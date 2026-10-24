@@ -11,16 +11,17 @@ import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class) @Config(sdk=28)
 public class PlaybackApiTest {
-    private static final String VIEW="{\"code\":0,\"message\":\"OK\",\"ttl\":1,\"data\":{\"bvid\":\"BV1GJ411x7h7\",\"aid\":80433022,\"cid\":137649199,\"title\":\"【官方 MV】Never Gonna Give You Up - Rick Astley\",\"duration\":213,\"pic\":\"http://i1.hdslb.com/bfs/archive/cover.jpg\",\"owner\":{\"name\":\"索尼音乐中国\"},\"pages\":[{\"cid\":137649199,\"page\":1}]}}";
-    private static final String PAGES="{\"code\":0,\"data\":[{\"cid\":137649199}]}";
+    private static final String PAGES="{\"code\":0,\"data\":[{\"cid\":137649199,\"part\":\"Never Gonna Give You Up\",\"duration\":213}]}";
     private static final String AUDIO="{\"code\":0,\"data\":{\"dash\":{\"audio\":[{\"id\":30216,\"codecs\":\"mp4a.40.2\",\"bandwidth\":64000,\"baseUrl\":\"https://cdn.example.com/audio.m4s\"}]}}}";
     private Track track() {return new Track("BV1GJ411x7h7","Rick Astley","Artist","","",213);}
     private JSONObject json(String text) throws IOException {try{return new JSONObject(text);}catch(JSONException e){throw new IOException(e);}}
-    @Test public void suppliedViewResponseParsesMetadataAndCid() throws Exception {
-        JSONObject response=json(VIEW);Track track=BiliApi.parseView("BV1GJ411x7h7",response);
-        assertEquals(213,track.duration);assertEquals("索尼音乐中国",track.artist);assertTrue(track.title.contains("Rick Astley"));
-        assertEquals(137649199,BiliApi.videoCid(response.getJSONObject("data")));
-        assertEquals(137649199,BiliApi.videoCid(new JSONObject("{\"pages\":[{\"cid\":137649199}]}")));
+    @Test public void bvLookupUsesDefaultPageWithoutFullVideoDetails() throws Exception {
+        List<String> urls = new ArrayList<>();
+        BiliApi api = new BiliApi(url -> { urls.add(url); return json(PAGES); });
+        Track track = api.search("https://www.bilibili.com/video/BV1GJ411x7h7/").get(0);
+        assertEquals(213, track.duration); assertEquals("Never Gonna Give You Up", track.title);
+        assertEquals("BV1GJ411x7h7", track.id); assertEquals(1, urls.size());
+        assertTrue(urls.get(0).contains("/pagelist?"));
     }
     @Test public void fullPublicDashRequestIncludesFnverWithoutRequiringWbiNav() throws Exception {
         List<String> urls=new ArrayList<>();

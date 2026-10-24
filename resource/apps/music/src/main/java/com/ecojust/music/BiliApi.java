@@ -43,7 +43,10 @@ final class BiliApi {
 
     Track view(String bv) throws IOException {
         try {
-            return parseView(bv, request("https://api.bilibili.com/x/web-interface/view?bvid=" + encode(bv)));
+            JSONObject pages = request("https://api.bilibili.com/x/player/pagelist?bvid=" + encode(bv));
+            pageCid(pages);
+            JSONObject first = pages.getJSONArray("data").getJSONObject(0);
+            return new Track(bv, first.optString("part", bv), "", "", "", first.optLong("duration"));
         } catch (JSONException e) { throw new IOException("视频信息无法解析", e); }
     }
 
@@ -75,18 +78,6 @@ final class BiliApi {
         return cid;
     }
 
-    static Track parseView(String bv, JSONObject response) throws IOException, JSONException {
-        JSONObject data = checked(response);
-        return new Track(bv, data.optString("title", bv), data.optJSONObject("owner") == null ? "" : data.getJSONObject("owner").optString("name"),
-                data.optString("pic"), "", data.optLong("duration"));
-    }
-    static long videoCid(JSONObject data) throws IOException {
-        long cid = data.optLong("cid");
-        JSONArray pages = data.optJSONArray("pages");
-        if (cid <= 0 && pages != null && pages.optJSONObject(0) != null) cid = pages.optJSONObject(0).optLong("cid");
-        if (cid <= 0) throw new IOException("没有可播放的音频分段");
-        return cid;
-    }
     static Map<String,String> playParams(String bv, long cid) {
         Map<String,String> params = new TreeMap<>();
         params.put("bvid", bv); params.put("cid", String.valueOf(cid));
