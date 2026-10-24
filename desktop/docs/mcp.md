@@ -111,4 +111,6 @@ xvfb-run -a python scripts/verify-mcp.py --binary src-tauri/target/x86_64-unknow
 
 此检查启动真实管理器与 stdio 代理，使用隔离的应用数据目录和模拟 ADB，验证设备操作、部分失败、保护、取消、关闭窗口错误；不连接真实电视。
 
-布局 v4 的 screen/users/system/background/navigation、静态 SVG 和只读系统保护见[完整协议](../../README.md#layoutjson-规范与画面对照)。批量排布可通过修改选定 users 的 frame 后 apply_launcher_layout 完成。get_launcher_covers 返回手动封面，优先级高于 Home 默认背景；get_launcher_backgrounds 读取默认背景但不切换桌面。JSON 最大 90 KiB。
+布局 v5 的 screen/users/system/background/navigation、静态 SVG 和只读系统保护见[完整协议](../../resource/README-development.md#layoutjson-协议规范与画面对照)。批量排布可通过修改选定 users 的 frame 后 apply_launcher_layout 完成。get_launcher_covers 返回手动封面，优先级高于 Home 默认背景；get_launcher_backgrounds 读取默认背景但不切换桌面。JSON 最大 90 KiB。
+
+组件的 textColor 控制文字，iconColor 控制 SVG currentColor，backgroundColor 支持 transparent。系统组件全字段只读。管理器的屏幕基准只显示；可用 get_launcher_layout 取得实际基准再调整 frame。

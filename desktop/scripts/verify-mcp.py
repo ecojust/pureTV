@@ -166,7 +166,7 @@ def main():
                 client.call('set_home',{'component':'com.ecojust.puretv/.MainActivity'})
                 layout=client.call('get_launcher_layout');assert layout['supported'] is True
                 draft=layout['layout']
-                draft['home']['users']=[{'id':'user-puretv','name':'pureTV','text':'Open pureTV','action':'com.ecojust.puretv','frame':{'x':48,'y':220,'width':200,'height':150},'visible':True,'icon':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 2h20v20H2z"/></svg>','color':'#FFFFFF','backgroundColor':'#374959'}]
+                draft['home']['users']=[{'id':'user-puretv','name':'pureTV','text':'Open pureTV','action':'com.ecojust.puretv','frame':{'x':48,'y':220,'width':200,'height':150},'visible':True,'icon':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 2h20v20H2z"/></svg>','textColor':'#FFFFFF','iconColor':'#C6DDCF','backgroundColor':'#374959'}]
                 tampered=json.loads(json.dumps(draft));tampered['home']['system'][0]['frame']['x']+=1
                 client.call('apply_launcher_layout',{'layoutJson':json.dumps(tampered)},failure=True)
                 assert client.call('apply_launcher_layout',{'layoutJson':json.dumps(draft)})['layout']==draft

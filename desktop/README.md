@@ -129,4 +129,4 @@ xvfb-run -a python scripts/verify-mcp.py --binary src-tauri/target/x86_64-unknow
 
 布局编辑器选中卡片后显示实际打开的应用、包名或内置功能，可从已安装且可启动的用户应用中更换目标。自定义显示名称不会改变真实目标。切换默认启动器通常无需重启电视，按遥控器 Home 键进入即可。
 
-所有页面、列表与布局弹窗关闭滚动回弹，采用统一细圆角滚动条。新版启动器使用 layout.json 版本 4，使用可配置 screen 基准和 users/system 组件，系统只读，用户块支持 SVG 与多选排布，电视与管理器共用布局；详见[场景规范](docs/launcher-layout.md)。
+所有页面、列表与布局弹窗关闭滚动回弹，采用统一细圆角滚动条。新版启动器使用 layout.json 版本 5，显示只读 screen 基准和 users/system 组件，系统只读，用户块支持 SVG 与多选排布，电视与管理器共用布局；详见[场景规范](docs/launcher-layout.md)。
