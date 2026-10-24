@@ -24,7 +24,7 @@
 - Picsum 地址实际下载返回 HTTP 200、JPEG、1920×1080；壁纸测试覆盖字节保真、恰好 4 MiB、无 Content-Length 的超限流及网络中断。
 
 ```bash
-cd launcher
+cd resource/launcher/puretv
 ./gradlew --no-daemon assembleDebug assembleRelease lintDebug testDebugUnitTest
 ```
 

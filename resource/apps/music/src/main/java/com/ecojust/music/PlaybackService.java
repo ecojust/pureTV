@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,7 @@ public class PlaybackService extends Service {
     private final LocalBinder binder = new LocalBinder();
     private final Handler main = new Handler(Looper.getMainLooper());
     private final ThreadPoolExecutor resolver = new ThreadPoolExecutor(2, 2, 0, TimeUnit.SECONDS,
-            new ArrayBlockingQueue<>(2), new ThreadPoolExecutor.DiscardOldestPolicy());
+            new ArrayBlockingQueue<>(2), new ThreadPoolExecutor.AbortPolicy());
     private final List<Track> queue = new ArrayList<>();
     private MusicStore store;
     private MediaPlayer player;
@@ -45,11 +46,17 @@ public class PlaybackService extends Service {
     private int index = -1, generation;
     private boolean prepared, loading, destroyed, resumeAfterFocus;
     private String error = "";
-    private Runnable listener, prepareTimeout;
+    private Runnable listener, prepareTimeout, resolveTimeout;
+    private final PlaybackOrder order = new PlaybackOrder();
+    private List<String> sources = new ArrayList<>();
+    private int sourceIndex;
+    private long loadDeadline;
+    private String stage = "";
 
     @Override public void onCreate() {
         super.onCreate();
         store = new MusicStore(this); queue.addAll(store.queue());
+        order.shuffle(getSharedPreferences("music_playback", 0).getBoolean("shuffle", false));
         if (!queue.isEmpty()) index = 0;
         audio = (AudioManager) getSystemService(AUDIO_SERVICE);
         AudioAttributes attributes = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
@@ -95,6 +102,21 @@ public class PlaybackService extends Service {
     Track current() { return index >= 0 && index < queue.size() ? queue.get(index) : null; }
     int currentIndex() { return index; }
     boolean loading() { return loading; }
+    String stage() { return stage; }
+    boolean shuffled() { return order.shuffled(); }
+    void shuffle(boolean enabled) {
+        order.shuffle(enabled);
+        getSharedPreferences("music_playback", 0).edit().putBoolean("shuffle", enabled).apply();
+        changed();
+    }
+    void playList(List<Track> tracks, boolean shuffled) {
+        if (tracks.isEmpty()) return;
+        List<Track> copy = new ArrayList<>(tracks);
+        clearQueue();
+        for (Track track : copy) { if (!add(track, false)) break; }
+        shuffle(shuffled);
+        play(shuffled ? order.next(-1, queue.size()) : 0);
+    }
     String error() { return error; }
     boolean playing() { return player != null && prepared && player.isPlaying(); }
     long position() { return player != null && prepared ? player.getCurrentPosition() : 0; }
@@ -113,23 +135,50 @@ public class PlaybackService extends Service {
     void play(int position) {
         if (position < 0 || position >= queue.size() || destroyed) return;
         cancelResolve(); releasePlayer();
-        index = position; error = ""; loading = true; resumeAfterFocus = false;
+        index = position; order.record(index, queue.size()); error = ""; loading = true; resumeAfterFocus = false;
+        stage = current().local() ? "正在打开本地音频…" : "正在获取音频分段…";
+        loadDeadline = SystemClock.elapsedRealtime() + 45000;
         Track track = current();
         startForegroundService(new Intent(this, PlaybackService.class).setAction(START));
         startForeground(NOTIFICATION, notification());
         changed();
         int ticket = generation;
-        pending = resolver.submit(() -> {
+        resolveTimeout = () -> { if (ticket == generation && loading) fail("获取音轨超时（20 秒），请重试或检查电视网络"); };
+        main.postDelayed(resolveTimeout, 20000);
+        try { pending = resolver.submit(() -> {
             try {
-                String source = track.local() ? track.localUri : BiliApi.get().audio(track);
-                main.post(() -> { if (!destroyed && ticket == generation) prepare(source, ticket); });
+                List<String> resolved = resolveSources(track, message -> main.post(() -> {
+                    if (!destroyed && ticket == generation && loading) { stage = message; changed(); }
+                }));
+                main.post(() -> {
+                    if (!destroyed && ticket == generation) {
+                        if (resolveTimeout != null) main.removeCallbacks(resolveTimeout);
+                        sources = resolved; sourceIndex = 0;
+                        prepare(sources.get(0), ticket);
+                    }
+                });
             } catch (Exception e) {
                 String message = e.getMessage() == null ? getString(R.string.playback_failed) : e.getMessage();
-                main.post(() -> { if (!destroyed && ticket == generation) fail(message); });
+                main.post(() -> { if (!destroyed && ticket == generation) fail(stage + " " + message); });
             }
-        });
+        }); } catch (java.util.concurrent.RejectedExecutionException e) {
+            fail("上一次音频请求尚未结束，请稍后重试");
+        }
+    }
+    List<String> resolveSources(Track track, java.util.function.Consumer<String> progress) throws java.io.IOException {
+        return track.local() ? java.util.Collections.singletonList(track.localUri) : BiliApi.get().audioSources(track, progress);
+    }
+    private void retrySource(int ticket, String message) {
+        if (ticket != generation || destroyed) return;
+        if (!loading) loadDeadline = SystemClock.elapsedRealtime() + 30000;
+        if (!current().local() && sourceIndex + 1 < sources.size() && SystemClock.elapsedRealtime() < loadDeadline) {
+            prepare(sources.get(++sourceIndex), ticket);
+        } else fail(message);
     }
     private void prepare(String source, int ticket) {
+        releasePlayer(); loading = true;
+        stage = current().local() ? "正在打开本地音频…" : "正在连接音频（" + (sourceIndex + 1) + "/" + sources.size() + "）…";
+        changed();
         try {
             player = new MediaPlayer();
             player.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
@@ -138,7 +187,7 @@ public class PlaybackService extends Service {
             HashMap<String, String> headers = new HashMap<>();
             if (!current().local()) {
                 headers.put("Referer", "https://www.bilibili.com/");
-                headers.put("User-Agent", "Mozilla/5.0 (Linux; Android 9)");
+                headers.put("User-Agent", BiliApi.AGENT);
             }
             player.setDataSource(this, Uri.parse(source), headers);
             player.setOnPreparedListener(value -> {
@@ -149,17 +198,17 @@ public class PlaybackService extends Service {
             });
             player.setOnCompletionListener(value -> {
                 if (ticket != generation || value != player) return;
-                if (index + 1 < queue.size()) play(index + 1);
+                if (order.shuffled() || index + 1 < queue.size()) next();
                 else { pause(false); seek(0); }
             });
             player.setOnErrorListener((value, what, extra) -> {
-                if (ticket == generation && value == player) fail(getString(R.string.decoder_error, what, extra));
+                if (ticket == generation && value == player) retrySource(ticket, getString(R.string.decoder_error, what, extra));
                 return true;
             });
             player.prepareAsync();
-            prepareTimeout = () -> { if (ticket == generation && loading) fail("音频加载超时，请重试或使用本地音频"); };
-            main.postDelayed(prepareTimeout, 30000);
-        } catch (Exception e) { fail(getString(R.string.playback_failed) + "：" + e.getMessage()); }
+            prepareTimeout = () -> { if (ticket == generation && loading) retrySource(ticket, "连接音频超时，请重试或检查电视网络"); };
+            main.postDelayed(prepareTimeout, Math.max(1, Math.min(10000, loadDeadline - SystemClock.elapsedRealtime())));
+        } catch (Exception e) { retrySource(ticket, getString(R.string.playback_failed) + "：" + e.getMessage()); }
     }
     void toggle() {
         if (loading) pause(false);
@@ -182,10 +231,10 @@ public class PlaybackService extends Service {
         } else updateNotification();
         changed();
     }
-    void next() { if (!queue.isEmpty()) play((index + 1) % queue.size()); }
+    void next() { if (!queue.isEmpty()) play(order.next(index, queue.size())); }
     void previous() {
         if (position() > 3000) seek(0);
-        else if (!queue.isEmpty()) play((index - 1 + queue.size()) % queue.size());
+        else if (!queue.isEmpty()) play(order.previous(index, queue.size()));
     }
     void seek(long position) {
         if (player != null && prepared) {
@@ -194,14 +243,14 @@ public class PlaybackService extends Service {
         }
     }
     void clearQueue() {
-        stopPlayback(); queue.clear(); index = -1; store.queue(queue); changed();
+        stopPlayback(); queue.clear(); order.clear(); index = -1; store.queue(queue); changed();
     }
     private void fail(String message) { error = message; loading = false; cancelResolve(); releasePlayer(); audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); changed(); }
     private void stopPlayback() {
         cancelResolve(); loading = false; releasePlayer(); resumeAfterFocus = false;
         audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); changed();
     }
-    private void cancelResolve() { generation++; if (pending != null) pending.cancel(true); pending = null; resolver.purge(); }
+    private void cancelResolve() { if (resolveTimeout != null) main.removeCallbacks(resolveTimeout); resolveTimeout = null; generation++; if (pending != null) pending.cancel(true); pending = null; resolver.purge(); }
     private void releasePlayer() { if (prepareTimeout != null) main.removeCallbacks(prepareTimeout); prepareTimeout = null; prepared = false; if (player != null) { player.release(); player = null; } }
     private void changed() { updateState(); if (listener != null) listener.run(); }
     private void updateState() {
@@ -224,7 +273,7 @@ public class PlaybackService extends Service {
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         return new Notification.Builder(this, CHANNEL).setSmallIcon(R.drawable.ic_music)
                 .setContentTitle(track == null ? getString(R.string.app_name) : track.title)
-                .setContentText(loading ? getString(R.string.loading_audio) : track == null ? "" : track.artist)
+                .setContentText(loading ? stage : track == null ? "" : track.artist)
                 .setContentIntent(open).setOnlyAlertOnce(true).setOngoing(playing() || loading)
                 .addAction(new Notification.Action.Builder(android.R.drawable.ic_media_previous, getString(R.string.previous), command(PREVIOUS, 1)).build())
                 .addAction(new Notification.Action.Builder(playing() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play,

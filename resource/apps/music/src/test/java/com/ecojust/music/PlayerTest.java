@@ -9,6 +9,75 @@ import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class) @Config(sdk=28)
 public class PlayerTest {
+    @org.junit.Before public void resetMode() {
+        RuntimeEnvironment.getApplication().getSharedPreferences("music_playback",0).edit().clear().commit();
+    }
+    public static class SlowResolver extends PlaybackService {
+        final java.util.concurrent.CountDownLatch started = new java.util.concurrent.CountDownLatch(1);
+        @Override java.util.List<String> resolveSources(Track track, java.util.function.Consumer<String> progress) throws java.io.IOException {
+            started.countDown();
+            try { new java.util.concurrent.CountDownLatch(1).await(); }
+            catch (InterruptedException e) { throw new java.io.IOException("cancelled"); }
+            return java.util.Collections.emptyList();
+        }
+    }
+    public static class BackupResolver extends PlaybackService {
+        @Override java.util.List<String> resolveSources(Track track, java.util.function.Consumer<String> progress) {
+            return java.util.Arrays.asList("https://one.example.com/audio", "https://two.example.com/audio", "https://three.example.com/audio");
+        }
+    }
+    @Test public void audioResolutionHasAnOverallTimeoutAndRemainsRetryable() throws Exception {
+        RuntimeEnvironment.getApplication().getSharedPreferences("music_library",0).edit().clear().commit();
+        ServiceController<SlowResolver> c = Robolectric.buildService(SlowResolver.class).create();
+        try {
+            SlowResolver p = c.get(); p.add(LibraryTest.track(0), true);
+            assertTrue(p.started.await(1, java.util.concurrent.TimeUnit.SECONDS));
+            assertTrue(p.loading());
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(21));
+            assertFalse(p.loading()); assertFalse(p.playing()); assertTrue(p.error().contains("20 秒"));
+            p.play(0); assertTrue(p.loading()); p.pause(false); assertFalse(p.loading());
+        } finally { c.destroy(); }
+    }
+    @Test public void stalledSourcesUseBoundedBackupsAndStopLoading() throws Exception {
+        RuntimeEnvironment.getApplication().getSharedPreferences("music_library",0).edit().clear().commit();
+        org.robolectric.shadows.ShadowMediaPlayer.setMediaInfoProvider(source -> new org.robolectric.shadows.ShadowMediaPlayer.MediaInfo(60000,60000));
+        ServiceController<BackupResolver> c = Robolectric.buildService(BackupResolver.class).create();
+        try {
+            BackupResolver p = c.get(); p.add(LibraryTest.track(0), true);
+            java.lang.reflect.Field pending = PlaybackService.class.getDeclaredField("pending"); pending.setAccessible(true);
+            ((java.util.concurrent.Future<?>) pending.get(p)).get(1, java.util.concurrent.TimeUnit.SECONDS);
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(31));
+            assertFalse(p.loading()); assertFalse(p.playing()); assertTrue(p.error().contains("超时"));
+            java.lang.reflect.Field index = PlaybackService.class.getDeclaredField("sourceIndex"); index.setAccessible(true);
+            assertEquals(2, index.getInt(p));
+        } finally { c.destroy(); }
+    }
+    @Test public void decoderErrorAfterPlaybackReentersBoundedLoading() throws Exception {
+        RuntimeEnvironment.getApplication().getSharedPreferences("music_library",0).edit().clear().commit();
+        org.robolectric.shadows.ShadowMediaPlayer.setMediaInfoProvider(source -> new org.robolectric.shadows.ShadowMediaPlayer.MediaInfo(60000,1));
+        ServiceController<BackupResolver> c = Robolectric.buildService(BackupResolver.class).create();
+        try {
+            BackupResolver p = c.get(); p.add(LibraryTest.track(0), true);
+            java.lang.reflect.Field pending = PlaybackService.class.getDeclaredField("pending"); pending.setAccessible(true);
+            ((java.util.concurrent.Future<?>) pending.get(p)).get(1, java.util.concurrent.TimeUnit.SECONDS);
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofMillis(10));
+            assertTrue(p.playing());
+            java.lang.reflect.Field field = PlaybackService.class.getDeclaredField("player"); field.setAccessible(true);
+            android.media.MediaPlayer decoder = (android.media.MediaPlayer) field.get(p);
+            org.robolectric.shadows.ShadowMediaPlayer.setMediaInfoProvider(source -> new org.robolectric.shadows.ShadowMediaPlayer.MediaInfo(60000,60000));
+            org.robolectric.Shadows.shadowOf(decoder).invokeErrorListener(1, -1004);
+            assertTrue(p.loading());
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(21));
+            assertFalse(p.loading()); assertTrue(p.error().contains("超时"));
+        } finally { c.destroy(); }
+    }
+    @Test public void shuffleModePersistsAcrossServiceRecreation() {
+        ServiceController<PlaybackService> c = Robolectric.buildService(PlaybackService.class).create();
+        c.get().shuffle(true); c.destroy();
+        c = Robolectric.buildService(PlaybackService.class).create();
+        try { assertTrue(c.get().shuffled()); } finally { c.destroy(); }
+    }
+
     @Test public void localPlaybackPauseResumeSeekAndCancelUseOneDecoder() throws Exception {
         RuntimeEnvironment.getApplication().getSharedPreferences("music_library",0).edit().clear().commit();
         org.robolectric.shadows.ShadowMediaPlayer.setMediaInfoProvider(source -> new org.robolectric.shadows.ShadowMediaPlayer.MediaInfo(60000,1));

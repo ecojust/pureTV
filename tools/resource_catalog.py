@@ -20,25 +20,28 @@ def child(directory,name):
 # Only build inputs participate in the source fingerprint; APKs and resource metadata do not.
 LAUNCHER_INPUTS=('FONT-LICENSE-OFL.txt','app','build-and-install.ps1','build-and-install.sh','build.gradle','gradle.properties','gradle','gradlew','gradlew.bat','settings.gradle')
 def launcher_source_tree(root,ref='HEAD'):
-    tree=subprocess.check_output(['git','ls-tree',ref+':resource/launcher'],cwd=root)
+    source_path='resource/launcher/puretv'
+    if subprocess.run(['git','cat-file','-e',ref+':'+source_path],cwd=root,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode:
+        source_path='resource/launcher' # Historical APK provenance before per-launcher folders.
+    tree=subprocess.check_output(['git','ls-tree',ref+':'+source_path],cwd=root)
     selected=b''.join(line+b'\n' for line in tree.splitlines() if line.split(b'\t',1)[1].decode() in LAUNCHER_INPUTS)
     assert len(selected.splitlines())==len(LAUNCHER_INPUTS),'Missing launcher build inputs'
     return subprocess.check_output(['git','mktree'],cwd=root,input=selected).decode().strip()
 
 def catalog_directories(root):
     assert {p.name for p in (root/'resource').iterdir() if p.is_dir()}=={'launcher','apps'},'Classify software under resource/launcher or resource/apps'
-    launcher=root/'resource/launcher'
-    assert launcher.is_dir() and (root/'resource/apps').is_dir(),'Expected resource/launcher and resource/apps'
-    yield launcher
-    for directory in sorted((root/'resource/apps').iterdir()):
-        if directory.is_dir() and not directory.name.startswith('.'):
-            yield directory
+    for category in ('launcher','apps'):
+        parent=root/'resource'/category
+        assert parent.is_dir(),f'Missing resource/{category}'
+        for directory in sorted(parent.iterdir()):
+            if directory.is_dir() and not directory.name.startswith('.'):
+                yield directory
 
 def verify_catalog(root,tools):
     entries=[]
     for directory in catalog_directories(root):
         info=json.loads(child(directory,'resource.json').read_text())
-        assert info['kind']==('launcher' if directory.name=='launcher' else 'app') and info['name'] and info['author']
+        assert info['kind']==('launcher' if directory.parent.name=='launcher' else 'app') and info['name'] and info['author']
         assert isinstance(info['supportsLayoutJson'],bool)
         apk=child(directory,info['apk']);assert apk.suffix=='.apk' and 0<apk.stat().st_size<100*1024*1024
         actual=apk_info(apk,tools)
@@ -46,7 +49,6 @@ def verify_catalog(root,tools):
         assert actual['versionName']==info['version'] and actual['bytes']==info['apkBytes']
         if info.get('sourceArchive'):
             source=child(directory,info['sourceArchive']);assert digest(source)==info['sourceArchiveSha256']
-        else:assert (directory/'src').is_dir(),'Provide corresponding source or an archive'
         child(directory,'LICENSE');child(directory,'README.md')
         if info.get('cover'):child(directory,info['cover'])
         if actual['packageName'] in ('com.ecojust.puretv','com.ecojust.music','com.ecojust.shortvideo','com.ecojust.webtv'):

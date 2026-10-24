@@ -10,9 +10,9 @@ def report_error(kind,value,tb):
     sys.__excepthook__(kind,value,tb)
 sys.excepthook=report_error
 root=Path(__file__).resolve().parents[1];tools=Path(os.environ['ANDROID_HOME'])/'build-tools/34.0.0'
-paths=list((root/'resource/launcher/app/build/outputs/apk/release').glob('*.apk'));assert len(paths)==1,paths
+paths=list((root/'resource/launcher/puretv/app/build/outputs/apk/release').glob('*.apk'));assert len(paths)==1,paths
 built=apk_info(paths[0],tools,allow_unsigned=True);assert built['packageName']=='com.ecojust.puretv'
-gradle=(root/'resource/launcher/app/build.gradle').read_text()
+gradle=(root/'resource/launcher/puretv/app/build.gradle').read_text()
 assert built['versionName']==re.search(r"versionName '([^']+)'",gradle)[1]
 assert built['versionCode']==int(re.search(r'versionCode (\d+)',gradle)[1])
 assert built['bytes']<=5*1024*1024
@@ -28,6 +28,6 @@ selected=root/resource['path'] if resource else paths[0]
 info=apk_info(selected,tools,allow_unsigned=not bool(resource))
 assert info['bytes']<=5*1024*1024
 info.update(requiresSigning=not bool(info['certificateSha256']),sourceSha=os.environ.get('GITHUB_SHA'),sourceTreeSha=source_tree,buildSourceSha=resource['sourceCommit'] if resource else os.environ.get('GITHUB_SHA'),releaseName=f"pureTV-{built['versionName']}.apk")
-output=root/'resource/launcher/release-output';output.mkdir(exist_ok=True);shutil.copyfile(selected,output/info['releaseName'])
-(root/'resource/launcher/release-metadata.json').write_text(json.dumps({'launcher':info},indent=2)+'\n')
+output=root/'resource/launcher/puretv/release-output';output.mkdir(exist_ok=True);shutil.copyfile(selected,output/info['releaseName'])
+(root/'resource/launcher/puretv/release-metadata.json').write_text(json.dumps({'launcher':info},indent=2)+'\n')
 print(json.dumps(info,ensure_ascii=False))

@@ -1,6 +1,6 @@
 # 维护 APK 资源
 
-根目录只保留电脑管理器与公共资源入口。原 Android 源码整体位于 `resource/launcher/` 与 `resource/apps/`；启动器 APK 直接在 launcher 目录，各应用 APK 直接在 apps 下各自的软件目录。每个软件目录必须有实际 APK、resource.json、README、LICENSE 和 SHA256SUMS.txt。源码可直接放在目录中，也可附对应源码归档；封面使用 thumb.png。
+根目录只保留电脑管理器与公共资源入口。原 Android 源码整体位于 `resource/launcher/puretv/` 与 `resource/apps/`；启动器与应用均按软件分目录：`resource/launcher/<启动器名>/` 和 `resource/apps/<应用名>/`，每个目录直接存放对应 APK。每个软件目录必须有实际 APK、resource.json、README、LICENSE 和 SHA256SUMS.txt。源码可直接放在目录中，也可附对应源码归档；封面使用 thumb.png。
 
 第三方 APK 保留上游原始二进制、证书与许可证。自研应用使用固定的 pureTV 发布证书，旧证书安装包不能直接覆盖安装，更新前按各目录说明处理。密钥与密码不能进入 Git、源码归档或 Release。
 

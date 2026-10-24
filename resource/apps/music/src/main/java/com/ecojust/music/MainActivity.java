@@ -28,16 +28,17 @@ public class MainActivity extends Activity {
     private LinearLayout content;
     private EditText query;
     private TextView heading, status, now, clock;
-    private Button toggle, favourite;
+    private Button toggle, favourite, mode;
     private SeekBar seek;
     private ListView list;
     private final List<Track> tracks = new ArrayList<>();
     private final TrackAdapter adapter = new TrackAdapter();
     private String page = "发现", favouriteTrackId, lastPlaybackError = "";
     private boolean cachedFavourite, wasLoading;
+    private String lastStage = "";
     private Dialog fullscreen;
     private TextView fullTitle, fullTime;
-    private Button fullToggle;
+    private Button fullToggle, fullMode;
     private final Runnable tick = new Runnable() {
         @Override public void run() { if (visible) { render(); main.postDelayed(this, 1000); } }
     };
@@ -67,6 +68,10 @@ public class MainActivity extends Activity {
         query.setImeOptions(EditorInfo.IME_ACTION_SEARCH); query.setOnEditorActionListener((v, action, event) -> { if (action == EditorInfo.IME_ACTION_SEARCH) { search(); return true; } return false; });
         search.addView(query, new LinearLayout.LayoutParams(0, dp(50), 1)); search.addView(button("搜索", this::search), new LinearLayout.LayoutParams(dp(85), dp(50))); content.addView(search);
         status = text("输入关键词搜索 B 站公开音乐，或打开本地音频。长按歌曲可收藏、加入队列。", 14); status.setPadding(0, dp(8), 0, dp(8)); content.addView(status);
+        LinearLayout resultActions = row();
+        resultActions.addView(button("播放全部", () -> playResults(false)));
+        resultActions.addView(button("随机播放", () -> playResults(true)));
+        content.addView(resultActions);
         list = new ListView(this); list.setDividerHeight(dp(5)); list.setSelector(R.drawable.list_focus); list.setDrawSelectorOnTop(true); list.setAdapter(adapter);
         list.setOnItemClickListener((parent, view, position, id) -> play(tracks.get(position)));
         list.setOnItemLongClickListener((parent, view, position, id) -> { trackMenu(tracks.get(position)); return true; });
@@ -77,6 +82,7 @@ public class MainActivity extends Activity {
         bar.addView(button("上一首", () -> { if (player != null) player.previous(); }));
         toggle = button("播放", () -> { if (player != null) player.toggle(); }); bar.addView(toggle);
         bar.addView(button("下一首", () -> { if (player != null) player.next(); }));
+        mode = button("顺序播放", () -> { if (player != null) player.shuffle(!player.shuffled()); }); bar.addView(mode);
         bar.addView(button("队列", this::queueDialog)); bar.addView(button("全屏", this::fullscreen)); bottom.addView(bar);
         LinearLayout timeline = row(); seek = new SeekBar(this); seek.setMax(1000); timeline.addView(seek, new LinearLayout.LayoutParams(0, dp(32), 1));
         clock = text("0:00 / 0:00", 13); timeline.addView(clock, new LinearLayout.LayoutParams(dp(125), dp(32))); bottom.addView(timeline);
@@ -117,6 +123,10 @@ public class MainActivity extends Activity {
         });
     }
     private void cancelSearch() { searchGeneration++; if (searchJob != null) searchJob.cancel(true); searchJob = null; ((ThreadPoolExecutor) searchWorker).purge(); }
+    private void playResults(boolean shuffle) {
+        if (tracks.isEmpty()) { toast("请先搜索音乐或打开收藏列表"); return; }
+        if (player != null) player.playList(new ArrayList<>(tracks), shuffle);
+    }
     private void play(Track track) { if (player != null && !player.add(track, true)) toast("队列已满，请先清理队列"); }
     private void trackMenu(Track track) {
         new AlertDialog.Builder(this).setTitle(track.title).setItems(new String[]{"立即播放", "加入队列", store.favourite(track.id) ? "取消收藏" : "收藏"}, (d, which) -> {
@@ -143,12 +153,15 @@ public class MainActivity extends Activity {
         fullscreen = new Dialog(this, R.style.MusicTheme); LinearLayout panel = column(); panel.setGravity(Gravity.CENTER); panel.setPadding(dp(48), dp(24), dp(48), dp(24)); panel.setBackgroundColor(0xff111319);
         TextView symbol = text("♫", 48); symbol.setTextColor(0xffe3a1b0); panel.addView(symbol);
         fullTitle = text("选择一首音乐", 30); fullTitle.setMaxLines(2); fullTitle.setGravity(Gravity.CENTER); panel.addView(fullTitle); space(panel, 24);
-        LinearLayout controls = row(); controls.setGravity(Gravity.CENTER); controls.addView(button("上一首", () -> { if (player != null) player.previous(); })); fullToggle = button("播放", () -> { if (player != null) player.toggle(); }); controls.addView(fullToggle); controls.addView(button("下一首", () -> { if (player != null) player.next(); })); controls.addView(button("收藏", this::toggleFavourite)); panel.addView(controls);
+        LinearLayout controls = row(); controls.setGravity(Gravity.CENTER); controls.addView(button("上一首", () -> { if (player != null) player.previous(); })); fullToggle = button("播放", () -> { if (player != null) player.toggle(); }); controls.addView(fullToggle); controls.addView(button("下一首", () -> { if (player != null) player.next(); })); controls.addView(button("收藏", this::toggleFavourite));
+        fullMode = button("顺序播放", () -> { if (player != null) player.shuffle(!player.shuffled()); }); controls.addView(fullMode); panel.addView(controls);
         fullTime = text("", 17); panel.addView(fullTime); space(panel, 24); panel.addView(button("返回", () -> fullscreen.dismiss()));
-        ScrollView scroll = new ScrollView(this); scroll.setFillViewport(true); scroll.addView(panel); fullscreen.setContentView(scroll); fullscreen.setOnDismissListener(d -> { fullscreen = null; fullTitle = null; fullTime = null; fullToggle = null; }); fullscreen.show(); fullscreen.getWindow().setLayout(-1, -1); fullToggle.requestFocus(); render();
+        ScrollView scroll = new ScrollView(this); scroll.setFillViewport(true); scroll.addView(panel); fullscreen.setContentView(scroll); fullscreen.setOnDismissListener(d -> { fullscreen = null; fullTitle = null; fullTime = null; fullToggle = null; fullMode = null; }); fullscreen.show(); fullscreen.getWindow().setLayout(-1, -1); fullToggle.requestFocus(); render();
     }
     private void render() {
         if (player == null) return;
+        mode.setText(player.shuffled() ? "随机播放" : "顺序播放");
+        if (fullMode != null) fullMode.setText(mode.getText());
         Track track = player.current(); String title = track == null ? "选择一首音乐" : track.title;
         now.setText(title); now.setContentDescription(track == null ? title : title + "，" + track.artist);
         String action = player.loading() ? "取消" : player.playing() ? "暂停" : "播放"; toggle.setText(action);
@@ -157,13 +170,13 @@ public class MainActivity extends Activity {
         favourite.setText(cachedFavourite ? "已收藏" : "收藏");
         long duration = player.duration(), position = player.position(); seek.setEnabled(duration > 0); seek.setProgress(duration > 0 ? (int)(position * 1000 / duration) : 0);
         String time = time(position) + " / " + time(duration); clock.setText(time);
-        if (!player.error().equals(lastPlaybackError) || player.loading() != wasLoading) {
+        if (!player.error().equals(lastPlaybackError) || player.loading() != wasLoading || !player.stage().equals(lastStage)) {
             if (!player.error().isEmpty()) status.setText(player.error() + " · 可重试播放，或打开本地音频");
-            else if (player.loading()) status.setText("正在加载音频…");
+            else if (player.loading()) status.setText(player.stage());
             else if (wasLoading || !lastPlaybackError.isEmpty()) status.setText("长按歌曲可收藏或加入队列");
-            lastPlaybackError = player.error(); wasLoading = player.loading();
+            lastPlaybackError = player.error(); wasLoading = player.loading(); lastStage = player.stage();
         }
-        if (fullTitle != null) { fullTitle.setText(title); fullTime.setText(player.loading() ? "正在加载音频…" : !player.error().isEmpty() ? player.error() : time); fullToggle.setText(action); }
+        if (fullTitle != null) { fullTitle.setText(title); fullTime.setText(player.loading() ? player.stage() : !player.error().isEmpty() ? player.error() : time); fullToggle.setText(action); }
     }
     private void localAudio() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("audio/*").putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);

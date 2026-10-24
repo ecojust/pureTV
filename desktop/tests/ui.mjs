@@ -563,7 +563,7 @@ try {
   await check('inactive launcher cards read Home background without switching the current desktop',async p=>{
     await nav(p,'launchers');await settled(p);const card=p.locator('[data-launcher-component="com.ecojust.puretv/.MainActivity"]');assert.equal(await card.locator('.launcher-card-background').getAttribute('src'),homeCover);assert.equal((await requests(p)).filter(r=>r.action==='setHome').length,0);assert.equal(await card.locator('[data-act="open-layout"]').count(),0);
   },snapshot(),{homeBackgrounds:{'com.ecojust.puretv/.MainActivity':homeCover}});
-  const protocolExample=JSON.parse(await readFile(new URL('../../resource/launcher/layout.example.json',import.meta.url),'utf8'));
+  const protocolExample=JSON.parse(await readFile(new URL('../../resource/launcher/puretv/layout.example.json',import.meta.url),'utf8'));
   await check('documented v4 file and Home/Apps previews use identical configuration',async p=>{
     await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();await p.locator('[data-unified-editor]').waitFor();await shot(p,'layout-v4-home-035');await p.locator('[data-u-page="apps"]').click();await shot(p,'layout-v4-apps-035');await p.locator('[data-u-act="json"]').click();assert.deepEqual(JSON.parse(await p.locator('.layout-json-viewer pre').innerText()),protocolExample);
   },unifiedState,{layoutSupported:true,layout:protocolExample,layoutApps:unifiedApps});
