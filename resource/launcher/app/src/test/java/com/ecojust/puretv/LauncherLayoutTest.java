@@ -54,4 +54,20 @@ public class LauncherLayoutTest {
   android.content.pm.ProviderInfo info=ctx().getPackageManager().resolveContentProvider("com.ecojust.puretv.layout",0);assertTrue(info.exported);assertEquals("android.permission.DUMP",info.readPermission);assertEquals("android.permission.DUMP",info.writePermission);
   LauncherLayoutProvider provider=Robolectric.buildContentProvider(LauncherLayoutProvider.class).create().get();android.os.Bundle result=provider.call("status",null,null);JSONObject value=new JSONObject(new String(android.util.Base64.decode(result.getString("result"),android.util.Base64.NO_WRAP),java.nio.charset.StandardCharsets.UTF_8));assertEquals(4,value.getInt("version"));assertEquals(4,value.getJSONObject("layout").getInt("version"));
  }
+ @Test public void downAndUpPageSwitchesFollowNavigationJson()throws Exception{
+  install("com.example.user",false);JSONObject draft=LauncherLayout.defaults(ctx()).json;draft.getJSONObject("home").put("users",new JSONArray().put(user("com.example.user")));LauncherLayout.apply(ctx(),draft);
+  try(org.robolectric.android.controller.ActivityController<MainActivity> home=Robolectric.buildActivity(MainActivity.class).setup()){
+   assertTrue(home.get().onTileVerticalKey(0,android.view.KeyEvent.KEYCODE_DPAD_DOWN));assertEquals(AppsActivity.class.getName(),org.robolectric.Shadows.shadowOf(home.get()).getNextStartedActivity().getComponent().getClassName());
+   draft.getJSONObject("home").put("navigation",new JSONObject());LauncherLayout.apply(ctx(),draft);org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();assertFalse(home.get().onTileVerticalKey(0,android.view.KeyEvent.KEYCODE_DPAD_DOWN));
+  }
+  try(org.robolectric.android.controller.ActivityController<AppsActivity> apps=Robolectric.buildActivity(AppsActivity.class).setup()){
+   assertTrue(apps.get().onTileVerticalKey(0,android.view.KeyEvent.KEYCODE_DPAD_UP));assertTrue(apps.get().isFinishing());
+  }
+ }
+ @Test public void pageBackgroundsAreIndependentAndLegacyUserBlocksMigrate()throws Exception{
+  install("com.example.user",false);JSONObject d=LauncherLayout.defaults(ctx()).json;
+  android.graphics.Bitmap bitmap=android.graphics.Bitmap.createBitmap(2,2,android.graphics.Bitmap.Config.ARGB_8888);bitmap.eraseColor(android.graphics.Color.RED);java.io.ByteArrayOutputStream bytes=new java.io.ByteArrayOutputStream();bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,bytes);bitmap.recycle();String image="data:image/png;base64,"+android.util.Base64.encodeToString(bytes.toByteArray(),android.util.Base64.NO_WRAP);
+  d.getJSONObject("home").getJSONObject("background").put("image",image);d.getJSONObject("apps").getJSONObject("background").put("color","#334455");LauncherLayout.apply(ctx(),d);JSONObject read=LauncherLayout.override(ctx()).json;assertEquals(image,read.getJSONObject("home").getJSONObject("background").getString("image"));assertFalse(read.getJSONObject("apps").getJSONObject("background").has("image"));assertEquals("#334455",read.getJSONObject("apps").getJSONObject("background").getString("color"));
+  JSONObject legacy=new JSONObject("{\"version\":3,\"home\":{\"columns\":4,\"items\":[{\"packageName\":\"com.example.user\",\"label\":\"旧应用\",\"frame\":{\"x\":10,\"y\":20,\"width\":100,\"height\":120}}]},\"apps\":{\"columns\":4,\"items\":[]}}");JSONObject migrated=UnifiedLayout.migrate(legacy,LauncherLayout.defaults(ctx()).json);new LauncherLayout(migrated);assertEquals("com.example.user",migrated.getJSONObject("home").getJSONArray("users").getJSONObject(0).getString("action"));assertEquals(10,migrated.getJSONObject("home").getJSONArray("users").getJSONObject(0).getJSONObject("frame").getInt("x"));
+ }
 }
