@@ -114,3 +114,87 @@ mod tests {
         let _ = fs::remove_dir_all(directory);
     }
 }
+
+/// Read only the bounded layout asset; never extract or execute files from an APK.
+pub fn apk_home_background(path: &Path) -> Option<String> {
+    let file = fs::File::open(path).ok()?;
+    if file.metadata().ok()?.len() > 256 * 1024 * 1024 {
+        return None;
+    }
+    let mut archive = zip::ZipArchive::new(file).ok()?;
+    let entry = archive.by_name("assets/layout.json").ok()?;
+    if entry.size() > 90 * 1024 {
+        return None;
+    }
+    let mut data = Vec::new();
+    entry.take(90 * 1024 + 1).read_to_end(&mut data).ok()?;
+    if data.len() > 90 * 1024 {
+        return None;
+    }
+    let layout: Value = serde_json::from_slice(&data).ok()?;
+    let value = layout["home"]["background"]["image"]
+        .as_str()
+        .or_else(|| layout["home"]["scene"]["background"]["image"].as_str())?;
+    if value.len() > 33000 {
+        return None;
+    }
+    let (mime, encoded) = value.split_once(',')?;
+    let bytes = STANDARD.decode(encoded).ok()?;
+    let valid = match mime {
+        "data:image/png;base64" => bytes.starts_with(b"\x89PNG\r\n\x1a\n"),
+        "data:image/jpeg;base64" => bytes.starts_with(b"\xff\xd8\xff"),
+        "data:image/webp;base64" => bytes.starts_with(b"RIFF") && bytes.get(8..12) == Some(b"WEBP"),
+        _ => false,
+    };
+    valid.then(|| value.to_string())
+}
+
+#[cfg(test)]
+mod home_background_tests {
+    use super::*;
+    use std::io::Write;
+    #[test]
+    fn apk_home_background_is_bounded_and_never_follows_external_urls() {
+        let directory =
+            std::env::temp_dir().join(format!("puretv-home-cover-{}", std::process::id()));
+        fs::create_dir_all(&directory).unwrap();
+        let path = directory.join("launcher.apk");
+        let png = format!(
+            "data:image/png;base64,{}",
+            STANDARD.encode(b"\x89PNG\r\n\x1a\nfixture")
+        );
+        for (image, expected) in [
+            (&*png, Some(png.clone())),
+            ("https://example.com/cover.png", None),
+            ("data:image/svg+xml;base64,PHN2Zz4=", None),
+        ] {
+            let mut archive = zip::ZipWriter::new(fs::File::create(&path).unwrap());
+            archive
+                .start_file(
+                    "assets/layout.json",
+                    zip::write::SimpleFileOptions::default(),
+                )
+                .unwrap();
+            archive
+                .write_all(
+                    json!({"version":4,"home":{"background":{"image":image}}})
+                        .to_string()
+                        .as_bytes(),
+                )
+                .unwrap();
+            archive.finish().unwrap();
+            assert_eq!(apk_home_background(&path), expected);
+        }
+        let mut archive = zip::ZipWriter::new(fs::File::create(&path).unwrap());
+        archive
+            .start_file(
+                "assets/layout.json",
+                zip::write::SimpleFileOptions::default(),
+            )
+            .unwrap();
+        archive.write_all(&vec![b' '; 90 * 1024 + 1]).unwrap();
+        archive.finish().unwrap();
+        assert!(apk_home_background(&path).is_none());
+        let _ = fs::remove_dir_all(directory);
+    }
+}

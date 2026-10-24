@@ -1221,3 +1221,38 @@ fn closing_cleans_adb_even_after_cancellation_and_preserves_saved_address() {
         before.host
     );
 }
+
+#[test]
+fn inactive_launcher_backgrounds_are_read_without_switching_home() {
+    use base64::Engine;
+    let (mut manager, tv) = fixture();
+    connect(&mut manager);
+    let before = manager.snapshot().default_home.clone();
+    let mut layout: serde_json::Value =
+        serde_json::from_str(include_str!("../../../public/layout-v3.json")).unwrap();
+    let image = format!(
+        "data:image/png;base64,{}",
+        base64::engine::general_purpose::STANDARD.encode(b"\x89PNG\r\n\x1a\nfixture")
+    );
+    layout["home"]["scene"]["background"]["image"] = serde_json::json!(image);
+    {
+        let mut tv = tv.lock().unwrap();
+        tv.layout_provider = true;
+        tv.launcher_layout = Some(layout);
+    }
+    let result = manager
+        .execute_launcher(crate::LauncherRequest::GetBackgrounds)
+        .unwrap();
+    assert!(result["backgrounds"]
+        .as_object()
+        .unwrap()
+        .values()
+        .any(|v| v == &image));
+    assert_eq!(manager.snapshot().default_home, before);
+    assert!(!tv
+        .lock()
+        .unwrap()
+        .calls
+        .iter()
+        .any(|args| args.iter().any(|v| v == "set-home-activity")));
+}

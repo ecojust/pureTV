@@ -50,8 +50,9 @@ pub fn tools() -> Vec<Value> {
         tool("get_launcher_covers","Read locally saved, user-provided launcher background images. No TV screenshots.",json!({}),&[],true),
         tool("set_launcher_cover","Set a launcher card background from a local PNG/JPEG/WebP image (max 4 MiB), or remove it when path is omitted. Key is the launcher component.",json!({"key":{"type":"string"},"path":{"type":"string"}}),&["key"],false),
         tool("choose_launcher_json","Open the manager's layout.json file picker and return UTF-8 configuration text; does not apply it.",json!({}),&[],true),
+        tool("get_launcher_backgrounds","Read Home background images for installed supported launchers without activating them. Returns component-keyed images, device serial and user id; no TV screenshots.",json!({}),&[],true),
         tool("get_launcher_layout","Read the CURRENT default launcher's verified layout.json capability, layout and launchable apps with icons. Unsupported launchers remain read-only.",json!({}),&[],true),
-        tool("apply_launcher_layout","Apply a data-only layout.json layout to the current supported launcher, then read it back. Layout is a JSON string; v3 uses shared 960x540 frames, visibility and layers for backgrounds, fixed controls and app cards; legacy v2 is supported for older launchers. Columns 1–6, home 0–24 entries, apps 0–100. No shell, arbitrary intents or remote icon URLs.",json!({"layoutJson":{"type":"string"}}),&["layoutJson"],false),
+        tool("apply_launcher_layout","Apply a data-only layout.json layout to the current supported launcher, then read it back. Layout is a JSON string; v4 defines screen, users, immutable system, independent page backgrounds and navigation. Components use package-style actions, frames and SVG icons. Legacy v2/v3 remain supported. Home supports 0–24 user apps, Apps 0–100. No shell, arbitrary intents or remote icon URLs.",json!({"layoutJson":{"type":"string"}}),&["layoutJson"],false),
         tool("reset_launcher_layout","Remove the supported current launcher's layout.json override and verify defaults. Does not reset wallpaper or other settings.",json!({}),&[],false),
         tool("get_state","Get current TV, apps, launchers and history. Cached state remains available during operations.",json!({}),&[],true),
         tool("get_status","Get operation busy/cancellation state, download progress and latest snapshot.",json!({}),&[],true),
@@ -123,6 +124,7 @@ pub fn launcher_request(
     use puretv_core::LauncherRequest;
     Ok(match name {
         "get_launcher_layout" => Some(LauncherRequest::GetLayout),
+        "get_launcher_backgrounds" => Some(LauncherRequest::GetBackgrounds),
         "apply_launcher_layout" => {
             let text = args["layoutJson"]
                 .as_str()
@@ -431,7 +433,7 @@ mod tests {
         let call = |name: &str, args: Value| Ok(json!({"tool":name,"arguments":args}));
         let response=dispatch(json!({"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26"}}),&call).unwrap();
         assert_eq!(response["result"]["protocolVersion"], "2025-03-26");
-        assert_eq!(tools().len(), 30);
+        assert_eq!(tools().len(), 31);
         for tool in tools() {
             let mut args = json!({});
             for key in tool["inputSchema"]["required"].as_array().unwrap() {

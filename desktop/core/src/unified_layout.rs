@@ -155,7 +155,7 @@ pub(crate) fn validate(d: &Value) -> Result<(), String> {
             .as_object()
             .ok_or("页面缺少导航定义")?;
         if nav.iter().any(|(k, v)| {
-            !["up", "down", "left", "right"].contains(&k.as_str())
+            !["up", "down"].contains(&k.as_str())
                 || !v.as_str().is_some_and(|v| ["home", "apps"].contains(&v))
         }) {
             return Err("页面导航无效".into());

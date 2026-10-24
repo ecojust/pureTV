@@ -1,10 +1,10 @@
-# pureTV Launcher 0.3.4
+# pureTV Launcher 0.3.5
 
 作者：ecojust / 桔子桑。包名 com.ecojust.puretv，沿用 0.2.0 发布证书，可直接升级。
 
-[下载 APK](pureTV-0.3.4.apk?raw=1) · [对应源码](source.tar.gz) · [layout.json 示例](layout.example.json) · [规范与画面对照](../../README.md#layoutjson-规范与画面对照) · [SHA256](SHA256SUMS.txt)
+[下载 APK](pureTV-0.3.5.apk?raw=1) · [对应源码](source.tar.gz) · [layout.json 示例](layout.example.json) · [规范与画面对照](../../README.md#layoutjson-规范与画面对照) · [SHA256](SHA256SUMS.txt)
 
-支持 pureTV 管理器的 layout.json 版本 3 场景接口：home/apps 共用统一坐标规范，背景、时钟、天气、固定按钮和卡片均可调整位置、尺寸、显示与层级。固定按钮保持原有功能；同一 JSON 由电视与管理器画布读取。只允许添加已安装可启动的用户应用，不兼容旧版 apps.json。
+支持 layout.json v4：screen 屏幕基准，Home/Apps 独立 users、只读 system、背景和方向键导航。用户块对应已安装 APK，使用包名 action 与原始 SVG 图标。默认块来自已安装用户应用；可由管理器框选、多选对齐／分散／平铺。系统组件只能查看。两页支持独立背景，Home 按下进入 Apps、Apps 按上返回，由 JSON 配置。
 
 ![首页渲染示例](thumb.png)
 

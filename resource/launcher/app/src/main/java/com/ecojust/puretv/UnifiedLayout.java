@@ -42,7 +42,7 @@ final class UnifiedLayout {
             JSONObject page=d.getJSONObject(section);keys(page,"users","system","background","navigation");if(page.length()!=4)throw new IllegalArgumentException("Invalid page");
             JSONObject background=page.getJSONObject("background");keys(background,"color","image");if(!background.getString("color").matches("#[0-9a-fA-F]{6}"))throw new IllegalArgumentException("Invalid background color");
             if(background.has("image"))validateImage(background.getString("image"));
-            JSONObject navigation=page.getJSONObject("navigation");keys(navigation,"up","down","left","right");Iterator<String> directions=navigation.keys();while(directions.hasNext())if(!Arrays.asList("home","apps").contains(navigation.getString(directions.next())))throw new IllegalArgumentException("Invalid navigation");
+            JSONObject navigation=page.getJSONObject("navigation");keys(navigation,"up","down");Iterator<String> directions=navigation.keys();while(directions.hasNext())if(!Arrays.asList("home","apps").contains(navigation.getString(directions.next())))throw new IllegalArgumentException("Invalid navigation");
             Set<String> ids=new HashSet<>(),packages=new HashSet<>();
             for(String kind:Arrays.asList("users","system")){
                 JSONArray nodes=page.getJSONArray(kind);if(nodes.length()>(kind.equals("system")?32:section.equals("home")?24:100))throw new IllegalArgumentException("Too many components");
@@ -81,7 +81,7 @@ final class UnifiedLayout {
             JSONObject n=source.getJSONArray("system").getJSONObject(i);String id=n.getString("id");
             if(id.equals("background")){background=new JSONObject().put("frame",n.getJSONObject("frame")).put("color",n.getString("backgroundColor")).put("visible",n.getBoolean("visible")).put("zIndex",0);if(n.has("image"))background.put("image",n.getString("image"));}
             else if(id.startsWith("shortcut-")){String action=id.substring(9).replaceFirst("-\\d+$","");items.put(item(n).put("action",action));}
-            else elements.put(new JSONObject().put("id",id).put("frame",n.getJSONObject("frame")).put("visible",n.getBoolean("visible")).put("zIndex",2));
+            else elements.put(new JSONObject().put("id",id).put("frame",n.getJSONObject("frame")).put("visible",n.getBoolean("visible")).put("zIndex",2).put("color",n.getString("color")).put("backgroundColor",n.getString("backgroundColor")).put("text",n.getString("text")));
         }
         for(int i=0;i<source.getJSONArray("users").length();i++){JSONObject n=source.getJSONArray("users").getJSONObject(i);items.put(item(n).put("packageName",n.getString("action")));}
         if(background==null)throw new IllegalArgumentException("Missing system background");return page.put("items",items).put("scene",new JSONObject().put("background",background).put("elements",elements));
@@ -100,6 +100,7 @@ final class UnifiedLayout {
     }
     static JSONObject migrate(JSONObject old,JSONObject template)throws Exception{
         JSONObject result=new JSONObject(template.toString());for(String page:Arrays.asList("home","apps")){
+            JSONObject oldScene=old.getJSONObject(page).optJSONObject("scene");JSONObject oldBackground=oldScene==null?null:oldScene.optJSONObject("background");if(oldBackground!=null){JSONObject bg=result.getJSONObject(page).getJSONObject("background");bg.put("color",oldBackground.optString("color","#101419"));if(oldBackground.has("image"))bg.put("image",oldBackground.getString("image"));}
             JSONArray entries=old.getJSONObject(page).getJSONArray("items");boolean hasCustom=false;for(int i=0;i<entries.length();i++)if(entries.getJSONObject(i).has("packageName"))hasCustom=true;
             if(hasCustom)result.getJSONObject(page).put("users",new JSONArray());JSONArray users=result.getJSONObject(page).getJSONArray("users");
             for(int i=0;i<entries.length();i++){JSONObject e=entries.getJSONObject(i);if(!e.has("packageName"))continue;String label=e.optString("label",e.getString("packageName"));JSONObject f=LayoutScene.frame(e,i,old.getJSONObject(page).optInt("columns",4),entries.length(),page);users.put(new JSONObject().put("id","app-imported-"+i).put("name",label).put("text",label).put("frame",f).put("action",e.getString("packageName")).put("visible",e.optBoolean("visible",true)).put("icon",ICON).put("color","#BFC3C8").put("backgroundColor",e.optString("color","#374959")));}

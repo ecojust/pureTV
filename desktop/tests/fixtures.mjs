@@ -49,6 +49,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         if (command === 'launcher_execute') {
           window.__launcherRequests.push(structuredClone(args.request));
           await new Promise(resolve=>setTimeout(resolve,70));
+          if(args.request.action==='getBackgrounds')return {supported:true,serial:state.device?.serial,userId:state.device?.userId,backgrounds:options.homeBackgrounds || {}};
           if (!options.layoutSupported) return {supported:false,component:state.defaultHome,message:'此启动器尚未接入可验证的布局接口，请使用它自身的设置。'};
           if (args.request.action === 'applyLayout') {launcherLayout=structuredClone(args.request.layout);customLayout=true;}
           if (args.request.action === 'resetLayout') {launcherLayout=structuredClone(defaultLayout);customLayout=false;}

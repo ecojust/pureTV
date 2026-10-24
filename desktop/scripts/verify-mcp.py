@@ -138,7 +138,7 @@ def main():
                 init=client.rpc('initialize',{'protocolVersion':'2025-06-18','capabilities':{},'clientInfo':{'name':'puretv-smoke','version':'1'}})
                 assert init['result']['serverInfo']['name']=='pureTV Manager',init
                 names={t['name'] for t in client.rpc('tools/list')['result']['tools']}
-                assert len(names)==30,names
+                assert len(names)==31,names
                 network=client.call('get_local_network')['localNetwork']
                 assert isinstance(network['addresses'],list)
                 for row in network['addresses']:assert row['interfaceName'] and not row['ip'].startswith('127.') and 0<=row['prefixLength']<=32
@@ -160,6 +160,7 @@ def main():
                 client.call('restore',{'packages':['com.vendor.ads']})
                 apk=root/'example.apk';apk.write_bytes(b'fake APK for simulated ADB')
                 client.call('install',{'paths':[str(apk)]})
+                before_home=client.call('get_state')['defaultHome'];assert isinstance(client.call('get_launcher_backgrounds')['backgrounds'],dict);assert client.call('get_state')['defaultHome']==before_home
                 assert client.call('get_launcher_layout')['supported'] is False
                 client.call('apply_launcher_layout',{'layoutJson':(root/'default-layout.json').read_text()},failure=True)
                 client.call('set_home',{'component':'com.ecojust.puretv/.MainActivity'})

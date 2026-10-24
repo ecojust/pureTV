@@ -310,6 +310,34 @@ impl Manager {
     pub fn execute_launcher(&mut self, request: LauncherRequest) -> Result<Value, String> {
         let device = self.ensure_device(true)?;
         self.read_catalogue(&device)?;
+        if matches!(request, LauncherRequest::GetBackgrounds) {
+            let mut backgrounds = serde_json::Map::new();
+            if self
+                .state
+                .launchers
+                .iter()
+                .any(|l| l.package_name == PACKAGE)
+            {
+                if let Ok(value) = self.layout_provider(&device, "status", None) {
+                    let layout = &value["layout"];
+                    let image = if layout["version"] == 4 {
+                        layout["home"]["background"]["image"].as_str()
+                    } else {
+                        layout["home"]["scene"]["background"]["image"].as_str()
+                    };
+                    if let Some(image) = image {
+                        for launcher in &self.state.launchers {
+                            if launcher.package_name == PACKAGE {
+                                backgrounds.insert(launcher.component.clone(), json!(image));
+                            }
+                        }
+                    }
+                }
+            }
+            return Ok(
+                json!({"supported":true,"serial":device.serial,"userId":device.user_id,"backgrounds":backgrounds}),
+            );
+        }
         let component = self
             .state
             .default_home

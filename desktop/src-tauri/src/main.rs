@@ -190,7 +190,7 @@ async fn choose_launcher_cover(
 #[tauri::command]
 async fn choose_launcher_apks(app: tauri::AppHandle) -> Result<Value, String> {
     tauri::async_runtime::spawn_blocking(move || {
-        Ok(json!(pick_apks(&app)?.into_iter().map(|path|json!({"cover":launcher_covers::sidecar(std::path::Path::new(&path)),"path":path})).collect::<Vec<_>>()))
+        Ok(json!(pick_apks(&app)?.into_iter().map(|path|json!({"cover":launcher_covers::sidecar(std::path::Path::new(&path)),"homeBackground":launcher_covers::apk_home_background(std::path::Path::new(&path)),"path":path})).collect::<Vec<_>>()))
     }).await.map_err(|_|"无法读取启动器 APK".to_string())?
 }
 
@@ -572,7 +572,7 @@ fn mcp_call(
     let snapshot = bridge.snapshot.lock().map_err(|_| "状态不可用")?.clone();
     let _ = app.emit(
         "mcp-operation",
-        json!({"running":false,"tool":name,"snapshot":snapshot,"error":result.as_ref().err(),"launcherResult":if ["get_launcher_layout","apply_launcher_layout","reset_launcher_layout"].contains(&name){result.as_ref().ok()}else{None}}),
+        json!({"running":false,"tool":name,"snapshot":snapshot,"error":result.as_ref().err(),"launcherResult":if ["get_launcher_layout","get_launcher_backgrounds","apply_launcher_layout","reset_launcher_layout"].contains(&name){result.as_ref().ok()}else{None}}),
     );
     drop(guard);
     result

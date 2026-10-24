@@ -83,13 +83,20 @@ final class LayoutScene extends FrameLayout {
         for(int i=0;i<nodes.size();i++){
             View wrapper=nodes.get(i);place(wrapper,specs.get(i),scale,left,top);
             View child=((ViewGroup)wrapper).getChildAt(0);
+            JSONObject spec=specs.get(i);
+            if(spec!=null&&spec.has("backgroundColor"))wrapper.setBackgroundColor(Color.parseColor(spec.optString("backgroundColor")));
+            if(child instanceof TextView&&spec!=null&&spec.has("color"))((TextView)child).setTextColor(Color.parseColor(spec.optString("color")));
+            String component=(String)wrapper.getTag();
+            if(child instanceof TextView&&spec!=null&&spec.has("text")&&!component.equals("clock")&&!component.equals("date")&&!component.equals("network"))((TextView)child).setText(spec.optString("text"));
+            if(child.getId()==R.id.weatherLine&&spec!=null&&spec.has("color"))((TextView)child.findViewById(R.id.weatherText)).setTextColor(Color.parseColor(spec.optString("color")));
             if(child.getId()==R.id.weatherLine){
-                ((TextView)child.findViewById(R.id.weatherText)).setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,13*designWidth/960f*scale);
-                View image=child.findViewById(R.id.weatherIcon);ViewGroup.LayoutParams ip=image.getLayoutParams();int size=Math.round(20*designWidth/960f*scale);if(ip.width!=size || ip.height!=size){ip.width=ip.height=size;image.setLayoutParams(ip);}
+                ((TextView)child.findViewById(R.id.weatherText)).setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,13*basisScale()*scale);
+                View image=child.findViewById(R.id.weatherIcon);ViewGroup.LayoutParams ip=image.getLayoutParams();int size=Math.round(20*basisScale()*scale);if(ip.width!=size || ip.height!=size){ip.width=ip.height=size;image.setLayoutParams(ip);}
             }
-            if(child instanceof TextView){String id=(String)wrapper.getTag();float size=id.equals("clock")?52:id.equals("title")?28:id.equals("allApps")?11:13;((TextView)child).setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,size*designWidth/960f*scale);}
+            if(child instanceof TextView){String id=(String)wrapper.getTag();float size=id.equals("clock")?52:id.equals("title")?28:id.equals("allApps")?11:13;((TextView)child).setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,size*basisScale()*scale);}
         }
     }
+    private float basisScale(){return Math.min(designWidth/960f,designHeight/540f);}
     String navigation(String direction){return navigation.optString(direction,"");}
     boolean edge(int position,boolean down){
         JSONArray items=page.optJSONArray("items");if(position<0||position>=items.length())return true;
@@ -124,8 +131,8 @@ final class LayoutScene extends FrameLayout {
             int w=Math.round(frame.optInt("width")*scale),h=Math.round(frame.optInt("height")*scale);view.setPadding(0,0,0,0);
             View card=view.findViewById(R.id.card);TextView name=view.findViewById(R.id.name);ImageView icon=view.findViewById(R.id.icon);
             FrameLayout.LayoutParams cp=(FrameLayout.LayoutParams)card.getLayoutParams();int cardHeight=Math.max(1,Math.round(h*110f/150));if(cp.width!=w || cp.height!=cardHeight || cp.gravity!=android.view.Gravity.TOP){cp.width=w;cp.height=cardHeight;cp.gravity=android.view.Gravity.TOP;card.setLayoutParams(cp);}
-            FrameLayout.LayoutParams np=(FrameLayout.LayoutParams)name.getLayoutParams();int labelHeight=Math.max(1,Math.round(h*26f/150)),labelTop=Math.round(h*118f/150);if(np.width!=w || np.height!=labelHeight || np.topMargin!=labelTop){np.width=w;np.height=labelHeight;np.topMargin=labelTop;name.setLayoutParams(np);}name.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,Math.min(14*designWidth/960f,h/scale*14f/150)*scale);
-            ViewGroup.LayoutParams ip=icon.getLayoutParams();int iconSize=Math.max(1,Math.round(Math.min(38*designWidth/960f,h/scale*.3f)*scale));if(ip.width!=iconSize || ip.height!=iconSize){ip.width=ip.height=iconSize;icon.setLayoutParams(ip);}
+            FrameLayout.LayoutParams np=(FrameLayout.LayoutParams)name.getLayoutParams();int labelHeight=Math.max(1,Math.round(h*26f/150)),labelTop=Math.round(h*118f/150);if(np.width!=w || np.height!=labelHeight || np.topMargin!=labelTop){np.width=w;np.height=labelHeight;np.topMargin=labelTop;name.setLayoutParams(np);}name.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,Math.min(14*basisScale(),h/scale*14f/150)*scale);
+            ViewGroup.LayoutParams ip=icon.getLayoutParams();int iconSize=Math.max(1,Math.round(Math.min(38*basisScale(),h/scale*.3f)*scale));if(ip.width!=iconSize || ip.height!=iconSize){ip.width=ip.height=iconSize;icon.setLayoutParams(ip);}
             view.measure(MeasureSpec.makeMeasureSpec(w,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(h,MeasureSpec.EXACTLY));view.layout(view.getLeft(),view.getTop(),view.getLeft()+w,view.getTop()+h);
         }
     }

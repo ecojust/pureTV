@@ -25,7 +25,7 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 
 `--mcp` 是当前窗口的代理，不创建第二套电视连接或管理状态。管理器内部仅监听 `127.0.0.1` 的随机端口，每次启动生成随机凭据；代理自动读取受保护的本机会话文件，不需要把令牌放到 Agent 配置。拒绝浏览器 Origin 请求，不允许跨电脑访问。重启窗口后请重新连接 MCP；关闭窗口后调用会明确报错。
 
-## 全部工具（30 个）
+## 全部工具（31 个）
 
 | 工具 | 参数 | 行为 |
 | --- | --- | --- |
@@ -59,6 +59,7 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 
 | 工具 | 参数 | 行为 |
 | --- | --- | --- |
+| `get_launcher_backgrounds` | 无 | 读取已安装且接入布局协议的启动器 Home 背景；无需激活，用作列表默认封面；返回设备序列号、用户和组件到图片的映射 |
 | `get_launcher_layout` | 无 | 检测当前默认启动器，返回支持状态、布局及应用列表／图标 |
 | `apply_launcher_layout` | `layoutJson` | 应用 JSON 文本并读回核对；只允许已成功握手的当前启动器 |
 | `reset_launcher_layout` | 无 | 恢复默认布局并复查 |
@@ -109,3 +110,5 @@ xvfb-run -a python scripts/verify-mcp.py --binary src-tauri/target/x86_64-unknow
 ```
 
 此检查启动真实管理器与 stdio 代理，使用隔离的应用数据目录和模拟 ADB，验证设备操作、部分失败、保护、取消、关闭窗口错误；不连接真实电视。
+
+布局 v4 的 screen/users/system/background/navigation、静态 SVG 和只读系统保护见[完整协议](../../README.md#layoutjson-规范与画面对照)。批量排布可通过修改选定 users 的 frame 后 apply_launcher_layout 完成。get_launcher_covers 返回手动封面，优先级高于 Home 默认背景；get_launcher_backgrounds 读取默认背景但不切换桌面。JSON 最大 90 KiB。

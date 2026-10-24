@@ -130,6 +130,7 @@ pub struct HistoryEntry {
 )]
 pub enum LauncherRequest {
     GetLayout,
+    GetBackgrounds,
     ApplyLayout { layout: serde_json::Value },
     ResetLayout,
 }
