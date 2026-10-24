@@ -553,7 +553,7 @@ try {
   await check('v5 has independent SVG and text colors, transparent systems and compact read-only baseline',async p=>{
     await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();await p.locator('[data-unified-editor]').waitFor();
     assert.equal(await p.locator('[data-u-screen]').count(),0);assert.equal(await p.locator('.unified-toolbar select').count(),0);
-    assert.equal(await p.locator('.layout-inspector [data-u-selection]').count(),1);
+    assert.equal(await p.locator('.layout-inspector [data-u-selection]').count(),1);assert.equal(await p.locator('.unified-editor > .layout-workspace').count(),1);const toolbarBox=await p.locator('.unified-toolbar').boundingBox(),canvasBox=await p.locator('.unified-canvas').boundingBox();assert.ok(canvasBox.y-toolbarBox.y-toolbarBox.height<40,'Canvas follows the compact toolbar without blank space');
     const id=modernLayout.home.users[0].id;await p.locator(`[data-u-node="${id}"]`).click();
     await p.locator('[data-u-field="textColor"]').fill('#112233');await p.locator('[data-u-field="textColor"]').dispatchEvent('change');
     await p.locator('[data-u-field="iconColor"]').fill('#aabbcc');await p.locator('[data-u-field="iconColor"]').dispatchEvent('change');

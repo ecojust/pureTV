@@ -96,6 +96,7 @@ final class UnifiedLayout {
                 JSONObject app=apps.getJSONObject(i);String pkg=app.getString("packageName"),label=app.getString("label");if(label.length()>100){int end=100;if(Character.isHighSurrogate(label.charAt(end-1)))end--;label=label.substring(0,end);}
                 JSONObject frame=LayoutScene.frame(new JSONObject(),i,4,count,page);
                 if(template.optInt("version")==5&&page.equals("home"))frame=new JSONObject().put("x",52+i*216).put("y",282).put("width",200).put("height",176);
+                if(template.optInt("version")==5&&page.equals("apps"))frame.put("y",frame.getInt("y")+36);
                 users.put(new JSONObject().put("id","app-"+i).put("name",label).put("text",label).put("frame",frame).put("action",pkg).put("visible",true).put("icon",SvgIcon.forPackage(pkg)).put("textColor","#263F3B").put("iconColor","#3B7064").put("backgroundColor",new String[]{"#DCE9E2","#E6DEED","#EADFCF","#DCE5EF"}[i%4]));
             }
         }return template;

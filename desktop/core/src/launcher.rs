@@ -7,7 +7,7 @@ const URI: &str = "content://com.ecojust.puretv.layout";
 const LAYOUT_LIMIT: usize = 48 * 1024;
 
 pub(crate) fn validate_layout(layout: &Value) -> Result<(), String> {
-    if (layout["version"] == 4 || layout["version"] == 5) {
+    if layout["version"] == 4 || layout["version"] == 5 {
         return crate::unified_layout::validate(layout);
     }
     let object = layout.as_object().ok_or("layout.json 应为对象")?;
@@ -254,7 +254,7 @@ fn provider_result(output: &str) -> Result<Value, String> {
     if value["version"] != value["layout"]["version"] {
         return Err("启动器布局接口与配置版本不一致".into());
     }
-    if (value["layout"]["version"] == 4 || value["layout"]["version"] == 5) {
+    if value["layout"]["version"] == 4 || value["layout"]["version"] == 5 {
         let baseline = crate::unified_layout::basis(&value)?;
         validate_layout(&baseline)?;
         crate::unified_layout::locked(&value["layout"], &baseline)?;
@@ -327,7 +327,7 @@ impl Manager {
             {
                 if let Ok(value) = self.layout_provider(&device, "status", None) {
                     let layout = &value["layout"];
-                    let image = if (layout["version"] == 4 || layout["version"] == 5) {
+                    let image = if layout["version"] == 4 || layout["version"] == 5 {
                         layout["home"]["background"]["image"].as_str()
                     } else {
                         layout["home"]["scene"]["background"]["image"].as_str()
@@ -380,11 +380,11 @@ impl Manager {
         let (method, arg, expected) = match request {
             LauncherRequest::ApplyLayout { layout } => {
                 validate_layout(&layout)?;
-                if (layout["version"] == 4 || layout["version"] == 5) {
+                if layout["version"] == 4 || layout["version"] == 5 {
                     crate::unified_layout::locked(&layout, &crate::unified_layout::basis(&value)?)?;
                 }
                 for section in ["home", "apps"] {
-                    let unified = (layout["version"] == 4 || layout["version"] == 5);
+                    let unified = layout["version"] == 4 || layout["version"] == 5;
                     for entry in layout[section][if unified { "users" } else { "items" }]
                         .as_array()
                         .unwrap()
