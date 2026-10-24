@@ -26,7 +26,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     }
 
     static final int PLACEHOLDER = 0, APP_STORE = 1, BILIBILI = 2, MUSIC_WEBSITE = 3, FILES = 4, SHORTVIDEO = 5, WEBTV = 6, CUSTOM_APP = 7;
-    static final float FOCUS_SCALE = 1.055f;
+    static final float FOCUS_SCALE = 1.08f;
     static final float DESIGN_W_DP = 190f, DESIGN_H_DP = 94f;
     static boolean reducedMotion;
 
@@ -157,7 +157,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         holder.card.setOnClickListener(v -> launch(entry));
         holder.card.setForeground(context.getDrawable(R.drawable.card_focus));
         if(!entry.svg.isEmpty()) {
-            GradientDrawable outline=new GradientDrawable();outline.setColor(android.graphics.Color.TRANSPARENT);outline.setCornerRadius(8*context.getResources().getDisplayMetrics().density);outline.setStroke(Math.max(1,Math.round(2*context.getResources().getDisplayMetrics().density)),entry.foreground);
+            GradientDrawable outline=new GradientDrawable();outline.setColor(android.graphics.Color.TRANSPARENT);outline.setCornerRadius(8*context.getResources().getDisplayMetrics().density);outline.setStroke(Math.max(1,Math.round(context.getResources().getDisplayMetrics().density)),entry.foreground);
             android.graphics.drawable.StateListDrawable focus=new android.graphics.drawable.StateListDrawable();focus.addState(new int[]{android.R.attr.state_focused},outline);focus.addState(new int[]{},new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));holder.card.setForeground(focus);
             try {
                 android.graphics.drawable.Drawable icon=SvgIcon.drawable(context,entry.svg,entry.iconColor);
@@ -252,6 +252,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
             name = view.findViewById(R.id.name);
             card.setOnFocusChangeListener((v, focused) -> {
                 v.animate().cancel();
+                v.setElevation((focused?12:2)*context.getResources().getDisplayMetrics().density);
                 float scale = focused ? FOCUS_SCALE : 1f;
                 if (reducedMotion) {
                     v.setScaleX(scale);

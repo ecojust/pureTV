@@ -113,6 +113,21 @@ final class LauncherLayout {
     private static LauncherLayout loadOverride(Context ctx,JSONObject source) throws Exception {
         LauncherLayout template=source.optInt("version")==3?defaults(ctx):template(ctx);
         if(source.optInt("version")==3||source.optInt("version")==4)source=UnifiedLayout.migrate(source,template.json);
+        // Upgrade only the recognized 0.1.0 system template; retain every user decision.
+        if(source.optInt("version")==5) {
+            try { UnifiedLayout.locked(source,template.json); }
+            catch(IllegalArgumentException changedTemplate) {
+                JSONObject previous=new JSONObject(new String(read(ctx.getAssets().open("layout-0.1.0.json")),StandardCharsets.UTF_8));
+                new LauncherLayout(source);UnifiedLayout.locked(source,previous);
+                JSONObject updated=new JSONObject(template.json.toString());JSONObject screen=source.getJSONObject("screen");
+                for(String section:Arrays.asList("home","apps")) {
+                    JSONObject target=updated.getJSONObject(section),old=source.getJSONObject(section);
+                    target.put("system",UnifiedLayout.resized(target.getJSONArray("system"),updated.getJSONObject("screen"),screen));
+                    target.put("users",old.getJSONArray("users")).put("background",old.getJSONObject("background")).put("navigation",old.getJSONObject("navigation"));
+                }
+                updated.put("screen",screen);source=updated;
+            }
+        }
         LauncherLayout result=new LauncherLayout(source);
         if((source.optInt("version")==4||source.optInt("version")==5))UnifiedLayout.locked(result.json,template.json);
         return result;

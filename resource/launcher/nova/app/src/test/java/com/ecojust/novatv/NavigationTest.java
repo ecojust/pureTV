@@ -25,6 +25,18 @@ public class NavigationTest {
         shadowOf(android.os.Looper.getMainLooper()).idle();
     }
 
+    @Test public void compactControlCenterKeepsEveryHiddenCommandAccessible() {
+        try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup()) {
+            MainActivity home=controller.get();layout(home);
+            home.findViewById(R.id.btnSettings).performClick();
+            android.app.AlertDialog dialog=org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+            assertNotNull(dialog);assertTrue(dialog.isShowing());assertEquals(5,dialog.getListView().getAdapter().getCount());
+            assertEquals(home.getString(R.string.inputs),dialog.getListView().getAdapter().getItem(2));
+            assertEquals(home.getString(R.string.network),dialog.getListView().getAdapter().getItem(3));
+            org.robolectric.Shadows.shadowOf(dialog).clickOnItem(3);
+            assertEquals(android.provider.Settings.ACTION_WIFI_SETTINGS,shadowOf(home).getNextStartedActivity().getAction());
+        }
+    }
     @Test public void applicationsCardOpensStoreWebsiteWhenNoStoreIsInstalled() {
         try (ActivityController<MainActivity> controller = Robolectric.buildActivity(MainActivity.class).setup()) {
             MainActivity home = controller.get();LegacyTestLayout.install(home,"home");
