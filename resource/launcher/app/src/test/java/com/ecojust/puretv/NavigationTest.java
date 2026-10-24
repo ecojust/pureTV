@@ -27,7 +27,7 @@ public class NavigationTest {
 
     @Test public void applicationsCardOpensStoreWebsiteWhenNoStoreIsInstalled() {
         try (ActivityController<MainActivity> controller = Robolectric.buildActivity(MainActivity.class).setup()) {
-            MainActivity home = controller.get();
+            MainActivity home = controller.get();LegacyTestLayout.install(home,"home");
             layout(home);
             RecyclerView grid = home.findViewById(R.id.grid);
             assertEquals(4, grid.getAdapter().getItemCount());
@@ -42,7 +42,7 @@ public class NavigationTest {
 
     @Test public void musicCardOpensFreeMusicWebsiteInBrowser() {
         try (ActivityController<MainActivity> controller = Robolectric.buildActivity(MainActivity.class).setup()) {
-            MainActivity home = controller.get();
+            MainActivity home = controller.get();LegacyTestLayout.install(home,"home");
             layout(home);
             RecyclerView grid = home.findViewById(R.id.grid);
             LayoutScene.holder(grid,0).itemView.findViewById(R.id.card).performClick();
@@ -55,7 +55,7 @@ public class NavigationTest {
 
     @Test public void musicCardPrefersInstalledNativePlayer() {
         try (ActivityController<MainActivity> controller = Robolectric.buildActivity(MainActivity.class).setup()) {
-            MainActivity home = controller.get();
+            MainActivity home = controller.get();LegacyTestLayout.install(home,"home");
             android.content.pm.ResolveInfo info = new android.content.pm.ResolveInfo();
             info.activityInfo = new android.content.pm.ActivityInfo();
             info.activityInfo.packageName = "com.ecojust.music";
@@ -74,7 +74,7 @@ public class NavigationTest {
 
     @Test public void musicCardExplainsMissingBrowser() {
         try (ActivityController<MainActivity> controller = Robolectric.buildActivity(MainActivity.class).setup()) {
-            MainActivity home = controller.get();
+            MainActivity home = controller.get();LegacyTestLayout.install(home,"home");
             android.content.Context noBrowser = new android.content.ContextWrapper(home) {
                 @Override public void startActivity(Intent intent) {
                     throw new android.content.ActivityNotFoundException("No browser installed");
@@ -91,7 +91,7 @@ public class NavigationTest {
 
     @Test public void applicationPageExplainsMissingShortVideoAndBackFinishes() {
         try (ActivityController<AppsActivity> controller = Robolectric.buildActivity(AppsActivity.class).setup()) {
-            AppsActivity page = controller.get();
+            AppsActivity page = controller.get();LegacyTestLayout.install(page,"apps");
             layout(page);
             RecyclerView grid = page.findViewById(R.id.appsGrid);
             assertEquals(8, grid.getAdapter().getItemCount());
@@ -105,7 +105,7 @@ public class NavigationTest {
 
     @Test public void shortVideoEntryLaunchesInstalledCompanion() {
         try (ActivityController<AppsActivity> controller = Robolectric.buildActivity(AppsActivity.class).setup()) {
-            AppsActivity page = controller.get();
+            AppsActivity page = controller.get();LegacyTestLayout.install(page,"apps");
             android.content.pm.ResolveInfo info = new android.content.pm.ResolveInfo();
             info.activityInfo = new android.content.pm.ActivityInfo();
             info.activityInfo.packageName = "com.ecojust.shortvideo";
@@ -125,7 +125,7 @@ public class NavigationTest {
 
     @Test public void webTvEntryExplainsMissingPackage() {
         try (ActivityController<AppsActivity> controller = Robolectric.buildActivity(AppsActivity.class).setup()) {
-            AppsActivity page = controller.get(); layout(page);
+            AppsActivity page = controller.get();LegacyTestLayout.install(page,"apps"); layout(page);
             RecyclerView grid = page.findViewById(R.id.appsGrid);
             LayoutScene.holder(grid,2).itemView.findViewById(R.id.card).performClick();
             assertEquals(page.getString(R.string.webtv_not_installed), ShadowToast.getTextOfLatestToast());
@@ -135,7 +135,7 @@ public class NavigationTest {
 
     @Test public void webTvEntryLaunchesInstalledCompanion() {
         try (ActivityController<AppsActivity> controller = Robolectric.buildActivity(AppsActivity.class).setup()) {
-            AppsActivity page = controller.get();
+            AppsActivity page = controller.get();LegacyTestLayout.install(page,"apps");
             android.content.pm.ResolveInfo info = new android.content.pm.ResolveInfo();
             info.activityInfo = new android.content.pm.ActivityInfo();
             info.activityInfo.packageName = "com.ecojust.webtv";
@@ -154,7 +154,7 @@ public class NavigationTest {
 
     @Test public void remoteDownOpensAppsAndUpReachesNavigation() {
         try (ActivityController<MainActivity> controller = Robolectric.buildActivity(MainActivity.class).setup()) {
-            MainActivity home = controller.get();
+            MainActivity home = controller.get();LegacyTestLayout.install(home,"home");
             layout(home);
             RecyclerView grid=home.findViewById(R.id.grid);View card=LayoutScene.holder(grid,0).itemView.findViewById(R.id.card);
             assertFalse(home.onTileVerticalKey(0, KeyEvent.KEYCODE_DPAD_UP));
@@ -167,7 +167,7 @@ public class NavigationTest {
 
     @Test public void remoteOnAppsPageCanReachBackAndLastRow() {
         try (ActivityController<AppsActivity> controller = Robolectric.buildActivity(AppsActivity.class).setup()) {
-            AppsActivity page = controller.get();
+            AppsActivity page = controller.get();LegacyTestLayout.install(page,"apps");
             layout(page);
             RecyclerView grid=page.findViewById(R.id.appsGrid);View card=LayoutScene.holder(grid,0).itemView.findViewById(R.id.card);
             assertFalse(page.onTileVerticalKey(0, KeyEvent.KEYCODE_DPAD_UP));View up=card.focusSearch(View.FOCUS_UP);assertNotNull(up);up.requestFocus();

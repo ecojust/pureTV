@@ -447,6 +447,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         int code = event.getKeyCode();
+        if(event.getAction()==KeyEvent.ACTION_DOWN&&adapter!=null&&adapter.getItemCount()==0&&(code==KeyEvent.KEYCODE_DPAD_DOWN||code==KeyEvent.KEYCODE_DPAD_UP)&&navigateLayout(code==KeyEvent.KEYCODE_DPAD_DOWN?"down":"up"))return true;
         // Home while the desk is already in front means "take me back to the top", not "relaunch me".
         // Handling it here rather than in onNewIntent because plenty of paths (a remote that sends a
         // plain KEYCODE_HOME, a shell-injected key) never re-deliver the HOME intent at all.
@@ -1009,7 +1010,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     @Override
     public boolean onTileVerticalKey(int position, int keyCode) {
-        if (layoutScene != null) return false;
+        if (layoutScene != null) {
+            boolean down=keyCode==KeyEvent.KEYCODE_DPAD_DOWN;
+            if(layoutScene.edge(position,down)&&navigateLayout(down?"down":"up"))return true;
+            return false;
+        }
         if (keyCode==KeyEvent.KEYCODE_DPAD_UP) {
             if(position<layoutColumns)findViewById(R.id.btnWallpaper).requestFocus();
             else focusTile(position-layoutColumns);
@@ -1023,6 +1028,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         return true;
     }
 
+    private boolean navigateLayout(String direction){
+        if(layoutScene==null)return false;String page=layoutScene.navigation(direction);
+        if(page.equals("apps")){openAppList();return true;}return false;
+    }
     private void focusTile(int position) {
         CardFocus.request(grid, position);
     }

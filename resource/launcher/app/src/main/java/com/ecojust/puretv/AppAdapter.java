@@ -35,6 +35,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         final int label, icon, color, action, number;
         final String customTitle, packageName;
         final boolean packageIcon;
+        String svg="";int foreground=0xFFBFC3C8;
 
         Entry(String key, int label, int icon, int color, int action, int number) {
             this(key,label,icon,color,action,number,"","",false);
@@ -140,6 +141,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     @Override public void onBindViewHolder(@NonNull Holder holder, int position) {
         Entry entry = entries.get(position);
         String title = entry.title(context);
+        holder.textColor=entry.foreground;
         holder.name.setText(title);
         holder.icon.setImageResource(entry.icon);
         if (entry.packageIcon && !entry.packageName.isEmpty()) {
@@ -153,6 +155,14 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         holder.card.setScaleX(holder.card.isFocused() ? FOCUS_SCALE : 1f);
         holder.card.setScaleY(holder.card.isFocused() ? FOCUS_SCALE : 1f);
         holder.card.setOnClickListener(v -> launch(entry));
+        if(!entry.svg.isEmpty()) {
+            try {
+                com.caverock.androidsvg.SVG svg=com.caverock.androidsvg.SVG.getFromString(entry.svg.replace("currentColor",String.format("#%06X",0xFFFFFF & entry.foreground)));
+                holder.icon.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+                holder.icon.setImageDrawable(new android.graphics.drawable.PictureDrawable(svg.renderToPicture(96,96)));
+            }catch(Exception ignored){holder.icon.setImageDrawable(null);}
+            holder.name.setTextColor(entry.foreground);
+        }
     }
 
     Holder sceneHolder(ViewGroup parent,int position) {
@@ -227,7 +237,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     @Override public long getItemId(int position) { return entries.get(position).key.hashCode(); }
 
     final class Holder extends RecyclerView.ViewHolder {
-        int scenePosition=-1;
+        int scenePosition=-1;int textColor=0xFFBFC3C8;
         final View card;
         final ImageView icon;
         final TextView name;
@@ -247,7 +257,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
                     v.animate().scaleX(scale).scaleY(scale).setDuration(120)
                             .setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
                 }
-                name.setTextColor(focused ? 0xFFF5F5F5 : 0xFFBFC3C8);
+                name.setTextColor(focused ? 0xFFF5F5F5 : textColor);
                 int position = scenePosition>=0?scenePosition:getBindingAdapterPosition();
                 if (focused && listener != null && position != RecyclerView.NO_POSITION) {
                     listener.onTileFocused(position, v);

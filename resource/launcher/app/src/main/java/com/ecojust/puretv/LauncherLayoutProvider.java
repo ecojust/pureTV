@@ -27,7 +27,7 @@ public final class LauncherLayoutProvider extends ContentProvider {
             } else if ("reset".equals(method)) LauncherLayout.reset(getContext());
             else if (!"status".equals(method)) throw new IllegalArgumentException("Unknown layout operation");
             LauncherLayout override=LauncherLayout.override(getContext());
-            JSONObject value=new JSONObject().put("supported",true).put("version",3).put("custom",override!=null)
+            JSONObject value=new JSONObject().put("supported",true).put("version",(override==null?LauncherLayout.defaults(getContext()):override).json.getInt("version")).put("custom",override!=null)
                 .put("layout",(override==null?LauncherLayout.defaults(getContext()):override).json).put("apps",LauncherLayout.installedApps(getContext()));
             Bundle result=new Bundle();result.putString("result",Base64.encodeToString(value.toString().getBytes(StandardCharsets.UTF_8),Base64.NO_WRAP));return result;
         } catch(Exception error) {throw new IllegalArgumentException("Cannot read or apply layout.json: "+error.getMessage(),error);}

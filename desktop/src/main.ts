@@ -1,5 +1,7 @@
 import {t,ui,message,locale,setLocale,setTheme,localeOptions,themeOptions} from './i18n';
 import './styles.css';
+import {UnifiedEditor} from './unified-editor';
+import {validUnified,systemUnchanged} from './unified-layout';
 import {sameSubnet} from './subnet';
 import {validGeometry,validScene,sceneLabels,autoFrame,sceneNode,frameStyle} from './scene';
 import {version as appVersion} from '../package.json';
@@ -77,6 +79,10 @@ const root = document.querySelector<HTMLDivElement>('#app')!;
 const dialog = document.createElement('dialog');
 dialog.className = 'modal'; document.body.append(dialog);
 const layoutDialog=document.createElement('dialog');layoutDialog.className='layout-modal';layoutDialog.setAttribute('aria-label',t('调整启动器布局'));document.body.append(layoutDialog);
+function unifiedDraft():import('./types').UnifiedLayout|null {try{const value=JSON.parse(layoutJson);return validUnified(value)?value:null;}catch{return null;}}
+function forwardLayoutAction(action:string):void {const button=document.createElement('button');button.dataset.act=action;void doAction(button).catch(error=>showNotice(error instanceof Error?error.message:String(error),'error'));}
+const unifiedEditor=new UnifiedEditor(layoutDialog,{json:()=>layoutJson,baseline:()=>launcherLayout?.layout,write:text=>{layoutJson=text;notice='';},render:()=>render(),busy:()=>busy,apps:()=>layoutApps(),notice:text=>showNotice(text,'error'),close:()=>{if(!busy)layoutDialog.close();},apply:()=>forwardLayoutAction('apply-layout'),reset:()=>forwardLayoutAction('reset-layout'),import:()=>forwardLayoutAction('import-layout')});
+
 layoutDialog.addEventListener('close',()=>{if(launcherLayout?.layout)layoutJson=JSON.stringify(launcherLayout.layout,null,2);});
 layoutDialog.addEventListener('cancel',event=>{if(busy)event.preventDefault();});
 const esc = (s: unknown): string => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
@@ -249,6 +255,7 @@ function layoutTargetInfo(entry:import('./types').LayoutEntry):string {
  return ui`<div class="layout-target-info"><span>实际打开目标</span><strong>${esc(name)}</strong><code>${esc(target)}</code><p class="hint">${esc(detail)}</p></div>`;
 }
 function layoutEditor(): string {
+  const unified=unifiedDraft();if(unified)return unifiedEditor.render(unified);
   const draft=draftLayout(), entries=draft?.[layoutSection].items || [], options=layoutApps();
   const selected=entries[layoutSelected];
   const markup=ui`<header class="layout-modal-heading"><div><h2>调整布局</h2><p>拖动卡片调整顺序；home 和 apps 分别保存列数。应用后同步到电视。</p></div>${actionButton('close-layout',t('关闭'),disabled(busy))}</header>${noticeKind==='error' && notice?`<div class="banner notice error" role="status">${esc(message(notice))}</div>`:''}<div class="layout-modal-toolbar"><div class="button-row">${actionButton('layout-home',t('Home · 首页'),disabled(busy),layoutSection==='home'?'primary':'')}${actionButton('layout-apps',t('Apps · 其他应用'),disabled(busy),layoutSection==='apps'?'primary':'')}</div><label>每行列数 <input name="layoutColumns" type="number" min="1" max="6" value="${draft?.[layoutSection].columns || 4}"${disabled(busy)}></label><div class="button-row">${actionButton('import-layout',t('导入 layout.json'),disabled(busy))}${actionButton('reset-layout',t('恢复默认'),disabled(busy))}</div></div><div class="layout-workspace"><div class="tv-canvas-scroll" data-scroll="layout-canvas"><div class="tv-canvas ${layoutSection}" role="group" aria-label="电视布局画布"><div class="tv-canvas-header"><strong>pureTV</strong><span>${layoutSection==='home'?t('Home 首页'):t('Apps 其他应用')}</span><span>12:00</span></div><div class="tv-canvas-grid" style="--columns:${draft?.[layoutSection].columns || 4}">${entries.map((entry,i)=>{
@@ -533,14 +540,14 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
     }
     case 'read-layout': await launcherOperation({action:'getLayout'}); break;
     case 'apply-layout': {
-      const draft=draftLayout();if(!draft || !layoutAvailable()) throw new Error(t('请先读取并编辑受支持启动器的布局'));
-      if(!['home','apps'].every(section=>draft[section as 'home'|'apps'].items.every(entry=>!entry.packageName || layoutApps().some(app=>app.packageName===entry.packageName))))throw new Error(t('只能使用已安装、可启动的用户应用'));
+      const draft=unifiedDraft() || draftLayout();if(!draft || !layoutAvailable()) throw new Error(t('请先读取并编辑受支持启动器的布局'));
+      if(!(draft.version===4?(['home','apps'] as const).every(section=>draft[section].users.every(entry=>layoutApps().some(app=>app.packageName===entry.action))):['home','apps'].every(section=>draft[section as 'home'|'apps'].items.every(entry=>!entry.packageName || layoutApps().some(app=>app.packageName===entry.packageName)))))throw new Error(t('只能使用已安装、可启动的用户应用'));
       if(await confirm(t('应用启动器布局'),t('将 layout.json 写入当前启动器，并复查返回的配置。'),[snapshot.defaultHome || ''],t('应用布局'))) await launcherOperation({action:'applyLayout',layout:draft});
       break;
     }
     case 'reset-layout': if(layoutAvailable() && await confirm(t('恢复默认布局'),t('移除当前启动器的 layout.json 自定义配置，壁纸和其他设置保留。'),[snapshot.defaultHome || ''],t('恢复默认布局'))) await launcherOperation({action:'resetLayout'}); break;
-    case 'import-layout': { const text=await api.chooseLauncherJson();if(text){layoutJson=text; if(!draftLayout()) throw new Error(t('布局文件格式无效')); render();} break; }
-    case 'parse-layout': if(!draftLayout()) throw new Error(t('layout.json 格式无效')); render(); break;
+    case 'import-layout': { const text=await api.chooseLauncherJson();if(text){const previous=layoutJson;layoutJson=text;const unified=unifiedDraft();if(!draftLayout()&&!unified){layoutJson=previous;throw new Error(t('布局文件格式无效'));}if(unified&&validUnified(launcherLayout?.layout)&&!systemUnchanged(unified,launcherLayout.layout)){layoutJson=previous;throw new Error(t('系统组件只读，不能修改属性或位置'));}render();} break; }
+    case 'parse-layout': if(!draftLayout()&&!unifiedDraft()) throw new Error(t('layout.json 格式无效')); render(); break;
     case 'layout-home': layoutSection='home';layoutNode=null;layoutSelected=0;render();break;
     case 'layout-apps': layoutSection='apps';layoutNode=null;layoutSelected=0;render();break;
     case 'layout-up': case 'layout-down': {

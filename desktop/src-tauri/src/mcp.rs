@@ -127,8 +127,8 @@ pub fn launcher_request(
             let text = args["layoutJson"]
                 .as_str()
                 .ok_or("layoutJson 应为 JSON 字符串")?;
-            if text.len() > 48 * 1024 {
-                return Err("layout.json 不能超过 48 KiB".into());
+            if text.len() > 90 * 1024 {
+                return Err("layout.json 不能超过 90 KiB".into());
             }
             Some(LauncherRequest::ApplyLayout {
                 layout: serde_json::from_str(text).map_err(|_| "layout.json 格式无效")?,

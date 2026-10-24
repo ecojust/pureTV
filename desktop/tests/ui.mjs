@@ -479,7 +479,7 @@ try {
     assert.equal(await p.locator('.layout-inspector').evaluate(element=>getComputedStyle(element).overscrollBehaviorY),'none');
     await act(p,'close-layout').click();assert.equal(await p.evaluate(()=>window.__launcherRequests.filter(r=>r.action==='applyLayout').length),0);
   },customHome,{layoutSupported:true});
-  const sceneLayout=JSON.parse(await readFile(new URL('../public/layout.json',import.meta.url),'utf8'));
+  const sceneLayout=JSON.parse(await readFile(new URL('../public/layout-v3.json',import.meta.url),'utf8'));
   await check('scene JSON positions every control and tile, supports geometry, visibility, background and drag',async p=>{
     await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();
     assert.equal(await p.locator('.scene-canvas').count(),1);
@@ -511,6 +511,39 @@ try {
     await act(p,'apply-layout').click();await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='applyLayout'));await settled(p);
     const applied=await p.evaluate(()=>window.__launcherRequests.find(r=>r.action==='applyLayout'));assert.equal(applied.layout.version,3);assert.equal(applied.layout.home.scene.background.color,'#223344');
   },customHome,{layoutSupported:true,layout:sceneLayout});
+  const unifiedLayout=JSON.parse(await readFile(new URL('../public/layout.json',import.meta.url),'utf8'));
+  const rawSvg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M2 2h20v20H2z"/></svg>';
+  const unifiedState=structuredClone(customHome);unifiedState.packages.push({packageName:'com.example.music',label:'Music',installed:true,enabled:true,system:false,protectedReason:null});
+  const unifiedApps=[{packageName:'com.ecojust.webtv',label:'WebTV'},{packageName:'com.ecojust.puretv',label:'pureTV'},{packageName:'com.example.music',label:'Music'}];
+  unifiedLayout.home.users=unifiedApps.map((a,i)=>({id:'user-'+i,name:a.label,text:a.label,action:a.packageName,frame:{x:[48,300,650][i],y:220+i*20,width:160,height:140},visible:true,icon:rawSvg,color:'#EEEEEE',backgroundColor:'#374959'}));
+  await check('v4 uses editable users and immutable system nodes with a top toolbar and raw JSON viewer',async p=>{
+    await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();await p.locator('[data-unified-editor]').waitFor();
+    assert.equal(await p.locator('[name="layoutColumns"]').count(),0);assert.equal(await p.locator('[data-scene-layer]').count(),0);assert.equal(await p.locator('.layout-inspector [data-u-add-app]').count(),0);assert.equal(await p.locator('.unified-toolbar [data-u-add-app]').count(),1);
+    const fixed=p.locator('[data-u-node="clock"]'),before=await fixed.boundingBox();await fixed.click();assert.equal(await p.locator('[data-u-frame="x"]').isDisabled(),true);assert.equal(await p.locator('[data-u-field="icon"]').isDisabled(),true);assert.equal(await p.locator('.layout-inspector input[value="com.ecojust.puretv.clock"]').isDisabled(),true);
+    await p.mouse.move(before.x+before.width/2,before.y+before.height/2);await p.mouse.down();await p.mouse.move(before.x+before.width/2+50,before.y+before.height/2+40,{steps:6});await p.mouse.up();
+    await p.locator('[data-u-act="json"]').click();let draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.deepEqual(draft.home.system,unifiedLayout.home.system);assert.equal(await p.locator('.layout-json-viewer textarea').count(),0);await p.locator('[data-close-json]').click();
+    await p.locator('[data-u-node="user-0"]').click();assert.equal(await p.locator('[data-u-frame="x"]').isDisabled(),false);assert.equal(await p.locator('[data-u-field="icon"]').inputValue(),rawSvg);assert.equal(await p.locator('select[data-u-field="action"]').inputValue(),'com.ecojust.webtv');
+    await p.locator('[data-u-field="text"]').fill('自定义直播');await p.locator('[data-u-field="text"]').dispatchEvent('change');
+    await p.locator('[data-u-screen="width"]').fill('1920');await p.locator('[data-u-screen="width"]').dispatchEvent('change');await p.locator('[data-u-screen="height"]').fill('1080');await p.locator('[data-u-screen="height"]').dispatchEvent('change');
+    await p.locator('[data-u-act="json"]').click();draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.equal(draft.screen.width,1920);assert.equal(draft.home.system.find(n=>n.id==='clock').frame.x,96);assert.equal(draft.home.users[0].frame.x,96);assert.equal(draft.home.users[0].text,'自定义直播');await p.locator('[data-close-json]').click();
+    for(const select of await p.locator('select:visible').all()){const h=await select.evaluate(el=>el.getBoundingClientRect().height);assert.ok(h>=32&&h<=40,'Select controls have a consistent usable height');}
+    await shot(p,'layout-v4-properties-035');
+  },unifiedState,{layoutSupported:true,layout:unifiedLayout,layoutApps:unifiedApps});
+  await check('v4 marquee selects only user blocks and batch alignment/distribution changes only their frames',async p=>{
+    await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();const canvas=p.locator('.unified-canvas');await canvas.waitFor();let rect=await canvas.boundingBox();
+    await p.mouse.move(rect.x+20/960*rect.width,rect.y+195/540*rect.height);await p.mouse.down();await p.mouse.move(rect.x+850/960*rect.width,rect.y+420/540*rect.height,{steps:12});await p.mouse.up();
+    assert.match(await p.locator('.unified-selection-tools').innerText(),/3 个用户组件已选择/);assert.equal(await p.locator('.system-fixed.selected').count(),0);
+    await p.locator('[data-u-arrange="top"]').click();await p.locator('[data-u-arrange="distribute-h"]').click();await p.locator('[data-u-act="json"]').click();let draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.deepEqual(draft.home.system,unifiedLayout.home.system);assert.deepEqual(draft.home.users.map(n=>n.frame.y),[220,220,220]);assert.equal(draft.home.users[1].frame.x,349);await p.locator('[data-close-json]').click();
+    await p.locator('[data-u-arrange="grid"]').click();await p.locator('[data-u-act="json"]').click();draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.ok(draft.home.users.every(n=>n.frame.width>0&&n.frame.x+n.frame.width<=960&&n.frame.y+n.frame.height<=540));await p.locator('[data-close-json]').click();
+    await shot(p,'layout-v4-multiselect-035');await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='applyLayout'));const applied=await p.evaluate(()=>window.__launcherRequests.find(r=>r.action==='applyLayout'));assert.equal(applied.layout.version,4);assert.equal(applied.layout.home.users[0].action,'com.ecojust.webtv');
+  },unifiedState,{layoutSupported:true,layout:unifiedLayout,layoutApps:unifiedApps});
+  await check('v4 backgrounds are independent and never tile on hover; navigation comes from JSON',async p=>{
+    await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();await p.locator('[data-u-act="background"]').click();
+    const png=await p.evaluate(()=>{const original=HTMLCanvasElement.prototype.toDataURL;HTMLCanvasElement.prototype.toDataURL=function(type,quality){return original.call(this,type==='image/webp'?'image/png':type,quality);};window.createImageBitmap=undefined;const canvas=document.createElement('canvas');canvas.width=32;canvas.height=18;const c=canvas.getContext('2d');c.fillStyle='red';c.fillRect(0,0,16,18);c.fillStyle='blue';c.fillRect(16,0,16,18);return canvas.toDataURL('image/png').split(',')[1];});
+    await p.locator('[data-u-bg-file]').setInputFiles({name:'background.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});await p.waitForFunction(()=>document.querySelector('.unified-canvas').style.backgroundImage.includes('data:image/jpeg'));
+    await p.locator('[data-u-navigation="down"]').selectOption('apps');await p.locator('[data-u-bg-act="close"]').click();const canvas=p.locator('.unified-canvas');await canvas.hover();const style=await canvas.evaluate(el=>{const s=getComputedStyle(el);return [s.backgroundSize,s.backgroundRepeat,s.backgroundPosition]});assert.deepEqual(style,['cover','no-repeat','50% 50%']);
+    await p.locator('[data-u-page="apps"]').click();assert.equal(await canvas.evaluate(el=>el.style.backgroundImage),'');await p.locator('[data-u-act="background"]').click();await p.locator('[data-u-bg-color]').fill('#334455');await p.locator('[data-u-bg-color]').dispatchEvent('change');await p.locator('[data-u-bg-act="close"]').click();await p.locator('[data-u-act="json"]').click();const draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.ok(draft.home.background.image.startsWith('data:image/jpeg'));assert.equal(draft.apps.background.color,'#334455');assert.equal(draft.home.navigation.down,'apps');assert.equal(draft.apps.navigation.up,'home');
+  },unifiedState,{layoutSupported:true,layout:unifiedLayout,layoutApps:unifiedApps});
   await check('scan disables competing actions and exposes cancellation', async p => {
     await nav(p,'apps'); await act(p,'scan').click(); await p.locator('.busy-bar').waitFor();
     assert.equal(await act(p,'scan').isDisabled(),true);

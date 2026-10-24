@@ -264,11 +264,11 @@ fn read_launcher_json(path: &std::path::Path) -> Result<String, String> {
     let mut data = Vec::new();
     std::fs::File::open(path)
         .map_err(|_| "无法打开布局文件")?
-        .take(48 * 1024 + 1)
+        .take(90 * 1024 + 1)
         .read_to_end(&mut data)
         .map_err(|_| "无法读取布局文件")?;
-    if data.len() > 48 * 1024 {
-        return Err("layout.json 不能超过 48 KiB".into());
+    if data.len() > 90 * 1024 {
+        return Err("layout.json 不能超过 90 KiB".into());
     }
     String::from_utf8(data).map_err(|_| "layout.json 应使用 UTF-8 编码".into())
 }

@@ -93,7 +93,7 @@ impl Runner for FakeRunner {
                             if !tv.layout_provider {return Ok(Output{code:1,text:"No content provider".into()})}
                             use base64::Engine;
                             let method=&a[a.iter().position(|arg|arg=="--method").unwrap()+1];
-                            let defaults:serde_json::Value=serde_json::from_str(include_str!("../../../../resource/launcher/app/src/main/assets/layout.json")).unwrap();
+                            let defaults:serde_json::Value=serde_json::from_str(include_str!("../../../public/layout-v3.json")).unwrap();
                             if method=="apply" {let arg=&a[a.iter().position(|arg|arg=="--arg").unwrap()+1];tv.launcher_layout=Some(serde_json::from_slice(&base64::engine::general_purpose::STANDARD.decode(arg).unwrap()).unwrap());}
                             else if method=="reset" {tv.launcher_layout=None;}
                             let layout=tv.launcher_layout.clone().unwrap_or(defaults);
@@ -949,10 +949,8 @@ fn launcher_customization_requires_a_verified_current_adapter_and_reads_back_cha
             .unwrap()["supported"],
         false
     );
-    let layout: serde_json::Value = serde_json::from_str(include_str!(
-        "../../../../resource/launcher/app/src/main/assets/layout.json"
-    ))
-    .unwrap();
+    let layout: serde_json::Value =
+        serde_json::from_str(include_str!("../../../public/layout-v3.json")).unwrap();
     assert!(manager
         .execute_launcher(LauncherRequest::ApplyLayout {
             layout: layout.clone()
@@ -1048,10 +1046,8 @@ fn layout_writes_reject_system_disabled_or_missing_user_apps() {
         tv.default = "com.ecojust.puretv/.MainActivity".into();
         tv.layout_provider = true;
     }
-    let mut layout: serde_json::Value = serde_json::from_str(include_str!(
-        "../../../../resource/launcher/app/src/main/assets/layout.json"
-    ))
-    .unwrap();
+    let mut layout: serde_json::Value =
+        serde_json::from_str(include_str!("../../../public/layout-v3.json")).unwrap();
     for package in ["com.vendor.ads", "com.user.app", "com.example.missing"] {
         layout["home"]["items"] = serde_json::json!([{"packageName":package}]);
         assert!(manager
