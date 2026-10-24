@@ -18,10 +18,10 @@ jobs:
           REPOSITORY: ${{ github.repository }}
         run: |
           python - <<'PY'
-          import os, subprocess
+          import os, re, subprocess
           job = os.environ['JOB_ID']
           assert job.isdigit()
-          result = subprocess.run(['gh', 'api', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True)
-          tail = (result.stdout + result.stderr)[-12000:]
+          result = subprocess.run(['gh', 'api', '--allow-escape-sequences', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True)
+          tail = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', result.stdout + result.stderr)[-12000:]
           print('::notice title=Failed job log::' + tail.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
           PY
