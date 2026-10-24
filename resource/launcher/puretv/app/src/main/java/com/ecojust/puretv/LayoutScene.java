@@ -27,6 +27,12 @@ final class LayoutScene extends FrameLayout {
     private final List<AppAdapter.Holder> cards=new ArrayList<>();
     private AppAdapter boundAdapter;
     private JSONObject navigation=new JSONObject();
+    private boolean modern;
+    private final java.util.Map<String,android.graphics.drawable.Drawable> icons=new java.util.HashMap<>();
+    private static android.graphics.drawable.Drawable focusSurface(int color) {
+        android.graphics.drawable.GradientDrawable focused=new android.graphics.drawable.GradientDrawable();focused.setColor((color&0xFFFFFF)|0x16000000);focused.setCornerRadius(14);focused.setStroke(2,color);
+        android.graphics.drawable.StateListDrawable states=new android.graphics.drawable.StateListDrawable();states.addState(new int[]{android.R.attr.state_focused},focused);states.addState(new int[]{android.R.attr.state_pressed},focused);states.addState(new int[]{},new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));return states;
+    }
     private int columns=4,designWidth=960,designHeight=540;
     LayoutScene(Activity activity,FrameLayout root,RecyclerView grid,String section) {
         super(activity);this.activity=activity;this.grid=grid;root.setBackgroundColor(Color.BLACK);
@@ -51,6 +57,13 @@ final class LayoutScene extends FrameLayout {
         this.section=section;navigation=layout.json.optJSONObject(section).optJSONObject("navigation");if(navigation==null)navigation=new JSONObject();designWidth=layout.screenWidth();designHeight=layout.screenHeight();page=layout.page(section);columns=layout.columns(section);specs.clear();
         JSONArray elements=page.optJSONObject("scene").optJSONArray("elements");
         for(View node:nodes){JSONObject match=null;for(int i=0;i<elements.length();i++)if(node.getTag().equals(elements.optJSONObject(i).optString("id")))match=elements.optJSONObject(i);specs.add(match);}
+        modern=layout.json.optInt("version")==5;icons.clear();
+        for(int i=0;i<nodes.size();i++){
+            View child=((ViewGroup)nodes.get(i)).getChildAt(0);JSONObject spec=specs.get(i);if(spec==null)continue;
+            try{android.graphics.drawable.Drawable icon=SvgIcon.drawable(activity,spec.optString("svg"),Color.parseColor(spec.optString("iconColor",spec.optString("color","#62776E"))));if(icon!=null)icons.put((String)nodes.get(i).getTag(),icon);}catch(Exception ignored){/* Metadata validation reports malformed SVG before apply. */}
+            if(modern&&child instanceof TextView){((TextView)child).setSingleLine(true);((TextView)child).setEllipsize(android.text.TextUtils.TruncateAt.END);}
+            if(modern)child.setBackground(child.isFocusable()?focusSurface(Color.parseColor(spec.optString("color","#62776E"))):new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
+        }
         // Background belongs to the scene, including its color, optional embedded image and bounds.
         View previous=findViewWithTag("scene-background");if(previous!=null)removeView(previous);
         JSONObject bg=page.optJSONObject("scene").optJSONObject("background");
@@ -84,16 +97,28 @@ final class LayoutScene extends FrameLayout {
             View wrapper=nodes.get(i);place(wrapper,specs.get(i),scale,left,top);
             View child=((ViewGroup)wrapper).getChildAt(0);
             JSONObject spec=specs.get(i);
-            if(spec!=null&&spec.has("backgroundColor"))wrapper.setBackgroundColor(Color.parseColor(spec.optString("backgroundColor")));
+            if(spec!=null&&spec.has("backgroundColor"))wrapper.setBackgroundColor(UnifiedLayout.color(spec.optString("backgroundColor")));
             if(child instanceof TextView&&spec!=null&&spec.has("color"))((TextView)child).setTextColor(Color.parseColor(spec.optString("color")));
             String component=(String)wrapper.getTag();
+            android.graphics.drawable.Drawable symbol=icons.get(component);
+            if(modern&&child instanceof TextView){
+                TextView text=(TextView)child;text.setCompoundDrawableTintList(null);
+                boolean command=java.util.Arrays.asList("wallpaper","favourites","inputs","network","settings","backHome","allApps").contains(component);
+                int padding=command?Math.round(8*basisScale()*scale):0;if(text.getPaddingLeft()!=padding||text.getPaddingRight()!=padding)text.setPadding(padding,0,padding,0);
+                int iconSize=Math.round(Math.min(22*basisScale(),spec.optJSONObject("frame").optInt("height")*.5f)*scale);
+                boolean resized=symbol!=null&&symbol.getBounds().width()!=iconSize;
+                if(symbol!=null)symbol.setBounds(0,0,iconSize,iconSize);
+                if(text.getCompoundDrawables()[0]!=symbol||resized){text.setCompoundDrawables(symbol,null,null,null);text.setCompoundDrawablePadding(Math.round(7*basisScale()*scale));}
+            }
             if(child instanceof TextView&&spec!=null&&spec.has("text")&&!component.equals("clock")&&!component.equals("date")&&!component.equals("network"))((TextView)child).setText(spec.optString("text"));
             if(child.getId()==R.id.weatherLine&&spec!=null&&spec.has("color"))((TextView)child.findViewById(R.id.weatherText)).setTextColor(Color.parseColor(spec.optString("color")));
             if(child.getId()==R.id.weatherLine){
                 ((TextView)child.findViewById(R.id.weatherText)).setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,13*basisScale()*scale);
-                View image=child.findViewById(R.id.weatherIcon);ViewGroup.LayoutParams ip=image.getLayoutParams();int size=Math.round(20*basisScale()*scale);if(ip.width!=size || ip.height!=size){ip.width=ip.height=size;image.setLayoutParams(ip);}
+                ImageView weatherIcon=child.findViewById(R.id.weatherIcon);
+                if(modern){weatherIcon.setImageTintList(android.content.res.ColorStateList.valueOf(Color.parseColor(spec.optString("iconColor","#4F7465"))));if(symbol!=null)weatherIcon.setImageDrawable(symbol);}
+                View image=weatherIcon;ViewGroup.LayoutParams ip=image.getLayoutParams();int size=Math.round(20*basisScale()*scale);if(ip.width!=size || ip.height!=size){ip.width=ip.height=size;image.setLayoutParams(ip);}
             }
-            if(child instanceof TextView){String id=(String)wrapper.getTag();float size=id.equals("clock")?52:id.equals("title")?28:id.equals("allApps")?11:13;((TextView)child).setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,size*basisScale()*scale);}
+            if(child instanceof TextView){String id=(String)wrapper.getTag();float size=id.equals("clock")?(modern?60:52):id.equals("title")?28:id.equals("allApps")?11:13;((TextView)child).setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,size*basisScale()*scale);}
         }
     }
     private float basisScale(){return Math.min(designWidth/960f,designHeight/540f);}
@@ -132,7 +157,7 @@ final class LayoutScene extends FrameLayout {
             View card=view.findViewById(R.id.card);TextView name=view.findViewById(R.id.name);ImageView icon=view.findViewById(R.id.icon);
             FrameLayout.LayoutParams cp=(FrameLayout.LayoutParams)card.getLayoutParams();int cardHeight=Math.max(1,Math.round(h*110f/150));if(cp.width!=w || cp.height!=cardHeight || cp.gravity!=android.view.Gravity.TOP){cp.width=w;cp.height=cardHeight;cp.gravity=android.view.Gravity.TOP;card.setLayoutParams(cp);}
             FrameLayout.LayoutParams np=(FrameLayout.LayoutParams)name.getLayoutParams();int labelHeight=Math.max(1,Math.round(h*26f/150)),labelTop=Math.round(h*118f/150);if(np.width!=w || np.height!=labelHeight || np.topMargin!=labelTop){np.width=w;np.height=labelHeight;np.topMargin=labelTop;name.setLayoutParams(np);}name.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,Math.min(14*basisScale(),h/scale*14f/150)*scale);
-            ViewGroup.LayoutParams ip=icon.getLayoutParams();int iconSize=Math.max(1,Math.round(Math.min(38*basisScale(),h/scale*.3f)*scale));if(ip.width!=iconSize || ip.height!=iconSize){ip.width=ip.height=iconSize;icon.setLayoutParams(ip);}
+            ViewGroup.LayoutParams ip=icon.getLayoutParams();int iconSize=Math.max(1,Math.round(Math.min(modern?52*basisScale():38*basisScale(),h/scale*.3f)*scale));if(ip.width!=iconSize || ip.height!=iconSize){ip.width=ip.height=iconSize;icon.setLayoutParams(ip);}
             view.measure(MeasureSpec.makeMeasureSpec(w,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(h,MeasureSpec.EXACTLY));view.layout(view.getLeft(),view.getTop(),view.getLeft()+w,view.getTop()+h);
         }
     }

@@ -11,6 +11,18 @@ const FIELDS: [&str; 9] = [
     "color",
     "backgroundColor",
 ];
+const FIELDS5: [&str; 10] = [
+    "id",
+    "name",
+    "frame",
+    "action",
+    "text",
+    "visible",
+    "icon",
+    "textColor",
+    "iconColor",
+    "backgroundColor",
+];
 pub(crate) fn svg(text: &str) -> Result<(), String> {
     if text.len() > 8192 {
         return Err("SVG 图标超过 8 KiB".into());
@@ -95,7 +107,7 @@ pub(crate) fn validate(d: &Value) -> Result<(), String> {
         || root
             .keys()
             .any(|k| !["version", "screen", "home", "apps"].contains(&k.as_str()))
-        || d["version"] != 4
+        || (d["version"] != 4 && d["version"] != 5)
         || d.to_string().len() > 90 * 1024
     {
         return Err("layout.json 版本或大小无效".into());
@@ -177,8 +189,9 @@ pub(crate) fn validate(d: &Value) -> Result<(), String> {
             }
             for n in nodes {
                 let fields = n.as_object().ok_or("组件应为对象")?;
-                if fields.len() != FIELDS.len()
-                    || fields.keys().any(|k| !FIELDS.contains(&k.as_str()))
+                let allowed: &[&str] = if d["version"] == 5 { &FIELDS5 } else { &FIELDS };
+                if fields.len() != allowed.len()
+                    || fields.keys().any(|k| !allowed.contains(&k.as_str()))
                 {
                     return Err("组件字段无效".into());
                 }
@@ -207,8 +220,16 @@ pub(crate) fn validate(d: &Value) -> Result<(), String> {
                 if !n["visible"].is_boolean() {
                     return Err("组件显示状态无效".into());
                 }
-                for key in ["color", "backgroundColor"] {
-                    let c = n[key].as_str().ok_or("组件颜色无效")?;
+                let colors: &[&str] = if d["version"] == 5 {
+                    &["textColor", "iconColor", "backgroundColor"]
+                } else {
+                    &["color", "backgroundColor"]
+                };
+                for key in colors {
+                    if *key == "backgroundColor" && d["version"] == 5 && n[*key] == "transparent" {
+                        continue;
+                    }
+                    let c = n[*key].as_str().ok_or("组件颜色无效")?;
                     if c.len() != 7
                         || !c.starts_with('#')
                         || !c[1..].bytes().all(|b| b.is_ascii_hexdigit())
@@ -256,7 +277,7 @@ pub(crate) fn basis(result: &Value) -> Result<Value, String> {
     Ok(layout)
 }
 pub(crate) fn locked(next: &Value, current: &Value) -> Result<(), String> {
-    if next["version"] != 4 || current["version"] != 4 {
+    if ![json!(4), json!(5)].contains(&next["version"]) || next["version"] != current["version"] {
         return Err("请先读取新版启动器布局".into());
     }
     for page in ["home", "apps"] {
@@ -289,7 +310,25 @@ pub(crate) fn locked(next: &Value, current: &Value) -> Result<(), String> {
 mod tests {
     use super::*;
     fn sample() -> Value {
-        serde_json::from_str(include_str!("../../public/layout.json")).unwrap()
+        serde_json::from_str(include_str!("../../public/layout-v4.json")).unwrap()
+    }
+    #[test]
+    fn v5_separates_icon_text_and_transparent_backgrounds() {
+        let mut d: Value = serde_json::from_str(include_str!("../../public/layout.json")).unwrap();
+        validate(&d).unwrap();
+        locked(&d, &d).unwrap();
+        let mut changed = d.clone();
+        changed["home"]["system"][0]["textColor"] = json!("#FFFFFF");
+        assert!(locked(&changed, &d).is_err());
+        let mut n = user();
+        n.as_object_mut().unwrap().remove("color");
+        n["textColor"] = json!("#112233");
+        n["iconColor"] = json!("#ABCDEF");
+        n["backgroundColor"] = json!("transparent");
+        d["home"]["users"] = json!([n]);
+        validate(&d).unwrap();
+        d["home"]["users"][0]["iconColor"] = json!("transparent");
+        assert!(validate(&d).is_err());
     }
     fn user() -> Value {
         json!({"id":"app-user","name":"电视应用","text":"打开电视应用","action":"com.example.tv","frame":{"x":40,"y":220,"width":200,"height":150},"visible":true,"icon":"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0L24 24\"/></svg>","color":"#FFFFFF","backgroundColor":"#123456"})

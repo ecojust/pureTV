@@ -81,7 +81,7 @@ function acceptLauncherResult(value: LauncherLayoutInfo): void {
   if (value.layout) {
     layoutJson = JSON.stringify(value.layout, null, 2);
     const key=launcherTarget(value.serial ?? snapshot.device?.serial,value.userId ?? snapshot.device?.userId,value.component || snapshot.defaultHome);
-    const layout=value.layout;const image=layout.version===4?layout.home.background.image:layout.version===3?layout.home.scene?.background.image:undefined;
+    const layout=value.layout;const image=(layout.version===4||layout.version===5)?layout.home.background.image:layout.version===3?layout.home.scene?.background.image:undefined;
     if(image)homeBackgrounds.set(key,image);else homeBackgrounds.delete(key);
   }
 }
@@ -91,7 +91,7 @@ dialog.className = 'modal'; document.body.append(dialog);
 const layoutDialog=document.createElement('dialog');layoutDialog.className='layout-modal';layoutDialog.setAttribute('aria-label',t('调整启动器布局'));document.body.append(layoutDialog);
 function unifiedDraft():import('./types').UnifiedLayout|null {try{const value=JSON.parse(layoutJson);return validUnified(value)?value:null;}catch{return null;}}
 function systemBaseline():unknown {
- const layout=launcherLayout?.layout,basis=launcherLayout?.systemBasis;if(!layout||layout.version!==4||!basis)return layout;
+ const layout=launcherLayout?.layout,basis=launcherLayout?.systemBasis;if(!layout||!(layout.version===4||layout.version===5)||!basis)return layout;
  return {...layout,screen:basis.screen,home:{...layout.home,users:[],system:basis.home},apps:{...layout.apps,users:[],system:basis.apps}};
 }
 function forwardLayoutAction(action:string):void {const button=document.createElement('button');button.dataset.act=action;void doAction(button).catch(error=>showNotice(error instanceof Error?error.message:String(error),'error'));}
@@ -557,7 +557,7 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
     case 'read-layout': await launcherOperation({action:'getLayout'}); break;
     case 'apply-layout': {
       const draft=unifiedDraft() || draftLayout();if(!draft || !layoutAvailable()) throw new Error(t('请先读取并编辑受支持启动器的布局'));
-      if(!(draft.version===4?(['home','apps'] as const).every(section=>draft[section].users.every(entry=>layoutApps().some(app=>app.packageName===entry.action))):['home','apps'].every(section=>draft[section as 'home'|'apps'].items.every(entry=>!entry.packageName || layoutApps().some(app=>app.packageName===entry.packageName)))))throw new Error(t('只能使用已安装、可启动的用户应用'));
+      if(!((draft.version===4||draft.version===5)?(['home','apps'] as const).every(section=>draft[section].users.every(entry=>layoutApps().some(app=>app.packageName===entry.action))):['home','apps'].every(section=>(draft as LauncherLayout)[section as 'home'|'apps'].items.every(entry=>!entry.packageName || layoutApps().some(app=>app.packageName===entry.packageName)))))throw new Error(t('只能使用已安装、可启动的用户应用'));
       if(await confirm(t('应用启动器布局'),t('将 layout.json 写入当前启动器，并复查返回的配置。'),[snapshot.defaultHome || ''],t('应用布局'))) await launcherOperation({action:'applyLayout',layout:draft});
       break;
     }

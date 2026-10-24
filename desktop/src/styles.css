@@ -1553,3 +1553,18 @@ select { box-sizing:border-box; height:38px; min-height:38px; line-height:normal
 .unified-clock,.unified-title {align-items:flex-start;line-height:1.1;}
 .unified-toolbar>label {display:flex;align-items:center;gap:8px;min-width:0;}
 .unified-toolbar>label select {max-width:280px;min-width:150px;}
+
+/* Compact editor actions; launcher coordinate baseline is informational. */
+.unified-toolbar button {min-height:30px;padding:4px 9px;font-size:12px;}
+.unified-toolbar .screen-baseline {font-size:12px;padding:5px 9px;border:1px solid var(--line);border-radius:6px;}
+.unified-toolbar .screen-baseline strong {font-variant-numeric:tabular-nums;font-weight:500;}
+.unified-selection-tools button {min-height:28px;padding:3px 7px;font-size:11px;}
+.unified-element .unified-icon svg {color:var(--u-icon-color,currentColor);}
+
+.layout-inspector .component-visibility-switch {display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;margin:0;}
+.layout-inspector .component-visibility-switch input {appearance:none;position:relative;width:36px;min-width:36px;height:21px;min-height:21px;flex:0 0 36px;padding:0;margin:0;border:0;border-radius:999px;background:#a4aca8;cursor:pointer;transition:background .15s;}
+.component-visibility-switch input::after {content:'';position:absolute;width:15px;height:15px;left:3px;top:3px;border-radius:50%;background:white;box-shadow:0 1px 3px #0002;transition:transform .15s;}
+.layout-inspector .component-visibility-switch input:checked {background:var(--accent,#087f68);}
+.component-visibility-switch input:checked::after {transform:translateX(15px);}
+.layout-inspector .component-visibility-switch input:disabled {cursor:default;opacity:.5;}
+.component-visibility-switch input:focus-visible {outline:2px solid var(--accent,#087f68);outline-offset:3px;}

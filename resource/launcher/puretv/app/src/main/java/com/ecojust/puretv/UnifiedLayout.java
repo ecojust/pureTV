@@ -35,8 +35,9 @@ final class UnifiedLayout {
         com.caverock.androidsvg.SVG.getFromString(text);
     }
     private static int integer(JSONObject value,String key,int min,int max)throws Exception{Object n=value.get(key);if(!(n instanceof Integer)||value.getInt(key)<min||value.getInt(key)>max)throw new IllegalArgumentException("Invalid "+key);return value.getInt(key);}
+    static int color(String value){return "transparent".equals(value)?android.graphics.Color.TRANSPARENT:android.graphics.Color.parseColor(value);}
     static void validate(JSONObject d)throws Exception{
-        keys(d,"version","screen","home","apps");if(d.length()!=4||!(d.opt("version") instanceof Integer)||d.getInt("version")!=4||d.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length>LauncherLayout.LIMIT)throw new IllegalArgumentException("Invalid layout v4");
+        keys(d,"version","screen","home","apps");if(d.length()!=4||!(d.opt("version") instanceof Integer)||(d.getInt("version")!=4&&d.getInt("version")!=5)||d.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length>LauncherLayout.LIMIT)throw new IllegalArgumentException("Invalid unified layout");
         JSONObject screen=d.getJSONObject("screen");keys(screen,"width","height");if(screen.length()!=2)throw new IllegalArgumentException("Invalid screen");int width=integer(screen,"width",320,7680),height=integer(screen,"height",320,7680);
         for(String section:Arrays.asList("home","apps")){
             JSONObject page=d.getJSONObject(section);keys(page,"users","system","background","navigation");if(page.length()!=4)throw new IllegalArgumentException("Invalid page");
@@ -47,13 +48,13 @@ final class UnifiedLayout {
             for(String kind:Arrays.asList("users","system")){
                 JSONArray nodes=page.getJSONArray(kind);if(nodes.length()>(kind.equals("system")?32:section.equals("home")?24:100))throw new IllegalArgumentException("Too many components");
                 for(int i=0;i<nodes.length();i++){
-                    JSONObject n=nodes.getJSONObject(i);keys(n,"id","name","frame","action","text","visible","icon","color","backgroundColor");
+                    JSONObject n=nodes.getJSONObject(i);if(d.getInt("version")==5)keys(n,"id","name","frame","action","text","visible","icon","textColor","iconColor","backgroundColor");else keys(n,"id","name","frame","action","text","visible","icon","color","backgroundColor");
                     String id=n.getString("id");if(!(n.get("id") instanceof String)||!id.matches("[-A-Za-z0-9_]{1,100}")||!ids.add(id))throw new IllegalArgumentException("Invalid component id");
-                    if(n.length()!=9)throw new IllegalArgumentException("Missing component fields");
+                    if(n.length()!=(d.getInt("version")==5?10:9))throw new IllegalArgumentException("Missing component fields");
                     for(String key:Arrays.asList("name","text"))if(!(n.get(key) instanceof String)||n.getString(key).length()>100)throw new IllegalArgumentException("Invalid component text");
                     String action=n.getString("action");if(!LauncherLayout.validPackage(action)||kind.equals("users")&&!packages.add(action))throw new IllegalArgumentException("Invalid component action");
                     if(!(n.get("visible") instanceof Boolean))throw new IllegalArgumentException("Invalid visibility");
-                    for(String key:Arrays.asList("color","backgroundColor"))if(!n.getString(key).matches("#[0-9a-fA-F]{6}"))throw new IllegalArgumentException("Invalid component color");
+                    for(String key:d.getInt("version")==5?Arrays.asList("textColor","iconColor","backgroundColor"):Arrays.asList("color","backgroundColor"))if(!(d.getInt("version")==5&&key.equals("backgroundColor")&&n.getString(key).equals("transparent"))&&!n.getString(key).matches("#[0-9a-fA-F]{6}"))throw new IllegalArgumentException("Invalid component color");
                     svg(n.getString("icon"));JSONObject f=n.getJSONObject("frame");keys(f,"x","y","width","height");if(f.length()!=4)throw new IllegalArgumentException("Invalid frame");int x=integer(f,"x",0,width),y=integer(f,"y",0,height),w=integer(f,"width",1,width),h=integer(f,"height",1,height);if(w>width-x||h>height-y)throw new IllegalArgumentException("Component outside screen");
 
                 }
@@ -81,12 +82,12 @@ final class UnifiedLayout {
             JSONObject n=source.getJSONArray("system").getJSONObject(i);String id=n.getString("id");
             if(id.equals("background")){background=new JSONObject().put("frame",n.getJSONObject("frame")).put("color",n.getString("backgroundColor")).put("visible",n.getBoolean("visible")).put("zIndex",0);if(n.has("image"))background.put("image",n.getString("image"));}
             else if(id.startsWith("shortcut-")){String action=id.substring(9).replaceFirst("-\\d+$","");items.put(item(n).put("action",action));}
-            else elements.put(new JSONObject().put("id",id).put("frame",n.getJSONObject("frame")).put("visible",n.getBoolean("visible")).put("zIndex",2).put("color",n.getString("color")).put("backgroundColor",n.getString("backgroundColor")).put("text",n.getString("text")));
+            else elements.put(new JSONObject().put("id",id).put("frame",n.getJSONObject("frame")).put("visible",n.getBoolean("visible")).put("zIndex",2).put("color",n.optString("textColor",n.optString("color","#243E3A"))).put("backgroundColor",n.getString("backgroundColor")).put("text",n.getString("text")).put("svg",n.getString("icon")).put("iconColor",n.optString("iconColor",n.optString("color","#243E3A"))));
         }
         for(int i=0;i<source.getJSONArray("users").length();i++){JSONObject n=source.getJSONArray("users").getJSONObject(i);items.put(item(n).put("packageName",n.getString("action")));}
         if(background==null)throw new IllegalArgumentException("Missing system background");return page.put("items",items).put("scene",new JSONObject().put("background",background).put("elements",elements));
     }
-    private static JSONObject item(JSONObject n)throws Exception{return new JSONObject().put("label",n.getString("text")).put("frame",n.getJSONObject("frame")).put("visible",n.getBoolean("visible")).put("color",n.getString("backgroundColor")).put("foreground",n.getString("color")).put("svg",n.getString("icon")).put("zIndex",1);}
+    private static JSONObject item(JSONObject n)throws Exception{return new JSONObject().put("label",n.getString("text")).put("frame",n.getJSONObject("frame")).put("visible",n.getBoolean("visible")).put("color",n.getString("backgroundColor")).put("foreground",n.optString("textColor",n.optString("color","#243E3A"))).put("svg",n.getString("icon")).put("iconColor",n.optString("iconColor",n.optString("color","#243E3A"))).put("zIndex",1);}
     static JSONObject withInstalled(Context ctx,JSONObject template)throws Exception{
         JSONArray apps=LauncherLayout.installedApps(ctx);int homeCount=Math.min(4,apps.length());
         for(String page:Arrays.asList("home","apps")){
@@ -94,16 +95,30 @@ final class UnifiedLayout {
             for(int i=0;i<count;i++){
                 JSONObject app=apps.getJSONObject(i);String pkg=app.getString("packageName"),label=app.getString("label");if(label.length()>100){int end=100;if(Character.isHighSurrogate(label.charAt(end-1)))end--;label=label.substring(0,end);}
                 JSONObject frame=LayoutScene.frame(new JSONObject(),i,4,count,page);
-                users.put(new JSONObject().put("id","app-"+i).put("name",label).put("text",label).put("frame",frame).put("action",pkg).put("visible",true).put("icon",ICON).put("color","#BFC3C8").put("backgroundColor","#374959"));
+                if(template.optInt("version")==5&&page.equals("home"))frame=new JSONObject().put("x",52+i*216).put("y",282).put("width",200).put("height",176);
+                if(template.optInt("version")==5&&page.equals("apps"))frame.put("y",frame.getInt("y")+36);
+                users.put(new JSONObject().put("id","app-"+i).put("name",label).put("text",label).put("frame",frame).put("action",pkg).put("visible",true).put("icon",SvgIcon.forPackage(pkg)).put("textColor","#263F3B").put("iconColor","#3B7064").put("backgroundColor",new String[]{"#DCE9E2","#E6DEED","#EADFCF","#DCE5EF"}[i%4]));
             }
         }return template;
     }
     static JSONObject migrate(JSONObject old,JSONObject template)throws Exception{
-        JSONObject result=new JSONObject(template.toString());for(String page:Arrays.asList("home","apps")){
+        JSONObject result=new JSONObject(template.toString());
+        if(old.optInt("version")==4){
+            JSONObject screen=old.getJSONObject("screen");
+            for(String page:Arrays.asList("home","apps")){
+                JSONObject target=result.getJSONObject(page),source=old.getJSONObject(page);
+                target.put("system",resized(target.getJSONArray("system"),result.getJSONObject("screen"),screen));
+                JSONArray users=new JSONArray(source.getJSONArray("users").toString());
+                for(int i=0;i<users.length();i++){JSONObject n=users.getJSONObject(i);String color=n.getString("color");n.remove("color");n.put("textColor",color).put("iconColor",color);}
+                target.put("users",users).put("background",source.getJSONObject("background")).put("navigation",source.getJSONObject("navigation"));
+            }
+            result.put("screen",screen);return result;
+        }
+        for(String page:Arrays.asList("home","apps")){
             JSONObject oldScene=old.getJSONObject(page).optJSONObject("scene");JSONObject oldBackground=oldScene==null?null:oldScene.optJSONObject("background");if(oldBackground!=null){JSONObject bg=result.getJSONObject(page).getJSONObject("background");bg.put("color",oldBackground.optString("color","#101419"));if(oldBackground.has("image"))bg.put("image",oldBackground.getString("image"));}
             JSONArray entries=old.getJSONObject(page).getJSONArray("items");boolean hasCustom=false;for(int i=0;i<entries.length();i++)if(entries.getJSONObject(i).has("packageName"))hasCustom=true;
             if(hasCustom)result.getJSONObject(page).put("users",new JSONArray());JSONArray users=result.getJSONObject(page).getJSONArray("users");
-            for(int i=0;i<entries.length();i++){JSONObject e=entries.getJSONObject(i);if(!e.has("packageName"))continue;String label=e.optString("label",e.getString("packageName"));JSONObject f=LayoutScene.frame(e,i,old.getJSONObject(page).optInt("columns",4),entries.length(),page);users.put(new JSONObject().put("id","app-imported-"+i).put("name",label).put("text",label).put("frame",f).put("action",e.getString("packageName")).put("visible",e.optBoolean("visible",true)).put("icon",ICON).put("color","#BFC3C8").put("backgroundColor",e.optString("color","#374959")));}
+            for(int i=0;i<entries.length();i++){JSONObject e=entries.getJSONObject(i);if(!e.has("packageName"))continue;String label=e.optString("label",e.getString("packageName"));JSONObject f=LayoutScene.frame(e,i,old.getJSONObject(page).optInt("columns",4),entries.length(),page);users.put(new JSONObject().put("id","app-imported-"+i).put("name",label).put("text",label).put("frame",f).put("action",e.getString("packageName")).put("visible",e.optBoolean("visible",true)).put("icon",ICON).put("textColor","#BFC3C8").put("iconColor","#BFC3C8").put("backgroundColor",e.optString("color","#374959")));}
         }return result;
     }
 }

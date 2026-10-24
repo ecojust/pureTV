@@ -1,8 +1,8 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.3.5** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.3.6** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.3.5 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.5)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.3.6 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.6)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
 ## 功能
 
@@ -23,14 +23,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.3.5 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.5) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.3.6 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.6) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.3.5-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.3.6-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.3.5-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.3.6-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -76,7 +76,7 @@
 
 ## 当前启动器的自定义布局
 
-只有当前默认启动器成功返回已适配的布局接口时才显示编辑器。当前适配电视端 **pureTV 0.3.5，包名 `com.ecojust.puretv`**；旧版 `com.ecojust.cleanyourtv` 及未适配的其他启动器不可直接写入。包名变化需要安装新 APK 并重新选择默认桌面。
+只有当前默认启动器成功返回已适配的布局接口时才显示编辑器。当前适配电视端 **pureTV 0.3.6，包名 `com.ecojust.puretv`**；旧版 `com.ecojust.cleanyourtv` 及未适配的其他启动器不可直接写入。包名变化需要安装新 APK 并重新选择默认桌面。
 
 在当前默认启动器卡片点击「调整布局」，打开电视画布弹窗。Home 与 Apps 分别定义列数和卡片顺序，支持拖动、名称、图标、颜色及 layout.json 导入。只能添加已安装可启动的用户应用，应用后读回复查。旧版 apps.json 不兼容。详情：[启动器布局文档](docs/launcher-layout.md)。
 
@@ -121,7 +121,7 @@ xvfb-run -a python scripts/verify-mcp.py --binary src-tauri/target/x86_64-unknow
 
 协议与实现约束：[CONTRACT.md](CONTRACT.md)。许可：[LICENSE](../LICENSE) 与 [NOTICE.md](../NOTICE.md)。
 
-## 0.3.5 连接与退出行为
+## 0.3.6 连接与退出行为
 
 本版本以 0.3.2 为基础，保留原有 ADB 连接流程。连接前读取本机所有 IPv4 网卡的实际子网前缀；电视与所有网卡均不在同一网段时弹窗提醒，可选择继续连接（例如已有跨网段路由或 VPN）。无法获取地址时不阻止连接。
 
@@ -129,4 +129,4 @@ xvfb-run -a python scripts/verify-mcp.py --binary src-tauri/target/x86_64-unknow
 
 布局编辑器选中卡片后显示实际打开的应用、包名或内置功能，可从已安装且可启动的用户应用中更换目标。自定义显示名称不会改变真实目标。切换默认启动器通常无需重启电视，按遥控器 Home 键进入即可。
 
-所有页面、列表与布局弹窗关闭滚动回弹，采用统一细圆角滚动条。新版启动器使用 layout.json 版本 4，使用可配置 screen 基准和 users/system 组件，系统只读，用户块支持 SVG 与多选排布，电视与管理器共用布局；详见[场景规范](docs/launcher-layout.md)。
+所有页面、列表与布局弹窗关闭滚动回弹，采用统一细圆角滚动条。新版启动器使用 layout.json 版本 5，显示只读 screen 基准和 users/system 组件，系统只读，用户块支持 SVG 与多选排布，电视与管理器共用布局；详见[场景规范](docs/launcher-layout.md)。

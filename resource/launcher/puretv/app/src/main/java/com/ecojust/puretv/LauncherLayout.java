@@ -29,7 +29,7 @@ final class LauncherLayout {
     final JSONObject json;
     int columns(String section) { return json.optJSONObject(section).optInt("columns",4); }
     LauncherLayout(JSONObject source) throws Exception {
-        if(source.optInt("version")==4){UnifiedLayout.validate(source);json=new JSONObject(source.toString());return;}
+        if((source.optInt("version")==4||source.optInt("version")==5)){UnifiedLayout.validate(source);json=new JSONObject(source.toString());return;}
         keys(source, "version", "home", "apps");
         if (!(source.opt("version") instanceof Integer) || source.getInt("version") != 3)
             throw new IllegalArgumentException("Unsupported layout.json version");
@@ -89,9 +89,9 @@ final class LauncherLayout {
         List<String> allowed=section.equals("home")?Arrays.asList("clock","date","weather","wallpaper","favourites","inputs","network","settings","allApps"):Arrays.asList("title","subtitle","backHome");
         for(int i=0;i<elements.length();i++) {JSONObject node=elements.getJSONObject(i);keys(node,"id","frame","visible","zIndex");String id=node.getString("id");if(!allowed.contains(id)||!seen.add(id)||!node.has("frame"))throw new IllegalArgumentException("Invalid scene element");geometry(node);}
     }
-    int screenWidth(){return json.optInt("version")==4?json.optJSONObject("screen").optInt("width"):960;}
-    int screenHeight(){return json.optInt("version")==4?json.optJSONObject("screen").optInt("height"):540;}
-    JSONObject page(String section) {try{return json.optInt("version")==4?UnifiedLayout.page(json,section):json.optJSONObject(section);}catch(Exception e){throw new IllegalStateException(e);}}
+    int screenWidth(){return (json.optInt("version")==4||json.optInt("version")==5)?json.optJSONObject("screen").optInt("width"):960;}
+    int screenHeight(){return (json.optInt("version")==4||json.optInt("version")==5)?json.optJSONObject("screen").optInt("height"):540;}
+    JSONObject page(String section) {try{return (json.optInt("version")==4||json.optInt("version")==5)?UnifiedLayout.page(json,section):json.optJSONObject(section);}catch(Exception e){throw new IllegalStateException(e);}}
     private static byte[] read(InputStream input) throws Exception {
         try (InputStream stream = input; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             byte[] bytes = new byte[4096]; int count;
@@ -112,9 +112,9 @@ final class LauncherLayout {
     }
     private static LauncherLayout loadOverride(Context ctx,JSONObject source) throws Exception {
         LauncherLayout template=source.optInt("version")==3?defaults(ctx):template(ctx);
-        if(source.optInt("version")==3)source=UnifiedLayout.migrate(source,template.json);
+        if(source.optInt("version")==3||source.optInt("version")==4)source=UnifiedLayout.migrate(source,template.json);
         LauncherLayout result=new LauncherLayout(source);
-        if(source.optInt("version")==4)UnifiedLayout.locked(result.json,template.json);
+        if((source.optInt("version")==4||source.optInt("version")==5))UnifiedLayout.locked(result.json,template.json);
         return result;
     }
     static LauncherLayout effective(Context ctx) {
@@ -128,7 +128,7 @@ final class LauncherLayout {
     }
     static void apply(Context ctx, JSONObject json) throws Exception {
         LauncherLayout layout = new LauncherLayout(json);
-        if(json.optInt("version")==4)UnifiedLayout.locked(json,template(ctx).json);
+        if((json.optInt("version")==4||json.optInt("version")==5))UnifiedLayout.locked(json,template(ctx).json);
         for(String section:Arrays.asList("home","apps")) {
             JSONArray items=layout.page(section).getJSONArray("items");
             for(int i=0;i<items.length();i++) {
@@ -170,10 +170,10 @@ final class LauncherLayout {
                 default:break;
             }
             AppAdapter.Entry rendered=new AppAdapter.Entry("layout-"+i+"-"+action+pkg,
-                base==null?R.string.placeholder_app:base.label,resource,Color.parseColor(item.optString("color","#374959")),
+                base==null?R.string.placeholder_app:base.label,resource,UnifiedLayout.color(item.optString("color","#374959")),
                 pkg.isEmpty()?(base==null?AppAdapter.PLACEHOLDER:base.action):AppAdapter.CUSTOM_APP,base==null?i+1:base.number,
                 title,pkg,item.optString("icon","app").equals("app"));
-            if(item.has("svg")){rendered.svg=item.optString("svg");rendered.foreground=Color.parseColor(item.optString("foreground","#BFC3C8"));}
+            if(item.has("svg")){rendered.svg=item.optString("svg");rendered.foreground=Color.parseColor(item.optString("foreground","#BFC3C8"));rendered.iconColor=Color.parseColor(item.optString("iconColor",item.optString("foreground","#BFC3C8")));}
             result.add(rendered);
         }
         return result;
@@ -183,7 +183,7 @@ final class LauncherLayout {
         LauncherLayout current=effective(ctx);
         JSONObject draft=new JSONObject(current.json.toString());
         JSONObject bg;
-        if(current.json.optInt("version")==4)bg=draft.getJSONObject("home").getJSONObject("background");
+        if((current.json.optInt("version")==4||current.json.optInt("version")==5))bg=draft.getJSONObject("home").getJSONObject("background");
         else bg=draft.getJSONObject("home").getJSONObject("scene").getJSONObject("background");
         if(file==null || !file.isFile())bg.remove("image");
         else {
@@ -201,7 +201,7 @@ final class LauncherLayout {
                 if(encoded.length()>33000)throw new IllegalArgumentException("Wallpaper too large");bg.put("image",encoded);
             }finally{bitmap.recycle();}
         }
-        if(draft.optInt("version")==4){new LauncherLayout(draft);AtomicFile target=new AtomicFile(file(ctx));FileOutputStream output=target.startWrite();try{output.write(draft.toString().getBytes(StandardCharsets.UTF_8));target.finishWrite(output);}catch(Exception error){target.failWrite(output);throw error;}MainActivity.reloadLayoutFromManager();AppsActivity.reloadLayoutFromManager();}
+        if((draft.optInt("version")==4||draft.optInt("version")==5)){new LauncherLayout(draft);AtomicFile target=new AtomicFile(file(ctx));FileOutputStream output=target.startWrite();try{output.write(draft.toString().getBytes(StandardCharsets.UTF_8));target.finishWrite(output);}catch(Exception error){target.failWrite(output);throw error;}MainActivity.reloadLayoutFromManager();AppsActivity.reloadLayoutFromManager();}
         else apply(ctx,draft);
     }
     static boolean isUserApp(Context ctx,String packageName) {

@@ -42,7 +42,7 @@ export interface LauncherLayout { version: 2 | 3; home: {columns:number;items:La
 export interface LauncherLayoutInfo { systemBasis?:{screen:{width:number;height:number};home:UnifiedComponent[];apps:UnifiedComponent[]}; backgrounds?:Record<string,string>; serial?: string; userId?: number; supported: boolean; component?: string; message?: string; custom?: boolean; layout?: LauncherLayout|UnifiedLayout; apps?: {packageName: string; label: string; iconPng?: string}[] }
 export type LauncherRequest = { action:'getLayout'|'getBackgrounds'|'resetLayout' } | { action:'applyLayout'; layout: LauncherLayout|UnifiedLayout };
 
-export interface UnifiedComponent {id:string;name:string;frame:LayoutFrame;action:string;text:string;visible:boolean;icon:string;color:string;backgroundColor:string}
-export interface UnifiedLayout {version:4;screen:{width:number;height:number};home:UnifiedPage;apps:UnifiedPage}
+export interface UnifiedComponent {id:string;name:string;frame:LayoutFrame;action:string;text:string;visible:boolean;icon:string;color?:string;textColor?:string;iconColor?:string;backgroundColor:string}
+export interface UnifiedLayout {version:4|5;screen:{width:number;height:number};home:UnifiedPage;apps:UnifiedPage}
 
 export interface UnifiedPage {users:UnifiedComponent[];system:UnifiedComponent[];background:{color:string;image?:string};navigation:Partial<Record<'up'|'down','home'|'apps'>>}

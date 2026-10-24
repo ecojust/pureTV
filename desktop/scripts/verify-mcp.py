@@ -39,7 +39,7 @@ elif args[:2]==['-s','192.168.1.50:5555']:
    method=a[a.index('--method')+1]
    if method=='apply':tv['layout']=json.loads(base64.b64decode(a[a.index('--arg')+1]));tv['customLayout']=True;save()
    elif method=='reset':tv['layout']=json.loads((root/'default-layout.json').read_text());tv['customLayout']=False;save()
-   result={'supported':True,'version':4,'custom':tv.get('customLayout',False),'layout':tv.get('layout',json.loads((root/'default-layout.json').read_text())),'apps':[{'packageName':'com.ecojust.puretv','label':'pureTV'}]}
+   result={'supported':True,'version':5,'custom':tv.get('customLayout',False),'layout':tv.get('layout',json.loads((root/'default-layout.json').read_text())),'apps':[{'packageName':'com.ecojust.puretv','label':'pureTV'}]}
    print('Bundle[{result='+base64.b64encode(json.dumps(result).encode()).decode()+'}]')
   elif a[0]=='cat':print('MemTotal: 4096 kB\nMemAvailable: 1024 kB' if a[1]=='/proc/meminfo' else '3600.25 20.0')
   elif a[0]=='df':print('Filesystem 1K-blocks Used Available Use% Mounted on\n/dev/data 4096 1024 3072 25% /data')
@@ -164,9 +164,9 @@ def main():
                 assert client.call('get_launcher_layout')['supported'] is False
                 client.call('apply_launcher_layout',{'layoutJson':(root/'default-layout.json').read_text()},failure=True)
                 client.call('set_home',{'component':'com.ecojust.puretv/.MainActivity'})
-                layout=client.call('get_launcher_layout');assert layout['supported'] is True
+                layout=client.call('get_launcher_layout');assert layout['supported'] is True,layout
                 draft=layout['layout']
-                draft['home']['users']=[{'id':'user-puretv','name':'pureTV','text':'Open pureTV','action':'com.ecojust.puretv','frame':{'x':48,'y':220,'width':200,'height':150},'visible':True,'icon':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 2h20v20H2z"/></svg>','color':'#FFFFFF','backgroundColor':'#374959'}]
+                draft['home']['users']=[{'id':'user-puretv','name':'pureTV','text':'Open pureTV','action':'com.ecojust.puretv','frame':{'x':48,'y':220,'width':200,'height':150},'visible':True,'icon':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 2h20v20H2z"/></svg>','textColor':'#FFFFFF','iconColor':'#C6DDCF','backgroundColor':'#374959'}]
                 tampered=json.loads(json.dumps(draft));tampered['home']['system'][0]['frame']['x']+=1
                 client.call('apply_launcher_layout',{'layoutJson':json.dumps(tampered)},failure=True)
                 assert client.call('apply_launcher_layout',{'layoutJson':json.dumps(draft)})['layout']==draft

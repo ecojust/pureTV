@@ -1,6 +1,6 @@
 # users/system 布局编辑
 
-pureTV Manager 和 Launcher 0.3.5 使用版本 4 布局。顶层 screen 设置屏幕基准；Home、Apps 分别定义 users、system、background、navigation。完整字段与示例见[README](../../resource/README-development.md#layoutjson-协议规范与画面对照)及[示例文件](../../resource/launcher/puretv/layout.example.json)。
+pureTV Manager 和 Launcher 0.3.6 使用版本 5 布局。顶层 screen 设置屏幕基准；Home、Apps 分别定义 users、system、background、navigation。完整字段与示例见[README](../../resource/README-development.md#layoutjson-协议规范与画面对照)及[示例文件](../../resource/launcher/puretv/layout.example.json)。
 
 ## 编辑工作区
 
@@ -23,3 +23,5 @@ navigation.down="apps" 使 Home 在最后一行用户块按下进入 Apps；navi
 版本 3 的用户包名、名称、坐标及两页背景迁移到 v4；旧图标枚举使用默认 SVG，可再自定义。系统组件采用新版启动器模板。旧 apps.json 不读取。未升级 APK 时管理器保留旧 v2/v3 网格或场景编辑。
 
 整个文件最多 90 KiB，单 SVG 最多 8 KiB，单背景 data URI 最多 33,000 字符；只允许数据配置，无任意 Intent 或 shell。
+
+组件颜色分为 textColor、iconColor、backgroundColor；backgroundColor 可以为 transparent。屏幕基准只读，顶部通过单个按钮添加应用块，随后在右侧切换 action。组件显隐开关位于右侧组件类型下方。

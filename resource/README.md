@@ -2,13 +2,13 @@
 
 目录分为 `launcher/`（启动器）和 `apps/`（应用）。源码与 APK 放在同一软件目录。每个软件文件夹至少包含一个真实 APK，以及 resource.json、许可证和校验文件；可附对应源码及封面。点击软件名称进入文件夹下载。第三方 APK 保持上游原始二进制与签名。
 
-“支持自定义”指管理器可识别的 layout.json 接口，当前配套启动器使用 v4 users/system 协议。上游截图、纯 TV 渲染示例与相关许可见各文件夹说明。
+“支持自定义”指管理器可识别的 layout.json 接口，当前配套启动器使用 v5 users/system 协议。上游截图、纯 TV 渲染示例与相关许可见各文件夹说明。
 
 ### 启动器
 
 | 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
-| [pureTV Launcher](launcher/puretv/) | ecojust / 桔子桑 | 0.3.5 | 736.1 KiB（753,746 B） | 是 | <img src="launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [pureTV Launcher](launcher/puretv/) | ecojust / 桔子桑 | 0.3.6 | 740.1 KiB（757,842 B） | 是 | <img src="launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
 
 ### 电视应用
 

@@ -22,14 +22,14 @@ public class LauncherLayoutTest {
  static Context ctx(){return RuntimeEnvironment.getApplication();}
  @After public void clear(){LauncherLayout.reset(ctx());}
  static void install(String pkg,boolean system){
-  PackageInfo info=new PackageInfo();info.packageName=pkg;info.applicationInfo=new ApplicationInfo();info.applicationInfo.packageName=pkg;info.applicationInfo.enabled=true;info.applicationInfo.nonLocalizedLabel=pkg;info.applicationInfo.flags=ApplicationInfo.FLAG_INSTALLED|(system?ApplicationInfo.FLAG_SYSTEM:0);
+  PackageInfo info=new PackageInfo();info.packageName=pkg;info.applicationInfo=new ApplicationInfo();info.applicationInfo.packageName=pkg;info.applicationInfo.enabled=true;info.applicationInfo.nonLocalizedLabel=pkg.equals("com.example.browser")?"浏览器":pkg.equals("com.example.files")?"文件":pkg.equals("com.example.music")?"Music TV":pkg;info.applicationInfo.flags=ApplicationInfo.FLAG_INSTALLED|(system?ApplicationInfo.FLAG_SYSTEM:0);
   org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).installPackage(info);
   ResolveInfo resolve=new ResolveInfo();resolve.activityInfo=new android.content.pm.ActivityInfo();resolve.activityInfo.packageName=pkg;resolve.activityInfo.name=pkg+".Main";resolve.activityInfo.applicationInfo=info.applicationInfo;resolve.activityInfo.enabled=true;resolve.activityInfo.exported=true;
   for(String category:new String[]{Intent.CATEGORY_LAUNCHER,Intent.CATEGORY_LEANBACK_LAUNCHER}){Intent query=new Intent(Intent.ACTION_MAIN).addCategory(category);org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).addResolveInfoForIntent(query,resolve);org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).addResolveInfoForIntent(new Intent(query).setPackage(pkg),resolve);}
  }
- static JSONObject user(String pkg)throws Exception{return new JSONObject().put("id","app-custom").put("name","用户应用").put("text","打开应用").put("action",pkg).put("frame",new JSONObject("{\"x\":120,\"y\":280,\"width\":200,\"height\":150}")).put("visible",true).put("icon",UnifiedLayout.ICON).put("color","#EEEEEE").put("backgroundColor","#123456");}
+ static JSONObject user(String pkg)throws Exception{return new JSONObject().put("id","app-custom").put("name","用户应用").put("text","打开应用").put("action",pkg).put("frame",new JSONObject("{\"x\":120,\"y\":280,\"width\":200,\"height\":150}")).put("visible",true).put("icon",UnifiedLayout.ICON).put("textColor","#EEEEEE").put("iconColor","#22AA88").put("backgroundColor","#123456");}
  @Test public void defaultsExposeUniformUsersAndSystemAndEveryComponentHasAction()throws Exception{
-  install("com.example.user",false);install("com.example.system",true);JSONObject d=LauncherLayout.defaults(ctx()).json;assertEquals(4,d.getInt("version"));assertFalse(d.getJSONObject("home").has("columns"));assertFalse(d.getJSONObject("home").has("scene"));
+  install("com.example.user",false);install("com.example.system",true);JSONObject d=LauncherLayout.defaults(ctx()).json;assertEquals(5,d.getInt("version"));assertFalse(d.getJSONObject("home").has("columns"));assertFalse(d.getJSONObject("home").has("scene"));
   for(String page:new String[]{"home","apps"})for(String kind:new String[]{"users","system"}){JSONArray nodes=d.getJSONObject(page).getJSONArray(kind);for(int i=0;i<nodes.length();i++){JSONObject n=nodes.getJSONObject(i);assertTrue(LauncherLayout.validPackage(n.getString("action")));assertTrue(n.has("frame"));assertTrue(n.has("name"));assertTrue(n.has("text"));UnifiedLayout.svg(n.getString("icon"));}}
   assertFalse(d.toString().contains("com.example.system"));assertTrue(d.toString().contains("com.example.user"));
  }
@@ -52,7 +52,7 @@ public class LauncherLayoutTest {
  }
  @Test public void providerIsShellProtectedAndReturnsV4()throws Exception{
   android.content.pm.ProviderInfo info=ctx().getPackageManager().resolveContentProvider("com.ecojust.puretv.layout",0);assertTrue(info.exported);assertEquals("android.permission.DUMP",info.readPermission);assertEquals("android.permission.DUMP",info.writePermission);
-  LauncherLayoutProvider provider=Robolectric.buildContentProvider(LauncherLayoutProvider.class).create().get();android.os.Bundle result=provider.call("status",null,null);JSONObject value=new JSONObject(new String(android.util.Base64.decode(result.getString("result"),android.util.Base64.NO_WRAP),java.nio.charset.StandardCharsets.UTF_8));assertEquals(4,value.getInt("version"));assertEquals(4,value.getJSONObject("layout").getInt("version"));
+  LauncherLayoutProvider provider=Robolectric.buildContentProvider(LauncherLayoutProvider.class).create().get();android.os.Bundle result=provider.call("status",null,null);JSONObject value=new JSONObject(new String(android.util.Base64.decode(result.getString("result"),android.util.Base64.NO_WRAP),java.nio.charset.StandardCharsets.UTF_8));assertEquals(5,value.getInt("version"));assertEquals(5,value.getJSONObject("layout").getInt("version"));
  }
  @Test public void downAndUpPageSwitchesFollowNavigationJson()throws Exception{
   install("com.example.user",false);JSONObject draft=LauncherLayout.defaults(ctx()).json;draft.getJSONObject("home").put("users",new JSONArray().put(user("com.example.user")));LauncherLayout.apply(ctx(),draft);
@@ -73,5 +73,13 @@ public class LauncherLayoutTest {
  @Test public void systemCoordinatesReturnToCanonicalBasisAfterScreenRoundTrip()throws Exception{
   JSONObject original=LauncherLayout.defaults(ctx()).json;JSONObject small=new JSONObject(original.toString());small.put("screen",new JSONObject("{\"width\":320,\"height\":320}"));for(String page:new String[]{"home","apps"}){small.getJSONObject(page).put("users",new JSONArray());small.getJSONObject(page).put("system",UnifiedLayout.resized(original.getJSONObject(page).getJSONArray("system"),original.getJSONObject("screen"),small.getJSONObject("screen")));}LauncherLayout.apply(ctx(),small);
   JSONObject restored=new JSONObject(small.toString());restored.put("screen",original.getJSONObject("screen"));for(String page:new String[]{"home","apps"})restored.getJSONObject(page).put("system",original.getJSONObject(page).getJSONArray("system"));LauncherLayout.apply(ctx(),restored);assertEquals(960,LauncherLayout.override(ctx()).json.getJSONObject("screen").getInt("width"));
+ }
+ @Test public void previousV4UserLayoutMigratesWithoutMovingUserCards()throws Exception{
+  JSONObject old=new JSONObject(new String(getClass().getClassLoader().getResourceAsStream("layout-v4.json").readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));
+  JSONObject node=user("com.example.custom");node.remove("textColor");node.remove("iconColor");node.put("color","#123456");old.getJSONObject("home").put("users",new JSONArray().put(node));
+  JSONObject upgraded=UnifiedLayout.migrate(old,LauncherLayout.template(ctx()).json);new LauncherLayout(upgraded);
+  JSONObject actual=upgraded.getJSONObject("home").getJSONArray("users").getJSONObject(0);
+  assertEquals(node.getJSONObject("frame").toString(),actual.getJSONObject("frame").toString());assertEquals("#123456",actual.getString("textColor"));assertEquals("#123456",actual.getString("iconColor"));assertFalse(actual.has("color"));
+  assertEquals("transparent",upgraded.getJSONObject("home").getJSONArray("system").getJSONObject(0).getString("backgroundColor"));
  }
 }
