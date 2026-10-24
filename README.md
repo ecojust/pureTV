@@ -70,7 +70,7 @@ resource/
 
 | 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
-| [pureTV Launcher](resource/launcher/) | ecojust / 桔子桑 | 0.3.4 | 676.0 KiB（692,231 B） | 是 | <img src="resource/launcher/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [pureTV Launcher](resource/launcher/) | ecojust / 桔子桑 | 0.3.5 | 736.1 KiB（753,746 B） | 是 | <img src="resource/launcher/thumb.png" width="180" alt="pureTV Launcher 界面"> |
 
 ### 电视应用
 
@@ -81,6 +81,7 @@ resource/
 | [ShortVideo TV](resource/apps/shortvideo/) | ecojust / 桔子桑 | 0.1.0 | 28.7 KiB（29,427 B） | 遥控器短视频播放器 | <img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
 | [TV Bro](resource/apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MiB（6,790,605 B） | 适配遥控器的电视浏览器，使用系统 WebView | <img src="resource/apps/tvbro/thumb.png" width="180" alt="TV Bro 界面"> |
 | [WebTV](resource/apps/webtv/) | ecojust / 桔子桑 | 0.1.0 | 36.8 KiB（37,731 B） | 电视直播与 M3U 播放器 | <img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
+
 
 
 <!-- resource-index:end -->
