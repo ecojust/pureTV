@@ -10,6 +10,8 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
+import traceback
 import urllib.request
 import urllib.error
 import http.client
@@ -83,7 +85,15 @@ def launch_copy(executable, directory, identifier):
                 print("Installed copy stayed running for 5 seconds (no device operations)", flush=True)
             else:
                 raise RuntimeError(f"Installed app exited during startup: {process.returncode}")
-            session=json.loads((profile/'mcp-session.json').read_text())
+            session_path = profile / 'mcp-session.json'
+            deadline = time.monotonic() + 25
+            while not session_path.is_file():
+                if process.poll() is not None:
+                    raise RuntimeError(f'Installed app exited before MCP readiness: {process.returncode}')
+                if time.monotonic() >= deadline:
+                    raise RuntimeError('Installed app did not publish its MCP session within 30 seconds')
+                time.sleep(0.2)
+            session=json.loads(session_path.read_text())
             request=urllib.request.Request(session['url'],data=json.dumps({'jsonrpc':'2.0','id':1,'method':'tools/call','params':{'name':'close_manager','arguments':{'confirmShutdown':True}}}).encode(),headers={'Authorization':'Bearer '+session['token'],'Content-Type':'application/json'},method='POST')
             try:
                 with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(request,timeout=10) as response:
@@ -144,4 +154,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        if os.environ.get('GITHUB_ACTIONS'):
+            detail = traceback.format_exc()[-3500:]
+            print('::error title=macOS installed startup::' + detail.replace('%','%25').replace('\r','%0D').replace('\n','%0A'), flush=True)
+        raise
