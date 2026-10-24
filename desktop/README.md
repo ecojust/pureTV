@@ -1,6 +1,6 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.3.6** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.3.8** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
 下载：[0.3.8 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.8)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
@@ -76,9 +76,9 @@
 
 ## 当前启动器的自定义布局
 
-只有当前默认启动器成功返回符合协议的布局接口时才显示编辑器。Manager 0.3.7 动态检测已安装启动器的 `<包名>.layout` 协议接口，通过验证后支持编辑，无需添加包名白名单。**pureTV 0.3.6** 与 **Nova TV 0.1.0** 均已实现；其他启动器可按[接入规范](../resource/README-development.md#第三方启动器接入与动态检测)实现。仅有 APK 内静态 layout.json、尚未实现读写接口的启动器不能保存布局。包名变化需要安装新 APK 并重新选择默认桌面。
+只有当前默认启动器成功返回符合协议的布局接口时才显示编辑器。Manager 0.3.7 动态检测已安装启动器的 `<包名>.layout` 协议接口，通过验证后支持编辑，无需添加包名白名单。**pureTV 0.3.6**、**Nova TV 0.1.1** 及[八款配套启动器](../resource/launcher/)均已实现；其他启动器可按[接入规范](../resource/README-development.md#第三方启动器接入与动态检测)实现。仅有 APK 内静态 layout.json、尚未实现读写接口的启动器不能保存布局。包名变化需要安装新 APK 并重新选择默认桌面。
 
-在当前默认启动器卡片点击「调整布局」，打开电视画布弹窗。Home 与 Apps 分别定义列数和卡片顺序，支持拖动、名称、图标、颜色及 layout.json 导入。只能添加已安装可启动的用户应用，应用后读回复查。旧版 apps.json 不兼容。详情：[启动器布局文档](docs/launcher-layout.md)。
+在当前默认启动器卡片点击「调整布局」，打开电视画布弹窗。Home 与 Apps 分别定义背景和组件的位置、尺寸，支持拖动、框选、对齐、分散排列，以及文案、图标、颜色和 layout.json 导入。只能添加已安装可启动的用户应用，应用后读回复查。旧版 apps.json 不兼容。详情：[启动器布局文档](docs/launcher-layout.md)。
 
 
 ## 语言、主题与资源

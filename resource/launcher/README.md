@@ -2,6 +2,8 @@
 
 每个启动器都有独立包名、APK、源码、layout.json 示例和原生渲染预览，可同时安装后在管理器切换。作者、版本、APK 大小和封面见[资源表](../README.md)。
 
+![八款 v5 启动器的 Android 原生渲染预览](../../docs/previews/launcher-collection-010.png)
+
 | 启动器 | 界面风格与排布 |
 | --- | --- |
 | [Nova TV](nova/) | 参考 tvOS 主屏幕：大幅峡湾背景、底部六个应用入口、角落状态与控制中心 |

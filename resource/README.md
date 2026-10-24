@@ -8,8 +8,16 @@
 
 | 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
-| [Nova TV](launcher/nova/) | ecojust / 桔子桑 | 0.1.0 | 435.5 KB | 是 | <img src="launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
+| [Aster TV · 星轨](launcher/aster/) | ecojust / 桔子桑 | 0.1.0 | 435.6 KB | 是 | <img src="launcher/aster/thumb.png" width="180" alt="Aster TV · 星轨 界面"> |
+| [Circuit TV · 回路](launcher/circuit/) | ecojust / 桔子桑 | 0.1.0 | 431.6 KB | 是 | <img src="launcher/circuit/thumb.png" width="180" alt="Circuit TV · 回路 界面"> |
+| [Drift TV](launcher/drift/) | ecojust / 桔子桑 | 0.1.0 | 455.7 KB | 是 | <img src="launcher/drift/thumb.png" width="180" alt="Drift TV 界面"> |
+| [Forma TV](launcher/forma/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | 是 | <img src="launcher/forma/thumb.png" width="180" alt="Forma TV 界面"> |
+| [Mono TV 墨白](launcher/mono/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | 是 | <img src="launcher/mono/thumb.png" width="180" alt="Mono TV 墨白 界面"> |
+| [Moss TV](launcher/moss/) | ecojust / 桔子桑 | 0.1.0 | 463.7 KB | 是 | <img src="launcher/moss/thumb.png" width="180" alt="Moss TV 界面"> |
+| [Nova TV](launcher/nova/) | ecojust / 桔子桑 | 0.1.1 | 471.7 KB | 是 | <img src="launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
+| [Pixel TV 像素](launcher/pixel/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | 是 | <img src="launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"> |
 | [pureTV Launcher](launcher/puretv/) | ecojust / 桔子桑 | 0.3.6 | 740.1 KB | 是 | <img src="launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [Sol TV](launcher/sol/) | ecojust / 桔子桑 | 0.1.0 | 435.7 KB | 是 | <img src="launcher/sol/thumb.png" width="180" alt="Sol TV 界面"> |
 
 ### 电视应用
 
