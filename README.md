@@ -198,7 +198,7 @@ pureTV Manager 与 Launcher **0.3.5 使用 layout.json v4**。布局由电视和
 电脑端：[构建与运行](desktop/README.md)。电视端使用 JDK 17／21、Android SDK Platform 35、Build Tools 34.0.0：
 
 ```bash
-cd launcher
+cd resource/launcher
 ./gradlew assembleDebug assembleRelease lintDebug testDebugUnitTest
 ```
 
