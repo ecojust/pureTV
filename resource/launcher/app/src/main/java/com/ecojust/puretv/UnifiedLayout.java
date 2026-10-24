@@ -92,7 +92,7 @@ final class UnifiedLayout {
         for(String page:Arrays.asList("home","apps")){
             JSONArray users=template.getJSONObject(page).getJSONArray("users");int count=page.equals("home")?homeCount:apps.length();
             for(int i=0;i<count;i++){
-                JSONObject app=apps.getJSONObject(i);String pkg=app.getString("packageName"),label=app.getString("label");
+                JSONObject app=apps.getJSONObject(i);String pkg=app.getString("packageName"),label=app.getString("label");if(label.length()>100){int end=100;if(Character.isHighSurrogate(label.charAt(end-1)))end--;label=label.substring(0,end);}
                 JSONObject frame=LayoutScene.frame(new JSONObject(),i,4,count,page);
                 users.put(new JSONObject().put("id","app-"+i).put("name",label).put("text",label).put("frame",frame).put("action",pkg).put("visible",true).put("icon",ICON).put("color","#BFC3C8").put("backgroundColor","#374959"));
             }

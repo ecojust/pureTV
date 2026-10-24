@@ -32,7 +32,7 @@ export class UnifiedEditor {
  private component(n:UnifiedComponent,kind:'users'|'system',d:UnifiedLayout):string {
   const f=n.frame,selected=kind==='users'?this.selection.has(n.id):this.selected?.kind===kind&&this.selected.id===n.id,basis=Math.min(d.screen.width/960,d.screen.height/540);
   const hasIcon=new DOMParser().parseFromString(n.icon,'image/svg+xml').querySelector('path,rect,circle,ellipse,line,polyline,polygon');
-  const font=kind==='users'?Math.min(14*basis,f.height*14/150):(n.id==='clock'?52:n.id==='title'?28:13)*basis;
+  const font=kind==='users'?Math.min(14*basis,f.height*14/150):(n.id==='clock'?52:n.id==='title'?28:n.id==='allApps'?11:13)*basis;
   return `<button type="button" data-u-node="${esc(n.id)}" data-u-kind="${kind}" class="unified-element ${kind==='system'?'system-fixed':'unified-tile'} unified-${kind==='system'?esc(n.id):'user'} ${selected?'selected':''} ${n.visible?'':'scene-hidden'}" aria-label="${esc(n.name)}" style="left:${f.x/d.screen.width*100}%;top:${f.y/d.screen.height*100}%;width:${f.width/d.screen.width*100}%;height:${f.height/d.screen.height*100}%;color:${n.color};--u-bg:${n.backgroundColor};--u-font:${font};--u-icon:${Math.min(38*basis,f.height*.3)};z-index:${kind==='system'?2:1}">${hasIcon?`<span class="unified-icon">${n.icon}</span>`:''}<span class="unified-text">${esc(n.text)}</span></button>`;
  }
  private active(){return !!this.dialog.querySelector('[data-unified-editor]');}
