@@ -122,7 +122,8 @@ final class LayoutScene extends FrameLayout {
             View wrapper=nodes.get(i);place(wrapper,specs.get(i),scale,left,top);
             View child=((ViewGroup)wrapper).getChildAt(0);
             JSONObject spec=specs.get(i);
-            if(spec!=null&&spec.has("backgroundColor"))wrapper.setBackgroundColor(UnifiedLayout.color(spec.optString("backgroundColor")));
+            if(spec==null)continue; // Omitted system controls remain detached/hidden, never rendered as ghost nodes.
+            if(spec.has("backgroundColor"))wrapper.setBackgroundColor(UnifiedLayout.color(spec.optString("backgroundColor")));
             if(child instanceof TextView&&spec!=null&&spec.has("color"))((TextView)child).setTextColor(Color.parseColor(spec.optString("color")));
             String component=(String)wrapper.getTag();
             android.graphics.drawable.Drawable symbol=icons.get(component);
