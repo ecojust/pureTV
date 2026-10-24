@@ -13,3 +13,5 @@
 图片由对应版本的实际 Android 页面在 Robolectric 原生图形环境中渲染，非实机录屏。源代码树、构建记录、APK 哈希与发布证书见 [resource.json](resource.json)。许可证及上游致谢见 [LICENSE](LICENSE) 与 [NOTICE.md](NOTICE.md)。
 
 升级会迁移旧版 v3/v4 的用户应用、位置和背景，并采用新版系统组件样式。编辑新布局需配套 Manager 0.3.6；发布 APK 沿用原证书，可覆盖安装。
+
+已有自定义布局会保留。若要采用新版默认排版与配色，请在管理器的「调整布局」中选择「恢复默认」。
