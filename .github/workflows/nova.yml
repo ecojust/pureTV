@@ -1,0 +1,91 @@
+name: Nova TV build
+on:
+  push:
+    branches: [master, feat/nova-tv]
+    paths:
+      - 'resource/launcher/nova/**'
+      - '.github/workflows/nova.yml'
+  pull_request:
+    paths:
+      - 'resource/launcher/nova/**'
+      - '.github/workflows/nova.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: nova-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install SDK
+        run: sdkmanager "platforms;android-35" "build-tools;34.0.0"
+      - name: Build, lint and render Nova TV
+        working-directory: resource/launcher/nova
+        env:
+          NOVA_UI_CAPTURE_DIR: ${{ runner.temp }}/nova-previews
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon :app:assembleDebug :app:assembleRelease :app:lintDebug :app:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/nova-build.log"
+      - name: Report test failures
+        if: failure()
+        run: |
+          python - <<'PY'
+          import os,pathlib,xml.etree.ElementTree as ET
+          for report in pathlib.Path('resource/launcher/nova').rglob('TEST-*.xml'):
+              for failure in ET.parse(report).getroot().iter('failure'):
+                  print('::error::'+(failure.text or '')[:3000].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
+          log=pathlib.Path(os.environ['RUNNER_TEMP'])/'nova-build.log'
+          if log.exists():print('::error::'+log.read_text(errors='replace')[-6000:].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
+          PY
+      - name: Verify APK identity
+        run: |
+          python - <<'PY'
+          import sys,os,json
+          from pathlib import Path
+          sys.path.insert(0,'tools')
+          from resource_catalog import apk_info
+          directory=Path('nova-artifact');directory.mkdir()
+          apks=list(Path('resource/launcher/nova/app/build/outputs/apk/release').glob('*.apk'));assert len(apks)==1
+          info=apk_info(apks[0],Path(os.environ['ANDROID_HOME'])/'build-tools/34.0.0',allow_unsigned=True)
+          assert info['packageName']=='com.ecojust.novatv' and info['versionName']=='0.1.0' and info['versionCode']==1
+          assert info['bytes']<5*1024*1024
+          info['sourceSha']=os.environ['GITHUB_SHA']
+          (directory/'nova.apk').write_bytes(apks[0].read_bytes());(directory/'metadata.json').write_text(json.dumps(info,indent=2))
+          for name in ['home-render.png','apps-render.png']:
+              (directory/name).write_bytes((Path(os.environ['RUNNER_TEMP'])/'nova-previews'/name).read_bytes())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nova-tv
+          path: nova-artifact/
+          if-no-files-found: error
+  stage:
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/feat/nova-tv'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: nova-tv
+          path: release-staging/nova
+      - run: |
+          git checkout -b "build-assets/nova-${GITHUB_RUN_ID}"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -f release-staging/nova
+          git commit -m "Stage verified Nova TV APK and native previews"
+          git push origin HEAD

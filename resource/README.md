@@ -8,6 +8,7 @@
 
 | 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
+| [Nova TV](launcher/nova/) | ecojust / 桔子桑 | 0.1.0 | 435.5 KB | 是 | <img src="launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
 | [pureTV Launcher](launcher/puretv/) | ecojust / 桔子桑 | 0.3.6 | 740.1 KB | 是 | <img src="launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
 
 ### 电视应用

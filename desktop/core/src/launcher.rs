@@ -2,8 +2,11 @@ use super::*;
 use crate::LauncherRequest;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use serde_json::{json, Value};
-const PACKAGE: &str = "com.ecojust.puretv";
-const URI: &str = "content://com.ecojust.puretv.layout";
+// Protocol discovery uses only validated packages returned by Android HOME queries.
+// The convention is public: every compatible launcher owns <package>.layout.
+fn provider_uri(package: &str) -> Option<String> {
+    parse::package(package).then(|| format!("content://{package}.layout"))
+}
 const LAYOUT_LIMIT: usize = 48 * 1024;
 
 pub(crate) fn validate_layout(layout: &Value) -> Result<(), String> {
@@ -293,6 +296,7 @@ impl Manager {
     fn layout_provider(
         &mut self,
         device: &Device,
+        uri: &str,
         method: &str,
         arg: Option<String>,
     ) -> Result<Value, String> {
@@ -303,7 +307,7 @@ impl Manager {
             "content".into(),
             "call".into(),
             "--uri".into(),
-            URI.into(),
+            uri.into(),
             "--user".into(),
             device.user_id.to_string(),
             "--method".into(),
@@ -312,20 +316,29 @@ impl Manager {
         if let Some(arg) = arg {
             args.extend(["--arg".into(), arg]);
         }
-        provider_result(&self.run(args, None, 20)?)
+        provider_result(&self.run(args, None, if method == "status" { 5 } else { 20 })?)
     }
     pub fn execute_launcher(&mut self, request: LauncherRequest) -> Result<Value, String> {
         let device = self.ensure_device(true)?;
         self.read_catalogue(&device)?;
         if matches!(request, LauncherRequest::GetBackgrounds) {
             let mut backgrounds = serde_json::Map::new();
-            if self
+            let packages: BTreeSet<String> = self
                 .state
                 .launchers
                 .iter()
-                .any(|l| l.package_name == PACKAGE)
-            {
-                if let Ok(value) = self.layout_provider(&device, "status", None) {
+                .filter(|home| {
+                    self.state.packages.iter().any(|app| {
+                        app.package_name == home.package_name && app.installed && app.enabled
+                    })
+                })
+                .map(|home| home.package_name.clone())
+                .collect();
+            for package in packages {
+                let Some(uri) = provider_uri(&package) else {
+                    continue;
+                };
+                if let Ok(value) = self.layout_provider(&device, &uri, "status", None) {
                     let layout = &value["layout"];
                     let image = if layout["version"] == 4 || layout["version"] == 5 {
                         layout["home"]["background"]["image"].as_str()
@@ -334,7 +347,7 @@ impl Manager {
                     };
                     if let Some(image) = image {
                         for launcher in &self.state.launchers {
-                            if launcher.package_name == PACKAGE {
+                            if launcher.package_name == package {
                                 backgrounds.insert(launcher.component.clone(), json!(image));
                             }
                         }
@@ -350,15 +363,29 @@ impl Manager {
             .default_home
             .clone()
             .ok_or("无法确认当前默认启动器")?;
-        if component.split('/').next() != Some(PACKAGE) {
+        let package = component.split('/').next().unwrap_or_default();
+        let current_installed_home = self
+            .state
+            .launchers
+            .iter()
+            .any(|home| home.component == component)
+            && self
+                .state
+                .packages
+                .iter()
+                .any(|app| app.package_name == package && app.installed && app.enabled);
+        let Some(uri) = current_installed_home
+            .then(|| provider_uri(package))
+            .flatten()
+        else {
             if !matches!(request, LauncherRequest::GetLayout) {
                 return Err("当前启动器未接入可验证的布局接口，未修改配置".into());
             }
             return Ok(
                 json!({"supported":false,"component":component,"message":"此启动器尚未接入可验证的布局接口，请使用它自身的自定义设置。管理器不会尝试改写未知格式。"}),
             );
-        }
-        let value = match self.layout_provider(&device, "status", None) {
+        };
+        let value = match self.layout_provider(&device, &uri, "status", None) {
             Ok(mut value) => {
                 value["component"] = json!(component);
                 value["serial"] = json!(device.serial);
@@ -368,7 +395,7 @@ impl Manager {
             Err(error) => {
                 if matches!(request, LauncherRequest::GetLayout) {
                     return Ok(
-                        json!({"supported":false,"component":component,"message":format!("当前 pureTV 未开放布局接口或设备限制访问；请安装支持 layout.json 的新版启动器。{error}")}),
+                        json!({"supported":false,"component":component,"message":format!("当前启动器未开放布局接口或设备限制访问；请安装支持 layout.json 的新版启动器。{error}")}),
                     );
                 }
                 return Err("无法读取布局接口，未修改启动器配置".into());
@@ -425,7 +452,7 @@ impl Manager {
         }
         self.defer_cancel = true;
         let result = (|| {
-            let returned = self.layout_provider(&device, method, arg)?;
+            let returned = self.layout_provider(&device, &uri, method, arg)?;
             if expected
                 .as_ref()
                 .is_some_and(|layout| &returned["layout"] != layout)
@@ -433,7 +460,7 @@ impl Manager {
             {
                 return Err("启动器未确认预期布局，请重新读取核对".into());
             }
-            let reread = self.layout_provider(&device, "status", None)?;
+            let reread = self.layout_provider(&device, &uri, "status", None)?;
             if returned["layout"] != reread["layout"] {
                 return Err("布局写入后复查不一致".into());
             }

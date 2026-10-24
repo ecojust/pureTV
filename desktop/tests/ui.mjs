@@ -565,6 +565,49 @@ try {
     await shot(p,'layout-v5-properties-036');
     await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='applyLayout'));const applied=await p.evaluate(()=>window.__launcherRequests.find(r=>r.action==='applyLayout'));assert.equal(applied.layout.version,5);
   },unifiedState,{layoutSupported:true,layout:modernLayout,layoutApps:unifiedApps});
+  const novaLayout=JSON.parse(await readFile(new URL('../../resource/launcher/nova/app/src/main/assets/layout.json',import.meta.url),'utf8'));
+  const novaComponent='com.ecojust.novatv/.MainActivity';
+  const novaState=structuredClone(unifiedState);novaState.defaultHome=novaComponent;
+  novaState.launchers.forEach(l=>l.isDefault=false);
+  novaState.launchers.push({packageName:'com.ecojust.novatv',component:novaComponent,label:'Nova TV',isDefault:true});
+  novaState.packages.push({packageName:'com.ecojust.novatv',label:'Nova TV',installed:true,enabled:true,system:false,protectedReason:'当前默认启动器'});
+  novaLayout.home.users=[{id:'nova-music',name:'Music TV',text:'Music TV',action:'com.ecojust.music',frame:{x:56,y:330,width:200,height:150},visible:true,icon:rawSvg,textColor:'#F5F6FA',iconColor:'#FFFFFF',backgroundColor:'#284D74'}];
+  await check('Nova v5 keeps its background and geometry and applies user edits to the current Nova desktop',async p=>{
+    await nav(p,'launchers');await settled(p);
+    const card=p.locator(`[data-launcher-component="${novaComponent}"]`);
+    assert.equal(await card.locator('.launcher-card-background').getAttribute('src'),novaLayout.home.background.image);
+    await card.locator('[data-act="open-layout"]').click();await p.locator('[data-unified-editor]').waitFor();
+    const canvas=p.locator('.unified-canvas');
+    assert.ok((await canvas.evaluate(el=>getComputedStyle(el).backgroundImage)).includes(novaLayout.home.background.image));
+    assert.deepEqual(await canvas.evaluate(el=>{const s=getComputedStyle(el);return [s.backgroundSize,s.backgroundRepeat]}),['cover','no-repeat']);
+    for(const node of [novaLayout.home.system.find(n=>n.id==='title'),novaLayout.home.users[0]]){
+      const rect=await canvas.boundingBox(),box=await p.locator(`[data-u-node="${node.id}"]`).boundingBox();
+      assert.ok(Math.abs((box.x-rect.x)/rect.width-node.frame.x/novaLayout.screen.width)<.005,'Nova x matches layout JSON');
+      assert.ok(Math.abs((box.y-rect.y)/rect.height-node.frame.y/novaLayout.screen.height)<.005,'Nova y matches layout JSON');
+      assert.ok(Math.abs(box.width/rect.width-node.frame.width/novaLayout.screen.width)<.005,'Nova width matches layout JSON');
+    }
+    await p.locator('[data-u-node="title"]').click();assert.equal(await p.locator('[data-u-field="name"]').isDisabled(),true);
+    assert.equal(await p.locator('[data-u-field="text"]').inputValue(),'NOVA TV');
+    await p.locator('[data-u-node="nova-music"]').click();
+    // A committed edit removes a still-focused dirty input; its native blur must not re-enter DOM replacement.
+    await p.locator('[data-u-field="text"]').fill('我的音乐');await p.locator('[data-u-field="text"]').dispatchEvent('change');
+    assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Focused text edits must render without a caught error');
+    await p.locator('[data-u-frame="x"]').fill('72');await p.locator('[data-u-frame="x"]').dispatchEvent('change');
+    assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Nova edits must not show a caught render error');
+    await shot(p,'nova-layout-home-037');
+    await p.locator('[data-u-page="apps"]').click();
+    assert.ok((await canvas.evaluate(el=>getComputedStyle(el).backgroundImage)).includes(novaLayout.apps.background.image));
+    assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Switching Nova pages must keep the editor error-free');
+    await shot(p,'nova-layout-apps-037');
+    await p.locator('[data-u-act="apply"]').click();
+    assert.match(await p.locator('#confirm-operation').locator('..').locator('..').innerText(),/com\.ecojust\.novatv/);
+    await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='applyLayout'));await settled(p);
+    const applied=await p.evaluate(()=>window.__launcherRequests.find(r=>r.action==='applyLayout'));
+    assert.equal(applied.layout.version,5);assert.equal(applied.layout.home.users[0].text,'我的音乐');assert.equal(applied.layout.home.users[0].frame.x,72);
+    assert.equal(applied.layout.home.users[0].action,'com.ecojust.music');
+    assert.deepEqual(applied.layout.home.system,novaLayout.home.system);assert.deepEqual(applied.layout.apps.system,novaLayout.apps.system);
+    assert.deepEqual(applied.layout.home.background,novaLayout.home.background);assert.deepEqual(applied.layout.apps.background,novaLayout.apps.background);
+  },novaState,{layoutSupported:true,layout:novaLayout,layoutApps:unifiedApps});
   const homeCover='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=';
   const updatedHomeCover='data:image/png;base64,'+Buffer.concat([Buffer.from(homeCover.split(',')[1],'base64'),Buffer.from([0])]).toString('base64');
   const coverLayout=structuredClone(unifiedLayout);coverLayout.home.background.image=homeCover;

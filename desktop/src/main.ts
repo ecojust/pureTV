@@ -175,13 +175,26 @@ function shell(): string {
 function syncSceneScale():void {const canvas=layoutDialog.querySelector<HTMLElement>('.scene-canvas');if(canvas)canvas.style.setProperty('--scene-unit',`${canvas.clientWidth/960}px`);}
 function scrollAreas():HTMLElement[]{return [...root.querySelectorAll<HTMLElement>('[data-scroll]'),...layoutDialog.querySelectorAll<HTMLElement>('[data-scroll]')];}
 const scrollPositions = new Map<string, { top: number; left: number }>();
+let rendering = false, rerenderQueued = false;
 function render(): void {
-  for (const area of scrollAreas()) scrollPositions.set(area.dataset.scroll!, { top: area.scrollTop, left: area.scrollLeft });
-  root.innerHTML = shell(); updateSelectAll();layoutDialog.setAttribute('aria-label',t('调整启动器布局'));
-  if(layoutDialog.open) {if(layoutModalTarget!==launcherTarget() || !layoutAvailable())layoutDialog.close();else {layoutDialog.innerHTML=layoutEditor();syncSceneScale();}}
-  for (const area of scrollAreas()) {
-    const position = scrollPositions.get(area.dataset.scroll!); if (position) { area.scrollTop = position.top; area.scrollLeft = position.left; }
+  // Replacing a focused input can synchronously dispatch its native change/blur.
+  // Commit that event's state, then draw it after the current DOM replacement ends.
+  if (rendering) {
+    if (!rerenderQueued) {
+      rerenderQueued = true;
+      queueMicrotask(() => { rerenderQueued = false; render(); });
+    }
+    return;
   }
+  rendering = true;
+  try {
+    for (const area of scrollAreas()) scrollPositions.set(area.dataset.scroll!, { top: area.scrollTop, left: area.scrollLeft });
+    root.innerHTML = shell(); updateSelectAll();layoutDialog.setAttribute('aria-label',t('调整启动器布局'));
+    if(layoutDialog.open) {if(layoutModalTarget!==launcherTarget() || !layoutAvailable())layoutDialog.close();else {layoutDialog.innerHTML=layoutEditor();syncSceneScale();}}
+    for (const area of scrollAreas()) {
+      const position = scrollPositions.get(area.dataset.scroll!); if (position) { area.scrollTop = position.top; area.scrollLeft = position.left; }
+    }
+  } finally { rendering = false; }
 }
 function content(): string {
   switch (page) {

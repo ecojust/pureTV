@@ -17,6 +17,8 @@ pureTV Manager 与 Launcher **0.3.6 使用 layout.json v5**。布局由电视和
 - **background**：该页独立的背景颜色与可选图片，与组件属性分开。Home 与 Apps 可以使用不同图片。图片存储在 JSON 中，不引用电脑路径；hover 不改变图片的覆盖与居中方式。
 - **navigation**：方向键到达当前用户块最上／最下边缘时的切页规则。默认 Home `down: "apps"`，Apps `up: "home"`，恢复首页按下进入应用页的行为；省略某个方向则不切页。
 
+同一份 v5 协议可以支持不同视觉风格：[pureTV](launcher/puretv/) 与 [Nova TV](launcher/nova/) 均使用 `users` / `system`、独立颜色和页面背景。Nova TV 的完整示例见 [layout.example.json](launcher/nova/layout.example.json)，需 Manager 0.3.7 或以上读写；其 provider 为 `content://com.ecojust.novatv.layout`，布局和数据与 pureTV 独立。
+
 完整示例：[layout.example.json](launcher/puretv/layout.example.json)。示例应用来自资源目录，需要先在电视安装对应 APK。`system` 必须使用当前启动器返回的完整内容，不要自行增删或修改。以下为用户块和页面属性的结构片段：
 
 ```json
@@ -84,9 +86,58 @@ pureTV Manager 与 Launcher **0.3.6 使用 layout.json v5**。布局由电视和
 
 读取接口额外返回只读 `systemBasis` 元数据（screen/home/apps），保存启动器提供的系统组件原始基准。它不写入 layout.json，用于屏幕基准多次缩放时避免整数舍入累积，确保管理器与电视仍计算出相同系统位置。
 
-读取：管理器仅对已适配并验证的布局接口绘制可编辑画布；写入：检查 action 是否仍可启动、SVG 是否有效、frame 是否越界、system 是否发生修改。任一失败都不覆盖上一份有效布局。MCP 与 GUI 走同一读写路径；读取未激活启动器的 Home 背景不需要先激活它。
+读取：Manager 0.3.7 起按已安装 HOME 启动器的包名动态探测布局接口，通过协议验证后绘制可编辑画布，不维护启动器包名白名单；写入：检查 action 是否仍可启动、SVG 是否有效、frame 是否越界、system 是否发生修改。任一失败都不覆盖上一份有效布局。MCP 与 GUI 走同一读写路径；读取未激活启动器的 Home 背景不需要先激活它。
 
 文件为 UTF-8，整体最多 **90 KiB**。旧版 v3/v4 已保存的用户应用块及背景可迁移；v4 的 color 同时迁入 textColor 和 iconColor，用户位置保持不变，系统组件采用新版透明样式。管理器仍支持 v2/v3/v4 APK；要使用 v5，需同时升级到 0.3.6 管理器与启动器。**不读取旧版 apps.json。**
+
+### 第三方启动器接入与动态检测
+
+管理器从电视的 HOME Activity 列表获取已安装启动器，按包名构造 `content://<packageName>.layout`。例如 `org.example.launcher` 使用 `content://org.example.launcher.layout`，无需向管理器注册包名。管理器对当前激活启动器调用 `status`，只有完整返回通过协议验证才显示“调整布局”；未实现接口、返回不支持或格式不合法时，仍可安装和切换，但不开放布局写入。读取封面时可探测其他已安装启动器，按包名去重且不切换桌面。
+
+APK 可在 `assets/layout.json` 提供默认布局及 Home 背景。**仅存在此静态文件不代表能够编辑正在运行的桌面**；启动器还需要实现以下 Android ContentProvider 接口，在读写后使用同一份 layout.json 渲染界面：
+
+这里的接口是 APK 内的 Android `ContentProvider` 组件，安装后由系统按需启动。管理器通过已连接的 ADB 调用，不使用 HTTP、不额外开放端口，也不需要先打开启动器界面。APK 文件本身只是安装包；接口访问的是电视上已安装应用的运行组件与私有布局数据。
+
+例如第三方启动器在清单中声明：
+
+```xml
+<provider
+    android:name=".LauncherLayoutProvider"
+    android:authorities="org.example.launcher.layout"
+    android:exported="true"
+    android:permission="android.permission.DUMP" />
+```
+
+读取当前用户的配置（包名、用户 ID 和电视地址按实际设备替换）：
+
+```sh
+adb -s 192.168.1.50:5555 shell content call --uri content://org.example.launcher.layout --user 0 --method status
+```
+
+`apply` 使用同一路径的 `--method apply --arg <Base64布局>`；`reset` 使用 `--method reset`。Provider 需实现 `call(method, arg, extras)`，不是仅声明清单或放入 JSON 文件。
+
+| 项目 | 约定 |
+| --- | --- |
+| Authority | `<packageName>.layout`；可导出，通过 `android.permission.DUMP` 限制 ADB shell 访问，启动器内部也可访问 |
+| `status` | 无参数；读取当前有效布局、是否已有自定义和可选用户应用 |
+| `apply` | `arg` 为 UTF-8 layout.json 的标准 Base64（无换行）；验证并原子保存，通知桌面刷新；失败时保持上一份布局 |
+| `reset` | 无参数；恢复当前启动器默认布局并刷新 |
+| 返回 Bundle | 三种方法统一返回字符串键 `result`，值为下面响应 JSON 的 UTF-8 标准 Base64；返回保存或重置之后的实际状态 |
+
+```json
+{
+  "supported": true,
+  "version": 5,
+  "custom": false,
+  "layout": { "version": 5, "screen": {}, "home": {}, "apps": {} },
+  "systemBasis": { "screen": {}, "home": [], "apps": [] },
+  "apps": [{ "packageName": "org.example.music", "label": "音乐" }]
+}
+```
+
+上例只展示响应外壳，`layout` 必须替换为本节定义的完整有效布局；`systemBasis.screen` 为系统组件的原始屏幕基准，`home` / `apps` 为各页完整 `system` 数组。`version` 必须与 `layout.version` 相同。`apps` 最多 100 项，只包含当前用户已安装且可启动的用户应用；可选 `iconPng` 是最多 8 KiB PNG 的 Base64，不带 data URI 前缀。
+
+管理器会验证布局字段、SVG、背景图片、坐标边界、系统基准与用户应用，再开放编辑；保存时再次确认默认 HOME 没有变化，并读取结果复查。启动器也必须独立执行同样的验证，不能仅依赖管理器。参考实现：[Nova Provider](launcher/nova/app/src/main/java/com/ecojust/novatv/LauncherLayoutProvider.java) 和 [布局验证及存储](launcher/nova/app/src/main/java/com/ecojust/novatv/LauncherLayout.java)。
 
 ### 文件与画面对照
 

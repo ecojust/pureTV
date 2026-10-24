@@ -36,10 +36,15 @@ elif args[:2]==['-s','192.168.1.50:5555']:
   if a[0]=='am':print('Starting HOME' if a[1]=='start' else '0')
   elif a[0] in ['screencap','rm']:print('')
   elif a[0]=='content':
-   method=a[a.index('--method')+1]
-   if method=='apply':tv['layout']=json.loads(base64.b64decode(a[a.index('--arg')+1]));tv['customLayout']=True;save()
-   elif method=='reset':tv['layout']=json.loads((root/'default-layout.json').read_text());tv['customLayout']=False;save()
-   result={'supported':True,'version':5,'custom':tv.get('customLayout',False),'layout':tv.get('layout',json.loads((root/'default-layout.json').read_text())),'apps':[{'packageName':'com.ecojust.puretv','label':'pureTV'}]}
+   method=a[a.index('--method')+1];uri=a[a.index('--uri')+1]
+   defaults={'content://com.ecojust.puretv.layout':'default-layout.json','content://com.ecojust.novatv.layout':'nova-layout.json','content://com.example.launcher.layout':'third-party-layout.json'}
+   if uri not in defaults:print('No content provider');sys.exit(1)
+   layouts=tv.setdefault('layouts',{})
+   if method=='apply':layouts[uri]=json.loads(base64.b64decode(a[a.index('--arg')+1]));save()
+   elif method=='reset':layouts.pop(uri,None);save()
+   else:assert method=='status',method
+   default=json.loads((root/defaults[uri]).read_text())
+   result={'supported':True,'version':5,'custom':uri in layouts,'layout':layouts.get(uri,default),'systemBasis':{'screen':default['screen'],'home':default['home']['system'],'apps':default['apps']['system']},'apps':[{'packageName':'com.ecojust.puretv','label':'pureTV'}]}
    print('Bundle[{result='+base64.b64encode(json.dumps(result).encode()).decode()+'}]')
   elif a[0]=='cat':print('MemTotal: 4096 kB\nMemAvailable: 1024 kB' if a[1]=='/proc/meminfo' else '3600.25 20.0')
   elif a[0]=='df':print('Filesystem 1K-blocks Used Available Use% Mounted on\n/dev/data 4096 1024 3072 25% /data')
@@ -69,7 +74,7 @@ elif args[:2]==['-s','192.168.1.50:5555']:
    else:raise AssertionError(a)
    save();print('Success' if a[1]=='uninstall' else 'new state: changed')
   elif a[:2]==['cmd','package']:
-   if a[2]=='query-activities':print('com.stock.home/.Main\ncom.ecojust.puretv/.MainActivity')
+   if a[2]=='query-activities':print('com.stock.home/.Main\ncom.ecojust.puretv/.MainActivity\ncom.ecojust.novatv/.MainActivity\ncom.example.launcher/.Home')
    elif a[2]=='resolve-activity':print(tv['home'])
    elif a[2]=='set-home-activity':tv['home']=a[-1].strip("'");save();print('Success')
    elif a[2]=='install-existing':tv['installed'].append(a[-1]);save();print('Package installed for user')
@@ -121,8 +126,11 @@ def main():
     binary=Path(parser.parse_args().binary).resolve()
     with tempfile.TemporaryDirectory(prefix='puretv-mcp-smoke-') as temp:
         root=Path(temp);adb=root/'adb';adb.write_text(FAKE_ADB);adb.chmod(0o755)
-        (root/'tv.json').write_text(json.dumps({'installed':['android','com.android.systemui','com.stock.home','com.ecojust.puretv','com.vendor.ads'], 'system':['android','com.android.systemui','com.stock.home','com.vendor.ads','com.vendor.removed'],'disabled':[],'home':'com.stock.home/.Main'}))
+        (root/'tv.json').write_text(json.dumps({'installed':['android','com.android.systemui','com.stock.home','com.ecojust.puretv','com.ecojust.novatv','com.example.launcher','com.vendor.ads'], 'system':['android','com.android.systemui','com.stock.home','com.vendor.ads','com.vendor.removed'],'disabled':[],'home':'com.stock.home/.Main'}))
         (root/'default-layout.json').write_text(Path('../resource/launcher/puretv/app/src/main/assets/layout.json').read_text())
+        (root/'nova-layout.json').write_text(Path('../resource/launcher/nova/app/src/main/assets/layout.json').read_text())
+        third_party=json.loads((root/'nova-layout.json').read_text());third_party['home']['background']['color']='#171923'
+        (root/'third-party-layout.json').write_text(json.dumps(third_party))
         env={**os.environ,'XDG_DATA_HOME':str(root/'data'),'XDG_CONFIG_HOME':str(root/'config'),'XDG_CACHE_HOME':str(root/'cache'),'PURETV_ADB':str(adb),'PURETV_FAKE_ROOT':str(root)}
         with (root/'gui.log').open('w') as log:
             gui=subprocess.Popen([str(binary)],env=env,stdout=log,stderr=log)
@@ -172,6 +180,43 @@ def main():
                 assert client.call('apply_launcher_layout',{'layoutJson':json.dumps(draft)})['layout']==draft
                 assert client.call('get_launcher_layout')['layout']['home']['users'][0]['action']=='com.ecojust.puretv'
                 assert client.call('reset_launcher_layout')['custom'] is False
+                # Exercise the second package through the actual GUI + stdio bridge.
+                # Each provider owns its state; an incorrect URI must fail these comparisons.
+                pure_default=json.loads((root/'default-layout.json').read_text())
+                nova_default=json.loads((root/'nova-layout.json').read_text())
+                assert nova_default!=pure_default
+                client.call('set_home',{'component':'com.ecojust.novatv/.MainActivity'})
+                nova=client.call('get_launcher_layout')
+                assert nova['supported'] is True and nova['layout']==nova_default,nova
+                assert nova['component'].split('/')[0]=='com.ecojust.novatv'
+                nova_draft=json.loads(json.dumps(nova_default));nova_draft['home']['users']=draft['home']['users']
+                nova_draft['home']['background']['color']='#142334'
+                tampered=json.loads(json.dumps(nova_draft));tampered['home']['system'][0]['frame']['x']+=1
+                client.call('apply_launcher_layout',{'layoutJson':json.dumps(tampered)},failure=True)
+                assert client.call('apply_launcher_layout',{'layoutJson':json.dumps(nova_draft)})['layout']==nova_draft
+                assert client.call('get_launcher_layout')['layout']==nova_draft
+                saved_tv=json.loads((root/'tv.json').read_text())
+                assert saved_tv['layouts']['content://com.ecojust.novatv.layout']==nova_draft
+                assert 'content://com.ecojust.puretv.layout' not in saved_tv['layouts']
+                backgrounds=client.call('get_launcher_backgrounds')['backgrounds']
+                if 'image' in nova_default['home']['background']:
+                    assert backgrounds[nova['component']]==nova_default['home']['background']['image']
+                assert client.call('get_state')['defaultHome']==nova['component']
+                reset=client.call('reset_launcher_layout');assert reset['custom'] is False and reset['layout']==nova_default
+                assert client.call('get_launcher_layout')['layout']==nova_default
+                client.call('set_home',{'component':'com.ecojust.puretv/.MainActivity'})
+                assert client.call('get_launcher_layout')['layout']==pure_default
+                print('PASS: independent Nova and pureTV providers, v5 editing, system lock, covers and reset',flush=True)
+                # No manager package registry: an unrelated installed HOME with the protocol works.
+                client.call('set_home',{'component':'com.example.launcher/.Home'})
+                discovered=client.call('get_launcher_layout');assert discovered['supported'] and discovered['layout']==third_party
+                third_draft=json.loads(json.dumps(third_party));third_draft['home']['background']['color']='#334455'
+                assert client.call('apply_launcher_layout',{'layoutJson':json.dumps(third_draft)})['layout']==third_draft
+                assert client.call('get_launcher_layout')['layout']==third_draft
+                assert client.call('reset_launcher_layout')['layout']==third_party
+                client.call('set_home',{'component':'com.ecojust.puretv/.MainActivity'})
+                assert client.call('get_launcher_layout')['layout']==pure_default
+                print('PASS: third-party layout provider discovered dynamically without a package allowlist',flush=True)
                 assert client.call('get_launcher_covers')=={}
                 assert client.call('get_state')['originalHome']=='com.stock.home/com.stock.home.Main'
                 client.call('restore_home')
