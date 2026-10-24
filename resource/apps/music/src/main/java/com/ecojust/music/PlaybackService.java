@@ -170,12 +170,13 @@ public class PlaybackService extends Service {
     }
     private void retrySource(int ticket, String message) {
         if (ticket != generation || destroyed) return;
+        if (!loading) loadDeadline = SystemClock.elapsedRealtime() + 30000;
         if (!current().local() && sourceIndex + 1 < sources.size() && SystemClock.elapsedRealtime() < loadDeadline) {
             prepare(sources.get(++sourceIndex), ticket);
         } else fail(message);
     }
     private void prepare(String source, int ticket) {
-        releasePlayer();
+        releasePlayer(); loading = true;
         stage = current().local() ? "正在打开本地音频…" : "正在连接音频（" + (sourceIndex + 1) + "/" + sources.size() + "）…";
         changed();
         try {

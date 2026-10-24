@@ -38,7 +38,7 @@
 复用仓库现有 Gradle、SDK 和签名配置，无需独立工程或第二份 Wrapper：
 
 ```bash
-cd resource/launcher
+cd resource/launcher/puretv
 ./gradlew :music:assembleDebug
 ./gradlew :music:verifyReleaseSize :music:lintDebug :music:testDebugUnitTest
 ```

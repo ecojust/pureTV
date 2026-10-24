@@ -21,7 +21,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 首页显示当前电脑的局域网 IPv4、网卡与子网前缀，支持刷新与多网卡。电视 IP／主机名和端口会在点击连接后自动记住，失败时也保留，下次打开自动填入。连接失败排查见[连接指南](desktop/README.md#连接失败排查)。
 
-管理器安装在**电脑**上。电视开启 ADB／网络调试并接受授权后，即可使用应用管理，不需要安装电视端常驻服务。自定义桌面需另行安装[配套 pureTV Launcher 0.3.5](resource/launcher/)。电视端 APK 直接在资源目录下载，包大小与 SHA256 见各目录；管理器校验值见发布附件；macOS 首次打开说明见[安装指南](desktop/README.md#macos-安装与首次打开)。
+管理器安装在**电脑**上。电视开启 ADB／网络调试并接受授权后，即可使用应用管理，不需要安装电视端常驻服务。自定义桌面需另行安装[配套 pureTV Launcher 0.3.5](resource/launcher/puretv/)。电视端 APK 直接在资源目录下载，包大小与 SHA256 见各目录；管理器校验值见发布附件；macOS 首次打开说明见[安装指南](desktop/README.md#macos-安装与首次打开)。
 
 ## 连接与应用管理
 
@@ -55,7 +55,8 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 ```text
 resource/
-├── launcher/          # 启动器源码、pureTV-0.3.5.apk、layout 示例和封面
+├── launcher/
+│   └── puretv/        # pureTV 启动器源码、APK、layout 示例和封面
 └── apps/
     ├── music/         # Music TV 源码与 APK
     ├── shortvideo/    # ShortVideo TV 源码与 APK
@@ -70,7 +71,7 @@ resource/
 
 | 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
-| [pureTV Launcher](resource/launcher/) | ecojust / 桔子桑 | 0.3.5 | 736.1 KiB（753,746 B） | 是 | <img src="resource/launcher/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.3.5 | 736.1 KiB（753,746 B） | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
 
 ### 电视应用
 
@@ -114,4 +115,4 @@ resource/
 
 ## 许可与致谢
 
-pureTV 使用 [MIT](LICENSE) 许可。部分电视端启动器代码参考 [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv)，原作者版权与许可保留于 [NOTICE.md](NOTICE.md)。字体见 [OFL 许可](resource/launcher/FONT-LICENSE-OFL.txt)。第三方 APK、截图与源码使用各资源文件夹内的许可证。
+pureTV 使用 [MIT](LICENSE) 许可。部分电视端启动器代码参考 [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv)，原作者版权与许可保留于 [NOTICE.md](NOTICE.md)。字体见 [OFL 许可](resource/launcher/puretv/FONT-LICENSE-OFL.txt)。第三方 APK、截图与源码使用各资源文件夹内的许可证。

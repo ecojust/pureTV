@@ -49,7 +49,7 @@ jobs:
           PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
           CLEAN_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tv-previews
           MUSIC_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-music-previews
-        working-directory: resource/launcher
+        working-directory: resource/launcher/puretv
         run: |
           set -o pipefail
           ./gradlew --no-daemon assembleDebug assembleRelease lintDebug testDebugUnitTest :music:verifyReleaseSize :music:lintDebug :music:testDebugUnitTest :shortvideo:verifyReleaseSize :webtv:verifyReleaseSize 2>&1 | tee "$RUNNER_TEMP/android-build.log"
@@ -75,7 +75,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: pureTV-release-metadata
-          path: resource/launcher/release-metadata.json
+          path: resource/launcher/puretv/release-metadata.json
       - uses: actions/upload-artifact@v4
         with:
           name: pureTV-tv-previews
@@ -84,11 +84,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: pureTV-debug
-          path: resource/launcher/app/build/outputs/apk/debug/*.apk
+          path: resource/launcher/puretv/app/build/outputs/apk/debug/*.apk
       - uses: actions/upload-artifact@v4
         with:
           name: pureTV-release
-          path: resource/launcher/release-output/*.apk
+          path: resource/launcher/puretv/release-output/*.apk
       - uses: actions/upload-artifact@v4
         with:
           name: music-tv-previews

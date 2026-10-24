@@ -8,7 +8,7 @@
 
 | 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
-| [pureTV Launcher](launcher/) | ecojust / 桔子桑 | 0.3.5 | 736.1 KiB（753,746 B） | 是 | <img src="launcher/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [pureTV Launcher](launcher/puretv/) | ecojust / 桔子桑 | 0.3.5 | 736.1 KiB（753,746 B） | 是 | <img src="launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
 
 ### 电视应用
 

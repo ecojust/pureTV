@@ -50,7 +50,7 @@
 ## 构建
 
 ```bash
-cd launcher
+cd resource/launcher/puretv
 ./gradlew :shortvideo:assembleDebug
 ./gradlew :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest
 ```

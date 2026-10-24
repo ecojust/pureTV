@@ -17,7 +17,7 @@ pureTV Manager 与 Launcher **0.3.5 使用 layout.json v4**。布局由电视和
 - **background**：该页独立的背景颜色与可选图片，与组件属性分开。Home 与 Apps 可以使用不同图片。图片存储在 JSON 中，不引用电脑路径；hover 不改变图片的覆盖与居中方式。
 - **navigation**：方向键到达当前用户块最上／最下边缘时的切页规则。默认 Home `down: "apps"`，Apps `up: "home"`，恢复首页按下进入应用页的行为；省略某个方向则不切页。
 
-完整示例：[layout.example.json](launcher/layout.example.json)。示例应用来自资源目录，需要先在电视安装对应 APK。`system` 必须使用当前启动器返回的完整内容，不要自行增删或修改。以下为用户块和页面属性的结构片段：
+完整示例：[layout.example.json](launcher/puretv/layout.example.json)。示例应用来自资源目录，需要先在电视安装对应 APK。`system` 必须使用当前启动器返回的完整内容，不要自行增删或修改。以下为用户块和页面属性的结构片段：
 
 ```json
 {
@@ -102,7 +102,7 @@ pureTV Manager 与 Launcher **0.3.5 使用 layout.json v4**。布局由电视和
 电脑端：[构建与运行](../desktop/README.md)。电视端使用 JDK 17／21、Android SDK Platform 35、Build Tools 34.0.0：
 
 ```bash
-cd resource/launcher
+cd resource/launcher/puretv
 ./gradlew assembleDebug assembleRelease lintDebug testDebugUnitTest
 ```
 

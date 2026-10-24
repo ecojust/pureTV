@@ -122,7 +122,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix='puretv-mcp-smoke-') as temp:
         root=Path(temp);adb=root/'adb';adb.write_text(FAKE_ADB);adb.chmod(0o755)
         (root/'tv.json').write_text(json.dumps({'installed':['android','com.android.systemui','com.stock.home','com.ecojust.puretv','com.vendor.ads'], 'system':['android','com.android.systemui','com.stock.home','com.vendor.ads','com.vendor.removed'],'disabled':[],'home':'com.stock.home/.Main'}))
-        (root/'default-layout.json').write_text(Path('../resource/launcher/app/src/main/assets/layout.json').read_text())
+        (root/'default-layout.json').write_text(Path('../resource/launcher/puretv/app/src/main/assets/layout.json').read_text())
         env={**os.environ,'XDG_DATA_HOME':str(root/'data'),'XDG_CONFIG_HOME':str(root/'config'),'XDG_CACHE_HOME':str(root/'cache'),'PURETV_ADB':str(adb),'PURETV_FAKE_ROOT':str(root)}
         with (root/'gui.log').open('w') as log:
             gui=subprocess.Popen([str(binary)],env=env,stdout=log,stderr=log)
