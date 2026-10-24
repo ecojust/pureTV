@@ -28,7 +28,16 @@ public class NavigationTest {
     @Test public void compactControlCenterKeepsEveryHiddenCommandAccessible() {
         try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup()) {
             MainActivity home=controller.get();layout(home);
-            home.findViewById(R.id.btnSettings).performClick();
+            // This test exercises the standard Wi-Fi action, so provide its platform handler.
+            // Without one, systemIntent intentionally falls back to a vendor settings component.
+            android.content.pm.ResolveInfo wifi=new android.content.pm.ResolveInfo();
+            wifi.activityInfo=new android.content.pm.ActivityInfo();
+            wifi.activityInfo.packageName="com.android.settings";wifi.activityInfo.name="com.android.settings.WifiSettings";
+            wifi.activityInfo.enabled=true;wifi.activityInfo.exported=true;
+            wifi.activityInfo.applicationInfo=new android.content.pm.ApplicationInfo();
+            wifi.activityInfo.applicationInfo.packageName="com.android.settings";
+            shadowOf(home.getPackageManager()).addResolveInfoForIntent(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS),wifi);
+            assertTrue(home.findViewById(R.id.btnSettings).isShown());home.findViewById(R.id.btnSettings).performClick();
             android.app.AlertDialog dialog=org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
             assertNotNull(dialog);assertTrue(dialog.isShowing());assertEquals(5,dialog.getListView().getAdapter().getCount());
             assertEquals(home.getString(R.string.inputs),dialog.getListView().getAdapter().getItem(2));

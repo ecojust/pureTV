@@ -44,7 +44,7 @@ jobs:
     needs: matrix
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 8
       matrix:
         launcher: ${{ fromJSON(needs.matrix.outputs.launchers) }}
     runs-on: ubuntu-latest
@@ -77,7 +77,7 @@ jobs:
               for failure in ET.parse(report).getroot().iter('failure'):
                   print('::error::'+(failure.text or '')[:3000].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
           log=pathlib.Path(os.environ['RUNNER_TEMP'])/'launcher-build.log'
-          if log.exists():print('::error::'+log.read_text(errors='replace')[-6000:].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
+          if log.exists():print('::error::'+log.read_text(errors='replace')[-3500:].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
           PY
       - name: Verify package and gather rendered previews
         env:

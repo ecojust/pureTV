@@ -616,6 +616,62 @@ try {
     assert.deepEqual(applied.layout.home.system,novaLayout.home.system);assert.deepEqual(applied.layout.apps.system,novaLayout.apps.system);
     assert.deepEqual(applied.layout.home.background,novaLayout.home.background);assert.deepEqual(applied.layout.apps.background,novaLayout.apps.background);
   },novaState,{layoutSupported:true,layout:novaLayout,layoutApps:novaApps});
+  for(const name of ['aster','sol','moss','forma','mono','drift','circuit','pixel']){
+    const layout=JSON.parse(await readFile(new URL(`../../resource/launcher/${name}/layout.example.json`,import.meta.url),'utf8'));
+    const template=JSON.parse(await readFile(new URL(`../../resource/launcher/${name}/app/src/main/assets/layout.json`,import.meta.url),'utf8'));
+    for(const section of ['home','apps'])for(const field of ['system','background','navigation'])assert.deepEqual(layout[section][field],template[section][field],`${name} example preserves shipped ${section}.${field}`);
+    const packageName=`com.ecojust.${name}tv`,component=`${packageName}/.MainActivity`,state=snapshot();
+    state.defaultHome=component;state.launchers.forEach(launcher=>launcher.isDefault=false);
+    state.launchers.push({packageName,component,label:name.toUpperCase()+' TV',isDefault:true});
+    const apps=[...new Map([...layout.home.users,...layout.apps.users].map(node=>[node.action,{packageName:node.action,label:node.name}])).values()];
+    for(const app of [{packageName,label:name.toUpperCase()+' TV'},...apps])if(!state.packages.some(p=>p.packageName===app.packageName))state.packages.push({...app,installed:true,enabled:true,system:false,protectedReason:null});
+    await check(`${name} v5 collection layout renders both pages and preserves system components on apply`,async p=>{
+      await nav(p,'launchers');await settled(p);
+      const card=p.locator(`[data-launcher-component="${component}"]`);
+      await card.locator('[data-act="open-layout"]').click();await p.locator('[data-unified-editor]').waitFor();
+      const canvas=p.locator('.unified-canvas');
+      const rgb=hex=>hex==='transparent'?'rgba(0, 0, 0, 0)':`rgb(${[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)).join(', ')})`;
+      for(const section of ['home','apps']){
+        await p.locator(`[data-u-page="${section}"]`).click();
+        assert.equal(await p.locator('.layout-modal .banner.error').count(),0,`${name} ${section} has no caught UI error`);
+        assert.equal(await p.locator('[data-u-kind="users"]').count(),6,`${name} shows its six example installed apps`);
+        const background=await canvas.evaluate(el=>{const style=getComputedStyle(el);return {image:style.backgroundImage,color:style.backgroundColor,size:style.backgroundSize,repeat:style.backgroundRepeat}});
+        assert.equal(background.color,rgb(layout[section].background.color));assert.equal(background.size,'cover');assert.equal(background.repeat,'no-repeat');
+        if(layout[section].background.image)assert.ok(background.image.includes(layout[section].background.image));else assert.equal(background.image,'none');
+        const rect=await canvas.boundingBox();
+        for(const kind of ['system','users'])for(const node of layout[section][kind]){
+          const element=p.locator(`[data-u-kind="${kind}"][data-u-node="${node.id}"]`),box=await element.boundingBox();
+          assert.ok(box,`${name} ${section}.${node.id} is represented in the editor`);
+          for(const [actual,expected] of [[(box.x-rect.x)/rect.width,node.frame.x/layout.screen.width],[(box.y-rect.y)/rect.height,node.frame.y/layout.screen.height],[box.width/rect.width,node.frame.width/layout.screen.width],[box.height/rect.height,node.frame.height/layout.screen.height]])assert.ok(Math.abs(actual-expected)<.005,`${name} ${section}.${node.id} geometry follows JSON: ${actual} vs ${expected}`);
+          assert.equal(await element.evaluate(el=>el.classList.contains('scene-hidden')),!node.visible);
+          const paint=await element.evaluate(el=>({text:getComputedStyle(el.querySelector('.unified-text')).color,icon:el.style.getPropertyValue('--u-icon-color'),background:el.style.getPropertyValue('--u-bg')}));
+          assert.deepEqual(paint,{text:rgb(node.textColor),icon:node.iconColor,background:node.backgroundColor});
+        }
+        await shot(p,`${name}-layout-${section}`);
+      }
+      await p.locator('[data-u-page="home"]').click();
+      if(name==='aster'){
+        await p.setViewportSize({width:1024,height:800});
+        const tiny=layout.home.system.find(n=>n.id==='date'),rect=await canvas.boundingBox(),box=await p.locator('[data-u-node="date"]').boundingBox();
+        assert.ok(box.height<38,'Small system nodes must not inherit normal button minimum height');
+        assert.ok(Math.abs(box.height-rect.height*tiny.frame.height/layout.screen.height)<1,'Small canvas preserves exact system height');
+        assert.ok(Math.abs(box.width-rect.width*tiny.frame.width/layout.screen.width)<1,'Small canvas preserves exact system width');
+        await shot(p,'aster-layout-home-compact');
+        await p.setViewportSize({width:1440,height:1000});
+      }
+      const first=layout.home.users[0],system=layout.home.system[0];
+      await p.locator('[data-u-selection]').selectOption(`system:${system.id}`);
+      assert.equal(await p.locator('[data-u-field="name"]').isDisabled(),true);assert.equal(await p.locator('[data-u-frame="x"]').isDisabled(),true);
+      await p.locator(`[data-u-node="${first.id}"][data-u-kind="users"]`).click();
+      const changedText=first.text+' · 自定义';await p.locator('[data-u-field="text"]').fill(changedText);await p.locator('[data-u-field="text"]').dispatchEvent('change');
+      assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Editing an installed app must not report a caught render error');
+      await p.locator('[data-u-act="apply"]').click();assert.ok((await p.locator('#confirm-operation').locator('..').locator('..').innerText()).includes(component));
+      await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='applyLayout'));await settled(p);
+      const applied=await p.evaluate(()=>window.__launcherRequests.find(r=>r.action==='applyLayout'));
+      const expected=structuredClone(layout);expected.home.users[0].text=changedText;assert.deepEqual(applied.layout,expected,`${name} applies only the intended user edit`);
+      assert.equal(await p.locator('.layout-modal .banner.error').count(),0);
+    },state,{layoutSupported:true,layout,layoutApps:apps});
+  }
   const homeCover='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=';
   const updatedHomeCover='data:image/png;base64,'+Buffer.concat([Buffer.from(homeCover.split(',')[1],'base64'),Buffer.from([0])]).toString('base64');
   const coverLayout=structuredClone(unifiedLayout);coverLayout.home.background.image=homeCover;

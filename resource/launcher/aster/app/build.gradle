@@ -42,6 +42,10 @@ android {
     testOptions {
         unitTests.includeAndroidResources = true
         unitTests.all {
+            // Robolectric keeps Android resource/graphics state per test worker. Bound each
+            // worker to one test class and provide room for native-backed TV scene captures.
+            maxHeapSize = '1g'
+            forkEvery = 1
             if (System.getenv('LAUNCHER_UI_CAPTURE_DIR')) {
                 outputs.upToDateWhen { false }
                 outputs.cacheIf { false }

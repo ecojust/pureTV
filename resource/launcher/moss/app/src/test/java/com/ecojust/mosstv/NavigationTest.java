@@ -28,7 +28,17 @@ public class NavigationTest {
     @Test public void compactControlCenterKeepsEveryHiddenCommandAccessible() {
         try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup()) {
             MainActivity home=controller.get();layout(home);
-            home.findViewById(R.id.btnSettings).performClick();
+            // A standard Android TV settings handler is installed for this navigation case.
+            // Without it Robolectric may resolve the explicit Xiaomi fallback, which has no action.
+            android.content.pm.ResolveInfo wifi=new android.content.pm.ResolveInfo();
+            wifi.activityInfo=new android.content.pm.ActivityInfo();
+            wifi.activityInfo.packageName="com.android.tv.settings";
+            wifi.activityInfo.name="com.android.tv.settings.WifiSettings";
+            wifi.activityInfo.enabled=true;wifi.activityInfo.exported=true;
+            wifi.activityInfo.applicationInfo=new android.content.pm.ApplicationInfo();
+            wifi.activityInfo.applicationInfo.packageName=wifi.activityInfo.packageName;
+            shadowOf(home.getPackageManager()).addResolveInfoForIntent(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS),wifi);
+            assertTrue(home.findViewById(R.id.btnSettings).isShown());home.findViewById(R.id.btnSettings).performClick();
             android.app.AlertDialog dialog=org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
             assertNotNull(dialog);assertTrue(dialog.isShowing());assertEquals(5,dialog.getListView().getAdapter().getCount());
             assertEquals(home.getString(R.string.inputs),dialog.getListView().getAdapter().getItem(2));

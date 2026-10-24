@@ -40,7 +40,7 @@ public class SvgRenderingTest {
         try(org.robolectric.android.controller.ActivityController<MainActivity> c=org.robolectric.Robolectric.buildActivity(MainActivity.class).setup()){
             android.view.View root=c.get().getWindow().getDecorView();root.measure(android.view.View.MeasureSpec.makeMeasureSpec(1920,android.view.View.MeasureSpec.EXACTLY),android.view.View.MeasureSpec.makeMeasureSpec(1080,android.view.View.MeasureSpec.EXACTLY));root.layout(0,0,1920,1080);
             org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
-            android.widget.TextView settings=c.get().findViewById(R.id.btnWallpaper);assertTrue(settings.isShown());assertEquals("",settings.getText().toString());assertNotNull(settings.getBackground());
+            android.widget.TextView settings=c.get().findViewById(R.id.btnSettings);assertTrue(settings.isShown());assertEquals("",settings.getText().toString());assertNotNull(settings.getBackground());
         }
     }
 }
