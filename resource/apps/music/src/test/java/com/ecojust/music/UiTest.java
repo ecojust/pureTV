@@ -23,6 +23,7 @@ public class UiTest {
     private org.robolectric.android.controller.ServiceController<PlaybackService> service;
     @Before public void bindRealService() {
         RuntimeEnvironment.getApplication().getSharedPreferences("music_library",0).edit().clear().commit();
+        RuntimeEnvironment.getApplication().getSharedPreferences("music_playback",0).edit().clear().commit();
         service = Robolectric.buildService(PlaybackService.class).create();
         shadowOf(RuntimeEnvironment.getApplication()).setComponentNameAndServiceForBindService(
             new android.content.ComponentName(RuntimeEnvironment.getApplication(),PlaybackService.class), service.get().onBind(new Intent()));
@@ -52,7 +53,8 @@ public class UiTest {
             java.lang.reflect.Field listField=MainActivity.class.getDeclaredField("list"); listField.setAccessible(true);
             ListView list=(ListView)listField.get(a); ((BaseAdapter)list.getAdapter()).notifyDataSetChanged();
             View root=a.getWindow().getDecorView(); root.measure(View.MeasureSpec.makeMeasureSpec(1920,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(1080,View.MeasureSpec.EXACTLY)); root.layout(0,0,1920,1080);
-            assertEquals(2,list.getAdapter().getCount()); assertTrue(list.getHeight()>0); assertNotNull(find(root,"队列"));
+            assertEquals(2,list.getAdapter().getCount()); assertTrue(list.getHeight()>0); assertNotNull(find(root,"队列")); assertNotNull(find(root,"播放全部")); assertNotNull(find(root,"随机播放"));
+            find(root,"顺序播放").performClick(); assertTrue(service.get().shuffled());
             String capture=System.getenv("MUSIC_UI_CAPTURE_DIR");
             if (capture!=null) { new File(capture).mkdirs(); Bitmap bitmap=Bitmap.createBitmap(1920,1080,Bitmap.Config.ARGB_8888); root.draw(new Canvas(bitmap)); try(FileOutputStream out=new FileOutputStream(new File(capture,"music-tv.png"))) { bitmap.compress(Bitmap.CompressFormat.PNG,100,out); } bitmap.recycle(); }
         }
