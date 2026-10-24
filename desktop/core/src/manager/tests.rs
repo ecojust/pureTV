@@ -20,6 +20,8 @@ struct FakeTv {
     calls: Vec<Vec<String>>,
     prior: BTreeMap<String, u8>,
     launcher_layout: Option<serde_json::Value>,
+    provider_defaults: BTreeMap<String, serde_json::Value>,
+    provider_layouts: BTreeMap<String, serde_json::Value>,
     layout_provider: bool,
 }
 struct FakeRunner {
@@ -93,11 +95,19 @@ impl Runner for FakeRunner {
                             if !tv.layout_provider {return Ok(Output{code:1,text:"No content provider".into()})}
                             use base64::Engine;
                             let method=&a[a.iter().position(|arg|arg=="--method").unwrap()+1];
-                            let defaults:serde_json::Value=serde_json::from_str(include_str!("../../../public/layout-v3.json")).unwrap();
-                            if method=="apply" {let arg=&a[a.iter().position(|arg|arg=="--arg").unwrap()+1];tv.launcher_layout=Some(serde_json::from_slice(&base64::engine::general_purpose::STANDARD.decode(arg).unwrap()).unwrap());}
-                            else if method=="reset" {tv.launcher_layout=None;}
-                            let layout=tv.launcher_layout.clone().unwrap_or(defaults);
-                            let value=serde_json::json!({"supported":true,"version":layout["version"],"custom":tv.launcher_layout.is_some(),"layout":layout,"apps":[{"packageName":"com.ecojust.puretv","label":"pureTV"}]});
+                            let uri=a[a.iter().position(|arg|arg=="--uri").unwrap()+1].clone();
+                            let original=uri=="content://com.ecojust.puretv.layout";
+                            let defaults:serde_json::Value=tv.provider_defaults.get(&uri).cloned().unwrap_or_else(||serde_json::from_str(include_str!("../../../public/layout-v3.json")).unwrap());
+                            if method=="apply" {
+                                let arg=&a[a.iter().position(|arg|arg=="--arg").unwrap()+1];
+                                let layout=serde_json::from_slice(&base64::engine::general_purpose::STANDARD.decode(arg).unwrap()).unwrap();
+                                if original {tv.launcher_layout=Some(layout);}else{tv.provider_layouts.insert(uri.clone(),layout);}
+                            } else if method=="reset" {
+                                if original {tv.launcher_layout=None;}else{tv.provider_layouts.remove(&uri);}
+                            }
+                            let custom=if original {tv.launcher_layout.clone()}else{tv.provider_layouts.get(&uri).cloned()};
+                            let layout=custom.clone().unwrap_or(defaults);
+                            let value=serde_json::json!({"supported":true,"version":layout["version"],"custom":custom.is_some(),"layout":layout,"apps":[{"packageName":"com.ecojust.puretv","label":"pureTV"}]});
                             format!("Bundle[{{result={}}}]",base64::engine::general_purpose::STANDARD.encode(value.to_string()))
                         },
                         "cat" => if a[1]=="/proc/meminfo" {"MemTotal: 4096 kB\nMemAvailable: 1024 kB".into()}else{"3600.25 20.0".into()},
@@ -1255,4 +1265,109 @@ fn inactive_launcher_backgrounds_are_read_without_switching_home() {
         .calls
         .iter()
         .any(|args| args.iter().any(|v| v == "set-home-activity")));
+}
+
+#[test]
+fn nova_layout_reads_writes_resets_and_covers_use_its_own_provider() {
+    use crate::LauncherRequest;
+    let (mut manager, tv) = fixture();
+    let nova = "com.ecojust.novatv/com.ecojust.novatv.MainActivity";
+    let nova_uri = "content://com.ecojust.novatv.layout";
+    let pure_uri = "content://com.ecojust.puretv.layout";
+    let mut defaults: serde_json::Value =
+        serde_json::from_str(include_str!("../../../public/layout.json")).unwrap();
+    let image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=";
+    defaults["home"]["background"]["image"] = serde_json::json!(image);
+    {
+        let mut tv = tv.lock().unwrap();
+        tv.default = nova.into();
+        tv.installed.insert("com.ecojust.novatv".into());
+        tv.launchers.push(nova.into());
+        tv.layout_provider = true;
+        tv.provider_defaults
+            .insert(nova_uri.into(), defaults.clone());
+    }
+    connect(&mut manager);
+    let status = manager
+        .execute_launcher(LauncherRequest::GetLayout)
+        .unwrap();
+    assert_eq!(status["supported"], true);
+    assert_eq!(status["component"], nova);
+    assert_eq!(status["layout"], defaults);
+    let mut draft = defaults.clone();
+    draft["home"]["background"]["color"] = serde_json::json!("#111122");
+    assert_eq!(
+        manager
+            .execute_launcher(LauncherRequest::ApplyLayout {
+                layout: draft.clone()
+            })
+            .unwrap()["layout"],
+        draft
+    );
+    assert_eq!(
+        manager
+            .execute_launcher(LauncherRequest::GetLayout)
+            .unwrap()["layout"],
+        draft
+    );
+    assert_eq!(
+        manager
+            .execute_launcher(LauncherRequest::ResetLayout)
+            .unwrap()["layout"],
+        defaults
+    );
+    {
+        let tv = tv.lock().unwrap();
+        let calls: Vec<_> = tv
+            .calls
+            .iter()
+            .filter(|a| a.iter().any(|v| v == "content"))
+            .collect();
+        assert!(calls.len() >= 7);
+        assert!(calls.iter().all(|a| a.iter().any(|v| v == nova_uri)));
+        assert!(tv.launcher_layout.is_none());
+        assert!(tv.provider_layouts.is_empty());
+    }
+    tv.lock().unwrap().calls.clear();
+    let covers = manager
+        .execute_launcher(LauncherRequest::GetBackgrounds)
+        .unwrap();
+    assert_eq!(covers["backgrounds"][nova], image);
+    assert!(covers["backgrounds"]["com.ecojust.puretv/.MainActivity"].is_null());
+    let tv = tv.lock().unwrap();
+    let calls: Vec<_> = tv
+        .calls
+        .iter()
+        .filter(|a| a.iter().any(|v| v == "content"))
+        .collect();
+    assert_eq!(calls.len(), 2);
+    assert!(calls.iter().any(|a| a.iter().any(|v| v == nova_uri)));
+    assert!(calls.iter().any(|a| a.iter().any(|v| v == pure_uri)));
+}
+
+#[test]
+fn unregistered_launcher_cannot_trigger_provider_reads_or_writes() {
+    use crate::LauncherRequest;
+    let (mut manager, tv) = fixture();
+    {
+        let mut tv = tv.lock().unwrap();
+        tv.default = "com.ecojust.novatv.clone/.Home".into();
+        tv.layout_provider = true;
+    }
+    connect(&mut manager);
+    assert_eq!(
+        manager
+            .execute_launcher(LauncherRequest::GetLayout)
+            .unwrap()["supported"],
+        false
+    );
+    assert!(manager
+        .execute_launcher(LauncherRequest::ResetLayout)
+        .is_err());
+    assert!(!tv
+        .lock()
+        .unwrap()
+        .calls
+        .iter()
+        .any(|a| a.iter().any(|v| v == "content")));
 }

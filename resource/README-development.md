@@ -17,6 +17,8 @@ pureTV Manager 与 Launcher **0.3.6 使用 layout.json v5**。布局由电视和
 - **background**：该页独立的背景颜色与可选图片，与组件属性分开。Home 与 Apps 可以使用不同图片。图片存储在 JSON 中，不引用电脑路径；hover 不改变图片的覆盖与居中方式。
 - **navigation**：方向键到达当前用户块最上／最下边缘时的切页规则。默认 Home `down: "apps"`，Apps `up: "home"`，恢复首页按下进入应用页的行为；省略某个方向则不切页。
 
+同一份 v5 协议可以支持不同视觉风格：[pureTV](launcher/puretv/) 与 [Nova TV](launcher/nova/) 均使用 `users` / `system`、独立颜色和页面背景。Nova TV 的完整示例见 [layout.example.json](launcher/nova/layout.example.json)，需 Manager 0.3.7 或以上读写；其 provider 为 `content://com.ecojust.novatv.layout`，布局和数据与 pureTV 独立。
+
 完整示例：[layout.example.json](launcher/puretv/layout.example.json)。示例应用来自资源目录，需要先在电视安装对应 APK。`system` 必须使用当前启动器返回的完整内容，不要自行增删或修改。以下为用户块和页面属性的结构片段：
 
 ```json

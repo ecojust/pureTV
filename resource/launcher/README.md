@@ -1,6 +1,6 @@
 # 电视启动器
 
-每个启动器使用独立的软件文件夹，APK 不直接放在本级目录。当前提供 [pureTV Launcher](puretv/)，作者、版本、APK 大小和封面见[资源表](../README.md)。
+每个启动器使用独立的软件文件夹，APK 不直接放在本级目录。当前提供 [Nova TV](nova/)（Apple TV 风格）与 [pureTV Launcher](puretv/)，作者、版本、APK 大小和封面见[资源表](../README.md)。
 
 ```text
 launcher/

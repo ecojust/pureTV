@@ -2,7 +2,7 @@
 
 **pureTV Manager 0.3.6** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.3.6 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.6)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.3.7 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.7)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
 ## 功能
 
@@ -23,14 +23,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.3.6 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.6) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.3.7 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.7) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.3.6-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.3.7-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.3.6-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.3.7-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -76,7 +76,7 @@
 
 ## 当前启动器的自定义布局
 
-只有当前默认启动器成功返回已适配的布局接口时才显示编辑器。当前适配电视端 **pureTV 0.3.6，包名 `com.ecojust.puretv`**；旧版 `com.ecojust.cleanyourtv` 及未适配的其他启动器不可直接写入。包名变化需要安装新 APK 并重新选择默认桌面。
+只有当前默认启动器成功返回已适配的布局接口时才显示编辑器。Manager 0.3.7 适配电视端 **pureTV 0.3.6（`com.ecojust.puretv`）** 和 **Nova TV 0.1.0（`com.ecojust.novatv`）**；旧版 `com.ecojust.cleanyourtv` 及未适配的其他启动器不可直接写入。包名变化需要安装新 APK 并重新选择默认桌面。
 
 在当前默认启动器卡片点击「调整布局」，打开电视画布弹窗。Home 与 Apps 分别定义列数和卡片顺序，支持拖动、名称、图标、颜色及 layout.json 导入。只能添加已安装可启动的用户应用，应用后读回复查。旧版 apps.json 不兼容。详情：[启动器布局文档](docs/launcher-layout.md)。
 
