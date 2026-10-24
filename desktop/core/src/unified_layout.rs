@@ -277,7 +277,7 @@ pub(crate) fn basis(result: &Value) -> Result<Value, String> {
     Ok(layout)
 }
 pub(crate) fn locked(next: &Value, current: &Value) -> Result<(), String> {
-    if next["version"] != 4 || current["version"] != 4 {
+    if ![json!(4), json!(5)].contains(&next["version"]) || next["version"] != current["version"] {
         return Err("请先读取新版启动器布局".into());
     }
     for page in ["home", "apps"] {
@@ -316,6 +316,10 @@ mod tests {
     fn v5_separates_icon_text_and_transparent_backgrounds() {
         let mut d: Value = serde_json::from_str(include_str!("../../public/layout.json")).unwrap();
         validate(&d).unwrap();
+        locked(&d, &d).unwrap();
+        let mut changed = d.clone();
+        changed["home"]["system"][0]["textColor"] = json!("#FFFFFF");
+        assert!(locked(&changed, &d).is_err());
         let mut n = user();
         n.as_object_mut().unwrap().remove("color");
         n["textColor"] = json!("#112233");

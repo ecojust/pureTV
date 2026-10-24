@@ -468,6 +468,19 @@ impl Manager {
 mod tests {
     use super::*;
     #[test]
+    fn v5_provider_status_validates_system_protection_end_to_end() {
+        let layout: Value = serde_json::from_str(include_str!("../../public/layout.json")).unwrap();
+        let value = json!({"supported":true,"version":5,"layout":layout,"apps":[]});
+        assert_eq!(
+            provider_result(&format!(
+                "Bundle[{{result={}}}]",
+                STANDARD.encode(value.to_string())
+            ))
+            .unwrap(),
+            value
+        );
+    }
+    #[test]
     fn layout_validation_and_provider_response_are_bounded_and_data_only() {
         let valid: Value =
             serde_json::from_str(include_str!("../../public/layout-v3.json")).unwrap();
