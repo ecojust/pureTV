@@ -59,7 +59,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-resource-') as temporary:
 
 [下载 APK]({signed.name}?raw=1) · [对应源码](source.tar.gz) · [layout.json 示例](layout.example.json) · [规范与画面对照](../../README-development.md#layoutjson-协议规范与画面对照) · [SHA256](SHA256SUMS.txt)
 
-支持 pureTV 管理器的 layout.json 版本 2 接口，home/apps 页面分别设置列数、顺序、名称、图标和颜色。只允许添加已安装可启动的用户应用，不兼容旧版 apps.json。
+支持 pureTV 管理器的 layout.json 版本 {resource['layoutJsonVersion']} 协议，home/apps 各自包含用户应用、只读系统组件、独立背景和导航规则。用户块可编辑位置、尺寸、文案、SVG 图标、action 和颜色；只允许添加已安装可启动的用户应用，不读取旧版 apps.json。
 
 ![首页渲染示例](thumb.png)
 
