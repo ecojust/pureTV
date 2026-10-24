@@ -39,7 +39,7 @@ elif args[:2]==['-s','192.168.1.50:5555']:
    method=a[a.index('--method')+1]
    if method=='apply':tv['layout']=json.loads(base64.b64decode(a[a.index('--arg')+1]));tv['customLayout']=True;save()
    elif method=='reset':tv['layout']=json.loads((root/'default-layout.json').read_text());tv['customLayout']=False;save()
-   result={'supported':True,'version':4,'custom':tv.get('customLayout',False),'layout':tv.get('layout',json.loads((root/'default-layout.json').read_text())),'apps':[{'packageName':'com.ecojust.puretv','label':'pureTV'}]}
+   result={'supported':True,'version':5,'custom':tv.get('customLayout',False),'layout':tv.get('layout',json.loads((root/'default-layout.json').read_text())),'apps':[{'packageName':'com.ecojust.puretv','label':'pureTV'}]}
    print('Bundle[{result='+base64.b64encode(json.dumps(result).encode()).decode()+'}]')
   elif a[0]=='cat':print('MemTotal: 4096 kB\nMemAvailable: 1024 kB' if a[1]=='/proc/meminfo' else '3600.25 20.0')
   elif a[0]=='df':print('Filesystem 1K-blocks Used Available Use% Mounted on\n/dev/data 4096 1024 3072 25% /data')

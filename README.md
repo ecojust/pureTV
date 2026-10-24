@@ -10,7 +10,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 ## 下载
 
-[下载 pureTV Manager 0.3.5](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.5)
+[下载 pureTV Manager 0.3.6](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.6)
 
 | 系统 | 安装包 |
 | --- | --- |
@@ -21,7 +21,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 首页显示当前电脑的局域网 IPv4、网卡与子网前缀，支持刷新与多网卡。电视 IP／主机名和端口会在点击连接后自动记住，失败时也保留，下次打开自动填入。连接失败排查见[连接指南](desktop/README.md#连接失败排查)。
 
-管理器安装在**电脑**上。电视开启 ADB／网络调试并接受授权后，即可使用应用管理，不需要安装电视端常驻服务。自定义桌面需另行安装[配套 pureTV Launcher 0.3.5](resource/launcher/puretv/)。电视端 APK 直接在资源目录下载，包大小与 SHA256 见各目录；管理器校验值见发布附件；macOS 首次打开说明见[安装指南](desktop/README.md#macos-安装与首次打开)。
+管理器安装在**电脑**上。电视开启 ADB／网络调试并接受授权后，即可使用应用管理，不需要安装电视端常驻服务。自定义桌面需另行安装[配套 pureTV Launcher 0.3.6](resource/launcher/puretv/)。电视端 APK 直接在资源目录下载，包大小与 SHA256 见各目录；管理器校验值见发布附件；macOS 首次打开说明见[安装指南](desktop/README.md#macos-安装与首次打开)。
 
 ## 连接与应用管理
 
@@ -51,7 +51,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 公共目录为 [resource/](resource/)，分为 [launcher/](resource/launcher/) 与 [apps/](resource/apps/)，原根目录的启动器和应用源码已整体移入。以后 Release 只发布电脑管理器；启动器和电视应用 APK 直接放在各自软件目录。每个软件文件夹至少包含一个实际 APK，可同时提供对应版本源码、封面、作者、许可证及 SHA256。点击软件名称进入对应文件夹。
 
-启动器表格的“支持自定义”指支持本管理器的 **layout.json 版本 4 users/system 接口**。启动器卡片默认使用 Home 背景图，提供 `thumb.png`／`APK名.thumb.png` 或手动选择封面时优先使用封面。
+启动器表格的“支持自定义”指支持本管理器的 **layout.json 版本 5 users/system 接口**。启动器卡片默认使用 Home 背景图，提供 `thumb.png`／`APK名.thumb.png` 或手动选择封面时优先使用封面。
 
 ```text
 resource/
@@ -71,7 +71,7 @@ resource/
 
 | 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
-| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.3.5 | 736.1 KiB（753,746 B） | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.3.6 | 736.1 KiB（753,746 B） | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
 
 ### 电视应用
 

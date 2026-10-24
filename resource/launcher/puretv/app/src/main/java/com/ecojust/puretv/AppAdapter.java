@@ -35,7 +35,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         final int label, icon, color, action, number;
         final String customTitle, packageName;
         final boolean packageIcon;
-        String svg="";int foreground=0xFFBFC3C8;
+        String svg="";int foreground=0xFFBFC3C8,iconColor=0xFFBFC3C8;
 
         Entry(String key, int label, int icon, int color, int action, int number) {
             this(key,label,icon,color,action,number,"","",false);
@@ -141,7 +141,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     @Override public void onBindViewHolder(@NonNull Holder holder, int position) {
         Entry entry = entries.get(position);
         String title = entry.title(context);
-        holder.textColor=entry.foreground;holder.fixedTextColor=!entry.svg.isEmpty();
+        holder.textColor=entry.foreground;holder.fixedTextColor=!entry.svg.isEmpty();holder.name.setTextColor(entry.foreground);
         holder.name.setText(title);
         holder.icon.setImageResource(entry.icon);
         if (entry.packageIcon && !entry.packageName.isEmpty()) {
@@ -155,12 +155,15 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         holder.card.setScaleX(holder.card.isFocused() ? FOCUS_SCALE : 1f);
         holder.card.setScaleY(holder.card.isFocused() ? FOCUS_SCALE : 1f);
         holder.card.setOnClickListener(v -> launch(entry));
+        holder.card.setForeground(context.getDrawable(R.drawable.card_focus));
         if(!entry.svg.isEmpty()) {
+            GradientDrawable outline=new GradientDrawable();outline.setColor(android.graphics.Color.TRANSPARENT);outline.setCornerRadius(8*context.getResources().getDisplayMetrics().density);outline.setStroke(Math.max(1,Math.round(2*context.getResources().getDisplayMetrics().density)),entry.foreground);
+            android.graphics.drawable.StateListDrawable focus=new android.graphics.drawable.StateListDrawable();focus.addState(new int[]{android.R.attr.state_focused},outline);focus.addState(new int[]{},new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));holder.card.setForeground(focus);
             try {
-                com.caverock.androidsvg.SVG svg=com.caverock.androidsvg.SVG.getFromString(entry.svg.replace("currentColor",String.format("#%06X",0xFFFFFF & entry.foreground)));
-                holder.icon.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
-                holder.icon.setImageDrawable(new android.graphics.drawable.PictureDrawable(svg.renderToPicture(96,96)));
-            }catch(Exception ignored){holder.icon.setImageDrawable(null);}
+                android.graphics.drawable.Drawable icon=SvgIcon.drawable(context,entry.svg,entry.iconColor);
+                holder.icon.setImageTintList(null);holder.icon.setLayerType(View.LAYER_TYPE_NONE,null);
+                holder.icon.setImageDrawable(icon);
+            }catch(Exception ignored){ /* Keep the installed-app/vector fallback, never a blank error icon. */ }
             holder.name.setTextColor(entry.foreground);
         }
     }
