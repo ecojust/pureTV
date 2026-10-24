@@ -1,0 +1,27 @@
+name: Read failed job diagnostics
+on:
+  workflow_dispatch:
+    inputs:
+      job_id:
+        description: Failed GitHub Actions job ID
+        required: true
+permissions:
+  actions: read
+jobs:
+  diagnostics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report verification log tail
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_ID: ${{ inputs.job_id }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          python - <<'PY'
+          import os, subprocess
+          job = os.environ['JOB_ID']
+          assert job.isdigit()
+          result = subprocess.run(['gh', 'api', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True, check=True)
+          tail = result.stdout[-12000:]
+          print('::notice title=Failed job log::' + tail.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
+          PY
