@@ -29,7 +29,7 @@ public class SvgRenderingTest {
         assertEquals(entry.foreground,holder.name.getCurrentTextColor());assertEquals(android.view.View.LAYER_TYPE_NONE,holder.icon.getLayerType());
     }
     @Test public void shippedAppVectorsHaveVisibleInk() throws Exception {
-        for(String pkg:new String[]{"com.ecojust.music","com.ecojust.webtv","com.ecojust.shortvideo","com.ecojust.novatv","com.example.other"}){
+        for(String pkg:new String[]{"com.ecojust.music","com.ecojust.webtv","com.ecojust.shortvideo","com.ecojust.novatv","com.example.other","com.example.browser","com.example.files"}){
             String raw=SvgIcon.forPackage(pkg);UnifiedLayout.svg(raw);
             Bitmap bitmap=((BitmapDrawable)SvgIcon.drawable(RuntimeEnvironment.getApplication(),raw,Color.BLUE)).getBitmap();
             boolean visible=false;for(int y=0;y<128&&!visible;y++)for(int x=0;x<128;x++)if(Color.alpha(bitmap.getPixel(x,y))>0){visible=true;break;}

@@ -2,7 +2,7 @@
 
 采用 Apple TV 风格的独立 Android 电视启动器：深色光影背景、简洁导航、大尺寸圆角卡片，以及遥控器焦点的平滑放大与清晰描边。应用标识 `com.ecojust.novatv`，可与 pureTV Launcher 同时安装。
 
-[下载 NovaTV-0.1.0.apk](NovaTV-0.1.0.apk) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [layout v5 协议](../../README-development.md#layoutjson-协议)
+[下载 NovaTV-0.1.0.apk](NovaTV-0.1.0.apk) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [layout v5 协议](../../README-development.md#layoutjson-规范与画面对照)
 
 ## 界面
 
