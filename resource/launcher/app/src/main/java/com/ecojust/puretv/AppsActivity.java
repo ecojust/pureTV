@@ -74,7 +74,10 @@ public class AppsActivity extends Activity implements AppAdapter.TileListener {
     @Override public void onTileFocused(int position, View card) { focusedPosition = position; }
 
     @Override public boolean onTileVerticalKey(int position, int key) {
-        if (layoutScene != null) return false;
+        if (layoutScene != null) {
+            if(layoutScene.edge(position,key==KeyEvent.KEYCODE_DPAD_DOWN)&&navigateLayout(key==KeyEvent.KEYCODE_DPAD_DOWN?"down":"up"))return true;
+            return false;
+        }
         if (key == KeyEvent.KEYCODE_DPAD_UP && position < columns) {
             findViewById(R.id.backHome).requestFocus();
             return true;
@@ -89,6 +92,9 @@ public class AppsActivity extends Activity implements AppAdapter.TileListener {
         CardFocus.request(grid, target);
         return true;
     }
+
+    private boolean navigateLayout(String direction){if(layoutScene!=null&&layoutScene.navigation(direction).equals("home")){finish();return true;}return false;}
+    @Override public boolean dispatchKeyEvent(KeyEvent event){if(event.getAction()==KeyEvent.ACTION_DOWN&&adapter!=null&&adapter.getItemCount()==0&&(event.getKeyCode()==KeyEvent.KEYCODE_DPAD_UP||event.getKeyCode()==KeyEvent.KEYCODE_DPAD_DOWN)&&navigateLayout(event.getKeyCode()==KeyEvent.KEYCODE_DPAD_UP?"up":"down"))return true;return super.dispatchKeyEvent(event);}
 
     @Override protected void onSaveInstanceState(Bundle state) {
         state.putInt("focusedPosition", focusedPosition);

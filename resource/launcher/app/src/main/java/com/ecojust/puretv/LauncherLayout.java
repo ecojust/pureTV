@@ -25,10 +25,11 @@ import java.util.TreeMap;
 
 /** Data-only layout.json override. It never accepts shell commands, intents or remote executable code. */
 final class LauncherLayout {
-    static final int LIMIT = 48 * 1024;
+    static final int LIMIT = 90 * 1024;
     final JSONObject json;
     int columns(String section) { return json.optJSONObject(section).optInt("columns",4); }
     LauncherLayout(JSONObject source) throws Exception {
+        if(source.optInt("version")==4){UnifiedLayout.validate(source);json=new JSONObject(source.toString());return;}
         keys(source, "version", "home", "apps");
         if (!(source.opt("version") instanceof Integer) || source.getInt("version") != 3)
             throw new IllegalArgumentException("Unsupported layout.json version");
@@ -88,7 +89,9 @@ final class LauncherLayout {
         List<String> allowed=section.equals("home")?Arrays.asList("clock","date","weather","wallpaper","favourites","inputs","network","settings","allApps"):Arrays.asList("title","subtitle","backHome");
         for(int i=0;i<elements.length();i++) {JSONObject node=elements.getJSONObject(i);keys(node,"id","frame","visible","zIndex");String id=node.getString("id");if(!allowed.contains(id)||!seen.add(id)||!node.has("frame"))throw new IllegalArgumentException("Invalid scene element");geometry(node);}
     }
-    JSONObject page(String section) {return json.optJSONObject(section);}
+    int screenWidth(){return json.optInt("version")==4?json.optJSONObject("screen").optInt("width"):960;}
+    int screenHeight(){return json.optInt("version")==4?json.optJSONObject("screen").optInt("height"):540;}
+    JSONObject page(String section) {try{return json.optInt("version")==4?UnifiedLayout.page(json,section):json.optJSONObject(section);}catch(Exception e){throw new IllegalStateException(e);}}
     private static byte[] read(InputStream input) throws Exception {
         try (InputStream stream = input; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             byte[] bytes = new byte[4096]; int count;
@@ -101,24 +104,33 @@ final class LauncherLayout {
         try {
             File privateFile = file(ctx);
             if (privateFile.exists() || new File(privateFile + ".bak").exists())
-                return new LauncherLayout(new JSONObject(new String(read(new AtomicFile(privateFile).openRead()), StandardCharsets.UTF_8)));
+                return loadOverride(ctx,new JSONObject(new String(read(new AtomicFile(privateFile).openRead()), StandardCharsets.UTF_8)));
             File external=ctx.getExternalFilesDir(null);File imported=external==null?null:new File(external,"layout.json");
-            if(imported!=null && imported.isFile())return new LauncherLayout(new JSONObject(new String(read(new java.io.FileInputStream(imported)),StandardCharsets.UTF_8)));
+            if(imported!=null && imported.isFile())return loadOverride(ctx,new JSONObject(new String(read(new java.io.FileInputStream(imported)),StandardCharsets.UTF_8)));
         } catch (Exception ignored) { /* An invalid override never breaks Home. */ }
         return null;
+    }
+    private static LauncherLayout loadOverride(Context ctx,JSONObject source) throws Exception {
+        LauncherLayout template=source.optInt("version")==3?defaults(ctx):template(ctx);
+        if(source.optInt("version")==3)source=UnifiedLayout.migrate(source,template.json);
+        LauncherLayout result=new LauncherLayout(source);
+        if(source.optInt("version")==4)UnifiedLayout.locked(result.json,template.json);
+        return result;
     }
     static LauncherLayout effective(Context ctx) {
         LauncherLayout layout=override(ctx);
         if(layout!=null)return layout;
         try{return defaults(ctx);}catch(Exception ignored){return null;}
     }
+    static LauncherLayout template(Context ctx)throws Exception{return new LauncherLayout(new JSONObject(new String(read(ctx.getAssets().open("layout.json")),StandardCharsets.UTF_8)));}
     static LauncherLayout defaults(Context ctx) throws Exception {
-        return new LauncherLayout(new JSONObject(new String(read(ctx.getAssets().open("layout.json")), StandardCharsets.UTF_8)));
+        return new LauncherLayout(UnifiedLayout.withInstalled(ctx,template(ctx).json));
     }
     static void apply(Context ctx, JSONObject json) throws Exception {
         LauncherLayout layout = new LauncherLayout(json);
+        if(json.optInt("version")==4)UnifiedLayout.locked(json,template(ctx).json);
         for(String section:Arrays.asList("home","apps")) {
-            JSONArray items=layout.json.getJSONObject(section).getJSONArray("items");
+            JSONArray items=layout.page(section).getJSONArray("items");
             for(int i=0;i<items.length();i++) {
                 JSONObject item=items.getJSONObject(i);
                 if(item.has("packageName") && !isUserApp(ctx,item.getString("packageName")))
@@ -142,7 +154,7 @@ final class LauncherLayout {
         AppsActivity.reloadLayoutFromManager();
     }
     List<AppAdapter.Entry> entries(Context ctx, String section) {
-        List<AppAdapter.Entry> result = new ArrayList<>(); JSONArray list = json.optJSONObject(section).optJSONArray("items");
+        List<AppAdapter.Entry> result = new ArrayList<>(); JSONArray list = page(section).optJSONArray("items");
         for (int i=0; i<list.length(); i++) {
             JSONObject item = list.optJSONObject(i); String action = item.optString("action","app");
             AppAdapter.Entry base = null;
@@ -157,17 +169,22 @@ final class LauncherLayout {
                 case "picture":resource=R.drawable.ic_picture;break;case "settings":resource=R.drawable.ic_settings;break;case "input":resource=R.drawable.ic_input;break;
                 default:break;
             }
-            result.add(new AppAdapter.Entry("layout-"+i+"-"+action+pkg,
+            AppAdapter.Entry rendered=new AppAdapter.Entry("layout-"+i+"-"+action+pkg,
                 base==null?R.string.placeholder_app:base.label,resource,Color.parseColor(item.optString("color","#374959")),
                 pkg.isEmpty()?(base==null?AppAdapter.PLACEHOLDER:base.action):AppAdapter.CUSTOM_APP,base==null?i+1:base.number,
-                title,pkg,item.optString("icon","app").equals("app")));
+                title,pkg,item.optString("icon","app").equals("app"));
+            if(item.has("svg")){rendered.svg=item.optString("svg");rendered.foreground=Color.parseColor(item.optString("foreground","#BFC3C8"));}
+            result.add(rendered);
         }
         return result;
     }
     /** Desktop wallpaper picker writes the very same JSON scene the manager reads. */
     static void wallpaper(Context ctx,File file) throws Exception {
-        LauncherLayout current=effective(ctx);JSONObject draft=new JSONObject(current.json.toString());
-        JSONObject bg=draft.getJSONObject("home").getJSONObject("scene").getJSONObject("background");
+        LauncherLayout current=effective(ctx);
+        JSONObject draft=new JSONObject(current.json.toString());
+        JSONObject bg;
+        if(current.json.optInt("version")==4)bg=draft.getJSONObject("home").getJSONObject("background");
+        else bg=draft.getJSONObject("home").getJSONObject("scene").getJSONObject("background");
         if(file==null || !file.isFile())bg.remove("image");
         else {
             android.graphics.BitmapFactory.Options opts=new android.graphics.BitmapFactory.Options();opts.inJustDecodeBounds=true;android.graphics.BitmapFactory.decodeFile(file.getPath(),opts);
@@ -184,7 +201,8 @@ final class LauncherLayout {
                 if(encoded.length()>33000)throw new IllegalArgumentException("Wallpaper too large");bg.put("image",encoded);
             }finally{bitmap.recycle();}
         }
-        apply(ctx,draft);
+        if(draft.optInt("version")==4){new LauncherLayout(draft);AtomicFile target=new AtomicFile(file(ctx));FileOutputStream output=target.startWrite();try{output.write(draft.toString().getBytes(StandardCharsets.UTF_8));target.finishWrite(output);}catch(Exception error){target.failWrite(output);throw error;}MainActivity.reloadLayoutFromManager();AppsActivity.reloadLayoutFromManager();}
+        else apply(ctx,draft);
     }
     static boolean isUserApp(Context ctx,String packageName) {
         try {

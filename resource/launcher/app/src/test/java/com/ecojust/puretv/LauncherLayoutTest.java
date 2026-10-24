@@ -1,9 +1,9 @@
 package com.ecojust.puretv;
 import android.content.Context;
-import android.content.pm.ProviderInfo;
-import android.os.Bundle;
-import android.util.Base64;
-import androidx.recyclerview.widget.GridLayoutManager;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.ResolveInfo;
 import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,142 +11,67 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
-import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
-import java.nio.charset.StandardCharsets;
+import org.robolectric.RobolectricTestRunner;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk=28,qualifiers="zh-rCN-w960dp-h540dp-land-xhdpi")
 public class LauncherLayoutTest {
-    private Context context(){return RuntimeEnvironment.getApplication();}
-    @After public void clear(){LauncherLayout.reset(context());}
-    @Test public void validLayoutChangesActualGridAndInvalidChangesPreserveIt() throws Exception {
-        JSONObject draft=LauncherLayout.defaults(context()).json;
-        draft.getJSONObject("home").put("columns",3).put("items",new JSONArray().put(new JSONObject().put("action","files").put("label","我的入口").put("icon","settings").put("color","#112233")).put(new JSONObject().put("action","music")));
-        LauncherLayout.apply(context(),draft);
-        assertEquals(3,LauncherLayout.override(context()).columns("home"));
-        try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup()) {
-            RecyclerView grid=controller.get().findViewById(R.id.grid);
-            assertEquals(3,((GridLayoutManager)grid.getLayoutManager()).getSpanCount());assertEquals(2,grid.getAdapter().getItemCount());
-            AppAdapter.Entry entry=LauncherLayout.override(context()).entries(context(),"home").get(0);
-            assertEquals("我的入口",entry.title(context()));assertEquals(R.drawable.ic_settings,entry.icon);assertEquals(AppAdapter.FILES,entry.action);
-            JSONObject bad=new JSONObject(draft.toString());bad.getJSONObject("home").put("columns",9);
-            try {LauncherLayout.apply(context(),bad);fail("Invalid layout must fail");} catch(IllegalArgumentException expected) { }
-            assertEquals(3,LauncherLayout.override(context()).columns("home"));
-            LauncherLayout.reset(context());org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();assertNull(LauncherLayout.override(context()));
-            assertEquals(4,grid.getAdapter().getItemCount());
-        }
-    }
-    @Test public void providerIsShellProtectedAndReturnsReadBackConfiguration() throws Exception {
-        ProviderInfo info=context().getPackageManager().resolveContentProvider("com.ecojust.puretv.layout",0);
-        assertNotNull(info);assertTrue(info.exported);assertEquals("android.permission.DUMP",info.readPermission);assertEquals("android.permission.DUMP",info.writePermission);
-        LauncherLayoutProvider provider=Robolectric.buildContentProvider(LauncherLayoutProvider.class).create().get();
-        JSONObject draft=LauncherLayout.defaults(context()).json;draft.getJSONObject("home").put("columns",2);
-        Bundle returned=provider.call("apply",Base64.encodeToString(draft.toString().getBytes(StandardCharsets.UTF_8),Base64.NO_WRAP),null);
-        JSONObject value=new JSONObject(new String(Base64.decode(returned.getString("result"),Base64.NO_WRAP),StandardCharsets.UTF_8));
-        assertTrue(value.getBoolean("supported"));assertEquals(2,value.getJSONObject("layout").getJSONObject("home").getInt("columns"));assertTrue(value.getBoolean("custom"));
-        Bundle reset=provider.call("reset",null,null);JSONObject defaults=new JSONObject(new String(Base64.decode(reset.getString("result"),Base64.NO_WRAP),StandardCharsets.UTF_8));assertFalse(defaults.getBoolean("custom"));
-    }
-    @Test public void rejectsCommandsUnknownIconsDuplicatesAndMalformedArrays() throws Exception {
-        for(String fields:new String[]{"{\"packageName\":\"com.example;reboot\"}","{\"packageName\":\"com.example.app\",\"command\":\"reboot\"}","{\"packageName\":\"com.example.app\",\"icon\":\"https://bad/icon\"}"}) {
-            JSONObject bad=LauncherLayout.defaults(context()).json;bad.getJSONObject("home").put("items",new JSONArray().put(new JSONObject(fields)));
-            try{new LauncherLayout(bad);fail("Bad fields must fail");}catch(IllegalArgumentException expected) { }
-        }
-        JSONObject duplicate=LauncherLayout.defaults(context()).json;duplicate.getJSONObject("home").put("items",new JSONArray().put(new JSONObject().put("action","music")).put(new JSONObject().put("action","music")));
-        try{new LauncherLayout(duplicate);fail("Duplicates must fail");}catch(IllegalArgumentException expected) { }
-    }
-    private void install(String pkg,boolean system) {
-        android.content.pm.PackageInfo info=new android.content.pm.PackageInfo();info.packageName=pkg;
-        info.applicationInfo=new android.content.pm.ApplicationInfo();info.applicationInfo.packageName=pkg;info.applicationInfo.enabled=true;
-        info.applicationInfo.flags=android.content.pm.ApplicationInfo.FLAG_INSTALLED | (system?android.content.pm.ApplicationInfo.FLAG_SYSTEM:0);
-        org.robolectric.Shadows.shadowOf(context().getPackageManager()).installPackage(info);
-        android.content.pm.ResolveInfo resolve=new android.content.pm.ResolveInfo();resolve.activityInfo=new android.content.pm.ActivityInfo();resolve.activityInfo.packageName=pkg;resolve.activityInfo.name=pkg+".Main";resolve.activityInfo.applicationInfo=info.applicationInfo;resolve.activityInfo.enabled=true;resolve.activityInfo.exported=true;
-        for(String category:new String[]{android.content.Intent.CATEGORY_LAUNCHER,android.content.Intent.CATEGORY_LEANBACK_LAUNCHER}) {
-            android.content.Intent query=new android.content.Intent(android.content.Intent.ACTION_MAIN).addCategory(category);
-            org.robolectric.Shadows.shadowOf(context().getPackageManager()).addResolveInfoForIntent(query,resolve);
-            org.robolectric.Shadows.shadowOf(context().getPackageManager()).addResolveInfoForIntent(new android.content.Intent(query).setPackage(pkg),resolve);
-        }
-    }
-    @Test public void onlyInstalledLaunchableUserAppsCanBeAdded() throws Exception {
-        install("com.example.user",false);install("com.example.system",true);
-        assertTrue(LauncherLayout.isUserApp(context(),"com.example.user"));assertFalse(LauncherLayout.isUserApp(context(),"com.example.system"));
-        JSONObject draft=LauncherLayout.defaults(context()).json;
-        draft.getJSONObject("home").put("items",new JSONArray().put(new JSONObject().put("packageName","com.example.user")));
-        LauncherLayout.apply(context(),draft);assertEquals("com.example.user",LauncherLayout.override(context()).json.getJSONObject("home").getJSONArray("items").getJSONObject(0).getString("packageName"));
-        for(String pkg:new String[]{"com.example.system","com.example.missing"}) {
-            draft.getJSONObject("home").put("items",new JSONArray().put(new JSONObject().put("packageName",pkg)));
-            try{LauncherLayout.apply(context(),draft);fail("Invalid user app must be rejected");}catch(IllegalArgumentException expected){}
-        }
-        assertFalse(LauncherLayout.installedApps(context()).toString().contains("com.example.system"));
-    }
-    @Test public void layoutJsonPagesAreIndependentAndOldAppsJsonIsIgnored() throws Exception {
-        JSONObject draft=LauncherLayout.defaults(context()).json;draft.getJSONObject("home").put("columns",2);draft.getJSONObject("apps").put("columns",5);
-        java.io.File old=new java.io.File(context().getFilesDir(),"apps.json");java.nio.file.Files.write(old.toPath(),draft.toString().getBytes(StandardCharsets.UTF_8));
-        assertNull(LauncherLayout.override(context()));old.delete();LauncherLayout.apply(context(),draft);
-        assertEquals(2,LauncherLayout.override(context()).columns("home"));assertEquals(5,LauncherLayout.override(context()).columns("apps"));
-        try(ActivityController<AppsActivity> controller=Robolectric.buildActivity(AppsActivity.class).setup()) {
-            RecyclerView grid=controller.get().findViewById(R.id.appsGrid);assertEquals(5,((GridLayoutManager)grid.getLayoutManager()).getSpanCount());
-        }
-    }
-
-    @Test public void defaultTelevisionPagesUseTheLayoutJsonTemplate() throws Exception {
-        assertNull(LauncherLayout.override(context()));LauncherLayout template=LauncherLayout.defaults(context());
-        try(ActivityController<MainActivity> home=Robolectric.buildActivity(MainActivity.class).setup();
-            ActivityController<AppsActivity> apps=Robolectric.buildActivity(AppsActivity.class).setup()) {
-            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
-            RecyclerView homeGrid=home.get().findViewById(R.id.grid), appsGrid=apps.get().findViewById(R.id.appsGrid);
-            assertEquals(template.columns("home"),((GridLayoutManager)homeGrid.getLayoutManager()).getSpanCount());
-            assertEquals(template.columns("apps"),((GridLayoutManager)appsGrid.getLayoutManager()).getSpanCount());
-            assertEquals(template.json.getJSONObject("home").getJSONArray("items").length(),homeGrid.getAdapter().getItemCount());
-            assertTrue(((AppAdapter)homeGrid.getAdapter()).keyAt(0).startsWith("layout-"));
-        }
-    }
-
-    @Test public void applyingAndResettingLayoutRefreshesAlreadyOpenAppsPage() throws Exception {
-        try(ActivityController<AppsActivity> controller=Robolectric.buildActivity(AppsActivity.class).setup()) {
-            RecyclerView grid=controller.get().findViewById(R.id.appsGrid);
-            JSONObject draft=LauncherLayout.defaults(context()).json;
-            draft.getJSONObject("apps").put("columns",2).put("items",new JSONArray().put(new JSONObject().put("action","music")));
-            LauncherLayout.apply(context(),draft);org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
-            assertEquals(2,((GridLayoutManager)grid.getLayoutManager()).getSpanCount());assertEquals(1,grid.getAdapter().getItemCount());
-            LauncherLayout.reset(context());org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
-            assertEquals(4,((GridLayoutManager)grid.getLayoutManager()).getSpanCount());assertEquals(8,grid.getAdapter().getItemCount());
-        }
-    }
-
-    @Test @Config(qualifiers="en-rUS-w960dp-h540dp-land")
-    public void defaultPlaceholdersUseTheTelevisionLanguage() throws Exception {
-        AppAdapter.Entry placeholder=LauncherLayout.defaults(context()).entries(context(),"apps").get(3);
-        assertEquals(context().getString(R.string.placeholder_app,4),placeholder.title(context()));
-    }
-
-    @Test public void sceneMovesRealControlsAndCardsAndPreservesFixedActions() throws Exception {
-        JSONObject draft=LauncherLayout.defaults(context()).json;
-        JSONObject scene=draft.getJSONObject("home").getJSONObject("scene");
-        JSONArray elements=scene.getJSONArray("elements");
-        for(int i=0;i<elements.length();i++) {
-            JSONObject node=elements.getJSONObject(i);
-            if(node.getString("id").equals("clock"))node.put("frame",new JSONObject("{\"x\":160,\"y\":70,\"width\":200,\"height\":65}"));
-            if(node.getString("id").equals("network"))node.put("visible",false);
-        }
-        JSONObject first=draft.getJSONObject("home").getJSONArray("items").getJSONObject(0);
-        first.put("frame",new JSONObject("{\"x\":120,\"y\":280,\"width\":200,\"height\":150}"));
-        LauncherLayout.apply(context(),draft);
-        try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup()) {
-            MainActivity activity=controller.get();android.view.View decor=activity.getWindow().getDecorView();
-            decor.measure(android.view.View.MeasureSpec.makeMeasureSpec(1920,android.view.View.MeasureSpec.EXACTLY),android.view.View.MeasureSpec.makeMeasureSpec(1080,android.view.View.MeasureSpec.EXACTLY));decor.layout(0,0,1920,1080);
-            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
-            android.view.View clock=activity.findViewById(R.id.clock);int[] xy=new int[2];clock.getLocationOnScreen(xy);assertEquals(320,xy[0]);assertEquals(140,xy[1]);assertEquals(400,clock.getWidth());
-            assertFalse(activity.findViewById(R.id.btnWifi).isShown());
-            RecyclerView grid=activity.findViewById(R.id.grid);android.view.View card=LayoutScene.holder(grid,0).itemView;assertEquals(240,card.getLeft());assertEquals(560,card.getTop());
-            android.content.Intent expected=MainActivity.systemIntent(activity,android.provider.Settings.ACTION_SETTINGS);
-            assertTrue(activity.findViewById(R.id.btnSettings).performClick());android.content.Intent started=org.robolectric.Shadows.shadowOf(activity).getNextStartedActivity();assertNotNull(started);assertEquals(expected.getAction(),started.getAction());assertEquals(expected.getComponent(),started.getComponent());
-        }
-        JSONObject invalid=new JSONObject(draft.toString());invalid.getJSONObject("home").getJSONObject("scene").getJSONArray("elements").getJSONObject(0).getJSONObject("frame").put("x",950);
-        try{LauncherLayout.apply(context(),invalid);fail("Out of bounds geometry must fail");}catch(IllegalArgumentException expected){}
-        assertEquals(160,LauncherLayout.override(context()).json.getJSONObject("home").getJSONObject("scene").getJSONArray("elements").getJSONObject(0).getJSONObject("frame").getInt("x"));
-    }
+ static Context ctx(){return RuntimeEnvironment.getApplication();}
+ @After public void clear(){LauncherLayout.reset(ctx());}
+ static void install(String pkg,boolean system){
+  PackageInfo info=new PackageInfo();info.packageName=pkg;info.applicationInfo=new ApplicationInfo();info.applicationInfo.packageName=pkg;info.applicationInfo.enabled=true;info.applicationInfo.nonLocalizedLabel=pkg;info.applicationInfo.flags=ApplicationInfo.FLAG_INSTALLED|(system?ApplicationInfo.FLAG_SYSTEM:0);
+  org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).installPackage(info);
+  ResolveInfo resolve=new ResolveInfo();resolve.activityInfo=new android.content.pm.ActivityInfo();resolve.activityInfo.packageName=pkg;resolve.activityInfo.name=pkg+".Main";resolve.activityInfo.applicationInfo=info.applicationInfo;resolve.activityInfo.enabled=true;resolve.activityInfo.exported=true;
+  for(String category:new String[]{Intent.CATEGORY_LAUNCHER,Intent.CATEGORY_LEANBACK_LAUNCHER}){Intent query=new Intent(Intent.ACTION_MAIN).addCategory(category);org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).addResolveInfoForIntent(query,resolve);org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).addResolveInfoForIntent(new Intent(query).setPackage(pkg),resolve);}
+ }
+ static JSONObject user(String pkg)throws Exception{return new JSONObject().put("id","app-custom").put("name","用户应用").put("text","打开应用").put("action",pkg).put("frame",new JSONObject("{\"x\":120,\"y\":280,\"width\":200,\"height\":150}")).put("visible",true).put("icon",UnifiedLayout.ICON).put("color","#EEEEEE").put("backgroundColor","#123456");}
+ @Test public void defaultsExposeUniformUsersAndSystemAndEveryComponentHasAction()throws Exception{
+  install("com.example.user",false);install("com.example.system",true);JSONObject d=LauncherLayout.defaults(ctx()).json;assertEquals(4,d.getInt("version"));assertFalse(d.getJSONObject("home").has("columns"));assertFalse(d.getJSONObject("home").has("scene"));
+  for(String page:new String[]{"home","apps"})for(String kind:new String[]{"users","system"}){JSONArray nodes=d.getJSONObject(page).getJSONArray(kind);for(int i=0;i<nodes.length();i++){JSONObject n=nodes.getJSONObject(i);assertTrue(LauncherLayout.validPackage(n.getString("action")));assertTrue(n.has("frame"));assertTrue(n.has("name"));assertTrue(n.has("text"));UnifiedLayout.svg(n.getString("icon"));}}
+  assertFalse(d.toString().contains("com.example.system"));assertTrue(d.toString().contains("com.example.user"));
+ }
+ @Test public void userPositionScreenAndSvgDriveRealViewsAndSystemCannotMove()throws Exception{
+  install("com.example.custom",false);JSONObject d=LauncherLayout.defaults(ctx()).json;d.getJSONObject("home").put("users",new JSONArray().put(user("com.example.custom")));LauncherLayout.apply(ctx(),d);
+  try(org.robolectric.android.controller.ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup()){
+   MainActivity activity=controller.get();android.view.View root=activity.getWindow().getDecorView();root.measure(android.view.View.MeasureSpec.makeMeasureSpec(1920,android.view.View.MeasureSpec.EXACTLY),android.view.View.MeasureSpec.makeMeasureSpec(1080,android.view.View.MeasureSpec.EXACTLY));root.layout(0,0,1920,1080);org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+   RecyclerView grid=activity.findViewById(R.id.grid);android.view.View card=LayoutScene.holder(grid,0).itemView;assertEquals(240,card.getLeft());assertEquals(560,card.getTop());assertEquals(400,card.getWidth());assertNotNull(((android.widget.ImageView)card.findViewById(R.id.icon)).getDrawable());
+   card.findViewById(R.id.card).performClick();assertEquals("com.example.custom",org.robolectric.Shadows.shadowOf(activity).getNextStartedActivity().getComponent().getPackageName());
+   JSONObject scaled=new JSONObject(d.toString());scaled.put("screen",new JSONObject("{\"width\":1920,\"height\":1080}"));for(String page:new String[]{"home","apps"})scaled.getJSONObject(page).put("system",UnifiedLayout.resized(d.getJSONObject(page).getJSONArray("system"),d.getJSONObject("screen"),scaled.getJSONObject("screen")));LauncherLayout.apply(ctx(),scaled);
+   root.measure(android.view.View.MeasureSpec.makeMeasureSpec(1920,android.view.View.MeasureSpec.EXACTLY),android.view.View.MeasureSpec.makeMeasureSpec(1080,android.view.View.MeasureSpec.EXACTLY));root.layout(0,0,1920,1080);org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();assertEquals(120,LayoutScene.holder(grid,0).itemView.getLeft());
+  }
+  JSONObject bad=new JSONObject(d.toString());bad.getJSONObject("home").getJSONArray("system").getJSONObject(1).getJSONObject("frame").put("x",123);
+  try{LauncherLayout.apply(ctx(),bad);fail("System must be immutable");}catch(IllegalArgumentException expected){}
+ }
+ @Test public void userActionsRequireInstalledLaunchableNonSystemAppsAndSvgIsBounded()throws Exception{
+  install("com.example.user",false);install("com.example.system",true);JSONObject d=LauncherLayout.defaults(ctx()).json;
+  for(String pkg:new String[]{"com.example.system","com.example.missing"}){d.getJSONObject("home").put("users",new JSONArray().put(user(pkg)));try{LauncherLayout.apply(ctx(),d);fail("Invalid user app");}catch(IllegalArgumentException expected){}}
+  for(String svg:new String[]{"<svg><script>bad</script></svg>","<svg onload=\"alert(1)\"/>","<svg><image href=\"https://evil\"/></svg>","<!DOCTYPE svg><svg/>"}){d.getJSONObject("home").put("users",new JSONArray().put(user("com.example.user").put("icon",svg)));try{new LauncherLayout(d);fail("Invalid SVG");}catch(Exception expected){}}
+ }
+ @Test public void providerIsShellProtectedAndReturnsV4()throws Exception{
+  android.content.pm.ProviderInfo info=ctx().getPackageManager().resolveContentProvider("com.ecojust.puretv.layout",0);assertTrue(info.exported);assertEquals("android.permission.DUMP",info.readPermission);assertEquals("android.permission.DUMP",info.writePermission);
+  LauncherLayoutProvider provider=Robolectric.buildContentProvider(LauncherLayoutProvider.class).create().get();android.os.Bundle result=provider.call("status",null,null);JSONObject value=new JSONObject(new String(android.util.Base64.decode(result.getString("result"),android.util.Base64.NO_WRAP),java.nio.charset.StandardCharsets.UTF_8));assertEquals(4,value.getInt("version"));assertEquals(4,value.getJSONObject("layout").getInt("version"));
+ }
+ @Test public void downAndUpPageSwitchesFollowNavigationJson()throws Exception{
+  install("com.example.user",false);JSONObject draft=LauncherLayout.defaults(ctx()).json;draft.getJSONObject("home").put("users",new JSONArray().put(user("com.example.user")));LauncherLayout.apply(ctx(),draft);
+  try(org.robolectric.android.controller.ActivityController<MainActivity> home=Robolectric.buildActivity(MainActivity.class).setup()){
+   assertTrue(home.get().onTileVerticalKey(0,android.view.KeyEvent.KEYCODE_DPAD_DOWN));assertEquals(AppsActivity.class.getName(),org.robolectric.Shadows.shadowOf(home.get()).getNextStartedActivity().getComponent().getClassName());
+   draft.getJSONObject("home").put("navigation",new JSONObject());LauncherLayout.apply(ctx(),draft);org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();assertFalse(home.get().onTileVerticalKey(0,android.view.KeyEvent.KEYCODE_DPAD_DOWN));
+  }
+  try(org.robolectric.android.controller.ActivityController<AppsActivity> apps=Robolectric.buildActivity(AppsActivity.class).setup()){
+   assertTrue(apps.get().onTileVerticalKey(0,android.view.KeyEvent.KEYCODE_DPAD_UP));assertTrue(apps.get().isFinishing());
+  }
+ }
+ @Test public void pageBackgroundsAreIndependentAndLegacyUserBlocksMigrate()throws Exception{
+  install("com.example.user",false);JSONObject d=LauncherLayout.defaults(ctx()).json;
+  android.graphics.Bitmap bitmap=android.graphics.Bitmap.createBitmap(2,2,android.graphics.Bitmap.Config.ARGB_8888);bitmap.eraseColor(android.graphics.Color.RED);java.io.ByteArrayOutputStream bytes=new java.io.ByteArrayOutputStream();bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,bytes);bitmap.recycle();String image="data:image/png;base64,"+android.util.Base64.encodeToString(bytes.toByteArray(),android.util.Base64.NO_WRAP);
+  d.getJSONObject("home").getJSONObject("background").put("image",image);d.getJSONObject("apps").getJSONObject("background").put("color","#334455");LauncherLayout.apply(ctx(),d);JSONObject read=LauncherLayout.override(ctx()).json;assertEquals(image,read.getJSONObject("home").getJSONObject("background").getString("image"));assertFalse(read.getJSONObject("apps").getJSONObject("background").has("image"));assertEquals("#334455",read.getJSONObject("apps").getJSONObject("background").getString("color"));
+  JSONObject legacy=new JSONObject("{\"version\":3,\"home\":{\"columns\":4,\"items\":[{\"packageName\":\"com.example.user\",\"label\":\"旧应用\",\"frame\":{\"x\":10,\"y\":20,\"width\":100,\"height\":120}}]},\"apps\":{\"columns\":4,\"items\":[]}}");JSONObject migrated=UnifiedLayout.migrate(legacy,LauncherLayout.defaults(ctx()).json);new LauncherLayout(migrated);assertEquals("com.example.user",migrated.getJSONObject("home").getJSONArray("users").getJSONObject(0).getString("action"));assertEquals(10,migrated.getJSONObject("home").getJSONArray("users").getJSONObject(0).getJSONObject("frame").getInt("x"));
+ }
+ @Test public void systemCoordinatesReturnToCanonicalBasisAfterScreenRoundTrip()throws Exception{
+  JSONObject original=LauncherLayout.defaults(ctx()).json;JSONObject small=new JSONObject(original.toString());small.put("screen",new JSONObject("{\"width\":320,\"height\":320}"));for(String page:new String[]{"home","apps"}){small.getJSONObject(page).put("users",new JSONArray());small.getJSONObject(page).put("system",UnifiedLayout.resized(original.getJSONObject(page).getJSONArray("system"),original.getJSONObject("screen"),small.getJSONObject("screen")));}LauncherLayout.apply(ctx(),small);
+  JSONObject restored=new JSONObject(small.toString());restored.put("screen",original.getJSONObject("screen"));for(String page:new String[]{"home","apps"})restored.getJSONObject(page).put("system",original.getJSONObject(page).getJSONArray("system"));LauncherLayout.apply(ctx(),restored);assertEquals(960,LauncherLayout.override(ctx()).json.getJSONObject("screen").getInt("width"));
+ }
 }

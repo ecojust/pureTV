@@ -1,331 +1,319 @@
 {
-  "version": 3,
+  "version": 4,
+  "screen": {
+    "width": 960,
+    "height": 540
+  },
   "home": {
-    "columns": 4,
-    "items": [
+    "users": [
       {
-        "action": "music",
-        "icon": "music",
-        "color": "#303338",
+        "id": "user-0",
+        "name": "WebTV",
+        "text": "WebTV",
+        "action": "com.ecojust.webtv",
         "frame": {
           "x": 48,
-          "y": 326,
-          "width": 204,
-          "height": 150
+          "y": 220,
+          "width": 160,
+          "height": 140
         },
         "visible": true,
-        "zIndex": 1
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M2 2h20v20H2z\"/></svg>",
+        "color": "#EEEEEE",
+        "backgroundColor": "#374959"
       },
       {
-        "action": "bilibili",
-        "icon": "video",
-        "color": "#86515F",
+        "id": "user-1",
+        "name": "pureTV",
+        "text": "pureTV",
+        "action": "com.ecojust.puretv",
         "frame": {
-          "x": 268,
-          "y": 326,
-          "width": 204,
-          "height": 150
+          "x": 300,
+          "y": 240,
+          "width": 160,
+          "height": 140
         },
         "visible": true,
-        "zIndex": 1
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M2 2h20v20H2z\"/></svg>",
+        "color": "#EEEEEE",
+        "backgroundColor": "#374959"
       },
       {
-        "action": "files",
-        "icon": "files",
-        "color": "#3B4C46",
+        "id": "user-2",
+        "name": "Music",
+        "text": "Music",
+        "action": "com.ecojust.music",
         "frame": {
-          "x": 488,
-          "y": 326,
-          "width": 204,
-          "height": 150
+          "x": 650,
+          "y": 260,
+          "width": 160,
+          "height": 140
         },
         "visible": true,
-        "zIndex": 1
-      },
-      {
-        "action": "apps",
-        "icon": "apps",
-        "color": "#374959",
-        "frame": {
-          "x": 708,
-          "y": 326,
-          "width": 204,
-          "height": 150
-        },
-        "visible": true,
-        "zIndex": 1
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M2 2h20v20H2z\"/></svg>",
+        "color": "#EEEEEE",
+        "backgroundColor": "#374959"
       }
     ],
-    "scene": {
-      "background": {
-        "color": "#101419",
-        "visible": true,
-        "zIndex": 0,
+    "system": [
+      {
+        "id": "clock",
+        "name": "时钟",
         "frame": {
-          "x": 0,
-          "y": 0,
-          "width": 960,
-          "height": 540
-        }
+          "x": 48,
+          "y": 34,
+          "width": 260,
+          "height": 65
+        },
+        "action": "com.ecojust.puretv.clock",
+        "text": "12:00",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
       },
-      "elements": [
-        {
-          "id": "clock",
-          "frame": {
-            "x": 48,
-            "y": 34,
-            "width": 260,
-            "height": 65
-          },
-          "visible": true,
-          "zIndex": 2
+      {
+        "id": "date",
+        "name": "日期",
+        "frame": {
+          "x": 48,
+          "y": 103,
+          "width": 300,
+          "height": 24
         },
-        {
-          "id": "date",
-          "frame": {
-            "x": 48,
-            "y": 103,
-            "width": 300,
-            "height": 24
-          },
-          "visible": true,
-          "zIndex": 2
+        "action": "com.ecojust.puretv.date",
+        "text": "星期一 · 10月24日",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
+      },
+      {
+        "id": "weather",
+        "name": "天气",
+        "frame": {
+          "x": 48,
+          "y": 132,
+          "width": 300,
+          "height": 40
         },
-        {
-          "id": "weather",
-          "frame": {
-            "x": 48,
-            "y": 132,
-            "width": 300,
-            "height": 40
-          },
-          "visible": true,
-          "zIndex": 2
+        "action": "com.ecojust.puretv.weather",
+        "text": "天气",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
+      },
+      {
+        "id": "wallpaper",
+        "name": "桌面",
+        "frame": {
+          "x": 472,
+          "y": 34,
+          "width": 88,
+          "height": 40
         },
-        {
-          "id": "wallpaper",
-          "frame": {
-            "x": 472,
-            "y": 34,
-            "width": 88,
-            "height": 40
-          },
-          "visible": true,
-          "zIndex": 2
+        "action": "com.ecojust.puretv.wallpaper",
+        "text": "桌面",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
+      },
+      {
+        "id": "favourites",
+        "name": "常用",
+        "frame": {
+          "x": 568,
+          "y": 34,
+          "width": 88,
+          "height": 40
         },
-        {
-          "id": "favourites",
-          "frame": {
-            "x": 568,
-            "y": 34,
-            "width": 88,
-            "height": 40
-          },
-          "visible": true,
-          "zIndex": 2
+        "action": "com.ecojust.puretv.favourites",
+        "text": "常用",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
+      },
+      {
+        "id": "inputs",
+        "name": "输入源",
+        "frame": {
+          "x": 664,
+          "y": 34,
+          "width": 72,
+          "height": 40
         },
-        {
-          "id": "inputs",
-          "frame": {
-            "x": 664,
-            "y": 34,
-            "width": 72,
-            "height": 40
-          },
-          "visible": true,
-          "zIndex": 2
+        "action": "com.ecojust.puretv.inputs",
+        "text": "输入源",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
+      },
+      {
+        "id": "network",
+        "name": "网络",
+        "frame": {
+          "x": 744,
+          "y": 34,
+          "width": 72,
+          "height": 40
         },
-        {
-          "id": "network",
-          "frame": {
-            "x": 744,
-            "y": 34,
-            "width": 72,
-            "height": 40
-          },
-          "visible": true,
-          "zIndex": 2
+        "action": "com.ecojust.puretv.network",
+        "text": "网络",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
+      },
+      {
+        "id": "settings",
+        "name": "设置",
+        "frame": {
+          "x": 824,
+          "y": 34,
+          "width": 88,
+          "height": 40
         },
-        {
-          "id": "settings",
-          "frame": {
-            "x": 824,
-            "y": 34,
-            "width": 88,
-            "height": 40
-          },
-          "visible": true,
-          "zIndex": 2
+        "action": "com.ecojust.puretv.settings",
+        "text": "设置",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
+      },
+      {
+        "id": "allApps",
+        "name": "全部应用",
+        "frame": {
+          "x": 48,
+          "y": 492,
+          "width": 864,
+          "height": 24
         },
-        {
-          "id": "allApps",
-          "frame": {
-            "x": 48,
-            "y": 492,
-            "width": 864,
-            "height": 24
-          },
-          "visible": true,
-          "zIndex": 2
-        }
-      ]
+        "action": "com.ecojust.puretv.allApps",
+        "text": "全部应用",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
+      }
+    ],
+    "background": {
+      "color": "#101419"
+    },
+    "navigation": {
+      "down": "apps"
     }
   },
   "apps": {
-    "columns": 4,
-    "items": [
+    "users": [
       {
-        "action": "shortvideo",
-        "icon": "video",
-        "color": "#503036",
+        "id": "user-0",
+        "name": "WebTV",
+        "text": "WebTV",
+        "action": "com.ecojust.webtv",
         "frame": {
           "x": 48,
-          "y": 128,
-          "width": 204,
-          "height": 150
+          "y": 170,
+          "width": 160,
+          "height": 140
         },
         "visible": true,
-        "zIndex": 1
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M2 2h20v20H2z\"/></svg>",
+        "color": "#EEEEEE",
+        "backgroundColor": "#374959"
       },
       {
-        "action": "music",
-        "icon": "music",
-        "color": "#303338",
+        "id": "user-1",
+        "name": "pureTV",
+        "text": "pureTV",
+        "action": "com.ecojust.puretv",
         "frame": {
-          "x": 268,
-          "y": 128,
-          "width": 204,
-          "height": 150
+          "x": 300,
+          "y": 170,
+          "width": 160,
+          "height": 140
         },
         "visible": true,
-        "zIndex": 1
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M2 2h20v20H2z\"/></svg>",
+        "color": "#EEEEEE",
+        "backgroundColor": "#374959"
       },
       {
-        "action": "webtv",
-        "icon": "apps",
-        "color": "#3B4C46",
+        "id": "user-2",
+        "name": "Music",
+        "text": "Music",
+        "action": "com.ecojust.music",
         "frame": {
-          "x": 488,
-          "y": 128,
-          "width": 204,
-          "height": 150
+          "x": 650,
+          "y": 170,
+          "width": 160,
+          "height": 140
         },
         "visible": true,
-        "zIndex": 1
-      },
-      {
-        "action": "placeholder",
-        "icon": "apps",
-        "color": "#374959",
-        "frame": {
-          "x": 708,
-          "y": 128,
-          "width": 204,
-          "height": 150
-        },
-        "visible": true,
-        "zIndex": 1
-      },
-      {
-        "action": "placeholder",
-        "icon": "apps",
-        "color": "#374959",
-        "frame": {
-          "x": 48,
-          "y": 302,
-          "width": 204,
-          "height": 150
-        },
-        "visible": true,
-        "zIndex": 1
-      },
-      {
-        "action": "placeholder",
-        "icon": "apps",
-        "color": "#374959",
-        "frame": {
-          "x": 268,
-          "y": 302,
-          "width": 204,
-          "height": 150
-        },
-        "visible": true,
-        "zIndex": 1
-      },
-      {
-        "action": "placeholder",
-        "icon": "apps",
-        "color": "#374959",
-        "frame": {
-          "x": 488,
-          "y": 302,
-          "width": 204,
-          "height": 150
-        },
-        "visible": true,
-        "zIndex": 1
-      },
-      {
-        "action": "placeholder",
-        "icon": "apps",
-        "color": "#374959",
-        "frame": {
-          "x": 708,
-          "y": 302,
-          "width": 204,
-          "height": 150
-        },
-        "visible": true,
-        "zIndex": 1
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M2 2h20v20H2z\"/></svg>",
+        "color": "#EEEEEE",
+        "backgroundColor": "#374959"
       }
     ],
-    "scene": {
-      "background": {
-        "color": "#101419",
-        "visible": true,
-        "zIndex": 0,
+    "system": [
+      {
+        "id": "title",
+        "name": "其他应用",
         "frame": {
-          "x": 0,
-          "y": 0,
-          "width": 960,
-          "height": 540
-        }
+          "x": 48,
+          "y": 30,
+          "width": 500,
+          "height": 40
+        },
+        "action": "com.ecojust.puretv.title",
+        "text": "其他应用",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
       },
-      "elements": [
-        {
-          "id": "title",
-          "frame": {
-            "x": 48,
-            "y": 30,
-            "width": 500,
-            "height": 40
-          },
-          "visible": true,
-          "zIndex": 2
+      {
+        "id": "subtitle",
+        "name": "所有应用与常用入口",
+        "frame": {
+          "x": 48,
+          "y": 76,
+          "width": 600,
+          "height": 24
         },
-        {
-          "id": "subtitle",
-          "frame": {
-            "x": 48,
-            "y": 76,
-            "width": 600,
-            "height": 24
-          },
-          "visible": true,
-          "zIndex": 2
+        "action": "com.ecojust.puretv.subtitle",
+        "text": "所有应用与常用入口",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
+      },
+      {
+        "id": "backHome",
+        "name": "返回首页",
+        "frame": {
+          "x": 800,
+          "y": 30,
+          "width": 112,
+          "height": 40
         },
-        {
-          "id": "backHome",
-          "frame": {
-            "x": 800,
-            "y": 30,
-            "width": 112,
-            "height": 40
-          },
-          "visible": true,
-          "zIndex": 2
-        }
-      ]
+        "action": "com.ecojust.puretv.backHome",
+        "text": "返回首页",
+        "visible": true,
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "color": "#BFC3C8",
+        "backgroundColor": "#101419"
+      }
+    ],
+    "background": {
+      "color": "#16222D"
+    },
+    "navigation": {
+      "up": "home"
     }
   }
 }

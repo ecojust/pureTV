@@ -130,6 +130,7 @@ pub struct HistoryEntry {
 )]
 pub enum LauncherRequest {
     GetLayout,
+    GetBackgrounds,
     ApplyLayout { layout: serde_json::Value },
     ResetLayout,
 }
@@ -159,3 +160,5 @@ pub struct InstallResult {
     pub success: bool,
     pub message: String,
 }
+
+mod unified_layout;

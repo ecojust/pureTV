@@ -14,3 +14,5 @@ Outfit 字体按 SIL Open Font License 1.1 分发，完整许可见 [FONT-LICENS
 Public APK resources
 --------------------
 The resource/ directory includes third-party APKs, source archives and upstream screenshots. Each entry retains its original author, source URLs and license. TV Bro binaries are unmodified official releases by Fedir Tsapana. Jellyfin for Android TV and its corresponding source are distributed under the included upstream GPL license. The repository's MIT license does not replace these third-party licenses. See resource/*/LICENSE and resource.json for provenance and SHA256 records.
+
+AndroidSVG (Paul LeBeau / BigBadaboom), Apache License 2.0, renders the bounded SVG component icons. License: app/src/main/assets/LICENSE.AndroidSVG.txt. Source: https://github.com/BigBadaboom/androidsvg.

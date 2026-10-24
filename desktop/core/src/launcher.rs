@@ -7,6 +7,9 @@ const URI: &str = "content://com.ecojust.puretv.layout";
 const LAYOUT_LIMIT: usize = 48 * 1024;
 
 pub(crate) fn validate_layout(layout: &Value) -> Result<(), String> {
+    if layout["version"] == 4 {
+        return crate::unified_layout::validate(layout);
+    }
     let object = layout.as_object().ok_or("layout.json 应为对象")?;
     if object
         .keys()
@@ -242,12 +245,17 @@ fn provider_result(output: &str) -> Result<Value, String> {
         return Err("启动器布局响应过大".into());
     }
     let mut value: Value = serde_json::from_slice(&bytes).map_err(|_| "启动器布局响应无效")?;
-    if value["supported"] != true || ![json!(2), json!(3)].contains(&value["version"]) {
+    if value["supported"] != true || ![json!(2), json!(3), json!(4)].contains(&value["version"]) {
         return Err("启动器布局接口版本不支持".into());
     }
     validate_layout(&value["layout"])?;
     if value["version"] != value["layout"]["version"] {
         return Err("启动器布局接口与配置版本不一致".into());
+    }
+    if value["layout"]["version"] == 4 {
+        let baseline = crate::unified_layout::basis(&value)?;
+        validate_layout(&baseline)?;
+        crate::unified_layout::locked(&value["layout"], &baseline)?;
     }
     let apps = value["apps"].as_array().ok_or("启动器应用列表无效")?;
     if apps.len() > 100 {
@@ -307,6 +315,34 @@ impl Manager {
     pub fn execute_launcher(&mut self, request: LauncherRequest) -> Result<Value, String> {
         let device = self.ensure_device(true)?;
         self.read_catalogue(&device)?;
+        if matches!(request, LauncherRequest::GetBackgrounds) {
+            let mut backgrounds = serde_json::Map::new();
+            if self
+                .state
+                .launchers
+                .iter()
+                .any(|l| l.package_name == PACKAGE)
+            {
+                if let Ok(value) = self.layout_provider(&device, "status", None) {
+                    let layout = &value["layout"];
+                    let image = if layout["version"] == 4 {
+                        layout["home"]["background"]["image"].as_str()
+                    } else {
+                        layout["home"]["scene"]["background"]["image"].as_str()
+                    };
+                    if let Some(image) = image {
+                        for launcher in &self.state.launchers {
+                            if launcher.package_name == PACKAGE {
+                                backgrounds.insert(launcher.component.clone(), json!(image));
+                            }
+                        }
+                    }
+                }
+            }
+            return Ok(
+                json!({"supported":true,"serial":device.serial,"userId":device.user_id,"backgrounds":backgrounds}),
+            );
+        }
         let component = self
             .state
             .default_home
@@ -342,9 +378,18 @@ impl Manager {
         let (method, arg, expected) = match request {
             LauncherRequest::ApplyLayout { layout } => {
                 validate_layout(&layout)?;
+                if layout["version"] == 4 {
+                    crate::unified_layout::locked(&layout, &crate::unified_layout::basis(&value)?)?;
+                }
                 for section in ["home", "apps"] {
-                    for entry in layout[section]["items"].as_array().unwrap() {
-                        if let Some(package) = entry["packageName"].as_str() {
+                    let unified = layout["version"] == 4;
+                    for entry in layout[section][if unified { "users" } else { "items" }]
+                        .as_array()
+                        .unwrap()
+                    {
+                        if let Some(package) =
+                            entry[if unified { "action" } else { "packageName" }].as_str()
+                        {
                             if !self.state.packages.iter().any(|app| {
                                 app.package_name == package
                                     && app.installed
@@ -422,10 +467,8 @@ mod tests {
     use super::*;
     #[test]
     fn layout_validation_and_provider_response_are_bounded_and_data_only() {
-        let valid: Value = serde_json::from_str(include_str!(
-            "../../../resource/launcher/app/src/main/assets/layout.json"
-        ))
-        .unwrap();
+        let valid: Value =
+            serde_json::from_str(include_str!("../../public/layout-v3.json")).unwrap();
         validate_layout(&valid).unwrap();
         for update in [
             json!({"home":{"columns":7,"items":[]}}),
@@ -453,7 +496,8 @@ mod tests {
     }
     #[test]
     fn scene_geometry_and_fixed_control_ids_are_validated_before_writes() {
-        let valid: Value = serde_json::from_str(include_str!("../../public/layout.json")).unwrap();
+        let valid: Value =
+            serde_json::from_str(include_str!("../../public/layout-v3.json")).unwrap();
         validate_layout(&valid).unwrap();
         for invalid in [
             json!({"x":950,"y":0,"width":200,"height":65}),

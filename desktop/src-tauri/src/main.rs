@@ -190,7 +190,7 @@ async fn choose_launcher_cover(
 #[tauri::command]
 async fn choose_launcher_apks(app: tauri::AppHandle) -> Result<Value, String> {
     tauri::async_runtime::spawn_blocking(move || {
-        Ok(json!(pick_apks(&app)?.into_iter().map(|path|json!({"cover":launcher_covers::sidecar(std::path::Path::new(&path)),"path":path})).collect::<Vec<_>>()))
+        Ok(json!(pick_apks(&app)?.into_iter().map(|path|json!({"cover":launcher_covers::sidecar(std::path::Path::new(&path)),"homeBackground":launcher_covers::apk_home_background(std::path::Path::new(&path)),"path":path})).collect::<Vec<_>>()))
     }).await.map_err(|_|"无法读取启动器 APK".to_string())?
 }
 
@@ -264,11 +264,11 @@ fn read_launcher_json(path: &std::path::Path) -> Result<String, String> {
     let mut data = Vec::new();
     std::fs::File::open(path)
         .map_err(|_| "无法打开布局文件")?
-        .take(48 * 1024 + 1)
+        .take(90 * 1024 + 1)
         .read_to_end(&mut data)
         .map_err(|_| "无法读取布局文件")?;
-    if data.len() > 48 * 1024 {
-        return Err("layout.json 不能超过 48 KiB".into());
+    if data.len() > 90 * 1024 {
+        return Err("layout.json 不能超过 90 KiB".into());
     }
     String::from_utf8(data).map_err(|_| "layout.json 应使用 UTF-8 编码".into())
 }
@@ -572,7 +572,7 @@ fn mcp_call(
     let snapshot = bridge.snapshot.lock().map_err(|_| "状态不可用")?.clone();
     let _ = app.emit(
         "mcp-operation",
-        json!({"running":false,"tool":name,"snapshot":snapshot,"error":result.as_ref().err(),"launcherResult":if ["get_launcher_layout","apply_launcher_layout","reset_launcher_layout"].contains(&name){result.as_ref().ok()}else{None}}),
+        json!({"running":false,"tool":name,"snapshot":snapshot,"error":result.as_ref().err(),"launcherResult":if ["get_launcher_layout","get_launcher_backgrounds","apply_launcher_layout","reset_launcher_layout"].contains(&name){result.as_ref().ok()}else{None}}),
     );
     drop(guard);
     result

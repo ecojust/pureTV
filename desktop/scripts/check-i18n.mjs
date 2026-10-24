@@ -2,7 +2,7 @@ import ts from 'typescript';
 import {readFileSync} from 'node:fs';
 const english=JSON.parse(readFileSync(new URL('../src/locales/en.json',import.meta.url),'utf8'));
 const traditional=JSON.parse(readFileSync(new URL('../src/locales/zh-TW.json',import.meta.url),'utf8'));
-const source=readFileSync(new URL('../src/main.ts',import.meta.url),'utf8');
+const source=['main.ts','unified-editor.ts'].map(name=>readFileSync(new URL('../src/'+name,import.meta.url),'utf8')).join('\n');
 const tree=ts.createSourceFile('main.ts',source,ts.ScriptTarget.Latest,true);const phrases=new Set();
 const pattern=/[\u3400-\u9fff][\u3400-\u9fffA-Za-z0-9_ ·／/…（）「」“”、。！？：；，,.%()↗↑↓—–:;+-]*/g;
 function add(text){for(const part of text.matchAll(pattern))phrases.add(part[0].trim());}
