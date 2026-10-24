@@ -10,7 +10,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 ## 下载
 
-[下载 pureTV Manager 0.3.7](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.7)
+[下载 pureTV Manager 0.3.8](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.8)
 
 | 系统 | 安装包 |
 | --- | --- |
@@ -21,7 +21,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 首页显示当前电脑的局域网 IPv4、网卡与子网前缀，支持刷新与多网卡。电视 IP／主机名和端口会在点击连接后自动记住，失败时也保留，下次打开自动填入。连接失败排查见[连接指南](desktop/README.md#连接失败排查)。
 
-管理器安装在**电脑**上。电视开启 ADB／网络调试并接受授权后，即可使用应用管理，不需要安装电视端常驻服务。自定义桌面可安装 [Nova TV](resource/launcher/nova/)（Apple TV 风格）或 [pureTV Launcher](resource/launcher/puretv/)。电视端 APK 直接在资源目录下载，包大小与 SHA256 见各目录；管理器校验值见发布附件；macOS 首次打开说明见[安装指南](desktop/README.md#macos-安装与首次打开)。
+管理器安装在**电脑**上。电视开启 ADB／网络调试并接受授权后，即可使用应用管理，不需要安装电视端常驻服务。自定义桌面可选择 [Nova TV](resource/launcher/nova/)（参考 tvOS 主屏幕）、[pureTV Launcher](resource/launcher/puretv/)，或[八款不同风格的 v5 启动器](resource/launcher/)。电视端 APK 直接在资源目录下载，包大小与 SHA256 见各目录；管理器校验值见发布附件；macOS 首次打开说明见[安装指南](desktop/README.md#macos-安装与首次打开)。
 
 ## 连接与应用管理
 
@@ -49,6 +49,8 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 ## 启动器与电视应用资源
 
+[![八款 v5 启动器的 Android 原生渲染预览](docs/previews/launcher-collection-010.png)](resource/launcher/)
+
 公共目录为 [resource/](resource/)，分为 [launcher/](resource/launcher/) 与 [apps/](resource/apps/)，原根目录的启动器和应用源码已整体移入。以后 Release 只发布电脑管理器；启动器和电视应用 APK 直接放在各自软件目录。每个软件文件夹至少包含一个实际 APK，可同时提供对应版本源码、封面、作者、许可证及 SHA256。点击软件名称进入对应文件夹。
 
 启动器表格的“支持自定义”指支持本管理器的 **layout.json 版本 5 users/system 接口**。启动器卡片默认使用 Home 背景图，提供 `thumb.png`／`APK名.thumb.png` 或手动选择封面时优先使用封面。
@@ -56,7 +58,16 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 ```text
 resource/
 ├── launcher/
-│   └── puretv/        # pureTV 启动器源码、APK、layout 示例和封面
+│   ├── puretv/        # 各目录均含独立 APK、源码、layout 示例和封面
+│   ├── nova/          # tvOS 风格
+│   ├── aster/         # 星空
+│   ├── sol/           # 北欧日光
+│   ├── moss/          # 森林晨雾
+│   ├── forma/         # 包豪斯
+│   ├── mono/          # 黑白编辑
+│   ├── drift/         # 粉彩梦境
+│   ├── circuit/       # 霓虹电路
+│   └── pixel/         # 复古像素
 └── apps/
     ├── music/         # Music TV 源码与 APK
     ├── shortvideo/    # ShortVideo TV 源码与 APK
@@ -71,8 +82,16 @@ resource/
 
 | 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
-| [Nova TV](resource/launcher/nova/) | ecojust / 桔子桑 | 0.1.0 | 435.5 KB | 是 | <img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
+| [Aster TV · 星轨](resource/launcher/aster/) | ecojust / 桔子桑 | 0.1.0 | 435.6 KB | 是 | <img src="resource/launcher/aster/thumb.png" width="180" alt="Aster TV · 星轨 界面"> |
+| [Circuit TV · 回路](resource/launcher/circuit/) | ecojust / 桔子桑 | 0.1.0 | 431.6 KB | 是 | <img src="resource/launcher/circuit/thumb.png" width="180" alt="Circuit TV · 回路 界面"> |
+| [Drift TV](resource/launcher/drift/) | ecojust / 桔子桑 | 0.1.0 | 455.7 KB | 是 | <img src="resource/launcher/drift/thumb.png" width="180" alt="Drift TV 界面"> |
+| [Forma TV](resource/launcher/forma/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | 是 | <img src="resource/launcher/forma/thumb.png" width="180" alt="Forma TV 界面"> |
+| [Mono TV 墨白](resource/launcher/mono/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | 是 | <img src="resource/launcher/mono/thumb.png" width="180" alt="Mono TV 墨白 界面"> |
+| [Moss TV](resource/launcher/moss/) | ecojust / 桔子桑 | 0.1.0 | 463.7 KB | 是 | <img src="resource/launcher/moss/thumb.png" width="180" alt="Moss TV 界面"> |
+| [Nova TV](resource/launcher/nova/) | ecojust / 桔子桑 | 0.1.1 | 471.7 KB | 是 | <img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
+| [Pixel TV 像素](resource/launcher/pixel/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | 是 | <img src="resource/launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"> |
 | [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.3.6 | 740.1 KB | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [Sol TV](resource/launcher/sol/) | ecojust / 桔子桑 | 0.1.0 | 435.7 KB | 是 | <img src="resource/launcher/sol/thumb.png" width="180" alt="Sol TV 界面"> |
 
 ### 电视应用
 

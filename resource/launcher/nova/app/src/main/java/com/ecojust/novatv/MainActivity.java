@@ -165,7 +165,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         findViewById(R.id.allAppsHint).setOnClickListener(v -> openAppList());
         btnInputs.setOnClickListener(v -> showInputs());
         btnWifi.setOnClickListener(v -> open(systemIntent(Settings.ACTION_WIFI_SETTINGS)));
-        btnSettings.setOnClickListener(v -> open(systemIntent(Settings.ACTION_SETTINGS)));
+        btnSettings.setOnClickListener(v -> showControlCenter());
 
         // Keep focus on the top bar at its ends and at the top: Android's focus finder would otherwise
         // jump to a tile far below when there is nothing in that direction.
@@ -475,6 +475,26 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     /** The favourites navigation returns focus to the four home shortcuts. */
+    private void showControlCenter() {
+        String[] labels={getString(R.string.desktop),getString(R.string.favourites),getString(R.string.inputs),getString(R.string.network),getString(R.string.settings)};
+        android.app.AlertDialog dialog=new android.app.AlertDialog.Builder(this)
+            .setTitle(R.string.control_center).setItems(labels,(window,which)->{
+                if(which==0)showWallpaperPicker();
+                else if(which==1)showDockPicker();
+                else if(which==2)showInputs();
+                else if(which==3)open(systemIntent(Settings.ACTION_WIFI_SETTINGS));
+                else open(systemIntent(Settings.ACTION_SETTINGS));
+            }).create();
+        dialog.show();
+        android.view.Window window=dialog.getWindow();
+        if(window!=null){
+            android.graphics.drawable.GradientDrawable surface=new android.graphics.drawable.GradientDrawable();surface.setColor(0xF5242B38);surface.setCornerRadius(22*density);
+            window.setBackgroundDrawable(surface);window.setLayout(Math.round(320*density),ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setGravity(android.view.Gravity.RIGHT|android.view.Gravity.CENTER_VERTICAL);
+            android.view.WindowManager.LayoutParams params=window.getAttributes();params.x=Math.round(32*density);params.dimAmount=.35f;window.setAttributes(params);
+        }
+    }
+
     private void showDockPicker() {
         scrollToTop();
     }
@@ -1099,7 +1119,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     /** Dropdown menu under the Inputs pill: HDMI ports (with connection state), AV and Live TV. */
     private void showInputs() {
-        View anchor = findViewById(R.id.btnInputs);
+        View inputAnchor=findViewById(R.id.btnInputs);
+        View anchor = inputAnchor.isShown()?inputAnchor:findViewById(R.id.btnSettings);
         View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
         LinearLayout rows = panel.findViewById(R.id.rows);
 

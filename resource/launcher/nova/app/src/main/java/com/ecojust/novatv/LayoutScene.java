@@ -29,9 +29,14 @@ final class LayoutScene extends FrameLayout {
     private JSONObject navigation=new JSONObject();
     private boolean modern;
     private final java.util.Map<String,android.graphics.drawable.Drawable> icons=new java.util.HashMap<>();
+    private final java.util.Map<String,android.graphics.drawable.LayerDrawable> commandSurfaces=new java.util.HashMap<>();
     private static android.graphics.drawable.Drawable focusSurface(int color) {
         android.graphics.drawable.GradientDrawable focused=new android.graphics.drawable.GradientDrawable();focused.setColor((color&0xFFFFFF)|0x16000000);focused.setCornerRadius(14);focused.setStroke(2,color);
         android.graphics.drawable.StateListDrawable states=new android.graphics.drawable.StateListDrawable();states.addState(new int[]{android.R.attr.state_focused},focused);states.addState(new int[]{android.R.attr.state_pressed},focused);states.addState(new int[]{},new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));return states;
+    }
+    private static android.graphics.drawable.LayerDrawable iconCommand(android.graphics.drawable.Drawable icon,int color){
+        android.graphics.drawable.LayerDrawable layers=new android.graphics.drawable.LayerDrawable(new android.graphics.drawable.Drawable[]{focusSurface(color),icon});
+        layers.setLayerGravity(1,android.view.Gravity.CENTER);layers.setLayerSize(1,icon.getBounds().width(),icon.getBounds().height());return layers;
     }
     private int columns=4,designWidth=960,designHeight=540;
     LayoutScene(Activity activity,FrameLayout root,RecyclerView grid,String section) {
@@ -56,6 +61,15 @@ final class LayoutScene extends FrameLayout {
     void apply(LauncherLayout layout,String section) {
         this.section=section;navigation=layout.json.optJSONObject(section).optJSONObject("navigation");if(navigation==null)navigation=new JSONObject();designWidth=layout.screenWidth();designHeight=layout.screenHeight();page=layout.page(section);columns=layout.columns(section);specs.clear();
         JSONArray elements=page.optJSONObject("scene").optJSONArray("elements");
+        // Keep the live TextClock while exposing Nova's compact status component in v5.
+        if(section.equals("home")) {
+            boolean compact=false;for(int i=0;i<elements.length();i++)if(elements.optJSONObject(i).optString("id").equals("statusClock"))compact=true;
+            for(View node:nodes)if(((ViewGroup)node).getChildAt(0).getId()==R.id.clock){
+                node.setTag(compact?"statusClock":"clock");TextView clock=(TextView)((ViewGroup)node).getChildAt(0);
+                clock.setGravity(compact?android.view.Gravity.CENTER:android.view.Gravity.TOP|android.view.Gravity.LEFT);
+                clock.setTypeface(android.graphics.Typeface.create(compact?"sans-serif-medium":"sans-serif-thin",android.graphics.Typeface.NORMAL));
+            }
+        }
         // Additional launcher-owned labels are ordinary v5 system nodes, also visible in the editor.
         for(int i=0;i<elements.length();i++) {
             String id=elements.optJSONObject(i).optString("id");boolean found=false;
@@ -68,9 +82,10 @@ final class LayoutScene extends FrameLayout {
             }
         }
         for(View node:nodes){JSONObject match=null;for(int i=0;i<elements.length();i++)if(node.getTag().equals(elements.optJSONObject(i).optString("id")))match=elements.optJSONObject(i);specs.add(match);}
-        modern=layout.json.optInt("version")==5;icons.clear();
+        modern=layout.json.optInt("version")==5;icons.clear();commandSurfaces.clear();
         for(int i=0;i<nodes.size();i++){
             View child=((ViewGroup)nodes.get(i)).getChildAt(0);JSONObject spec=specs.get(i);if(spec==null)continue;
+            if(spec.has("name"))child.setContentDescription(spec.optString("name"));
             try{android.graphics.drawable.Drawable icon=SvgIcon.drawable(activity,spec.optString("svg"),Color.parseColor(spec.optString("iconColor",spec.optString("color","#62776E"))));if(icon!=null)icons.put((String)nodes.get(i).getTag(),icon);}catch(Exception ignored){/* Metadata validation reports malformed SVG before apply. */}
             if(modern&&child instanceof TextView){((TextView)child).setSingleLine(true);((TextView)child).setEllipsize(android.text.TextUtils.TruncateAt.END);}
             if(modern)child.setBackground(child.isFocusable()?focusSurface(Color.parseColor(spec.optString("color","#62776E"))):new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
@@ -108,20 +123,33 @@ final class LayoutScene extends FrameLayout {
             View wrapper=nodes.get(i);place(wrapper,specs.get(i),scale,left,top);
             View child=((ViewGroup)wrapper).getChildAt(0);
             JSONObject spec=specs.get(i);
-            if(spec!=null&&spec.has("backgroundColor"))wrapper.setBackgroundColor(UnifiedLayout.color(spec.optString("backgroundColor")));
+            if(spec==null)continue; // Omitted system controls remain detached/hidden, never rendered as ghost nodes.
+            if(spec.has("backgroundColor"))wrapper.setBackgroundColor(UnifiedLayout.color(spec.optString("backgroundColor")));
             if(child instanceof TextView&&spec!=null&&spec.has("color"))((TextView)child).setTextColor(Color.parseColor(spec.optString("color")));
             String component=(String)wrapper.getTag();
             android.graphics.drawable.Drawable symbol=icons.get(component);
             if(modern&&child instanceof TextView){
                 TextView text=(TextView)child;text.setCompoundDrawableTintList(null);
                 boolean command=java.util.Arrays.asList("wallpaper","favourites","inputs","network","settings","backHome","allApps").contains(component);
-                int padding=command?Math.round(8*basisScale()*scale):0;if(text.getPaddingLeft()!=padding||text.getPaddingRight()!=padding)text.setPadding(padding,0,padding,0);
+                boolean iconOnly=command&&spec.optString("text").isEmpty()&&symbol!=null;
+                // Icon-only buttons use a centered background and need no compound-text padding.
+                int padding=command&&!iconOnly?Math.round(8*basisScale()*scale):0;if(text.getPaddingLeft()!=padding||text.getPaddingRight()!=padding)text.setPadding(padding,0,padding,0);
                 int iconSize=Math.round(Math.min(22*basisScale(),spec.optJSONObject("frame").optInt("height")*.5f)*scale);
                 boolean resized=symbol!=null&&symbol.getBounds().width()!=iconSize;
                 if(symbol!=null)symbol.setBounds(0,0,iconSize,iconSize);
-                if(text.getCompoundDrawables()[0]!=symbol||resized){text.setCompoundDrawables(symbol,null,null,null);text.setCompoundDrawablePadding(Math.round(7*basisScale()*scale));}
+                if(iconOnly){
+                    android.graphics.drawable.Drawable[] compound=text.getCompoundDrawables();
+                    if(compound[0]!=null||compound[1]!=null||compound[2]!=null||compound[3]!=null)text.setCompoundDrawables(null,null,null,null);
+                    android.graphics.drawable.LayerDrawable surface=commandSurfaces.get(component);
+                    if(surface==null||surface.getLayerWidth(1)!=iconSize||surface.getLayerHeight(1)!=iconSize){
+                        surface=iconCommand(symbol,Color.parseColor(spec.optString("color","#FFFFFF")));commandSurfaces.put(component,surface);
+                    }
+                    // Replacing a background during every layout re-applies drawable padding and
+                    // requests another layout. Keep the same surface until apply or size changes.
+                    if(text.getBackground()!=surface)text.setBackground(surface);
+                }else if(text.getCompoundDrawables()[0]!=symbol||resized){text.setCompoundDrawables(symbol,null,null,null);text.setCompoundDrawablePadding(Math.round(7*basisScale()*scale));}
             }
-            if(child instanceof TextView&&spec!=null&&spec.has("text")&&!component.equals("clock")&&!component.equals("date")&&!component.equals("network"))((TextView)child).setText(spec.optString("text"));
+            if(child instanceof TextView&&spec!=null&&spec.has("text")&&!(child instanceof android.widget.TextClock)&&!component.equals("network"))((TextView)child).setText(spec.optString("text"));
             if(child.getId()==R.id.weatherLine&&spec!=null&&spec.has("color"))((TextView)child.findViewById(R.id.weatherText)).setTextColor(Color.parseColor(spec.optString("color")));
             if(child.getId()==R.id.weatherLine){
                 ((TextView)child.findViewById(R.id.weatherText)).setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,13*basisScale()*scale);

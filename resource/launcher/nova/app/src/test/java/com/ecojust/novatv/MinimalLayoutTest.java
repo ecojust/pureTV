@@ -31,7 +31,7 @@ public class MinimalLayoutTest {
     @Before public void useChineseLocale() {
         previousLocale = Locale.getDefault();
         Locale.setDefault(Locale.SIMPLIFIED_CHINESE);
-        for(String pkg:new String[]{"com.example.music","com.example.video","com.example.browser","com.example.files"})LauncherLayoutTest.install(pkg,false);
+        for(String pkg:new String[]{"com.example.music","com.example.video","com.example.browser","com.example.files","com.ecojust.webtv"})LauncherLayoutTest.install(pkg,false);
     }
     @After public void restoreLocale() { Locale.setDefault(previousLocale); }
 
@@ -70,7 +70,7 @@ public class MinimalLayoutTest {
         }
     }
 
-    @Test public void homeRendersFourCardsAndNavigation() throws Exception {
+    @Test public void homeRendersSixCardsAndCompactNavigation() throws Exception {
         String wallpaper = System.getenv("CLEAN_UI_TEST_WALLPAPER");
         if (wallpaper != null) {
             File file = new File(RuntimeEnvironment.getApplication().getExternalFilesDir(null), "wallpaper.jpg");
@@ -81,6 +81,7 @@ public class MinimalLayoutTest {
             layout(home, 1920, 1080);
             RecyclerView grid = home.findViewById(R.id.grid);
             checkCards(grid, grid.getAdapter().getItemCount());
+            assertEquals(6,grid.getAdapter().getItemCount());
             assertFalse(((android.widget.TextView)LayoutScene.holder(grid,0).itemView.findViewById(R.id.name)).getText().toString().isEmpty());
             assertFalse(((android.widget.TextView)LayoutScene.holder(grid,2).itemView.findViewById(R.id.name)).getText().toString().isEmpty());
             View first = LayoutScene.holder(grid,0).itemView.findViewById(R.id.card);
@@ -90,6 +91,11 @@ public class MinimalLayoutTest {
             assertTrue("home shortcuts belong in the bottom half", at[1] > home.getWindow().getDecorView().getHeight() / 2);
             View nav = home.findViewById(R.id.topButtons);
             assertTrue(home.findViewById(R.id.clock).getWidth() > 0);
+            assertEquals(26f,((android.widget.TextView)home.findViewById(R.id.clock)).getTextSize(),.1f);
+            assertFalse(home.findViewById(R.id.btnInputs).isShown());assertFalse(home.findViewById(R.id.btnWifi).isShown());
+            View top=first.focusSearch(View.FOCUS_UP);assertNotNull(top);assertTrue(top.isShown());assertTrue(top.requestFocus());
+            assertTrue(top.getId()==R.id.btnWallpaper||top.getId()==R.id.btnSettings);
+            first.requestFocus();
             assertTrue(nav.getRight() <= home.findViewById(R.id.root).getWidth());
             capture(home, "home-render");
         }

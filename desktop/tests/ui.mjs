@@ -565,13 +565,15 @@ try {
     await shot(p,'layout-v5-properties-036');
     await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='applyLayout'));const applied=await p.evaluate(()=>window.__launcherRequests.find(r=>r.action==='applyLayout'));assert.equal(applied.layout.version,5);
   },unifiedState,{layoutSupported:true,layout:modernLayout,layoutApps:unifiedApps});
-  const novaLayout=JSON.parse(await readFile(new URL('../../resource/launcher/nova/app/src/main/assets/layout.json',import.meta.url),'utf8'));
+  const novaLayout=JSON.parse(await readFile(new URL('../../resource/launcher/nova/layout.example.json',import.meta.url),'utf8'));
   const novaComponent='com.ecojust.novatv/.MainActivity';
   const novaState=structuredClone(unifiedState);novaState.defaultHome=novaComponent;
   novaState.launchers.forEach(l=>l.isDefault=false);
   novaState.launchers.push({packageName:'com.ecojust.novatv',component:novaComponent,label:'Nova TV',isDefault:true});
   novaState.packages.push({packageName:'com.ecojust.novatv',label:'Nova TV',installed:true,enabled:true,system:false,protectedReason:'当前默认启动器'});
-  novaLayout.home.users=[{id:'nova-music',name:'Music TV',text:'Music TV',action:'com.ecojust.music',frame:{x:56,y:330,width:200,height:150},visible:true,icon:rawSvg,textColor:'#F5F6FA',iconColor:'#FFFFFF',backgroundColor:'#284D74'}];
+  const novaApps=[...new Map([...novaLayout.home.users,...novaLayout.apps.users].map(node=>[node.action,{packageName:node.action,label:node.name}])).values()];
+  for(const app of novaApps)if(!novaState.packages.some(p=>p.packageName===app.packageName))novaState.packages.push({...app,installed:true,enabled:true,system:false,protectedReason:null});
+  const novaFirst=novaLayout.home.users[0],novaClock=novaLayout.home.system.find(n=>n.id==='statusClock');
   await check('Nova v5 keeps its background and geometry and applies user edits to the current Nova desktop',async p=>{
     await nav(p,'launchers');await settled(p);
     const card=p.locator(`[data-launcher-component="${novaComponent}"]`);
@@ -580,34 +582,96 @@ try {
     const canvas=p.locator('.unified-canvas');
     assert.ok((await canvas.evaluate(el=>getComputedStyle(el).backgroundImage)).includes(novaLayout.home.background.image));
     assert.deepEqual(await canvas.evaluate(el=>{const s=getComputedStyle(el);return [s.backgroundSize,s.backgroundRepeat]}),['cover','no-repeat']);
-    for(const node of [novaLayout.home.system.find(n=>n.id==='title'),novaLayout.home.users[0]]){
+    assert.equal(novaLayout.home.users.length,6,'The shipped example shows six app tiles');
+    assert.equal(await p.locator('[data-u-kind="users"]').count(),6);
+    for(const node of [novaClock,...novaLayout.home.users]){
       const rect=await canvas.boundingBox(),box=await p.locator(`[data-u-node="${node.id}"]`).boundingBox();
       assert.ok(Math.abs((box.x-rect.x)/rect.width-node.frame.x/novaLayout.screen.width)<.005,'Nova x matches layout JSON');
       assert.ok(Math.abs((box.y-rect.y)/rect.height-node.frame.y/novaLayout.screen.height)<.005,'Nova y matches layout JSON');
       assert.ok(Math.abs(box.width/rect.width-node.frame.width/novaLayout.screen.width)<.005,'Nova width matches layout JSON');
     }
-    await p.locator('[data-u-node="title"]').click();assert.equal(await p.locator('[data-u-field="name"]').isDisabled(),true);
-    assert.equal(await p.locator('[data-u-field="text"]').inputValue(),'NOVA TV');
-    await p.locator('[data-u-node="nova-music"]').click();
+    await p.locator('[data-u-node="statusClock"]').click();assert.equal(await p.locator('[data-u-field="name"]').isDisabled(),true);
+    assert.equal(await p.locator('[data-u-field="text"]').inputValue(),novaClock.text);
+    assert.equal(await p.locator('[data-u-node="statusClock"]').evaluate(el=>el.style.getPropertyValue('--u-font')),'13','Status time uses the v5 generic system label size');
+    assert.equal(await p.locator('[data-u-node="statusClock"] .unified-icon').count(),0,'Empty SVG adds no phantom status icon');
+    await p.locator(`[data-u-node="${novaFirst.id}"]`).click();
+    await shot(p,'nova-layout-home-011');
     // A committed edit removes a still-focused dirty input; its native blur must not re-enter DOM replacement.
     await p.locator('[data-u-field="text"]').fill('我的音乐');await p.locator('[data-u-field="text"]').dispatchEvent('change');
     assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Focused text edits must render without a caught error');
     await p.locator('[data-u-frame="x"]').fill('72');await p.locator('[data-u-frame="x"]').dispatchEvent('change');
     assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Nova edits must not show a caught render error');
-    await shot(p,'nova-layout-home-037');
+    await shot(p,'nova-layout-home-edited-011');
     await p.locator('[data-u-page="apps"]').click();
-    assert.ok((await canvas.evaluate(el=>getComputedStyle(el).backgroundImage)).includes(novaLayout.apps.background.image));
+    if(novaLayout.apps.background.image)assert.ok((await canvas.evaluate(el=>getComputedStyle(el).backgroundImage)).includes(novaLayout.apps.background.image));
+    else assert.equal(await canvas.evaluate(el=>getComputedStyle(el).backgroundImage),'none');
     assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Switching Nova pages must keep the editor error-free');
-    await shot(p,'nova-layout-apps-037');
+    await shot(p,'nova-layout-apps-011');
     await p.locator('[data-u-act="apply"]').click();
     assert.match(await p.locator('#confirm-operation').locator('..').locator('..').innerText(),/com\.ecojust\.novatv/);
     await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='applyLayout'));await settled(p);
     const applied=await p.evaluate(()=>window.__launcherRequests.find(r=>r.action==='applyLayout'));
     assert.equal(applied.layout.version,5);assert.equal(applied.layout.home.users[0].text,'我的音乐');assert.equal(applied.layout.home.users[0].frame.x,72);
-    assert.equal(applied.layout.home.users[0].action,'com.ecojust.music');
+    assert.equal(applied.layout.home.users[0].action,novaFirst.action);
     assert.deepEqual(applied.layout.home.system,novaLayout.home.system);assert.deepEqual(applied.layout.apps.system,novaLayout.apps.system);
     assert.deepEqual(applied.layout.home.background,novaLayout.home.background);assert.deepEqual(applied.layout.apps.background,novaLayout.apps.background);
-  },novaState,{layoutSupported:true,layout:novaLayout,layoutApps:unifiedApps});
+  },novaState,{layoutSupported:true,layout:novaLayout,layoutApps:novaApps});
+  for(const name of ['aster','sol','moss','forma','mono','drift','circuit','pixel']){
+    const layout=JSON.parse(await readFile(new URL(`../../resource/launcher/${name}/layout.example.json`,import.meta.url),'utf8'));
+    const template=JSON.parse(await readFile(new URL(`../../resource/launcher/${name}/app/src/main/assets/layout.json`,import.meta.url),'utf8'));
+    for(const section of ['home','apps'])for(const field of ['system','background','navigation'])assert.deepEqual(layout[section][field],template[section][field],`${name} example preserves shipped ${section}.${field}`);
+    const packageName=`com.ecojust.${name}tv`,component=`${packageName}/.MainActivity`,state=snapshot();
+    state.defaultHome=component;state.launchers.forEach(launcher=>launcher.isDefault=false);
+    state.launchers.push({packageName,component,label:name.toUpperCase()+' TV',isDefault:true});
+    const apps=[...new Map([...layout.home.users,...layout.apps.users].map(node=>[node.action,{packageName:node.action,label:node.name}])).values()];
+    for(const app of [{packageName,label:name.toUpperCase()+' TV'},...apps])if(!state.packages.some(p=>p.packageName===app.packageName))state.packages.push({...app,installed:true,enabled:true,system:false,protectedReason:null});
+    await check(`${name} v5 collection layout renders both pages and preserves system components on apply`,async p=>{
+      await nav(p,'launchers');await settled(p);
+      const card=p.locator(`[data-launcher-component="${component}"]`);
+      await card.locator('[data-act="open-layout"]').click();await p.locator('[data-unified-editor]').waitFor();
+      const canvas=p.locator('.unified-canvas');
+      const rgb=hex=>hex==='transparent'?'rgba(0, 0, 0, 0)':`rgb(${[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)).join(', ')})`;
+      for(const section of ['home','apps']){
+        await p.locator(`[data-u-page="${section}"]`).click();
+        assert.equal(await p.locator('.layout-modal .banner.error').count(),0,`${name} ${section} has no caught UI error`);
+        assert.equal(await p.locator('[data-u-kind="users"]').count(),6,`${name} shows its six example installed apps`);
+        const background=await canvas.evaluate(el=>{const style=getComputedStyle(el);return {image:style.backgroundImage,color:style.backgroundColor,size:style.backgroundSize,repeat:style.backgroundRepeat}});
+        assert.equal(background.color,rgb(layout[section].background.color));assert.equal(background.size,'cover');assert.equal(background.repeat,'no-repeat');
+        if(layout[section].background.image)assert.ok(background.image.includes(layout[section].background.image));else assert.equal(background.image,'none');
+        const rect=await canvas.boundingBox();
+        for(const kind of ['system','users'])for(const node of layout[section][kind]){
+          const element=p.locator(`[data-u-kind="${kind}"][data-u-node="${node.id}"]`),box=await element.boundingBox();
+          assert.ok(box,`${name} ${section}.${node.id} is represented in the editor`);
+          for(const [actual,expected] of [[(box.x-rect.x)/rect.width,node.frame.x/layout.screen.width],[(box.y-rect.y)/rect.height,node.frame.y/layout.screen.height],[box.width/rect.width,node.frame.width/layout.screen.width],[box.height/rect.height,node.frame.height/layout.screen.height]])assert.ok(Math.abs(actual-expected)<.005,`${name} ${section}.${node.id} geometry follows JSON: ${actual} vs ${expected}`);
+          assert.equal(await element.evaluate(el=>el.classList.contains('scene-hidden')),!node.visible);
+          const paint=await element.evaluate(el=>({text:getComputedStyle(el.querySelector('.unified-text')).color,icon:el.style.getPropertyValue('--u-icon-color'),background:el.style.getPropertyValue('--u-bg')}));
+          assert.deepEqual(paint,{text:rgb(node.textColor),icon:node.iconColor,background:node.backgroundColor});
+        }
+        await shot(p,`${name}-layout-${section}`);
+      }
+      await p.locator('[data-u-page="home"]').click();
+      if(name==='aster'){
+        await p.setViewportSize({width:1024,height:800});
+        const tiny=layout.home.system.find(n=>n.id==='date'),rect=await canvas.boundingBox(),box=await p.locator('[data-u-node="date"]').boundingBox();
+        assert.ok(box.height<38,'Small system nodes must not inherit normal button minimum height');
+        assert.ok(Math.abs(box.height-rect.height*tiny.frame.height/layout.screen.height)<1,'Small canvas preserves exact system height');
+        assert.ok(Math.abs(box.width-rect.width*tiny.frame.width/layout.screen.width)<1,'Small canvas preserves exact system width');
+        await shot(p,'aster-layout-home-compact');
+        await p.setViewportSize({width:1440,height:1000});
+      }
+      const first=layout.home.users[0],system=layout.home.system[0];
+      await p.locator('[data-u-selection]').selectOption(`system:${system.id}`);
+      assert.equal(await p.locator('[data-u-field="name"]').isDisabled(),true);assert.equal(await p.locator('[data-u-frame="x"]').isDisabled(),true);
+      await p.locator(`[data-u-node="${first.id}"][data-u-kind="users"]`).click();
+      const changedText=first.text+' · 自定义';await p.locator('[data-u-field="text"]').fill(changedText);await p.locator('[data-u-field="text"]').dispatchEvent('change');
+      assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Editing an installed app must not report a caught render error');
+      await p.locator('[data-u-act="apply"]').click();assert.ok((await p.locator('#confirm-operation').locator('..').locator('..').innerText()).includes(component));
+      await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='applyLayout'));await settled(p);
+      const applied=await p.evaluate(()=>window.__launcherRequests.find(r=>r.action==='applyLayout'));
+      const expected=structuredClone(layout);expected.home.users[0].text=changedText;assert.deepEqual(applied.layout,expected,`${name} applies only the intended user edit`);
+      assert.equal(await p.locator('.layout-modal .banner.error').count(),0);
+    },state,{layoutSupported:true,layout,layoutApps:apps});
+  }
   const homeCover='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=';
   const updatedHomeCover='data:image/png;base64,'+Buffer.concat([Buffer.from(homeCover.split(',')[1],'base64'),Buffer.from([0])]).toString('base64');
   const coverLayout=structuredClone(unifiedLayout);coverLayout.home.background.image=homeCover;

@@ -1,7 +1,7 @@
 name: Nova TV build
 on:
   push:
-    branches: [master, feat/nova-tv]
+    branches: [master, "feat/nova-tv*"]
     paths:
       - 'resource/launcher/nova/**'
       - '.github/workflows/nova.yml'
@@ -46,19 +46,22 @@ jobs:
               for failure in ET.parse(report).getroot().iter('failure'):
                   print('::error::'+(failure.text or '')[:3000].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
           log=pathlib.Path(os.environ['RUNNER_TEMP'])/'nova-build.log'
-          if log.exists():print('::error::'+log.read_text(errors='replace')[-6000:].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
+          if log.exists():print('::error::'+log.read_text(errors='replace')[-3500:].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
           PY
       - name: Verify APK identity
         run: |
           python - <<'PY'
-          import sys,os,json
+          import sys,os,json,re
           from pathlib import Path
           sys.path.insert(0,'tools')
           from resource_catalog import apk_info
           directory=Path('nova-artifact');directory.mkdir()
           apks=list(Path('resource/launcher/nova/app/build/outputs/apk/release').glob('*.apk'));assert len(apks)==1
           info=apk_info(apks[0],Path(os.environ['ANDROID_HOME'])/'build-tools/34.0.0',allow_unsigned=True)
-          assert info['packageName']=='com.ecojust.novatv' and info['versionName']=='0.1.0' and info['versionCode']==1
+          gradle=Path('resource/launcher/nova/app/build.gradle').read_text()
+          assert info['packageName']=='com.ecojust.novatv'
+          assert info['versionName']==re.search(r"versionName '([^']+)'",gradle)[1]
+          assert info['versionCode']==int(re.search(r'versionCode (\d+)',gradle)[1])
           assert info['bytes']<5*1024*1024
           info['sourceSha']=os.environ['GITHUB_SHA']
           (directory/'nova.apk').write_bytes(apks[0].read_bytes());(directory/'metadata.json').write_text(json.dumps(info,indent=2))
@@ -72,7 +75,7 @@ jobs:
           if-no-files-found: error
   stage:
     needs: build
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/feat/nova-tv'
+    if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/heads/feat/nova-tv')
     runs-on: ubuntu-latest
     permissions:
       contents: write

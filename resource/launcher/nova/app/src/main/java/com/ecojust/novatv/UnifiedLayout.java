@@ -82,25 +82,43 @@ final class UnifiedLayout {
             JSONObject n=source.getJSONArray("system").getJSONObject(i);String id=n.getString("id");
             if(id.equals("background")){background=new JSONObject().put("frame",n.getJSONObject("frame")).put("color",n.getString("backgroundColor")).put("visible",n.getBoolean("visible")).put("zIndex",0);if(n.has("image"))background.put("image",n.getString("image"));}
             else if(id.startsWith("shortcut-")){String action=id.substring(9).replaceFirst("-\\d+$","");items.put(item(n).put("action",action));}
-            else elements.put(new JSONObject().put("id",id).put("frame",n.getJSONObject("frame")).put("visible",n.getBoolean("visible")).put("zIndex",2).put("color",n.optString("textColor",n.optString("color","#243E3A"))).put("backgroundColor",n.getString("backgroundColor")).put("text",n.getString("text")).put("svg",n.getString("icon")).put("iconColor",n.optString("iconColor",n.optString("color","#243E3A"))));
+            else elements.put(new JSONObject().put("id",id).put("name",n.getString("name")).put("frame",n.getJSONObject("frame")).put("visible",n.getBoolean("visible")).put("zIndex",2).put("color",n.optString("textColor",n.optString("color","#243E3A"))).put("backgroundColor",n.getString("backgroundColor")).put("text",n.getString("text")).put("svg",n.getString("icon")).put("iconColor",n.optString("iconColor",n.optString("color","#243E3A"))));
         }
         for(int i=0;i<source.getJSONArray("users").length();i++){JSONObject n=source.getJSONArray("users").getJSONObject(i);items.put(item(n).put("packageName",n.getString("action")));}
         if(background==null)throw new IllegalArgumentException("Missing system background");return page.put("items",items).put("scene",new JSONObject().put("background",background).put("elements",elements));
     }
     private static JSONObject item(JSONObject n)throws Exception{return new JSONObject().put("label",n.getString("text")).put("frame",n.getJSONObject("frame")).put("visible",n.getBoolean("visible")).put("color",n.getString("backgroundColor")).put("foreground",n.optString("textColor",n.optString("color","#243E3A"))).put("svg",n.getString("icon")).put("iconColor",n.optString("iconColor",n.optString("color","#243E3A"))).put("zIndex",1);}
     static JSONObject withInstalled(Context ctx,JSONObject template)throws Exception{
-        JSONArray apps=LauncherLayout.installedApps(ctx);int homeCount=Math.min(4,apps.length());
+        JSONArray apps=LauncherLayout.installedApps(ctx);int homeCount=Math.min(6,apps.length());
         for(String page:Arrays.asList("home","apps")){
             JSONArray users=template.getJSONObject(page).getJSONArray("users");int count=page.equals("home")?homeCount:apps.length();
             for(int i=0;i<count;i++){
                 JSONObject app=apps.getJSONObject(i);String pkg=app.getString("packageName"),label=app.getString("label");if(label.length()>100){int end=100;if(Character.isHighSurrogate(label.charAt(end-1)))end--;label=label.substring(0,end);}
                 JSONObject frame=LayoutScene.frame(new JSONObject(),i,4,count,page);
-                if(template.optInt("version")==5&&page.equals("home"))frame=new JSONObject().put("x",56+i*216).put("y",330).put("width",200).put("height",150);
-                if(template.optInt("version")==5&&page.equals("apps"))frame.put("y",frame.getInt("y")+36);
-                users.put(new JSONObject().put("id","app-"+i).put("name",label).put("text",label).put("frame",frame).put("action",pkg).put("visible",true).put("icon",SvgIcon.forPackage(pkg)).put("textColor","#F5F6FA").put("iconColor","#F4F7FF").put("backgroundColor",new String[]{"#284D74","#6B3859","#335A57","#524875"}[i%4]));
+                if(template.optInt("version")==5){
+                    int rows=Math.max(1,(count+5)/6),step=Math.min(140,408/rows);
+                    frame=new JSONObject().put("x",54+(i%6)*144).put("y",page.equals("home")?360:116+(i/6)*step).put("width",132).put("height",page.equals("home")?126:Math.max(1,Math.min(126,step-8)));
+                }
+                users.put(new JSONObject().put("id","app-"+i).put("name",label).put("text",label).put("frame",frame).put("action",pkg).put("visible",true).put("icon",SvgIcon.forPackage(pkg)).put("textColor","#F5F6FA").put("iconColor",SvgIcon.ink(pkg)).put("backgroundColor",SvgIcon.surface(pkg)));
             }
-        }return template;
+        }
+        // Keep all installed entries within v5's shared 90 KiB budget. A large catalogue
+        // first uses a smaller copy of the same artwork, then shorter displayed labels.
+        if(size(template)>LauncherLayout.LIMIT){
+            try(java.io.InputStream image=ctx.getAssets().open("wallpaper-compact.webp");java.io.ByteArrayOutputStream bytes=new java.io.ByteArrayOutputStream()){
+                byte[] buffer=new byte[4096];int read;while((read=image.read(buffer))!=-1)bytes.write(buffer,0,read);
+                template.getJSONObject("home").getJSONObject("background").put("image","data:image/webp;base64,"+android.util.Base64.encodeToString(bytes.toByteArray(),android.util.Base64.NO_WRAP));
+            }
+        }
+        for(int limit:new int[]{64,48,32,16})if(size(template)>LauncherLayout.LIMIT){
+            for(String section:Arrays.asList("home","apps")){JSONArray nodes=template.getJSONObject(section).getJSONArray("users");for(int i=0;i<nodes.length();i++){
+                JSONObject n=nodes.getJSONObject(i);String label=n.getString("text");if(label.length()>limit){int end=limit-1;if(Character.isHighSurrogate(label.charAt(end-1)))end--;label=label.substring(0,end)+"…";n.put("text",label).put("name",label);}
+            }}
+        }
+        if(size(template)>LauncherLayout.LIMIT)template.getJSONObject("home").getJSONObject("background").remove("image");
+        return template;
     }
+    private static int size(JSONObject value){return value.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length;}
     static JSONObject migrate(JSONObject old,JSONObject template)throws Exception{
         JSONObject result=new JSONObject(template.toString());
         if(old.optInt("version")==4){

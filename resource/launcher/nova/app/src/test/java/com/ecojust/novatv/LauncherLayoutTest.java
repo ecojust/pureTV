@@ -21,13 +21,36 @@ import static org.junit.Assert.*;
 public class LauncherLayoutTest {
  static Context ctx(){return RuntimeEnvironment.getApplication();}
  @After public void clear(){LauncherLayout.reset(ctx());}
- static void install(String pkg,boolean system){
-  PackageInfo info=new PackageInfo();info.packageName=pkg;info.applicationInfo=new ApplicationInfo();info.applicationInfo.packageName=pkg;info.applicationInfo.enabled=true;info.applicationInfo.nonLocalizedLabel=pkg.equals("com.example.browser")?"浏览器":pkg.equals("com.example.files")?"文件":pkg.equals("com.example.music")?"音乐":pkg.equals("com.example.video")?"视频":pkg;info.applicationInfo.flags=ApplicationInfo.FLAG_INSTALLED|(system?ApplicationInfo.FLAG_SYSTEM:0);
+ static void install(String pkg,boolean system){install(pkg,system,null);}
+ static void install(String pkg,boolean system,String title){
+  PackageInfo info=new PackageInfo();info.packageName=pkg;info.applicationInfo=new ApplicationInfo();info.applicationInfo.packageName=pkg;info.applicationInfo.enabled=true;info.applicationInfo.nonLocalizedLabel=title!=null?title:pkg.equals("com.example.browser")?"浏览器":pkg.equals("com.example.files")?"文件":pkg.equals("com.example.music")?"音乐":pkg.equals("com.example.video")?"视频":pkg.equals("com.ecojust.webtv")?"电视":pkg;info.applicationInfo.flags=ApplicationInfo.FLAG_INSTALLED|(system?ApplicationInfo.FLAG_SYSTEM:0);
   org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).installPackage(info);
   ResolveInfo resolve=new ResolveInfo();resolve.activityInfo=new android.content.pm.ActivityInfo();resolve.activityInfo.packageName=pkg;resolve.activityInfo.name=pkg+".Main";resolve.activityInfo.applicationInfo=info.applicationInfo;resolve.activityInfo.enabled=true;resolve.activityInfo.exported=true;
   for(String category:new String[]{Intent.CATEGORY_LAUNCHER,Intent.CATEGORY_LEANBACK_LAUNCHER}){Intent query=new Intent(Intent.ACTION_MAIN).addCategory(category);org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).addResolveInfoForIntent(query,resolve);org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).addResolveInfoForIntent(new Intent(query).setPackage(pkg),resolve);}
  }
  static JSONObject user(String pkg)throws Exception{return new JSONObject().put("id","app-custom").put("name","用户应用").put("text","打开应用").put("action",pkg).put("frame",new JSONObject("{\"x\":120,\"y\":280,\"width\":200,\"height\":150}")).put("visible",true).put("icon",UnifiedLayout.ICON).put("textColor","#EEEEEE").put("iconColor","#22AA88").put("backgroundColor","#123456");}
+ @Test public void hundredApplicationsWithLongChineseLabelsRemainWithinProtocolBudget()throws Exception{
+  for(int i=0;i<100;i++){
+    String pkg="com.example.catalogue.app"+i;install(pkg,false,"电视应用长名称".repeat(20)+i);
+  }
+  JSONObject layout=LauncherLayout.defaults(ctx()).json;assertEquals(100,layout.getJSONObject("apps").getJSONArray("users").length());
+  assertTrue(layout.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length<=LauncherLayout.LIMIT);
+  assertEquals(6,layout.getJSONObject("home").getJSONArray("users").length());LauncherLayout.apply(ctx(),layout);
+ }
+ @Test public void upgradesPreviousV5SystemAndPreservesCustomUsersAndBackground()throws Exception{
+  install("com.example.user",false);
+  JSONObject old=new JSONObject(new String(ctx().getAssets().open("layout-0.1.0.json").readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));
+  old.getJSONObject("home").put("users",new JSONArray().put(user("com.example.user")));
+  old.getJSONObject("home").put("background",new JSONObject().put("color","#123456"));
+  old.getJSONObject("home").put("navigation",new JSONObject());
+  java.io.File stored=new java.io.File(ctx().getFilesDir(),"layout.json");java.nio.file.Files.write(stored.toPath(),old.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+  JSONObject upgraded=LauncherLayout.override(ctx()).json;
+  assertEquals(120,upgraded.getJSONObject("home").getJSONArray("users").getJSONObject(0).getJSONObject("frame").getInt("x"));
+  assertEquals("#123456",upgraded.getJSONObject("home").getJSONObject("background").getString("color"));
+  assertEquals(0,upgraded.getJSONObject("home").getJSONObject("navigation").length());
+  assertEquals("statusClock",upgraded.getJSONObject("home").getJSONArray("system").getJSONObject(0).getString("id"));
+  LauncherLayout.apply(ctx(),upgraded);
+ }
  @Test public void defaultsExposeUniformUsersAndSystemAndEveryComponentHasAction()throws Exception{
   install("com.example.user",false);install("com.example.system",true);JSONObject d=LauncherLayout.defaults(ctx()).json;assertEquals(5,d.getInt("version"));assertFalse(d.getJSONObject("home").has("columns"));assertFalse(d.getJSONObject("home").has("scene"));
   for(String page:new String[]{"home","apps"})for(String kind:new String[]{"users","system"}){JSONArray nodes=d.getJSONObject(page).getJSONArray(kind);for(int i=0;i<nodes.length();i++){JSONObject n=nodes.getJSONObject(i);assertTrue(LauncherLayout.validPackage(n.getString("action")));assertTrue(n.has("frame"));assertTrue(n.has("name"));assertTrue(n.has("text"));UnifiedLayout.svg(n.getString("icon"));}}
