@@ -17,8 +17,8 @@ def tables(prefix):
             extra=('是' if info.get('supportsLayoutJson') and info.get('layoutJsonVersion') in (2,3,4,5) else '否') if kind=='launcher' else info.get('description','电视应用')
             size=(root/'resource'/key/info['apk']).stat().st_size
             assert size==info['apkBytes']
-            display=f'{size/1024/1024:.2f} MiB' if size>=1024*1024 else f'{size/1024:.1f} KiB'
-            output.append(f'| [{info["name"]}]({directory}) | {info["author"]} | {info["version"]} | {display}（{size:,} B） | {extra} | {image} |')
+            display=f'{size/1024/1024:.2f} MB' if size>=1024*1024 else f'{size/1024:.1f} KB'
+            output.append(f'| [{info["name"]}]({directory}) | {info["author"]} | {info["version"]} | {display} | {extra} | {image} |')
         output+=['']
     return '\n'.join(output).rstrip()
 p=root/'README.md';text=p.read_text();start='<!-- resource-index:start -->';end='<!-- resource-index:end -->';left=text.index(start)+len(start);right=text.index(end);p.write_text(text[:left]+'\n\n'+tables('resource/')+'\n\n'+text[right:])

@@ -16,8 +16,8 @@ for line in lines:
         match=re.search(r'\]\((resource/[^)]+)\)',line)
         assert match,line
         directory=root/match[1];info=json.loads(child(directory,'resource.json').read_text());apk=child(directory,info['apk']);size=apk.stat().st_size;assert size==info['apkBytes']
-        display=f'{size/1024/1024:.2f} MiB' if size>=1024*1024 else f'{size/1024:.1f} KiB'
-        label=f'{display}（{size:,} B）';cells=[v.strip() for v in line.strip('|').split('|')]
+        display=f'{size/1024/1024:.2f} MB' if size>=1024*1024 else f'{size/1024:.1f} KB'
+        label=f'{display}';cells=[v.strip() for v in line.strip('|').split('|')]
         if len(cells)==columns-1:cells.insert(3,label)
         else:assert len(cells)==columns;cells[3]=label
         cells[2]=info['version'];line='| '+' | '.join(cells)+' |'
