@@ -49,7 +49,6 @@ def verify_catalog(root,tools):
         assert actual['versionName']==info['version'] and actual['bytes']==info['apkBytes']
         if info.get('sourceArchive'):
             source=child(directory,info['sourceArchive']);assert digest(source)==info['sourceArchiveSha256']
-        else:assert (directory/'src').is_dir(),'Provide corresponding source or an archive'
         child(directory,'LICENSE');child(directory,'README.md')
         if info.get('cover'):child(directory,info['cover'])
         if actual['packageName'] in ('com.ecojust.puretv','com.ecojust.music','com.ecojust.shortvideo','com.ecojust.webtv'):

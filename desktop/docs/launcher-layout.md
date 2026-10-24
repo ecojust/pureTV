@@ -1,6 +1,6 @@
 # users/system 布局编辑
 
-pureTV Manager 和 Launcher 0.3.5 使用版本 4 布局。顶层 screen 设置屏幕基准；Home、Apps 分别定义 users、system、background、navigation。完整字段与示例见[README](../../README.md#layoutjson-规范与画面对照)及[示例文件](../../resource/launcher/puretv/layout.example.json)。
+pureTV Manager 和 Launcher 0.3.5 使用版本 4 布局。顶层 screen 设置屏幕基准；Home、Apps 分别定义 users、system、background、navigation。完整字段与示例见[README](../../resource/README-development.md#layoutjson-协议规范与画面对照)及[示例文件](../../resource/launcher/puretv/layout.example.json)。
 
 ## 编辑工作区
 
