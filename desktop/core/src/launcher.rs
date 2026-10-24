@@ -252,6 +252,11 @@ fn provider_result(output: &str) -> Result<Value, String> {
     if value["version"] != value["layout"]["version"] {
         return Err("启动器布局接口与配置版本不一致".into());
     }
+    if value["layout"]["version"] == 4 {
+        let baseline = crate::unified_layout::basis(&value)?;
+        validate_layout(&baseline)?;
+        crate::unified_layout::locked(&value["layout"], &baseline)?;
+    }
     let apps = value["apps"].as_array().ok_or("启动器应用列表无效")?;
     if apps.len() > 100 {
         return Err("启动器应用列表超过限制".into());
@@ -374,7 +379,7 @@ impl Manager {
             LauncherRequest::ApplyLayout { layout } => {
                 validate_layout(&layout)?;
                 if layout["version"] == 4 {
-                    crate::unified_layout::locked(&layout, &value["layout"])?;
+                    crate::unified_layout::locked(&layout, &crate::unified_layout::basis(&value)?)?;
                 }
                 for section in ["home", "apps"] {
                     let unified = layout["version"] == 4;

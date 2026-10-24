@@ -29,6 +29,8 @@ public final class LauncherLayoutProvider extends ContentProvider {
             LauncherLayout override=LauncherLayout.override(getContext());
             JSONObject value=new JSONObject().put("supported",true).put("version",(override==null?LauncherLayout.defaults(getContext()):override).json.getInt("version")).put("custom",override!=null)
                 .put("layout",(override==null?LauncherLayout.defaults(getContext()):override).json).put("apps",LauncherLayout.installedApps(getContext()));
+            JSONObject template=LauncherLayout.template(getContext()).json;
+            value.put("systemBasis",new JSONObject().put("screen",template.getJSONObject("screen")).put("home",template.getJSONObject("home").getJSONArray("system")).put("apps",template.getJSONObject("apps").getJSONArray("system")));
             Bundle result=new Bundle();result.putString("result",Base64.encodeToString(value.toString().getBytes(StandardCharsets.UTF_8),Base64.NO_WRAP));return result;
         } catch(Exception error) {throw new IllegalArgumentException("Cannot read or apply layout.json: "+error.getMessage(),error);}
     }

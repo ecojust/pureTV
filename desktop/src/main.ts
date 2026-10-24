@@ -90,8 +90,12 @@ const dialog = document.createElement('dialog');
 dialog.className = 'modal'; document.body.append(dialog);
 const layoutDialog=document.createElement('dialog');layoutDialog.className='layout-modal';layoutDialog.setAttribute('aria-label',t('调整启动器布局'));document.body.append(layoutDialog);
 function unifiedDraft():import('./types').UnifiedLayout|null {try{const value=JSON.parse(layoutJson);return validUnified(value)?value:null;}catch{return null;}}
+function systemBaseline():unknown {
+ const layout=launcherLayout?.layout,basis=launcherLayout?.systemBasis;if(!layout||layout.version!==4||!basis)return layout;
+ return {...layout,screen:basis.screen,home:{...layout.home,users:[],system:basis.home},apps:{...layout.apps,users:[],system:basis.apps}};
+}
 function forwardLayoutAction(action:string):void {const button=document.createElement('button');button.dataset.act=action;void doAction(button).catch(error=>showNotice(error instanceof Error?error.message:String(error),'error'));}
-const unifiedEditor=new UnifiedEditor(layoutDialog,{json:()=>layoutJson,baseline:()=>launcherLayout?.layout,write:text=>{layoutJson=text;notice='';},render:()=>render(),busy:()=>busy,apps:()=>layoutApps(),notice:text=>showNotice(text,'error'),close:()=>{if(!busy)layoutDialog.close();},apply:()=>forwardLayoutAction('apply-layout'),reset:()=>forwardLayoutAction('reset-layout'),import:()=>forwardLayoutAction('import-layout')});
+const unifiedEditor=new UnifiedEditor(layoutDialog,{json:()=>layoutJson,baseline:()=>systemBaseline(),write:text=>{layoutJson=text;notice='';},render:()=>render(),busy:()=>busy,apps:()=>layoutApps(),notice:text=>showNotice(text,'error'),close:()=>{if(!busy)layoutDialog.close();},apply:()=>forwardLayoutAction('apply-layout'),reset:()=>forwardLayoutAction('reset-layout'),import:()=>forwardLayoutAction('import-layout')});
 
 layoutDialog.addEventListener('close',()=>{if(launcherLayout?.layout)layoutJson=JSON.stringify(launcherLayout.layout,null,2);});
 layoutDialog.addEventListener('cancel',event=>{if(busy)event.preventDefault();});
@@ -558,7 +562,7 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
       break;
     }
     case 'reset-layout': if(layoutAvailable() && await confirm(t('恢复默认布局'),t('移除当前启动器的 layout.json 自定义配置，壁纸和其他设置保留。'),[snapshot.defaultHome || ''],t('恢复默认布局'))) await launcherOperation({action:'resetLayout'}); break;
-    case 'import-layout': { const text=await api.chooseLauncherJson();if(text){const previous=layoutJson;layoutJson=text;const unified=unifiedDraft();if(!draftLayout()&&!unified){layoutJson=previous;throw new Error(t('布局文件格式无效'));}if(unified&&validUnified(launcherLayout?.layout)&&!systemUnchanged(unified,launcherLayout.layout)){layoutJson=previous;throw new Error(t('系统组件只读，不能修改属性或位置'));}render();} break; }
+    case 'import-layout': { const text=await api.chooseLauncherJson();if(text){const previous=layoutJson;layoutJson=text;const unified=unifiedDraft();if(!draftLayout()&&!unified){layoutJson=previous;throw new Error(t('布局文件格式无效'));}if(unified&&validUnified(systemBaseline())&&!systemUnchanged(unified,systemBaseline() as import('./types').UnifiedLayout)){layoutJson=previous;throw new Error(t('系统组件只读，不能修改属性或位置'));}render();} break; }
     case 'parse-layout': if(!draftLayout()&&!unifiedDraft()) throw new Error(t('layout.json 格式无效')); render(); break;
     case 'layout-home': layoutSection='home';layoutNode=null;layoutSelected=0;render();break;
     case 'layout-apps': layoutSection='apps';layoutNode=null;layoutSelected=0;render();break;

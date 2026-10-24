@@ -26,5 +26,5 @@ export function resizedSystem(nodes:UnifiedComponent[],from:{width:number;height
  return nodes.map(n=>({...n,frame:{x:Math.round(n.frame.x*to.width/from.width),y:Math.round(n.frame.y*to.height/from.height),width:Math.max(1,Math.round(n.frame.width*to.width/from.width)),height:Math.max(1,Math.round(n.frame.height*to.height/from.height))}}));
 }
 export function systemUnchanged(next:UnifiedLayout,current:UnifiedLayout):boolean {
- return (['home','apps'] as const).every(page=>{const a=next[page].system,b=resizedSystem(current[page].system,current.screen,next.screen);return a.length===b.length&&a.every((n,i)=>['id','name','action','text','visible','icon','color','backgroundColor','image'].every(k=>n[k as keyof UnifiedComponent]===b[i][k as keyof UnifiedComponent])&&(['x','y','width','height'] as const).every(k=>n.frame[k]===b[i].frame[k]));});
+ return (['home','apps'] as const).every(page=>{const a=next[page].system,b=resizedSystem(current[page].system,current.screen,next.screen);return a.length===b.length&&a.every((n,i)=>['id','name','action','text','visible','icon','color','backgroundColor'].every(k=>n[k as keyof UnifiedComponent]===b[i][k as keyof UnifiedComponent])&&(['x','y','width','height'] as const).every(k=>n.frame[k]===b[i].frame[k]));});
 }

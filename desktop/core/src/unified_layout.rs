@@ -236,6 +236,25 @@ pub(crate) fn validate(d: &Value) -> Result<(), String> {
     }
     Ok(())
 }
+pub(crate) fn basis(result: &Value) -> Result<Value, String> {
+    let mut layout = result["layout"].clone();
+    if let Some(value) = result.get("systemBasis") {
+        let object = value.as_object().ok_or("系统组件基准无效")?;
+        if object.len() != 3
+            || object
+                .keys()
+                .any(|k| !["screen", "home", "apps"].contains(&k.as_str()))
+        {
+            return Err("系统组件基准无效".into());
+        }
+        layout["screen"] = value["screen"].clone();
+        for page in ["home", "apps"] {
+            layout[page]["users"] = json!([]);
+            layout[page]["system"] = value[page].clone();
+        }
+    }
+    Ok(layout)
+}
 pub(crate) fn locked(next: &Value, current: &Value) -> Result<(), String> {
     if next["version"] != 4 || current["version"] != 4 {
         return Err("请先读取新版启动器布局".into());
@@ -321,5 +340,30 @@ mod tests {
         ] {
             assert!(svg(text).is_err(), "{text}");
         }
+    }
+    #[test]
+    fn canonical_system_basis_avoids_round_trip_rounding_failures() {
+        let original = sample();
+        let mut small = original.clone();
+        small["screen"] = json!({"width":320,"height":320});
+        for page in ["home", "apps"] {
+            for node in small[page]["system"].as_array_mut().unwrap() {
+                for (field, axis) in [
+                    ("x", "width"),
+                    ("width", "width"),
+                    ("y", "height"),
+                    ("height", "height"),
+                ] {
+                    node["frame"][field] = json!((node["frame"][field].as_f64().unwrap() * 320.0
+                        / original["screen"][axis].as_f64().unwrap())
+                    .round() as u64);
+                }
+            }
+        }
+        let result = json!({"layout":small,"systemBasis":{"screen":original["screen"],"home":original["home"]["system"],"apps":original["apps"]["system"]}});
+        let canonical = basis(&result).unwrap();
+        validate(&canonical).unwrap();
+        locked(&original, &canonical).unwrap();
+        locked(&result["layout"], &canonical).unwrap();
     }
 }

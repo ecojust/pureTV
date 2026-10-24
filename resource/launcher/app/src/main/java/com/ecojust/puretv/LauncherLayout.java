@@ -111,7 +111,7 @@ final class LauncherLayout {
         return null;
     }
     private static LauncherLayout loadOverride(Context ctx,JSONObject source) throws Exception {
-        LauncherLayout template=defaults(ctx);
+        LauncherLayout template=source.optInt("version")==3?defaults(ctx):template(ctx);
         if(source.optInt("version")==3)source=UnifiedLayout.migrate(source,template.json);
         LauncherLayout result=new LauncherLayout(source);
         if(source.optInt("version")==4)UnifiedLayout.locked(result.json,template.json);
@@ -122,12 +122,13 @@ final class LauncherLayout {
         if(layout!=null)return layout;
         try{return defaults(ctx);}catch(Exception ignored){return null;}
     }
+    static LauncherLayout template(Context ctx)throws Exception{return new LauncherLayout(new JSONObject(new String(read(ctx.getAssets().open("layout.json")),StandardCharsets.UTF_8)));}
     static LauncherLayout defaults(Context ctx) throws Exception {
-        return new LauncherLayout(UnifiedLayout.withInstalled(ctx,new JSONObject(new String(read(ctx.getAssets().open("layout.json")), StandardCharsets.UTF_8))));
+        return new LauncherLayout(UnifiedLayout.withInstalled(ctx,template(ctx).json));
     }
     static void apply(Context ctx, JSONObject json) throws Exception {
         LauncherLayout layout = new LauncherLayout(json);
-        if(json.optInt("version")==4)UnifiedLayout.locked(json,effective(ctx).json);
+        if(json.optInt("version")==4)UnifiedLayout.locked(json,template(ctx).json);
         for(String section:Arrays.asList("home","apps")) {
             JSONArray items=layout.page(section).getJSONArray("items");
             for(int i=0;i<items.length();i++) {

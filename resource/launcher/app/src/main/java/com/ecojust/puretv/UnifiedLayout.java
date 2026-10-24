@@ -36,7 +36,7 @@ final class UnifiedLayout {
     }
     private static int integer(JSONObject value,String key,int min,int max)throws Exception{Object n=value.get(key);if(!(n instanceof Integer)||value.getInt(key)<min||value.getInt(key)>max)throw new IllegalArgumentException("Invalid "+key);return value.getInt(key);}
     static void validate(JSONObject d)throws Exception{
-        keys(d,"version","screen","home","apps");if(d.length()!=4||d.getInt("version")!=4||d.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length>LauncherLayout.LIMIT)throw new IllegalArgumentException("Invalid layout v4");
+        keys(d,"version","screen","home","apps");if(d.length()!=4||!(d.opt("version") instanceof Integer)||d.getInt("version")!=4||d.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length>LauncherLayout.LIMIT)throw new IllegalArgumentException("Invalid layout v4");
         JSONObject screen=d.getJSONObject("screen");keys(screen,"width","height");if(screen.length()!=2)throw new IllegalArgumentException("Invalid screen");int width=integer(screen,"width",320,7680),height=integer(screen,"height",320,7680);
         for(String section:Arrays.asList("home","apps")){
             JSONObject page=d.getJSONObject(section);keys(page,"users","system","background","navigation");if(page.length()!=4)throw new IllegalArgumentException("Invalid page");
@@ -48,7 +48,7 @@ final class UnifiedLayout {
                 JSONArray nodes=page.getJSONArray(kind);if(nodes.length()>(kind.equals("system")?32:section.equals("home")?24:100))throw new IllegalArgumentException("Too many components");
                 for(int i=0;i<nodes.length();i++){
                     JSONObject n=nodes.getJSONObject(i);keys(n,"id","name","frame","action","text","visible","icon","color","backgroundColor");
-                    String id=n.getString("id");if(!id.matches("[-A-Za-z0-9_]{1,100}")||!ids.add(id))throw new IllegalArgumentException("Invalid component id");
+                    String id=n.getString("id");if(!(n.get("id") instanceof String)||!id.matches("[-A-Za-z0-9_]{1,100}")||!ids.add(id))throw new IllegalArgumentException("Invalid component id");
                     if(n.length()!=9)throw new IllegalArgumentException("Missing component fields");
                     for(String key:Arrays.asList("name","text"))if(!(n.get(key) instanceof String)||n.getString(key).length()>100)throw new IllegalArgumentException("Invalid component text");
                     String action=n.getString("action");if(!LauncherLayout.validPackage(action)||kind.equals("users")&&!packages.add(action))throw new IllegalArgumentException("Invalid component action");
