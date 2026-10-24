@@ -51,7 +51,7 @@ def verify_catalog(root,tools):
             source=child(directory,info['sourceArchive']);assert digest(source)==info['sourceArchiveSha256']
         child(directory,'LICENSE');child(directory,'README.md')
         if info.get('cover'):child(directory,info['cover'])
-        if actual['packageName'] in ('com.ecojust.puretv','com.ecojust.novatv','com.ecojust.music','com.ecojust.shortvideo','com.ecojust.webtv'):
+        if actual['packageName'].startswith('com.ecojust.'):
             assert actual['certificateSha256']==(root/'tools/puretv-release-certificate.sha256').read_text().strip()
         if actual['packageName']=='com.ecojust.puretv':
             assert info.get('sourceTreeSha') and info.get('sourceCommit')

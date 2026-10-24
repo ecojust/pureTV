@@ -1,0 +1,130 @@
+name: Launcher collection build
+on:
+  push:
+    branches: [master, "feat/nova-tv*"]
+    paths:
+      - 'resource/launcher/aster/**'
+      - 'resource/launcher/sol/**'
+      - 'resource/launcher/moss/**'
+      - 'resource/launcher/forma/**'
+      - 'resource/launcher/mono/**'
+      - 'resource/launcher/drift/**'
+      - 'resource/launcher/circuit/**'
+      - 'resource/launcher/pixel/**'
+      - 'tools/launcher-builds.json'
+      - '.github/workflows/launcher-collection.yml'
+  pull_request:
+    paths:
+      - 'resource/launcher/**'
+      - 'tools/launcher-builds.json'
+      - '.github/workflows/launcher-collection.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: launcher-collection-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      launchers: ${{ steps.names.outputs.launchers }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: names
+        run: |
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          names=json.loads(Path('tools/launcher-builds.json').read_text())
+          assert len(names)==8 and len(set(names))==8
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:out.write('launchers='+json.dumps(names)+'\n')
+          PY
+  build:
+    needs: matrix
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        launcher: ${{ fromJSON(needs.matrix.outputs.launchers) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - uses: gradle/actions/setup-gradle@v4
+      - run: sdkmanager "platforms;android-35" "build-tools;34.0.0"
+      - name: Build, lint, test and render
+        working-directory: resource/launcher/${{ matrix.launcher }}
+        env:
+          LAUNCHER_UI_CAPTURE_DIR: ${{ runner.temp }}/launcher-previews
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon :app:assembleDebug :app:assembleRelease :app:lintDebug :app:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/launcher-build.log"
+      - name: Report failures
+        if: failure()
+        env:
+          LAUNCHER: ${{ matrix.launcher }}
+        run: |
+          python - <<'PY'
+          import os,pathlib,xml.etree.ElementTree as ET
+          for report in (pathlib.Path('resource/launcher')/os.environ['LAUNCHER']).rglob('TEST-*.xml'):
+              for failure in ET.parse(report).getroot().iter('failure'):
+                  print('::error::'+(failure.text or '')[:3000].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
+          log=pathlib.Path(os.environ['RUNNER_TEMP'])/'launcher-build.log'
+          if log.exists():print('::error::'+log.read_text(errors='replace')[-6000:].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
+          PY
+      - name: Verify package and gather rendered previews
+        env:
+          LAUNCHER: ${{ matrix.launcher }}
+        run: |
+          python - <<'PY'
+          import sys,os,json,re
+          from pathlib import Path
+          sys.path.insert(0,'tools')
+          from resource_catalog import apk_info
+          source=Path('resource/launcher')/os.environ['LAUNCHER'];descriptor=json.loads((source/'build-resource.json').read_text());gradle=(source/'app/build.gradle').read_text()
+          apks=list((source/'app/build/outputs/apk/release').glob('*.apk'));assert len(apks)==1
+          info=apk_info(apks[0],Path(os.environ['ANDROID_HOME'])/'build-tools/34.0.0',allow_unsigned=True)
+          assert info['packageName']==descriptor['packageName']==re.search(r"applicationId '([^']+)'",gradle)[1]
+          assert info['versionName']==descriptor['version']==re.search(r"versionName '([^']+)'",gradle)[1]
+          assert info['versionCode']==int(re.search(r'versionCode (\d+)',gradle)[1]) and info['bytes']<5*1024*1024
+          assert Path(descriptor['apk']).name==descriptor['apk'] and descriptor['apk'].endswith('.apk')
+          output=Path('launcher-artifact');output.mkdir();info['sourceSha']=os.environ['GITHUB_SHA']
+          (output/descriptor['apk']).write_bytes(apks[0].read_bytes());(output/'metadata.json').write_text(json.dumps(info,indent=2))
+          for name in ['home-render.png','apps-render.png']:(output/name).write_bytes((Path(os.environ['RUNNER_TEMP'])/'launcher-previews'/name).read_bytes())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: launcher-${{ matrix.launcher }}
+          path: launcher-artifact/
+          if-no-files-found: error
+  stage:
+    needs: build
+    if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/heads/feat/nova-tv')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: launcher-*
+          path: collection-artifacts
+      - run: |
+          python - <<'PY'
+          import json,shutil
+          from pathlib import Path
+          for name in json.loads(Path('tools/launcher-builds.json').read_text()):shutil.copytree(Path('collection-artifacts')/('launcher-'+name),Path('release-staging/collection')/name)
+          PY
+          git checkout -b "build-assets/collection-${GITHUB_RUN_ID}"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -f release-staging/collection
+          git commit -m "Stage verified launcher collection and native previews"
+          git push origin HEAD

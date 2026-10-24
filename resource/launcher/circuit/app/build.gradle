@@ -1,0 +1,81 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.ecojust.circuittv'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.ecojust.circuittv'
+        minSdk 26
+        targetSdk 29
+        versionCode 1
+        versionName '0.1.0'
+    }
+
+    // Release credentials are supplied locally or through GitHub Actions secrets.
+    signingConfigs {
+        release {
+            if (System.getenv('PURETV_KEYSTORE_PATH')) {
+                storeFile file(System.getenv('PURETV_KEYSTORE_PATH'))
+                storePassword System.getenv('PURETV_KEYSTORE_PASSWORD')
+                keyAlias 'puretv'
+                keyPassword System.getenv('PURETV_KEYSTORE_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (System.getenv('PURETV_KEYSTORE_PATH')) {
+                signingConfig signingConfigs.release
+            }
+            // Same switch upstream uses: R8 strips and optimises the code (AndroidX included),
+            // resource shrinking drops what the launcher never references.
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+        unitTests.all {
+            if (System.getenv('LAUNCHER_UI_CAPTURE_DIR')) {
+                outputs.upToDateWhen { false }
+                outputs.cacheIf { false }
+            }
+        }
+    }
+
+    lint {
+        // The launcher is sideloaded over ADB, never published to Google Play, so Play's minimum targetSdk
+        // does not apply; without this, lintVitalRelease fails assembleRelease.
+        disable 'ExpiredTargetSdkVersion'
+        // False positive: setHasFixedSize(true) is called on the desk grid only, whose size is the screen.
+        // The Favourites panel's list really does need wrap_content — it is measured so the popup can be
+        // as tall as its content — and lint cannot tell the two RecyclerViews apart.
+        disable 'InvalidSetHasFixedSize'
+    }
+
+    packagingOptions {
+        resources {
+            // Kotlin metadata dragged in by AndroidX. This launcher is plain Java and never reads it;
+            // leaving it out takes about 14 KB off every install. (Upstream does the same.)
+            excludes += ['kotlin/**', 'META-INF/*.version', 'META-INF/*.kotlin_module', 'DebugProbesKt.bin']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.14.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'com.caverock:androidsvg-aar:1.4'
+}
