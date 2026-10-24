@@ -76,7 +76,7 @@
 
 ## 当前启动器的自定义布局
 
-只有当前默认启动器成功返回已适配的布局接口时才显示编辑器。Manager 0.3.7 适配电视端 **pureTV 0.3.6（`com.ecojust.puretv`）** 和 **Nova TV 0.1.0（`com.ecojust.novatv`）**；旧版 `com.ecojust.cleanyourtv` 及未适配的其他启动器不可直接写入。包名变化需要安装新 APK 并重新选择默认桌面。
+只有当前默认启动器成功返回已适配的布局接口时才显示编辑器。Manager 0.3.7 动态检测已安装启动器的 `<包名>.layout` 协议接口，通过验证后支持编辑，无需添加包名白名单。**pureTV 0.3.6** 与 **Nova TV 0.1.0** 均已实现；其他启动器可按[接入规范](../resource/README-development.md#第三方启动器接入与动态检测)实现。仅有 APK 内静态 layout.json、尚未实现读写接口的启动器不能保存布局。包名变化需要安装新 APK 并重新选择默认桌面。
 
 在当前默认启动器卡片点击「调整布局」，打开电视画布弹窗。Home 与 Apps 分别定义列数和卡片顺序，支持拖动、名称、图标、颜色及 layout.json 导入。只能添加已安装可启动的用户应用，应用后读回复查。旧版 apps.json 不兼容。详情：[启动器布局文档](docs/launcher-layout.md)。
 

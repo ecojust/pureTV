@@ -97,6 +97,7 @@ impl Runner for FakeRunner {
                             let method=&a[a.iter().position(|arg|arg=="--method").unwrap()+1];
                             let uri=a[a.iter().position(|arg|arg=="--uri").unwrap()+1].clone();
                             let original=uri=="content://com.ecojust.puretv.layout";
+                            if !original && !tv.provider_defaults.contains_key(&uri) {return Ok(Output{code:1,text:"No content provider".into()})}
                             let defaults:serde_json::Value=tv.provider_defaults.get(&uri).cloned().unwrap_or_else(||serde_json::from_str(include_str!("../../../public/layout-v3.json")).unwrap());
                             if method=="apply" {
                                 let arg=&a[a.iter().position(|arg|arg=="--arg").unwrap()+1];
@@ -1340,13 +1341,13 @@ fn nova_layout_reads_writes_resets_and_covers_use_its_own_provider() {
         .iter()
         .filter(|a| a.iter().any(|v| v == "content"))
         .collect();
-    assert_eq!(calls.len(), 2);
+    assert_eq!(calls.len(), 3);
     assert!(calls.iter().any(|a| a.iter().any(|v| v == nova_uri)));
     assert!(calls.iter().any(|a| a.iter().any(|v| v == pure_uri)));
 }
 
 #[test]
-fn unregistered_launcher_cannot_trigger_provider_reads_or_writes() {
+fn uninstalled_home_cannot_trigger_provider_reads_or_writes() {
     use crate::LauncherRequest;
     let (mut manager, tv) = fixture();
     {
@@ -1370,4 +1371,102 @@ fn unregistered_launcher_cannot_trigger_provider_reads_or_writes() {
         .calls
         .iter()
         .any(|a| a.iter().any(|v| v == "content")));
+}
+
+#[test]
+fn third_party_launcher_protocol_is_discovered_without_registration() {
+    use crate::LauncherRequest;
+    let (mut manager, tv) = fixture();
+    let package = "com.example.launcher";
+    let component = "com.example.launcher/com.example.launcher.Home";
+    let uri = "content://com.example.launcher.layout";
+    let mut defaults: serde_json::Value =
+        serde_json::from_str(include_str!("../../../public/layout.json")).unwrap();
+    let image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=";
+    defaults["home"]["background"]["image"] = serde_json::json!(image);
+    {
+        let mut tv = tv.lock().unwrap();
+        tv.default = component.into();
+        tv.installed.insert(package.into());
+        tv.launchers.push(component.into());
+        tv.launchers.push("com.example.launcher/.SecondHome".into());
+        tv.layout_provider = true;
+        tv.provider_defaults.insert(uri.into(), defaults.clone());
+    }
+    connect(&mut manager);
+    assert_eq!(
+        manager
+            .execute_launcher(LauncherRequest::GetLayout)
+            .unwrap()["layout"],
+        defaults
+    );
+    let mut draft = defaults.clone();
+    draft["home"]["background"]["color"] = serde_json::json!("#123456");
+    assert_eq!(
+        manager
+            .execute_launcher(LauncherRequest::ApplyLayout {
+                layout: draft.clone()
+            })
+            .unwrap()["layout"],
+        draft
+    );
+    assert_eq!(
+        manager
+            .execute_launcher(LauncherRequest::ResetLayout)
+            .unwrap()["layout"],
+        defaults
+    );
+    tv.lock().unwrap().calls.clear();
+    let backgrounds = manager
+        .execute_launcher(LauncherRequest::GetBackgrounds)
+        .unwrap();
+    assert_eq!(backgrounds["backgrounds"][component], image);
+    assert_eq!(
+        backgrounds["backgrounds"]["com.example.launcher/com.example.launcher.SecondHome"],
+        image
+    );
+    let tv = tv.lock().unwrap();
+    assert_eq!(
+        tv.calls
+            .iter()
+            .filter(|a| a.iter().any(|v| v == uri))
+            .count(),
+        1
+    );
+}
+
+#[test]
+fn missing_or_invalid_protocol_remains_read_only_and_unsupported() {
+    use crate::LauncherRequest;
+    for invalid in [false, true] {
+        let (mut manager, tv) = fixture();
+        let uri = "content://com.stock.home.layout";
+        {
+            let mut tv = tv.lock().unwrap();
+            tv.layout_provider = true;
+            if invalid {
+                tv.provider_defaults
+                    .insert(uri.into(), serde_json::json!({"version":999}));
+            }
+        }
+        connect(&mut manager);
+        assert_eq!(
+            manager
+                .execute_launcher(LauncherRequest::GetLayout)
+                .unwrap()["supported"],
+            false
+        );
+        assert!(manager
+            .execute_launcher(LauncherRequest::ResetLayout)
+            .is_err());
+        let calls = tv.lock().unwrap().calls.clone();
+        let provider_calls: Vec<_> = calls
+            .iter()
+            .filter(|a| a.iter().any(|v| v == "content"))
+            .collect();
+        assert_eq!(provider_calls.len(), 2);
+        assert!(provider_calls
+            .iter()
+            .all(|a| a.iter().any(|v| v == uri) && a.iter().any(|v| v == "status")));
+    }
 }

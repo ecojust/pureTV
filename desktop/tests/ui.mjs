@@ -589,11 +589,15 @@ try {
     await p.locator('[data-u-node="title"]').click();assert.equal(await p.locator('[data-u-field="name"]').isDisabled(),true);
     assert.equal(await p.locator('[data-u-field="text"]').inputValue(),'NOVA TV');
     await p.locator('[data-u-node="nova-music"]').click();
+    // A committed edit removes a still-focused dirty input; its native blur must not re-enter DOM replacement.
     await p.locator('[data-u-field="text"]').fill('我的音乐');await p.locator('[data-u-field="text"]').dispatchEvent('change');
+    assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Focused text edits must render without a caught error');
     await p.locator('[data-u-frame="x"]').fill('72');await p.locator('[data-u-frame="x"]').dispatchEvent('change');
+    assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Nova edits must not show a caught render error');
     await shot(p,'nova-layout-home-037');
     await p.locator('[data-u-page="apps"]').click();
     assert.ok((await canvas.evaluate(el=>getComputedStyle(el).backgroundImage)).includes(novaLayout.apps.background.image));
+    assert.equal(await p.locator('.layout-modal .banner.error').count(),0,'Switching Nova pages must keep the editor error-free');
     await shot(p,'nova-layout-apps-037');
     await p.locator('[data-u-act="apply"]').click();
     assert.match(await p.locator('#confirm-operation').locator('..').locator('..').innerText(),/com\.ecojust\.novatv/);

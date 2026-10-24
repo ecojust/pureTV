@@ -2,15 +2,10 @@ use super::*;
 use crate::LauncherRequest;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use serde_json::{json, Value};
-// Only launchers with an implemented, verified layout adapter are contacted.
-const PROVIDERS: &[(&str, &str)] = &[
-    ("com.ecojust.puretv", "content://com.ecojust.puretv.layout"),
-    ("com.ecojust.novatv", "content://com.ecojust.novatv.layout"),
-];
-fn provider_uri(package: &str) -> Option<&'static str> {
-    PROVIDERS
-        .iter()
-        .find_map(|(name, uri)| (*name == package).then_some(*uri))
+// Protocol discovery uses only validated packages returned by Android HOME queries.
+// The convention is public: every compatible launcher owns <package>.layout.
+fn provider_uri(package: &str) -> Option<String> {
+    parse::package(package).then(|| format!("content://{package}.layout"))
 }
 const LAYOUT_LIMIT: usize = 48 * 1024;
 
@@ -321,23 +316,29 @@ impl Manager {
         if let Some(arg) = arg {
             args.extend(["--arg".into(), arg]);
         }
-        provider_result(&self.run(args, None, 20)?)
+        provider_result(&self.run(args, None, if method == "status" { 5 } else { 20 })?)
     }
     pub fn execute_launcher(&mut self, request: LauncherRequest) -> Result<Value, String> {
         let device = self.ensure_device(true)?;
         self.read_catalogue(&device)?;
         if matches!(request, LauncherRequest::GetBackgrounds) {
             let mut backgrounds = serde_json::Map::new();
-            for &(package, uri) in PROVIDERS {
-                if !self
-                    .state
-                    .launchers
-                    .iter()
-                    .any(|l| l.package_name == package)
-                {
+            let packages: BTreeSet<String> = self
+                .state
+                .launchers
+                .iter()
+                .filter(|home| {
+                    self.state.packages.iter().any(|app| {
+                        app.package_name == home.package_name && app.installed && app.enabled
+                    })
+                })
+                .map(|home| home.package_name.clone())
+                .collect();
+            for package in packages {
+                let Some(uri) = provider_uri(&package) else {
                     continue;
-                }
-                if let Ok(value) = self.layout_provider(&device, uri, "status", None) {
+                };
+                if let Ok(value) = self.layout_provider(&device, &uri, "status", None) {
                     let layout = &value["layout"];
                     let image = if layout["version"] == 4 || layout["version"] == 5 {
                         layout["home"]["background"]["image"].as_str()
@@ -362,7 +363,21 @@ impl Manager {
             .default_home
             .clone()
             .ok_or("无法确认当前默认启动器")?;
-        let Some(uri) = component.split('/').next().and_then(provider_uri) else {
+        let package = component.split('/').next().unwrap_or_default();
+        let current_installed_home = self
+            .state
+            .launchers
+            .iter()
+            .any(|home| home.component == component)
+            && self
+                .state
+                .packages
+                .iter()
+                .any(|app| app.package_name == package && app.installed && app.enabled);
+        let Some(uri) = current_installed_home
+            .then(|| provider_uri(package))
+            .flatten()
+        else {
             if !matches!(request, LauncherRequest::GetLayout) {
                 return Err("当前启动器未接入可验证的布局接口，未修改配置".into());
             }
@@ -370,7 +385,7 @@ impl Manager {
                 json!({"supported":false,"component":component,"message":"此启动器尚未接入可验证的布局接口，请使用它自身的自定义设置。管理器不会尝试改写未知格式。"}),
             );
         };
-        let value = match self.layout_provider(&device, uri, "status", None) {
+        let value = match self.layout_provider(&device, &uri, "status", None) {
             Ok(mut value) => {
                 value["component"] = json!(component);
                 value["serial"] = json!(device.serial);
@@ -437,7 +452,7 @@ impl Manager {
         }
         self.defer_cancel = true;
         let result = (|| {
-            let returned = self.layout_provider(&device, uri, method, arg)?;
+            let returned = self.layout_provider(&device, &uri, method, arg)?;
             if expected
                 .as_ref()
                 .is_some_and(|layout| &returned["layout"] != layout)
@@ -445,7 +460,7 @@ impl Manager {
             {
                 return Err("启动器未确认预期布局，请重新读取核对".into());
             }
-            let reread = self.layout_provider(&device, uri, "status", None)?;
+            let reread = self.layout_provider(&device, &uri, "status", None)?;
             if returned["layout"] != reread["layout"] {
                 return Err("布局写入后复查不一致".into());
             }
