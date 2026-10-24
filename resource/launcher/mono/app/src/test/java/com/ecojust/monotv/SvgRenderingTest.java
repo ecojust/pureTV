@@ -43,4 +43,26 @@ public class SvgRenderingTest {
             android.widget.TextView settings=c.get().findViewById(R.id.btnSettings);assertTrue(settings.isShown());assertEquals("",settings.getText().toString());assertNotNull(settings.getBackground());
         }
     }
+    @Test(timeout=20000) public void iconOnlyCommandSurfacesStayStableAcrossRepeatedLayouts() throws Exception {
+        try(org.robolectric.android.controller.ActivityController<MainActivity> c=org.robolectric.Robolectric.buildActivity(MainActivity.class).setup()) {
+            android.view.View root=c.get().getWindow().getDecorView();
+            android.widget.TextView command=c.get().findViewById(R.id.btnSettings);
+            LayoutScene scene=(LayoutScene)command.getParent().getParent();
+            android.graphics.drawable.Drawable first=null;
+            for(int pass=0;pass<8;pass++) {
+                scene.requestLayout();
+                root.measure(android.view.View.MeasureSpec.makeMeasureSpec(1920,android.view.View.MeasureSpec.EXACTLY),android.view.View.MeasureSpec.makeMeasureSpec(1080,android.view.View.MeasureSpec.EXACTLY));
+                root.layout(0,0,1920,1080);
+                org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+                assertTrue(command.getBackground() instanceof android.graphics.drawable.LayerDrawable);
+                if(first==null)first=command.getBackground();else assertSame("layout must reuse its command surface",first,command.getBackground());
+                assertEquals(0,command.getPaddingLeft());assertEquals(0,command.getPaddingRight());
+                assertNull(command.getCompoundDrawables()[0]);
+            }
+            scene.apply(LauncherLayout.defaults(c.get()),"home");
+            root.measure(android.view.View.MeasureSpec.makeMeasureSpec(1920,android.view.View.MeasureSpec.EXACTLY),android.view.View.MeasureSpec.makeMeasureSpec(1080,android.view.View.MeasureSpec.EXACTLY));root.layout(0,0,1920,1080);
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+            assertNotSame("new layout invalidates the bounded surface cache",first,command.getBackground());
+        }
+    }
 }

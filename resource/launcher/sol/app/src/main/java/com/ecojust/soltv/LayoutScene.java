@@ -29,11 +29,12 @@ final class LayoutScene extends FrameLayout {
     private JSONObject navigation=new JSONObject();
     private boolean modern;
     private final java.util.Map<String,android.graphics.drawable.Drawable> icons=new java.util.HashMap<>();
+    private final java.util.Map<String,android.graphics.drawable.LayerDrawable> commandSurfaces=new java.util.HashMap<>();
     private static android.graphics.drawable.Drawable focusSurface(int color) {
         android.graphics.drawable.GradientDrawable focused=new android.graphics.drawable.GradientDrawable();focused.setColor((color&0xFFFFFF)|0x16000000);focused.setCornerRadius(14);focused.setStroke(2,color);
         android.graphics.drawable.StateListDrawable states=new android.graphics.drawable.StateListDrawable();states.addState(new int[]{android.R.attr.state_focused},focused);states.addState(new int[]{android.R.attr.state_pressed},focused);states.addState(new int[]{},new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));return states;
     }
-    private static android.graphics.drawable.Drawable iconCommand(android.graphics.drawable.Drawable icon,int color){
+    private static android.graphics.drawable.LayerDrawable iconCommand(android.graphics.drawable.Drawable icon,int color){
         android.graphics.drawable.LayerDrawable layers=new android.graphics.drawable.LayerDrawable(new android.graphics.drawable.Drawable[]{focusSurface(color),icon});
         layers.setLayerGravity(1,android.view.Gravity.CENTER);layers.setLayerSize(1,icon.getBounds().width(),icon.getBounds().height());return layers;
     }
@@ -81,7 +82,7 @@ final class LayoutScene extends FrameLayout {
             }
         }
         for(View node:nodes){JSONObject match=null;for(int i=0;i<elements.length();i++)if(node.getTag().equals(elements.optJSONObject(i).optString("id")))match=elements.optJSONObject(i);specs.add(match);}
-        modern=layout.json.optInt("version")==5;icons.clear();
+        modern=layout.json.optInt("version")==5;icons.clear();commandSurfaces.clear();
         for(int i=0;i<nodes.size();i++){
             View child=((ViewGroup)nodes.get(i)).getChildAt(0);JSONObject spec=specs.get(i);if(spec==null)continue;
             if(spec.has("name"))child.setContentDescription(spec.optString("name"));
@@ -130,12 +131,22 @@ final class LayoutScene extends FrameLayout {
             if(modern&&child instanceof TextView){
                 TextView text=(TextView)child;text.setCompoundDrawableTintList(null);
                 boolean command=java.util.Arrays.asList("wallpaper","favourites","inputs","network","settings","backHome","allApps").contains(component);
-                int padding=command?Math.round(8*basisScale()*scale):0;if(text.getPaddingLeft()!=padding||text.getPaddingRight()!=padding)text.setPadding(padding,0,padding,0);
+                boolean iconOnly=command&&spec.optString("text").isEmpty()&&symbol!=null;
+                // Icon-only buttons use a centered background and need no compound-text padding.
+                int padding=command&&!iconOnly?Math.round(8*basisScale()*scale):0;if(text.getPaddingLeft()!=padding||text.getPaddingRight()!=padding)text.setPadding(padding,0,padding,0);
                 int iconSize=Math.round(Math.min(22*basisScale(),spec.optJSONObject("frame").optInt("height")*.5f)*scale);
                 boolean resized=symbol!=null&&symbol.getBounds().width()!=iconSize;
                 if(symbol!=null)symbol.setBounds(0,0,iconSize,iconSize);
-                if(command&&spec.optString("text").isEmpty()&&symbol!=null){
-                    text.setCompoundDrawables(null,null,null,null);text.setBackground(iconCommand(symbol,Color.parseColor(spec.optString("color","#FFFFFF"))));
+                if(iconOnly){
+                    android.graphics.drawable.Drawable[] compound=text.getCompoundDrawables();
+                    if(compound[0]!=null||compound[1]!=null||compound[2]!=null||compound[3]!=null)text.setCompoundDrawables(null,null,null,null);
+                    android.graphics.drawable.LayerDrawable surface=commandSurfaces.get(component);
+                    if(surface==null||surface.getLayerWidth(1)!=iconSize||surface.getLayerHeight(1)!=iconSize){
+                        surface=iconCommand(symbol,Color.parseColor(spec.optString("color","#FFFFFF")));commandSurfaces.put(component,surface);
+                    }
+                    // Replacing a background during every layout re-applies drawable padding and
+                    // requests another layout. Keep the same surface until apply or size changes.
+                    if(text.getBackground()!=surface)text.setBackground(surface);
                 }else if(text.getCompoundDrawables()[0]!=symbol||resized){text.setCompoundDrawables(symbol,null,null,null);text.setCompoundDrawablePadding(Math.round(7*basisScale()*scale));}
             }
             if(child instanceof TextView&&spec!=null&&spec.has("text")&&!(child instanceof android.widget.TextClock)&&!component.equals("network"))((TextView)child).setText(spec.optString("text"));
