@@ -61,6 +61,7 @@ final class LayoutScene extends FrameLayout {
         for(int i=0;i<nodes.size();i++){
             View child=((ViewGroup)nodes.get(i)).getChildAt(0);JSONObject spec=specs.get(i);if(spec==null)continue;
             try{android.graphics.drawable.Drawable icon=SvgIcon.drawable(activity,spec.optString("svg"),Color.parseColor(spec.optString("iconColor",spec.optString("color","#62776E"))));if(icon!=null)icons.put((String)nodes.get(i).getTag(),icon);}catch(Exception ignored){/* Metadata validation reports malformed SVG before apply. */}
+            if(modern&&child instanceof TextView){((TextView)child).setSingleLine(true);((TextView)child).setEllipsize(android.text.TextUtils.TruncateAt.END);}
             if(modern)child.setBackground(child.isFocusable()?focusSurface(Color.parseColor(spec.optString("color","#62776E"))):new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
         }
         // Background belongs to the scene, including its color, optional embedded image and bounds.
@@ -102,6 +103,8 @@ final class LayoutScene extends FrameLayout {
             android.graphics.drawable.Drawable symbol=icons.get(component);
             if(modern&&child instanceof TextView){
                 TextView text=(TextView)child;text.setCompoundDrawableTintList(null);
+                boolean command=java.util.Arrays.asList("wallpaper","favourites","inputs","network","settings","backHome","allApps").contains(component);
+                int padding=command?Math.round(8*basisScale()*scale):0;if(text.getPaddingLeft()!=padding||text.getPaddingRight()!=padding)text.setPadding(padding,0,padding,0);
                 int iconSize=Math.round(Math.min(22*basisScale(),spec.optJSONObject("frame").optInt("height")*.5f)*scale);
                 boolean resized=symbol!=null&&symbol.getBounds().width()!=iconSize;
                 if(symbol!=null)symbol.setBounds(0,0,iconSize,iconSize);

@@ -36,4 +36,11 @@ public class SvgRenderingTest {
             assertTrue(pkg,visible);
         }
     }
+    @Test public void systemCommandLabelsStayOnOneLine() {
+        try(org.robolectric.android.controller.ActivityController<MainActivity> c=org.robolectric.Robolectric.buildActivity(MainActivity.class).setup()){
+            android.view.View root=c.get().getWindow().getDecorView();root.measure(android.view.View.MeasureSpec.makeMeasureSpec(1920,android.view.View.MeasureSpec.EXACTLY),android.view.View.MeasureSpec.makeMeasureSpec(1080,android.view.View.MeasureSpec.EXACTLY));root.layout(0,0,1920,1080);
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+            android.widget.TextView input=c.get().findViewById(R.id.btnInputs);assertEquals(1,input.getLineCount());assertEquals("输入源",input.getText().toString());
+        }
+    }
 }

@@ -22,7 +22,7 @@ public class LauncherLayoutTest {
  static Context ctx(){return RuntimeEnvironment.getApplication();}
  @After public void clear(){LauncherLayout.reset(ctx());}
  static void install(String pkg,boolean system){
-  PackageInfo info=new PackageInfo();info.packageName=pkg;info.applicationInfo=new ApplicationInfo();info.applicationInfo.packageName=pkg;info.applicationInfo.enabled=true;info.applicationInfo.nonLocalizedLabel=pkg;info.applicationInfo.flags=ApplicationInfo.FLAG_INSTALLED|(system?ApplicationInfo.FLAG_SYSTEM:0);
+  PackageInfo info=new PackageInfo();info.packageName=pkg;info.applicationInfo=new ApplicationInfo();info.applicationInfo.packageName=pkg;info.applicationInfo.enabled=true;info.applicationInfo.nonLocalizedLabel=pkg.equals("com.example.browser")?"浏览器":pkg.equals("com.example.files")?"文件":pkg.equals("com.example.music")?"Music TV":pkg;info.applicationInfo.flags=ApplicationInfo.FLAG_INSTALLED|(system?ApplicationInfo.FLAG_SYSTEM:0);
   org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).installPackage(info);
   ResolveInfo resolve=new ResolveInfo();resolve.activityInfo=new android.content.pm.ActivityInfo();resolve.activityInfo.packageName=pkg;resolve.activityInfo.name=pkg+".Main";resolve.activityInfo.applicationInfo=info.applicationInfo;resolve.activityInfo.enabled=true;resolve.activityInfo.exported=true;
   for(String category:new String[]{Intent.CATEGORY_LAUNCHER,Intent.CATEGORY_LEANBACK_LAUNCHER}){Intent query=new Intent(Intent.ACTION_MAIN).addCategory(category);org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).addResolveInfoForIntent(query,resolve);org.robolectric.Shadows.shadowOf(ctx().getPackageManager()).addResolveInfoForIntent(new Intent(query).setPackage(pkg),resolve);}
