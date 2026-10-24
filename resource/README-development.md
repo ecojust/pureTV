@@ -96,6 +96,26 @@ pureTV Manager 与 Launcher **0.3.6 使用 layout.json v5**。布局由电视和
 
 APK 可在 `assets/layout.json` 提供默认布局及 Home 背景。**仅存在此静态文件不代表能够编辑正在运行的桌面**；启动器还需要实现以下 Android ContentProvider 接口，在读写后使用同一份 layout.json 渲染界面：
 
+这里的接口是 APK 内的 Android `ContentProvider` 组件，安装后由系统按需启动。管理器通过已连接的 ADB 调用，不使用 HTTP、不额外开放端口，也不需要先打开启动器界面。APK 文件本身只是安装包；接口访问的是电视上已安装应用的运行组件与私有布局数据。
+
+例如第三方启动器在清单中声明：
+
+```xml
+<provider
+    android:name=".LauncherLayoutProvider"
+    android:authorities="org.example.launcher.layout"
+    android:exported="true"
+    android:permission="android.permission.DUMP" />
+```
+
+读取当前用户的配置（包名、用户 ID 和电视地址按实际设备替换）：
+
+```sh
+adb -s 192.168.1.50:5555 shell content call --uri content://org.example.launcher.layout --user 0 --method status
+```
+
+`apply` 使用同一路径的 `--method apply --arg <Base64布局>`；`reset` 使用 `--method reset`。Provider 需实现 `call(method, arg, extras)`，不是仅声明清单或放入 JSON 文件。
+
 | 项目 | 约定 |
 | --- | --- |
 | Authority | `<packageName>.layout`；可导出，通过 `android.permission.DUMP` 限制 ADB shell 访问，启动器内部也可访问 |
