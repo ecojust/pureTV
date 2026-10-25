@@ -12,6 +12,7 @@ import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import java.io.IOException;
+import com.ecojust.hifinitv.BrowseStateStore.Position;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -27,9 +28,11 @@ public class MainActivity extends Activity {
     private Future<?> searchJob;
     private Runnable searchTimeout;
     private int searchGeneration;
-    private boolean visible,bound,searching,seeking,localMode=true,selectionMode;
+    private boolean visible,resumed,bound,searching,seeking,localMode=true,selectionMode;
     private long shownLibraryRevision=Long.MIN_VALUE;
-    private ListPosition searchPosition=new ListPosition(),localPosition=new ListPosition();
+    private Position searchPosition=new Position(),localPosition=new Position(),pendingListPosition;
+    private boolean pendingLocalMode;
+    private BrowseStateStore browseStore;
     private String searchStatus="";
     private PlaybackService player;
     private CoverLoader covers;
@@ -41,7 +44,8 @@ public class MainActivity extends Activity {
     private AlertDialog deleteDialog,deleteFailureDialog;
     private ImageButton search,toggle,previous,next,audioQr;
     private ImageView hero;
-    private TextView status,title,artist,now,elapsed,total;
+    private TextView status,title,artist,now,elapsed,total,toggleLabel;
+    private ProgressBar downloadProgress;
     private ListView list;
     private RhythmView rhythm;
     private SeekBar seek;
@@ -55,7 +59,9 @@ public class MainActivity extends Activity {
     };
 
     @Override public void onCreate(Bundle state){
-        super.onCreate(state);covers=new CoverLoader();searches.allowCoreThreadTimeOut(true);searchStatus=getString(R.string.welcome);
+        super.onCreate(state);covers=new CoverLoader();searches.allowCoreThreadTimeOut(true);browseStore=new BrowseStateStore(this);
+        BrowseStateStore.State browsing=state!=null&&state.containsKey("browse")?BrowseStateStore.deserialize(state.getString("browse")):browseStore.load();
+        tracks.addAll(browsing.tracks);localMode=browsing.localMode;searchPosition=browsing.searchPosition;localPosition=browsing.localPosition;searchStatus=tracks.isEmpty()?getString(R.string.welcome):getString(R.string.results_count,tracks.size());
         scene=new Scene();scene.setFocusable(false);
         LinearLayout brand=new LinearLayout(this);brand.setGravity(Gravity.CENTER_VERTICAL);
         ImageView mark=new ImageView(this);mark.setImageDrawable(MusicVisuals.icon("waveform",MINT));brand.addView(mark,new LinearLayout.LayoutParams(px(28),px(38)));
@@ -80,7 +86,7 @@ public class MainActivity extends Activity {
         selectAll=compactButton(R.string.select_all,()->{if(selectedIds.size()==localTracks.size())selectedIds.clear();else{selectedIds.clear();for(Track track:localTracks)selectedIds.add(track.id);}adapter.notifyDataSetChanged();updateSelectionControls();});scene.place(selectAll,35,184,64,26);
         deleteSelected=compactButton(R.string.delete_selected,()->confirmDelete());scene.place(deleteSelected,105,184,102,26);
         selectionCount=text("",11,MUTED);selectionCount.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);scene.place(selectionCount,213,184,86,26);
-        list=new ListView(this);list.setId(View.generateViewId());list.setDivider(null);list.setDividerHeight(0);list.setPadding(px(3),px(3),px(3),px(3));list.setClipToPadding(false);
+        list=new ListView(this){@Override protected void onLayout(boolean changed,int left,int top,int right,int bottom){super.onLayout(changed,left,top,right,bottom);pendingListPosition=null;}};list.setId(View.generateViewId());list.setDivider(null);list.setDividerHeight(0);list.setPadding(px(3),px(3),px(3),px(3));list.setClipToPadding(false);
         list.setSelector(R.drawable.list_focus);list.setDrawSelectorOnTop(true);list.setOverScrollMode(View.OVER_SCROLL_NEVER);list.setVerticalScrollBarEnabled(false);list.setFocusable(true);list.setAdapter(adapter);
         list.setOnItemClickListener((parent,row,position,id)->play(position));scene.place(list,27,157,280,329);
         hero=new ImageView(this);hero.setId(View.generateViewId());hero.setScaleType(ImageView.ScaleType.CENTER_CROP);hero.setImageDrawable(MusicVisuals.artwork());hero.setContentDescription(getString(R.string.album_artwork));
@@ -95,12 +101,15 @@ public class MainActivity extends Activity {
         elapsed=text("0:00",12,MUTED);scene.place(elapsed,334,452,42,23);
         seek=new SeekBar(this);seek.setId(View.generateViewId());seek.setMax(1000);seek.setPadding(px(8),0,px(8),0);seek.setProgressTintList(android.content.res.ColorStateList.valueOf(MINT));seek.setThumbTintList(android.content.res.ColorStateList.valueOf(TEXT));
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(SeekBar bar,int progress,boolean fromUser){if(fromUser&&player!=null)player.seek(player.duration()*progress/1000);}public void onStartTrackingTouch(SeekBar bar){seeking=true;}public void onStopTrackingTouch(SeekBar bar){seeking=false;}});
-        scene.place(seek,374,451,514,25);total=text("0:00",12,MUTED);total.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);scene.place(total,886,452,43,23);
+        scene.place(seek,374,451,514,25);
+        downloadProgress=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);downloadProgress.setId(View.generateViewId());downloadProgress.setMax(1000);downloadProgress.setProgressTintList(android.content.res.ColorStateList.valueOf(MINT));downloadProgress.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(0xff343c3b));downloadProgress.setIndeterminateTintList(android.content.res.ColorStateList.valueOf(MINT));downloadProgress.setFocusable(false);downloadProgress.setVisibility(View.GONE);scene.place(downloadProgress,399,459,465,8);
+        total=text("0:00",12,MUTED);total.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);scene.place(total,886,452,43,23);
         previous=iconButton("previous",R.string.previous,()->{if(player!=null)player.previous();},false);scene.place(previous,534,483,39,34);
         toggle=iconButton("play",R.string.play,()->{if(player!=null)player.toggle();},true);scene.place(toggle,606,479,42,42);
         next=iconButton("next",R.string.next,()->{if(player!=null)player.next();},false);scene.place(next,682,483,39,34);
+        toggleLabel=text("",11,MINT);toggleLabel.setGravity(Gravity.CENTER);toggleLabel.setSingleLine();toggleLabel.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);scene.place(toggleLabel,580,521,94,16);
         TextView remote=text(getString(R.string.remote_hint),10,MUTED);remote.setSingleLine();remote.setEllipsize(TextUtils.TruncateAt.END);scene.place(remote,35,500,290,20);
-        linkFocus();updateTabs();updateSelectionControls();setContentView(scene);if(state!=null)query.setText(state.getString("query",""));localTab.requestFocus();render();
+        linkFocus();updateTabs();updateSelectionControls();showListStatus();setContentView(scene);query.setText(browsing.query);(localMode?localTab:searchTab).requestFocus();render();
     }
     private void linkFocus(){
         query.setNextFocusRightId(search.getId());query.setNextFocusDownId(localTab.getId());search.setNextFocusLeftId(query.getId());search.setNextFocusRightId(login.getId());search.setNextFocusDownId(searchTab.getId());
@@ -122,28 +131,29 @@ public class MainActivity extends Activity {
         if(localMode==local){showListStatus();return;}
         if(localMode)localPosition=captureListPosition();else searchPosition=captureListPosition();
         if(local&&searching){cancelSearch();searchStatus=getString(R.string.request_cancelled);}
-        localMode=local;selectionMode=false;selectedIds.clear();updateTabs();adapter.notifyDataSetChanged();updateSelectionControls();restoreListPosition(local?localPosition:searchPosition);showListStatus();
+        localMode=local;selectionMode=false;selectedIds.clear();updateTabs();adapter.notifyDataSetChanged();updateSelectionControls();restoreListPosition(local?localPosition:searchPosition);showListStatus();browseStore.save(browsingState(false));
     }
     private void refreshLibrary(){
         if(player==null)return;long revision=player.libraryRevision();if(revision==shownLibraryRevision)return;
-        ListPosition position=localMode?captureListPosition():localPosition;List<Track> saved=player.localTracks();shownLibraryRevision=player.libraryRevision();localTracks.clear();localTracks.addAll(saved);
+        Position position=localMode?(shownLibraryRevision==Long.MIN_VALUE?localPosition:captureListPosition()):localPosition;List<Track> saved=player.localTracks();shownLibraryRevision=player.libraryRevision();localTracks.clear();localTracks.addAll(saved);
         Set<String> existing=new HashSet<>();for(Track track:localTracks)existing.add(track.id);selectedIds.retainAll(existing);
         if(localTracks.isEmpty())selectionMode=false;
         if(localMode){adapter.notifyDataSetChanged();updateSelectionControls();restoreListPosition(position);showListStatus();}
     }
-    private static final class ListPosition {String selectedId="",firstId="";int selectedIndex=-1,firstIndex,selectedOffset,firstOffset;}
-    private ListPosition captureListPosition(){
-        ListPosition position=new ListPosition();if(list==null)return position;List<Track> shown=displayedTracks();position.selectedIndex=list.getSelectedItemPosition();position.firstIndex=list.getFirstVisiblePosition();
+    private Position captureListPosition(){
+        if(localMode&&shownLibraryRevision==Long.MIN_VALUE)return localPosition;
+        if(pendingListPosition!=null&&pendingLocalMode==localMode)return pendingListPosition;
+        Position position=new Position();if(list==null)return position;List<Track> shown=displayedTracks();position.selectedIndex=list.getSelectedItemPosition();position.firstIndex=list.getFirstVisiblePosition();
         if(position.selectedIndex>=0&&position.selectedIndex<shown.size())position.selectedId=shown.get(position.selectedIndex).id;
         if(position.firstIndex>=0&&position.firstIndex<shown.size())position.firstId=shown.get(position.firstIndex).id;
         View first=list.getChildAt(0),selected=list.getSelectedView();position.firstOffset=first==null?0:first.getTop()-list.getPaddingTop();position.selectedOffset=selected==null?position.firstOffset:selected.getTop()-list.getPaddingTop();return position;
     }
-    private void restoreListPosition(ListPosition position){
-        List<Track> shown=displayedTracks();if(shown.isEmpty())return;int selected=indexOf(shown,position.selectedId),first=indexOf(shown,position.firstId);
+    private void restoreListPosition(Position position){
+        List<Track> shown=displayedTracks();if(shown.isEmpty()){pendingListPosition=null;return;}pendingListPosition=position;pendingLocalMode=localMode;int selected=indexOf(shown,position.selectedId),first=indexOf(shown,position.firstId);
         if(selected>=0)list.setSelectionFromTop(selected,position.selectedOffset);else if(position.selectedIndex>=0)list.setSelectionFromTop(Math.min(position.selectedIndex,shown.size()-1),position.selectedOffset);else list.setSelectionFromTop(first>=0?first:Math.min(Math.max(0,position.firstIndex),shown.size()-1),position.firstOffset);
     }
     private int indexOf(List<Track> values,String id){for(int i=0;i<values.size();i++)if(values.get(i).id.equals(id))return i;return -1;}
-    private void setSelectionMode(boolean value){if(!localMode||value&&localTracks.isEmpty())return;ListPosition position=captureListPosition();selectionMode=value;if(!value)selectedIds.clear();adapter.notifyDataSetChanged();updateSelectionControls();restoreListPosition(position);if(localTracks.isEmpty())localSequential.requestFocus();else selectMode.requestFocus();}
+    private void setSelectionMode(boolean value){if(!localMode||value&&localTracks.isEmpty())return;Position position=captureListPosition();selectionMode=value;if(!value)selectedIds.clear();adapter.notifyDataSetChanged();updateSelectionControls();restoreListPosition(position);if(localTracks.isEmpty())localSequential.requestFocus();else selectMode.requestFocus();}
     private void updateSelectionControls(){
         if(list==null)return;boolean selectionHadFocus=selectAll.hasFocus()||deleteSelected.hasFocus();int localVisibility=localMode?View.VISIBLE:View.GONE,selectionVisibility=localMode&&selectionMode?View.VISIBLE:View.GONE;
         localSequential.setVisibility(localVisibility);localShuffle.setVisibility(localVisibility);selectMode.setVisibility(localVisibility);selectMode.setEnabled(!localTracks.isEmpty());selectMode.setText(selectionMode?R.string.selection_done:R.string.select_tracks);
@@ -168,14 +178,14 @@ public class MainActivity extends Activity {
         searchTimeout=()->{if(visible&&ticket==searchGeneration&&searching){cancelSearch();searchStatus=getString(R.string.search_timeout);if(!localMode){status.setText(searchStatus);query.requestFocus();}}};main.postDelayed(searchTimeout,20000);
         searchJob=searches.submit(()->{try{List<Track> found=searchTracks(keyword);main.post(()->{
             if(!visible||ticket!=searchGeneration)return;finishSearch();tracks.clear();tracks.addAll(found);adapter.notifyDataSetChanged();
-            searchStatus=found.isEmpty()?getString(R.string.no_results):getString(R.string.results_count,found.size());status.setText(searchStatus);searchPosition=new ListPosition();
+            searchStatus=found.isEmpty()?getString(R.string.no_results):getString(R.string.results_count,found.size());status.setText(searchStatus);searchPosition=new Position();browseStore.save(browsingState(false));
             if(!found.isEmpty()){list.requestFocus();list.setSelection(0);}render();
         });}catch(Exception e){String reason=MusicError.display(this,e);boolean needsLogin=requiresLogin(e);main.post(()->{if(visible&&ticket==searchGeneration){finishSearch();searchStatus=getString(R.string.search_failed,reason);if(!localMode){status.setText(searchStatus);if(needsLogin)login.requestFocus();else query.requestFocus();}}});}});
     }
     private boolean requiresLogin(Throwable error){for(Throwable cause=error;cause!=null;cause=cause.getCause())if(cause instanceof MusicError&&((MusicError)cause).resource==R.string.source_login_required)return true;return false;}
     private void finishSearch(){if(searchTimeout!=null)main.removeCallbacks(searchTimeout);searchTimeout=null;searching=false;search.setEnabled(true);}
     private void cancelSearch(){searchGeneration++;if(searchJob!=null)searchJob.cancel(true);searchJob=null;searches.purge();if(searchTimeout!=null)main.removeCallbacks(searchTimeout);searchTimeout=null;searching=false;if(search!=null)search.setEnabled(true);}
-    private void play(int position){List<Track> shown=displayedTracks();if(position<0||position>=shown.size())return;if(localMode&&selectionMode){String id=shown.get(position).id;if(!selectedIds.add(id))selectedIds.remove(id);adapter.notifyDataSetChanged();updateSelectionControls();return;}if(player==null)return;if(localMode)player.playLocalListAt(new ArrayList<>(shown),position);else player.playListAt(new ArrayList<>(shown),position);}
+    private void play(int position){List<Track> shown=displayedTracks();if(position<0||position>=shown.size())return;if(localMode&&selectionMode){String id=shown.get(position).id;if(!selectedIds.add(id))selectedIds.remove(id);adapter.notifyDataSetChanged();updateSelectionControls();return;}if(player==null)return;saveBrowsing();if(localMode)player.playLocalListAt(new ArrayList<>(shown),position);else player.playListAt(new ArrayList<>(shown),position);}
     private void render(){
         if(toggle==null)return;
         Track track=player==null?null:player.current();String id=track==null?"":track.id;
@@ -184,14 +194,37 @@ public class MainActivity extends Activity {
         title.setText(track==null?getString(R.string.choose_track):track.title);artist.setText(track==null?"HiFiNi":track.artist.isEmpty()?getString(R.string.unknown_artist):track.artist);
         String key=track==null?"":track.cover;if(!key.equals(coverKey)){coverKey=key;covers.load(key,hero,512);}
         boolean loading=player!=null&&player.loading(),playing=player!=null&&player.playing();
-        toggle.setImageDrawable(MusicVisuals.icon(loading?"close":playing?"pause":"play",INK));toggle.setContentDescription(getString(loading?R.string.cancel:playing?R.string.pause:R.string.play));toggle.setEnabled(track!=null);
+        String error=player==null?"":player.error();boolean retry=track!=null&&!loading&&(!error.isEmpty()||player.interruptedDownload());
+        int action=loading?R.string.cancel:retry?R.string.retry:playing?R.string.pause:R.string.play;
+        toggleLabel.setText(loading||retry?getString(action):"");
+        toggle.setImageDrawable(MusicVisuals.icon(loading?"close":playing?"pause":"play",INK));toggle.setContentDescription(getString(action));toggle.setEnabled(track!=null);
         previous.setEnabled(track!=null);next.setEnabled(track!=null);
-        String error=player==null?"":player.error();now.setText(track==null?getString(R.string.ready_to_listen):loading?player.stage():!error.isEmpty()?getString(R.string.playback_failed):playing?getString(R.string.now_playing):getString(R.string.paused));
+        now.setText(track==null?getString(R.string.ready_to_listen):loading?player.stage():player.interruptedDownload()?getString(R.string.download_interrupted_short):!error.isEmpty()?getString(R.string.playback_failed):playing?getString(R.string.now_playing):getString(R.string.paused));
         if(!error.equals(shownError)){shownError=error;if(!error.isEmpty())status.setText(getString(R.string.retry_audio,error));else if(!searching)showListStatus();}
         long duration=player==null?0:player.duration(),position=player==null?0:player.position();seek.setEnabled(duration>0);if(!seeking)seek.setProgress(duration>0?(int)(position*1000/duration):0);elapsed.setText(time(position));total.setText(time(duration));
+        renderDownload(loading&&player.downloading());
+        boolean keepScreen=visible&&resumed&&(loading||playing),screenFlag=(getWindow().getAttributes().flags&WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)!=0;
+        if(keepScreen!=screenFlag){if(keepScreen)getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
         renderAudioLink(track,error);
         rhythm.setPlaying(track!=null&&playing&&!loading);
     }
+    private void renderDownload(boolean downloading){
+        boolean seekHadFocus=seek.hasFocus();downloadProgress.setVisibility(downloading?View.VISIBLE:View.GONE);seek.setVisibility(downloading?View.INVISIBLE:View.VISIBLE);
+        scene.move(elapsed,334,452,downloading?60:42,23);scene.move(total,downloading?869:886,452,downloading?60:43,23);
+        if(downloading){
+            long received=Math.max(0,player.downloadedBytes()),size=player.downloadTotalBytes();boolean known=size>0;
+            String receivedText=readableBytes(received),sizeText=known?readableBytes(size):getString(R.string.download_total_unknown);
+            int percent=known?(int)Math.min(100,received*100d/size):0;
+            downloadProgress.setIndeterminate(!known);if(known)downloadProgress.setProgress((int)Math.min(1000,received*1000d/size));
+            elapsed.setText(receivedText);total.setText(sizeText);
+            String description=known?getString(R.string.download_progress_detail,receivedText,sizeText,percent):getString(R.string.download_progress_unknown,receivedText);
+            downloadProgress.setContentDescription(description);elapsed.setContentDescription(getString(R.string.download_received,receivedText));total.setContentDescription(getString(R.string.download_total,sizeText));
+            now.setText(known?getString(R.string.download_progress_percent,percent):getString(R.string.download_start));
+        }else{elapsed.setContentDescription(null);total.setContentDescription(null);}
+        int upward=downloading?search.getId():seek.getId();previous.setNextFocusUpId(upward);toggle.setNextFocusUpId(upward);next.setNextFocusUpId(upward);
+        if(downloading&&seekHadFocus)toggle.requestFocus();
+    }
+    private static String readableBytes(long size){return size<1024*1024?String.format(Locale.US,"%.1f KB",size/1024d):String.format(Locale.US,"%.1f MB",size/(1024d*1024));}
     private void renderAudioLink(Track track,String error){
         String url=track==null||player==null?"":player.audioUrl();if(!AudioUrlQrCode.isSupported(url))url="";
         String trackId=track==null?"":track.id;
@@ -201,8 +234,9 @@ public class MainActivity extends Activity {
             else{if(audioQr.hasFocus())query.requestFocus();audioQr.setImageDrawable(null);}
             audioQr.setVisibility(available?View.VISIBLE:View.GONE);
             scene.move(title,323,394,available?250:316,32);scene.move(artist,331,427,available?242:300,22);
-            login.setNextFocusDownId(available?audioQr.getId():seek.getId());seek.setNextFocusUpId(available?audioQr.getId():search.getId());list.setNextFocusRightId(available?audioQr.getId():toggle.getId());
+            login.setNextFocusDownId(available?audioQr.getId():toggle.getId());seek.setNextFocusUpId(available?audioQr.getId():search.getId());list.setNextFocusRightId(available?audioQr.getId():toggle.getId());
         }
+        audioQr.setNextFocusDownId(downloadProgress.getVisibility()==View.VISIBLE?toggle.getId():seek.getId());audioQr.setNextFocusRightId(downloadProgress.getVisibility()==View.VISIBLE?toggle.getId():seek.getId());
         if(audioDebugError!=null){audioDebugError.setText(error.isEmpty()?"":getString(R.string.playback_error_detail,error));audioDebugError.setVisibility(error.isEmpty()?View.GONE:View.VISIBLE);}
     }
     private void showAudioLink(){
@@ -222,13 +256,18 @@ public class MainActivity extends Activity {
         details.setNextFocusDownId(android.R.id.button1);
     }
     private void dismissAudioLink(){if(audioLinkDialog!=null)audioLinkDialog.dismiss();audioLinkDialog=null;audioDebugError=null;}
-    @Override protected void onStart(){super.onStart();visible=true;list.setAdapter(adapter);restoreListPosition(localMode?localPosition:searchPosition);bound=bindService(new Intent(this,PlaybackService.class),connection,BIND_AUTO_CREATE);main.post(tick);}
-    @Override protected void onResume(){super.onResume();rhythm.setPageVisible(true);}
-    @Override protected void onPause(){rhythm.setPageVisible(false);super.onPause();}
-    @Override protected void onStop(){visible=false;dismissAudioLink();if(deleteDialog!=null)deleteDialog.dismiss();if(deleteFailureDialog!=null)deleteFailureDialog.dismiss();rhythm.setPageVisible(false);boolean wasSearching=searching;cancelSearch();if(wasSearching){searchStatus=getString(R.string.request_cancelled);showListStatus();}main.removeCallbacks(tick);if(localMode)localPosition=captureListPosition();else searchPosition=captureListPosition();list.setAdapter(null);covers.trim();coverKey="";hero.setImageDrawable(MusicVisuals.artwork());if(player!=null)player.listen(null);if(bound)unbindService(connection);bound=false;player=null;super.onStop();}
+    @Override protected void onStart(){super.onStart();visible=true;shownLibraryRevision=Long.MIN_VALUE;list.setAdapter(adapter);restoreListPosition(localMode?localPosition:searchPosition);bound=bindService(new Intent(this,PlaybackService.class),connection,BIND_AUTO_CREATE);main.post(tick);}
+    @Override protected void onResume(){super.onResume();resumed=true;rhythm.setPageVisible(true);render();}
+    @Override protected void onPause(){resumed=false;saveBrowsing();rhythm.setPageVisible(false);getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);super.onPause();}
+    @Override protected void onStop(){saveBrowsing();visible=false;getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);dismissAudioLink();if(deleteDialog!=null)deleteDialog.dismiss();if(deleteFailureDialog!=null)deleteFailureDialog.dismiss();rhythm.setPageVisible(false);boolean wasSearching=searching;cancelSearch();if(wasSearching){searchStatus=getString(R.string.request_cancelled);showListStatus();}main.removeCallbacks(tick);if(localMode)localPosition=captureListPosition();else searchPosition=captureListPosition();list.setAdapter(null);covers.trim();coverKey="";hero.setImageDrawable(MusicVisuals.artwork());if(player!=null)player.listen(null);if(bound)unbindService(connection);bound=false;player=null;super.onStop();}
     @Override protected void onDestroy(){searches.shutdownNow();covers.close();main.removeCallbacksAndMessages(null);super.onDestroy();}
     @Override public void onTrimMemory(int level){super.onTrimMemory(level);if(covers!=null&&level>=TRIM_MEMORY_RUNNING_LOW){covers.trim();coverKey="";}}
-    @Override protected void onSaveInstanceState(Bundle state){state.putString("query",query.getText().toString());super.onSaveInstanceState(state);}
+    private BrowseStateStore.State browsingState(boolean capture){
+        if(capture&&list.getAdapter()!=null){if(localMode)localPosition=captureListPosition();else searchPosition=captureListPosition();}
+        BrowseStateStore.State state=new BrowseStateStore.State();state.query=query.getText().toString();state.localMode=localMode;state.tracks=new ArrayList<>(tracks);state.searchPosition=searchPosition;state.localPosition=localPosition;return state;
+    }
+    private void saveBrowsing(){if(browseStore!=null&&query!=null)browseStore.save(browsingState(true));}
+    @Override protected void onSaveInstanceState(Bundle state){BrowseStateStore.State browsing=browsingState(true);state.putString("browse",BrowseStateStore.serialize(browsing));browseStore.save(browsing);super.onSaveInstanceState(state);}
     @Override public boolean onKeyDown(int key,KeyEvent event){
         if(key==KeyEvent.KEYCODE_BACK&&searching){cancelSearch();searchStatus=getString(R.string.request_cancelled);showListStatus();return true;}
         if(key==KeyEvent.KEYCODE_BACK&&selectionMode){setSelectionMode(false);return true;}

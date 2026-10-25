@@ -6,6 +6,7 @@ import android.database.DataSetObserver;
 import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Looper;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.view.*;
 import android.widget.*;
@@ -32,13 +33,17 @@ public class UiTest {
     public static class PreviewPlayer extends PlaybackService {
         Track track; List<Track> selected=new ArrayList<>(),saved=new ArrayList<>(); boolean active,random,busy;
         int selectedIndex=-1,plays,cancellations,onlinePlays,localSelections,localShuffles,localSequentialCalls,libraryReads,deletions;long revision;
-        boolean deletionFails;Set<String> requestedDeletion=new LinkedHashSet<>();
+        boolean deletionFails,transferring,interrupted;long receivedBytes,totalBytes=-1;Set<String> requestedDeletion=new LinkedHashSet<>();
         String attemptedUrl="",failure="",progressStage="";
         Runnable callback;
         @Override void listen(Runnable value){callback=value;}
         void update(){if(callback!=null)callback.run();}
         @Override Track current(){return track;}
         @Override boolean loading(){return busy;}
+        @Override boolean downloading(){return transferring;}
+        @Override long downloadedBytes(){return receivedBytes;}
+        @Override long downloadTotalBytes(){return totalBytes;}
+        @Override boolean interruptedDownload(){return interrupted;}
         @Override boolean playing(){return active;}
         @Override String stage(){return progressStage;}
         @Override String error(){return failure;}
@@ -56,7 +61,7 @@ public class UiTest {
         @Override void playLocalListAt(List<Track> tracks,int index){localSelections++;select(tracks,index,false);}
         @Override int deleteLocalTracks(Collection<String> ids){deletions++;requestedDeletion=new LinkedHashSet<>(ids);if(deletionFails)return -1;int before=saved.size();saved.removeIf(track->ids.contains(track.id));int removed=before-saved.size();if(removed>0){revision++;update();}return removed;}
         @Override String libraryError(){return deletionFails?"Storage unavailable":"";}
-        @Override void toggle(){if(busy){busy=false;active=false;cancellations++;}else active=!active;update();}
+        @Override void toggle(){if(busy){busy=false;transferring=false;active=false;cancellations++;}else{interrupted=false;failure="";active=!active;}update();}
         @Override void previous(){selectedIndex--;}
         @Override void next(){selectedIndex++;}
         @Override void seek(long value){}
@@ -76,7 +81,10 @@ public class UiTest {
             catch(InterruptedException e){Thread.currentThread().interrupt();throw new IOException("cancelled");}
         }
     }
-    @Before public void bindPreviewPlayer(){
+    @Before public void bindPreviewPlayer()throws Exception{
+        PlaybackRecoveryStore.awaitWritesForTest();
+        File filesDir=RuntimeEnvironment.getApplication().getFilesDir();PlaybackRecoveryStore.resetMemoryForTest(filesDir);
+        File previousState=new File(filesDir,PlaybackRecoveryStore.FILE_NAME);assertTrue(!previousState.exists()||previousState.delete());
         // Drive virtual vsync explicitly; its default auto-advance never idles a repeating animation.
         ShadowChoreographer.setPaused(true);
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16));
@@ -84,7 +92,7 @@ public class UiTest {
         service=Robolectric.buildService(PreviewPlayer.class).create();
         shadowOf(RuntimeEnvironment.getApplication()).setComponentNameAndServiceForBindService(new ComponentName(RuntimeEnvironment.getApplication(),PlaybackService.class),service.get().onBind(new Intent()));
     }
-    @After public void release(){service.destroy();}
+    @After public void release()throws Exception{service.destroy();PlaybackRecoveryStore.awaitWritesForTest();}
     private static List<Track> samples(boolean english){
         String[] titles=english?new String[]{"Night Star","Night Voyage","After Midnight","Coastal Night","When Night Falls","Waiting for Night"}:new String[]{"夜行星","夜航","夜色未央","沿海的夜","入夜以后","等夜归来"};
         String[] artists=english?new String[]{"Forest Guest","Slow Island","North Shore","Wood and Blue","Daylight","Mountains and Sea"}:new String[]{"林间来客","慢岛乐队","北岸","木与蓝","拾光","山海计划"};
@@ -225,8 +233,11 @@ public class UiTest {
             RhythmView rhythm=field(a,"rhythm");assertNotNull(findText(root,a.getString(R.string.rhythm)));assertTrue(rhythm.isAnimating());assertFalse(rhythm.isFocusable());
             ImageButton audioQr=field(a,"audioQr");assertEquals(p.attemptedUrl,decodeQr(audioQr));assertAudioQrBounds(a,1920,1080);
             assertTrue(((Button)field(a,"localTab")).isFocused());if(english)assertEnglish(root);
-            String capture=System.getenv("HIFINI_UI_CAPTURE_DIR");if(capture!=null){new File(capture).mkdirs();Bitmap bitmap=Bitmap.createBitmap(1920,1080,Bitmap.Config.ARGB_8888);root.draw(new Canvas(bitmap));try(FileOutputStream output=new FileOutputStream(new File(capture,filename))){bitmap.compress(Bitmap.CompressFormat.PNG,100,output);}bitmap.recycle();}
+            capture(root,filename,1920,1080);
         }
+    }
+    private static void capture(View root,String filename,int width,int height)throws IOException{
+        String capture=System.getenv("HIFINI_UI_CAPTURE_DIR");if(capture!=null){new File(capture).mkdirs();Bitmap bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);try{root.draw(new Canvas(bitmap));try(FileOutputStream output=new FileOutputStream(new File(capture,filename))){bitmap.compress(Bitmap.CompressFormat.PNG,100,output);}}finally{bitmap.recycle();}}
     }
     @Test public void attemptedAudioQrSurvivesFailureAndChangesWithTheCurrentSong()throws Exception{
         try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup().visible()){
@@ -249,17 +260,55 @@ public class UiTest {
     @Test public void downloadingShowsProgressAndCanBeCancelledWithoutReplacingSearchStatus()throws Exception{downloadProgress(false,1920,1080);}
     @Test @Config(qualifiers="en-rUS-w640dp-h360dp-land-mdpi") public void englishDownloadProgressFitsCompactScreens()throws Exception{downloadProgress(true,640,360);}
     private void downloadProgress(boolean english,int width,int height)throws Exception{
+        new android.app.Instrumentation().setInTouchMode(false);
         try(ActivityController<SourceActivity> controller=Robolectric.buildActivity(SourceActivity.class).setup().visible()){
             SourceActivity a=controller.get();View root=a.getWindow().getDecorView();TextView status=field(a,"status"),now=field(a,"now");String searchStatus=a.getString(R.string.results_count,6);
             ((EditText)field(a,"query")).setText(english?"Night":"夜");findDescription(root,a.getString(R.string.search)).performClick();await(()->searchStatus.contentEquals(status.getText()));
-            PreviewPlayer p=service.get();p.track=samples(english).get(0);p.attemptedUrl="https://audio.example.org/music/night-star.mp3?demo=1";p.busy=true;RhythmView rhythm=field(a,"rhythm");
-            for(String stage:new String[]{a.getString(R.string.download_start),a.getString(R.string.download_progress_percent,100),a.getString(R.string.download_progress_size,"64.0 MB"),a.getString(R.string.preparing_audio)}){
-                p.progressStage=stage;p.update();layout(root,width,height);assertEquals(stage,now.getText().toString());assertEquals(1,now.getLayout().getLineCount());assertEquals(0,now.getLayout().getEllipsisCount(0));assertEquals(stage.length(),now.getLayout().getLineEnd(0));
-                assertEquals(searchStatus,status.getText().toString());assertFalse(rhythm.isAnimating());assertNotNull(findDescription(root,a.getString(R.string.cancel)));assertAudioQrBounds(a,width,height);
-            }
+            PreviewPlayer p=service.get();p.track=samples(english).get(0);p.attemptedUrl="https://audio.example.org/music/night-star.mp3?demo=1";p.busy=true;p.transferring=true;p.receivedBytes=2621440;p.totalBytes=10485760;p.progressStage=a.getString(R.string.download_start);p.update();layout(root,width,height);
+            ProgressBar progress=field(a,"downloadProgress");SeekBar seek=field(a,"seek");TextView received=field(a,"elapsed"),total=field(a,"total"),label=field(a,"toggleLabel");RhythmView rhythm=field(a,"rhythm");ImageButton toggle=field(a,"toggle");
+            assertEquals(View.VISIBLE,progress.getVisibility());assertFalse(progress.isIndeterminate());assertEquals(250,progress.getProgress());assertEquals("2.5 MB",received.getText().toString());assertEquals("10.0 MB",total.getText().toString());assertEquals(a.getString(R.string.download_progress_percent,25),now.getText().toString());assertEquals(a.getString(R.string.download_progress_detail,"2.5 MB","10.0 MB",25),progress.getContentDescription());
+            assertEquals(View.INVISIBLE,seek.getVisibility());assertFalse(progress.isFocusable());assertEquals(a.getString(R.string.cancel),label.getText().toString());assertEquals(searchStatus,status.getText().toString());assertFalse(rhythm.isAnimating());assertTrue(keepsScreenOn(a));
+            for(View part:new View[]{progress,received,total,label})assertInside(part,width,height);for(TextView text:new TextView[]{received,total,label,now})assertSingleLineUnclipped(text);assertTrue(received.getRight()<=progress.getLeft());assertTrue(progress.getRight()<=total.getLeft());assertAudioQrBounds(a,width,height);
+            capture(root,english?"hifini-tv-download.en.png":"hifini-tv-download.png",width,height);
+            // A blocked connection must leave navigation and cancellation usable without inventing progress.
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(1000));assertEquals(250,progress.getProgress());assertEquals(searchStatus,status.getText().toString());assertTrue(toggle.requestFocus());assertTrue(toggle.isFocused());
+            p.totalBytes=-1;p.receivedBytes=4096;p.update();layout(root,width,height);assertTrue(progress.isIndeterminate());assertEquals("4.0 KB",received.getText().toString());assertEquals(a.getString(R.string.download_total_unknown),total.getText().toString());assertEquals(a.getString(R.string.download_start),now.getText().toString());assertFalse(now.getText().toString().contains("%"));assertEquals(a.getString(R.string.download_progress_unknown,"4.0 KB"),progress.getContentDescription());assertSingleLineUnclipped(total);
             ImageButton qr=field(a,"audioQr");if(qr.getDrawable() instanceof BitmapDrawable)assertEquals(p.attemptedUrl,decodeQr(qr));
-            findDescription(root,a.getString(R.string.cancel)).performClick();assertEquals(1,p.cancellations);assertFalse(p.busy);assertFalse(rhythm.isAnimating());assertEquals(View.VISIBLE,qr.getVisibility());
-            p.busy=true;p.progressStage=a.getString(R.string.download_progress_percent,45);p.update();assertFalse(rhythm.isAnimating());p.busy=false;p.active=true;p.update();assertTrue(rhythm.isAnimating());assertEquals(searchStatus,status.getText().toString());if(english)assertEnglish(root);
+            toggle.performClick();assertEquals(1,p.cancellations);assertFalse(p.busy);assertFalse(rhythm.isAnimating());assertEquals(View.GONE,progress.getVisibility());assertEquals(View.VISIBLE,seek.getVisibility());assertEquals(View.VISIBLE,qr.getVisibility());assertFalse(keepsScreenOn(a));
+            p.failure=a.getString(R.string.download_timeout);p.update();assertEquals(a.getString(R.string.retry),toggle.getContentDescription());assertEquals(a.getString(R.string.retry),label.getText().toString());assertTrue(toggle.isFocused());toggle.performClick();assertTrue(p.active);assertTrue(rhythm.isAnimating());assertTrue(keepsScreenOn(a));assertEquals(searchStatus,status.getText().toString());
+            p.active=false;p.busy=true;p.transferring=false;p.progressStage=a.getString(R.string.preparing_audio);p.update();layout(root,width,height);assertEquals(View.GONE,progress.getVisibility());assertEquals(p.progressStage,now.getText().toString());assertFalse(rhythm.isAnimating());assertTrue(keepsScreenOn(a));
+            controller.pause().stop();assertFalse(keepsScreenOn(a));controller.start().resume().visible();await(()->keepsScreenOn(a));assertEquals(p.progressStage,now.getText().toString());if(english)assertEnglish(root);
+        }
+    }
+    @Test public void downloadTimeoutKeepsTheCurrentSearchAndSongOnScreenWithRetry()throws Exception{failedDownloadStaysInPlace(R.string.download_timeout);}
+    @Test public void downloadFailureKeepsTheCurrentSearchAndSongOnScreenWithRetry()throws Exception{failedDownloadStaysInPlace(R.string.audio_download_failed);}
+    private void failedDownloadStaysInPlace(int failureResource)throws Exception{
+        new android.app.Instrumentation().setInTouchMode(false);
+        try(ActivityController<SourceActivity> controller=Robolectric.buildActivity(SourceActivity.class).setup().visible()){
+            SourceActivity a=controller.get();View root=a.getWindow().getDecorView();layout(root,1920,1080);EditText query=field(a,"query");query.setText("夜");((ImageButton)field(a,"search")).performClick();ListView list=field(a,"list");await(()->list.getCount()==6);layout(root,1920,1080);
+            list.requestFocus();list.setSelectionFromTop(3,12);layout(root,1920,1080);assertNotNull(list.getSelectedItem());Track chosen=(Track)list.getSelectedItem();list.performItemClick(list.getSelectedView(),list.getSelectedItemPosition(),list.getSelectedItemId());
+            PreviewPlayer p=service.get();p.active=false;p.busy=true;p.transferring=true;p.receivedBytes=4096;p.totalBytes=10485760;p.progressStage=a.getString(R.string.download_start);p.update();layout(root,1920,1080);assertEquals(chosen.id,p.current().id);
+            int firstVisible=list.getFirstVisiblePosition(),firstTop=list.getChildAt(0).getTop();List<String> resultIds=identities(field(a,"tracks"));assertNull(shadowOf(a).getNextStartedActivity());
+            p.busy=false;p.transferring=false;p.failure=a.getString(failureResource);p.update();shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(2));layout(root,1920,1080);
+            assertFalse("A failed download must not finish the current screen",a.isFinishing());assertFalse(a.isDestroyed());assertNull("No home or other navigation intent may be started on failure",shadowOf(a).getNextStartedActivity());assertTrue(root.isShown());
+            assertEquals(Boolean.FALSE,field(a,"localMode"));assertTrue(((Button)field(a,"searchTab")).isSelected());assertFalse(((Button)field(a,"localTab")).isSelected());assertEquals("夜",query.getText().toString());assertEquals(resultIds,identities(field(a,"tracks")));assertEquals(6,list.getCount());assertEquals(firstVisible,list.getFirstVisiblePosition());assertEquals(firstTop,list.getChildAt(0).getTop());assertNotNull(list.getSelectedItem());assertEquals(chosen.id,((Track)list.getSelectedItem()).id);assertTrue(list.hasFocus());
+            assertEquals(chosen.id,p.current().id);assertEquals(chosen.title,((TextView)field(a,"title")).getText().toString());assertEquals(a.getString(R.string.playback_failed),((TextView)field(a,"now")).getText().toString());assertEquals(a.getString(R.string.retry_audio,p.failure),((TextView)field(a,"status")).getText().toString());assertEquals(View.GONE,((ProgressBar)field(a,"downloadProgress")).getVisibility());
+            ImageButton retry=field(a,"toggle");assertEquals(a.getString(R.string.retry),retry.getContentDescription());assertEquals(a.getString(R.string.retry),((TextView)field(a,"toggleLabel")).getText().toString());assertTrue(retry.isEnabled());assertTrue(retry.requestFocus());retry.performClick();assertTrue(p.active);assertEquals(chosen.id,p.current().id);assertEquals(Boolean.FALSE,field(a,"localMode"));assertFalse(a.isFinishing());assertNull(shadowOf(a).getNextStartedActivity());
+        }
+    }
+    private static boolean keepsScreenOn(MainActivity activity){return (activity.getWindow().getAttributes().flags&WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)!=0;}
+    @Test public void bundleRecreationRestoresSearchResultsAndTheInterruptedSongWithoutAnotherSearch()throws Exception{restoreBrowsing(true);}
+    @Test public void reopeningWithoutABundleRestoresPrivateBrowseMetadataAndTheCurrentTab()throws Exception{restoreBrowsing(false);}
+    private void restoreBrowsing(boolean bundle)throws Exception{
+        new android.app.Instrumentation().setInTouchMode(false);PreviewPlayer p=service.get();p.saveLibrary(librarySamples(8));Bundle saved=new Bundle();
+        try(ActivityController<SourceActivity> first=Robolectric.buildActivity(SourceActivity.class).setup().visible()){
+            SourceActivity old=first.get();View root=old.getWindow().getDecorView();layout(root,1920,1080);((EditText)field(old,"query")).setText("夜");((ImageButton)field(old,"search")).performClick();ListView list=field(old,"list");await(()->list.getCount()==6);layout(root,1920,1080);list.requestFocus();list.setSelectionFromTop(3,12);layout(root,1920,1080);
+            String selected=((Track)list.getSelectedItem()).id;p.track=samples(false).get(3);p.interrupted=true;p.busy=false;p.active=false;p.update();if(!bundle)((Button)field(old,"localTab")).performClick();first.saveInstanceState(saved).pause().stop();
+            try(ActivityController<SourceActivity> second=(bundle?Robolectric.buildActivity(SourceActivity.class).setup(saved):Robolectric.buildActivity(SourceActivity.class).setup()).visible()){
+                SourceActivity restored=second.get();View restoredRoot=restored.getWindow().getDecorView();layout(restoredRoot,1920,1080);ListView restoredList=field(restored,"list");assertEquals(0,restored.searches);assertEquals("夜",((EditText)field(restored,"query")).getText().toString());assertEquals(Boolean.valueOf(!bundle),field(restored,"localMode"));assertEquals(p.track.title,((TextView)field(restored,"title")).getText().toString());assertEquals(restored.getString(R.string.retry),((ImageButton)field(restored,"toggle")).getContentDescription());assertEquals(restored.getString(R.string.download_interrupted_short),((TextView)field(restored,"now")).getText().toString());assertFalse(keepsScreenOn(restored));
+                if(!bundle){assertEquals(8,restoredList.getCount());((Button)field(restored,"searchTab")).performClick();layout(restoredRoot,1920,1080);}assertEquals(6,restoredList.getCount());assertNotNull(restoredList.getSelectedItem());assertEquals(selected,((Track)restoredList.getSelectedItem()).id);assertEquals(0,restored.searches);
+                ((ImageButton)field(restored,"toggle")).performClick();assertFalse(p.interrupted);assertTrue(p.active);assertTrue(keepsScreenOn(restored));
+            }
         }
     }
     @Test public void rhythmMovesOnlyDuringPlaybackAndStopsWithThePage()throws Exception{

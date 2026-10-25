@@ -44,6 +44,11 @@ public class PlaybackService extends Service {
     static final int QUEUE_LIMIT = 50;
     private boolean refreshedSource, downloadSlotPrepared, localOnlyQueue, currentAudioPersistent;
     private LocalLibrary library;
+    private PlaybackRecoveryStore recovery;
+    private long recoveryGeneration;
+    private boolean interruptedDownload, downloading;
+    private long downloadedBytes, downloadTotalBytes = -1;
+    private PowerManager.WakeLock downloadWakeLock;
     private MediaPlayer player;
     private MediaSession session;
     private AudioManager audio;
@@ -70,8 +75,14 @@ public class PlaybackService extends Service {
         AudioDownloader.cleanCache(getCacheDir());
         try { library = new LocalLibrary(getFilesDir()); }
         catch (IOException unavailableStorage) { library = null; error = libraryError = getString(R.string.library_unavailable); }
-        // Playback queues and temporary media links stay in this session only.
-        order.shuffle(getSharedPreferences("music_playback", 0).getBoolean("shuffle", true));
+        // Persist identities only. Resuming always resolves a fresh media URL after an explicit Play.
+        recovery = new PlaybackRecoveryStore(getFilesDir());
+        PlaybackRecoveryStore.State saved = recovery.readLatest();
+        queue.addAll(saved.queue); index = saved.index; localOnlyQueue = saved.localOnly;
+        interruptedDownload = saved.interrupted;
+        if (interruptedDownload) { stage = getString(R.string.download_interrupted); error = stage; }
+        order.shuffle(saved.queue.isEmpty() ? getSharedPreferences("music_playback", 0).getBoolean("shuffle", true) : saved.shuffled);
+        if (index >= 0) order.record(index, queue.size());
         audio = (AudioManager) getSystemService(AUDIO_SERVICE);
         AudioAttributes attributes = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build();
@@ -142,17 +153,47 @@ public class PlaybackService extends Service {
             order.clear();
             if (index >= 0) order.record(index, queue.size());
         }
-        changed(); return failed ? -1 : removed.size();
+        saveRecovery(loading || interruptedDownload); changed(); return failed ? -1 : removed.size();
     }
     Track current() { return index >= 0 && index < queue.size() ? queue.get(index) : null; }
     int currentIndex() { return index; }
     boolean loading() { return loading; }
     String stage() { return stage; }
+    boolean downloading() { return downloading; }
+    long downloadedBytes() { return downloadedBytes; }
+    long downloadTotalBytes() { return downloadTotalBytes; }
+    boolean interruptedDownload() { return interruptedDownload; }
+    private void saveRecovery(boolean unfinished) {
+        if (recovery == null) return;
+        final long ticket = ++recoveryGeneration;
+        recovery.writeAsync(new ArrayList<>(queue), index, localOnlyQueue, order.shuffled(), unfinished && index >= 0,
+                unavailable -> main.post(() -> {
+                    if (!destroyed && ticket == recoveryGeneration) {
+                        libraryError = getString(R.string.playback_recovery_unavailable); changed();
+                    }
+                }));
+    }
+    private void acquireDownloadWakeLock(long remaining) {
+        releaseDownloadWakeLock();
+        PowerManager power = (PowerManager) getSystemService(POWER_SERVICE);
+        if (power == null) return;
+        try {
+            downloadWakeLock = power.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "hifinitv:audio-download");
+            downloadWakeLock.setReferenceCounted(false);
+            downloadWakeLock.acquire(Math.max(1, Math.min(AudioDownloader.TIMEOUT_MS, remaining)) + 5000);
+        } catch (RuntimeException denied) { downloadWakeLock = null; }
+    }
+    private void releaseDownloadWakeLock() {
+        if (downloadWakeLock != null) {
+            try { if (downloadWakeLock.isHeld()) downloadWakeLock.release(); } catch (RuntimeException ignored) { }
+            downloadWakeLock = null;
+        }
+    }
     boolean shuffled() { return order.shuffled(); }
     void shuffle(boolean enabled) {
         order.shuffle(enabled);
         getSharedPreferences("music_playback", 0).edit().putBoolean("shuffle", enabled).apply();
-        changed();
+        saveRecovery(loading || interruptedDownload); changed();
     }
     void playList(List<Track> tracks, boolean shuffled) { playList(tracks, shuffled, false); }
     void playLocalList(List<Track> tracks, boolean shuffled) { playList(tracks, shuffled, true); }
@@ -195,10 +236,11 @@ public class PlaybackService extends Service {
     void play(int position) {
         if (position < 0 || position >= queue.size() || destroyed) return;
         cancelResolve(); releasePlayer(); clearAudioFile();
-        index = position; order.record(index, queue.size()); error = ""; attemptedAudioUrl = ""; loading = true; resumeAfterFocus = false;
+        index = position; order.record(index, queue.size()); error = ""; attemptedAudioUrl = ""; interruptedDownload = false; loading = true; resumeAfterFocus = false;
         refreshedSource = false; downloadSlotPrepared = false; sources = new ArrayList<>();
         stage = getString(R.string.fetch_detail);
-        loadDeadline = SystemClock.elapsedRealtime() + 120000;
+        loadDeadline = SystemClock.elapsedRealtime() + AudioDownloader.TIMEOUT_MS;
+        saveRecovery(true);
         startForegroundService(new Intent(this, PlaybackService.class).setAction(START));
         startForeground(NOTIFICATION, notification());
         changed();
@@ -238,7 +280,7 @@ public class PlaybackService extends Service {
                     if (!destroyed && ticket == generation) {
                         if (resolveTimeout != null) main.removeCallbacks(resolveTimeout);
                         resolveTimeout = null;
-                        queue.set(index, resolved.track);
+                        queue.set(index, resolved.track); saveRecovery(true);
                         sources = new ArrayList<>(resolved.audioUrls); sourceIndex = 0;
                         downloadSource(sources.get(0), ticket);
                     }
@@ -280,15 +322,17 @@ public class PlaybackService extends Service {
         final int attempt = downloadAttempt;
         final AudioDownloader transfer = new AudioDownloader(getCacheDir());
         final String referer = current().pageUrl();
-        downloader = transfer;
+        downloader = transfer; downloading = true; downloadedBytes = 0; downloadTotalBytes = -1;
+        acquireDownloadWakeLock(remaining); changed();
         downloadTimeout = () -> {
             if (activeDownload(ticket, attempt)) retryDownload(ticket, getString(R.string.download_timeout), false);
         };
-        main.postDelayed(downloadTimeout, Math.min(90000, remaining));
+        main.postDelayed(downloadTimeout, remaining);
         try { downloadPending = resolver.submit(() -> {
             try {
                 File file = downloadAudio(transfer, source, referer, progress -> main.post(() -> {
                     if (!activeDownload(ticket, attempt) || downloader != transfer || !loading) return;
+                    downloadedBytes = Math.max(0, progress.downloaded); downloadTotalBytes = progress.total > 0 ? progress.total : -1;
                     stage = progress.total > 0
                             ? getString(R.string.download_progress_percent, (int)Math.min(100, progress.downloaded * 100 / progress.total))
                             : getString(R.string.download_progress_size, readableBytes(progress.downloaded));
@@ -303,12 +347,12 @@ public class PlaybackService extends Service {
                     synchronized (filesLock) { completedDownloads.remove(file); }
                     if (!activeDownload(ticket, attempt)) { deleteFile(file); return; }
                     if (downloadTimeout != null) main.removeCallbacks(downloadTimeout);
-                    downloadTimeout = null; downloadPending = null; downloader = null;
+                    downloadTimeout = null; downloadPending = null; downloader = null; downloading = false; releaseDownloadWakeLock();
                     try {
                         stage = getString(R.string.saving_audio); changed();
                         if (!activeDownload(ticket, attempt)) { deleteFile(file); return; }
                         File saved = library.save(current(), file);
-                        prepareLocal(saved, ticket, true);
+                        saveRecovery(false); prepareLocal(saved, ticket, true);
                     } catch (IOException unavailableStorage) {
                         deleteFile(file); fail(getString(R.string.library_unavailable));
                     }
@@ -370,7 +414,7 @@ public class PlaybackService extends Service {
             player.setDataSource(file.getAbsolutePath());
             player.setOnPreparedListener(value -> {
                 if (destroyed || ticket != generation || value != player) return;
-                prepared = true; loading = false;
+                prepared = true; loading = false; interruptedDownload = false; saveRecovery(false);
                 if (prepareTimeout != null) main.removeCallbacks(prepareTimeout);
                 prepareTimeout = null; resume();
             });
@@ -410,7 +454,7 @@ public class PlaybackService extends Service {
         if (!prepared || player == null) { if (index >= 0) play(index); return; }
         if (audio.requestAudioFocus(focus) != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) { fail(getString(R.string.focus_denied)); return; }
         startForegroundService(new Intent(this, PlaybackService.class).setAction(START));
-        player.start(); resumeAfterFocus = false;
+        player.start(); resumeAfterFocus = false; interruptedDownload = false; error = ""; saveRecovery(false);
         startForeground(NOTIFICATION, notification()); changed();
     }
     void pause(boolean transientLoss) {
@@ -420,7 +464,7 @@ public class PlaybackService extends Service {
             resumeAfterFocus = false; audio.abandonAudioFocusRequest(focus);
             stopForeground(STOP_FOREGROUND_REMOVE); stopSelf();
         } else updateNotification();
-        changed();
+        interruptedDownload = false; saveRecovery(false); changed();
     }
     void next() { if (!queue.isEmpty()) play(order.next(index, queue.size())); }
     void previous() {
@@ -434,12 +478,12 @@ public class PlaybackService extends Service {
         }
     }
     void clearQueue() {
-        attemptedAudioUrl = ""; stopPlayback(); queue.clear(); order.clear(); index = -1; localOnlyQueue = false; changed();
+        attemptedAudioUrl = ""; stopPlayback(); queue.clear(); order.clear(); index = -1; localOnlyQueue = false; interruptedDownload = false; saveRecovery(false); changed();
     }
-    private void fail(String message) { error = message; loading = false; cancelResolve(); releasePlayer(); clearAudioFile(); audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); changed(); }
+    private void fail(String message) { interruptedDownload = loading && !prepared; error = message; loading = false; cancelResolve(); releasePlayer(); clearAudioFile(); saveRecovery(interruptedDownload); audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); changed(); }
     private void stopPlayback() {
         cancelResolve(); loading = false; releasePlayer(); clearAudioFile(); resumeAfterFocus = false;
-        audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); changed();
+        audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); interruptedDownload = false; saveRecovery(false); changed();
     }
     private void cancelResolve() {
         if (resolveTimeout != null) main.removeCallbacks(resolveTimeout);
@@ -448,6 +492,7 @@ public class PlaybackService extends Service {
         pending = null; cancelDownload(); resolver.purge();
     }
     private void cancelDownload() {
+        downloading = false; downloadedBytes = 0; downloadTotalBytes = -1; releaseDownloadWakeLock();
         downloadAttempt++;
         if (downloadTimeout != null) main.removeCallbacks(downloadTimeout);
         downloadTimeout = null;

@@ -51,9 +51,12 @@ public class PlayerTest {
         return (android.media.MediaPlayer)field(player, "player");
     }
     private static File localFile(PlaybackService player) throws Exception { return (File)field(player, "currentAudioFile"); }
-    @Before public void reset() {
+    @Before public void reset() throws Exception {
+        PlaybackRecoveryStore.awaitWritesForTest();
+        PlaybackRecoveryStore.resetMemoryForTest(RuntimeEnvironment.getApplication().getFilesDir());
         RuntimeEnvironment.getApplication().getSharedPreferences("music_playback", 0).edit().clear().commit();
         deleteTree(new File(RuntimeEnvironment.getApplication().getFilesDir(), "hifini-library"));
+        deleteTree(new File(RuntimeEnvironment.getApplication().getFilesDir(), PlaybackRecoveryStore.FILE_NAME));
         ShadowMediaPlayer.resetStaticState();
         ShadowMediaPlayer.setMediaInfoProvider(source -> new ShadowMediaPlayer.MediaInfo(60000, 1));
     }
@@ -229,20 +232,28 @@ public class PlayerTest {
             player.add(track(0), true); resolveOnly(player); assertTrue(player.started.await(3, TimeUnit.SECONDS));
             player.report.accept(new AudioDownloader.Progress(1024, 2048)); Shadows.shadowOf(Looper.getMainLooper()).idle();
             assertEquals(player.getString(R.string.download_progress_percent, 50), player.stage()); assertNull(decoder(player)); assertTrue(player.loading());
+            assertTrue(player.downloading()); assertEquals(1024, player.downloadedBytes()); assertEquals(2048, player.downloadTotalBytes());
             player.report.accept(new AudioDownloader.Progress(4096, -1)); Shadows.shadowOf(Looper.getMainLooper()).idle();
             assertEquals(player.getString(R.string.download_progress_size, "4 KB"), player.stage());
+            assertEquals(4096, player.downloadedBytes()); assertEquals(-1, player.downloadTotalBytes());
             player.pause(false); assertFalse(player.loading()); assertFalse(player.playing());
             player.release.countDown(); finishWorkers(player); assertNotNull(player.lateFile); assertFalse(player.lateFile.exists());
             assertNull(decoder(player)); assertTrue(player.localTracks().isEmpty()); assertEquals("https://audio.example.org/100?token=1", player.audioUrl());
         } finally { player.release.countDown(); controller.destroy(); }
     }
-    @Test public void downloadTimeoutCancelsAfterNinetySecondsWithoutStartingDecoder() throws Exception {
+    @Test public void slowDownloadSurvivesNinetySecondsButStillHasABoundedOverallDeadline() throws Exception {
         ServiceController<BlockingDownload> controller = Robolectric.buildService(BlockingDownload.class).create();
         BlockingDownload player = controller.get();
         try {
             player.add(track(0), true); resolveOnly(player); assertTrue(player.started.await(3, TimeUnit.SECONDS));
             Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(91));
-            assertFalse(player.loading()); assertEquals(player.getString(R.string.download_timeout), player.error());
+            assertTrue(player.loading()); assertTrue(player.downloading()); assertEquals("", player.error());
+            player.report.accept(new AudioDownloader.Progress(5120, 10240)); Shadows.shadowOf(Looper.getMainLooper()).idle();
+            assertEquals(5120, player.downloadedBytes()); assertEquals(10240, player.downloadTotalBytes());
+            assertTrue(((android.os.PowerManager.WakeLock)field(player, "downloadWakeLock")).isHeld());
+            Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(AudioDownloader.TIMEOUT_MS));
+            assertFalse(player.loading()); assertFalse(player.downloading()); assertNull(field(player, "downloadWakeLock"));
+            assertEquals(player.getString(R.string.download_timeout), player.error());
             assertNull(decoder(player)); assertEquals(1, player.calls.get());
             player.release.countDown(); finishWorkers(player); assertFalse(player.lateFile.exists());
         } finally { player.release.countDown(); controller.destroy(); }
@@ -375,7 +386,7 @@ public class PlayerTest {
             player.clearQueue(); assertTrue(local.exists()); assertEquals(1, player.localTracks().size()); assertFalse(player.playing()); assertFalse(player.loading()); assertNull(player.current());
         } finally { controller.destroy(); }
     }
-    @Test public void queueIsBoundedDeduplicatedAndNeverRestoredFromAnEarlierSession() {
+    @Test public void unselectedQueueIsBoundedDeduplicatedAndDoesNotCreateAResumeCheckpoint() {
         ServiceController<PlaybackService> controller = Robolectric.buildService(PlaybackService.class).create();
         try {
             PlaybackService player = controller.get(); assertTrue(player.queue().isEmpty()); assertNull(player.current());
@@ -537,11 +548,47 @@ public class PlayerTest {
         try { assertEquals("com.ecojust.hifinitv", controller.get().getPackageName()); assertTrue(controller.get().queue().isEmpty()); }
         finally { controller.destroy(); }
     }
-    @Test public void shufflePreferencePersistsWhileTheActiveQueueIsSessionOnly() {
+    @Test public void shufflePreferencePersistsWithoutInventingASelectedSong() {
         ServiceController<PlaybackService> controller = Robolectric.buildService(PlaybackService.class).create();
         assertTrue(controller.get().shuffled()); controller.get().shuffle(false); controller.destroy();
         controller = Robolectric.buildService(PlaybackService.class).create();
         try { assertFalse(controller.get().shuffled()); assertTrue(controller.get().queue().isEmpty()); }
         finally { controller.destroy(); }
     }
+    @Test public void interruptedDownloadRestoresSongIdentityPausedAndRetriesWithAFreshLink() throws Exception {
+        ServiceController<BlockingDownload> first = Robolectric.buildService(BlockingDownload.class).create();
+        BlockingDownload old = first.get();
+        File completed = library(old).save(track(9), old.fixture());
+        old.playListAt(Arrays.asList(track(0), track(1)), 0); resolveOnly(old);
+        assertTrue(old.started.await(3, TimeUnit.SECONDS));
+        old.report.accept(new AudioDownloader.Progress(1024, 8192)); Shadows.shadowOf(Looper.getMainLooper()).idle();
+        PlaybackRecoveryStore.awaitWritesForTest();
+        String checkpoint = new String(Files.readAllBytes(new File(old.getFilesDir(), PlaybackRecoveryStore.FILE_NAME).toPath()), java.nio.charset.StandardCharsets.UTF_8);
+        assertFalse(checkpoint.contains("token=")); assertFalse(checkpoint.contains("audio.example.org"));
+        first.destroy(); old.release.countDown(); finishWorkers(old);
+        PlaybackRecoveryStore.awaitWritesForTest(); PlaybackRecoveryStore.resetMemoryForTest(old.getFilesDir());
+        ServiceController<FreshResolver> second = Robolectric.buildService(FreshResolver.class).create();
+        FreshResolver restored = second.get();
+        try {
+            assertEquals(2, restored.queue().size()); assertEquals("100", restored.current().id);
+            assertTrue(restored.interruptedDownload()); assertFalse(restored.loading()); assertFalse(restored.playing());
+            assertEquals(0, restored.calls.get()); assertEquals(0, restored.downloads.get()); assertEquals("", restored.audioUrl());
+            assertTrue(completed.exists()); assertEquals(1, restored.localTracks().size());
+            restored.resume(); resolvedWork(restored);
+            assertEquals(1, restored.calls.get()); assertEquals(1, restored.downloads.get());
+            assertFalse(restored.interruptedDownload()); assertEquals(2, restored.localTracks().size());
+        } finally { second.destroy(); }
+    }
+
+    @Test public void deliberateCancellationKeepsSelectionWithoutClaimingAnInterruptedDownload() throws Exception {
+        ServiceController<BlockingDownload> first = Robolectric.buildService(BlockingDownload.class).create();
+        BlockingDownload player = first.get(); player.add(track(0), true); resolveOnly(player);
+        assertTrue(player.started.await(3, TimeUnit.SECONDS)); player.pause(false);
+        assertFalse(player.downloading()); assertNull(field(player, "downloadWakeLock"));
+        first.destroy(); player.release.countDown(); finishWorkers(player);
+        ServiceController<FreshResolver> second = Robolectric.buildService(FreshResolver.class).create();
+        try { assertEquals("100", second.get().current().id); assertFalse(second.get().interruptedDownload()); assertEquals(0, second.get().calls.get()); }
+        finally { second.destroy(); }
+    }
+
 }

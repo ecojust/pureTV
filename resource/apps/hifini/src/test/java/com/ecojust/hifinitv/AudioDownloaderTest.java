@@ -289,21 +289,26 @@ public class AudioDownloaderTest {
         } finally {release.countDown();}
         assertEquals(0,cachedFiles().length);
     }
-    @Test public void explicitCancelDisconnectsInFlightTransferAndRemovesItsPartialFile() throws Exception {
-        CountDownLatch started=new CountDownLatch(1),release=new CountDownLatch(1);
+    @Test public void explicitCancelReturnsPromptlyAndReaderCleansPartialAfterTransportUnblocks() throws Exception {
+        CountDownLatch started=new CountDownLatch(1),received=new CountDownLatch(1),release=new CountDownLatch(1);
         server.createContext("/partial",exchange->{
             exchange.sendResponseHeaders(200,0);
             try(java.io.OutputStream output=exchange.getResponseBody()) {
-                output.write(wav());output.flush();started.countDown();release.await(3,TimeUnit.SECONDS);
+                output.write(wav());output.flush();started.countDown();release.await();
             } catch(InterruptedException interrupted){Thread.currentThread().interrupt();}
         });
         ExecutorService worker=Executors.newSingleThreadExecutor();AudioDownloader downloader=downloader();
         try {
             Future<AudioDownloader.Failure> task=worker.submit(()->{
-                try {downloader.download(OFFICIAL+"partial",OFFICIAL,null);return null;}
+                try {downloader.download(OFFICIAL+"partial",OFFICIAL,progress->{if(progress.downloaded>0)received.countDown();});return null;}
                 catch(AudioDownloader.DownloadException error){return error.failure;}
             });
-            assertTrue(started.await(2,TimeUnit.SECONDS));downloader.cancel();
+            assertTrue(started.await(2,TimeUnit.SECONDS));assertTrue(received.await(2,TimeUnit.SECONDS));
+            assertTrue("The reader must own an in-flight partial file",cachedFiles().length>0);
+            requests.submit(downloader::cancel).get(300,TimeUnit.MILLISECONDS);
+            // JDK/Android disconnect implementations may wait behind the active read. The UI
+            // caller must return promptly; the reader owns cleanup once EOF/read timeout wakes it.
+            release.countDown();
             assertEquals(AudioDownloader.Failure.CANCELLED,task.get(2,TimeUnit.SECONDS));
             assertEquals(0,cachedFiles().length);
         } finally {release.countDown();downloader.close();worker.shutdownNow();}
@@ -337,4 +342,104 @@ public class AudioDownloaderTest {
         for(byte[] bytes:new byte[][]{wav(),mp3,tagged,flac,m4a,ogg}){File file=File.createTempFile("signature-",".bin",cache);Files.write(file.toPath(),bytes);assertTrue(AudioDownloader.supportedAudio(file));}
         tagged[9]=127;File truncated=new File(cache,"truncated.bin");Files.write(truncated.toPath(),java.util.Arrays.copyOf(tagged,20));assertFalse(AudioDownloader.supportedAudio(truncated));
     }
+    @Test public void continuouslyAdvancingSlowTransferOutlivesItsIdleDeadline() throws Exception {
+        byte[] bytes = wav();
+        server.createContext("/slow-progress", exchange -> {
+            exchange.sendResponseHeaders(200, bytes.length);
+            try (java.io.OutputStream output = exchange.getResponseBody()) {
+                for (int offset = 0; offset < bytes.length; offset += 30) {
+                    output.write(bytes, offset, Math.min(30, bytes.length - offset)); output.flush();
+                    try { Thread.sleep(80); } catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); return; }
+                }
+            }
+        });
+        try (AudioDownloader transfer = new AudioDownloader(cache,
+                url -> (HttpURLConnection) new URL("http://127.0.0.1:" + server.getAddress().getPort() + url.getFile()).openConnection(),
+                session, AudioDownloader.MAX_BYTES, 3000, 300)) {
+            long started = System.nanoTime();
+            File downloaded = transfer.download(OFFICIAL + "slow-progress", OFFICIAL, null);
+            assertTrue("Slow fixture must outlive the idle interval", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started) > 600);
+            assertArrayEquals(bytes, Files.readAllBytes(downloaded.toPath()));
+        }
+    }
+
+    @Test public void stalledTransferStillTimesOutAndCleansItsPartialFile() throws Exception {
+        CountDownLatch release = new CountDownLatch(1);
+        server.createContext("/stalled-progress", exchange -> {
+            exchange.sendResponseHeaders(200, 300);
+            exchange.getResponseBody().write(wav(), 0, 50); exchange.getResponseBody().flush();
+            try { release.await(2, TimeUnit.SECONDS); } catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+        });
+        try (AudioDownloader transfer = new AudioDownloader(cache,
+                url -> (HttpURLConnection) new URL("http://127.0.0.1:" + server.getAddress().getPort() + url.getFile()).openConnection(),
+                session, AudioDownloader.MAX_BYTES, 3000, 150)) {
+            failure(AudioDownloader.Failure.TIMEOUT, () -> transfer.download(OFFICIAL + "stalled-progress", OFFICIAL, null));
+            assertEquals(0, cachedFiles().length);
+        } finally { release.countDown(); }
+    }
+
+    private static final class BlockingDisconnect extends HttpURLConnection {
+        final CountDownLatch reading = new CountDownLatch(1), disconnecting = new CountDownLatch(1);
+        final CountDownLatch releaseRead = new CountDownLatch(1), releaseDisconnect = new CountDownLatch(1);
+        final java.util.concurrent.atomic.AtomicInteger disconnectCalls = new java.util.concurrent.atomic.AtomicInteger();
+        volatile Thread reader, closer;
+        boolean throwsOnDisconnect;
+        BlockingDisconnect() throws Exception { super(new URL(OFFICIAL + "blocking")); }
+        @Override public void connect() { }
+        @Override public boolean usingProxy() { return false; }
+        @Override public void disconnect() {
+            if (throwsOnDisconnect) throw new IllegalStateException("vendor disconnect failure");
+            if (disconnectCalls.getAndIncrement() > 0) return;
+            disconnecting.countDown();
+            try { releaseDisconnect.await(3, TimeUnit.SECONDS); }
+            catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+        }
+        @Override public int getResponseCode() { return 200; }
+        @Override public long getContentLengthLong() { return 300; }
+        @Override public java.util.Map<String,List<String>> getHeaderFields() { return Collections.emptyMap(); }
+        @Override public java.io.InputStream getInputStream() {
+            return new java.io.InputStream() {
+                private boolean emitted;
+                @Override public int read() { throw new AssertionError("Use bounded bulk reads"); }
+                @Override public int read(byte[] bytes, int offset, int length) throws IOException {
+                    reader = Thread.currentThread(); reading.countDown();
+                    try { if (!releaseRead.await(3, TimeUnit.SECONDS)) throw new IOException("fixture timeout"); }
+                    catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); throw new IOException(interrupted); }
+                    if (emitted) return -1; emitted = true; byte[] data = wav();
+                    System.arraycopy(data, 0, bytes, offset, data.length); return data.length;
+                }
+                @Override public void close() { closer = Thread.currentThread(); }
+            };
+        }
+    }
+
+    @Test public void cancelReturnsBeforeBlockingDisconnectAndOnlyReaderClosesStream() throws Exception {
+        BlockingDisconnect connection = new BlockingDisconnect();
+        AudioDownloader transfer = new AudioDownloader(cache, url -> connection, session, AudioDownloader.MAX_BYTES, 5000);
+        Future<?> running = requests.submit(() -> { failure(AudioDownloader.Failure.CANCELLED,
+                () -> transfer.download(OFFICIAL + "blocking", OFFICIAL, null)); return null; });
+        try {
+            assertTrue(connection.reading.await(2, TimeUnit.SECONDS));
+            Future<?> cancellation = requests.submit(transfer::cancel);
+            cancellation.get(300, TimeUnit.MILLISECONDS);
+            assertTrue(connection.disconnecting.await(2, TimeUnit.SECONDS));
+            assertNull("Cancellation must not close another thread's stream", connection.closer);
+            connection.releaseRead.countDown(); running.get(2, TimeUnit.SECONDS);
+            assertSame(connection.reader, connection.closer); assertEquals(0, cachedFiles().length);
+        } finally { connection.releaseRead.countDown(); connection.releaseDisconnect.countDown(); transfer.close(); }
+    }
+
+    @Test public void vendorDisconnectExceptionsCannotEscapeCancellationCaller() throws Exception {
+        BlockingDisconnect connection = new BlockingDisconnect(); connection.throwsOnDisconnect = true;
+        AudioDownloader transfer = new AudioDownloader(cache, url -> connection, session, AudioDownloader.MAX_BYTES, 5000);
+        Future<?> running = requests.submit(() -> { failure(AudioDownloader.Failure.CANCELLED,
+                () -> transfer.download(OFFICIAL + "blocking", OFFICIAL, null)); return null; });
+        try {
+            assertTrue(connection.reading.await(2, TimeUnit.SECONDS));
+            requests.submit(transfer::cancel).get(300, TimeUnit.MILLISECONDS);
+            connection.releaseRead.countDown(); running.get(2, TimeUnit.SECONDS);
+            assertEquals(0, cachedFiles().length);
+        } finally { connection.releaseRead.countDown(); transfer.close(); }
+    }
+
 }

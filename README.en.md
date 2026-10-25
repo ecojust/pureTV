@@ -88,7 +88,7 @@ resource/
 
 | Name | Author | Version | APK size | Purpose | Preview |
 | --- | --- | --- | --- | --- | --- |
-| [HIFINi TV](resource/apps/hifini/) | ecojust | 0.1.3 | 193.1 KB | HiFiNi music search, shuffle playback and rhythm animation | <img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"> |
+| [HIFINi TV](resource/apps/hifini/) | ecojust | 0.1.4 | 201.1 KB | HiFiNi music search, shuffle playback and rhythm animation | <img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"> |
 | [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Android TV client for Jellyfin media servers | <img src="docs/previews/en/app-jellyfin-tv.png" width="180" alt="Jellyfin for Android TV preview"> |
 | [Music TV](resource/apps/music/) | ecojust | 0.1.3 | 48.8 KB | Native TV music player | <img src="docs/previews/en/app-music.png" width="180" alt="Music TV preview"> |
 | [ShortVideo TV](resource/apps/shortvideo/) | ecojust | 0.1.1 | 32.7 KB | Short video player with remote control support | <img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"> |
