@@ -12,19 +12,32 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /** A bounded, private, one-at-a-time audio download. Completed files belong to the caller. */
 final class AudioDownloader implements AutoCloseable {
-    static final long MAX_BYTES = 64L * 1024 * 1024, TIMEOUT_MS = 90000;
-    private static final int CONNECT_TIMEOUT_MS = 10000, READ_TIMEOUT_MS = 15000, MAX_REDIRECTS = 5;
+    static final long MAX_BYTES = 64L * 1024 * 1024, TIMEOUT_MS = 30 * 60 * 1000L, IDLE_TIMEOUT_MS = 45000;
+    private static final int CONNECT_TIMEOUT_MS = 10000, MAX_REDIRECTS = 5;
     private static final String DIRECTORY = "hifini-audio", PREFIX = "audio-";
     private static final ScheduledThreadPoolExecutor WATCHDOG = new ScheduledThreadPoolExecutor(1, runnable -> {
         Thread thread = new Thread(runnable, "hifini-download-timeout"); thread.setDaemon(true); return thread;
     });
     static { WATCHDOG.setRemoveOnCancelPolicy(true); }
+    // Some Android HttpURLConnection implementations block disconnect behind a socket read.
+    // Cancellation callers and the timeout scheduler only mark state; transport cleanup is bounded
+    // to two background workers. The reading worker always closes its own InputStream in finally.
+    private static final ThreadPoolExecutor CLEANUP = new ThreadPoolExecutor(2, 2, 30, TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(8), runnable -> {
+                Thread thread = new Thread(runnable, "hifini-download-cleanup"); thread.setDaemon(true); return thread;
+            }, new ThreadPoolExecutor.AbortPolicy());
+    static { CLEANUP.allowCoreThreadTimeOut(true); }
 
     enum Failure { CANCELLED, TIMEOUT, TOO_LARGE, LOGIN_REQUIRED, HTTP_STATUS, INVALID_AUDIO, UNSUPPORTED_URL, CACHE_IO }
     static final class DownloadException extends IOException {
@@ -52,27 +65,34 @@ final class AudioDownloader implements AutoCloseable {
         public void accept(String url, List<String> cookies, long epoch) { HifiniSession.acceptCookies(url, cookies, epoch); }
     };
     private static final class Request {
-        volatile boolean cancelled, timedOut;
+        final AtomicInteger termination = new AtomicInteger(); // 0 active, 1 cancelled, 2 timed out, 3 committed
         volatile HttpURLConnection connection;
         volatile InputStream input;
         volatile File part;
+        final long started = System.nanoTime();
+        volatile long lastActivity = started;
+        final AtomicBoolean cleanupQueued = new AtomicBoolean();
     }
     private final File directory;
     private final Connections connections;
     private final Session session;
-    private final long maximumBytes, timeoutMs;
+    private final long maximumBytes, timeoutMs, idleTimeoutMs;
     private final Object lock = new Object();
-    private Request active;
-    private boolean closed;
+    private volatile Request active;
+    private volatile boolean closed;
 
     AudioDownloader(File cacheDir) {
         this(cacheDir, url -> (HttpURLConnection) url.openConnection(), OFFICIAL_SESSION, MAX_BYTES, TIMEOUT_MS);
     }
     // The transport seam keeps tests on a real local HTTP server, without contacting a music provider.
     AudioDownloader(File cacheDir, Connections connections, Session session, long maximumBytes, long timeoutMs) {
+        this(cacheDir, connections, session, maximumBytes, timeoutMs, Math.min(IDLE_TIMEOUT_MS, timeoutMs));
+    }
+    AudioDownloader(File cacheDir, Connections connections, Session session, long maximumBytes, long timeoutMs, long idleTimeoutMs) {
         this.directory = new File(cacheDir, DIRECTORY); this.connections = connections; this.session = session;
-        if (maximumBytes <= 0 || maximumBytes > MAX_BYTES || timeoutMs <= 0 || timeoutMs > TIMEOUT_MS) throw new IllegalArgumentException();
-        this.maximumBytes = maximumBytes; this.timeoutMs = timeoutMs;
+        if (maximumBytes <= 0 || maximumBytes > MAX_BYTES || timeoutMs <= 0 || timeoutMs > TIMEOUT_MS
+                || idleTimeoutMs <= 0 || idleTimeoutMs > IDLE_TIMEOUT_MS) throw new IllegalArgumentException();
+        this.maximumBytes = maximumBytes; this.timeoutMs = timeoutMs; this.idleTimeoutMs = idleTimeoutMs;
     }
 
     /** Call once at service startup, before any downloader or decoder owns files in this directory. */
@@ -94,7 +114,12 @@ final class AudioDownloader implements AutoCloseable {
         final long epoch = session.epoch();
         // Once a chain becomes anonymous, a redirect back cannot reacquire site credentials.
         boolean officialChain = HifiniSession.allows(current);
-        ScheduledFuture<?> watchdog = WATCHDOG.schedule(() -> abort(request, true), timeoutMs, TimeUnit.MILLISECONDS);
+        long pollMs = Math.max(1, Math.min(1000, Math.min(timeoutMs, idleTimeoutMs) / 4));
+        ScheduledFuture<?> watchdog = WATCHDOG.scheduleAtFixedRate(() -> {
+            long now = System.nanoTime();
+            if (now - request.started >= TimeUnit.MILLISECONDS.toNanos(timeoutMs)
+                    || now - request.lastActivity >= TimeUnit.MILLISECONDS.toNanos(idleTimeoutMs)) abort(request, true);
+        }, pollMs, pollMs, TimeUnit.MILLISECONDS);
         boolean committed = false;
         try {
             check(request, epoch);
@@ -102,11 +127,11 @@ final class AudioDownloader implements AutoCloseable {
             for (int redirect = 0; redirect <= MAX_REDIRECTS; redirect++) {
                 check(request, epoch);
                 HttpURLConnection connection = connections.open(new URL(current));
-                request.connection = connection;
+                request.cleanupQueued.set(false); request.connection = connection;
                 check(request, epoch);
                 connection.setInstanceFollowRedirects(false);
                 connection.setConnectTimeout((int) Math.min(CONNECT_TIMEOUT_MS, timeoutMs));
-                connection.setReadTimeout((int) Math.min(READ_TIMEOUT_MS, timeoutMs));
+                connection.setReadTimeout((int) Math.min(idleTimeoutMs, timeoutMs));
                 connection.setRequestProperty("User-Agent", HifiniApi.AGENT);
                 connection.setRequestProperty("Accept", "audio/*,application/octet-stream;q=0.9,*/*;q=0.5");
                 connection.setRequestProperty("Accept-Encoding", "identity");
@@ -115,7 +140,7 @@ final class AudioDownloader implements AutoCloseable {
                 String cookie = officialHop ? session.cookie(current, epoch) : "";
                 if (!cookie.isEmpty()) connection.setRequestProperty("Cookie", cookie);
                 int code = connection.getResponseCode();
-                check(request, epoch);
+                check(request, epoch); request.lastActivity = System.nanoTime();
                 if (officialHop) for (Map.Entry<String, List<String>> header : connection.getHeaderFields().entrySet()) {
                     if ("Set-Cookie".equalsIgnoreCase(header.getKey())) session.accept(current, header.getValue(), epoch);
                 }
@@ -124,7 +149,7 @@ final class AudioDownloader implements AutoCloseable {
                     String next = checkedUrl(connection.getHeaderField("Location"), current);
                     if (HifiniApi.loginPageUrl(next)) throw new DownloadException(Failure.LOGIN_REQUIRED);
                     if (!HifiniSession.allows(next)) officialChain = false;
-                    connection.disconnect(); request.connection = null; current = next; continue;
+                    queueDisconnect(request, connection); request.connection = null; current = next; continue;
                 }
                 if (code == 401) throw new DownloadException(Failure.LOGIN_REQUIRED);
                 if (code != 200) throw new DownloadException(Failure.HTTP_STATUS, code);
@@ -145,6 +170,7 @@ final class AudioDownloader implements AutoCloseable {
                     while ((count = input.read(buffer)) != -1) {
                         check(request, epoch);
                         if (count == 0) continue;
+                        request.lastActivity = System.nanoTime();
                         if (downloaded + count > maximumBytes) throw new DownloadException(Failure.TOO_LARGE);
                         int copied = Math.min(count, prefix.length - prefixSize);
                         if (copied > 0) { System.arraycopy(buffer, 0, prefix, prefixSize, copied); prefixSize += copied; }
@@ -164,6 +190,9 @@ final class AudioDownloader implements AutoCloseable {
                 synchronized (lock) {
                     check(request, epoch);
                     if (!request.part.renameTo(complete)) throw new DownloadException(Failure.CACHE_IO);
+                    request.part = complete;
+                    check(request, epoch);
+                    if (!request.termination.compareAndSet(0, 3)) check(request, epoch);
                     request.part = null; committed = true;
                 }
                 return complete;
@@ -176,29 +205,36 @@ final class AudioDownloader implements AutoCloseable {
         } finally {
             watchdog.cancel(false);
             HttpURLConnection connection = request.connection; request.connection = null;
-            if (connection != null) connection.disconnect();
+            if (connection != null) queueDisconnect(request, connection);
             if (!committed && request.part != null) request.part.delete();
             synchronized (lock) { if (active == request) active = null; }
         }
     }
 
     void cancel() {
-        Request request;
-        synchronized (lock) { request = active; }
+        Request request = active;
         if (request != null) abort(request, false);
     }
-    @Override public void close() { synchronized (lock) { closed = true; } cancel(); }
+    @Override public void close() { closed = true; cancel(); }
     private static void abort(Request request, boolean timedOut) {
-        if (timedOut) request.timedOut = true; else request.cancelled = true;
+        if (!request.termination.compareAndSet(0, timedOut ? 2 : 1)) return;
         HttpURLConnection connection = request.connection;
-        if (connection != null) connection.disconnect();
-        InputStream input = request.input;
-        if (input != null) try { input.close(); } catch (IOException ignored) { }
-        File part = request.part; if (part != null) part.delete();
+        if (connection != null) queueDisconnect(request, connection);
+    }
+    private static void queueDisconnect(Request request, HttpURLConnection connection) {
+        if (!request.cleanupQueued.compareAndSet(false, true)) return;
+        try { CLEANUP.execute(() -> disconnectQuietly(connection)); }
+        catch (RejectedExecutionException full) {
+            // Socket read/connect timeouts still bound the owning worker. Never fall back to
+            // closing streams on a UI caller or blocking the single watchdog thread.
+        }
+    }
+    private static void disconnectQuietly(HttpURLConnection connection) {
+        try { connection.disconnect(); } catch (RuntimeException ignored) { /* Worker cleanup must not crash the UI. */ }
     }
     private void check(Request request, long epoch) throws DownloadException {
-        if (request.timedOut) throw new DownloadException(Failure.TIMEOUT);
-        if (request.cancelled || Thread.currentThread().isInterrupted() || session.epoch() != epoch)
+        if (request.termination.get() == 2) throw new DownloadException(Failure.TIMEOUT);
+        if (closed || request.termination.get() == 1 || Thread.currentThread().isInterrupted() || session.epoch() != epoch)
             throw new DownloadException(Failure.CANCELLED);
     }
     private static void report(Consumer<Progress> consumer, long downloaded, long total) {

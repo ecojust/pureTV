@@ -8,7 +8,7 @@ The APK in this directory is signed with the pureTV release certificate. Android
 
 [English](README.en.md) · [中文](README.md)
 
-An independent HiFiNi music client for Android TV remotes, requiring Android 8.0 or later. Package: `com.ecojust.hifinitv`; version: `0.1.3`. It installs alongside Music TV and does not access or modify Music TV data.
+An independent HiFiNi music client for Android TV remotes, requiring Android 8.0 or later. Package: `com.ecojust.hifinitv`; version: `0.1.4`. It installs alongside Music TV and does not access or modify Music TV data.
 
 ![Native English UI with fictional test tracks; not a live playback or physical TV capture](docs/hifini-tv.en.png)
 
@@ -17,13 +17,21 @@ An independent HiFiNi music client for Android TV remotes, requiring Android 8.0
 - Search by song or artist after signing in to HiFiNi, or enter an official forum page containing static player data, such as `https://www.hifini.net/thread-6544.htm`.
 - Switch between Search results and Local songs. Select a search result to play it. The local list provides Play in order and Shuffle; shuffle avoids repeats within a round. Queues contain up to 50 tracks; this does not sample the entire site catalog.
 - Search uses `musicparse-search.htm?keyword=...`, preserving each NetEase/Kuwo source ID, title, artist, artwork, and duration, including tracks without a forum topic.
-- New songs are downloaded through `musicparse-play.htm?source=...&id=...`, saved in a private library once complete, and played locally using Android MediaPlayer. A `.mp3` URL suffix is not required. Downloads show a percentage or byte count and can be cancelled. Saved songs play directly without downloading again.
+- New songs are downloaded through `musicparse-play.htm?source=...&id=...`, saved in a private library once complete, and played locally using Android MediaPlayer. A `.mp3` URL suffix is not required. Downloads show a horizontal progress bar, percentage, and downloaded/total size. Unknown-length responses show indeterminate progress and the downloaded size. Downloads can be cancelled or retried. Saved songs play directly without downloading again.
 - A QR code beside the current song title contains the remote URL used for this download and remains available after failure. Select it to enlarge the code and view the full URL and playback error for testing on a phone. This is the remote download entry, not the private file path on the TV.
-- Each audio file is limited to 64 MiB and downloads to 90 seconds. Cancellation, track changes, and service shutdown remove incomplete temporary files. Completed songs remain saved across app exits and restarts. HTTP media is limited to public NetEase and Kuwo music CDNs; account and search traffic remain HTTPS, and HiFiNi session cookies are never forwarded to third-party CDNs.
+- Each audio file is limited to 64 MiB. Slow transfers that continue receiving data are no longer stopped after 90 seconds; downloads time out after 45 seconds without progress or a 30-minute total limit. Cancellation, track changes, and service shutdown remove incomplete temporary files. Completed songs remain saved across app exits and restarts. HTTP media is limited to public NetEase and Kuwo music CDNs; account and search traffic remain HTTPS, and HiFiNi session cookies are never forwarded to third-party CDNs.
 - Source artwork and artist details accompany a native rhythm animation. The animation runs during playback and rests when paused, stopped, or off-screen. It does not record a microphone or analyze the audio spectrum. Lyrics are not included.
 - Play/pause, previous/next, seeking, background playback, system media keys, and playback notifications.
 
 Use the directional pad to navigate and OK to select. Back cancels a pending search. The interface follows the system language, with Chinese and English resources.
+
+## Slow downloads and interrupted sessions
+
+Download timeouts and failures keep the current playback screen open, with an error and a retry control; the app does not navigate back or return to the TV launcher.
+
+Cancelling a download updates its state immediately and closes the network connection in the background, keeping remote-control interactions responsive. The visible playback screen stays awake while downloading or playing, and releases that screen flag when you leave.
+
+Search text, results, the selected tab, and list position are saved locally. Playback recovery stores only source IDs and necessary song metadata, without temporary media URLs or login cookies. If the app or service is terminated, reopening restores the song information for an explicit retry; it does not automatically download or play. Retry obtains a fresh audio URL and downloads from the beginning. Incomplete files never appear as saved local songs.
 
 ## Local songs and the 50-track limit
 
@@ -56,4 +64,4 @@ Release outputs are under `resource/apps/hifini/build/outputs/apk/release/`; cat
 
 Production dependencies are jsoup for HTML parsing and ZXing Core for generating registration and audio URL QR codes locally; Android MediaPlayer handles audio. Release builds shrink code and resources and must remain below 5 MiB. Artwork has a 4 MiB memory cache and a 2 MiB per-download limit; queues are limited to 50 tracks. See [NOTICE.md](NOTICE.md) for licenses.
 
-**Live verification status:** The user has confirmed that search works on their TV and that version 0.1.2 plays successfully after downloading the audio locally. The development environment still cannot reach HiFiNi, so real account sign-in and online playback have not been independently verified here. Version 0.1.3's persistent library and 50-track eviction use automated tests and still need testing on a TV. Native UI, parser fixture, and playback state tests do not replace TV testing. Site changes, verification, media formats, and regional connectivity may affect availability. The adapter uses official search/playback entries and explicitly supplied page data; it does not execute decryption scripts or use third-party resolver services.
+**Live verification status:** The user has confirmed that search works on their TV and that version 0.1.2 plays successfully after downloading the audio locally. The development environment still cannot reach HiFiNi, so real account sign-in and online playback have not been independently verified here. Version 0.1.4's slow-download, cancellation, and Activity/service recovery paths use automated tests. No crash log from the user's TV is available, so the previous return to the TV home screen has not been attributed to a single confirmed cause; the fix still needs physical TV verification. Native UI, parser fixture, and playback state tests do not replace TV testing. Site changes, verification, media formats, and regional connectivity may affect availability. The adapter uses official search/playback entries and explicitly supplied page data; it does not execute decryption scripts or use third-party resolver services.
