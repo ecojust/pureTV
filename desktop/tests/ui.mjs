@@ -602,6 +602,111 @@ try {
     await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();await p.evaluate(()=>crypto.randomUUID=undefined);await p.locator('[data-u-act="add"]').click();await p.locator('[data-u-act="json"]').click();let draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.equal(draft.home.users.length,4);const added=draft.home.users.at(-1);assert.match(added.id,/^app-[0-9a-f]{32}$/);assert.equal(added.action,'com.example.extra');assert.equal(added.name,'Extra TV');assert.ok(added.icon.startsWith('<svg'));await p.locator('[data-close-json]').click();await p.locator('[data-u-act="remove"]').click();await p.locator('[data-u-act="json"]').click();draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.equal(draft.home.users.length,3);
   },addState,{layoutSupported:true,layout:unifiedLayout,layoutApps:[...unifiedApps,{packageName:'com.example.extra',label:'Extra TV'}]});
   const modernLayout=JSON.parse(await readFile(new URL('../../resource/launcher/puretv/layout.example.json',import.meta.url),'utf8'));
+  const mossTemplate=JSON.parse(await readFile(new URL('../../resource/launcher/moss/app/src/main/assets/layout.json',import.meta.url),'utf8'));
+  const cctvApp={packageName:'com.ecojust.cctvlive',label:'CCTV Live',installed:true,enabled:true,system:false,protectedReason:null};
+  const mossState=structuredClone(unifiedState);
+  mossState.defaultHome='com.ecojust.mosstv/.MainActivity';
+  mossState.packages.push({...cctvApp},{packageName:'com.ecojust.mosstv',label:'MossTV',installed:true,enabled:true,system:false,protectedReason:'当前默认启动器'});
+  mossState.launchers.forEach(launcher=>launcher.isDefault=false);
+  mossState.launchers.push({packageName:'com.ecojust.mosstv',component:mossState.defaultHome,label:'MossTV',isDefault:true});
+  const cctvNode={...structuredClone(modernLayout.home.users[0]),id:'cctv-live',name:'央视直播',text:'央视直播',action:cctvApp.packageName};
+  const mossLayout=structuredClone(mossTemplate);mossLayout.home.users=[cctvNode];mossLayout.apps.users=[];
+  const mossApps=[...unifiedApps,{packageName:cctvApp.packageName,label:cctvApp.label}];
+  const openMossEditor=async p=>{await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();await p.locator('[data-unified-editor]').waitFor();};
+  const readEditorJson=async p=>{await p.locator('[data-u-act="json"]').click();const value=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());await p.locator('[data-close-json]').click();return value;};
+  await check('layout validation: MossTV reopens with the current generated layout instead of a stale closed draft',async p=>{
+    await openMossEditor(p);assert.equal((await readEditorJson(p)).home.users[0].action,'com.ecojust.cctvlive');
+    await p.locator('[data-u-act="close"]').first().click();await nav(p,'apps');
+    const updated=structuredClone(mossState);updated.revision=2;updated.packages=updated.packages.filter(app=>app.packageName!==cctvApp.packageName);
+    const current=structuredClone(mossLayout);current.home.users=[{...cctvNode,id:'webtv-current',name:'当前电视应用',text:'当前电视应用',action:'com.ecojust.webtv'}];
+    await p.evaluate(({state,layout,apps})=>{window.__setMockState(state);window.__setMockLayout(layout);window.__setMockLayoutApps(apps);},{state:updated,layout:current,apps:unifiedApps});
+    await openMossEditor(p);const reopened=await readEditorJson(p);
+    assert.deepEqual(reopened.home.users,current.home.users,'A closed, unedited cache must not overwrite the fresh launcher layout');
+    assert.equal(await p.locator('[data-u-invalid-id]').count(),0);
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  const beforeCctvInstall=structuredClone(mossState);beforeCctvInstall.packages=beforeCctvInstall.packages.filter(app=>app.packageName!==cctvApp.packageName);
+  await check('layout validation: preflight discovers externally installed CCTV Live and preserves the edited MossTV draft',async p=>{
+    await openMossEditor(p);await p.locator('[data-u-node="cctv-live"]').click();
+    await p.locator('[data-u-field="text"]').fill('客厅央视直播');await p.locator('[data-u-field="text"]').dispatchEvent('change');
+    const count=await p.evaluate(()=>window.__launcherRequests.filter(request=>request.action==='getLayout').length);
+    await p.evaluate(({state,apps})=>{window.__setMockState(state);window.__setMockLayoutApps(apps);},{state:{...mossState,revision:2},apps:mossApps});
+    await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').waitFor();
+    assert.ok(await p.evaluate(before=>window.__launcherRequests.filter(request=>request.action==='getLayout').length>before,count),'Apply refreshes the real launcher before confirmation');
+    assert.equal(await p.evaluate(()=>window.__launcherRequests.filter(request=>request.action==='applyLayout').length),0,'Preflight remains read-only');
+    await p.locator('#confirm-operation').click();await result(p,'success');await acknowledge(p);
+    const applied=await p.evaluate(()=>window.__launcherRequests.find(request=>request.action==='applyLayout').layout);
+    assert.equal(applied.home.users[0].action,'com.ecojust.cctvlive');assert.equal(applied.home.users[0].text,'客厅央视直播');
+    assert.equal(await p.locator('[data-u-invalid-id]').count(),0);
+  },beforeCctvInstall,{layoutSupported:true,layout:mossLayout,layoutApps:unifiedApps});
+  const obsoleteLayout=structuredClone(mossLayout);
+  obsoleteLayout.apps.users=[{...structuredClone(cctvNode),id:'old-hidden-app',name:'旧电影入口',text:'旧电影入口',action:'com.old.removed',visible:false}];
+  await check('layout validation: an unrelated hidden Apps entry identifies its package and can be removed before applying CCTV Live',async p=>{
+    await openMossEditor(p);await p.locator('[data-u-node="cctv-live"]').click();
+    await p.locator('[data-u-act="apply"]').click();await settled(p);
+    assert.equal(await p.locator('#confirm-operation').count(),0);assert.equal(await p.evaluate(()=>window.__launcherRequests.filter(request=>request.action==='applyLayout').length),0);
+    const jump=p.locator('[data-u-invalid-page="apps"][data-u-invalid-id="old-hidden-app"]');await jump.waitFor();
+    const displayed=await p.locator('.layout-modal[open]').innerText();assert.match(displayed,/Apps/);assert.match(displayed,/旧电影入口/);assert.match(displayed,/com\.old\.removed/);
+    assert.equal((await readEditorJson(p)).apps.users.length,1,'Unavailable entries are never silently deleted');
+    await jump.click();assert.equal(await p.locator('[data-u-field="name"]').inputValue(),'旧电影入口');assert.equal(await p.locator('[data-u-field="visible"]').isChecked(),false);
+    assert.equal(await p.locator('[data-u-page="apps"]').evaluate(el=>el.classList.contains('primary')),true);
+    await p.locator('[data-u-act="remove"]').click();assert.equal(await p.locator('[data-u-invalid-id]').count(),0);
+    await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await result(p,'success');
+    const applied=await p.evaluate(()=>window.__launcherRequests.find(request=>request.action==='applyLayout').layout);
+    assert.equal(applied.home.users[0].action,'com.ecojust.cctvlive');assert.deepEqual(applied.apps.users,[]);
+  },mossState,{layoutSupported:true,layout:obsoleteLayout,layoutApps:mossApps});
+  const restrictedState=structuredClone(mossState);
+  const restrictedApps=[
+    {packageName:'com.blocked.system',label:'系统入口',system:true,installed:true,enabled:true,protectedReason:null},
+    {packageName:'com.blocked.disabled',label:'已停用入口',system:false,installed:true,enabled:false,protectedReason:null},
+    {packageName:'com.blocked.removed',label:'未安装入口',system:false,installed:false,enabled:true,protectedReason:null},
+    {packageName:'com.blocked.service',label:'无启动入口',system:false,installed:true,enabled:true,protectedReason:null},
+  ];
+  restrictedState.packages.push(...restrictedApps);
+  const restrictedLayout=structuredClone(mossLayout);restrictedLayout.apps.users=restrictedApps.map((app,index)=>({...structuredClone(cctvNode),id:'blocked-'+index,name:app.label,text:app.label,action:app.packageName}));
+  await check('layout validation: refreshed provider choices never admit system disabled uninstalled or non-launchable entries',async p=>{
+    await openMossEditor(p);await p.locator('[data-u-act="apply"]').click();await settled(p);
+    assert.equal(await p.locator('#confirm-operation').count(),0);assert.equal(await p.evaluate(()=>window.__launcherRequests.filter(request=>request.action==='applyLayout').length),0);
+    const displayed=await p.locator('.layout-modal[open]').innerText();
+    for(const [index,app] of restrictedApps.entries()){assert.ok(displayed.includes(app.packageName));await p.locator(`[data-u-invalid-page="apps"][data-u-invalid-id="blocked-${index}"]`).waitFor();}
+    assert.equal((await readEditorJson(p)).apps.users.length,4,'Validation does not remove invalid entries without the user editing the draft');
+  },restrictedState,{layoutSupported:true,layout:restrictedLayout,layoutApps:[...mossApps,...restrictedApps.slice(0,3).map(({packageName,label})=>({packageName,label}))]});
+  await check('layout validation: a failed refresh cannot confirm or apply a cached CCTV Live draft',async p=>{
+    await openMossEditor(p);await p.locator('[data-u-node="cctv-live"]').click();
+    await p.locator('[data-u-field="text"]').fill('保持这份修改');await p.locator('[data-u-field="text"]').dispatchEvent('change');
+    await p.evaluate(()=>window.__failNextLayoutRead('无法刷新电视应用，请重新连接'));
+    await p.locator('[data-u-act="apply"]').click();await settled(p);
+    assert.equal(await p.locator('#confirm-operation').count(),0);assert.equal(await p.evaluate(()=>window.__launcherRequests.filter(request=>request.action==='applyLayout').length),0);
+    assert.equal((await readEditorJson(p)).home.users[0].text,'保持这份修改');
+    await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await result(p,'success');
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  await check('layout validation: explicit refresh updates application choices without replacing an edited MossTV draft',async p=>{
+    await openMossEditor(p);await p.locator('[data-u-node="cctv-live"]').click();
+    await p.locator('[data-u-field="text"]').fill('刷新前的央视文案');await p.locator('[data-u-field="text"]').dispatchEvent('change');
+    await p.locator('[data-u-frame="x"]').fill('88');await p.locator('[data-u-frame="x"]').dispatchEvent('change');
+    const before=await readEditorJson(p),external={packageName:'com.new.external',label:'新装的电视应用',installed:true,enabled:true,system:false,protectedReason:null};
+    const updated=structuredClone(mossState);updated.revision=2;updated.packages.push(external);
+    const current=structuredClone(mossLayout);current.home.users[0].text='电视返回的原始布局';
+    const reads=await p.evaluate(()=>window.__launcherRequests.filter(request=>request.action==='getLayout').length);
+    await p.evaluate(({state,layout,apps})=>{window.__setMockState(state);window.__setMockLayout(layout);window.__setMockLayoutApps(apps);},{state:updated,layout:current,apps:[...mossApps,{packageName:external.packageName,label:external.label}]});
+    await p.locator('[data-u-act="refresh"]').click();await result(p,'success');await acknowledge(p);
+    assert.ok(await p.evaluate(count=>window.__launcherRequests.filter(request=>request.action==='getLayout').length>count,reads));
+    assert.equal(await p.locator('[data-u-field="action"] option[value="com.new.external"]').isEnabled(),true);
+    assert.deepEqual(await readEditorJson(p),before,'Refreshing app choices preserves edited text, frames and current action');
+    assert.equal(await p.evaluate(()=>window.__launcherRequests.filter(request=>request.action==='applyLayout').length),0,'Refresh never writes a layout');
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  await check('layout validation: changing the television user or launcher during confirmation prevents every layout write',async p=>{
+    let revision=2;
+    for(const change of [{device:{...mossState.device,serial:'192.168.1.99:5555'}},{device:{...mossState.device,userId:10}},{defaultHome:'com.ecojust.puretv/.MainActivity'}]){
+      await openMossEditor(p);await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').waitFor();
+      const changed={...structuredClone(mossState),...change,revision:revision++};
+      await p.evaluate(state=>{window.__setMockState(state);window.__emitMcp('mcp-operation',{running:false,tool:'get_state',snapshot:state});},changed);
+      await p.locator('#confirm-operation').click();const error=await result(p,'error');
+      assert.match(await error.innerText(),/设备或启动器已变化/);
+      assert.equal(await p.evaluate(()=>window.__launcherRequests.filter(request=>request.action==='applyLayout').length),0,'Confirmation for an earlier target cannot authorize a write to the new target');
+      await acknowledge(p);
+      await p.evaluate(state=>{window.__setMockState(state);window.__emitMcp('mcp-operation',{running:false,tool:'get_state',snapshot:state});},{...structuredClone(mossState),revision:revision++});
+    }
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
   await check('feedback: applying v5 layout blocks the whole window and returns to the saved editor',async p=>{
     await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();
     const id=modernLayout.home.users[0].id;

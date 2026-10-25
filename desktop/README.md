@@ -1,8 +1,8 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.4.3** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.4.4** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.4.3 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.3)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.4.4 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.4)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
 ## 功能
 
@@ -26,14 +26,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.4.3 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.3) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.4.4 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.4) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.4.3-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.4.4-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.3-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.4-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -94,6 +94,8 @@
 只有当前默认启动器成功返回符合协议的布局接口时才显示编辑器。Manager 0.3.7 动态检测已安装启动器的 `<包名>.layout` 协议接口，通过验证后支持编辑，无需添加包名白名单。**pureTV 0.3.7**、**Nova TV 0.1.2** 及[八款配套启动器](../resource/launcher/)均已实现；其他启动器可按[接入规范](../resource/README-development.md#第三方启动器接入与动态检测)实现。仅有 APK 内静态 layout.json、尚未实现读写接口的启动器不能保存布局。包名变化需要安装新 APK 并重新选择默认桌面。
 
 在当前默认启动器卡片点击「调整布局」，打开电视画布弹窗。Home 与 Apps 分别定义背景和组件的位置、尺寸，支持拖动、框选、对齐、分散排列，以及文案、图标、颜色和 layout.json 导入。只能添加已安装可启动的用户应用，应用后读回复查。旧版 apps.json 不兼容。详情：[启动器布局文档](docs/launcher-layout.md)。
+
+应用布局前会刷新电视应用状态，也可以点击「刷新应用列表」，保留正在编辑的修改。若旧布局中的应用已卸载、停用或没有启动入口，编辑器会列出 Home／Apps 中对应的组件名称与包名；点击提示定位组件，重新选择 action 或移除该应用块后再应用。
 
 
 ## 语言、主题与资源

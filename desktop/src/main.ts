@@ -1,6 +1,7 @@
 import {t,ui,message,locale,setLocale,setTheme,localeOptions,themeOptions} from './i18n';
 import './styles.css';
 import {UnifiedEditor} from './unified-editor';
+import {unavailableLayoutApps} from './layout-apps';
 import {validUnified,systemUnchanged} from './unified-layout';
 import {sameSubnet} from './subnet';
 import {groupMarketItems, type MarketGroup} from './market';
@@ -198,7 +199,7 @@ function systemBaseline():unknown {
  return {...layout,screen:basis.screen,home:{...layout.home,users:[],system:basis.home},apps:{...layout.apps,users:[],system:basis.apps}};
 }
 function forwardLayoutAction(action:string):void {const button=document.createElement('button');button.dataset.act=action;void doAction(button).catch(actionError);}
-const unifiedEditor=new UnifiedEditor(layoutDialog,{json:()=>layoutJson,baseline:()=>systemBaseline(),write:text=>{layoutJson=text;notice='';},render:()=>render(),busy:()=>busy,apps:()=>layoutApps(),notice:text=>showNotice(text,'error'),close:()=>{if(!busy)layoutDialog.close();},apply:()=>forwardLayoutAction('apply-layout'),reset:()=>forwardLayoutAction('reset-layout'),import:()=>forwardLayoutAction('import-layout')});
+const unifiedEditor=new UnifiedEditor(layoutDialog,{json:()=>layoutJson,baseline:()=>systemBaseline(),write:text=>{layoutJson=text;notice='';},render:()=>render(),busy:()=>busy,apps:()=>layoutApps(),notice:text=>showNotice(text,'error'),close:()=>{if(!busy)layoutDialog.close();},apply:()=>forwardLayoutAction('apply-layout'),refresh:()=>forwardLayoutAction('refresh-layout-apps'),reset:()=>forwardLayoutAction('reset-layout'),import:()=>forwardLayoutAction('import-layout')});
 
 layoutDialog.addEventListener('close',()=>{if(launcherLayout?.layout)layoutJson=JSON.stringify(launcherLayout.layout,null,2);});
 layoutDialog.addEventListener('cancel',event=>{if(busy)event.preventDefault();});
@@ -553,9 +554,15 @@ function sceneEditor(markup:string,draft:LauncherLayout):string {
  return template.innerHTML;
 }
 
-async function launcherOperation(request: LauncherRequest, preserveDraft = false): Promise<void> {
-  const savedDraft = preserveDraft && layoutAvailable() ? layoutJson : null;
-  if (busy || !online()) return;
+function editedLayoutDraft():string|null {
+  if(!layoutDialog.open || !layoutAvailable())return null;
+  try {return JSON.stringify(JSON.parse(layoutJson))===JSON.stringify(launcherLayout?.layout)?null:layoutJson;}
+  catch {return layoutJson;}
+}
+async function launcherOperation(request: LauncherRequest, preserveDraft = false): Promise<boolean> {
+  const savedDraft = preserveDraft ? editedLayoutDraft() : null;
+  if (busy || !online()) return false;
+  let completed=false;
   const mutation = request.action === 'applyLayout' || request.action === 'resetLayout', originalDraft = layoutJson;
   let outcome: NoticeKind = 'error', resultMessage = t('设备或启动器已变化，未确认布局应用结果');
   let target=launcherTarget();
@@ -565,7 +572,7 @@ async function launcherOperation(request: LauncherRequest, preserveDraft = false
   render();
   try {
     const value=await api.launcherExecute(request);
-    if(target!==launcherTarget())return;
+    if(target!==launcherTarget())return false;
     if (mutation && (!value.supported || !value.layout)) throw new Error(value.message || t('电视未返回可验证的布局，请重新读取后重试'));
     if(request.action==='getBackgrounds')acceptLauncherBackgrounds(value);
     else {
@@ -573,20 +580,22 @@ async function launcherOperation(request: LauncherRequest, preserveDraft = false
         if (mutation) throw new Error(t('设备或启动器已变化，未确认布局应用结果'));
         // The television can switch HOME outside the manager; reconcile its catalogue first.
         const state=await api.execute({action:'getState'});
-        if(target!==launcherTarget())return;
+        if(target!==launcherTarget())return false;
         applySnapshot(state);target=launcherTarget();
-        if(!acceptLauncherResult(value))return;
+        if(!acceptLauncherResult(value))return false;
       }
       if(savedDraft&&draftTarget===target&&layoutAvailable())layoutJson=savedDraft;
       layoutDirty=false;
       // Read every installed HOME without activating it; image-less colors are valid backgrounds.
       try {const backgrounds=await api.launcherExecute({action:'getBackgrounds'});if(target===launcherTarget())acceptLauncherBackgrounds(backgrounds);} catch {/* A failed optional read leaves the last confirmed background. */}
     }
-    if(target!==launcherTarget())return;
-    try {const state=await api.execute({action:'getState'});if(target===launcherTarget())applySnapshot(state);} catch { /* Another operation may have started; its event supplies the new state. */ }
-    if (target !== launcherTarget()) return;
+    if(target!==launcherTarget())return false;
+    const state=await api.execute({action:'getState'});
+    if(target!==launcherTarget() || !applySnapshot(state))return false;
+    if (target !== launcherTarget()) return false;
     if(request.action!=='getBackgrounds'){notice=value.message||(value.supported?t('布局已读取，可调整后应用'):t('此启动器暂不可编辑'));noticeKind=mutation&&!cancelling?'success':'info';}
     if (mutation) { outcome = cancelling ? 'info' : 'success'; resultMessage = value.message || t('布局已应用并复查'); }
+    completed=!cancelling;
   }
   catch (error) { outcome = cancelling ? 'info' : 'error'; resultMessage = error instanceof Error ? error.message : String(error); if(target===launcherTarget()){notice = resultMessage; noticeKind = outcome; if (mutation) layoutJson = originalDraft;} }
   finally {
@@ -594,6 +603,7 @@ async function launcherOperation(request: LauncherRequest, preserveDraft = false
     if (mutation) finishFeedback(outcome, resultMessage);
     render();
   }
+  return completed;
 }
 function modifyLayout(change: (draft: LauncherLayout) => void): void {
   if (busy || !layoutAvailable()) return;
@@ -891,10 +901,22 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
       } break;
     }
     case 'read-layout': await launcherOperation({action:'getLayout'}); break;
+    case 'refresh-layout-apps': {
+      if(!await launcherOperation({action:'getLayout'},true))throw new Error(notice || t('无法刷新电视应用，请重试后再应用布局'));
+      if(!layoutAvailable())throw new Error(launcherLayout?.message || t('此启动器暂不可编辑'));
+      finishFeedback('success',t('已刷新电视应用，当前未保存的修改已保留。'),[],t('刷新应用列表'));break;
+    }
     case 'apply-layout': {
+      const target=launcherTarget();
+      if(!await launcherOperation({action:'getLayout'},true))throw new Error(notice || t('无法刷新电视应用，请重试后再应用布局'));
+      if(target!==launcherTarget())throw new Error(t('设备或启动器已变化，未确认布局应用结果'));
       const draft=unifiedDraft() || draftLayout();if(!draft || !layoutAvailable()) throw new Error(t('请先读取并编辑受支持启动器的布局'));
-      if(!((draft.version===4||draft.version===5)?(['home','apps'] as const).every(section=>draft[section].users.every(entry=>layoutApps().some(app=>app.packageName===entry.action))):['home','apps'].every(section=>(draft as LauncherLayout)[section as 'home'|'apps'].items.every(entry=>!entry.packageName || layoutApps().some(app=>app.packageName===entry.packageName)))))throw new Error(t('只能使用已安装、可启动的用户应用'));
-      if(await confirm(t('应用启动器布局'),t('将 layout.json 写入当前启动器，并复查返回的配置。'),[snapshot.defaultHome || ''],t('应用布局'))) await launcherOperation({action:'applyLayout',layout:draft});
+      const unavailable=unavailableLayoutApps(draft,layoutApps());
+      if(unavailable.length)throw new Error(t('以下应用块不可用，请重新选择已安装并启用的用户应用，或移除应用块。')+'\n'+unavailable.map(entry=>`${entry.page==='home'?'Home':'Apps'} / ${entry.name} (${entry.id}) · ${entry.packageName}`).join('\n'));
+      if(await confirm(t('应用启动器布局'),t('将 layout.json 写入当前启动器，并复查返回的配置。'),[snapshot.defaultHome || ''],t('应用布局'))) {
+        if(target!==launcherTarget())throw new Error(t('设备或启动器已变化，未确认布局应用结果'));
+        await launcherOperation({action:'applyLayout',layout:draft});
+      }
       break;
     }
     case 'reset-layout': if(layoutAvailable() && await confirm(t('恢复默认布局'),t('移除当前启动器的 layout.json 自定义配置，壁纸和其他设置保留。'),[snapshot.defaultHome || ''],t('恢复默认布局'))) await launcherOperation({action:'resetLayout'}); break;
