@@ -6,6 +6,8 @@
 - 切换分类、页面或界面语言时保留版本选择；刷新目录或由 MCP 同步目录后，保留仍在最近 5 个选项内的选择，失效时回到最新版。
 - 保留下载进度、取消与结果弹窗，以及下载后的待安装队列；安装启动器后仍由用户选择是否切换默认桌面。
 
+- 市场顶部改为“软件上架请联系”，通过弹窗说明向 pureTV GitHub 仓库提交 PR 的上架方式。
+
 [全部电视 APK、源码与截图](https://github.com/ecojust/pureTV/tree/master/resource)。电视 APK 位于资源目录，Release 仅发布电脑管理器。
 
 Windows x64 安装版／便携版、macOS ARM64／Intel DMG、Linux x64 DEB；SHA256SUMS.txt 提供校验。macOS 为 ad-hoc 签名，未进行 Apple 公证；Windows 未进行商业代码签名。原生渲染和自动测试不等于电视实机测试。

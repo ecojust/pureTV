@@ -315,6 +315,12 @@ function content(): string {
 function appTabs(): string {
   return ui`<div class="application-tabs" aria-label="应用管理视图">${actionButton('go-apps',ui`已安装应用 · ${snapshot.packages.filter(app=>app.installed).length}`,'',page==='apps'?'primary':'')}${actionButton('go-install',ui`待安装应用 · ${apkPaths.length}`,'',page==='install'?'primary':'')}</div>`;
 }
+function marketSubmission(): void {
+  if (dialog.open) dialog.close();
+  dialog.innerHTML = ui`<div class="modal-heading"><h2>软件上架请联系</h2><button class="icon-button" data-act="close-dialog" aria-label="关闭">${icon('close')}</button></div><p>上架应用或启动器，请向以下仓库提交 Pull Request（PR）：</p>${actionButton('project-repository', 'https://github.com/ecojust/pureTV', '', 'text-button link-button')}<div class="modal-actions">${actionButton('close-dialog', t('关闭'), '', 'primary')}</div>`;
+  dialog.setAttribute('aria-label', t('软件上架请联系')); dialog.returnValue = ''; dialog.showModal();
+  dialog.querySelector<HTMLButtonElement>('[data-act="project-repository"]')?.focus();
+}
 function marketSize(value: number): string { return value >= 1048576 ? `${(value / 1048576).toFixed(1)} MB` : `${Math.max(0.1, value / 1024).toFixed(1)} KB`; }
 function marketDiagnostic(value: string): string {
   const prefix = '市场更新失败，正在显示上次缓存。';
@@ -347,7 +353,7 @@ function marketCount(): string {
 function marketPage(): string {
   const pending = marketKind === 'launcher' ? launcherApks.length : apkPaths.length;
   const count = (kind: MarketKind) => marketGroups.filter(group => group.kind === kind).length;
-  return ui`<div class="market-heading"><div class="application-tabs market-tabs" role="tablist" aria-label="市场分类">${(['app','launcher'] as const).map(kind => `<button type="button" role="tab" data-market-kind="${kind}" aria-selected="${marketKind === kind}" class="${marketKind === kind ? 'primary' : ''}">${icon(kind === 'app' ? 'grid' : 'home')}${kind === 'app' ? t('应用') : t('启动器')}<span>${count(kind)}</span></button>`).join('')}</div>${actionButton('market-source', t('查看市场仓库 ↗'), '', 'text-button small')}</div><section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (marketKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${marketKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}<div class="market-grid" data-scroll="market-${marketKind}" tabindex="0" role="tabpanel" aria-label="市场安装包列表">${marketCards()}</div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 Gitee · pure-tv-store')}</span></div></section><p class="hint market-note">${online() ? marketKind === 'launcher' ? t('安装后请前往“启动器”设为默认桌面，当前桌面不会自动切换。') : t('安装完成后会刷新电视应用列表，也可先下载到待安装列表。') : t('未连接电视也可以浏览和下载，连接后再安装。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
+  return ui`<div class="market-heading"><div class="application-tabs market-tabs" role="tablist" aria-label="市场分类">${(['app','launcher'] as const).map(kind => `<button type="button" role="tab" data-market-kind="${kind}" aria-selected="${marketKind === kind}" class="${marketKind === kind ? 'primary' : ''}">${icon(kind === 'app' ? 'grid' : 'home')}${kind === 'app' ? t('应用') : t('启动器')}<span>${count(kind)}</span></button>`).join('')}</div>${actionButton('market-submission', t('软件上架请联系'), '', 'text-button small')}</div><section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (marketKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${marketKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}<div class="market-grid" data-scroll="market-${marketKind}" tabindex="0" role="tabpanel" aria-label="市场安装包列表">${marketCards()}</div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 Gitee · pure-tv-store')}</span></div></section><p class="hint market-note">${online() ? marketKind === 'launcher' ? t('安装后请前往“启动器”设为默认桌面，当前桌面不会自动切换。') : t('安装完成后会刷新电视应用列表，也可先下载到待安装列表。') : t('未连接电视也可以浏览和下载，连接后再安装。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
 }
 function updateMarketList(): void {
   const list = root.querySelector<HTMLElement>('.market-grid');
@@ -841,7 +847,8 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
     case 'platform-tools-license': await api.openResource('platformToolsLicense'); break;
     case 'releases': await api.openResource('releases'); break;
     case 'resource-catalog': await api.openResource('catalog'); break;
-    case 'market-source': await api.openResource('market'); break;
+    case 'market-submission': marketSubmission(); break;
+    case 'project-repository': await api.openResource('repository'); break;
     case 'refresh-market': await loadMarketCatalog(true); break;
     case 'download-market': await runMarketItem(button.dataset.id!, 'download'); break;
     case 'install-market': await runMarketItem(button.dataset.id!, 'install'); break;

@@ -654,6 +654,7 @@ fn pick_adb(app: &tauri::AppHandle) -> Result<Option<String>, String> {
 #[tauri::command]
 fn open_resource(resource: &str, app: tauri::AppHandle) -> Result<(), String> {
     let url = match resource {
+        "repository" => "https://github.com/ecojust/pureTV",
         "catalog" => "https://github.com/ecojust/pureTV/tree/master/resource",
         "releases" => "https://github.com/ecojust/pureTV/releases",
         "market" => "https://gitee.com/juzisang331/pure-tv-store",
