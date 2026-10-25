@@ -3,102 +3,60 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { Script } from 'node:vm';
 
-// Run the actual Java-generated script against a minimal DOM. No credentials or network are used.
-const source = readFileSync(new URL('../../main/java/com/ecojust/hifinitv/LoginAutofill.java', import.meta.url), 'utf8');
-const expression = source.slice(source.indexOf('return "') + 7, source.lastIndexOf(';')).trim();
-const fixture = { username: 'fixture-";globalThis.tampered=true;//', password: 'fixture-\\\n\"\u2028-only' };
-const token = /\s+|\+|"(?:\\.|[^"\\])*"|JSONObject\.quote\(credentials\.(username|password)\)|submit/gy;
-function actualScript(explicit, javaExpression=expression) {
-  let script = '', position = 0;
-  while (position < javaExpression.length) {
-    token.lastIndex = position;
-    const match = token.exec(javaExpression);
-    assert.ok(match, `Unrecognized Java string expression at ${position}`);
-    position = token.lastIndex;
-    if (match[1]) script += JSON.stringify(fixture[match[1]]);
-    else if (match[0][0] === '"') script += JSON.parse(match[0]);
-    else if (match[0] === 'submit') script += JSON.stringify(Boolean(explicit));
-  }
-  return script;
-}
+// Execute the actual Java-generated JavaScript against a minimal DOM with synthetic credentials.
+const source=readFileSync(new URL('../../main/java/com/ecojust/hifinitv/LoginAutofill.java',import.meta.url),'utf8');
+const fixture={username:'fixture-";globalThis.tampered=true;//',password:'fixture-\\\n"\u2028-only'};
+function expressionAfter(marker,text=source){const start=text.indexOf('return "',text.indexOf(marker))+7;const end=text.indexOf('\n    }',start);return text.slice(start,end).trim().replace(/;$/,'');}
+const token=/\s+|\+|"(?:\\.|[^"\\])*"|JSONObject\.quote\(credentials\.(username|password)\)|helpers\(\)|submit/gy;
+function expressionValue(expression,explicit=false){let script='',position=0;while(position<expression.length){token.lastIndex=position;const match=token.exec(expression);assert.ok(match,`Unrecognized Java expression at ${position}`);position=token.lastIndex;if(match[1])script+=JSON.stringify(fixture[match[1]]);else if(match[0][0]==='"')script+=JSON.parse(match[0]);else if(match[0]==='submit')script+=JSON.stringify(explicit);else if(match[0]==='helpers()')script+=expressionValue(expressionAfter('private static String helpers()'));}return script;}
+function actualScript(explicit=false,state=false){return expressionValue(expressionAfter(state?'static String stateScript()':'static String script(CredentialStore.Credentials credentials, boolean submit)'),explicit);}
 
-function run(options = {}) {
-  const location = new URL(options.url || 'https://www.hifini.net/user-login.htm');
-  const base = options.base || location.href;
-  class Input {
-    constructor(type, name) { this.type=type;this.name=name;this.disabled=false;this.readOnly=false;this.text='';this.events=[]; }
-    get value() { return this.text; } set value(value) { this.text=value; }
-    hasAttribute() { return false; } dispatchEvent(event) { this.events.push(event.type); if(options.actionChangedOnInput)form.action='https://example.invalid/collect'; }
+function element(options={}){return {nodeType:1,type:options.type||'',hidden:Boolean(options.hidden),parentElement:options.parent||null,
+  getAttribute:name=>name==='aria-hidden'?(options.ariaHidden?'true':null):null,
+  getClientRects:()=>options.noRect?[]:[{}],style:{display:options.display||'block',visibility:options.visibility||'visible',opacity:options.opacity||'1'},
+  get textContent(){throw new Error('State classification must not read raw text');}};}
+
+function run(options={}){
+  const location=new URL(options.url||'https://www.hifini.net/user-login.htm'),base=options.base||location.href;
+  class Input{
+    constructor(type,name){this.type=type;this.name=name;this.disabled=false;this.readOnly=false;this.text='';this.events=[];}
+    get value(){if(options.forbidValueRead)throw new Error('Do not inspect website credential values');return this.text;}
+    set value(value){this.text=value;}
+    hasAttribute(){return false;}dispatchEvent(event){this.events.push(event.type);if(options.actionChangedOnInput)form.action='https://example.invalid/collect';}
   }
-  const user = new Input('text', 'email'), password = new Input('password', 'password');
-  const form = { method: options.method || 'post', action: new URL(options.action || 'user-login.htm', base).href,
-    elements: [user,password], querySelectorAll: () => options.registration ? [password,new Input('password','confirm')] : [password],
-    querySelector: () => user, submissions: 0, submit() { throw new Error('Direct submit bypasses validation'); } };
-  class Form { requestSubmit() { this.submissions++; if(options.submitError)throw new Error('Verification needed'); } }
+  const user=new Input('text','email'),password=new Input('password','password');
+  const errors=options.error?[element(options.error===true?{}:options.error)]:[];
+  const form={method:options.method||'post',action:new URL(options.action||'user-login.htm',base).href,elements:[user,password],
+    querySelectorAll:selector=>selector==='input[type=password]'?(options.registration?[password,new Input('password','confirm')]:[password]):errors,
+    querySelector:()=>user,submissions:0,checkValidity:()=>!options.invalid,submit(){throw new Error('Direct submit bypasses validation');}};
+  class Form{requestSubmit(){this.submissions++;if(options.submitError)throw new Error('Verification needed');}}
   if(options.missingRequest)delete Form.prototype.requestSubmit;
-  user.form = options.foreignOwner ? {} : form; password.form = form;
-  if(options.readOnly)password.readOnly=true;
-  if(options.submitAction)form.elements.push({ formAction: new URL(options.submitAction,base).href,
-    hasAttribute: name => name === 'formaction', getAttribute: () => options.submitAction });
-  const window = {}; window.top = options.frame ? {} : window;
-  const context = { location, window, document:{forms:[form],baseURI:base},URL,HTMLInputElement:Input,HTMLFormElement:Form,Event:class {constructor(type){this.type=type;}} };
-  const result = new Script(actualScript(options.explicit)).runInNewContext(context, {timeout:1000});
+  user.form=options.foreignOwner?{}:form;password.form=form;if(options.readOnly)password.readOnly=true;
+  if(options.submitAction)form.elements.push({formAction:new URL(options.submitAction,base).href,hasAttribute:name=>name==='formaction',getAttribute:()=>options.submitAction});
+  const window={};window.top=options.frame?{}:window;
+  const account=options.account?[{href:new URL(options.accountPath||'my.htm',location).href,get textContent(){throw new Error('Do not read account identity');}}]:[];
+  const logout=options.logout?[{href:new URL(options.logoutPath||'user-logout.htm',location).href}]:[];
+  const captcha=options.captcha?[element(options.captcha===true?{}:options.captcha)]:[];
+  const document={forms:options.noForm?[]:[form],baseURI:base,querySelectorAll:selector=>{
+    if(selector==='.navbar li.username > a')return account;if(selector==='.navbar a')return logout;
+    if(selector.startsWith('.g-recaptcha'))return captcha;if(selector.startsWith('.alert-danger'))return options.outsideError?errors:[];throw new Error(`Unknown selector: ${selector}`);
+  }};
+  const context={location,window,document,URL,HTMLInputElement:Input,HTMLFormElement:Form,getComputedStyle:e=>e.style,Event:class{constructor(type){this.type=type;}}};
+  const result=new Script(actualScript(Boolean(options.explicit),Boolean(options.state))).runInNewContext(context,{timeout:1000});
   return {result,user,password,context,form};
 }
 
-test('fills an official POST login form, safely quotes values and never submits', () => {
-  const result=run(); assert.equal(result.result,'filled'); assert.equal(result.user.value,fixture.username);
-  assert.equal(result.password.value,fixture.password); assert.equal(result.context.tampered,undefined);
-  assert.deepEqual(result.password.events,['input','change']);
-  assert.equal(result.form.submissions,0);
-});
-test('only an explicit native login invokes standard requestSubmit once', () => {
-  const result=run({explicit:true});assert.equal(result.result,'submitted');assert.equal(result.form.submissions,1);
-});
-test('explicit login keeps every origin and form guard', () => {
-  for(const options of [{url:'https://example.invalid/user-login.htm'},{base:'https://example.invalid/'},
-    {method:'get'},{submitAction:'https://example.invalid/collect'},{foreignOwner:true},{registration:true}]) {
-    const result=run({...options,explicit:true});assert.notEqual(result.result,'submitted');assert.equal(result.form.submissions,0);
-  }
-});
-test('unsupported submission and a dynamically changed destination fall back to the official page', () => {
-  for(const options of [{missingRequest:true},{actionChangedOnInput:true}]) {
-    const result=run({...options,explicit:true});assert.equal(result.result,'filled');assert.equal(result.form.submissions,0);
-  }
-  const validation=run({explicit:true,submitError:true});assert.equal(validation.result,'filled');
-});
-test('rejects untrusted origins, HTTP, unusual ports and child frames', () => {
-  for(const options of [{url:'https://example.invalid/user-login.htm'},{url:'http://www.hifini.net/user-login.htm'},
-    {url:'https://www.hifini.net:444/user-login.htm'},{url:'https://user@www.hifini.net/user-login.htm'},{frame:true}]) {
-    const result=run(options);assert.equal(result.result,'blocked');assert.equal(result.password.value,'');
-  }
-});
-test('validates browser-resolved form action including base URLs', () => {
-  for(const options of [{base:'https://example.invalid/'},{action:'https://example.invalid/user-login.htm'},
-    {action:'/user-register.htm'},{method:'get'},{submitAction:'https://example.invalid/collect'}]) {
-    const result=run(options);assert.equal(result.result,'no-form');assert.equal(result.password.value,'');
-  }
-});
-test('does not fill controls owned by another form or registration/readonly fields', () => {
-  for(const options of [{foreignOwner:true},{registration:true},{readOnly:true}]) {
-    const result=run(options);assert.equal(result.result,'no-form');assert.equal(result.password.value,'');
-  }
-});
+test('fills official POST login safely without automatically submitting',()=>{const r=run();assert.equal(r.result,'filled');assert.equal(r.user.value,fixture.username);assert.equal(r.password.value,fixture.password);assert.equal(r.context.tampered,undefined);assert.deepEqual(r.password.events,['input','change']);assert.equal(r.form.submissions,0);});
+test('only an explicit native action invokes standard requestSubmit once',()=>{const r=run({explicit:true});assert.equal(r.result,'submitted');assert.equal(r.form.submissions,1);});
+test('origin and form guards also apply to explicit submission',()=>{for(const o of [{url:'https://example.invalid/user-login.htm'},{base:'https://example.invalid/'},{method:'get'},{submitAction:'https://example.invalid/collect'},{foreignOwner:true},{registration:true}]){const r=run({...o,explicit:true});assert.notEqual(r.result,'submitted');assert.equal(r.form.submissions,0);}});
+test('unsupported requestSubmit and changed destinations never directly submit',()=>{for(const o of [{missingRequest:true},{actionChangedOnInput:true}]){const r=run({...o,explicit:true});assert.equal(r.result,'filled');assert.equal(r.form.submissions,0);}assert.equal(run({explicit:true,submitError:true}).result,'filled');});
+test('both scripts reject foreign origins, HTTP, unusual ports, userinfo and frames',()=>{for(const o of [{url:'https://example.invalid/user-login.htm'},{url:'http://www.hifini.net/user-login.htm'},{url:'https://www.hifini.net:444/user-login.htm'},{url:'https://user@www.hifini.net/user-login.htm'},{frame:true}])for(const state of [false,true]){const r=run({...o,state});assert.equal(r.result,'blocked');assert.equal(r.password.value,'');}});
+test('validates browser-resolved action, base URLs and control ownership',()=>{for(const o of [{base:'https://example.invalid/'},{action:'https://example.invalid/user-login.htm'},{action:'/user-register.htm'},{method:'get'},{submitAction:'https://example.invalid/collect'},{foreignOwner:true},{registration:true},{readOnly:true}]){const r=run(o);assert.equal(r.result,'no-form');assert.equal(r.password.value,'');assert.equal(run({...o,state:true}).result,'pending');}});
+test('visible verification blocks filling and submission, but hidden captcha fields do not',()=>{for(const state of [false,true]){const r=run({captcha:true,explicit:true,state});assert.equal(r.result,'verification');assert.equal(r.password.value,'');assert.equal(r.form.submissions,0);}for(const captcha of [{type:'hidden'},{hidden:true},{display:'none'},{visibility:'hidden'},{opacity:'0'},{noRect:true},{ariaHidden:true},{parent:element({display:'none'})}]){assert.equal(run({captcha,state:true}).result,'ready');assert.equal(run({captcha,explicit:true}).result,'submitted');}});
+test('visible official form errors and native constraint failures classify as rejected',()=>{assert.equal(run({error:true,state:true}).result,'rejected');assert.equal(run({error:{display:'none'},state:true}).result,'ready');const r=run({invalid:true,explicit:true});assert.equal(r.result,'rejected');assert.equal(r.form.submissions,0);});
+test('authenticated requires both official markers and never reads identity',()=>{assert.equal(run({account:true,logout:true,state:true}).result,'authenticated');for(const o of [{account:true},{logout:true},{account:true,logout:true,accountPath:'https://example.invalid/my.htm'},{account:true,logout:true,logoutPath:'https://example.invalid/user-logout.htm'}])assert.equal(run({...o,state:true}).result,'ready');});
+test('polling returns only classifications, never reads fields or returns raw credentials',()=>{for(const o of [{},{noForm:true},{captcha:true},{error:true},{account:true,logout:true}]){const result=run({...o,state:true,forbidValueRead:true}).result;assert.ok(['ready','pending','verification','rejected','authenticated'].includes(result));assert.equal(result.includes(fixture.username),false);assert.equal(result.includes(fixture.password),false);}});
 
-const sessionSource = readFileSync(new URL('../../main/java/com/ecojust/hifinitv/HifiniSession.java', import.meta.url), 'utf8');
-const sessionMethod = sessionSource.indexOf('static String authenticatedPageScript()');
-const sessionStart = sessionSource.indexOf('return "',sessionMethod)+7;
-const sessionEnd = sessionSource.indexOf('\n    }',sessionStart);
-const sessionExpression = sessionSource.slice(sessionStart,sessionEnd).trim().replace(/;$/,'');
-function authenticatedPage(options={}) {
-  const location=new URL(options.url||'https://www.hifini.net/');const window={};window.top=options.frame?{}:window;
-  const account=options.account===false?[]:[{href:new URL(options.accountPath||'my.htm',location).href,get textContent(){throw new Error('Do not read account identity');}}];
-  const logout=options.logout===false?[]:[{href:new URL(options.logoutPath||'user-logout.htm',location).href}];
-  const document={baseURI:location.href,querySelectorAll:selector=>selector==='.navbar li.username > a'?account:logout};
-  return new Script(actualScript(false,sessionExpression)).runInNewContext({location,window,document,URL},{timeout:1000});
-}
-test('requires both official authenticated navigation markers without reading account identity',()=>{
-  assert.equal(authenticatedPage(),true);
-  for(const options of [{account:false},{logout:false},{account:false,logout:false},{accountPath:'https://example.invalid/my.htm'},
-    {logoutPath:'https://example.invalid/user-logout.htm'},{url:'https://example.invalid/'},{frame:true}])assert.equal(authenticatedPage(options),false);
-});
+const sessionSource=readFileSync(new URL('../../main/java/com/ecojust/hifinitv/HifiniSession.java',import.meta.url),'utf8');
+function authenticatedPage(options={}){const location=new URL(options.url||'https://www.hifini.net/'),window={};window.top=options.frame?{}:window;const account=options.account===false?[]:[{href:new URL(options.accountPath||'my.htm',location).href,get textContent(){throw new Error('Do not read account identity');}}],logout=options.logout===false?[]:[{href:new URL(options.logoutPath||'user-logout.htm',location).href}];const document={baseURI:location.href,querySelectorAll:selector=>selector==='.navbar li.username > a'?account:logout};return new Script(expressionValue(expressionAfter('static String authenticatedPageScript()',sessionSource))).runInNewContext({location,window,document,URL},{timeout:1000});}
+test('session confirmation requires official account and logout navigation markers',()=>{assert.equal(authenticatedPage(),true);for(const o of [{account:false},{logout:false},{account:false,logout:false},{accountPath:'https://example.invalid/my.htm'},{logoutPath:'https://example.invalid/user-logout.htm'},{url:'https://example.invalid/'},{frame:true}])assert.equal(authenticatedPage(o),false);});

@@ -1,7 +1,9 @@
 package com.ecojust.hifinitv;
 
 import android.content.*;
+import android.app.AlertDialog;
 import android.graphics.*;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Looper;
 import android.provider.Settings;
 import android.view.*;
@@ -26,7 +28,7 @@ import static org.robolectric.Shadows.shadowOf;
 public class UiTest {
     private ServiceController<PreviewPlayer> service;
     public static class PreviewPlayer extends PlaybackService {
-        Track track; List<Track> selected=new ArrayList<>(); boolean active,random;int selectedIndex=-1,plays;
+        Track track; List<Track> selected=new ArrayList<>(); boolean active,random;int selectedIndex=-1,plays;String attemptedUrl="",failure="";
         Runnable callback;
         @Override void listen(Runnable value){callback=value;}
         void update(){if(callback!=null)callback.run();}
@@ -34,7 +36,8 @@ public class UiTest {
         @Override boolean loading(){return false;}
         @Override boolean playing(){return active;}
         @Override String stage(){return "";}
-        @Override String error(){return "";}
+        @Override String error(){return failure;}
+        @Override String audioUrl(){return attemptedUrl;}
         @Override boolean shuffled(){return random;}
         @Override long position(){return track==null?0:88000;}
         @Override long duration(){return track==null?0:226000;}
@@ -124,13 +127,32 @@ public class UiTest {
         try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup().visible()){
             MainActivity a=controller.get();View root=a.getWindow().getDecorView();List<Track> data=samples(english);List<Track> tracks=field(a,"tracks");tracks.addAll(data);ListView list=field(a,"list");((BaseAdapter)list.getAdapter()).notifyDataSetChanged();
             ((EditText)field(a,"query")).setText(english?"Night":"夜");((TextView)field(a,"status")).setText(a.getString(R.string.results_count,data.size()));
-            PreviewPlayer p=service.get();p.track=data.get(0);p.active=true;p.update();layout(root,1920,1080);
+            PreviewPlayer p=service.get();p.track=data.get(0);p.active=true;p.attemptedUrl="https://audio.example.org/music/night-star.mp3?demo=1";p.update();layout(root,1920,1080);
             assertEquals(6,list.getCount());assertNotNull(findText(root,data.get(0).title));assertNotNull(findText(root,data.get(0).artist));assertNotNull(((ImageView)field(a,"hero")).getDrawable());
             RhythmView rhythm=field(a,"rhythm");assertNotNull(findText(root,a.getString(R.string.rhythm)));assertTrue(rhythm.isAnimating());assertFalse(rhythm.isFocusable());
+            ImageButton audioQr=field(a,"audioQr");assertEquals(p.attemptedUrl,decodeQr(audioQr));assertAudioQrBounds(a,1920,1080);
             assertTrue(findText(root,a.getString(R.string.shuffle)).isFocused());if(english)assertEnglish(root);
             String capture=System.getenv("HIFINI_UI_CAPTURE_DIR");if(capture!=null){new File(capture).mkdirs();Bitmap bitmap=Bitmap.createBitmap(1920,1080,Bitmap.Config.ARGB_8888);root.draw(new Canvas(bitmap));try(FileOutputStream output=new FileOutputStream(new File(capture,filename))){bitmap.compress(Bitmap.CompressFormat.PNG,100,output);}bitmap.recycle();}
         }
     }
+    @Test public void attemptedAudioQrSurvivesFailureAndChangesWithTheCurrentSong()throws Exception{
+        try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup().visible()){
+            MainActivity a=controller.get();View root=a.getWindow().getDecorView();layout(root,1920,1080);ImageButton qr=field(a,"audioQr");assertEquals(View.GONE,qr.getVisibility());
+            PreviewPlayer p=service.get();p.track=Track.catalog("netease","114713","0","Night Star","Forest Guest","",226);p.attemptedUrl="https://audio.example.org/music/first.mp3?token=demo%2F1&source=netease";p.active=true;p.update();layout(root,1920,1080);
+            assertEquals(View.VISIBLE,qr.getVisibility());assertEquals(p.attemptedUrl,decodeQr(qr));assertAudioQrBounds(a,1920,1080);
+            p.active=false;p.failure=a.getString(R.string.decoder_error,1,-2147483648);p.update();assertEquals(View.VISIBLE,qr.getVisibility());assertEquals(p.attemptedUrl,decodeQr(qr));assertTrue(qr.isFocusable());
+            qr.performClick();AlertDialog dialog=field(a,"audioLinkDialog");assertNotNull(dialog);assertTrue(dialog.isShowing());View dialogRoot=dialog.getWindow().getDecorView();
+            assertNotNull(findText(dialogRoot,p.attemptedUrl));assertNotNull(findText(dialogRoot,a.getString(R.string.audio_link_identity,p.track.id)));assertNotNull(findText(dialogRoot,a.getString(R.string.playback_error_detail,p.failure)));
+            assertEquals(p.attemptedUrl,decodeQr((ImageView)findDescription(dialogRoot,a.getString(R.string.audio_link_qr))));
+            p.track=Track.catalog("kuwo","289192","0","Night Voyage","Slow Island","",230);p.attemptedUrl="";p.failure="";p.update();assertEquals(View.GONE,qr.getVisibility());assertFalse(dialog.isShowing());
+            p.attemptedUrl="https://audio.example.org/music/second.mp3?source=kuwo";p.update();layout(root,1920,1080);assertEquals(p.attemptedUrl,decodeQr(qr));
+            p.attemptedUrl="https://audio.example.org/music/second.mp3?token="+"a".repeat(2500);p.update();assertEquals(View.VISIBLE,qr.getVisibility());assertFalse(qr.getDrawable() instanceof BitmapDrawable);qr.performClick();
+            AlertDialog fullTextDialog=field(a,"audioLinkDialog");View fullTextRoot=fullTextDialog.getWindow().getDecorView();assertNotNull(findText(fullTextRoot,p.attemptedUrl));assertNotNull(findText(fullTextRoot,a.getString(R.string.audio_link_too_long)));assertNull(findDescription(fullTextRoot,a.getString(R.string.audio_link_qr)));
+            p.attemptedUrl="https://name:password@audio.example.org/private.mp3";p.update();assertEquals(View.GONE,qr.getVisibility());
+        }
+    }
+    private static String decodeQr(ImageView image)throws Exception{assertNotNull(image);assertTrue(image.getDrawable() instanceof BitmapDrawable);Bitmap bitmap=((BitmapDrawable)image.getDrawable()).getBitmap();int[] pixels=new int[bitmap.getWidth()*bitmap.getHeight()];bitmap.getPixels(pixels,0,bitmap.getWidth(),0,0,bitmap.getWidth(),bitmap.getHeight());return new com.google.zxing.qrcode.QRCodeReader().decode(new com.google.zxing.BinaryBitmap(new com.google.zxing.common.HybridBinarizer(new com.google.zxing.RGBLuminanceSource(bitmap.getWidth(),bitmap.getHeight(),pixels)))).getText();}
+    private static void assertAudioQrBounds(MainActivity a,int width,int height)throws Exception{ImageButton qr=field(a,"audioQr");TextView title=field(a,"title"),artist=field(a,"artist");SeekBar seek=field(a,"seek");assertInside(qr,width,height);assertTrue("QR stays beside the title",title.getRight()<=qr.getLeft());assertTrue("QR stays beside the artist",artist.getRight()<=qr.getLeft());assertTrue("QR stays above the seek bar",qr.getBottom()<=seek.getTop());}
     @Test public void rhythmMovesOnlyDuringPlaybackAndStopsWithThePage()throws Exception{
         try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup().visible()){
             MainActivity a=controller.get();View root=a.getWindow().getDecorView();layout(root,1920,1080);RhythmView rhythm=field(a,"rhythm");assertFalse(rhythm.isAnimating());
@@ -158,7 +180,8 @@ public class UiTest {
         try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup().visible()){
             MainActivity a=controller.get();View root=a.getWindow().getDecorView();layout(root,640,360);
             for(int id:new int[]{R.string.search,R.string.previous,R.string.next,R.string.play})assertInside(findDescription(root,a.getString(id)),640,360);
-            assertInside(findText(root,a.getString(R.string.shuffle)),640,360);assertInside(field(a,"hero"),640,360);assertInside(field(a,"rhythm"),640,360);if(english)assertEnglish(root);
+            assertInside(findText(root,a.getString(R.string.shuffle)),640,360);assertInside(field(a,"hero"),640,360);assertInside(field(a,"rhythm"),640,360);
+            PreviewPlayer p=service.get();p.track=samples(english).get(0);p.attemptedUrl="https://audio.example.org/music/night-star.mp3?demo=1";p.update();layout(root,640,360);assertAudioQrBounds(a,640,360);if(english)assertEnglish(root);
         }
     }
     private static void assertInside(View view,int width,int height){assertNotNull(view);int[] point=new int[2];view.getLocationOnScreen(point);assertTrue("horizontal bounds",point[0]>=0&&point[0]+view.getWidth()<=width);assertTrue("vertical bounds",point[1]>=0&&point[1]+view.getHeight()<=height);assertTrue(view.getWidth()>0&&view.getHeight()>0);}
