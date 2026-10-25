@@ -1,8 +1,8 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.4.1** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.4.2** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.4.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.1)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.4.2 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.2)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
 ## 功能
 
@@ -12,6 +12,7 @@
 | 应用管理 · 已安装 | 搜索／分类、应用与启动器安装包大小、批量启用／停用、为当前用户卸载／恢复 |
 | 应用管理 · 待安装 | 导入本地 APK、逐项或勾选批量安装；成功项移出队列，失败和未执行项保留 |
 | 启动器 | 设置／恢复默认 HOME，查看包大小、导入和逐项安装启动器 APK；支持时读取和编辑 layout.json 布局及应用图标 |
+| 市场 | 动态读取 Gitee 商店中的应用和启动器，搜索、预览、下载到待安装列表或直接安装到电视 |
 | 操作记录 | 最近 200 项修改记录，包含目标设备／用户、逐项结果与错误 |
 
 非首页仅在顶部显示当前连接状态，不重复放置 IP 和连接表单。各类列表独立滚动，表头及顶部批量操作保持可见，选择和重新渲染保留列表位置。
@@ -25,14 +26,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.4.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.1) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.4.2 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.2) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.4.1-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.4.2-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.1-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.2-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -76,6 +77,14 @@
 
 应用和启动器的大小统计主 APK 与分包 APK 的合计字节数，不包含应用私有数据、缓存、原生库或优化文件。通过分组查询路径和文件元数据减少 ADB 往返；无法读取或结果不完整时显示「未能读取」。
 
+## 市场
+
+侧栏「启动器」之后的「市场」分为「应用」和「启动器」。内容来自 [pure-tv-store](https://gitee.com/juzisang331/pure-tv-store) 的 `apps/` 和 `launcher/` 目录，按仓库实际 APK 自动发现；新增资源无需重新发布管理器。卡片展示文件名解析的名称、版本、APK 大小和同目录封面。
+
+无需连接电视即可浏览、搜索和下载。下载完成后，应用进入「应用管理 → 待安装」，启动器进入「启动器」的待安装区；连接电视后也可选择「下载并安装」。安装失败时保留下载好的 APK，便于重试。安装启动器不会自动切换默认桌面。
+
+目录会缓存，点击刷新可重新读取；网络失败且有缓存时明确提示正在使用旧目录。下载固定到当前目录对应的仓库提交，并校验 APK 大小与 Git blob SHA；取消下载会清理临时文件。市场封面用于浏览资源，已安装启动器的背景仍从电视上的 Home 布局读取。
+
 ## 当前启动器的自定义布局
 
 只有当前默认启动器成功返回符合协议的布局接口时才显示编辑器。Manager 0.3.7 动态检测已安装启动器的 `<包名>.layout` 协议接口，通过验证后支持编辑，无需添加包名白名单。**pureTV 0.3.7**、**Nova TV 0.1.2** 及[八款配套启动器](../resource/launcher/)均已实现；其他启动器可按[接入规范](../resource/README-development.md#第三方启动器接入与动态检测)实现。仅有 APK 内静态 layout.json、尚未实现读写接口的启动器不能保存布局。包名变化需要安装新 APK 并重新选择默认桌面。
@@ -87,13 +96,13 @@
 
 左下角支持简体中文、繁體中文、English，以及青绿、深蓝、石墨三套主题；窗口和 Agent 的偏好修改实时同步并保存。
 
-根目录 [resource](../resource/README.md) 提供带实际 APK、作者、许可、源码和校验记录的资源。完整 layout.json 规范与文件／画面对照见[根 README](../README.md#layoutjson-规范与画面对照)。
+根目录 [resource](../resource/README.md) 提供带实际 APK、作者、许可、源码和校验记录的资源。完整 layout.json 规范与文件／画面对照见[资源开发文档](../resource/README-development.md#layoutjson-协议规范与画面对照)。
 
 ## MCP / Agent
 
 保持管理器打开，在首页「MCP · Agent 调试」复制 JSON 到客户端。标准 stdio 代理连接同一窗口，共享当前电视、Android 用户、ADB、操作锁和记录；状态、错误、布局与画面同步显示。
 
-**31 个工具**覆盖界面现有设备管理功能，包括系统信息、连接、应用安装／卸载／启停、启动器切换／布局、ADB 下载配置、用户背景图、原生文件选择器、取消和历史。详见 [MCP 接入及工具](docs/mcp.md)。
+**34 个工具**覆盖界面现有设备管理功能，包括系统信息、连接、应用安装／卸载／启停、启动器切换／布局、市场目录／下载／安装、ADB 下载配置、用户背景图、原生文件选择器、取消和历史。详见 [MCP 接入及工具](docs/mcp.md)。
 
 ## 操作范围与恢复
 

@@ -1,6 +1,6 @@
 import { Channel, invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
-import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress } from './types';
+import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketProgress, type MarketResult, type MarketEventResult } from './types';
 
 export const demo = new URLSearchParams(location.search).get('demo') === '1';
 export const desktop = '__TAURI_INTERNALS__' in window;
@@ -110,24 +110,58 @@ export async function installPlatformTools(onProgress: (progress: DownloadProgre
   const progress = new Channel<DownloadProgress>(onProgress);
   return invoke<Snapshot>('install_platform_tools', { acceptedLicense: true, onProgress: progress, ...(forceDownload?{forceDownload:true}:{}) });
 }
-export async function openResource(resource: 'catalog' | 'releases' | 'platformTools' | 'platformToolsLicense'): Promise<void> {
+export async function openResource(resource: 'catalog' | 'market' | 'releases' | 'platformTools' | 'platformToolsLicense'): Promise<void> {
   if (demo || !desktop) {
-    const url = resource === 'catalog' ? 'https://github.com/ecojust/pureTV/tree/master/resource' : resource === 'releases' ? 'https://github.com/ecojust/pureTV/releases' : resource === 'platformToolsLicense' ? 'https://developer.android.com/studio/terms' : 'https://developer.android.com/tools/releases/platform-tools';
+    const url = resource === 'market' ? 'https://gitee.com/juzisang331/pure-tv-store' : resource === 'catalog' ? 'https://github.com/ecojust/pureTV/tree/master/resource' : resource === 'releases' ? 'https://github.com/ecojust/pureTV/releases' : resource === 'platformToolsLicense' ? 'https://developer.android.com/studio/terms' : 'https://developer.android.com/tools/releases/platform-tools';
     window.open(url, '_blank', 'noopener,noreferrer'); return;
   }
   await invoke('open_resource', { resource });
 }
 
 export interface McpInfo { config: { mcpServers: Record<string, { command: string; args: string[] }> }; sessionPath: string }
-export interface McpOperation { running: boolean; tool: string; snapshot?: Snapshot; error?: string; launcherResult?: import('./types').LauncherLayoutInfo }
+export interface McpOperation { running: boolean; tool: string; snapshot?: Snapshot; error?: string; launcherResult?: import('./types').LauncherLayoutInfo; marketResult?: MarketEventResult }
 export async function mcpInfo(): Promise<McpInfo | null> {
   if (!desktop || demo) return null;
   return invoke<McpInfo>('mcp_info');
 }
-export async function watchMcp(operation: (value: McpOperation) => void, progress: (value: DownloadProgress) => void): Promise<void> {
+export async function watchMcp(operation: (value: McpOperation) => void, progress: (value: DownloadProgress) => void, marketProgress?: (value: MarketProgress) => void): Promise<void> {
   if (!desktop || demo) return;
   await listen<McpOperation>('mcp-operation', event => operation(event.payload));
   await listen<DownloadProgress>('mcp-progress', event => progress(event.payload));
+  if (marketProgress) await listen<MarketProgress>('mcp-market-progress', event => marketProgress(event.payload));
+}
+
+const demoMarket: MarketCatalog = {
+  sourceUrl: 'https://gitee.com/juzisang331/pure-tv-store', revision: 'demo', fetchedAt: Date.now(), stale: false,
+  items: [
+    {id: 'apps/demo/Demo-Music-1.0.apk', kind: 'app', name: 'Demo Music', version: '1.0', fileName: 'Demo-Music-1.0.apk', bytes: 4194304, blobSha: 'demo-music', folderUrl: ''},
+    {id: 'launcher/demo/Demo-Home-1.0.apk', kind: 'launcher', name: 'Demo Home', version: '1.0', fileName: 'Demo-Home-1.0.apk', bytes: 786432, blobSha: 'demo-home', folderUrl: ''},
+  ],
+};
+export async function getMarketCatalog(refresh = false, onProgress?: (progress: MarketProgress) => void): Promise<MarketCatalog> {
+  if (demo) { onProgress?.({stage: 'catalog', downloaded: 0, total: 0}); return structuredClone(demoMarket); }
+  if (!desktop) throw new Error(unavailable);
+  return invoke<MarketCatalog>('get_market_catalog', {refresh, onProgress: new Channel<MarketProgress>(onProgress || (() => {}))});
+}
+export async function marketItem(operation: 'download' | 'install', id: string, revision: string, onProgress: (progress: MarketProgress) => void): Promise<MarketResult> {
+  if (demo) {
+    const item = demoMarket.items.find(item => item.id === id);
+    if (!item) throw new Error('Market item not found');
+    demoDownloadCancelled = false;
+    for (const downloaded of [0, Math.floor(item.bytes / 2), item.bytes]) {
+      onProgress({stage: 'downloading', downloaded, total: item.bytes, itemId: id});
+      await new Promise(resolve => setTimeout(resolve, 250));
+      if (demoDownloadCancelled) throw new Error('演示下载已取消，未下载真实文件');
+    }
+    const path = `/demo/market/${item.fileName}`;
+    if (operation === 'install') {
+      onProgress({stage: 'installing', downloaded: item.bytes, total: item.bytes, itemId: id});
+      return {operation, download: {item, path}, installed: true, snapshot: await simulate({action: 'install', paths: [path]})};
+    }
+    return {operation, download: {item, path}, installed: false};
+  }
+  if (!desktop) throw new Error(unavailable);
+  return invoke<MarketResult>(operation === 'download' ? 'download_market_item' : 'install_market_item', {id, revision, onProgress: new Channel<MarketProgress>(onProgress)});
 }
 export async function launcherExecute(request: import('./types').LauncherRequest): Promise<import('./types').LauncherLayoutInfo> {
   if (!desktop || demo) throw new Error('请在真实桌面管理器中连接电视，读取启动器布局接口。');

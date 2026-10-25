@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 import { mkdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { mockBridge, snapshot } from './fixtures.mjs';
+import { mockBridge, snapshot, marketCatalog } from './fixtures.mjs';
 
 const directory = fileURLToPath(new URL('..', import.meta.url));
 const port = 1429, url = `http://127.0.0.1:${port}`;
@@ -972,6 +972,166 @@ try {
     await nav(p,'apps'); assert.equal(await p.locator('.apps-table img, .device-badge img').count(),0); assert.equal(await p.evaluate(()=>window.__xss),false);
     assert.match(await p.locator('.apps-table').innerText(),/onerror/);
   },injected);
+
+  const store=marketCatalog();
+  const marketCard=(p,item)=>p.locator('.market-card').filter({has:p.locator(`[data-act="download-market"][data-id="${item.id}"]`)});
+  const openMarket=async p=>{await nav(p,'market');await p.locator('.market-card').first().waitFor();await settled(p);};
+  const marketRequests=p=>p.evaluate(()=>window.__marketRequests);
+  const unsafeMarket=marketCatalog();unsafeMarket.items[0].name='<img src=x onerror="window.__xss=true">';
+  await check('market discovers categorized APKs without ADB and escapes repository metadata',async p=>{
+    await openMarket(p);
+    const navigation=await p.locator('nav [data-page]').evaluateAll(elements=>elements.map(element=>element.dataset.page));
+    assert.equal(navigation[navigation.indexOf('launchers')+1],'market','Market immediately follows Launchers');
+    assert.equal(await p.locator('.market-card').count(),2);
+    assert.equal(await marketCard(p,store.items[0]).locator('img[src="x"]').count(),0);
+    assert.match(await marketCard(p,store.items[0]).innerText(),/onerror/);
+    assert.equal(await p.evaluate(()=>window.__xss),false);
+    assert.match(await marketCard(p,store.items[0]).innerText(),/193\.1 KB/);
+    assert.match(await marketCard(p,store.items[1]).innerText(),/2\.0 MB/);
+    assert.equal(await act(p,'download-market').isEnabled(),true);
+    assert.equal(await act(p,'install-market').isDisabled(),true);
+    await p.locator('[name="marketSearch"]').fill('WEB');
+    assert.equal(await p.locator('.market-card').count(),1);
+    assert.match(await p.locator('.market-card').innerText(),/WebTV/);
+    assert.equal(await p.locator('[name="marketSearch"]').evaluate(element=>element===document.activeElement),true,'Filtering preserves typing focus');
+    await p.locator('[name="marketSearch"]').fill('');
+    await p.locator('[data-market-kind="launcher"]').click();
+    assert.equal(await p.locator('.market-card').count(),1);assert.match(await p.locator('.market-card').innerText(),/Nova TV/);
+    assert.deepEqual(await requests(p),[],'Browsing does not invoke ADB');
+    assert.equal((await marketRequests(p)).filter(value=>value.command==='get_market_catalog').length,1,'Changing tabs reuses the catalog');
+  },withoutAdb(),{marketCatalog:unsafeMarket});
+  await check('market offline download uses displayed revision and joins the pending app list once',async p=>{
+    await openMarket(p);await marketCard(p,store.items[0]).locator('[data-act="download-market"]').click();await held(p,'downloadMarketItem');
+    assert.doesNotMatch(await feedback(p).innerText(),/ADB/,'APK progress is independent from ADB setup');
+    assert.equal(await act(p,'refresh-market').isDisabled(),true);
+    await release(p,'downloadMarketItem');await result(p,'success');await acknowledge(p);
+    const download=(await marketRequests(p)).find(value=>value.command==='download_market_item');
+    assert.deepEqual(download,{command:'download_market_item',id:store.items[0].id,revision:store.revision});
+    await p.locator('[data-act="market-pending"][data-kind="app"]').click();
+    assert.equal(await p.locator('.apk-item').count(),1);assert.match(await p.locator('.apk-item').innerText(),/hifini-0\.1\.3\.apk/);
+    await nav(p,'market');await act(p,'download-market').click();await held(p,'downloadMarketItem');await release(p,'downloadMarketItem');await result(p,'success');await acknowledge(p);
+    await p.locator('[data-act="market-pending"][data-kind="app"]').click();assert.equal(await p.locator('.apk-item').count(),1,'Repeated downloads do not duplicate a pending path');
+    assert.deepEqual(await requests(p),[],'Offline download never starts ADB');
+  },withoutAdb(),{holdActions:['downloadMarketItem']});
+  await check('market launcher download carries APK Home background into the launcher queue',async p=>{
+    await openMarket(p);await p.locator('[data-market-kind="launcher"]').click();await act(p,'download-market').click();await result(p,'success');await acknowledge(p);
+    await p.locator('[data-act="market-pending"][data-kind="launcher"]').click();
+    const pending=p.locator('[data-launcher-apk="/tmp/puretv-market/nova-0.1.1.apk"]');await pending.waitFor();
+    assert.equal(await pending.locator('.launcher-card-background').evaluate(element=>getComputedStyle(element).backgroundColor),'rgb(34, 51, 68)');
+    assert.deepEqual(await requests(p),[],'Downloading a launcher never changes the default Home');
+  },withoutAdb());
+  await check('market installation reports completion and does not activate a downloaded launcher',async p=>{
+    await openMarket(p);await p.locator('[data-market-kind="launcher"]').click();await act(p,'install-market').click();
+    await p.locator('#confirm-operation').click();await held(p,'installMarketItem');
+    await release(p,'installMarketItem');await result(p,'success');await acknowledge(p);
+    const install=(await marketRequests(p)).find(value=>value.command==='install_market_item');assert.equal(install.id,store.items[2].id);assert.equal(install.revision,store.revision);
+    await nav(p,'launchers');await settled(p);
+    assert.match(await p.locator('.launcher-card.current').innerText(),/原厂桌面/);
+    assert.equal(await p.locator('[data-launcher-apk]').count(),0,'A verified successful install is removed from pending');
+    assert.match(await p.locator('.launcher-grid').innerText(),/Nova TV/);
+    assert.equal((await requests(p)).some(value=>value.action==='setHome'),false,'Installing does not silently select the launcher');
+  },snapshot(),{holdActions:['installMarketItem']});
+  await check('market installation failure keeps the verified APK available for retry',async p=>{
+    await openMarket(p);await act(p,'install-market').click();await p.locator('#confirm-operation').click();
+    assert.match(await (await result(p,'error')).innerText(),/INSTALL_FAILED_UPDATE_INCOMPATIBLE/);await acknowledge(p);
+    await p.locator('[data-act="market-pending"][data-kind="app"]').click();
+    assert.equal(await p.locator('.apk-item').count(),1);assert.match(await p.locator('.apk-item').innerText(),/hifini-0\.1\.3\.apk/);
+    assert.equal(await act(p,'install-one-apk').isEnabled(),true);
+  },snapshot(),{marketInstallError:'INSTALL_FAILED_UPDATE_INCOMPATIBLE'});
+  await check('market cancellation and failed verification never add a partial APK',async p=>{
+    await openMarket(p);await act(p,'download-market').click();await held(p,'downloadMarketItem');
+    await act(p,'cancel').click();await release(p,'downloadMarketItem');await p.locator('dialog.operation-feedback[open][data-phase="result"]').waitFor();
+    assert.match(await feedback(p).innerText(),/取消/);assert.notEqual(await feedback(p).getAttribute('data-outcome'),'success');await acknowledge(p);
+    await act(p,'download-market').click();await held(p,'downloadMarketItem');await release(p,'downloadMarketItem',{error:'下载校验失败，请重试'});
+    assert.match(await (await result(p,'error')).innerText(),/校验失败/);await acknowledge(p);
+    await nav(p,'install');assert.equal(await p.locator('.apk-item').count(),0);
+  },snapshot(),{holdActions:['downloadMarketItem']});
+  await check('market refresh replaces a stale catalog and preserves localized controls',async p=>{
+    await openMarket(p);assert.match(await p.locator('main').innerText(),/缓存目录/);
+    await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'Market');
+    assert.match(await p.locator('[data-market-kind="launcher"]').innerText(),/Launchers/);
+    assert.match(await marketCard(p,store.items[0]).innerText(),/HIFINi TV/);
+    const updated=marketCatalog();updated.revision='f'.repeat(40);updated.items=[updated.items[1]];
+    await p.evaluate(value=>{window.__marketCatalog=value;},updated);
+    await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
+    assert.equal(await p.locator('.market-card').count(),1);assert.match(await p.locator('.market-card').innerText(),/WebTV/);
+    assert.equal((await marketRequests(p)).at(-1).refresh,true,'Manual refresh bypasses catalog cache');
+    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'市場');
+    assert.match(await p.locator('[data-market-kind="launcher"]').innerText(),/啟動器/);
+    await p.locator('[data-market-kind="launcher"]').click();assert.equal(await p.locator('.market-card').count(),0);
+    await shot(p,'market-traditional-empty');
+  },withoutAdb(),{marketCatalog:{...marketCatalog(),stale:true,warning:'网络暂不可用，正在显示缓存目录'}});
+  await check('market initial network failure shows an empty error state and can be retried',async p=>{
+    await nav(p,'market');await p.waitForFunction(()=>document.querySelector('.market-warning')?.textContent.includes('无法读取市场目录'));await settled(p);
+    assert.equal(await p.locator('.market-card').count(),0,'Failed live requests never display a fabricated catalog');
+    assert.match(await p.locator('.market-empty').innerText(),/暂时无法读取市场/);
+    await p.evaluate(()=>{window.__marketCatalogError=null;});await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
+    assert.equal(await p.locator('.market-card').count(),2);assert.deepEqual(await requests(p),[]);
+  },withoutAdb(),{failMarketCatalog:true});
+  const largeMarket=marketCatalog();largeMarket.items=Array.from({length:45},(_,index)=>({...store.items[0],id:`apps/example${index}/example-${index}.apk`,name:`Example ${index}`,fileName:`example-${index}.apk`}));
+  await check('market long catalogs scroll internally in compact windows and all themes',async p=>{
+    await p.setViewportSize({width:960,height:640});await openMarket(p);
+    const area=p.locator('[data-scroll="market-app"]');
+    const metrics=await area.evaluate(element=>({height:element.clientHeight,total:element.scrollHeight}));
+    assert.ok(metrics.height>60 && metrics.total>metrics.height,JSON.stringify(metrics));
+    const cardBounds=await p.locator('.market-card').first().evaluate(element=>({card:element.getBoundingClientRect().toJSON(),cover:element.querySelector('.market-cover').getBoundingClientRect().toJSON(),buttons:[...element.querySelectorAll('.market-card-actions button')].map(button=>button.getBoundingClientRect().toJSON())}));
+    assert.ok(cardBounds.card.height>=250,`Cards must not collapse into grid lines: ${JSON.stringify(cardBounds)}`);
+    assert.ok(cardBounds.cover.height>100,'Cover keeps a visible aspect ratio in a long catalog');
+    assert.ok(cardBounds.buttons.every(button=>button.top>=cardBounds.card.top && button.bottom<=cardBounds.card.bottom && button.left>=cardBounds.card.left && button.right<=cardBounds.card.right),`Download and install controls stay inside the card: ${JSON.stringify(cardBounds)}`);
+    assert.ok(await p.evaluate(()=>document.documentElement.scrollHeight<=innerHeight+1),'Document does not scroll');
+    assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Cards do not overflow horizontally');
+    const top=(await p.locator('.page-header').boundingBox()).y;
+    await area.evaluate(element=>{element.scrollTop=1000;});assert.ok(await area.evaluate(element=>element.scrollTop>0));
+    assert.equal((await p.locator('.page-header').boundingBox()).y,top);assert.equal(await p.evaluate(()=>scrollY),0);
+    await p.locator('[name="theme"]').selectOption('graphite');assert.equal(await p.locator('html').getAttribute('data-theme'),'graphite');
+    await p.locator('[name="locale"]').selectOption('en');await shot(p,'market-en-graphite');
+  },withoutAdb(),{marketCatalog:largeMarket});
+  await check('market MCP results synchronize catalog and download/install queues with the window',async p=>{
+    await openMarket(p);
+    const imported={...store.items[0],id:'apps/agent/agent.apk',name:'Agent import',fileName:'agent.apk'};
+    const catalog={...marketCatalog(),items:[imported]};
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'get_market_catalog',marketResult:{operation:'catalog',catalog:value}}),catalog);
+    assert.equal(await p.locator('.market-card').count(),1);assert.match(await p.locator('.market-card').innerText(),/Agent import/);
+    await p.evaluate(()=>{window.__emitMcp('mcp-operation',{running:true,tool:'download_market_item'});window.__emitMcp('mcp-market-progress',{stage:'downloading',downloaded:50,total:100,itemId:'apps/agent/agent.apk'});});
+    await p.locator('.busy-bar').waitFor();assert.match(await p.locator('.busy-bar').innerText(),/50%/);
+    const download={item:imported,path:'/tmp/puretv-market/agent.apk'};
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'download_market_item',marketResult:{operation:'download',download:value,installed:false}}),download);
+    await settled(p);await p.locator('[data-act="market-pending"][data-kind="app"]').click();assert.equal(await p.locator('.apk-item').count(),1);
+    const installed=snapshot();installed.revision=3;installed.installResults=[{path:download.path,success:true,message:'Installed'}];
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'install_market_item',snapshot:value.snapshot,marketResult:{operation:'install',download:value.download,installed:true,snapshot:value.snapshot}}),{download,snapshot:installed});
+    await settled(p);assert.equal(await p.locator('.apk-item').count(),0);
+  },snapshot());
+
+
+  await check('market install confirmation rejects a changed television or Android user',async p=>{
+    await openMarket(p);let target=snapshot();
+    for(const change of [{serial:'192.168.1.99:5555'},{userId:10}]) {
+      await act(p,'install-market').click();await p.locator('#confirm-operation').waitFor();
+      target={...target,revision:target.revision+1,device:{...target.device,...change}};
+      await p.evaluate(value=>{window.__setMockState(value);window.__emitMcp('mcp-operation',{running:false,tool:'connect',snapshot:value});},target);
+      await p.locator('#confirm-operation').click();await p.locator('.notice.error').waitFor();
+      assert.match(await p.locator('.notice.error').innerText(),/目标电视已变化/);await acknowledge(p);
+      assert.equal((await marketRequests(p)).filter(value=>value.command==='install_market_item').length,0,'An earlier confirmation cannot authorize installation on a new target');
+    }
+  });
+  await check('market pending queues follow verified generic MCP installs and ignore failed or older results',async p=>{
+    await openMarket(p);await act(p,'download-market').click();await result(p,'success');await acknowledge(p);
+    await p.locator('[data-market-kind="launcher"]').click();await act(p,'download-market').click();await result(p,'success');await acknowledge(p);
+    await nav(p,'install');assert.equal(await p.locator('.apk-item').count(),1);
+    const appPath='/tmp/puretv-market/'+store.items[0].fileName,launcherPath='/tmp/puretv-market/'+store.items[2].fileName;
+    const previous={...snapshot(),revision:2,installResults:[{path:appPath,success:true,message:'Previous install'},{path:launcherPath,success:true,message:'Previous install'}]};
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'install',snapshot:value,error:'安装前检查失败'}),previous);
+    await settled(p);assert.equal(await p.locator('.apk-item').count(),1,'A failed call cannot reuse successful results from an earlier install');
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'install',snapshot:{...value,revision:1}}),previous);
+    await settled(p);assert.equal(await p.locator('.apk-item').count(),1,'Older snapshots cannot remove pending files');
+    const partial={...previous,revision:3,installResults:[{path:appPath,success:true,message:'Installed'},{path:launcherPath,success:false,message:'Install failed'}]};
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'install',snapshot:value}),partial);
+    await settled(p);assert.equal(await p.locator('.apk-item').count(),0,'A successful generic MCP install clears its downloaded app');
+    await nav(p,'launchers');await settled(p);assert.equal(await p.locator('[data-launcher-apk]').count(),1,'Failed launchers remain retryable');
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'install',snapshot:{...value,revision:4,installResults:value.installResults.map(item=>({...item,success:true}))}}),partial);
+    await settled(p);assert.equal(await p.locator('[data-launcher-apk]').count(),0,'A successful retry clears its downloaded launcher');
+  });
+
   console.log(`${passed} UI scenarios passed`);
 } finally {
   await browser?.close(); server.kill();

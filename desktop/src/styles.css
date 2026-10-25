@@ -1396,6 +1396,44 @@ main.list-page { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden;
 .launcher-toolbar .button-row, .layout-editor .section-title .button-row { max-width: none; justify-content: flex-start; }
 @media (max-height: 760px) { .launcher-toolbar { margin-bottom: 10px; } .launcher-toolbar p { margin-top: 2px; } }
 .application-tabs { display: flex; gap: 10px; flex-shrink: 0; margin-bottom: 14px; }
+.market-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px; }
+.market-tabs { margin:0; }
+.market-tabs button { gap:8px; }
+.market-tabs button > span { opacity:.75; font-size:12px; }
+.list-page #page-content > .market-panel { flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden; padding:0; }
+.market-toolbar { flex-shrink:0; border-bottom:1px solid var(--line); }
+.market-toolbar .search { min-width:160px; }
+.market-toolbar .toolbar-buttons { flex-wrap:wrap; justify-content:flex-end; }
+.market-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(248px,1fr)); grid-auto-rows:max-content; gap:18px; align-content:start; flex:1; min-height:0; padding:20px; overflow:auto; overscroll-behavior:contain; scrollbar-gutter:stable; }
+.market-card { min-width:0; min-height:280px; border:1px solid var(--line); background:var(--surface); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; }
+.market-cover { flex-shrink:0; position:relative; overflow:hidden; background:linear-gradient(135deg,var(--green-soft),var(--surface-muted)); }
+.market-cover::before { content:''; display:block; padding-top:56.25%; }
+.market-cover-placeholder { position:absolute; inset:0; display:grid; place-items:center; color:var(--green); opacity:.45; }
+.market-cover-placeholder .icon { width:46px; height:46px; }
+.market-cover img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:var(--surface-muted); }
+.market-category { position:absolute; top:12px; left:12px; border-radius:20px; padding:4px 9px; background:#13261edb; color:#fff; font-size:11px; }
+.market-card-body { display:flex; flex-direction:column; flex:1 0 auto; min-width:0; padding:16px; }
+.market-card-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; min-width:0; }
+.market-card-heading h2 { margin:0; font-size:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.market-downloaded { display:inline-flex; align-items:center; gap:3px; font-size:11px; flex-shrink:0; color:var(--green); }
+.market-downloaded .icon { width:13px; height:13px; }
+.market-meta { display:flex; flex-wrap:wrap; gap:8px; color:var(--muted); font-size:12px; margin-top:8px; }
+.market-meta span + span::before { content:'·'; margin-right:8px; }
+.market-file { color:var(--muted); font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin:8px 0 16px; }
+.market-card-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; }
+.market-card-actions button { flex:1 1 auto; justify-content:center; white-space:normal; }
+.market-card-actions button .icon { width:15px; height:15px; flex-shrink:0; }
+.market-list-count { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px 16px; flex-shrink:0; }
+.market-empty { grid-column:1/-1; padding:56px 20px; }
+.market-warning { margin:0; padding:10px 18px; font-size:12px; color:var(--text); background:var(--surface-muted); border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
+.market-note { margin:10px 0 0; }
+@media (max-width:900px) {
+  .market-grid { grid-template-columns:repeat(2,minmax(0,1fr)); padding:14px; gap:14px; }
+  .market-toolbar { flex-wrap:wrap; gap:10px; }
+  .market-toolbar .search { flex:1 1 100%; }
+  .market-toolbar .toolbar-buttons { width:100%; }
+  .market-card-body { padding:12px; }
+}
 .device-info { margin: 0 0 18px; }
 .device-info dl { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px 24px; margin: 0; }
 .device-info dt { font-size: 12px; color: var(--muted); margin-bottom: 5px; }

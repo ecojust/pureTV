@@ -64,7 +64,7 @@ Other Tauri commands:
 
 - `choose_apks` -> `string[]` (native file picker, .apk, multiple)
 - `choose_adb` -> `string | null` (native executable file picker)
-- `open_resource { resource: "releases" | "platformTools" | "platformToolsLicense" }` (fixed URL allowlist)
+- `open_resource { resource: "catalog" | "releases" | "platformTools" | "platformToolsLicense" | "market" }` (fixed URL allowlist)
 - `platform_tools_info` -> `PlatformToolsInfo` (local metadata only, no download)
 - `install_platform_tools { acceptedLicense: boolean, onProgress: Channel<DownloadProgress> }` -> `Snapshot`
 
@@ -100,7 +100,7 @@ The Tauri dispatcher resets the cancellation flag once before enqueueing a task.
 
 ## MCP bridge
 
-The desktop starts an authenticated loopback MCP service sharing the same Manager, cached snapshot, busy/cancel guard and protected device operations. `mcp_info` returns a stdio client configuration; `puretv-desktop --mcp <session-file>` relays to that running window without creating a Manager. The 31 tools, protocol behavior and validation are documented in [docs/mcp.md](docs/mcp.md). The native integration test runs against the actual GUI and stdio process with isolated simulated ADB.
+The desktop starts an authenticated loopback MCP service sharing the same Manager, cached snapshot, busy/cancel guard and protected device operations. `mcp_info` returns a stdio client configuration; `puretv-desktop --mcp <session-file>` relays to that running window without creating a Manager. The 34 tools, protocol behavior and validation are documented in [docs/mcp.md](docs/mcp.md). The native integration test runs against the actual GUI and stdio process with isolated simulated ADB.
 
 Installed application and launcher APK sizes are measured during scans (and refreshed after APK installation) using validated `pm path --user` paths and bounded marker-delimited `stat` batches; normal batch catalogue checks reuse the measured values. Unavailable, unsupported or incomplete results are null, never invented zeroes. Metadata collection has a 30-second scheduling budget, 12-second batch command timeouts and shares cancellation. Uninstalled recovery entries have null sizes; installed system packages are measured too.
 
@@ -129,3 +129,17 @@ Normal window close, application quit and confirmed MCP close_manager share one 
 screen defines integer design dimensions (320–7680). Each page contains users, system, background and navigation. Every component has id/name/text/frame/action/visible/icon/textColor/iconColor/backgroundColor. User actions are launchable installed user package names; SVG is a bounded static subset without scripts, DTD or external resources. System components are launcher-owned and immutable through apply, except coordinate conversion when screen dimensions change. The backend compares them with the current verified launcher result; Android verifies the template too. Page backgrounds and directional navigation remain editable. Maximum JSON is 90 KiB, below Android shell's per-argument limit after base64 encoding. Both applications use these same frames; internal v2/v3 adapters are not part of the public v5 JSON.
 
 V5 components use separate textColor/iconColor; backgroundColor may be transparent. Desktop screen dimensions are informational, and the property inspector places its visibility switch beneath the component type. V4 remains accepted with its original coupled color field.
+
+## Market
+
+The manager reads the fixed public repository `https://gitee.com/juzisang331/pure-tv-store`. It resolves the default branch to a commit and discovers APK blobs under `apps/` and `launcher/`, with sibling thumbnail images. Names and versions fall back to the APK filename. Catalog and APK requests run in Rust; the webview cannot choose an arbitrary source URL or destination. Only the two Gitee image origins are allowed for lazy thumbnail rendering, without remote scripts.
+
+`get_market_catalog {refresh?: boolean}` returns `{sourceUrl,revision,fetchedAt,stale,warning?,items}`. `revision` is the Git commit SHA, not its tree SHA; `fetchedAt` is Unix milliseconds. A cached catalog is usable without a connected TV. A failed refresh may return the last valid catalog with `stale: true` and a warning; an initial failure without a cache remains an error.
+
+Each item contains `{id,kind,name,version?,fileName,bytes,blobSha,folderUrl,coverUrl?}`. `id` is a repository-relative APK path and `kind` is `app` or `launcher`. Remote data is rendered as text, not HTML. Thumbnail URLs are pinned to the catalog commit, retaining the canonical raw URL rather than a short-lived redirect URL.
+
+`download_market_item {id,revision?}` and `install_market_item {id,revision?}` return `{operation,download,installed,error?,snapshot?}`. `download` contains `{item,path,homeBackground?,homeBackgroundColor?}`; Home metadata is bounded and read from the APK. The GUI sends the displayed catalog revision; a mismatch is rejected instead of silently substituting a new APK. Downloads use a fixed commit, verify the byte count and Git blob SHA, and clean temporary files on failure or cancellation. Cached files are verified before reuse.
+
+Download and installation share the global operation lock and cancellation flag with device operations. Installation uses the existing validated `Request::Install` path and its per-file results. Download success followed by installation failure preserves the downloaded path with `installed: false` and an error. A successful download joins the corresponding GUI pending queue; only confirmed installation success removes it. Installing a launcher does not activate it.
+
+Market progress is separate from ADB tool progress: `{stage:'catalog'|'downloading'|'verifying'|'installing',downloaded,total,itemId?}`. MCP exposes the same three tools, progress in `get_status`, and `mcp-market-progress` events. Completed `mcp-operation` events carry `marketResult`, either `{operation:'catalog',catalog}` or the download/install result, so Agent actions update the same window.

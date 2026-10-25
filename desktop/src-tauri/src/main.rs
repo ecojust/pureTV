@@ -1,11 +1,13 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod launcher_covers;
+mod market;
 mod mcp;
 mod platform_tools;
 mod ui_preferences;
 
 use puretv_core::{LauncherRequest, Manager as TvManager, Request, Snapshot};
+use serde::Serialize;
 use serde_json::{json, Value};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -23,6 +25,52 @@ struct Bridge {
     running: Arc<AtomicBool>,
     snapshot: Arc<Mutex<Snapshot>>,
     progress: Arc<Mutex<Option<platform_tools::Progress>>>,
+    market_progress: Arc<Mutex<Option<market::Progress>>>,
+}
+
+// Keep the shared operation reservation alive even if a command task exits early.
+struct OperationGuard(Arc<AtomicBool>);
+impl Drop for OperationGuard {
+    fn drop(&mut self) {
+        self.0.store(false, Ordering::Release);
+    }
+}
+
+fn begin_market_operation(bridge: &Bridge) -> Result<OperationGuard, String> {
+    if bridge.closing.load(Ordering::Acquire) {
+        return Err("管理器正在退出".into());
+    }
+    if bridge
+        .running
+        .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+        .is_err()
+    {
+        return Err("已有操作正在执行，请等待完成或取消".into());
+    }
+    let guard = OperationGuard(bridge.running.clone());
+    bridge.cancel.store(false, Ordering::Release);
+    if bridge.closing.load(Ordering::Acquire) {
+        bridge.cancel.store(true, Ordering::Release);
+        return Err("管理器正在退出".into());
+    }
+    *bridge.progress.lock().map_err(|_| "进度不可用")? = None;
+    *bridge
+        .market_progress
+        .lock()
+        .map_err(|_| "市场进度不可用")? = None;
+    Ok(guard)
+}
+
+#[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct MarketResult {
+    operation: &'static str,
+    download: market::Download,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    snapshot: Option<Snapshot>,
+    installed: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    error: Option<String>,
 }
 
 #[derive(Default)]
@@ -54,6 +102,11 @@ fn request_shutdown(app: &tauri::AppHandle) -> bool {
         }
         let app = app.clone();
         tauri::async_runtime::spawn_blocking(move || {
+            // Market downloads do not hold the ADB manager mutex. Let their
+            // cancellation remove temporary files before terminating the process.
+            if !wait_for_operation(&bridge.running, std::time::Duration::from_secs(30)) {
+                eprintln!("Manager shutdown: operation cancellation timed out");
+            }
             let result = bridge
                 .manager
                 .lock()
@@ -71,6 +124,17 @@ fn request_shutdown(app: &tauri::AppHandle) -> bool {
             shutdown.complete.store(true, Ordering::Release);
             app.exit(0);
         });
+    }
+    true
+}
+
+fn wait_for_operation(running: &AtomicBool, timeout: std::time::Duration) -> bool {
+    let deadline = std::time::Instant::now() + timeout;
+    while running.load(Ordering::Acquire) {
+        if std::time::Instant::now() >= deadline {
+            return false;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(25));
     }
     true
 }
@@ -302,6 +366,170 @@ fn platform_tools_info(app: tauri::AppHandle) -> Result<platform_tools::Info, St
 }
 
 #[tauri::command]
+async fn get_market_catalog(
+    refresh: Option<bool>,
+    on_progress: tauri::ipc::Channel<market::Progress>,
+    app: tauri::AppHandle,
+    bridge: tauri::State<'_, Bridge>,
+) -> Result<market::Catalog, String> {
+    let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
+    let guard = begin_market_operation(&bridge)?;
+    let bridge = bridge.inner().clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let _guard = guard;
+        market::catalog(
+            &directory,
+            refresh.unwrap_or(false),
+            &bridge.cancel,
+            |progress| {
+                cache_market_progress(&bridge, progress.clone())?;
+                on_progress
+                    .send(progress)
+                    .map_err(|_| "市场目录界面已关闭，请重试".to_string())?;
+                Ok(())
+            },
+        )
+    })
+    .await
+    .map_err(|_| "市场目录任务异常结束，请重试".to_string())?
+}
+
+#[tauri::command]
+async fn download_market_item(
+    id: String,
+    revision: Option<String>,
+    on_progress: tauri::ipc::Channel<market::Progress>,
+    app: tauri::AppHandle,
+    bridge: tauri::State<'_, Bridge>,
+) -> Result<MarketResult, String> {
+    execute_market_item(id, revision, false, on_progress, app, bridge).await
+}
+
+#[tauri::command]
+async fn install_market_item(
+    id: String,
+    revision: Option<String>,
+    on_progress: tauri::ipc::Channel<market::Progress>,
+    app: tauri::AppHandle,
+    bridge: tauri::State<'_, Bridge>,
+) -> Result<MarketResult, String> {
+    execute_market_item(id, revision, true, on_progress, app, bridge).await
+}
+
+async fn execute_market_item(
+    id: String,
+    revision: Option<String>,
+    install: bool,
+    on_progress: tauri::ipc::Channel<market::Progress>,
+    app: tauri::AppHandle,
+    bridge: tauri::State<'_, Bridge>,
+) -> Result<MarketResult, String> {
+    let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
+    let guard = begin_market_operation(&bridge)?;
+    let bridge = bridge.inner().clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let _guard = guard;
+        run_market_item(
+            &directory,
+            &bridge,
+            &id,
+            revision.as_deref(),
+            install,
+            |progress| {
+                cache_market_progress(&bridge, progress.clone())?;
+                on_progress
+                    .send(progress)
+                    .map_err(|_| "市场下载界面已关闭，请重试".to_string())?;
+                Ok(())
+            },
+        )
+    })
+    .await
+    .map_err(|_| "市场任务异常结束，请重试".to_string())?
+}
+
+fn cache_market_progress(bridge: &Bridge, progress: market::Progress) -> Result<(), String> {
+    *bridge
+        .market_progress
+        .lock()
+        .map_err(|_| "市场进度不可用")? = Some(progress);
+    Ok(())
+}
+
+fn run_market_item(
+    directory: &std::path::Path,
+    bridge: &Bridge,
+    id: &str,
+    revision: Option<&str>,
+    install: bool,
+    mut report: impl FnMut(market::Progress) -> Result<(), String>,
+) -> Result<MarketResult, String> {
+    let mut download = market::download(directory, id, revision, &bridge.cancel, &mut report)?;
+    if download.item.kind == "launcher" {
+        if let Some(background) =
+            launcher_covers::apk_home_background(std::path::Path::new(&download.path))
+        {
+            download.home_background = background.image;
+            download.home_background_color = Some(background.color);
+        }
+    }
+    let mut result = MarketResult {
+        operation: if install { "install" } else { "download" },
+        download,
+        snapshot: None,
+        installed: false,
+        error: None,
+    };
+    if !install {
+        return Ok(result);
+    }
+    // Preserve a verified local APK even when the device rejects its installation.
+    let outcome = (|| -> Result<(), String> {
+        if bridge.closing.load(Ordering::Acquire) {
+            return Err("管理器正在退出，APK 已下载，尚未安装".into());
+        }
+        if bridge.cancel.load(Ordering::Acquire) {
+            return Err("安装已取消，APK 已保留在待安装列表".into());
+        }
+        report(market::Progress {
+            stage: "installing".into(),
+            downloaded: 0,
+            total: 1,
+            item_id: Some(result.download.item.id.clone()),
+        })?;
+        let mut manager = bridge.manager.lock().map_err(|_| "管理状态不可用")?;
+        if bridge.closing.load(Ordering::Acquire) {
+            return Err("管理器正在退出，APK 已下载，尚未安装".into());
+        }
+        let execution = manager.execute(Request::Install {
+            paths: vec![result.download.path.clone()],
+        });
+        let snapshot = manager.snapshot();
+        *bridge.snapshot.lock().map_err(|_| "状态缓存不可用")? = snapshot.clone();
+        result.snapshot = Some(snapshot.clone());
+        execution?;
+        confirm_market_install(&snapshot, &result.download.path)?;
+        result.installed = true;
+        Ok(())
+    })();
+    result.error = outcome.err();
+    Ok(result)
+}
+
+fn confirm_market_install(snapshot: &Snapshot, path: &str) -> Result<(), String> {
+    let installed = snapshot
+        .install_results
+        .iter()
+        .find(|entry| entry.path == path)
+        .ok_or("安装未执行，APK 已保留在待安装列表")?;
+    if installed.success {
+        Ok(())
+    } else {
+        Err(installed.message.clone())
+    }
+}
+
+#[tauri::command]
 async fn install_platform_tools(
     accepted_license: bool,
     force_download: Option<bool>,
@@ -428,6 +656,7 @@ fn open_resource(resource: &str, app: tauri::AppHandle) -> Result<(), String> {
     let url = match resource {
         "catalog" => "https://github.com/ecojust/pureTV/tree/master/resource",
         "releases" => "https://github.com/ecojust/pureTV/releases",
+        "market" => "https://gitee.com/juzisang331/pure-tv-store",
         "platformTools" => "https://developer.android.com/tools/releases/platform-tools",
         "platformToolsLicense" => "https://developer.android.com/studio/terms",
         _ => return Err("不支持的资源".into()),
@@ -470,7 +699,7 @@ fn mcp_call(
     }
     if name == "get_status" {
         return Ok(
-            json!({"running":bridge.running.load(Ordering::Acquire),"cancelling":bridge.running.load(Ordering::Acquire) && bridge.cancel.load(Ordering::Acquire),"progress":bridge.progress.lock().map_err(|_| "进度不可用")?.clone(),"snapshot":bridge.snapshot.lock().map_err(|_| "状态不可用")?.clone()}),
+            json!({"running":bridge.running.load(Ordering::Acquire),"cancelling":bridge.running.load(Ordering::Acquire) && bridge.cancel.load(Ordering::Acquire),"progress":bridge.progress.lock().map_err(|_| "进度不可用")?.clone(),"marketProgress":bridge.market_progress.lock().map_err(|_| "市场进度不可用")?.clone(),"snapshot":bridge.snapshot.lock().map_err(|_| "状态不可用")?.clone()}),
         );
     }
     if name == "cancel" {
@@ -501,9 +730,53 @@ fn mcp_call(
         return Err("管理器正在退出".into());
     }
     *bridge.progress.lock().map_err(|_| "进度不可用")? = None;
+    *bridge
+        .market_progress
+        .lock()
+        .map_err(|_| "市场进度不可用")? = None;
     let _ = app.emit("mcp-operation", json!({"running":true,"tool":name}));
+    let mut market_result = None;
     let result = (|| -> Result<Value, String> {
         match name {
+            "get_market_catalog" => {
+                let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
+                let catalog = market::catalog(
+                    &directory,
+                    args["refresh"].as_bool().unwrap_or(false),
+                    &bridge.cancel,
+                    |progress| {
+                        cache_market_progress(bridge, progress.clone())?;
+                        let _ = app.emit("mcp-market-progress", progress);
+                        Ok(())
+                    },
+                )?;
+                let value = serde_json::to_value(catalog).map_err(|error| error.to_string())?;
+                market_result = Some(json!({"operation":"catalog","catalog":value}));
+                return Ok(value);
+            }
+            "download_market_item" | "install_market_item" => {
+                let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
+                let result = run_market_item(
+                    &directory,
+                    bridge,
+                    args["id"].as_str().ok_or("缺少市场应用标识")?,
+                    args["revision"].as_str(),
+                    name == "install_market_item",
+                    |progress| {
+                        cache_market_progress(bridge, progress.clone())?;
+                        let _ = app.emit("mcp-market-progress", progress);
+                        Ok(())
+                    },
+                )?;
+                let mut value = serde_json::to_value(result).map_err(|error| error.to_string())?;
+                market_result = Some(value.clone());
+                // Embedded launcher artwork is useful to the GUI but can exceed the
+                // MCP transport's message limit. Agents receive its local APK path.
+                if let Some(download) = value.get_mut("download").and_then(Value::as_object_mut) {
+                    download.remove("homeBackground");
+                }
+                return Ok(value);
+            }
             "get_launcher_covers" => return get_launcher_covers(app.clone()),
             "set_launcher_cover" => {
                 return launcher_covers::set(
@@ -586,7 +859,7 @@ fn mcp_call(
     let snapshot = bridge.snapshot.lock().map_err(|_| "状态不可用")?.clone();
     let _ = app.emit(
         "mcp-operation",
-        json!({"running":false,"tool":name,"snapshot":snapshot,"error":result.as_ref().err(),"launcherResult":if ["get_launcher_layout","get_launcher_backgrounds","apply_launcher_layout","reset_launcher_layout"].contains(&name){result.as_ref().ok()}else{None}}),
+        json!({"running":false,"tool":name,"snapshot":snapshot,"error":result.as_ref().err(),"launcherResult":if ["get_launcher_layout","get_launcher_backgrounds","apply_launcher_layout","reset_launcher_layout"].contains(&name){result.as_ref().ok()}else{None},"marketResult":market_result}),
     );
     drop(guard);
     result
@@ -634,6 +907,7 @@ fn main() {
                 running: Arc::new(AtomicBool::new(false)),
                 snapshot: snapshot.clone(),
                 progress: Arc::new(Mutex::new(None)),
+                market_progress: Arc::new(Mutex::new(None)),
             };
             let handle = app.handle().clone();
             let service = bridge.clone();
@@ -667,6 +941,9 @@ fn main() {
             choose_adb,
             platform_tools_info,
             install_platform_tools,
+            get_market_catalog,
+            download_market_item,
+            install_market_item,
             open_resource,
             mcp_info
         ])
@@ -679,4 +956,57 @@ fn main() {
                 }
             }
         });
+}
+
+#[cfg(test)]
+mod market_integration_tests {
+    use super::*;
+
+    #[test]
+    fn successful_dispatch_does_not_mask_an_install_rejection_or_cancellation() {
+        let mut snapshot = Snapshot::default();
+        snapshot.install_results.push(puretv_core::InstallResult {
+            path: "/cache/tv.apk".into(),
+            success: false,
+            message: "INSTALL_FAILED_VERSION_DOWNGRADE".into(),
+        });
+        assert_eq!(
+            confirm_market_install(&snapshot, "/cache/tv.apk"),
+            Err("INSTALL_FAILED_VERSION_DOWNGRADE".into())
+        );
+        // An earlier successful install must not count as this item's completion.
+        snapshot.install_results[0].success = true;
+        assert!(confirm_market_install(&snapshot, "/cache/other.apk").is_err());
+        assert!(confirm_market_install(&snapshot, "/cache/tv.apk").is_ok());
+        snapshot.install_results.clear();
+        assert!(confirm_market_install(&snapshot, "/cache/tv.apk").is_err());
+    }
+
+    #[test]
+    fn shutdown_waits_for_cancelled_worker_cleanup_and_has_a_deadline() {
+        let running = Arc::new(AtomicBool::new(true));
+        let cancel = Arc::new(AtomicBool::new(false));
+        let cleaned = Arc::new(AtomicBool::new(false));
+        let worker_running = running.clone();
+        let worker_cancel = cancel.clone();
+        let worker_cleaned = cleaned.clone();
+        let worker = std::thread::spawn(move || {
+            let _guard = OperationGuard(worker_running);
+            while !worker_cancel.load(Ordering::Acquire) {
+                std::thread::yield_now();
+            }
+            worker_cleaned.store(true, Ordering::Release);
+        });
+        cancel.store(true, Ordering::Release);
+        assert!(wait_for_operation(
+            &running,
+            std::time::Duration::from_secs(2)
+        ));
+        assert!(cleaned.load(Ordering::Acquire));
+        worker.join().unwrap();
+        assert!(!wait_for_operation(
+            &AtomicBool::new(true),
+            std::time::Duration::ZERO
+        ));
+    }
 }

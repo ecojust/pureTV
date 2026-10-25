@@ -10,7 +10,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
 [![App count](https://img.shields.io/badge/apps-6-f97316?style=flat-square)](resource/apps/)
-[![MCP](https://img.shields.io/badge/MCP-31%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
+[![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
 [![License](https://img.shields.io/badge/license-MIT-f4c430?style=flat-square)](LICENSE)
@@ -28,6 +28,7 @@ Once connected, the home page displays the model, Android version, SDK version, 
 - **App management:** search and filter apps, enable or disable them in batches, uninstall them for the current user, and restore system apps whose APKs are still present.
 - **Pending installations:** import local APKs, install one from its row, or select several for batch installation. Successful items leave the queue; failed and unprocessed items remain.
 - **Launchers:** import and install launcher APKs directly from this page, choose a default home screen, or restore the previous default. The active launcher shows “Adjust layout” when it supports the interface.
+- **Market:** browse apps and launchers dynamically from [pure-tv-store](https://gitee.com/juzisang331/pure-tv-store), search and preview them, download them to the pending installation queue, or install them on a connected TV. Refresh to discover newly added APKs.
 - App and launcher sizes include the main APK and split APKs. Private data, caches, and optimized files are excluded. Unreadable sizes are explicitly shown as unknown.
 - Lists scroll within their own tables, with fixed headers and batch actions above them. Core system components and the current default launcher are protected.
 
@@ -100,7 +101,7 @@ TV app APKs and source code are available in [resource/apps/](resource/apps/). T
 
 ## MCP / Agent
 
-Open “Device connection → MCP · Agent debugging,” copy the configuration into your client, and keep the manager window open. Its 31 tools cover system information, connections, app management, APK installation, launcher switching and layouts, background images, ADB configuration, language and theme settings, cancellation, and logs. The Agent and the interface share the same state.
+Open “Device connection → MCP · Agent debugging,” copy the configuration into your client, and keep the manager window open. Its 34 tools cover system information, connections, app management, APK installation, launcher switching and layouts, market browsing/downloads/installation, background images, ADB configuration, language and theme settings, cancellation, and logs. The Agent and the interface share the same state.
 
 See the [complete MCP setup and parameter guide](desktop/docs/mcp.md), currently available in Chinese.
 

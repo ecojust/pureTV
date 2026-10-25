@@ -39,8 +39,25 @@ fn tool(
     json!({"name":name,"description":description,"inputSchema":schema(properties,required),
         "annotations":{"readOnlyHint":read_only,"destructiveHint":!read_only,"openWorldHint":false}})
 }
+fn market_tool(
+    name: &str,
+    description: &str,
+    properties: Value,
+    required: &[&str],
+    read_only: bool,
+    destructive: bool,
+) -> Value {
+    let mut value = tool(name, description, properties, required, read_only);
+    value["annotations"]["openWorldHint"] = json!(true);
+    value["annotations"]["destructiveHint"] = json!(destructive);
+    value
+}
 pub fn tools() -> Vec<Value> {
     let packages = json!({"type":"array","items":{"type":"string"},"minItems":1,"maxItems":100});
+    let market_item = json!({
+        "id":{"type":"string","minLength":1,"description":"Exact APK-relative item id returned by get_market_catalog; arbitrary URLs and local paths are not accepted."},
+        "revision":{"type":"string","minLength":40,"maxLength":40,"description":"Optional 40-character lowercase hexadecimal catalog commit. Pass catalog.revision to reject a selection if the catalog has changed."}
+    });
     vec![
         tool("close_manager","Close the open manager after cancelling pending work and stopping the configured ADB server. In-flight mutations finish first. This interrupts connections using that ADB server; explicit user confirmation is required. A stdio disconnection during shutdown is expected.",json!({"confirmShutdown":{"type":"boolean","const":true}}),&["confirmShutdown"],false),
         tool("get_local_network","Refresh this computer's active LAN IPv4 addresses, adapter names and subnet prefixes. Returns the shared snapshot; no ADB or TV connection required.",json!({}),&[],true),
@@ -55,7 +72,7 @@ pub fn tools() -> Vec<Value> {
         tool("apply_launcher_layout","Apply a data-only layout.json layout to the current supported launcher, then read it back. Layout is a JSON string; v5 defines screen, users, immutable system, independent page backgrounds and navigation. Components use package-style actions, frames, SVG icons, separate textColor/iconColor and transparent component backgrounds. Legacy v2/v3/v4 remain supported. Home supports 0–24 user apps, Apps 0–100. No shell, arbitrary intents or remote icon URLs.",json!({"layoutJson":{"type":"string"}}),&["layoutJson"],false),
         tool("reset_launcher_layout","Remove the supported current launcher's layout.json override and verify defaults. Does not reset wallpaper or other settings.",json!({}),&[],false),
         tool("get_state","Get current TV, apps, launchers and history. Cached state remains available during operations.",json!({}),&[],true),
-        tool("get_status","Get operation busy/cancellation state, download progress and latest snapshot.",json!({}),&[],true),
+        tool("get_status","Get operation busy/cancellation state, ADB download progress, marketProgress and latest snapshot.",json!({}),&[],true),
         tool("set_adb_path","Select a local adb executable. Empty path automatically discovers ADB; disconnect TV first.",json!({"path":{"type":"string"}}),&["path"],false),
         tool("connect","Connect to an Android TV and scan when authorized. Accept the TV's authorization prompt if needed.",json!({"host":{"type":"string"},"port":{"type":"integer","minimum":1,"maximum":65535}}),&["host","port"],false),
         tool("disconnect","Disconnect the selected TV.",json!({}),&[],false),
@@ -64,6 +81,9 @@ pub fn tools() -> Vec<Value> {
         tool("uninstall","Uninstall explicit packages for current Android user, retaining data. Does not delete system partition APKs.",json!({"packages":packages}),&["packages"],false),
         tool("restore","Restore packages still available on the device using install-existing.",json!({"packages":packages}),&["packages"],false),
         tool("install","Install local single APK files in order, reporting each result. APKS/XAPK are unsupported.",json!({"paths":{"type":"array","items":{"type":"string"},"minItems":1,"maxItems":10}}),&["paths"],false),
+        market_tool("get_market_catalog","Read the applications and launchers in the Gitee pure-tv-store catalog. Set refresh=true to fetch a fresh catalog. Returns commit revision, item ids, APK sizes and cover URLs; no TV connection required. A stale cached catalog is explicitly marked.",json!({"refresh":{"type":"boolean"}}),&[],true,false),
+        market_tool("download_market_item","Download an APK selected by catalog item id into the manager's local cache and import it into the matching pending applications or launchers list. Pass catalog.revision to keep the selection tied to the displayed version. Does not install or activate a launcher; no TV connection required.",market_item.clone(),&["id"],false,false),
+        market_tool("install_market_item","Download a catalog APK and install it on the connected TV using the shared operation lock. Pass catalog.revision to keep the selection tied to the displayed version. Does not activate a launcher. If installation fails, the result retains the downloaded path with installed=false and isError=true for retry.",market_item,&["id"],false,true),
         tool("set_home","Set an installed HOME component as TV launcher and record previous HOME for recovery.",json!({"component":{"type":"string"}}),&["component"],false),
         tool("restore_home","Restore the recorded original launcher for this TV/user.",json!({}),&[],false),
         tool("clear_history","Clear the saved operation history.",json!({}),&[],false),
@@ -72,7 +92,7 @@ pub fn tools() -> Vec<Value> {
         tool("install_platform_tools","Download/verify/configure ADB or reuse verified offline cache. Set forceDownload=true to fetch a new verified copy even when the cache is valid. Google with Tencent fallback. Requires explicit Android SDK license acceptance; disconnect TV first.",json!({"forceDownload":{"type":"boolean","description":"Force a fresh download; preserve current ADB on cancellation or failure."},"acceptedLicense":{"type":"boolean","const":true,"description":"Set true only after the user accepts https://developer.android.com/studio/terms"}}),&["acceptedLicense"],false),
         tool("choose_apks","Open the manager's native multi-APK picker. Returns paths; does not install.",json!({}),&[],true),
         tool("choose_adb","Open the manager's native executable picker. Returns path; does not configure it.",json!({}),&[],true),
-        tool("open_resource","Open the allowlisted APK resource catalog, project, Platform Tools or Android SDK license page in the user's browser.",json!({"resource":{"type":"string","enum":["catalog","releases","platformTools","platformToolsLicense"]}}),&["resource"],false),
+        tool("open_resource","Open the allowlisted APK resource catalog, Gitee market, project, Platform Tools or Android SDK license page in the user's browser.",json!({"resource":{"type":"string","enum":["catalog","market","releases","platformTools","platformToolsLicense"]}}),&["resource"],false),
     ]
 }
 fn error(id: Value, code: i64, message: &str) -> Value {
@@ -96,7 +116,11 @@ fn valid_arguments(tool: &Value, arguments: &Value) -> bool {
             return false;
         };
         let typed = match rule["type"].as_str() {
-            Some("string") => v.is_string(),
+            Some("string") => v.as_str().is_some_and(|s| {
+                let length = s.chars().count() as u64;
+                length >= rule["minLength"].as_u64().unwrap_or(0)
+                    && length <= rule["maxLength"].as_u64().unwrap_or(u64::MAX)
+            }),
             Some("boolean") => v.is_boolean(),
             Some("integer") => v.as_u64().is_some_and(|n| {
                 n >= rule["minimum"].as_u64().unwrap_or(0)
@@ -220,7 +244,8 @@ pub fn dispatch(
                     let failed = value
                         .get("failedTargets")
                         .and_then(Value::as_array)
-                        .is_some_and(|failed| !failed.is_empty());
+                        .is_some_and(|failed| !failed.is_empty())
+                        || (name == "install_market_item" && value["installed"] == false);
                     json!({"content":[{"type":"text","text":value.to_string()}],"structuredContent":{"result":value},"isError":failed})
                 }
                 Err(message) => json!({"content":[{"type":"text","text":message}],"isError":true}),
@@ -433,7 +458,7 @@ mod tests {
         let call = |name: &str, args: Value| Ok(json!({"tool":name,"arguments":args}));
         let response=dispatch(json!({"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26"}}),&call).unwrap();
         assert_eq!(response["result"]["protocolVersion"], "2025-03-26");
-        assert_eq!(tools().len(), 31);
+        assert_eq!(tools().len(), 34);
         for tool in tools() {
             let mut args = json!({});
             for key in tool["inputSchema"]["required"].as_array().unwrap() {
@@ -498,6 +523,96 @@ mod tests {
         )
         .unwrap();
         assert_eq!(r["result"]["isError"], true);
+    }
+    #[test]
+    fn market_protocol_validates_selection_and_retains_partial_results() {
+        let revision = "0123456789abcdef0123456789abcdef01234567";
+        let selection = json!({"id":"apps/hifini/hifini-0.1.3.apk","revision":revision});
+        for (name, args) in [
+            ("get_market_catalog", json!({})),
+            ("get_market_catalog", json!({"refresh":true})),
+            ("download_market_item", selection.clone()),
+            (
+                "download_market_item",
+                json!({"id":"launcher/nova/nova.apk"}),
+            ),
+            ("install_market_item", selection.clone()),
+            ("open_resource", json!({"resource":"market"})),
+        ] {
+            let response = dispatch(
+                json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":name,"arguments":args}}),
+                &|called_name, called_args| {
+                    assert_eq!(called_name, name);
+                    assert_eq!(called_args, args);
+                    Ok(json!({"installed":true}))
+                },
+            ).unwrap();
+            assert_eq!(response["result"]["isError"], false, "{name}");
+        }
+        for (name, args) in [
+            ("get_market_catalog", json!({"refresh":"true"})),
+            (
+                "get_market_catalog",
+                json!({"url":"https://example.com/store"}),
+            ),
+            ("download_market_item", json!({})),
+            ("download_market_item", json!({"id":""})),
+            ("download_market_item", json!({"id":7})),
+            (
+                "download_market_item",
+                json!({"id":"apps/music/music.apk","path":"/tmp/target.apk"}),
+            ),
+            (
+                "install_market_item",
+                json!({"id":"apps/music/music.apk","revision":"master"}),
+            ),
+            (
+                "install_market_item",
+                json!({"id":"apps/music/music.apk","revision":format!("{revision}0")}),
+            ),
+        ] {
+            let response = dispatch(
+                json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":name,"arguments":args}}),
+                &|_, _| panic!("invalid market arguments reached the operation handler"),
+            ).unwrap();
+            assert_eq!(response["error"]["code"], -32602, "{name}: {args}");
+        }
+
+        let download =
+            json!({"item":{"id":selection["id"],"kind":"app"},"path":"/cache/market/hifini.apk"});
+        let failed = json!({"operation":"install","download":download,"installed":false,"error":"TV rejected installation","snapshot":{"revision":9}});
+        let response = dispatch(
+            json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"install_market_item","arguments":selection}}),
+            &|_, _| Ok(failed.clone()),
+        ).unwrap();
+        assert_eq!(response["result"]["isError"], true);
+        assert_eq!(response["result"]["structuredContent"]["result"], failed);
+        let downloaded = json!({"operation":"download","download":download,"installed":false});
+        let response = dispatch(
+            json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"download_market_item","arguments":selection}}),
+            &|_, _| Ok(downloaded.clone()),
+        ).unwrap();
+        assert_eq!(response["result"]["isError"], false);
+        assert_eq!(
+            response["result"]["structuredContent"]["result"],
+            downloaded
+        );
+
+        let catalog = tools();
+        for name in [
+            "get_market_catalog",
+            "download_market_item",
+            "install_market_item",
+        ] {
+            let annotations =
+                &catalog.iter().find(|tool| tool["name"] == name).unwrap()["annotations"];
+            assert_eq!(annotations["openWorldHint"], true);
+            assert_eq!(annotations["readOnlyHint"], name == "get_market_catalog");
+            assert_eq!(
+                annotations["destructiveHint"],
+                name == "install_market_item"
+            );
+        }
     }
     #[test]
     fn transport_authentication_origin_and_parallel_cancel() {

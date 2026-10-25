@@ -25,7 +25,7 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 
 `--mcp` 是当前窗口的代理，不创建第二套电视连接或管理状态。管理器内部仅监听 `127.0.0.1` 的随机端口，每次启动生成随机凭据；代理自动读取受保护的本机会话文件，不需要把令牌放到 Agent 配置。拒绝浏览器 Origin 请求，不允许跨电脑访问。重启窗口后请重新连接 MCP；关闭窗口后调用会明确报错。
 
-## 全部工具（31 个）
+## 全部工具（34 个）
 
 | 工具 | 参数 | 行为 |
 | --- | --- | --- |
@@ -33,7 +33,7 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 | `get_interface_preferences` | 无 | 读取当前窗口的语言和主题偏好 |
 | `set_interface_preferences` | 可选 `locale`、`theme` | 保存偏好并立即同步窗口；语言 zh-CN / zh-TW / en，主题 emerald / ocean / graphite |
 | `get_state` | 无 | 当前设备、ADB 状态、应用、启动器、原桌面、最近 200 项记录和消息；忙碌时返回最近快照 |
-| `get_status` | 无 | 是否正在操作、是否请求取消、最近下载进度和快照 |
+| `get_status` | 无 | 是否正在操作、是否请求取消、ADB 下载 `progress`、市场 `marketProgress` 和最近快照 |
 | `set_adb_path` | `path` | 设置本机 ADB 可执行文件；空字符串自动寻找，需先断开电视 |
 | `connect` | `host`, `port` | 连接电视，已授权时自动扫描；电视首次授权仍在电视上完成 |
 | `disconnect` | 无 | 断开当前电视 |
@@ -51,7 +51,7 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 | `install_platform_tools` | `acceptedLicense: true`，可选 `forceDownload: true` | 下载、校验并配置 ADB；默认复用已校验缓存，强制模式重新下载；失败或取消保留当前配置，需先断开电视 |
 | `choose_apks` | 无 | 在管理器打开原生多选 APK 对话框，只返回路径，不安装 |
 | `choose_adb` | 无 | 在管理器打开原生可执行文件对话框，只返回路径，不配置 |
-| `open_resource` | `resource` | 打开 `catalog`、`releases`、`platformTools` 或 `platformToolsLicense` 对应的固定网页 |
+| `open_resource` | `resource` | 打开 `catalog`、`market`、`releases`、`platformTools` 或 `platformToolsLicense` 对应的固定网页；`market` 指向 Gitee 市场仓库 |
 
 已安装应用及启动器的 `apkSizeBytes` 返回主 APK 和分包合计字节数，不含私有数据与缓存；无法读取时为 `null`，重新扫描会刷新。
 
@@ -75,6 +75,20 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 | --- | --- | --- |
 | `refresh_system_info` | 无 | 刷新内存、磁盘、CPU、SDK／补丁、分辨率和运行时间 |
 
+市场工具：
+
+| 工具 | 参数 | 行为 |
+| --- | --- | --- |
+| `get_market_catalog` | 可选 `refresh: true` | 读取应用／启动器目录；强制刷新时重新检查 [pure-tv-store](https://gitee.com/juzisang331/pure-tv-store)，无需连接电视 |
+| `download_market_item` | `id`，可选 `revision` | 下载目录中的 APK 到本机缓存，并同步加入应用或启动器待安装列表；不安装、不切换电视桌面 |
+| `install_market_item` | `id`，可选 `revision` | 在同一次共享操作中下载 APK 并安装到当前电视；安装启动器后仍需单独调用 `set_home` 才会切换桌面 |
+
+目录返回 `sourceUrl`、`revision`（40 位小写十六进制提交标识）、`fetchedAt`（毫秒时间戳）、`stale`、可选 `warning` 和 `items`。每个项目包含 `id`（仓库中的 APK 相对路径）、`kind`（`app` 或 `launcher`）、`name`、可选 `version`、`fileName`、`bytes`、`blobSha`、`folderUrl` 和可选 `coverUrl`。封面为该提交中的资源 URL，不在目录中内嵌图片。刷新失败后若使用旧缓存，`stale` 和 `warning` 会明确说明。
+
+下载／安装时应把选中目录的 `revision` 一并传入；若目录已更新，管理器会拒绝旧选择，Agent 应重新读取目录后再选择需要的项目。`id` 必须来自目录，工具不接受任意下载地址、目标文件路径或安装命令。
+
+下载返回 `{ operation: "download", download: { item, path, ... }, installed: false }`。安装返回同样的 `download`，加上 `operation: "install"`、`snapshot` 和 `installed`。如果下载成功但安装失败，MCP 返回 `isError: true`，同时保留 `structuredContent.result` 中的下载结果、错误和设备快照；窗口保留待安装 APK，可修复连接后用现有 `install { paths: [...] }` 重试。`installed: false` 对单纯下载是正常结果。为限制响应大小，MCP 下载结果不内嵌 `homeBackground` 图片；窗口仍会显示下载 APK 提供的 Home 背景。
+
 应用筛选、搜索、查看记录可基于 `get_state` 的 `packages`、`launchers`、`history` 完成；Agent 可直接提交选定的包名或 APK 路径，不需要模拟勾选界面。文件选择器需要用户在窗口操作，自动化时直接提供本机完整路径更方便。
 
 ## 调试示例
@@ -93,7 +107,14 @@ set_enabled {"packages":["com.vendor.recommendations"],"enabled":false}
 get_state {}
 ```
 
-Agent 的操作、完成状态和 ADB 下载进度会同步显示在窗口中。界面与 MCP 同时修改时，后到的操作收到「已有操作正在执行」；`get_state`、`get_status`、`cancel` 在任务执行时仍可调用。
+浏览市场并下载的调用顺序（`id`、`revision` 使用实际目录中的值）：
+
+```text
+get_market_catalog {"refresh":true}
+download_market_item {"id":"apps/hifini/hifini-0.1.3.apk","revision":"<catalog.revision>"}
+```
+
+已有电视连接且需要直接安装时，将第二步换成 `install_market_item`。Agent 的操作、完成状态、ADB／市场下载进度和待安装列表会同步显示在窗口中。界面与 MCP 同时修改时，后到的操作收到「已有操作正在执行」；`get_state`、`get_status`、`cancel` 在任务执行时仍可调用。市场进度通过独立的 `mcp-market-progress` 事件同步；完成事件的 `marketResult` 提供目录或下载／安装结果。
 
 成功结果同时提供文本 JSON 和 `structuredContent.result`。操作失败时 `isError: true`；批量部分失败时返回 `{ snapshot, failedTargets }` 并同样标记为错误，不能把部分失败说成全部成功。取消不会回滚已完成的批量项，实际结果以快照和记录为准。
 
@@ -101,7 +122,7 @@ MCP 沿用后端的核心组件、当前 HOME 保护、目标设备／用户复�
 
 ## 开发验证
 
-`cargo test --locked --manifest-path src-tauri/Cargo.toml` 验证协议、完整工具参数映射、令牌／Origin 校验和并发取消。`npm run test:ui` 检查配置展示、Agent 状态、下载进度和错误同步。
+`cargo test --locked --manifest-path src-tauri/Cargo.toml` 验证协议、完整工具参数映射、市场选择参数和安装失败保留下载结果、令牌／Origin 校验和并发取消。`npm run test:ui` 检查配置展示、Agent 状态、下载进度和错误同步。
 
 Linux 原生构建后，在 Xvfb 中运行：
 

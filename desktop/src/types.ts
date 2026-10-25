@@ -8,6 +8,24 @@ export interface PlatformToolsInfo {
 export interface DownloadProgress {
   stage: 'downloading' | 'verifying' | 'extracting' | 'checking'; downloaded: number; total: number;
 }
+export type MarketKind = 'app' | 'launcher';
+export interface MarketItem {
+  id: string; kind: MarketKind; name: string; version?: string | null; fileName: string;
+  bytes: number; blobSha: string; folderUrl: string; coverUrl?: string | null;
+}
+export interface MarketCatalog {
+  sourceUrl: string; revision: string; fetchedAt: number; stale: boolean; warning?: string | null; items: MarketItem[];
+}
+export interface MarketProgress {
+  stage: 'catalog' | 'downloading' | 'verifying' | 'installing'; downloaded: number; total: number; itemId?: string;
+}
+export interface MarketDownload {
+  item: MarketItem; path: string; homeBackground?: string | null; homeBackgroundColor?: string | null;
+}
+export interface MarketResult {
+  operation: 'download' | 'install'; download: MarketDownload; snapshot?: Snapshot; installed: boolean; error?: string | null;
+}
+export type MarketEventResult = MarketResult | { operation: 'catalog'; catalog: MarketCatalog };
 export interface SystemInfo {
   manufacturer: string | null; brand: string | null; sdkVersion: string | null; securityPatch: string | null;
   cpu: string | null; cpuAbi: string | null; memoryTotalBytes: number | null; memoryAvailableBytes: number | null;
