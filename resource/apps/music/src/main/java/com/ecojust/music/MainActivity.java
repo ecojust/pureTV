@@ -78,13 +78,25 @@ public class MainActivity extends Activity {
         list.setOnItemLongClickListener((parent, view, position, id) -> { trackMenu(tracks.get(position)); return true; });
         content.addView(list, new LinearLayout.LayoutParams(-1, 0, 1));
         LinearLayout bottom = column(); bottom.setPadding(dp(8), dp(12), 0, 0); root.addView(bottom);
-        LinearLayout bar = row(); now = text(getString(R.string.choose_track), 16); now.setSingleLine(); now.setEllipsize(TextUtils.TruncateAt.END); bar.addView(now, new LinearLayout.LayoutParams(0, dp(44), 1));
-        favourite = button(getString(R.string.favourite), this::toggleFavourite); bar.addView(favourite);
-        bar.addView(button(getString(R.string.previous), () -> { if (player != null) player.previous(); }));
-        toggle = button(getString(R.string.play), () -> { if (player != null) player.toggle(); }); bar.addView(toggle);
-        bar.addView(button(getString(R.string.next), () -> { if (player != null) player.next(); }));
-        mode = button(getString(R.string.sequence), () -> { if (player != null) player.shuffle(!player.shuffled()); }); bar.addView(mode);
-        bar.addView(button(getString(R.string.queue), this::queueDialog)); bar.addView(button(getString(R.string.fullscreen), this::fullscreen)); bottom.addView(bar);
+        boolean compact = getResources().getConfiguration().screenWidthDp < 800;
+        LinearLayout bar = row(); now = text(getString(R.string.choose_track), 16); now.setSingleLine(); now.setEllipsize(TextUtils.TruncateAt.END);
+        if (compact) bottom.addView(now, new LinearLayout.LayoutParams(-1, dp(30)));
+        else bar.addView(now, new LinearLayout.LayoutParams(0, dp(44), 1));
+        favourite = button(getString(R.string.favourite), this::toggleFavourite);
+        Button previous = button(getString(R.string.previous), () -> { if (player != null) player.previous(); });
+        toggle = button(getString(R.string.play), () -> { if (player != null) player.toggle(); });
+        Button next = button(getString(R.string.next), () -> { if (player != null) player.next(); });
+        mode = button(getString(R.string.sequence), () -> { if (player != null) player.shuffle(!player.shuffled()); });
+        Button queue = button(getString(R.string.queue), this::queueDialog), expand = button(getString(R.string.fullscreen), this::fullscreen);
+        Button[] controls = {favourite, previous, toggle, next, mode, queue, expand};
+        for (int i=0;i<controls.length;i++) {
+            if (compact) {
+                controls[i].setTextSize(13);controls[i].setPadding(dp(6),dp(6),dp(6),dp(6));
+                controls[i].setSingleLine();bar.addView(controls[i],new LinearLayout.LayoutParams(0,dp(44),1));
+            }
+            else bar.addView(controls[i]);
+        }
+        bottom.addView(bar);
         LinearLayout timeline = row(); seek = new SeekBar(this); seek.setMax(1000); timeline.addView(seek, new LinearLayout.LayoutParams(0, dp(32), 1));
         clock = text("0:00 / 0:00", 13); timeline.addView(clock, new LinearLayout.LayoutParams(dp(125), dp(32))); bottom.addView(timeline);
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

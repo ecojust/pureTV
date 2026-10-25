@@ -81,7 +81,7 @@ public class UiTest {
     @Test @Config(qualifiers="en-rUS-w640dp-h360dp-land-mdpi") public void englishCompactPlayerKeepsControlsInsideScreen() {
         try(ActivityController<MainActivity> c=Robolectric.buildActivity(MainActivity.class).setup().visible()) {
             MainActivity a=c.get();View root=a.getWindow().getDecorView();root.measure(View.MeasureSpec.makeMeasureSpec(640,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(360,View.MeasureSpec.EXACTLY));root.layout(0,0,640,360);
-            for(int id:new int[]{R.string.queue,R.string.fullscreen,R.string.sequence,R.string.play_all}){Button b=find(root,a.getString(id));assertNotNull(b);int[] xy=new int[2];b.getLocationOnScreen(xy);assertTrue(xy[0]>=0&&xy[0]+b.getWidth()<=640);assertTrue(xy[1]>=0&&xy[1]+b.getHeight()<=360);}
+            for(int id:new int[]{R.string.queue,R.string.fullscreen,R.string.sequence,R.string.play_all,R.string.previous,R.string.next,R.string.play}){Button b=find(root,a.getString(id));assertNotNull(b);int[] xy=new int[2];b.getLocationOnScreen(xy);assertTrue(a.getString(id)+" horizontal bounds",xy[0]>=0&&xy[0]+b.getWidth()<=640);assertTrue(a.getString(id)+" vertical bounds",xy[1]>=0&&xy[1]+b.getHeight()<=360);}
             assertEnglish(root);
         }
     }
