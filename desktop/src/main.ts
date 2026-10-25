@@ -9,7 +9,7 @@ import * as api from './bridge';
 import { emptySnapshot, type Request, type PackageInfo, type PlatformToolsInfo, type DownloadProgress, type Snapshot, type LauncherLayout, type LauncherLayoutInfo, type LauncherRequest } from './types';
 
 type Page = 'connect' | 'apps' | 'launchers' | 'install' | 'history';
-type Filter = 'all' | 'system' | 'user' | 'disabled' | 'recoverable';
+type Filter = 'all' | 'system' | 'enabled' | 'disabled' | 'recoverable';
 const pages: Record<Page, [string, string, string]> = {
   connect: ['设备连接', '连接电视，开始管理你的应用和桌面', 'monitor'],
   apps: ['应用管理', '查看电视中的应用，按需停用或恢复', 'grid'],
@@ -325,8 +325,8 @@ function localNetworkPanel():string {
 function connectionPage(): string {
   return ui`${connectionStrip()}${deviceInfoPanel()}${localNetworkPanel()}<div class="two-columns"><section class="panel"><div class="panel-heading">${icon('monitor')}<div><h2>连接你的电视</h2><p>电视与电脑连接同一网络</p></div></div><ol class="steps"><li><span>1</span><div><strong>开启电视开发者选项</strong><p>在系统设置中找到“关于”，连续点击版本号，再开启 USB 或网络调试。</p></div></li><li><span>2</span><div><strong>输入电视 IP 和调试端口</strong><p>常见端口为 5555；如果电视显示其他端口，以电视上的值为准。</p></div></li><li><span>3</span><div><strong>在电视上允许连接</strong><p>确认电脑的调试授权。连接成功后会扫描当前用户的应用。</p></div></li></ol>${snapshot.device ? ui`<div class="device-summary"><span>设备</span><strong>${esc(snapshot.device.model || snapshot.device.serial)}</strong><span>地址</span><code>${esc(snapshot.device.serial)}</code><span>当前用户</span><strong>${snapshot.device.userId}</strong><span>状态</span><strong>${esc(deviceStatus()[0])}</strong></div>` : ''}</section><div class="stack">${adbPanel()}</div></div>`;
 }
-const filters: [Filter, string][] = [['all', '全部'], ['system', '系统应用'], ['user', '用户应用'], ['disabled', '已停用'], ['recoverable', '可恢复']];
-function inFilter(p: PackageInfo, f: Filter): boolean { return f === 'recoverable' ? !p.installed : p.installed && (f === 'all' || f === 'system' && p.system || f === 'user' && !p.system || f === 'disabled' && !p.enabled); }
+const filters: [Filter, string][] = [['all', '全部'], ['system', '系统应用'], ['enabled', '已启用'], ['disabled', '已停用'], ['recoverable', '可恢复']];
+function inFilter(p: PackageInfo, f: Filter): boolean { return f === 'recoverable' ? !p.installed : p.installed && (f === 'all' || f === 'system' && p.system || f === 'enabled' && !p.system && p.enabled || f === 'disabled' && !p.enabled); }
 function visiblePackages(): PackageInfo[] { const needle = query.trim().toLocaleLowerCase(); return snapshot.packages.filter(p => inFilter(p, filter) && (!needle || `${p.label} ${p.packageName}`.toLocaleLowerCase().includes(needle))); }
 function selectedPackages(): PackageInfo[] { return snapshot.packages.filter(p => selected.has(p.packageName)); }
 function appIcon(p: PackageInfo): string {
@@ -504,7 +504,7 @@ function updateList(): void {
   else if (focusAll) root.querySelector<HTMLInputElement>('[data-select-all]')?.focus({ preventScroll: true });
 }
 function cleanSelection(): void {
-  const valid = new Set(snapshot.packages.filter(p => !p.protectedReason).map(p => p.packageName));
+  const valid = new Set(snapshot.packages.filter(p => !p.protectedReason && inFilter(p, filter)).map(p => p.packageName));
   selected = new Set([...selected].filter(p => valid.has(p)));
 }
 type RunResult = { success: boolean; installedPaths: string[] };
