@@ -289,21 +289,26 @@ public class AudioDownloaderTest {
         } finally {release.countDown();}
         assertEquals(0,cachedFiles().length);
     }
-    @Test public void explicitCancelDisconnectsInFlightTransferAndRemovesItsPartialFile() throws Exception {
-        CountDownLatch started=new CountDownLatch(1),release=new CountDownLatch(1);
+    @Test public void explicitCancelReturnsPromptlyAndReaderCleansPartialAfterTransportUnblocks() throws Exception {
+        CountDownLatch started=new CountDownLatch(1),received=new CountDownLatch(1),release=new CountDownLatch(1);
         server.createContext("/partial",exchange->{
             exchange.sendResponseHeaders(200,0);
             try(java.io.OutputStream output=exchange.getResponseBody()) {
-                output.write(wav());output.flush();started.countDown();release.await(3,TimeUnit.SECONDS);
+                output.write(wav());output.flush();started.countDown();release.await();
             } catch(InterruptedException interrupted){Thread.currentThread().interrupt();}
         });
         ExecutorService worker=Executors.newSingleThreadExecutor();AudioDownloader downloader=downloader();
         try {
             Future<AudioDownloader.Failure> task=worker.submit(()->{
-                try {downloader.download(OFFICIAL+"partial",OFFICIAL,null);return null;}
+                try {downloader.download(OFFICIAL+"partial",OFFICIAL,progress->{if(progress.downloaded>0)received.countDown();});return null;}
                 catch(AudioDownloader.DownloadException error){return error.failure;}
             });
-            assertTrue(started.await(2,TimeUnit.SECONDS));downloader.cancel();
+            assertTrue(started.await(2,TimeUnit.SECONDS));assertTrue(received.await(2,TimeUnit.SECONDS));
+            assertTrue("The reader must own an in-flight partial file",cachedFiles().length>0);
+            requests.submit(downloader::cancel).get(300,TimeUnit.MILLISECONDS);
+            // JDK/Android disconnect implementations may wait behind the active read. The UI
+            // caller must return promptly; the reader owns cleanup once EOF/read timeout wakes it.
+            release.countDown();
             assertEquals(AudioDownloader.Failure.CANCELLED,task.get(2,TimeUnit.SECONDS));
             assertEquals(0,cachedFiles().length);
         } finally {release.countDown();downloader.close();worker.shutdownNow();}
