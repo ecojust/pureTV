@@ -116,6 +116,8 @@ Installed application and launcher APK sizes are measured during scans (and refr
 
 `Snapshot.installResults` holds the current batch's `{path,success,message}` using the original full request paths. It is not persisted into history. The UI removes only confirmed successful paths from its pending queue; failures and skipped files remain.
 
+Explicit GUI operations display a modal loading state followed by a result dialog, above any open layout editor. Results use the operation's own response and distinguish failures, cancellation, and unprocessed targets; an unrelated MCP event cannot replace them. Rejected installation requests never consume old `installResults`. Layout write failures preserve the editor draft. Automatic reads and MCP state synchronization remain non-modal.
+
 ## Interface preferences
 
 get_interface_preferences / set_interface_preferences expose the same locale and theme controls as the window. Values are limited to zh-CN/zh-TW/en and emerald/ocean/graphite, persisted separately as interface-preferences.json and emitted through interface-preferences events. Initialization only fills unset values, preserving agent changes during startup. Native file-picker titles follow the selected locale. Browser storage contains only the scoped puretv.preferences object, never device hosts, pairing codes or APK paths.

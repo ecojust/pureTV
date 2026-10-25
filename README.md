@@ -33,6 +33,8 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 系统应用卸载只针对当前 Android 用户，保留数据，不删除系统分区 APK。新安装且具备启动入口的用户应用可加入启动器排布。
 
+主动执行连接、刷新、应用管理、启动器切换或布局应用等操作时，管理器显示等待状态，完成后弹窗反馈结果。批量任务区分成功、失败和未执行项；后台自动读取不会反复弹窗。
+
 ## 启动器与电视应用资源
 
 [![八款 v5 启动器的 Android 原生渲染预览](docs/previews/launcher-collection-010.png)](resource/launcher/)

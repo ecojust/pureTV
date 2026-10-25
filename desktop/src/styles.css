@@ -1016,6 +1016,41 @@ tr.selected {
 .modal::backdrop {
   background: #14231c66;
 }
+.operation-feedback {
+  width: min(520px, calc(100vw - 40px));
+  padding: 30px;
+  text-align: center;
+}
+.operation-feedback::backdrop { background: #10231eb8; backdrop-filter: blur(3px); }
+.operation-feedback .feedback-symbol {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  color: var(--green);
+  background: var(--green-soft);
+}
+.feedback-symbol .spinner { width: 28px; height: 28px; border-width: 3px; }
+.feedback-symbol .icon { width: 28px; height: 28px; }
+.feedback-symbol.error { color: var(--danger); background: var(--danger-soft); }
+.operation-feedback .feedback-operation { margin: 0 0 7px; color: var(--muted); font-size: 12px; }
+.operation-feedback h2 { margin: 0; font-size: 21px; }
+.feedback-live > p { margin: 14px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; white-space: pre-line; overflow-wrap: anywhere; }
+.feedback-live .feedback-error, .feedback-item-status.error { color: var(--danger); }
+.feedback-live .download-meter { width: 100%; height: 6px; margin-top: 18px; }
+.operation-feedback .modal-actions { justify-content: center; }
+.operation-feedback .modal-actions button { min-width: 100px; }
+.feedback-results { list-style: none; text-align: left; padding: 0; margin: 20px 0 0; max-height: 34vh; overflow: auto; border: 1px solid var(--line); border-radius: 9px; }
+.feedback-results li { padding: 11px 13px; border-bottom: 1px solid var(--line); }
+.feedback-results li:last-child { border-bottom: 0; }
+.feedback-results li > div { display: flex; align-items: flex-start; gap: 12px; justify-content: space-between; }
+.feedback-results strong { min-width: 0; font-size: 12px; overflow-wrap: anywhere; }
+.feedback-item-status { flex-shrink: 0; color: var(--muted); font-size: 12px; }
+.feedback-item-status.success { color: var(--green); }
+.feedback-results p { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) { .operation-feedback .spinner { animation: none; } }
 .modal-heading {
   display: flex;
   align-items: center;
