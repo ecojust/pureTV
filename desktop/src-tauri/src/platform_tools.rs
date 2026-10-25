@@ -752,11 +752,13 @@ fn install_with_mode<T>(
 mod tests {
     use super::*;
     use std::io::Cursor;
-    use std::sync::Arc;
+    use std::sync::{atomic::AtomicU64, Arc};
     use zip::{write::SimpleFileOptions, CompressionMethod, ZipWriter};
 
     fn directory() -> Directory {
-        let path = std::env::temp_dir().join(format!("puretv-tools-test-{}", nonce()));
+        static NEXT_DIRECTORY_ID: AtomicU64 = AtomicU64::new(0);
+        let id = NEXT_DIRECTORY_ID.fetch_add(1, Ordering::Relaxed);
+        let path = std::env::temp_dir().join(format!("puretv-tools-test-{}-{id}", nonce()));
         private_directory(&path).unwrap();
         Directory { path, keep: false }
     }
