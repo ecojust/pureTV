@@ -111,7 +111,10 @@ feedbackDialog.tabIndex = -1;
 feedbackDialog.setAttribute('aria-labelledby', 'feedback-title');
 feedbackDialog.setAttribute('aria-describedby', 'feedback-description');
 document.body.append(feedbackDialog);
-feedbackDialog.addEventListener('cancel', event => { if (feedback?.phase === 'loading') event.preventDefault(); });
+feedbackDialog.addEventListener('cancel', event => {
+  event.preventDefault();
+  if (feedback?.phase === 'result') closeFeedback();
+});
 feedbackDialog.addEventListener('keydown', event => {
   if (event.key !== 'Tab') return;
   const buttons = [...feedbackDialog.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')];
@@ -120,17 +123,20 @@ feedbackDialog.addEventListener('keydown', event => {
   else if (event.shiftKey && (document.activeElement === first || document.activeElement === feedbackDialog)) { event.preventDefault(); last!.focus(); }
   else if (!event.shiftKey && (document.activeElement === last || document.activeElement === feedbackDialog)) { event.preventDefault(); first.focus(); }
 });
-feedbackDialog.addEventListener('close', () => {
-  if (feedbackDialog.open) return;
-  feedback = null; feedbackMarkup = '';
-  if (feedbackFocus?.isConnected) feedbackFocus.focus({ preventScroll: true });
+function closeFeedback(): void {
+  if (feedback?.phase !== 'result') return;
+  const previousFocus = feedbackFocus;
+  // Native dialog close events are queued. Clear state before closing so an
+  // immediate render cannot reopen this result, or a late event clear a new one.
+  feedback = null; feedbackMarkup = ''; feedbackFocus = null;
+  feedbackDialog.close();
+  if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
   else if (layoutDialog.open) layoutDialog.querySelector<HTMLButtonElement>('[data-u-act="apply"], [data-act="apply-layout"]')?.focus({ preventScroll: true });
   else root.querySelector<HTMLButtonElement>('.nav-item.active')?.focus({ preventScroll: true });
-  feedbackFocus = null;
-});
+}
 feedbackDialog.addEventListener('click', event => {
   const target = event.target as HTMLElement;
-  if (target.closest('[data-feedback-close]') && feedback?.phase === 'result') feedbackDialog.close();
+  if (target.closest('[data-feedback-close]')) closeFeedback();
   if (target.closest('[data-feedback-cancel]') && feedback?.phase === 'loading' && !cancelling) void cancelOperation();
 });
 function renderFeedback(): void {
