@@ -110,6 +110,8 @@ Installed application and launcher APK sizes are measured during scans (and refr
 
 Before confirming Apply, the editor refreshes the current launcher's layout/app catalogue and the matching manager snapshot. A failed read cannot authorize a write. Only an open editor's unsaved edits survive refresh; a closed editor never replaces a freshly read layout with its earlier cache. Availability checks cover both pages, including hidden cards. Unavailable cards remain in the draft and are identified by page, name, ID and package, with a shortcut to select and repair the card. Core validation supplies the same identifiers plus the specific rejection reason for MCP clients.
 
+The GUI shows modal checking feedback before the first preflight read. Cancellation and failures produce a result without opening write confirmation. Preflight skips other launchers' background reads; ordinary catalogue reads and confirmed writes retain background refreshes. SVG property input removes only unnamespaced role/aria-* attributes and text-only title/desc metadata, then validates the unchanged v5 drawing subset. Invalid icon edits stay in the editor and block GUI Apply until corrected, discarded, or removed; protocol imports and MCP payloads remain strict.
+
 `get_launcher_covers`, `choose_launcher_cover` and `choose_launcher_apks` manage user-provided optional card backgrounds, never TV screenshots. PNG/JPEG/WebP imports are bounded to 4 MiB. APK sibling thumb images are discovered locally, and installed-card covers persist in the manager data directory. MCP exposes get_launcher_covers and set_launcher_cover, synchronizing local UI state.
 
 ## System info and install queue

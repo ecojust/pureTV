@@ -707,6 +707,125 @@ try {
       await p.evaluate(state=>{window.__setMockState(state);window.__emitMcp('mcp-operation',{running:false,tool:'get_state',snapshot:state});},{...structuredClone(mossState),revision:revision++});
     }
   },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  const holdNext=(p,action)=>p.evaluate(action=>window.__holdNextOperation(action),action);
+  const layoutWrites=p=>p.evaluate(()=>window.__launcherRequests.filter(request=>request.action==='applyLayout'));
+  await check('layout preflight: checking is modal before the first read and continues through snapshot reconciliation',async p=>{
+    await openMossEditor(p);const before=await p.evaluate(()=>window.__launcherRequests.length);await holdNext(p,'getLayout');await holdNext(p,'getState');
+    await p.locator('[data-u-act="apply"]').click();await held(p,'getLayout');
+    const observed=await p.evaluate(()=>window.__pendingOperations.find(operation=>operation.action==='getLayout').feedback);
+    assert.equal(observed.phase,'loading');assert.equal(observed.modal,true);assert.match(observed.text,/正在检查电视应用和启动器布局/);
+    assert.equal(await p.locator('[data-u-act="apply"]').isDisabled(),true);assert.equal(await p.locator('[data-u-field="text"]').isDisabled(),true);
+    await p.keyboard.press('Escape');assert.equal(await feedback(p).getAttribute('data-phase'),'loading');
+    for(let i=0;i<4;i++){await p.keyboard.press('Tab');assert.equal(await p.evaluate(()=>!!document.activeElement.closest('.operation-feedback')),true);}
+    assert.equal(await p.locator('#confirm-operation').count(),0);await release(p,'getLayout');await held(p,'getState');
+    assert.equal(await feedback(p).getAttribute('data-phase'),'loading','Snapshot reconciliation remains covered by the same loading dialog');
+    assert.deepEqual(await p.evaluate(index=>window.__launcherRequests.slice(index).map(request=>request.action),before),['getLayout'],'Checking does not scan unrelated launcher backgrounds');
+    await release(p,'getState');await p.locator('#confirm-operation').waitFor();assert.equal(await feedback(p).count(),0,'The checking overlay is gone before confirmation');
+    assert.equal(await p.locator('#confirm-operation').evaluate(el=>el.closest('dialog').matches(':modal')),true);assert.equal((await layoutWrites(p)).length,0);
+    await p.locator('dialog[open]:has(#confirm-operation) [data-act="close-dialog"]').last().click();assert.equal((await layoutWrites(p)).length,0);assert.equal(await p.locator('[data-u-act="apply"]').isEnabled(),true);
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  await check('layout preflight: cancelling a slow check keeps edits and never opens confirmation or writes',async p=>{
+    await openMossEditor(p);await p.locator('[data-u-field="text"]').fill('取消检查也保留');await p.locator('[data-u-field="text"]').dispatchEvent('change');await holdNext(p,'getLayout');
+    await p.locator('[data-u-act="apply"]').click();await held(p,'getLayout');await feedback(p).locator('[data-feedback-cancel]').click();assert.equal(await feedback(p).locator('[data-feedback-cancel]').isDisabled(),true);
+    await release(p,'getLayout');const modal=await result(p,'info');assert.match(await modal.innerText(),/检查已取消，尚未写入电视/);assert.equal(await p.locator('#confirm-operation').count(),0);assert.equal((await layoutWrites(p)).length,0);
+    await acknowledge(p);assert.equal(await p.locator('[data-u-field="text"]').inputValue(),'取消检查也保留');assert.equal(await p.locator('[data-u-act="apply"]').isEnabled(),true);
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  await check('layout preflight: failed layout or snapshot reads show an error and preserve the draft for retry',async p=>{
+    await openMossEditor(p);await p.locator('[data-u-field="text"]').fill('检查失败保留草稿');await p.locator('[data-u-field="text"]').dispatchEvent('change');
+    for(const action of ['getLayout','getState']){
+      await holdNext(p,action);await p.locator('[data-u-act="apply"]').click();await held(p,action);await release(p,action,{error:'读取失败 '+action});
+      assert.match(await (await result(p,'error')).innerText(),new RegExp('读取失败 '+action));assert.equal(await p.locator('#confirm-operation').count(),0);assert.equal((await layoutWrites(p)).length,0);await acknowledge(p);
+      assert.equal(await p.locator('[data-u-field="text"]').inputValue(),'检查失败保留草稿');assert.equal(await p.locator('[data-u-act="apply"]').isEnabled(),true);
+    }
+    await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await result(p,'success');assert.equal((await layoutWrites(p))[0].layout.home.users[0].text,'检查失败保留草稿');
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  const cctvSvg=await readFile(new URL('./fixtures/cctv-logo.svg',import.meta.url),'utf8');
+  const svgInput=p=>p.locator('textarea[data-u-field="icon"]');
+  const editSvg=async(p,value)=>{await svgInput(p).fill(value);await svgInput(p).dispatchEvent('change');};
+  await check('SVG icon: the supplied CCTV artwork strips accessibility metadata and preserves every drawing command',async p=>{
+    await openMossEditor(p);await editSvg(p,cctvSvg);assert.equal(await p.locator('[data-svg-error]').count(),0);
+    const normalized=(await readEditorJson(p)).home.users[0].icon;
+    const details=await p.evaluate(({source,normalized})=>{
+      const parse=text=>new DOMParser().parseFromString(text,'image/svg+xml'),attrs=node=>Object.fromEntries([...node.attributes].map(attr=>[attr.name,attr.value]));
+      const original=parse(source),clean=parse(normalized);
+      return {originalPaths:[...original.querySelectorAll('path')].map(attrs),cleanPaths:[...clean.querySelectorAll('path')].map(attrs),originalGroup:attrs(original.querySelector('g')),cleanGroup:attrs(clean.querySelector('g')),root:attrs(clean.documentElement),metadata:clean.querySelectorAll('title,desc,[role],[aria-label]').length};
+    },{source:cctvSvg,normalized});
+    assert.deepEqual(details.cleanPaths,details.originalPaths);assert.deepEqual(details.cleanGroup,details.originalGroup);assert.equal(details.metadata,0);assert.equal(details.root.viewBox,'0 0 32 32');assert.equal(details.root.width,'32');assert.equal(details.root.height,'32');assert.equal(await p.locator('[data-u-node="cctv-live"] svg path').count(),4);
+    const systemId=mossLayout.home.system[0].id;await p.locator(`[data-u-node="${systemId}"]`).click();assert.equal(await svgInput(p).isDisabled(),true);await p.locator('[data-u-node="cctv-live"]').click();
+    await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await result(p,'success');const sent=(await layoutWrites(p))[0].layout;assert.equal(sent.home.users[0].icon,normalized);assert.deepEqual(sent.home.system,mossLayout.home.system);await shot(p,'svg-cctv-applied');
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  await check('SVG icon: pasting and immediately applying does not consume the first click',async p=>{
+    await openMossEditor(p);await svgInput(p).fill(cctvSvg);
+    await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').waitFor({timeout:4000});
+    assert.equal((await layoutWrites(p)).length,0,'The initial click starts checking and confirmation, never a premature write');
+    await p.locator('#confirm-operation').click();await result(p,'success');
+    const applied=(await layoutWrites(p))[0].layout.home.users[0].icon;assert.match(applied,/M126\.57 53\.76/);assert.doesNotMatch(applied,/<title|role=|aria-label=/);
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  await check('SVG icon: invalid input survives page changes and blocks apply until explicitly discarded',async p=>{
+    await openMossEditor(p);await p.locator('[data-u-field="text"]').fill('保留文案');await p.locator('[data-u-field="text"]').dispatchEvent('change');const malformed='<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0';await editSvg(p,malformed);
+    assert.match(await p.locator('[data-svg-error]').innerText(),/SVG/);assert.doesNotMatch(await p.locator('[data-svg-error]').innerText(),/屏幕范围|系统组件只读/);
+    await p.locator('[data-u-page="apps"]').click();const before=await p.evaluate(()=>window.__launcherRequests.length);await p.locator('[data-u-act="apply"]').click();await settled(p);
+    assert.equal(await p.evaluate(()=>window.__launcherRequests.length),before,'Invalid SVG is rejected before reading or writing any television state');assert.equal(await p.locator('#confirm-operation').count(),0);assert.equal(await svgInput(p).inputValue(),malformed);assert.equal(await p.locator('[data-u-page="home"]').evaluate(el=>el.classList.contains('primary')),true);
+    await p.locator('[data-u-act="discard-svg"]').click();assert.equal(await svgInput(p).inputValue(),cctvNode.icon);assert.equal(await p.locator('[data-u-field="text"]').inputValue(),'保留文案');await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await result(p,'success');assert.equal((await layoutWrites(p))[0].layout.home.users[0].text,'保留文案');
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  await check('SVG icon: an invalid icon alone preserves its application identity during a catalogue refresh',async p=>{
+    await openMossEditor(p);const original=await readEditorJson(p),malformed='<svg><path';await editSvg(p,malformed);
+    const fresh=structuredClone(mossLayout);fresh.home.users=[{...structuredClone(cctvNode),id:'new-webtv-default',name:'新的默认入口',text:'新的默认入口',action:'com.ecojust.webtv'}];
+    await p.evaluate(layout=>window.__setMockLayout(layout),fresh);await p.locator('[data-u-act="refresh"]').click();await result(p,'success');await acknowledge(p);
+    assert.equal(await svgInput(p).inputValue(),malformed);assert.deepEqual(await readEditorJson(p),original,'An invalid icon draft alone protects the card identity even before any valid property edit');
+    const before=await p.evaluate(()=>window.__launcherRequests.length);await p.locator('[data-u-act="apply"]').click();await settled(p);assert.equal(await p.evaluate(()=>window.__launcherRequests.length),before);assert.equal((await layoutWrites(p)).length,0);
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  await check('SVG icon: unsupported drawing features and active content are rejected without changing the last valid artwork',async p=>{
+    await openMossEditor(p);await editSvg(p,cctvSvg);
+    for(const value of [
+      '<svg xmlns="http://www.w3.org/2000/svg" onload="window.__xss=true"><path d="M0 0L24 24"/></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg"><script>window.__xss=true</script></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg"><title><script>window.__xss=true</script></title></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg"><image href="https://example.invalid/image.png"/></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="round"><circle r="10"/></clipPath></defs><path d="M0 0L24 24"/></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg"><title>'+('x'.repeat(8200))+'</title><path d="M0 0L24 24"/></svg>',
+    ]){
+      await editSvg(p,value);const message=await p.locator('[data-svg-error]').innerText();assert.match(message,/SVG/);assert.doesNotMatch(message,/屏幕范围|系统组件只读/);assert.equal(await svgInput(p).inputValue(),value);
+      assert.equal(await p.locator('[data-u-node="cctv-live"] svg path').count(),4);assert.equal(await p.locator('.unified-canvas script,.unified-canvas image,.unified-canvas [onload]').count(),0);assert.equal(await p.evaluate(()=>window.__xss),false);
+    }
+    const before=await p.evaluate(()=>window.__launcherRequests.length);await p.locator('[data-u-act="apply"]').click();await settled(p);assert.equal(await p.evaluate(()=>window.__launcherRequests.length),before);assert.equal((await layoutWrites(p)).length,0);
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
+  const paddedSvg=count=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0L24 24"/><!--'+' '.repeat(count)+'--></svg>';
+  const largeSvgLayout=structuredClone(mossLayout),largeSvgState=structuredClone(mossState),largeSvgApps=structuredClone(mossApps);
+  for(let index=0;index<12;index++){
+    const packageName='com.example.svgfiller'+index,label='SVG filler '+index;
+    largeSvgLayout.apps.users.push({...structuredClone(cctvNode),id:'svg-filler-'+index,name:label,text:label,action:packageName,icon:paddedSvg(3000)});
+    largeSvgState.packages.push({packageName,label,installed:true,enabled:true,system:false,protectedReason:null});largeSvgApps.push({packageName,label});
+  }
+  const layoutByteLimit=90*1024,largeSvgTarget=layoutByteLimit-128;
+  let svgPadding=largeSvgTarget-Buffer.byteLength(JSON.stringify(largeSvgLayout));assert.ok(svgPadding>0);
+  for(const node of largeSvgLayout.apps.users){const count=Math.min(svgPadding,8192-Buffer.byteLength(node.icon));node.icon=node.icon.replace('--></svg>',' '.repeat(count)+'--></svg>');svgPadding-=count;}
+  assert.equal(svgPadding,0);assert.equal(Buffer.byteLength(JSON.stringify(largeSvgLayout)),largeSvgTarget);
+  await check('SVG icon: a valid small icon cannot silently bypass the total layout size limit',async p=>{
+    await openMossEditor(p);const replacement=paddedSvg(7200);assert.ok(Buffer.byteLength(replacement)<8192);
+    assert.equal(Buffer.byteLength(JSON.stringify(await readEditorJson(p))),largeSvgTarget,'Initial layout fits the protocol limit');
+    await editSvg(p,replacement);assert.match(await p.locator('[data-svg-error]').innerText(),/90 KiB/);assert.equal(await svgInput(p).inputValue(),replacement);
+    await p.locator('[data-u-page="apps"]').click();await p.locator('[data-u-page="home"]').click();assert.equal(await svgInput(p).inputValue(),replacement,'Rejected replacement survives navigation');
+    const before=await p.evaluate(()=>window.__launcherRequests.length);await p.locator('[data-u-act="apply"]').click();await settled(p);assert.equal(await p.evaluate(()=>window.__launcherRequests.length),before);assert.equal(await p.locator('#confirm-operation').count(),0);assert.equal((await layoutWrites(p)).length,0);
+    const unchanged=await readEditorJson(p);assert.equal(unchanged.home.users[0].icon,cctvNode.icon);assert.equal(Buffer.byteLength(JSON.stringify(unchanged)),largeSvgTarget,'Committed layout retains its original valid icon');
+    await p.locator('[data-u-act="discard-svg"]').click();assert.equal(await svgInput(p).inputValue(),cctvNode.icon);assert.equal(await p.locator('[data-svg-error]').count(),0);
+  },largeSvgState,{layoutSupported:true,layout:largeSvgLayout,layoutApps:largeSvgApps});
+  await check('layout switch: visibility keeps a circular thumb in every theme without changing ordinary checkboxes',async p=>{
+    await p.addStyleTag({content:'input[role="switch"],input[role="switch"]::after{transition:none!important}'});
+    const inspect=locator=>locator.evaluate(el=>{
+      const style=getComputedStyle(el),thumb=getComputedStyle(el,'::after'),probe=document.createElement('span');probe.style.backgroundColor='var(--green)';probe.style.color='var(--on-accent)';document.body.append(probe);const colors=getComputedStyle(probe),expectedTrack=colors.backgroundColor,expectedThumb=colors.color;probe.remove();
+      return {width:style.width,height:style.height,track:style.backgroundColor,thumb:thumb.backgroundColor,geometry:[thumb.width,thumb.height,thumb.left,thumb.top,thumb.borderLeftWidth,thumb.borderBottomWidth],transform:thumb.transform,expectedTrack,expectedThumb};
+    });
+    for(const theme of ['emerald','ocean','graphite']){
+      await p.locator('[name="theme"]').selectOption(theme);await openMossEditor(p);const visibility=p.getByRole('switch',{name:'显示组件'});assert.equal(await visibility.isChecked(),true);
+      let style=await inspect(visibility);assert.equal(style.width,'36px');assert.equal(style.height,'21px');assert.deepEqual(style.geometry,['15px','15px','3px','3px','0px','0px']);assert.equal(style.transform,'matrix(1, 0, 0, 1, 15, 0)');assert.equal(style.track,style.expectedTrack);assert.equal(style.thumb,style.expectedThumb);
+      await visibility.click();assert.equal(await visibility.isChecked(),false);style=await inspect(visibility);assert.deepEqual(style.geometry,['15px','15px','3px','3px','0px','0px']);assert.equal(style.transform,'matrix(1, 0, 0, 1, 0, 0)');assert.equal((await readEditorJson(p)).home.users[0].visible,false,'Switch toggles the actual layout property');
+      await visibility.click();assert.equal((await readEditorJson(p)).home.users[0].visible,true);
+      const ordinary=p.locator('[data-u-field="transparentBackground"]');await ordinary.check();const checkmark=await ordinary.evaluate(el=>{const a=getComputedStyle(el,'::after');return [a.width,a.height,a.borderLeftWidth,a.borderBottomWidth];});assert.deepEqual(checkmark,['8px','4px','2px','2px'],'Ordinary checkbox still has its checkmark');
+      const systemId=mossLayout.home.system[0].id;await p.locator('[data-u-selection]').selectOption('system:'+systemId);assert.equal(await visibility.isDisabled(),true);const checked=await visibility.isChecked();await visibility.evaluate(el=>el.click());assert.equal(await visibility.isChecked(),checked);assert.deepEqual((await inspect(visibility)).geometry,['15px','15px','3px','3px','0px','0px']);assert.deepEqual((await readEditorJson(p)).home.system,mossLayout.home.system);
+      await p.locator('[data-u-act="close"]').first().click();
+    }
+  },mossState,{layoutSupported:true,layout:mossLayout,layoutApps:mossApps});
   await check('feedback: applying v5 layout blocks the whole window and returns to the saved editor',async p=>{
     await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();
     const id=modernLayout.home.users[0].id;
@@ -989,7 +1108,7 @@ try {
     assert.equal(await cardFor(p).locator('.launcher-card-background').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(51, 68, 85)');
     await p.locator('[data-u-act="reset"]').click();await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='resetLayout'));await settled(p);
     assert.equal(await cardFor(p).locator('img.launcher-card-background').getAttribute('src'),homeCover);
-    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests.map(r=>r.action)),['getLayout','getBackgrounds','getLayout','getBackgrounds','applyLayout','getBackgrounds','resetLayout','getBackgrounds'],'Apply rechecks the current layout and apps before its single write; reset performs its own single write');
+    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests.map(r=>r.action)),['getLayout','getBackgrounds','getLayout','applyLayout','getBackgrounds','resetLayout','getBackgrounds'],'Apply rechecks the current layout and apps before its single write; reset performs its own single write');
     assert.equal(await p.locator('.banner.error').count(),0);
   },unifiedState,{layoutSupported:true,layout:coverLayout,layoutApps:unifiedApps,covers:{[pureComponent]:updatedHomeCover}});
   await check('list entry and scan refresh inactive Home backgrounds without activating the desktop',async p=>{

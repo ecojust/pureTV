@@ -111,7 +111,7 @@ const dialog = document.createElement('dialog');
 dialog.className = 'modal'; document.body.append(dialog);
 const layoutDialog=document.createElement('dialog');layoutDialog.className='layout-modal';layoutDialog.setAttribute('aria-label',t('调整启动器布局'));document.body.append(layoutDialog);
 type FeedbackRow = { target: string; success: boolean | null; message: string };
-type Feedback = { phase: 'loading' | 'result'; operation: string; description: string; outcome?: NoticeKind; rows: FeedbackRow[]; cancellable: boolean; cancelError?: string };
+type Feedback = { phase: 'loading' | 'result'; operation: string; description: string; outcome?: NoticeKind; rows: FeedbackRow[]; cancellable: boolean; checkingLayout?:boolean; cancelError?: string };
 let feedback: Feedback | null = null, feedbackMarkup = '';
 let feedbackFocus: HTMLElement | null = null;
 const feedbackDialog = document.createElement('dialog');
@@ -134,6 +134,9 @@ feedbackDialog.addEventListener('keydown', event => {
 });
 function closeFeedback(): void {
   if (feedback?.phase !== 'result') return;
+  dismissFeedback();
+}
+function dismissFeedback(): void {
   const previousFocus = feedbackFocus;
   // Native dialog close events are queued. Clear state before closing so an
   // immediate render cannot reopen this result, or a late event clear a new one.
@@ -155,7 +158,7 @@ function renderFeedback(): void {
   const market = activeMarketOperation(), marketStatus = activeMarketProgress();
   const downloading = downloadingTools || (market && marketStatus?.stage !== 'installing');
   const description = loading && market ? marketProgressText(marketStatus) : loading && downloadingTools ? progressText() : feedback.description;
-  const html = `<div class="feedback-symbol ${loading ? '' : feedback.outcome}">${loading ? '<span class="spinner" aria-hidden="true"></span>' : icon(feedback.outcome === 'success' ? 'check' : feedback.outcome === 'error' ? 'close' : 'list')}</div><p class="feedback-operation">${esc(feedback.operation)}</p><h2 id="feedback-title">${esc(title)}</h2><div class="feedback-live" role="status" aria-live="polite"><p id="feedback-description">${esc(message(description))}</p>${loading && cancelling ? `<p class="hint">${esc(downloading ? t('正在取消并清理临时文件') : t('当前修改会完成并复查，后续项将停止'))}</p>` : ''}${feedback.cancelError ? `<p class="feedback-error" role="alert">${esc(feedback.cancelError)}</p>` : ''}${loading && market ? downloadMeter(marketStatus, t('安装包下载进度')) : loading && downloadingTools ? downloadMeter() : ''}</div>${feedback.rows.length ? `<ul class="feedback-results">${feedback.rows.map(row => `<li><div><strong>${esc(row.target)}</strong><span class="feedback-item-status ${row.success === true ? 'success' : row.success === false ? 'error' : ''}">${esc(t(row.success === true ? '成功' : row.success === false ? '失败' : '未执行'))}</span></div><p>${esc(message(row.message))}</p></li>`).join('')}</ul>` : ''}<div class="modal-actions">${loading ? feedback.cancellable ? `<button type="button" data-feedback-cancel${disabled(cancelling)}>${esc(cancelling ? t('正在取消') : downloading ? t('取消下载') : t('停止后续操作'))}</button>` : '' : `<button type="button" class="primary" data-feedback-close>${esc(t('确定'))}</button>`}</div>`;
+  const html = `<div class="feedback-symbol ${loading ? '' : feedback.outcome}">${loading ? '<span class="spinner" aria-hidden="true"></span>' : icon(feedback.outcome === 'success' ? 'check' : feedback.outcome === 'error' ? 'close' : 'list')}</div><p class="feedback-operation">${esc(feedback.operation)}</p><h2 id="feedback-title">${esc(title)}</h2><div class="feedback-live" role="status" aria-live="polite"><p id="feedback-description">${esc(message(description))}</p>${loading && cancelling ? `<p class="hint">${esc(feedback.checkingLayout ? t('正在取消检查…') : downloading ? t('正在取消并清理临时文件') : t('当前修改会完成并复查，后续项将停止'))}</p>` : ''}${feedback.cancelError ? `<p class="feedback-error" role="alert">${esc(feedback.cancelError)}</p>` : ''}${loading && market ? downloadMeter(marketStatus, t('安装包下载进度')) : loading && downloadingTools ? downloadMeter() : ''}</div>${feedback.rows.length ? `<ul class="feedback-results">${feedback.rows.map(row => `<li><div><strong>${esc(row.target)}</strong><span class="feedback-item-status ${row.success === true ? 'success' : row.success === false ? 'error' : ''}">${esc(t(row.success === true ? '成功' : row.success === false ? '失败' : '未执行'))}</span></div><p>${esc(message(row.message))}</p></li>`).join('')}</ul>` : ''}<div class="modal-actions">${loading ? feedback.cancellable ? `<button type="button" data-feedback-cancel${disabled(cancelling)}>${esc(cancelling ? t('正在取消') : feedback.checkingLayout ? t('取消检查') : downloading ? t('取消下载') : t('停止后续操作'))}</button>` : '' : `<button type="button" class="primary" data-feedback-close>${esc(t('确定'))}</button>`}</div>`;
   const wasLoading = feedbackDialog.dataset.phase === 'loading';
   feedbackDialog.dataset.phase = feedback.phase;
   feedbackDialog.dataset.outcome = feedback.outcome || '';
@@ -168,9 +171,9 @@ function renderFeedback(): void {
   if (!feedbackDialog.open) feedbackDialog.showModal();
   if (!loading && wasLoading) feedbackDialog.querySelector<HTMLButtonElement>('[data-feedback-close]')?.focus();
 }
-function beginFeedback(operation: string, description: string, cancellable = true): void {
+function beginFeedback(operation: string, description: string, cancellable = true, checkingLayout = false): void {
   feedbackFocus = document.activeElement as HTMLElement | null;
-  feedback = { phase: 'loading', operation, description, rows: [], cancellable };
+  feedback = { phase: 'loading', operation, description, rows: [], cancellable, checkingLayout };
   renderFeedback();
 }
 function finishFeedback(outcome: NoticeKind, description: string, rows: FeedbackRow[] = [], operation = feedback?.operation || t('操作结果')): void {
@@ -556,24 +559,27 @@ function sceneEditor(markup:string,draft:LauncherLayout):string {
 
 function editedLayoutDraft():string|null {
   if(!layoutDialog.open || !layoutAvailable())return null;
+  if(unifiedEditor.hasSvgEdits())return layoutJson;
   try {return JSON.stringify(JSON.parse(layoutJson))===JSON.stringify(launcherLayout?.layout)?null:layoutJson;}
   catch {return layoutJson;}
 }
-async function launcherOperation(request: LauncherRequest, preserveDraft = false): Promise<boolean> {
+async function launcherOperation(request: LauncherRequest, preserveDraft = false, options: {preflight?:boolean} = {}): Promise<boolean> {
   const savedDraft = preserveDraft ? editedLayoutDraft() : null;
   if (busy || !online()) return false;
   let completed=false;
+  const preflight=options.preflight && request.action==='getLayout';
   const mutation = request.action === 'applyLayout' || request.action === 'resetLayout', originalDraft = layoutJson;
   let outcome: NoticeKind = 'error', resultMessage = t('设备或启动器已变化，未确认布局应用结果');
   let target=launcherTarget();
   const draftTarget=target;
-  localBusy = true; busy = true; cancelling = false; busyLabel = mutation ? t('正在写入布局并核对电视返回的配置…') : t('读取／应用当前启动器布局…'); notice = '';
+  localBusy = true; busy = true; cancelling = false; busyLabel = preflight ? t('正在检查电视应用和启动器布局…') : mutation ? t('正在写入布局并核对电视返回的配置…') : t('读取／应用当前启动器布局…'); notice = '';
   if (mutation) beginFeedback(t(request.action === 'resetLayout' ? '恢复默认布局' : '应用启动器布局'), busyLabel);
+  if (preflight) beginFeedback(t('应用启动器布局'), busyLabel,true,true);
   render();
   try {
     const value=await api.launcherExecute(request);
     if(target!==launcherTarget())return false;
-    if (mutation && (!value.supported || !value.layout)) throw new Error(value.message || t('电视未返回可验证的布局，请重新读取后重试'));
+    if ((mutation || preflight) && (!value.supported || !value.layout)) throw new Error(value.message || t('电视未返回可验证的布局，请重新读取后重试'));
     if(request.action==='getBackgrounds')acceptLauncherBackgrounds(value);
     else {
       if(!acceptLauncherResult(value)){
@@ -587,7 +593,7 @@ async function launcherOperation(request: LauncherRequest, preserveDraft = false
       if(savedDraft&&draftTarget===target&&layoutAvailable())layoutJson=savedDraft;
       layoutDirty=false;
       // Read every installed HOME without activating it; image-less colors are valid backgrounds.
-      try {const backgrounds=await api.launcherExecute({action:'getBackgrounds'});if(target===launcherTarget())acceptLauncherBackgrounds(backgrounds);} catch {/* A failed optional read leaves the last confirmed background. */}
+      if(!preflight)try {const backgrounds=await api.launcherExecute({action:'getBackgrounds'});if(target===launcherTarget())acceptLauncherBackgrounds(backgrounds);} catch {/* A failed optional read leaves the last confirmed background. */}
     }
     if(target!==launcherTarget())return false;
     const state=await api.execute({action:'getState'});
@@ -596,12 +602,16 @@ async function launcherOperation(request: LauncherRequest, preserveDraft = false
     if(request.action!=='getBackgrounds'){notice=value.message||(value.supported?t('布局已读取，可调整后应用'):t('此启动器暂不可编辑'));noticeKind=mutation&&!cancelling?'success':'info';}
     if (mutation) { outcome = cancelling ? 'info' : 'success'; resultMessage = value.message || t('布局已应用并复查'); }
     completed=!cancelling;
+    if(completed && request.action==='resetLayout')unifiedEditor.discardSvgEdits();
   }
   catch (error) { outcome = cancelling ? 'info' : 'error'; resultMessage = error instanceof Error ? error.message : String(error); if(target===launcherTarget()){notice = resultMessage; noticeKind = outcome; if (mutation) layoutJson = originalDraft;} }
   finally {
+    const wasCancelled=cancelling;
     localBusy = false; busy = !!agentOperation?.running; cancelling = false;
     if (mutation) finishFeedback(outcome, resultMessage);
+    if (preflight && !completed) finishFeedback(wasCancelled?'info':'error',wasCancelled?t('检查已取消，尚未写入电视。'):resultMessage);
     render();
+    if (preflight && completed) dismissFeedback();
   }
   return completed;
 }
@@ -907,8 +917,9 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
       finishFeedback('success',t('已刷新电视应用，当前未保存的修改已保留。'),[],t('刷新应用列表'));break;
     }
     case 'apply-layout': {
+      if(busy || !online())return;
       const target=launcherTarget();
-      if(!await launcherOperation({action:'getLayout'},true))throw new Error(notice || t('无法刷新电视应用，请重试后再应用布局'));
+      if(!await launcherOperation({action:'getLayout'},true,{preflight:true}))break;
       if(target!==launcherTarget())throw new Error(t('设备或启动器已变化，未确认布局应用结果'));
       const draft=unifiedDraft() || draftLayout();if(!draft || !layoutAvailable()) throw new Error(t('请先读取并编辑受支持启动器的布局'));
       const unavailable=unavailableLayoutApps(draft,layoutApps());
@@ -920,7 +931,7 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
       break;
     }
     case 'reset-layout': if(layoutAvailable() && await confirm(t('恢复默认布局'),t('移除当前启动器的 layout.json 自定义配置，壁纸和其他设置保留。'),[snapshot.defaultHome || ''],t('恢复默认布局'))) await launcherOperation({action:'resetLayout'}); break;
-    case 'import-layout': { const text=await api.chooseLauncherJson();if(text){const previous=layoutJson;layoutJson=text;const unified=unifiedDraft();if(!draftLayout()&&!unified){layoutJson=previous;throw new Error(t('布局文件格式无效'));}if(unified&&validUnified(systemBaseline())&&!systemUnchanged(unified,systemBaseline() as import('./types').UnifiedLayout)){layoutJson=previous;throw new Error(t('系统组件只读，不能修改属性或位置'));}render();finishFeedback('success',t('布局已导入到编辑器，点击“应用到电视”后才会写入电视。'),[],t('导入 layout.json'));} break; }
+    case 'import-layout': { const text=await api.chooseLauncherJson();if(text){const previous=layoutJson;layoutJson=text;const unified=unifiedDraft();if(!draftLayout()&&!unified){layoutJson=previous;throw new Error(t('布局文件格式无效'));}if(unified&&validUnified(systemBaseline())&&!systemUnchanged(unified,systemBaseline() as import('./types').UnifiedLayout)){layoutJson=previous;throw new Error(t('系统组件只读，不能修改属性或位置'));}unifiedEditor.discardSvgEdits();render();finishFeedback('success',t('布局已导入到编辑器，点击“应用到电视”后才会写入电视。'),[],t('导入 layout.json'));} break; }
     case 'parse-layout': if(!draftLayout()&&!unifiedDraft()) throw new Error(t('layout.json 格式无效')); render();finishFeedback('success',t('布局已更新到编辑器，点击“应用到电视”后才会写入电视。'),[],t('解析配置')); break;
     case 'layout-home': layoutSection='home';layoutNode=null;layoutSelected=0;render();break;
     case 'layout-apps': layoutSection='apps';layoutNode=null;layoutSelected=0;render();break;
@@ -1048,7 +1059,7 @@ void api.watchMcp(value => {
   if(value.launcherResult){if(value.tool==='get_launcher_backgrounds')acceptLauncherBackgrounds(value.launcherResult);else acceptedLayout=acceptLauncherResult(value.launcherResult);}
   if(value.tool==='set_launcher_cover' && !value.running)void api.launcherCovers().then(value=>{covers=value;render();});
   if (!value.running) { agentProgress = null; void refreshToolsInfo().then(render); }
-  if(acceptedLayout)layoutDirty=false;
+  if(acceptedLayout){layoutDirty=false;if(['apply_launcher_layout','reset_launcher_layout'].includes(value.tool))unifiedEditor.discardSvgEdits();}
   render();
   // Only explicit device/catalogue/layout operations trigger reads. Background reads never recurse.
   if(page==='launchers'&&!busy&&online()&&!value.running){

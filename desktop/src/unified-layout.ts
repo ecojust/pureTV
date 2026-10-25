@@ -1,12 +1,8 @@
 import type {UnifiedLayout,UnifiedComponent} from './types';
+import {svgError} from './svg';
 export const defaultSvg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 8h8v8H8z"/></svg>';
-const tags=new Set(['svg','g','path','rect','circle','ellipse','line','polyline','polygon']);
-const attrs=new Set(['xmlns','viewBox','width','height','x','y','x1','y1','x2','y2','cx','cy','r','rx','ry','d','points','fill','stroke','stroke-width','stroke-linecap','stroke-linejoin','fill-rule','clip-rule','opacity','fill-opacity','stroke-opacity','transform','color']);
 export function validSvg(value:unknown):value is string {
- if(typeof value!=='string'||new TextEncoder().encode(value).length>8192||/<!DOCTYPE|<!ENTITY/i.test(value))return false;
- try {const doc=new DOMParser().parseFromString(value,'image/svg+xml');if(doc.querySelector('parsererror')||doc.documentElement.localName!=='svg')return false;
- return [...doc.querySelectorAll('*')].every(e=>tags.has(e.localName)&&[...e.attributes].every(a=>attrs.has(a.name)&&(a.name==='xmlns'?a.value==='http://www.w3.org/2000/svg':!/[<>]|url\s*\(|javascript:|https?:|data:|@import/i.test(a.value))));
- }catch{return false;}
+ return svgError(value)===null;
 }
 export function validUnified(value:unknown):value is UnifiedLayout {
  const d=value as UnifiedLayout;if(!d||![4,5].includes(d.version)||Object.keys(d).some(k=>!['version','screen','home','apps'].includes(k)))return false;

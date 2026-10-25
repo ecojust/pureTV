@@ -82,6 +82,8 @@ pureTV Manager 与 Launcher **0.3.6 使用 layout.json v5**。布局由电视和
 
 `name` 用于编辑器识别组件；`text` 是画面文案，二者可以不同。`textColor` 用于文案，`iconColor` 用于 SVG 的 currentColor，SVG 内显式 fill/stroke 保持原值。空 SVG 表示没有自定义静态图形；时钟、天气等系统组件的实时内容和内部图形仍由相应功能生成。`visible=false` 不删除数据，之后可从组件列表重新选择用户块并恢复显示。组件不包含层级字段，固定系统组件由启动器管理，用户块按列表顺序绘制。
 
+Manager 0.4.5 起，在属性面板粘贴 SVG 时会先移除非绘制信息：`role`、`aria-*` 属性，以及只包含文字的 `title`／`desc` 元素。绘图元素、变换和颜色保持原样；其他不支持的内容会明确报错，不会静默删除。此处理仅用于编辑器的 SVG 输入，写入 `layout.json` 的结果仍必须满足上表的静态子集和 8 KiB 限制；直接导入协议文件和 MCP 写入不会自动扩展该子集。
+
 `background.image` 是完整 `data:image/png;base64,...`、`data:image/jpeg;base64,...` 或 `data:image/webp;base64,...` 字符串；省略表示只绘制 color。图片按 cover 居中覆盖，不重复平铺。图片只保存在其所在页面，不会自动覆盖另一页。启动器列表卡片自动匹配 Home 的背景色与背景图，包括未激活的协议启动器。列表不提供选择或移除封面的操作；桌面背景在「调整布局」中修改并应用。导入 APK 时优先读取 assets/layout.json 中的 Home 背景，仅在无法读取布局背景时使用同目录的 thumb.png／APK名.thumb.png；纯色布局不会回退到旧封面。
 
 读取接口额外返回只读 `systemBasis` 元数据（screen/home/apps），保存启动器提供的系统组件原始基准。它不写入 layout.json，用于屏幕基准多次缩放时避免整数舍入累积，确保管理器与电视仍计算出相同系统位置。
