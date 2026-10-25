@@ -28,6 +28,8 @@ jobs:
           node-version: '22'
       - name: Verify official login form autofill
         run: node --test resource/apps/hifini/src/test/js/login-autofill.test.mjs
+      - name: Verify CCTV website player presentation
+        run: node --test resource/apps/cctv/src/test/js/player-focus.test.mjs
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools

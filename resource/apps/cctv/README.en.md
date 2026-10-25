@@ -2,51 +2,56 @@
 
 [English](README.en.md) · [中文](README.md)
 
-An independent CCTV channel player from the pureTV project, designed for Android TV / Google TV remotes. Package: `com.ecojust.cctvlive`; version: `0.1.0`; Android 8.0 or later. The interface follows the system language and includes Chinese and English. This is a third-party client, not an official CCTV application.
+An independent CCTV channel player from the pureTV project, designed for Android TV / Google TV remotes. Package: `com.ecojust.cctvlive`; version: `0.1.0`; Android 8.0 or later. The application shell follows the system language and supports Chinese and English. The playback area retains the CCTV website's own content and messages. This is a third-party client, not an official CCTV application.
 
 ## Interface and remote controls
 
-- Browse channels on the left with the directional pad, then press OK to select and play. Switch between all channels and favorites.
-- The current channel's information and playback area provide play/pause, favorites, route selection and fullscreen controls.
-- In fullscreen, Up/Down changes channels, Back returns to the channel list, and Menu opens route selection.
-- A failed route automatically falls back to another untried route for that channel. If all routes fail, the current page and channel remain visible with an error and retry control.
+The channel list is on the left. On the right, the system WebView opens the selected channel's official CCTV live page and focuses its presentation on the player area.
+
+- Use the directional pad to move between the channel list and controls, then press OK to select a channel. All-channel and favorites lists are available.
+- Select “Player” to focus the website player. Playback and pause controls belong to the website; volume is controlled by the TV system.
+- Menu returns to the channel list. In fullscreen, Up/Down changes channels and Back exits fullscreen.
+- A page-loading failure keeps the current channel and interface visible, with retry or reload available. Playback failure does not automatically close the application.
+- Going into the background pauses the WebView and loads `about:blank` to stop the page. Returning to the application reloads the selected channel.
 
 ![Native Android interface preview; not a physical TV or live broadcast capture](docs/cctv-live.en.png)
 
 ## Fixed channel file
 
-The channel list is [`src/main/assets/channels.m3u`](src/main/assets/channels.m3u). The application reads and parses this bundled file at startup. It does not scrape a website for channel metadata or construct stream URLs in Java code. To add or remove channels, reorder them, or change a route, edit this file and rebuild the APK. Existing installations do not automatically receive changes made to the repository file.
+The channel list is [`src/main/assets/channels.m3u`](src/main/assets/channels.m3u). The application reads this bundled file at startup and uses each channel's `page-url` to open its official live page. Adding or removing channels, changing their order, or updating an official page address requires rebuilding the APK. Existing installations do not automatically receive changes made to the repository file.
 
-The initial list was supplied by the user and identified as **captured from the `tv.cctv.com/live` web player on 2026-10-25**. It contains 21 channels, 21 primary routes and 18 backup routes, including CCTV-4 Asia/Europe/America and CCTV-4K. The originally commented backup URLs have been converted into parseable M3U entries.
+After records are merged by `tvg-id`, the list contains **21 channel entries, with corresponding official player pages configured for 20 of them**, including CCTV-4 Asia, Europe and the Americas. CCTV-9 uses `https://tv.cctv.com/live/cctvjilu/`, and CCTV-14 uses `https://tv.cctv.com/live/cctvchild/`; page addresses cannot simply be derived from channel numbers.
 
-Entries sharing a `tvg-id` are merged into one channel. The first occurrence determines channel order. Each HTTP(S) URL line defines a route; duplicate URLs are removed and route order follows the file. A channel catalog is different from the HLS media playlist returned by an individual stream URL.
+CCTV-4K currently has no valid corresponding official player page. Its records explicitly set `page-unavailable="true"` and omit `page-url`. The channel remains in the list; selecting it displays a message that an official player page is currently unavailable.
+
+The original **39 stream URLs**, supplied by the user and identified as **captured from the `tv.cctv.com/live` web player on 2026-10-25**, remain in the file as source material: 21 primary and 18 backup URLs. The application does not request these M3U/HLS addresses directly or automatically switch between primary and backup streams.
 
 ```m3u
 #EXTM3U
-#EXTINF:-1 tvg-id="cctv1.cn" tvg-name="CCTV-1 综合" tvg-name-en="CCTV-1 General" group-title="CCTV" route-name="主线路" route-name-en="Primary",CCTV-1 综合
+#EXTINF:-1 tvg-id="cctv1.cn" page-url="https://tv.cctv.com/live/cctv1/" tvg-name-en="CCTV-1 General" group-title="CCTV" route-name="Primary" route-name-en="Primary",CCTV-1 General
 https://ldncctvwbcdtxy.liveplay.myqcloud.com/ldncctvwbcd/cdrmldcctv1_1/index.m3u8
-#EXTINF:-1 tvg-id="cctv1.cn" tvg-name="CCTV-1 综合" tvg-name-en="CCTV-1 General" group-title="CCTV" route-name="备用线路 · 1080P" route-name-en="Backup · 1080P",CCTV-1 综合
-https://ldncctvwbcdcnc.v.wscdns.com/ldncctvwbcd/cdrmldcctv1_1_1080P/playlist.m3u8?wsApp=HLS
+#EXTINF:-1 tvg-id="cctv4k.cn" page-unavailable="true" tvg-name-en="CCTV-4K Ultra HD" group-title="CCTV" route-name="Primary" route-name-en="Primary",CCTV-4K Ultra HD
+https://ldocctvwbcdtxy.liveplay.myqcloud.com/ldocctvwbcd/cdrmldcctv4k_1/index.m3u8
 ```
 
-`tvg-name-en`, `route-name`, and `route-name-en` are optional application extensions for the English channel name and Chinese/English route labels. Missing English names fall back to the original names. Lines beginning with `#` are comments, except for recognized M3U directives; a comment alone does not add a route. Parsing is limited to 512 KiB, 100 channels and four routes per channel. All bundled routes use HTTPS; this application does not permit cleartext HTTP streaming.
+Original records sharing a `tvg-id` are merged into one channel, ordered by their first occurrence. They must specify the same `page-url` or the same unavailable status. Available channels use HTTPS official channel pages under `tv.cctv.com/live/...`; `page-unavailable="true"` and `page-url` are mutually exclusive. `tvg-name-en` supplies the English channel name, falling back to the original name when absent. `route-name`, `route-name-en`, and the following stream URL line preserve source metadata and do not select the application's playback destination. The parser retains limits of 512 KiB, 100 channels and four original stream records per channel.
 
-## Playback and verification
+## Website player and verification
 
-Android `MediaPlayer`, `SurfaceView`, and `MediaSession` provide playback. There is only one player at a time; changing channels releases the previous decoder, and leaving the foreground releases the player and audio focus. There are no third-party production dependencies. The app requests network access only and does not download entire live broadcasts or maintain a disk video cache.
+The right-hand WebView loads the actual CCTV channel page. The bundled [`player-focus.js`](src/main/assets/player-focus.js) retains the original `#player` DOM and its player content, hides surrounding navigation and programme listings, and adjusts the player's display size. Playback continues in the official page environment, with media resources loaded by the website. The application does not extract streams for a native player or bypass CORS through a proxy or disabled cross-origin protections.
 
-If loading or buffering exceeds 25 seconds, or the player reports an error, the app tries the channel’s remaining routes in file order. Each route is attempted at most once per playback attempt, preventing an endless loop between primary and backup routes. If every route fails, the app stays on the current page; retrying or selecting a route starts a new attempt. Changing channels, pausing, or leaving the foreground cancels a pending automatic route switch.
+The website player's access restrictions, regional or scheduling messages, and playback errors remain visible. Availability depends on the channel service, network, system WebView and TV capabilities; playback of every channel in every region and at every time cannot be guaranteed. Website changes to the player structure may require a script update.
 
-“1080P” in a route label comes from the supplied source description and does not assert the actual decoded resolution. Picture quality and codec compatibility depend on the server and TV. Native UI previews and offline tests do not establish successful playback of every channel on a physical TV. Capture tests use controlled media states and do not fabricate broadcast footage.
-
-An address check from the development environment on 2026-10-25 could read the CCTV-1 and CCTV-2 M3U manifests; both the CCTV-5 primary and backup routes returned HTTP 403. This check establishes manifest access only. Decoding and sustained playback of all 21 channels have not been verified on a physical TV.
+Interface previews and offline tests check channel selection, page lifecycle and player-area presentation. They do not establish sustained playback of every channel on a physical TV, and capture tests do not fabricate broadcast footage.
 
 ## Build
 
-From the repository root:
+From the repository root, run the script tests and then enter the shared Android project:
 
 ```bash
-cd resource/launcher/puretv
+cd resource/apps/cctv
+node --test src/test/js/player-focus.test.mjs
+cd ../../launcher/puretv
 ./gradlew :cctv:assembleDebug :cctv:testDebugUnitTest :cctv:lintDebug
 ./gradlew :cctv:verifyReleaseSize
 ```

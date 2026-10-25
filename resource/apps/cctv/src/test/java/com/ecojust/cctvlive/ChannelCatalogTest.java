@@ -21,7 +21,10 @@ public class ChannelCatalogTest {
         return ChannelCatalog.parse(body.getBytes(StandardCharsets.UTF_8));
     }
     private String record(String id, String url) {
-        return "#EXTINF:-1 tvg-id=\"" + id + "\",频道\n" + url + "\n";
+        return record(id, url, "https://tv.cctv.com/live/cctv1/");
+    }
+    private String record(String id, String url, String pageUrl) {
+        return "#EXTINF:-1 tvg-id=\"" + id + "\" page-url=\"" + pageUrl + "\",频道\n" + url + "\n";
     }
     private void rejects(String body) throws Exception {
         try { parse(body); fail("Catalog should be rejected"); } catch (IOException expected) { assertFalse(expected.getMessage().isEmpty()); }
@@ -29,9 +32,9 @@ public class ChannelCatalogTest {
 
     @Test public void mergesRepeatedIdsInFirstAppearanceOrderAndDeduplicatesRoutes() throws Exception {
         List<ChannelCatalog.Channel> channels = parse("\uFEFF#EXTM3U\r\n"
-                + "#EXTINF:-1 tvg-id=\"one\" tvg-name-en=\"One, HD\" route-name=\"主线路\" route-name-en=\"Primary\",频道一,高清\r\nhttps://example.com/one.m3u8\r\n"
-                + record("two", "https://example.com/two.m3u8")
-                + "#EXTINF:-1 tvg-id='one' route-name='备用线路' route-name-en='Backup',不同显示名\nhttps://example.org/one.m3u8\n"
+                + "#EXTINF:-1 tvg-id=\"one\" page-url=\"https://tv.cctv.com/live/cctv1/\" tvg-name-en=\"One, HD\" route-name=\"主线路\" route-name-en=\"Primary\",频道一,高清\r\nhttps://example.com/one.m3u8\r\n"
+                + record("two", "https://example.com/two.m3u8", "https://tv.cctv.com/live/cctv2/")
+                + "#EXTINF:-1 tvg-id='one' page-url='https://tv.cctv.com/live/cctv1/' route-name='备用线路' route-name-en='Backup',不同显示名\nhttps://example.org/one.m3u8\n"
                 + record("one", "https://example.com/one.m3u8")
                 + "# 备用注释 https://example.org/not-a-route.m3u8\nhttps://example.org/bare-url.m3u8\n");
         assertEquals(2, channels.size()); assertEquals("one", channels.get(0).id); assertEquals("two", channels.get(1).id);
@@ -39,6 +42,8 @@ public class ChannelCatalogTest {
         assertEquals("频道一,高清", first.name); assertEquals("One, HD", first.englishName); assertEquals(2, first.routes.size());
         assertEquals("主线路", first.routes.get(0).label); assertEquals("Backup", first.routes.get(1).englishLabel);
         assertEquals("https://example.org/one.m3u8", first.routes.get(1).url);
+        assertEquals("https://tv.cctv.com/live/cctv1/", first.pageUrl);
+        assertEquals("https://tv.cctv.com/live/cctv2/", channels.get(1).pageUrl);
         try { channels.clear(); fail(); } catch (UnsupportedOperationException expected) {}
         try { first.routes.clear(); fail(); } catch (UnsupportedOperationException expected) {}
     }
@@ -50,10 +55,20 @@ public class ChannelCatalogTest {
         assertTrue(bytes.length < 20 * 1024); assertEquals(21, channels.size());
         String[] ids = {"cctv1","cctv2","cctv3","cctv4","cctv5","cctv5plus","cctv6","cctv7","cctv8","cctv9","cctv10","cctv11","cctv12","cctv13","cctv14","cctv15","cctv16","cctv17","cctveurope","cctvamerica","cctv4k"};
         String[] names = {"CCTV-1 综合","CCTV-2 财经","CCTV-3 综艺","CCTV-4 中文国际（亚）","CCTV-5 体育","CCTV-5+ 体育赛事","CCTV-6 电影","CCTV-7 国防军事","CCTV-8 电视剧","CCTV-9 纪录","CCTV-10 科教","CCTV-11 戏曲","CCTV-12 社会与法","CCTV-13 新闻","CCTV-14 少儿","CCTV-15 音乐","CCTV-16 奥林匹克","CCTV-17 农业农村","CCTV-4 中文国际（欧）","CCTV-4 中文国际（美）","CCTV-4K 超高清"};
+        String[] pages = {
+                "https://tv.cctv.com/live/cctv1/", "https://tv.cctv.com/live/cctv2/", "https://tv.cctv.com/live/cctv3/",
+                "https://tv.cctv.com/live/cctv4/", "https://tv.cctv.com/live/cctv5/", "https://tv.cctv.com/live/cctv5plus/",
+                "https://tv.cctv.com/live/cctv6/", "https://tv.cctv.com/live/cctv7/", "https://tv.cctv.com/live/cctv8/",
+                "https://tv.cctv.com/live/cctvjilu/", "https://tv.cctv.com/live/cctv10/", "https://tv.cctv.com/live/cctv11/",
+                "https://tv.cctv.com/live/cctv12/", "https://tv.cctv.com/live/cctv13/", "https://tv.cctv.com/live/cctvchild/",
+                "https://tv.cctv.com/live/cctv15/", "https://tv.cctv.com/live/cctv16/", "https://tv.cctv.com/live/cctv17/",
+                "https://tv.cctv.com/live/cctveurope/", "https://tv.cctv.com/live/cctvamerica/", ""};
         int routes = 0;
         for (int i = 0; i < ids.length; i++) {
             String id = ids[i]; ChannelCatalog.Channel channel = channels.get(i);
             assertEquals(id + ".cn", channel.id); assertEquals(names[i], channel.name); assertFalse(channel.englishName.isEmpty());
+            assertEquals(pages[i], channel.pageUrl);
+            if (!channel.pageUrl.isEmpty()) assertEquals(pages[i], ChannelCatalog.safePageUrl(channel.pageUrl));
             String prefix = Arrays.asList("cctv1", "cctv13").contains(id) ? "ldn"
                     : Arrays.asList("cctv5", "cctv5plus", "cctv16").contains(id) ? "ld" : "ldo";
             assertEquals("https://" + prefix + "cctvwbcdtxy.liveplay.myqcloud.com/" + prefix + "cctvwbcd/cdrmld" + id + "_1/index.m3u8", channel.routes.get(0).url);
@@ -106,6 +121,42 @@ public class ChannelCatalogTest {
             try { ChannelCatalog.safeUrl(url); fail(url); } catch (IOException expected) {}
         }
         assertEquals("http://[::1]:8080/live.m3u8", ChannelCatalog.safeUrl("http://[::1]:8080/live.m3u8"));
+    }
+
+    @Test public void rejectsMissingUnsafeAndConflictingOfficialPagesBeforeDeduplicatingRoutes() throws Exception {
+        rejects("#EXTM3U\n#EXTINF:-1 tvg-id=\"one\",频道\nhttps://example.com/one.m3u8\n");
+        for (String page : new String[]{"", "http://tv.cctv.com/live/cctv1/", "https://example.com/live/cctv1/",
+                "https://tv.cctv.com.evil.example/live/cctv1/", "https://evil.tv.cctv.com/live/cctv1/",
+                "https://tv.cctv.com/video/cctv1/", "https://tv.cctv.com/live/", "https://tv.cctv.com/livestream/cctv1/",
+                "https://tv.cctv.com/live/../video/", "https://tv.cctv.com/live/%2e%2e/video/", "https://tv.cctv.com/live/cctv1%2f..%2f..%2fvideo/",
+                "https://user:password@tv.cctv.com/live/cctv1/", "https://tv.cctv.com:8443/live/cctv1/",
+                "https://tv.cctv.com/live/cctv1/#fragment", "file:///live/cctv1/", "javascript:alert(1)"}) {
+            rejects("#EXTM3U\n" + record("one", "https://example.com/one.m3u8", page));
+            try { ChannelCatalog.safePageUrl(page); fail(page); } catch (IOException expected) {}
+        }
+        try { ChannelCatalog.safePageUrl(null); fail(); } catch (IOException expected) {}
+        for (String stream : new String[]{"https://example.com/one.m3u8", "https://example.com/backup.m3u8"}) {
+            rejects("#EXTM3U\n" + record("one", "https://example.com/one.m3u8", "https://tv.cctv.com/live/cctv1/")
+                    + record("one", stream, "https://tv.cctv.com/live/cctv2/"));
+        }
+        assertEquals("https://tv.cctv.com/live/future-channel/", ChannelCatalog.safePageUrl("https://tv.cctv.com/live/future-channel/"));
+        assertEquals("https://tv.cctv.com/live/cctv1/index.shtml", ChannelCatalog.safePageUrl("https://tv.cctv.com/live/cctv1/index.shtml"));
+        assertEquals("https://tv.cctv.com/live/cctv1/m/", ChannelCatalog.safePageUrl("https://tv.cctv.com/live/cctv1/m/"));
+    }
+
+    @Test public void explicitUnavailablePagesRemainVisibleButCannotConflictWithPlayableMetadata() throws Exception {
+        String unavailable = "#EXTINF:-1 tvg-id=\"one\" page-unavailable=\"true\",暂未提供官网播放页\nhttps://example.com/one.m3u8\n";
+        List<ChannelCatalog.Channel> channels = parse("#EXTM3U\n" + unavailable + unavailable);
+        assertEquals(1, channels.size()); assertEquals("", channels.get(0).pageUrl); assertEquals(1, channels.get(0).routes.size());
+        for (String invalid : new String[]{unavailable.replace("page-unavailable=\"true\"", "page-unavailable=\"false\""),
+                unavailable.replace("page-unavailable=\"true\"", "page-unavailable=\"unknown\""),
+                unavailable.replace("page-unavailable=\"true\"", "page-unavailable=\"true\" page-url=\"\""),
+                unavailable.replace("page-unavailable=\"true\"", "page-unavailable=\"true\" page-url=\"https://tv.cctv.com/live/cctv1/\"")}) {
+            rejects("#EXTM3U\n" + invalid);
+        }
+        String playable = record("one", "https://example.com/one.m3u8");
+        rejects("#EXTM3U\n" + unavailable + playable);
+        rejects("#EXTM3U\n" + playable + unavailable);
     }
 
     @Test public void boundedReadsCloseTheInputEvenOnFailure() throws Exception {

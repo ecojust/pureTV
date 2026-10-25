@@ -3,10 +3,10 @@ package com.ecojust.cctvlive;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.media.MediaPlayer;
+import android.webkit.WebView;
+import android.webkit.ValueCallback;
 import android.os.Looper;
 import android.view.KeyEvent;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,8 +22,7 @@ import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.GraphicsMode;
 import org.robolectric.annotation.LooperMode;
-import org.robolectric.shadows.ShadowAlertDialog;
-import org.robolectric.shadows.ShadowMediaPlayer;
+import org.robolectric.shadows.ShadowWebView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.time.Duration;
@@ -33,7 +32,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.*;
 import static org.robolectric.Shadows.shadowOf;
 
-/** Real bundled channel metadata and native controls, with only the decoder replaced by a shadow. */
+/** Real channel metadata and native controls; WebView callbacks model the official page lifecycle. */
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk=28,qualifiers="zh-rCN-w960dp-h540dp-land-xhdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -43,7 +42,6 @@ public class UiTest {
         // A TV remote operates outside touch mode; otherwise Android can reject button focus.
         new android.app.Instrumentation().setInTouchMode(false);
         RuntimeEnvironment.getApplication().getSharedPreferences("cctv-live",0).edit().clear().commit();
-        ShadowMediaPlayer.setMediaInfoProvider(source->new ShadowMediaPlayer.MediaInfo(60000,1));
     }
 
     private ActivityController<MainActivity> activity() {
@@ -62,30 +60,34 @@ public class UiTest {
     @SuppressWarnings("unchecked") private <T>T field(Object object,String name,Class<?> owner)throws Exception {
         java.lang.reflect.Field field=owner.getDeclaredField(name);field.setAccessible(true);return (T)field.get(object);
     }
-    private MediaPlayer decoder(MainActivity activity)throws Exception{return field(activity.live,"player",LivePlayer.class);}
     private Button button(MainActivity activity,String tag){Button value=activity.getWindow().getDecorView().findViewWithTag(tag);assertNotNull(tag,value);return value;}
-    private void attachSurface(MainActivity activity){SurfaceView surface=activity.getWindow().getDecorView().findViewWithTag("video-surface");assertNotNull(surface);activity.surfaceCreated(surface.getHolder());}
-    private void prepared(){shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(30));}
+    private ShadowWebView browser(MainActivity activity){assertNotNull(activity.web.view());return shadowOf(activity.web.view());}
     private void choose(MainActivity activity,int position){
         activity.channelList.setSelection(position);
         activity.channelList.performItemClick(null,position,activity.channelList.getAdapter().getItemId(position));
     }
-    private void play(MainActivity activity){attachSurface(activity);button(activity,"play").performClick();prepared();assertEquals(LivePlayer.State.PLAYING,activity.live.state());}
+    private void websiteReady(MainActivity activity){
+        ShadowWebView browser=browser(activity);
+        browser.getWebViewClient().onPageFinished(activity.web.view(),activity.web.pageUrl());
+        ValueCallback<String> callback=browser.getLastEvaluatedJavascriptCallback();assertNotNull(callback);
+        callback.onReceiveValue("{\"found\":true,\"playing\":false}");
+        assertEquals(CctvWebPlayer.State.READY,activity.web.state());
+    }
     private void key(MainActivity activity,int code){activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,code));activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,code));}
     private void assertStaysInApp(MainActivity activity){assertFalse(activity.isFinishing());assertFalse(activity.isDestroyed());assertNull(shadowOf(activity).getNextStartedActivity());}
 
-    @Test public void bundledChannelsOpenWithoutAutoplayAndRememberFavouritesAndLastSelection()throws Exception {
+    @Test public void bundledChannelsOpenWithoutAutoplayAndRememberFavouritesAndLastSelection(){
         try(ActivityController<MainActivity> controller=activity()){
             MainActivity activity=controller.get();
             assertEquals(21,activity.channelList.getCount());assertEquals("cctv1.cn",activity.current.id);
-            assertNull(decoder(activity));assertEquals(LivePlayer.State.STOPPED,activity.live.state());
-            button(activity,"favourite").performClick();attachSurface(activity);choose(activity,1);prepared();
+            assertEquals("",activity.web.pageUrl());assertEquals(CctvWebPlayer.State.IDLE,activity.web.state());
+            button(activity,"favourite").performClick();choose(activity,1);
             assertEquals("cctv2.cn",activity.current.id);button(activity,"favourite").performClick();
             assertEquals(2,activity.getSharedPreferences("cctv-live",0).getStringSet("favourites",Collections.emptySet()).size());
         }
         try(ActivityController<MainActivity> controller=activity()){
-            MainActivity activity=controller.get();assertEquals("cctv2.cn",activity.current.id);assertNull(decoder(activity));
-            assertEquals(1,activity.channelList.getSelectedItemPosition());
+            MainActivity activity=controller.get();assertEquals("cctv2.cn",activity.current.id);
+            assertEquals(1,activity.channelList.getSelectedItemPosition());assertEquals("",activity.web.pageUrl());
             button(activity,"tab-favourites").performClick();assertEquals(2,activity.channelList.getCount());
             assertEquals("cctv1.cn",((ChannelCatalog.Channel)activity.channelList.getAdapter().getItem(0)).id);
             button(activity,"favourite").performClick();assertEquals(1,activity.channelList.getCount());
@@ -93,91 +95,63 @@ public class UiTest {
         }
     }
 
-    @Test public void chosenChannelAndStreamDialogUseTheFixedFileUrls()throws Exception {
+    @Test public void selectedChannelLoadsItsOfficialPageAndReloadKeepsTheSameWebView()throws Exception{
         try(ActivityController<MainActivity> controller=activity()){
-            MainActivity activity=controller.get();List<ChannelCatalog.Channel> channels=ChannelCatalog.load(activity);
-            attachSurface(activity);choose(activity,1);prepared();
-            assertEquals(channels.get(1).routes.get(0).url,activity.live.url());assertEquals("cctv2.cn",activity.current.id);
-            MediaPlayer first=decoder(activity);
-            key(activity,KeyEvent.KEYCODE_MENU);AlertDialog dialog=ShadowAlertDialog.getLatestAlertDialog();assertTrue(dialog.isShowing());
-            ListView routes=dialog.getListView();assertEquals(2,routes.getCount());
-            assertEquals(channels.get(1).routes.get(1).displayName(activity),routes.getAdapter().getItem(1));
-            routes.performItemClick(null,1,1);prepared();
-            assertEquals(channels.get(1).routes.get(1).url,activity.live.url());assertEquals(1,activity.routeIndex);
-            assertEquals("cctv2.cn",activity.current.id);assertFalse(dialog.isShowing());
-            assertEquals(ShadowMediaPlayer.State.END,shadowOf(first).getState());assertNotSame(first,decoder(activity));
-            key(activity,KeyEvent.KEYCODE_MENU);AlertDialog staleRoutes=ShadowAlertDialog.getLatestAlertDialog();assertTrue(staleRoutes.isShowing());
-            activity.next();prepared();
-            assertEquals("cctv3.cn",activity.current.id);assertFalse(staleRoutes.isShowing());
+            MainActivity activity=controller.get();WebView original=activity.web.view();
+            List<ChannelCatalog.Channel> channels=ChannelCatalog.load(activity);choose(activity,1);
+            assertEquals(channels.get(1).pageUrl,browser(activity).getLastLoadedUrl());
+            assertEquals(CctvWebPlayer.State.LOADING,activity.web.state());
+            assertFalse(button(activity,"player").isEnabled());websiteReady(activity);
+            assertTrue(button(activity,"player").isEnabled());button(activity,"play").performClick();
+            assertEquals(CctvWebPlayer.State.LOADING,activity.web.state());assertSame(original,activity.web.view());
+            assertEquals(channels.get(1).pageUrl,browser(activity).getLastLoadedUrl());assertStaysInApp(activity);
         }
     }
 
-    @Test public void fullscreenKeepsOneDecoderAndRemoteNavigationReturnsToTheSelectedChannel()throws Exception {
+    @Test public void fullscreenRetainsWebViewAndRemoteNavigationRestoresSelection()throws Exception{
         try(ActivityController<MainActivity> controller=activity()){
-            MainActivity activity=controller.get();play(activity);MediaPlayer first=decoder(activity);
-            button(activity,"fullscreen").performClick();layout(activity,1920,1080);
-            assertTrue(activity.fullscreen);assertSame(first,decoder(activity));
-            activity.onBackPressed();layout(activity,1920,1080);
-            assertFalse(activity.fullscreen);assertSame(first,decoder(activity));assertTrue(activity.channelList.hasFocus());
-            button(activity,"fullscreen").performClick();
+            MainActivity activity=controller.get();choose(activity,0);websiteReady(activity);WebView original=activity.web.view();
+            button(activity,"fullscreen").performClick();layout(activity,1920,1080);assertTrue(activity.fullscreen);
+            assertSame(original,activity.web.view());assertEquals(activity.current.pageUrl,browser(activity).getLastLoadedUrl());
             View footer=field(activity,"footer",MainActivity.class);
-            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(4));
-            assertEquals(View.VISIBLE,footer.getVisibility());key(activity,KeyEvent.KEYCODE_DPAD_RIGHT);
-            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(4));
-            assertEquals(View.VISIBLE,footer.getVisibility());assertSame(first,decoder(activity));
-            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(600));
-            assertEquals(View.GONE,footer.getVisibility());assertSame(first,decoder(activity));
-            key(activity,KeyEvent.KEYCODE_DPAD_DOWN);prepared();
-            assertEquals("cctv2.cn",activity.current.id);assertEquals(ShadowMediaPlayer.State.END,shadowOf(first).getState());
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(4000));key(activity,KeyEvent.KEYCODE_DPAD_RIGHT);
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(4000));assertEquals(View.VISIBLE,footer.getVisibility());
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(600));assertEquals(View.GONE,footer.getVisibility());
+            key(activity,KeyEvent.KEYCODE_DPAD_DOWN);assertEquals("cctv2.cn",activity.current.id);
+            assertEquals(activity.current.pageUrl,browser(activity).getLastLoadedUrl());assertSame(original,activity.web.view());
             activity.onBackPressed();layout(activity,1920,1080);
-            assertFalse(activity.fullscreen);assertTrue(activity.channelList.hasFocus());assertEquals(1,activity.channelList.getSelectedItemPosition());
-            assertStaysInApp(activity);
+            assertFalse(activity.fullscreen);assertTrue(activity.channelList.hasFocus());assertEquals(1,activity.channelList.getSelectedItemPosition());assertStaysInApp(activity);
         }
     }
 
-    @Test public void failedSingleRouteRemainsOnTheChannelAndOffersWorkingRetry()throws Exception {
+    @Test public void loadTimeoutOffersReloadAndNeverLeavesTheApp(){
         try(ActivityController<MainActivity> controller=activity()){
-            MainActivity activity=controller.get();attachSurface(activity);choose(activity,2);prepared();
-            assertEquals("cctv3.cn",activity.current.id);assertEquals(1,activity.current.routes.size());
-            String url=activity.live.url();shadowOf(decoder(activity)).invokeErrorListener(1,-1004);prepared();
-            assertEquals(LivePlayer.State.ERROR,activity.live.state());assertEquals("cctv3.cn",activity.current.id);assertEquals(url,activity.live.url());
-            assertEquals(activity.getString(R.string.retry),button(activity,"play").getText().toString());
-            assertTrue("Retry must receive remote focus; touchMode="+button(activity,"play").isInTouchMode()+", focused="+activity.getCurrentFocus(),button(activity,"play").hasFocus());
-            assertStaysInApp(activity);assertNull(decoder(activity));
-            button(activity,"play").performClick();prepared();assertEquals(LivePlayer.State.PLAYING,activity.live.state());assertEquals(url,activity.live.url());
-        }
-    }
-
-    @Test public void exhaustedRoutesStopRetryingUntilTheUserActs()throws Exception {
-        try(ActivityController<MainActivity> controller=activity()){
-            MainActivity activity=controller.get();play(activity);ChannelCatalog.Channel channel=activity.current;
-            shadowOf(decoder(activity)).invokeErrorListener(1,-1004);prepared();
-            assertEquals(1,activity.routeIndex);assertEquals(channel.routes.get(1).url,activity.live.url());assertEquals(LivePlayer.State.PLAYING,activity.live.state());
-            shadowOf(decoder(activity)).invokeErrorListener(1,-1004);prepared();
-            assertEquals(LivePlayer.State.ERROR,activity.live.state());assertNull(decoder(activity));
+            MainActivity activity=controller.get();choose(activity,2);
             shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(30));
-            assertEquals(LivePlayer.State.ERROR,activity.live.state());assertNull(decoder(activity));assertEquals(channel.id,activity.current.id);assertStaysInApp(activity);
-            button(activity,"play").performClick();prepared();assertEquals(LivePlayer.State.PLAYING,activity.live.state());
+            assertEquals(CctvWebPlayer.State.ERROR,activity.web.state());assertEquals("cctv3.cn",activity.current.id);
+            assertEquals(activity.getString(R.string.retry),button(activity,"play").getText().toString());assertTrue(button(activity,"play").hasFocus());
+            assertStaysInApp(activity);button(activity,"play").performClick();assertEquals(CctvWebPlayer.State.LOADING,activity.web.state());
+            assertEquals(activity.current.pageUrl,browser(activity).getLastLoadedUrl());
         }
     }
 
-    @Test public void changingChannelCancelsAnOlderPendingFallback()throws Exception {
+    @Test public void unavailableWebsiteDoesNotLeaveThePreviousChannelPlaying(){
         try(ActivityController<MainActivity> controller=activity()){
-            MainActivity activity=controller.get();play(activity);
-            shadowOf(decoder(activity)).invokeErrorListener(1,-1004);
-            choose(activity,2);prepared();shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(1));
-            assertEquals("cctv3.cn",activity.current.id);assertEquals(activity.current.routes.get(0).url,activity.live.url());assertEquals(0,activity.routeIndex);
-            assertEquals(LivePlayer.State.PLAYING,activity.live.state());assertStaysInApp(activity);
+            MainActivity activity=controller.get();choose(activity,0);websiteReady(activity);choose(activity,20);
+            assertEquals("cctv4k.cn",activity.current.id);assertEquals("",activity.current.pageUrl);
+            assertEquals("about:blank",browser(activity).getLastLoadedUrl());assertEquals(CctvWebPlayer.State.ERROR,activity.web.state());
+            assertEquals(activity.getString(R.string.web_page_unavailable),activity.web.error());assertStaysInApp(activity);
         }
     }
 
-    @Test public void leavingDuringFallbackReleasesPlaybackAndCancelsTheQueuedSwitch()throws Exception {
+    @Test public void stoppingClearsTheWebsiteAndLatePageResultsCannotRestartIt()throws Exception{
         try(ActivityController<MainActivity> controller=activity()){
-            MainActivity activity=controller.get();play(activity);MediaPlayer old=decoder(activity);
-            shadowOf(old).invokeErrorListener(1,-1004);controller.pause().stop();
+            MainActivity activity=controller.get();choose(activity,0);
+            ShadowWebView browser=browser(activity);browser.getWebViewClient().onPageFinished(activity.web.view(),activity.web.pageUrl());
+            ValueCallback<String> pending=browser.getLastEvaluatedJavascriptCallback();assertNotNull(pending);
+            controller.pause().stop();pending.onReceiveValue("{\"found\":true,\"playing\":true}");
             shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(30));
-            assertEquals(LivePlayer.State.STOPPED,activity.live.state());assertNull(decoder(activity));assertNull(field(activity.live,"session",LivePlayer.class));
-            assertEquals(ShadowMediaPlayer.State.END,shadowOf(old).getState());assertEquals(0,activity.routeIndex);assertEquals("cctv1.cn",activity.current.id);
+            assertEquals("about:blank",browser.getLastLoadedUrl());assertNotEquals(CctvWebPlayer.State.READY,activity.web.state());
             View root=field(activity,"root",MainActivity.class);assertFalse(root.getKeepScreenOn());
         }
     }
@@ -194,8 +168,8 @@ public class UiTest {
     private void capture(int width,int height,String name)throws Exception{
         try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup().visible()){
             MainActivity activity=controller.get();layout(activity,width,height);View root=activity.getWindow().getDecorView();
-            assertEquals(21,activity.channelList.getCount());assertNull(decoder(activity));assertEquals(LivePlayer.State.STOPPED,activity.live.state());
-            for(String tag:new String[]{"tab-all","tab-favourites","play","routes","favourite","fullscreen"}){
+            assertEquals(21,activity.channelList.getCount());assertEquals("",activity.web.pageUrl());assertEquals(CctvWebPlayer.State.IDLE,activity.web.state());
+            for(String tag:new String[]{"tab-all","tab-favourites","play","player","favourite","fullscreen"}){
                 Button control=button(activity,tag);int[] xy=new int[2];control.getLocationOnScreen(xy);
                 assertTrue(tag,control.getWidth()>0&&control.getHeight()>0);assertTrue(tag,xy[0]>=0&&xy[1]>=0);
                 assertTrue(tag,xy[0]+control.getWidth()<=width&&xy[1]+control.getHeight()<=height);

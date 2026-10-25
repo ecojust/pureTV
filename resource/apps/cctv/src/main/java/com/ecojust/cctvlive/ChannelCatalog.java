@@ -27,10 +27,10 @@ final class ChannelCatalog {
     private static final Pattern ATTRIBUTE = Pattern.compile("([\\w-]+)\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)'|([^\\s,]+))");
 
     static final class Channel {
-        final String id, name, englishName;
+        final String id, name, englishName, pageUrl;
         final List<Route> routes;
-        Channel(String id, String name, String englishName, List<Route> routes) {
-            this.id = id; this.name = name; this.englishName = englishName;
+        Channel(String id, String name, String englishName, String pageUrl, List<Route> routes) {
+            this.id = id; this.name = name; this.englishName = englishName; this.pageUrl = pageUrl;
             this.routes = Collections.unmodifiableList(new ArrayList<>(routes));
         }
         String displayName(Context context) { return english(context) && !englishName.isEmpty() ? englishName : name; }
@@ -97,10 +97,17 @@ final class ChannelCatalog {
                 String name = field(title.isEmpty() ? attributes.getOrDefault("tvg-name", "") : title, 120, false);
                 String id = field(attributes.getOrDefault("tvg-id", name), 160, false);
                 String englishName = field(attributes.getOrDefault("tvg-name-en", ""), 160, true);
+                String unavailable = attributes.get("page-unavailable");
+                if (unavailable != null && (!"true".equals(unavailable) || attributes.containsKey("page-url"))) {
+                    throw new IOException("Invalid official page availability metadata");
+                }
+                String pageUrl = "true".equals(unavailable) ? "" : safePageUrl(attributes.get("page-url"));
                 Builder channel = found.get(id);
                 if (channel == null) {
                     if (found.size() >= MAX_CHANNELS) throw new IOException("Too many channels");
-                    channel = new Builder(id, name, englishName); found.put(id, channel);
+                    channel = new Builder(id, name, englishName, pageUrl); found.put(id, channel);
+                } else if (!channel.pageUrl.equals(pageUrl)) {
+                    throw new IOException("Conflicting official page URLs for channel " + id);
                 }
                 boolean duplicate = false;
                 for (Route route : channel.routes) if (route.url.equals(url)) { duplicate = true; break; }
@@ -117,8 +124,25 @@ final class ChannelCatalog {
         if (attributes != null) throw new IOException("Channel has no stream URL");
         if (found.isEmpty()) throw new IOException("No channels in catalog");
         List<Channel> result = new ArrayList<>();
-        for (Builder channel : found.values()) result.add(new Channel(channel.id, channel.name, channel.englishName, channel.routes));
+        for (Builder channel : found.values()) result.add(new Channel(channel.id, channel.name, channel.englishName, channel.pageUrl, channel.routes));
         return Collections.unmodifiableList(result);
+    }
+
+    /** Only official channel pages may be loaded as the player document. */
+    static String safePageUrl(String address) throws IOException {
+        if (address == null || address.trim().isEmpty() || address.length() > 8192) throw new IOException("Missing or invalid official page URL");
+        try {
+            URI uri = new URI(address.trim());
+            String path = uri.getRawPath();
+            if (!"https".equalsIgnoreCase(uri.getScheme()) || !"tv.cctv.com".equalsIgnoreCase(uri.getHost())
+                    || uri.getUserInfo() != null || uri.getFragment() != null || (uri.getPort() != -1 && uri.getPort() != 443)
+                    || path == null || !path.matches("/live/[A-Za-z0-9_-]+(?:/(?:m/)?(?:index\\.(?:html?|shtml))?)?")) {
+                throw new IOException("Unsupported official channel page URL");
+            }
+            return uri.toASCIIString();
+        } catch (URISyntaxException error) {
+            throw new IOException("Invalid official page URL", error);
+        }
     }
 
     static String safeUrl(String address) throws IOException {
@@ -164,8 +188,8 @@ final class ChannelCatalog {
     }
 
     private static final class Builder {
-        final String id, name, englishName;
+        final String id, name, englishName, pageUrl;
         final List<Route> routes = new ArrayList<>();
-        Builder(String id, String name, String englishName) { this.id = id; this.name = name; this.englishName = englishName; }
+        Builder(String id, String name, String englishName, String pageUrl) { this.id = id; this.name = name; this.englishName = englishName; this.pageUrl = pageUrl; }
     }
 }

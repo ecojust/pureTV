@@ -2,51 +2,56 @@
 
 [中文](README.md) · [English](README.en.md)
 
-pureTV 项目的独立央视频道播放器，适用于 Android TV / Google TV 遥控器。包名 `com.ecojust.cctvlive`，版本 `0.1.0`，要求 Android 8.0 及以上。界面跟随系统语言，支持中文和英文。这是第三方客户端，不是央视官方应用。
+pureTV 项目的独立央视频道播放器，适用于 Android TV / Google TV 遥控器。包名 `com.ecojust.cctvlive`，版本 `0.1.0`，要求 Android 8.0 及以上。应用外壳跟随系统语言，支持中文和英文；播放区域保留央视网页面自身的内容与提示。这是第三方客户端，不是央视官方应用。
 
 ## 页面与遥控器
 
-- 左侧显示央视频道，方向键移动焦点，确定键选择并播放；支持全部频道和收藏列表。
-- 频道信息与播放区域跟随当前选择，提供播放／暂停、收藏、线路切换和全屏。
-- 全屏时，上／下键切换频道，返回键回到频道列表；菜单键打开线路选择。
-- 当前线路失败时自动尝试该频道其他未尝试的线路；全部失败后，保留当前页面和频道，显示错误及重试入口。
+左侧为频道列表，右侧通过系统 WebView 打开所选频道的央视网官方直播页，并将页面集中显示为播放器区域。
+
+- 使用方向键在频道列表与操作区移动，确定键选择频道；支持全部频道和收藏列表。
+- 选择「操作播放器」将焦点交给网页播放器；播放、暂停等控制由官网播放器提供，音量使用电视系统控制。
+- 菜单键返回频道列表；全屏时，上／下键切换频道，返回键退出全屏。
+- 页面加载失败时保留当前频道与界面，可选择重试或重新加载；应用不会因为播放失败自动退出。
+- 退到后台时暂停 WebView 并加载 `about:blank` 停止当前页面；返回应用后重新加载所选频道。
 
 ![Android 原生页面预览，非电视实机直播截图](docs/cctv-live.png)
 
 ## 固定频道文件
 
-频道清单位于 [`src/main/assets/channels.m3u`](src/main/assets/channels.m3u)。应用启动时直接读取并解析这个固定文件，不从网页抓取频道目录，也不在 Java 代码中拼接直播地址。增删频道、调整顺序或更换线路时，编辑此文件并重新构建 APK；已经安装的旧 APK 不会自动取得仓库中的文件更新。
+频道清单位于 [`src/main/assets/channels.m3u`](src/main/assets/channels.m3u)。应用启动时读取这个固定文件，以每个频道的 `page-url` 加载对应的官方直播页。增删频道、调整顺序或修改官网地址后，需要重新构建 APK；已经安装的旧 APK 不会自动取得仓库文件的更新。
 
-当前清单来自用户提供的、标注为 **2026-10-25 从 `tv.cctv.com/live` 页面播放器抓取**的数据：21 个频道，21 条主线路和 18 条备用线路，包含 CCTV-4 亚洲／欧洲／美洲及 CCTV-4K。备用地址已从原始说明注释整理为可解析的 M3U 条目。
+当前清单按 `tvg-id` 合并后有 **21 个频道条目，其中 20 个配置了对应的官网播放页**，包括 CCTV-4 亚洲／欧洲／美洲。CCTV-9 使用 `https://tv.cctv.com/live/cctvjilu/`，CCTV-14 使用 `https://tv.cctv.com/live/cctvchild/`，不能直接按频道数字拼接地址。
 
-同一 `tvg-id` 的条目合并为一个频道，首次出现的位置决定频道顺序。每个条目的一行 HTTP(S) 地址代表一条线路；重复地址去重，线路按文件顺序排列。不要把单个频道的 HLS 媒体播放列表内容当作频道目录。
+CCTV-4K 暂无有效的对应官网播放页，清单显式设置 `page-unavailable="true"`，不设置 `page-url`。该频道仍保留在列表中，选中后会提示当前没有可用的官网播放页。
+
+原清单中由用户提供、标注为 **2026-10-25 从 `tv.cctv.com/live` 页面播放器抓取**的 39 个直播流 URL 继续保留为原始资料，包含 21 条主线路和 18 条备用线路。应用不直接请求这些 M3U/HLS 地址，也不在主备流之间自动切换。
 
 ```m3u
 #EXTM3U
-#EXTINF:-1 tvg-id="cctv1.cn" tvg-name="CCTV-1 综合" tvg-name-en="CCTV-1 General" group-title="CCTV" route-name="主线路" route-name-en="Primary",CCTV-1 综合
+#EXTINF:-1 tvg-id="cctv1.cn" page-url="https://tv.cctv.com/live/cctv1/" tvg-name-en="CCTV-1 General" group-title="央视" route-name="主线路" route-name-en="Primary",CCTV-1 综合
 https://ldncctvwbcdtxy.liveplay.myqcloud.com/ldncctvwbcd/cdrmldcctv1_1/index.m3u8
-#EXTINF:-1 tvg-id="cctv1.cn" tvg-name="CCTV-1 综合" tvg-name-en="CCTV-1 General" group-title="CCTV" route-name="备用线路 · 1080P" route-name-en="Backup · 1080P",CCTV-1 综合
-https://ldncctvwbcdcnc.v.wscdns.com/ldncctvwbcd/cdrmldcctv1_1_1080P/playlist.m3u8?wsApp=HLS
+#EXTINF:-1 tvg-id="cctv4k.cn" page-unavailable="true" tvg-name-en="CCTV-4K Ultra HD" group-title="央视" route-name="主线路" route-name-en="Primary",CCTV-4K 超高清
+https://ldocctvwbcdtxy.liveplay.myqcloud.com/ldocctvwbcd/cdrmldcctv4k_1/index.m3u8
 ```
 
-`tvg-name-en`、`route-name` 与 `route-name-en` 是本应用读取的可选扩展属性，分别提供英文频道名和中英文线路名；没有英文名称时保留原名。`#` 开头的说明行只作为注释，不能代替实际线路条目。解析器限制文件不超过 512 KiB、100 个频道、每频道 4 条线路。内置清单全部使用 HTTPS；本应用不允许明文 HTTP 播流。
+同一 `tvg-id` 的原始记录合并为一个频道，首次出现的位置决定频道顺序；这些记录必须使用一致的 `page-url` 或一致的不可用标记。可播放频道使用 HTTPS 的 `tv.cctv.com/live/...` 官方频道页；`page-unavailable="true"` 与 `page-url` 互斥。`tvg-name-en` 提供英文频道名，缺少时保留原名。`route-name`、`route-name-en` 和记录下一行的流 URL 保留来源信息，不决定应用播放路径。解析器仍限制文件不超过 512 KiB、100 个频道、每频道 4 条原始流记录。
 
-## 播放与验证
+## 官网播放器与验证
 
-使用 Android 原生 `MediaPlayer`、`SurfaceView` 和 `MediaSession`，同一时间只有一个播放器；切台释放旧解码器，退到后台释放播放器及音频焦点。无生产环境第三方依赖，仅申请联网权限，不下载整段直播或保存视频缓存。
+右侧 WebView 加载真实的央视网频道页。内置 [`player-focus.js`](src/main/assets/player-focus.js) 保留 `#player` 的原 DOM 及其播放器内容，隐藏外围导航、节目单等区域，并调整播放器的显示尺寸。播放器继续运行在官网页面环境中，由官网加载其媒体资源；应用不提取直播流转交原生播放器，也不通过代理或关闭跨域限制来绕过 CORS。
 
-当前线路加载或缓冲超过 25 秒，或播放器报告错误时，会按文件顺序自动尝试该频道尚未尝试的线路。每轮播放中，每条线路最多尝试一次，避免主备线路之间无限循环。全部线路失败后停留在当前页面，可手动重试或选择线路开始新一轮播放；切换频道、暂停或离开前台会取消待执行的自动切换。
+官网播放器自身的权限限制、地区或时段提示以及播放错误会保留。能否播放取决于频道服务、网络、系统 WebView 和电视支持情况，不能保证所有频道在所有地区、所有时段均可播放。若官网修改播放器结构，可能需要更新展示脚本。
 
-线路标签中的“1080P”来自提供的源说明，不表示实际播放已经达到该分辨率。真实画面、码率和编码以服务器及电视解码能力为准；页面预览和离线测试不代表所有线路均已实机播放验证。测试使用受控媒体状态，不为截图伪造真实节目画面。
-
-2026-10-25 开发环境的地址检查中，CCTV-1、CCTV-2 的 M3U 清单可以读取，CCTV-5 主线路与备用线路均返回 HTTP 403。这项检查仅确认清单访问结果，没有验证全部 21 个频道的电视端解码或持续播放。
+界面预览和离线测试验证的是频道选择、页面生命周期和播放器区域展示逻辑，不代表所有频道已经在电视实机上验证持续播放，也不为截图伪造节目画面。
 
 ## 构建
 
-从仓库根目录执行：
+从仓库根目录执行脚本测试，再进入共享 Android 工程：
 
 ```bash
-cd resource/launcher/puretv
+cd resource/apps/cctv
+node --test src/test/js/player-focus.test.mjs
+cd ../../launcher/puretv
 ./gradlew :cctv:assembleDebug :cctv:testDebugUnitTest :cctv:lintDebug
 ./gradlew :cctv:verifyReleaseSize
 ```
