@@ -129,6 +129,9 @@ jobs:
       - name: Test desktop UI
         if: runner.os == 'Linux'
         run: npm run test:ui
+      - name: Test SVG normalization
+        if: runner.os == 'Linux'
+        run: npm run test:svg
       - name: Build native desktop and installer
         run: npm run tauri -- build --ci --target "$BUILD_TARGET" --bundles "$BUNDLE_FORMAT" -- --locked
       - name: Verify MCP against the running desktop

@@ -173,7 +173,7 @@ input[type="checkbox"]:checked {
   border-color: var(--green);
   position: relative;
 }
-input[type="checkbox"]:checked::after {
+input[type="checkbox"]:not([role="switch"]):checked::after {
   content: "";
   position: absolute;
   width: 8px;
@@ -1520,7 +1520,7 @@ button.primary { color:var(--on-accent); }
 .nav-item:hover:not(:disabled) { background:rgba(255,255,255,.08); color:#fff; }
 .nav-item.active, .nav-item.active:hover { background:var(--green); color:var(--on-accent); }
 
-input[type="checkbox"]:checked::after { border-color:var(--on-accent); }
+input[type="checkbox"]:not([role="switch"]):checked::after { border-color:var(--on-accent); }
 
 /* Anchor identity below appearance controls. */
 .sidebar > .brand { margin:20px 7px 0; font-size:28px; }
@@ -1642,9 +1642,9 @@ select { box-sizing:border-box; height:38px; min-height:38px; line-height:normal
 .unified-element .unified-icon svg {color:var(--u-icon-color,currentColor);}
 
 .layout-inspector .component-visibility-switch {display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;margin:0;}
-.layout-inspector .component-visibility-switch input {appearance:none;position:relative;width:36px;min-width:36px;height:21px;min-height:21px;flex:0 0 36px;padding:0;margin:0;border:0;border-radius:999px;background:#a4aca8;cursor:pointer;transition:background .15s;}
-.component-visibility-switch input::after {content:'';position:absolute;width:15px;height:15px;left:3px;top:3px;border-radius:50%;background:white;box-shadow:0 1px 3px #0002;transition:transform .15s;}
-.layout-inspector .component-visibility-switch input:checked {background:var(--accent,#087f68);}
-.component-visibility-switch input:checked::after {transform:translateX(15px);}
+.layout-inspector .component-visibility-switch input {-webkit-appearance:none;appearance:none;position:relative;width:36px;min-width:36px;height:21px;min-height:21px;flex:0 0 36px;padding:0;margin:0;border:0;border-radius:999px;background:#a4aca8;cursor:pointer;transition:background .15s;}
+.component-visibility-switch input::after {content:'';position:absolute;width:15px;height:15px;left:3px;top:3px;border:0;border-radius:50%;background:var(--surface);box-shadow:0 1px 3px #0002;transform:translateX(0);transition:transform .15s,background .15s;}
+.layout-inspector .component-visibility-switch input:checked {background:var(--green);}
+.component-visibility-switch input:checked::after {background:var(--on-accent);transform:translateX(15px);}
 .layout-inspector .component-visibility-switch input:disabled {cursor:default;opacity:.5;}
-.component-visibility-switch input:focus-visible {outline:2px solid var(--accent,#087f68);outline-offset:3px;}
+.component-visibility-switch input:focus-visible {outline:2px solid var(--green);outline-offset:3px;}

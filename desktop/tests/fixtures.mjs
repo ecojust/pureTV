@@ -44,14 +44,17 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     window.__launcherRequests=[];let covers=structuredClone(options.covers || {});
     // Tests hold a real bridge promise until assertions have observed its pending UI.
     window.__pendingOperations=[];
+    const heldOnce=new Set();window.__holdNextOperation=action=>heldOnce.add(action);
     window.__releaseOperation=(action,outcome={})=>{
       const index=window.__pendingOperations.findIndex(operation=>operation.action===action);
       if(index<0)throw new Error('No held operation: '+action);
       window.__pendingOperations.splice(index,1)[0].resolve(outcome);
     };
     const holdOperation=async action=>{
-      if(!options.holdActions?.includes(action))return {};
-      const outcome=await new Promise(resolve=>window.__pendingOperations.push({action,resolve}));
+      const once=heldOnce.delete(action);if(!once&&!options.holdActions?.includes(action))return {};
+      const modal=document.querySelector('dialog.operation-feedback[open]');
+      const feedback={phase:modal?.dataset.phase,modal:!!modal?.matches(':modal'),text:modal?.textContent || ''};
+      const outcome=await new Promise(resolve=>window.__pendingOperations.push({action,resolve,feedback}));
       if(outcome.error)throw new Error(outcome.error);
       return outcome;
     };
@@ -165,7 +168,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         if (command !== 'execute') throw new Error('Unexpected command: '+command);
         const r = args.request;
         if (r.action === 'getState') {
-          if(window.__holdNextStateRead){window.__holdNextStateRead=false;await holdOperation('getState');}
+          if(window.__holdNextStateRead || heldOnce.has('getState')){window.__holdNextStateRead=false;await holdOperation('getState');}
           return structuredClone(state);
         }
         window.__requests.push(structuredClone(r));
