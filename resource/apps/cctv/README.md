@@ -1,5 +1,11 @@
 # CCTV Live · 央视直播
 
+<!-- apk-resource:start -->
+[下载 APK](cctv-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
+
+此目录内 APK 使用 pureTV 发布证书签名。
+<!-- apk-resource:end -->
+
 [中文](README.md) · [English](README.en.md)
 
 pureTV 项目的独立央视频道播放器，适用于 Android TV / Google TV 遥控器。包名 `com.ecojust.cctvlive`，版本 `0.1.0`，要求 Android 8.0 及以上。应用外壳跟随系统语言，支持中文和英文；播放区域保留央视网页面自身的内容与提示。这是第三方客户端，不是央视官方应用。

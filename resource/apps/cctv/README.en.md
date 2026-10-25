@@ -1,5 +1,11 @@
 # CCTV Live
 
+<!-- apk-resource:start -->
+[Download APK](cctv-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
+
+The APK in this directory is signed with the pureTV release certificate.
+<!-- apk-resource:end -->
+
 [English](README.en.md) · [中文](README.md)
 
 An independent CCTV channel player from the pureTV project, designed for Android TV / Google TV remotes. Package: `com.ecojust.cctvlive`; version: `0.1.0`; Android 8.0 or later. The application shell follows the system language and supports Chinese and English. The playback area retains the CCTV website's own content and messages. This is a third-party client, not an official CCTV application.
