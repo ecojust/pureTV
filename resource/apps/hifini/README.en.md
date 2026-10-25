@@ -1,7 +1,7 @@
 # HIFINi TV
 
 <!-- apk-resource:start -->
-[Download APK](hifini-0.1.3.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
+[Download APK](hifini-0.1.4.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
 
 The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
