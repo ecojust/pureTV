@@ -10,6 +10,8 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 
 [![Release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
+[![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
+[![App count](https://img.shields.io/badge/apps-5-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-31%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
