@@ -36,16 +36,16 @@ final class Playlist {
         }
     }
     static List<Channel> parse(byte[] bytes, boolean defaults) throws IOException {
-        if (bytes.length > MAX_BYTES) throw new IOException("频道列表超过 512 KiB 上限");
+        if (bytes.length > MAX_BYTES) throw new UiError(R.string.list_size_limit);
         String text = new String(bytes, StandardCharsets.UTF_8).replace("\uFEFF", "");
         if (text.contains("#EXT-X-TARGETDURATION") || text.contains("#EXT-X-STREAM-INF"))
-            throw new IOException("请选择频道 M3U 列表，不能导入单个 HLS 媒体播放列表");
+            throw new UiError(R.string.list_is_hls);
         Map<String,Builder> found = new LinkedHashMap<>();
         Map<String,String> attributes = null; String name = null;
         try (BufferedReader reader = new BufferedReader(new StringReader(text))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (Thread.currentThread().isInterrupted()) throw new IOException("读取已取消");
+                if (Thread.currentThread().isInterrupted()) throw new UiError(R.string.list_cancelled);
                 line = line.trim();
                 if (line.startsWith("#EXTINF:")) {
                     attributes = new HashMap<>(); Matcher matcher = ATTRIBUTE.matcher(line);
@@ -78,7 +78,7 @@ final class Playlist {
         }
         List<Channel> result = new ArrayList<>();
         for (Builder entry : found.values()) result.add(new Channel(entry.id, entry.name, entry.group, entry.urls));
-        if (result.isEmpty()) throw new IOException("没有找到可用的 HTTP(S) 频道，请检查 M3U 格式");
+        if (result.isEmpty()) throw new UiError(R.string.list_no_channels);
         if (defaults) result.sort(Comparator.comparingInt(channel -> order(channel.id)));
         return result;
     }
@@ -95,21 +95,21 @@ final class Playlist {
         return -1;
     }
     static String safeUrl(String address) throws IOException {
-        if (address == null || address.isEmpty() || address.length() > 8192) throw new IOException("直播地址为空或过长");
+        if (address == null || address.isEmpty() || address.length() > 8192) throw new UiError(R.string.url_empty);
         try {
             URI uri = new URI(address.trim());
             if (!("http".equalsIgnoreCase(uri.getScheme()) || "https".equalsIgnoreCase(uri.getScheme()))
                     || uri.getHost() == null || uri.getUserInfo() != null || uri.getFragment() != null)
-                throw new IOException("仅支持 HTTP(S) 地址，不支持此协议或内嵌账号密码");
+                throw new UiError(R.string.url_unsupported);
             return uri.toASCIIString();
-        } catch (URISyntaxException e) { throw new IOException("直播地址格式无效", e); }
+        } catch (URISyntaxException e) { UiError error = new UiError(R.string.url_invalid); error.initCause(e); throw error; }
     }
     static byte[] read(InputStream input) throws IOException {
         try (InputStream stream = input; ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[8192]; int count;
             while ((count = stream.read(buffer)) != -1) {
-                if (Thread.currentThread().isInterrupted()) throw new IOException("读取已取消");
-                if (output.size() + count > MAX_BYTES) throw new IOException("频道列表超过 512 KiB 上限");
+                if (Thread.currentThread().isInterrupted()) throw new UiError(R.string.list_cancelled);
+                if (output.size() + count > MAX_BYTES) throw new UiError(R.string.list_size_limit);
                 output.write(buffer, 0, count);
             }
             return output.toByteArray();

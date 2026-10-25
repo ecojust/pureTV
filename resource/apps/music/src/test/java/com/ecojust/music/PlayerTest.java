@@ -34,7 +34,7 @@ public class PlayerTest {
             assertTrue(p.started.await(1, java.util.concurrent.TimeUnit.SECONDS));
             assertTrue(p.loading());
             org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(21));
-            assertFalse(p.loading()); assertFalse(p.playing()); assertTrue(p.error().contains("20 秒"));
+            assertFalse(p.loading()); assertFalse(p.playing()); assertEquals(p.getString(R.string.resolve_timeout),p.error());
             p.play(0); assertTrue(p.loading()); p.pause(false); assertFalse(p.loading());
         } finally { c.destroy(); }
     }
@@ -47,7 +47,7 @@ public class PlayerTest {
             java.lang.reflect.Field pending = PlaybackService.class.getDeclaredField("pending"); pending.setAccessible(true);
             ((java.util.concurrent.Future<?>) pending.get(p)).get(1, java.util.concurrent.TimeUnit.SECONDS);
             org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(31));
-            assertFalse(p.loading()); assertFalse(p.playing()); assertTrue(p.error().contains("超时"));
+            assertFalse(p.loading()); assertFalse(p.playing()); assertEquals(p.getString(R.string.connect_timeout),p.error());
             java.lang.reflect.Field index = PlaybackService.class.getDeclaredField("sourceIndex"); index.setAccessible(true);
             assertEquals(2, index.getInt(p));
         } finally { c.destroy(); }
@@ -68,7 +68,7 @@ public class PlayerTest {
             org.robolectric.Shadows.shadowOf(decoder).invokeErrorListener(1, -1004);
             assertTrue(p.loading());
             org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(21));
-            assertFalse(p.loading()); assertTrue(p.error().contains("超时"));
+            assertFalse(p.loading()); assertEquals(p.getString(R.string.connect_timeout),p.error());
         } finally { c.destroy(); }
     }
     @Test public void shuffleModePersistsAcrossServiceRecreation() {

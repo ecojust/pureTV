@@ -29,7 +29,7 @@ public class PlayerUiTest {
     public static class TestActivity extends MainActivity {
         @Override protected FeedController.Loader createLoader() { return new FeedController.Loader() {
             public VideoFeed.Clip fetch(VideoFeed.Source source) throws IOException {
-                int number=calls.incrementAndGet();if(offline)throw new IOException("测试网络不可用");
+                int number=calls.incrementAndGet();if(offline)throw new IOException("Test network unavailable");
                 return new VideoFeed.Clip("https://example.com/video/"+number+".mp4",source);
             }
             public void cancel() { }
@@ -135,11 +135,46 @@ public class PlayerUiTest {
         assertArrayEquals(new int[]{1,1},MainActivity.fit(0,1080,720,1280));
     }
     @Test public void rendersTvControls() throws Exception { capture(1920,1080,"shortvideo-tv.png"); }
+    @Test @Config(qualifiers="en-rUS-w960dp-h540dp-land-xhdpi") public void rendersEnglishTvControls() throws Exception { capture(1920,1080,"shortvideo-tv.en.png"); }
     @Test @Config(qualifiers="zh-rCN-w640dp-h360dp-land-mdpi") public void compactTvKeepsControlsInsideScreen() throws Exception { capture(640,360,"shortvideo-tv-compact.png"); }
+    @Test @Config(qualifiers="en-rUS-w640dp-h360dp-land-mdpi") public void compactEnglishTvKeepsControlsInsideScreen() throws Exception { capture(640,360,"shortvideo-tv-compact.en.png"); }
+    @Test @Config(qualifiers="en-rUS-w960dp-h540dp-land-xhdpi") public void englishLocaleLocalizesSourcesPlaybackAndErrors() throws Exception {
+        try(ActivityController<TestActivity> c=Robolectric.buildActivity(TestActivity.class).setup().visible()) {
+            TestActivity activity=c.get();start(activity);
+            TextView source=field(activity,"sourceLabel",MainActivity.class),counter=field(activity,"counter",MainActivity.class),mode=field(activity,"modeLabel",MainActivity.class);
+            assertEquals("Source: Kuleu Random",source.getText().toString());assertEquals("Clip 1",counter.getText().toString());assertEquals("Autoplay",mode.getText().toString());
+            key(activity,KeyEvent.KEYCODE_MEDIA_PAUSE);assertEquals("Paused",mode.getText().toString());
+            assertNotNull(button(activity.getWindow().getDecorView(),"Play"));
+            key(activity,KeyEvent.KEYCODE_MENU);AlertDialog dialog=ShadowAlertDialog.getLatestAlertDialog();
+            assertEquals("Kuleu Random",dialog.getListView().getAdapter().getItem(0));assertEquals("Dwo Random",dialog.getListView().getAdapter().getItem(1));
+            assertEquals("Close",dialog.getButton(AlertDialog.BUTTON_NEGATIVE).getText().toString());assertNoChineseText(dialog.getWindow().getDecorView());dialog.dismiss();
+            activity.error(R.string.feed_http_error,503);
+            TextView message=field(activity,"message",MainActivity.class);assertEquals("The video source request failed (HTTP 503).",message.getText().toString());
+            assertNotNull(button(activity.getWindow().getDecorView(),"Try again"));assertNoChineseText(activity.getWindow().getDecorView());
+        }
+    }
+    @Test @Config(qualifiers="en-rUS-w960dp-h540dp-land-xhdpi") public void englishNetworkFailureUsesLocalizedMessageInsteadOfExceptionText() throws Exception {
+        offline=true;
+        try(ActivityController<TestActivity> c=Robolectric.buildActivity(TestActivity.class).setup().visible()) {
+            TestActivity activity=c.get();start(activity);TextView message=field(activity,"message",MainActivity.class);
+            assertEquals("This video source is unavailable. Try again or choose another source.",message.getText().toString());
+            assertNoChineseText(activity.getWindow().getDecorView());
+        }
+    }
+    private void assertNoChineseText(View view) {
+        if(view instanceof TextView)assertFalse(((TextView)view).getText().toString(),((TextView)view).getText().toString().matches("(?s).*[\\p{IsHan}].*"));
+        if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)assertNoChineseText(((ViewGroup)view).getChildAt(i));
+    }
     private void capture(int width,int height,String file) throws Exception {
         try(ActivityController<TestActivity> c=Robolectric.buildActivity(TestActivity.class).setup().visible()) {
             TestActivity activity=c.get();start(activity);View root=activity.getWindow().getDecorView();root.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(height,View.MeasureSpec.EXACTLY));root.layout(0,0,width,height);
-            Button sources=button(root,"视频源");int[] location=new int[2];sources.getLocationOnScreen(location);assertTrue(location[0]>=0);assertTrue(location[0]+sources.getWidth()<=width);assertTrue(location[1]+sources.getHeight()<=height);assertTrue(sources.isFocusable());
+            for(int label:new int[]{R.string.previous,R.string.pause,R.string.next,R.string.sources}) {
+                Button control=button(root,activity.getString(label));assertNotNull(control);int[] location=new int[2];control.getLocationOnScreen(location);
+                assertTrue(location[0]>=0);assertTrue(location[0]+control.getWidth()<=width);assertTrue(location[1]+control.getHeight()<=height);
+                assertEquals(1,control.getLineCount());
+            }
+            assertTrue(button(root,activity.getString(R.string.sources)).isFocusable());
+            if(file.contains(".en."))assertNoChineseText(root);
             String folder=System.getenv("SHORTVIDEO_UI_CAPTURE_DIR");
             if(folder!=null){new File(folder).mkdirs();Bitmap bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);root.draw(new Canvas(bitmap));try(FileOutputStream out=new FileOutputStream(new File(folder,file))){bitmap.compress(Bitmap.CompressFormat.PNG,100,out);}bitmap.recycle();}
         }

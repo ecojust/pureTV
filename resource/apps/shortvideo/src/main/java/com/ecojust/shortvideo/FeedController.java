@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /** A maximum of ten ephemeral addresses and one network worker, independent of the decoder. */
 final class FeedController implements AutoCloseable {
     interface Loader { VideoFeed.Clip fetch(VideoFeed.Source source) throws IOException; void cancel(); }
-    interface Events { void loading(); void clip(VideoFeed.Clip clip); void error(String message); }
+    interface Events { void loading(); void clip(VideoFeed.Clip clip); void error(int message, Object... arguments); }
     static final int HISTORY_LIMIT = 10;
     static final long REQUEST_INTERVAL_MS = 1500; // <= 40 requests/minute across both sources.
     private final Loader loader;
@@ -76,9 +76,11 @@ final class FeedController implements AutoCloseable {
                     if (suspended || Thread.currentThread().isInterrupted()) return;
                     main.post(() -> accept(ticket, attempt, clip));
                 } catch (Exception e) {
-                    String message = e.getMessage() == null ? "视频源暂时不可用" : e.getMessage();
+                    // Platform exception messages are not localized for the Activity's locale.
+                    int message = e instanceof VideoFeed.FeedException ? ((VideoFeed.FeedException)e).message : R.string.network_error;
+                    Object[] arguments = e instanceof VideoFeed.FeedException ? ((VideoFeed.FeedException)e).arguments : new Object[0];
                     if (!suspended && !Thread.currentThread().isInterrupted()) main.post(() -> {
-                        if (valid(ticket)) { loading = false; events.error(message); }
+                        if (valid(ticket)) { loading = false; events.error(message, arguments); }
                     });
                 }
             });
@@ -88,7 +90,7 @@ final class FeedController implements AutoCloseable {
         if (!valid(ticket)) return;
         for (VideoFeed.Clip old : history) if (old.key().equals(clip.key())) {
             if (attempt == 0) schedule(ticket, 1);
-            else { loading = false; events.error("视频源连续返回重复内容，请稍后重试或切换源"); }
+            else { loading = false; events.error(R.string.feed_repeated); }
             return;
         }
         while (history.size() > index + 1) history.remove(history.size() - 1);

@@ -99,7 +99,14 @@ final class UnifiedLayout {
                 if(template.optInt("version")==5&&page.equals("apps"))frame.put("y",frame.getInt("y")+36);
                 users.put(new JSONObject().put("id","app-"+i).put("name",label).put("text",label).put("frame",frame).put("action",pkg).put("visible",true).put("icon",SvgIcon.forPackage(pkg)).put("textColor","#263F3B").put("iconColor","#3B7064").put("backgroundColor",new String[]{"#DCE9E2","#E6DEED","#EADFCF","#DCE5EF"}[i%4]));
             }
-        }return template;
+        }
+        // Labels are generated defaults, not saved user edits. Keep every application within v5's byte budget.
+        for(int limit:new int[]{64,48,32,16})if(template.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length>LauncherLayout.LIMIT){
+            for(String section:Arrays.asList("home","apps")){JSONArray nodes=template.getJSONObject(section).getJSONArray("users");for(int i=0;i<nodes.length();i++){
+                JSONObject n=nodes.getJSONObject(i);String label=n.getString("text");if(label.length()>limit){int end=limit-1;if(Character.isHighSurrogate(label.charAt(end-1)))end--;label=label.substring(0,end)+"…";n.put("text",label).put("name",label);}
+            }}
+        }
+        return template;
     }
     static JSONObject migrate(JSONObject old,JSONObject template)throws Exception{
         JSONObject result=new JSONObject(template.toString());

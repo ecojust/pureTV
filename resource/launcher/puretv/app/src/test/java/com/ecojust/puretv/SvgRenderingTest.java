@@ -13,7 +13,7 @@ import org.robolectric.annotation.GraphicsMode;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk=28)
+@Config(sdk=28,qualifiers="zh-rCN-w960dp-h540dp-land-xhdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 public class SvgRenderingTest {
     @Test public void currentColorSvgProducesPixelsIndependentOfLabelColor() throws Exception {

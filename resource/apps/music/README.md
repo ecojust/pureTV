@@ -10,6 +10,12 @@
 
 ![原生 TV 界面渲染预览，曲目为测试示例，非线上搜索结果或电视实机截图](docs/music-tv.png)
 
+## 语言
+
+界面跟随电视系统语言：英语环境显示英文，中文环境保留中文。导航、播放器、队列、设置、通知、加载阶段和错误提示均使用 Android 本地化资源。歌曲名称、作者和本地文件名按内容原文显示。
+
+英文预览由 `UiTest.englishResourcesRenderAndNavigateWithoutReplacingUiText` 使用真实英语资源渲染，测试曲目使用英文样例名称；设置 `MUSIC_UI_CAPTURE_DIR` 后同时导出 `music-tv.png` 和 `music-tv.en.png`，不改写截图中的界面文案。
+
 ## 功能
 
 - 关键词搜索 B 站音乐分区公开视频，或粘贴 BV 号／完整 BV 链接。

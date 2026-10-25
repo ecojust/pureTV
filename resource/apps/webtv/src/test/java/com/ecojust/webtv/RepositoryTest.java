@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.*;
 import static org.robolectric.Shadows.shadowOf;
 
-@RunWith(RobolectricTestRunner.class) @Config(sdk=28)
+@RunWith(RobolectricTestRunner.class) @Config(sdk=28,qualifiers="zh-rCN")
 public class RepositoryTest {
     private Context context;
     private static final String BODY="#EXTM3U\n#EXTINF:-1 tvg-id=\"custom\",我的卫视\nhttps://example.com/live.m3u8\n";
@@ -49,16 +49,16 @@ public class RepositoryTest {
     @Test public void httpErrorsAndOversizeInputsDoNotCreateSnapshot()throws Exception{
         Connection connection=new Connection("error");connection.status=503;
         ChannelRepository repo=new ChannelRepository(context){@Override protected HttpURLConnection open(String address){return connection;}};
-        try{repo.refresh(new ChannelRepository.Source("url","https://example.com/list"),new ChannelRepository.Request());fail();}catch(IOException expected){assertTrue(expected.getMessage().contains("503"));}
+        try{repo.refresh(new ChannelRepository.Source("url","https://example.com/list"),new ChannelRepository.Request());fail();}catch(IOException expected){assertTrue(UiError.message(RuntimeEnvironment.getApplication(),expected).contains("503"));}
         connection.status=200;connection.body=new byte[Playlist.MAX_BYTES+1];
-        try{repo.refresh(new ChannelRepository.Source("url","https://example.com/list"),new ChannelRepository.Request());fail();}catch(IOException expected){assertTrue(expected.getMessage().contains("512"));}
+        try{repo.refresh(new ChannelRepository.Source("url","https://example.com/list"),new ChannelRepository.Request());fail();}catch(IOException expected){assertTrue(UiError.message(RuntimeEnvironment.getApplication(),expected).contains("512"));}
         assertFalse(new File(context.getFilesDir(),"channels.snapshot").exists());assertTrue(connection.disconnected);
     }
     @Test public void redirectsAreBoundedAndHttpsCannotDowngrade()throws Exception{
         Connection connection=new Connection("");connection.status=302;connection.location="http://example.com/other";AtomicInteger calls=new AtomicInteger();
         ChannelRepository repo=new ChannelRepository(context){@Override protected HttpURLConnection open(String address){calls.incrementAndGet();return connection;}};
-        try{repo.refresh(new ChannelRepository.Source("url","https://example.com/list"),new ChannelRepository.Request());fail();}catch(IOException expected){assertTrue(expected.getMessage().contains("降级"));}assertEquals(1,calls.get());
+        try{repo.refresh(new ChannelRepository.Source("url","https://example.com/list"),new ChannelRepository.Request());fail();}catch(IOException expected){assertTrue(UiError.message(RuntimeEnvironment.getApplication(),expected).contains("降级"));}assertEquals(1,calls.get());
         connection.location="https://example.com/loop";calls.set(0);
-        try{repo.refresh(new ChannelRepository.Source("url","https://example.com/list"),new ChannelRepository.Request());fail();}catch(IOException expected){assertTrue(expected.getMessage().contains("重定向"));}assertEquals(4,calls.get());
+        try{repo.refresh(new ChannelRepository.Source("url","https://example.com/list"),new ChannelRepository.Request());fail();}catch(IOException expected){assertTrue(UiError.message(RuntimeEnvironment.getApplication(),expected).contains("重定向"));}assertEquals(4,calls.get());
     }
 }

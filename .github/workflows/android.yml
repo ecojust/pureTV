@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       stage_resources:
-        description: Stage the verified launcher APK and rendered TV previews for resource preparation
+        description: Stage verified launcher/app APKs and bilingual native previews
         type: boolean
         default: false
 permissions:
@@ -49,10 +49,12 @@ jobs:
           PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
           CLEAN_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tv-previews
           MUSIC_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-music-previews
+          SHORTVIDEO_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-shortvideo-previews
+          WEBTV_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-webtv-previews
         working-directory: resource/launcher/puretv
         run: |
           set -o pipefail
-          ./gradlew --no-daemon assembleDebug assembleRelease lintDebug testDebugUnitTest :music:verifyReleaseSize :music:lintDebug :music:testDebugUnitTest :shortvideo:verifyReleaseSize :webtv:verifyReleaseSize 2>&1 | tee "$RUNNER_TEMP/android-build.log"
+          ./gradlew --no-daemon assembleDebug assembleRelease lintDebug testDebugUnitTest :music:verifyReleaseSize :music:lintDebug :music:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/android-build.log"
       - name: Report Android build or test failures
         if: failure()
         run: |
@@ -62,9 +64,9 @@ jobs:
           for report in pathlib.Path('resource').rglob('TEST-*.xml'):
               for case in ET.parse(report).getroot().iter('testcase'):
                   for failure in case.findall('failure'):
-                      messages.append(case.attrib.get('name','test')+': '+(failure.text or '')[:6000])
+                      messages.append(case.attrib.get('name','test')+': '+(failure.text or '')[:3000])
           log=pathlib.Path(os.environ['RUNNER_TEMP'])/'android-build.log'
-          if log.exists(): messages.append(log.read_text(errors='replace')[-10000:])
+          if log.exists(): messages.append(log.read_text(errors='replace')[-3500:])
           for message in messages:
               print('::error::'+message.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
           PYTHON
@@ -96,6 +98,16 @@ jobs:
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
+          name: shortvideo-tv-previews
+          path: ${{ runner.temp }}/puretv-shortvideo-previews/*.png
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: webtv-previews
+          path: ${{ runner.temp }}/puretv-webtv-previews/*.png
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
           name: music-tv
           path: resource/apps/music/build/outputs/apk/**/*.apk
       - uses: actions/upload-artifact@v4
@@ -108,7 +120,7 @@ jobs:
           path: resource/apps/webtv/build/outputs/apk/**/*.apk
 
   stage-resources:
-    name: Stage verified launcher resource inputs
+    name: Stage verified launcher and app resource inputs
     needs: build
     if: github.event_name == 'workflow_dispatch' && inputs.stage_resources
     runs-on: ubuntu-24.04
@@ -134,8 +146,9 @@ jobs:
               apks=[p for p in apks if 'release' in p.name]
               assert len(apks)==1,apks
               shutil.copyfile(apks[0],output/(app+'.apk'))
-          shutil.copyfile(root/'music-tv-previews/music-tv.png',output/'music-tv.png')
-          for name in ['home-render.png','apps-render.png']:
+          for artifact,names in [('music-tv-previews',['music-tv.png','music-tv.en.png']),('shortvideo-tv-previews',['shortvideo-tv.png','shortvideo-tv.en.png']),('webtv-previews',['webtv-controls.png','webtv-controls.en.png'])]:
+              for name in names:shutil.copyfile(root/artifact/name,output/name)
+          for name in ['home-render.png','apps-render.png','home-render.en.png','apps-render.en.png']:
               shutil.copyfile(root/'pureTV-tv-previews'/name,output/name)
           PYTHON
           git checkout -b "build-assets/resources-${GITHUB_RUN_ID}"

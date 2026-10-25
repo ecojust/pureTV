@@ -111,39 +111,48 @@ final class LauncherLayout {
         return null;
     }
     private static LauncherLayout loadOverride(Context ctx,JSONObject source) throws Exception {
-        LauncherLayout template=source.optInt("version")==3?defaults(ctx):template(ctx);
-        if(source.optInt("version")==3||source.optInt("version")==4)source=UnifiedLayout.migrate(source,template.json);
-        // Upgrade only the recognized 0.1.0 system template; retain every user decision.
-        if(source.optInt("version")==5) {
-            try { UnifiedLayout.locked(source,template.json); }
-            catch(IllegalArgumentException changedTemplate) {
-                JSONObject previous=new JSONObject(new String(read(ctx.getAssets().open("layout-0.1.0.json")),StandardCharsets.UTF_8));
-                new LauncherLayout(source);UnifiedLayout.locked(source,previous);
-                JSONObject updated=new JSONObject(template.json.toString());JSONObject screen=source.getJSONObject("screen");
-                for(String section:Arrays.asList("home","apps")) {
-                    JSONObject target=updated.getJSONObject(section),old=source.getJSONObject(section);
-                    target.put("system",UnifiedLayout.resized(target.getJSONArray("system"),updated.getJSONObject("screen"),screen));
-                    target.put("users",old.getJSONArray("users")).put("background",old.getJSONObject("background")).put("navigation",old.getJSONObject("navigation"));
-                }
-                updated.put("screen",screen);source=updated;
-            }
-        }
+        LauncherLayout current=source.optInt("version")==3?defaults(ctx):template(ctx);
+        if(source.optInt("version")==3||source.optInt("version")==4)source=UnifiedLayout.migrate(source,current.json);
         LauncherLayout result=new LauncherLayout(source);
-        if((source.optInt("version")==4||source.optInt("version")==5))UnifiedLayout.locked(result.json,template.json);
-        return result;
+        return source.optInt("version")==5?canonicalLocale(ctx,result,current.json):result;
+    }
+    /** Only shipped system templates may cross locale/version boundaries. User content is untouched. */
+    private static LauncherLayout canonicalLocale(Context ctx,LauncherLayout incoming,JSONObject current)throws Exception {
+        try{UnifiedLayout.locked(incoming.json,current);return incoming;}
+        catch(IllegalArgumentException differentLocale){/* Check all known templates before normalization. */}
+        boolean known=false;
+        for(String filename:new String[]{"layout.json","layout.en.json","layout-0.1.0.json"}) {
+            JSONObject candidate;
+            try{candidate=asset(ctx,filename).json;}catch(java.io.FileNotFoundException absent){continue;}
+            try{UnifiedLayout.locked(incoming.json,candidate);known=true;break;}
+            catch(IllegalArgumentException differentTemplate){/* Never accept arbitrary system edits. */}
+        }
+        if(!known)throw new IllegalArgumentException("System components are read-only");
+        JSONObject result=new JSONObject(incoming.json.toString());
+        for(String page:Arrays.asList("home","apps"))result.getJSONObject(page).put("system",
+            UnifiedLayout.resized(current.getJSONObject(page).getJSONArray("system"),current.getJSONObject("screen"),result.getJSONObject("screen")));
+        LauncherLayout normalized=new LauncherLayout(result);UnifiedLayout.locked(normalized.json,current);return normalized;
+    }
+    private static LauncherLayout asset(Context ctx,String filename)throws Exception {
+        return new LauncherLayout(new JSONObject(new String(read(ctx.getAssets().open(filename)),StandardCharsets.UTF_8)));
     }
     static LauncherLayout effective(Context ctx) {
         LauncherLayout layout=override(ctx);
         if(layout!=null)return layout;
         try{return defaults(ctx);}catch(Exception ignored){return null;}
     }
-    static LauncherLayout template(Context ctx)throws Exception{return new LauncherLayout(new JSONObject(new String(read(ctx.getAssets().open("layout.json")),StandardCharsets.UTF_8)));}
+    static LauncherLayout template(Context ctx)throws Exception {
+        android.os.LocaleList locales=ctx.getResources().getConfiguration().getLocales();
+        java.util.Locale locale=locales.isEmpty()?java.util.Locale.getDefault():locales.get(0);
+        return asset(ctx,"zh".equals(locale.getLanguage())?"layout.json":"layout.en.json");
+    }
     static LauncherLayout defaults(Context ctx) throws Exception {
         return new LauncherLayout(UnifiedLayout.withInstalled(ctx,template(ctx).json));
     }
     static void apply(Context ctx, JSONObject json) throws Exception {
         LauncherLayout layout = new LauncherLayout(json);
-        if((json.optInt("version")==4||json.optInt("version")==5))UnifiedLayout.locked(json,template(ctx).json);
+        if(json.optInt("version")==5)layout=canonicalLocale(ctx,layout,template(ctx).json);
+        else if(json.optInt("version")==4)UnifiedLayout.locked(json,template(ctx).json);
         for(String section:Arrays.asList("home","apps")) {
             JSONArray items=layout.page(section).getJSONArray("items");
             for(int i=0;i<items.length();i++) {

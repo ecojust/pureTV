@@ -54,17 +54,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Li
         live = new LivePlayer(this,this); buildUi();
     }
     private void buildUi() {
+        boolean english = getResources().getConfiguration().getLocales().get(0).getLanguage().equals("en");
         root = column(); root.setBackgroundColor(0xff111319); root.setFocusableInTouchMode(true); root.setPadding(dp(16),dp(10),dp(16),dp(8));
         header = row(); TextView brand = text(getString(R.string.app_name),26); brand.setTextColor(0xffe3a1b0); header.addView(brand,new LinearLayout.LayoutParams(dp(100),dp(48)));
         sourceStatus = text("",13); sourceStatus.setSingleLine(); sourceStatus.setEllipsize(TextUtils.TruncateAt.END); sourceStatus.setTextColor(0xffa9acb6); header.addView(sourceStatus,new LinearLayout.LayoutParams(0,dp(48),1));
-        header.addView(button(R.string.sources,this::sourceDialog),new LinearLayout.LayoutParams(dp(80),dp(44)));
-        fullButton = button(R.string.fullscreen,()->setFullscreen(!fullscreen)); header.addView(fullButton,new LinearLayout.LayoutParams(dp(74),dp(44))); root.addView(header);
+        header.addView(button(R.string.sources,this::sourceDialog),new LinearLayout.LayoutParams(dp(english?88:80),dp(44)));
+        fullButton = button(R.string.fullscreen,()->setFullscreen(!fullscreen)); header.addView(fullButton,new LinearLayout.LayoutParams(dp(english?104:74),dp(44))); root.addView(header);
         LinearLayout body = row(); body.setGravity(Gravity.TOP); root.addView(body,new LinearLayout.LayoutParams(-1,0,1));
         side = column(); int sideWidth = getResources().getConfiguration().screenWidthDp >= 800 ? 200 : 170;
         side.setPadding(0,dp(6),dp(10),0); body.addView(side,new LinearLayout.LayoutParams(dp(sideWidth),-1));
         LinearLayout tabs = row();
         String[] categories = {Playlist.SATELLITE,Playlist.CCTV,"收藏","全部"}; int[] labels = {R.string.satellite,R.string.cctv,R.string.favourites,R.string.all};
-        for(int i=0;i<categories.length;i++){String value=categories[i];Button tab=button(labels[i],()->setCategory(value));tab.setTextSize(13);tab.setPadding(0,0,0,0);tabs.addView(tab,new LinearLayout.LayoutParams(0,dp(42),1));} side.addView(tabs);
+        for(int i=0;i<categories.length;i++){if(english && i==2){side.addView(tabs);tabs=row();}String value=categories[i];Button tab=button(labels[i],()->setCategory(value));tab.setTextSize(13);tab.setPadding(0,0,0,0);tabs.addView(tab,new LinearLayout.LayoutParams(0,dp(42),1));} side.addView(tabs);
         FrameLayout listFrame = new FrameLayout(this); side.addView(listFrame,new LinearLayout.LayoutParams(-1,0,1));
         list = new ListView(this); list.setFocusableInTouchMode(true); list.setDividerHeight(dp(3)); list.setSelector(R.drawable.list_focus); list.setDrawSelectorOnTop(true); list.setAdapter(adapter);
         list.setOnItemClickListener((parent,view,position,id)->{
@@ -74,7 +75,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Li
         });
         listFrame.addView(list,new FrameLayout.LayoutParams(-1,-1)); empty=text(getString(R.string.empty),15);empty.setGravity(Gravity.CENTER);empty.setPadding(dp(8),dp(20),dp(8),dp(20));listFrame.addView(empty,new FrameLayout.LayoutParams(-1,-1));list.setEmptyView(empty);
         LinearLayout right = column(); body.addView(right,new LinearLayout.LayoutParams(0,-1,1));
-        stage = new FrameLayout(this);stage.setBackgroundColor(0xff090b0f);stage.setFocusable(true);stage.setContentDescription("直播播放区域");right.addView(stage,new LinearLayout.LayoutParams(-1,0,1));
+        stage = new FrameLayout(this);stage.setBackgroundColor(0xff090b0f);stage.setFocusable(true);stage.setContentDescription(getString(R.string.playback_area));right.addView(stage,new LinearLayout.LayoutParams(-1,0,1));
         surface = new SurfaceView(this);stage.addView(surface,new FrameLayout.LayoutParams(1,1,Gravity.CENTER));surface.getHolder().addCallback(this);
         stage.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->layoutVideo());
         stage.setOnClickListener(v->{if(fullscreen)showFullControls(footer.getVisibility()!=View.VISIBLE,true);else setFullscreen(true);});
@@ -111,7 +112,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Li
             try{
                 ChannelRepository.Catalogue result=action.run(ticketRequest);ticketRequest.check();
                 main.post(()->{if(active&&ticket==loadGeneration){loadingList=false;retryList=null;apply(result);}});
-            }catch(Exception e){String reason=e.getMessage()==null?"无法读取列表":e.getMessage();
+            }catch(Exception e){String reason=UiError.message(this,e);
                 if(!ticketRequest.cancelled)main.post(()->{if(active&&ticket==loadGeneration){loadingList=false;
                     if(catalogue==null){setMessage(getString(R.string.list_error,reason),false);retry.setText(R.string.list_retry);retry.requestFocus();}
                     else{updateSourceStatus();toast(getString(R.string.list_error,reason));}
@@ -129,7 +130,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Li
         if(chosen!=null){int line=chosen.urls.indexOf(oldUrl);if(old!=null&&line>=0&&live.state()==LivePlayer.State.PLAYING){current=chosen;routeIndex=line;adapter.notifyDataSetChanged();changed();}else play(chosen,Math.max(0,line));}
         list.requestFocus();
     }
-    private void updateSourceStatus(){if(catalogue!=null)sourceStatus.setText(getString(R.string.list_ready,catalogue.source.label(),catalogue.channels.size()));}
+    private void updateSourceStatus(){if(catalogue!=null)sourceStatus.setText(getString(R.string.list_ready,catalogue.source.label(this),catalogue.channels.size()));}
     private void setCategory(String value){category=value;preferences.edit().putString("category",value).apply();refreshList();list.requestFocus();}
     private void refreshList(){
         shown.clear();if(catalogue!=null)for(Playlist.Channel channel:catalogue.channels)if(category.equals("全部")||category.equals(channel.group)||category.equals("收藏")&&favourites.contains(channel.id))shown.add(channel);
@@ -154,8 +155,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Li
     }
     private void routes(){
         if(current==null)return;if(current.urls.size()<2){toast(getString(R.string.single_route));return;}
-        String[] labels=new String[current.urls.size()];for(int i=0;i<labels.length;i++)labels[i]="线路 "+(i+1)+" · "+URI.create(current.urls.get(i)).getHost();
-        Playlist.Channel selected=current;showDialog(new AlertDialog.Builder(this).setTitle(current.name).setSingleChoiceItems(labels,routeIndex,(d,which)->{play(selected,which);d.dismiss();}).setNegativeButton(R.string.close,null).create());
+        String[] labels=new String[current.urls.size()];for(int i=0;i<labels.length;i++)labels[i]=getString(R.string.route_label,i+1,URI.create(current.urls.get(i)).getHost());
+        Playlist.Channel selected=current;showDialog(new AlertDialog.Builder(this).setTitle(channelName(current)).setSingleChoiceItems(labels,routeIndex,(d,which)->{play(selected,which);d.dismiss();}).setNegativeButton(R.string.close,null).create());
     }
     private void sourceDialog(){
         if(loadingList){toast(getString(R.string.busy));return;}
@@ -172,7 +173,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Li
         AlertDialog form=new AlertDialog.Builder(this).setTitle(R.string.import_url).setView(input).setPositiveButton(R.string.import_action,null).setNegativeButton(R.string.cancel,null).create();
         showDialog(form);form.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
             try{String address=Playlist.safeUrl(input.getText().toString().trim());form.dismiss();load(req->repository.refresh(new ChannelRepository.Source("url",address),req));}
-            catch(Exception e){input.setError(e.getMessage());}
+            catch(Exception e){input.setError(UiError.message(this,e));}
         });
     }
     private void filePicker(){
@@ -200,7 +201,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Li
     private void scheduleHide(){main.removeCallbacks(hideControls);if(fullscreen&&active&&dialog==null&&live.state()==LivePlayer.State.PLAYING)main.postDelayed(hideControls,4500);}
     @Override public void changed(){
         if(root==null||channelTitle==null)return;LivePlayer.State state=live.state();
-        channelTitle.setText(current==null?getString(R.string.waiting):getString(R.string.route_count,current.name,routeIndex+1,current.urls.size()));
+        channelTitle.setText(current==null?getString(R.string.waiting):getString(R.string.route_count,channelName(current),routeIndex+1,current.urls.size()));
         fullButton.setEnabled(current!=null);favourite.setEnabled(current!=null);route.setEnabled(current!=null);favourite.setText(current!=null&&favourites.contains(current.id)?R.string.favourited:R.string.favourite);
         if(state==LivePlayer.State.LOADING){playbackStatus.setText(R.string.loading_video);setMessage(getString(R.string.loading_video),true);showFullControls(true,false);}
         else if(state==LivePlayer.State.PLAYING){playbackStatus.setText(R.string.live);messagePanel.setVisibility(View.GONE);scheduleHide();}
@@ -238,9 +239,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Li
     private final class Channels extends BaseAdapter{
         public int getCount(){return shown.size();}public Playlist.Channel getItem(int index){return shown.get(index);}public long getItemId(int index){return index;}
         public View getView(int index,View recycled,ViewGroup parent){TextView view=recycled instanceof TextView?(TextView)recycled:text("",17);Playlist.Channel channel=getItem(index);
-            view.setText(String.format(Locale.ROOT,"%02d  %s",index+1,channel.name));view.setSingleLine();view.setEllipsize(TextUtils.TruncateAt.END);view.setGravity(Gravity.CENTER_VERTICAL);view.setPadding(dp(10),0,dp(8),0);view.setMinHeight(dp(50));
+            view.setText(String.format(Locale.ROOT,"%02d  %s",index+1,channelName(channel)));view.setSingleLine();view.setEllipsize(TextUtils.TruncateAt.END);view.setGravity(Gravity.CENTER_VERTICAL);view.setPadding(dp(10),0,dp(8),0);view.setMinHeight(dp(50));
             boolean selected=current!=null&&current.id.equals(channel.id);view.setTextColor(selected?0xffe3a1b0:0xffececf0);view.setBackgroundColor(selected?0xff28252e:0xff171a21);return view;}
     }
+    private String channelName(Playlist.Channel channel){return ChannelLabels.name(this,channel,catalogue!=null&&catalogue.source.kind.equals("default"));}
     private int dp(int value){return Math.round(value*getResources().getDisplayMetrics().density);}
     private LinearLayout column(){LinearLayout view=new LinearLayout(this);view.setOrientation(LinearLayout.VERTICAL);return view;}
     private LinearLayout row(){LinearLayout view=new LinearLayout(this);view.setOrientation(LinearLayout.HORIZONTAL);view.setGravity(Gravity.CENTER_VERTICAL);return view;}

@@ -13,12 +13,22 @@ import java.net.URL;
 /** Small public JSON requests only. No credentials, video downloads or on-disk cache. */
 final class VideoFeed implements FeedController.Loader {
     enum Source {
-        KULEU("酷乐随机", "https://api.kuleu.com/api/MP4_xiaojiejie?type=json"),
-        DWO("小渡随机", "https://openapi.dwo.cc/api/4qb_sp");
-        final String label, endpoint;
-        Source(String label, String endpoint) { this.label = label; this.endpoint = endpoint; }
+        KULEU(R.string.source_kuleu, "https://api.kuleu.com/api/MP4_xiaojiejie?type=json"),
+        DWO(R.string.source_dwo, "https://openapi.dwo.cc/api/4qb_sp");
+        final int label;
+        final String endpoint;
+        Source(int label, String endpoint) { this.label = label; this.endpoint = endpoint; }
         static Source from(String name) {
             try { return valueOf(name); } catch (IllegalArgumentException | NullPointerException e) { return KULEU; }
+        }
+    }
+    /** The UI resolves this resource using its current locale, without exposing platform errors. */
+    static final class FeedException extends IOException {
+        final int message;
+        final Object[] arguments;
+        FeedException(int message, Object... arguments) {
+            super("Video source error (resource " + message + ")");
+            this.message = message; this.arguments = arguments;
         }
     }
     static final class Clip {
@@ -40,10 +50,10 @@ final class VideoFeed implements FeedController.Loader {
 
     @Override public Clip fetch(Source source) throws IOException {
         try { return parse(source, request(source.endpoint)); }
-        catch (JSONException e) { throw new IOException("视频源没有返回有效 JSON", e); }
+        catch (JSONException e) { throw new FeedException(R.string.feed_invalid_json); }
     }
     static Clip parse(Source source, JSONObject response) throws IOException {
-        if (response.optInt("code") != 200) throw new IOException("视频源返回错误，请稍后重试");
+        if (response.optInt("code") != 200) throw new FeedException(R.string.feed_error);
         String url;
         if (source == Source.KULEU) url = response.optString("mp4_video");
         else {
@@ -54,13 +64,13 @@ final class VideoFeed implements FeedController.Loader {
         return new Clip(url, source);
     }
     static String safeUrl(String value) throws IOException {
-        if (value == null || value.isEmpty() || value.length() > 8192) throw new IOException("视频源未返回有效视频地址");
+        if (value == null || value.isEmpty() || value.length() > 8192) throw new FeedException(R.string.feed_invalid_url);
         try {
             URI uri = new URI(value);
             if (!"https".equalsIgnoreCase(uri.getScheme()) || uri.getHost() == null || uri.getUserInfo() != null || uri.getFragment() != null)
-                throw new IOException("视频源未返回安全的 HTTPS 地址");
+                throw new FeedException(R.string.feed_unsafe_url);
             return uri.toASCIIString();
-        } catch (URISyntaxException e) { throw new IOException("视频地址格式无效", e); }
+        } catch (URISyntaxException e) { throw new FeedException(R.string.feed_malformed_url); }
     }
     private JSONObject request(String address) throws IOException, JSONException {
         for (int redirects = 0; redirects <= 3; redirects++) {
@@ -75,27 +85,27 @@ final class VideoFeed implements FeedController.Loader {
                 checkCancelled(); int status = current.getResponseCode();
                 if (status == 301 || status == 302 || status == 303 || status == 307 || status == 308) {
                     String location = current.getHeaderField("Location");
-                    if (location == null) throw new IOException("视频源重定向无效");
+                    if (location == null) throw new FeedException(R.string.feed_invalid_redirect);
                     address = new URL(current.getURL(), location).toString(); continue;
                 }
-                if (status != 200) throw new IOException(status == 429 ? "视频源请求过快，请稍后重试" : "视频源请求失败（HTTP " + status + "）");
-                if (current.getContentLengthLong() > 65536) throw new IOException("视频源响应过大");
+                if (status != 200) throw status == 429 ? new FeedException(R.string.feed_rate_limited) : new FeedException(R.string.feed_http_error, status);
+                if (current.getContentLengthLong() > 65536) throw new FeedException(R.string.feed_too_large);
                 try (InputStream input = current.getInputStream(); ByteArrayOutputStream output = new ByteArrayOutputStream()) {
                     byte[] buffer = new byte[4096]; int count;
                     while ((count = input.read(buffer)) != -1) {
                         checkCancelled();
-                        if (System.nanoTime() > deadline) throw new IOException("视频源请求超时");
-                        if (output.size() + count > 65536) throw new IOException("视频源响应过大");
+                        if (System.nanoTime() > deadline) throw new FeedException(R.string.feed_timeout);
+                        if (output.size() + count > 65536) throw new FeedException(R.string.feed_too_large);
                         output.write(buffer, 0, count);
                     }
                     return new JSONObject(output.toString("UTF-8"));
                 }
             } finally { if (connection == current) connection = null; current.disconnect(); }
         }
-        throw new IOException("视频源重定向次数过多");
+        throw new FeedException(R.string.feed_too_many_redirects);
     }
     private static void checkCancelled() throws IOException {
-        if (Thread.currentThread().isInterrupted()) throw new IOException("请求已取消");
+        if (Thread.currentThread().isInterrupted()) throw new FeedException(R.string.feed_cancelled);
     }
     @Override public void cancel() { HttpURLConnection current = connection; if (current != null) current.disconnect(); }
 }

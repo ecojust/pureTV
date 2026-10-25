@@ -136,19 +136,19 @@ public class PlaybackService extends Service {
         if (position < 0 || position >= queue.size() || destroyed) return;
         cancelResolve(); releasePlayer();
         index = position; order.record(index, queue.size()); error = ""; loading = true; resumeAfterFocus = false;
-        stage = current().local() ? "正在打开本地音频…" : "正在获取音频分段…";
+        stage = current().local() ? getString(R.string.opening_local) : getString(R.string.fetch_segments);
         loadDeadline = SystemClock.elapsedRealtime() + 45000;
         Track track = current();
         startForegroundService(new Intent(this, PlaybackService.class).setAction(START));
         startForeground(NOTIFICATION, notification());
         changed();
         int ticket = generation;
-        resolveTimeout = () -> { if (ticket == generation && loading) fail("获取音轨超时（20 秒），请重试或检查电视网络"); };
+        resolveTimeout = () -> { if (ticket == generation && loading) fail(getString(R.string.resolve_timeout)); };
         main.postDelayed(resolveTimeout, 20000);
         try { pending = resolver.submit(() -> {
             try {
                 List<String> resolved = resolveSources(track, message -> main.post(() -> {
-                    if (!destroyed && ticket == generation && loading) { stage = message; changed(); }
+                    if (!destroyed && ticket == generation && loading) { stage = getString(BiliApi.STAGE_SEGMENTS.equals(message) ? R.string.fetch_segments : BiliApi.STAGE_AUDIO.equals(message) ? R.string.request_audio : R.string.loading_audio); changed(); }
                 }));
                 main.post(() -> {
                     if (!destroyed && ticket == generation) {
@@ -158,11 +158,11 @@ public class PlaybackService extends Service {
                     }
                 });
             } catch (Exception e) {
-                String message = e.getMessage() == null ? getString(R.string.playback_failed) : e.getMessage();
+                String message = MusicError.display(this,e);
                 main.post(() -> { if (!destroyed && ticket == generation) fail(stage + " " + message); });
             }
         }); } catch (java.util.concurrent.RejectedExecutionException e) {
-            fail("上一次音频请求尚未结束，请稍后重试");
+            fail(getString(R.string.request_busy));
         }
     }
     List<String> resolveSources(Track track, java.util.function.Consumer<String> progress) throws java.io.IOException {
@@ -177,7 +177,7 @@ public class PlaybackService extends Service {
     }
     private void prepare(String source, int ticket) {
         releasePlayer(); loading = true;
-        stage = current().local() ? "正在打开本地音频…" : "正在连接音频（" + (sourceIndex + 1) + "/" + sources.size() + "）…";
+        stage = current().local() ? getString(R.string.opening_local) : getString(R.string.connecting_audio, sourceIndex + 1, sources.size());
         changed();
         try {
             player = new MediaPlayer();
@@ -206,9 +206,9 @@ public class PlaybackService extends Service {
                 return true;
             });
             player.prepareAsync();
-            prepareTimeout = () -> { if (ticket == generation && loading) retrySource(ticket, "连接音频超时，请重试或检查电视网络"); };
+            prepareTimeout = () -> { if (ticket == generation && loading) retrySource(ticket, getString(R.string.connect_timeout)); };
             main.postDelayed(prepareTimeout, Math.max(1, Math.min(10000, loadDeadline - SystemClock.elapsedRealtime())));
-        } catch (Exception e) { retrySource(ticket, getString(R.string.playback_failed) + "：" + e.getMessage()); }
+        } catch (Exception e) { retrySource(ticket, getString(R.string.playback_error_detail, MusicError.display(this,e))); }
     }
     void toggle() {
         if (loading) pause(false);
