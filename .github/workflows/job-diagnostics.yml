@@ -1,38 +1,41 @@
-name: Read failed job diagnostics
+name: Read public HiFiNi contract
 on:
   workflow_dispatch:
     inputs:
       job_id:
-        description: Failed GitHub Actions job ID
         required: true
+        description: Probe identifier
 permissions:
-  actions: read
+  contents: read
 jobs:
   diagnostics:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - name: Report verification log tail
-        env:
-          GH_TOKEN: ${{ github.token }}
-          JOB_ID: ${{ inputs.job_id }}
-          REPOSITORY: ${{ github.repository }}
+      - name: Inspect ordinary public responses
         run: |
-          python - <<'PY'
-          import os, re, subprocess
-          job = os.environ['JOB_ID']
-          assert job.isdigit()
-          result = subprocess.run(['gh', 'api', '--allow-escape-sequences', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True)
-          log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', result.stdout + result.stderr)
-          lines = log.splitlines()
-          primary = [i for i, line in enumerate(lines) if re.search(r'FAILURE: Build failed|\* What went wrong:', line) and '##[error]' not in line]
-          fallback = [i for i, line in enumerate(lines) if re.search(r'(?:error:|Error:|TimeoutError|ui\.mjs:|> Task .+ FAILED|Execution failed for task)', line) and '##[error]' not in line]
-          matches = primary or fallback
-          if matches:
-              before = '\n'.join(lines[max(0, matches[0] - 50):matches[0]])[-3500:]
-              print('::notice title=Failure preceding context::' + before.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-              start = max(0, matches[0] - 2)
-              selected = '\n'.join(lines[start:start + 65])[:3500]
-          else:
-              selected = log[-3500:]
-          print('::notice title=Failed job log::' + selected.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-          PY
+          python - <<'PROBE'
+          import urllib.request,urllib.parse,urllib.error,re,json,html
+          def fetch(url):
+              request=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (Linux; Android 9) AppleWebKit/537.36 Chrome/120.0 Safari/537.36'})
+              try:
+                  with urllib.request.urlopen(request,timeout=25) as response:
+                      data=response.read(1024*1024).decode('utf-8','replace')
+                      links=list(dict.fromkeys(re.findall(r'thread-([0-9]+)\.htm',data)))
+                      result={'url':url,'status':response.status,'final':response.url,'bytes':len(data),'threads':links[:5],'title':re.findall(r'<title[^>]*>(.*?)</title>',data,re.S)[:1]}
+                      if '/thread-' in url:
+                          scripts=re.findall(r'<script[^>]*>(.*?)</script>',data,re.S|re.I)
+                          player=[s for s in scripts if re.search(r'APlayer|aplayer|music:',s)][:2]
+                          def redact(text):
+                              text=re.sub(r'https?://[^\s\'\"<>]+',lambda m:urllib.parse.urlsplit(m[0])._replace(query='',fragment='').geturl(),text)
+                              return text[:2200]
+                          result['playerSnippets']=[redact(s) for s in player]
+                          result['audioTags']=[redact(t) for t in re.findall(r'<audio[^>]*>.*?</audio>',data,re.S|re.I)[:1]]
+                          result['messageClasses']=re.findall(r'class=[\'\"]([^\'\"]*(?:message|lyric)[^\'\"]*)',data)[:10]
+                      print('::notice::'+json.dumps(result,ensure_ascii=False).replace('%','%25'))
+                      return links
+              except Exception as error:
+                  print('::notice::'+json.dumps({'url':url,'error':str(error)}).replace('%','%25'));return []
+          home=fetch('https://www.hifini.net/')
+          found=fetch('https://www.hifini.net/search-'+urllib.parse.quote('夜')+'-1-0-1.htm')
+          if found or home: fetch('https://www.hifini.net/thread-'+(found or home)[0]+'.htm')
+          PROBE
