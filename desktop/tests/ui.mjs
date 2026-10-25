@@ -989,7 +989,7 @@ try {
     assert.equal(await cardFor(p).locator('.launcher-card-background').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(51, 68, 85)');
     await p.locator('[data-u-act="reset"]').click();await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='resetLayout'));await settled(p);
     assert.equal(await cardFor(p).locator('img.launcher-card-background').getAttribute('src'),homeCover);
-    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests.map(r=>r.action)),['getLayout','getBackgrounds','applyLayout','getBackgrounds','resetLayout','getBackgrounds']);
+    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests.map(r=>r.action)),['getLayout','getBackgrounds','getLayout','getBackgrounds','applyLayout','getBackgrounds','resetLayout','getBackgrounds'],'Apply rechecks the current layout and apps before its single write; reset performs its own single write');
     assert.equal(await p.locator('.banner.error').count(),0);
   },unifiedState,{layoutSupported:true,layout:coverLayout,layoutApps:unifiedApps,covers:{[pureComponent]:updatedHomeCover}});
   await check('list entry and scan refresh inactive Home backgrounds without activating the desktop',async p=>{
