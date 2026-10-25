@@ -14,6 +14,8 @@ The channel list is on the left. On the right, the system WebView opens the sele
 - A page-loading failure keeps the current channel and interface visible, with retry or reload available. Playback failure does not automatically close the application.
 - Going into the background pauses the WebView and loads `about:blank` to stop the page. Returning to the application reloads the selected channel.
 
+Exiting with Back from the main channel view saves favourites and selection, destroys the WebView, clears callbacks, removes the task, and terminates this app’s process. Leaving fullscreen or moving to the background does not terminate the process.
+
 ![Native Android interface preview; not a physical TV or live broadcast capture](docs/cctv-live.en.png)
 
 ## Fixed channel file

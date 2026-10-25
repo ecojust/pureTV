@@ -91,7 +91,11 @@ public class MainActivity extends Activity implements CctvWebPlayer.Events {
     }
     @Override protected void onStart(){super.onStart();active=true;web.activate();main.post(clockTick);}
     @Override protected void onStop(){active=false;main.removeCallbacksAndMessages(null);web.suspend();root.setKeepScreenOn(false);super.onStop();}
-    @Override protected void onDestroy(){web.close();main.removeCallbacksAndMessages(null);super.onDestroy();}
+    @Override protected void onDestroy(){
+        boolean terminate=isFinishing()&&!isChangingConfigurations();
+        active=false;web.close();main.removeCallbacksAndMessages(null);root.setKeepScreenOn(false);super.onDestroy();
+        if(terminate)android.os.Process.killProcess(android.os.Process.myPid());
+    }
     @Override protected void onSaveInstanceState(Bundle state){super.onSaveInstanceState(state);state.putBoolean("favourite_mode",favouriteMode);}
     private void updateClock(){Locale locale=getResources().getConfiguration().getLocales().get(0);Date now=new Date();clock.setText(new SimpleDateFormat("HH:mm",locale).format(now));date.setText(new SimpleDateFormat("MM/dd E",locale).format(now));}
     private void setCategory(boolean saved){favouriteMode=saved;refreshList();channelList.requestFocus();}
@@ -138,7 +142,14 @@ public class MainActivity extends Activity implements CctvWebPlayer.Events {
         if(state==CctvWebPlayer.State.ERROR&&active)playButton.requestFocus();
         root.setKeepScreenOn(active&&(ready||state==CctvWebPlayer.State.LOADING));adapter.notifyDataSetChanged();
     }
-    @Override public void onBackPressed(){if(fullscreen)setFullscreen(false);else if(web.view()!=null&&web.view().hasFocus())channelList.requestFocus();else super.onBackPressed();}
+    private void exitApplication(){
+        active=false;main.removeCallbacksAndMessages(null);web.close();root.setKeepScreenOn(false);
+        // apply() is asynchronous; flush the tiny selection record before ending our process.
+        SharedPreferences.Editor saved=preferences.edit().putStringSet("favourites",new LinkedHashSet<>(favourites));
+        if(current!=null)saved.putString("last_channel",current.id);
+        saved.commit();finishAndRemoveTask();
+    }
+    @Override public void onBackPressed(){if(fullscreen)setFullscreen(false);else if(web.view()!=null&&web.view().hasFocus())channelList.requestFocus();else exitApplication();}
     @Override public boolean dispatchKeyEvent(KeyEvent event){
         if(fullscreen&&event.getAction()==KeyEvent.ACTION_DOWN)scheduleHide();
         int key=event.getKeyCode();boolean next=key==KeyEvent.KEYCODE_CHANNEL_UP||key==KeyEvent.KEYCODE_MEDIA_NEXT||(fullscreen&&key==KeyEvent.KEYCODE_DPAD_DOWN);

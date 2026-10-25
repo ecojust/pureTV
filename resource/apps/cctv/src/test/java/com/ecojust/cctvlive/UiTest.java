@@ -1,6 +1,7 @@
 package com.ecojust.cctvlive;
 
 import android.app.AlertDialog;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.webkit.WebView;
@@ -21,7 +22,12 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.GraphicsMode;
+import org.robolectric.annotation.Implementation;
+import org.robolectric.annotation.Implements;
 import org.robolectric.annotation.LooperMode;
+import org.robolectric.shadow.api.Shadow;
+import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowProcess;
 import org.robolectric.shadows.ShadowWebView;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -41,7 +47,15 @@ public class UiTest {
     @Before public void prepare() {
         // A TV remote operates outside touch mode; otherwise Android can reject button focus.
         new android.app.Instrumentation().setInTouchMode(false);
+        ShadowProcess.setPid(41001);ShadowProcess.clearKilledProcesses();
         RuntimeEnvironment.getApplication().getSharedPreferences("cctv-live",0).edit().clear().commit();
+    }
+
+    /** Stock ShadowActivity does not distinguish finish() from finishAndRemoveTask(). */
+    @Implements(Activity.class)
+    public static class TaskRemovalActivityShadow extends ShadowActivity {
+        boolean taskRemovalRequested;
+        @Implementation @Override protected void finishAndRemoveTask(){taskRemovalRequested=true;super.finishAndRemoveTask();}
     }
 
     private ActivityController<MainActivity> activity() {
@@ -74,7 +88,8 @@ public class UiTest {
         assertEquals(CctvWebPlayer.State.READY,activity.web.state());
     }
     private void key(MainActivity activity,int code){activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,code));activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,code));}
-    private void assertStaysInApp(MainActivity activity){assertFalse(activity.isFinishing());assertFalse(activity.isDestroyed());assertNull(shadowOf(activity).getNextStartedActivity());}
+    private void assertProcessRunning(){assertFalse("The application process must remain alive",ShadowProcess.wasKilled(android.os.Process.myPid()));}
+    private void assertStaysInApp(MainActivity activity){assertFalse(activity.isFinishing());assertFalse(activity.isDestroyed());assertNull(shadowOf(activity).getNextStartedActivity());assertProcessRunning();}
 
     @Test public void bundledChannelsOpenWithoutAutoplayAndRememberFavouritesAndLastSelection(){
         try(ActivityController<MainActivity> controller=activity()){
@@ -153,6 +168,28 @@ public class UiTest {
             shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(30));
             assertEquals("about:blank",browser.getLastLoadedUrl());assertNotEquals(CctvWebPlayer.State.READY,activity.web.state());
             View root=field(activity,"root",MainActivity.class);assertFalse(root.getKeepScreenOn());
+            assertProcessRunning();assertFalse(browser.wasDestroyCalled());assertFalse(activity.isFinishing());
+        }
+    }
+
+    @Test @Config(shadows=TaskRemovalActivityShadow.class)
+    public void explicitBackExitDestroysTheWebsiteRemovesTheTaskAndKillsOnlyItsOwnProcess()throws Exception{
+        try(ActivityController<MainActivity> controller=activity()){
+            MainActivity activity=controller.get();choose(activity,1);button(activity,"favourite").performClick();websiteReady(activity);
+            WebView original=activity.web.view();ShadowWebView website=shadowOf(original);int pid=android.os.Process.myPid();
+            View root=field(activity,"root",MainActivity.class);assertTrue(root.getKeepScreenOn());
+            button(activity,"player").performClick();assertTrue(original.hasFocus());
+            activity.onBackPressed();assertTrue(activity.channelList.hasFocus());assertStaysInApp(activity);assertSame(original,activity.web.view());
+            activity.onBackPressed();
+            TaskRemovalActivityShadow lifecycle=Shadow.extract(activity);
+            assertTrue("Exit must remove the task from recents",lifecycle.taskRemovalRequested);assertTrue(activity.isFinishing());
+            assertNull(activity.web.view());assertTrue(website.wasDestroyCalled());assertNull(original.getParent());assertFalse(root.getKeepScreenOn());
+            assertEquals("cctv2.cn",activity.getSharedPreferences("cctv-live",0).getString("last_channel",""));
+            assertTrue(activity.getSharedPreferences("cctv-live",0).getStringSet("favourites",Collections.emptySet()).contains("cctv2.cn"));
+            assertProcessRunning();
+            controller.pause().stop().destroy();shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(30));
+            assertTrue(activity.isDestroyed());assertTrue("Exit must terminate its own PID after destruction",ShadowProcess.wasKilled(pid));
+            assertFalse("Exit must not terminate another process",ShadowProcess.wasKilled(pid+1));
         }
     }
 
