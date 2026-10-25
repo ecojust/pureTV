@@ -24,6 +24,8 @@ python tools/prepare-launcher-resource.py \
 
 更新自研应用使用相同参数运行 `tools/prepare-app-resources.py`。两者核验构建来源、包名、版本和签名后，直接更新对应软件文件夹的 APK、校验值和索引。应用直接保留源码；启动器同时附精确版本的源码归档。
 
+只更新单个应用时加 `--app 应用目录名`，可重复指定。例如独立的 HIFINi TV 使用 `--app hifini`，不会更新 Music TV。为了保留原批量行为，不传 `--app` 时仍只更新 `music`、`shortvideo`、`webtv`。
+
 4. 提交资源并重新运行严格校验。Android CI（包括手动准备任务）不允许缺少 APK 或元数据。校验完成后删除临时 build-assets 分支。
 
 启动器源码指纹仅覆盖 Gradle、源码、字体许可和安装脚本等构建输入，资源目录中的 APK、封面和元数据不参与计算，避免循环依赖。目录搬迁不改变现有 APK 的源码指纹。
