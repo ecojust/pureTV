@@ -2,8 +2,6 @@
 
 <div align="center">
   <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV Logo">
-  <h1>pureTV</h1>
-  <p>管理你的电视系统、应用与桌面。</p>
 </div>
 
 pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连接电视，查看系统信息，安装、卸载、启停应用，选择启动器，并用可视化画布自定义支持的桌面。也可通过 MCP 让 Agent 控制已打开的管理器。
