@@ -28,14 +28,14 @@ import static org.robolectric.Shadows.shadowOf;
 public class UiTest {
     private ServiceController<PreviewPlayer> service;
     public static class PreviewPlayer extends PlaybackService {
-        Track track; List<Track> selected=new ArrayList<>(); boolean active,random;int selectedIndex=-1,plays;String attemptedUrl="",failure="";
+        Track track; List<Track> selected=new ArrayList<>(); boolean active,random,busy;int selectedIndex=-1,plays,cancellations;String attemptedUrl="",failure="",progressStage="";
         Runnable callback;
         @Override void listen(Runnable value){callback=value;}
         void update(){if(callback!=null)callback.run();}
         @Override Track current(){return track;}
-        @Override boolean loading(){return false;}
+        @Override boolean loading(){return busy;}
         @Override boolean playing(){return active;}
-        @Override String stage(){return "";}
+        @Override String stage(){return progressStage;}
         @Override String error(){return failure;}
         @Override String audioUrl(){return attemptedUrl;}
         @Override boolean shuffled(){return random;}
@@ -43,7 +43,7 @@ public class UiTest {
         @Override long duration(){return track==null?0:226000;}
         @Override void playList(List<Track> tracks,boolean shuffled){selected=new ArrayList<>(tracks);random=shuffled;selectedIndex=0;track=tracks.get(0);active=true;plays++;update();}
         @Override void playListAt(List<Track> tracks,int index){selected=new ArrayList<>(tracks);random=false;selectedIndex=index;track=tracks.get(index);active=true;plays++;update();}
-        @Override void toggle(){active=!active;update();}
+        @Override void toggle(){if(busy){busy=false;active=false;cancellations++;}else active=!active;update();}
         @Override void previous(){selectedIndex--;}
         @Override void next(){selectedIndex++;}
         @Override void seek(long value){}
@@ -153,6 +153,21 @@ public class UiTest {
     }
     private static String decodeQr(ImageView image)throws Exception{assertNotNull(image);assertTrue(image.getDrawable() instanceof BitmapDrawable);Bitmap bitmap=((BitmapDrawable)image.getDrawable()).getBitmap();int[] pixels=new int[bitmap.getWidth()*bitmap.getHeight()];bitmap.getPixels(pixels,0,bitmap.getWidth(),0,0,bitmap.getWidth(),bitmap.getHeight());return new com.google.zxing.qrcode.QRCodeReader().decode(new com.google.zxing.BinaryBitmap(new com.google.zxing.common.HybridBinarizer(new com.google.zxing.RGBLuminanceSource(bitmap.getWidth(),bitmap.getHeight(),pixels)))).getText();}
     private static void assertAudioQrBounds(MainActivity a,int width,int height)throws Exception{ImageButton qr=field(a,"audioQr");TextView title=field(a,"title"),artist=field(a,"artist");SeekBar seek=field(a,"seek");assertInside(qr,width,height);assertTrue("QR stays beside the title",title.getRight()<=qr.getLeft());assertTrue("QR stays beside the artist",artist.getRight()<=qr.getLeft());assertTrue("QR stays above the seek bar",qr.getBottom()<=seek.getTop());}
+    @Test public void downloadingShowsProgressAndCanBeCancelledWithoutReplacingSearchStatus()throws Exception{downloadProgress(false,1920,1080);}
+    @Test @Config(qualifiers="en-rUS-w640dp-h360dp-land-mdpi") public void englishDownloadProgressFitsCompactScreens()throws Exception{downloadProgress(true,640,360);}
+    private void downloadProgress(boolean english,int width,int height)throws Exception{
+        try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup().visible()){
+            MainActivity a=controller.get();View root=a.getWindow().getDecorView();TextView status=field(a,"status"),now=field(a,"now");String searchStatus=a.getString(R.string.results_count,6);status.setText(searchStatus);
+            PreviewPlayer p=service.get();p.track=samples(english).get(0);p.attemptedUrl="https://audio.example.org/music/night-star.mp3?demo=1";p.busy=true;RhythmView rhythm=field(a,"rhythm");
+            for(String stage:new String[]{a.getString(R.string.download_start),a.getString(R.string.download_progress_percent,100),a.getString(R.string.download_progress_size,"64.0 MB"),a.getString(R.string.preparing_audio)}){
+                p.progressStage=stage;p.update();layout(root,width,height);assertEquals(stage,now.getText().toString());assertEquals(1,now.getLayout().getLineCount());assertEquals(0,now.getLayout().getEllipsisCount(0));assertEquals(stage.length(),now.getLayout().getLineEnd(0));
+                assertEquals(searchStatus,status.getText().toString());assertFalse(rhythm.isAnimating());assertNotNull(findDescription(root,a.getString(R.string.cancel)));assertAudioQrBounds(a,width,height);
+            }
+            ImageButton qr=field(a,"audioQr");if(qr.getDrawable() instanceof BitmapDrawable)assertEquals(p.attemptedUrl,decodeQr(qr));
+            findDescription(root,a.getString(R.string.cancel)).performClick();assertEquals(1,p.cancellations);assertFalse(p.busy);assertFalse(rhythm.isAnimating());assertEquals(View.VISIBLE,qr.getVisibility());
+            p.busy=true;p.progressStage=a.getString(R.string.download_progress_percent,45);p.update();assertFalse(rhythm.isAnimating());p.busy=false;p.active=true;p.update();assertTrue(rhythm.isAnimating());assertEquals(searchStatus,status.getText().toString());if(english)assertEnglish(root);
+        }
+    }
     @Test public void rhythmMovesOnlyDuringPlaybackAndStopsWithThePage()throws Exception{
         try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup().visible()){
             MainActivity a=controller.get();View root=a.getWindow().getDecorView();layout(root,1920,1080);RhythmView rhythm=field(a,"rhythm");assertFalse(rhythm.isAnimating());
