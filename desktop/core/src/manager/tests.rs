@@ -22,6 +22,7 @@ struct FakeTv {
     launcher_layout: Option<serde_json::Value>,
     provider_defaults: BTreeMap<String, serde_json::Value>,
     provider_layouts: BTreeMap<String, serde_json::Value>,
+    provider_apps: Option<serde_json::Value>,
     layout_provider: bool,
 }
 struct FakeRunner {
@@ -109,7 +110,8 @@ impl Runner for FakeRunner {
                             }
                             let custom=if original {tv.launcher_layout.clone()}else{tv.provider_layouts.get(&uri).cloned()};
                             let layout=custom.clone().unwrap_or(defaults);
-                            let value=serde_json::json!({"supported":true,"version":layout["version"],"custom":custom.is_some(),"layout":layout,"apps":[{"packageName":"com.ecojust.puretv","label":"pureTV"}]});
+                            let apps=tv.provider_apps.clone().unwrap_or_else(||serde_json::json!([{"packageName":"com.ecojust.puretv","label":"pureTV"}]));
+                            let value=serde_json::json!({"supported":true,"version":layout["version"],"custom":custom.is_some(),"layout":layout,"apps":apps});
                             format!("Bundle[{{result={}}}]",base64::engine::general_purpose::STANDARD.encode(value.to_string()))
                         },
                         "cat" => if a[1]=="/proc/meminfo" {"MemTotal: 4096 kB\nMemAvailable: 1024 kB".into()}else{"3600.25 20.0".into()},
@@ -1073,6 +1075,90 @@ fn layout_writes_reject_system_disabled_or_missing_user_apps() {
     assert!(manager
         .execute_launcher(crate::LauncherRequest::ApplyLayout { layout })
         .is_ok());
+}
+
+#[test]
+fn moss_layout_accepts_new_cctv_install_and_identifies_unavailable_old_apps() {
+    use crate::LauncherRequest;
+    use serde_json::json;
+    let (mut manager, tv) = fixture();
+    let component = "com.ecojust.mosstv/com.ecojust.mosstv.MainActivity";
+    let uri = "content://com.ecojust.mosstv.layout";
+    let defaults: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../resource/launcher/moss/app/src/main/assets/layout.json"
+    ))
+    .unwrap();
+    {
+        let mut tv = tv.lock().unwrap();
+        tv.default = component.into();
+        tv.installed.insert("com.ecojust.mosstv".into());
+        tv.installed.insert("com.user.noentry".into());
+        tv.launchers.push(component.into());
+        tv.layout_provider = true;
+        tv.provider_defaults.insert(uri.into(), defaults.clone());
+    }
+    connect(&mut manager);
+    assert!(!manager
+        .snapshot()
+        .packages
+        .iter()
+        .any(|app| app.package_name == "com.ecojust.cctvlive"));
+    // A package can be installed after the manager's last scan. The apply path
+    // must check the television's fresh catalogue and the launcher's app list.
+    {
+        let mut tv = tv.lock().unwrap();
+        tv.installed.insert("com.ecojust.cctvlive".into());
+        tv.provider_apps = Some(json!([
+            {"packageName":"com.ecojust.cctvlive","label":"央视直播"}
+        ]));
+    }
+    let tile = json!({
+        "id":"cctv-tile", "name":"央视直播", "text":"央视直播",
+        "frame":{"x":390,"y":180,"width":160,"height":142},
+        "action":"com.ecojust.cctvlive", "visible":true,
+        "icon":"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"></svg>",
+        "textColor":"#FFFFFF", "iconColor":"#FFFFFF", "backgroundColor":"transparent"
+    });
+    let mut layout = defaults;
+    layout["home"]["users"] = json!([tile.clone()]);
+    assert_eq!(
+        manager
+            .execute_launcher(LauncherRequest::ApplyLayout {
+                layout: layout.clone()
+            })
+            .unwrap()["layout"],
+        layout
+    );
+    for (package, reason) in [
+        ("com.example.removed", "布局中的应用未安装"),
+        ("com.user.app", "布局中的应用已停用"),
+        ("com.vendor.ads", "布局中的应用是系统应用"),
+        ("com.user.noentry", "启动器未提供此应用的可启动入口"),
+    ] {
+        let mut draft = layout.clone();
+        let mut old = tile.clone();
+        old["id"] = json!("old-hidden-tile");
+        old["name"] = json!("旧应用");
+        old["action"] = json!(package);
+        old["visible"] = json!(false);
+        draft["apps"]["users"] = json!([old]);
+        tv.lock().unwrap().calls.clear();
+        let error = manager
+            .execute_launcher(LauncherRequest::ApplyLayout { layout: draft })
+            .unwrap_err();
+        assert_eq!(
+            error,
+            format!(
+                "{reason}：apps / 旧应用（old-hidden-tile），{package}。请修改或移除该应用块。"
+            )
+        );
+        let tv = tv.lock().unwrap();
+        assert_eq!(tv.provider_layouts[uri], layout);
+        assert!(!tv
+            .calls
+            .iter()
+            .any(|args| args.windows(2).any(|pair| pair == ["--method", "apply"])));
+    }
 }
 
 #[test]

@@ -39,6 +39,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     const state = structuredClone(initial);
     const defaultLayout=options.layout || {version:2,home:{columns:4,items:[{action:'music',icon:'music',color:'#303338'},{action:'files',icon:'files',color:'#3B4C46'},{action:'apps',icon:'apps',color:'#374959'}]},apps:{columns:3,items:[]}};
     let launcherLayout=structuredClone(defaultLayout), customLayout=false;
+    let layoutApps=options.layoutApps ? structuredClone(options.layoutApps) : null, nextLayoutReadError='';
     window.__interfacePreferences={};
     window.__launcherRequests=[];let covers=structuredClone(options.covers || {});
     // Tests hold a real bridge promise until assertions have observed its pending UI.
@@ -56,6 +57,8 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     };
     window.__setMockState=value=>Object.assign(state,structuredClone(value));
     window.__setMockLayout=value=>{launcherLayout=structuredClone(value);};
+    window.__setMockLayoutApps=value=>{layoutApps=structuredClone(value);};
+    window.__failNextLayoutRead=value=>{nextLayoutReadError=String(value);};
     window.__homeBackgrounds=structuredClone(options.homeBackgrounds || {});window.__homeBackgroundColors=structuredClone(options.homeBackgroundColors || {});
     window.__failedBackgroundComponents=structuredClone(options.failedBackgroundComponents || []);
     const callbacks = new Map(); let nextCallback = 1, downloadCancelled = false, marketCancelled = false, toolsInstalled = !!options.toolsInstalled;
@@ -80,6 +83,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         if (command === 'choose_launcher_json') return JSON.stringify({version:2,home:{columns:2,items:[{packageName:'com.ecojust.webtv',icon:'app'}]},apps:{columns:3,items:[]}});
         if (command === 'launcher_execute') {
           window.__launcherRequests.push(structuredClone(args.request));
+          if(args.request.action==='getLayout' && nextLayoutReadError){const error=nextLayoutReadError;nextLayoutReadError='';throw new Error(error);}
           const held=await holdOperation(args.request.action);
           if(held.response)return structuredClone(held.response);
           if(args.request.action==='getBackgrounds'){
@@ -95,7 +99,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
           if (!options.layoutSupported) return {supported:false,component:state.defaultHome,message:'此启动器尚未接入可验证的布局接口，请使用它自身的设置。'};
           if (args.request.action === 'applyLayout') {launcherLayout=structuredClone(args.request.layout);customLayout=true;}
           if (args.request.action === 'resetLayout') {launcherLayout=structuredClone(defaultLayout);customLayout=false;}
-          return {supported:true,serial:state.device?.serial,userId:state.device?.userId,version:launcherLayout.version,systemBasis:[4,5].includes(launcherLayout.version)?{screen:defaultLayout.screen,home:defaultLayout.home.system,apps:defaultLayout.apps.system}:undefined,component:state.defaultHome,custom:customLayout,layout:structuredClone(launcherLayout),apps:options.layoutApps || [...(state.packages.some(p=>p.packageName==='com.imported.app')?[{packageName:'com.imported.app',label:'新安装应用'}]:[]),{packageName:'com.ecojust.webtv',label:'WebTV',iconPng:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII='},{packageName:'com.vendor.home',label:'系统启动器'},{packageName:'com.not.installed',label:'未安装应用'}],message:args.request.action === 'getLayout' ? '布局已读取' : '布局已应用并复查'};
+          return {supported:true,serial:state.device?.serial,userId:state.device?.userId,version:launcherLayout.version,systemBasis:[4,5].includes(launcherLayout.version)?{screen:defaultLayout.screen,home:defaultLayout.home.system,apps:defaultLayout.apps.system}:undefined,component:state.defaultHome,custom:customLayout,layout:structuredClone(launcherLayout),apps:structuredClone(layoutApps || [...(state.packages.some(p=>p.packageName==='com.imported.app')?[{packageName:'com.imported.app',label:'新安装应用'}]:[]),{packageName:'com.ecojust.webtv',label:'WebTV',iconPng:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII='},{packageName:'com.vendor.home',label:'系统启动器'},{packageName:'com.not.installed',label:'未安装应用'}]),message:args.request.action === 'getLayout' ? '布局已读取' : '布局已应用并复查'};
         }
         if (command === 'choose_apks') {
           if (options.apkPaths) return options.apkPaths;

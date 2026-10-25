@@ -443,25 +443,44 @@ impl Manager {
                 }
                 for section in ["home", "apps"] {
                     let unified = layout["version"] == 4 || layout["version"] == 5;
-                    for entry in layout[section][if unified { "users" } else { "items" }]
+                    for (index, entry) in layout[section][if unified { "users" } else { "items" }]
                         .as_array()
                         .unwrap()
+                        .iter()
+                        .enumerate()
                     {
                         if let Some(package) =
                             entry[if unified { "action" } else { "packageName" }].as_str()
                         {
-                            if !self.state.packages.iter().any(|app| {
-                                app.package_name == package
-                                    && app.installed
-                                    && !app.system
-                                    && app.enabled
-                            }) || !value["apps"]
-                                .as_array()
-                                .unwrap()
+                            let app = self
+                                .state
+                                .packages
                                 .iter()
-                                .any(|app| app["packageName"] == package)
-                            {
-                                return Err("布局只能选择当前用户已安装、可启动的用户应用".into());
+                                .find(|app| app.package_name == package);
+                            let reason = match app {
+                                None => Some("布局中的应用未安装"),
+                                Some(app) if !app.installed => Some("布局中的应用未安装"),
+                                Some(app) if app.system => Some("布局中的应用是系统应用"),
+                                Some(app) if !app.enabled => Some("布局中的应用已停用"),
+                                _ if !value["apps"]
+                                    .as_array()
+                                    .unwrap()
+                                    .iter()
+                                    .any(|app| app["packageName"] == package) =>
+                                {
+                                    Some("启动器未提供此应用的可启动入口")
+                                }
+                                _ => None,
+                            };
+                            if let Some(reason) = reason {
+                                let name = entry[if unified { "name" } else { "label" }]
+                                    .as_str()
+                                    .unwrap_or(package);
+                                let fallback_id = format!("#{}", index + 1);
+                                let id = entry["id"].as_str().unwrap_or(&fallback_id);
+                                return Err(format!(
+                                    "{reason}：{section} / {name}（{id}），{package}。请修改或移除该应用块。"
+                                ));
                             }
                         }
                     }
