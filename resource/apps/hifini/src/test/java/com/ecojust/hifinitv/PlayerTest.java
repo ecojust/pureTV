@@ -53,7 +53,19 @@ public class PlayerTest {
     private static File localFile(PlaybackService player) throws Exception { return (File)field(player, "currentAudioFile"); }
     @Before public void reset() {
         RuntimeEnvironment.getApplication().getSharedPreferences("music_playback", 0).edit().clear().commit();
+        deleteTree(new File(RuntimeEnvironment.getApplication().getFilesDir(), "hifini-library"));
+        ShadowMediaPlayer.resetStaticState();
         ShadowMediaPlayer.setMediaInfoProvider(source -> new ShadowMediaPlayer.MediaInfo(60000, 1));
+    }
+    private static void deleteTree(File file) {
+        File[] children = file.listFiles(); if (children != null) for (File child : children) deleteTree(child);
+        file.delete();
+    }
+    private static LocalLibrary library(PlaybackService player) throws Exception { return (LocalLibrary)field(player, "library"); }
+    private static List<File> seed(LocalFixtureService player, int count) throws Exception {
+        List<File> files = new ArrayList<>();
+        for (int i = 0; i < count; i++) { library(player).prepareDownload(track(i)); files.add(library(player).save(track(i), player.fixture())); }
+        return files;
     }
     public static class LocalFixtureService extends PlaybackService {
         final AtomicInteger downloads = new AtomicInteger();
@@ -150,11 +162,40 @@ public class PlayerTest {
         }
     }
     public static class ImmediateDecoderFailure extends CatalogResolver {
+        @Override public void onCreate() {
+            super.onCreate();
+            ShadowMediaPlayer.setCreateListener((decoder, shadow) -> {
+                try {
+                    File local = library(this).find(current().id);
+                    ShadowMediaPlayer.addException(DataSource.toDataSource(local.getAbsolutePath()),
+                            new IOException("setDataSource failed: status=0x80000000 https://example.invalid/?secret=private-token"));
+                } catch (Exception invalidFixture) { throw new AssertionError(invalidFixture); }
+            });
+        }
+    }
+    public static class OfflineService extends LocalFixtureService {
+        final AtomicInteger resolutions = new AtomicInteger();
+        @Override HifiniApi.Resolved resolveTrack(Track track, Consumer<String> progress) {
+            resolutions.incrementAndGet(); throw new AssertionError("Local playback must not resolve or require a login");
+        }
+        @Override File downloadAudio(AudioDownloader transfer, String source, String referer, Consumer<AudioDownloader.Progress> progress) {
+            downloads.incrementAndGet(); throw new AssertionError("Local playback must not download");
+        }
+    }
+    public static class ExpiredBeforeDownload extends FreshResolver {
+        @Override HifiniApi.Resolved resolveTrack(Track track, Consumer<String> progress) {
+            HifiniApi.Resolved result = super.resolveTrack(track, progress);
+            try { Field deadline = PlaybackService.class.getDeclaredField("loadDeadline"); deadline.setAccessible(true); deadline.setLong(this, -1); }
+            catch (Exception failure) { throw new AssertionError(failure); }
+            return result;
+        }
+    }
+    public static class InspectingDownload extends FreshResolver {
+        volatile boolean evictionPublished;
         @Override File downloadAudio(AudioDownloader transfer, String source, String referer, Consumer<AudioDownloader.Progress> progress) throws IOException {
-            File local = super.downloadAudio(transfer, source, referer, progress);
-            ShadowMediaPlayer.addException(DataSource.toDataSource(local.getAbsolutePath()),
-                    new IOException("setDataSource failed: status=0x80000000 https://example.invalid/?secret=private-token"));
-            return local;
+            assertEquals(49, localTracks().size()); assertFalse(localTracks().stream().anyMatch(track -> track.id.equals("100")));
+            assertTrue("The UI must receive the reduced library before any network download", evictionPublished);
+            return super.downloadAudio(transfer, source, referer, progress);
         }
     }
 
@@ -178,7 +219,7 @@ public class PlayerTest {
             assertEquals(DataSource.toDataSource(local.getAbsolutePath()), Shadows.shadowOf(decoder(player)).getDataSource());
             assertEquals("https://audio.example.org/100?token=1", player.audioUrl());
             assertFalse(player.audioUrl().contains(getCachePath(player))); assertEquals(1, player.downloads.get());
-        } finally { controller.destroy(); if (local != null) assertFalse(local.exists()); }
+        } finally { controller.destroy(); if (local != null) assertTrue(local.exists()); }
     }
     private static String getCachePath(PlaybackService player) { return player.getCacheDir().getAbsolutePath(); }
     @Test public void downloadProgressPrecedesDecoderAndPauseDiscardsALateCompletedFile() throws Exception {
@@ -192,7 +233,7 @@ public class PlayerTest {
             assertEquals(player.getString(R.string.download_progress_size, "4 KB"), player.stage());
             player.pause(false); assertFalse(player.loading()); assertFalse(player.playing());
             player.release.countDown(); finishWorkers(player); assertNotNull(player.lateFile); assertFalse(player.lateFile.exists());
-            assertNull(decoder(player)); assertEquals("https://audio.example.org/100?token=1", player.audioUrl());
+            assertNull(decoder(player)); assertTrue(player.localTracks().isEmpty()); assertEquals("https://audio.example.org/100?token=1", player.audioUrl());
         } finally { player.release.countDown(); controller.destroy(); }
     }
     @Test public void downloadTimeoutCancelsAfterNinetySecondsWithoutStartingDecoder() throws Exception {
@@ -215,6 +256,7 @@ public class PlayerTest {
             assertEquals("101", player.current().id); assertTrue(selected.exists()); assertTrue(player.playing());
             player.release.countDown(); finishWorkers(player);
             assertFalse(player.lateFile.exists()); assertTrue(selected.exists()); assertEquals(selected, localFile(player));
+            assertEquals(1, player.localTracks().size()); assertEquals("101", player.localTracks().get(0).id);
             assertEquals("https://audio.example.org/101?token=2", player.audioUrl());
         } finally { player.release.countDown(); controller.destroy(); }
     }
@@ -224,7 +266,7 @@ public class PlayerTest {
         player.add(track(0), true); resolveOnly(player); assertTrue(player.started.await(3, TimeUnit.SECONDS));
         controller.destroy(); player.release.countDown();
         ThreadPoolExecutor workers = (ThreadPoolExecutor)field(player, "resolver"); assertTrue(workers.awaitTermination(3, TimeUnit.SECONDS));
-        assertNotNull(player.lateFile); assertFalse(player.lateFile.exists());
+        assertNotNull(player.lateFile); assertFalse(player.lateFile.exists()); assertTrue(player.localTracks().isEmpty());
     }
     private static void finishWorkers(PlaybackService player) throws Exception {
         ThreadPoolExecutor workers = (ThreadPoolExecutor)field(player, "resolver"); workers.shutdown();
@@ -254,7 +296,7 @@ public class PlayerTest {
         try {
             FailedDownload player = controller.get(); player.add(track(0), true); resolvedWork(player);
             assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(2, player.calls.get()); assertEquals(2, player.downloads.get());
-            assertNull(decoder(player)); assertNull(localFile(player)); assertTrue(player.error().contains("503"));
+            assertNull(decoder(player)); assertNull(localFile(player)); assertTrue(player.localTracks().isEmpty()); assertTrue(player.error().contains("503"));
             assertEquals("https://audio.example.org/100?token=2", player.audioUrl());
         } finally { controller.destroy(); }
     }
@@ -264,7 +306,7 @@ public class PlayerTest {
             FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player); File local = localFile(player);
             Shadows.shadowOf(decoder(player)).invokeErrorListener(1, -1004);
             assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(1, player.calls.get()); assertEquals(1, player.downloads.get());
-            assertEquals(player.getString(R.string.decoder_error, 1, -1004), player.error()); assertFalse(local.exists());
+            assertEquals(player.getString(R.string.decoder_error, 1, -1004), player.error()); assertTrue(local.exists());
             assertEquals("https://audio.example.org/100?token=1", player.audioUrl());
         } finally { controller.destroy(); }
     }
@@ -275,16 +317,18 @@ public class PlayerTest {
             FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player); File local = localFile(player);
             assertTrue(player.loading()); Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(11));
             assertFalse(player.loading()); assertEquals(player.getString(R.string.local_prepare_timeout), player.error());
-            assertEquals(1, player.downloads.get()); assertFalse(local.exists());
+            assertEquals(1, player.downloads.get()); assertTrue(local.exists());
         } finally { controller.destroy(); }
     }
-    @Test public void playingSameTrackAgainResolvesAndDownloadsFreshAudioAndArtwork() throws Exception {
+    @Test public void replayUsesSavedAudioWithoutRequestsOrRefreshingFifoOrder() throws Exception {
         ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();
         try {
-            FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player); File old = localFile(player);
-            player.play(0); assertFalse(old.exists()); resolvedWork(player);
-            assertEquals(2, player.calls.get()); assertEquals(2, player.downloads.get()); assertEquals("Resolved 100 #2", player.current().title);
-            assertEquals("https://covers.example.org/100-2.png", player.current().cover); assertNotEquals(old, localFile(player));
+            FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player); File saved = localFile(player);
+            long revision = player.libraryRevision();
+            player.play(0); resolvedWork(player);
+            assertEquals(1, player.calls.get()); assertEquals(1, player.downloads.get()); assertEquals("Resolved 100 #1", player.current().title);
+            assertEquals("https://covers.example.org/100-1.png", player.current().cover); assertEquals(saved, localFile(player));
+            assertEquals(revision, player.libraryRevision()); assertTrue(saved.exists());
         } finally { controller.destroy(); }
     }
     @Test public void cancelledOldResolutionCannotReplaceNewSongMetadataOrLocalAudio() throws Exception {
@@ -316,10 +360,10 @@ public class PlayerTest {
             assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(1, player.calls.get()); assertEquals(1, player.downloads.get());
             assertEquals("https://www.hifini.net/musicparse-play.htm?source=netease&id=254485", player.audioUrl());
             assertTrue(player.error().contains("IOException")); assertTrue(player.error().contains("status=0x80000000"));
-            assertFalse(player.error().contains("private-token")); assertFalse(player.error().contains("https://")); assertFalse(player.files.get(0).exists());
+            assertFalse(player.error().contains("private-token")); assertFalse(player.error().contains("https://")); assertFalse(player.files.get(0).exists()); assertNotNull(library(player).find("netease:254485"));
         } finally { controller.destroy(); }
     }
-    @Test public void pauseResumeAndSeekKeepLocalFileButClearQueueDeletesIt() throws Exception {
+    @Test public void pauseResumeSeekAndClearQueueKeepPersistentAudio() throws Exception {
         ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();
         try {
             FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player);
@@ -328,7 +372,7 @@ public class PlayerTest {
             player.pause(false); assertFalse(player.playing()); assertTrue(local.exists()); player.resume(); assertTrue(player.playing());
             player.seek(10000); Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(10));
             assertTrue(player.position() >= 10000); assertSame(currentDecoder, decoder(player)); assertEquals(1, player.downloads.get());
-            player.clearQueue(); assertFalse(local.exists()); assertFalse(player.playing()); assertFalse(player.loading()); assertNull(player.current());
+            player.clearQueue(); assertTrue(local.exists()); assertEquals(1, player.localTracks().size()); assertFalse(player.playing()); assertFalse(player.loading()); assertNull(player.current());
         } finally { controller.destroy(); }
     }
     @Test public void queueIsBoundedDeduplicatedAndNeverRestoredFromAnEarlierSession() {
@@ -366,6 +410,126 @@ public class PlayerTest {
             assertEquals("https://www.hifini.net/musicparse-play.htm?source=netease&id=254485", player.audioUrl());
         } finally { controller.destroy(); }
     }
+    @Test public void librarySurvivesRecreationAndLocalOrSearchSelectionNeverNeedsNetwork() throws Exception {
+        Track song = Track.catalog("netease", "254485", "", "Song", "Artist", "https://covers.example.org/song.png", 239);
+        ServiceController<CatalogResolver> first = Robolectric.buildService(CatalogResolver.class).create();
+        first.get().playListAt(Collections.singletonList(song), 0); resolvedWork(first.get());
+        File saved = localFile(first.get()); long revision = first.get().libraryRevision(); first.destroy(); assertTrue(saved.exists());
+        ServiceController<OfflineService> next = Robolectric.buildService(OfflineService.class).create();
+        try {
+            OfflineService player = next.get(); assertEquals(1, player.localTracks().size()); assertEquals(revision, player.libraryRevision());
+            player.playLocalListAt(player.localTracks(), 0); resolvedWork(player); assertTrue(player.playing()); assertEquals(saved, localFile(player));
+            player.clearQueue(); player.playListAt(Collections.singletonList(song), 0); resolvedWork(player);
+            assertTrue(player.playing()); assertEquals(0, player.resolutions.get()); assertEquals(0, player.downloads.get());
+            assertEquals(revision, player.libraryRevision()); assertEquals("https://www.hifini.net/musicparse-play.htm?source=netease&id=254485", player.audioUrl());
+        } finally { next.destroy(); }
+        assertTrue(saved.exists());
+    }
+    @Test public void localShufflePlaysEachSavedSongWithoutRequestsAndDoesNotRefreshFifo() throws Exception {
+        ServiceController<OfflineService> controller = Robolectric.buildService(OfflineService.class).create();
+        try {
+            OfflineService player = controller.get(); seed(player, 3); long revision = player.libraryRevision();
+            player.playLocalList(player.localTracks(), true); resolvedWork(player); Set<String> heard = new HashSet<>(); heard.add(player.current().id);
+            player.next(); resolvedWork(player); assertTrue(heard.add(player.current().id));
+            player.next(); resolvedWork(player); assertTrue(heard.add(player.current().id));
+            assertEquals(3, heard.size()); assertEquals(0, player.resolutions.get()); assertEquals(0, player.downloads.get());
+            assertEquals(revision, player.libraryRevision()); assertEquals("100", player.localTracks().get(0).id);
+        } finally { controller.destroy(); }
+    }
+    @Test public void missingLocalFilePrunesLibraryAndNeverSilentlyDownloads() throws Exception {
+        ServiceController<OfflineService> controller = Robolectric.buildService(OfflineService.class).create();
+        try {
+            OfflineService player = controller.get(); List<File> stored = seed(player, 1); List<Track> snapshot = player.localTracks(); long revision = player.libraryRevision();
+            assertTrue(stored.get(0).delete()); player.playLocalListAt(snapshot, 0); resolvedWork(player);
+            assertFalse(player.loading()); assertEquals(player.getString(R.string.local_audio_missing), player.error());
+            assertTrue(player.localTracks().isEmpty()); assertTrue(player.libraryRevision() > revision);
+            assertEquals(0, player.resolutions.get()); assertEquals(0, player.downloads.get()); assertNull(decoder(player));
+        } finally { controller.destroy(); }
+    }
+    @Test public void fiftyFirstDownloadEvictsOldestAndPublishesLibraryBeforeTheTransferStarts() throws Exception {
+        ServiceController<InspectingDownload> controller = Robolectric.buildService(InspectingDownload.class).create();
+        try {
+            InspectingDownload player = controller.get(); List<File> stored = seed(player, 50);
+            player.listen(() -> { if (player.localTracks().size() == 49) player.evictionPublished = true; });
+            player.playListAt(Collections.singletonList(track(50)), 0); resolvedWork(player);
+            assertTrue(player.playing()); assertFalse(stored.get(0).exists()); assertTrue(stored.get(1).exists()); assertEquals(50, player.localTracks().size());
+            assertEquals("101", player.localTracks().get(0).id); assertEquals("150", player.localTracks().get(49).id);
+        } finally { controller.destroy(); }
+    }
+    @Test public void failedDownloadRetriesDoNotEvictASecondSavedSong() throws Exception {
+        ServiceController<FailedDownload> controller = Robolectric.buildService(FailedDownload.class).create();
+        try {
+            FailedDownload player = controller.get(); List<File> stored = seed(player, 50); long revision = player.libraryRevision();
+            player.playListAt(Collections.singletonList(track(50)), 0); resolvedWork(player);
+            assertEquals(2, player.downloads.get()); assertFalse(player.playing()); assertEquals(49, player.localTracks().size());
+            assertFalse(stored.get(0).exists()); assertTrue(stored.get(1).exists()); assertEquals("101", player.localTracks().get(0).id);
+            assertEquals(revision + 1, player.libraryRevision());
+        } finally { controller.destroy(); }
+    }
+    @Test public void expiredRequestDoesNotEvictIfNoDownloadCanStart() throws Exception {
+        ServiceController<ExpiredBeforeDownload> controller = Robolectric.buildService(ExpiredBeforeDownload.class).create();
+        try {
+            ExpiredBeforeDownload player = controller.get(); List<File> stored = seed(player, 50); long revision = player.libraryRevision();
+            player.playListAt(Collections.singletonList(track(50)), 0); resolvedWork(player);
+            assertEquals(0, player.downloads.get()); assertEquals(50, player.localTracks().size()); assertTrue(stored.get(0).exists());
+            assertEquals(revision, player.libraryRevision()); assertEquals(player.getString(R.string.download_timeout), player.error());
+        } finally { controller.destroy(); }
+    }
+    @Test public void damagedLibraryIsReportedWithoutDeletingAudioOrDownloading() throws Exception {
+        File directory = new File(RuntimeEnvironment.getApplication().getFilesDir(), "hifini-library"); assertTrue(directory.mkdirs());
+        File audio = new File(directory, "existing.audio"); Files.write(audio.toPath(), new byte[]{1,2,3});
+        Files.write(new File(directory, "index.json").toPath(), "not a library".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        ServiceController<OfflineService> controller = Robolectric.buildService(OfflineService.class).create();
+        try {
+            OfflineService player = controller.get(); assertEquals(player.getString(R.string.library_unavailable), player.error());
+            player.playListAt(Collections.singletonList(track(0)), 0); assertEquals(0, player.resolutions.get()); assertEquals(0, player.downloads.get());
+            assertTrue(audio.exists()); assertEquals(player.getString(R.string.library_unavailable), player.error());
+        } finally { controller.destroy(); }
+    }
+    @Test public void deletingCurrentAndOtherSavedSongsStopsAndRemovesThemFromAutomaticQueue() throws Exception {
+        ServiceController<OfflineService> controller = Robolectric.buildService(OfflineService.class).create();
+        try {
+            OfflineService player = controller.get(); List<File> stored = seed(player, 3); player.playLocalListAt(player.localTracks(), 1); resolvedWork(player);
+            assertEquals(2, player.deleteLocalTracks(Arrays.asList("101", "102", "unknown"))); assertFalse(player.playing()); assertNull(player.current());
+            assertEquals("", player.audioUrl()); assertEquals(1, player.queue().size()); assertEquals("100", player.queue().get(0).id);
+            assertTrue(stored.get(0).exists()); assertFalse(stored.get(1).exists()); assertFalse(stored.get(2).exists());
+            player.next(); resolvedWork(player); assertEquals("100", player.current().id); assertEquals(0, player.resolutions.get()); assertEquals(0, player.downloads.get());
+        } finally { controller.destroy(); }
+    }
+    @Test public void deletingOtherSongsPreservesDecoderAndRepairsSearchQueueShuffleIndices() throws Exception {
+        ServiceController<OfflineService> controller = Robolectric.buildService(OfflineService.class).create();
+        try {
+            OfflineService player = controller.get(); seed(player, 4); player.playListAt(player.localTracks(), 2); resolvedWork(player);
+            android.media.MediaPlayer initial = decoder(player); player.shuffle(true);
+            assertEquals(2, player.deleteLocalTracks(Arrays.asList("100", "103"))); assertTrue(player.playing()); assertSame(initial, decoder(player));
+            assertEquals(1, player.currentIndex()); assertEquals("102", player.current().id); assertEquals(2, player.queue().size());
+            player.next(); resolvedWork(player); assertEquals("101", player.current().id);
+            player.next(); resolvedWork(player); assertEquals("102", player.current().id); assertEquals(0, player.resolutions.get()); assertEquals(0, player.downloads.get());
+            player.previous(); resolvedWork(player); assertTrue(Arrays.asList("101", "102").contains(player.current().id));
+        } finally { controller.destroy(); }
+    }
+    @Test public void unknownOrDuplicateDeletionIdsNeverDeleteUnselectedFilesOrStopPlayback() throws Exception {
+        ServiceController<OfflineService> controller = Robolectric.buildService(OfflineService.class).create();
+        try {
+            OfflineService player = controller.get(); List<File> stored = seed(player, 2); player.playLocalListAt(player.localTracks(), 1); resolvedWork(player);
+            android.media.MediaPlayer initial = decoder(player); long revision = player.libraryRevision();
+            assertEquals(0, player.deleteLocalTracks(Arrays.asList(null, "../index.json", "unknown"))); assertTrue(player.playing()); assertSame(initial, decoder(player));
+            assertEquals(revision, player.libraryRevision()); assertTrue(stored.get(0).exists()); assertTrue(stored.get(1).exists());
+            assertEquals(1, player.deleteLocalTracks(Arrays.asList("100", "100", "unknown"))); assertTrue(player.playing()); assertEquals("101", player.current().id);
+        } finally { controller.destroy(); }
+    }
+    @Test public void failedDeletionRollsBackLibraryAndKeepsAnUnselectedDecoderPlaying() throws Exception {
+        ServiceController<OfflineService> controller = Robolectric.buildService(OfflineService.class).create();
+        try {
+            OfflineService player = controller.get(); List<File> stored = seed(player, 2); player.playLocalListAt(player.localTracks(), 1); resolvedWork(player);
+            Field field = PlaybackService.class.getDeclaredField("library"); field.setAccessible(true);
+            field.set(player, new LocalLibrary(player.getFilesDir(), () -> { throw new IOException("simulated index write failure"); }));
+            android.media.MediaPlayer initial = decoder(player);
+            assertEquals(-1, player.deleteLocalTracks(Collections.singleton("100"))); assertEquals(player.getString(R.string.library_unavailable), player.libraryError());
+            assertTrue(player.playing()); assertSame(initial, decoder(player)); assertEquals(2, player.queue().size()); assertEquals(2, player.localTracks().size());
+            assertTrue(stored.get(0).exists()); assertTrue(stored.get(1).exists());
+        } finally { controller.destroy(); }
+    }
     @Test public void applicationAndPlaybackServiceHaveIndependentHifiniIdentity() {
         assertEquals("com.ecojust.hifinitv", RuntimeEnvironment.getApplication().getPackageName());
         assertEquals("HIFINi TV", RuntimeEnvironment.getApplication().getString(R.string.app_name));
@@ -373,7 +537,7 @@ public class PlayerTest {
         try { assertEquals("com.ecojust.hifinitv", controller.get().getPackageName()); assertTrue(controller.get().queue().isEmpty()); }
         finally { controller.destroy(); }
     }
-    @Test public void onlyShufflePreferencePersistsAcrossServiceRecreation() {
+    @Test public void shufflePreferencePersistsWhileTheActiveQueueIsSessionOnly() {
         ServiceController<PlaybackService> controller = Robolectric.buildService(PlaybackService.class).create();
         assertTrue(controller.get().shuffled()); controller.get().shuffle(false); controller.destroy();
         controller = Robolectric.buildService(PlaybackService.class).create();
