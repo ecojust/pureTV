@@ -63,6 +63,16 @@ public class EnglishLayoutPreviewTest {
         View decor=activity.getWindow().getDecorView();
         decor.measure(View.MeasureSpec.makeMeasureSpec(1920,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(1080,View.MeasureSpec.EXACTLY));
         decor.layout(0,0,1920,1080);shadowOf(android.os.Looper.getMainLooper()).idle();englishVisibleText(decor);
+        if(activity instanceof MainActivity){
+            String expected=null;org.json.JSONArray system=LauncherLayout.template(ctx()).json.getJSONObject("home").getJSONArray("system");
+            for(int i=0;i<system.length();i++)if(system.getJSONObject(i).getString("id").equals("network"))expected=system.getJSONObject(i).getString("text");
+            assertEquals("Wi-Fi",expected);TextView network=activity.findViewById(R.id.btnWifi);assertEquals(expected,network.getText().toString());
+            java.lang.reflect.Method refresh=MainActivity.class.getDeclaredMethod("updateWifiLabel");refresh.setAccessible(true);refresh.invoke(activity);
+            assertEquals("Connection updates must preserve the protocol label",expected,network.getText().toString());
+            assertTrue(network.getContentDescription().toString().startsWith(activity.getString(R.string.network)+": "));
+            assertNotNull(network.getLayout());assertEquals(1,network.getLineCount());
+            assertEquals("The English network command must fit without ellipsis",0,network.getLayout().getEllipsisCount(0));
+        }
         assertNull("Fresh locale screenshot must use the real default, not an injected override",LauncherLayout.override(ctx()));
         String output=System.getenv("CLEAN_UI_CAPTURE_DIR");if(output==null)return;
         File directory=new File(output);assertTrue(directory.isDirectory()||directory.mkdirs());

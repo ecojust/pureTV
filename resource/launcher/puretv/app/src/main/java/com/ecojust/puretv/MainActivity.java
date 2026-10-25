@@ -1038,7 +1038,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     // ---- top bar ---------------------------------------------------------------------------------
 
-    /** Shows the Wi-Fi network name on the button when we can read it, otherwise the connection type. */
+    /** Updates accessible connection details; the visible label belongs to layout.json or the XML fallback. */
     private void updateWifiLabel() {
         String text = getString(R.string.wifi);
         try {
@@ -1061,7 +1061,6 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         } catch (Exception ignored) {
         }
         btnWifi.setContentDescription(getString(R.string.network) + ": " + text);
-        btnWifi.setText(R.string.network);
     }
 
     private void open(Intent i) {
