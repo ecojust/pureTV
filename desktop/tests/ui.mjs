@@ -371,18 +371,49 @@ try {
     assert.equal(await act(p,'choose-adb').isEnabled(),true);
     assert.equal(await p.evaluate(()=>window.__toolsInstalls),0);
   },withoutAdb(),{unsupportedTools:true});
-  await check('installed/recoverable filters, search and protected components', async p => {
+  const filterState = snapshot();
+  filterState.packages.push(
+    {packageName:'com.example.disabled',label:'停用的用户应用',system:false,installed:true,enabled:false,protectedReason:null},
+    {packageName:'com.example.removed',label:'未安装的用户应用',system:false,installed:false,enabled:true,protectedReason:null},
+  );
+  await check('installed/enabled/recoverable filters, search and protected components', async p => {
     await nav(p,'apps');
-    assert.equal(await p.locator('input[data-select-package]').count(),6);
+    assert.equal(await p.locator('input[data-select-package]').count(),7);
     assert.equal(await box(p,'com.vendor.home').isDisabled(),true);
     assert.equal(await box(p,'com.android.settings').isDisabled(),true);
     await p.locator('[data-filter="recoverable"]').click();
-    assert.equal(await p.locator('input[data-select-package]').count(),1);
-    assert.equal(await box(p,'com.vendor.removed').count(),1);
-    await p.locator('[data-filter="user"]').click();
     assert.equal(await p.locator('input[data-select-package]').count(),2);
+    assert.equal(await box(p,'com.vendor.removed').count(),1);
+    await p.locator('[data-filter="enabled"]').click();
+    assert.match(await p.locator('[data-filter="enabled"]').innerText(),/^已启用/);
+    assert.equal(await p.locator('[data-filter="enabled"] span').innerText(),'2');
+    assert.equal(await p.locator('input[data-select-package]').count(),2);
+    assert.equal(await box(p,'com.example.disabled').count(),0);
+    assert.equal(await box(p,'com.example.removed').count(),0);
+    assert.equal(await box(p,'com.vendor.recommendations').count(),0);
+    assert.match(await p.locator('#list-count').innerText(),/2 \/ 2/);
+    await p.locator('[name="locale"]').selectOption('en');
+    assert.match(await p.locator('[data-filter="enabled"]').innerText(),/^Enabled/);
+    await p.locator('[name="locale"]').selectOption('zh-TW');
+    assert.match(await p.locator('[data-filter="enabled"]').innerText(),/^已啟用/);
+    await p.locator('[name="locale"]').selectOption('zh-CN');
+    await p.locator('[name="search"]').fill('com.example');
+    assert.equal(await p.locator('input[data-select-package]').count(),0);
     await p.locator('[name="search"]').fill('webtv');
     assert.equal(await p.locator('input[data-select-package]').count(),1);
+    await p.locator('[name="search"]').fill('');
+    await p.locator('[data-select-all]').check();
+    assert.deepEqual(await p.locator('input[data-select-package]:checked').evaluateAll(inputs=>inputs.map(input=>input.dataset.selectPackage).sort()),['com.ecojust.puretv','com.ecojust.webtv']);
+    const changedState=structuredClone(filterState);changedState.revision=1;
+    changedState.packages.find(app=>app.packageName==='com.ecojust.webtv').enabled=false;
+    await p.evaluate(state=>{window.__setMockState(state);window.__emitMcp('mcp-operation',{running:false,tool:'set_enabled',snapshot:state});},changedState);
+    assert.equal(await box(p,'com.ecojust.webtv').count(),0);
+    assert.equal(await p.locator('[data-filter="enabled"] span').innerText(),'1');
+    assert.match(await p.locator('#selection-bar').innerText(),/已选择 1 项/);
+    assert.equal(await box(p,'com.ecojust.puretv').isChecked(),true);
+    await p.locator('[data-filter="disabled"]').click();
+    assert.equal(await box(p,'com.example.disabled').count(),1);
+    assert.equal(await box(p,'com.ecojust.webtv').count(),1);
     await p.locator('[name="search"]').fill(''); await p.locator('[data-filter="all"]').click();
     await shot(p,'applications');
     await p.setViewportSize({width:960,height:640});
@@ -390,7 +421,7 @@ try {
       await nav(p,page);
       assert.equal(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `No horizontal overflow on ${page}`);
     }
-  });
+  },filterState);
   await check('cancel confirmation sends no mutation; confirmed disable sends exact target', async p => {
     await nav(p,'apps'); await box(p,'com.vendor.recommendations').check();
     await act(p,'disable').click();
