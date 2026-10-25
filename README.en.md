@@ -33,6 +33,8 @@ Once connected, the home page displays the model, Android version, SDK version, 
 
 Uninstalling a system app affects only the current Android user, preserves its data, and leaves the APK on the system partition. Newly installed user apps with a launchable activity can be added to the launcher layout.
 
+Actions such as connecting, refreshing, managing apps, switching launchers, and applying layouts show a loading state followed by a result dialog. Batch results distinguish successful, failed, and unprocessed items. Automatic background reads do not interrupt you with dialogs.
+
 ## Launcher and TV app resources
 
 [![Native Android previews of eight v5 launchers](docs/previews/launcher-collection-en.png)](resource/launcher/)

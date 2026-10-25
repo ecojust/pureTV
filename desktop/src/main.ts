@@ -28,7 +28,8 @@ function applySnapshot(value: Snapshot): boolean {
 }
 let page: Page = api.demo ? 'apps' : 'connect';
 let filter: Filter = 'all', query = '', busy = false, busyLabel = '', cancelling = false;
-let notice = '', noticeKind: 'info' | 'success' | 'error' = 'info';
+type NoticeKind = 'info' | 'success' | 'error';
+let notice = '', noticeKind: NoticeKind = 'info';
 let connectionEdited=false;
 let host = api.demo ? '192.168.1.50' : '', port = '5555', adbPath = '';
 let selected = new Set<string>();
@@ -100,12 +101,87 @@ const root = document.querySelector<HTMLDivElement>('#app')!;
 const dialog = document.createElement('dialog');
 dialog.className = 'modal'; document.body.append(dialog);
 const layoutDialog=document.createElement('dialog');layoutDialog.className='layout-modal';layoutDialog.setAttribute('aria-label',t('调整启动器布局'));document.body.append(layoutDialog);
+type FeedbackRow = { target: string; success: boolean | null; message: string };
+type Feedback = { phase: 'loading' | 'result'; operation: string; description: string; outcome?: NoticeKind; rows: FeedbackRow[]; cancellable: boolean; cancelError?: string };
+let feedback: Feedback | null = null, feedbackMarkup = '';
+let feedbackFocus: HTMLElement | null = null;
+const feedbackDialog = document.createElement('dialog');
+feedbackDialog.className = 'modal operation-feedback';
+feedbackDialog.tabIndex = -1;
+feedbackDialog.setAttribute('aria-labelledby', 'feedback-title');
+feedbackDialog.setAttribute('aria-describedby', 'feedback-description');
+document.body.append(feedbackDialog);
+feedbackDialog.addEventListener('cancel', event => { if (feedback?.phase === 'loading') event.preventDefault(); });
+feedbackDialog.addEventListener('keydown', event => {
+  if (event.key !== 'Tab') return;
+  const buttons = [...feedbackDialog.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')];
+  const first = buttons[0], last = buttons.at(-1);
+  if (!first) { event.preventDefault(); feedbackDialog.focus(); }
+  else if (event.shiftKey && (document.activeElement === first || document.activeElement === feedbackDialog)) { event.preventDefault(); last!.focus(); }
+  else if (!event.shiftKey && (document.activeElement === last || document.activeElement === feedbackDialog)) { event.preventDefault(); first.focus(); }
+});
+feedbackDialog.addEventListener('close', () => {
+  if (feedbackDialog.open) return;
+  feedback = null; feedbackMarkup = '';
+  if (feedbackFocus?.isConnected) feedbackFocus.focus({ preventScroll: true });
+  else if (layoutDialog.open) layoutDialog.querySelector<HTMLButtonElement>('[data-u-act="apply"], [data-act="apply-layout"]')?.focus({ preventScroll: true });
+  else root.querySelector<HTMLButtonElement>('.nav-item.active')?.focus({ preventScroll: true });
+  feedbackFocus = null;
+});
+feedbackDialog.addEventListener('click', event => {
+  const target = event.target as HTMLElement;
+  if (target.closest('[data-feedback-close]') && feedback?.phase === 'result') feedbackDialog.close();
+  if (target.closest('[data-feedback-cancel]') && feedback?.phase === 'loading' && !cancelling) void cancelOperation();
+});
+function renderFeedback(): void {
+  if (!feedback) return;
+  const loading = feedback.phase === 'loading';
+  const title = loading ? t('正在处理') : feedback.outcome === 'success' ? t('操作成功') : feedback.outcome === 'error' ? t('操作未完成') : t('操作结果');
+  const description = loading && downloadingTools ? progressText() : feedback.description;
+  const html = `<div class="feedback-symbol ${loading ? '' : feedback.outcome}">${loading ? '<span class="spinner" aria-hidden="true"></span>' : icon(feedback.outcome === 'success' ? 'check' : feedback.outcome === 'error' ? 'close' : 'list')}</div><p class="feedback-operation">${esc(feedback.operation)}</p><h2 id="feedback-title">${esc(title)}</h2><div class="feedback-live" role="status" aria-live="polite"><p id="feedback-description">${esc(message(description))}</p>${loading && cancelling ? `<p class="hint">${esc(downloadingTools ? t('正在取消并清理临时文件') : t('当前修改会完成并复查，后续项将停止'))}</p>` : ''}${feedback.cancelError ? `<p class="feedback-error" role="alert">${esc(feedback.cancelError)}</p>` : ''}${loading && downloadingTools ? downloadMeter() : ''}</div>${feedback.rows.length ? `<ul class="feedback-results">${feedback.rows.map(row => `<li><div><strong>${esc(row.target)}</strong><span class="feedback-item-status ${row.success === true ? 'success' : row.success === false ? 'error' : ''}">${esc(t(row.success === true ? '成功' : row.success === false ? '失败' : '未执行'))}</span></div><p>${esc(message(row.message))}</p></li>`).join('')}</ul>` : ''}<div class="modal-actions">${loading ? feedback.cancellable ? `<button type="button" data-feedback-cancel${disabled(cancelling)}>${esc(cancelling ? t('正在取消') : downloadingTools ? t('取消下载') : t('停止后续操作'))}</button>` : '' : `<button type="button" class="primary" data-feedback-close>${esc(t('确定'))}</button>`}</div>`;
+  const wasLoading = feedbackDialog.dataset.phase === 'loading';
+  feedbackDialog.dataset.phase = feedback.phase;
+  feedbackDialog.dataset.outcome = feedback.outcome || '';
+  feedbackDialog.setAttribute('aria-busy', String(loading));
+  if (html !== feedbackMarkup) {
+    const hadFocus = feedbackDialog.contains(document.activeElement);
+    feedbackDialog.innerHTML = html; feedbackMarkup = html;
+    if (hadFocus) (feedbackDialog.querySelector<HTMLButtonElement>('button:not(:disabled)') || feedbackDialog).focus({ preventScroll: true });
+  }
+  if (!feedbackDialog.open) feedbackDialog.showModal();
+  if (!loading && wasLoading) feedbackDialog.querySelector<HTMLButtonElement>('[data-feedback-close]')?.focus();
+}
+function beginFeedback(operation: string, description: string, cancellable = true): void {
+  feedbackFocus = document.activeElement as HTMLElement | null;
+  feedback = { phase: 'loading', operation, description, rows: [], cancellable };
+  renderFeedback();
+}
+function finishFeedback(outcome: NoticeKind, description: string, rows: FeedbackRow[] = [], operation = feedback?.operation || t('操作结果')): void {
+  feedback = { phase: 'result', operation, description, outcome, rows, cancellable: false };
+  renderFeedback();
+}
+function actionError(error: unknown): void {
+  const text = error instanceof Error ? error.message : String(error);
+  showNotice(text, 'error'); finishFeedback('error', text);
+}
+async function cancelOperation(): Promise<void> {
+  if (!busy || cancelling) return;
+  cancelling = true; if (feedback) feedback.cancelError = ''; render();
+  try { await api.cancel(); }
+  catch (error) {
+    cancelling = false;
+    const text = ui`停止请求失败：${error instanceof Error ? error.message : String(error)}`;
+    if (feedback?.phase === 'loading') feedback.cancelError = text;
+    else { notice = text; noticeKind = 'error'; }
+    render();
+  }
+}
 function unifiedDraft():import('./types').UnifiedLayout|null {try{const value=JSON.parse(layoutJson);return validUnified(value)?value:null;}catch{return null;}}
 function systemBaseline():unknown {
  const layout=launcherLayout?.layout,basis=launcherLayout?.systemBasis;if(!layout||!(layout.version===4||layout.version===5)||!basis)return layout;
  return {...layout,screen:basis.screen,home:{...layout.home,users:[],system:basis.home},apps:{...layout.apps,users:[],system:basis.apps}};
 }
-function forwardLayoutAction(action:string):void {const button=document.createElement('button');button.dataset.act=action;void doAction(button).catch(error=>showNotice(error instanceof Error?error.message:String(error),'error'));}
+function forwardLayoutAction(action:string):void {const button=document.createElement('button');button.dataset.act=action;void doAction(button).catch(actionError);}
 const unifiedEditor=new UnifiedEditor(layoutDialog,{json:()=>layoutJson,baseline:()=>systemBaseline(),write:text=>{layoutJson=text;notice='';},render:()=>render(),busy:()=>busy,apps:()=>layoutApps(),notice:text=>showNotice(text,'error'),close:()=>{if(!busy)layoutDialog.close();},apply:()=>forwardLayoutAction('apply-layout'),reset:()=>forwardLayoutAction('reset-layout'),import:()=>forwardLayoutAction('import-layout')});
 
 layoutDialog.addEventListener('close',()=>{if(launcherLayout?.layout)layoutJson=JSON.stringify(launcherLayout.layout,null,2);});
@@ -205,6 +281,7 @@ function render(): void {
     for (const area of scrollAreas()) {
       const position = scrollPositions.get(area.dataset.scroll!); if (position) { area.scrollTop = position.top; area.scrollLeft = position.left; }
     }
+    renderFeedback();
   } finally { rendering = false; }
 }
 function content(): string {
@@ -334,15 +411,21 @@ function sceneEditor(markup:string,draft:LauncherLayout):string {
 async function launcherOperation(request: LauncherRequest, preserveDraft = false): Promise<void> {
   const savedDraft = preserveDraft && layoutAvailable() ? layoutJson : null;
   if (busy || !online()) return;
+  const mutation = request.action === 'applyLayout' || request.action === 'resetLayout', originalDraft = layoutJson;
+  let outcome: NoticeKind = 'error', resultMessage = t('设备或启动器已变化，未确认布局应用结果');
   let target=launcherTarget();
   const draftTarget=target;
-  localBusy = true; busy = true; cancelling = false; busyLabel = t('读取／应用当前启动器布局…'); notice = ''; render();
+  localBusy = true; busy = true; cancelling = false; busyLabel = mutation ? t('正在写入布局并核对电视返回的配置…') : t('读取／应用当前启动器布局…'); notice = '';
+  if (mutation) beginFeedback(t(request.action === 'resetLayout' ? '恢复默认布局' : '应用启动器布局'), busyLabel);
+  render();
   try {
     const value=await api.launcherExecute(request);
     if(target!==launcherTarget())return;
+    if (mutation && (!value.supported || !value.layout)) throw new Error(value.message || t('电视未返回可验证的布局，请重新读取后重试'));
     if(request.action==='getBackgrounds')acceptLauncherBackgrounds(value);
     else {
       if(!acceptLauncherResult(value)){
+        if (mutation) throw new Error(t('设备或启动器已变化，未确认布局应用结果'));
         // The television can switch HOME outside the manager; reconcile its catalogue first.
         const state=await api.execute({action:'getState'});
         if(target!==launcherTarget())return;
@@ -356,10 +439,16 @@ async function launcherOperation(request: LauncherRequest, preserveDraft = false
     }
     if(target!==launcherTarget())return;
     try {const state=await api.execute({action:'getState'});if(target===launcherTarget())applySnapshot(state);} catch { /* Another operation may have started; its event supplies the new state. */ }
-    if(request.action!=='getBackgrounds'){notice=value.message||(value.supported?t('布局已读取，可调整后应用'):t('此启动器暂不可编辑'));noticeKind='info';}
+    if (target !== launcherTarget()) return;
+    if(request.action!=='getBackgrounds'){notice=value.message||(value.supported?t('布局已读取，可调整后应用'):t('此启动器暂不可编辑'));noticeKind=mutation&&!cancelling?'success':'info';}
+    if (mutation) { outcome = cancelling ? 'info' : 'success'; resultMessage = value.message || t('布局已应用并复查'); }
   }
-  catch (error) { if(target===launcherTarget()){notice = error instanceof Error ? error.message : String(error); noticeKind = 'error';} }
-  finally { localBusy = false; busy = !!agentOperation?.running; cancelling = false; render(); }
+  catch (error) { outcome = cancelling ? 'info' : 'error'; resultMessage = error instanceof Error ? error.message : String(error); if(target===launcherTarget()){notice = resultMessage; noticeKind = outcome; if (mutation) layoutJson = originalDraft;} }
+  finally {
+    localBusy = false; busy = !!agentOperation?.running; cancelling = false;
+    if (mutation) finishFeedback(outcome, resultMessage);
+    render();
+  }
 }
 function modifyLayout(change: (draft: LauncherLayout) => void): void {
   if (busy || !layoutAvailable()) return;
@@ -412,26 +501,63 @@ function cleanSelection(): void {
   const valid = new Set(snapshot.packages.filter(p => !p.protectedReason).map(p => p.packageName));
   selected = new Set([...selected].filter(p => valid.has(p)));
 }
-async function run(request: Request, label: string): Promise<boolean> {
-  if (busy) return false; localBusy = true; busy = true; cancelling = false; busyLabel = label; notice = ''; render();
-  let success = false;
+type RunResult = { success: boolean; installedPaths: string[] };
+async function run(request: Request, label: string, operation?: string): Promise<RunResult> {
+  const result: RunResult = { success: false, installedPaths: [] };
+  if (busy) return result;
+  const before = snapshot.device, originalHome = snapshot.originalHome;
+  const previousEntries = new Set(snapshot.history.map(entry => entry.id));
+  const operationNames: Record<string, string> = { connect: '连接电视', disconnect: '断开连接', scan: '扫描应用', refreshSystemInfo: '刷新电视系统信息', refreshLocalNetwork: '刷新本机 IP', setAdbPath: '配置 ADB', install: '安装 APK', setHome: '更换默认桌面', restoreHome: '恢复原桌面', clearHistory: '清空操作记录', setEnabled: request.action === 'setEnabled' && request.enabled ? '启用' : '停用', uninstall: '当前用户卸载', restore: '恢复安装' };
+  localBusy = true; busy = true; cancelling = false; busyLabel = label; notice = '';
+  beginFeedback(operation || t(operationNames[request.action] || '操作结果'), label); render();
+  let rows: FeedbackRow[] = [], outcome: NoticeKind = 'error', resultMessage = '';
   try {
-    const before = snapshot.device?.serial, previousEntries = new Set(snapshot.history.map(entry => entry.id));
-    applySnapshot(await api.execute(request));
-    if(request.action==='install')layoutDirty=true;
-    if (before !== snapshot.device?.serial) selected.clear(); cleanSelection();
-    const failed = snapshot.history.some(entry => !previousEntries.has(entry.id) && !entry.success);
-    const unready = request.action === 'connect' && !online();
-    notice = snapshot.message;
-    noticeKind = failed ? 'error' : cancelling || unready ? 'info' : 'success';
-    success = !failed && !cancelling && !unready;
+    // Evaluate this response, never an unrelated event/recovery snapshot or old install results.
+    const value = await api.execute(request);
+    const accepted = applySnapshot(value);
+    if (request.action === 'install') layoutDirty = true;
+    if (before?.serial !== snapshot.device?.serial) selected.clear(); cleanSelection();
+    const entries = value.history.filter(entry => !previousEntries.has(entry.id));
+    let failed = false, incomplete = false;
+    if (request.action === 'install') {
+      rows = request.paths.map(path => {
+        const item = value.installResults?.find(item => item.path === path);
+        return { target: path, success: item ? item.success : null, message: item?.message || t('未收到执行结果，请重新扫描确认') };
+      });
+      const sameDevice = before?.serial === value.device?.serial && before?.userId === value.device?.userId;
+      if (accepted && sameDevice) result.installedPaths = rows.filter(row => row.success === true).map(row => row.target);
+      failed ||= rows.some(row => row.success === false);
+      incomplete = !sameDevice || rows.some(row => row.success !== true);
+    } else if ('packages' in request) {
+      rows = request.packages.map(pkg => {
+        const entry = entries.find(entry => entry.target === pkg && entry.device === before?.serial && entry.userId === before?.userId);
+        return { target: pkg, success: entry ? entry.success : null, message: entry?.message || t('未收到执行结果，请重新扫描确认') };
+      });
+      failed ||= rows.some(row => row.success === false);
+      incomplete = rows.some(row => row.success !== true);
+    } else if (request.action === 'setHome' || request.action === 'restoreHome') {
+      incomplete = value.defaultHome !== (request.action === 'setHome' ? request.component : originalHome);
+    } else if (request.action === 'setAdbPath') incomplete = !value.adbAvailable || !value.adbPath;
+    const unready = request.action === 'connect' && value.device?.status !== 'device';
+    const changedDevice = ['install', 'setEnabled', 'uninstall', 'restore', 'setHome', 'restoreHome'].includes(request.action) && (before?.serial !== value.device?.serial || before?.userId !== value.device?.userId);
+    incomplete ||= !accepted || changedDevice;
+    resultMessage = value.message ? message(value.message) : t('操作已完成');
+    if (unready) resultMessage = t('尚未连接，请检查电视授权或设备状态') + '\n' + resultMessage;
+    else if (incomplete || failed) resultMessage = t('未确认全部操作完成，请检查逐项结果') + '\n' + resultMessage;
+    else if (cancelling) resultMessage = t('已发送停止请求，已执行项目的结果如下。') + '\n' + resultMessage;
+    outcome = failed ? 'error' : cancelling || unready || incomplete ? 'info' : 'success';
+    result.success = outcome === 'success';
     if (request.action === 'connect' && online()) page = 'connect';
     if (request.action === 'setAdbPath') adbPath = snapshot.adbPath || '';
-  } catch (e) {
-    notice = e instanceof Error ? e.message : String(e); noticeKind = 'error';
+  } catch (error) {
+    resultMessage = error instanceof Error ? error.message : String(error); outcome = cancelling ? 'info' : 'error';
     try { const previousDevice = snapshot.device?.serial; applySnapshot(await api.execute({ action: 'getState' })); if (previousDevice !== snapshot.device?.serial) selected.clear(); cleanSelection(); } catch { /* Keep the last known snapshot if state refresh also fails. */ }
-  } finally { localBusy = false; busy = !!agentOperation?.running; cancelling = false; render(); }
-  return success;
+  } finally {
+    localBusy = false; busy = !!agentOperation?.running; cancelling = false;
+    notice = resultMessage; noticeKind = outcome;
+    finishFeedback(outcome, resultMessage, rows); render();
+  }
+  return result;
 }
 function confirm(title: string, description: string, targets: string[], button: string, danger = false): Promise<boolean> {
   if (dialog.open) dialog.close();
@@ -474,6 +600,7 @@ function updateToolsProgress(progress: DownloadProgress): void {
     if (meter) { meter.max = progress.total; meter.value = Math.min(Math.max(0, progress.downloaded), progress.total); }
     else bar.querySelector('button')?.insertAdjacentHTML('beforebegin', downloadMeter());
   } else meter?.remove();
+  renderFeedback();
 }
 async function downloadTools(forceDownload=false): Promise<void> {
   if (busy || toolsPreparing || snapshot.device || (!api.desktop && !api.demo)) return;
@@ -484,18 +611,21 @@ async function downloadTools(forceDownload=false): Promise<void> {
   if (!info.supported) throw new Error(info.message || t('当前电脑不支持在线配置，请手动选择 ADB'));
   if (!await confirmTools(info,forceDownload) || busy || snapshot.device) return;
   localBusy = true; busy = true; downloadingTools = true; cancelling = false; notice = '';
-  toolsProgress = { stage: info.installed && !forceDownload ? 'checking' : 'downloading', downloaded: 0, total: info.downloadBytes }; render();
+  toolsProgress = { stage: info.installed && !forceDownload ? 'checking' : 'downloading', downloaded: 0, total: info.downloadBytes };
+  beginFeedback(t(forceDownload ? '重新下载 ADB 工具' : '配置 ADB'), progressText()); render();
+  let outcome: NoticeKind = 'error', resultMessage = '';
   try {
     const value = await api.installPlatformTools(updateToolsProgress,forceDownload);
     if (!value.adbAvailable || !value.adbPath) throw new Error(t('工具尚未就绪，请重试或手动选择 ADB'));
     applySnapshot(value); adbPath = snapshot.adbPath || ""; toolsInfo = { ...info, installed: true };
-    notice = value.message || t('ADB 已就绪，可以连接电视'); noticeKind = cancelling ? 'info' : 'success';
+    resultMessage = value.message || t('ADB 已就绪，可以连接电视'); outcome = cancelling ? 'info' : 'success';
   } catch (error) {
-    notice = error instanceof Error ? error.message : String(error);
-    noticeKind = cancelling ? 'info' : 'error';
+    resultMessage = error instanceof Error ? error.message : String(error);
+    outcome = cancelling ? 'info' : 'error';
     try { applySnapshot(await api.execute({ action: 'getState' })); adbPath = snapshot.adbPath || ''; } catch { /* Retain last known state if refresh fails. */ }
   } finally {
-    downloadingTools = false; localBusy = false; busy = !!agentOperation?.running; cancelling = false; toolsProgress = null; render();
+    downloadingTools = false; localBusy = false; busy = !!agentOperation?.running; cancelling = false; toolsProgress = null;
+    notice = resultMessage; noticeKind = outcome; finishFeedback(outcome, resultMessage); render();
   }
 }
 function details(pkg: string): void {
@@ -548,7 +678,8 @@ async function addApks(): Promise<void> {
   if (!values.length) return;
   let added = 0;
   for (const path of values) if (!apkPaths.includes(path)) { apkPaths.push(path); selectedApks.add(path); added++; }
-  page = 'install'; showNotice(ui`已添加 ${added} 个安装包。请勾选后点击“安装所选”。`);
+  page = 'install'; showNotice(ui`已添加 ${added} 个安装包。请勾选后点击“安装所选”。`, added ? 'success' : 'info');
+  finishFeedback(added ? 'success' : 'info', notice, [], t('添加安装包'));
 }
 async function doAction(button: HTMLButtonElement): Promise<void> {
   if (button.disabled) return; const action = button.dataset.act;
@@ -572,23 +703,23 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
     case 'releases': await api.openResource('releases'); break;
     case 'resource-catalog': await api.openResource('catalog'); break;
     case 'scan': await run({ action: 'scan' }, t('扫描电视应用，读取当前用户状态…')); if(page==='launchers' && online())await launcherOperation({action:'getLayout'},true);break;
-    case 'cancel': cancelling = true; render(); await api.cancel(); break;
+    case 'cancel': await cancelOperation(); break;
     case 'details': details(button.dataset.pkg!); break;
     case 'clear-selection': selected.clear(); updateList(); break;
     case 'disable': case 'enable': case 'uninstall': case 'restore': await packageAction(action); break;
     case 'enable-one': await packageAction('enable', button.dataset.pkg); break;
     case 'restore-one': await packageAction('restore', button.dataset.pkg); break;
-    case 'add-launcher': { const values=await api.chooseLauncherApks();for(const value of values)if(!launcherApks.some(item=>item.path===value.path))launcherApks.push(value);render();break; }
+    case 'add-launcher': { const values=await api.chooseLauncherApks();let added=0;for(const value of values)if(!launcherApks.some(item=>item.path===value.path)){launcherApks.push(value);added++;}render();if(values.length)finishFeedback(added?'success':'info',ui`已添加 ${added} 个启动器 APK，可在列表中安装。`,[],t('添加启动器 APK'));break; }
     case 'remove-launcher-apk': launcherApks=launcherApks.filter(item=>item.path!==button.dataset.path);render();break;
     case 'install-launcher': {
       const path=button.dataset.path!;if(busy || !online())return;
       if(await confirm(t('安装启动器'),t('将安装此 APK，完成后刷新启动器列表。'),[path],t('开始安装'))) {
         const before=new Set(snapshot.launchers.map(item=>item.component)), item=launcherApks.find(item=>item.path===path);
-        await run({action:'install',paths:[path]},t('正在安装启动器…'));
-        if(snapshot.installResults?.some(result=>result.path===path && result.success)) {
+        const result = await run({action:'install',paths:[path]},t('正在安装启动器…'),t('安装启动器'));
+        if(result.installedPaths.includes(path)) {
           launcherApks=launcherApks.filter(item=>item.path!==path);
           if(item&&validBackgroundColor(item.homeBackgroundColor))for(const launcher of snapshot.launchers.filter(value=>!before.has(value.component)))homeBackgrounds.set(launcherTarget(snapshot.device?.serial,snapshot.device?.userId,launcher.component),{color:item.homeBackgroundColor,...(item.homeBackground?{image:item.homeBackground}:{})});
-          if(item?.cover)for(const launcher of snapshot.launchers.filter(item=>!before.has(item.component)))covers=await api.adoptLauncherCover(launcher.component,path);
+          if(item?.cover)for(const launcher of snapshot.launchers.filter(item=>!before.has(item.component))){try{covers=await api.adoptLauncherCover(launcher.component,path);}catch{/* A local preview failure does not change the confirmed APK installation result. */}}
         }
         render();if(online())await launcherOperation({action:'getLayout'});
       }break;
@@ -603,8 +734,8 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
       const paths = action==='install-one-apk' ? apkPaths.filter(p=>p===button.dataset.path) : apkPaths.filter(p => selectedApks.has(p)); if (!paths.length || busy || !online()) return;
       if (paths.length > 10) throw new Error(t('一次最多安装 10 个 APK，请减少所选数量；其他文件会保留在列表中'));
       if (await confirm(ui`安装 ${paths.length} 个应用`, t('将按顺序安装以下 APK。同包名且签名一致的应用会尝试覆盖升级。'), paths, t('开始安装'))) {
-        const complete=await run({ action: 'install', paths }, t('正在安装所选 APK，完成后刷新应用…'));
-        const installed=new Set(snapshot.installResults?.filter(result=>result.success && paths.includes(result.path)).map(result=>result.path) || (complete?paths:[]));
+        const result=await run({ action: 'install', paths }, t('正在安装所选 APK，完成后刷新应用…'));
+        const installed=new Set(result.installedPaths);
         apkPaths=apkPaths.filter(path=>!installed.has(path));selectedApks=new Set([...selectedApks].filter(path=>!installed.has(path)));render();
       } break;
     }
@@ -616,8 +747,8 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
       break;
     }
     case 'reset-layout': if(layoutAvailable() && await confirm(t('恢复默认布局'),t('移除当前启动器的 layout.json 自定义配置，壁纸和其他设置保留。'),[snapshot.defaultHome || ''],t('恢复默认布局'))) await launcherOperation({action:'resetLayout'}); break;
-    case 'import-layout': { const text=await api.chooseLauncherJson();if(text){const previous=layoutJson;layoutJson=text;const unified=unifiedDraft();if(!draftLayout()&&!unified){layoutJson=previous;throw new Error(t('布局文件格式无效'));}if(unified&&validUnified(systemBaseline())&&!systemUnchanged(unified,systemBaseline() as import('./types').UnifiedLayout)){layoutJson=previous;throw new Error(t('系统组件只读，不能修改属性或位置'));}render();} break; }
-    case 'parse-layout': if(!draftLayout()&&!unifiedDraft()) throw new Error(t('layout.json 格式无效')); render(); break;
+    case 'import-layout': { const text=await api.chooseLauncherJson();if(text){const previous=layoutJson;layoutJson=text;const unified=unifiedDraft();if(!draftLayout()&&!unified){layoutJson=previous;throw new Error(t('布局文件格式无效'));}if(unified&&validUnified(systemBaseline())&&!systemUnchanged(unified,systemBaseline() as import('./types').UnifiedLayout)){layoutJson=previous;throw new Error(t('系统组件只读，不能修改属性或位置'));}render();finishFeedback('success',t('布局已导入到编辑器，点击“应用到电视”后才会写入电视。'),[],t('导入 layout.json'));} break; }
+    case 'parse-layout': if(!draftLayout()&&!unifiedDraft()) throw new Error(t('layout.json 格式无效')); render();finishFeedback('success',t('布局已更新到编辑器，点击“应用到电视”后才会写入电视。'),[],t('解析配置')); break;
     case 'layout-home': layoutSection='home';layoutNode=null;layoutSelected=0;render();break;
     case 'layout-apps': layoutSection='apps';layoutNode=null;layoutSelected=0;render();break;
     case 'layout-up': case 'layout-down': {
@@ -644,7 +775,7 @@ document.addEventListener('click', event => {
   const tab = target.closest<HTMLButtonElement>('[data-filter]');
   if (tab) { filter = tab.dataset.filter as Filter; selected.clear(); render(); return; }
   const button = target.closest<HTMLButtonElement>('button[data-act]');
-  if (button) void doAction(button).catch(e => showNotice(e instanceof Error ? e.message : String(e), 'error'));
+  if (button) void doAction(button).catch(actionError);
 });
 document.addEventListener('input', event => {
   if ((event.target as HTMLTextAreaElement).name==='layoutJson') { layoutJson=(event.target as HTMLTextAreaElement).value; return; }

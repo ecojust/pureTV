@@ -28,6 +28,19 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     let launcherLayout=structuredClone(defaultLayout), customLayout=false;
     window.__interfacePreferences={};
     window.__launcherRequests=[];let covers=structuredClone(options.covers || {});
+    // Tests hold a real bridge promise until assertions have observed its pending UI.
+    window.__pendingOperations=[];
+    window.__releaseOperation=(action,outcome={})=>{
+      const index=window.__pendingOperations.findIndex(operation=>operation.action===action);
+      if(index<0)throw new Error('No held operation: '+action);
+      window.__pendingOperations.splice(index,1)[0].resolve(outcome);
+    };
+    const holdOperation=async action=>{
+      if(!options.holdActions?.includes(action))return {};
+      const outcome=await new Promise(resolve=>window.__pendingOperations.push({action,resolve}));
+      if(outcome.error)throw new Error(outcome.error);
+      return outcome;
+    };
     window.__setMockState=value=>Object.assign(state,structuredClone(value));
     window.__setMockLayout=value=>{launcherLayout=structuredClone(value);};
     window.__homeBackgrounds=structuredClone(options.homeBackgrounds || {});window.__homeBackgroundColors=structuredClone(options.homeBackgroundColors || {});
@@ -52,6 +65,8 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         if (command === 'choose_launcher_json') return JSON.stringify({version:2,home:{columns:2,items:[{packageName:'com.ecojust.webtv',icon:'app'}]},apps:{columns:3,items:[]}});
         if (command === 'launcher_execute') {
           window.__launcherRequests.push(structuredClone(args.request));
+          const held=await holdOperation(args.request.action);
+          if(held.response)return structuredClone(held.response);
           if(args.request.action==='getBackgrounds'){
             const backgrounds=structuredClone(window.__homeBackgrounds),backgroundColors=structuredClone(window.__homeBackgroundColors);
             const home=options.layoutSupported?([4,5].includes(launcherLayout.version)?launcherLayout.home.background:launcherLayout.home.scene?.background):null;
@@ -83,7 +98,9 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
           downloadCancelled = false; let index = 0;
           const emit = (stage,downloaded) => callbacks.get(args.onProgress.id)?.({index:index++,message:{stage,downloaded,total:16110554}});
           try {
+            window.__emitToolsProgress=emit;
             emit(toolsInstalled && !args.forceDownload ? 'checking' : 'downloading', 8055277);
+            await holdOperation('installPlatformTools');
             await new Promise(resolve => setTimeout(resolve, options.slowDownload ? 900 : 180));
             if (downloadCancelled) throw new Error('下载已取消，临时文件已清理');
             if (options.failDownloadOnce && window.__toolsInstalls === 1) throw new Error('下载失败，请检查网络后重试');
@@ -95,8 +112,13 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         }
         if (command !== 'execute') throw new Error('Unexpected command: '+command);
         const r = args.request;
-        if (r.action === 'getState') return structuredClone(state);
+        if (r.action === 'getState') {
+          if(window.__holdNextStateRead){window.__holdNextStateRead=false;await holdOperation('getState');}
+          return structuredClone(state);
+        }
         window.__requests.push(structuredClone(r));
+        const held=await holdOperation(r.action);
+        if(held.response){Object.assign(state,structuredClone(held.response));return structuredClone(state);}
         if(r.action==='refreshLocalNetwork'){state.localNetwork=options.localNetworkAfterRefresh || state.localNetwork;state.message='本机局域网地址已刷新';return structuredClone(state);}
         if(r.action==='connect') {state.lastConnection={host:r.host,port:r.port};if(options.connectError){state.device=null;state.message=options.connectError;throw new Error(options.connectError);}}
         if (options.failAction === r.action) throw new Error('电视拒绝了操作，请检查授权');
@@ -115,7 +137,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
           }
         }
         if (r.action === 'install') {
-          state.installResults=r.paths.map((path,index)=>({path,success:!(options.partialInstall && index===1),message:options.partialInstall && index===1?'安装失败':'已安装'}));
+          state.installResults=r.paths.map((path,index)=>({path,success:!(options.partialInstall && index===1),message:options.partialInstall && index===1?'安装失败':'电视已确认安装成功，已刷新应用列表'}));
           if(options.partialInstall){
             for(const [index,result] of state.installResults.entries())state.history.unshift({id:'install-'+index,timestamp:1,action:'install',target:result.path,device:state.device.serial,userId:0,success:result.success,message:result.message});
             state.message='安装完成：成功 1 项，失败 1 项';return structuredClone(state);
@@ -134,7 +156,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         }
         if (r.action === 'disconnect') { state.device = null; state.packages = []; state.launchers = []; }
         if (r.action === 'clearHistory') state.history = [];
-        else state.history.unshift({id: String(Date.now()), timestamp: Math.floor(Date.now()/1000), action:r.action, target:(r.packages||r.paths||[r.component||'电视']).join(', '), device:initial.device?.serial||'',userId:0,success:true,message:'执行后状态已核对'});
+        else for(const [index,target] of (r.packages||r.paths||[r.component||'电视']).entries())state.history.unshift({id: `${Date.now()}-${index}`, timestamp: Math.floor(Date.now()/1000), action:r.action, target, device:initial.device?.serial||'',userId:0,success:true,message:'执行后状态已核对'});
         state.message = '操作完成，状态已核对';
         return structuredClone(state);
       },

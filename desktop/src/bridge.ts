@@ -63,7 +63,10 @@ async function simulate(request: Request): Promise<Snapshot> {
   } else if (request.action === 'restoreHome') {
     if (!sample.originalHome) throw new Error('没有已记录的原桌面');
     sample.defaultHome = sample.originalHome; protectCurrentHome(); record('restoreHome', sample.defaultHome);
-  } else if (request.action === 'install') for (const file of request.paths) record('install', file);
+  } else if (request.action === 'install') {
+    sample.installResults = request.paths.map(path => ({ path, success: true, message: '演示结果，未向任何设备发送命令' }));
+    for (const file of request.paths) record('install', file);
+  }
   sample.message = request.action === 'getState' ? '' : '演示操作完成，未连接真实设备';
   return copy();
 }
