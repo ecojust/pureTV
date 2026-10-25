@@ -25,7 +25,7 @@ jobs:
           log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', result.stdout + result.stderr)
           lines = log.splitlines()
           primary = [i for i, line in enumerate(lines) if re.search(r'FAILURE: Build failed|\* What went wrong:', line) and '##[error]' not in line]
-          fallback = [i for i, line in enumerate(lines) if re.search(r'(?:error:|> Task .+ FAILED|Execution failed for task)', line) and '##[error]' not in line]
+          fallback = [i for i, line in enumerate(lines) if re.search(r'(?:error:|Error:|TimeoutError|ui\.mjs:|> Task .+ FAILED|Execution failed for task)', line) and '##[error]' not in line]
           matches = primary or fallback
           if matches:
               before = '\n'.join(lines[max(0, matches[0] - 50):matches[0]])[-3500:]

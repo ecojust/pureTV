@@ -674,6 +674,32 @@ try {
     await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'get_state',snapshot:value}),updated);await release(p,'getState');
     const modal=await result(p,'error');assert.match(await modal.innerText(),/本次扫描失败/);assert.doesNotMatch(await modal.innerText(),/Agent 读取状态完成/);await acknowledge(p);
   },snapshot(),{holdActions:['scan','getState']});
+  await check('feedback: dismissing a result stays closed across immediate renders and cannot clear the next operation',async p=>{
+    await nav(p,'apps');await act(p,'scan').click();await held(p,'scan');await release(p,'scan');await result(p,'success');
+    const afterClose=await p.evaluate(()=>{
+      const dialog=document.querySelector('dialog.operation-feedback');
+      dialog.querySelector('[data-feedback-close]').click();
+      // A preference/channel update may render before the browser delivers the queued close event.
+      window.__emitMcp('interface-preferences',{locale:'en',theme:'graphite'});
+      return dialog.open;
+    });
+    assert.equal(afterClose,false,'A result acknowledged by the user must not reopen during the next render');
+    assert.equal(await feedback(p).count(),0);await nav(p,'history');await nav(p,'apps');
+    await act(p,'scan').click();await held(p,'scan');await release(p,'scan');await result(p,'success');
+    await p.evaluate(()=>{
+      document.querySelector('[data-feedback-close]').click();
+      document.querySelector('[data-act="scan"]').click();
+    });
+    await held(p,'scan');
+    await p.evaluate(()=>window.__emitMcp('interface-preferences',{locale:'en',theme:'ocean'}));
+    assert.equal(await feedback(p).getAttribute('data-phase'),'loading','An old close event must not discard a newly started operation');
+    await release(p,'scan');await result(p,'success');
+    await p.evaluate(()=>document.querySelector('dialog.operation-feedback').addEventListener('cancel',()=>{
+      queueMicrotask(()=>window.__emitMcp('interface-preferences',{locale:'zh-CN',theme:'graphite'}));
+    },{once:true}));
+    await p.keyboard.press('Escape');assert.equal(await feedback(p).count(),0,'Escape dismissal stays closed across a queued render');
+    await nav(p,'history');assert.equal(await feedback(p).count(),0);
+  },snapshot(),{holdActions:['scan']});
   await check('feedback: explicit scans show results while navigation and automatic reads stay silent',async p=>{
     await nav(p,'launchers');await settled(p);assert.equal(await feedback(p).count(),0);await nav(p,'apps');await act(p,'scan').click();await held(p,'scan');await release(p,'scan');await result(p,'success');await acknowledge(p);
     await act(p,'scan').click();await held(p,'scan');await release(p,'scan',{error:'扫描失败，请检查电视授权'});assert.match(await (await result(p,'error')).innerText(),/扫描失败/);await acknowledge(p);
