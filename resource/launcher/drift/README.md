@@ -1,8 +1,8 @@
-# Drift TV 0.1.0 · 流境
+# Drift TV 0.1.1 · 流境
 
 柔和梦境与错落漂浮应用岛，清透粉彩风格。独立包名 `com.ecojust.drifttv`，与其他启动器并存。采用 layout.json v5，画面位置、用户应用、文字、SVG 图标、颜色与页面背景均可由管理器读取和调整。
 
-[下载 APK](DriftTV-0.1.0.apk?raw=1) · [源码归档](source.tar.gz) · [布局示例](layout.example.json) · [协议与接入规范](../../README-development.md#layoutjson-规范与画面对照) · [SHA256](SHA256SUMS.txt)
+[下载 APK](DriftTV-0.1.1.apk?raw=1) · [源码归档](source.tar.gz) · [布局示例](layout.example.json) · [协议与接入规范](../../README-development.md#layoutjson-规范与画面对照) · [SHA256](SHA256SUMS.txt)
 
 | 首页 | 应用页 |
 | --- | --- |

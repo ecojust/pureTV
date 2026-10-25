@@ -2,7 +2,7 @@
 
 墨黑与暖白构成的编辑式电视桌面：大时钟、留白、原创几何线稿和右侧非对称应用列。
 
-[下载 MonoTV-0.1.0.apk](MonoTV-0.1.0.apk) · [布局示例](layout.example.json) · [layout v5 协议](../../README-development.md#layoutjson-规范与画面对照)
+[下载 MonoTV-0.1.1.apk](MonoTV-0.1.1.apk) · [布局示例](layout.example.json) · [layout v5 协议](../../README-development.md#layoutjson-规范与画面对照)
 
 | 首页 | 应用页 |
 | --- | --- |

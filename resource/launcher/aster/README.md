@@ -2,7 +2,7 @@
 
 星轨与轨道构成的深蓝空间桌面，悬浮双排应用与左侧大时钟。基于原生 Android TV，使用遥控器方向键和确认键操作。
 
-[下载 AsterTV-0.1.0.apk](AsterTV-0.1.0.apk) · [布局示例](layout.example.json) · [源码归档](source.tar.gz) · [元数据](resource.json)
+[下载 AsterTV-0.1.1.apk](AsterTV-0.1.1.apk) · [布局示例](layout.example.json) · [源码归档](source.tar.gz) · [元数据](resource.json)
 
 ![首页](thumb.png)
 ![应用页](apps.png)

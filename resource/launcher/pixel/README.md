@@ -2,7 +2,7 @@
 
 以游戏地图为灵感的像素电视桌面：深紫底、荧光色块、阶梯式路线和原创 8-bit 应用图标。
 
-[下载 PixelTV-0.1.0.apk](PixelTV-0.1.0.apk) · [布局示例](layout.example.json) · [layout v5 协议](../../README-development.md#layoutjson-规范与画面对照)
+[下载 PixelTV-0.1.1.apk](PixelTV-0.1.1.apk) · [布局示例](layout.example.json) · [layout v5 协议](../../README-development.md#layoutjson-规范与画面对照)
 
 | 首页 | 应用页 |
 | --- | --- |

@@ -39,7 +39,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 公共目录为 [resource/](resource/)，分为 [launcher/](resource/launcher/) 与 [apps/](resource/apps/)，原根目录的启动器和应用源码已整体移入。以后 Release 只发布电脑管理器；启动器和电视应用 APK 直接放在各自软件目录。每个软件文件夹至少包含一个实际 APK，可同时提供对应版本源码、封面、作者、许可证及 SHA256。点击软件名称进入对应文件夹。
 
-启动器表格的“支持自定义”指支持本管理器的 **layout.json 版本 5 users/system 接口**。启动器卡片默认使用 Home 背景图，提供 `thumb.png`／`APK名.thumb.png` 或手动选择封面时优先使用封面。
+启动器表格的“支持自定义”指支持本管理器的 **layout.json 版本 5 users/system 接口**。支持布局协议的启动器卡片自动显示 Home 背景颜色和图片，包括未激活的启动器；修改并应用布局后同步更新。列表不提供选择或移除封面的操作，桌面背景统一在「调整布局」中修改。待安装 APK 优先预览内置布局的 Home 背景，仅在无法读取布局背景时使用同目录的 `thumb.png`／`APK名.thumb.png`。
 
 ```text
 resource/
@@ -68,26 +68,26 @@ resource/
 
 | 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
-| [Aster TV · 星轨](resource/launcher/aster/) | ecojust / 桔子桑 | 0.1.0 | 435.6 KB | 是 | <img src="resource/launcher/aster/thumb.png" width="180" alt="Aster TV · 星轨 界面"> |
-| [Circuit TV · 回路](resource/launcher/circuit/) | ecojust / 桔子桑 | 0.1.0 | 431.6 KB | 是 | <img src="resource/launcher/circuit/thumb.png" width="180" alt="Circuit TV · 回路 界面"> |
-| [Drift TV](resource/launcher/drift/) | ecojust / 桔子桑 | 0.1.0 | 455.7 KB | 是 | <img src="resource/launcher/drift/thumb.png" width="180" alt="Drift TV 界面"> |
-| [Forma TV](resource/launcher/forma/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | 是 | <img src="resource/launcher/forma/thumb.png" width="180" alt="Forma TV 界面"> |
-| [Mono TV 墨白](resource/launcher/mono/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | 是 | <img src="resource/launcher/mono/thumb.png" width="180" alt="Mono TV 墨白 界面"> |
-| [Moss TV](resource/launcher/moss/) | ecojust / 桔子桑 | 0.1.0 | 463.7 KB | 是 | <img src="resource/launcher/moss/thumb.png" width="180" alt="Moss TV 界面"> |
-| [Nova TV](resource/launcher/nova/) | ecojust / 桔子桑 | 0.1.1 | 471.7 KB | 是 | <img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
-| [Pixel TV 像素](resource/launcher/pixel/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | 是 | <img src="resource/launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"> |
-| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.3.6 | 740.1 KB | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
-| [Sol TV](resource/launcher/sol/) | ecojust / 桔子桑 | 0.1.0 | 435.7 KB | 是 | <img src="resource/launcher/sol/thumb.png" width="180" alt="Sol TV 界面"> |
+| [Aster TV · 星轨](resource/launcher/aster/) | ecojust / 桔子桑 | 0.1.1 | 443.7 KB | 是 | <img src="resource/launcher/aster/thumb.png" width="180" alt="Aster TV · 星轨 界面"> |
+| [Circuit TV · 回路](resource/launcher/circuit/) | ecojust / 桔子桑 | 0.1.1 | 435.7 KB | 是 | <img src="resource/launcher/circuit/thumb.png" width="180" alt="Circuit TV · 回路 界面"> |
+| [Drift TV](resource/launcher/drift/) | ecojust / 桔子桑 | 0.1.1 | 475.7 KB | 是 | <img src="resource/launcher/drift/thumb.png" width="180" alt="Drift TV 界面"> |
+| [Forma TV](resource/launcher/forma/) | ecojust / 桔子桑 | 0.1.1 | 443.7 KB | 是 | <img src="resource/launcher/forma/thumb.png" width="180" alt="Forma TV 界面"> |
+| [Mono TV 墨白](resource/launcher/mono/) | ecojust / 桔子桑 | 0.1.1 | 443.7 KB | 是 | <img src="resource/launcher/mono/thumb.png" width="180" alt="Mono TV 墨白 界面"> |
+| [Moss TV](resource/launcher/moss/) | ecojust / 桔子桑 | 0.1.1 | 487.7 KB | 是 | <img src="resource/launcher/moss/thumb.png" width="180" alt="Moss TV 界面"> |
+| [Nova TV](resource/launcher/nova/) | ecojust / 桔子桑 | 0.1.2 | 495.7 KB | 是 | <img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
+| [Pixel TV 像素](resource/launcher/pixel/) | ecojust / 桔子桑 | 0.1.1 | 443.7 KB | 是 | <img src="resource/launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"> |
+| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.3.7 | 740.1 KB | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [Sol TV](resource/launcher/sol/) | ecojust / 桔子桑 | 0.1.1 | 439.7 KB | 是 | <img src="resource/launcher/sol/thumb.png" width="180" alt="Sol TV 界面"> |
 
 ### 电视应用
 
 | 名称 | 作者 | 版本 | APK 大小 | 用途 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
 | [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Jellyfin 媒体服务器的 Android TV 客户端 | <img src="resource/apps/jellyfin-tv/thumb.png" width="180" alt="Jellyfin for Android TV 界面"> |
-| [Music TV](resource/apps/music/) | ecojust / 桔子桑 | 0.1.2 | 40.8 KB | 原生电视音乐播放器 | <img src="resource/apps/music/thumb.png" width="180" alt="Music TV 界面"> |
-| [ShortVideo TV](resource/apps/shortvideo/) | ecojust / 桔子桑 | 0.1.0 | 28.7 KB | 遥控器短视频播放器 | <img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
+| [Music TV](resource/apps/music/) | ecojust / 桔子桑 | 0.1.3 | 48.8 KB | 原生电视音乐播放器 | <img src="resource/apps/music/thumb.png" width="180" alt="Music TV 界面"> |
+| [ShortVideo TV](resource/apps/shortvideo/) | ecojust / 桔子桑 | 0.1.1 | 32.7 KB | 遥控器短视频播放器 | <img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
 | [TV Bro](resource/apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | 适配遥控器的电视浏览器，使用系统 WebView | <img src="resource/apps/tvbro/thumb.png" width="180" alt="TV Bro 界面"> |
-| [WebTV](resource/apps/webtv/) | ecojust / 桔子桑 | 0.1.0 | 36.8 KB | 电视直播与 M3U 播放器 | <img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
+| [WebTV](resource/apps/webtv/) | ecojust / 桔子桑 | 0.1.1 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
 
 <!-- resource-index:end -->
 

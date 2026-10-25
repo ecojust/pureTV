@@ -2,7 +2,7 @@
 
 紫色与电光青的回路桌面，不对称大卡片和清晰的霓虹焦点。基于原生 Android TV，使用遥控器方向键和确认键操作。
 
-[下载 CircuitTV-0.1.0.apk](CircuitTV-0.1.0.apk) · [布局示例](layout.example.json) · [源码归档](source.tar.gz) · [元数据](resource.json)
+[下载 CircuitTV-0.1.1.apk](CircuitTV-0.1.1.apk) · [布局示例](layout.example.json) · [源码归档](source.tar.gz) · [元数据](resource.json)
 
 ![首页](thumb.png)
 ![应用页](apps.png)

@@ -1,8 +1,8 @@
-# Sol TV 0.1.0
+# Sol TV 0.1.1
 
 北欧日光风格，暖白留白与不对称应用排版。独立包名 `com.ecojust.soltv`，可以与其他启动器同时安装。
 
-[下载 APK](SolTV-0.1.0.apk?raw=1) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [协议与接入说明](../../README-development.md#第三方启动器接入与动态检测) · [校验值](SHA256SUMS.txt)
+[下载 APK](SolTV-0.1.1.apk?raw=1) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [协议与接入说明](../../README-development.md#第三方启动器接入与动态检测) · [校验值](SHA256SUMS.txt)
 
 | 首页 | 应用页 |
 | --- | --- |
