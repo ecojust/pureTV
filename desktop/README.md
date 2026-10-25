@@ -1,8 +1,8 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.4.2** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.4.3** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.4.2 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.2)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.4.3 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.3)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
 ## 功能
 
@@ -12,7 +12,7 @@
 | 应用管理 · 已安装 | 搜索／分类、应用与启动器安装包大小、批量启用／停用、为当前用户卸载／恢复 |
 | 应用管理 · 待安装 | 导入本地 APK、逐项或勾选批量安装；成功项移出队列，失败和未执行项保留 |
 | 启动器 | 设置／恢复默认 HOME，查看包大小、导入和逐项安装启动器 APK；支持时读取和编辑 layout.json 布局及应用图标 |
-| 市场 | 动态读取 Gitee 商店中的应用和启动器，搜索、预览、下载到待安装列表或直接安装到电视 |
+| 市场 | 动态读取 Gitee 商店中的应用和启动器，同一资源合并展示并选择最近 5 个版本，搜索、预览、下载到待安装列表或直接安装到电视 |
 | 操作记录 | 最近 200 项修改记录，包含目标设备／用户、逐项结果与错误 |
 
 非首页仅在顶部显示当前连接状态，不重复放置 IP 和连接表单。各类列表独立滚动，表头及顶部批量操作保持可见，选择和重新渲染保留列表位置。
@@ -26,14 +26,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.4.2 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.2) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.4.3 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.3) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.4.2-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.4.3-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.2-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.3-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -79,7 +79,9 @@
 
 ## 市场
 
-侧栏「启动器」之后的「市场」分为「应用」和「启动器」。内容来自 [pure-tv-store](https://gitee.com/juzisang331/pure-tv-store) 的 `apps/` 和 `launcher/` 目录，按仓库实际 APK 自动发现；新增资源无需重新发布管理器。卡片展示文件名解析的名称、版本、APK 大小和同目录封面。
+侧栏「启动器」之后的「市场」分为「应用」和「启动器」。内容来自 [pure-tv-store](https://gitee.com/juzisang331/pure-tv-store) 的 `apps/` 和 `launcher/` 目录，按仓库实际 APK 自动发现；新增资源无需重新发布管理器。同一目录中同名应用的多个版本合并为一张卡片，启动器同样处理。版本下拉框按数字版本号从新到旧显示最近 5 个版本，默认选中最新版；选择后，APK 大小、文件名、封面、下载状态和下载／安装目标同步更新。搜索和分类计数按合并后的卡片显示。
+
+版本从 `名称-1.2.3.apk` 这样的文件名解析（支持 2～4 段数字）；不同目录或不同名称的 APK 不会合并，没有可识别版本号的 APK 使用文件名作为选项，并排在已识别版本之后。刷新后保留仍在最近 5 个版本内的选择，否则回到最新版。
 
 无需连接电视即可浏览、搜索和下载。下载完成后，应用进入「应用管理 → 待安装」，启动器进入「启动器」的待安装区；连接电视后也可选择「下载并安装」。安装失败时保留下载好的 APK，便于重试。安装启动器不会自动切换默认桌面。
 
