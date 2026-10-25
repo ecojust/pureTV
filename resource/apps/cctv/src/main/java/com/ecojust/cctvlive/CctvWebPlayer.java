@@ -91,6 +91,8 @@ final class CctvWebPlayer {
                     .replace(" Version/4.0", "").replace(" Mobile", ""));
         }
         web.setBackgroundColor(Color.BLACK);
+        web.setFocusable(true);
+        web.setFocusableInTouchMode(true);
         web.setAlpha(0f); // Never flash the untrimmed website while the player is locating.
         web.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
         web.setHorizontalScrollBarEnabled(false);
