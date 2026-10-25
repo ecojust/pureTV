@@ -1,6 +1,6 @@
 package com.ecojust.hifinitv;
 
-/** Session-only metadata with separate catalog and optional forum identities; never a media URL. */
+/** Stable song metadata with separate catalog and optional forum identities; never a media URL. */
 final class Track {
     final String id, title, artist, cover;
     final String source, sourceId, threadId;

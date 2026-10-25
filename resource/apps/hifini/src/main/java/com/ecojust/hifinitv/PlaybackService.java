@@ -19,6 +19,7 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -30,7 +31,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/** Resolve, download into bounded private cache, then decode a local file with native media controls. */
+/** Resolve, download into the bounded local library, then decode saved audio with native media controls. */
 public class PlaybackService extends Service {
     private static final String CHANNEL = "music_playback", START = "start", TOGGLE = "toggle", NEXT = "next", PREVIOUS = "previous", STOP = "stop";
     private static final int NOTIFICATION = 11;
@@ -41,7 +42,8 @@ public class PlaybackService extends Service {
             new ArrayBlockingQueue<>(2), new ThreadPoolExecutor.AbortPolicy());
     private final List<Track> queue = new ArrayList<>();
     static final int QUEUE_LIMIT = 50;
-    private boolean refreshedSource;
+    private boolean refreshedSource, downloadSlotPrepared, localOnlyQueue, currentAudioPersistent;
+    private LocalLibrary library;
     private MediaPlayer player;
     private MediaSession session;
     private AudioManager audio;
@@ -55,7 +57,7 @@ public class PlaybackService extends Service {
     private volatile int generation, downloadAttempt;
     private volatile boolean destroyed;
     private boolean prepared, loading, resumeAfterFocus;
-    private String error = "", attemptedAudioUrl = "";
+    private String error = "", attemptedAudioUrl = "", libraryError = "";
     private Runnable listener, prepareTimeout, resolveTimeout, downloadTimeout;
     private final PlaybackOrder order = new PlaybackOrder();
     private List<String> sources = new ArrayList<>();
@@ -66,6 +68,8 @@ public class PlaybackService extends Service {
     @Override public void onCreate() {
         super.onCreate();
         AudioDownloader.cleanCache(getCacheDir());
+        try { library = new LocalLibrary(getFilesDir()); }
+        catch (IOException unavailableStorage) { library = null; error = libraryError = getString(R.string.library_unavailable); }
         // Playback queues and temporary media links stay in this session only.
         order.shuffle(getSharedPreferences("music_playback", 0).getBoolean("shuffle", true));
         audio = (AudioManager) getSystemService(AUDIO_SERVICE);
@@ -109,6 +113,37 @@ public class PlaybackService extends Service {
     }
     void listen(Runnable callback) { listener = callback; }
     List<Track> queue() { return new ArrayList<>(queue); }
+    List<Track> localTracks() { return library == null ? new ArrayList<>() : library.tracks(); }
+    long libraryRevision() { return library == null ? 0 : library.revision(); }
+    String libraryError() { return libraryError; }
+    /** Main-thread operation. Returns the actual deletion count, or -1 with a localized storage error. */
+    int deleteLocalTracks(Collection<String> requestedIds) {
+        libraryError = "";
+        if (library == null) { libraryError = getString(R.string.library_unavailable); changed(); return -1; }
+        Set<String> requested = requestedIds == null ? new HashSet<>() : new HashSet<>(requestedIds);
+        Set<String> removing = new HashSet<>();
+        for (Track track : library.tracks()) if (requested.contains(track.id)) removing.add(track.id);
+        if (removing.isEmpty()) { changed(); return 0; }
+        String playingId = current() == null ? "" : current().id;
+        boolean removingCurrent = removing.contains(playingId);
+        if (removingCurrent) stopPlayback();
+        boolean failed = false;
+        try { library.removeAll(removing); }
+        catch (IOException unavailableStorage) { libraryError = getString(R.string.library_unavailable); failed = true; }
+        // A committed index can outlive a failed retired-file cleanup. Reconcile the actual library even on error.
+        Set<String> removed = new HashSet<>(removing);
+        for (Track retained : library.tracks()) removed.remove(retained.id);
+        if (!removed.isEmpty()) {
+            // Search results remain in the UI, but automatic next/previous must not redownload deleted songs.
+            queue.removeIf(track -> removed.contains(track.id));
+            index = -1;
+            if (!removed.contains(playingId)) for (int i = 0; i < queue.size(); i++) if (queue.get(i).id.equals(playingId)) { index = i; break; }
+            if (removed.contains(playingId)) { attemptedAudioUrl = ""; error = ""; sources.clear(); }
+            order.clear();
+            if (index >= 0) order.record(index, queue.size());
+        }
+        changed(); return failed ? -1 : removed.size();
+    }
     Track current() { return index >= 0 && index < queue.size() ? queue.get(index) : null; }
     int currentIndex() { return index; }
     boolean loading() { return loading; }
@@ -119,25 +154,29 @@ public class PlaybackService extends Service {
         getSharedPreferences("music_playback", 0).edit().putBoolean("shuffle", enabled).apply();
         changed();
     }
-    void playList(List<Track> tracks, boolean shuffled) {
+    void playList(List<Track> tracks, boolean shuffled) { playList(tracks, shuffled, false); }
+    void playLocalList(List<Track> tracks, boolean shuffled) { playList(tracks, shuffled, true); }
+    private void playList(List<Track> tracks, boolean shuffled, boolean localOnly) {
         if (tracks.isEmpty()) return;
         List<Track> copy = new ArrayList<>(tracks);
-        clearQueue();
+        clearQueue(); localOnlyQueue = localOnly;
         for (Track track : copy) { if (!add(track, false)) break; }
         shuffle(shuffled);
         play(shuffled ? order.next(-1, queue.size()) : 0);
     }
-    void playListAt(List<Track> tracks, int startIndex) {
+    void playListAt(List<Track> tracks, int startIndex) { playListAt(tracks, startIndex, false); }
+    void playLocalListAt(List<Track> tracks, int startIndex) { playListAt(tracks, startIndex, true); }
+    private void playListAt(List<Track> tracks, int startIndex, boolean localOnly) {
         if (startIndex < 0 || startIndex >= tracks.size()) return;
         String selected = tracks.get(startIndex).id;
         List<Track> copy = new ArrayList<>(tracks);
-        clearQueue();
+        clearQueue(); localOnlyQueue = localOnly;
         for (Track track : copy) { if (!add(track, false)) break; }
         shuffle(false);
         for (int i = 0; i < queue.size(); i++) if (queue.get(i).id.equals(selected)) { play(i); return; }
     }
     String error() { return error; }
-    /** Last remote download URL; never exposes the private local playback path. */
+    /** Remote download URL or canonical catalog link; never exposes the private local playback path. */
     String audioUrl() { return attemptedAudioUrl; }
     boolean playing() { try { return player != null && prepared && player.isPlaying(); } catch (IllegalStateException ignored) { return false; } }
     long position() { try { return player != null && prepared ? Math.max(0, player.getCurrentPosition()) : 0; } catch (IllegalStateException ignored) { return 0; } }
@@ -157,12 +196,25 @@ public class PlaybackService extends Service {
         if (position < 0 || position >= queue.size() || destroyed) return;
         cancelResolve(); releasePlayer(); clearAudioFile();
         index = position; order.record(index, queue.size()); error = ""; attemptedAudioUrl = ""; loading = true; resumeAfterFocus = false;
-        refreshedSource = false; sources = new ArrayList<>();
+        refreshedSource = false; downloadSlotPrepared = false; sources = new ArrayList<>();
         stage = getString(R.string.fetch_detail);
         loadDeadline = SystemClock.elapsedRealtime() + 120000;
         startForegroundService(new Intent(this, PlaybackService.class).setAction(START));
         startForeground(NOTIFICATION, notification());
         changed();
+        if (library == null) { fail(getString(R.string.library_unavailable)); return; }
+        try {
+            File saved = library.find(current().id);
+            if (saved != null) {
+                for (Track stored : library.tracks()) if (stored.id.equals(current().id)) { queue.set(index, stored); break; }
+                // Local replay does not contact HiFiNi or update insertion order. Never expose a private path in the QR.
+                try { attemptedAudioUrl = current().source.isEmpty() ? "" : HifiniApi.buildPlaybackUrl(current()); }
+                catch (IOException unavailableLink) { attemptedAudioUrl = ""; }
+                prepareLocal(saved, generation, true); return;
+            }
+        } catch (IOException unavailableStorage) { fail(getString(R.string.library_unavailable)); return; }
+        if (localOnlyQueue) { fail(getString(R.string.local_audio_missing)); return; }
+        changed(); // A missing library file may have been pruned by find().
         resolveCurrent(generation);
     }
     private void resolveCurrent(int ticket) {
@@ -213,9 +265,18 @@ public class PlaybackService extends Service {
     private void downloadSource(String source, int ticket) {
         if (destroyed || ticket != generation) return;
         cancelDownload(); releasePlayer(); clearAudioFile(); loading = true;
-        attemptedAudioUrl = source; stage = getString(R.string.download_start); changed();
         long remaining = loadDeadline - SystemClock.elapsedRealtime();
         if (remaining <= 0) { fail(getString(R.string.download_timeout)); return; }
+        if (!downloadSlotPrepared) {
+            try {
+                library.prepareDownload(current()); downloadSlotPrepared = true;
+                changed(); // Publish FIFO eviction before opening a network download.
+            } catch (IOException unavailableStorage) { fail(getString(R.string.library_unavailable)); return; }
+        }
+        if (destroyed || ticket != generation) return;
+        attemptedAudioUrl = source; stage = getString(R.string.download_start); changed();
+        if (destroyed || ticket != generation) return;
+        remaining = Math.max(1, loadDeadline - SystemClock.elapsedRealtime());
         final int attempt = downloadAttempt;
         final AudioDownloader transfer = new AudioDownloader(getCacheDir());
         final String referer = current().pageUrl();
@@ -243,7 +304,14 @@ public class PlaybackService extends Service {
                     if (!activeDownload(ticket, attempt)) { deleteFile(file); return; }
                     if (downloadTimeout != null) main.removeCallbacks(downloadTimeout);
                     downloadTimeout = null; downloadPending = null; downloader = null;
-                    prepareLocal(file, ticket);
+                    try {
+                        stage = getString(R.string.saving_audio); changed();
+                        if (!activeDownload(ticket, attempt)) { deleteFile(file); return; }
+                        File saved = library.save(current(), file);
+                        prepareLocal(saved, ticket, true);
+                    } catch (IOException unavailableStorage) {
+                        deleteFile(file); fail(getString(R.string.library_unavailable));
+                    }
                 });
             } catch (Exception failure) {
                 String message = downloadFailure(failure);
@@ -290,8 +358,8 @@ public class PlaybackService extends Service {
         AudioDownloader.Failure kind = ((AudioDownloader.DownloadException)failure).failure;
         return kind == AudioDownloader.Failure.HTTP_STATUS || kind == AudioDownloader.Failure.TIMEOUT;
     }
-    private void prepareLocal(File file, int ticket) {
-        releasePlayer(); clearAudioFile(); currentAudioFile = file; loading = true;
+    private void prepareLocal(File file, int ticket, boolean persistent) {
+        releasePlayer(); clearAudioFile(); currentAudioFile = file; currentAudioPersistent = persistent; loading = true;
         stage = getString(R.string.preparing_audio); changed();
         try {
             player = new MediaPlayer();
@@ -366,7 +434,7 @@ public class PlaybackService extends Service {
         }
     }
     void clearQueue() {
-        attemptedAudioUrl = ""; stopPlayback(); queue.clear(); order.clear(); index = -1; changed();
+        attemptedAudioUrl = ""; stopPlayback(); queue.clear(); order.clear(); index = -1; localOnlyQueue = false; changed();
     }
     private void fail(String message) { error = message; loading = false; cancelResolve(); releasePlayer(); clearAudioFile(); audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); changed(); }
     private void stopPlayback() {
@@ -393,7 +461,10 @@ public class PlaybackService extends Service {
         }
         resolver.purge();
     }
-    private void clearAudioFile() { deleteFile(currentAudioFile); currentAudioFile = null; }
+    private void clearAudioFile() {
+        if (!currentAudioPersistent) deleteFile(currentAudioFile);
+        currentAudioFile = null; currentAudioPersistent = false;
+    }
     private static void deleteFile(File file) { if (file != null) file.delete(); }
     private void releasePlayer() { if (prepareTimeout != null) main.removeCallbacks(prepareTimeout); prepareTimeout = null; prepared = false; if (player != null) { player.release(); player = null; } }
     private void changed() { updateState(); if (listener != null) listener.run(); }
