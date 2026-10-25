@@ -51,7 +51,7 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 | `install_platform_tools` | `acceptedLicense: true`，可选 `forceDownload: true` | 下载、校验并配置 ADB；默认复用已校验缓存，强制模式重新下载；失败或取消保留当前配置，需先断开电视 |
 | `choose_apks` | 无 | 在管理器打开原生多选 APK 对话框，只返回路径，不安装 |
 | `choose_adb` | 无 | 在管理器打开原生可执行文件对话框，只返回路径，不配置 |
-| `open_resource` | `resource` | 打开 `catalog`、`market`、`releases`、`platformTools` 或 `platformToolsLicense` 对应的固定网页；`market` 指向 Gitee 市场仓库 |
+| `open_resource` | `resource` | 打开 `catalog`、`market`、`repository`、`releases`、`platformTools` 或 `platformToolsLicense` 对应的固定网页；`market` 指向 Gitee 市场仓库，`repository` 指向 [pureTV GitHub 仓库](https://github.com/ecojust/pureTV)，用于提交软件上架 PR |
 
 已安装应用及启动器的 `apkSizeBytes` 返回主 APK 和分包合计字节数，不含私有数据与缓存；无法读取时为 `null`，重新扫描会刷新。
 

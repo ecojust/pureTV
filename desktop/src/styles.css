@@ -1417,8 +1417,11 @@ main.list-page { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden;
 .market-card-heading h2 { margin:0; font-size:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .market-downloaded { display:inline-flex; align-items:center; gap:3px; font-size:11px; flex-shrink:0; color:var(--green); }
 .market-downloaded .icon { width:13px; height:13px; }
-.market-meta { display:flex; flex-wrap:wrap; gap:8px; color:var(--muted); font-size:12px; margin-top:8px; }
-.market-meta span + span::before { content:'·'; margin-right:8px; }
+.market-meta { display:flex; align-items:center; flex-wrap:wrap; gap:8px; color:var(--muted); font-size:12px; margin-top:10px; }
+.market-version { display:flex; align-items:center; gap:8px; flex:1; min-width:0; }
+.market-version > span { flex-shrink:0; }
+.market-version select { width:100%; min-width:0; max-width:180px; height:34px; min-height:34px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--text); font-size:12px; }
+.market-size { flex-shrink:0; margin-left:auto; }
 .market-file { color:var(--muted); font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin:8px 0 16px; }
 .market-card-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; }
 .market-card-actions button { flex:1 1 auto; justify-content:center; white-space:normal; }

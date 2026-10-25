@@ -92,7 +92,7 @@ pub fn tools() -> Vec<Value> {
         tool("install_platform_tools","Download/verify/configure ADB or reuse verified offline cache. Set forceDownload=true to fetch a new verified copy even when the cache is valid. Google with Tencent fallback. Requires explicit Android SDK license acceptance; disconnect TV first.",json!({"forceDownload":{"type":"boolean","description":"Force a fresh download; preserve current ADB on cancellation or failure."},"acceptedLicense":{"type":"boolean","const":true,"description":"Set true only after the user accepts https://developer.android.com/studio/terms"}}),&["acceptedLicense"],false),
         tool("choose_apks","Open the manager's native multi-APK picker. Returns paths; does not install.",json!({}),&[],true),
         tool("choose_adb","Open the manager's native executable picker. Returns path; does not configure it.",json!({}),&[],true),
-        tool("open_resource","Open the allowlisted APK resource catalog, Gitee market, project, Platform Tools or Android SDK license page in the user's browser.",json!({"resource":{"type":"string","enum":["catalog","market","releases","platformTools","platformToolsLicense"]}}),&["resource"],false),
+        tool("open_resource","Open the allowlisted APK resource catalog, Gitee market, project repository or releases, Platform Tools or Android SDK license page in the user's browser.",json!({"resource":{"type":"string","enum":["catalog","market","repository","releases","platformTools","platformToolsLicense"]}}),&["resource"],false),
     ]
 }
 fn error(id: Value, code: i64, message: &str) -> Value {
