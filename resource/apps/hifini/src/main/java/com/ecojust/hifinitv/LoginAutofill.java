@@ -23,7 +23,11 @@ final class LoginAutofill {
                 + "if(explicit&&actionFor(f)&&u.form===f&&p.form===f){"
                 + "if(typeof f.checkValidity==='function'&&!f.checkValidity())return 'rejected';"
                 + "var request=typeof HTMLFormElement!=='undefined'&&HTMLFormElement.prototype.requestSubmit;"
-                + "if(typeof request==='function'){try{request.call(f);return 'submitted';}catch(e){}}}"
+                + "if(typeof request==='function'){try{request.call(f);return 'submitted';}catch(e){}}"
+                + "else{var control=Array.from(f.elements).find(function(b){return submitControl(b,f);});"
+                + "var click=typeof HTMLElement!=='undefined'&&HTMLElement.prototype.click;"
+                + "if(control&&typeof click==='function'&&actionFor(f)&&u.form===f&&p.form===f&&submitControl(control,f)){"
+                + "try{click.call(control);return 'submitted';}catch(e){}}}}"
                 + "return 'filled';})(" + submit + ")";
     }
 
@@ -36,6 +40,9 @@ final class LoginAutofill {
                 + "function verification(){return anyVisible(document,'.g-recaptcha,.h-captcha,.cf-turnstile,#captcha,.captcha,input[name=captcha],input[name=verifycode],input[name=verify],input[name=vcode],iframe[src*=\"recaptcha\"],iframe[src*=\"hcaptcha\"],iframe[src*=\"challenges.cloudflare.com\"],form#challenge-form,form[action*=\"/cdn-cgi/challenge-platform/\"]');}"
                 + "function has(selector,path){return Array.from(document.querySelectorAll(selector)).some(function(a){try{var u=new URL(a.href,document.baseURI);return u.origin===location.origin&&u.pathname===path&&!u.username&&!u.password;}catch(e){return false;}});}"
                 + "function authenticated(){return has('.navbar li.username > a','/my.htm')&&has('.navbar a','/user-logout.htm');}"
+                + "function submitControl(b,f){return ((typeof HTMLButtonElement!=='undefined'&&b instanceof HTMLButtonElement)"
+                + "||(typeof HTMLInputElement!=='undefined'&&b instanceof HTMLInputElement))&&b.form===f&&b.type==='submit'"
+                + "&&!b.disabled&&!b.formNoValidate&&!(typeof b.matches==='function'&&b.matches(':disabled'));}"
                 + "function actionFor(f){var a;try{a=new URL(f.action||location.href,document.baseURI);}catch(e){return null;}"
                 + "if(f.method.toLowerCase()!=='post'||a.origin!==location.origin||a.username||a.password||!/^\\/user-login(?:\\.htm)?\\/?$/.test(a.pathname))return null;"
                 + "var overrides=Array.from(f.elements).filter(function(b){return b.hasAttribute('formaction')||b.hasAttribute('formmethod');});"
