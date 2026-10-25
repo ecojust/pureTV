@@ -47,7 +47,7 @@ public class PlaybackService extends Service {
     private Future<?> pending;
     private int index = -1, generation;
     private boolean prepared, loading, destroyed, resumeAfterFocus;
-    private String error = "";
+    private String error = "", attemptedAudioUrl = "";
     private Runnable listener, prepareTimeout, resolveTimeout;
     private final PlaybackOrder order = new PlaybackOrder();
     private List<String> sources = new ArrayList<>();
@@ -128,6 +128,8 @@ public class PlaybackService extends Service {
         for (int i = 0; i < queue.size(); i++) if (queue.get(i).id.equals(selected)) { play(i); return; }
     }
     String error() { return error; }
+    /** Last URL actually handed to the decoder; kept after failure for on-screen diagnostics only. */
+    String audioUrl() { return attemptedAudioUrl; }
     boolean playing() { try { return player != null && prepared && player.isPlaying(); } catch (IllegalStateException ignored) { return false; } }
     long position() { try { return player != null && prepared ? Math.max(0, player.getCurrentPosition()) : 0; } catch (IllegalStateException ignored) { return 0; } }
     long duration() { try { return player != null && prepared ? Math.max(0, player.getDuration()) : 0; } catch (IllegalStateException ignored) { return 0; } }
@@ -145,7 +147,7 @@ public class PlaybackService extends Service {
     void play(int position) {
         if (position < 0 || position >= queue.size() || destroyed) return;
         cancelResolve(); releasePlayer();
-        index = position; order.record(index, queue.size()); error = ""; loading = true; resumeAfterFocus = false;
+        index = position; order.record(index, queue.size()); error = ""; attemptedAudioUrl = ""; loading = true; resumeAfterFocus = false;
         refreshedSource = false; resumePosition = 0; sources = new ArrayList<>();
         stage = getString(R.string.fetch_detail);
         loadDeadline = SystemClock.elapsedRealtime() + 45000;
@@ -203,7 +205,6 @@ public class PlaybackService extends Service {
     private void prepare(String source, int ticket) {
         releasePlayer(); loading = true;
         stage = getString(R.string.connecting_audio, sourceIndex + 1, sources.size());
-        changed();
         try {
             player = new MediaPlayer();
             player.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
@@ -212,6 +213,8 @@ public class PlaybackService extends Service {
             HashMap<String, String> headers = new HashMap<>();
             headers.put("Referer", current().pageUrl());
             headers.put("User-Agent", HifiniApi.AGENT);
+            attemptedAudioUrl = source;
+            changed();
             player.setDataSource(this, Uri.parse(source), headers);
             player.setOnPreparedListener(value -> {
                 if (destroyed || ticket != generation || value != player) return;
@@ -232,7 +235,18 @@ public class PlaybackService extends Service {
             player.prepareAsync();
             prepareTimeout = () -> { if (ticket == generation && loading) retrySource(ticket, getString(R.string.connect_timeout), false); };
             main.postDelayed(prepareTimeout, Math.max(1, Math.min(10000, loadDeadline - SystemClock.elapsedRealtime())));
-        } catch (Exception e) { retrySource(ticket, getString(R.string.playback_error_detail, MusicError.display(this,e)), true); }
+        } catch (Exception e) { retrySource(ticket, getString(R.string.playback_error_detail, nativeFailureDetail(e)), true); }
+    }
+    private String nativeFailureDetail(Exception error) {
+        // Native setDataSource errors often carry a useful status code. Do not display arbitrary
+        // exception messages: they can contain signed media URLs or other request details.
+        String diagnostic = error.getClass().getSimpleName();
+        String message = error.getMessage();
+        if (message != null) {
+            java.util.regex.Matcher status = java.util.regex.Pattern.compile("(?i)\\bstatus\\s*=\\s*(?:0x[0-9a-f]{1,8}|-?[0-9]{1,10})\\b").matcher(message);
+            if (status.find()) diagnostic += "; " + status.group().replaceAll("\\s+", "");
+        }
+        return MusicError.display(this, error) + " (" + diagnostic + ")";
     }
     void toggle() {
         if (loading) pause(false);
@@ -267,7 +281,7 @@ public class PlaybackService extends Service {
         }
     }
     void clearQueue() {
-        stopPlayback(); queue.clear(); order.clear(); index = -1; changed();
+        attemptedAudioUrl = ""; stopPlayback(); queue.clear(); order.clear(); index = -1; changed();
     }
     private void fail(String message) { error = message; loading = false; cancelResolve(); releasePlayer(); audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); changed(); }
     private void stopPlayback() {

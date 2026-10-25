@@ -104,6 +104,7 @@ public class PlayerTest {
             assertFalse(player.loading()); assertFalse(player.playing());
             assertEquals(player.getString(R.string.connect_timeout), player.error());
             assertEquals(1, player.calls.get()); assertEquals(2, field(player, "sourceIndex"));
+            assertEquals("https://three.example.org/audio", player.audioUrl());
         } finally { controller.destroy(); }
     }
     @Test public void decoderErrorAfterPlaybackReentersBoundedLoading() throws Exception {
@@ -129,7 +130,8 @@ public class PlayerTest {
             assertEquals("Resolved 100 #2", player.current().title);
             Shadows.shadowOf(decoder(player)).invokeErrorListener(1, -1004);
             assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(2, player.calls.get());
-            assertFalse(player.error().isEmpty());
+            assertEquals(player.getString(R.string.decoder_error, 1, -1004), player.error());
+            assertEquals("https://audio.example.org/100?token=2", player.audioUrl());
         } finally { controller.destroy(); }
     }
     @Test public void playingSameTrackAgainResolvesFreshAudioAndArtwork() throws Exception {
@@ -157,7 +159,36 @@ public class PlayerTest {
             assertEquals("Resolved 101 #1", player.current().title); assertTrue(player.playing());
             assertEquals(Collections.singletonList("https://audio.example.org/101?token=1"), field(player, "sources"));
             assertEquals("", player.error());
+            assertEquals("https://audio.example.org/101?token=1", player.audioUrl());
         } finally { player.releaseFirst.countDown(); controller.destroy(); }
+    }
+    @Test public void attemptedAudioUrlClearsBeforeANewSelectionAndWhenQueueIsCleared() throws Exception {
+        ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();
+        try {
+            FreshResolver player = controller.get(); assertEquals("", player.audioUrl());
+            player.playListAt(Arrays.asList(track(0), track(1)), 0); resolvedWork(player);
+            assertEquals("https://audio.example.org/100?token=1", player.audioUrl());
+            player.pause(false); assertEquals("https://audio.example.org/100?token=1", player.audioUrl());
+            player.play(1); assertEquals("", player.audioUrl()); resolvedWork(player);
+            assertEquals("https://audio.example.org/101?token=2", player.audioUrl());
+            player.clearQueue(); assertEquals("", player.audioUrl()); assertNull(player.current());
+        } finally { controller.destroy(); }
+    }
+    @Test public void immediateDecoderFailuresRetainAttemptedUrlAndNativeStatusWithoutLeakingMessages() throws Exception {
+        String url = "https://www.hifini.net/musicparse-play.htm?source=netease&id=254485";
+        ShadowMediaPlayer.addException(org.robolectric.shadows.util.DataSource.toDataSource(url),
+                new IOException("setDataSource failed: status=0x80000000 https://example.invalid/?secret=private-token"));
+        ServiceController<CatalogResolver> controller = Robolectric.buildService(CatalogResolver.class).create();
+        try {
+            CatalogResolver player = controller.get();
+            player.add(Track.catalog("netease", "254485", "", "Song", "Artist", "", 239), true);
+            resolvedWork(player); // The first synchronous native error schedules one fresh resolve.
+            if (player.loading()) resolvedWork(player);
+            assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(2, player.calls.get());
+            assertEquals(url, player.audioUrl()); assertTrue(player.error().contains("IOException"));
+            assertTrue(player.error().contains("status=0x80000000")); assertFalse(player.error().contains("private-token"));
+            assertFalse(player.error().contains("https://"));
+        } finally { controller.destroy(); }
     }
     @Test public void pauseResumeAndSeekKeepTheCurrentDecoderButReplayReResolves() throws Exception {
         ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();

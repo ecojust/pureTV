@@ -1,6 +1,7 @@
 package com.ecojust.hifinitv;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
@@ -31,13 +32,15 @@ public class MainActivity extends Activity {
     private Scene scene;
     private EditText query;
     private Button shuffle,login;
-    private ImageButton search,toggle,previous,next;
+    private ImageButton search,toggle,previous,next,audioQr;
     private ImageView hero;
     private TextView heading,status,title,artist,now,elapsed,total;
     private ListView list;
     private RhythmView rhythm;
     private SeekBar seek;
-    private String coverKey="",currentId="",shownError="";
+    private String coverKey="",currentId="",shownError="",shownAudioUrl="",shownAudioTrack="";
+    private AlertDialog audioLinkDialog;
+    private TextView audioDebugError;
     private final Runnable tick=new Runnable(){@Override public void run(){if(visible){render();main.postDelayed(this,500);}}};
     private final ServiceConnection connection=new ServiceConnection(){
         @Override public void onServiceConnected(ComponentName name,IBinder binder){player=((PlaybackService.LocalBinder)binder).player();player.listen(MainActivity.this::render);render();}
@@ -76,6 +79,7 @@ public class MainActivity extends Activity {
         now=text(getString(R.string.ready_to_listen),12,MINT);now.setGravity(Gravity.CENTER);scene.place(now,332,372,298,22);
         title=text(getString(R.string.choose_track),24,TEXT);title.setTypeface(null,Typeface.BOLD);title.setGravity(Gravity.CENTER);title.setSingleLine();title.setEllipsize(TextUtils.TruncateAt.END);scene.place(title,323,394,316,32);
         artist=text("HiFiNi",15,MUTED);artist.setGravity(Gravity.CENTER);artist.setSingleLine();artist.setEllipsize(TextUtils.TruncateAt.END);scene.place(artist,331,427,300,22);
+        audioQr=new ImageButton(this);audioQr.setId(View.generateViewId());audioQr.setContentDescription(getString(R.string.audio_link_qr));audioQr.setScaleType(ImageView.ScaleType.FIT_CENTER);audioQr.setPadding(px(3),px(3),px(3),px(3));audioQr.setBackground(buttonBackground(false,5));audioQr.setDefaultFocusHighlightEnabled(false);audioQr.setFocusable(true);audioQr.setFocusableInTouchMode(true);audioQr.setVisibility(View.GONE);audioQr.setOnClickListener(v->showAudioLink());scene.place(audioQr,586,391,54,54);
         TextView rhythmLabel=text(getString(R.string.rhythm),14,MUTED);scene.place(rhythmLabel,663,101,260,25);
         rhythm=new RhythmView(this);rhythm.setFocusable(false);rhythm.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);scene.place(rhythm,638,136,304,243);
         TextView rhythmCaption=text(getString(R.string.rhythm_caption),11,MUTED);rhythmCaption.setGravity(Gravity.CENTER);rhythmCaption.setLetterSpacing(.13f);scene.place(rhythmCaption,650,382,280,24);
@@ -93,6 +97,7 @@ public class MainActivity extends Activity {
         query.setNextFocusRightId(search.getId());query.setNextFocusDownId(list.getId());search.setNextFocusLeftId(query.getId());search.setNextFocusRightId(shuffle.getId());search.setNextFocusDownId(list.getId());
         shuffle.setNextFocusLeftId(search.getId());shuffle.setNextFocusRightId(login.getId());shuffle.setNextFocusDownId(seek.getId());login.setNextFocusLeftId(shuffle.getId());login.setNextFocusDownId(seek.getId());list.setNextFocusUpId(query.getId());list.setNextFocusRightId(toggle.getId());
         seek.setNextFocusUpId(shuffle.getId());seek.setNextFocusDownId(toggle.getId());
+        audioQr.setNextFocusUpId(shuffle.getId());audioQr.setNextFocusDownId(seek.getId());audioQr.setNextFocusLeftId(list.getId());audioQr.setNextFocusRightId(seek.getId());
         previous.setNextFocusRightId(toggle.getId());previous.setNextFocusLeftId(list.getId());previous.setNextFocusUpId(seek.getId());toggle.setNextFocusLeftId(previous.getId());toggle.setNextFocusRightId(next.getId());toggle.setNextFocusUpId(seek.getId());next.setNextFocusLeftId(toggle.getId());next.setNextFocusUpId(seek.getId());
     }
     private void search(){String keyword=query.getText().toString().trim();if(keyword.isEmpty()){query.requestFocus();return;}load(false,keyword);}
@@ -127,12 +132,43 @@ public class MainActivity extends Activity {
         String error=player==null?"":player.error();now.setText(track==null?getString(R.string.ready_to_listen):loading?player.stage():!error.isEmpty()?getString(R.string.playback_failed):playing?getString(R.string.now_playing):getString(R.string.paused));
         if(!error.equals(shownError)){shownError=error;if(!error.isEmpty())status.setText(getString(R.string.retry_audio,error));else if(!searching&&!tracks.isEmpty())status.setText(getString(discovery?R.string.shuffle_count:R.string.results_count,tracks.size()));}
         long duration=player==null?0:player.duration(),position=player==null?0:player.position();seek.setEnabled(duration>0);if(!seeking)seek.setProgress(duration>0?(int)(position*1000/duration):0);elapsed.setText(time(position));total.setText(time(duration));
+        renderAudioLink(track,error);
         rhythm.setPlaying(track!=null&&playing&&!loading);
     }
+    private void renderAudioLink(Track track,String error){
+        String url=track==null||player==null?"":player.audioUrl();if(!AudioUrlQrCode.isSupported(url))url="";
+        String trackId=track==null?"":track.id;
+        if(!url.equals(shownAudioUrl)||!trackId.equals(shownAudioTrack)){
+            dismissAudioLink();shownAudioUrl=url;shownAudioTrack=trackId;boolean available=!url.isEmpty();
+            if(available){Bitmap bitmap=AudioUrlQrCode.encode(url,px(48));audioQr.setContentDescription(getString(bitmap==null?R.string.audio_link_open:R.string.audio_link_qr));if(bitmap!=null){BitmapDrawable drawable=new BitmapDrawable(getResources(),bitmap);drawable.setFilterBitmap(false);audioQr.setImageDrawable(drawable);}else audioQr.setImageDrawable(MusicVisuals.icon("search",MINT));}
+            else{if(audioQr.hasFocus())shuffle.requestFocus();audioQr.setImageDrawable(null);}
+            audioQr.setVisibility(available?View.VISIBLE:View.GONE);
+            scene.move(title,323,394,available?250:316,32);scene.move(artist,331,427,available?242:300,22);
+            shuffle.setNextFocusDownId(available?audioQr.getId():seek.getId());seek.setNextFocusUpId(available?audioQr.getId():shuffle.getId());list.setNextFocusRightId(available?audioQr.getId():toggle.getId());
+        }
+        if(audioDebugError!=null){audioDebugError.setText(error.isEmpty()?"":getString(R.string.playback_error_detail,error));audioDebugError.setVisibility(error.isEmpty()?View.GONE:View.VISIBLE);}
+    }
+    private void showAudioLink(){
+        if(shownAudioUrl.isEmpty()||player==null||player.current()==null)return;dismissAudioLink();
+        Track track=player.current();LinearLayout body=new LinearLayout(this);body.setPadding(px(20),px(12),px(20),px(12));body.setGravity(Gravity.CENTER_VERTICAL);
+        Bitmap bitmap=AudioUrlQrCode.encode(shownAudioUrl,px(230));
+        if(bitmap!=null){ImageView enlarged=new ImageView(this);BitmapDrawable drawable=new BitmapDrawable(getResources(),bitmap);drawable.setFilterBitmap(false);enlarged.setImageDrawable(drawable);enlarged.setScaleType(ImageView.ScaleType.FIT_CENTER);enlarged.setContentDescription(getString(R.string.audio_link_qr));body.addView(enlarged,new LinearLayout.LayoutParams(px(230),px(230)));}
+        ScrollView details=new ScrollView(this);details.setId(View.generateViewId());details.setFocusable(true);details.setOverScrollMode(View.OVER_SCROLL_NEVER);details.setPadding(px(18),0,0,0);
+        LinearLayout fields=column();TextView song=text(track.title,20,TEXT);song.setTypeface(null,Typeface.BOLD);fields.addView(song);fields.addView(text(track.artist,14,MUTED));
+        TextView identity=text(getString(R.string.audio_link_identity,track.id),13,MUTED);identity.setPadding(0,px(12),0,px(8));fields.addView(identity);
+        fields.addView(text(getString(bitmap==null?R.string.audio_link_too_long:R.string.audio_link_hint),13,MINT));
+        TextView address=text(shownAudioUrl,13,TEXT);address.setTypeface(Typeface.MONOSPACE);address.setPadding(0,px(10),0,px(10));fields.addView(address);
+        audioDebugError=text(player.error().isEmpty()?"":getString(R.string.playback_error_detail,player.error()),13,0xffefb7a8);audioDebugError.setVisibility(player.error().isEmpty()?View.GONE:View.VISIBLE);fields.addView(audioDebugError);
+        details.addView(fields,new ScrollView.LayoutParams(-1,-2));body.addView(details,new LinearLayout.LayoutParams(0,px(250),1));
+        audioLinkDialog=new AlertDialog.Builder(this).setTitle(R.string.audio_link_title).setView(body).setPositiveButton(R.string.close,(dialog,which)->dialog.dismiss()).create();
+        audioLinkDialog.setOnDismissListener(dialog->{audioLinkDialog=null;audioDebugError=null;});audioLinkDialog.show();Window window=audioLinkDialog.getWindow();if(window!=null){window.setBackgroundDrawable(shape(INK,12,0xff343c3b,1));window.setLayout(px(760),WindowManager.LayoutParams.WRAP_CONTENT);}
+        details.setNextFocusDownId(android.R.id.button1);
+    }
+    private void dismissAudioLink(){if(audioLinkDialog!=null)audioLinkDialog.dismiss();audioLinkDialog=null;audioDebugError=null;}
     @Override protected void onStart(){super.onStart();visible=true;list.setAdapter(adapter);bound=bindService(new Intent(this,PlaybackService.class),connection,BIND_AUTO_CREATE);main.post(tick);}
     @Override protected void onResume(){super.onResume();rhythm.setPageVisible(true);}
     @Override protected void onPause(){rhythm.setPageVisible(false);super.onPause();}
-    @Override protected void onStop(){visible=false;rhythm.setPageVisible(false);boolean wasSearching=searching;cancelSearch();if(wasSearching)status.setText(R.string.request_cancelled);main.removeCallbacks(tick);list.setAdapter(null);covers.trim();coverKey="";hero.setImageDrawable(MusicVisuals.artwork());if(player!=null)player.listen(null);if(bound)unbindService(connection);bound=false;player=null;super.onStop();}
+    @Override protected void onStop(){visible=false;dismissAudioLink();rhythm.setPageVisible(false);boolean wasSearching=searching;cancelSearch();if(wasSearching)status.setText(R.string.request_cancelled);main.removeCallbacks(tick);list.setAdapter(null);covers.trim();coverKey="";hero.setImageDrawable(MusicVisuals.artwork());if(player!=null)player.listen(null);if(bound)unbindService(connection);bound=false;player=null;super.onStop();}
     @Override protected void onDestroy(){searches.shutdownNow();covers.close();main.removeCallbacksAndMessages(null);super.onDestroy();}
     @Override public void onTrimMemory(int level){super.onTrimMemory(level);if(covers!=null&&level>=TRIM_MEMORY_RUNNING_LOW){covers.trim();coverKey="";}}
     @Override protected void onSaveInstanceState(Bundle state){state.putString("query",query.getText().toString());super.onSaveInstanceState(state);}
@@ -165,6 +201,7 @@ public class MainActivity extends Activity {
         private final Map<View,Rect> frames=new HashMap<>();private final Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG);
         Scene(){super(MainActivity.this);setWillNotDraw(false);setBackgroundColor(INK);}
         void place(View view,int x,int y,int width,int height){frames.put(view,new Rect(x,y,x+width,y+height));addView(view);}
+        void move(View view,int x,int y,int width,int height){frames.put(view,new Rect(x,y,x+width,y+height));requestLayout();}
         @Override protected void onMeasure(int width,int height){int w=MeasureSpec.getSize(width),h=MeasureSpec.getSize(height);setMeasuredDimension(w,h);float unit=Math.min(w/960f,h/540f);for(Map.Entry<View,Rect> entry:frames.entrySet()){Rect f=entry.getValue();entry.getKey().measure(MeasureSpec.makeMeasureSpec(Math.round(f.width()*unit),MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(Math.round(f.height()*unit),MeasureSpec.EXACTLY));}}
         @Override protected void onLayout(boolean changed,int left,int top,int right,int bottom){float unit=Math.min(getWidth()/960f,getHeight()/540f);int dx=Math.round((getWidth()-960*unit)/2),dy=Math.round((getHeight()-540*unit)/2);for(Map.Entry<View,Rect> entry:frames.entrySet()){Rect f=entry.getValue();entry.getKey().layout(dx+Math.round(f.left*unit),dy+Math.round(f.top*unit),dx+Math.round(f.right*unit),dy+Math.round(f.bottom*unit));}}
         @Override protected void onDraw(Canvas canvas){super.onDraw(canvas);paint.setShader(new RadialGradient(getWidth()*.55f,getHeight()*.53f,getWidth()*.38f,0xff192d2c,INK,Shader.TileMode.CLAMP));canvas.drawRect(0,0,getWidth(),getHeight(),paint);paint.setShader(null);}

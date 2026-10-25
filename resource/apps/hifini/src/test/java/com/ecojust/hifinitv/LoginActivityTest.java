@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import java.util.Map;
+import java.time.Duration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -55,6 +56,20 @@ public class LoginActivityTest {
             root.layout(0,0,1920,1080);shadowOf(android.os.Looper.getMainLooper()).idle();
         }
     }
+    private static WebView startAttempt(LoginActivity activity)throws Exception {
+        javax.crypto.SecretKey key=javax.crypto.KeyGenerator.getInstance("AES").generateKey();
+        CredentialStore store=new CredentialStore(activity.getSharedPreferences("login-click-test",0),()->key);
+        java.lang.reflect.Field storeField=LoginActivity.class.getDeclaredField("credentialStore");storeField.setAccessible(true);storeField.set(activity,store);
+        EditText username=field(activity,"username"),password=field(activity,"password");username.setText("fixture-user");password.setText("fixture-password");
+        text(activity.getWindow().getDecorView(),activity.getString(R.string.hifini_remember)).performClick();
+        assertEquals("fixture-user",store.load().username);return field(activity,"browser");
+    }
+    private static void pageReady(WebView browser) {
+        browser.getWebViewClient().onPageStarted(browser,HifiniSession.LOGIN,null);
+        browser.getWebViewClient().onPageFinished(browser,HifiniSession.LOGIN);
+    }
+    private static void reply(WebView browser,String state) { shadowOf(browser).getLastEvaluatedJavascriptCallback().onReceiveValue("\""+state+"\""); }
+    private static void advance(long milliseconds) { shadowOf(android.os.Looper.getMainLooper()).idleFor(Duration.ofMillis(milliseconds)); }
     @Test public void loginUsesOfficialPageAndHardenedWebViewWithoutAJavaScriptBridge() throws Exception {
         try(ActivityController<LoginActivity> controller=Robolectric.buildActivity(LoginActivity.class).setup()) {
             LoginActivity a=controller.get(); WebView web=find(a.getWindow().getDecorView(),WebView.class); assertNotNull(web);
@@ -64,6 +79,10 @@ public class LoginActivityTest {
             assertEquals(WebSettings.MIXED_CONTENT_NEVER_ALLOW,settings.getMixedContentMode());
             assertFalse(settings.getJavaScriptCanOpenWindowsAutomatically()); assertFalse(settings.getSaveFormData());
             assertEquals(View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS, web.getImportantForAutofill());
+            assertEquals(View.INVISIBLE,web.getVisibility());assertFalse(web.isShown());assertFalse(web.isFocusable());
+            assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS,web.getImportantForAccessibility());
+            for(int label:new int[]{R.string.hifini_web_back,R.string.hifini_web_reload,R.string.hifini_open_login,R.string.hifini_login_done})
+                assertNull(text(a.getWindow().getDecorView(),a.getString(label)));
             assertNull(shadowOf(web).getJavascriptInterface("Android"));
             assertFalse(a.getPackageManager().getActivityInfo(new ComponentName(a,LoginActivity.class),0).exported);
             assertEquals(0,a.getApplicationInfo().flags&ApplicationInfo.FLAG_ALLOW_BACKUP);
@@ -112,31 +131,66 @@ public class LoginActivityTest {
             if(capture!=null){java.io.File directory=new java.io.File(capture);directory.mkdirs();android.graphics.Bitmap preview=android.graphics.Bitmap.createBitmap(1920,1080,android.graphics.Bitmap.Config.ARGB_8888);root.draw(new android.graphics.Canvas(preview));try(java.io.FileOutputStream output=new java.io.FileOutputStream(new java.io.File(directory,"hifini-login-native-en.png"))){preview.compress(android.graphics.Bitmap.CompressFormat.PNG,100,output);}preview.recycle();}
         }
     }
-    @Test public void nativeLoginSubmitsOnceButRestoringTheOfficialPageOnlyFills() throws Exception {
+    @Test public void explicitLoginWaitsForTheFormSubmitsOnceAndShowsSuccessFor1500ms() throws Exception {
         try(ActivityController<LoginActivity> controller=Robolectric.buildActivity(LoginActivity.class).setup()) {
-            LoginActivity a=controller.get();javax.crypto.SecretKey key=javax.crypto.KeyGenerator.getInstance("AES").generateKey();
-            CredentialStore store=new CredentialStore(a.getSharedPreferences("login-click-test",0),()->key);
-            java.lang.reflect.Field storeField=LoginActivity.class.getDeclaredField("credentialStore");storeField.setAccessible(true);storeField.set(a,store);
-            EditText username=field(a,"username"),password=field(a,"password");username.setText("fixture-user");password.setText("fixture-password");
-            WebView browser=field(a,"browser");text(a.getWindow().getDecorView(),a.getString(R.string.hifini_remember)).performClick();
-            assertEquals("fixture-user",store.load().username);assertTrue(shadowOf(browser).getLastEvaluatedJavascript().endsWith("})(true)"));
+            LoginActivity a=controller.get();WebView browser=startAttempt(a);assertNull(shadowOf(browser).getLastEvaluatedJavascript());
+            pageReady(browser);assertEquals(LoginAutofill.stateScript(),shadowOf(browser).getLastEvaluatedJavascript());reply(browser,"ready");
+            assertTrue(shadowOf(browser).getLastEvaluatedJavascript().endsWith("})(true)"));reply(browser,"submitted");
             assertFalse((Boolean)field(a,"pendingLogin"));assertFalse(a.isFinishing());
-            browser.getWebViewClient().onPageStarted(browser,HifiniSession.LOGIN,null);browser.getWebViewClient().onPageFinished(browser,HifiniSession.LOGIN);
-            shadowOf(browser).getLastEvaluatedJavascriptCallback().onReceiveValue("false");
-            assertTrue(shadowOf(browser).getLastEvaluatedJavascript().endsWith("})(false)"));assertFalse(a.isFinishing());
-            browser.getWebViewClient().onPageFinished(browser,HifiniSession.LOGIN);shadowOf(browser).getLastEvaluatedJavascriptCallback().onReceiveValue("true");
-            assertTrue(a.isFinishing());
+            advance(500);assertEquals(LoginAutofill.stateScript(),shadowOf(browser).getLastEvaluatedJavascript());reply(browser,"ready");
+            assertEquals(LoginAutofill.stateScript(),shadowOf(browser).getLastEvaluatedJavascript());
+            advance(500);reply(browser,"authenticated");
+            TextView status=field(a,"status");assertEquals(a.getString(R.string.hifini_login_success),status.getText().toString());
+            assertFalse(a.isFinishing());advance(1499);assertFalse(a.isFinishing());advance(1);assertTrue(a.isFinishing());
         }
     }
     @Test public void anExistingSessionKeepsAccountControlsOpenWithoutANewNativeLoginAttempt() throws Exception {
         try(ActivityController<LoginActivity> controller=Robolectric.buildActivity(LoginActivity.class).setup()) {
             LoginActivity a=controller.get();WebView browser=field(a,"browser");
             HifiniSession.acceptCookies(HifiniSession.HOME,java.util.List.of("fixture=present; Path=/"));assertFalse(a.isFinishing());
-            browser.getWebViewClient().onPageFinished(browser,HifiniSession.LOGIN);shadowOf(browser).getLastEvaluatedJavascriptCallback().onReceiveValue("false");assertFalse(a.isFinishing());
-            browser.getWebViewClient().onPageFinished(browser,HifiniSession.LOGIN);shadowOf(browser).getLastEvaluatedJavascriptCallback().onReceiveValue("true");assertFalse(a.isFinishing());
-            TextView feedback=field(a,"accountStatus");assertEquals(a.getString(R.string.hifini_signed_in),feedback.getText().toString());
+            pageReady(browser);reply(browser,"ready");assertFalse(a.isFinishing());
+            pageReady(browser);reply(browser,"authenticated");assertFalse(a.isFinishing());advance(1500);assertFalse(a.isFinishing());
+            TextView feedback=field(a,"status");assertEquals(a.getString(R.string.hifini_signed_in),feedback.getText().toString());
             assertNotNull(text(a.getWindow().getDecorView(),a.getString(R.string.hifini_sign_out)));
             assertNotNull(text(a.getWindow().getDecorView(),a.getString(R.string.hifini_forget)));
         }
+    }
+    @Test public void explicitLoginCanReuseAConfirmedSessionWithoutSubmittingCredentials() throws Exception {
+        try(ActivityController<LoginActivity> controller=Robolectric.buildActivity(LoginActivity.class).setup()) {
+            LoginActivity a=controller.get();WebView browser=startAttempt(a);pageReady(browser);reply(browser,"authenticated");
+            assertEquals(LoginAutofill.stateScript(),shadowOf(browser).getLastEvaluatedJavascript());assertFalse(a.isFinishing());
+            advance(1500);assertTrue(a.isFinishing());
+        }
+    }
+    @Test public void rejectedAndVerificationResponsesRestoreTheButtonAndNeverExit() throws Exception {
+        for(String state:new String[]{"rejected","verification"})try(ActivityController<LoginActivity> controller=Robolectric.buildActivity(LoginActivity.class).setup()) {
+            LoginActivity a=controller.get();WebView browser=startAttempt(a);pageReady(browser);reply(browser,"ready");reply(browser,"submitted");advance(500);
+            android.webkit.ValueCallback<String> late=shadowOf(browser).getLastEvaluatedJavascriptCallback();reply(browser,state);
+            TextView feedback=field(a,"status");assertEquals(a.getString(state.equals("verification")?R.string.hifini_login_verification:R.string.hifini_login_rejected),feedback.getText().toString());
+            assertTrue(text(a.getWindow().getDecorView(),a.getString(R.string.hifini_remember)).isEnabled());
+            late.onReceiveValue("\"authenticated\"");advance(30000);assertFalse(a.isFinishing());
+        }
+    }
+    @Test public void unsupportedSubmissionAndAStalledPageReturnUsableNativeErrors() throws Exception {
+        try(ActivityController<LoginActivity> controller=Robolectric.buildActivity(LoginActivity.class).setup()) {
+            LoginActivity a=controller.get();WebView browser=startAttempt(a);pageReady(browser);reply(browser,"ready");reply(browser,"filled");
+            TextView feedback=field(a,"status");assertEquals(a.getString(R.string.hifini_login_unsupported),feedback.getText().toString());assertFalse(a.isFinishing());
+            startAttempt(a);advance(29999);assertFalse(text(a.getWindow().getDecorView(),a.getString(R.string.hifini_remember)).isEnabled());
+            advance(1);assertTrue(text(a.getWindow().getDecorView(),a.getString(R.string.hifini_remember)).isEnabled());
+            assertEquals(a.getString(R.string.hifini_login_timeout),feedback.getText().toString());assertFalse(a.isFinishing());
+        }
+    }
+    @Test public void leavingTheScreenCancelsSuccessDelayAndStaleJavascriptCallbacks() throws Exception {
+        try(ActivityController<LoginActivity> controller=Robolectric.buildActivity(LoginActivity.class).setup()) {
+            LoginActivity a=controller.get();WebView browser=startAttempt(a);pageReady(browser);
+            android.webkit.ValueCallback<String> stale=shadowOf(browser).getLastEvaluatedJavascriptCallback();controller.pause();stale.onReceiveValue("\"authenticated\"");advance(1500);assertFalse(a.isFinishing());
+            controller.resume();browser=startAttempt(a);pageReady(browser);reply(browser,"authenticated");advance(1000);controller.pause();advance(1000);assertFalse(a.isFinishing());
+            controller.resume();advance(2000);assertFalse(a.isFinishing());
+        }
+    }
+    @Test public void siteAlertsNeverTreatSuccessOrUnknownTextAsLoginFailureOrAuthentication() {
+        assertEquals(0,LoginActivity.alertFailure("登录成功"));assertEquals(0,LoginActivity.alertFailure("Welcome back"));
+        assertEquals(R.string.hifini_login_rejected,LoginActivity.alertFailure("账号或密码错误"));
+        assertEquals(R.string.hifini_login_verification,LoginActivity.alertFailure("请先完成验证码"));
     }
 }
