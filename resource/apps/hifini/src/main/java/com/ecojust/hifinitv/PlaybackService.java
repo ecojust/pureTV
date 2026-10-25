@@ -12,7 +12,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -20,14 +19,18 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Locale;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/** One native decoder, bounded resolving work, native audio focus and foreground media controls. */
+/** Resolve, download into bounded private cache, then decode a local file with native media controls. */
 public class PlaybackService extends Service {
     private static final String CHANNEL = "music_playback", START = "start", TOGGLE = "toggle", NEXT = "next", PREVIOUS = "previous", STOP = "stop";
     private static final int NOTIFICATION = 11;
@@ -39,16 +42,21 @@ public class PlaybackService extends Service {
     private final List<Track> queue = new ArrayList<>();
     static final int QUEUE_LIMIT = 50;
     private boolean refreshedSource;
-    private long resumePosition;
     private MediaPlayer player;
     private MediaSession session;
     private AudioManager audio;
     private AudioFocusRequest focus;
-    private Future<?> pending;
-    private int index = -1, generation;
-    private boolean prepared, loading, destroyed, resumeAfterFocus;
+    private Future<?> pending, downloadPending;
+    private AudioDownloader downloader;
+    private File currentAudioFile;
+    private final Object filesLock = new Object();
+    private final Set<File> completedDownloads = new HashSet<>();
+    private int index = -1;
+    private volatile int generation, downloadAttempt;
+    private volatile boolean destroyed;
+    private boolean prepared, loading, resumeAfterFocus;
     private String error = "", attemptedAudioUrl = "";
-    private Runnable listener, prepareTimeout, resolveTimeout;
+    private Runnable listener, prepareTimeout, resolveTimeout, downloadTimeout;
     private final PlaybackOrder order = new PlaybackOrder();
     private List<String> sources = new ArrayList<>();
     private int sourceIndex;
@@ -57,6 +65,7 @@ public class PlaybackService extends Service {
 
     @Override public void onCreate() {
         super.onCreate();
+        AudioDownloader.cleanCache(getCacheDir());
         // Playback queues and temporary media links stay in this session only.
         order.shuffle(getSharedPreferences("music_playback", 0).getBoolean("shuffle", true));
         audio = (AudioManager) getSystemService(AUDIO_SERVICE);
@@ -128,7 +137,7 @@ public class PlaybackService extends Service {
         for (int i = 0; i < queue.size(); i++) if (queue.get(i).id.equals(selected)) { play(i); return; }
     }
     String error() { return error; }
-    /** Last URL actually handed to the decoder; kept after failure for on-screen diagnostics only. */
+    /** Last remote download URL; never exposes the private local playback path. */
     String audioUrl() { return attemptedAudioUrl; }
     boolean playing() { try { return player != null && prepared && player.isPlaying(); } catch (IllegalStateException ignored) { return false; } }
     long position() { try { return player != null && prepared ? Math.max(0, player.getCurrentPosition()) : 0; } catch (IllegalStateException ignored) { return 0; } }
@@ -146,11 +155,11 @@ public class PlaybackService extends Service {
     }
     void play(int position) {
         if (position < 0 || position >= queue.size() || destroyed) return;
-        cancelResolve(); releasePlayer();
+        cancelResolve(); releasePlayer(); clearAudioFile();
         index = position; order.record(index, queue.size()); error = ""; attemptedAudioUrl = ""; loading = true; resumeAfterFocus = false;
-        refreshedSource = false; resumePosition = 0; sources = new ArrayList<>();
+        refreshedSource = false; sources = new ArrayList<>();
         stage = getString(R.string.fetch_detail);
-        loadDeadline = SystemClock.elapsedRealtime() + 45000;
+        loadDeadline = SystemClock.elapsedRealtime() + 120000;
         startForegroundService(new Intent(this, PlaybackService.class).setAction(START));
         startForeground(NOTIFICATION, notification());
         changed();
@@ -179,7 +188,7 @@ public class PlaybackService extends Service {
                         resolveTimeout = null;
                         queue.set(index, resolved.track);
                         sources = new ArrayList<>(resolved.audioUrls); sourceIndex = 0;
-                        prepare(sources.get(0), ticket);
+                        downloadSource(sources.get(0), ticket);
                     }
                 });
             } catch (Exception e) {
@@ -191,37 +200,111 @@ public class PlaybackService extends Service {
     HifiniApi.Resolved resolveTrack(Track track, java.util.function.Consumer<String> progress) throws java.io.IOException {
         return HifiniApi.get().resolve(track, progress);
     }
-    private void retrySource(int ticket, String message, boolean mayRefresh) {
+    private void retryDownload(int ticket, String message, boolean mayRefresh) {
         if (ticket != generation || destroyed) return;
-        if (!loading) { resumePosition = position(); loadDeadline = SystemClock.elapsedRealtime() + 45000; }
         if (sourceIndex + 1 < sources.size() && SystemClock.elapsedRealtime() < loadDeadline) {
-            prepare(sources.get(++sourceIndex), ticket);
+            downloadSource(sources.get(++sourceIndex), ticket);
         } else if (mayRefresh && !refreshedSource && SystemClock.elapsedRealtime() < loadDeadline) {
-            // The thread is stable but its media URL may expire. Refresh once, never reuse it from disk.
-            refreshedSource = true; releasePlayer(); loading = true;
+            // A signed media URL may have expired. Refresh only once after a download failure.
+            refreshedSource = true; cancelDownload(); releasePlayer(); clearAudioFile(); loading = true;
             stage = getString(R.string.refreshing_audio); changed(); resolveCurrent(ticket);
         } else fail(message);
     }
-    private void prepare(String source, int ticket) {
-        releasePlayer(); loading = true;
-        stage = getString(R.string.connecting_audio, sourceIndex + 1, sources.size());
+    private void downloadSource(String source, int ticket) {
+        if (destroyed || ticket != generation) return;
+        cancelDownload(); releasePlayer(); clearAudioFile(); loading = true;
+        attemptedAudioUrl = source; stage = getString(R.string.download_start); changed();
+        long remaining = loadDeadline - SystemClock.elapsedRealtime();
+        if (remaining <= 0) { fail(getString(R.string.download_timeout)); return; }
+        final int attempt = downloadAttempt;
+        final AudioDownloader transfer = new AudioDownloader(getCacheDir());
+        final String referer = current().pageUrl();
+        downloader = transfer;
+        downloadTimeout = () -> {
+            if (activeDownload(ticket, attempt)) retryDownload(ticket, getString(R.string.download_timeout), false);
+        };
+        main.postDelayed(downloadTimeout, Math.min(90000, remaining));
+        try { downloadPending = resolver.submit(() -> {
+            try {
+                File file = downloadAudio(transfer, source, referer, progress -> main.post(() -> {
+                    if (!activeDownload(ticket, attempt) || downloader != transfer || !loading) return;
+                    stage = progress.total > 0
+                            ? getString(R.string.download_progress_percent, (int)Math.min(100, progress.downloaded * 100 / progress.total))
+                            : getString(R.string.download_progress_size, readableBytes(progress.downloaded));
+                    changed();
+                }));
+                if (file == null || !file.isFile() || file.length() == 0) { deleteFile(file); throw new IOException("No completed audio file"); }
+                synchronized (filesLock) {
+                    if (!activeDownload(ticket, attempt)) { deleteFile(file); return; }
+                    completedDownloads.add(file);
+                }
+                main.post(() -> {
+                    synchronized (filesLock) { completedDownloads.remove(file); }
+                    if (!activeDownload(ticket, attempt)) { deleteFile(file); return; }
+                    if (downloadTimeout != null) main.removeCallbacks(downloadTimeout);
+                    downloadTimeout = null; downloadPending = null; downloader = null;
+                    prepareLocal(file, ticket);
+                });
+            } catch (Exception failure) {
+                String message = downloadFailure(failure);
+                main.post(() -> {
+                    if (!activeDownload(ticket, attempt)) return;
+                    // Logout changes the request epoch. Cancellation must never continue on a backup URL.
+                    if (failure instanceof AudioDownloader.DownloadException
+                            && ((AudioDownloader.DownloadException)failure).failure == AudioDownloader.Failure.CANCELLED) fail(message);
+                    else retryDownload(ticket, message, retryableDownload(failure));
+                });
+            } finally { transfer.close(); }
+        }); } catch (java.util.concurrent.RejectedExecutionException busy) { transfer.close(); fail(getString(R.string.request_busy)); }
+    }
+    File downloadAudio(AudioDownloader transfer, String source, String referer,
+            java.util.function.Consumer<AudioDownloader.Progress> progress) throws IOException {
+        return transfer.download(source, referer, progress);
+    }
+    private boolean activeDownload(int ticket, int attempt) {
+        return !destroyed && ticket == generation && attempt == downloadAttempt;
+    }
+    private static String readableBytes(long bytes) {
+        return bytes >= 1024 * 1024 ? String.format(Locale.ROOT, "%.1f MB", bytes / (1024d * 1024))
+                : String.format(Locale.ROOT, "%d KB", Math.max(0, bytes) / 1024);
+    }
+    private String downloadFailure(Exception failure) {
+        String detail;
+        if (failure instanceof AudioDownloader.DownloadException) {
+            AudioDownloader.DownloadException download = (AudioDownloader.DownloadException)failure;
+            switch (download.failure) {
+                case TIMEOUT: detail = getString(R.string.download_timeout); break;
+                case TOO_LARGE: detail = getString(R.string.audio_download_too_large); break;
+                case LOGIN_REQUIRED: detail = getString(R.string.source_login_required); break;
+                case HTTP_STATUS: detail = getString(R.string.source_unavailable, download.statusCode); break;
+                case INVALID_AUDIO: detail = getString(R.string.audio_download_invalid); break;
+                case UNSUPPORTED_URL: detail = getString(R.string.unsupported_link); break;
+                case CANCELLED: detail = getString(R.string.playback_cancelled); break;
+                default: detail = getString(R.string.audio_download_failed); break;
+            }
+        } else detail = MusicError.display(this, failure);
+        return getString(R.string.download_failed_detail, detail);
+    }
+    private static boolean retryableDownload(Exception failure) {
+        if (!(failure instanceof AudioDownloader.DownloadException)) return failure instanceof IOException;
+        AudioDownloader.Failure kind = ((AudioDownloader.DownloadException)failure).failure;
+        return kind == AudioDownloader.Failure.HTTP_STATUS || kind == AudioDownloader.Failure.TIMEOUT;
+    }
+    private void prepareLocal(File file, int ticket) {
+        releasePlayer(); clearAudioFile(); currentAudioFile = file; loading = true;
+        stage = getString(R.string.preparing_audio); changed();
         try {
             player = new MediaPlayer();
             player.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build());
             player.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
-            HashMap<String, String> headers = new HashMap<>();
-            headers.put("Referer", current().pageUrl());
-            headers.put("User-Agent", HifiniApi.AGENT);
-            attemptedAudioUrl = source;
-            changed();
-            player.setDataSource(this, Uri.parse(source), headers);
+            // URL suffixes and streaming-server quirks no longer reach the system decoder.
+            player.setDataSource(file.getAbsolutePath());
             player.setOnPreparedListener(value -> {
                 if (destroyed || ticket != generation || value != player) return;
                 prepared = true; loading = false;
                 if (prepareTimeout != null) main.removeCallbacks(prepareTimeout);
-                if (resumePosition > 0) { seek(resumePosition); resumePosition = 0; }
-                resume();
+                prepareTimeout = null; resume();
             });
             player.setOnCompletionListener(value -> {
                 if (ticket != generation || value != player) return;
@@ -229,13 +312,15 @@ public class PlaybackService extends Service {
                 else { pause(false); seek(0); }
             });
             player.setOnErrorListener((value, what, extra) -> {
-                if (ticket == generation && value == player) retrySource(ticket, getString(R.string.decoder_error, what, extra), true);
+                if (ticket == generation && value == player) fail(getString(R.string.decoder_error, what, extra));
                 return true;
             });
             player.prepareAsync();
-            prepareTimeout = () -> { if (ticket == generation && loading) retrySource(ticket, getString(R.string.connect_timeout), false); };
+            prepareTimeout = () -> {
+                if (ticket == generation && loading) fail(getString(R.string.local_prepare_timeout));
+            };
             main.postDelayed(prepareTimeout, Math.max(1, Math.min(10000, loadDeadline - SystemClock.elapsedRealtime())));
-        } catch (Exception e) { retrySource(ticket, getString(R.string.playback_error_detail, nativeFailureDetail(e)), true); }
+        } catch (Exception failure) { fail(getString(R.string.playback_error_detail, nativeFailureDetail(failure))); }
     }
     private String nativeFailureDetail(Exception error) {
         // Native setDataSource errors often carry a useful status code. Do not display arbitrary
@@ -261,7 +346,7 @@ public class PlaybackService extends Service {
         startForeground(NOTIFICATION, notification()); changed();
     }
     void pause(boolean transientLoss) {
-        if (loading) { cancelResolve(); releasePlayer(); loading = false; }
+        if (loading) { cancelResolve(); releasePlayer(); clearAudioFile(); loading = false; }
         if (playing()) player.pause();
         if (!transientLoss) {
             resumeAfterFocus = false; audio.abandonAudioFocusRequest(focus);
@@ -283,12 +368,33 @@ public class PlaybackService extends Service {
     void clearQueue() {
         attemptedAudioUrl = ""; stopPlayback(); queue.clear(); order.clear(); index = -1; changed();
     }
-    private void fail(String message) { error = message; loading = false; cancelResolve(); releasePlayer(); audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); changed(); }
+    private void fail(String message) { error = message; loading = false; cancelResolve(); releasePlayer(); clearAudioFile(); audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); changed(); }
     private void stopPlayback() {
-        cancelResolve(); loading = false; releasePlayer(); resumeAfterFocus = false;
+        cancelResolve(); loading = false; releasePlayer(); clearAudioFile(); resumeAfterFocus = false;
         audio.abandonAudioFocusRequest(focus); stopForeground(STOP_FOREGROUND_REMOVE); stopSelf(); changed();
     }
-    private void cancelResolve() { if (resolveTimeout != null) main.removeCallbacks(resolveTimeout); resolveTimeout = null; generation++; if (pending != null) pending.cancel(true); pending = null; resolver.purge(); }
+    private void cancelResolve() {
+        if (resolveTimeout != null) main.removeCallbacks(resolveTimeout);
+        resolveTimeout = null; generation++;
+        if (pending != null) pending.cancel(true);
+        pending = null; cancelDownload(); resolver.purge();
+    }
+    private void cancelDownload() {
+        downloadAttempt++;
+        if (downloadTimeout != null) main.removeCallbacks(downloadTimeout);
+        downloadTimeout = null;
+        if (downloader != null) downloader.cancel();
+        downloader = null;
+        if (downloadPending != null) downloadPending.cancel(true);
+        downloadPending = null;
+        synchronized (filesLock) {
+            for (File file : completedDownloads) deleteFile(file);
+            completedDownloads.clear();
+        }
+        resolver.purge();
+    }
+    private void clearAudioFile() { deleteFile(currentAudioFile); currentAudioFile = null; }
+    private static void deleteFile(File file) { if (file != null) file.delete(); }
     private void releasePlayer() { if (prepareTimeout != null) main.removeCallbacks(prepareTimeout); prepareTimeout = null; prepared = false; if (player != null) { player.release(); player = null; } }
     private void changed() { updateState(); if (listener != null) listener.run(); }
     private void updateState() {
@@ -324,7 +430,7 @@ public class PlaybackService extends Service {
     @Override public void onTaskRemoved(Intent rootIntent) { stopPlayback(); super.onTaskRemoved(rootIntent); }
     @Override public void onDestroy() {
         destroyed = true; listener = null; cancelResolve(); resolver.shutdownNow(); main.removeCallbacksAndMessages(null);
-        releasePlayer(); if (audio != null) audio.abandonAudioFocusRequest(focus);
+        releasePlayer(); clearAudioFile(); if (audio != null) audio.abandonAudioFocusRequest(focus);
         if (session != null) { session.setActive(false); session.release(); }
         super.onDestroy();
     }

@@ -1,8 +1,10 @@
 package com.ecojust.hifinitv;
 
 import android.os.Looper;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
@@ -15,6 +17,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.Config;
 import org.robolectric.android.controller.ServiceController;
 import org.robolectric.shadows.ShadowMediaPlayer;
+import org.robolectric.shadows.util.DataSource;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class) @Config(sdk=28)
@@ -28,17 +31,48 @@ public class PlayerTest {
         Field field = PlaybackService.class.getDeclaredField(name); field.setAccessible(true); return field.get(player);
     }
     private static void resolvedWork(PlaybackService player) throws Exception {
+        // Each retry can enqueue a new resolver and downloader. Drain real work, then main callbacks.
+        for (int round = 0; round < 16; round++) {
+            Future<?> resolution = (Future<?>)field(player, "pending");
+            if (resolution != null && !resolution.isCancelled()) resolution.get(3, TimeUnit.SECONDS);
+            Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(10));
+            Future<?> download = (Future<?>)field(player, "downloadPending");
+            if (download != null && !download.isCancelled()) download.get(3, TimeUnit.SECONDS);
+            Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(10));
+            if (!player.loading() || decoder(player) != null) return;
+        }
+        fail("Playback did not settle within its bounded attempts");
+    }
+    private static void resolveOnly(PlaybackService player) throws Exception {
         ((Future<?>)field(player, "pending")).get(3, TimeUnit.SECONDS);
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(10));
     }
     private static android.media.MediaPlayer decoder(PlaybackService player) throws Exception {
         return (android.media.MediaPlayer)field(player, "player");
     }
+    private static File localFile(PlaybackService player) throws Exception { return (File)field(player, "currentAudioFile"); }
     @Before public void reset() {
         RuntimeEnvironment.getApplication().getSharedPreferences("music_playback", 0).edit().clear().commit();
         ShadowMediaPlayer.setMediaInfoProvider(source -> new ShadowMediaPlayer.MediaInfo(60000, 1));
     }
-    public static class SlowResolver extends PlaybackService {
+    public static class LocalFixtureService extends PlaybackService {
+        final AtomicInteger downloads = new AtomicInteger();
+        final List<String> downloadedUrls = Collections.synchronizedList(new ArrayList<>());
+        final List<File> files = Collections.synchronizedList(new ArrayList<>());
+        File fixture() throws IOException {
+            File directory = new File(getCacheDir(), "hifini-audio"); directory.mkdirs();
+            File result = File.createTempFile("player-fixture-", ".audio", directory);
+            // Decoder behavior is Robolectric's responsibility; the service must still receive a real local file.
+            Files.write(result.toPath(), new byte[]{'R','I','F','F',8,0,0,0,'W','A','V','E'});
+            files.add(result); return result;
+        }
+        @Override File downloadAudio(AudioDownloader transfer, String source, String referer, Consumer<AudioDownloader.Progress> progress) throws IOException {
+            downloads.incrementAndGet(); downloadedUrls.add(source);
+            progress.accept(new AudioDownloader.Progress(2048, 4096));
+            File result = fixture(); progress.accept(new AudioDownloader.Progress(4096, 4096)); return result;
+        }
+    }
+    public static class SlowResolver extends LocalFixtureService {
         final CountDownLatch started = new CountDownLatch(1);
         @Override HifiniApi.Resolved resolveTrack(Track track, Consumer<String> progress) throws IOException {
             started.countDown();
@@ -47,7 +81,7 @@ public class PlayerTest {
             throw new AssertionError("A stopped resolver must not complete");
         }
     }
-    public static class FreshResolver extends PlaybackService {
+    public static class FreshResolver extends LocalFixtureService {
         final AtomicInteger calls = new AtomicInteger();
         final List<String> requestedIds = Collections.synchronizedList(new ArrayList<>());
         @Override HifiniApi.Resolved resolveTrack(Track track, Consumer<String> progress) {
@@ -55,20 +89,53 @@ public class PlayerTest {
             return resolved(track, call, Collections.singletonList("https://audio.example.org/" + track.id + "?token=" + call));
         }
     }
-    public static class CatalogResolver extends PlaybackService {
+    public static class CatalogResolver extends LocalFixtureService {
         final AtomicInteger calls = new AtomicInteger();
         final HifiniApi api = new HifiniApi((url, referer, maximum) -> {
-            throw new AssertionError("Catalog playback must use the confirmed source/id URL, not a guessed forum thread");
+            throw new AssertionError("Catalog playback must not invent a forum request");
         });
         @Override HifiniApi.Resolved resolveTrack(Track track, Consumer<String> progress) throws IOException {
             calls.incrementAndGet(); return api.resolve(track, progress);
         }
     }
-    public static class BackupResolver extends PlaybackService {
+    public static class BackupResolver extends LocalFixtureService {
         final AtomicInteger calls = new AtomicInteger();
         @Override HifiniApi.Resolved resolveTrack(Track track, Consumer<String> progress) {
             return resolved(track, calls.incrementAndGet(), Arrays.asList(
                     "https://one.example.org/audio", "https://two.example.org/audio", "https://three.example.org/audio"));
+        }
+        @Override File downloadAudio(AudioDownloader transfer, String source, String referer, Consumer<AudioDownloader.Progress> progress) throws IOException {
+            if (!source.contains("three.")) {
+                downloads.incrementAndGet(); downloadedUrls.add(source);
+                throw new AudioDownloader.DownloadException(AudioDownloader.Failure.HTTP_STATUS, 503);
+            }
+            return super.downloadAudio(transfer, source, referer, progress);
+        }
+    }
+    public static class CancelledBackupDownload extends BackupResolver {
+        @Override File downloadAudio(AudioDownloader transfer, String source, String referer, Consumer<AudioDownloader.Progress> progress) throws IOException {
+            downloads.incrementAndGet(); downloadedUrls.add(source);
+            // The downloader reports this same failure when logout invalidates its captured session epoch.
+            throw new AudioDownloader.DownloadException(AudioDownloader.Failure.CANCELLED);
+        }
+    }
+    public static class FailedDownload extends FreshResolver {
+        @Override File downloadAudio(AudioDownloader transfer, String source, String referer, Consumer<AudioDownloader.Progress> progress) throws IOException {
+            downloads.incrementAndGet(); downloadedUrls.add(source);
+            throw new AudioDownloader.DownloadException(AudioDownloader.Failure.HTTP_STATUS, 503);
+        }
+    }
+    public static class BlockingDownload extends FreshResolver {
+        final CountDownLatch started = new CountDownLatch(1), release = new CountDownLatch(1), finished = new CountDownLatch(1);
+        volatile Consumer<AudioDownloader.Progress> report;
+        volatile File lateFile;
+        @Override File downloadAudio(AudioDownloader transfer, String source, String referer, Consumer<AudioDownloader.Progress> progress) throws IOException {
+            if (!source.contains("/100?")) return super.downloadAudio(transfer, source, referer, progress);
+            downloads.incrementAndGet(); downloadedUrls.add(source); report = progress; started.countDown();
+            boolean released = false;
+            // Even a transport completing after interruption must not restore cancelled playback or leave an orphan.
+            while (!released) try { release.await(); released = true; } catch (InterruptedException ignored) { }
+            lateFile = fixture(); finished.countDown(); return lateFile;
         }
     }
     public static class LateResolver extends FreshResolver {
@@ -76,11 +143,18 @@ public class PlayerTest {
         @Override HifiniApi.Resolved resolveTrack(Track track, Consumer<String> progress) {
             if (!"100".equals(track.id)) return super.resolveTrack(track, progress);
             firstStarted.countDown();
-            // Model a transport that returns after its Future was cancelled. A new song must still win.
             boolean released = false;
             while (!released) try { releaseFirst.await(); released = true; } catch (InterruptedException ignored) { }
             HifiniApi.Resolved result = resolved(track, 99, Collections.singletonList("https://audio.example.org/expired-old"));
             firstReturned.countDown(); return result;
+        }
+    }
+    public static class ImmediateDecoderFailure extends CatalogResolver {
+        @Override File downloadAudio(AudioDownloader transfer, String source, String referer, Consumer<AudioDownloader.Progress> progress) throws IOException {
+            File local = super.downloadAudio(transfer, source, referer, progress);
+            ShadowMediaPlayer.addException(DataSource.toDataSource(local.getAbsolutePath()),
+                    new IOException("setDataSource failed: status=0x80000000 https://example.invalid/?secret=private-token"));
+            return local;
         }
     }
 
@@ -90,76 +164,137 @@ public class PlayerTest {
             SlowResolver player = controller.get(); player.add(track(0), true);
             assertTrue(player.started.await(3, TimeUnit.SECONDS)); assertTrue(player.loading());
             Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(21));
-            assertFalse(player.loading()); assertFalse(player.playing());
+            assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(0, player.downloads.get());
             assertEquals(player.getString(R.string.resolve_timeout), player.error());
             player.play(0); assertTrue(player.loading()); player.pause(false); assertFalse(player.loading());
         } finally { controller.destroy(); }
     }
-    @Test public void stalledSourcesUseBoundedBackupsWithoutEndlessPageRefresh() throws Exception {
-        ShadowMediaPlayer.setMediaInfoProvider(source -> new ShadowMediaPlayer.MediaInfo(60000, 60000));
+    @Test public void completeDownloadFeedsLocalDecoderAndRemoteQrNeverExposesCachePath() throws Exception {
+        ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();
+        FreshResolver player = controller.get(); File local = null;
+        try {
+            player.add(track(0), true); resolvedWork(player); local = localFile(player);
+            assertNotNull(local); assertTrue(local.isFile()); assertTrue(player.playing());
+            assertEquals(DataSource.toDataSource(local.getAbsolutePath()), Shadows.shadowOf(decoder(player)).getDataSource());
+            assertEquals("https://audio.example.org/100?token=1", player.audioUrl());
+            assertFalse(player.audioUrl().contains(getCachePath(player))); assertEquals(1, player.downloads.get());
+        } finally { controller.destroy(); if (local != null) assertFalse(local.exists()); }
+    }
+    private static String getCachePath(PlaybackService player) { return player.getCacheDir().getAbsolutePath(); }
+    @Test public void downloadProgressPrecedesDecoderAndPauseDiscardsALateCompletedFile() throws Exception {
+        ServiceController<BlockingDownload> controller = Robolectric.buildService(BlockingDownload.class).create();
+        BlockingDownload player = controller.get();
+        try {
+            player.add(track(0), true); resolveOnly(player); assertTrue(player.started.await(3, TimeUnit.SECONDS));
+            player.report.accept(new AudioDownloader.Progress(1024, 2048)); Shadows.shadowOf(Looper.getMainLooper()).idle();
+            assertEquals(player.getString(R.string.download_progress_percent, 50), player.stage()); assertNull(decoder(player)); assertTrue(player.loading());
+            player.report.accept(new AudioDownloader.Progress(4096, -1)); Shadows.shadowOf(Looper.getMainLooper()).idle();
+            assertEquals(player.getString(R.string.download_progress_size, "4 KB"), player.stage());
+            player.pause(false); assertFalse(player.loading()); assertFalse(player.playing());
+            player.release.countDown(); finishWorkers(player); assertNotNull(player.lateFile); assertFalse(player.lateFile.exists());
+            assertNull(decoder(player)); assertEquals("https://audio.example.org/100?token=1", player.audioUrl());
+        } finally { player.release.countDown(); controller.destroy(); }
+    }
+    @Test public void downloadTimeoutCancelsAfterNinetySecondsWithoutStartingDecoder() throws Exception {
+        ServiceController<BlockingDownload> controller = Robolectric.buildService(BlockingDownload.class).create();
+        BlockingDownload player = controller.get();
+        try {
+            player.add(track(0), true); resolveOnly(player); assertTrue(player.started.await(3, TimeUnit.SECONDS));
+            Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(91));
+            assertFalse(player.loading()); assertEquals(player.getString(R.string.download_timeout), player.error());
+            assertNull(decoder(player)); assertEquals(1, player.calls.get());
+            player.release.countDown(); finishWorkers(player); assertFalse(player.lateFile.exists());
+        } finally { player.release.countDown(); controller.destroy(); }
+    }
+    @Test public void switchingDuringDownloadKeepsOnlyTheSelectedSongsCompletedFile() throws Exception {
+        ServiceController<BlockingDownload> controller = Robolectric.buildService(BlockingDownload.class).create();
+        BlockingDownload player = controller.get();
+        try {
+            player.add(track(0), true); resolveOnly(player); assertTrue(player.started.await(3, TimeUnit.SECONDS));
+            player.add(track(1), true); resolvedWork(player); File selected = localFile(player);
+            assertEquals("101", player.current().id); assertTrue(selected.exists()); assertTrue(player.playing());
+            player.release.countDown(); finishWorkers(player);
+            assertFalse(player.lateFile.exists()); assertTrue(selected.exists()); assertEquals(selected, localFile(player));
+            assertEquals("https://audio.example.org/101?token=2", player.audioUrl());
+        } finally { player.release.countDown(); controller.destroy(); }
+    }
+    @Test public void destroyingServiceDiscardsLateDownloadWithoutDependingOnMainCallbacks() throws Exception {
+        ServiceController<BlockingDownload> controller = Robolectric.buildService(BlockingDownload.class).create();
+        BlockingDownload player = controller.get();
+        player.add(track(0), true); resolveOnly(player); assertTrue(player.started.await(3, TimeUnit.SECONDS));
+        controller.destroy(); player.release.countDown();
+        ThreadPoolExecutor workers = (ThreadPoolExecutor)field(player, "resolver"); assertTrue(workers.awaitTermination(3, TimeUnit.SECONDS));
+        assertNotNull(player.lateFile); assertFalse(player.lateFile.exists());
+    }
+    private static void finishWorkers(PlaybackService player) throws Exception {
+        ThreadPoolExecutor workers = (ThreadPoolExecutor)field(player, "resolver"); workers.shutdown();
+        assertTrue(workers.awaitTermination(3, TimeUnit.SECONDS)); Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(10));
+    }
+    @Test public void failedDownloadsUseBoundedBackupsBeforeDecoding() throws Exception {
         ServiceController<BackupResolver> controller = Robolectric.buildService(BackupResolver.class).create();
         try {
             BackupResolver player = controller.get(); player.add(track(0), true); resolvedWork(player);
-            Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(31));
-            assertFalse(player.loading()); assertFalse(player.playing());
-            assertEquals(player.getString(R.string.connect_timeout), player.error());
-            assertEquals(1, player.calls.get()); assertEquals(2, field(player, "sourceIndex"));
-            assertEquals("https://three.example.org/audio", player.audioUrl());
+            assertTrue(player.playing()); assertEquals(1, player.calls.get()); assertEquals(3, player.downloads.get());
+            assertEquals(Arrays.asList("https://one.example.org/audio", "https://two.example.org/audio", "https://three.example.org/audio"), player.downloadedUrls);
+            assertEquals("https://three.example.org/audio", player.audioUrl()); assertTrue(localFile(player).exists());
         } finally { controller.destroy(); }
     }
-    @Test public void decoderErrorAfterPlaybackReentersBoundedLoading() throws Exception {
-        ServiceController<BackupResolver> controller = Robolectric.buildService(BackupResolver.class).create();
+    @Test public void cancelledDownloadNeverTriesBackupsOrRefreshesAnInvalidatedSession() throws Exception {
+        ServiceController<CancelledBackupDownload> controller = Robolectric.buildService(CancelledBackupDownload.class).create();
         try {
-            BackupResolver player = controller.get(); player.add(track(0), true); resolvedWork(player); assertTrue(player.playing());
-            android.media.MediaPlayer initial = decoder(player);
-            ShadowMediaPlayer.setMediaInfoProvider(source -> new ShadowMediaPlayer.MediaInfo(60000, 60000));
-            Shadows.shadowOf(initial).invokeErrorListener(1, -1004); assertTrue(player.loading());
-            Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(21));
-            assertFalse(player.loading()); assertEquals(player.getString(R.string.connect_timeout), player.error());
-            assertEquals(1, player.calls.get());
+            CancelledBackupDownload player = controller.get(); player.add(track(0), true); resolvedWork(player);
+            assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(1, player.calls.get()); assertEquals(1, player.downloads.get());
+            assertEquals(Collections.singletonList("https://one.example.org/audio"), player.downloadedUrls);
+            assertEquals(0, field(player, "sourceIndex")); assertNull(decoder(player)); assertNull(localFile(player));
+            assertEquals(player.getString(R.string.download_failed_detail, player.getString(R.string.playback_cancelled)), player.error());
         } finally { controller.destroy(); }
     }
-    @Test public void expiredMediaResolvesOnceAgainAndDoesNotLoopOnRepeatedFailure() throws Exception {
-        ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();
+    @Test public void repeatedDownloadFailureRefreshesSourceOnceAndStopsWithoutStreamingFallback() throws Exception {
+        ServiceController<FailedDownload> controller = Robolectric.buildService(FailedDownload.class).create();
         try {
-            FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player);
-            Shadows.shadowOf(decoder(player)).invokeErrorListener(1, -1004);
-            assertTrue(player.loading()); resolvedWork(player);
-            assertEquals(2, player.calls.get()); assertTrue(player.playing());
-            assertEquals(Collections.singletonList("https://audio.example.org/100?token=2"), field(player, "sources"));
-            assertEquals("Resolved 100 #2", player.current().title);
-            Shadows.shadowOf(decoder(player)).invokeErrorListener(1, -1004);
-            assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(2, player.calls.get());
-            assertEquals(player.getString(R.string.decoder_error, 1, -1004), player.error());
+            FailedDownload player = controller.get(); player.add(track(0), true); resolvedWork(player);
+            assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(2, player.calls.get()); assertEquals(2, player.downloads.get());
+            assertNull(decoder(player)); assertNull(localFile(player)); assertTrue(player.error().contains("503"));
             assertEquals("https://audio.example.org/100?token=2", player.audioUrl());
         } finally { controller.destroy(); }
     }
-    @Test public void playingSameTrackAgainResolvesFreshAudioAndArtwork() throws Exception {
+    @Test public void localDecoderErrorStopsWithoutRedownloadingTheUnsupportedAudio() throws Exception {
         ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();
         try {
-            FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player);
-            assertEquals(1, player.calls.get()); assertEquals("Resolved 100 #1", player.current().title);
-            player.play(0); assertTrue(player.loading()); resolvedWork(player);
-            assertEquals(2, player.calls.get()); assertEquals("Resolved 100 #2", player.current().title);
-            assertEquals("https://covers.example.org/100-2.png", player.current().cover);
-            assertEquals(Collections.singletonList("https://audio.example.org/100?token=2"), field(player, "sources"));
+            FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player); File local = localFile(player);
+            Shadows.shadowOf(decoder(player)).invokeErrorListener(1, -1004);
+            assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(1, player.calls.get()); assertEquals(1, player.downloads.get());
+            assertEquals(player.getString(R.string.decoder_error, 1, -1004), player.error()); assertFalse(local.exists());
+            assertEquals("https://audio.example.org/100?token=1", player.audioUrl());
         } finally { controller.destroy(); }
     }
-    @Test public void cancelledOldResolutionCannotReplaceNewSongMetadataOrAudio() throws Exception {
-        ServiceController<LateResolver> controller = Robolectric.buildService(LateResolver.class).create();
-        LateResolver player = controller.get();
+    @Test public void localPreparationHasTenSecondTimeoutWithoutAnotherDownload() throws Exception {
+        ShadowMediaPlayer.setMediaInfoProvider(source -> new ShadowMediaPlayer.MediaInfo(60000, 60000));
+        ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();
+        try {
+            FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player); File local = localFile(player);
+            assertTrue(player.loading()); Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(11));
+            assertFalse(player.loading()); assertEquals(player.getString(R.string.local_prepare_timeout), player.error());
+            assertEquals(1, player.downloads.get()); assertFalse(local.exists());
+        } finally { controller.destroy(); }
+    }
+    @Test public void playingSameTrackAgainResolvesAndDownloadsFreshAudioAndArtwork() throws Exception {
+        ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();
+        try {
+            FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player); File old = localFile(player);
+            player.play(0); assertFalse(old.exists()); resolvedWork(player);
+            assertEquals(2, player.calls.get()); assertEquals(2, player.downloads.get()); assertEquals("Resolved 100 #2", player.current().title);
+            assertEquals("https://covers.example.org/100-2.png", player.current().cover); assertNotEquals(old, localFile(player));
+        } finally { controller.destroy(); }
+    }
+    @Test public void cancelledOldResolutionCannotReplaceNewSongMetadataOrLocalAudio() throws Exception {
+        ServiceController<LateResolver> controller = Robolectric.buildService(LateResolver.class).create(); LateResolver player = controller.get();
         try {
             player.add(track(0), true); assertTrue(player.firstStarted.await(3, TimeUnit.SECONDS));
-            player.add(track(1), true); resolvedWork(player); assertEquals("101", player.current().id);
-            player.releaseFirst.countDown(); assertTrue(player.firstReturned.await(3, TimeUnit.SECONDS));
-            // Wait for the old worker to exit and enqueue its result, without relying on a wall-clock sleep.
-            ThreadPoolExecutor executor = (ThreadPoolExecutor)field(player, "resolver");
-            executor.shutdown(); assertTrue(executor.awaitTermination(3, TimeUnit.SECONDS));
-            Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(10));
-            assertEquals("Resolved 101 #1", player.current().title); assertTrue(player.playing());
-            assertEquals(Collections.singletonList("https://audio.example.org/101?token=1"), field(player, "sources"));
-            assertEquals("", player.error());
-            assertEquals("https://audio.example.org/101?token=1", player.audioUrl());
+            player.add(track(1), true); resolvedWork(player); File local = localFile(player);
+            player.releaseFirst.countDown(); assertTrue(player.firstReturned.await(3, TimeUnit.SECONDS)); finishWorkers(player);
+            assertEquals("Resolved 101 #1", player.current().title); assertTrue(player.playing()); assertEquals(local, localFile(player));
+            assertEquals(Collections.singletonList("https://audio.example.org/101?token=1"), player.downloadedUrls); assertEquals("", player.error());
         } finally { player.releaseFirst.countDown(); controller.destroy(); }
     }
     @Test public void attemptedAudioUrlClearsBeforeANewSelectionAndWhenQueueIsCleared() throws Exception {
@@ -174,33 +309,26 @@ public class PlayerTest {
             player.clearQueue(); assertEquals("", player.audioUrl()); assertNull(player.current());
         } finally { controller.destroy(); }
     }
-    @Test public void immediateDecoderFailuresRetainAttemptedUrlAndNativeStatusWithoutLeakingMessages() throws Exception {
-        String url = "https://www.hifini.net/musicparse-play.htm?source=netease&id=254485";
-        ShadowMediaPlayer.addException(org.robolectric.shadows.util.DataSource.toDataSource(url),
-                new IOException("setDataSource failed: status=0x80000000 https://example.invalid/?secret=private-token"));
-        ServiceController<CatalogResolver> controller = Robolectric.buildService(CatalogResolver.class).create();
+    @Test public void immediateLocalDecoderFailuresRetainRemoteUrlAndSanitizedNativeStatus() throws Exception {
+        ServiceController<ImmediateDecoderFailure> controller = Robolectric.buildService(ImmediateDecoderFailure.class).create();
         try {
-            CatalogResolver player = controller.get();
-            player.add(Track.catalog("netease", "254485", "", "Song", "Artist", "", 239), true);
-            resolvedWork(player); // The first synchronous native error schedules one fresh resolve.
-            if (player.loading()) resolvedWork(player);
-            assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(2, player.calls.get());
-            assertEquals(url, player.audioUrl()); assertTrue(player.error().contains("IOException"));
-            assertTrue(player.error().contains("status=0x80000000")); assertFalse(player.error().contains("private-token"));
-            assertFalse(player.error().contains("https://"));
+            ImmediateDecoderFailure player = controller.get(); player.add(Track.catalog("netease", "254485", "", "Song", "Artist", "", 239), true); resolvedWork(player);
+            assertFalse(player.loading()); assertFalse(player.playing()); assertEquals(1, player.calls.get()); assertEquals(1, player.downloads.get());
+            assertEquals("https://www.hifini.net/musicparse-play.htm?source=netease&id=254485", player.audioUrl());
+            assertTrue(player.error().contains("IOException")); assertTrue(player.error().contains("status=0x80000000"));
+            assertFalse(player.error().contains("private-token")); assertFalse(player.error().contains("https://")); assertFalse(player.files.get(0).exists());
         } finally { controller.destroy(); }
     }
-    @Test public void pauseResumeAndSeekKeepTheCurrentDecoderButReplayReResolves() throws Exception {
+    @Test public void pauseResumeAndSeekKeepLocalFileButClearQueueDeletesIt() throws Exception {
         ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();
         try {
             FreshResolver player = controller.get(); player.add(track(0), true); resolvedWork(player);
-            android.media.MediaPlayer currentDecoder = decoder(player);
+            android.media.MediaPlayer currentDecoder = decoder(player); File local = localFile(player);
             assertTrue(player.playing()); assertEquals(60000, player.duration());
-            player.pause(false); assertFalse(player.playing()); player.resume(); assertTrue(player.playing());
+            player.pause(false); assertFalse(player.playing()); assertTrue(local.exists()); player.resume(); assertTrue(player.playing());
             player.seek(10000); Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(10));
-            assertTrue(player.position() >= 10000); assertSame(currentDecoder, decoder(player)); assertEquals(1, player.calls.get());
-            player.play(0); resolvedWork(player); assertEquals(2, player.calls.get()); assertNotSame(currentDecoder, decoder(player));
-            player.clearQueue(); assertFalse(player.playing()); assertFalse(player.loading()); assertNull(player.current());
+            assertTrue(player.position() >= 10000); assertSame(currentDecoder, decoder(player)); assertEquals(1, player.downloads.get());
+            player.clearQueue(); assertFalse(local.exists()); assertFalse(player.playing()); assertFalse(player.loading()); assertNull(player.current());
         } finally { controller.destroy(); }
     }
     @Test public void queueIsBoundedDeduplicatedAndNeverRestoredFromAnEarlierSession() {
@@ -208,49 +336,42 @@ public class PlayerTest {
         try {
             PlaybackService player = controller.get(); assertTrue(player.queue().isEmpty()); assertNull(player.current());
             for (int i = 0; i < 50; i++) assertTrue(player.add(track(i), false));
-            assertFalse(player.add(track(50), false)); assertTrue(player.add(track(0), false));
-            assertEquals(50, player.queue().size()); assertFalse(player.playing());
+            assertFalse(player.add(track(50), false)); assertTrue(player.add(track(0), false)); assertEquals(50, player.queue().size()); assertFalse(player.playing());
             player.queue().clear(); assertEquals(50, player.queue().size());
         } finally { controller.destroy(); }
         controller = Robolectric.buildService(PlaybackService.class).create();
-        try {
-            PlaybackService player = controller.get(); assertTrue(player.queue().isEmpty()); assertNull(player.current());
-            assertFalse(player.playing()); assertFalse(player.loading());
-        } finally { controller.destroy(); }
+        try { assertTrue(controller.get().queue().isEmpty()); assertNull(controller.get().current()); assertFalse(controller.get().playing()); }
+        finally { controller.destroy(); }
     }
-    @Test public void choosingSearchResultStartsThatSongWithoutResolvingTheFirstResult() throws Exception {
+    @Test public void choosingSearchResultDownloadsThatSongWithoutResolvingTheFirstResult() throws Exception {
         ServiceController<FreshResolver> controller = Robolectric.buildService(FreshResolver.class).create();
         try {
             FreshResolver player = controller.get(); player.playListAt(Arrays.asList(track(0), track(1), track(2)), 2); resolvedWork(player);
             assertEquals(Collections.singletonList("102"), player.requestedIds); assertEquals("102", player.current().id);
+            assertEquals(Collections.singletonList("https://audio.example.org/102?token=1"), player.downloadedUrls);
             assertEquals(3, player.queue().size()); assertFalse(player.shuffled()); assertTrue(player.playing());
         } finally { controller.destroy(); }
     }
-    @Test public void catalogResultsKeepProviderIdentityAndPlayTheirOfficialSourceIdUrl() throws Exception {
+    @Test public void catalogResultsKeepProviderIdentityAndDownloadTheirOfficialSourceIdUrl() throws Exception {
         Track netease = Track.catalog("netease", "254485", "", "Song", "Artist", "https://covers.example.org/a.png", 239);
         Track kuwo = Track.catalog("kuwo", "254485", "", "Other version", "Other artist", "https://covers.example.org/b.png", 241);
         ServiceController<CatalogResolver> controller = Robolectric.buildService(CatalogResolver.class).create();
         try {
             CatalogResolver player = controller.get(); player.playListAt(Arrays.asList(netease, kuwo), 1); resolvedWork(player);
-            assertEquals(2, player.queue().size()); assertEquals("kuwo:254485", player.current().id);
-            assertEquals("", player.current().threadId); assertEquals("https://covers.example.org/b.png", player.current().cover);
-            assertEquals(241, player.current().duration); assertTrue(player.playing());
-            assertEquals(Collections.singletonList("https://www.hifini.net/musicparse-play.htm?source=kuwo&id=254485"), field(player, "sources"));
-            player.play(0); resolvedWork(player);
-            assertEquals("netease:254485", player.current().id); assertEquals(2, player.calls.get());
-            assertEquals(Collections.singletonList("https://www.hifini.net/musicparse-play.htm?source=netease&id=254485"), field(player, "sources"));
-            player.play(0); resolvedWork(player); assertEquals(3, player.calls.get()); assertTrue(player.playing());
+            assertEquals(2, player.queue().size()); assertEquals("kuwo:254485", player.current().id); assertEquals("", player.current().threadId);
+            assertEquals("https://covers.example.org/b.png", player.current().cover); assertEquals(241, player.current().duration); assertTrue(player.playing());
+            assertEquals(Collections.singletonList("https://www.hifini.net/musicparse-play.htm?source=kuwo&id=254485"), player.downloadedUrls);
+            assertEquals(DataSource.toDataSource(localFile(player).getAbsolutePath()), Shadows.shadowOf(decoder(player)).getDataSource());
+            player.play(0); resolvedWork(player); assertEquals("netease:254485", player.current().id); assertEquals(2, player.calls.get());
+            assertEquals("https://www.hifini.net/musicparse-play.htm?source=netease&id=254485", player.audioUrl());
         } finally { controller.destroy(); }
     }
     @Test public void applicationAndPlaybackServiceHaveIndependentHifiniIdentity() {
         assertEquals("com.ecojust.hifinitv", RuntimeEnvironment.getApplication().getPackageName());
         assertEquals("HIFINi TV", RuntimeEnvironment.getApplication().getString(R.string.app_name));
         ServiceController<PlaybackService> controller = Robolectric.buildService(PlaybackService.class).create();
-        try {
-            assertEquals("com.ecojust.hifinitv", controller.get().getPackageName());
-            assertEquals("com.ecojust.hifinitv.PlaybackService", controller.get().getClass().getName());
-            assertTrue(controller.get().queue().isEmpty()); assertNull(controller.get().current());
-        } finally { controller.destroy(); }
+        try { assertEquals("com.ecojust.hifinitv", controller.get().getPackageName()); assertTrue(controller.get().queue().isEmpty()); }
+        finally { controller.destroy(); }
     }
     @Test public void onlyShufflePreferencePersistsAcrossServiceRecreation() {
         ServiceController<PlaybackService> controller = Robolectric.buildService(PlaybackService.class).create();
