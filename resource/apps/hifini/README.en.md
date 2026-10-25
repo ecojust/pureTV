@@ -1,5 +1,11 @@
 # HIFINi TV
 
+<!-- apk-resource:start -->
+[Download APK](hifini-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
+
+The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
+<!-- apk-resource:end -->
+
 [English](README.en.md) · [中文](README.md)
 
 An independent HiFiNi music client for Android TV remotes, requiring Android 8.0 or later. Package: `com.ecojust.hifinitv`; version: `0.1.0`. It installs alongside Music TV and does not access or modify Music TV data.
