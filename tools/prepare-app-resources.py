@@ -17,7 +17,7 @@ parser.add_argument('--stage-branch', required=True)
 parser.add_argument('--source-sha', required=True)
 parser.add_argument('--build-tools', required=True, type=Path)
 parser.add_argument('--skip-index', action='store_true', help='Defer resource index regeneration until the batch is complete')
-parser.add_argument('--app', action='append', choices=['music', 'shortvideo', 'webtv', 'hifini'], help='Update only this app; repeat to select several (default: music, shortvideo, webtv)')
+parser.add_argument('--app', action='append', choices=['music', 'shortvideo', 'webtv', 'hifini', 'cctv'], help='Update only this app; repeat to select several (default: music, shortvideo, webtv)')
 args = parser.parse_args()
 if not re.fullmatch(r'build-assets/resources-\d+', args.stage_branch) or not re.fullmatch(r'[a-f0-9]{40}', args.source_sha):
     parser.error('Expected a build-assets/resources-RUN_ID branch and a complete source SHA')
@@ -58,6 +58,7 @@ apps = [
     ('shortvideo', 'ShortVideo TV', '遥控器短视频播放器', 'shortvideo-tv', 'controls-preview', 'com.ecojust.shortvideo'),
     ('webtv', 'WebTV', '电视直播与 M3U 播放器', 'webtv-controls', 'controls-render', 'com.ecojust.webtv'),
     ('hifini', 'HIFINi TV', '基于 HiFiNi 的电视音乐播放器', 'hifini-tv', 'hifini-tv', 'com.ecojust.hifinitv'),
+    ('cctv', 'CCTV Live', '央视频道直播播放器', 'cctv-live', 'cctv-live', 'com.ecojust.cctvlive'),
 ]
 selected_apps = args.app or ['music', 'shortvideo', 'webtv']
 apps = [app for app in apps if app[0] in selected_apps]
@@ -107,7 +108,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
             'version': info['versionName'], 'packageName': info['packageName'], 'versionCode': info['versionCode'],
             'apk': apk.name, 'apkBytes': info['bytes'], 'sha256': info['sha256'], 'certificateSha256': info['certificateSha256'],
             'supportsLayoutJson': False, 'languages': ['zh', 'en'], 'cover': 'thumb.png',
-            'coverSource': 'Real Android UI rendered in Chinese by Robolectric native graphics with fixture content; not a physical TV capture',
+            'coverSource': ('Real Android idle UI rendered in Chinese by Robolectric native graphics with the bundled M3U catalog; not a physical TV capture' if slug == 'cctv' else 'Real Android UI rendered in Chinese by Robolectric native graphics with fixture content; not a physical TV capture'),
             'license': 'MIT', 'sourceCommit': args.source_sha, 'buildRun': run_url,
         }
         resource_path.write_text(json.dumps(resource, ensure_ascii=False, indent=2) + '\n')
