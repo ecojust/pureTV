@@ -300,6 +300,15 @@ impl Manager {
         method: &str,
         arg: Option<String>,
     ) -> Result<Value, String> {
+        provider_result(&self.layout_provider_output(device, uri, method, arg)?)
+    }
+    fn layout_provider_output(
+        &mut self,
+        device: &Device,
+        uri: &str,
+        method: &str,
+        arg: Option<String>,
+    ) -> Result<String, String> {
         let mut args = vec![
             "-s".into(),
             device.serial.clone(),
@@ -316,13 +325,15 @@ impl Manager {
         if let Some(arg) = arg {
             args.extend(["--arg".into(), arg]);
         }
-        provider_result(&self.run(args, None, if method == "status" { 5 } else { 20 })?)
+        self.run(args, None, if method == "status" { 5 } else { 20 })
     }
     pub fn execute_launcher(&mut self, request: LauncherRequest) -> Result<Value, String> {
         let device = self.ensure_device(true)?;
         self.read_catalogue(&device)?;
         if matches!(request, LauncherRequest::GetBackgrounds) {
             let mut backgrounds = serde_json::Map::new();
+            let mut background_colors = serde_json::Map::new();
+            let mut failed_components = BTreeSet::new();
             let packages: BTreeSet<String> = self
                 .state
                 .launchers
@@ -338,24 +349,44 @@ impl Manager {
                 let Some(uri) = provider_uri(&package) else {
                     continue;
                 };
-                if let Ok(value) = self.layout_provider(&device, &uri, "status", None) {
+                let output = match self.layout_provider_output(&device, &uri, "status", None) {
+                    Ok(output) => output,
+                    Err(_) => {
+                        failed_components.extend(
+                            self.state
+                                .launchers
+                                .iter()
+                                .filter(|launcher| launcher.package_name == package)
+                                .map(|launcher| launcher.component.clone()),
+                        );
+                        continue;
+                    }
+                };
+                // Only an ADB read failure can preserve a previously confirmed preview.
+                // A received but invalid protocol response must clear it instead.
+                if let Ok(value) = provider_result(&output) {
                     let layout = &value["layout"];
-                    let image = if layout["version"] == 4 || layout["version"] == 5 {
-                        layout["home"]["background"]["image"].as_str()
+                    let background = if layout["version"] == 4 || layout["version"] == 5 {
+                        &layout["home"]["background"]
                     } else {
-                        layout["home"]["scene"]["background"]["image"].as_str()
+                        &layout["home"]["scene"]["background"]
                     };
-                    if let Some(image) = image {
+                    // A validated color also identifies a solid Home background.
+                    // Keep the image-only field for existing clients; v2 has no background.
+                    if let Some(color) = background["color"].as_str() {
                         for launcher in &self.state.launchers {
                             if launcher.package_name == package {
-                                backgrounds.insert(launcher.component.clone(), json!(image));
+                                background_colors.insert(launcher.component.clone(), json!(color));
+                                if let Some(image) = background["image"].as_str() {
+                                    backgrounds.insert(launcher.component.clone(), json!(image));
+                                }
                             }
                         }
                     }
                 }
             }
             return Ok(
-                json!({"supported":true,"serial":device.serial,"userId":device.user_id,"backgrounds":backgrounds}),
+                json!({"supported":true,"serial":device.serial,"userId":device.user_id,"backgrounds":backgrounds,"backgroundColors":background_colors,"failedComponents":failed_components}),
             );
         }
         let component = self

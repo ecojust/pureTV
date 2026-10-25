@@ -190,8 +190,22 @@ async fn choose_launcher_cover(
 #[tauri::command]
 async fn choose_launcher_apks(app: tauri::AppHandle) -> Result<Value, String> {
     tauri::async_runtime::spawn_blocking(move || {
-        Ok(json!(pick_apks(&app)?.into_iter().map(|path|json!({"cover":launcher_covers::sidecar(std::path::Path::new(&path)),"homeBackground":launcher_covers::apk_home_background(std::path::Path::new(&path)),"path":path})).collect::<Vec<_>>()))
-    }).await.map_err(|_|"无法读取启动器 APK".to_string())?
+        Ok(json!(pick_apks(&app)?
+            .into_iter()
+            .map(|path| {
+                let apk = std::path::Path::new(&path);
+                let background = launcher_covers::apk_home_background(apk);
+                json!({
+                    "cover": launcher_covers::sidecar(apk),
+                    "homeBackground": background.as_ref().and_then(|value| value.image.as_deref()),
+                    "homeBackgroundColor": background.as_ref().map(|value| value.color.as_str()),
+                    "path": path
+                })
+            })
+            .collect::<Vec<_>>()))
+    })
+    .await
+    .map_err(|_| "无法读取启动器 APK".to_string())?
 }
 
 #[tauri::command]

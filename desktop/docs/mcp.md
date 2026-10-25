@@ -59,15 +59,15 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 
 | 工具 | 参数 | 行为 |
 | --- | --- | --- |
-| `get_launcher_backgrounds` | 无 | 读取已安装且接入布局协议的启动器 Home 背景；无需激活，用作列表默认封面；返回设备序列号、用户和组件到图片的映射 |
+| `get_launcher_backgrounds` | 无 | 读取已安装且接入布局协议的启动器 Home 背景；无需激活，用作列表背景；返回设备序列号、用户、`backgrounds` 图片映射及 `backgroundColors` 颜色映射，纯色背景也会返回；`failedComponents` 列出 ADB 读取失败的组件，客户端保留其已确认背景，收到无效协议响应的组件不在此列 |
 | `get_launcher_layout` | 无 | 检测当前默认启动器，返回支持状态、布局及应用列表／图标 |
 | `apply_launcher_layout` | `layoutJson` | 应用 JSON 文本并读回核对；只允许已成功握手的当前启动器 |
 | `reset_launcher_layout` | 无 | 恢复默认布局并复查 |
 | `get_launcher_covers` | 无 | 读取用户提供的本地启动器背景图 |
-| `set_launcher_cover` | `key`, 可选 `path` | 为组件选择本地 PNG/JPEG/WebP 图片（≤4 MiB）；省略 path 移除背景 |
+| `set_launcher_cover` | `key`, 可选 `path` | 旧客户端兼容：保存电脑端 PNG/JPEG/WebP 封面（≤4 MiB）；省略 path 移除本地封面，不修改电视布局 |
 | `choose_launcher_json` | 无 | 原生 JSON 文件选择器，只返回文本，不应用 |
 
-配置格式和支持条件见[启动器布局](launcher-layout.md)。当前适配本次新增接口的 pureTV，旧包名 APK 需安装 `com.ecojust.puretv` 并选为默认桌面，未适配启动器不会被写入。
+配置格式和支持条件见[启动器布局](launcher-layout.md)。管理器动态检测已安装启动器的标准 `<包名>.layout` 接口，符合协议的当前默认桌面才可编辑，未适配启动器不会被写入。
 
 系统信息工具：
 
@@ -111,6 +111,6 @@ xvfb-run -a python scripts/verify-mcp.py --binary src-tauri/target/x86_64-unknow
 
 此检查启动真实管理器与 stdio 代理，使用隔离的应用数据目录和模拟 ADB，验证设备操作、部分失败、保护、取消、关闭窗口错误；不连接真实电视。
 
-布局 v5 的 screen/users/system/background/navigation、静态 SVG 和只读系统保护见[完整协议](../../resource/README-development.md#layoutjson-协议规范与画面对照)。批量排布可通过修改选定 users 的 frame 后 apply_launcher_layout 完成。get_launcher_covers 返回手动封面，优先级高于 Home 默认背景；get_launcher_backgrounds 读取默认背景但不切换桌面。JSON 最大 90 KiB。
+布局 v5 的 screen/users/system/background/navigation、静态 SVG 和只读系统保护见[完整协议](../../resource/README-development.md#layoutjson-协议规范与画面对照)。批量排布可通过修改选定 users 的 frame 后 apply_launcher_layout 完成。get_launcher_covers / set_launcher_cover 保留对旧客户端的本地封面兼容，仅操作电脑端文件，不修改电视 layout；支持协议的卡片始终以 Home 背景为准，列表不再提供手动封面操作。get_launcher_backgrounds 只读取背景颜色与图片，不切换桌面或写入布局。JSON 最大 90 KiB。
 
 组件的 textColor 控制文字，iconColor 控制 SVG currentColor，backgroundColor 支持 transparent。系统组件全字段只读。管理器的屏幕基准只显示；可用 get_launcher_layout 取得实际基准再调整 frame。
