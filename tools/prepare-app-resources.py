@@ -17,6 +17,7 @@ parser.add_argument('--stage-branch', required=True)
 parser.add_argument('--source-sha', required=True)
 parser.add_argument('--build-tools', required=True, type=Path)
 parser.add_argument('--skip-index', action='store_true', help='Defer resource index regeneration until the batch is complete')
+parser.add_argument('--app', action='append', choices=['music', 'shortvideo', 'webtv', 'hifini'], help='Update only this app; repeat to select several (default: music, shortvideo, webtv)')
 args = parser.parse_args()
 if not re.fullmatch(r'build-assets/resources-\d+', args.stage_branch) or not re.fullmatch(r'[a-f0-9]{40}', args.source_sha):
     parser.error('Expected a build-assets/resources-RUN_ID branch and a complete source SHA')
@@ -53,25 +54,33 @@ expected = (root / 'tools/puretv-release-certificate.sha256').read_text().strip(
 key = os.environ['PURETV_KEYSTORE_PATH']
 require(bool(os.environ.get('PURETV_KEYSTORE_PASSWORD')), 'PURETV_KEYSTORE_PASSWORD is required')
 apps = [
-    ('music', 'Music TV', '原生电视音乐播放器', 'music-tv', 'music-tv'),
-    ('shortvideo', 'ShortVideo TV', '遥控器短视频播放器', 'shortvideo-tv', 'controls-preview'),
-    ('webtv', 'WebTV', '电视直播与 M3U 播放器', 'webtv-controls', 'controls-render'),
+    ('music', 'Music TV', '原生电视音乐播放器', 'music-tv', 'music-tv', 'com.ecojust.music'),
+    ('shortvideo', 'ShortVideo TV', '遥控器短视频播放器', 'shortvideo-tv', 'controls-preview', 'com.ecojust.shortvideo'),
+    ('webtv', 'WebTV', '电视直播与 M3U 播放器', 'webtv-controls', 'controls-render', 'com.ecojust.webtv'),
+    ('hifini', 'HIFINi TV', '基于 HiFiNi 的电视音乐播放器', 'hifini-tv', 'hifini-tv', 'com.ecojust.hifinitv'),
 ]
+selected_apps = args.app or ['music', 'shortvideo', 'webtv']
+apps = [app for app in apps if app[0] in selected_apps]
 with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
     temporary = Path(temporary)
-    for slug, name, description, capture, doc_image in apps:
+    for slug, name, description, capture, doc_image, package_name in apps:
         folder = root / 'resource/apps' / slug
-        old_resource = json.loads((folder / 'resource.json').read_text())
+        require(folder.is_dir(), f'{slug}: missing application source directory')
+        resource_path = folder / 'resource.json'
+        old_resource = json.loads(resource_path.read_text()) if resource_path.exists() else {}
         old_name = old_resource.get('apk')
-        require(isinstance(old_name, str) and Path(old_name).name == old_name and '/' not in old_name and '\\' not in old_name and old_name.endswith('.apk'), f'{slug}: invalid previous APK name')
+        if resource_path.exists():
+            require(isinstance(old_name, str) and Path(old_name).name == old_name and '/' not in old_name and '\\' not in old_name and old_name.endswith('.apk'), f'{slug}: invalid previous APK name')
         # Both previews must come from this successful build, never from older docs.
         chinese = validate_png(artifact(capture + '.png'))[0]
         english = validate_png(artifact(capture + '.en.png'))[0]
         unsigned = temporary / (slug + '.apk')
         unsigned.write_bytes(artifact(slug + '.apk'))
         identity = apk_info(unsigned, args.build_tools, allow_unsigned=True)
-        require(identity['packageName'] == 'com.ecojust.' + slug and not identity['certificateSha256'], f'{slug}: expected the unsigned application artifact')
+        require(identity['packageName'] == package_name and not identity['certificateSha256'], f'{slug}: expected the unsigned application artifact')
         gradle = git('show', args.source_sha + ':resource/apps/' + slug + '/build.gradle').decode()
+        application_id = re.search(r"applicationId '([^']+)'", gradle)
+        require(application_id is not None and application_id[1] == package_name, f'{slug}: source application ID does not match the expected package')
         version = re.search(r"versionName '([^']+)'", gradle)[1]
         code = int(re.search(r'versionCode (\d+)', gradle)[1])
         require(bool(re.fullmatch(r'\d+\.\d+\.\d+', version)), f'{slug}: invalid application version')
@@ -101,11 +110,12 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
             'coverSource': 'Real Android UI rendered in Chinese by Robolectric native graphics with fixture content; not a physical TV capture',
             'license': 'MIT', 'sourceCommit': args.source_sha, 'buildRun': run_url,
         }
-        (folder / 'resource.json').write_text(json.dumps(resource, ensure_ascii=False, indent=2) + '\n')
+        resource_path.write_text(json.dumps(resource, ensure_ascii=False, indent=2) + '\n')
         checksums = [apk.name, 'thumb.png', 'docs/' + doc_image + '.png', 'docs/' + doc_image + '.en.png']
         (folder / 'SHA256SUMS.txt').write_text(''.join(f'{digest(folder / filename)}  {filename}\n' for filename in checksums))
         readme = folder / 'README.md'
-        heading, rest = readme.read_text().split('\n', 1)
+        readme_text = readme.read_text() if readme.exists() else '# ' + name + '\n'
+        heading, _, rest = readme_text.partition('\n')
         rest = re.sub(r'\n*<!-- apk-resource:start -->.*?<!-- apk-resource:end -->\n*', '\n', rest, flags=re.S)
         readme.write_text(heading + '\n\n<!-- apk-resource:start -->\n[下载 APK](' + apk.name + '?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)\n\n此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。\n<!-- apk-resource:end -->\n' + rest)
         english_readme = folder / 'README.en.md'
@@ -119,7 +129,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
                 english_heading, english_rest = english_text.split('\n', 1)
                 english_text = english_heading + '\n\n' + block + '\n' + english_rest
             english_readme.write_text(english_text)
-        if old_name != apk.name:
+        if old_name is not None and old_name != apk.name:
             (folder / old_name).unlink(missing_ok=True)
         print(json.dumps({'app': name, 'apk': str(apk.relative_to(root)), 'bytes': info['bytes'], 'verified': True, 'previews': ['zh', 'en']}))
 if not args.skip_index:
