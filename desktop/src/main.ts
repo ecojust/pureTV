@@ -6,14 +6,15 @@ import {sameSubnet} from './subnet';
 import {validGeometry,validScene,sceneLabels,autoFrame,sceneNode,frameStyle} from './scene';
 import {version as appVersion} from '../package.json';
 import * as api from './bridge';
-import { emptySnapshot, type Request, type PackageInfo, type PlatformToolsInfo, type DownloadProgress, type Snapshot, type LauncherLayout, type LauncherLayoutInfo, type LauncherRequest } from './types';
+import { emptySnapshot, type Request, type PackageInfo, type PlatformToolsInfo, type DownloadProgress, type Snapshot, type LauncherLayout, type LauncherLayoutInfo, type LauncherRequest, type MarketKind, type MarketCatalog, type MarketItem, type MarketProgress, type MarketResult } from './types';
 
-type Page = 'connect' | 'apps' | 'launchers' | 'install' | 'history';
+type Page = 'connect' | 'apps' | 'launchers' | 'market' | 'install' | 'history';
 type Filter = 'all' | 'system' | 'enabled' | 'disabled' | 'recoverable';
 const pages: Record<Page, [string, string, string]> = {
   connect: ['设备连接', '连接电视，开始管理你的应用和桌面', 'monitor'],
   apps: ['应用管理', '查看电视中的应用，按需停用或恢复', 'grid'],
   launchers: ['启动器', '选择电视的默认桌面，随时回到原来的启动器', 'home'],
+  market: ['市场', '发现电视应用与启动器，下载或安装到你的电视', 'store'],
   install: ['应用管理', '导入本地安装包，安装后可用于启动器排布', 'download'],
   history: ['操作记录', '逐项查看操作结果，确认电视上的实际变化', 'list'],
 };
@@ -38,6 +39,10 @@ let toolsInfo: PlatformToolsInfo | null = null, toolsInfoError = '', toolsPrepar
 let toolsProgress: DownloadProgress | null = null;
 let launcherLayout: LauncherLayoutInfo | null = null;
 let covers:Record<string,string> = {}, launcherApks:{path:string;cover?:string|null;homeBackground?:string|null;homeBackgroundColor?:string|null}[]=[];
+let marketCatalog: MarketCatalog | null = null, marketKind: MarketKind = 'app', marketQuery = '', marketError = '';
+let marketLoading = false, marketWorking = false, marketProgress: MarketProgress | null = null, agentMarketProgress: MarketProgress | null = null;
+const marketDownloads = new Map<string, {blobSha: string; path: string}>();
+const marketTools = ['get_market_catalog', 'download_market_item', 'install_market_item'];
 let layoutNode:string|null=null;
 type HomeBackground={color?:string;image?:string};
 const homeBackgrounds=new Map<string,HomeBackground>();
@@ -143,8 +148,10 @@ function renderFeedback(): void {
   if (!feedback) return;
   const loading = feedback.phase === 'loading';
   const title = loading ? t('正在处理') : feedback.outcome === 'success' ? t('操作成功') : feedback.outcome === 'error' ? t('操作未完成') : t('操作结果');
-  const description = loading && downloadingTools ? progressText() : feedback.description;
-  const html = `<div class="feedback-symbol ${loading ? '' : feedback.outcome}">${loading ? '<span class="spinner" aria-hidden="true"></span>' : icon(feedback.outcome === 'success' ? 'check' : feedback.outcome === 'error' ? 'close' : 'list')}</div><p class="feedback-operation">${esc(feedback.operation)}</p><h2 id="feedback-title">${esc(title)}</h2><div class="feedback-live" role="status" aria-live="polite"><p id="feedback-description">${esc(message(description))}</p>${loading && cancelling ? `<p class="hint">${esc(downloadingTools ? t('正在取消并清理临时文件') : t('当前修改会完成并复查，后续项将停止'))}</p>` : ''}${feedback.cancelError ? `<p class="feedback-error" role="alert">${esc(feedback.cancelError)}</p>` : ''}${loading && downloadingTools ? downloadMeter() : ''}</div>${feedback.rows.length ? `<ul class="feedback-results">${feedback.rows.map(row => `<li><div><strong>${esc(row.target)}</strong><span class="feedback-item-status ${row.success === true ? 'success' : row.success === false ? 'error' : ''}">${esc(t(row.success === true ? '成功' : row.success === false ? '失败' : '未执行'))}</span></div><p>${esc(message(row.message))}</p></li>`).join('')}</ul>` : ''}<div class="modal-actions">${loading ? feedback.cancellable ? `<button type="button" data-feedback-cancel${disabled(cancelling)}>${esc(cancelling ? t('正在取消') : downloadingTools ? t('取消下载') : t('停止后续操作'))}</button>` : '' : `<button type="button" class="primary" data-feedback-close>${esc(t('确定'))}</button>`}</div>`;
+  const market = activeMarketOperation(), marketStatus = activeMarketProgress();
+  const downloading = downloadingTools || (market && marketStatus?.stage !== 'installing');
+  const description = loading && market ? marketProgressText(marketStatus) : loading && downloadingTools ? progressText() : feedback.description;
+  const html = `<div class="feedback-symbol ${loading ? '' : feedback.outcome}">${loading ? '<span class="spinner" aria-hidden="true"></span>' : icon(feedback.outcome === 'success' ? 'check' : feedback.outcome === 'error' ? 'close' : 'list')}</div><p class="feedback-operation">${esc(feedback.operation)}</p><h2 id="feedback-title">${esc(title)}</h2><div class="feedback-live" role="status" aria-live="polite"><p id="feedback-description">${esc(message(description))}</p>${loading && cancelling ? `<p class="hint">${esc(downloading ? t('正在取消并清理临时文件') : t('当前修改会完成并复查，后续项将停止'))}</p>` : ''}${feedback.cancelError ? `<p class="feedback-error" role="alert">${esc(feedback.cancelError)}</p>` : ''}${loading && market ? downloadMeter(marketStatus, t('安装包下载进度')) : loading && downloadingTools ? downloadMeter() : ''}</div>${feedback.rows.length ? `<ul class="feedback-results">${feedback.rows.map(row => `<li><div><strong>${esc(row.target)}</strong><span class="feedback-item-status ${row.success === true ? 'success' : row.success === false ? 'error' : ''}">${esc(t(row.success === true ? '成功' : row.success === false ? '失败' : '未执行'))}</span></div><p>${esc(message(row.message))}</p></li>`).join('')}</ul>` : ''}<div class="modal-actions">${loading ? feedback.cancellable ? `<button type="button" data-feedback-cancel${disabled(cancelling)}>${esc(cancelling ? t('正在取消') : downloading ? t('取消下载') : t('停止后续操作'))}</button>` : '' : `<button type="button" class="primary" data-feedback-close>${esc(t('确定'))}</button>`}</div>`;
   const wasLoading = feedbackDialog.dataset.phase === 'loading';
   feedbackDialog.dataset.phase = feedback.phase;
   feedbackDialog.dataset.outcome = feedback.outcome || '';
@@ -207,6 +214,7 @@ function icon(name: string): string {
     input: '<path d="M12 3v12m-4-4 4 4 4-4M5 17v4h14v-4"/>',
     grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
     home: '<path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/>',
+    store: '<path d="M3 10h18l-2-6H5Zm1 0v10h16V10M9 20v-6h6v6M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/>',
     download: '<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',
     list: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
     search: '<circle cx="10" cy="10" r="6.5"/><path d="m15 15 6 6"/>',
@@ -240,16 +248,17 @@ function progressText(progress = toolsProgress): string {
 function busyIndicator(): string {
   if (!busy) return '';
   const external = !!agentOperation?.running;
-  const download = external ? agentOperation?.tool === 'install_platform_tools' : downloadingTools;
+  const market = activeMarketOperation(), marketStatus = activeMarketProgress();
+  const download = market ? marketStatus?.stage !== 'installing' : external ? agentOperation?.tool === 'install_platform_tools' : downloadingTools;
   const progress = external ? agentProgress : toolsProgress;
-  const label = download ? progressText(progress) : external ? ui`Agent 正在执行 ${agentOperation?.tool}…` : busyLabel;
+  const label = market ? marketProgressText(marketStatus) : download ? progressText(progress) : external ? ui`Agent 正在执行 ${agentOperation?.tool}…` : busyLabel;
   const cancellingLabel = download ? t(' · 正在取消并清理临时文件') : t(' · 当前修改会完成并复查，后续项将停止');
-  return `<div class="busy-bar" role="status"><span class="spinner"></span><span data-busy-label>${esc(label)}${cancelling ? cancellingLabel : ''}</span>${download ? downloadMeter(progress) : ''}${actionButton('cancel', cancelling ? t('正在取消') : download ? t('取消下载') : t('停止后续操作'), disabled(cancelling), 'small')}</div>`;
+  return `<div class="busy-bar" role="status"><span class="spinner"></span><span data-busy-label>${esc(label)}${cancelling ? cancellingLabel : ''}</span>${market ? downloadMeter(marketStatus, t('安装包下载进度')) : download ? downloadMeter(progress) : ''}${actionButton('cancel', cancelling ? t('正在取消') : download ? t('取消下载') : t('停止后续操作'), disabled(cancelling), 'small')}</div>`;
 }
-function downloadMeter(progress = toolsProgress): string {
+function downloadMeter(progress: {stage:string;downloaded:number;total:number} | null = toolsProgress, label = t('Platform Tools 下载进度')): string {
   if (!progress || progress.stage !== 'downloading' || progress.total <= 0) return '';
   const value = Math.min(Math.max(0, progress.downloaded), progress.total);
-  return ui`<progress class="download-meter" max="${progress.total}" value="${value}" aria-label="Platform Tools 下载进度"></progress>`;
+  return `<progress class="download-meter" max="${progress.total}" value="${value}" aria-label="${esc(label)}"></progress>`;
 }
 function mcpPanel(): string {
   if (!api.desktop || api.demo) return '';
@@ -295,12 +304,124 @@ function content(): string {
     case 'connect': return connectionPage() + mcpPanel();
     case 'apps': return appTabs() + appsPage();
     case 'launchers': return launchersPage();
+    case 'market': return marketPage();
     case 'install': return appTabs() + installPage();
     case 'history': return historyPage();
   }
 }
 function appTabs(): string {
   return ui`<div class="application-tabs" aria-label="应用管理视图">${actionButton('go-apps',ui`已安装应用 · ${snapshot.packages.filter(app=>app.installed).length}`,'',page==='apps'?'primary':'')}${actionButton('go-install',ui`待安装应用 · ${apkPaths.length}`,'',page==='install'?'primary':'')}</div>`;
+}
+function marketSize(value: number): string { return value >= 1048576 ? `${(value / 1048576).toFixed(1)} MB` : `${Math.max(0.1, value / 1024).toFixed(1)} KB`; }
+function marketDiagnostic(value: string): string {
+  const prefix = '市场更新失败，正在显示上次缓存。';
+  return value.startsWith(prefix) ? t(prefix) + ' ' + message(value.slice(prefix.length)) : message(value);
+}
+function visibleMarketItems(): MarketItem[] {
+  const needle = marketQuery.trim().toLocaleLowerCase();
+  return (marketCatalog?.items || []).filter(item => item.kind === marketKind && (!needle || `${item.name} ${item.fileName} ${item.version || ''}`.toLocaleLowerCase().includes(needle)));
+}
+function marketCards(): string {
+  const items = visibleMarketItems();
+  if (!items.length) {
+    const heading = marketLoading ? t('正在读取市场目录…') : marketError && !marketCatalog ? t('暂时无法读取市场') : marketQuery ? t('没有匹配的安装包') : t('市场暂时没有安装包');
+    const detail = marketError && !marketCatalog ? message(marketError) : marketQuery ? t('试试其他名称或版本。') : t('刷新后会自动发现仓库中新加入的 APK。');
+    return `<div class="empty-state market-empty">${marketLoading ? '<span class="spinner"></span>' : icon('store')}<h3>${esc(heading)}</h3><p>${esc(detail)}</p></div>`;
+  }
+  return items.map(item => {
+    const downloaded = marketDownloads.get(item.id)?.blobSha === item.blobSha;
+    const cover = item.coverUrl?.startsWith('https://gitee.com/juzisang331/pure-tv-store/raw/') ? item.coverUrl : null;
+    return ui`<article class="market-card" data-market-id="${esc(item.id)}"><div class="market-cover"><span class="market-cover-placeholder" aria-hidden="true">${icon(item.kind === 'launcher' ? 'home' : 'grid')}</span>${cover ? `<img src="${esc(cover)}" alt="${esc(item.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : ''}<span class="market-category">${item.kind === 'launcher' ? t('启动器') : t('应用')}</span></div><div class="market-card-body"><div class="market-card-heading"><h2 title="${esc(item.name)}">${esc(item.name)}</h2>${downloaded ? `<span class="market-downloaded">${icon('check')}${t('已下载')}</span>` : ''}</div><div class="market-meta">${item.version ? `<span>v${esc(item.version)}</span>` : ''}<span>${marketSize(item.bytes)}</span></div><p class="market-file" title="${esc(item.fileName)}">${esc(item.fileName)}</p><div class="market-card-actions">${actionButton('download-market', icon('download') + t('下载到电脑'), ` data-id="${esc(item.id)}"${disabled(busy || (!api.desktop && !api.demo))}`, 'small')}${actionButton('install-market', t('下载并安装'), ` data-id="${esc(item.id)}"${disabled(busy || !online())}`, 'small primary')}</div></div></article>`;
+  }).join('');
+}
+function marketCount(): string {
+  const total = marketCatalog?.items.filter(item => item.kind === marketKind).length || 0;
+  return ui`显示 ${visibleMarketItems().length} / ${total} 个安装包`;
+}
+function marketPage(): string {
+  const pending = marketKind === 'launcher' ? launcherApks.length : apkPaths.length;
+  const count = (kind: MarketKind) => marketCatalog?.items.filter(item => item.kind === kind).length || 0;
+  return ui`<div class="market-heading"><div class="application-tabs market-tabs" role="tablist" aria-label="市场分类">${(['app','launcher'] as const).map(kind => `<button type="button" role="tab" data-market-kind="${kind}" aria-selected="${marketKind === kind}" class="${marketKind === kind ? 'primary' : ''}">${icon(kind === 'app' ? 'grid' : 'home')}${kind === 'app' ? t('应用') : t('启动器')}<span>${count(kind)}</span></button>`).join('')}</div>${actionButton('market-source', t('查看市场仓库 ↗'), '', 'text-button small')}</div><section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (marketKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${marketKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}<div class="market-grid" data-scroll="market-${marketKind}" tabindex="0" role="tabpanel" aria-label="市场安装包列表">${marketCards()}</div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 Gitee · pure-tv-store')}</span></div></section><p class="hint market-note">${online() ? marketKind === 'launcher' ? t('安装后请前往“启动器”设为默认桌面，当前桌面不会自动切换。') : t('安装完成后会刷新电视应用列表，也可先下载到待安装列表。') : t('未连接电视也可以浏览和下载，连接后再安装。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
+}
+function updateMarketList(): void {
+  const list = root.querySelector<HTMLElement>('.market-grid');
+  if (list) { list.innerHTML = marketCards(); list.scrollTop = 0; }
+  const count = root.querySelector<HTMLElement>('#market-count');
+  if (count) count.textContent = marketCount();
+}
+function activeMarketOperation(): boolean { return marketWorking || !!(agentOperation?.running && marketTools.includes(agentOperation.tool)); }
+function activeMarketProgress(): MarketProgress | null { return marketWorking ? marketProgress : agentMarketProgress; }
+function marketProgressText(progress: MarketProgress | null = activeMarketProgress()): string {
+  if (!progress || progress.stage === 'catalog') return t('正在读取市场目录…');
+  if (progress.stage === 'verifying') return t('正在校验安装包…');
+  if (progress.stage === 'installing') return t('正在安装到电视并刷新应用…');
+  if (progress.total <= 0) return t('正在下载安装包…');
+  const downloaded = Math.min(Math.max(0, progress.downloaded), progress.total);
+  return `${t('正在下载安装包…')} ${Math.floor(downloaded / progress.total * 100)}% · ${marketSize(downloaded)} / ${marketSize(progress.total)}`;
+}
+function updateMarketProgress(value: MarketProgress): void {
+  if (!marketWorking) return;
+  marketProgress = value;
+  const bar = root.querySelector<HTMLElement>('.busy-bar');
+  if (bar) bar.outerHTML = busyIndicator();
+  renderFeedback();
+}
+function acceptMarketCatalog(value: MarketCatalog): void { marketCatalog = value; marketError = value.warning || ''; }
+function adoptMarketResult(result: MarketResult): void {
+  const {item, path, homeBackground, homeBackgroundColor} = result.download;
+  marketDownloads.set(item.id, {blobSha: item.blobSha, path});
+  if (result.snapshot) { applySnapshot(result.snapshot); cleanSelection(); }
+  if (item.kind === 'launcher') {
+    if (result.installed) launcherApks = launcherApks.filter(item => item.path !== path);
+    else if (!launcherApks.some(item => item.path === path)) launcherApks.push({path, homeBackground, homeBackgroundColor});
+  } else if (result.installed) { apkPaths = apkPaths.filter(item => item !== path); selectedApks.delete(path); }
+  else { if (!apkPaths.includes(path)) apkPaths.push(path); selectedApks.add(path); }
+  if (result.operation === 'install') layoutDirty = true;
+}
+function marketResultMessage(result: MarketResult): string {
+  if (result.error) return message(result.error) + '\n' + t('安装包已保留在待安装列表，可稍后重试。');
+  if (result.operation === 'install' && !result.installed) return t('尚未确认安装成功，安装包已保留在待安装列表。');
+  if (result.installed) return result.download.item.kind === 'launcher' ? t('启动器安装成功。请前往“启动器”选择默认桌面。') : t('应用安装成功，电视应用列表已刷新。');
+  return result.download.item.kind === 'launcher' ? t('下载完成，已加入启动器的待安装列表。') : t('下载完成，已加入应用管理的待安装列表。');
+}
+async function loadMarketCatalog(refresh = false): Promise<void> {
+  if (busy || marketLoading || (!api.desktop && !api.demo)) return;
+  marketLoading = true; marketWorking = true; localBusy = true; busy = true; cancelling = false; marketError = '';
+  marketProgress = {stage: 'catalog', downloaded: 0, total: 0};
+  if (refresh) beginFeedback(t('刷新市场'), marketProgressText());
+  render();
+  try {
+    acceptMarketCatalog(await api.getMarketCatalog(refresh, updateMarketProgress));
+    if (refresh) finishFeedback(marketCatalog!.stale ? 'info' : 'success', marketCatalog!.stale ? marketDiagnostic(marketCatalog!.warning || t('当前显示上次成功读取的目录。')) : ui`市场目录已更新，共 ${marketCatalog!.items.length} 个安装包。`);
+  } catch (error) {
+    marketError = error instanceof Error ? error.message : String(error);
+    if (refresh) finishFeedback(cancelling ? 'info' : 'error', marketError);
+  } finally {
+    marketLoading = false; marketWorking = false; localBusy = false; marketProgress = null; busy = !!agentOperation?.running; cancelling = false; render();
+  }
+}
+async function runMarketItem(id: string, operation: 'download' | 'install'): Promise<void> {
+  if (busy || !marketCatalog || (operation === 'install' && !online())) return;
+  const item = marketCatalog.items.find(item => item.id === id), revision = marketCatalog.revision;
+  const target = {serial: snapshot.device?.serial, userId: snapshot.device?.userId};
+  if (!item) throw new Error(t('市场项目已变化，请刷新后重试。'));
+  if (operation === 'install' && !await confirm(t('下载并安装'), t('将下载此 APK 并安装到当前电视，同包名且签名一致的应用会尝试覆盖升级。'), [item.fileName], t('开始安装'))) return;
+  if (operation === 'install' && (target.serial !== snapshot.device?.serial || target.userId !== snapshot.device?.userId)) throw new Error(t('目标电视已变化，请重新确认安装。'));
+  if (busy || (operation === 'install' && !online())) return;
+  marketWorking = true; localBusy = true; busy = true; cancelling = false; notice = '';
+  marketProgress = {stage: 'downloading', downloaded: 0, total: item.bytes, itemId: id};
+  beginFeedback(operation === 'install' ? t('下载并安装') : t('下载到电脑'), marketProgressText()); render();
+  let outcome: NoticeKind = 'error', description = '', rows: FeedbackRow[] = [];
+  try {
+    const result = await api.marketItem(operation, id, revision, updateMarketProgress);
+    adoptMarketResult(result); description = marketResultMessage(result);
+    outcome = result.error || (operation === 'install' && !result.installed) ? 'error' : 'success';
+    rows = [{target: item.fileName, success: outcome === 'success', message: description}];
+  } catch (error) { description = error instanceof Error ? error.message : String(error); outcome = cancelling ? 'info' : 'error'; }
+  finally {
+    marketWorking = false; marketProgress = null; localBusy = false; busy = !!agentOperation?.running; cancelling = false;
+    notice = description; noticeKind = outcome; finishFeedback(outcome, description, rows); render();
+  }
 }
 function storageBytes(value: number | null | undefined): string {
   if (value == null) return t('未知'); const units=['B','KiB','MiB','GiB','TiB']; let unit=0;
@@ -708,6 +829,11 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
     case 'platform-tools-license': await api.openResource('platformToolsLicense'); break;
     case 'releases': await api.openResource('releases'); break;
     case 'resource-catalog': await api.openResource('catalog'); break;
+    case 'market-source': await api.openResource('market'); break;
+    case 'refresh-market': await loadMarketCatalog(true); break;
+    case 'download-market': await runMarketItem(button.dataset.id!, 'download'); break;
+    case 'install-market': await runMarketItem(button.dataset.id!, 'install'); break;
+    case 'market-pending': page = button.dataset.kind === 'launcher' ? 'launchers' : 'install'; render(); if (page === 'launchers' && online() && !busy) void launcherOperation({action: 'getLayout'}, true); break;
     case 'scan': await run({ action: 'scan' }, t('扫描电视应用，读取当前用户状态…')); if(page==='launchers' && online())await launcherOperation({action:'getLayout'},true);break;
     case 'cancel': await cancelOperation(); break;
     case 'details': details(button.dataset.pkg!); break;
@@ -775,7 +901,9 @@ document.addEventListener('click', event => {
   const target = event.target as HTMLElement;
   if (target.closest('.brand')) { event.preventDefault(); page = 'connect'; render(); return; }
   const nav = target.closest<HTMLButtonElement>('[data-page]');
-  if (nav) { page = nav.dataset.page as Page; render(); if(page==='launchers' && online() && !busy)void launcherOperation({action:'getLayout'},true); return; }
+  if (nav) { page = nav.dataset.page as Page; render(); if(page==='launchers' && online() && !busy)void launcherOperation({action:'getLayout'},true); if(page==='market' && !marketCatalog)void loadMarketCatalog(); return; }
+  const marketTab = target.closest<HTMLButtonElement>('[data-market-kind]');
+  if (marketTab) { marketKind = marketTab.dataset.marketKind as MarketKind; marketQuery = ''; render(); return; }
   const node=target.closest<HTMLElement>('[data-scene-node]');if(node){layoutNode=node.dataset.sceneNode || null;layoutSelected=-1;render();return;}
   const tile=target.closest<HTMLElement>('[data-layout-tile]');if(tile){layoutNode=null;layoutSelected=Number(tile.dataset.layoutTile);render();return;}
   const tab = target.closest<HTMLButtonElement>('[data-filter]');
@@ -792,6 +920,7 @@ document.addEventListener('input', event => {
     case 'port': port = input.value; connectionEdited=true; break;
     case 'adbPath': adbPath = input.value; break;
     case 'search': query = input.value; updateList(); break;
+    case 'marketSearch': marketQuery = input.value; updateMarketList(); break;
   }
 });
 document.addEventListener('change', event => {
@@ -829,19 +958,42 @@ void api.execute({ action: 'getState' }).then(value => {
 
 void api.mcpInfo().then(value => { mcpInfo = value; render(); }).catch(error => { mcpError = String(error); render(); });
 void api.watchMcp(value => {
+  const wasCancelling = cancelling, marketOperation = marketTools.includes(value.tool);
+  let acceptedSnapshot = false;
   agentOperation = value; busy = localBusy || value.running;
   if (!localBusy) cancelling = false;
   if (value.running) { notice = ''; agentProgress = null; }
+  if (value.running && marketOperation && !localBusy) {
+    agentMarketProgress = {stage: value.tool === 'get_market_catalog' ? 'catalog' : 'downloading', downloaded: 0, total: 0};
+    beginFeedback(value.tool === 'get_market_catalog' ? t('刷新市场') : value.tool === 'install_market_item' ? t('下载并安装') : t('下载到电脑'), marketProgressText(agentMarketProgress));
+  }
   if (value.snapshot) {
     const previous = snapshot.device?.serial;
     if (applySnapshot(value.snapshot)) {
+      acceptedSnapshot = true;
       adbPath = snapshot.adbPath || '';
       if (previous !== snapshot.device?.serial) selected.clear();
       cleanSelection();
       notice = value.error || snapshot.message; noticeKind = value.error ? 'error' : 'info';
     }
   }
+  if (!value.running && value.tool === 'install' && !value.error && acceptedSnapshot) {
+    const installed = new Set(value.snapshot?.installResults?.filter(item => item.success).map(item => item.path) || []);
+    apkPaths = apkPaths.filter(path => !installed.has(path));
+    selectedApks = new Set([...selectedApks].filter(path => !installed.has(path)));
+    launcherApks = launcherApks.filter(item => !installed.has(item.path));
+  }
   if (['install','uninstall','restore','set_enabled','scan'].includes(value.tool) && !value.running) layoutDirty=true;
+  if (value.marketResult) {
+    if (value.marketResult.operation === 'catalog') acceptMarketCatalog(value.marketResult.catalog);
+    else adoptMarketResult(value.marketResult);
+  }
+  if (!value.running && marketOperation && !localBusy) {
+    const result = value.marketResult;
+    const description = value.error || (result ? result.operation === 'catalog' ? result.catalog.warning ? marketDiagnostic(result.catalog.warning) : ui`市场目录已更新，共 ${result.catalog.items.length} 个安装包。` : marketResultMessage(result) : t('未收到执行结果，请重新扫描确认'));
+    const outcome = wasCancelling ? 'info' : value.error || !result || (result.operation !== 'catalog' && (result.error || (result.operation === 'install' && !result.installed))) ? 'error' : result.operation === 'catalog' && result.catalog.stale ? 'info' : 'success';
+    notice = description; noticeKind = outcome; finishFeedback(outcome, description); agentMarketProgress = null;
+  }
   let acceptedLayout=false;
   if(value.launcherResult){if(value.tool==='get_launcher_backgrounds')acceptLauncherBackgrounds(value.launcherResult);else acceptedLayout=acceptLauncherResult(value.launcherResult);}
   if(value.tool==='set_launcher_cover' && !value.running)void api.launcherCovers().then(value=>{covers=value;render();});
@@ -850,10 +1002,19 @@ void api.watchMcp(value => {
   render();
   // Only explicit device/catalogue/layout operations trigger reads. Background reads never recurse.
   if(page==='launchers'&&!busy&&online()&&!value.running){
-    if(['install','uninstall','restore','set_enabled','scan','connect','set_home','restore_home'].includes(value.tool)&&layoutDirty)void launcherOperation({action:'getLayout'},true);
+    if(['install','install_market_item','uninstall','restore','set_enabled','scan','connect','set_home','restore_home'].includes(value.tool)&&layoutDirty)void launcherOperation({action:'getLayout'},true);
     else if(acceptedLayout&&['get_launcher_layout','apply_launcher_layout','reset_launcher_layout'].includes(value.tool))void launcherOperation({action:'getBackgrounds'});
   }
-}, value => { agentProgress = value; render(); }).catch(error => { mcpError = ui`无法订阅 Agent 状态：${String(error)}`; render(); });
+}, value => { agentProgress = value; render(); }, value => {
+  agentMarketProgress = value;
+  const bar = root.querySelector<HTMLElement>('.busy-bar'); if (bar) bar.outerHTML = busyIndicator();
+  renderFeedback();
+}).catch(error => { mcpError = ui`无法订阅 Agent 状态：${String(error)}`; render(); });
+
+root.addEventListener('error', event => {
+  const image = event.target;
+  if (image instanceof HTMLImageElement && image.closest('.market-cover')) image.remove();
+}, true);
 
 void api.launcherCovers().then(value=>{covers=value;render();}).catch(error=>showNotice(String(error),'error'));
 layoutDialog.addEventListener('dragstart',event=>{

@@ -21,8 +21,21 @@ export function snapshot() {
   };
 }
 
+export function marketCatalog() {
+  const revision = 'a'.repeat(40);
+  return {
+    sourceUrl: 'https://gitee.com/juzisang331/pure-tv-store', revision,
+    fetchedAt: 1792886400000, stale: false, warning: null,
+    items: [
+      {id:'apps/hifini/hifini-0.1.3.apk',kind:'app',name:'HIFINi TV',version:'0.1.3',fileName:'hifini-0.1.3.apk',bytes:197732,blobSha:'b'.repeat(40),folderUrl:'https://gitee.com/juzisang331/pure-tv-store/tree/'+revision+'/apps/hifini',coverUrl:null},
+      {id:'apps/webtv/webtv-0.2.1.apk',kind:'app',name:'WebTV',version:'0.2.1',fileName:'webtv-0.2.1.apk',bytes:2097152,blobSha:'c'.repeat(40),folderUrl:'https://gitee.com/juzisang331/pure-tv-store/tree/'+revision+'/apps/webtv',coverUrl:null},
+      {id:'launcher/nova/nova-0.1.1.apk',kind:'launcher',name:'Nova TV',version:'0.1.1',fileName:'nova-0.1.1.apk',bytes:1048576,blobSha:'d'.repeat(40),folderUrl:'https://gitee.com/juzisang331/pure-tv-store/tree/'+revision+'/launcher/nova',coverUrl:null},
+    ],
+  };
+}
+
 export async function mockBridge(page, initial = snapshot(), options = {}) {
-  await page.addInitScript(({initial, options}) => {
+  await page.addInitScript(({initial, options, defaultMarketCatalog}) => {
     const state = structuredClone(initial);
     const defaultLayout=options.layout || {version:2,home:{columns:4,items:[{action:'music',icon:'music',color:'#303338'},{action:'files',icon:'files',color:'#3B4C46'},{action:'apps',icon:'apps',color:'#374959'}]},apps:{columns:3,items:[]}};
     let launcherLayout=structuredClone(defaultLayout), customLayout=false;
@@ -45,7 +58,9 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     window.__setMockLayout=value=>{launcherLayout=structuredClone(value);};
     window.__homeBackgrounds=structuredClone(options.homeBackgrounds || {});window.__homeBackgroundColors=structuredClone(options.homeBackgroundColors || {});
     window.__failedBackgroundComponents=structuredClone(options.failedBackgroundComponents || []);
-    const callbacks = new Map(); let nextCallback = 1, downloadCancelled = false, toolsInstalled = !!options.toolsInstalled;
+    const callbacks = new Map(); let nextCallback = 1, downloadCancelled = false, marketCancelled = false, toolsInstalled = !!options.toolsInstalled;
+    window.__marketCatalog=structuredClone(options.marketCatalog || defaultMarketCatalog);
+    window.__marketRequests=[];window.__marketCatalogError=options.failMarketCatalog?'无法读取市场目录，请检查网络后重试':null;
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
     window.__networkReads=0; window.__requests = []; window.__pickerCalls = 0; window.__xss = false; window.__toolsInstalls = 0; window.__resources = [];
@@ -88,7 +103,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
           return window.__pickerCalls === 1 ? ['C:\\我的安装包\\custom music.apk'] : ['C:\\我的安装包\\custom music.apk','C:\\Downloads\\second.apk'];
         }
         if (command === 'choose_adb') return 'C:\\platform-tools\\adb.exe';
-        if (command === 'cancel') { window.__requests.push({action:'cancel'}); downloadCancelled = true; return; }
+        if (command === 'cancel') { window.__requests.push({action:'cancel'}); downloadCancelled = true; marketCancelled = true; return; }
         if (command === 'open_resource') { window.__resources.push(args.resource); return; }
         if (command === 'platform_tools_info') return {version:'37.0.1',platform:'macos',downloadBytes:16110554,installed:toolsInstalled,supported:!options.unsupportedTools,message:options.unsupportedTools ? '此系统请手动配置 ADB' : ''};
         if (command === 'install_platform_tools') {
@@ -109,6 +124,39 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
             state.adbAvailable = true; toolsInstalled = true; state.message = 'ADB 已就绪，可以连接电视';
             return structuredClone(state);
           } finally { callbacks.get(args.onProgress.id)?.({index,end:true}); }
+        }
+        if (['get_market_catalog','download_market_item','install_market_item'].includes(command)) {
+          const action={get_market_catalog:'getMarketCatalog',download_market_item:'downloadMarketItem',install_market_item:'installMarketItem'}[command];
+          window.__marketRequests.push({command,...(args.id?{id:args.id}:{}),...(args.revision?{revision:args.revision}:{}),...(args.refresh!==undefined?{refresh:args.refresh}:{})});
+          marketCancelled=false;let index=0;
+          const item=window.__marketCatalog.items.find(item=>item.id===args.id);
+          const emit=(stage,downloaded=0,total=item?.bytes || 0)=>callbacks.get(args.onProgress?.id)?.({index:index++,message:{stage,downloaded,total,itemId:item?.id || null}});
+          try {
+            emit(command==='get_market_catalog'?'catalog':'downloading',item?Math.floor(item.bytes/2):0);
+            const held=await holdOperation(action);
+            await new Promise(resolve=>setTimeout(resolve,options.marketDelay || 90));
+            if(marketCancelled)throw new Error('下载已取消，临时文件已清理');
+            if(held.response)return structuredClone(held.response);
+            if(command==='get_market_catalog') {
+              if(window.__marketCatalogError)throw new Error(window.__marketCatalogError);
+              return structuredClone(window.__marketCatalog);
+            }
+            if(!item)throw new Error('市场项目不存在，请刷新目录');
+            if(args.revision && args.revision!==window.__marketCatalog.revision)throw new Error('市场目录已更新，请刷新后重试');
+            if(options.failMarketDownload)throw new Error('下载校验失败，请重试');
+            emit('verifying',item.bytes);
+            const download={item:structuredClone(item),path:'/tmp/puretv-market/'+item.fileName,...(item.kind==='launcher'?{homeBackgroundColor:'#223344'}:{})};
+            if(command==='download_market_item')return {operation:'download',download,installed:false};
+            if(!state.device)return {operation:'install',download,installed:false,error:'请先连接电视'};
+            emit('installing',item.bytes);
+            state.revision++;
+            const error=options.marketInstallError || null;
+            state.installResults=[{path:download.path,success:!error,message:error || '电视已确认安装成功，已刷新应用列表'}];
+            state.message=error || '安装完成：成功 1 项，失败 0 项';
+            if(!error && item.kind==='app')state.packages.push({packageName:'com.market.'+item.fileName.split('-')[0],label:item.name,installed:true,enabled:true,system:false,protectedReason:null,apkSizeBytes:item.bytes});
+            if(!error && item.kind==='launcher')state.launchers.push({packageName:'com.market.nova',component:'com.market.nova/.Main',label:item.name,isDefault:false});
+            return {operation:'install',download,installed:!error,snapshot:structuredClone(state),...(error?{error}:{})};
+          } finally { callbacks.get(args.onProgress?.id)?.({index,end:true}); }
         }
         if (command !== 'execute') throw new Error('Unexpected command: '+command);
         const r = args.request;
@@ -161,5 +209,5 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         return structuredClone(state);
       },
     };
-  }, {initial, options});
+  }, {initial, options, defaultMarketCatalog:marketCatalog()});
 }

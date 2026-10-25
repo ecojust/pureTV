@@ -145,8 +145,28 @@ def main():
                 client=Client(binary,session,env)
                 init=client.rpc('initialize',{'protocolVersion':'2025-06-18','capabilities':{},'clientInfo':{'name':'puretv-smoke','version':'1'}})
                 assert init['result']['serverInfo']['name']=='pureTV Manager',init
-                names={t['name'] for t in client.rpc('tools/list')['result']['tools']}
-                assert len(names)==31,names
+                catalog={t['name']:t for t in client.rpc('tools/list')['result']['tools']}
+                names=set(catalog)
+                assert len(names)==34,names
+                for name in ['get_market_catalog','download_market_item','install_market_item']:
+                    assert name in names and catalog[name]['annotations']['openWorldHint'],name
+                assert not catalog['download_market_item']['annotations']['destructiveHint']
+                assert 'market' in catalog['open_resource']['inputSchema']['properties']['resource']['enum']
+                assert 'marketProgress' in client.call('get_status')
+                # Reject unsupported market arguments before any repository request.
+                for name,args in [
+                    ('get_market_catalog',{'refresh':'true'}),
+                    ('download_market_item',{'id':''}),
+                    ('download_market_item',{'id':'apps/music/music.apk','url':'https://example.com/apk'}),
+                    ('install_market_item',{'id':'apps/music/music.apk','revision':'master'}),
+                ]:
+                    rejected=client.rpc('tools/call',{'name':name,'arguments':args})
+                    assert rejected['error']['code']==-32602,(name,rejected)
+                # Valid JSON shapes still cannot bypass the backend's path/revision
+                # checks. These fail before reading the cache or contacting Gitee.
+                client.call('download_market_item',{'id':'../bad.apk'},failure=True)
+                client.call('install_market_item',{'id':'https://example.com/bad.apk'},failure=True)
+                client.call('download_market_item',{'id':'apps/music/music.apk','revision':'g'*40},failure=True)
                 network=client.call('get_local_network')['localNetwork']
                 assert isinstance(network['addresses'],list)
                 for row in network['addresses']:assert row['interfaceName'] and not row['ip'].startswith('127.') and 0<=row['prefixLength']<=32
