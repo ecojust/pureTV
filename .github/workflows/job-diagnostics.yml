@@ -35,6 +35,7 @@ jobs:
                       return links
               except Exception as error:
                   print('::notice::'+json.dumps({'url':url,'error':str(error)}).replace('%','%25'));return []
+          fetch('https://www.hifini.net/thread-6544.htm')
           home=fetch('https://www.hifini.net/')
           found=fetch('https://www.hifini.net/search-'+urllib.parse.quote('夜')+'-1-0-1.htm')
           if found or home: fetch('https://www.hifini.net/thread-'+(found or home)[0]+'.htm')
