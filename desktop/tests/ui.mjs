@@ -1077,7 +1077,7 @@ try {
     const cardBounds=await p.locator('.market-card').first().evaluate(element=>({card:element.getBoundingClientRect().toJSON(),cover:element.querySelector('.market-cover').getBoundingClientRect().toJSON(),buttons:[...element.querySelectorAll('.market-card-actions button')].map(button=>button.getBoundingClientRect().toJSON())}));
     assert.ok(cardBounds.card.height>=250,`Cards must not collapse into grid lines: ${JSON.stringify(cardBounds)}`);
     assert.ok(cardBounds.cover.height>100,'Cover keeps a visible aspect ratio in a long catalog');
-    assert.ok(cardBounds.buttons.every(button=>button.top>=cardBounds.card.top && button.bottom<=cardBounds.card.bottom && button.left>=cardBounds.card.left && button.right<=cardBounds.card.right),'Download and install controls stay inside the card');
+    assert.ok(cardBounds.buttons.every(button=>button.top>=cardBounds.card.top && button.bottom<=cardBounds.card.bottom && button.left>=cardBounds.card.left && button.right<=cardBounds.card.right),`Download and install controls stay inside the card: ${JSON.stringify(cardBounds)}`);
     assert.ok(await p.evaluate(()=>document.documentElement.scrollHeight<=innerHeight+1),'Document does not scroll');
     assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Cards do not overflow horizontally');
     const top=(await p.locator('.page-header').boundingBox()).y;
@@ -1110,7 +1110,7 @@ try {
       target={...target,revision:target.revision+1,device:{...target.device,...change}};
       await p.evaluate(value=>{window.__setMockState(value);window.__emitMcp('mcp-operation',{running:false,tool:'connect',snapshot:value});},target);
       await p.locator('#confirm-operation').click();await p.locator('.notice.error').waitFor();
-      assert.match(await p.locator('.notice.error').innerText(),/目标电视已变化/);
+      assert.match(await p.locator('.notice.error').innerText(),/目标电视已变化/);await acknowledge(p);
       assert.equal((await marketRequests(p)).filter(value=>value.command==='install_market_item').length,0,'An earlier confirmation cannot authorize installation on a new target');
     }
   });

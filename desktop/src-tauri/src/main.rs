@@ -368,7 +368,7 @@ fn platform_tools_info(app: tauri::AppHandle) -> Result<platform_tools::Info, St
 #[tauri::command]
 async fn get_market_catalog(
     refresh: Option<bool>,
-    on_progress: Option<tauri::ipc::Channel<market::Progress>>,
+    on_progress: tauri::ipc::Channel<market::Progress>,
     app: tauri::AppHandle,
     bridge: tauri::State<'_, Bridge>,
 ) -> Result<market::Catalog, String> {
@@ -383,11 +383,9 @@ async fn get_market_catalog(
             &bridge.cancel,
             |progress| {
                 cache_market_progress(&bridge, progress.clone())?;
-                if let Some(channel) = &on_progress {
-                    channel
-                        .send(progress)
-                        .map_err(|_| "市场目录界面已关闭，请重试".to_string())?;
-                }
+                on_progress
+                    .send(progress)
+                    .map_err(|_| "市场目录界面已关闭，请重试".to_string())?;
                 Ok(())
             },
         )
@@ -400,7 +398,7 @@ async fn get_market_catalog(
 async fn download_market_item(
     id: String,
     revision: Option<String>,
-    on_progress: Option<tauri::ipc::Channel<market::Progress>>,
+    on_progress: tauri::ipc::Channel<market::Progress>,
     app: tauri::AppHandle,
     bridge: tauri::State<'_, Bridge>,
 ) -> Result<MarketResult, String> {
@@ -411,7 +409,7 @@ async fn download_market_item(
 async fn install_market_item(
     id: String,
     revision: Option<String>,
-    on_progress: Option<tauri::ipc::Channel<market::Progress>>,
+    on_progress: tauri::ipc::Channel<market::Progress>,
     app: tauri::AppHandle,
     bridge: tauri::State<'_, Bridge>,
 ) -> Result<MarketResult, String> {
@@ -422,7 +420,7 @@ async fn execute_market_item(
     id: String,
     revision: Option<String>,
     install: bool,
-    on_progress: Option<tauri::ipc::Channel<market::Progress>>,
+    on_progress: tauri::ipc::Channel<market::Progress>,
     app: tauri::AppHandle,
     bridge: tauri::State<'_, Bridge>,
 ) -> Result<MarketResult, String> {
@@ -439,11 +437,9 @@ async fn execute_market_item(
             install,
             |progress| {
                 cache_market_progress(&bridge, progress.clone())?;
-                if let Some(channel) = &on_progress {
-                    channel
-                        .send(progress)
-                        .map_err(|_| "市场下载界面已关闭，请重试".to_string())?;
-                }
+                on_progress
+                    .send(progress)
+                    .map_err(|_| "市场下载界面已关闭，请重试".to_string())?;
                 Ok(())
             },
         )

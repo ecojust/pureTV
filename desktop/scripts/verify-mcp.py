@@ -4,6 +4,8 @@
 Linux CI runs this inside Xvfb. No real TV, network downloads, or user data.
 """
 import argparse
+import hashlib
+import io
 import json
 import os
 from pathlib import Path
@@ -12,6 +14,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import zipfile
 
 FAKE_ADB = r'''#!/usr/bin/env python3
 import json, os, sys, time, base64, re
@@ -30,7 +33,9 @@ elif args[0] in ['connect','disconnect']:print('connected' if args[0]=='connect'
 elif args[:2]==['-s','192.168.1.50:5555']:
  if args[2]=='exec-out':sys.stdout.buffer.write(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII='))
  elif args[2]=='pull':Path(args[-1]).write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII='));print('pulled')
- elif args[2]=='install':tv['installed'].append('com.imported.app');save();print('Success')
+ elif args[2]=='install':
+  if (root/'fail-market-install').exists():print('Failure [INSTALL_FAILED_INSUFFICIENT_STORAGE]');sys.exit(1)
+  tv['installed'].append('com.imported.app');save();print('Success')
  else:
   a=args[3:]
   if a[0]=='am':print('Starting HOME' if a[1]=='start' else '0')
@@ -83,6 +88,28 @@ elif args[:2]==['-s','192.168.1.50:5555']:
 else:raise AssertionError(args)
 '''
 
+def seed_market(root):
+    """Seed the production catalog/APK cache, so native routing stays offline."""
+    source='https://gitee.com/juzisang331/pure-tv-store'
+    revision='0123456789abcdef0123456789abcdef01234567'
+    directory=root/'data/com.ecojust.puretv.manager/market'
+    items=[];paths={}
+    for kind,folder,name in [('app','apps/smoke','market-smoke'),('launcher','launcher/smoke','market-launcher')]:
+        filename=f'{name}-1.0.apk';item_id=f'{folder}/{filename}'
+        output=io.BytesIO()
+        with zipfile.ZipFile(output,'w') as archive:
+            archive.writestr('AndroidManifest.xml','<manifest package="com.example.marketsmoke"/>')
+            if kind=='launcher':archive.writestr('assets/layout.json',(root/'default-layout.json').read_bytes())
+        apk=output.getvalue()
+        digest=hashlib.sha1(f'blob {len(apk)}\0'.encode()+apk).hexdigest()
+        path=directory/'apks'/digest/filename
+        path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(apk)
+        items.append({'id':item_id,'kind':kind,'name':name,'version':'1.0','fileName':filename,'bytes':len(apk),'blobSha':digest,'folderUrl':f'{source}/tree/{revision}/{folder}','coverUrl':None})
+        paths[kind]=path
+    catalog={'sourceUrl':source,'revision':revision,'fetchedAt':int(time.time()*1000),'stale':False,'warning':None,'items':items}
+    (directory/'catalog.json').write_text(json.dumps(catalog))
+    return catalog,paths
+
 class Client:
     def __init__(self, binary, session, env):
         self.process = subprocess.Popen([str(binary), '--mcp', str(session)], env=env,
@@ -131,6 +158,7 @@ def main():
         (root/'nova-layout.json').write_text(Path('../resource/launcher/nova/app/src/main/assets/layout.json').read_text())
         third_party=json.loads((root/'nova-layout.json').read_text());third_party['home']['background']['color']='#171923'
         (root/'third-party-layout.json').write_text(json.dumps(third_party))
+        market_fixture,market_paths=seed_market(root)
         env={**os.environ,'XDG_DATA_HOME':str(root/'data'),'XDG_CONFIG_HOME':str(root/'config'),'XDG_CACHE_HOME':str(root/'cache'),'PURETV_ADB':str(adb),'PURETV_FAKE_ROOT':str(root)}
         with (root/'gui.log').open('w') as log:
             gui=subprocess.Popen([str(binary)],env=env,stdout=log,stderr=log)
@@ -167,6 +195,16 @@ def main():
                 client.call('download_market_item',{'id':'../bad.apk'},failure=True)
                 client.call('install_market_item',{'id':'https://example.com/bad.apk'},failure=True)
                 client.call('download_market_item',{'id':'apps/music/music.apk','revision':'g'*40},failure=True)
+                market=client.call('get_market_catalog')
+                assert market['revision']==market_fixture['revision'] and market['items']==market_fixture['items'],market
+                assert market['stale'] is False
+                app_item,launcher_item=market['items']
+                downloaded=client.call('download_market_item',{'id':app_item['id'],'revision':market['revision']})
+                assert downloaded['operation']=='download' and downloaded['installed'] is False,downloaded
+                assert downloaded['download']['item']==app_item and Path(downloaded['download']['path'])==market_paths['app'],downloaded
+                progress=client.call('get_status')['marketProgress']
+                assert progress['itemId']==app_item['id'] and progress['downloaded']==app_item['bytes'],progress
+                client.call('download_market_item',{'id':app_item['id'],'revision':'a'*40},failure=True)
                 network=client.call('get_local_network')['localNetwork']
                 assert isinstance(network['addresses'],list)
                 for row in network['addresses']:assert row['interfaceName'] and not row['ip'].startswith('127.') and 0<=row['prefixLength']<=32
@@ -177,6 +215,22 @@ def main():
                 state=client.call('connect',{'host':'192.168.1.50','port':5555})
                 assert state['device']['model']=='MCP Test TV'
                 assert state['systemInfo']['memoryTotalBytes']==4194304
+                home_before_market=state['defaultHome']
+                installed=client.call('install_market_item',{'id':launcher_item['id'],'revision':market['revision']})
+                assert installed['operation']=='install' and installed['installed'] is True,installed
+                assert installed['download']['item']==launcher_item and Path(installed['download']['path'])==market_paths['launcher'],installed
+                assert installed['snapshot']['defaultHome']==home_before_market
+                assert any(row['path']==str(market_paths['launcher']) and row['success'] for row in installed['snapshot']['installResults']),installed
+                assert 'homeBackground' not in installed['download']
+                (root/'fail-market-install').touch()
+                try:
+                    failed_market=client.call('install_market_item',{'id':app_item['id'],'revision':market['revision']},failure=True)
+                finally:(root/'fail-market-install').unlink()
+                assert failed_market['operation']=='install' and failed_market['installed'] is False and failed_market['error'],failed_market
+                assert Path(failed_market['download']['path'])==market_paths['app'] and market_paths['app'].exists(),failed_market
+                assert any(row['path']==str(market_paths['app']) and not row['success'] for row in failed_market['snapshot']['installResults']),failed_market
+                assert failed_market['snapshot']['defaultHome']==home_before_market
+                assert client.call('get_state')['defaultHome']==home_before_market
                 client.call('refresh_system_info')
                 assert next(p for p in state['packages'] if p['packageName']=='com.ecojust.puretv')['apkSizeBytes']==1024
                 client.call('set_enabled',{'packages':['com.vendor.ads'],'enabled':False})
