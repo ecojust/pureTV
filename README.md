@@ -8,21 +8,6 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 ![管理器界面示例，使用模拟设备数据](docs/previews/manager-031.png)
 
-## 下载
-
-[下载 pureTV Manager 0.3.8](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.3.8)
-
-| 系统 | 安装包 |
-| --- | --- |
-| Windows x64 | 安装版 EXE / 便携 EXE |
-| macOS Apple Silicon | ARM64 DMG，macOS 11+ |
-| macOS Apple Intel | x86_64 DMG，macOS 11+ |
-| Linux x64 | DEB |
-
-首页显示当前电脑的局域网 IPv4、网卡与子网前缀，支持刷新与多网卡。电视 IP／主机名和端口会在点击连接后自动记住，失败时也保留，下次打开自动填入。连接失败排查见[连接指南](desktop/README.md#连接失败排查)。
-
-管理器安装在**电脑**上。电视开启 ADB／网络调试并接受授权后，即可使用应用管理，不需要安装电视端常驻服务。自定义桌面可选择 [Nova TV](resource/launcher/nova/)（参考 tvOS 主屏幕）、[pureTV Launcher](resource/launcher/puretv/)，或[八款不同风格的 v5 启动器](resource/launcher/)。电视端 APK 直接在资源目录下载，包大小与 SHA256 见各目录；管理器校验值见发布附件；macOS 首次打开说明见[安装指南](desktop/README.md#macos-安装与首次打开)。
-
 ## 连接与应用管理
 
 1. 电脑和电视接入可互通的网络，在电视开发者选项中开启 ADB／网络调试。
@@ -38,14 +23,6 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 - 列表内部滚动，表头和顶部批量操作固定；核心系统组件与当前默认启动器受保护。
 
 系统应用卸载只针对当前 Android 用户，保留数据，不删除系统分区 APK。新安装且具备启动入口的用户应用可加入启动器排布。
-
-## 语言、主题与 Logo
-
-左下角可切换 **简体中文 / 繁體中文 / English**，以及 **青绿 / 深蓝 / 石墨** 三种主题。偏好保存后重启仍生效；应用名称、包名及文件路径保持原样。新 Logo 将 P、电视屏幕与应用卡片融为一个图形。
-
-| English · 深蓝 | 繁體中文 · 石墨 |
-| --- | --- |
-| ![English Ocean 示例](docs/previews/manager-en-ocean-030.png) | ![繁體中文石墨主题示例](docs/previews/manager-tw-graphite-030.png) |
 
 ## 启动器与电视应用资源
 
@@ -107,31 +84,27 @@ resource/
 
 所有电视应用的 APK 与源码见 [resource/apps/](resource/apps/)。第三方资源保留各自作者、原始签名和许可证，不纳入 pureTV 的 MIT 授权范围。
 
-<a id="layoutjson-规范与画面对照"></a>
-
-<a id="layoutjson-协议规范与画面对照"></a>
-
-## 自定义启动器布局
-
-`layout.json` 是连接启动器与管理器显示的协议文件：电视和电脑使用同一份布局，管理器可以重现桌面并调整应用块。Home 和 Apps 支持独立背景、布局与切页设置；用户应用可编辑，系统组件仅供查看。
-
-在启动器页面选择「调整布局」，可添加已安装用户应用、拖动、框选、对齐或平铺排布，确认后应用到电视。使用新版布局需同时更新管理器与配套启动器。
-
-完整字段说明、JSON 示例与画面对照见 [layout.json 协议规范](resource/README-development.md#layoutjson-协议规范与画面对照)。
-
 ## MCP / Agent
 
 在「设备连接 → MCP · Agent 调试」复制配置到客户端，保持管理器窗口打开。31 个工具覆盖系统信息、连接、应用管理、APK 安装、启动器切换与布局、背景图、ADB 配置、语言与主题、取消及记录；Agent 与界面共享状态。
 
 [完整 MCP 接入与参数](desktop/docs/mcp.md)。
 
-## 电视端包名与升级
-
-当前包名为 **`com.ecojust.puretv`**，沿用 pureTV 0.2.0 的发布证书，可覆盖升级。更早的 `com.ecojust.cleanyourtv` 是另一个应用，需要独立安装并重新选择默认桌面，不能继承其私有设置。建议先保留原桌面，确认新版运行正常后再处理旧应用。
-
 ## 开发文档
 
-构建、测试以及 layout.json 协议的逐字段规范和文件／画面对照，见 [resource 开发 README](resource/README-development.md)。
+构建与测试说明见 [resource 开发 README](resource/README-development.md)。
+
+<a id="layoutjson-规范与画面对照"></a>
+
+<a id="layoutjson-协议规范与画面对照"></a>
+
+### 自定义启动器布局
+
+`layout.json` 是连接启动器与管理器显示的协议文件：电视和电脑使用同一份布局，管理器可以重现桌面并调整应用块。Home 和 Apps 支持独立背景、布局与切页设置；用户应用可编辑，系统组件仅供查看。
+
+在启动器页面选择「调整布局」，可添加已安装用户应用、拖动、框选、对齐或平铺排布，确认后应用到电视。使用新版布局需同时更新管理器与配套启动器。
+
+完整字段说明、JSON 示例与画面对照见 [layout.json 协议规范](resource/README-development.md#layoutjson-协议规范与画面对照)。
 
 ## 许可与致谢
 
