@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import static org.junit.Assert.*;
 
-@RunWith(RobolectricTestRunner.class) @Config(sdk=28)
+@RunWith(RobolectricTestRunner.class) @Config(sdk=28,qualifiers="zh-rCN")
 public class PlaylistTest {
     private List<Playlist.Channel> parse(String text) throws Exception{return Playlist.parse(text.getBytes(StandardCharsets.UTF_8),false);}
     @Test public void quotedCommasBomAndAlternateRoutesAreParsed() throws Exception{
@@ -29,12 +29,12 @@ public class PlaylistTest {
     }
     @Test public void rejectsHlsMediaListsAndListsWithoutPlayableChannels() throws Exception{
         for(String body:new String[]{"#EXTM3U\n#EXT-X-TARGETDURATION:6\n#EXTINF:6,\n1.ts", "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=123\nstream.m3u8", "<html>unavailable</html>", "#EXTM3U\n#EXTINF:-1,频道\nudp://239.1.1.1:1234"}){
-            try{parse(body);fail(body);}catch(IOException expected){assertFalse(expected.getMessage().isEmpty());}
+            try{parse(body);fail(body);}catch(IOException expected){assertFalse(UiError.message(RuntimeEnvironment.getApplication(),expected).isEmpty());}
         }
     }
     @Test public void limitsStreamInputAndClosesIt() throws Exception{
         final boolean[] closed={false};InputStream input=new ByteArrayInputStream(new byte[Playlist.MAX_BYTES+1]){@Override public void close(){closed[0]=true;}};
-        try{Playlist.read(input);fail();}catch(IOException expected){assertTrue(expected.getMessage().contains("512"));}assertTrue(closed[0]);
+        try{Playlist.read(input);fail();}catch(IOException expected){assertTrue(UiError.message(RuntimeEnvironment.getApplication(),expected).contains("512"));}assertTrue(closed[0]);
     }
     @Test public void rejectsUnsupportedSchemesCredentialsAndMalformedAddresses() throws Exception{
         for(String url:new String[]{"file:///x","content://media/1","udp://239.1.1.1:1234","https://user:secret@example.com/live","javascript:alert(1)","https://example.com/live|User-Agent=x","https://example.com/live#fragment"}){

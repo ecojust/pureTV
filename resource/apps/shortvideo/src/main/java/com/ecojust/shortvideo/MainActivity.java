@@ -79,7 +79,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Fe
         stage.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> layoutVideo());
         header = column(); header.setPadding(dp(26), dp(18), dp(12), 0);
         header.addView(text(getString(R.string.app_name), 25));
-        sourceLabel = text(getString(R.string.source_label, feed.source().label), 15); sourceLabel.setTextColor(0xffa9acb6); header.addView(sourceLabel);
+        sourceLabel = text(getString(R.string.source_label, getString(feed.source().label)), 15); sourceLabel.setTextColor(0xffa9acb6); header.addView(sourceLabel);
         counter = text("", 14); counter.setTextColor(0xffa9acb6); header.addView(counter);
         root.addView(header, new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.START));
         modeLabel = text(getString(R.string.auto_play), 15); modeLabel.setPadding(0, dp(25), dp(26), 0);
@@ -129,7 +129,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Fe
         long restore = resumePending && clip.url.equals(currentUrl) ? savedPosition : 0;
         releasePlayer(false); savedPosition = restore; resumePending = false; currentUrl = clip.url;
         fetching = false; preparing = true; buffering = false; error = "";
-        sourceLabel.setText(getString(R.string.source_label, clip.source.label)); counter.setText(getString(R.string.clip_number, feed.index() + 1));
+        sourceLabel.setText(getString(R.string.source_label, getString(clip.source.label))); counter.setText(getString(R.string.clip_number, feed.index() + 1));
         showControls(true, false); setMessage(getString(R.string.loading_video), true); updateControls();
         int ticket = decoderGeneration;
         try {
@@ -159,7 +159,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Fe
             player.setDataSource(this, android.net.Uri.parse(clip.url), headers); player.prepareAsync(); armTimeout(ticket);
         } catch (Exception e) { fail(getString(R.string.network_error)); }
     }
-    @Override public void error(String message) { fetching = false; fail(message); }
+    @Override public void error(int message, Object... arguments) { fetching = false; fail(getString(message, arguments)); }
     private boolean validDecoder(MediaPlayer value, int ticket) { return active && surfaceReady && value == player && ticket == decoderGeneration; }
     private void armTimeout(int ticket) {
         cancelTimeout(); timeout = () -> { if (active && ticket == decoderGeneration) fail(getString(R.string.load_timeout)); }; main.postDelayed(timeout, 25000);
@@ -255,7 +255,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Fe
         main.removeCallbacks(hideControls); boolean wasPlaying = isPlaying();
         if (wasPlaying) pausePlayer();
         VideoFeed.Source[] values = VideoFeed.Source.values(); String[] labels = new String[values.length];
-        for (int i = 0; i < values.length; i++) labels[i] = values[i].label;
+        for (int i = 0; i < values.length; i++) labels[i] = getString(values[i].label);
         final boolean[] switched = {false};
         sourceDialog = new AlertDialog.Builder(this).setTitle(R.string.sources)
                 .setSingleChoiceItems(labels, feed.source().ordinal(), (dialog, position) -> {

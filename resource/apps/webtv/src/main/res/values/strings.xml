@@ -1,26 +1,88 @@
 <resources>
-    <string name="app_name">WebTV</string><string name="satellite">卫视</string><string name="cctv">央视</string>
-    <string name="favourites">收藏</string><string name="all">全部</string><string name="sources">直播源</string>
-    <string name="fullscreen">全屏</string><string name="exit_fullscreen">退出全屏</string>
-    <string name="previous">上一台</string><string name="next">下一台</string><string name="favourite">收藏</string>
-    <string name="favourited">已收藏</string><string name="route">换线路</string><string name="retry">重试播放</string>
-    <string name="loading_list">正在读取频道列表…</string><string name="loading_video">正在连接直播…</string>
-    <string name="live">● 直播</string><string name="paused">已停止，按确定继续直播</string>
-    <string name="waiting">等待播放</string><string name="empty">暂无频道，可切换分类或导入 M3U 列表</string>
+    <string name="app_name">WebTV</string>
+    <string name="satellite">卫视</string>
+    <string name="cctv">央视</string>
+    <string name="favourites">收藏</string>
+    <string name="all">全部</string>
+    <string name="sources">直播源</string>
+    <string name="fullscreen">全屏</string>
+    <string name="exit_fullscreen">退出全屏</string>
+    <string name="previous">上一台</string>
+    <string name="next">下一台</string>
+    <string name="favourite">收藏</string>
+    <string name="favourited">已收藏</string>
+    <string name="route">换线路</string>
+    <string name="retry">重试播放</string>
+    <string name="loading_list">正在读取频道列表…</string>
+    <string name="loading_video">正在连接直播…</string>
+    <string name="live">● 直播</string>
+    <string name="paused">已停止，按确定继续直播</string>
+    <string name="waiting">等待播放</string>
+    <string name="empty">暂无频道，可切换分类或导入 M3U 列表</string>
     <string name="load_timeout">直播连接或缓冲超时，请重试或换线路</string>
     <string name="decoder_error">系统无法播放此线路（%1$d / %2$d），请换线路或更新直播源</string>
-    <string name="ended">直播流已结束，请重试或换线路</string><string name="focus_denied">暂时无法获取音频焦点，请稍后重试</string>
+    <string name="ended">直播流已结束，请重试或换线路</string>
+    <string name="focus_denied">暂时无法获取音频焦点，请稍后重试</string>
     <string name="network_error">无法打开直播线路，请重试或换线路</string>
     <string name="route_count">%1$s · 线路 %2$d/%3$d</string>
     <string name="hints">↑↓ 选频道　确定 切台／全屏　返回 列表　菜单 直播源</string>
     <string name="full_hints">↑↓ 切台　确定 显示控制　返回 列表　菜单 直播源</string>
-    <string name="refresh">更新当前列表</string><string name="import_url">导入网络 M3U</string>
-    <string name="import_file">导入本地 M3U</string><string name="restore">恢复内置频道</string>
-    <string name="url_hint">http(s)://…/channels.m3u</string><string name="import_action">导入</string>
-    <string name="cancel">取消</string><string name="close">关闭</string><string name="busy">正在读取列表，请稍候</string>
-    <string name="local_refresh">本地列表请重新选择文件导入</string><string name="no_picker">电视未安装文件选择器</string>
+    <string name="refresh">更新当前列表</string>
+    <string name="import_url">导入网络 M3U</string>
+    <string name="import_file">导入本地 M3U</string>
+    <string name="restore">恢复内置频道</string>
+    <string name="url_hint">http(s)://…/channels.m3u</string>
+    <string name="import_action">导入</string>
+    <string name="cancel">取消</string>
+    <string name="close">关闭</string>
+    <string name="busy">正在读取列表，请稍候</string>
+    <string name="local_refresh">本地列表请重新选择文件导入</string>
+    <string name="no_picker">电视未安装文件选择器</string>
     <string name="single_route">此频道只有一条线路，可更新列表或导入其他直播源</string>
     <string name="favourite_limit">最多收藏 50 个频道，请先取消部分收藏</string>
-    <string name="list_ready">%1$s · %2$d 个频道</string><string name="list_error">列表读取失败：%1$s</string>
+    <string name="list_ready">%1$s · %2$d 个频道</string>
+    <string name="list_error">列表读取失败：%1$s</string>
     <string name="list_retry">重试读取</string>
+    <string name="playback_area">直播播放区域</string>
+    <string name="source_default">默认频道</string>
+    <string name="source_url">网络列表</string>
+    <string name="source_file">本地列表</string>
+    <string name="route_label">线路 %1$d · %2$s</string>
+    <string name="list_unreadable">无法读取列表</string>
+    <string name="list_cancelled">读取已取消</string>
+    <string name="list_timeout">列表读取超时</string>
+    <string name="file_required">请选择系统文件选择器中的 M3U 文件</string>
+    <string name="file_unreadable">无法读取选择的文件</string>
+    <string name="list_url_limit">列表地址超过 2048 字符上限</string>
+    <string name="list_redirect_invalid">列表重定向无效</string>
+    <string name="list_redirect_downgrade">列表不允许从 HTTPS 降级跳转</string>
+    <string name="list_http_error">列表请求失败（HTTP %1$d）</string>
+    <string name="list_size_limit">频道列表超过 512 KiB 上限</string>
+    <string name="list_redirect_limit">列表重定向次数过多</string>
+    <string name="list_is_hls">请选择频道 M3U 列表，不能导入单个 HLS 媒体播放列表</string>
+    <string name="list_no_channels">没有找到可用的 HTTP(S) 频道，请检查 M3U 格式</string>
+    <string name="url_empty">直播地址为空或过长</string>
+    <string name="url_unsupported">仅支持 HTTP(S) 地址，不支持此协议或内嵌账号密码</string>
+    <string name="url_invalid">直播地址格式无效</string>
+    <string name="channel_guangdong">广东卫视</string>
+    <string name="channel_hunan">湖南卫视</string>
+    <string name="channel_beijing">北京卫视</string>
+    <string name="channel_zhejiang">浙江卫视</string>
+    <string name="channel_jiangsu">江苏卫视</string>
+    <string name="channel_dragon">东方卫视国际版</string>
+    <string name="channel_shenzhen">深圳卫视</string>
+    <string name="channel_anhui">安徽卫视</string>
+    <string name="channel_shandong">山东卫视</string>
+    <string name="channel_sichuan">四川卫视</string>
+    <string name="channel_tianjin">天津卫视</string>
+    <string name="channel_liaoning">辽宁卫视</string>
+    <string name="channel_heilongjiang">黑龙江卫视</string>
+    <string name="channel_hebei">河北卫视</string>
+    <string name="channel_jiangxi">江西卫视</string>
+    <string name="channel_guizhou">贵州卫视</string>
+    <string name="channel_qinghai">青海卫视</string>
+    <string name="channel_yunnan">云南卫视</string>
+    <string name="channel_ningxia">宁夏卫视</string>
+    <string name="channel_yanbian">延边卫视</string>
+    <string name="channel_bingtuan">兵团卫视</string>
 </resources>

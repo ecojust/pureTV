@@ -24,16 +24,25 @@ public class ApiTest {
     }
     @Test public void refusesUnavailableOrProtectedAudio() throws Exception {
         try { BiliApi.parseAudio(new JSONObject("{\"code\":0,\"data\":{\"durl\":[{\"url\":\"https://example.com/video\"}]}}")); fail(); }
-        catch (IOException expected) { assertTrue(expected.getMessage().contains("AAC")); }
+        catch (IOException expected) { assertEquals(R.string.no_aac, ((MusicError)expected).resource); }
     }
     @Test public void verificationFailuresAreVisible() throws Exception {
         try { BiliApi.checked(new JSONObject("{\"code\":-352,\"message\":\"verify\"}")); fail(); }
-        catch (IOException expected) { assertTrue(expected.getMessage().contains("验证")); }
+        catch (IOException expected) { assertEquals(R.string.verification, ((MusicError)expected).resource); }
     }
     @Test public void wbiCanonicalizesWithoutMutatingParameters() throws Exception {
         Map<String,String> params = new HashMap<>(); params.put("keyword", "a b!'()*");
         String signed = BiliApi.sign(params,"test",1700000000);
         assertEquals("keyword=a%20b&wts=1700000000&w_rid=c7c83e10e633862d6646475a3c93246e",signed);
         assertEquals(1,params.size());
+    }
+    @Test @Config(qualifiers="en-rUS") public void englishErrorsKeepCodesAndDoNotExposeRemoteLanguage() throws Exception {
+        android.content.Context context=org.robolectric.RuntimeEnvironment.getApplication();
+        for(int code:new int[]{-400,-352,-412,-404}) {
+            try{BiliApi.checked(new JSONObject().put("code",code).put("message","中文上游错误"));fail();}
+            catch(IOException error){String text=MusicError.display(context,error);assertFalse(text.matches("(?s).*[\\p{IsHan}].*"));assertFalse(text.isEmpty());if(code==-404)assertTrue(text.contains("-404"));if(code==-400)assertTrue(text.contains("-400"));}
+        }
+        assertEquals(context.getString(R.string.network_timeout),MusicError.display(context,new java.net.SocketTimeoutException()));
+        assertEquals(context.getString(R.string.request_failed),MusicError.display(context,new IOException("中文外部错误")));
     }
 }

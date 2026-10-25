@@ -115,8 +115,14 @@ mod tests {
     }
 }
 
+#[derive(Debug, PartialEq)]
+pub struct HomeBackground {
+    pub color: String,
+    pub image: Option<String>,
+}
+
 /// Read only the bounded layout asset; never extract or execute files from an APK.
-pub fn apk_home_background(path: &Path) -> Option<String> {
+pub fn apk_home_background(path: &Path) -> Option<HomeBackground> {
     let file = fs::File::open(path).ok()?;
     if file.metadata().ok()?.len() > 256 * 1024 * 1024 {
         return None;
@@ -132,9 +138,30 @@ pub fn apk_home_background(path: &Path) -> Option<String> {
         return None;
     }
     let layout: Value = serde_json::from_slice(&data).ok()?;
-    let value = layout["home"]["background"]["image"]
-        .as_str()
-        .or_else(|| layout["home"]["scene"]["background"]["image"].as_str())?;
+    let background = match layout["version"].as_u64()? {
+        3 => &layout["home"]["scene"]["background"],
+        4 | 5 => &layout["home"]["background"],
+        _ => return None,
+    };
+    let fields = background.as_object()?;
+    let color = fields.get("color")?.as_str()?;
+    if color.len() != 7
+        || !color.starts_with('#')
+        || !color[1..].bytes().all(|b| b.is_ascii_hexdigit())
+    {
+        return None;
+    }
+    let image = match fields.get("image") {
+        Some(value) => Some(background_image(value.as_str()?)?),
+        None => None,
+    };
+    Some(HomeBackground {
+        color: color.to_string(),
+        image,
+    })
+}
+
+fn background_image(value: &str) -> Option<String> {
     if value.len() > 33000 {
         return None;
     }
@@ -153,48 +180,125 @@ pub fn apk_home_background(path: &Path) -> Option<String> {
 mod home_background_tests {
     use super::*;
     use std::io::Write;
-    #[test]
-    fn apk_home_background_is_bounded_and_never_follows_external_urls() {
-        let directory =
-            std::env::temp_dir().join(format!("puretv-home-cover-{}", std::process::id()));
-        fs::create_dir_all(&directory).unwrap();
-        let path = directory.join("launcher.apk");
-        let png = format!(
-            "data:image/png;base64,{}",
-            STANDARD.encode(b"\x89PNG\r\n\x1a\nfixture")
-        );
-        for (image, expected) in [
-            (&*png, Some(png.clone())),
-            ("https://example.com/cover.png", None),
-            ("data:image/svg+xml;base64,PHN2Zz4=", None),
-        ] {
-            let mut archive = zip::ZipWriter::new(fs::File::create(&path).unwrap());
-            archive
-                .start_file(
-                    "assets/layout.json",
-                    zip::write::SimpleFileOptions::default(),
-                )
-                .unwrap();
-            archive
-                .write_all(
-                    json!({"version":4,"home":{"background":{"image":image}}})
-                        .to_string()
-                        .as_bytes(),
-                )
-                .unwrap();
-            archive.finish().unwrap();
-            assert_eq!(apk_home_background(&path), expected);
-        }
-        let mut archive = zip::ZipWriter::new(fs::File::create(&path).unwrap());
+
+    fn write_apk(path: &Path, data: &[u8]) {
+        let mut archive = zip::ZipWriter::new(fs::File::create(path).unwrap());
         archive
             .start_file(
                 "assets/layout.json",
                 zip::write::SimpleFileOptions::default(),
             )
             .unwrap();
-        archive.write_all(&vec![b' '; 90 * 1024 + 1]).unwrap();
+        archive.write_all(data).unwrap();
         archive.finish().unwrap();
+    }
+
+    fn fixture(name: &str) -> std::path::PathBuf {
+        let directory =
+            std::env::temp_dir().join(format!("puretv-home-cover-{name}-{}", std::process::id()));
+        fs::create_dir_all(&directory).unwrap();
+        directory.join("launcher.apk")
+    }
+
+    #[test]
+    fn apk_home_background_reads_images_and_solid_colors_without_modifying_apks() {
+        let path = fixture("versions");
+        let png = format!(
+            "data:image/png;base64,{}",
+            STANDARD.encode(b"\x89PNG\r\n\x1a\nfixture")
+        );
+        for version in [3, 4, 5] {
+            for with_image in [true, false] {
+                let mut background = json!({"color":"#12abCD"});
+                if with_image {
+                    background["image"] = json!(png);
+                }
+                let home = if version == 3 {
+                    json!({"scene":{"background":background}})
+                } else {
+                    json!({"background":background})
+                };
+                write_apk(
+                    &path,
+                    json!({"version":version,"home":home})
+                        .to_string()
+                        .as_bytes(),
+                );
+                let before = fs::read(&path).unwrap();
+                assert_eq!(
+                    apk_home_background(&path),
+                    Some(HomeBackground {
+                        color: "#12abCD".into(),
+                        image: with_image.then(|| png.clone()),
+                    })
+                );
+                assert_eq!(fs::read(&path).unwrap(), before);
+                assert_eq!(fs::read_dir(path.parent().unwrap()).unwrap().count(), 1);
+            }
+        }
+        fs::remove_dir_all(path.parent().unwrap()).unwrap();
+    }
+
+    #[test]
+    fn apk_home_background_rejects_bad_colors_versions_and_external_urls() {
+        let path = fixture("invalid");
+        let background = json!({"color":"#123456"});
+        let mut invalid = vec![
+            json!({"version":2,"home":{"background":background}}),
+            json!({"version":6,"home":{"background":background}}),
+            json!({"version":"5","home":{"background":background}}),
+            json!({"version":3,"home":{"background":background}}),
+            json!({"version":5,"home":{"scene":{"background":background}}}),
+            json!({"version":5,"home":{"background":{}}}),
+        ];
+        for color in [
+            json!("#fff"),
+            json!("#12345678"),
+            json!("#12gg45"),
+            json!("red"),
+            json!("url(https://example.com)"),
+            json!(123456),
+            json!(null),
+        ] {
+            invalid.push(json!({"version":5,"home":{"background":{"color":color}}}));
+        }
+        for image in [
+            json!("https://example.com/cover.png"),
+            json!("file:///tmp/cover.png"),
+            json!("data:image/svg+xml;base64,PHN2Zz4="),
+            json!("data:image/png;base64,ZmFrZQ=="),
+            json!(format!(
+                "data:image/jpeg;base64,{}",
+                STANDARD.encode(b"\x89PNG\r\n\x1a\nfixture")
+            )),
+            json!("data:image/png;base64,!bad!"),
+            json!(format!("data:image/png;base64,{}", "A".repeat(33000))),
+            json!(null),
+        ] {
+            invalid
+                .push(json!({"version":5,"home":{"background":{"color":"#123456","image":image}}}));
+        }
+        for layout in invalid {
+            write_apk(&path, layout.to_string().as_bytes());
+            let before = fs::read(&path).unwrap();
+            assert_eq!(apk_home_background(&path), None, "{layout}");
+            assert_eq!(fs::read(&path).unwrap(), before);
+        }
+        fs::remove_dir_all(path.parent().unwrap()).unwrap();
+    }
+
+    #[test]
+    fn apk_home_background_enforces_archive_and_asset_size_bounds() {
+        let path = fixture("bounds");
+        write_apk(&path, &vec![b' '; 90 * 1024 + 1]);
         assert!(apk_home_background(&path).is_none());
-        let _ = fs::remove_dir_all(directory);
+        write_apk(&path, b"not JSON");
+        assert!(apk_home_background(&path).is_none());
+        fs::File::create(&path)
+            .unwrap()
+            .set_len(256 * 1024 * 1024 + 1)
+            .unwrap();
+        assert!(apk_home_background(&path).is_none());
+        fs::remove_dir_all(path.parent().unwrap()).unwrap();
     }
 }

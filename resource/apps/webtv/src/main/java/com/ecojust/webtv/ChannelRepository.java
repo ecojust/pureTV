@@ -15,7 +15,7 @@ class ChannelRepository {
     static final class Source {
         final String kind, address;
         Source(String kind, String address) { this.kind = kind; this.address = address; }
-        String label() { return kind.equals("url") ? "网络列表" : kind.equals("file") ? "本地列表" : "默认频道"; }
+        String label(Context context) { return context.getString(kind.equals("url") ? R.string.source_url : kind.equals("file") ? R.string.source_file : R.string.source_default); }
     }
     static final class Catalogue {
         final Source source; final List<Playlist.Channel> channels;
@@ -30,7 +30,7 @@ class ChannelRepository {
             cancelled = true; HttpURLConnection current = connection; if (current != null) current.disconnect();
             InputStream open = stream; if (open != null) try { open.close(); } catch (IOException ignored) { }
         }
-        void check() throws IOException { if (cancelled || Thread.currentThread().isInterrupted()) throw new IOException("读取已取消"); if (System.nanoTime() > deadline) throw new IOException("列表读取超时"); }
+        void check() throws IOException { if (cancelled || Thread.currentThread().isInterrupted()) throw new UiError(R.string.list_cancelled); if (System.nanoTime() > deadline) throw new UiError(R.string.list_timeout); }
     }
     private final Context context;
     private final AtomicFile cache;
@@ -43,14 +43,14 @@ class ChannelRepository {
         request.check(); return new Catalogue(new Source("default", ""), Playlist.parse(data, true));
     }
     Catalogue refresh(Source source, Request request) throws IOException {
-        if (source.kind.equals("file")) throw new IOException("本地列表请重新选择文件导入");
+        if (source.kind.equals("file")) throw new UiError(R.string.local_refresh);
         String address = source.kind.equals("url") ? source.address : DEFAULT_URL;
         byte[] body = download(address, request); return save(source, body, request);
     }
     Catalogue importFile(Uri uri, Request request) throws IOException {
-        if (!"content".equals(uri.getScheme())) throw new IOException("请选择系统文件选择器中的 M3U 文件");
+        if (!"content".equals(uri.getScheme())) throw new UiError(R.string.file_required);
         request.check(); InputStream stream = context.getContentResolver().openInputStream(uri);
-        if (stream == null) throw new IOException("无法读取选择的文件");
+        if (stream == null) throw new UiError(R.string.file_unreadable);
         request.stream = stream;
         try { return save(new Source("file", ""), Playlist.read(stream), request); }
         finally { request.stream = null; }
@@ -80,7 +80,7 @@ class ChannelRepository {
         } catch (IOException | RuntimeException e) { return null; }
     }
     private byte[] download(String raw, Request request) throws IOException {
-        if (raw.length() > 2048) throw new IOException("列表地址超过 2048 字符上限");
+        if (raw.length() > 2048) throw new UiError(R.string.list_url_limit);
         String address = Playlist.safeUrl(raw);
         for (int redirects = 0; redirects <= 3; redirects++) {
             request.check(); HttpURLConnection connection = open(address); request.connection = connection;
@@ -89,13 +89,13 @@ class ChannelRepository {
             try {
                 request.check(); int status = connection.getResponseCode();
                 if (status == 301 || status == 302 || status == 303 || status == 307 || status == 308) {
-                    String location = connection.getHeaderField("Location"); if (location == null) throw new IOException("列表重定向无效");
+                    String location = connection.getHeaderField("Location"); if (location == null) throw new UiError(R.string.list_redirect_invalid);
                     String next = Playlist.safeUrl(new URL(connection.getURL(), location).toString());
-                    if (address.startsWith("https:") && !next.startsWith("https:")) throw new IOException("列表不允许从 HTTPS 降级跳转");
+                    if (address.startsWith("https:") && !next.startsWith("https:")) throw new UiError(R.string.list_redirect_downgrade);
                     address = next; continue;
                 }
-                if (status != 200) throw new IOException("列表请求失败（HTTP " + status + "）");
-                if (connection.getContentLengthLong() > Playlist.MAX_BYTES) throw new IOException("频道列表超过 512 KiB 上限");
+                if (status != 200) throw new UiError(R.string.list_http_error, status);
+                if (connection.getContentLengthLong() > Playlist.MAX_BYTES) throw new UiError(R.string.list_size_limit);
                 InputStream stream = connection.getInputStream(); request.stream = stream;
                 byte[] bytes = Playlist.read(new FilterInputStream(stream) {
                     @Override public int read(byte[] buffer, int offset, int length) throws IOException {
@@ -104,7 +104,7 @@ class ChannelRepository {
                 }); request.check(); return bytes;
             } finally { request.stream = null; request.connection = null; connection.disconnect(); }
         }
-        throw new IOException("列表重定向次数过多");
+        throw new UiError(R.string.list_redirect_limit);
     }
     protected HttpURLConnection open(String address) throws IOException { return (HttpURLConnection) new URL(address).openConnection(); }
 }

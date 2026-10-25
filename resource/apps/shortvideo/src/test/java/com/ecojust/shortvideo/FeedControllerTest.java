@@ -17,12 +17,13 @@ import static org.robolectric.Shadows.shadowOf;
 public class FeedControllerTest {
     private FeedController controller;
     private final List<VideoFeed.Clip> clips=new ArrayList<>();
-    private final List<String> errors=new ArrayList<>();
+    private final List<Integer> errors=new ArrayList<>();
+    private final List<Object[]> errorArguments=new ArrayList<>();
     private final AtomicInteger calls=new AtomicInteger();
     private final FeedController.Events events=new FeedController.Events() {
         public void loading() { }
         public void clip(VideoFeed.Clip clip) { clips.add(clip); }
-        public void error(String message) { errors.add(message); }
+        public void error(int message,Object... arguments) { errors.add(message);errorArguments.add(arguments); }
     };
     private FeedController.Loader unique() { return new FeedController.Loader() {
         public VideoFeed.Clip fetch(VideoFeed.Source source) throws IOException { return new VideoFeed.Clip("https://example.com/"+calls.incrementAndGet()+".mp4",source); }
@@ -56,7 +57,7 @@ public class FeedControllerTest {
             public void cancel() { }
         });
         controller.start();flush();nextReady();shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(1500));flush();
-        assertEquals(3,calls.get());assertEquals(1,errors.size());assertFalse(controller.loading());
+        assertEquals(3,calls.get());assertEquals(Collections.singletonList(R.string.feed_repeated),errors);assertFalse(controller.loading());
         shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMinutes(3));assertEquals(3,calls.get());assertEquals(1,controller.size());
     }
     @Test public void networkErrorNeedsExplicitRetry() throws Exception {
@@ -64,9 +65,18 @@ public class FeedControllerTest {
             public VideoFeed.Clip fetch(VideoFeed.Source source) throws IOException { calls.incrementAndGet();throw new IOException("offline"); }
             public void cancel() { }
         });
-        controller.start();flush();assertEquals(Collections.singletonList("offline"),errors);assertFalse(controller.loading());
+        controller.start();flush();assertEquals(Collections.singletonList(R.string.network_error),errors);assertFalse(controller.loading());
         shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMinutes(3));assertEquals(1,calls.get());
         controller.fresh();flush();assertEquals(2,calls.get());
+    }
+    @Test public void sourceErrorKeepsResourceAndFormattingArgumentsForTheUiLocale() throws Exception {
+        create(new FeedController.Loader() {
+            public VideoFeed.Clip fetch(VideoFeed.Source source) throws IOException { throw new VideoFeed.FeedException(R.string.feed_http_error,503); }
+            public void cancel() { }
+        });
+        controller.start();flush();
+        assertEquals(Collections.singletonList(R.string.feed_http_error),errors);
+        assertArrayEquals(new Object[]{503},errorArguments.get(0));
     }
     @Test public void suspendDiscardsLateResponseAndClosePreventsFurtherRequests() throws Exception {
         CountDownLatch entered=new CountDownLatch(1),release=new CountDownLatch(1),returned=new CountDownLatch(1);

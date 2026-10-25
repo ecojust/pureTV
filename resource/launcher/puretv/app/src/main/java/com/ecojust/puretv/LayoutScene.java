@@ -110,7 +110,7 @@ final class LayoutScene extends FrameLayout {
                 if(symbol!=null)symbol.setBounds(0,0,iconSize,iconSize);
                 if(text.getCompoundDrawables()[0]!=symbol||resized){text.setCompoundDrawables(symbol,null,null,null);text.setCompoundDrawablePadding(Math.round(7*basisScale()*scale));}
             }
-            if(child instanceof TextView&&spec!=null&&spec.has("text")&&!component.equals("clock")&&!component.equals("date")&&!component.equals("network"))((TextView)child).setText(spec.optString("text"));
+            if(child instanceof TextView&&spec!=null&&spec.has("text")&&!component.equals("clock")&&!component.equals("date"))((TextView)child).setText(spec.optString("text"));
             if(child.getId()==R.id.weatherLine&&spec!=null&&spec.has("color"))((TextView)child.findViewById(R.id.weatherText)).setTextColor(Color.parseColor(spec.optString("color")));
             if(child.getId()==R.id.weatherLine){
                 ((TextView)child.findViewById(R.id.weatherText)).setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,13*basisScale()*scale);

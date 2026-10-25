@@ -28,6 +28,10 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     let launcherLayout=structuredClone(defaultLayout), customLayout=false;
     window.__interfacePreferences={};
     window.__launcherRequests=[];let covers=structuredClone(options.covers || {});
+    window.__setMockState=value=>Object.assign(state,structuredClone(value));
+    window.__setMockLayout=value=>{launcherLayout=structuredClone(value);};
+    window.__homeBackgrounds=structuredClone(options.homeBackgrounds || {});window.__homeBackgroundColors=structuredClone(options.homeBackgroundColors || {});
+    window.__failedBackgroundComponents=structuredClone(options.failedBackgroundComponents || []);
     const callbacks = new Map(); let nextCallback = 1, downloadCancelled = false, toolsInstalled = !!options.toolsInstalled;
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
@@ -44,16 +48,24 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         if (command === 'mcp_info') return {config:{mcpServers:{puretv:{command:'/Applications/pureTV Manager.app/Contents/MacOS/puretv-desktop',args:['--mcp','/Users/test/mcp-session.json']}}},sessionPath:'/Users/test/mcp-session.json'};
         if(command==='get_launcher_covers')return structuredClone(covers);
         if(command==='choose_launcher_cover'){if(args.remove)delete covers[args.key];else covers[args.key]='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=';return structuredClone(covers);}
-        if(command==='choose_launcher_apks')return [{path:'/tmp/pureTV.apk',cover:options.thumbnail?'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=':null}];
+        if(command==='choose_launcher_apks')return options.launcherApks || [{path:'/tmp/pureTV.apk',cover:options.thumbnail?'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=':null}];
         if (command === 'choose_launcher_json') return JSON.stringify({version:2,home:{columns:2,items:[{packageName:'com.ecojust.webtv',icon:'app'}]},apps:{columns:3,items:[]}});
         if (command === 'launcher_execute') {
           window.__launcherRequests.push(structuredClone(args.request));
+          if(args.request.action==='getBackgrounds'){
+            const backgrounds=structuredClone(window.__homeBackgrounds),backgroundColors=structuredClone(window.__homeBackgroundColors);
+            const home=options.layoutSupported?([4,5].includes(launcherLayout.version)?launcherLayout.home.background:launcherLayout.home.scene?.background):null;
+            if(home){backgroundColors[state.defaultHome]=home.color;if(home.image)backgrounds[state.defaultHome]=home.image;else delete backgrounds[state.defaultHome];}
+            const failedComponents=structuredClone(window.__failedBackgroundComponents);
+            for(const component of failedComponents){delete backgrounds[component];delete backgroundColors[component];}
+            const result={supported:true,serial:state.device?.serial,userId:state.device?.userId,backgrounds,backgroundColors,failedComponents};
+            await new Promise(resolve=>setTimeout(resolve,options.backgroundDelay || 70));return result;
+          }
           await new Promise(resolve=>setTimeout(resolve,70));
-          if(args.request.action==='getBackgrounds')return {supported:true,serial:state.device?.serial,userId:state.device?.userId,backgrounds:options.homeBackgrounds || {}};
           if (!options.layoutSupported) return {supported:false,component:state.defaultHome,message:'此启动器尚未接入可验证的布局接口，请使用它自身的设置。'};
           if (args.request.action === 'applyLayout') {launcherLayout=structuredClone(args.request.layout);customLayout=true;}
           if (args.request.action === 'resetLayout') {launcherLayout=structuredClone(defaultLayout);customLayout=false;}
-          return {supported:true,version:launcherLayout.version,systemBasis:[4,5].includes(launcherLayout.version)?{screen:defaultLayout.screen,home:defaultLayout.home.system,apps:defaultLayout.apps.system}:undefined,component:state.defaultHome,custom:customLayout,layout:structuredClone(launcherLayout),apps:options.layoutApps || [...(state.packages.some(p=>p.packageName==='com.imported.app')?[{packageName:'com.imported.app',label:'新安装应用'}]:[]),{packageName:'com.ecojust.webtv',label:'WebTV',iconPng:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII='},{packageName:'com.vendor.home',label:'系统启动器'},{packageName:'com.not.installed',label:'未安装应用'}],message:args.request.action === 'getLayout' ? '布局已读取' : '布局已应用并复查'};
+          return {supported:true,serial:state.device?.serial,userId:state.device?.userId,version:launcherLayout.version,systemBasis:[4,5].includes(launcherLayout.version)?{screen:defaultLayout.screen,home:defaultLayout.home.system,apps:defaultLayout.apps.system}:undefined,component:state.defaultHome,custom:customLayout,layout:structuredClone(launcherLayout),apps:options.layoutApps || [...(state.packages.some(p=>p.packageName==='com.imported.app')?[{packageName:'com.imported.app',label:'新安装应用'}]:[]),{packageName:'com.ecojust.webtv',label:'WebTV',iconPng:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII='},{packageName:'com.vendor.home',label:'系统启动器'},{packageName:'com.not.installed',label:'未安装应用'}],message:args.request.action === 'getLayout' ? '布局已读取' : '布局已应用并复查'};
         }
         if (command === 'choose_apks') {
           if (options.apkPaths) return options.apkPaths;

@@ -39,13 +39,13 @@ public class PlaybackApiTest {
             if(url.endsWith("/nav"))return json("{\"code\":-101,\"data\":{\"wbi_img\":{\"img_url\":\"https://example.com/01234567890123456789012345678901.png\",\"sub_url\":\"https://example.com/01234567890123456789012345678901.png\"}}}");
             return json("{\"code\":-400,\"message\":\"请求错误\",\"ttl\":1}");
         });
-        try{api.audio(track());fail();}catch(IOException expected){assertTrue(expected.getMessage().contains("-400"));}
+        try{api.audio(track());fail();}catch(IOException expected){assertEquals(R.string.bad_request, ((MusicError)expected).resource);}
         assertEquals(4,urls.size());assertTrue(urls.get(3).contains("/wbi/playurl?"));assertTrue(urls.get(3).contains("w_rid="));assertTrue(urls.get(3).contains("fnver=0"));
     }
     @Test public void verificationFailureDoesNotTryOtherEndpoints() throws Exception {
         List<String> urls=new ArrayList<>();
         BiliApi api=new BiliApi(url->{urls.add(url);return json(url.contains("/pagelist?")?PAGES:"{\"code\":-352,\"message\":\"verify\"}");});
-        try{api.audio(track());fail();}catch(IOException expected){assertTrue(expected.getMessage().contains("验证"));}
+        try{api.audio(track());fail();}catch(IOException expected){assertEquals(R.string.verification, ((MusicError)expected).resource);}
         assertEquals(2,urls.size());
     }
     @Test public void singletonAudioAndBackupUrlWithoutBandwidthRemainPlayable() throws Exception {
@@ -71,9 +71,9 @@ public class PlaybackApiTest {
     @Test public void unavailablePagesStopBeforeRequestingAudio() throws Exception {
         List<String> urls = new ArrayList<>();
         BiliApi api = new BiliApi(url -> { urls.add(url); return json("{\"code\":-352,\"message\":\"verify\"}"); });
-        try { api.audio(track()); fail(); } catch (IOException e) { assertTrue(e.getMessage().contains("验证")); }
+        try { api.audio(track()); fail(); } catch (IOException e) { assertEquals(R.string.verification, ((MusicError)e).resource); }
         assertEquals(1, urls.size());
         try { BiliApi.pageCid(json("{\"code\":0,\"data\":[]}")); fail(); }
-        catch (IOException e) { assertTrue(e.getMessage().contains("分段")); }
+        catch (IOException e) { assertEquals(R.string.no_segments, ((MusicError)e).resource); }
     }
 }

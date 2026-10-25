@@ -1,12 +1,15 @@
 # ShortVideo TV
 
 <!-- apk-resource:start -->
-[下载 APK](shortvideo-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
+[下载 APK](shortvideo-0.1.1.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
 
 此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
 <!-- apk-resource:end -->
 
+简体中文 | [English](README.en.md)
 面向遥控器的轻量原生 Android TV 短视频播放器。Android 8.0（API 26）以上，包名 `com.ecojust.shortvideo`，版本 `0.1.0`。不需要账号或 API Key。
+
+界面跟随电视系统语言，支持简体中文和英语。英文界面包含播放状态、错误提示、视频源名称和选择弹窗；视频内容由第三方来源提供，不做翻译。
 
 ![原生控件渲染预览，SurfaceView 视频层不包含在此截图中，非电视实机截图](docs/controls-preview.png)
 
@@ -65,6 +68,7 @@ adb shell am start -n com.ecojust.shortvideo/.MainActivity
 ## 验证
 
 - 离线测试覆盖两类响应、坏地址／错误响应、JSON 大小与重定向上限、请求间隔、重复内容、历史上限、取消、播放控制、解码超时、自动下一条、前后台资源释放／进度恢复、系统媒体控制，以及 960dp 与 640dp TV 控件布局。
+- 中英文界面使用同一原生 Activity 渲染并测试，包含视频源选择、状态、错误提示和按钮边界。设置 `SHORTVIDEO_UI_CAPTURE_DIR` 可导出 `shortvideo-tv.png` 与 `shortvideo-tv.en.png`，以及对应的紧凑尺寸截图。
 - 2026-10-23 使用应用相同的接口及请求头，分别获取并下载两个源各一条样本：均为 720 × 1280 H.264 + AAC，约 2.29 MB／1.09 MB；FFmpeg 对前三秒解码均成功。验证下载文件保存在开发环境外部目录，未放入仓库或安装包。
 - 上述解码检查在开发机器完成；没有 Android TV 实机，不能代替电视硬件解码、连续播放稳定性或峰值内存测试。Robolectric 截图只包含控件，无法捕获独立 Surface 视频层。
 

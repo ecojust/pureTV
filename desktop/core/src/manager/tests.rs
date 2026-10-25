@@ -96,6 +96,7 @@ impl Runner for FakeRunner {
                             use base64::Engine;
                             let method=&a[a.iter().position(|arg|arg=="--method").unwrap()+1];
                             let uri=a[a.iter().position(|arg|arg=="--uri").unwrap()+1].clone();
+                            if tv.failure.as_deref()==Some(uri.as_str()) {return Err("ADB provider read timed out".into())}
                             let original=uri=="content://com.ecojust.puretv.layout";
                             if !original && !tv.provider_defaults.contains_key(&uri) {return Ok(Output{code:1,text:"No content provider".into()})}
                             let defaults:serde_json::Value=tv.provider_defaults.get(&uri).cloned().unwrap_or_else(||serde_json::from_str(include_str!("../../../public/layout-v3.json")).unwrap());
@@ -1266,6 +1267,214 @@ fn inactive_launcher_backgrounds_are_read_without_switching_home() {
         .calls
         .iter()
         .any(|args| args.iter().any(|v| v == "set-home-activity")));
+}
+
+#[test]
+fn home_background_scan_returns_images_and_solid_colors_without_writes() {
+    use base64::Engine;
+    let image = format!(
+        "data:image/png;base64,{}",
+        base64::engine::general_purpose::STANDARD.encode(b"\x89PNG\r\n\x1a\nfixture")
+    );
+    let component = "com.ecojust.puretv/com.ecojust.puretv.MainActivity";
+    for template in [
+        include_str!("../../../public/layout-v3.json"),
+        include_str!("../../../public/layout-v4.json"),
+        include_str!("../../../public/layout.json"),
+    ] {
+        let (mut manager, tv) = fixture();
+        tv.lock().unwrap().user = 10;
+        connect(&mut manager);
+        let before_home = manager.snapshot().default_home;
+        let before_saved = fs::read(manager.data_dir.join("state.json")).unwrap();
+        let mut layout: serde_json::Value = serde_json::from_str(template).unwrap();
+        let background_path = if layout["version"] == 3 {
+            "/home/scene/background"
+        } else {
+            "/home/background"
+        };
+        for with_image in [true, false] {
+            let background = layout.pointer_mut(background_path).unwrap();
+            background["color"] = serde_json::json!("#123aBC");
+            if with_image {
+                background["image"] = serde_json::json!(image);
+            } else {
+                background.as_object_mut().unwrap().remove("image");
+            }
+            {
+                let mut tv = tv.lock().unwrap();
+                tv.layout_provider = true;
+                tv.launcher_layout = Some(layout.clone());
+                tv.calls.clear();
+            }
+            let result = manager
+                .execute_launcher(crate::LauncherRequest::GetBackgrounds)
+                .unwrap();
+            assert_eq!(result["serial"], "192.168.1.50:5555");
+            assert_eq!(result["userId"], 10);
+            assert_eq!(
+                result["backgroundColors"],
+                serde_json::json!({component:"#123aBC"})
+            );
+            assert_eq!(
+                result["backgrounds"],
+                if with_image {
+                    serde_json::json!({component:image})
+                } else {
+                    serde_json::json!({})
+                }
+            );
+            assert_eq!(manager.snapshot().default_home, before_home);
+            assert_eq!(
+                fs::read(manager.data_dir.join("state.json")).unwrap(),
+                before_saved
+            );
+            let tv = tv.lock().unwrap();
+            assert_eq!(tv.launcher_layout, Some(layout.clone()));
+            assert!(tv.provider_layouts.is_empty());
+            assert!(tv.calls.iter().all(|args| !args.iter().any(|value| [
+                "apply",
+                "reset",
+                "--arg",
+                "set-home-activity",
+                "start",
+                "push"
+            ]
+            .contains(&value.as_str()))));
+            let calls: Vec<_> = tv
+                .calls
+                .iter()
+                .filter(|args| args.iter().any(|v| v == "content"))
+                .collect();
+            assert_eq!(calls.len(), 2);
+            for call in calls {
+                assert_eq!(&call[..3], ["-s", "192.168.1.50:5555", "shell"]);
+                assert!(call.windows(2).any(|pair| pair == ["--user", "10"]));
+                assert!(call.windows(2).any(|pair| pair == ["--method", "status"]));
+            }
+        }
+    }
+}
+
+#[test]
+fn home_background_scan_rejects_invalid_layouts_without_writes() {
+    let (mut manager, tv) = fixture();
+    connect(&mut manager);
+    for (pointer, invalid) in [
+        ("/home/background/color", serde_json::json!("#bad")),
+        (
+            "/home/background/image",
+            serde_json::json!("https://example.com/image.png"),
+        ),
+        ("/screen/width", serde_json::json!(0)),
+        ("/version", serde_json::json!(99)),
+    ] {
+        let mut layout: serde_json::Value =
+            serde_json::from_str(include_str!("../../../public/layout.json")).unwrap();
+        if pointer.ends_with("/image") {
+            layout["home"]["background"]["image"] = invalid;
+        } else {
+            *layout.pointer_mut(pointer).unwrap() = invalid;
+        }
+        {
+            let mut tv = tv.lock().unwrap();
+            tv.layout_provider = true;
+            tv.launcher_layout = Some(layout.clone());
+            tv.calls.clear();
+        }
+        let result = manager
+            .execute_launcher(crate::LauncherRequest::GetBackgrounds)
+            .unwrap();
+        assert_eq!(result["backgroundColors"], serde_json::json!({}));
+        assert_eq!(result["backgrounds"], serde_json::json!({}));
+        let tv = tv.lock().unwrap();
+        assert_eq!(tv.launcher_layout, Some(layout));
+        assert!(tv.calls.iter().all(|args| !args.iter().any(|value| [
+            "apply",
+            "reset",
+            "--arg",
+            "set-home-activity",
+            "start",
+            "push"
+        ]
+        .contains(&value.as_str()))));
+    }
+}
+
+#[test]
+fn home_background_scan_distinguishes_read_failures_from_invalid_or_backgroundless_responses() {
+    let (mut manager, tv) = fixture();
+    let uri = "content://com.ecojust.puretv.layout";
+    let component = "com.ecojust.puretv/com.ecojust.puretv.MainActivity";
+    let second_component = "com.ecojust.puretv/com.ecojust.puretv.SecondHome";
+    let valid: serde_json::Value =
+        serde_json::from_str(include_str!("../../../public/layout.json")).unwrap();
+    {
+        let mut tv = tv.lock().unwrap();
+        tv.layout_provider = true;
+        tv.launchers.push(second_component.into());
+        tv.provider_defaults
+            .insert("content://com.stock.home.layout".into(), valid.clone());
+        tv.launcher_layout = Some(valid);
+    }
+    connect(&mut manager);
+    let confirmed = manager
+        .execute_launcher(crate::LauncherRequest::GetBackgrounds)
+        .unwrap();
+    assert!(confirmed["backgroundColors"][component].is_string());
+    assert_eq!(confirmed["failedComponents"], serde_json::json!([]));
+    tv.lock().unwrap().failure = Some(uri.into());
+    let failed = manager
+        .execute_launcher(crate::LauncherRequest::GetBackgrounds)
+        .unwrap();
+    assert_eq!(
+        failed["failedComponents"],
+        serde_json::json!([component, second_component])
+    );
+    assert!(failed["backgroundColors"][component].is_null());
+    assert!(failed["backgroundColors"]["com.stock.home/com.stock.home.Main"].is_string());
+    assert_eq!(failed["serial"], confirmed["serial"]);
+    assert_eq!(failed["userId"], confirmed["userId"]);
+
+    let mut backgroundless: serde_json::Value =
+        serde_json::from_str(include_str!("../../../public/layout-v3.json")).unwrap();
+    backgroundless["version"] = serde_json::json!(2);
+    for page in ["home", "apps"] {
+        backgroundless[page]
+            .as_object_mut()
+            .unwrap()
+            .remove("scene");
+    }
+    for response in [serde_json::json!({"version":999}), backgroundless] {
+        {
+            let mut tv = tv.lock().unwrap();
+            tv.failure = None;
+            tv.launcher_layout = Some(response.clone());
+            tv.calls.clear();
+        }
+        let result = manager
+            .execute_launcher(crate::LauncherRequest::GetBackgrounds)
+            .unwrap();
+        assert_eq!(result["failedComponents"], serde_json::json!([]));
+        assert!(result["backgroundColors"][component].is_null());
+        assert!(result["backgrounds"][component].is_null());
+        let tv = tv.lock().unwrap();
+        assert_eq!(tv.launcher_layout, Some(response));
+        assert_eq!(
+            tv.calls
+                .iter()
+                .filter(|args| args.iter().any(|value| value == uri))
+                .count(),
+            1
+        );
+        assert!(tv.calls.iter().all(|args| !args.iter().any(|value| [
+            "apply",
+            "reset",
+            "--arg",
+            "set-home-activity"
+        ]
+        .contains(&value.as_str()))));
+    }
 }
 
 #[test]

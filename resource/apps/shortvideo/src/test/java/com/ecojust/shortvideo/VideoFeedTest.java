@@ -14,8 +14,8 @@ import static org.junit.Assert.*;
 @RunWith(RobolectricTestRunner.class) @Config(sdk=28)
 public class VideoFeedTest {
     @Test public void parsesBothLiveResponseShapesWithoutInventingMetadata() throws Exception {
-        VideoFeed.Clip a=VideoFeed.parse(VideoFeed.Source.KULEU,new JSONObject("{\"code\":200,\"msg\":\"成功\",\"mp4_video\":\"https://cdn.example.com/one.mp4?cache=1\"}"));
-        VideoFeed.Clip b=VideoFeed.parse(VideoFeed.Source.DWO,new JSONObject("{\"code\":200,\"message\":\"操作成功\",\"data\":{\"video\":{\"url\":\"https://cdn.example.com/two.mp4\"}}}"));
+        VideoFeed.Clip a=VideoFeed.parse(VideoFeed.Source.KULEU,new JSONObject("{\"code\":200,\"msg\":\"Success\",\"mp4_video\":\"https://cdn.example.com/one.mp4?cache=1\"}"));
+        VideoFeed.Clip b=VideoFeed.parse(VideoFeed.Source.DWO,new JSONObject("{\"code\":200,\"message\":\"Success\",\"data\":{\"video\":{\"url\":\"https://cdn.example.com/two.mp4\"}}}"));
         assertEquals(VideoFeed.Source.KULEU,a.source); assertEquals(VideoFeed.Source.DWO,b.source);
         assertEquals("https://cdn.example.com/two.mp4",b.url);
         assertEquals(a.key(),new VideoFeed.Clip("https://cdn.example.com/one.mp4?cache=2",a.source).key());
@@ -45,7 +45,7 @@ public class VideoFeedTest {
     @Test public void httpErrorsDisconnectAndDoNotRetryInALoop() throws Exception {
         Connection connection=new Connection(429, "limited"); AtomicInteger calls=new AtomicInteger();
         VideoFeed feed=new VideoFeed(url->{calls.incrementAndGet();return connection;});
-        try { feed.fetch(VideoFeed.Source.KULEU); fail(); } catch(IOException expected) { assertTrue(expected.getMessage().contains("过快")); }
+        try { feed.fetch(VideoFeed.Source.KULEU); fail(); } catch(VideoFeed.FeedException expected) { assertEquals(R.string.feed_rate_limited,expected.message); }
         assertTrue(connection.disconnected); assertEquals(1,calls.get());
     }
     @Test public void capsJsonBodyAndRejectsInvalidJson() throws Exception {
@@ -58,11 +58,11 @@ public class VideoFeedTest {
     @Test public void rejectsHttpsDowngradeAndBoundsRedirects() throws Exception {
         Connection downgrade=new Connection(302,""); downgrade.location="http://example.com/video";
         AtomicInteger count=new AtomicInteger(); VideoFeed feed=new VideoFeed(url->{count.incrementAndGet(); return downgrade;});
-        try { feed.fetch(VideoFeed.Source.KULEU);fail(); } catch(IOException expected) { assertTrue(expected.getMessage().contains("HTTPS")); }
+        try { feed.fetch(VideoFeed.Source.KULEU);fail(); } catch(VideoFeed.FeedException expected) { assertEquals(R.string.feed_unsafe_url,expected.message); }
         assertEquals(1,count.get());
         Connection loop=new Connection(302,""); loop.location="https://example.com/next"; count.set(0);
         feed=new VideoFeed(url->{count.incrementAndGet(); return loop;});
-        try { feed.fetch(VideoFeed.Source.KULEU);fail(); } catch(IOException expected) { assertTrue(expected.getMessage().contains("重定向")); }
+        try { feed.fetch(VideoFeed.Source.KULEU);fail(); } catch(VideoFeed.FeedException expected) { assertEquals(R.string.feed_too_many_redirects,expected.message); }
         assertEquals(4,count.get()); assertTrue(loop.disconnected);
     }
 }

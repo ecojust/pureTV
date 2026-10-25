@@ -15,7 +15,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
 [![License](https://img.shields.io/badge/license-MIT-f4c430?style=flat-square)](LICENSE)
 
-![Manager preview using simulated device data](docs/previews/manager-031.png)
+![Manager preview using simulated device data](docs/previews/manager-en.png)
 
 ## Connection and app management
 
@@ -35,11 +35,13 @@ Uninstalling a system app affects only the current Android user, preserves its d
 
 ## Launcher and TV app resources
 
-[![Native Android previews of eight v5 launchers](docs/previews/launcher-collection-010.png)](resource/launcher/)
+[![Native Android previews of eight v5 launchers](docs/previews/launcher-collection-en.png)](resource/launcher/)
 
 The public [resource/](resource/) directory contains [launcher/](resource/launcher/) and [apps/](resource/apps/). Launcher and app sources previously stored at the repository root have moved into these directories. GitHub Releases contain only the desktop manager; launcher and TV app APKs are available in their individual software directories. Each software folder contains at least one actual APK and may also include matching source code, cover images, author details, licenses, and SHA256 checksums. Click a software name to open its folder.
 
-“Customizable” in the launcher table means support for this manager's **layout.json version 5 users/system interface**. Launcher cards use the Home background image by default. A provided `thumb.png`, `APK-name.thumb.png`, or manually selected cover takes precedence.
+The launchers and first-party TV apps support English. Select English in the TV system settings to use it. User-provided app names, playlists, and media titles keep their original text. Native previews below use English test content; they are not physical TV captures.
+
+“Customizable” in the launcher table means support for this manager's **layout.json version 5 users/system interface**. Cards for launchers that support the layout protocol automatically display the Home background color and image, including inactive launchers, and update after layout changes are applied. The list has no choose-cover or remove-cover actions; edit the home-screen background in “Adjust layout.” Pending APKs use their embedded Home background when available, falling back to a sibling `thumb.png` or `APK-name.thumb.png` only when no layout background can be read.
 
 ```text
 resource/
@@ -68,26 +70,26 @@ resource/
 
 | Name | Author | Version | APK size | Customizable | Preview |
 | --- | --- | --- | --- | --- | --- |
-| [Aster TV · 星轨](resource/launcher/aster/) | ecojust / 桔子桑 | 0.1.0 | 435.6 KB | Yes | <img src="resource/launcher/aster/thumb.png" width="180" alt="Aster TV · 星轨 preview"> |
-| [Circuit TV · 回路](resource/launcher/circuit/) | ecojust / 桔子桑 | 0.1.0 | 431.6 KB | Yes | <img src="resource/launcher/circuit/thumb.png" width="180" alt="Circuit TV · 回路 preview"> |
-| [Drift TV](resource/launcher/drift/) | ecojust / 桔子桑 | 0.1.0 | 455.7 KB | Yes | <img src="resource/launcher/drift/thumb.png" width="180" alt="Drift TV preview"> |
-| [Forma TV](resource/launcher/forma/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | Yes | <img src="resource/launcher/forma/thumb.png" width="180" alt="Forma TV preview"> |
-| [Mono TV 墨白](resource/launcher/mono/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | Yes | <img src="resource/launcher/mono/thumb.png" width="180" alt="Mono TV 墨白 preview"> |
-| [Moss TV](resource/launcher/moss/) | ecojust / 桔子桑 | 0.1.0 | 463.7 KB | Yes | <img src="resource/launcher/moss/thumb.png" width="180" alt="Moss TV preview"> |
-| [Nova TV](resource/launcher/nova/) | ecojust / 桔子桑 | 0.1.1 | 471.7 KB | Yes | <img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV preview"> |
-| [Pixel TV 像素](resource/launcher/pixel/) | ecojust / 桔子桑 | 0.1.0 | 439.7 KB | Yes | <img src="resource/launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 preview"> |
-| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.3.6 | 740.1 KB | Yes | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher preview"> |
-| [Sol TV](resource/launcher/sol/) | ecojust / 桔子桑 | 0.1.0 | 435.7 KB | Yes | <img src="resource/launcher/sol/thumb.png" width="180" alt="Sol TV preview"> |
+| [Aster TV](resource/launcher/aster/) | ecojust | 0.1.1 | 443.7 KB | Yes | <img src="docs/previews/en/launcher-aster.png" width="180" alt="Aster TV preview"> |
+| [Circuit TV](resource/launcher/circuit/) | ecojust | 0.1.1 | 435.7 KB | Yes | <img src="docs/previews/en/launcher-circuit.png" width="180" alt="Circuit TV preview"> |
+| [Drift TV](resource/launcher/drift/) | ecojust | 0.1.1 | 475.7 KB | Yes | <img src="docs/previews/en/launcher-drift.png" width="180" alt="Drift TV preview"> |
+| [Forma TV](resource/launcher/forma/) | ecojust | 0.1.1 | 443.7 KB | Yes | <img src="docs/previews/en/launcher-forma.png" width="180" alt="Forma TV preview"> |
+| [Mono TV](resource/launcher/mono/) | ecojust | 0.1.1 | 443.7 KB | Yes | <img src="docs/previews/en/launcher-mono.png" width="180" alt="Mono TV preview"> |
+| [Moss TV](resource/launcher/moss/) | ecojust | 0.1.1 | 487.7 KB | Yes | <img src="docs/previews/en/launcher-moss.png" width="180" alt="Moss TV preview"> |
+| [Nova TV](resource/launcher/nova/) | ecojust | 0.1.2 | 495.7 KB | Yes | <img src="docs/previews/en/launcher-nova.png" width="180" alt="Nova TV preview"> |
+| [Pixel TV](resource/launcher/pixel/) | ecojust | 0.1.1 | 443.7 KB | Yes | <img src="docs/previews/en/launcher-pixel.png" width="180" alt="Pixel TV preview"> |
+| [pureTV Launcher](resource/launcher/puretv/) | ecojust | 0.3.7 | 740.1 KB | Yes | <img src="docs/previews/en/launcher-puretv.png" width="180" alt="pureTV Launcher preview"> |
+| [Sol TV](resource/launcher/sol/) | ecojust | 0.1.1 | 439.7 KB | Yes | <img src="docs/previews/en/launcher-sol.png" width="180" alt="Sol TV preview"> |
 
 ### TV apps
 
 | Name | Author | Version | APK size | Purpose | Preview |
 | --- | --- | --- | --- | --- | --- |
-| [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Android TV client for Jellyfin media servers | <img src="resource/apps/jellyfin-tv/thumb.png" width="180" alt="Jellyfin for Android TV preview"> |
-| [Music TV](resource/apps/music/) | ecojust / 桔子桑 | 0.1.2 | 40.8 KB | Native TV music player | <img src="resource/apps/music/thumb.png" width="180" alt="Music TV preview"> |
-| [ShortVideo TV](resource/apps/shortvideo/) | ecojust / 桔子桑 | 0.1.0 | 28.7 KB | Short video player with remote control support | <img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV preview"> |
-| [TV Bro](resource/apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | TV browser with remote control support, using the system WebView | <img src="resource/apps/tvbro/thumb.png" width="180" alt="TV Bro preview"> |
-| [WebTV](resource/apps/webtv/) | ecojust / 桔子桑 | 0.1.0 | 36.8 KB | Live TV and M3U player | <img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV preview"> |
+| [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Android TV client for Jellyfin media servers | <img src="docs/previews/en/app-jellyfin-tv.png" width="180" alt="Jellyfin for Android TV preview"> |
+| [Music TV](resource/apps/music/) | ecojust | 0.1.3 | 48.8 KB | Native TV music player | <img src="docs/previews/en/app-music.png" width="180" alt="Music TV preview"> |
+| [ShortVideo TV](resource/apps/shortvideo/) | ecojust | 0.1.1 | 32.7 KB | Short video player with remote control support | <img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"> |
+| [TV Bro](resource/apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | TV browser with remote control support, using the system WebView | <img src="docs/previews/en/app-tvbro.png" width="180" alt="TV Bro preview"> |
+| [WebTV](resource/apps/webtv/) | ecojust | 0.1.1 | 44.8 KB | Live TV and M3U player | <img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"> |
 
 <!-- resource-index:end -->
 

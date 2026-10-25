@@ -10,6 +10,7 @@ const port = 1429, url = `http://127.0.0.1:${port}`;
 const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', String(port), '--strictPort'], { cwd: directory, stdio: ['ignore', 'pipe', 'pipe'] });
 let serverLog = ''; server.stdout.on('data', d => serverLog += d); server.stderr.on('data', d => serverLog += d);
 let browser, passed = 0;
+const testMatch=process.env.PURETV_TEST_MATCH?new RegExp(process.env.PURETV_TEST_MATCH):null;
 const act = (p, action) => p.locator(`[data-act="${action}"]`).first();
 const nav = async (p, page) => {if(page==='install'){await p.locator('[data-page="apps"]').click();await p.locator('[data-act="go-install"]').first().click();}else await p.locator(`[data-page="${page}"]`).click();};
 const requests = p => p.evaluate(() => window.__requests);
@@ -33,6 +34,7 @@ async function acceptTools(p) {
 const captureDir = process.env.PURETV_CAPTURE_DIR;
 async function shot(p, name) { if (captureDir) { await mkdir(captureDir, { recursive: true }); await p.screenshot({path:`${captureDir}/${name}.png`, fullPage:true}); } }
 async function check(name, run, state = snapshot(), options = {}) {
+  if(testMatch&&!testMatch.test(name))return;
   const context = await browser.newContext({ locale:'zh-CN', viewport: { width: 1440, height: 1000 } });
   const p = await context.newPage(), errors = [];
   p.on('pageerror', e => errors.push(e.message));
@@ -138,7 +140,7 @@ try {
     for (const viewport of [{width:1440,height:900},{width:960,height:640}]) {
       await p.setViewportSize(viewport);
       for (const [page,key] of [['apps','apps'],['launchers','launchers'],['history','history'],['install','apks']]) {
-        await nav(p,page);
+        await nav(p,page);await settled(p);
         if (page==='install' && !await p.locator('[data-scroll="apks"]').count()) await act(p,'add-apks').click();
         const area = p.locator(`[data-scroll="${key}"]`);
         const metrics = await area.evaluate(el=>({height:el.clientHeight,total:el.scrollHeight}));
@@ -222,13 +224,13 @@ try {
   await check('removed live view and pairing are absent',async p=>{
     assert.equal(await p.locator('[data-page="live"]').count(),0);assert.equal(await p.locator('[name="pairCode"]').count(),0);assert.equal(await act(p,'go-live').count(),0);
   });
-  await check('launcher APK installs on the same page and covers are optional backgrounds',async p=>{
+  await check('launcher APK installs on the same page and sidecar previews remain read-only',async p=>{
     await nav(p,'launchers');await settled(p);await act(p,'add-launcher').click();
     assert.equal(await p.locator('.pending-launcher').count(),1);assert.equal(await p.locator('.pending-launcher .launcher-card-background').count(),1);
     await act(p,'install-launcher').click();await confirmOperation(p);assert.equal(await p.locator('.pending-launcher').count(),0);
     assert.equal(await p.locator('[data-page="launchers"]').getAttribute('aria-current'),'page');
-    await act(p,'launcher-cover').click();assert.equal(await p.locator('.launcher-card-background').count(),1);
-    await act(p,'remove-launcher-cover').click();assert.equal(await p.locator('.launcher-card-background').count(),0);
+    assert.equal(await p.locator('[data-act="launcher-cover"], [data-act="remove-launcher-cover"]').count(),0);
+    await settled(p);
     await p.setViewportSize({width:1000,height:700});
     assert.equal(await p.locator('.launcher-card').evaluateAll(cards=>cards.every(card=>[...card.querySelectorAll('button')].every(button=>{const c=card.getBoundingClientRect(),b=button.getBoundingClientRect();return b.left>=c.left && b.right<=c.right && b.bottom<=c.bottom;}))),true,'Card buttons stay inside cards');
   },snapshot(),{thumbnail:true});
@@ -675,17 +677,101 @@ try {
   const homeCover='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=';
   const updatedHomeCover='data:image/png;base64,'+Buffer.concat([Buffer.from(homeCover.split(',')[1],'base64'),Buffer.from([0])]).toString('base64');
   const coverLayout=structuredClone(unifiedLayout);coverLayout.home.background.image=homeCover;
-  await check('launcher card defaults to the active Home background and custom covers take precedence',async p=>{
-    await nav(p,'launchers');await settled(p);const card=p.locator('[data-launcher-component="com.ecojust.puretv/.MainActivity"]');assert.equal(await card.locator('.launcher-card-background').getAttribute('src'),homeCover);
-    await card.locator('[data-act="launcher-cover"]').click();const explicit=await card.locator('.launcher-card-background').getAttribute('src');
-    const result={supported:true,version:4,component:'com.ecojust.puretv/.MainActivity',layout:structuredClone(coverLayout),apps:unifiedApps};result.layout.home.background.image=updatedHomeCover;
-    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'get_launcher_layout',launcherResult:value}),result);assert.equal(await card.locator('.launcher-card-background').getAttribute('src'),explicit);
-    await card.locator('[data-act="remove-launcher-cover"]').click();assert.equal(await card.locator('.launcher-card-background').getAttribute('src'),updatedHomeCover);
-    await shot(p,'launcher-home-background-035');
+  const pureComponent='com.ecojust.puretv/.MainActivity';
+  const cardFor=(p,component=pureComponent)=>p.locator(`[data-launcher-component="${component}"]`);
+  const backgroundResult=(state,colors,images={})=>({supported:true,serial:state.device.serial,userId:state.device.userId,backgroundColors:colors,backgrounds:images});
+  await check('launcher cards read every Home and ignore old local covers without any cover controls or writes',async p=>{
+    await nav(p,'launchers');await settled(p);
+    assert.equal(await cardFor(p).locator('.launcher-card-background').getAttribute('src'),homeCover);
+    assert.equal(await cardFor(p,'com.vendor.home/.Main').locator('.launcher-card-background').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(34, 51, 68)');
+    assert.equal(await p.locator('[data-act="launcher-cover"], [data-act="remove-launcher-cover"]').count(),0);
+    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests.map(r=>r.action)),['getLayout','getBackgrounds']);
+    assert.deepEqual(await requests(p),[],'Reading cards must not activate a launcher or write to the TV');
+    await shot(p,'launcher-home-background-039');
+  },unifiedState,{layoutSupported:true,layout:coverLayout,layoutApps:unifiedApps,covers:{[pureComponent]:updatedHomeCover},homeBackgroundColors:{'com.vendor.home/.Main':'#223344'}});
+  await check('Home image removal and reset update cards; only editor apply and reset write layouts',async p=>{
+    await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();
+    await p.locator('[data-u-act="background"]').click();await p.locator('[data-u-bg-act="remove"]').click();
+    await p.locator('[data-u-bg-color]').fill('#334455');await p.locator('[data-u-bg-color]').dispatchEvent('change');await p.locator('[data-u-bg-act="close"]').click();
+    assert.equal(await cardFor(p).locator('img.launcher-card-background').getAttribute('src'),homeCover,'Unsaved editor changes do not affect cards');
+    assert.equal(await p.evaluate(()=>window.__launcherRequests.filter(r=>['applyLayout','resetLayout'].includes(r.action)).length),0);
+    await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='applyLayout'));await settled(p);
+    assert.equal(await cardFor(p).locator('img.launcher-card-background').count(),0,'Pure color clears the old image and never revives a saved local cover');
+    assert.equal(await cardFor(p).locator('.launcher-card-background').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(51, 68, 85)');
+    await p.locator('[data-u-act="reset"]').click();await p.locator('#confirm-operation').click();await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='resetLayout'));await settled(p);
+    assert.equal(await cardFor(p).locator('img.launcher-card-background').getAttribute('src'),homeCover);
+    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests.map(r=>r.action)),['getLayout','getBackgrounds','applyLayout','getBackgrounds','resetLayout','getBackgrounds']);
+    assert.equal(await p.locator('.banner.error').count(),0);
+  },unifiedState,{layoutSupported:true,layout:coverLayout,layoutApps:unifiedApps,covers:{[pureComponent]:updatedHomeCover}});
+  await check('list entry and scan refresh inactive Home backgrounds without activating the desktop',async p=>{
+    await nav(p,'launchers');await settled(p);assert.equal(await cardFor(p).locator('img.launcher-card-background').getAttribute('src'),homeCover);
+    await nav(p,'apps');await p.evaluate(component=>{window.__homeBackgroundColors[component]='#445566';delete window.__homeBackgrounds[component];},pureComponent);
+    await nav(p,'launchers');await settled(p);assert.equal(await cardFor(p).locator('img.launcher-card-background').count(),0);
+    assert.equal(await cardFor(p).locator('.launcher-card-background').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(68, 85, 102)');
+    await p.evaluate(({component,image})=>{window.__homeBackgrounds[component]=image;}, {component:pureComponent,image:updatedHomeCover});
+    await act(p,'scan').click();await settled(p);assert.equal(await cardFor(p).locator('img.launcher-card-background').getAttribute('src'),updatedHomeCover);
+    assert.deepEqual(await requests(p),[{action:'scan'}]);
+    assert.equal(await cardFor(p).locator('[data-act="open-layout"]').count(),0);
+    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests.map(r=>r.action)),['getLayout','getBackgrounds','getLayout','getBackgrounds','getLayout','getBackgrounds']);
+  },snapshot(),{homeBackgrounds:{[pureComponent]:homeCover},homeBackgroundColors:{[pureComponent]:'#112233'},covers:{[pureComponent]:updatedHomeCover}});
+  await check('a HOME switched on the television reconciles the snapshot before rendering its layout',async p=>{
+    await nav(p,'launchers');await settled(p);await nav(p,'apps');
+    const changed=structuredClone(unifiedState);changed.revision=1;changed.defaultHome='com.vendor.home/.Main';changed.launchers.forEach(l=>l.isDefault=l.component===changed.defaultHome);
+    await p.evaluate(value=>window.__setMockState(value),changed);
+    await nav(p,'launchers');await settled(p);
+    assert.equal(await cardFor(p,'com.vendor.home/.Main').locator('[data-act="open-layout"]').count(),1);
+    assert.equal(await cardFor(p).locator('[data-act="open-layout"]').count(),0);
+    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests.map(r=>r.action)),['getLayout','getBackgrounds','getLayout','getBackgrounds']);
+    assert.deepEqual(await requests(p),[],'Recognizing a TV-side switch does not change HOME again');
   },unifiedState,{layoutSupported:true,layout:coverLayout,layoutApps:unifiedApps});
-  await check('inactive launcher cards read Home background without switching the current desktop',async p=>{
-    await nav(p,'launchers');await settled(p);const card=p.locator('[data-launcher-component="com.ecojust.puretv/.MainActivity"]');assert.equal(await card.locator('.launcher-card-background').getAttribute('src'),homeCover);assert.equal((await requests(p)).filter(r=>r.action==='setHome').length,0);assert.equal(await card.locator('[data-act="open-layout"]').count(),0);
-  },snapshot(),{homeBackgrounds:{'com.ecojust.puretv/.MainActivity':homeCover}});
+  await check('MCP layout changes refresh cards once and background results never create a read loop',async p=>{
+    await nav(p,'launchers');await settled(p);
+    const changed=structuredClone(coverLayout);changed.home.background={color:'#556677'};
+    const result={supported:true,serial:unifiedState.device.serial,userId:unifiedState.device.userId,component:pureComponent,layout:changed,apps:unifiedApps};
+    await p.evaluate(value=>{window.__setMockLayout(value.layout);window.__emitMcp('mcp-operation',{running:false,tool:'apply_launcher_layout',launcherResult:value});},result);await settled(p);
+    assert.equal(await cardFor(p).locator('img.launcher-card-background').count(),0);
+    assert.equal(await cardFor(p).locator('.launcher-card-background').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(85, 102, 119)');
+    const before=await p.evaluate(()=>window.__launcherRequests.length);
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'get_launcher_backgrounds',launcherResult:value}),backgroundResult(unifiedState,{[pureComponent]:'#667788'}));
+    await p.waitForTimeout(220);
+    assert.equal(await p.evaluate(()=>window.__launcherRequests.length),before,'Completed background read is terminal');
+    assert.equal(await cardFor(p).locator('.launcher-card-background').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(102, 119, 136)');
+    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests.map(r=>r.action)),['getLayout','getBackgrounds','getBackgrounds']);
+    assert.equal(await p.locator('.banner.error').count(),0);
+  },unifiedState,{layoutSupported:true,layout:coverLayout,layoutApps:unifiedApps,covers:{[pureComponent]:updatedHomeCover}});
+  await check('temporary provider failure preserves confirmed Home but invalid or unsupported layouts clear cached previews',async p=>{
+    await nav(p,'launchers');await settled(p);
+    assert.equal(await cardFor(p).locator('img.launcher-card-background').getAttribute('src'),homeCover,'Secondary read failure cannot erase the just-confirmed active Home');
+    const failed={...backgroundResult(unifiedState,{}),failedComponents:[pureComponent]};
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'get_launcher_backgrounds',launcherResult:value}),failed);
+    assert.equal(await cardFor(p).locator('img.launcher-card-background').getAttribute('src'),homeCover);
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'get_launcher_backgrounds',launcherResult:value}),backgroundResult(unifiedState,{}));
+    assert.equal(await cardFor(p).locator('img.launcher-card-background').getAttribute('src'),updatedHomeCover,'A confirmed unsupported layout can use its old independent cover fallback');
+    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests.map(r=>r.action)),['getLayout','getBackgrounds']);
+  },unifiedState,{layoutSupported:true,layout:coverLayout,layoutApps:unifiedApps,covers:{[pureComponent]:updatedHomeCover},failedBackgroundComponents:[pureComponent]});
+  await check('background responses are scoped to the device and Android user during in-flight reads',async p=>{
+    await nav(p,'launchers');await p.waitForFunction(()=>window.__launcherRequests.some(r=>r.action==='getBackgrounds'));
+    const next=structuredClone(snapshot());next.revision=1;next.device.userId=10;
+    await p.evaluate(value=>{window.__setMockState(value);window.__emitMcp('mcp-operation',{running:false,tool:'get_state',snapshot:value});},next);
+    await settled(p);assert.equal(await cardFor(p).locator('.launcher-card-background').count(),0,'Old user response cannot populate the new user card');
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'get_launcher_backgrounds',launcherResult:value}),backgroundResult(snapshot(),{[pureComponent]:'#112233'},{[pureComponent]:homeCover}));
+    assert.equal(await cardFor(p).locator('.launcher-card-background').count(),0,'MCP results for another user are ignored');
+    await nav(p,'apps');await nav(p,'launchers');await settled(p);assert.equal(await cardFor(p).locator('img.launcher-card-background').getAttribute('src'),homeCover);
+    const other=structuredClone(next);other.revision=2;other.device.serial='192.168.1.99:5555';
+    await p.evaluate(value=>{window.__setMockState(value);window.__emitMcp('mcp-operation',{running:false,tool:'get_state',snapshot:value});},other);
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'get_launcher_backgrounds',launcherResult:value}),backgroundResult(next,{[pureComponent]:'#112233'},{[pureComponent]:homeCover}));
+    assert.equal(await cardFor(p).locator('.launcher-card-background').count(),0,'MCP results for another television are ignored');
+    assert.equal(await p.locator('.banner.error').count(),0);
+  },snapshot(),{backgroundDelay:350,homeBackgrounds:{[pureComponent]:homeCover},homeBackgroundColors:{[pureComponent]:'#112233'}});
+  await check('pending APK cards use embedded Home image or color before sidecar fallback',async p=>{
+    await nav(p,'launchers');await settled(p);await act(p,'add-launcher').click();
+    const pending=path=>p.locator(`[data-launcher-apk="${path}"]`);
+    assert.equal(await pending('/tmp/with-image.apk').locator('img.launcher-card-background').getAttribute('src'),homeCover);
+    assert.equal(await pending('/tmp/color-only.apk').locator('img.launcher-card-background').count(),0);
+    assert.equal(await pending('/tmp/color-only.apk').locator('.launcher-card-background').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(51, 68, 85)');
+    assert.equal(await pending('/tmp/legacy.apk').locator('img.launcher-card-background').getAttribute('src'),updatedHomeCover);
+    assert.deepEqual(await requests(p),[],'Import previews do not modify any television layout');
+  },snapshot(),{launcherApks:[{path:'/tmp/with-image.apk',homeBackgroundColor:'#223344',homeBackground:homeCover,cover:updatedHomeCover},{path:'/tmp/color-only.apk',homeBackgroundColor:'#334455',cover:updatedHomeCover},{path:'/tmp/legacy.apk',cover:updatedHomeCover}]});
   const protocolExample=JSON.parse(await readFile(new URL('../../resource/launcher/puretv/layout.example.json',import.meta.url),'utf8'));
   await check('documented v5 file and Home/Apps previews use identical configuration',async p=>{
     await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();await p.locator('[data-unified-editor]').waitFor();await shot(p,'layout-v5-home-036');await p.locator('[data-u-page="apps"]').click();await shot(p,'layout-v5-apps-036');await p.locator('[data-u-act="json"]').click();assert.deepEqual(JSON.parse(await p.locator('.layout-json-viewer pre').innerText()),protocolExample);

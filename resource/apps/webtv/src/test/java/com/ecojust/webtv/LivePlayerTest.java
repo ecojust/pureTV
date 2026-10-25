@@ -39,7 +39,7 @@ public class LivePlayerTest {
     @Test public void bufferingTimeoutAndEndedStreamOfferExplicitRecovery()throws Exception{
         live.play("https://example.com/live.m3u8");prepared();MediaPlayer player=field("player");shadowOf(player).invokeInfoListener(MediaPlayer.MEDIA_INFO_BUFFERING_START,0);
         shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(26));assertEquals(LivePlayer.State.ERROR,live.state());assertNull(field("player"));
-        live.play("https://example.com/live.m3u8");prepared();player=field("player");shadowOf(player).invokeCompletionListener();assertEquals(LivePlayer.State.ERROR,live.state());assertTrue(live.error().contains("结束"));
+        live.play("https://example.com/live.m3u8");prepared();player=field("player");shadowOf(player).invokeCompletionListener();assertEquals(LivePlayer.State.ERROR,live.state());assertEquals(RuntimeEnvironment.getApplication().getString(R.string.ended),live.error());
     }
     @Test public void surfaceLossAndBackgroundReleaseResourcesThenResumeFresh()throws Exception{
         live.play("https://example.com/live.m3u8");prepared();MediaPlayer old=field("player");live.surface(null);assertNull(field("player"));assertEquals(ShadowMediaPlayer.State.END,shadowOf(old).getState());

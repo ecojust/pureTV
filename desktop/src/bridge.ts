@@ -137,7 +137,7 @@ export async function chooseLauncherJson(): Promise<string | null> {
 
 export async function launcherCovers(): Promise<Record<string,string>> { if(!desktop || demo)return {}; return invoke('get_launcher_covers'); }
 export async function chooseLauncherCover(key:string, remove=false): Promise<Record<string,string>> { return invoke('choose_launcher_cover',{key,remove}); }
-export async function chooseLauncherApks(): Promise<{path:string;cover?:string|null;homeBackground?:string|null}[]> { if(demo)return [{path:'pureTV.apk'}]; return invoke('choose_launcher_apks'); }
+export async function chooseLauncherApks(): Promise<{path:string;cover?:string|null;homeBackground?:string|null;homeBackgroundColor?:string|null}[]> { if(demo)return [{path:'pureTV.apk'}]; return invoke('choose_launcher_apks'); }
 
 export async function adoptLauncherCover(key:string,apkPath:string):Promise<Record<string,string>> {return invoke('choose_launcher_cover',{key,apkPath});}
 

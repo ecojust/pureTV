@@ -2,7 +2,7 @@
 
 星轨与轨道构成的深蓝空间桌面，悬浮双排应用与左侧大时钟。基于原生 Android TV，使用遥控器方向键和确认键操作。
 
-[下载 AsterTV-0.1.0.apk](AsterTV-0.1.0.apk) · [布局示例](layout.example.json) · [源码归档](source.tar.gz) · [元数据](resource.json)
+[下载 AsterTV-0.1.1.apk](AsterTV-0.1.1.apk) · [布局示例](layout.example.json) · [源码归档](source.tar.gz) · [元数据](resource.json)
 
 ![首页](thumb.png)
 ![应用页](apps.png)
@@ -28,3 +28,5 @@
 设置 `LAUNCHER_UI_CAPTURE_DIR` 可导出 `home-render.png` / `apps-render.png`。发布 APK 使用 pureTV 项目签名，签名与 SHA-256 记录于 `resource.json` / `SHA256SUMS.txt`。
 
 图标、背景均为本项目原创程序绘制；字体和依赖许可见 [NOTICE.md](NOTICE.md)。
+
+界面语言跟随 Android 的应用／系统语言：中文使用 `layout.json`，英文及其他非中文语言使用 `layout.en.json`。切换语言会保留已保存的用户应用位置、颜色、操作和背景，只读系统组件采用当前语言的文案。英文布局示例见 [layout.example.en.json](layout.example.en.json)；用户自己填写的应用名称不会自动翻译。

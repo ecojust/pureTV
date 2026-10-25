@@ -36,9 +36,11 @@ let apkPaths: string[] = [], selectedApks = new Set<string>();
 let toolsInfo: PlatformToolsInfo | null = null, toolsInfoError = '', toolsPreparing = false, downloadingTools = false;
 let toolsProgress: DownloadProgress | null = null;
 let launcherLayout: LauncherLayoutInfo | null = null;
-let covers:Record<string,string> = {}, launcherApks:{path:string;cover?:string|null;homeBackground?:string|null}[]=[];
+let covers:Record<string,string> = {}, launcherApks:{path:string;cover?:string|null;homeBackground?:string|null;homeBackgroundColor?:string|null}[]=[];
 let layoutNode:string|null=null;
-const homeBackgrounds=new Map<string,string>();
+type HomeBackground={color?:string;image?:string};
+const homeBackgrounds=new Map<string,HomeBackground>();
+const validBackgroundColor=(color:unknown):color is string=>typeof color==='string'&&/^#[0-9a-fA-F]{6}$/.test(color);
 let layoutSelected=0, layoutDrag:number|null=null;
 let layoutModalTarget='';
 let layoutDirty = true;
@@ -73,17 +75,26 @@ function draftLayout(): LauncherLayout | null {
   } catch { return null; }
 }
 function acceptLauncherBackgrounds(value:LauncherLayoutInfo):void {
- if(!value.backgrounds || value.serial!==snapshot.device?.serial || value.userId!==snapshot.device?.userId)return;
- for(const launcher of snapshot.launchers){const key=launcherTarget(value.serial,value.userId,launcher.component),image=value.backgrounds[launcher.component];if(image)homeBackgrounds.set(key,image);else homeBackgrounds.delete(key);}
+ if((!value.backgrounds&&!value.backgroundColors) || value.serial!==snapshot.device?.serial || value.userId!==snapshot.device?.userId)return;
+ for(const launcher of snapshot.launchers){
+  if(value.failedComponents?.includes(launcher.component))continue;
+  const key=launcherTarget(value.serial,value.userId,launcher.component),image=value.backgrounds?.[launcher.component],color=value.backgroundColors?.[launcher.component];
+  if(validBackgroundColor(color))homeBackgrounds.set(key,{color,...(image?{image}:{})});
+  else if(image)homeBackgrounds.set(key,{image});
+  else homeBackgrounds.delete(key);
+ }
 }
-function acceptLauncherResult(value: LauncherLayoutInfo): void {
+function acceptLauncherResult(value: LauncherLayoutInfo): boolean {
+  if((value.serial!==undefined&&value.serial!==snapshot.device?.serial)||(value.userId!==undefined&&value.userId!==snapshot.device?.userId)||(value.component&&value.component!==snapshot.defaultHome))return false;
   launcherLayout = value; layoutComponent = value.component || snapshot.defaultHome || ''; layoutTarget = launcherTarget(value.serial ?? snapshot.device?.serial,value.userId ?? snapshot.device?.userId,layoutComponent);
   if (value.layout) {
     layoutJson = JSON.stringify(value.layout, null, 2);
     const key=launcherTarget(value.serial ?? snapshot.device?.serial,value.userId ?? snapshot.device?.userId,value.component || snapshot.defaultHome);
-    const layout=value.layout;const image=(layout.version===4||layout.version===5)?layout.home.background.image:layout.version===3?layout.home.scene?.background.image:undefined;
-    if(image)homeBackgrounds.set(key,image);else homeBackgrounds.delete(key);
+    const layout=value.layout,background=(layout.version===4||layout.version===5)?layout.home.background:layout.version===3?layout.home.scene?.background:undefined;
+    if(background&&validBackgroundColor(background.color))homeBackgrounds.set(key,{color:background.color,...(background.image?{image:background.image}:{})});
+    else homeBackgrounds.delete(key);
   }
+  return true;
 }
 const root = document.querySelector<HTMLDivElement>('#app')!;
 const dialog = document.createElement('dialog');
@@ -323,9 +334,31 @@ function sceneEditor(markup:string,draft:LauncherLayout):string {
 async function launcherOperation(request: LauncherRequest, preserveDraft = false): Promise<void> {
   const savedDraft = preserveDraft && layoutAvailable() ? layoutJson : null;
   if (busy || !online()) return;
+  let target=launcherTarget();
+  const draftTarget=target;
   localBusy = true; busy = true; cancelling = false; busyLabel = t('读取／应用当前启动器布局…'); notice = ''; render();
-  try { const value = await api.launcherExecute(request); acceptLauncherResult(value); if(request.action==='getLayout'&&!value.supported){try{acceptLauncherBackgrounds(await api.launcherExecute({action:'getBackgrounds'}));}catch{/* Cover metadata is optional; never activate a launcher to read it. */}} if (savedDraft && layoutAvailable()) layoutJson = savedDraft; if(request.action==='getLayout')layoutDirty=false; try {applySnapshot(await api.execute({action:'getState'}));} catch { /* Another operation may have started; its event supplies the new state. */ } notice = value.message || (value.supported ? t('布局已读取，可调整后应用') : t('此启动器暂不可编辑')); noticeKind = 'info'; }
-  catch (error) { notice = error instanceof Error ? error.message : String(error); noticeKind = 'error'; }
+  try {
+    const value=await api.launcherExecute(request);
+    if(target!==launcherTarget())return;
+    if(request.action==='getBackgrounds')acceptLauncherBackgrounds(value);
+    else {
+      if(!acceptLauncherResult(value)){
+        // The television can switch HOME outside the manager; reconcile its catalogue first.
+        const state=await api.execute({action:'getState'});
+        if(target!==launcherTarget())return;
+        applySnapshot(state);target=launcherTarget();
+        if(!acceptLauncherResult(value))return;
+      }
+      if(savedDraft&&draftTarget===target&&layoutAvailable())layoutJson=savedDraft;
+      layoutDirty=false;
+      // Read every installed HOME without activating it; image-less colors are valid backgrounds.
+      try {const backgrounds=await api.launcherExecute({action:'getBackgrounds'});if(target===launcherTarget())acceptLauncherBackgrounds(backgrounds);} catch {/* A failed optional read leaves the last confirmed background. */}
+    }
+    if(target!==launcherTarget())return;
+    try {const state=await api.execute({action:'getState'});if(target===launcherTarget())applySnapshot(state);} catch { /* Another operation may have started; its event supplies the new state. */ }
+    if(request.action!=='getBackgrounds'){notice=value.message||(value.supported?t('布局已读取，可调整后应用'):t('此启动器暂不可编辑'));noticeKind='info';}
+  }
+  catch (error) { if(target===launcherTarget()){notice = error instanceof Error ? error.message : String(error); noticeKind = 'error';} }
   finally { localBusy = false; busy = !!agentOperation?.running; cancelling = false; render(); }
 }
 function modifyLayout(change: (draft: LauncherLayout) => void): void {
@@ -335,12 +368,21 @@ function modifyLayout(change: (draft: LauncherLayout) => void): void {
   if(!draftLayout()){layoutJson=previous;showNotice(t('布局未修改：请检查元素边界、应用数量、名称、图标与颜色。'),'error');return;}
   notice='';noticeKind='info';render();
 }
-function launcherCardBackground(component:string):string|undefined {return covers[component] || homeBackgrounds.get(launcherTarget(snapshot.device?.serial,snapshot.device?.userId,component));}
-function launcherCardCover(image?:string|null):string {
-  return image && /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(image)?`<img class="launcher-card-background" src="${esc(image)}" alt="">`:'';
+function launcherCardBackground(component:string):HomeBackground|undefined {
+  return homeBackgrounds.get(launcherTarget(snapshot.device?.serial,snapshot.device?.userId,component)) || (covers[component]?{image:covers[component]}:undefined);
+}
+function pendingLauncherBackground(item:typeof launcherApks[number]):HomeBackground|undefined {
+  if(validBackgroundColor(item.homeBackgroundColor))return {color:item.homeBackgroundColor,...(item.homeBackground?{image:item.homeBackground}:{})};
+  return item.cover||item.homeBackground?{image:item.cover||item.homeBackground||undefined}:undefined;
+}
+function launcherCardCover(background?:HomeBackground):string {
+  if(!background)return '';
+  const image=background.image,style=validBackgroundColor(background.color)?` style="background-color:${background.color}"`:'';
+  if(image&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(image))return `<img class="launcher-card-background" src="${esc(image)}" alt=""${style}>`;
+  return style?`<div class="launcher-card-background"${style}></div>`:'';
 }
 function launchersPage(): string {
-  return ui`<div class="section-title launcher-toolbar"><div><h2>电视启动器</h2><p>安装、激活启动器；当前桌面支持时可调整布局。</p></div><div class="button-row">${actionButton('scan',icon('refresh')+t('重新扫描'),disabled(busy || !online()))}${actionButton('add-launcher',icon('plus')+t('添加启动器 APK'),disabled(busy),'primary')}</div></div><div class="launcher-grid" data-scroll="launchers" tabindex="0" aria-label="启动器列表">${launcherApks.map(item=>ui`<article class="panel launcher-card pending-launcher ${item.cover||item.homeBackground?'has-background':''}" data-launcher-apk="${esc(item.path)}">${launcherCardCover(item.cover || item.homeBackground)}<div class="launcher-card-content"><span class="pill">待安装</span><h3>${esc(fileName(item.path))}</h3><code>${esc(item.path)}</code><p class="hint">同目录的 thumb.png 或 APK名.thumb.png 可作为背景。</p><div class="launcher-card-actions">${actionButton('install-launcher',t('安装启动器'),` data-path="${esc(item.path)}"${disabled(busy || !online())}`,'primary')}${actionButton('remove-launcher-apk',t('移除'),` data-path="${esc(item.path)}"${disabled(busy)}`)}</div></div></article>`).join('')}${snapshot.launchers.map(l=>ui`<article data-launcher-component="${esc(l.component)}" class="panel launcher-card ${l.isDefault?'current':''} ${launcherCardBackground(l.component)?'has-background':''}">${launcherCardCover(launcherCardBackground(l.component))}<div class="launcher-card-content"><div class="launcher-top"><span class="large-icon">${icon('home')}</span>${l.isDefault?t('<span class="pill">当前默认桌面</span>'):''}</div><h3>${esc(l.label || l.packageName)}</h3><code>${esc(l.component)}</code><p class="launcher-size">安装包大小：${l.apkSizeBytes!=null?storageBytes(l.apkSizeBytes):packageSize(snapshot.packages.find(p=>p.packageName===l.packageName) || {packageName:l.packageName,label:l.label,installed:true,system:false,enabled:true,protectedReason:null})}</p><div class="launcher-card-actions">${actionButton('set-home',l.isDefault?t('正在使用'):t('设为默认桌面'),` data-component="${esc(l.component)}"${disabled(busy || !online() || l.isDefault)}`,l.isDefault?'':'primary')}${l.isDefault && layoutAvailable()?actionButton('open-layout',t('调整布局'),disabled(busy),'primary'):''}${actionButton('launcher-cover',t('选择背景图'),` data-component="${esc(l.component)}"${disabled(busy)}`)}${covers[l.component]?actionButton('remove-launcher-cover',t('移除背景'),` data-component="${esc(l.component)}"${disabled(busy)}`):''}</div></div></article>`).join('')}${!snapshot.launchers.length && !launcherApks.length?ui`<section class="panel empty-state">${icon('home')}<h3>${online()?t('未查询到启动器'):t('连接后查看启动器')}</h3><p>也可以添加本地启动器 APK，在此页面直接安装。</p></section>`:''}</div><section class="panel restore-panel"><div><h2>恢复原桌面</h2><p>${snapshot.originalHome?esc(snapshot.originalHome):t('首次切换前会记录原来的默认桌面。')}</p></div>${actionButton('restore-home',t('恢复原桌面'),disabled(busy || !online() || !snapshot.originalHome || snapshot.originalHome===snapshot.defaultHome))}</section>${layoutTarget===launcherTarget() && launcherLayout && !launcherLayout.supported?`<p class="hint">${esc(message(launcherLayout.message || t('此启动器不支持布局调整')))}</p>`:''}`;
+  return ui`<div class="section-title launcher-toolbar"><div><h2>电视启动器</h2><p>安装、激活启动器；当前桌面支持时可调整布局。</p></div><div class="button-row">${actionButton('scan',icon('refresh')+t('重新扫描'),disabled(busy || !online()))}${actionButton('add-launcher',icon('plus')+t('添加启动器 APK'),disabled(busy),'primary')}</div></div><div class="launcher-grid" data-scroll="launchers" tabindex="0" aria-label="启动器列表">${launcherApks.map(item=>ui`<article class="panel launcher-card pending-launcher ${pendingLauncherBackground(item)?'has-background':''}" data-launcher-apk="${esc(item.path)}">${launcherCardCover(pendingLauncherBackground(item))}<div class="launcher-card-content"><span class="pill">待安装</span><h3>${esc(fileName(item.path))}</h3><code>${esc(item.path)}</code><p class="hint">背景自动匹配 APK 的 Home 布局；无布局时使用同目录封面。</p><div class="launcher-card-actions">${actionButton('install-launcher',t('安装启动器'),` data-path="${esc(item.path)}"${disabled(busy || !online())}`,'primary')}${actionButton('remove-launcher-apk',t('移除'),` data-path="${esc(item.path)}"${disabled(busy)}`)}</div></div></article>`).join('')}${snapshot.launchers.map(l=>ui`<article data-launcher-component="${esc(l.component)}" class="panel launcher-card ${l.isDefault?'current':''} ${launcherCardBackground(l.component)?'has-background':''}">${launcherCardCover(launcherCardBackground(l.component))}<div class="launcher-card-content"><div class="launcher-top"><span class="large-icon">${icon('home')}</span>${l.isDefault?t('<span class="pill">当前默认桌面</span>'):''}</div><h3>${esc(l.label || l.packageName)}</h3><code>${esc(l.component)}</code><p class="launcher-size">安装包大小：${l.apkSizeBytes!=null?storageBytes(l.apkSizeBytes):packageSize(snapshot.packages.find(p=>p.packageName===l.packageName) || {packageName:l.packageName,label:l.label,installed:true,system:false,enabled:true,protectedReason:null})}</p><div class="launcher-card-actions">${actionButton('set-home',l.isDefault?t('正在使用'):t('设为默认桌面'),` data-component="${esc(l.component)}"${disabled(busy || !online() || l.isDefault)}`,l.isDefault?'':'primary')}${l.isDefault && layoutAvailable()?actionButton('open-layout',t('调整布局'),disabled(busy),'primary'):''}</div></div></article>`).join('')}${!snapshot.launchers.length && !launcherApks.length?ui`<section class="panel empty-state">${icon('home')}<h3>${online()?t('未查询到启动器'):t('连接后查看启动器')}</h3><p>也可以添加本地启动器 APK，在此页面直接安装。</p></section>`:''}</div><section class="panel restore-panel"><div><h2>恢复原桌面</h2><p>${snapshot.originalHome?esc(snapshot.originalHome):t('首次切换前会记录原来的默认桌面。')}</p></div>${actionButton('restore-home',t('恢复原桌面'),disabled(busy || !online() || !snapshot.originalHome || snapshot.originalHome===snapshot.defaultHome))}</section>${layoutTarget===launcherTarget() && launcherLayout && !launcherLayout.supported?`<p class="hint">${esc(message(launcherLayout.message || t('此启动器不支持布局调整')))}</p>`:''}`;
 }
 function installPage(): string {
   return ui`${connectionStrip()}<section class="panel install-panel"><div class="section-title"><div><h2>待安装的 APK</h2><p>从电脑导入安装包，勾选要安装的文件；添加不会立即安装。</p></div>${actionButton('add-apks', icon('plus') + t('添加安装包'), disabled(busy || (!api.desktop && !api.demo)), 'primary')}</div><div class="install-footer"><span>共 ${apkPaths.length} 个文件 · 已选择 ${selectedApks.size} 个</span><div class="button-row">${actionButton('select-apks', t('全选'), disabled(busy || !apkPaths.length))}${actionButton('clear-apks-selection', t('取消选择'), disabled(busy || !selectedApks.size))}${actionButton('install-apks', t('安装所选'), disabled(busy || !online() || !selectedApks.size), 'primary')}</div></div>${apkPaths.length ? ui`<div class="apk-list" data-scroll="apks" tabindex="0" aria-label="待安装 APK 列表">${apkPaths.map(path => ui`<div class="apk-item" data-apk="${esc(path)}"><input type="checkbox" data-select-apk="${esc(path)}" aria-label="选择 ${esc(fileName(path))}"${selectedApks.has(path) ? ' checked' : ''}${disabled(busy)}><span class="large-icon">${icon('box')}</span><div class="apk-name"><strong>${esc(fileName(path))}</strong><code>${esc(path)}</code></div><div class="button-row apk-item-actions">${actionButton('install-one-apk',t('安装'),` data-path="${esc(path)}"${disabled(busy || !online())}`,'primary')}${actionButton('remove-apk', t('移除'), ` data-path="${esc(path)}"${disabled(busy)}`, 'text-button')}</div></div>`).join('')}</div>` : ui`<div class="empty-state upload-state">${icon('download')}<h3>添加你自己的安装包</h3><p>支持多次添加和多选 APK。移除列表项不会删除电脑文件。</p>${actionButton('add-apks', t('选择本地 APK'), disabled(busy || (!api.desktop && !api.demo)))}</div>`}</section><div class="two-columns install-notes"><section class="panel"><h2>电视应用资源</h2><p>启动器和第三方电视应用可从公共资源目录下载。</p>${actionButton('resource-catalog', t('打开资源目录 ↗'), '', 'text-button link-button')}</section><section class="panel"><h2>安装说明</h2><p>首版支持单个 APK 文件，可批量顺序安装多个应用。分包应用（APKS / XAPK）需使用其他安装方式。</p><p class="hint">同包名升级需签名一致。安装结束后会更新应用列表。</p></section></div>`;
@@ -545,13 +587,12 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
         await run({action:'install',paths:[path]},t('正在安装启动器…'));
         if(snapshot.installResults?.some(result=>result.path===path && result.success)) {
           launcherApks=launcherApks.filter(item=>item.path!==path);
-          if(item?.homeBackground)for(const launcher of snapshot.launchers.filter(value=>!before.has(value.component)))homeBackgrounds.set(launcherTarget(snapshot.device?.serial,snapshot.device?.userId,launcher.component),item.homeBackground);
+          if(item&&validBackgroundColor(item.homeBackgroundColor))for(const launcher of snapshot.launchers.filter(value=>!before.has(value.component)))homeBackgrounds.set(launcherTarget(snapshot.device?.serial,snapshot.device?.userId,launcher.component),{color:item.homeBackgroundColor,...(item.homeBackground?{image:item.homeBackground}:{})});
           if(item?.cover)for(const launcher of snapshot.launchers.filter(item=>!before.has(item.component)))covers=await api.adoptLauncherCover(launcher.component,path);
         }
         render();if(online())await launcherOperation({action:'getLayout'});
       }break;
     }
-    case 'launcher-cover': case 'remove-launcher-cover': covers=await api.chooseLauncherCover(button.dataset.component!,action==='remove-launcher-cover');render();break;
     case 'open-layout': if(layoutDirty && online())await launcherOperation({action:'getLayout'},true);if(layoutAvailable()){layoutNode=null;layoutSelected=0;layoutSection='home';layoutModalTarget=launcherTarget();layoutDialog.innerHTML=layoutEditor();layoutDialog.showModal();syncSceneScale();}break;
     case 'close-layout': if(!busy)layoutDialog.close();break;
     case 'add-apks': await addApks(); break;
@@ -597,7 +638,7 @@ document.addEventListener('click', event => {
   const target = event.target as HTMLElement;
   if (target.closest('.brand')) { event.preventDefault(); page = 'connect'; render(); return; }
   const nav = target.closest<HTMLButtonElement>('[data-page]');
-  if (nav) { page = nav.dataset.page as Page; render(); if(page==='launchers' && layoutDirty && online() && !busy)void launcherOperation({action:'getLayout'},true); return; }
+  if (nav) { page = nav.dataset.page as Page; render(); if(page==='launchers' && online() && !busy)void launcherOperation({action:'getLayout'},true); return; }
   const node=target.closest<HTMLElement>('[data-scene-node]');if(node){layoutNode=node.dataset.sceneNode || null;layoutSelected=-1;render();return;}
   const tile=target.closest<HTMLElement>('[data-layout-tile]');if(tile){layoutNode=null;layoutSelected=Number(tile.dataset.layoutTile);render();return;}
   const tab = target.closest<HTMLButtonElement>('[data-filter]');
@@ -664,12 +705,17 @@ void api.watchMcp(value => {
     }
   }
   if (['install','uninstall','restore','set_enabled','scan'].includes(value.tool) && !value.running) layoutDirty=true;
-  if (value.launcherResult) {if(value.tool==='get_launcher_backgrounds')acceptLauncherBackgrounds(value.launcherResult);else acceptLauncherResult(value.launcherResult);}
+  let acceptedLayout=false;
+  if(value.launcherResult){if(value.tool==='get_launcher_backgrounds')acceptLauncherBackgrounds(value.launcherResult);else acceptedLayout=acceptLauncherResult(value.launcherResult);}
   if(value.tool==='set_launcher_cover' && !value.running)void api.launcherCovers().then(value=>{covers=value;render();});
   if (!value.running) { agentProgress = null; void refreshToolsInfo().then(render); }
-  if(value.tool==='get_launcher_layout' && value.launcherResult)layoutDirty=false;
+  if(acceptedLayout)layoutDirty=false;
   render();
-  if(page==='launchers' && !busy && layoutDirty && online())void launcherOperation({action:'getLayout'},true);
+  // Only explicit device/catalogue/layout operations trigger reads. Background reads never recurse.
+  if(page==='launchers'&&!busy&&online()&&!value.running){
+    if(['install','uninstall','restore','set_enabled','scan','connect','set_home','restore_home'].includes(value.tool)&&layoutDirty)void launcherOperation({action:'getLayout'},true);
+    else if(acceptedLayout&&['get_launcher_layout','apply_launcher_layout','reset_launcher_layout'].includes(value.tool))void launcherOperation({action:'getBackgrounds'});
+  }
 }, value => { agentProgress = value; render(); }).catch(error => { mcpError = ui`无法订阅 Agent 状态：${String(error)}`; render(); });
 
 void api.launcherCovers().then(value=>{covers=value;render();}).catch(error=>showNotice(String(error),'error'));

@@ -33,7 +33,8 @@ public class MainActivity extends Activity {
     private ListView list;
     private final List<Track> tracks = new ArrayList<>();
     private final TrackAdapter adapter = new TrackAdapter();
-    private String page = "发现", favouriteTrackId, lastPlaybackError = "";
+    private int page = R.string.discover;
+    private String favouriteTrackId, lastPlaybackError = "";
     private boolean cachedFavourite, wasLoading;
     private String lastStage = "";
     private Dialog fullscreen;
@@ -45,7 +46,7 @@ public class MainActivity extends Activity {
     private final ServiceConnection connection = new ServiceConnection() {
         @Override public void onServiceConnected(ComponentName name, IBinder service) {
             player = ((PlaybackService.LocalBinder) service).player(); player.listen(MainActivity.this::render);
-            for (int i = 0; i < pendingLocal.size(); i++) { if (!player.add(pendingLocal.get(i), i == 0)) { toast("队列已满"); break; } }
+            for (int i = 0; i < pendingLocal.size(); i++) { if (!player.add(pendingLocal.get(i), i == 0)) { toast(getString(R.string.queue_full)); break; } }
             pendingLocal.clear(); render();
         }
         @Override public void onServiceDisconnected(ComponentName name) { player = null; }
@@ -57,33 +58,45 @@ public class MainActivity extends Activity {
         LinearLayout body = row(); root.addView(body, new LinearLayout.LayoutParams(-1, 0, 1));
         LinearLayout nav = column(); nav.setPadding(0, dp(12), dp(20), 0); ScrollView navScroll = new ScrollView(this); navScroll.setFillViewport(false); navScroll.addView(nav); body.addView(navScroll, new LinearLayout.LayoutParams(dp(140), -1));
         TextView brand = text("Music TV", 25); brand.setTextColor(0xffe3a1b0); nav.addView(brand); space(nav, 18);
-        for (String name : new String[]{"发现", "搜索", "收藏", "最近播放", "本地音频", "设置"}) {
-            Button button = button(name, () -> navigate(name)); nav.addView(button, new LinearLayout.LayoutParams(-1, dp(48)));
+        for (int name : new int[]{R.string.discover, R.string.search, R.string.favourite, R.string.history, R.string.local_audio, R.string.settings}) {
+            Button button = button(getString(name), () -> navigate(name)); nav.addView(button, new LinearLayout.LayoutParams(-1, dp(48)));
         }
         content = column(); body.addView(content, new LinearLayout.LayoutParams(0, -1, 1));
-        heading = text("发现音乐", 25); content.addView(heading); space(content, 8);
+        heading = text(getString(R.string.discover_music), 25); content.addView(heading); space(content, 8);
         LinearLayout search = row(); query = new EditText(this); query.setSingleLine(); query.setTextSize(18); query.setTextColor(0xfff4f4f5);
-        query.setHintTextColor(0xff9699a3); query.setHint("搜索音乐、歌手，或粘贴 BV 号"); query.setContentDescription("搜索音乐");
+        query.setHintTextColor(0xff9699a3); query.setHint(getString(R.string.search_hint)); query.setContentDescription(getString(R.string.search_music));
         query.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(120)});
         query.setImeOptions(EditorInfo.IME_ACTION_SEARCH); query.setOnEditorActionListener((v, action, event) -> { if (action == EditorInfo.IME_ACTION_SEARCH) { search(); return true; } return false; });
-        search.addView(query, new LinearLayout.LayoutParams(0, dp(50), 1)); search.addView(button("搜索", this::search), new LinearLayout.LayoutParams(dp(85), dp(50))); content.addView(search);
-        status = text("输入关键词搜索 B 站公开音乐，或打开本地音频。长按歌曲可收藏、加入队列。", 14); status.setPadding(0, dp(8), 0, dp(8)); content.addView(status);
+        search.addView(query, new LinearLayout.LayoutParams(0, dp(50), 1)); search.addView(button(getString(R.string.search), this::search), new LinearLayout.LayoutParams(dp(85), dp(50))); content.addView(search);
+        status = text(getString(R.string.welcome), 14); status.setPadding(0, dp(8), 0, dp(8)); content.addView(status);
         LinearLayout resultActions = row();
-        resultActions.addView(button("播放全部", () -> playResults(false)));
-        resultActions.addView(button("随机播放", () -> playResults(true)));
+        resultActions.addView(button(getString(R.string.play_all), () -> playResults(false)));
+        resultActions.addView(button(getString(R.string.shuffle), () -> playResults(true)));
         content.addView(resultActions);
         list = new ListView(this); list.setDividerHeight(dp(5)); list.setSelector(R.drawable.list_focus); list.setDrawSelectorOnTop(true); list.setAdapter(adapter);
         list.setOnItemClickListener((parent, view, position, id) -> play(tracks.get(position)));
         list.setOnItemLongClickListener((parent, view, position, id) -> { trackMenu(tracks.get(position)); return true; });
         content.addView(list, new LinearLayout.LayoutParams(-1, 0, 1));
         LinearLayout bottom = column(); bottom.setPadding(dp(8), dp(12), 0, 0); root.addView(bottom);
-        LinearLayout bar = row(); now = text("选择一首音乐", 16); now.setSingleLine(); now.setEllipsize(TextUtils.TruncateAt.END); bar.addView(now, new LinearLayout.LayoutParams(0, dp(44), 1));
-        favourite = button("收藏", this::toggleFavourite); bar.addView(favourite);
-        bar.addView(button("上一首", () -> { if (player != null) player.previous(); }));
-        toggle = button("播放", () -> { if (player != null) player.toggle(); }); bar.addView(toggle);
-        bar.addView(button("下一首", () -> { if (player != null) player.next(); }));
-        mode = button("顺序播放", () -> { if (player != null) player.shuffle(!player.shuffled()); }); bar.addView(mode);
-        bar.addView(button("队列", this::queueDialog)); bar.addView(button("全屏", this::fullscreen)); bottom.addView(bar);
+        boolean compact = getResources().getConfiguration().screenWidthDp < 800;
+        LinearLayout bar = row(); now = text(getString(R.string.choose_track), 16); now.setSingleLine(); now.setEllipsize(TextUtils.TruncateAt.END);
+        if (compact) bottom.addView(now, new LinearLayout.LayoutParams(-1, dp(30)));
+        else bar.addView(now, new LinearLayout.LayoutParams(0, dp(44), 1));
+        favourite = button(getString(R.string.favourite), this::toggleFavourite);
+        Button previous = button(getString(R.string.previous), () -> { if (player != null) player.previous(); });
+        toggle = button(getString(R.string.play), () -> { if (player != null) player.toggle(); });
+        Button next = button(getString(R.string.next), () -> { if (player != null) player.next(); });
+        mode = button(getString(R.string.sequence), () -> { if (player != null) player.shuffle(!player.shuffled()); });
+        Button queue = button(getString(R.string.queue), this::queueDialog), expand = button(getString(R.string.fullscreen), this::fullscreen);
+        Button[] controls = {favourite, previous, toggle, next, mode, queue, expand};
+        for (int i=0;i<controls.length;i++) {
+            if (compact) {
+                controls[i].setTextSize(13);controls[i].setPadding(dp(6),dp(6),dp(6),dp(6));
+                controls[i].setSingleLine();bar.addView(controls[i],new LinearLayout.LayoutParams(0,dp(44),1));
+            }
+            else bar.addView(controls[i]);
+        }
+        bottom.addView(bar);
         LinearLayout timeline = row(); seek = new SeekBar(this); seek.setMax(1000); timeline.addView(seek, new LinearLayout.LayoutParams(0, dp(32), 1));
         clock = text("0:00 / 0:00", 13); timeline.addView(clock, new LinearLayout.LayoutParams(dp(125), dp(32))); bottom.addView(timeline);
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -94,93 +107,93 @@ public class MainActivity extends Activity {
         setContentView(root); query.requestFocus();
         if (state != null) query.setText(state.getString("query", ""));
     }
-    private void navigate(String destination) {
-        if (destination.equals("本地音频")) { localAudio(); return; }
-        if (destination.equals("设置")) {
-            new AlertDialog.Builder(this).setTitle("轻量设置").setMessage("原生系统解码 · 不缓存音频\n封面缓存最多 1 MiB\n队列 50 首 · 收藏 100 首 · 最近 30 首\n仅使用 B 站公开接口，不提供登录或付费内容访问。")
-                    .setPositiveButton("清理封面缓存", (d, w) -> { covers.trim(); list.invalidateViews(); })
-                    .setNegativeButton("关闭", null).show(); return;
+    private void navigate(int destination) {
+        if (destination == R.string.local_audio) { localAudio(); return; }
+        if (destination == R.string.settings) {
+            new AlertDialog.Builder(this).setTitle(getString(R.string.settings_title)).setMessage(getString(R.string.settings_message))
+                    .setPositiveButton(getString(R.string.clear_covers), (d, w) -> { covers.trim(); list.invalidateViews(); })
+                    .setNegativeButton(getString(R.string.close), null).show(); return;
         }
-        cancelSearch(); page = destination; heading.setText(destination.equals("发现") ? "发现音乐" : destination);
+        cancelSearch(); page = destination; heading.setText(destination == R.string.discover ? getString(R.string.discover_music) : getString(destination));
         tracks.clear();
-        if (destination.equals("收藏")) tracks.addAll(store.favourites());
-        else if (destination.equals("最近播放")) tracks.addAll(store.history());
+        if (destination == R.string.favourite) tracks.addAll(store.favourites());
+        else if (destination == R.string.history) tracks.addAll(store.history());
         adapter.notifyDataSetChanged();
-        status.setText(tracks.isEmpty() ? destination.equals("收藏") ? "还没有收藏。长按歌曲，或使用底部收藏按钮。" : destination.equals("最近播放") ? "播放后会显示最近记录。" : "试试搜索：轻音乐、钢琴、华语现场、Lo-fi。也可以打开本地音频。" : "共 " + tracks.size() + " 首 · 长按打开歌曲操作");
-        if (destination.equals("搜索")) query.requestFocus();
+        status.setText(tracks.isEmpty() ? destination == R.string.favourite ? getString(R.string.empty_favourites) : destination == R.string.history ? getString(R.string.empty_history) : getString(R.string.search_suggestions) : getString(R.string.track_count, tracks.size()));
+        if (destination == R.string.search) query.requestFocus();
     }
     private void search() {
         String keyword = query.getText().toString().trim(); if (keyword.isEmpty()) { query.requestFocus(); return; }
-        cancelSearch(); page = "搜索"; heading.setText("搜索音乐"); tracks.clear(); adapter.notifyDataSetChanged(); status.setText("正在搜索…");
+        cancelSearch(); page = R.string.search; heading.setText(getString(R.string.search_music)); tracks.clear(); adapter.notifyDataSetChanged(); status.setText(getString(R.string.searching));
         int ticket = searchGeneration;
         searchJob = searchWorker.submit(() -> {
             try {
                 List<Track> result = BiliApi.get().search(keyword);
-                main.post(() -> { if (visible && ticket == searchGeneration) { tracks.clear(); tracks.addAll(result); adapter.notifyDataSetChanged(); status.setText(result.isEmpty() ? "没有找到结果，请换个关键词。" : "找到 " + result.size() + " 首 · 长按可收藏或加入队列"); if (!result.isEmpty()) list.requestFocus(); } });
+                main.post(() -> { if (visible && ticket == searchGeneration) { tracks.clear(); tracks.addAll(result); adapter.notifyDataSetChanged(); status.setText(result.isEmpty() ? getString(R.string.no_results) : getString(R.string.results_count, result.size())); if (!result.isEmpty()) list.requestFocus(); } });
             } catch (Exception e) {
-                main.post(() -> { if (visible && ticket == searchGeneration) status.setText("搜索失败：" + e.getMessage() + "。可再次搜索，或使用本地音频。"); });
+                main.post(() -> { if (visible && ticket == searchGeneration) status.setText(getString(R.string.search_failed, MusicError.display(this,e))); });
             }
         });
     }
     private void cancelSearch() { searchGeneration++; if (searchJob != null) searchJob.cancel(true); searchJob = null; ((ThreadPoolExecutor) searchWorker).purge(); }
     private void playResults(boolean shuffle) {
-        if (tracks.isEmpty()) { toast("请先搜索音乐或打开收藏列表"); return; }
+        if (tracks.isEmpty()) { toast(getString(R.string.search_first)); return; }
         if (player != null) player.playList(new ArrayList<>(tracks), shuffle);
     }
-    private void play(Track track) { if (player != null && !player.add(track, true)) toast("队列已满，请先清理队列"); }
+    private void play(Track track) { if (player != null && !player.add(track, true)) toast(getString(R.string.queue_full_clear)); }
     private void trackMenu(Track track) {
-        new AlertDialog.Builder(this).setTitle(track.title).setItems(new String[]{"立即播放", "加入队列", store.favourite(track.id) ? "取消收藏" : "收藏"}, (d, which) -> {
+        new AlertDialog.Builder(this).setTitle(track.title).setItems(new String[]{getString(R.string.play_now), getString(R.string.add_queue), store.favourite(track.id) ? getString(R.string.remove_favourite) : getString(R.string.favourite)}, (d, which) -> {
             if (which == 0) play(track);
-            else if (which == 1) { if (player != null) toast(player.add(track, false) ? "已加入队列" : "队列已满"); }
-            else { toast(store.toggle(track) ? "已收藏" : "已取消收藏"); favouriteTrackId = null; if (page.equals("收藏")) navigate(page); render(); }
+            else if (which == 1) { if (player != null) toast(player.add(track, false) ? getString(R.string.queued) : getString(R.string.queue_full)); }
+            else { toast(store.toggle(track) ? getString(R.string.saved) : getString(R.string.unsaved)); favouriteTrackId = null; if (page == R.string.favourite) navigate(page); render(); }
         }).show();
     }
     private void toggleFavourite() {
         Track track = player == null ? null : player.current();
-        if (track != null) { toast(store.toggle(track) ? "已收藏" : "已取消收藏"); favouriteTrackId = null; if (page.equals("收藏")) navigate(page); render(); }
+        if (track != null) { toast(store.toggle(track) ? getString(R.string.saved) : getString(R.string.unsaved)); favouriteTrackId = null; if (page == R.string.favourite) navigate(page); render(); }
     }
     private void queueDialog() {
         if (player == null) return;
         List<Track> queue = player.queue(); String[] titles = new String[queue.size()];
         for (int i = 0; i < titles.length; i++) titles[i] = (i == player.currentIndex() ? "♪  " : "") + queue.get(i).title;
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this).setTitle("播放队列 · " + titles.length + "/50").setNegativeButton("关闭", null);
-        if (titles.length == 0) dialog.setMessage("队列为空，选择歌曲开始播放。");
-        else dialog.setItems(titles, (d, which) -> { if (player != null) player.play(which); }).setNeutralButton("清空", (d, w) -> new AlertDialog.Builder(this).setMessage("清空队列并停止播放？").setPositiveButton("清空", (a, b) -> { if (player != null) player.clearQueue(); }).setNegativeButton("取消", null).show());
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this).setTitle(getString(R.string.queue_title, titles.length)).setNegativeButton(getString(R.string.close), null);
+        if (titles.length == 0) dialog.setMessage(getString(R.string.queue_empty));
+        else dialog.setItems(titles, (d, which) -> { if (player != null) player.play(which); }).setNeutralButton(getString(R.string.clear), (d, w) -> new AlertDialog.Builder(this).setMessage(getString(R.string.clear_queue_confirm)).setPositiveButton(getString(R.string.clear), (a, b) -> { if (player != null) player.clearQueue(); }).setNegativeButton(getString(R.string.cancel), null).show());
         dialog.show();
     }
     private void fullscreen() {
         if (fullscreen != null) return;
         fullscreen = new Dialog(this, R.style.MusicTheme); LinearLayout panel = column(); panel.setGravity(Gravity.CENTER); panel.setPadding(dp(48), dp(24), dp(48), dp(24)); panel.setBackgroundColor(0xff111319);
         TextView symbol = text("♫", 48); symbol.setTextColor(0xffe3a1b0); panel.addView(symbol);
-        fullTitle = text("选择一首音乐", 30); fullTitle.setMaxLines(2); fullTitle.setGravity(Gravity.CENTER); panel.addView(fullTitle); space(panel, 24);
-        LinearLayout controls = row(); controls.setGravity(Gravity.CENTER); controls.addView(button("上一首", () -> { if (player != null) player.previous(); })); fullToggle = button("播放", () -> { if (player != null) player.toggle(); }); controls.addView(fullToggle); controls.addView(button("下一首", () -> { if (player != null) player.next(); })); controls.addView(button("收藏", this::toggleFavourite));
-        fullMode = button("顺序播放", () -> { if (player != null) player.shuffle(!player.shuffled()); }); controls.addView(fullMode); panel.addView(controls);
-        fullTime = text("", 17); panel.addView(fullTime); space(panel, 24); panel.addView(button("返回", () -> fullscreen.dismiss()));
+        fullTitle = text(getString(R.string.choose_track), 30); fullTitle.setMaxLines(2); fullTitle.setGravity(Gravity.CENTER); panel.addView(fullTitle); space(panel, 24);
+        LinearLayout controls = row(); controls.setGravity(Gravity.CENTER); controls.addView(button(getString(R.string.previous), () -> { if (player != null) player.previous(); })); fullToggle = button(getString(R.string.play), () -> { if (player != null) player.toggle(); }); controls.addView(fullToggle); controls.addView(button(getString(R.string.next), () -> { if (player != null) player.next(); })); controls.addView(button(getString(R.string.favourite), this::toggleFavourite));
+        fullMode = button(getString(R.string.sequence), () -> { if (player != null) player.shuffle(!player.shuffled()); }); controls.addView(fullMode); panel.addView(controls);
+        fullTime = text("", 17); panel.addView(fullTime); space(panel, 24); panel.addView(button(getString(R.string.back), () -> fullscreen.dismiss()));
         ScrollView scroll = new ScrollView(this); scroll.setFillViewport(true); scroll.addView(panel); fullscreen.setContentView(scroll); fullscreen.setOnDismissListener(d -> { fullscreen = null; fullTitle = null; fullTime = null; fullToggle = null; fullMode = null; }); fullscreen.show(); fullscreen.getWindow().setLayout(-1, -1); fullToggle.requestFocus(); render();
     }
     private void render() {
         if (player == null) return;
-        mode.setText(player.shuffled() ? "随机播放" : "顺序播放");
+        mode.setText(player.shuffled() ? getString(R.string.shuffle) : getString(R.string.sequence));
         if (fullMode != null) fullMode.setText(mode.getText());
-        Track track = player.current(); String title = track == null ? "选择一首音乐" : track.title;
-        now.setText(title); now.setContentDescription(track == null ? title : title + "，" + track.artist);
-        String action = player.loading() ? "取消" : player.playing() ? "暂停" : "播放"; toggle.setText(action);
+        Track track = player.current(); String title = track == null ? getString(R.string.choose_track) : track.title;
+        now.setText(title); now.setContentDescription(track == null ? title : title + ", " + track.artist);
+        String action = player.loading() ? getString(R.string.cancel) : player.playing() ? getString(R.string.pause) : getString(R.string.play); toggle.setText(action);
         if (track == null) { favouriteTrackId = null; cachedFavourite = false; }
         else if (!track.id.equals(favouriteTrackId)) { favouriteTrackId = track.id; cachedFavourite = store.favourite(track.id); }
-        favourite.setText(cachedFavourite ? "已收藏" : "收藏");
+        favourite.setText(cachedFavourite ? getString(R.string.saved) : getString(R.string.favourite));
         long duration = player.duration(), position = player.position(); seek.setEnabled(duration > 0); seek.setProgress(duration > 0 ? (int)(position * 1000 / duration) : 0);
         String time = time(position) + " / " + time(duration); clock.setText(time);
         if (!player.error().equals(lastPlaybackError) || player.loading() != wasLoading || !player.stage().equals(lastStage)) {
-            if (!player.error().isEmpty()) status.setText(player.error() + " · 可重试播放，或打开本地音频");
+            if (!player.error().isEmpty()) status.setText(getString(R.string.retry_audio, player.error()));
             else if (player.loading()) status.setText(player.stage());
-            else if (wasLoading || !lastPlaybackError.isEmpty()) status.setText("长按歌曲可收藏或加入队列");
+            else if (wasLoading || !lastPlaybackError.isEmpty()) status.setText(getString(R.string.track_hint));
             lastPlaybackError = player.error(); wasLoading = player.loading(); lastStage = player.stage();
         }
         if (fullTitle != null) { fullTitle.setText(title); fullTime.setText(player.loading() ? player.stage() : !player.error().isEmpty() ? player.error() : time); fullToggle.setText(action); }
     }
     private void localAudio() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("audio/*").putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-        try { startActivityForResult(intent, 71); } catch (ActivityNotFoundException e) { toast("电视未安装文件选择器"); }
+        try { startActivityForResult(intent, 71); } catch (ActivityNotFoundException e) { toast(getString(R.string.no_picker)); }
     }
     @Override protected void onActivityResult(int request, int result, Intent data) {
         super.onActivityResult(request, result, data); if (request != 71 || result != RESULT_OK || data == null) return;
@@ -191,13 +204,13 @@ public class MainActivity extends Activity {
         for (Uri uri : uris) {
             if (!"content".equals(uri.getScheme())) continue;
             try { if ((data.getFlags() & Intent.FLAG_GRANT_READ_URI_PERMISSION) != 0) getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION); } catch (SecurityException ignored) { }
-            String title = "本地音频";
+            String title = getString(R.string.local_audio);
             try (Cursor cursor = getContentResolver().query(uri, new String[]{OpenableColumns.DISPLAY_NAME}, null, null, null)) { if (cursor != null && cursor.moveToFirst()) title = cursor.getString(0); } catch (RuntimeException ignored) { }
-            if (title == null) title = "本地音频"; if (title.length() > 200) title = title.substring(0, 200);
-            Track track = new Track(uri.toString(), title, "本地音频", "", uri.toString(), 0);
+            if (title == null) title = getString(R.string.local_audio); if (title.length() > 200) title = title.substring(0, 200);
+            Track track = new Track(uri.toString(), title, getString(R.string.local_audio), "", uri.toString(), 0);
             // Binding is asynchronous after the system picker returns: enqueue on the next UI frame if needed.
             final boolean playNow = first; first = false;
-            if (player != null) { if (!player.add(track, playNow)) { toast("队列已满"); break; } }
+            if (player != null) { if (!player.add(track, playNow)) { toast(getString(R.string.queue_full)); break; } }
             else pendingLocal.add(track);
         }
     }
@@ -237,7 +250,7 @@ public class MainActivity extends Activity {
                 row.addView(text("", 14), new LinearLayout.LayoutParams(dp(65), -2));
             } else row = (LinearLayout) recycled;
             Track track = getItem(position); ImageView cover = (ImageView) row.getChildAt(0); covers.load(track.cover, cover);
-            LinearLayout labels = (LinearLayout) row.getChildAt(1); ((TextView) labels.getChildAt(0)).setText(track.title); ((TextView) labels.getChildAt(1)).setText(track.artist); ((TextView) row.getChildAt(2)).setText(track.duration > 0 ? time(track.duration * 1000) : "本地");
+            LinearLayout labels = (LinearLayout) row.getChildAt(1); ((TextView) labels.getChildAt(0)).setText(track.title); ((TextView) labels.getChildAt(1)).setText(track.artist); ((TextView) row.getChildAt(2)).setText(track.duration > 0 ? time(track.duration * 1000) : getString(R.string.local));
             return row;
         }
     }

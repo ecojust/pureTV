@@ -21,6 +21,7 @@ import java.util.TreeMap;
 final class BiliApi {
     private static final BiliApi INSTANCE = new BiliApi();
     private static final int[] MIX = {46,47,18,2,53,8,23,32,15,50,10,31,58,3,45,35,27,43,5,49,33,9,42,19,29,28,14,39,12,38,41,13,37,48,7,16,24,55,40,61,26,17,0,1,60,51,30,4,22,25,54,21,56,59,6,63,57,62,11,36,20,34,44,52};
+    static final String STAGE_SEGMENTS = "segments", STAGE_AUDIO = "audio";
     static final String AGENT = "Mozilla/5.0 (Linux; Android 9) AppleWebKit/537.36 Chrome/120.0 Safari/537.36";
     private String key = "";
     private volatile String cookies = "";
@@ -38,7 +39,7 @@ final class BiliApi {
         params.put("search_type", "video"); params.put("keyword", input.trim());
         params.put("tids", "3"); params.put("page", "1"); params.put("page_size", "12");
         try { return parseSearch(request("https://api.bilibili.com/x/web-interface/wbi/search/type?" + signed(params))); }
-        catch (JSONException e) { throw new IOException("搜索响应无法解析", e); }
+        catch (JSONException e) { throw new MusicError(R.string.bad_search, e); }
     }
 
     Track view(String bv) throws IOException {
@@ -47,7 +48,7 @@ final class BiliApi {
             pageCid(pages);
             JSONObject first = pages.getJSONArray("data").getJSONObject(0);
             return new Track(bv, first.optString("part", bv), "", "", "", first.optLong("duration"));
-        } catch (JSONException e) { throw new IOException("视频信息无法解析", e); }
+        } catch (JSONException e) { throw new MusicError(R.string.bad_video, e); }
     }
 
     String audio(Track track) throws IOException {
@@ -56,17 +57,17 @@ final class BiliApi {
 
     List<String> audioSources(Track track, java.util.function.Consumer<String> stage) throws IOException {
         try {
-            stage.accept("正在获取音频分段…");
+            stage.accept(STAGE_SEGMENTS);
             JSONObject pages = request("https://api.bilibili.com/x/player/pagelist?bvid=" + encode(track.id));
             Map<String, String> params = playParams(track.id, pageCid(pages));
-            stage.accept("正在请求音轨…");
+            stage.accept(STAGE_AUDIO);
             // Same public DASH request flow used by BiliMusic; keep our native low-bandwidth player.
             JSONObject response = request("https://api.bilibili.com/x/player/playurl?" + query(params));
             // Try the signed variant once for a parameter error, never for login/verification failures.
             if (response.optInt("code") == -400)
                 response = request("https://api.bilibili.com/x/player/wbi/playurl?" + signed(params));
             return parseAudioSources(response);
-        } catch (JSONException e) { throw new IOException("音频信息无法解析", e); }
+        } catch (JSONException e) { throw new MusicError(R.string.bad_audio, e); }
     }
 
     static long pageCid(JSONObject response) throws IOException, JSONException {
@@ -74,7 +75,7 @@ final class BiliApi {
         JSONArray pages = response.optJSONArray("data");
         JSONObject first = pages == null ? null : pages.optJSONObject(0);
         long cid = first == null ? 0 : first.optLong("cid");
-        if (cid <= 0) throw new IOException("没有可播放的音频分段");
+        if (cid <= 0) throw new MusicError(R.string.no_segments);
         return cid;
     }
 
@@ -145,7 +146,7 @@ final class BiliApi {
                 chosen = item; smallest = bandwidth; chosenLc = lc;
             }
         }
-        if (chosen == null) throw new IOException("此内容没有可直接播放的 AAC 音轨，可能需要登录或授权");
+        if (chosen == null) throw new MusicError(R.string.no_aac);
         List<String> urls = new ArrayList<>();
         addAudioUrl(urls, chosen.optString("baseUrl"));
         addAudioUrl(urls, chosen.optString("base_url"));
@@ -171,13 +172,13 @@ final class BiliApi {
     static JSONObject checked(JSONObject response) throws IOException, JSONException {
         checkCode(response);
         JSONObject data = response.optJSONObject("data");
-        if (data == null) throw new IOException("B 站没有返回内容");
+        if (data == null) throw new MusicError(R.string.no_content);
         return data;
     }
     private static void checkCode(JSONObject response) throws IOException {
         int code = response.optInt("code", -1);
-        if (code == -400) throw new IOException("B 站拒绝请求（-400：请求错误），请重试或换用其他内容");
-        if (code != 0) throw new IOException(code == -412 || code == -352 ? "B 站要求验证，请稍后或换用本地音频" : "B 站返回 " + code + "：" + response.optString("message", "内容不可用"));
+        if (code == -400) throw new MusicError(R.string.bad_request);
+        if (code != 0) throw new MusicError(code == -412 || code == -352 ? R.string.verification : R.string.api_error, code);
     }
 
     private synchronized String signingKey() throws IOException {
@@ -186,14 +187,14 @@ final class BiliApi {
             JSONObject response = request("https://api.bilibili.com/x/web-interface/nav");
             JSONObject data = response.optJSONObject("data");
             JSONObject images = data == null ? null : data.optJSONObject("wbi_img");
-            if (images == null) throw new IOException("无法取得公开请求参数，请稍后重试");
+            if (images == null) throw new MusicError(R.string.missing_signing);
             String combined = basename(images.getString("img_url")) + basename(images.getString("sub_url"));
-            if (combined.length() < 64) throw new IOException("请求参数无效");
+            if (combined.length() < 64) throw new MusicError(R.string.bad_signing);
             StringBuilder mixed = new StringBuilder();
             for (int i = 0; i < 32; i++) mixed.append(combined.charAt(MIX[i]));
             key = mixed.toString(); keyTime = System.currentTimeMillis();
             return key;
-        } catch (JSONException e) { throw new IOException("公开请求参数无法解析", e); }
+        } catch (JSONException e) { throw new MusicError(R.string.parse_signing, e); }
     }
     private String signed(Map<String, String> params) throws IOException {
         String mix = signingKey();
@@ -221,7 +222,7 @@ final class BiliApi {
     private static String encode(String value) { try { return URLEncoder.encode(value, "UTF-8").replace("+", "%20"); } catch (java.io.UnsupportedEncodingException e) { throw new AssertionError(e); } }
 
     private JSONObject request(String url) throws IOException {
-        if (Thread.currentThread().isInterrupted()) throw new IOException("请求已取消");
+        if (Thread.currentThread().isInterrupted()) throw new MusicError(R.string.request_cancelled);
         if (responses != null) return responses.get(url);
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setConnectTimeout(8000); connection.setReadTimeout(8000);
@@ -230,7 +231,7 @@ final class BiliApi {
         if (!cookies.isEmpty()) connection.setRequestProperty("Cookie", cookies);
         try {
             int status = connection.getResponseCode();
-            if (status != 200) throw new IOException(status == 412 || status == 403 ? "B 站暂时拒绝访问，请稍后或换用本地音频（HTTP " + status + "）" : "网络请求失败（HTTP " + status + "）");
+            if (status != 200) throw new MusicError(status == 412 || status == 403 ? R.string.http_denied : R.string.http_error, status);
             List<String> set = null;
             for (Map.Entry<String,List<String>> header : connection.getHeaderFields().entrySet())
                 if ("Set-Cookie".equalsIgnoreCase(header.getKey())) { set = header.getValue(); break; }
@@ -243,12 +244,12 @@ final class BiliApi {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 byte[] buffer = new byte[8192]; int count;
                 while ((count = input.read(buffer)) != -1) {
-                    if (Thread.currentThread().isInterrupted()) throw new IOException("请求已取消");
-                    if (bytes.size() + count > 1024 * 1024) throw new IOException("响应过大，已停止加载");
+                    if (Thread.currentThread().isInterrupted()) throw new MusicError(R.string.request_cancelled);
+                    if (bytes.size() + count > 1024 * 1024) throw new MusicError(R.string.response_large);
                     bytes.write(buffer, 0, count);
                 }
                 return new JSONObject(bytes.toString("UTF-8"));
-            } catch (JSONException e) { throw new IOException("服务没有返回有效数据", e); }
+            } catch (JSONException e) { throw new MusicError(R.string.bad_response, e); }
         } finally { connection.disconnect(); }
     }
 }

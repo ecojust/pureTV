@@ -39,7 +39,7 @@ export interface LayoutGeometry {frame?:LayoutFrame;visible?:boolean;zIndex?:num
 export interface LayoutScene {background:LayoutGeometry & {color:string;image?:string};elements:(LayoutGeometry & {id:string;frame:LayoutFrame})[]}
 export interface LayoutEntry extends LayoutGeometry { action?: string; packageName?: string; label?: string; icon?: string; color?: string }
 export interface LauncherLayout { version: 2 | 3; home: {columns:number;items:LayoutEntry[];scene?:LayoutScene}; apps: {columns:number;items:LayoutEntry[];scene?:LayoutScene} }
-export interface LauncherLayoutInfo { systemBasis?:{screen:{width:number;height:number};home:UnifiedComponent[];apps:UnifiedComponent[]}; backgrounds?:Record<string,string>; serial?: string; userId?: number; supported: boolean; component?: string; message?: string; custom?: boolean; layout?: LauncherLayout|UnifiedLayout; apps?: {packageName: string; label: string; iconPng?: string}[] }
+export interface LauncherLayoutInfo { systemBasis?:{screen:{width:number;height:number};home:UnifiedComponent[];apps:UnifiedComponent[]}; backgrounds?:Record<string,string>; backgroundColors?:Record<string,string>; failedComponents?:string[]; serial?: string; userId?: number; supported: boolean; component?: string; message?: string; custom?: boolean; layout?: LauncherLayout|UnifiedLayout; apps?: {packageName: string; label: string; iconPng?: string}[] }
 export type LauncherRequest = { action:'getLayout'|'getBackgrounds'|'resetLayout' } | { action:'applyLayout'; layout: LauncherLayout|UnifiedLayout };
 
 export interface UnifiedComponent {id:string;name:string;frame:LayoutFrame;action:string;text:string;visible:boolean;icon:string;color?:string;textColor?:string;iconColor?:string;backgroundColor:string}

@@ -1,8 +1,8 @@
-# Forma TV 0.1.0
+# Forma TV 0.1.1
 
 包豪斯几何风格，三原色构成与应用拼贴。独立包名 `com.ecojust.formatv`，可以与其他启动器同时安装。
 
-[下载 APK](FormaTV-0.1.0.apk?raw=1) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [协议与接入说明](../../README-development.md#第三方启动器接入与动态检测) · [校验值](SHA256SUMS.txt)
+[下载 APK](FormaTV-0.1.1.apk?raw=1) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [协议与接入说明](../../README-development.md#第三方启动器接入与动态检测) · [校验值](SHA256SUMS.txt)
 
 | 首页 | 应用页 |
 | --- | --- |
@@ -23,3 +23,5 @@
 ```
 
 源码基于 Nova TV 的 layout v5 原生渲染、ADB Provider 与遥控器导航。发布 APK 使用仓库发布证书签名；版本、SHA256 和对应构建记录见 resource.json。许可证与致谢见 LICENSE、NOTICE.md。
+
+界面语言跟随 Android 的应用／系统语言：中文使用 `layout.json`，英文及其他非中文语言使用 `layout.en.json`。切换语言会保留已保存的用户应用位置、颜色、操作和背景，只读系统组件采用当前语言的文案。英文布局示例见 [layout.example.en.json](layout.example.en.json)；用户自己填写的应用名称不会自动翻译。
