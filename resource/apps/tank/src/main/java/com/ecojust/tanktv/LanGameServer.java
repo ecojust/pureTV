@@ -119,6 +119,14 @@ public final class LanGameServer implements AutoCloseable {
         if (broadcaster != null) broadcaster.shutdownNow();
         if (workers != null) workers.shutdownNow();
         listener = null;
+        // On some JVMs close() wakes accept() before its native listener FD is released.
+        // Let that short unwind complete so returning from stop also releases the port.
+        Thread stoppedAcceptor = acceptor;
+        acceptor = null;
+        if (stoppedAcceptor != null && stoppedAcceptor != Thread.currentThread()) {
+            try { stoppedAcceptor.join(250); }
+            catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+        }
     }
 
     private static Thread daemon(Runnable task, String name) {
