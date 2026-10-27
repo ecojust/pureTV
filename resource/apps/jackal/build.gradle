@@ -1,0 +1,44 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.ecojust.jackaltv'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.ecojust.jackaltv'
+        minSdk 26
+        targetSdk 29
+        versionCode 1
+        versionName '0.1.0'
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    testOptions { unitTests.includeAndroidResources = true }
+    lint { disable 'ExpiredTargetSdkVersion' }
+}
+
+dependencies {
+    implementation 'com.google.zxing:core:3.5.3'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.14.1'
+}
+
+tasks.register('verifyReleaseSize') {
+    dependsOn 'assembleRelease'
+    doLast {
+        def apks = fileTree("$buildDir/outputs/apk/release") { include '*.apk' }
+        if (apks.empty) throw new GradleException('No release APK found')
+        apks.each { apk ->
+            if (apk.length() > 5 * 1024 * 1024) throw new GradleException("APK exceeds 5 MiB: ${apk.length()} bytes")
+            println "Jackal TV APK: ${apk.length()} bytes (limit 5 MiB)"
+        }
+    }
+}
