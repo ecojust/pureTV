@@ -14,7 +14,7 @@ await mkdir(output, { recursive: true });
 const server = http.createServer(async (request, response) => {
   const file = new URL(request.url, 'http://localhost').pathname.substring(1);
   if (file === 'favicon.ico') { response.writeHead(204).end(); return; }
-  if (!['tv.html','tv.css','game.js','controller.html','controller.css','controller.js'].includes(file)) { response.writeHead(404).end(); return; }
+  if (!['tv.html','tv.css','nes-renderer.js','game.js','controller.html','controller.css','controller.js'].includes(file)) { response.writeHead(404).end(); return; }
   response.setHeader('Content-Type',file.endsWith('.js')?'application/javascript':file.endsWith('.css')?'text/css':'text/html');
   response.end(await readFile(new URL(file,assets)));
 });
@@ -39,6 +39,17 @@ try {
     await page.goto(`${base}/tv.html`);
     await page.waitForFunction(()=>window.TankTV && window.__lastState);
     assert.equal(await page.locator('#game-overlay').isVisible(),true);
+    const display=await page.locator('#battlefield').evaluate(canvas=>({
+      width:canvas.width,height:canvas.height,smoothing:canvas.getContext('2d').imageSmoothingEnabled,
+      rendering:getComputedStyle(canvas).imageRendering,
+      worldWidth:window.TankTV.game.map[0].length*32,worldHeight:window.TankTV.game.map.length*32,
+      border:Array.from(canvas.getContext('2d').getImageData(0,0,1,1).data),
+      ground:Array.from(canvas.getContext('2d').getImageData(16,16,1,1).data)
+    }));
+    const {border,ground,...geometry}=display;
+    assert.deepEqual(geometry,{width:256,height:240,smoothing:false,rendering:'pixelated',worldWidth:832,worldHeight:832},'Native NES frame preserves square 208px battlefield and hard pixel edges');
+    assert.ok(border[0]>=96&&border[0]<=160&&border[0]===border[1]&&border[1]===border[2]&&border[3]===255,'Classic frame is opaque flat gray');
+    assert.deepEqual(ground,[0,0,0,255],'Classic battlefield is opaque black');
     await page.screenshot({path:resolve(output,`tank-lobby${language==='en'?'.en':''}.png`)});
     await page.evaluate(()=>{window.__inputs.forEach(p=>{p.connected=true;});window.__inputs[0].a=true;});
     await page.waitForFunction(()=>window.__lastState.phase==='playing');
@@ -67,11 +78,14 @@ try {
     await page.waitForTimeout(150);
     assert.equal(await page.locator('#room-qr').evaluate(el=>el.complete&&el.naturalWidth>0),true);
     if(language==='en') assert.doesNotMatch(await page.locator('body').innerText(),/[\u3400-\u9fff]/,'English screenshot must contain English UI');
-    for(const [width,height] of [[960,540],[1280,720],[1920,1080]]) {
+    for(const [width,height] of [[720,480],[960,540],[1280,720],[1920,1080]]) {
       await page.setViewportSize({width,height});
       const bounds=await page.locator('.sidebar').evaluate(el=>({bottom:el.lastElementChild.getBoundingClientRect().bottom,screen:innerHeight,scroll:document.documentElement.scrollHeight}));
       assert.ok(bounds.bottom<=height,`Sidebar fits ${width}×${height}: ${JSON.stringify(bounds)}`);
       assert.ok(bounds.scroll<=height,`No page scrolling ${width}×${height}`);
+      const screen=await page.locator('#battlefield').boundingBox();
+      assert.ok(Math.abs(screen.width/screen.height-256/240)<.005,`NES frame keeps its aspect ratio at ${width}×${height}`);
+      assert.ok(screen.x>=0&&screen.y>=0&&screen.x+screen.width<=width+.5&&screen.y+screen.height<=height+.5,`Whole NES frame visible at ${width}×${height}`);
     }
     await page.setViewportSize({width:1280,height:720});
     await page.screenshot({path:resolve(output,`tank-tv${language==='en'?'.en':''}.png`)});
@@ -98,7 +112,7 @@ try {
     if(language==='en')assert.doesNotMatch(await control.locator('body').innerText(),/[\u3400-\u9fff]/);
     await control.screenshot({path:resolve(output,`tank-controller${language==='en'?'.en':''}.png`)});
     await phone.close();
-    console.log(`PASS ${language}: native bridge controls, shield, exit suspension, disconnect pause, three TV sizes and actual UI captures`);
+    console.log(`PASS ${language}: native bridge controls, shield, exit suspension, disconnect pause, four TV sizes and actual UI captures`);
   }
 } finally {await browser.close();await new Promise(resolve=>server.close(resolve));}
 console.log(`${count} bilingual game integration scenarios passed. Screenshots: ${output}`);

@@ -10,7 +10,7 @@
     paused: 'Game paused on TV.', gameover: 'Round over. Press A to play again.', victory: 'Stage clear! Get ready for the next wave.',
     lost: 'Connection lost. Controls released — reconnecting…', full: 'This room already has two players. Try again when a place is free.',
     invalid: 'This room is unavailable. Scan the current QR code on your TV.', waitingPlayer: 'Waiting for a place',
-    gold: 'Amber tank', cyan: 'Cyan tank', joining: 'Connecting to your TV…', expired: 'Room expired. Scan the new QR code on your TV.',
+    gold: 'Yellow tank', cyan: 'Green tank', joining: 'Connecting to your TV…', expired: 'Room expired. Scan the new QR code on your TV.',
     fullscreen: 'Full screen', leaveFullscreen: 'Exit full screen', joystick: 'Movement joystick', fireLabel: 'A: Fire', shieldLabel: 'B: Shield',
     connectionError: 'Cannot reach the TV. Keep your phone and TV on the same local network.', cooling: 's',
   } : {
@@ -21,7 +21,7 @@
     paused: '游戏已在电视上暂停。', gameover: '本局结束，按 A 再来一局。', victory: '关卡完成，准备迎接下一波！',
     lost: '连接暂时中断，已松开所有按键，正在重连…', full: '房间已有两名玩家，空出位置后可重新连接。',
     invalid: '房间不可用，请重新扫描电视上的二维码。', waitingPlayer: '等待加入房间',
-    gold: '琥珀坦克', cyan: '青蓝坦克', joining: '正在连接电视…', expired: '房间已过期，请扫描电视上的新二维码。',
+    gold: '黄色坦克', cyan: '绿色坦克', joining: '正在连接电视…', expired: '房间已过期，请扫描电视上的新二维码。',
     fullscreen: '全屏', leaveFullscreen: '退出全屏', joystick: '方向摇杆', fireLabel: 'A 开火', shieldLabel: 'B 防护盾',
     connectionError: '暂时无法连接电视，请确认手机和电视处于同一局域网。', cooling: '秒',
   };
