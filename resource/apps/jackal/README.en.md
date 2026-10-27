@@ -1,61 +1,75 @@
 # Jackal TV
 
+[中文](README.md) · [English](README.en.md)
+
+Jackal TV is being independently rewritten around the six-stage NES version of Jackal: jeep movement, prisoner rescue, helicopter extraction, weapon upgrades and six distinct boss encounters. The TV displays the game and a room QR code. One or two phones join over the local network with a left joystick, right A/B buttons, and START/SELECT controls.
+
+**The current source is an unreleased rewrite preview.** The `0.1.0` APK below is the previously published version. Its three-stage original gameplay, controls and visuals do not represent this rewrite. This work has not replaced the APK, version number or signing record. Reference comparisons remain incomplete; the preview is not claimed to reproduce every original frame.
+
+## Previously released APK
+
 <!-- apk-resource:start -->
 [Download APK](jackal-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
 
 The APK in this directory is signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
-[中文](README.md) · [English](README.en.md)
+Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`. The previously published APK is version `0.1.0`.
 
-Drive a jeep behind enemy lines, blast open prison huts, rescue prisoners and deliver them to helicopter evacuation pads. Jackal TV is an original pixel game inspired by the classic NES jeep rescue game, supporting one or two players on a local network. The TV displays a vertically scrolling battlefield and room QR code. Each phone joins in its browser with a left joystick and right A/B buttons, without installing a controller app.
+## Rewrite preview controls
 
-Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`; version: `0.1.0`. The native 256×240 canvas preserves crisp pixel edges when scaled. Levels, pixel graphics, sound effects and controller pages are bundled in the APK; play does not require Internet access. No original game ROM or extracted image/audio assets are included. The TV follows the system language and the controller follows the browser language; both support Chinese and English.
-
-## Play
-
-1. Install the APK on your TV using pureTV Manager or ADB, then open Jackal TV.
-2. Connect the phone and TV to the same local network. A wired TV connection works when the phone uses the same router's Wi-Fi.
-3. Scan the room QR code on the right side of the TV. The first phone controls the yellow P1 jeep; the second controls the green P2 jeep.
-4. Press **A** to deploy. Landscape orientation is recommended for the phone; portrait mode also works.
+1. Connect the phones and TV to the same local network; the TV may use Ethernet.
+2. Open a development build and scan its room QR code. The first phone controls green P1; the second controls brown P2.
+3. Use **SELECT** on the title screen to choose one or two players, then press **START**. Connecting a second phone does not automatically change a selected single-player game.
 
 | Control | Action |
 | --- | --- |
-| Left joystick | Drive in eight directions and turn the jeep |
-| Right A button | Start and fire the machine gun; hold for continuous fire, always aimed north |
-| Right B button | Throw a grenade in the jeep's facing direction; hold to repeat |
+| Left joystick | Drive and turn in eight directions |
+| A | Throw a grenade or fire a rocket in the current direction; press again for each shot |
+| B | Fire the machine gun toward the top of the screen; hold for repeated fire |
+| START | Start, pause/resume, or confirm the Continue menu choice |
+| SELECT | Choose the player count at the title or toggle the Continue menu choice |
+| A + B | An eliminated co-op player borrows a life from a teammate who has at least two remaining |
 | TV Back button | Show exit confirmation |
 
-Use the machine gun or drive over infantry; use grenades against armored targets and prison huts. Once a hut is destroyed, approach prisoners to pick them up. Each jeep carries up to eight. Stop inside a helipad to unload them one by one, earning 250 points per rescued prisoner. Delivering three and six prisoners upgrades your grenades. Grenades have unlimited ammunition with a short cooldown between throws.
+The native 256×240 display scrolls across six 512-pixel-wide stages. Each player starts with five lives. The machine gun always points north; the main weapon progresses from grenade to rocket, horizontal splash rocket, and cross-shaped splash rocket.
 
-The campaign has three stages: jungle, desert and harbor. Advance north along roads, cross water on bridges and defeat each stage's fortress boss to proceed. Completing the third stage wins the campaign. Two players share the screen, each starting with three lives and receiving brief invulnerability after respawning.
-
-![Actual game page rendered in Chromium with a simulated room connection; not a physical TV capture](docs/jackal-tv.en.png)
-
-![Phone controller](docs/controller.en.png)
+Different huts release two prisoners, four prisoners, or one flashing weapon-upgrade prisoner; some buildings are tank garages. Prisoners leave in a queue and board a nearby jeep, without the old eight-passenger cap. Helipads unload them one at a time, upgrading the main weapon at 4, 9 and 15 deliveries. Completing the walk into the helicopter awards the relevant score; the stage tally separately rewards delivered prisoners. Passengers still aboard carry over to the next stage. See the [reference and implementation notes](docs/reference.md) for constants, sources and verification limits.
 
 ## Rooms and exit
 
-The TV app provides an HTTP and WebSocket room server on a port assigned at startup. Its QR code contains a random token for the current room. Controller input travels directly between the phone and TV, without a cloud relay. Up to two players can join. Scan the new code after restarting the app.
+No controller app is required on the phones. The TV provides a local HTTP/WebSocket server on an assigned port, with a random room token in the QR code. Up to two players connect directly, without a cloud relay.
 
-A temporary phone disconnection, background switch or screen lock releases held controls, preventing a jeep from continuing to drive or fire. A reconnecting phone attempts to resume its previous player slot. The game pauses when all controllers disconnect. Pressing Home closes the room. Confirming exit disconnects all phones, closes the listening port and server threads, destroys the game page and terminates this app's process. Reopening creates a new room.
+Backgrounding, locking or disconnecting a phone releases held controls. Reconnection attempts to restore its player slot, and the game pauses when all controllers disconnect. Pressing Home closes the room. Confirming exit disconnects phones, closes listening ports and server threads, destroys the game page and terminates the app process. Reopening creates a new room.
 
-If the phone cannot connect, check that both devices share a local network and that the router does not isolate guest or Wi-Fi clients. There is no public Internet relay; the phone browser must be able to access the TV's local HTTP address.
+If the QR link cannot connect, check that both devices share a local network and that guest-network or Wi-Fi client isolation is disabled.
 
-## Build and verify
+## Development builds and assets
 
-Run from the repository root:
+The logic consists of newly written JavaScript state machines. It contains no ROM loader, CPU emulator or third-party game program implementation. The six maps and event lists are data files with explicit provenance. Original visual and note material is currently used only for local reference validation; assets and permissions for formal distribution remain unresolved. Such material is not automatically covered by this project's MIT license, and the rewrite must not be described as using no extracted reference material.
 
-```bash
-node --test resource/apps/jackal/tests/game.test.cjs
-npm ci --prefix desktop
-cd desktop && npx playwright install chromium && cd ..
-node resource/apps/jackal/tests/controller.mjs
-node resource/apps/jackal/tests/capture.mjs
-cd resource/launcher/puretv
-./gradlew :jackal:assembleDebug :jackal:testDebugUnitTest :jackal:lintDebug :jackal:verifyReleaseSize
+The renderer requires a separately prepared `src/main/assets/art/` directory containing stage tile/sprite atlases, HUD font, sprite metadata, boss background patches and cinematic timelines. A complete playable development build cannot be produced without these assets. See the [reference notes](docs/reference.md) and [enemy/boss notes](docs/reference-enemies.md) for data origins, rights boundaries and remaining comparisons. Local reference material is not being published as an update to the existing APK.
+
+Verify logic and data from the repository root:
+
+```sh
+node resource/apps/jackal/tools/build-levels.cjs --check
+node --test resource/apps/jackal/tests/game.test.cjs resource/apps/jackal/tests/enemies.test.cjs
 ```
 
-APKs are generated under `resource/apps/jackal/build/outputs/apk/`. Release builds enable code and resource shrinking and enforce a 5 MiB size limit. Published resource APKs use the pureTV release certificate. Android tests cover the room server and lifecycle, Node tests cover game rules, and browser tests cover the controller and game page.
+After preparing the required assets, build Android:
 
-Set `JACKAL_UI_CAPTURE_DIR` and run `tests/capture.mjs` to export Chinese and English game and controller previews. They render the actual bundled pages in Chromium using a simulated native bridge and test room; they do not measure physical TV performance or phone network latency. Resource updates use Android CI staging followed by `tools/prepare-app-resources.py --app jackal`; see [resource maintenance](../../../docs/resource-maintenance.md).
+```sh
+cd resource/launcher/puretv
+./gradlew :jackal:assembleDebug :jackal:testDebugUnitTest :jackal:lintDebug
+```
+
+APKs appear under `resource/apps/jackal/build/outputs/apk/`. Android tests cover the LAN protocol, service shutdown and process exit; Node tests cover game rules. Browser tests and captures establish page behavior, not physical TV performance, phone latency or complete original-game parity. See [resource maintenance](../../../docs/resource-maintenance.md) for the release workflow.
+
+## Previous-version screenshots
+
+These images show the previously released pages rendered in Chromium with a simulated room connection. They are neither the new rewrite nor physical TV captures.
+
+![Previous-version game page](docs/jackal-tv.en.png)
+
+![Previous-version phone controller](docs/controller.en.png)

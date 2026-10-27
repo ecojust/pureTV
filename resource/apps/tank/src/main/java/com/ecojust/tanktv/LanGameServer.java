@@ -85,7 +85,8 @@ public final class LanGameServer implements AutoCloseable {
                     if (live) connected++;
                     if (!live || now - p.inputAt > STALE_INPUT_MS) p.clear();
                     list.put(new JSONObject().put("id", p.id).put("connected", live)
-                            .put("x", p.x).put("y", p.y).put("a", p.a).put("b", p.b));
+                            .put("x", p.x).put("y", p.y).put("a", p.a).put("b", p.b)
+                            .put("start", p.start).put("select", p.select));
                 }
                 return new JSONObject().put("players", list).put("connections", connected).toString();
             } catch (JSONException impossible) { return "{\"players\":[],\"connections\":0}"; }
@@ -302,12 +303,17 @@ public final class LanGameServer implements AutoCloseable {
                         if (seq <= sequence) continue;
                         double x = message.getDouble("x"), y = message.getDouble("y");
                         if (!Double.isFinite(x) || !Double.isFinite(y)
-                                || !(message.opt("a") instanceof Boolean) || !(message.opt("b") instanceof Boolean)) { fail("protocol_error"); break; }
+                                || !(message.opt("a") instanceof Boolean) || !(message.opt("b") instanceof Boolean)
+                                || (message.has("start") && !(message.opt("start") instanceof Boolean))
+                                || (message.has("select") && !(message.opt("select") instanceof Boolean))) { fail("protocol_error"); break; }
                         sequence = seq;
                         synchronized (lock) {
                             if (player.peer != this) break;
                             player.x = Math.max(-1, Math.min(1, x)); player.y = Math.max(-1, Math.min(1, y));
-                            player.a = message.getBoolean("a"); player.b = message.getBoolean("b"); player.inputAt = now();
+                            player.a = message.getBoolean("a"); player.b = message.getBoolean("b");
+                            // Older phone controllers omit the NES menu buttons.
+                            player.start = message.optBoolean("start", false);
+                            player.select = message.optBoolean("select", false); player.inputAt = now();
                         }
                     } else if ("ping".equals(type) && player != null) { text("{\"type\":\"pong\"}"); }
                     else { fail("protocol_error"); break; }
@@ -363,9 +369,9 @@ public final class LanGameServer implements AutoCloseable {
         long disconnectedAt;
         long inputAt;
         double x, y;
-        boolean a, b;
+        boolean a, b, start, select;
         Player(int id) { this.id = id; }
-        void clear() { x = 0; y = 0; a = false; b = false; }
+        void clear() { x = 0; y = 0; a = false; b = false; start = false; select = false; }
     }
 
     private static final class Request {

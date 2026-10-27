@@ -67,6 +67,7 @@ public class MainActivity extends Activity {
     private ConnectivityManager connectivity;
     private ConnectivityManager.NetworkCallback networkCallback;
     private List<String> lastAddresses = Collections.emptyList();
+    private volatile java.util.Set<String> sceneAssetPaths;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -141,12 +142,84 @@ public class MainActivity extends Activity {
         return value;
     }
 
+    /** Only named, bundled game resources may share the native bridge origin. */
+    static String bundledAssetMime(String path) {
+        if (path == null) return null;
+        switch (path) {
+            case "/tv.html": return "text/html";
+            case "/tv.css": return "text/css";
+            case "/game.js":
+            case "/game-model.js":
+            case "/levels.js":
+            case "/runtime.js":
+            case "/nes-renderer.js":
+            case "/nes-audio.js":
+            case "/enemies.js":
+            case "/scene-updates.js":
+                return "application/javascript";
+            case "/data/entities.json":
+            case "/data/destruction.json":
+            case "/data/stage-1.json":
+            case "/data/stage-2.json":
+            case "/data/stage-3.json":
+            case "/data/stage-4.json":
+            case "/data/stage-5.json":
+            case "/data/stage-6.json":
+                return "application/json";
+            case "/art/levels/sprites.json": return "application/json";
+            case "/art/boss_patches.json": return "application/json";
+            case "/art/data/audio-score.json": return "application/json";
+            case "/art/fonts/hud.png": return "image/png";
+            default: break;
+        }
+        // Reserved for the reviewed renderer manifest. Missing artwork stays unavailable;
+        // no directory wildcard, external download, or arbitrary asset-file access is allowed.
+        if (path.matches("/art/textures/stage_0[1-6]_(tiles|sprites)\\.png")) return "image/png";
+        String scene = "/art/cinematics/(title_[12]p|intro_[12]p|attract|continue_(yes|no)|game_over|ending(_restart)?|stage_clear_0[1-5]|(stage|continue)_load_0[1-6])/";
+        if (path.matches(scene + "timeline\\.json")) return "application/json";
+        if (path.matches(scene + "tiles\\.png")) return "image/png";
+        return null;
+    }
+
+    /** The bundled manifest lists exact optional preview images; it cannot open arbitrary files. */
+    private java.util.Set<String> sceneAssetPaths() {
+        if (sceneAssetPaths != null) return sceneAssetPaths;
+        synchronized (this) {
+            if (sceneAssetPaths != null) return sceneAssetPaths;
+            java.util.Set<String> paths = new java.util.HashSet<>();
+            try (java.io.InputStream stream = getAssets().open("scene-update-paths.json")) {
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                byte[] buffer = new byte[4096];
+                int count;
+                while ((count = stream.read(buffer)) != -1) {
+                    output.write(buffer,0,count);
+                    if (output.size() > 65536) throw new IOException("Scene asset manifest is too large");
+                }
+                JSONArray manifest = new JSONArray(new String(output.toByteArray(),java.nio.charset.StandardCharsets.UTF_8));
+                for (int i=0;i<manifest.length();i++) {
+                    String path = manifest.getString(i);
+                    if (!path.matches("textures/[a-z0-9_/]+\\.png") || path.contains("//"))
+                        throw new IOException("Invalid scene asset path");
+                    paths.add("/art/" + path);
+                }
+            } catch (IOException | org.json.JSONException invalid) { paths.clear(); }
+            sceneAssetPaths = Collections.unmodifiableSet(paths);
+            return sceneAssetPaths;
+        }
+    }
+
     WebResourceResponse localAsset(Uri uri) {
         String name = uri.getPath();
-        if ("https".equals(uri.getScheme()) && "jackal.invalid".equals(uri.getHost()) && uri.getPort() == -1
-            && ("/tv.html".equals(name) || "/tv.css".equals(name) || "/game.js".equals(name) || "/nes-renderer.js".equals(name) || "/game-model.js".equals(name))) {
-            String mime = name.endsWith(".html") ? "text/html" : name.endsWith(".css") ? "text/css" : "application/javascript";
-            try { return new WebResourceResponse(mime,"UTF-8",200,"OK",Collections.singletonMap("Cache-Control","no-store"),getAssets().open(name.substring(1))); }
+        String mime = bundledAssetMime(name);
+        if (mime == null && sceneAssetPaths().contains(name)) mime = "image/png";
+        if ("https".equals(uri.getScheme()) && "jackal.invalid".equals(uri.getEncodedAuthority())
+            && uri.getQuery() == null && uri.getFragment() == null && name != null
+            && name.equals(uri.getEncodedPath()) && mime != null) {
+            String encoding = mime.startsWith("audio/") || mime.startsWith("image/") ? null : "UTF-8";
+            Map<String,String> headers = new java.util.HashMap<>();
+            headers.put("Cache-Control","no-store");
+            headers.put("X-Content-Type-Options","nosniff");
+            try { return new WebResourceResponse(mime,encoding,200,"OK",headers,getAssets().open(name.substring(1))); }
             catch (IOException ignored) { }
         }
         return new WebResourceResponse("text/plain","UTF-8",403,"Forbidden",Collections.emptyMap(),new ByteArrayInputStream(new byte[0]));
@@ -352,6 +425,8 @@ public class MainActivity extends Activity {
             case KeyEvent.KEYCODE_MENU:
             case KeyEvent.KEYCODE_B:
             case KeyEvent.KEYCODE_BUTTON_B: key="b"; break;
+            case KeyEvent.KEYCODE_BUTTON_START: key="Start"; break;
+            case KeyEvent.KEYCODE_BUTTON_SELECT: key="Select"; break;
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
             case KeyEvent.KEYCODE_P: key="p"; break;
             default: return super.dispatchKeyEvent(event);

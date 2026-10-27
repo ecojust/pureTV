@@ -67,24 +67,27 @@ public class LanGameServerTest {
 
     @Test public void inputsClampIgnoreOldSequencesAndExpireWithoutSticking() throws Exception {
         Socket socket = websocket(); send(socket, "{\"type\":\"hello\"}"); message(socket, "welcome");
-        send(socket, input(1, 4, -4, true, true));
+        send(socket, new JSONObject(input(1, 4, -4, true, true)).put("start", true).put("select", true).toString());
         await(() -> player().optBoolean("a"));
         JSONObject active = player();
         assertEquals(1, active.getDouble("x"), 0); assertEquals(-1, active.getDouble("y"), 0);
+        assertTrue(active.getBoolean("start")); assertTrue(active.getBoolean("select"));
         send(socket, input(0, 0, 0, false, false));
         send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
         assertTrue(player().getBoolean("a"));
         Thread.sleep(800);
         assertEquals(0, player().getDouble("x"), 0); assertFalse(player().getBoolean("a"));
         assertTrue(player().getBoolean("connected"));
+        assertFalse(player().getBoolean("start")); assertFalse(player().getBoolean("select"));
     }
 
     @Test public void reconnectRequiresSessionAndClearsHeldInputs() throws Exception {
         Socket first = websocket(); send(first, "{\"type\":\"hello\"}");
         JSONObject welcome = message(first, "welcome");
-        send(first, input(90, 1, 0, true, false)); await(() -> player().optBoolean("a"));
+        send(first, new JSONObject(input(90, 1, 0, true, false)).put("start", true).put("select", true).toString()); await(() -> player().optBoolean("start"));
         first.close(); await(() -> !player().optBoolean("connected"));
         assertFalse(player().getBoolean("a"));
+        assertFalse(player().getBoolean("start")); assertFalse(player().getBoolean("select"));
         Socket second = websocket(); send(second, new JSONObject().put("type", "hello").put("session", welcome.getString("session")).toString());
         JSONObject resumed = message(second, "welcome");
         assertEquals(1, resumed.getInt("player")); assertEquals(welcome.getString("session"), resumed.getString("session"));
@@ -98,10 +101,39 @@ public class LanGameServerTest {
         JSONObject state;
         do { state = message(socket, "state"); } while (!"playing".equals(state.optString("phase")));
         assertEquals(3, state.getInt("stage"));
-        send(socket, input(0, 1, 1, true, true)); await(() -> player().optBoolean("a"));
+        send(socket, new JSONObject(input(0, 1, 1, true, true)).put("start", true).put("select", true).toString()); await(() -> player().optBoolean("start"));
         server.releaseInputs();
         assertFalse(player().getBoolean("a")); assertFalse(player().getBoolean("b"));
+        assertFalse(player().getBoolean("start")); assertFalse(player().getBoolean("select"));
         assertEquals(0, player().getDouble("y"), 0);
+    }
+
+    @Test public void nesMenuButtonsReachSnapshotAndLegacyInputReleasesThem() throws Exception {
+        Socket socket = websocket(); send(socket, "{\"type\":\"hello\"}"); message(socket, "welcome");
+        assertFalse(player().getBoolean("start")); assertFalse(player().getBoolean("select"));
+        send(socket, new JSONObject(input(1, 0, 0, false, false)).put("start", true).put("select", true).toString());
+        await(() -> player().optBoolean("start") && player().optBoolean("select"));
+        assertFalse(player().getBoolean("a")); assertFalse(player().getBoolean("b"));
+        send(socket, input(2, 0, 0, true, false));
+        await(() -> player().optBoolean("a"));
+        assertFalse("A legacy snapshot releases Start", player().getBoolean("start"));
+        assertFalse("A legacy snapshot releases Select", player().getBoolean("select"));
+    }
+
+    @Test public void optionalNesButtonsRejectNonBooleanValues() throws Exception {
+        String session = null;
+        for (String key : new String[] {"start", "select"}) {
+            for (Object invalid : new Object[] {"true", 1, JSONObject.NULL}) {
+                Socket socket = websocket();
+                JSONObject hello = new JSONObject().put("type", "hello");
+                if (session != null) hello.put("session", session);
+                send(socket, hello.toString()); session = message(socket, "welcome").getString("session");
+                send(socket, new JSONObject(input(0, 0, 0, false, false)).put(key, invalid).toString());
+                assertEquals(key, "protocol_error", message(socket, "error").getString("code"));
+                await(() -> !player().optBoolean("connected"));
+                assertFalse(player().getBoolean("start")); assertFalse(player().getBoolean("select"));
+            }
+        }
     }
 
     @Test public void malformedOrUnmaskedFramesCannotChangeInputs() throws Exception {
@@ -121,10 +153,11 @@ public class LanGameServerTest {
     @Test public void stopDisconnectsClientsAndPortCanBeReleased() throws Exception {
         Socket client = websocket(); send(client, "{\"type\":\"hello\"}"); message(client, "welcome");
         Socket second = websocket(); send(second, "{\"type\":\"hello\"}"); message(second, "welcome");
-        send(client, input(0, 1, 0, true, true)); await(() -> player().optBoolean("a"));
+        send(client, new JSONObject(input(0, 1, 0, true, true)).put("start", true).put("select", true).toString()); await(() -> player().optBoolean("start"));
         server.stop();
         assertEquals(0, new JSONObject(server.snapshot()).getInt("connections"));
         assertFalse(player().getBoolean("a"));
+        assertFalse(player().getBoolean("start")); assertFalse(player().getBoolean("select"));
         for (Socket phone : new Socket[] {client, second}) {
             phone.setSoTimeout(1000);
             // Drain any already-buffered state; both phones must then observe a closed socket.
