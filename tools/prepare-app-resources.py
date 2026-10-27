@@ -59,7 +59,7 @@ apps = [
     ('webtv', 'WebTV', '电视直播与 M3U 播放器', 'webtv-controls', 'controls-render', 'com.ecojust.webtv'),
     ('hifini', 'HIFINi TV', '基于 HiFiNi 的电视音乐播放器', 'hifini-tv', 'hifini-tv', 'com.ecojust.hifinitv'),
     ('cctv', 'CCTV Live', '央视官网播放器与电视频道导航', 'cctv-live', 'cctv-live', 'com.ecojust.cctvlive'),
-    ('tank', 'Tank TV', '手机扫码操控的局域网合作坦克防守游戏', 'tank-tv', 'tank-tv', 'com.ecojust.tanktv'),
+    ('tank', 'Tank TV', '红白机像素风格的手机扫码合作坦克大战', 'tank-tv', 'tank-tv', 'com.ecojust.tanktv'),
 ]
 selected_apps = args.app or ['music', 'shortvideo', 'webtv']
 apps = [app for app in apps if app[0] in selected_apps]

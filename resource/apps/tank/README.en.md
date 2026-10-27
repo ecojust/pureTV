@@ -1,16 +1,16 @@
 # Tank TV
 
 <!-- apk-resource:start -->
-[Download APK](tank-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
+[Download APK](tank-0.1.1.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
 
 The APK in this directory is signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)
 
-Defend your base on the TV and use your phone as a controller. Tank TV is an original tank defense game for one or two players sharing a local network. The TV displays the battlefield and a room QR code; each phone joins through its browser without installing another app. The game, levels and controller page are bundled in the APK and do not depend on an Internet service.
+Defend your base on the TV and use your phone as a controller. Tank TV is a classic 8-bit tank defense game for one or two players sharing a local network. The TV displays the battlefield and a room QR code; each phone joins through its browser without installing another app. The game, levels and controller page are bundled in the APK and do not depend on an Internet service.
 
-Requires Android 8.0 or later. Package: `com.ecojust.tanktv`; version: `0.1.0`. The TV interface follows the system language, while the controller follows the browser language. Both support Chinese and English. This project uses original graphics and code, without commercial game ROMs, assets or trademarks.
+Requires Android 8.0 or later. Package: `com.ecojust.tanktv`; version: `0.1.1`. The TV interface follows the system language, while the controller follows the browser language. Both support Chinese and English. The game renders to a native 256×240 pixel canvas: a square 208×208 black battlefield, gray status panel, yellow and green player tanks, brick and steel walls, and an eagle base. Nearest-neighbor scaling keeps the pixels sharp. Each stage has 20 enemies; the side panel shows the remaining spawn queue as tank icons, player lives and a stage flag.
 
 ## Play
 

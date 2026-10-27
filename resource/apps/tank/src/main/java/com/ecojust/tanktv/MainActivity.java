@@ -144,7 +144,7 @@ public class MainActivity extends Activity {
     WebResourceResponse localAsset(Uri uri) {
         String name = uri.getPath();
         if ("https".equals(uri.getScheme()) && "tank.invalid".equals(uri.getHost()) && uri.getPort() == -1
-            && ("/tv.html".equals(name) || "/tv.css".equals(name) || "/game.js".equals(name))) {
+            && ("/tv.html".equals(name) || "/tv.css".equals(name) || "/game.js".equals(name) || "/nes-renderer.js".equals(name))) {
             String mime = name.endsWith(".html") ? "text/html" : name.endsWith(".css") ? "text/css" : "application/javascript";
             try { return new WebResourceResponse(mime,"UTF-8",200,"OK",Collections.singletonMap("Cache-Control","no-store"),getAssets().open(name.substring(1))); }
             catch (IOException ignored) { }

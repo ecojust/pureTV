@@ -143,8 +143,8 @@ public class MainActivityTest {
     }
 
     @Test public void onlyBundledGameAssetsAreReadable() throws Exception {
-        String[] names={"tv.html","tv.css","game.js"};
-        String[] mimes={"text/html","text/css","application/javascript"};
+        String[] names={"tv.html","tv.css","game.js","nes-renderer.js"};
+        String[] mimes={"text/html","text/css","application/javascript","application/javascript"};
         for (int i=0;i<names.length;i++) {
             WebResourceResponse response=activity.localAsset(Uri.parse("https://tank.invalid/"+names[i]));
             assertEquals(names[i],200,response.getStatusCode());
