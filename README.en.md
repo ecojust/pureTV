@@ -9,7 +9,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-7-f97316?style=flat-square)](resource/apps/)
+[![App count](https://img.shields.io/badge/apps-8-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
@@ -93,6 +93,7 @@ resource/
 | [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Android TV client for Jellyfin media servers | <img src="docs/previews/en/app-jellyfin-tv.png" width="180" alt="Jellyfin for Android TV preview"> |
 | [Music TV](resource/apps/music/) | ecojust | 0.1.3 | 48.8 KB | Native TV music player | <img src="docs/previews/en/app-music.png" width="180" alt="Music TV preview"> |
 | [ShortVideo TV](resource/apps/shortvideo/) | ecojust | 0.1.1 | 32.7 KB | Short video player with remote control support | <img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"> |
+| [Tank TV](resource/apps/tank/) | ecojust | 0.1.0 | 73.1 KB | Local co-op tank defense with phone joystick and A/B controls | <img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"> |
 | [TV Bro](resource/apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | TV browser with remote control support, using the system WebView | <img src="docs/previews/en/app-tvbro.png" width="180" alt="TV Bro preview"> |
 | [WebTV](resource/apps/webtv/) | ecojust | 0.1.1 | 44.8 KB | Live TV and M3U player | <img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"> |
 

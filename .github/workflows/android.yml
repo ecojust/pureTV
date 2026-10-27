@@ -198,7 +198,7 @@ jobs:
               apks=[p for p in apks if 'release' in p.name]
               assert len(apks)==1,apks
               shutil.copyfile(apks[0],output/(app+'.apk'))
-          for artifact,names in [('music-tv-previews',['music-tv.png','music-tv.en.png']),('hifini-tv-previews',['hifini-tv.png','hifini-tv.en.png']),('shortvideo-tv-previews',['shortvideo-tv.png','shortvideo-tv.en.png']),('webtv-previews',['webtv-controls.png','webtv-controls.en.png']),('cctv-tv-previews',['cctv-live.png','cctv-live.en.png']),('tank-tv-previews',['tank-tv.png','tank-tv.en.png'])]:
+          for artifact,names in [('music-tv-previews',['music-tv.png','music-tv.en.png']),('hifini-tv-previews',['hifini-tv.png','hifini-tv.en.png']),('shortvideo-tv-previews',['shortvideo-tv.png','shortvideo-tv.en.png']),('webtv-previews',['webtv-controls.png','webtv-controls.en.png']),('cctv-tv-previews',['cctv-live.png','cctv-live.en.png']),('tank-tv-previews',['tank-tv.png','tank-tv.en.png','tank-controller.png','tank-controller.en.png'])]:
               for name in names:shutil.copyfile(root/artifact/name,output/name)
           for name in ['home-render.png','apps-render.png','home-render.en.png','apps-render.en.png']:
               shutil.copyfile(root/'pureTV-tv-previews'/name,output/name)

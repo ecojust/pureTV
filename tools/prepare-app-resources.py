@@ -103,6 +103,9 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         (folder / 'thumb.png').write_bytes(chinese)
         (docs / (doc_image + '.png')).write_bytes(chinese)
         (docs / (doc_image + '.en.png')).write_bytes(english)
+        if slug == 'tank':
+            for suffix in ('', '.en'):
+                (docs / ('controller' + suffix + '.png')).write_bytes(validate_png(artifact('tank-controller' + suffix + '.png'))[0])
         preview_options = {'renderer': 'Chromium', 'provenance': 'Actual bundled game page rendered in Chromium with English locale and a simulated native room bridge; not a physical TV capture.'} if slug == 'tank' else {}
         write_english_previews(root, 'apps', slug, version, args.source_sha, run_url, english, **preview_options)
         resource = {
@@ -115,6 +118,8 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         }
         resource_path.write_text(json.dumps(resource, ensure_ascii=False, indent=2) + '\n')
         checksums = [apk.name, 'thumb.png', 'docs/' + doc_image + '.png', 'docs/' + doc_image + '.en.png']
+        if slug == 'tank':
+            checksums += ['docs/controller.png', 'docs/controller.en.png']
         (folder / 'SHA256SUMS.txt').write_text(''.join(f'{digest(folder / filename)}  {filename}\n' for filename in checksums))
         readme = folder / 'README.md'
         readme_text = readme.read_text() if readme.exists() else '# ' + name + '\n'
