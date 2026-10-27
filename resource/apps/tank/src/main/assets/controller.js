@@ -1,0 +1,231 @@
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const english = !/^zh\b/i.test(navigator.language || 'zh');
+  const messages = english ? {
+    controller: 'FIELD CONTROLLER', yourTank: 'YOUR TANK', stage: 'STAGE', lives: 'LIVES', score: 'SCORE', move: 'MOVE · LEFT STICK',
+    fire: 'FIRE', shield: 'SHIELD', hint: 'Hold A to fire · B activates your shield', rotate: 'Turn your phone sideways for a better grip',
+    retry: 'Reconnect', connecting: 'Connecting', connected: 'Connected', reconnecting: 'Reconnecting', offline: 'Disconnected',
+    waiting: 'Joining the room on your TV…', ready: 'Press A to begin. Defend the base together.', playing: 'Defend the base. Keep an eye on the TV.',
+    paused: 'Game paused on TV.', gameover: 'Round over. Press A to play again.', victory: 'Stage clear! Get ready for the next wave.',
+    lost: 'Connection lost. Controls released — reconnecting…', full: 'This room already has two players. Try again when a place is free.',
+    invalid: 'This room is unavailable. Scan the current QR code on your TV.', waitingPlayer: 'Waiting for a place',
+    gold: 'Amber tank', cyan: 'Cyan tank', joining: 'Connecting to your TV…', expired: 'Room expired. Scan the new QR code on your TV.',
+    fullscreen: 'Full screen', leaveFullscreen: 'Exit full screen', joystick: 'Movement joystick', fireLabel: 'A: Fire', shieldLabel: 'B: Shield',
+    connectionError: 'Cannot reach the TV. Keep your phone and TV on the same local network.', cooling: 's',
+  } : {
+    controller: '手机控制器', yourTank: '你的坦克', stage: '关卡', lives: '生命', score: '得分', move: '移动 · 左侧摇杆',
+    fire: '开火', shield: '防护盾', hint: '按住 A 连续开火 · B 开启护盾', rotate: '横屏握持，体验更好',
+    retry: '重新连接', connecting: '正在连接', connected: '已连接', reconnecting: '正在重连', offline: '连接已断开',
+    waiting: '正在加入电视上的房间…', ready: '按 A 开始游戏，和队友一起守护基地。', playing: '守护基地，战场画面在电视上。',
+    paused: '游戏已在电视上暂停。', gameover: '本局结束，按 A 再来一局。', victory: '关卡完成，准备迎接下一波！',
+    lost: '连接暂时中断，已松开所有按键，正在重连…', full: '房间已有两名玩家，空出位置后可重新连接。',
+    invalid: '房间不可用，请重新扫描电视上的二维码。', waitingPlayer: '等待加入房间',
+    gold: '琥珀坦克', cyan: '青蓝坦克', joining: '正在连接电视…', expired: '房间已过期，请扫描电视上的新二维码。',
+    fullscreen: '全屏', leaveFullscreen: '退出全屏', joystick: '方向摇杆', fireLabel: 'A 开火', shieldLabel: 'B 防护盾',
+    connectionError: '暂时无法连接电视，请确认手机和电视处于同一局域网。', cooling: '秒',
+  };
+  document.documentElement.lang = english ? 'en' : 'zh-CN';
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = messages[el.dataset.i18n]; });
+  $('joystick').setAttribute('aria-label', messages.joystick);
+  $('button-a').setAttribute('aria-label', messages.fireLabel);
+  $('button-b').setAttribute('aria-label', messages.shieldLabel);
+  $('fullscreen').setAttribute('aria-label', messages.fullscreen);
+  $('fullscreen').title = messages.fullscreen;
+  $('player-name').textContent = messages.waitingPlayer;
+  const root = $('controller');
+  const room = new URL(location.href).searchParams.get('room') || '';
+  const storageKey = `tank-controller:${room}`;
+  let session = '';
+  try { session = sessionStorage.getItem(storageKey) || ''; } catch (_) { /* Private browser storage may be unavailable. */ }
+  let ws = null, connected = false, player = 0, seq = 0, attempts = 0;
+  let reconnectTimer = 0, helloTimer = 0, lastSend = 0, lastSent = '', terminal = false, leaving = false;
+  let stickPointer = null, stickX = 0, stickY = 0;
+  const actionPointers = new Map();
+  const keys = new Set();
+  const input = { x: 0, y: 0, a: false, b: false };
+  const isVisible = () => !document.hidden && !leaving;
+  const setMessage = (key, error = false) => { $('message').textContent = messages[key] || key; root.dataset.error = String(error); };
+  function showConnection(key) {
+    $('connection-text').textContent = messages[key];
+    root.dataset.connected = String(connected);
+    $('button-a').disabled = !connected;
+    $('button-b').disabled = !connected;
+    $('joystick').setAttribute('aria-disabled', String(!connected));
+  }
+  function vibrate(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (_) {} }
+  function updateStick() {
+    const radius = $('joystick').clientWidth * .265;
+    $('joystick-thumb').style.transform = `translate(${input.x * radius}px,${input.y * radius}px)`;
+    $('joystick').classList.toggle('active', !!(input.x || input.y));
+  }
+  function updateInput() {
+    input.x = stickPointer !== null ? stickX : (keys.has('ArrowRight') ? 1 : 0) - (keys.has('ArrowLeft') ? 1 : 0);
+    input.y = stickPointer !== null ? stickY : (keys.has('ArrowDown') ? 1 : 0) - (keys.has('ArrowUp') ? 1 : 0);
+    input.a = [...actionPointers.values()].includes('a') || keys.has(' ') || keys.has('Enter');
+    input.b = [...actionPointers.values()].includes('b') || keys.has('b');
+    $('button-a').classList.toggle('pressed', input.a);
+    $('button-b').classList.toggle('pressed', input.b);
+    updateStick();
+  }
+  function sendInput(force = false) {
+    if (!connected || !ws || ws.readyState !== WebSocket.OPEN) return;
+    const now = performance.now();
+    const state = JSON.stringify(input);
+    if (!force && ((state === lastSent && now - lastSend < 250) || now - lastSend < 30)) return;
+    try {
+      ws.send(JSON.stringify({ type: 'input', ...input, seq: ++seq }));
+      lastSent = state; lastSend = now;
+    } catch (_) { resetControls(false); }
+  }
+  function resetControls(send = true) {
+    stickPointer = null; stickX = stickY = 0; actionPointers.clear(); keys.clear(); updateInput();
+    if (send) sendInput(true);
+  }
+  function clearTimers() { clearTimeout(reconnectTimer); clearTimeout(helloTimer); reconnectTimer = helloTimer = 0; }
+  function scheduleReconnect() {
+    if (terminal || !isVisible() || reconnectTimer) return;
+    const delay = Math.min(6000, 500 * 2 ** Math.min(attempts, 4));
+    reconnectTimer = setTimeout(() => { reconnectTimer = 0; connect(); }, delay);
+  }
+  function fail(key, stop = false) {
+    resetControls(); connected = false; terminal = stop; showConnection('offline'); setMessage(key, true);
+    $('error-actions').hidden = !stop;
+    if (stop) { clearTimers(); if (ws) ws.close(); }
+  }
+  function applyState(state) {
+    if (!connected) return;
+    if (Number.isFinite(state.stage)) $('stage').textContent = String(Math.max(1, state.stage)).padStart(2, '0');
+    const mine = Array.isArray(state.players) ? state.players.find(p => Number(p.id) === player) : null;
+    if (mine) {
+      if (Number.isFinite(mine.lives)) $('lives').textContent = String(Math.max(0, mine.lives));
+      if (Number.isFinite(mine.score)) $('score').textContent = String(Math.max(0, mine.score)).padStart(4, '0');
+      const cooldown = Number(mine.shieldCooldown) || 0;
+      $('button-b').dataset.cooling = String(cooldown > 0);
+      $('shield-caption').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}${messages.cooling}` : messages.shield;
+    }
+    const phaseKey = { lobby: 'ready', ready: 'ready', playing: 'playing', paused: 'paused', gameover: 'gameover', over: 'gameover', victory: 'victory', stageclear: 'victory' }[state.phase];
+    if (phaseKey) setMessage(phaseKey);
+  }
+  function connect() {
+    if (!isVisible() || terminal) return;
+    clearTimers();
+    if (!room || !/^[a-zA-Z0-9_-]{16,128}$/.test(room)) { fail('invalid', true); return; }
+    resetControls(false); connected = false; showConnection(attempts ? 'reconnecting' : 'connecting');
+    setMessage(attempts > 3 ? 'connectionError' : attempts ? 'lost' : 'waiting', attempts > 3);
+    $('error-actions').hidden = true;
+    const previous = ws;
+    ws = null;
+    if (previous) previous.close();
+    let socket;
+    try { socket = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws?room=${encodeURIComponent(room)}`); }
+    catch (_) { attempts++; scheduleReconnect(); return; }
+    ws = socket; seq = 0; lastSent = ''; lastSend = 0; attempts++;
+    helloTimer = setTimeout(() => { if (socket === ws && !connected) socket.close(); }, 7000);
+    socket.addEventListener('open', () => {
+      if (socket !== ws || !isVisible()) { socket.close(); return; }
+      socket.send(JSON.stringify({ type: 'hello', ...(session ? { session } : {}) }));
+    });
+    socket.addEventListener('message', event => {
+      if (socket !== ws || typeof event.data !== 'string' || event.data.length > 32768) return;
+      let data; try { data = JSON.parse(event.data); } catch (_) { return; }
+      if (!data || typeof data !== 'object') return;
+      if (data.type === 'welcome' && [1, 2].includes(data.player) && typeof data.session === 'string') {
+        clearTimeout(helloTimer); helloTimer = 0;
+        session = data.session; try { sessionStorage.setItem(storageKey, session); } catch (_) {}
+        player = data.player; connected = true; attempts = 0; root.dataset.player = String(player);
+        $('player-number').textContent = `P${player}`; $('player-name').textContent = messages[player === 1 ? 'gold' : 'cyan'];
+        resetControls(false); showConnection('connected'); setMessage('ready'); sendInput(true);
+      } else if (data.type === 'state') applyState(data);
+      else if (data.type === 'error') {
+        const code = String(data.code || data.error || '').toLowerCase();
+        if (/full|capacity/.test(code)) fail('full', true);
+        else if (/room|token|auth|expired/.test(code)) fail('expired', true);
+        else if (/session/.test(code)) { session = ''; try { sessionStorage.removeItem(storageKey); } catch (_) {} socket.close(); }
+        else fail('connectionError', true);
+      }
+    });
+    socket.addEventListener('close', () => {
+      if (socket !== ws) return;
+      clearTimeout(helloTimer); helloTimer = 0;
+      resetControls(false); connected = false; showConnection('offline');
+      if (!terminal && isVisible()) { setMessage(attempts > 3 ? 'connectionError' : 'lost', attempts > 3); scheduleReconnect(); }
+    });
+    socket.addEventListener('error', () => { if (socket === ws) socket.close(); });
+  }
+
+  const stick = $('joystick');
+  function moveStick(event) {
+    const rect = stick.getBoundingClientRect();
+    const radius = Math.max(1, rect.width * .265);
+    let x = (event.clientX - rect.left - rect.width / 2) / radius;
+    let y = (event.clientY - rect.top - rect.height / 2) / radius;
+    const length = Math.hypot(x, y);
+    if (length < .13) x = y = 0;
+    else if (length > 1) { x /= length; y /= length; }
+    stickX = Math.round(x * 1000) / 1000; stickY = Math.round(y * 1000) / 1000; updateInput(); sendInput();
+  }
+  stick.addEventListener('pointerdown', event => {
+    if (!connected || stickPointer !== null || event.button > 0) return;
+    event.preventDefault(); stickPointer = event.pointerId;
+    try { stick.setPointerCapture(event.pointerId); } catch (_) {}
+    moveStick(event); vibrate(8);
+  });
+  stick.addEventListener('pointermove', event => { if (event.pointerId === stickPointer) { event.preventDefault(); moveStick(event); } });
+  function releaseStick(event) {
+    if (event.pointerId !== stickPointer) return;
+    stickPointer = null; stickX = stickY = 0; updateInput(); sendInput(true);
+  }
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => stick.addEventListener(name, releaseStick));
+  ['a', 'b'].forEach(action => {
+    const button = $(`button-${action}`);
+    button.addEventListener('pointerdown', event => {
+      if (!connected || event.button > 0) return;
+      event.preventDefault(); actionPointers.set(event.pointerId, action);
+      try { button.setPointerCapture(event.pointerId); } catch (_) {}
+      updateInput(); sendInput(true); vibrate(action === 'a' ? 10 : 20);
+    });
+    const release = event => {
+      if (actionPointers.get(event.pointerId) !== action) return;
+      actionPointers.delete(event.pointerId); updateInput(); sendInput(true);
+    };
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => button.addEventListener(name, release));
+  });
+  document.addEventListener('keydown', event => {
+    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    if (!connected || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', 'b'].includes(key)) return;
+    if ((event.target === $('retry') || event.target === $('fullscreen')) && [' ', 'Enter'].includes(key)) return;
+    event.preventDefault(); keys.add(key); updateInput(); sendInput();
+  });
+  document.addEventListener('keyup', event => {
+    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    if (!keys.has(key)) return;
+    event.preventDefault(); keys.delete(key); updateInput(); sendInput(true);
+  });
+  window.addEventListener('blur', () => resetControls());
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { clearTimers(); resetControls(); connected = false; showConnection('offline'); if (ws) ws.close(); }
+    else if (!terminal) connect();
+  });
+  window.addEventListener('pagehide', () => { leaving = true; clearTimers(); resetControls(); connected = false; if (ws) ws.close(); });
+  window.addEventListener('pageshow', event => { if (event.persisted) { leaving = false; terminal = false; connect(); } });
+  window.addEventListener('online', () => { if (!connected && !terminal) connect(); });
+  window.addEventListener('resize', () => resetControls());
+  document.addEventListener('contextmenu', event => event.preventDefault());
+  document.addEventListener('gesturestart', event => event.preventDefault());
+  $('retry').addEventListener('click', () => { terminal = false; attempts = 0; connect(); });
+  $('fullscreen').addEventListener('click', async () => {
+    try {
+      if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen();
+      else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+    } catch (_) { /* Fullscreen is optional, including on iOS browsers. */ }
+  });
+  if (!document.documentElement.requestFullscreen) $('fullscreen').hidden = true;
+  document.addEventListener('fullscreenchange', () => {
+    const label = messages[document.fullscreenElement ? 'leaveFullscreen' : 'fullscreen'];
+    $('fullscreen').title = label; $('fullscreen').setAttribute('aria-label', label); resetControls();
+  });
+  setInterval(() => { if (isVisible()) sendInput(); }, 33);
+  $('shield-caption').textContent = messages.shield;
+  connect();
+})();

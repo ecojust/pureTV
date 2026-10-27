@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'"><title>Tank TV</title><link rel="stylesheet" href="tv.css">
+</head>
+<body>
+<div class="app">
+<header class="header">
+  <div class="brand"><span class="brand-mark"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 13h7v22H7zm19 0h7v22h-7zM15 17h10v15H15zM18 4h4v19h-4z" fill="currentColor"/></svg></span><div><div class="eyebrow">PURE TV · ARCADE</div><h1 id="brand-name">坦克前线<span>TANK TV</span></h1></div></div>
+  <div class="mission"><span class="live-dot"></span><span id="mission-title">守住基地 · 并肩作战</span></div>
+  <div class="stage"><span id="stage-label">关卡</span><b id="stage-value">01</b></div>
+</header>
+<main class="main">
+  <section class="arena-panel">
+    <div class="arena-top"><div><span class="eyebrow" id="battle-label">BATTLEFIELD</span><span class="arena-name" id="battle-name">基地防线</span></div><div class="enemy-count"><span id="enemy-label">敌方剩余</span><b id="enemy-value">12</b><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h3v11H3zm11 0h3v11h-3zM7 8h6v7H7zM9 1h2v10H9z" fill="currentColor"/></svg></div></div>
+    <div class="canvas-wrap"><canvas id="battlefield" width="832" height="640" aria-label="坦克战场"></canvas>
+      <div class="game-overlay" id="game-overlay"><div class="overlay-card"><div class="overlay-kicker" id="overlay-kicker">LOCAL CO-OP · 1–2 PLAYERS</div><h2 id="overlay-title">手机就位，<br>战斗开始。</h2><p id="overlay-copy">手机扫描右侧二维码，加入战场。<br>摧毁敌方坦克，守住我们的基地。</p><div class="overlay-action" id="overlay-action"><span class="key-pill">A</span><span id="overlay-hint">连接后按 A 开始游戏</span></div></div></div>
+      <div class="wave-banner" id="wave-banner" hidden></div>
+    </div>
+    <div class="arena-bottom"><span><i class="base-icon"></i><span id="base-label">保护基地</span></span><span id="battle-tip">砖墙可击碎 · 草丛可隐藏 · 钢墙不可摧毁</span></div>
+  </section>
+  <aside class="sidebar">
+    <section class="join-card"><div class="section-heading"><span class="eyebrow" id="join-label">加入房间</span><span class="lan-pill" id="lan-label">局域网</span></div><div class="qr-frame"><img id="room-qr" alt="扫码加入房间" hidden><div id="qr-pending"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 7h10v10H7zm16 0h10v10H23zM7 23h10v10H7zm16 0h4v4h-4zm6 6h4v4h-4z" fill="currentColor"/></svg><span id="network-message">正在创建房间…</span></div></div><h2 id="scan-title">手机扫码，即刻开战</h2><p id="scan-description">手机和电视连接同一局域网<br>无需安装任何应用</p><div class="room-address" id="room-address"></div></section>
+    <section class="players" aria-label="Players"><div class="player-card p1" id="player-1"><div class="player-icon">1P</div><div class="player-info"><strong id="player-name-1">先锋 · 玩家一</strong><span id="player-status-1">等待手机加入</span></div><div class="player-score" id="player-score-1">—</div></div><div class="player-card p2" id="player-2"><div class="player-icon">2P</div><div class="player-info"><strong id="player-name-2">支援 · 玩家二</strong><span id="player-status-2">等待手机加入</span></div><div class="player-score" id="player-score-2">—</div></div></section>
+    <section class="control-legend"><div><span class="legend-stick">✥</span><span id="move-label">移动</span></div><div><span class="key-pill a">A</span><span id="fire-label">开火</span></div><div><span class="key-pill b">B</span><span id="shield-label">护盾</span></div></section>
+    <p class="shield-tip" id="shield-tip">护盾持续 2.5 秒 · 冷却 10 秒</p>
+  </aside>
+</main>
+<footer class="footer"><span id="footer-left">一起玩，才有意思。</span><span id="footer-right">遥控器也可单人游玩：方向键移动 · OK 开火 · 菜单键护盾 · 返回退出</span></footer>
+</div><script src="game.js"></script>
+</body>
+</html>

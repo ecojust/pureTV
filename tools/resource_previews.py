@@ -1,4 +1,4 @@
-"""Publish English previews rendered by Android's Robolectric native graphics backend.
+"""Publish English previews rendered from the application's real UI.
 
 These are test renders of the real application with English resources and fixture
 content, never physical-TV captures or translated screenshot pixels.
@@ -83,8 +83,8 @@ def _replace(path, data):
             os.unlink(name)
 
 
-def write_english_previews(root, category, slug, version, source_sha, build_run, home_png, apps_png=None):
-    """Write validated English native captures and their reproducible provenance."""
+def write_english_previews(root, category, slug, version, source_sha, build_run, home_png, apps_png=None, *, renderer='Robolectric native graphics', provenance=None):
+    """Write validated English captures and their reproducible provenance."""
     if category not in ('launcher', 'apps') or not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', slug):
         raise ValueError('Invalid preview category or resource slug')
     if not isinstance(version, str) or not version.strip() or not re.fullmatch(r'[0-9a-f]{40}', source_sha):
@@ -96,6 +96,12 @@ def write_english_previews(root, category, slug, version, source_sha, build_run,
         raise ValueError('Preview provenance requires a pureTV GitHub Actions run URL')
     if apps_png is not None and category != 'launcher':
         raise ValueError('Only launcher previews have an apps-page capture')
+    if renderer not in ('Robolectric native graphics', 'Chromium'):
+        raise ValueError('Unsupported preview renderer')
+    if provenance is None:
+        provenance = 'Real Android UI with English locale and fixture content; not a physical TV capture.'
+    if not isinstance(provenance, str) or not provenance.strip():
+        raise ValueError('Preview provenance is required')
     prefix = 'launcher' if category == 'launcher' else 'app'
     sources = [(f'{prefix}-{slug}.png', home_png)]
     if apps_png is not None:
@@ -111,8 +117,8 @@ def write_english_previews(root, category, slug, version, source_sha, build_run,
     for name, data, width, height in images:
         added.append({'file': name, 'category': category, 'slug': slug, 'version': version,
                       'sourceCommit': source_sha, 'buildRun': build_run, 'locale': 'en-US',
-                      'renderer': 'Robolectric native graphics', 'physicalTvCapture': False,
-                      'provenance': 'Real Android UI with English locale and fixture content; not a physical TV capture.',
+                      'renderer': renderer, 'physicalTvCapture': False,
+                      'provenance': provenance,
                       'sha256': hashlib.sha256(data).hexdigest(), 'bytes': len(data),
                       'width': width, 'height': height})
     for name, data, _, _ in images:

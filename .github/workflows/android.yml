@@ -30,6 +30,19 @@ jobs:
         run: node --test resource/apps/hifini/src/test/js/login-autofill.test.mjs
       - name: Verify CCTV website player presentation
         run: node --test resource/apps/cctv/src/test/js/player-focus.test.mjs
+      - name: Verify Tank TV game rules
+        run: node --test resource/apps/tank/tests/game.test.cjs
+      - name: Install Tank TV browser test tools
+        working-directory: desktop
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Verify Tank TV phone controls and capture actual game UI
+        env:
+          TANK_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tank-previews
+        run: |
+          node resource/apps/tank/tests/controller.mjs
+          node resource/apps/tank/tests/capture.mjs
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools
@@ -63,7 +76,7 @@ jobs:
         working-directory: resource/launcher/puretv
         run: |
           set -o pipefail
-          ./gradlew --no-daemon --continue assembleDebug assembleRelease lintDebug testDebugUnitTest :music:verifyReleaseSize :music:lintDebug :music:testDebugUnitTest :hifini:verifyReleaseSize :hifini:lintDebug :hifini:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest :cctv:verifyReleaseSize :cctv:lintDebug :cctv:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/android-build.log"
+          ./gradlew --no-daemon --continue assembleDebug assembleRelease lintDebug testDebugUnitTest :music:verifyReleaseSize :music:lintDebug :music:testDebugUnitTest :hifini:verifyReleaseSize :hifini:lintDebug :hifini:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest :cctv:verifyReleaseSize :cctv:lintDebug :cctv:testDebugUnitTest :tank:verifyReleaseSize :tank:lintDebug :tank:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/android-build.log"
       - name: Report Android build or test failures
         if: failure()
         run: |
@@ -127,6 +140,11 @@ jobs:
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
+          name: tank-tv-previews
+          path: ${{ runner.temp }}/puretv-tank-previews/*.png
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
           name: music-tv
           path: resource/apps/music/build/outputs/apk/**/*.apk
       - uses: actions/upload-artifact@v4
@@ -146,6 +164,11 @@ jobs:
         with:
           name: cctv-tv
           path: resource/apps/cctv/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tank-tv
+          path: resource/apps/tank/build/outputs/apk/**/*.apk
           if-no-files-found: error
 
   stage-resources:
@@ -170,12 +193,12 @@ jobs:
           assert info['sourceSha']==os.environ['GITHUB_SHA']
           apk=root/'pureTV-release'/info['releaseName'];assert hashlib.file_digest(apk.open('rb'),'sha256').hexdigest()==info['sha256']
           shutil.copyfile(apk,output/info['releaseName']);shutil.copyfile(root/'pureTV-release-metadata/release-metadata.json',output/'release-metadata.json')
-          for app in ['music','hifini','shortvideo','webtv','cctv']:
-              apks=list((root/({'music':'music-tv','hifini':'hifini-tv','shortvideo':'shortvideo-tv','webtv':'webtv','cctv':'cctv-tv'}[app])).rglob('*.apk'))
+          for app in ['music','hifini','shortvideo','webtv','cctv','tank']:
+              apks=list((root/({'music':'music-tv','hifini':'hifini-tv','shortvideo':'shortvideo-tv','webtv':'webtv','cctv':'cctv-tv','tank':'tank-tv'}[app])).rglob('*.apk'))
               apks=[p for p in apks if 'release' in p.name]
               assert len(apks)==1,apks
               shutil.copyfile(apks[0],output/(app+'.apk'))
-          for artifact,names in [('music-tv-previews',['music-tv.png','music-tv.en.png']),('hifini-tv-previews',['hifini-tv.png','hifini-tv.en.png']),('shortvideo-tv-previews',['shortvideo-tv.png','shortvideo-tv.en.png']),('webtv-previews',['webtv-controls.png','webtv-controls.en.png']),('cctv-tv-previews',['cctv-live.png','cctv-live.en.png'])]:
+          for artifact,names in [('music-tv-previews',['music-tv.png','music-tv.en.png']),('hifini-tv-previews',['hifini-tv.png','hifini-tv.en.png']),('shortvideo-tv-previews',['shortvideo-tv.png','shortvideo-tv.en.png']),('webtv-previews',['webtv-controls.png','webtv-controls.en.png']),('cctv-tv-previews',['cctv-live.png','cctv-live.en.png']),('tank-tv-previews',['tank-tv.png','tank-tv.en.png'])]:
               for name in names:shutil.copyfile(root/artifact/name,output/name)
           for name in ['home-render.png','apps-render.png','home-render.en.png','apps-render.en.png']:
               shutil.copyfile(root/'pureTV-tv-previews'/name,output/name)
