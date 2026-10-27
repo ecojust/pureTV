@@ -33,10 +33,19 @@ jobs:
       - name: Verify Tank TV game rules
         run: node --test resource/apps/tank/tests/game.test.cjs
       - name: Install Tank TV browser test tools
+        timeout-minutes: 5
+        working-directory: desktop
+        run: npm ci --prefer-offline --no-audit --no-fund
+      - name: Select Tank TV test browser
+        timeout-minutes: 5
         working-directory: desktop
         run: |
-          npm ci
-          npx playwright install --with-deps chromium
+          tank_chrome_path="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -n "$tank_chrome_path" ]; then
+            echo "CHROMIUM_PATH=$tank_chrome_path" >> "$GITHUB_ENV"
+          else
+            npx playwright install --with-deps chromium
+          fi
       - name: Verify Tank TV phone controls and capture actual game UI
         env:
           TANK_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tank-previews
