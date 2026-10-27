@@ -1,5 +1,11 @@
 # Jackal TV
 
+<!-- apk-resource:start -->
+[Download APK](jackal-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
+
+The APK in this directory is signed with the pureTV release certificate.
+<!-- apk-resource:end -->
+
 [中文](README.md) · [English](README.en.md)
 
 Drive a jeep behind enemy lines, blast open prison huts, rescue prisoners and deliver them to helicopter evacuation pads. Jackal TV is an original pixel game inspired by the classic NES jeep rescue game, supporting one or two players on a local network. The TV displays a vertically scrolling battlefield and room QR code. Each phone joins in its browser with a left joystick and right A/B buttons, without installing a controller app.

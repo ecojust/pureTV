@@ -1,5 +1,11 @@
 # Jackal TV · 赤色要塞
 
+<!-- apk-resource:start -->
+[下载 APK](jackal-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
+
+此目录内 APK 使用 pureTV 发布证书签名。
+<!-- apk-resource:end -->
+
 [中文](README.md) · [English](README.en.md)
 
 驾驶吉普车深入敌军阵地，炸开囚室，营救人质，再将他们送往直升机撤离点。Jackal TV 是一款向经典红白机赤色要塞致敬的原创像素游戏，支持 1–2 人局域网合作。电视显示纵向卷轴战场和房间二维码，手机扫码后在浏览器里显示左侧摇杆、右侧 A/B 按钮，无需安装手机应用。
