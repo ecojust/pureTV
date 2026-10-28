@@ -92,7 +92,7 @@ resource/
 | --- | --- | --- | --- | --- | --- |
 | [CCTV Live](resource/apps/cctv/) | ecojust / 桔子桑 | 0.1.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="resource/apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
 | [HIFINi TV](resource/apps/hifini/) | ecojust / 桔子桑 | 0.1.4 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="resource/apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
-| [Jackal TV](resource/apps/jackal/) | ecojust / 桔子桑 | 0.2.0-preview.1 | 11.96 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
+| [Jackal TV](resource/apps/jackal/) | ecojust / 桔子桑 | 0.3.0 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
 | [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Jellyfin 媒体服务器的 Android TV 客户端 | <img src="resource/apps/jellyfin-tv/thumb.png" width="180" alt="Jellyfin for Android TV 界面"> |
 | [Music TV](resource/apps/music/) | ecojust / 桔子桑 | 0.1.3 | 48.8 KB | 原生电视音乐播放器 | <img src="resource/apps/music/thumb.png" width="180" alt="Music TV 界面"> |
 | [ShortVideo TV](resource/apps/shortvideo/) | ecojust / 桔子桑 | 0.1.1 | 32.7 KB | 遥控器短视频播放器 | <img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
