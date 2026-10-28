@@ -655,7 +655,14 @@ async function kartProgressFixture(tv,phones,config) {
   assert.ok(result.laps.every(lap=>lap===4)&&result.finished.every(Boolean)&&result.checkpoints.every(value=>value===13),'Three ordered laps finish each human racer');
   await awaitPhase(tv,config,'results');
   const status=await gameState(tv,config);assert.ok(status.players.every(p=>p.score>0),'Results award points to both participants');
-  await tapControl(phones[0].page,'button-start');await awaitPhase(tv,config,'playing');
+  // The fixture finishes immediately, while the phones receive published state
+  // asynchronously. Let their results transition release old controls before
+  // sending START, then hold it until the real TV model consumes the press.
+  for(const phone of phones)await phone.page.waitForFunction(()=>document.getElementById('controller').dataset.state==='finished');
+  await pressControl(phones[0].page,'button-start');
+  try { await awaitPhase(tv,config,'playing'); }
+  finally { await releaseControl(phones[0].page,'button-start'); }
+  await tv.waitForFunction(api=>!window.__inputs[0].start&&!window[api].game.previous[1].start,config.api);
   assert.ok((await gameState(tv,config)).countdown>0,'START makes results immediately replayable');
   console.log('PASS coast-kart controlled item/checkpoint fixture: simultaneous A effects, three laps, shared results, replay');
 }
