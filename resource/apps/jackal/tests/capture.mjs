@@ -318,6 +318,12 @@ try {
       await writeFile('/tmp/jackal-render-diagnostics.json',JSON.stringify(diagnostics,null,2)+'\n');
     }
 
+    // Stop the mock phone before navigating its paired TV. Pending heartbeat
+    // bindings otherwise evaluate into the destroyed TV execution context.
+    await phone.evaluate(async()=>{
+      window.dispatchEvent(new PageTransitionEvent('pagehide'));
+      await Promise.all(window.__sockets.map(socket=>socket.queue));
+    });
     // Reload resets the keyboard-connected flag; test native SELECT independently of phone input.
     await tv.reload(); await phase(tv,'title');
     await tv.evaluate(api=>window[api].key('Select',true),api);
