@@ -1,7 +1,7 @@
 # CCTV Live · 央视直播
 
 <!-- apk-resource:start -->
-[下载 APK](cctv-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
+[下载 APK](cctv-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
 
 此目录内 APK 使用 pureTV 发布证书签名。
 <!-- apk-resource:end -->

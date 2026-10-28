@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {after, before, test} from 'node:test';
-import {readFile} from 'node:fs/promises';
+import {readFile,readdir} from 'node:fs/promises';
 import ts from 'typescript';
 import {chromium} from 'playwright';
 
@@ -23,6 +23,23 @@ const inspect=value=>page.evaluate(value=>{
   try{return {strict,result:window.svgModule.prepareSvg(value)};}
   catch(error){return {strict,error:{code:error.code,detail:error.detail}};}
 },value);
+
+test('every bundled application supplies a 64px logo usable by launcher layouts',async()=>{
+  const root=new URL('../../resource/apps/',import.meta.url);
+  const folders=(await readdir(root,{withFileTypes:true})).filter(entry=>entry.isDirectory()&&!entry.name.startsWith('.'));
+  assert.ok(folders.length>0,'The public app catalog is not empty');
+  for(const folder of folders){
+    const svg=await readFile(new URL(folder.name+'/logo.svg',root),'utf8');
+    const result=await inspect(svg);
+    assert.equal(result.strict,null,folder.name+': '+JSON.stringify(result));
+    assert.equal(result.result.svg,svg,folder.name+': the shipped logo is already protocol-compatible');
+    const dimensions=await page.evaluate(svg=>{
+      const root=new DOMParser().parseFromString(svg,'image/svg+xml').documentElement;
+      return ['width','height','viewBox'].map(name=>root.getAttribute(name));
+    },svg);
+    assert.deepEqual(dimensions,['64','64','0 0 64 64'],folder.name+': standard logo dimensions');
+  }
+});
 
 test('the supplied CCTV icon retains every drawing attribute after removing accessibility metadata',async()=>{
   const {strict,result}=await inspect(cctv);
