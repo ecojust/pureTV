@@ -1,60 +1,89 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'">
-<title>Jackal TV</title>
-<link rel="stylesheet" href="tv.css">
-</head>
-<body>
-<div class="app">
-  <!-- These labels remain available to the game bridge; the NES canvas owns its HUD. -->
-  <header class="header" hidden>
-    <h1 id="brand-name">Jackal TV</h1><span id="mission-title">营救战俘</span>
-    <span id="stage-label">关卡</span><b id="stage-value">01</b>
-  </header>
-  <main class="main">
-    <section class="arena-panel">
-      <div class="arena-top" hidden><span id="battle-label">BATTLEFIELD</span><span id="battle-name">深入敌后</span><span id="rescue-label">已救出</span><b id="rescue-value">00</b></div>
-      <div class="canvas-wrap">
-        <canvas id="battlefield" width="256" height="240" aria-label="赤色要塞战场"></canvas>
-        <div class="game-overlay" id="game-overlay">
-          <div class="overlay-card">
-            <div class="overlay-kicker" id="overlay-kicker">1 OR 2 PLAYERS</div>
-            <h2 id="overlay-title">JACKAL<br>TV</h2>
-            <p id="overlay-copy">手机扫描右侧二维码加入。</p>
-            <div class="overlay-action" id="overlay-action"><span class="start-arrow" aria-hidden="true">▶</span><span class="key-pill">A</span><span id="overlay-hint">按 A 开始</span></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; media-src 'self' blob:"
+    />
+    <title>JACKAL TV</title>
+    <link rel="stylesheet" href="tv.css" />
+  </head>
+  <body>
+    <div class="app">
+      <main class="main">
+        <section class="arena-panel">
+          <div class="canvas-wrap">
+            <canvas
+              id="battlefield"
+              width="256"
+              height="240"
+              aria-label="JACKAL TV"
+            ></canvas>
+            <div class="loading" id="game-loading">
+              <strong id="loading-title">正在载入游戏…</strong>
+              <p id="loading-detail"></p>
+            </div>
           </div>
-        </div>
-        <div class="wave-banner" id="wave-banner" hidden></div>
-      </div>
-      <div class="arena-bottom" hidden><span id="mission-label">突破要塞</span><span id="battle-tip">炸开营房 · 接走战俘 · 停机坪撤离</span></div>
-    </section>
-    <aside class="sidebar">
-      <section class="join-card">
-        <div class="room-brand">JACKAL TV</div>
-        <div class="section-heading"><span id="join-label">加入房间</span><span id="lan-label">局域网</span></div>
-        <div class="qr-frame">
-          <img id="room-qr" alt="扫码加入房间" hidden>
-          <div id="qr-pending"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 7h10v10H7zm16 0h10v10H23zM7 23h10v10H7zm16 0h4v4h-4zm6 6h4v4h-4z" fill="currentColor"/></svg><span id="network-message">正在创建房间…</span></div>
-        </div>
-        <h2 id="scan-title">手机扫码，即刻开战</h2>
-        <p id="scan-description">手机和电视连接同一局域网<br>无需安装任何应用</p>
-        <div class="room-address" id="room-address"></div>
-      </section>
-      <section class="players" aria-label="Players">
-        <div class="player-card p1" id="player-1"><div class="player-icon">1P</div><div class="player-info"><strong id="player-name-1">玩家一</strong><span id="player-status-1">等待手机加入</span></div><div class="player-score" id="player-score-1">—</div></div>
-        <div class="player-card p2" id="player-2"><div class="player-icon">2P</div><div class="player-info"><strong id="player-name-2">玩家二</strong><span id="player-status-2">等待手机加入</span></div><div class="player-score" id="player-score-2">—</div></div>
-      </section>
-      <section class="control-legend"><div><span class="legend-stick" aria-hidden="true">✚</span><span id="move-label">移动</span></div><div><span class="key-pill a">A</span><span id="fire-label">开火</span></div><div><span class="key-pill b">B</span><span id="grenade-label">榴弹</span></div></section>
-      <p class="mission-tip" id="mission-tip">机枪朝前 · 榴弹沿车头方向</p>
-    </aside>
-  </main>
-  <footer class="footer"><span id="footer-left">JACKAL TV</span><span id="footer-right">遥控器：方向键移动 · OK 开火 · 菜单键榴弹 · 返回退出</span></footer>
-</div>
-<script src="game-model.js"></script>
-<script src="nes-renderer.js"></script>
-<script src="game.js"></script>
-</body>
+        </section>
+        <aside class="sidebar">
+          <section class="join-card">
+            <div class="room-brand" id="room-brand">JACKAL TV</div>
+            <div class="section-heading">
+              <span id="join-label">手机手柄</span
+              ><span id="lan-label">同一局域网</span>
+            </div>
+            <div class="qr-frame">
+              <img id="room-qr" alt="Room QR code" hidden />
+              <div id="qr-pending">
+                <span id="network-message">正在创建房间…</span>
+              </div>
+            </div>
+            <h2 id="scan-title">扫码连接手柄</h2>
+            <p id="scan-description"></p>
+            <div class="room-address" id="room-address"></div>
+          </section>
+          <section class="players" aria-label="Players">
+            <div class="player-card p1" id="player-1">
+              <div class="player-icon">1P</div>
+              <div class="player-info">
+                <strong id="player-name-1">玩家一</strong
+                ><span id="player-status-1"></span>
+              </div>
+            </div>
+            <div class="player-card p2" id="player-2">
+              <div class="player-icon">2P</div>
+              <div class="player-info">
+                <strong id="player-name-2">玩家二</strong
+                ><span id="player-status-2"></span>
+              </div>
+            </div>
+          </section>
+          <p class="menu-help" id="menu-help"></p>
+          <section class="control-legend">
+            <div>
+              <span class="legend-stick">✚</span><span id="move-label"></span>
+            </div>
+            <div><span class="key-pill">A</span><span id="a-label"></span></div>
+            <div><span class="key-pill">B</span><span id="b-label"></span></div>
+          </section>
+        </aside>
+      </main>
+      <footer class="footer">
+        <span id="footer-left"></span><span id="footer-right"></span>
+      </footer>
+    </div>
+    <script src="levels.js"></script>
+    <script src="enemies.js"></script>
+    <script src="game-model.js"></script>
+    <script src="scene-updates.js"></script>
+    <script src="nes-renderer.js"></script>
+    <script src="nes-audio.js"></script>
+    <script src="runtime.js"></script>
+    <script src="game.js"></script>
+  </body>
 </html>

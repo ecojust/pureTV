@@ -141,12 +141,48 @@ public class MainActivity extends Activity {
         return value;
     }
 
+    /** Only named, bundled game resources may share the native bridge origin. */
+    static String bundledAssetMime(String path) {
+        if (path == null) return null;
+        switch (path) {
+            case "/tv.html": return "text/html";
+            case "/tv.css": return "text/css";
+            case "/game.js":
+            case "/game-model.js":
+            case "/levels.js":
+            case "/runtime.js":
+            case "/nes-renderer.js":
+            case "/nes-audio.js":
+            case "/battle-art.js":
+                return "application/javascript";
+            case "/audio/pause.ogg":
+            case "/audio/bullet_shot.ogg":
+            case "/audio/bullet_hit_1.ogg":
+            case "/audio/bullet_hit_2.ogg":
+            case "/audio/game_over.ogg":
+            case "/audio/explosion_2.ogg":
+            case "/audio/statistics_1.ogg":
+            case "/audio/powerup_pick.ogg":
+            case "/audio/stage_start.ogg":
+            case "/audio/powerup_appear.ogg":
+            case "/audio/explosion_1.ogg":
+                return "audio/ogg";
+            default: break;
+        }
+        return null;
+    }
+
     WebResourceResponse localAsset(Uri uri) {
         String name = uri.getPath();
-        if ("https".equals(uri.getScheme()) && "tank.invalid".equals(uri.getHost()) && uri.getPort() == -1
-            && ("/tv.html".equals(name) || "/tv.css".equals(name) || "/game.js".equals(name) || "/nes-renderer.js".equals(name))) {
-            String mime = name.endsWith(".html") ? "text/html" : name.endsWith(".css") ? "text/css" : "application/javascript";
-            try { return new WebResourceResponse(mime,"UTF-8",200,"OK",Collections.singletonMap("Cache-Control","no-store"),getAssets().open(name.substring(1))); }
+        String mime = bundledAssetMime(name);
+        if ("https".equals(uri.getScheme()) && "tank.invalid".equals(uri.getEncodedAuthority())
+            && uri.getQuery() == null && uri.getFragment() == null && name != null
+            && name.equals(uri.getEncodedPath()) && mime != null) {
+            String encoding = mime.startsWith("audio/") || mime.startsWith("image/") ? null : "UTF-8";
+            Map<String,String> headers = new java.util.HashMap<>();
+            headers.put("Cache-Control","no-store");
+            headers.put("X-Content-Type-Options","nosniff");
+            try { return new WebResourceResponse(mime,encoding,200,"OK",headers,getAssets().open(name.substring(1))); }
             catch (IOException ignored) { }
         }
         return new WebResourceResponse("text/plain","UTF-8",403,"Forbidden",Collections.emptyMap(),new ByteArrayInputStream(new byte[0]));
@@ -352,6 +388,8 @@ public class MainActivity extends Activity {
             case KeyEvent.KEYCODE_MENU:
             case KeyEvent.KEYCODE_B:
             case KeyEvent.KEYCODE_BUTTON_B: key="b"; break;
+            case KeyEvent.KEYCODE_BUTTON_START: key="Start"; break;
+            case KeyEvent.KEYCODE_BUTTON_SELECT: key="Select"; break;
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
             case KeyEvent.KEYCODE_P: key="p"; break;
             default: return super.dispatchKeyEvent(event);

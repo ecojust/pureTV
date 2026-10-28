@@ -2,13 +2,14 @@
   "kind": "app",
   "name": "Tank TV",
   "author": "ecojust / 桔子桑",
-  "description": "红白机像素风格的手机扫码合作坦克大战",
-  "version": "0.1.1",
+  "description": "独立重写的 35 关坦克大战，支持手机扫码双人合作",
+  "version": "0.2.0-preview.1",
+  "releaseChannel": "preview",
   "packageName": "com.ecojust.tanktv",
-  "versionCode": 2,
-  "apk": "tank-0.1.1.apk",
-  "apkBytes": 74875,
-  "sha256": "f8b2995551fa5ad5674a95d8d0c7aedc61b466c5faa140e5273f04c747dd6306",
+  "versionCode": 3,
+  "apk": "tank-0.2.0-preview.1.apk",
+  "apkBytes": 264426,
+  "sha256": "c0666c3597042362b60166c522852c2d891dc9dd79da1e5269493d382bfe9d68",
   "certificateSha256": "e250cd5c734ca2e84f7f64e8f92d0728d3f42fdfd4891ce02916814ae5a62ef7",
   "supportsLayoutJson": false,
   "languages": [
@@ -16,8 +17,18 @@
     "en"
   ],
   "cover": "thumb.png",
-  "coverSource": "Actual bundled game page rendered in Chromium with Chinese locale and a simulated native room bridge; not a physical TV capture",
-  "license": "MIT",
-  "sourceCommit": "378944a201690a7a062ac568df5412c45f1207df",
-  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/40528369405"
+  "coverSource": "Actual independently rewritten game page captured locally in Chromium with Chinese locale and a simulated native room bridge; not a physical TV capture",
+  "license": "MIT (application code); third-party art and music retain their original rights",
+  "assetNotices": [
+    "docs/reference-art-audio.md"
+  ],
+  "sourceCommit": "fe5186ae80099f0f789a138549a0e23ab8569a29",
+  "buildMethod": "Local Gradle release build with the pureTV release certificate; existing signed 0.2.0-preview.1 artifact preserved byte-for-byte",
+  "verification": {
+    "sourceAssetsMatchApk": true,
+    "checkedSourceAssetFiles": 23,
+    "signatureVerified": true,
+    "physicalTvTested": false
+  },
+  "romIncluded": false
 }

@@ -1,4 +1,5 @@
 plugins { id 'com.android.application' }
+apply from: 'tools/preview-png.gradle'
 
 android {
     namespace 'com.ecojust.jackaltv'
@@ -7,8 +8,8 @@ android {
         applicationId 'com.ecojust.jackaltv'
         minSdk 26
         targetSdk 29
-        versionCode 1
-        versionName '0.1.0'
+        versionCode 2
+        versionName '0.2.0-preview.1'
     }
     buildTypes {
         release {
@@ -25,6 +26,140 @@ android {
     lint { disable 'ExpiredTargetSdkVersion' }
 }
 
+// Private comparison artwork is supplied explicitly and never copied into src/.
+// Keep this finite list aligned with MainActivity's asset routes and the renderer.
+def previewScenes = ['title_1p', 'title_2p', 'intro_1p', 'intro_2p', 'attract',
+    'continue_yes', 'continue_no', 'game_over', 'ending', 'ending_restart']
+(1..5).each { previewScenes.add(String.format('stage_clear_%02d', it)) }
+(1..6).each {
+    previewScenes.add(String.format('stage_load_%02d', it))
+    previewScenes.add(String.format('continue_load_%02d', it))
+}
+def requiredArtwork = ['levels/sprites.json', 'fonts/hud.png', 'boss_patches.json', 'data/audio-score.json']
+def sceneAssetManifest = file('src/main/assets/scene-update-paths.json')
+def sceneArtwork = new groovy.json.JsonSlurper().parse(sceneAssetManifest, 'UTF-8')
+if (!(sceneArtwork instanceof List) || sceneArtwork.empty || sceneArtwork.any {
+    !(it instanceof String) || !(it ==~ /textures\/[a-z0-9_\/]+\.png/) || it.contains('//')
+}) throw new GradleException('Invalid bundled scene-update-paths.json: expected exact texture PNG paths')
+requiredArtwork.addAll(sceneArtwork)
+(1..6).each { stage ->
+    requiredArtwork.add(String.format('textures/stage_%02d_tiles.png', stage))
+    requiredArtwork.add(String.format('textures/stage_%02d_sprites.png', stage))
+}
+previewScenes.each { scene ->
+    requiredArtwork.add("cinematics/${scene}/timeline.json".toString())
+    requiredArtwork.add("cinematics/${scene}/tiles.png".toString())
+}
+def artworkLocation = providers.gradleProperty('jackalArtworkDir')
+def generatedPreviewAssets = objects.directoryProperty()
+generatedPreviewAssets.set(layout.buildDirectory.dir('generated/jackalPreviewAssets'))
+
+def preparePreviewAssets = tasks.register('prepareJackalPreviewAssets') {
+    group = 'build'
+    description = 'Stages explicitly supplied local artwork without changing source assets.'
+    inputs.property('artworkLocation', artworkLocation.orElse(''))
+    inputs.property('requiredArtwork', requiredArtwork)
+    inputs.file(file('tools/preview-png.gradle'))
+    if (artworkLocation.isPresent()) {
+        inputs.files(fileTree(file(artworkLocation.get())) {
+            include(requiredArtwork)
+            include('provenance.json')
+            include('scene-updates-provenance.json')
+        })
+    }
+    outputs.dir(generatedPreviewAssets)
+    doLast {
+        File output = generatedPreviewAssets.get().asFile
+        // Always clear the old staged copy when parameters change. An ordinary
+        // Sync task with no source would skip this and could reuse private art.
+        delete(output)
+        output.mkdirs()
+        if (artworkLocation.isPresent()) {
+            copy {
+                from(file(artworkLocation.get()))
+                into(new File(output, 'art'))
+                include(requiredArtwork)
+                include('provenance.json')
+                include('scene-updates-provenance.json')
+            }
+            File staged = new File(output, 'art')
+            def records = []
+            requiredArtwork.each { relative ->
+                File item = new File(staged, relative)
+                if (item.isFile()) {
+                    byte[] original = item.bytes
+                    if (relative.endsWith('.png')) project.recompressPreviewPng(item)
+                    records.add([path:relative, sourceBytes:original.length, generatedBytes:item.length(),
+                        sourceSha256:java.security.MessageDigest.getInstance('SHA-256').digest(original).encodeHex().toString(),
+                        generatedSha256:java.security.MessageDigest.getInstance('SHA-256').digest(item.bytes).encodeHex().toString()])
+                }
+            }
+            if (staged.isDirectory()) {
+                new File(staged, 'preview-asset-provenance.json').text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson([
+                    format:'puretv.jackal.preview-assets.v1',
+                    transformation:'PNG IDAT zlib level 9 only; identical inflated bytes and unchanged non-IDAT chunks',
+                    files:records]))
+            }
+        }
+    }
+}
+
+def verifyPreviewArtwork = tasks.register('verifyJackalPreviewArtwork') {
+    group = 'verification'
+    description = 'Refuses to package an incomplete local Jackal preview.'
+    dependsOn(preparePreviewAssets)
+    doLast {
+        if (!artworkLocation.isPresent() || artworkLocation.get().trim().isEmpty()) {
+            throw new GradleException('Jackal preview APK requires -PjackalArtworkDir=/absolute/path/to/visual-data. '
+                + 'No artwork was bundled. See resource/apps/jackal/docs/local-preview-build.md. '
+                + 'Unit tests and lint can run without this property.')
+        }
+        File source = file(artworkLocation.get())
+        if (!source.isDirectory()) throw new GradleException("Jackal artwork directory does not exist: ${source}")
+        File staged = new File(generatedPreviewAssets.get().asFile, 'art')
+        def missing = requiredArtwork.findAll { relative ->
+            File item = new File(staged, relative)
+            !item.isFile() || item.length() == 0
+        }
+        if (!missing.empty) throw new GradleException('Jackal preview artwork is incomplete; missing or empty files:\n  '
+            + missing.join('\n  ') + '\nSource directory: ' + source)
+        requiredArtwork.each { relative ->
+            File item = new File(staged, relative)
+            if (relative.endsWith('.png')) {
+                String signature = item.withInputStream { stream -> stream.readNBytes(8).encodeHex().toString() }
+                if (signature != '89504e470d0a1a0a') throw new GradleException("Invalid preview PNG: ${relative}")
+            } else if (relative.endsWith('.json')) {
+                def data
+                try { data = new groovy.json.JsonSlurper().parse(item, 'UTF-8') }
+                catch (Exception invalid) { throw new GradleException("Invalid preview JSON: ${relative}", invalid) }
+                if (!(data instanceof Map)) throw new GradleException("Incomplete preview JSON data: ${relative}")
+                boolean valid = true
+                if (relative == 'levels/sprites.json') valid &= data.frames instanceof List && !data.frames.empty
+                if (relative == 'boss_patches.json') valid &= data.patches instanceof List && !data.patches.empty
+                if (relative == 'data/audio-score.json') valid &= (data.schema == 'puretv.jackal.audio-score.v1'
+                    && data.scores instanceof Map && !data.scores.empty && data.envelopes instanceof List && !data.envelopes.empty)
+                if (relative.startsWith('cinematics/')) valid &= (data.frames instanceof List && !data.frames.empty
+                    && data.duration_ticks instanceof Number && data.duration_ticks > 0)
+                if (!valid) throw new GradleException("Incomplete preview JSON data: ${relative}")
+            }
+        }
+        logger.lifecycle("Jackal local preview: verified ${requiredArtwork.size()} artwork files from ${source}")
+    }
+}
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        def suffix = variant.name.capitalize()
+        // Use AGP's generated-source API so asset merge, unit tests and lint all
+        // receive the producing-task dependency, not just merge*Assets.
+        variant.sources.assets.addGeneratedSourceDirectory(preparePreviewAssets) { task -> generatedPreviewAssets }
+        // Unit-test packaging and lint intentionally do not depend on this check.
+        tasks.matching { it.name in ["package${suffix}", "assemble${suffix}", "bundle${suffix}", "package${suffix}Bundle"].collect { name -> name.toString() } }
+            .configureEach { dependsOn(verifyPreviewArtwork) }
+        tasks.matching { it.name == "pre${suffix}Build" }.configureEach { mustRunAfter(verifyPreviewArtwork) }
+    }
+}
+
 dependencies {
     implementation 'com.google.zxing:core:3.5.3'
     testImplementation 'junit:junit:4.13.2'
@@ -37,8 +172,8 @@ tasks.register('verifyReleaseSize') {
         def apks = fileTree("$buildDir/outputs/apk/release") { include '*.apk' }
         if (apks.empty) throw new GradleException('No release APK found')
         apks.each { apk ->
-            if (apk.length() > 5 * 1024 * 1024) throw new GradleException("APK exceeds 5 MiB: ${apk.length()} bytes")
-            println "Jackal TV APK: ${apk.length()} bytes (limit 5 MiB)"
+            if (apk.length() > 16 * 1024 * 1024) throw new GradleException("APK exceeds 16 MiB: ${apk.length()} bytes")
+            println "Jackal TV APK: ${apk.length()} bytes (limit 16 MiB; complete six-stage preview artwork)"
         }
     }
 }

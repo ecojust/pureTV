@@ -4,32 +4,40 @@
   const english = !/^zh\b/i.test(navigator.language || 'zh');
   const messages = english ? {
     controller: 'FIELD CONTROLLER', yourJeep: 'YOUR JEEP', stage: 'STAGE', lives: 'LIVES', score: 'SCORE', cargo: 'ON BOARD', move: 'MOVE · LEFT STICK',
-    fire: 'MACHINE GUN', grenade: 'GRENADE', hint: 'Hold A for northbound fire · B throws a grenade', rotate: 'Turn your phone sideways for a better grip',
+    actionA: 'GRENADE', actionB: 'MACHINE GUN', hint: 'A: grenade · B: machine gun · START: begin / pause', rotate: 'Turn your phone sideways for a better grip',
     retry: 'Reconnect', connecting: 'Connecting', connected: 'Connected', reconnecting: 'Reconnecting', offline: 'Disconnected',
-    waiting: 'Joining the room on your TV…', ready: 'Press A to begin. Rescue prisoners together.', playing: 'Break huts with B. Pick up prisoners, then reach H.',
-    paused: 'Game paused on TV.', gameover: 'Round over. Press A to play again.', victory: 'Mission complete! Release A, then press it to replay.',
+    waiting: 'Joining the room on your TV…', ready: 'SELECT chooses the mode. START begins the game.', playing: 'Use A against huts. Rescue prisoners and reach the helicopter.',
+    paused: 'Game paused on TV.', gameover: 'Round over. Use START on the TV title screen.', victory: 'Mission complete! Use START on the TV title screen.',
     lost: 'Connection lost. Controls released — reconnecting…', full: 'This room already has two players. Try again when a place is free.',
     invalid: 'This room is unavailable. Scan the current QR code on your TV.', waitingPlayer: 'Waiting for a place',
-    gold: 'Yellow jeep', cyan: 'Green jeep', joining: 'Connecting to your TV…', expired: 'Room expired. Scan the new QR code on your TV.',
-    fullscreen: 'Full screen', leaveFullscreen: 'Exit full screen', joystick: 'Movement joystick', fireLabel: 'A: Fire', grenadeLabel: 'B: Grenade',
+    gold: 'Green jeep', cyan: 'Brown jeep', joining: 'Connecting to your TV…', expired: 'Room expired. Scan the new QR code on your TV.',
+    fullscreen: 'Full screen', leaveFullscreen: 'Exit full screen', joystick: 'Movement joystick', actionALabel: 'A: Grenade', actionBLabel: 'B: Machine gun',
+    select: 'Select', start: 'Start / pause', selectLabel: 'SELECT: choose mode', startLabel: 'START: begin or pause',
     connectionError: 'Cannot reach the TV. Keep your phone and TV on the same local network.', cooling: 's',
   } : {
     controller: '手机控制器', yourJeep: '你的吉普', stage: '关卡', lives: '生命', score: '得分', cargo: '载员', move: '移动 · 左侧摇杆',
-    fire: '机枪', grenade: '榴弹', hint: '按住 A 连续开火 · B 发射榴弹', rotate: '横屏握持，体验更好',
+    actionA: '榴弹', actionB: '机枪', hint: 'A 榴弹 · B 机枪 · START 开始或暂停', rotate: '横屏握持，体验更好',
     retry: '重新连接', connecting: '正在连接', connected: '已连接', reconnecting: '正在重连', offline: '连接已断开',
-    waiting: '正在加入电视上的房间…', ready: '按 A 出发，和队友一起营救战俘。', playing: '用 B 炸开营房，接走战俘后到 H 停机坪撤离。',
-    paused: '游戏已在电视上暂停。', gameover: '本局结束，按 A 再来一局。', victory: '行动完成！松开 A 后再次按下可重新出发。',
+    waiting: '正在加入电视上的房间…', ready: 'SELECT 选择模式，START 开始游戏。', playing: '用 A 炸开营房，接走战俘后到直升机撤离点。',
+    paused: '游戏已在电视上暂停。', gameover: '本局结束，回到标题画面后按 START 开始。', victory: '行动完成！回到标题画面后按 START 开始。',
     lost: '连接暂时中断，已松开所有按键，正在重连…', full: '房间已有两名玩家，空出位置后可重新连接。',
     invalid: '房间不可用，请重新扫描电视上的二维码。', waitingPlayer: '等待加入房间',
-    gold: '黄色吉普', cyan: '绿色吉普', joining: '正在连接电视…', expired: '房间已过期，请扫描电视上的新二维码。',
-    fullscreen: '全屏', leaveFullscreen: '退出全屏', joystick: '方向摇杆', fireLabel: 'A 开火', grenadeLabel: 'B 榴弹',
+    gold: '绿色吉普', cyan: '棕色吉普', joining: '正在连接电视…', expired: '房间已过期，请扫描电视上的新二维码。',
+    fullscreen: '全屏', leaveFullscreen: '退出全屏', joystick: '方向摇杆', actionALabel: 'A 榴弹', actionBLabel: 'B 机枪',
+    select: '选择', start: '开始 / 暂停', selectLabel: 'SELECT 选择模式', startLabel: 'START 开始或暂停',
     connectionError: '暂时无法连接电视，请确认手机和电视处于同一局域网。', cooling: '秒',
   };
   document.documentElement.lang = english ? 'en' : 'zh-CN';
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = messages[el.dataset.i18n]; });
   $('joystick').setAttribute('aria-label', messages.joystick);
-  $('button-a').setAttribute('aria-label', messages.fireLabel);
-  $('button-b').setAttribute('aria-label', messages.grenadeLabel);
+  $('button-a').setAttribute('aria-label', messages.actionALabel);
+  $('button-b').setAttribute('aria-label', messages.actionBLabel);
+  $('button-start').setAttribute('aria-label', messages.startLabel);
+  $('button-select').setAttribute('aria-label', messages.selectLabel);
+  $('a-caption').textContent = messages.actionA;
+  $('b-caption').textContent = messages.actionB;
+  $('select-caption').textContent = messages.select;
+  $('start-caption').textContent = messages.start;
   $('fullscreen').setAttribute('aria-label', messages.fullscreen);
   $('fullscreen').title = messages.fullscreen;
   $('player-name').textContent = messages.waitingPlayer;
@@ -43,14 +51,13 @@
   let stickPointer = null, stickX = 0, stickY = 0;
   const actionPointers = new Map();
   const keys = new Set();
-  const input = { x: 0, y: 0, a: false, b: false };
+  const input = { x: 0, y: 0, a: false, b: false, start: false, select: false };
   const isVisible = () => !document.hidden && !leaving;
   const setMessage = (key, error = false) => { $('message').textContent = messages[key] || key; root.dataset.error = String(error); };
   function showConnection(key) {
     $('connection-text').textContent = messages[key];
     root.dataset.connected = String(connected);
-    $('button-a').disabled = !connected;
-    $('button-b').disabled = !connected;
+    for (const action of ['a', 'b', 'start', 'select']) $(`button-${action}`).disabled = !connected;
     $('joystick').setAttribute('aria-disabled', String(!connected));
   }
   function vibrate(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (_) {} }
@@ -62,10 +69,11 @@
   function updateInput() {
     input.x = stickPointer !== null ? stickX : (keys.has('ArrowRight') ? 1 : 0) - (keys.has('ArrowLeft') ? 1 : 0);
     input.y = stickPointer !== null ? stickY : (keys.has('ArrowDown') ? 1 : 0) - (keys.has('ArrowUp') ? 1 : 0);
-    input.a = [...actionPointers.values()].includes('a') || keys.has(' ') || keys.has('Enter');
-    input.b = [...actionPointers.values()].includes('b') || keys.has('b');
-    $('button-a').classList.toggle('pressed', input.a);
-    $('button-b').classList.toggle('pressed', input.b);
+    input.a = [...actionPointers.values()].includes('a') || keys.has(' ') || keys.has('z') || keys.has('button:a');
+    input.b = [...actionPointers.values()].includes('b') || keys.has('b') || keys.has('x') || keys.has('button:b');
+    input.start = [...actionPointers.values()].includes('start') || keys.has('Enter') || keys.has('button:start');
+    input.select = [...actionPointers.values()].includes('select') || keys.has('Shift') || keys.has('button:select');
+    for (const action of ['a', 'b', 'start', 'select']) $(`button-${action}`).classList.toggle('pressed', input[action]);
     updateStick();
   }
   function sendInput(force = false) {
@@ -100,12 +108,12 @@
     if (mine) {
       if (Number.isFinite(mine.lives)) $('lives').textContent = String(Math.max(0, mine.lives));
       if (Number.isFinite(mine.score)) $('score').textContent = String(Math.max(0, mine.score)).padStart(4, '0');
-      if (Number.isFinite(mine.passengers)) $('cargo').textContent = `${Math.max(0, Math.min(8, mine.passengers))}/8`;
+      if (Number.isFinite(mine.passengers)) $('cargo').textContent = String(Math.max(0, Math.floor(mine.passengers)));
       const cooldown = Number(mine.grenadeCooldown) || 0;
-      $('button-b').dataset.cooling = String(cooldown > 0);
-      $('grenade-caption').textContent = cooldown > 0 ? `${cooldown.toFixed(1)}${messages.cooling}` : messages.grenade;
+      $('button-a').dataset.cooling = String(cooldown > 0);
+      $('a-caption').textContent = cooldown > 0 ? `${cooldown.toFixed(1)}${messages.cooling}` : messages.actionA;
     }
-    const phaseKey = { lobby: 'ready', ready: 'ready', playing: 'playing', paused: 'paused', gameover: 'gameover', over: 'gameover', victory: 'victory', stageclear: 'victory' }[state.phase];
+    const phaseKey = { title: 'ready', menu: 'ready', lobby: 'ready', ready: 'ready', playing: 'playing', paused: 'paused', gameover: 'gameover', over: 'gameover', victory: 'victory', stageclear: 'victory' }[state.phase];
     if (phaseKey) setMessage(phaseKey);
   }
   function connect() {
@@ -178,7 +186,7 @@
     stickPointer = null; stickX = stickY = 0; updateInput(); sendInput(true);
   }
   ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => stick.addEventListener(name, releaseStick));
-  ['a', 'b'].forEach(action => {
+  ['a', 'b', 'start', 'select'].forEach(action => {
     const button = $(`button-${action}`);
     button.addEventListener('pointerdown', event => {
       if (!connected || event.button > 0) return;
@@ -191,12 +199,23 @@
       actionPointers.delete(event.pointerId); updateInput(); sendInput(true);
     };
     ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => button.addEventListener(name, release));
+    button.addEventListener('keydown', event => {
+      if (!connected || ![' ', 'Enter'].includes(event.key)) return;
+      event.preventDefault(); event.stopPropagation(); keys.add(`button:${action}`); updateInput(); sendInput(true);
+    });
+    button.addEventListener('keyup', event => {
+      if (![' ', 'Enter'].includes(event.key)) return;
+      event.preventDefault(); event.stopPropagation(); keys.delete(`button:${action}`); updateInput(); sendInput(true);
+    });
+    button.addEventListener('blur', () => {
+      if (keys.delete(`button:${action}`)) { updateInput(); sendInput(true); }
+    });
   });
   document.addEventListener('keydown', event => {
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
-    if (!connected || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', 'b'].includes(key)) return;
+    if (!connected || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', 'Shift', 'z', 'x', 'b'].includes(key)) return;
     if ((event.target === $('retry') || event.target === $('fullscreen')) && [' ', 'Enter'].includes(key)) return;
-    event.preventDefault(); keys.add(key); updateInput(); sendInput();
+    event.preventDefault(); keys.add(key); updateInput(); sendInput(true);
   });
   document.addEventListener('keyup', event => {
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
@@ -233,6 +252,6 @@
   window.addEventListener('pagehide', stopHeartbeat);
   window.addEventListener('pageshow', event => { if (event.persisted) startHeartbeat(); });
   startHeartbeat();
-  $('grenade-caption').textContent = messages.grenade;
+  $('a-caption').textContent = messages.actionA;
   connect();
 })();

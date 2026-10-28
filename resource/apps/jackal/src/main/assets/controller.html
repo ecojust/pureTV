@@ -18,7 +18,7 @@
 
     <section class="dashboard" aria-label="游戏状态">
       <div class="player-badge"><span class="player-number" id="player-number">P—</span><div><span class="eyebrow" data-i18n="yourJeep">你的吉普</span><strong id="player-name">等待加入房间</strong></div></div>
-      <div class="stats"><div><span data-i18n="stage">关卡</span><strong id="stage">01</strong></div><div><span data-i18n="lives">生命</span><strong id="lives">—</strong></div><div><span data-i18n="score">得分</span><strong id="score">0000</strong></div><div><span data-i18n="cargo">载员</span><strong id="cargo">0/8</strong></div></div>
+      <div class="stats"><div><span data-i18n="stage">关卡</span><strong id="stage">01</strong></div><div><span data-i18n="lives">生命</span><strong id="lives">—</strong></div><div><span data-i18n="score">得分</span><strong id="score">0000</strong></div><div><span data-i18n="cargo">载员</span><strong id="cargo">0</strong></div></div>
     </section>
 
     <div class="message" id="message" role="status" aria-live="polite">正在加入电视上的房间…</div>
@@ -32,13 +32,17 @@
         </div>
         <span class="control-caption" data-i18n="move">移动 · 左侧摇杆</span>
       </div>
+      <div class="system-keys" aria-label="NES menu controls">
+        <button type="button" id="button-select" class="system-button" disabled aria-label="选择游戏模式"><span>SELECT</span><small id="select-caption">选择</small></button>
+        <button type="button" id="button-start" class="system-button" disabled aria-label="开始或暂停"><span>START</span><small id="start-caption">开始 / 暂停</small></button>
+      </div>
       <div class="actions">
-        <div class="button-wrap b-wrap"><button type="button" id="button-b" class="action-button button-b" disabled aria-label="B 榴弹"><span>B</span><i id="grenade-progress"></i></button><span class="button-caption" id="grenade-caption">榴弹</span></div>
-        <div class="button-wrap a-wrap"><button type="button" id="button-a" class="action-button button-a" disabled aria-label="A 机枪"><span>A</span></button><span class="button-caption" data-i18n="fire">机枪</span></div>
+        <div class="button-wrap b-wrap"><button type="button" id="button-b" class="action-button button-b" disabled aria-label="B 机枪"><span>B</span></button><span class="button-caption" id="b-caption">机枪</span></div>
+        <div class="button-wrap a-wrap"><button type="button" id="button-a" class="action-button button-a" disabled aria-label="A 榴弹"><span>A</span><i id="grenade-progress"></i></button><span class="button-caption" id="a-caption">榴弹</span></div>
       </div>
     </section>
 
-    <footer class="footer"><span class="footer-line"></span><span id="footer-hint" data-i18n="hint">按住 A 连射 · B 发射榴弹</span><span class="footer-line"></span></footer>
+    <footer class="footer"><span class="footer-line"></span><span id="footer-hint" data-i18n="hint">A 榴弹 · B 机枪 · START 开始或暂停</span><span class="footer-line"></span></footer>
     <div class="rotate-hint" data-i18n="rotate">横屏握持，体验更好</div>
     <div class="error-actions" id="error-actions" hidden><button type="button" id="retry" data-i18n="retry">重新连接</button></div>
   </main>

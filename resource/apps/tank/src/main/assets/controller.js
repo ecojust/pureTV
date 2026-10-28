@@ -4,32 +4,40 @@
   const english = !/^zh\b/i.test(navigator.language || 'zh');
   const messages = english ? {
     controller: 'FIELD CONTROLLER', yourTank: 'YOUR TANK', stage: 'STAGE', lives: 'LIVES', score: 'SCORE', move: 'MOVE · LEFT STICK',
-    fire: 'FIRE', shield: 'SHIELD', hint: 'Hold A to fire · B activates your shield', rotate: 'Turn your phone sideways for a better grip',
+    actionA: 'FIRE', actionB: 'FIRE', hint: 'A / B fires · START begins or pauses', rotate: 'Turn your phone sideways for a better grip',
     retry: 'Reconnect', connecting: 'Connecting', connected: 'Connected', reconnecting: 'Reconnecting', offline: 'Disconnected',
-    waiting: 'Joining the room on your TV…', ready: 'Press A to begin. Defend the base together.', playing: 'Defend the base. Keep an eye on the TV.',
-    paused: 'Game paused on TV.', gameover: 'Round over. Press A to play again.', victory: 'Stage clear! Get ready for the next wave.',
+    waiting: 'Joining the room on your TV…', ready: 'SELECT chooses the mode. START begins the game.', playing: 'Defend the base. Keep an eye on the TV.',
+    paused: 'Game paused on TV.', gameover: 'Round over. Use START on the TV title screen.', victory: 'Stage clear! Get ready for the next wave.',
     lost: 'Connection lost. Controls released — reconnecting…', full: 'This room already has two players. Try again when a place is free.',
     invalid: 'This room is unavailable. Scan the current QR code on your TV.', waitingPlayer: 'Waiting for a place',
     gold: 'Yellow tank', cyan: 'Green tank', joining: 'Connecting to your TV…', expired: 'Room expired. Scan the new QR code on your TV.',
-    fullscreen: 'Full screen', leaveFullscreen: 'Exit full screen', joystick: 'Movement joystick', fireLabel: 'A: Fire', shieldLabel: 'B: Shield',
+    fullscreen: 'Full screen', leaveFullscreen: 'Exit full screen', joystick: 'Movement joystick', actionALabel: 'A: Fire', actionBLabel: 'B: Fire',
+    select: 'Select', start: 'Start / pause', selectLabel: 'SELECT: choose mode', startLabel: 'START: begin or pause',
     connectionError: 'Cannot reach the TV. Keep your phone and TV on the same local network.', cooling: 's',
   } : {
     controller: '手机控制器', yourTank: '你的坦克', stage: '关卡', lives: '生命', score: '得分', move: '移动 · 左侧摇杆',
-    fire: '开火', shield: '防护盾', hint: '按住 A 连续开火 · B 开启护盾', rotate: '横屏握持，体验更好',
+    actionA: '开火', actionB: '开火', hint: 'A / B 开火 · START 开始或暂停', rotate: '横屏握持，体验更好',
     retry: '重新连接', connecting: '正在连接', connected: '已连接', reconnecting: '正在重连', offline: '连接已断开',
-    waiting: '正在加入电视上的房间…', ready: '按 A 开始游戏，和队友一起守护基地。', playing: '守护基地，战场画面在电视上。',
-    paused: '游戏已在电视上暂停。', gameover: '本局结束，按 A 再来一局。', victory: '关卡完成，准备迎接下一波！',
+    waiting: '正在加入电视上的房间…', ready: 'SELECT 选择模式，START 开始游戏。', playing: '守护基地，战场画面在电视上。',
+    paused: '游戏已在电视上暂停。', gameover: '本局结束，回到标题画面后按 START 开始。', victory: '关卡完成，准备迎接下一波！',
     lost: '连接暂时中断，已松开所有按键，正在重连…', full: '房间已有两名玩家，空出位置后可重新连接。',
     invalid: '房间不可用，请重新扫描电视上的二维码。', waitingPlayer: '等待加入房间',
     gold: '黄色坦克', cyan: '绿色坦克', joining: '正在连接电视…', expired: '房间已过期，请扫描电视上的新二维码。',
-    fullscreen: '全屏', leaveFullscreen: '退出全屏', joystick: '方向摇杆', fireLabel: 'A 开火', shieldLabel: 'B 防护盾',
+    fullscreen: '全屏', leaveFullscreen: '退出全屏', joystick: '方向摇杆', actionALabel: 'A 开火', actionBLabel: 'B 开火',
+    select: '选择', start: '开始 / 暂停', selectLabel: 'SELECT 选择模式', startLabel: 'START 开始或暂停',
     connectionError: '暂时无法连接电视，请确认手机和电视处于同一局域网。', cooling: '秒',
   };
   document.documentElement.lang = english ? 'en' : 'zh-CN';
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = messages[el.dataset.i18n]; });
   $('joystick').setAttribute('aria-label', messages.joystick);
-  $('button-a').setAttribute('aria-label', messages.fireLabel);
-  $('button-b').setAttribute('aria-label', messages.shieldLabel);
+  $('button-a').setAttribute('aria-label', messages.actionALabel);
+  $('button-b').setAttribute('aria-label', messages.actionBLabel);
+  $('button-start').setAttribute('aria-label', messages.startLabel);
+  $('button-select').setAttribute('aria-label', messages.selectLabel);
+  $('a-caption').textContent = messages.actionA;
+  $('b-caption').textContent = messages.actionB;
+  $('select-caption').textContent = messages.select;
+  $('start-caption').textContent = messages.start;
   $('fullscreen').setAttribute('aria-label', messages.fullscreen);
   $('fullscreen').title = messages.fullscreen;
   $('player-name').textContent = messages.waitingPlayer;
@@ -43,14 +51,13 @@
   let stickPointer = null, stickX = 0, stickY = 0;
   const actionPointers = new Map();
   const keys = new Set();
-  const input = { x: 0, y: 0, a: false, b: false };
+  const input = { x: 0, y: 0, a: false, b: false, start: false, select: false };
   const isVisible = () => !document.hidden && !leaving;
   const setMessage = (key, error = false) => { $('message').textContent = messages[key] || key; root.dataset.error = String(error); };
   function showConnection(key) {
     $('connection-text').textContent = messages[key];
     root.dataset.connected = String(connected);
-    $('button-a').disabled = !connected;
-    $('button-b').disabled = !connected;
+    for (const action of ['a', 'b', 'start', 'select']) $(`button-${action}`).disabled = !connected;
     $('joystick').setAttribute('aria-disabled', String(!connected));
   }
   function vibrate(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (_) {} }
@@ -62,10 +69,11 @@
   function updateInput() {
     input.x = stickPointer !== null ? stickX : (keys.has('ArrowRight') ? 1 : 0) - (keys.has('ArrowLeft') ? 1 : 0);
     input.y = stickPointer !== null ? stickY : (keys.has('ArrowDown') ? 1 : 0) - (keys.has('ArrowUp') ? 1 : 0);
-    input.a = [...actionPointers.values()].includes('a') || keys.has(' ') || keys.has('Enter');
-    input.b = [...actionPointers.values()].includes('b') || keys.has('b');
-    $('button-a').classList.toggle('pressed', input.a);
-    $('button-b').classList.toggle('pressed', input.b);
+    input.a = [...actionPointers.values()].includes('a') || keys.has(' ') || keys.has('z') || keys.has('button:a');
+    input.b = [...actionPointers.values()].includes('b') || keys.has('b') || keys.has('x') || keys.has('button:b');
+    input.start = [...actionPointers.values()].includes('start') || keys.has('Enter') || keys.has('button:start');
+    input.select = [...actionPointers.values()].includes('select') || keys.has('Shift') || keys.has('button:select');
+    for (const action of ['a', 'b', 'start', 'select']) $(`button-${action}`).classList.toggle('pressed', input[action]);
     updateStick();
   }
   function sendInput(force = false) {
@@ -100,11 +108,9 @@
     if (mine) {
       if (Number.isFinite(mine.lives)) $('lives').textContent = String(Math.max(0, mine.lives));
       if (Number.isFinite(mine.score)) $('score').textContent = String(Math.max(0, mine.score)).padStart(4, '0');
-      const cooldown = Number(mine.shieldCooldown) || 0;
-      $('button-b').dataset.cooling = String(cooldown > 0);
-      $('shield-caption').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}${messages.cooling}` : messages.shield;
+
     }
-    const phaseKey = { lobby: 'ready', ready: 'ready', playing: 'playing', paused: 'paused', gameover: 'gameover', over: 'gameover', victory: 'victory', stageclear: 'victory' }[state.phase];
+    const phaseKey = { title: 'ready', menu: 'ready', lobby: 'ready', ready: 'ready', playing: 'playing', paused: 'paused', gameover: 'gameover', over: 'gameover', victory: 'victory', stageclear: 'victory' }[state.phase];
     if (phaseKey) setMessage(phaseKey);
   }
   function connect() {
@@ -177,7 +183,7 @@
     stickPointer = null; stickX = stickY = 0; updateInput(); sendInput(true);
   }
   ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => stick.addEventListener(name, releaseStick));
-  ['a', 'b'].forEach(action => {
+  ['a', 'b', 'start', 'select'].forEach(action => {
     const button = $(`button-${action}`);
     button.addEventListener('pointerdown', event => {
       if (!connected || event.button > 0) return;
@@ -190,12 +196,23 @@
       actionPointers.delete(event.pointerId); updateInput(); sendInput(true);
     };
     ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => button.addEventListener(name, release));
+    button.addEventListener('keydown', event => {
+      if (!connected || ![' ', 'Enter'].includes(event.key)) return;
+      event.preventDefault(); event.stopPropagation(); keys.add(`button:${action}`); updateInput(); sendInput(true);
+    });
+    button.addEventListener('keyup', event => {
+      if (![' ', 'Enter'].includes(event.key)) return;
+      event.preventDefault(); event.stopPropagation(); keys.delete(`button:${action}`); updateInput(); sendInput(true);
+    });
+    button.addEventListener('blur', () => {
+      if (keys.delete(`button:${action}`)) { updateInput(); sendInput(true); }
+    });
   });
   document.addEventListener('keydown', event => {
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
-    if (!connected || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', 'b'].includes(key)) return;
+    if (!connected || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', 'Shift', 'z', 'x', 'b'].includes(key)) return;
     if ((event.target === $('retry') || event.target === $('fullscreen')) && [' ', 'Enter'].includes(key)) return;
-    event.preventDefault(); keys.add(key); updateInput(); sendInput();
+    event.preventDefault(); keys.add(key); updateInput(); sendInput(true);
   });
   document.addEventListener('keyup', event => {
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
@@ -225,7 +242,13 @@
     const label = messages[document.fullscreenElement ? 'leaveFullscreen' : 'fullscreen'];
     $('fullscreen').title = label; $('fullscreen').setAttribute('aria-label', label); resetControls();
   });
-  setInterval(() => { if (isVisible()) sendInput(); }, 33);
-  $('shield-caption').textContent = messages.shield;
+  let heartbeat = 0;
+  function startHeartbeat() { if (!heartbeat && isVisible()) heartbeat = setInterval(() => { if (isVisible()) sendInput(); }, 33); }
+  function stopHeartbeat() { clearInterval(heartbeat); heartbeat = 0; }
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stopHeartbeat(); else startHeartbeat(); });
+  window.addEventListener('pagehide', stopHeartbeat);
+  window.addEventListener('pageshow', event => { if (event.persisted) startHeartbeat(); });
+  startHeartbeat();
+
   connect();
 })();

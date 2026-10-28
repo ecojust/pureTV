@@ -143,20 +143,54 @@ public class MainActivityTest {
     }
 
     @Test public void onlyBundledGameAssetsAreReadable() throws Exception {
-        String[] names={"tv.html","tv.css","game.js","nes-renderer.js"};
-        String[] mimes={"text/html","text/css","application/javascript","application/javascript"};
+        String[] names={"tv.html","tv.css","game.js","game-model.js","levels.js","runtime.js","nes-renderer.js","battle-art.js","nes-audio.js","audio/pause.ogg","audio/bullet_shot.ogg","audio/bullet_hit_1.ogg","audio/bullet_hit_2.ogg","audio/game_over.ogg","audio/explosion_2.ogg","audio/statistics_1.ogg","audio/powerup_pick.ogg","audio/stage_start.ogg","audio/powerup_appear.ogg","audio/explosion_1.ogg"};
+        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","audio/ogg","audio/ogg","audio/ogg","audio/ogg","audio/ogg","audio/ogg","audio/ogg","audio/ogg","audio/ogg","audio/ogg","audio/ogg"};
         for (int i=0;i<names.length;i++) {
             WebResourceResponse response=activity.localAsset(Uri.parse("https://tank.invalid/"+names[i]));
             assertEquals(names[i],200,response.getStatusCode());
             assertEquals(mimes[i],response.getMimeType());
-            assertTrue(response.getData().readAllBytes().length>100);
+            assertEquals("nosniff",response.getResponseHeaders().get("X-Content-Type-Options"));
+            byte[] bytes=response.getData().readAllBytes();
+            assertTrue(names[i],bytes.length>100);
+            if (mimes[i].equals("audio/ogg")) {
+                assertNull(response.getEncoding());
+                assertEquals("OggS",new String(bytes,0,4,StandardCharsets.US_ASCII));
+            } else assertEquals("UTF-8",response.getEncoding());
             response.getData().close();
         }
-        for (String url:new String[]{"https://tank.invalid/controller.js","https://tank.invalid/../private","https://tank.invalid/secret","https://tank.invalid:443/game.js","https://evil.example/game.js","http://tank.invalid/game.js","file:///android_asset/game.js","content://private/data"}) {
+        for (String url:new String[]{
+            "https://tank.invalid/controller.js","https://tank.invalid/../private",
+            "https://tank.invalid/secret","https://tank.invalid:443/game.js",
+            "https://evil.example/game.js","http://tank.invalid/game.js",
+            "file:///android_asset/game.js","content://private/data",
+            "https://tank.invalid/game.js?other=1","https://tank.invalid/game.js#fragment",
+            "https://user@tank.invalid/game.js","https://tank.invalid/%67ame.js",
+            "https://tank.invalid/audio/../game.js","https://tank.invalid/data/../../game.js",
+            "https://tank.invalid/audio/%2e%2e/game.js","https://tank.invalid/audio/not-bundled.ogg",
+            "https://tank.invalid/data/stage-7.json","https://tank.invalid/art/unknown.png"
+        }) {
             WebResourceResponse blocked=activity.localAsset(Uri.parse(url));
             assertEquals(url,403,blocked.getStatusCode());
             assertEquals(-1,blocked.getData().read());
+            blocked.getData().close();
         }
+    }
+
+    @Test public void everyHtmlDependencyCanLoadThroughTheActualWebViewBoundary() throws Exception {
+        WebResourceResponse page=activity.localAsset(Uri.parse(MainActivity.GAME_URL));
+        String html=new String(page.getData().readAllBytes(),StandardCharsets.UTF_8);
+        page.getData().close();
+        java.util.regex.Matcher dependencies=java.util.regex.Pattern.compile("(?:src|href)=\"([^\"]+)\"").matcher(html);
+        int count=0;
+        while (dependencies.find()) {
+            String dependency=dependencies.group(1);
+            if (dependency.startsWith("data:") || dependency.startsWith("#")) continue;
+            WebResourceResponse response=activity.localAsset(Uri.parse("https://tank.invalid/"+dependency));
+            assertEquals("HTML dependency: "+dependency,200,response.getStatusCode());
+            assertTrue(response.getData().readAllBytes().length>0);
+            response.getData().close();count++;
+        }
+        assertTrue("The test must inspect the real script and stylesheet dependencies",count>=7);
     }
 
     @Test public void generatedPngQrDecodesToExactJoinUrl() throws Exception {
@@ -255,5 +289,15 @@ public class MainActivityTest {
         assertTrue(browser().getLastEvaluatedJavascript().contains("key(\"Enter\",true)"));
         activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,KeyEvent.KEYCODE_MENU));
         assertTrue(browser().getLastEvaluatedJavascript().contains("key(\"b\",false)"));
+        for (int code : new int[] {KeyEvent.KEYCODE_BUTTON_START, KeyEvent.KEYCODE_BUTTON_SELECT}) {
+            String name = code == KeyEvent.KEYCODE_BUTTON_START ? "Start" : "Select";
+            activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, code));
+            assertTrue(browser().getLastEvaluatedJavascript().contains("key(\"" + name + "\",true)"));
+            activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, code));
+            assertTrue(browser().getLastEvaluatedJavascript().contains("key(\"" + name + "\",false)"));
+        }
+        String released = browser().getLastEvaluatedJavascript();
+        activity.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BUTTON_START, 1));
+        assertEquals("A held Start key must not send repeated presses", released, browser().getLastEvaluatedJavascript());
     }
 }

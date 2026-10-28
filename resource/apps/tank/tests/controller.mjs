@@ -69,7 +69,7 @@ try {
     await page.waitForTimeout(310);
     const neutral = await page.evaluate(() => window.__sent.filter(x => x.type === 'input'));
     assert.ok(neutral.length >= 2, 'Neutral input still heartbeats within stale-input timeout');
-    assert.ok(neutral.every(x => x.x === 0 && x.y === 0 && !x.a && !x.b));
+    assert.ok(neutral.every(x => x.x === 0 && x.y === 0 && !x.a && !x.b && !x.start && !x.select));
     await page.reload();
     await page.waitForFunction(() => document.querySelector('#controller').dataset.connected === 'true');
     assert.equal(await page.evaluate(() => window.__sent[0].session), 'resume-session-1');
@@ -90,6 +90,53 @@ try {
     assert.equal((await input(page)).b, false);
     await context.close();
   });
+  await test('NES START and SELECT are independent touch controls and release on cancel or disconnect', async () => {
+    const { context, page } = await fixture();
+    await press(page, 'button-a', 101);
+    await press(page, 'button-start', 102);
+    await press(page, 'button-select', 103);
+    assert.equal((await input(page)).a, true);
+    assert.equal((await input(page)).start, true);
+    assert.equal((await input(page)).select, true);
+    await release(page, 'button-start', 102, 'pointercancel');
+    assert.equal((await input(page)).start, false);
+    assert.equal((await input(page)).select, true);
+    assert.equal((await input(page)).a, true);
+    await release(page, 'button-select', 103, 'lostpointercapture');
+    assert.equal((await input(page)).select, false);
+    await press(page, 'button-start', 104);
+    await press(page, 'button-select', 105);
+    await page.evaluate(() => window.__sockets.at(-1).close());
+    for (const id of ['button-a','button-b','button-start','button-select']) {
+      assert.equal(await page.locator(`#${id}`).isDisabled(), true);
+      assert.equal(await page.locator(`#${id}`).evaluate(el=>el.classList.contains('pressed')), false);
+    }
+    await page.waitForFunction(() => window.__sockets.length===2 && document.querySelector('#controller').dataset.connected==='true');
+    assert.equal((await input(page)).start, false);
+    assert.equal((await input(page)).select, false);
+    assert.equal((await input(page)).a, false);
+    await context.close();
+  });
+  await test('Keyboard maps Enter/Shift to START/SELECT and supports focused control buttons', async () => {
+    const { context, page } = await fixture();
+    await page.keyboard.down('Enter');
+    assert.equal((await input(page)).start, true); assert.equal((await input(page)).a, false);
+    await page.keyboard.down('Shift');
+    assert.equal((await input(page)).select, true);
+    await page.keyboard.up('Enter'); await page.keyboard.up('Shift');
+    assert.equal((await input(page)).start, false); assert.equal((await input(page)).select, false);
+    await page.locator('#button-select').focus();
+    await page.keyboard.down('Enter');
+    assert.equal((await input(page)).select, true); assert.equal((await input(page)).start, false);
+    await page.keyboard.up('Enter');
+    assert.equal((await input(page)).select, false);
+    await page.locator('#button-start').focus(); await page.keyboard.down('Space');
+    assert.equal((await input(page)).start, true); assert.equal((await input(page)).a, false);
+    await page.locator('#button-select').focus();
+    assert.equal((await input(page)).start, false);
+    await page.keyboard.up('Space');
+    await context.close();
+  });
   await test('Joystick clamps diagonal magnitude, ignores second stick pointer and resets on blur', async () => {
     const { context, page } = await fixture();
     const rect = await page.locator('#joystick').boundingBox();
@@ -101,7 +148,7 @@ try {
     await press(page, 'button-a', 23);
     assert.equal((await input(page)).x, diagonal.x);
     await page.evaluate(() => window.dispatchEvent(new Event('blur')));
-    assert.deepEqual(await input(page), { type: 'input', x: 0, y: 0, a: false, b: false, seq: (await input(page)).seq });
+    assert.deepEqual(await input(page), { type: 'input', x: 0, y: 0, a: false, b: false, start: false, select: false, seq: (await input(page)).seq });
     await context.close();
   });
   await test('Disconnect releases held input; reconnect resumes same player with fresh sequence', async () => {
@@ -119,8 +166,12 @@ try {
   await test('Hidden page sends neutral then closes; visible page reconnects without stuck controls', async () => {
     const { context, page } = await fixture();
     await press(page, 'button-b', 41);
+    await press(page, 'button-start', 42);
+    await press(page, 'button-select', 43);
     await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')); });
     assert.equal((await input(page)).b, false);
+    assert.equal((await input(page)).start, false);
+    assert.equal((await input(page)).select, false);
     assert.equal(await page.evaluate(() => window.__sockets.at(-1).readyState), 3);
     await page.waitForTimeout(600);
     assert.equal(await page.evaluate(() => window.__sockets.length), 1);
@@ -141,13 +192,14 @@ try {
     assert.equal(await page.evaluate(() => window.__sockets.length), 2);
     await context.close();
   });
-  await test('State updates local player stats, shield cooldown, language and safe text content', async () => {
+  await test('State updates local player stats, fire labels, language and safe text content', async () => {
     const { context, page } = await fixture({ locale: 'en-US' });
     await page.evaluate(() => window.__sockets.at(-1).receive({ type: 'state', phase: 'playing', stage: 3, players: [{ id: 1, lives: 2, score: 840, shieldCooldown: 2.6 }, { id: 2, lives: 9, score: 9999 }] }));
     assert.equal(await page.locator('#stage').textContent(), '03');
     assert.equal(await page.locator('#score').textContent(), '0840');
     assert.equal(await page.locator('#lives').textContent(), '2');
-    assert.equal(await page.locator('#shield-caption').textContent(), '3s');
+    assert.equal(await page.locator('#a-caption').textContent(), 'FIRE');
+    assert.equal(await page.locator('#b-caption').textContent(), 'FIRE');
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
     assert.match(await page.locator('#message').textContent(), /Defend the base/);
     await page.evaluate(() => window.__sockets.at(-1).receive({ type: 'state', stage: '<img src=x onerror=alert(1)>', phase: 'unknown', players: [{ id: 1, score: '<svg onload=alert(1)>' }] }));
@@ -159,13 +211,13 @@ try {
     const { context, page } = await fixture();
     for (const viewport of [{ width: 844, height: 390 }, { width: 667, height: 375 }, { width: 390, height: 844 }, { width: 320, height: 568 }]) {
       await page.setViewportSize(viewport);
-      const rectangles = await Promise.all(['joystick', 'button-a', 'button-b'].map(id => page.locator(`#${id}`).boundingBox()));
+      const rectangles = await Promise.all(['joystick', 'button-a', 'button-b', 'button-start', 'button-select'].map(id => page.locator(`#${id}`).boundingBox()));
       for (const rect of rectangles) {
         assert.ok(rect.x >= 0 && rect.y >= 0 && rect.x + rect.width <= viewport.width + 1 && rect.y + rect.height <= viewport.height + 1, `${JSON.stringify(viewport)} control outside viewport ${JSON.stringify(rect)}`);
       }
       const [stick, a, b] = rectangles;
       const overlaps = (p, q) => p.x < q.x + q.width && p.x + p.width > q.x && p.y < q.y + q.height && p.y + p.height > q.y;
-      assert.ok(!overlaps(stick, a) && !overlaps(stick, b) && !overlaps(a, b), `overlap at ${JSON.stringify(viewport)}`);
+      for (let i=0;i<rectangles.length;i++) for (let j=i+1;j<rectangles.length;j++) assert.ok(!overlaps(rectangles[i],rectangles[j]), `overlap at ${JSON.stringify(viewport)} controls ${i}/${j}`);
       assert.equal(await page.evaluate(() => getComputedStyle(document.body).overflow), 'hidden');
       assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('#joystick')).touchAction), 'none');
     }
