@@ -1,6 +1,6 @@
 # Tank TV 构建
 
-当前发布版本为 `0.3.0`，Android `versionCode` 为 `5`。此版本包含重新实现的规则、35 个关卡、原生比例画面与声音，尚有 [reference.md](reference.md) 所列的逐帧还原边界。
+当前发布版本为 `0.3.1`，Android `versionCode` 为 `6`。手机手柄使用按下定位、松手隐藏的浮动摇杆。此版本包含重新实现的规则、35 个关卡、原生比例画面与声音，尚有 [reference.md](reference.md) 所列的逐帧还原边界。
 
 ```sh
 cd resource/launcher/puretv

@@ -19,7 +19,7 @@ const browser = await chromium.launch({ headless: true, ...(process.env.CHROMIUM
 let passed = 0;
 
 async function fixture(options = {}) {
-  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, locale: 'zh-CN', ...options });
+  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, locale: 'zh-CN', hasTouch: true, ...options });
   await context.addInitScript(() => {
     window.__sockets = [];
     window.__sent = [];
@@ -55,6 +55,37 @@ async function press(page, id, pointerId, coordinates = {}) {
 async function release(page, id, pointerId, type = 'pointerup') {
   await page.locator(`#${id}`).dispatchEvent(type, { pointerId, pointerType: 'touch', button: 0, buttons: 0 });
 }
+async function zonePoint(page, x = .5, y = .5) {
+  const rect = await page.locator('#joystick-zone').boundingBox();
+  return { clientX: rect.x + rect.width * x, clientY: rect.y + rect.height * y };
+}
+async function moveStick(page, pointerId, point) {
+  // Movement packets are intentionally throttled; advance past that interval.
+  await page.waitForTimeout(40);
+  await page.locator('#joystick-zone').dispatchEvent('pointermove', { pointerId, pointerType: 'touch', button: 0, buttons: 1, ...point });
+}
+async function dragStick(page, pointerId, dx, dy, origin) {
+  origin = origin || await zonePoint(page);
+  await press(page, 'joystick-zone', pointerId, origin);
+  await moveStick(page, pointerId, { clientX: origin.clientX + dx, clientY: origin.clientY + dy });
+  return origin;
+}
+async function stickHidden(page) {
+  assert.equal(await page.locator('#joystick').isHidden(), true, 'Floating joystick is hidden when not held');
+  assert.equal(await page.locator('#joystick-zone').getAttribute('data-active'), 'false');
+}
+async function stickCenter(page, origin) {
+  const rect = await page.locator('#joystick').boundingBox();
+  assert.ok(rect && Math.abs(rect.x + rect.width / 2 - origin.clientX) < 1
+    && Math.abs(rect.y + rect.height / 2 - origin.clientY) < 1,
+  'Floating joystick center matches the original touch point: ' + JSON.stringify({ rect, origin }));
+}
+async function expectInput(page, expected) {
+  await page.waitForFunction(expected => {
+    const frame = window.__sent.filter(value => value.type === 'input').at(-1);
+    return frame && Object.entries(expected).every(([key, value]) => frame[key] === value);
+  }, expected, { timeout: 3000 });
+}
 async function test(name, run) {
   await run(); passed++; console.log(`PASS ${name}`);
 }
@@ -66,6 +97,9 @@ try {
     assert.match(hello.url, /\/ws\?room=0123456789abcdef0123456789abcdef$/);
     assert.deepEqual(hello.first, { type: 'hello' });
     assert.equal(hello.saved, 'resume-session-1');
+    await stickHidden(page);
+    for (const id of ['joystick', 'joystick-thumb'])
+      assert.equal(await page.locator('#' + id).evaluate(element => getComputedStyle(element).pointerEvents), 'none', 'Joystick art must not intercept touches');
     await page.waitForTimeout(310);
     const neutral = await page.evaluate(() => window.__sent.filter(x => x.type === 'input'));
     assert.ok(neutral.length >= 2, 'Neutral input still heartbeats within stale-input timeout');
@@ -77,15 +111,15 @@ try {
   });
   await test('Three simultaneous touches: joystick + A + B, independently released and cancelled', async () => {
     const { context, page } = await fixture();
-    const rect = await page.locator('#joystick').boundingBox();
-    await press(page, 'joystick', 11, { clientX: rect.x + rect.width, clientY: rect.y + rect.height / 2 });
+    await dragStick(page, 11, 150, 0);
     await press(page, 'button-a', 12);
     await press(page, 'button-b', 13);
     assert.equal((await input(page)).x, 1); assert.equal((await input(page)).a, true); assert.equal((await input(page)).b, true);
     await release(page, 'button-a', 12);
     assert.equal((await input(page)).a, false); assert.equal((await input(page)).b, true); assert.equal((await input(page)).x, 1);
-    await release(page, 'joystick', 11, 'pointercancel');
+    await release(page, 'joystick-zone', 11, 'pointercancel');
     assert.equal((await input(page)).x, 0); assert.equal((await input(page)).b, true);
+    await stickHidden(page);
     await release(page, 'button-b', 13, 'lostpointercapture');
     assert.equal((await input(page)).b, false);
     await context.close();
@@ -139,32 +173,109 @@ try {
   });
   await test('Joystick clamps diagonal magnitude, ignores second stick pointer and resets on blur', async () => {
     const { context, page } = await fixture();
-    const rect = await page.locator('#joystick').boundingBox();
-    await press(page, 'joystick', 21, { clientX: rect.x + rect.width * 4, clientY: rect.y + rect.height * 4 });
-    await page.waitForTimeout(40);
+    const origin = await dragStick(page, 21, 200, 200, await zonePoint(page, .3, .4));
     const diagonal = await input(page);
     assert.ok(Math.abs(diagonal.x - .707) < .002 && Math.abs(diagonal.y - .707) < .002);
-    await press(page, 'joystick', 22, { clientX: rect.x, clientY: rect.y });
+    await press(page, 'joystick-zone', 22, await zonePoint(page, .8, .7));
+    await moveStick(page, 22, await zonePoint(page, .05, .05));
+    await release(page, 'joystick-zone', 22);
     await press(page, 'button-a', 23);
     assert.equal((await input(page)).x, diagonal.x);
+    assert.equal((await input(page)).y, diagonal.y);
+    await stickCenter(page, origin);
     await page.evaluate(() => window.dispatchEvent(new Event('blur')));
     assert.deepEqual(await input(page), { type: 'input', x: 0, y: 0, a: false, b: false, start: false, select: false, seq: (await input(page)).seq });
+    await stickHidden(page);
+    await context.close();
+  });
+  await test('Each touch establishes a neutral center; four directions, deadzone, release and lost capture', async () => {
+    const { context, page } = await fixture();
+    let pointerId = 60;
+    for (const [dx, dy, x, y, fx, fy] of [[180,0,1,0,.15,.25],[-180,0,-1,0,.85,.75],[0,-180,0,-1,.25,.8],[0,180,0,1,.8,.2]]) {
+      const origin = await zonePoint(page, fx, fy);
+      await press(page, 'joystick-zone', ++pointerId, origin);
+      await expectInput(page, { x: 0, y: 0 });
+      await stickCenter(page, origin);
+      await moveStick(page, pointerId, { clientX: origin.clientX + 1, clientY: origin.clientY + 1 });
+      await expectInput(page, { x: 0, y: 0 });
+      await moveStick(page, pointerId, { clientX: origin.clientX + dx, clientY: origin.clientY + dy });
+      await expectInput(page, { x, y });
+      await release(page, 'joystick-zone', pointerId, pointerId % 2 ? 'lostpointercapture' : 'pointerup');
+      await expectInput(page, { x: 0, y: 0 });
+      await stickHidden(page);
+    }
+    await context.close();
+  });
+  await test('Real touchscreen hits the edge of the zone, captures dragging outside, and keeps A/B independent', async () => {
+    const { context, page } = await fixture();
+    const cdp = await context.newCDPSession(page);
+    await page.evaluate(() => {
+      window.__pointerEvents = [];
+      for (const type of ['pointerdown', 'pointermove', 'pointerup'])
+        document.addEventListener(type, event => window.__pointerEvents.push({ type, target: event.target.id, trusted: event.isTrusted, pointerId: event.pointerId }), true);
+    });
+    const touches = new Map();
+    async function touch(type, id, x, y) {
+      if (type === 'touchEnd') {
+        const point = touches.get(id);
+        await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [point] });
+        touches.delete(id);
+      } else {
+        touches.set(id, { id, x, y, radiusX: 4, radiusY: 4, force: 1 });
+        await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [...touches.values()] });
+      }
+    }
+    const zone = await page.locator('#joystick-zone').boundingBox();
+    const origin = { clientX: zone.x + 3, clientY: zone.y + zone.height * .55 };
+    assert.equal(await page.evaluate(({clientX,clientY}) => document.elementFromPoint(clientX,clientY).id, origin), 'joystick-zone');
+    await touch('touchStart', 1, origin.clientX, origin.clientY);
+    await expectInput(page, { x: 0, y: 0 });
+    await stickCenter(page, origin);
+    await touch('touchMove', 1, origin.clientX + 130, origin.clientY);
+    await expectInput(page, { x: 1, y: 0 });
+    for (const [id, name] of [[2,'button-a'],[3,'button-b']]) {
+      const box = await page.locator('#' + name).boundingBox();
+      await touch('touchStart', id, box.x + box.width / 2, box.y + box.height / 2);
+    }
+    await expectInput(page, { x: 1, y: 0, a: true, b: true });
+    await touch('touchEnd', 2);
+    await expectInput(page, { x: 1, a: false, b: true });
+    await touch('touchStart', 4, zone.x + zone.width * .75, zone.y + zone.height * .25);
+    await touch('touchMove', 4, zone.x + zone.width * .5, zone.y + zone.height * .15);
+    await stickCenter(page, origin);
+    await expectInput(page, { x: 1, y: 0, b: true });
+    const pointerId = await page.evaluate(() => window.__pointerEvents.find(event => event.type === 'pointerdown' && event.target === 'joystick-zone').pointerId);
+    assert.equal(await page.locator('#joystick-zone').evaluate((element,id) => element.hasPointerCapture(id), pointerId), true, 'Real browser pointer capture owns the active stick touch');
+    await touch('touchMove', 1, zone.x + zone.width + 40, Math.min(380, zone.y + zone.height + 20));
+    await touch('touchEnd', 1);
+    await expectInput(page, { x: 0, y: 0, a: false, b: true });
+    await stickHidden(page);
+    await touch('touchEnd', 3);
+    await touch('touchEnd', 4);
+    await expectInput(page, { x: 0, y: 0, a: false, b: false });
+    const events = await page.evaluate(() => window.__pointerEvents);
+    assert.ok(events.length && events.every(event => event.trusted), 'Touch events are browser-generated, not dispatchEvent simulations');
+    assert.ok(events.some(event => event.type === 'pointerup' && event.target === 'joystick-zone' && event.pointerId === pointerId), 'Captured release returns to the joystick after leaving its region');
+    await cdp.detach();
     await context.close();
   });
   await test('Disconnect releases held input; reconnect resumes same player with fresh sequence', async () => {
     const { context, page } = await fixture();
+    await dragStick(page, 30, 150, 0);
     await press(page, 'button-a', 31);
     await page.evaluate(() => window.__sockets.at(-1).close());
     assert.equal(await page.locator('#button-a').isDisabled(), true);
     assert.equal(await page.locator('#button-a').evaluate(el => el.classList.contains('pressed')), false);
+    await stickHidden(page);
     await page.waitForFunction(() => window.__sockets.length === 2 && document.querySelector('#controller').dataset.connected === 'true');
     const hello = await page.evaluate(() => window.__sent.filter(x => x.type === 'hello').at(-1));
     assert.equal(hello.session, 'resume-session-1');
-    const current = await input(page); assert.equal(current.a, false); assert.equal(current.b, false); assert.equal(current.seq, 1);
+    const current = await input(page); assert.equal(current.a, false); assert.equal(current.b, false); assert.equal(current.x, 0); assert.equal(current.y, 0); assert.equal(current.seq, 1);
     await context.close();
   });
   await test('Hidden page sends neutral then closes; visible page reconnects without stuck controls', async () => {
     const { context, page } = await fixture();
+    await dragStick(page, 40, 0, -150);
     await press(page, 'button-b', 41);
     await press(page, 'button-start', 42);
     await press(page, 'button-select', 43);
@@ -172,12 +283,29 @@ try {
     assert.equal((await input(page)).b, false);
     assert.equal((await input(page)).start, false);
     assert.equal((await input(page)).select, false);
+    assert.equal((await input(page)).x, 0); assert.equal((await input(page)).y, 0);
+    await stickHidden(page);
     assert.equal(await page.evaluate(() => window.__sockets.at(-1).readyState), 3);
     await page.waitForTimeout(600);
     assert.equal(await page.evaluate(() => window.__sockets.length), 1);
     await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: false }); document.dispatchEvent(new Event('visibilitychange')); });
     await page.waitForFunction(() => document.querySelector('#controller').dataset.connected === 'true');
     assert.equal((await input(page)).b, false);
+    await context.close();
+  });
+  await test('Resizing during a gesture clears the floating center and the next touch starts neutral', async () => {
+    const { context, page } = await fixture();
+    await dragStick(page, 71, -150, 0);
+    await expectInput(page, { x: -1, y: 0 });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expectInput(page, { x: 0, y: 0 });
+    await stickHidden(page);
+    const origin = await zonePoint(page, .75, .65);
+    await press(page, 'joystick-zone', 72, origin);
+    await expectInput(page, { x: 0, y: 0 });
+    await stickCenter(page, origin);
+    await release(page, 'joystick-zone', 72);
+    await stickHidden(page);
     await context.close();
   });
   await test('Full room gives actionable error, disables controls and retries only on request', async () => {
@@ -211,15 +339,17 @@ try {
     const { context, page } = await fixture();
     for (const viewport of [{ width: 844, height: 390 }, { width: 667, height: 375 }, { width: 390, height: 844 }, { width: 320, height: 568 }]) {
       await page.setViewportSize(viewport);
-      const rectangles = await Promise.all(['joystick', 'button-a', 'button-b', 'button-start', 'button-select'].map(id => page.locator(`#${id}`).boundingBox()));
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      const rectangles = await Promise.all(['joystick-zone', 'button-a', 'button-b', 'button-start', 'button-select'].map(id => page.locator(`#${id}`).boundingBox()));
       for (const rect of rectangles) {
         assert.ok(rect.x >= 0 && rect.y >= 0 && rect.x + rect.width <= viewport.width + 1 && rect.y + rect.height <= viewport.height + 1, `${JSON.stringify(viewport)} control outside viewport ${JSON.stringify(rect)}`);
       }
-      const [stick, a, b] = rectangles;
       const overlaps = (p, q) => p.x < q.x + q.width && p.x + p.width > q.x && p.y < q.y + q.height && p.y + p.height > q.y;
       for (let i=0;i<rectangles.length;i++) for (let j=i+1;j<rectangles.length;j++) assert.ok(!overlaps(rectangles[i],rectangles[j]), `overlap at ${JSON.stringify(viewport)} controls ${i}/${j}`);
       assert.equal(await page.evaluate(() => getComputedStyle(document.body).overflow), 'hidden');
-      assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('#joystick')).touchAction), 'none');
+      assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('#joystick-zone')).touchAction), 'none');
+      assert.ok(rectangles[0].width >= 100 && rectangles[0].height >= 100, 'The floating joystick has a usable touch region');
+      await stickHidden(page);
     }
     await context.close();
   });

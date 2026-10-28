@@ -188,10 +188,14 @@ try {
       }
     },api);
     const before=await tv.evaluate(api=>window[api].game.players[0].y,api);
-    const stick=await phone.locator('#joystick').boundingBox();
-    await press(phone,'joystick',11,{clientX:stick.x+stick.width/2,clientY:stick.y});
+    const stick=await phone.locator('#joystick-zone').boundingBox();
+    const origin={clientX:stick.x+stick.width/2,clientY:stick.y+stick.height/2};
+    await press(phone,'joystick-zone',11,origin);
+    await phone.waitForTimeout(40);
+    await phone.locator('#joystick-zone').dispatchEvent('pointermove',{pointerId:11,pointerType:'touch',button:0,buttons:1,clientX:origin.clientX,clientY:origin.clientY-80});
     await tv.waitForFunction(({api,before})=>window[api].game.players[0].y<before,{api,before});
-    await release(phone,'joystick',11);
+    await release(phone,'joystick-zone',11);
+    assert.equal(await phone.locator('#joystick').isHidden(),true,'Releasing the floating joystick hides its visual');
     await tap(phone,'button-a');
     await tv.waitForFunction(kind=>window.__shots[kind==='tank'?'fire':'throwGrenade']>0,kind);
     await tv.waitForTimeout(550);
@@ -246,7 +250,16 @@ try {
     assert.equal(await phone.locator('#button-start').isEnabled(),true);
     assert.equal(await phone.locator('#button-select').isEnabled(),true);
     if(language==='en')assert.doesNotMatch(await phone.locator('body').innerText(),/[\u3400-\u9fff]/,'English phone UI contains no untranslated Chinese');
+    assert.equal(await phone.locator('#joystick').isHidden(),true);
     await phone.screenshot({path:resolve(output,`${kind}-controller${suffix}.png`)});
+    const touchZone=await phone.locator('#joystick-zone').boundingBox();
+    const touchOrigin={clientX:touchZone.x+touchZone.width*.45,clientY:touchZone.y+touchZone.height*.55};
+    await press(phone,'joystick-zone',91,touchOrigin);
+    await phone.waitForTimeout(40);
+    await phone.locator('#joystick-zone').dispatchEvent('pointermove',{pointerId:91,pointerType:'touch',button:0,buttons:1,clientX:touchOrigin.clientX+35,clientY:touchOrigin.clientY-20});
+    assert.equal(await phone.locator('#joystick').isVisible(),true);
+    await phone.screenshot({path:resolve(output,`${kind}-controller-active${suffix}.png`),animations:'disabled'});
+    await release(phone,'joystick-zone',91);
     // Stop the mock phone before navigating its paired TV. Pending heartbeat
     // bindings otherwise evaluate into the destroyed TV execution context.
     await phone.evaluate(async()=>{

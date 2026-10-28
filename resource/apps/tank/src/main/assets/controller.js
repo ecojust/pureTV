@@ -3,7 +3,7 @@
   const $ = id => document.getElementById(id);
   const english = !/^zh\b/i.test(navigator.language || 'zh');
   const messages = english ? {
-    controller: 'FIELD CONTROLLER', yourTank: 'YOUR TANK', stage: 'STAGE', lives: 'LIVES', score: 'SCORE', move: 'MOVE · LEFT STICK',
+    controller: 'FIELD CONTROLLER', yourTank: 'YOUR TANK', stage: 'STAGE', lives: 'LIVES', score: 'SCORE', move: 'HOLD AND SLIDE ON THE LEFT',
     actionA: 'FIRE', actionB: 'FIRE', hint: 'A / B fires · START begins or pauses', rotate: 'Turn your phone sideways for a better grip',
     retry: 'Reconnect', connecting: 'Connecting', connected: 'Connected', reconnecting: 'Reconnecting', offline: 'Disconnected',
     waiting: 'Joining the room on your TV…', ready: 'SELECT chooses the mode. START begins the game.', playing: 'Defend the base. Keep an eye on the TV.',
@@ -11,11 +11,11 @@
     lost: 'Connection lost. Controls released — reconnecting…', full: 'This room already has two players. Try again when a place is free.',
     invalid: 'This room is unavailable. Scan the current QR code on your TV.', waitingPlayer: 'Waiting for a place',
     gold: 'Yellow tank', cyan: 'Green tank', joining: 'Connecting to your TV…', expired: 'Room expired. Scan the new QR code on your TV.',
-    fullscreen: 'Full screen', leaveFullscreen: 'Exit full screen', joystick: 'Movement joystick', actionALabel: 'A: Fire', actionBLabel: 'B: Fire',
+    fullscreen: 'Full screen', leaveFullscreen: 'Exit full screen', joystick: 'Hold and slide anywhere on the left to move', actionALabel: 'A: Fire', actionBLabel: 'B: Fire',
     select: 'Select', start: 'Start / pause', selectLabel: 'SELECT: choose mode', startLabel: 'START: begin or pause',
     connectionError: 'Cannot reach the TV. Keep your phone and TV on the same local network.', cooling: 's',
   } : {
-    controller: '手机控制器', yourTank: '你的坦克', stage: '关卡', lives: '生命', score: '得分', move: '移动 · 左侧摇杆',
+    controller: '手机控制器', yourTank: '你的坦克', stage: '关卡', lives: '生命', score: '得分', move: '左侧按住滑动',
     actionA: '开火', actionB: '开火', hint: 'A / B 开火 · START 开始或暂停', rotate: '横屏握持，体验更好',
     retry: '重新连接', connecting: '正在连接', connected: '已连接', reconnecting: '正在重连', offline: '连接已断开',
     waiting: '正在加入电视上的房间…', ready: 'SELECT 选择模式，START 开始游戏。', playing: '守护基地，战场画面在电视上。',
@@ -23,13 +23,13 @@
     lost: '连接暂时中断，已松开所有按键，正在重连…', full: '房间已有两名玩家，空出位置后可重新连接。',
     invalid: '房间不可用，请重新扫描电视上的二维码。', waitingPlayer: '等待加入房间',
     gold: '黄色坦克', cyan: '绿色坦克', joining: '正在连接电视…', expired: '房间已过期，请扫描电视上的新二维码。',
-    fullscreen: '全屏', leaveFullscreen: '退出全屏', joystick: '方向摇杆', actionALabel: 'A 开火', actionBLabel: 'B 开火',
+    fullscreen: '全屏', leaveFullscreen: '退出全屏', joystick: '左侧任意位置按住滑动来移动', actionALabel: 'A 开火', actionBLabel: 'B 开火',
     select: '选择', start: '开始 / 暂停', selectLabel: 'SELECT 选择模式', startLabel: 'START 开始或暂停',
     connectionError: '暂时无法连接电视，请确认手机和电视处于同一局域网。', cooling: '秒',
   };
   document.documentElement.lang = english ? 'en' : 'zh-CN';
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = messages[el.dataset.i18n]; });
-  $('joystick').setAttribute('aria-label', messages.joystick);
+  $('joystick-zone').setAttribute('aria-label', messages.joystick);
   $('button-a').setAttribute('aria-label', messages.actionALabel);
   $('button-b').setAttribute('aria-label', messages.actionBLabel);
   $('button-start').setAttribute('aria-label', messages.startLabel);
@@ -42,6 +42,7 @@
   $('fullscreen').title = messages.fullscreen;
   $('player-name').textContent = messages.waitingPlayer;
   const root = $('controller');
+  const stick = $('joystick'), stickZone = $('joystick-zone');
   const room = new URL(location.href).searchParams.get('room') || '';
   const storageKey = `tank-controller:${room}`;
   let session = '';
@@ -49,6 +50,7 @@
   let ws = null, connected = false, player = 0, seq = 0, attempts = 0;
   let reconnectTimer = 0, helloTimer = 0, lastSend = 0, lastSent = '', terminal = false, leaving = false;
   let stickPointer = null, stickX = 0, stickY = 0;
+  let stickOriginX = 0, stickOriginY = 0, stickRadius = 1;
   const actionPointers = new Map();
   const keys = new Set();
   const input = { x: 0, y: 0, a: false, b: false, start: false, select: false };
@@ -58,13 +60,14 @@
     $('connection-text').textContent = messages[key];
     root.dataset.connected = String(connected);
     for (const action of ['a', 'b', 'start', 'select']) $(`button-${action}`).disabled = !connected;
-    $('joystick').setAttribute('aria-disabled', String(!connected));
+    stickZone.setAttribute('aria-disabled', String(!connected));
   }
   function vibrate(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (_) {} }
   function updateStick() {
-    const radius = $('joystick').clientWidth * .265;
-    $('joystick-thumb').style.transform = `translate(${input.x * radius}px,${input.y * radius}px)`;
-    $('joystick').classList.toggle('active', !!(input.x || input.y));
+    $('joystick-thumb').style.transform = `translate(${stickX * stickRadius}px,${stickY * stickRadius}px)`;
+    const active = stickPointer !== null;
+    stick.classList.toggle('active', active);
+    stickZone.dataset.active = String(active);
   }
   function updateInput() {
     input.x = stickPointer !== null ? stickX : (keys.has('ArrowRight') ? 1 : 0) - (keys.has('ArrowLeft') ? 1 : 0);
@@ -86,8 +89,17 @@
       lastSent = state; lastSend = now;
     } catch (_) { resetControls(false); }
   }
+  function clearStick() {
+    const pointer = stickPointer;
+    stickPointer = null; stickX = stickY = 0;
+    stickOriginX = stickOriginY = 0; stickRadius = 1;
+    stick.style.left = ''; stick.style.top = '';
+    try {
+      if (pointer !== null && stickZone.hasPointerCapture(pointer)) stickZone.releasePointerCapture(pointer);
+    } catch (_) {}
+  }
   function resetControls(send = true) {
-    stickPointer = null; stickX = stickY = 0; actionPointers.clear(); keys.clear(); updateInput();
+    clearStick(); actionPointers.clear(); keys.clear(); updateInput();
     if (send) sendInput(true);
   }
   function clearTimers() { clearTimeout(reconnectTimer); clearTimeout(helloTimer); reconnectTimer = helloTimer = 0; }
@@ -160,29 +172,34 @@
     socket.addEventListener('error', () => { if (socket === ws) socket.close(); });
   }
 
-  const stick = $('joystick');
   function moveStick(event) {
-    const rect = stick.getBoundingClientRect();
-    const radius = Math.max(1, rect.width * .265);
-    let x = (event.clientX - rect.left - rect.width / 2) / radius;
-    let y = (event.clientY - rect.top - rect.height / 2) / radius;
+    // The first touch remains the origin, including when it is close to an edge.
+    let x = (event.clientX - stickOriginX) / stickRadius;
+    let y = (event.clientY - stickOriginY) / stickRadius;
     const length = Math.hypot(x, y);
     if (length < .13) x = y = 0;
     else if (length > 1) { x /= length; y /= length; }
     stickX = Math.round(x * 1000) / 1000; stickY = Math.round(y * 1000) / 1000; updateInput(); sendInput();
   }
-  stick.addEventListener('pointerdown', event => {
+  stickZone.addEventListener('pointerdown', event => {
     if (!connected || stickPointer !== null || event.button > 0) return;
-    event.preventDefault(); stickPointer = event.pointerId;
-    try { stick.setPointerCapture(event.pointerId); } catch (_) {}
-    moveStick(event); vibrate(8);
+    event.preventDefault();
+    const rect = stickZone.getBoundingClientRect();
+    stickPointer = event.pointerId;
+    stickOriginX = event.clientX; stickOriginY = event.clientY;
+    stickX = stickY = 0;
+    stick.style.left = `${stickOriginX - rect.left}px`;
+    stick.style.top = `${stickOriginY - rect.top}px`;
+    stickRadius = Math.max(1, stick.clientWidth * .265);
+    try { stickZone.setPointerCapture(event.pointerId); } catch (_) {}
+    updateInput(); sendInput(true); vibrate(8);
   });
-  stick.addEventListener('pointermove', event => { if (event.pointerId === stickPointer) { event.preventDefault(); moveStick(event); } });
+  stickZone.addEventListener('pointermove', event => { if (event.pointerId === stickPointer) { event.preventDefault(); moveStick(event); } });
   function releaseStick(event) {
     if (event.pointerId !== stickPointer) return;
-    stickPointer = null; stickX = stickY = 0; updateInput(); sendInput(true);
+    clearStick(); updateInput(); sendInput(true);
   }
-  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => stick.addEventListener(name, releaseStick));
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => stickZone.addEventListener(name, releaseStick));
   ['a', 'b', 'start', 'select'].forEach(action => {
     const button = $(`button-${action}`);
     button.addEventListener('pointerdown', event => {

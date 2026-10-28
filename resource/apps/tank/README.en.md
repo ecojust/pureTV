@@ -1,33 +1,33 @@
 # Tank TV
 
 <!-- apk-resource:start -->
-[Download APK](tank-0.3.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
+[Download APK](tank-0.3.1.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
 The APK in this directory is signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)
 
-The published version is **`0.3.0`**, independently reimplementing the 1985 NES Battle City rules, 35 stages and presentation. Install and play without importing a ROM. The unchanged package ID and signing certificate allow updating an earlier installation. Physical-TV and frame-by-frame comparisons are incomplete.
+The published version is **`0.3.1`**, independently reimplementing the 1985 NES Battle City rules, 35 stages and presentation. Install and play without importing a ROM. The unchanged package ID and signing certificate allow updating an earlier installation. Physical-TV and frame-by-frame comparisons are incomplete.
 
 The rewrite retains QR pairing and two phone controllers over the local network, with a native 256×240 display and 208×208 battlefield. It does not load or execute a ROM. The 35 maps, 20-enemy stage sequences, four enemy classes, six power-ups, upgrades, co-op tallies and Construction mode have source references. AI, some collisions and animation timings still need frame-by-frame comparison. See [rules and maps](docs/reference.md) and [artwork and audio](docs/reference-art-audio.md) for evidence and limitations.
 
 Requires Android 8.0 or later; package `com.ecojust.tanktv`. The room UI and phone controllers support Chinese and English. In-game menus retain the original English labels.
 
-## Changes in 0.3.0
+## Changes in 0.3.1
 
-Fixes a black game screen and missing player status on older TV WebViews by removing newer JavaScript syntax and API dependencies. Room status now updates independently of game rendering, and startup/render failures display a readable error. Regression tests cover legacy syntax, missing APIs, failure messages, player joins/disconnects and cleanup on exit. Includes a 64×64 SVG icon with matching Android app artwork.
+The phone controller now uses a floating joystick. It stays hidden until you touch the left control area, and that touch becomes the center for the current gesture. Drag in any direction to move; release to stop and hide the stick. Each new touch establishes a new center. Movement and A/B support simultaneous touches. Cancelling a touch, rotating or hiding the page, and losing the connection clear movement to prevent stuck input. The older TV WebView startup fix from 0.3.0 is retained.
 
 ## Play
 
-1. Install the new test build and connect the TV and phones to the same router.
+1. Install the app and connect the TV and phones to the same router.
 2. Scan the TV's QR code; up to two phones can join.
 3. Use **SELECT** to choose 1 PLAYER, 2 PLAYERS or CONSTRUCTION; confirm with **START**.
 4. On the initial stage selector, A/B changes the stage and START begins. During play, START pauses or resumes.
 
 | Control | Action |
 | --- | --- |
-| Joystick | Move and turn |
+| Left touch area | Touch anywhere to set the joystick center; drag to move and turn; release to stop and hide |
 | A / B | Fire on each press; holding does not autofire |
 | SELECT | Change menu selection |
 | START | Start, confirm, pause or resume |
@@ -66,7 +66,7 @@ cd resource/launcher/puretv
 
 APKs are generated under `resource/apps/tank/build/outputs/apk/`. Release builds enable code and resource shrinking and enforce a 5 MiB size limit. Published resource APKs are signed with the pureTV release certificate. Android tests cover the room server and lifecycle, Node tests cover game rules, and browser tests cover phone input.
 
-Set `TANK_UI_CAPTURE_DIR` and run `tests/capture.mjs` to export Chinese and English game previews. These capture the actual bundled page in Chromium using test data for the native room bridge; they are not measurements of physical TV performance or phone network latency. This directory contains the signed 0.3.0 package with the compatibility fix. See [resource.json](resource.json) for its source commit, APK checksum and build method, and [resource maintenance](../../../docs/resource-maintenance.md) for catalog maintenance.
+Set `TANK_UI_CAPTURE_DIR` and run `tests/capture.mjs` to export Chinese and English game previews. These capture the actual bundled page in Chromium using test data for the native room bridge; they are not measurements of physical TV performance or phone network latency. This directory contains the signed 0.3.1 package with the floating joystick. See [resource.json](resource.json) for its source commit, APK checksum and build method, and [resource maintenance](../../../docs/resource-maintenance.md) for catalog maintenance.
 
 ## Artwork and licensing
 
