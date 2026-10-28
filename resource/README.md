@@ -29,7 +29,7 @@
 | [Jellyfin for Android TV](apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Jellyfin 媒体服务器的 Android TV 客户端 | <img src="apps/jellyfin-tv/thumb.png" width="180" alt="Jellyfin for Android TV 界面"> |
 | [Music TV](apps/music/) | ecojust / 桔子桑 | 0.1.3 | 48.8 KB | 原生电视音乐播放器 | <img src="apps/music/thumb.png" width="180" alt="Music TV 界面"> |
 | [ShortVideo TV](apps/shortvideo/) | ecojust / 桔子桑 | 0.1.1 | 32.7 KB | 遥控器短视频播放器 | <img src="apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
-| [Tank TV](apps/tank/) | ecojust / 桔子桑 | 0.3.0 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
+| [Tank TV](apps/tank/) | ecojust / 桔子桑 | 0.3.1 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
 | [TV Bro](apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | 适配遥控器的电视浏览器，使用系统 WebView | <img src="apps/tvbro/thumb.png" width="180" alt="TV Bro 界面"> |
 | [WebTV](apps/webtv/) | ecojust / 桔子桑 | 0.1.1 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
 
