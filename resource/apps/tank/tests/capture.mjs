@@ -222,6 +222,12 @@ try {
     assert.equal(await phone.locator('#button-select').isEnabled(),true);
     if(language==='en')assert.doesNotMatch(await phone.locator('body').innerText(),/[\u3400-\u9fff]/,'English phone UI contains no untranslated Chinese');
     await phone.screenshot({path:resolve(output,`${kind}-controller${suffix}.png`)});
+    // Stop the mock phone before navigating its paired TV. Pending heartbeat
+    // bindings otherwise evaluate into the destroyed TV execution context.
+    await phone.evaluate(async()=>{
+      window.dispatchEvent(new PageTransitionEvent('pagehide'));
+      await Promise.all(window.__sockets.map(socket=>socket.queue));
+    });
     // Reload resets the keyboard-connected flag; test native SELECT independently of phone input.
     await tv.reload(); await phase(tv,'title');
     await tv.evaluate(api=>window[api].key('Select',true),api);

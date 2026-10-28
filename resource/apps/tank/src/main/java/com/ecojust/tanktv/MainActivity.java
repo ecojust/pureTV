@@ -148,6 +148,7 @@ public class MainActivity extends Activity {
             case "/tv.html": return "text/html";
             case "/tv.css": return "text/css";
             case "/game.js":
+            case "/bootstrap.js":
             case "/game-model.js":
             case "/levels.js":
             case "/runtime.js":

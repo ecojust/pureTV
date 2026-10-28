@@ -66,6 +66,7 @@ jobs:
         env:
           TANK_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tank-previews
         run: |
+          node resource/apps/tank/tests/compatibility.mjs
           node resource/apps/tank/tests/controller.mjs
           node resource/apps/tank/tests/capture.mjs
       - name: Verify Jackal TV phone controls and capture actual game UI

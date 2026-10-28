@@ -1,6 +1,6 @@
 # Tank TV 预览版构建
 
-当前发布版本为 `0.2.0-preview.1`，Android `versionCode` 为 `3`。预览包含重新实现的规则、35 个关卡、原生比例画面与声音，尚有 [reference.md](reference.md) 所列的逐帧还原边界。
+当前发布版本为 `0.2.0-preview.2`，Android `versionCode` 为 `4`。预览包含重新实现的规则、35 个关卡、原生比例画面与声音，尚有 [reference.md](reference.md) 所列的逐帧还原边界。
 
 ```sh
 cd resource/launcher/puretv
@@ -28,3 +28,11 @@ node --test resource/apps/tank/tests/game.test.cjs
 # 从 resource/launcher/puretv 运行
 ./gradlew :tank:testDebugUnitTest :tank:lintDebug
 ```
+
+兼容性回归（从仓库根目录，先安装 desktop 依赖及 Playwright 浏览器）：
+
+```sh
+node resource/apps/tank/tests/compatibility.mjs
+```
+
+检查目标为 Chrome 61 语法与 ES2017，并模拟旧引擎缺失的 API；可用 `TANK_TEST_ASSETS=/absolute/path/to/extracted/apk/assets` 校验 APK 内的实际网页资源。此测试不等同于电视实机验证。

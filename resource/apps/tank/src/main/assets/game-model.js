@@ -43,7 +43,7 @@
       this.seed = n >>> 0; return this.seed / 4294967296;
     }
     emit(type, detail = {}) {
-      this.events.push({type,frame:this.frame,...detail});
+      this.events.push(Object.assign({type,frame:this.frame},detail));
       if (this.events.length > 96) this.events.splice(0,this.events.length-96);
     }
     setPhase(phase) { this.phase = phase; this.phaseFrames = 0; }
@@ -66,7 +66,7 @@
       this.accumulator += clamp(Number(dt)||0,0,.1);
       while (this.accumulator + 1e-9 >= 1/60) {
         this.accumulator -= 1/60; this.tick();
-        this.previous = this.inputs.map(p => ({...p}));
+        this.previous = this.inputs.map(p => Object.assign({},p));
       }
     }
     tick() {
@@ -243,12 +243,15 @@
       if(Math.abs(dy)<1)return dx>=0?1:3;
       return this.random()<.5?(dx>0?1:3):(dy>0?2:0);
     }
-    cell(x,y) { return this.map[Math.floor(y/4)]?.[Math.floor(x/4)] ?? 2; }
+    cell(x,y) {
+      const row = this.map[Math.floor(y/4)], value = row && row[Math.floor(x/4)];
+      return value == null ? 2 : value;
+    }
     blocked(x,y,ignore) {
       if(x<8 || y<8 || x>200 || y>200)return true;
       for(let r=Math.floor((y-8)/4);r<=Math.floor((y+7.99)/4);r++) {
         for(let c=Math.floor((x-8)/4);c<=Math.floor((x+7.99)/4);c++) {
-          if([1,2,3].includes(this.map[r]?.[c]))return true;
+          if([1,2,3].includes(this.map[r] && this.map[r][c]))return true;
         }
       }
       if(this.base.alive && Math.abs(x-this.base.x)<16 && Math.abs(y-this.base.y)<16)return true;
@@ -306,14 +309,14 @@
       const touched=[];
       for(let c=across;c<=across+1;c++) {
         const row=horizontal?c:along,col=horizontal?along:c;
-        if([1,2].includes(this.map[row]?.[col]))touched.push([row,col,this.map[row][col]]);
+        if([1,2].includes(this.map[row] && this.map[row][col]))touched.push([row,col,this.map[row][col]]);
       }
       if(!touched.length)return false;
       let brick=false;
       touched.forEach(([row,col,value])=> {
         if(bullet.steel) {
           const ry=row&~1,cx=col&~1;
-          for(let y=ry;y<ry+2;y++)for(let x=cx;x<cx+2;x++)if([1,2].includes(this.map[y]?.[x]))this.map[y][x]=0;
+          for(let y=ry;y<ry+2;y++)for(let x=cx;x<cx+2;x++)if([1,2].includes(this.map[y] && this.map[y][x]))this.map[y][x]=0;
           brick=true;
         } else if(value===1){this.map[row][col]=0;brick=true;}
       });
@@ -354,7 +357,7 @@
       }
       power.type=POWERS[Math.floor(this.random()*8)];this.powerUp=power;this.emit('powerup_appear');
     }
-    takePowerUp(p,type=this.powerUp?.type) {
+    takePowerUp(p,type=this.powerUp ? this.powerUp.type : undefined) {
       if(!type || !POWERS.includes(type))return false;
       const point=this.powerUp || p;
       this.scorePopups.push({x:point.x,y:point.y,score:500,frames:50});

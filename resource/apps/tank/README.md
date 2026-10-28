@@ -1,18 +1,22 @@
 # Tank TV · 经典坦克大战
 
 <!-- apk-resource:start -->
-[下载 APK](tank-0.2.0-preview.1.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
+[下载 APK](tank-0.2.0-preview.2.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
 
 此目录内 APK 使用 pureTV 发布证书签名。
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)
 
-当前发布版本为 **`0.2.0-preview.1`**，独立重写 1985 年红白机《Battle City》的玩法、35 关地图与表现。安装后即可游玩，无须导入 ROM；同包名、同签名，可覆盖此前版本。它仍是预览版，尚未完成电视实机和逐帧对照验证。
+当前发布版本为 **`0.2.0-preview.2`**，独立重写 1985 年红白机《Battle City》的玩法、35 关地图与表现。安装后即可游玩，无须导入 ROM；同包名、同签名，可覆盖此前版本。它仍是预览版，尚未完成电视实机和逐帧对照验证。
 
 新版保留电视二维码与手机局域网双人手柄，使用 256×240 原生画面和 208×208 战场。游戏规则独立编写，不加载或运行 ROM。35 关地图、每关 20 辆敌人的顺序、四种敌军、六种道具、星级升级、双人统计与 Construction 均有来源对照；AI、部分碰撞和动画时序仍需进一步逐帧核对。详细依据与局限见[规则和关卡](docs/reference.md)、[图像与声音](docs/reference-art-audio.md)。
 
 适用于 Android 8.0 及以上电视，包名 `com.ecojust.tanktv`。电视房间界面与手机手柄支持中英文，游戏内部保留原作英文菜单。
+
+## 本次修复
+
+修复旧版电视 WebView 中的游戏黑屏及扫码后玩家状态不更新；移除较新 JavaScript 语法和 API 依赖。房间状态独立于游戏绘制更新，启动或绘制失败时会显示可读的错误提示。新增旧语法、缺失 API、故障提示、玩家加入／断开和退出清理的回归测试。
 
 ## 开始游玩
 
@@ -53,6 +57,7 @@
 node --test resource/apps/tank/tests/game.test.cjs
 npm ci --prefix desktop
 cd desktop && npx playwright install chromium && cd ..
+node resource/apps/tank/tests/compatibility.mjs
 node resource/apps/tank/tests/controller.mjs
 node resource/apps/tank/tests/capture.mjs
 cd resource/launcher/puretv
@@ -61,7 +66,7 @@ cd resource/launcher/puretv
 
 APK 输出在 `resource/apps/tank/build/outputs/apk/`。Release 开启代码与资源压缩，体积上限为 5 MiB；正式资源 APK 使用 pureTV 发布证书签名。Android 测试验证房间服务及生命周期，Node 测试验证游戏规则，浏览器测试验证手机触控。
 
-设置 `TANK_UI_CAPTURE_DIR` 后运行 `tests/capture.mjs`，可导出中英文游戏页面预览。这些图片由随 APK 打包的真实页面在 Chromium 中渲染，原生桥接使用测试房间数据，不代表电视实机性能或真实手机网络时延。此目录保留已验证的原始签名测试包，源码提交、APK 校验值及构建方式见 [resource.json](resource.json)；资源目录维护见[资源维护说明](../../../docs/resource-maintenance.md)。
+设置 `TANK_UI_CAPTURE_DIR` 后运行 `tests/capture.mjs`，可导出中英文游戏页面预览。这些图片由随 APK 打包的真实页面在 Chromium 中渲染，原生桥接使用测试房间数据，不代表电视实机性能或真实手机网络时延。此目录提供修复后的签名预览包，源码提交、APK 校验值及构建方式见 [resource.json](resource.json)；资源目录维护见[资源维护说明](../../../docs/resource-maintenance.md)。
 
 ## 素材与许可
 
