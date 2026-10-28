@@ -28,7 +28,7 @@ Once connected, the home page displays the model, Android version, SDK version, 
 - **App management:** search and filter apps, enable or disable them in batches, uninstall them for the current user, and restore system apps whose APKs are still present.
 - **Pending installations:** import local APKs, install one from its row, or select several for batch installation. Successful items leave the queue; failed and unprocessed items remain.
 - **Launchers:** import and install launcher APKs directly from this page, choose a default home screen, or restore the previous default. The active launcher shows “Adjust layout” when it supports the interface.
-- **Market:** browse apps and launchers dynamically from [pure-tv-store](https://gitee.com/juzisang331/pure-tv-store), search and preview them, download them to the pending installation queue, or install them on a connected TV. Versions of the same app or launcher share one card, with a dropdown for the latest five versions and the newest selected by default. Refresh to discover newly added APKs.
+- **Market:** browse apps and launchers dynamically from [pure-tv-store](https://gitee.com/juzisang331/pure-tv-store), search and preview them, download them to the pending installation queue, or install them on a connected TV. Versions of the same app or launcher share one card, with a dropdown for the latest five versions and the newest selected by default. Refresh to discover newly added APKs. Downloads also cache a sibling `logo.svg`; adding an app block or changing its app in the layout editor automatically uses the saved icon.
 - App and launcher sizes include the main APK and split APKs. Private data, caches, and optimized files are excluded. Unreadable sizes are explicitly shown as unknown.
 - Lists scroll within their own tables, with fixed headers and batch actions above them. Core system components and the current default launcher are protected.
 
@@ -40,7 +40,7 @@ Actions such as connecting, refreshing, managing apps, switching launchers, and 
 
 [![Native Android previews of eight v5 launchers](docs/previews/launcher-collection-en.png)](resource/launcher/)
 
-The public [resource/](resource/) directory contains [launcher/](resource/launcher/) and [apps/](resource/apps/). Launcher and app sources previously stored at the repository root have moved into these directories. GitHub Releases contain only the desktop manager; launcher and TV app APKs are available in their individual software directories. Each software folder contains at least one actual APK and may also include matching source code, cover images, author details, licenses, and SHA256 checksums. Click a software name to open its folder.
+The public [resource/](resource/) directory contains [launcher/](resource/launcher/) and [apps/](resource/apps/). Launcher and app sources previously stored at the repository root have moved into these directories. GitHub Releases contain only the desktop manager; launcher and TV app APKs are available in their individual software directories. Each software folder contains at least one actual APK and may also include matching source code, cover images, author details, licenses, and SHA256 checksums. Click a software name to open its folder. Every TV app directory provides a 64×64 `logo.svg` for launcher layouts; see the [resource convention](resource/README-development.md#应用资源与-logosvg-约定) for new apps.
 
 The launchers and first-party TV apps support English. Select English in the TV system settings to use it. User-provided app names, playlists, and media titles keep their original text. Native previews below use English test content; they are not physical TV captures.
 
@@ -60,8 +60,12 @@ resource/
 │   ├── circuit/       # Neon circuitry
 │   └── pixel/         # Retro pixels
 └── apps/
+    ├── cctv/          # CCTV Live source, APK, and logo.svg
+    ├── hifini/        # HIFINi TV
+    ├── jackal/        # Jackal TV
     ├── music/         # Music TV source and APK
     ├── shortvideo/    # ShortVideo TV source and APK
+    ├── tank/          # Tank TV
     ├── webtv/         # WebTV source and APK
     ├── tvbro/         # TV Bro APK and corresponding source
     └── jellyfin-tv/   # Jellyfin TV APK and corresponding source

@@ -162,3 +162,8 @@ pub struct InstallResult {
 }
 
 mod unified_layout;
+
+/// Validate the same bounded SVG subset accepted by launcher layout icons.
+pub fn validate_svg_icon(value: &str) -> Result<(), String> {
+    unified_layout::svg(value)
+}

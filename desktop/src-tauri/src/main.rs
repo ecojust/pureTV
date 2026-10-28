@@ -1,5 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod app_logos;
 mod launcher_covers;
 mod market;
 mod mcp;
@@ -276,7 +277,9 @@ async fn choose_launcher_apks(app: tauri::AppHandle) -> Result<Value, String> {
 async fn launcher_execute(
     request: LauncherRequest,
     bridge: tauri::State<'_, Bridge>,
+    app: tauri::AppHandle,
 ) -> Result<Value, String> {
+    let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
     if bridge
         .running
         .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
@@ -298,7 +301,10 @@ async fn launcher_execute(
         if closing.load(Ordering::Acquire) {
             return Err("管理器正在退出".into());
         }
-        let result = manager.execute_launcher(request);
+        let mut result = manager.execute_launcher(request);
+        if let Ok(value) = &mut result {
+            app_logos::enrich(&directory, value);
+        }
         *cache.lock().map_err(|_| "状态缓存不可用")? = manager.snapshot();
         result
     })
@@ -800,7 +806,10 @@ fn mcp_call(
             return Err("管理器正在退出".into());
         }
         if let Some(request) = mcp::launcher_request(name, args.clone())? {
-            let result = manager.execute_launcher(request);
+            let mut result = manager.execute_launcher(request);
+            if let (Ok(value), Ok(directory)) = (&mut result, app.path().app_data_dir()) {
+                app_logos::enrich(&directory, value);
+            }
             *bridge.snapshot.lock().map_err(|_| "状态不可用")? = manager.snapshot();
             return result;
         }

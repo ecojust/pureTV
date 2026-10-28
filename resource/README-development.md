@@ -2,6 +2,47 @@
 
 本文面向启动器作者、管理器开发者和 MCP 集成开发者。普通安装和使用见[项目首页](../README.md)，APK 资源见[资源目录](README.md)。下列构建命令从仓库根目录开始。
 
+## 应用资源与 logo.svg 约定
+
+后续新增应用必须在 APK 同目录提供 `logo.svg`。文件使用 UTF-8 编码，根元素声明 `width="64"`、`height="64"`、`viewBox="0 0 64 64"`，文件总大小不超过 **8192 字节（8 KiB）**。图标应在 64×64 尺寸下保持清晰，作者与许可随资源一起说明；第三方应用图标保留其来源和权利声明。
+
+```text
+resource/apps/tank/
+├── tank-0.3.0.apk
+├── logo.svg
+├── resource.json
+├── README.md
+├── LICENSE
+├── SHA256SUMS.txt
+└── src/
+```
+
+APK 必须直接放在对应软件目录，源码可以附在同一目录。`SHA256SUMS.txt` 同时记录 APK 和 `logo.svg` 的校验值，README 提供图标文件链接。市场仓库使用对应的 `apps/<应用名>/`、`launcher/<启动器名>/` 目录；应用图标通过固定文件名发现，无须在 `resource.json` 增加图标地址字段。可参考 [Tank TV 图标](apps/tank/logo.svg)。
+
+### 图标格式与安全子集
+
+`logo.svg` 与 layout.json 的 `icon` 使用相同的静态 SVG 子集：支持 `svg`、`g`、`path`、`rect`、`circle`、`ellipse`、`line`、`polyline`、`polygon`，以及本页协议定义的坐标、路径、填充、描边、透明度和变换属性。建议输出简单路径，移除编辑器附带的元数据。不要使用脚本、事件属性、外部 URL、嵌入位图、`image`、`style`、字体、滤镜、渐变、DTD 或实体声明。
+
+固定配色直接写在 `fill`／`stroke`；需要跟随用户选择的图标颜色时使用 `currentColor`，由布局组件的 `iconColor` 控制。文件大小按 UTF-8 字节计算，不能以字符数量代替。一个最小结构示例：
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <path fill="currentColor" d="M12 12H52V52H12Z"/>
+</svg>
+```
+
+`logo.svg` 用于应用块的图标属性。`thumb.png` 用于资源目录的封面截图；启动器桌面背景仍由 `layout.json` 中 Home 页的 `background` 定义。
+
+### 市场下载、缓存与布局使用
+
+Manager **0.4.6** 起，下载市场 APK 时会读取该 APK 同目录的 `logo.svg`，按所选仓库提交验证文件并缓存；APK 的实际包名用于关联图标，应用重名不会互相替换。管理器重新打开后仍可使用已缓存图标，无须再次访问市场。
+
+布局编辑器新增应用块，或用户明确切换块的 `action` 为另一个已安装应用时，会把该应用已缓存的合法 SVG 文本写入组件 `icon`，之后可在属性面板继续编辑。打开已有布局、选择已有组件或刷新应用列表时，保留布局中已有的自定义图标。图标只改变本地草稿，仍需点击「应用到电视」保存到启动器。`action` 的应用安装、启用及可启动条件保持不变。
+
+同一目录存放多个 APK 版本时，它们共用该目录的 `logo.svg`，市场在同一卡片中展示版本下拉列表。若不同版本需要不同图标，将 APK 与各自的 `logo.svg` 放在各自版本目录，例如 `apps/example/0.3.0/example-0.3.0.apk` 与 `apps/example/0.3.0/logo.svg`；每个 APK 都只读取自己的同目录文件。当前市场会将不同目录作为不同卡片展示，因此通常应让同一应用的版本共用目录和图标。目录内不使用 `APK名.logo.svg` 或远程图标地址。
+
+历史市场资源可以没有 `logo.svg`。图标缺失、下载失败或不符合 SVG 协议时，APK 仍可正常下载和安装，布局继续使用原有图标处理。此兼容行为用于旧资源；新上架应用应随 APK 一起提供合规图标。
+
 <a id="layoutjson-规范与画面对照"></a>
 
 ## layout.json 协议规范与画面对照
