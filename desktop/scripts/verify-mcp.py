@@ -16,6 +16,8 @@ import threading
 import time
 import zipfile
 
+SMOKE_LOGO = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><path fill="#F4BB48" d="M16 16h32v32H16z"/></svg>'
+
 FAKE_ADB = r'''#!/usr/bin/env python3
 import json, os, sys, time, base64, re
 from pathlib import Path
@@ -93,6 +95,8 @@ def seed_market(root):
     source='https://gitee.com/juzisang331/pure-tv-store'
     revision='0123456789abcdef0123456789abcdef01234567'
     directory=root/'data/com.ecojust.puretv.manager/market'
+    logo=SMOKE_LOGO.encode('utf-8')
+    logo_digest=hashlib.sha1(f'blob {len(logo)}\0'.encode()+logo).hexdigest()
     items=[];paths={}
     for kind,folder,name in [('app','apps/smoke','market-smoke'),('launcher','launcher/smoke','market-launcher')]:
         filename=f'{name}-1.0.apk';item_id=f'{folder}/{filename}'
@@ -104,10 +108,16 @@ def seed_market(root):
         digest=hashlib.sha1(f'blob {len(apk)}\0'.encode()+apk).hexdigest()
         path=directory/'apks'/digest/filename
         path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(apk)
-        items.append({'id':item_id,'kind':kind,'name':name,'version':'1.0','fileName':filename,'bytes':len(apk),'blobSha':digest,'folderUrl':f'{source}/tree/{revision}/{folder}','coverUrl':None})
+        (path.parent/'logo.svg').write_bytes(logo)
+        items.append({'id':item_id,'kind':kind,'name':name,'version':'1.0','fileName':filename,'bytes':len(apk),'blobSha':digest,'folderUrl':f'{source}/tree/{revision}/{folder}','coverUrl':None,'logoUrl':f'{source}/raw/{revision}/{folder}/logo.svg','logoBlobSha':logo_digest,'logoBytes':len(logo)})
         paths[kind]=path
     catalog={'sourceUrl':source,'revision':revision,'fetchedAt':int(time.time()*1000),'stale':False,'warning':None,'items':items}
-    (directory/'catalog.json').write_text(json.dumps(catalog))
+    (directory/'catalog-v2.json').write_text(json.dumps(catalog))
+    # This fixture's APKs deliberately use a text manifest. Real binary-manifest
+    # identity/save coverage lives in app_logos.rs against all nine shipped APKs;
+    # seed the persisted identity here to exercise the running GUI/MCP read path.
+    logos=directory.parent/'application-logos';logos.mkdir(parents=True,exist_ok=True)
+    (logos/'com.ecojust.puretv.svg').write_bytes(logo)
     return catalog,paths
 
 class Client:
@@ -202,6 +212,7 @@ def main():
                 downloaded=client.call('download_market_item',{'id':app_item['id'],'revision':market['revision']})
                 assert downloaded['operation']=='download' and downloaded['installed'] is False,downloaded
                 assert downloaded['download']['item']==app_item and Path(downloaded['download']['path'])==market_paths['app'],downloaded
+                assert (market_paths['app'].parent/'logo.svg').read_text()==SMOKE_LOGO
                 progress=client.call('get_status')['marketProgress']
                 assert progress['itemId']==app_item['id'] and progress['downloaded']==app_item['bytes'],progress
                 client.call('download_market_item',{'id':app_item['id'],'revision':'a'*40},failure=True)
@@ -247,8 +258,11 @@ def main():
                 client.call('apply_launcher_layout',{'layoutJson':(root/'default-layout.json').read_text()},failure=True)
                 client.call('set_home',{'component':'com.ecojust.puretv/.MainActivity'})
                 layout=client.call('get_launcher_layout');assert layout['supported'] is True,layout
+                cached_logo=next(app for app in layout['apps'] if app['packageName']=='com.ecojust.puretv')
+                assert cached_logo['logoSvg']==SMOKE_LOGO,cached_logo
+                print('PASS: persisted application SVG reaches launcher layout through the running MCP bridge',flush=True)
                 draft=layout['layout']
-                draft['home']['users']=[{'id':'user-puretv','name':'pureTV','text':'Open pureTV','action':'com.ecojust.puretv','frame':{'x':48,'y':220,'width':200,'height':150},'visible':True,'icon':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 2h20v20H2z"/></svg>','textColor':'#FFFFFF','iconColor':'#C6DDCF','backgroundColor':'#374959'}]
+                draft['home']['users']=[{'id':'user-puretv','name':'pureTV','text':'Open pureTV','action':'com.ecojust.puretv','frame':{'x':48,'y':220,'width':200,'height':150},'visible':True,'icon':cached_logo['logoSvg'],'textColor':'#FFFFFF','iconColor':'#C6DDCF','backgroundColor':'#374959'}]
                 tampered=json.loads(json.dumps(draft));tampered['home']['system'][0]['frame']['x']+=1
                 client.call('apply_launcher_layout',{'layoutJson':json.dumps(tampered)},failure=True)
                 assert client.call('apply_launcher_layout',{'layoutJson':json.dumps(draft)})['layout']==draft
