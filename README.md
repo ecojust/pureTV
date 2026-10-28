@@ -58,6 +58,8 @@ resource/
 │   ├── circuit/       # 霓虹电路
 │   └── pixel/         # 复古像素
 └── apps/
+    ├── coast-kart/    # Coast Kart TV
+    ├── cozy-island/   # Cozy Island TV
     ├── bomb-jack/     # Mighty Bomb Jack TV
     ├── adventure-island/ # Adventure Island TV
     ├── super-mario/   # Super Mario TV

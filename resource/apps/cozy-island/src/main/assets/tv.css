@@ -1,0 +1,353 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+body {
+  font-family: "Noto Sans", "Microsoft Yahei", sans-serif;
+  background: #d7e5dc;
+  color: #4f6a60;
+}
+.app {
+  height: 100%;
+  padding: 20px 24px 12px;
+  display: flex;
+  flex-direction: column;
+}
+.main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+}
+.arena-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  border-radius: 26px;
+  background: #d0e2d7;
+  overflow: hidden;
+}
+.canvas-wrap {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px #729c8b33;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.sidebar {
+  width: 250px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+.join-card {
+  background: #faf9ec;
+  border-radius: 22px;
+  padding: 17px;
+  text-align: center;
+}
+.room-brand {
+  font-weight: 700;
+  font-size: 22px;
+  margin-bottom: 12px;
+  color: #628474;
+  letter-spacing: 1px;
+}
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #8b9c87;
+  margin-bottom: 12px;
+}
+.qr-frame {
+  width: 152px;
+  height: 152px;
+  background: #fff;
+  margin: 0 auto;
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#room-qr {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+#room-qr[hidden] {
+  display: none;
+}
+#qr-pending {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #93a08c;
+}
+h2 {
+  font-size: 17px;
+  margin: 12px 0 7px;
+}
+#scan-description {
+  white-space: pre-line;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 0;
+  color: #92a18c;
+}
+.room-address {
+  font-size: 10px;
+  word-break: break-all;
+  margin-top: 8px;
+}
+.players {
+  margin-top: 12px;
+}
+.player-card {
+  display: flex;
+  align-items: center;
+  background: #f1f4e8;
+  border-radius: 14px;
+  padding: 10px;
+  margin-bottom: 7px;
+  min-height: 54px;
+  opacity: 0.65;
+}
+.player-card.connected {
+  opacity: 1;
+  background: #fffbee;
+}
+.player-icon {
+  border-radius: 12px;
+  background: #dca28c;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 8px;
+  margin-right: 10px;
+}
+.p2 .player-icon {
+  background: #88b0c5;
+}
+.player-info {
+  min-width: 0;
+}
+.player-info strong {
+  display: block;
+  font-size: 12px;
+}
+.player-info span {
+  display: block;
+  font-size: 10px;
+  line-height: 1.4;
+  color: #8c9b87;
+  margin-top: 3px;
+}
+.menu-help {
+  white-space: pre-line;
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 4px 5px 7px;
+  color: #7d947f;
+}
+.music-button {
+  font: inherit;
+  font-size: 11px;
+  padding: 7px;
+  border: 1px solid #b4cbb8;
+  border-radius: 12px;
+  background: #e5eddd;
+  color: #69816e;
+}
+.control-legend {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 12px;
+  font-size: 10px;
+}
+.control-legend > div {
+  display: flex;
+  align-items: center;
+}
+.key-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  margin-right: 4px;
+  border: 1px solid #a7bead;
+  border-radius: 50%;
+  font-weight: bold;
+}
+.footer {
+  display: flex;
+  justify-content: space-between;
+  flex: none;
+  font-size: 10px;
+  color: #859b8a;
+  padding-top: 10px;
+}
+.loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #eaf1df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 24px;
+  text-align: center;
+}
+.loading[hidden] {
+  display: none;
+}
+.loading strong {
+  font-size: 22px;
+}
+.loading p {
+  font-size: 13px;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+@media (max-height: 700px) {
+  .app {
+    padding: 12px 16px 8px;
+  }
+  .sidebar {
+    width: 210px;
+  }
+  .arena-panel {
+    margin-right: 12px;
+  }
+  .join-card {
+    padding: 12px;
+    border-radius: 16px;
+  }
+  .room-brand {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .section-heading {
+    margin-bottom: 8px;
+    font-size: 9px;
+  }
+  .qr-frame {
+    width: 116px;
+    height: 116px;
+  }
+  .join-card h2 {
+    font-size: 14px;
+    margin: 8px 0 4px;
+  }
+  #scan-description {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+  .player-card {
+    padding: 7px;
+    min-height: 44px;
+  }
+  .players {
+    margin-top: 8px;
+  }
+  .player-icon {
+    font-size: 13px;
+    padding: 6px;
+  }
+  .menu-help {
+    font-size: 9px;
+  }
+  .control-legend {
+    margin-top: 7px;
+  }
+  .footer {
+    padding-top: 7px;
+  }
+}
+@media (max-height: 530px) {
+  .app {
+    padding: 8px;
+  }
+  .sidebar {
+    width: 170px;
+  }
+  .arena-panel {
+    margin-right: 8px;
+    border-radius: 16px;
+  }
+  .join-card {
+    padding: 9px;
+  }
+  .room-brand {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .section-heading {
+    font-size: 8px;
+  }
+  .qr-frame {
+    width: 94px;
+    height: 94px;
+    padding: 5px;
+  }
+  #scan-description {
+    display: none;
+  }
+  .join-card h2 {
+    font-size: 12px;
+  }
+  .room-address {
+    font-size: 8px;
+  }
+  .player-card {
+    min-height: 38px;
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+  .player-info strong {
+    font-size: 10px;
+  }
+  .player-info span {
+    font-size: 9px;
+  }
+  .menu-help {
+    font-size: 8px;
+    margin: 2px 2px 5px;
+  }
+  .music-button {
+    padding: 4px;
+    font-size: 9px;
+  }
+  .control-legend {
+    font-size: 8px;
+  }
+  .key-pill {
+    width: 15px;
+    height: 15px;
+  }
+  .footer {
+    font-size: 8px;
+    padding-top: 5px;
+  }
+}

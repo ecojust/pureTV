@@ -60,6 +60,8 @@ resource/
 │   ├── circuit/       # Neon circuitry
 │   └── pixel/         # Retro pixels
 └── apps/
+    ├── coast-kart/    # Coast Kart TV
+    ├── cozy-island/   # Cozy Island TV
     ├── bomb-jack/     # Mighty Bomb Jack TV
     ├── adventure-island/ # Adventure Island TV
     ├── super-mario/   # Super Mario TV
