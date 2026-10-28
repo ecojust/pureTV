@@ -23,6 +23,8 @@
 
 | 名称 | 作者 | 版本 | APK 大小 | 用途 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
+| [Adventure Island TV](apps/adventure-island/) | ecojust / 桔子桑 | 0.1.0 | 85.4 KB | 8 区域 32 关横版冒险，支持手机扫码单人或双人轮流 | <img src="apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"> |
+| [Mighty Bomb Jack TV](apps/bomb-jack/) | ecojust / 桔子桑 | 0.1.0 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |
 | [CCTV Live](apps/cctv/) | ecojust / 桔子桑 | 0.1.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
 | [HIFINi TV](apps/hifini/) | ecojust / 桔子桑 | 0.1.4 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
 | [Jackal TV](apps/jackal/) | ecojust / 桔子桑 | 0.3.0 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
@@ -30,6 +32,7 @@
 | [Magic Jewelry TV](apps/jewel/) | ecojust / 桔子桑 | 0.1.0 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
 | [Music TV](apps/music/) | ecojust / 桔子桑 | 0.1.3 | 48.8 KB | 原生电视音乐播放器 | <img src="apps/music/thumb.png" width="180" alt="Music TV 界面"> |
 | [ShortVideo TV](apps/shortvideo/) | ecojust / 桔子桑 | 0.1.1 | 32.7 KB | 遥控器短视频播放器 | <img src="apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
+| [Super Mario TV](apps/super-mario/) | ecojust / 桔子桑 | 0.1.0 | 89.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
 | [Tank TV](apps/tank/) | ecojust / 桔子桑 | 0.3.1 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
 | [Tetris TV](apps/tetris/) | ecojust / 桔子桑 | 0.1.0 | 77.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
 | [TV Bro](apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | 适配遥控器的电视浏览器，使用系统 WebView | <img src="apps/tvbro/thumb.png" width="180" alt="TV Bro 界面"> |
