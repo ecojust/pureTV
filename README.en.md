@@ -9,7 +9,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-14-f97316?style=flat-square)](resource/apps/)
+[![App count](https://img.shields.io/badge/apps-16-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
@@ -102,6 +102,8 @@ resource/
 | [Adventure Island TV](resource/apps/adventure-island/) | ecojust | 0.1.0 | 85.4 KB | 32-stage island adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"> |
 | [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust | 0.1.0 | 85.4 KB | 16-stage pyramid adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"> |
 | [CCTV Live](resource/apps/cctv/) | ecojust | 0.1.0 | 40.9 KB | Official CCTV website player with TV channel navigation | <img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"> |
+| [Coast Kart TV](resource/apps/coast-kart/) | ecojust | 0.1.0 | 89.4 KB | Original kart racing with drifting, items and split-screen LAN phone play | <img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"> |
+| [Cozy Island TV](resource/apps/cozy-island/) | ecojust | 0.1.0 | 93.4 KB | Original island life with gathering, fishing, decorating and LAN phone play | <img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"> |
 | [HIFINi TV](resource/apps/hifini/) | ecojust | 0.1.4 | 201.1 KB | HiFiNi music search, shuffle playback and rhythm animation | <img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"> |
 | [Jackal TV](resource/apps/jackal/) | ecojust | 0.3.0 | 11.95 MB | Independently rewritten six-stage jeep rescue with two LAN phone controllers | <img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"> |
 | [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Android TV client for Jellyfin media servers | <img src="docs/previews/en/app-jellyfin-tv.png" width="180" alt="Jellyfin for Android TV preview"> |
