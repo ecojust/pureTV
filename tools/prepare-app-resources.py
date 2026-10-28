@@ -59,8 +59,8 @@ apps = [
     ('webtv', 'WebTV', '电视直播与 M3U 播放器', 'webtv-controls', 'controls-render', 'com.ecojust.webtv'),
     ('hifini', 'HIFINi TV', '基于 HiFiNi 的电视音乐播放器', 'hifini-tv', 'hifini-tv', 'com.ecojust.hifinitv'),
     ('cctv', 'CCTV Live', '央视官网播放器与电视频道导航', 'cctv-live', 'cctv-live', 'com.ecojust.cctvlive'),
-    ('tank', 'Tank TV', '红白机像素风格的手机扫码合作坦克大战', 'tank-tv', 'tank-tv', 'com.ecojust.tanktv'),
-    ('jackal', 'Jackal TV', '红白机像素风格的双人吉普车营救游戏', 'jackal-tv', 'jackal-tv', 'com.ecojust.jackaltv'),
+    ('tank', 'Tank TV', '独立重写的 35 关坦克大战，支持手机扫码双人合作', 'tank-tv', 'tank-tv', 'com.ecojust.tanktv'),
+    ('jackal', 'Jackal TV', '独立重写的六关吉普车营救游戏，支持手机扫码双人合作', 'jackal-tv', 'jackal-tv', 'com.ecojust.jackaltv'),
 ]
 selected_apps = args.app or ['music', 'shortvideo', 'webtv']
 apps = [app for app in apps if app[0] in selected_apps]
@@ -86,8 +86,9 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         require(application_id is not None and application_id[1] == package_name, f'{slug}: source application ID does not match the expected package')
         version = re.search(r"versionName '([^']+)'", gradle)[1]
         code = int(re.search(r'versionCode (\d+)', gradle)[1])
-        require(bool(re.fullmatch(r'\d+\.\d+\.\d+', version)), f'{slug}: invalid application version')
-        require(identity['versionName'] == version and identity['versionCode'] == code and 0 < identity['bytes'] < 5 * 1024 * 1024, f'{slug}: artifact identity or size does not match the source build')
+        require(bool(re.fullmatch(r'\d+\.\d+\.\d+(?:-preview\.\d+)?', version)), f'{slug}: invalid application version')
+        maximum_bytes = (16 if slug == 'jackal' else 5) * 1024 * 1024
+        require(identity['versionName'] == version and identity['versionCode'] == code and 0 < identity['bytes'] < maximum_bytes, f'{slug}: artifact identity or size does not match the source build')
         aligned = temporary / (slug + '-aligned.apk')
         signed = temporary / (slug + '-signed.apk')
         subprocess.run([str(args.build_tools / 'zipalign'), '-f', '4', str(unsigned), str(aligned)], check=True)
@@ -115,8 +116,14 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
             'apk': apk.name, 'apkBytes': info['bytes'], 'sha256': info['sha256'], 'certificateSha256': info['certificateSha256'],
             'supportsLayoutJson': False, 'languages': ['zh', 'en'], 'cover': 'thumb.png',
             'coverSource': ('Actual bundled game page rendered in Chromium with Chinese locale and a simulated native room bridge; not a physical TV capture' if slug in ('tank', 'jackal') else 'Real Android idle UI rendered in Chinese by Robolectric native graphics with the bundled M3U catalog; not a physical TV capture' if slug == 'cctv' else 'Real Android UI rendered in Chinese by Robolectric native graphics with fixture content; not a physical TV capture'),
-            'license': 'MIT', 'sourceCommit': args.source_sha, 'buildRun': run_url,
+            'license': old_resource.get('license', 'MIT'), 'sourceCommit': args.source_sha, 'buildRun': run_url,
         }
+        if old_resource.get('assetNotices'):
+            resource['assetNotices'] = old_resource['assetNotices']
+        if '-preview.' in version:
+            resource['releaseChannel'] = 'preview'
+        if slug in ('tank', 'jackal'):
+            resource['romIncluded'] = False
         resource_path.write_text(json.dumps(resource, ensure_ascii=False, indent=2) + '\n')
         checksums = [apk.name, 'thumb.png', 'docs/' + doc_image + '.png', 'docs/' + doc_image + '.en.png']
         if slug in ('tank', 'jackal'):

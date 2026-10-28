@@ -2,24 +2,24 @@
 
 [中文](README.md) · [English](README.en.md)
 
-Jackal TV is being independently rewritten around the six-stage NES version of Jackal: jeep movement, prisoner rescue, helicopter extraction, weapon upgrades and six distinct boss encounters. The TV displays the game and a room QR code. One or two phones join over the local network with a left joystick, right A/B buttons, and START/SELECT controls.
+Jackal TV independently reimplements the six-stage NES version of Jackal: jeep movement, prisoner rescue, helicopter extraction, weapon upgrades and six distinct boss encounters. The TV displays the game and a room QR code. One or two phones join over the local network with a left joystick, right A/B buttons, and START/SELECT controls.
 
-**The current source is an unreleased rewrite preview.** The `0.1.0` APK below is the previously published version. Its three-stage original gameplay, controls and visuals do not represent this rewrite. This work has not replaced the APK, version number or signing record. Reference comparisons remain incomplete; the preview is not claimed to reproduce every original frame.
+The published version is **`0.2.0-preview.1`**. Install and play without importing a ROM; the unchanged package ID and signing certificate allow updating earlier versions. This preview includes the six-stage rewrite, with remaining differences in AI, some collisions, animation timing and sound. Physical-TV and frame-by-frame comparisons are incomplete.
 
-## Previously released APK
+## APK
 
 <!-- apk-resource:start -->
-[Download APK](jackal-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
+[Download APK](jackal-0.2.0-preview.1.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
 
 The APK in this directory is signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
-Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`. The previously published APK is version `0.1.0`.
+Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`. The current APK version is `0.2.0-preview.1`.
 
 ## Rewrite preview controls
 
 1. Connect the phones and TV to the same local network; the TV may use Ethernet.
-2. Open a development build and scan its room QR code. The first phone controls green P1; the second controls brown P2.
+2. Open the app and scan its room QR code. The first phone controls green P1; the second controls brown P2.
 3. Use **SELECT** on the title screen to choose one or two players, then press **START**. Connecting a second phone does not automatically change a selected single-player game.
 
 | Control | Action |
@@ -46,30 +46,31 @@ If the QR link cannot connect, check that both devices share a local network and
 
 ## Development builds and assets
 
-The logic consists of newly written JavaScript state machines. It contains no ROM loader, CPU emulator or third-party game program implementation. The six maps and event lists are data files with explicit provenance. Original visual and note material is currently used only for local reference validation; assets and permissions for formal distribution remain unresolved. Such material is not automatically covered by this project's MIT license, and the rewrite must not be described as using no extracted reference material.
+The logic consists of newly written JavaScript state machines. It contains no ROM loader, CPU emulator or third-party game program implementation. The six maps, events, images and note data retain their provenance. This preview APK includes the reference assets required to run it; the original artwork, music and designs remain credited to Konami. The MIT license for the application code does not grant a new license to that material. The app does not execute the original program, but does use extracted and transcribed reference data.
 
-The renderer requires a separately prepared `src/main/assets/art/` directory containing stage tile/sprite atlases, HUD font, sprite metadata, boss background patches and cinematic timelines. A complete playable development build cannot be produced without these assets. See the [reference notes](docs/reference.md) and [enemy/boss notes](docs/reference-enemies.md) for data origins, rights boundaries and remaining comparisons. Local reference material is not being published as an update to the existing APK.
+The renderer requires stage tile/sprite atlases, a HUD font, sprite metadata, boss background patches, cinematic timelines and note data. Installing the APK in this directory requires no additional assets. Source builds require the complete artwork directory passed through `-PjackalArtworkDir`; see the [build guide](docs/local-preview-build.md). Data origins, attribution and remaining comparisons are documented in the [reference notes](docs/reference.md), [audio notes](docs/reference-audio.md) and [enemy/boss notes](docs/reference-enemies.md).
 
 Verify logic and data from the repository root:
 
 ```sh
 node resource/apps/jackal/tools/build-levels.cjs --check
-node --test resource/apps/jackal/tests/game.test.cjs resource/apps/jackal/tests/enemies.test.cjs
+node --test resource/apps/jackal/tests/game.test.cjs resource/apps/jackal/tests/enemies.test.cjs resource/apps/jackal/tests/scenes.test.cjs
 ```
 
 After preparing the required assets, build Android:
 
 ```sh
 cd resource/launcher/puretv
-./gradlew :jackal:assembleDebug :jackal:testDebugUnitTest :jackal:lintDebug
+./gradlew :jackal:assembleDebug :jackal:testDebugUnitTest :jackal:lintDebug \
+  -PjackalArtworkDir=/absolute/path/to/artwork
 ```
 
 APKs appear under `resource/apps/jackal/build/outputs/apk/`. Android tests cover the LAN protocol, service shutdown and process exit; Node tests cover game rules. Browser tests and captures establish page behavior, not physical TV performance, phone latency or complete original-game parity. See [resource maintenance](../../../docs/resource-maintenance.md) for the release workflow.
 
-## Previous-version screenshots
+## Rewrite preview screenshots
 
-These images show the previously released pages rendered in Chromium with a simulated room connection. They are neither the new rewrite nor physical TV captures.
+These images show the actual `0.2.0-preview.1` game page running in Chromium with simulated room data. They are not physical-TV captures.
 
-![Previous-version game page](docs/jackal-tv.en.png)
+![Rewrite preview game page](docs/jackal-tv.en.png)
 
-![Previous-version phone controller](docs/controller.en.png)
+![Phone controller](docs/controller.en.png)

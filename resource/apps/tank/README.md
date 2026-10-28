@@ -1,14 +1,14 @@
 # Tank TV · 经典坦克大战
 
 <!-- apk-resource:start -->
-[下载 APK](tank-0.1.1.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
+[下载 APK](tank-0.2.0-preview.1.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
 
 此目录内 APK 使用 pureTV 发布证书签名。
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)
 
-当前源码正在独立重写 1985 年红白机《Battle City》的玩法、35 关地图与表现。上方 `0.1.1` APK 是此前发布的旧版，不包含这次重写；本分支尚未发布新 APK。
+当前发布版本为 **`0.2.0-preview.1`**，独立重写 1985 年红白机《Battle City》的玩法、35 关地图与表现。安装后即可游玩，无须导入 ROM；同包名、同签名，可覆盖此前版本。它仍是预览版，尚未完成电视实机和逐帧对照验证。
 
 新版保留电视二维码与手机局域网双人手柄，使用 256×240 原生画面和 208×208 战场。游戏规则独立编写，不加载或运行 ROM。35 关地图、每关 20 辆敌人的顺序、四种敌军、六种道具、星级升级、双人统计与 Construction 均有来源对照；AI、部分碰撞和动画时序仍需进一步逐帧核对。详细依据与局限见[规则和关卡](docs/reference.md)、[图像与声音](docs/reference-art-audio.md)。
 
@@ -31,7 +31,11 @@
 
 保护基地，清除敌军。头盔、时钟、铲子、星星、手雷和坦克是地图中拾取的六种道具；B 不再提供自定义护盾。星级影响弹速、并发炮弹与破坏钢墙的能力。玩家炮弹也会摧毁基地，命中队友会暂时冻结队友。
 
-当前目录的旧截图对应已发布版本。新版实录由 `tests/capture.mjs` 生成，发布资源时同步替换，不能用旧截图证明重写版本的效果。
+以下图片对应本次重写预览，在 Chromium 中运行实际游戏页面，并使用模拟房间数据；不是电视实机截图。
+
+![重写预览游戏页面](docs/tank-tv.png)
+
+![手机控制器](docs/controller.png)
 
 ## 局域网连接
 
@@ -57,4 +61,8 @@ cd resource/launcher/puretv
 
 APK 输出在 `resource/apps/tank/build/outputs/apk/`。Release 开启代码与资源压缩，体积上限为 5 MiB；正式资源 APK 使用 pureTV 发布证书签名。Android 测试验证房间服务及生命周期，Node 测试验证游戏规则，浏览器测试验证手机触控。
 
-设置 `TANK_UI_CAPTURE_DIR` 后运行 `tests/capture.mjs`，可导出中英文游戏页面预览。这些图片由随 APK 打包的真实页面在 Chromium 中渲染，原生桥接使用测试房间数据，不代表电视实机性能或真实手机网络时延。正式更新可使用 Android CI 的资源暂存流程，再运行 `tools/prepare-app-resources.py --app tank`；见[资源维护说明](../../../docs/resource-maintenance.md)。
+设置 `TANK_UI_CAPTURE_DIR` 后运行 `tests/capture.mjs`，可导出中英文游戏页面预览。这些图片由随 APK 打包的真实页面在 Chromium 中渲染，原生桥接使用测试房间数据，不代表电视实机性能或真实手机网络时延。此目录保留已验证的原始签名测试包，源码提交、APK 校验值及构建方式见 [resource.json](resource.json)；资源目录维护见[资源维护说明](../../../docs/resource-maintenance.md)。
+
+## 素材与许可
+
+应用独立实现使用 MIT 许可；参考图像和短音效的上游来源、许可记录与原作 Namco 署名见[图像与声音说明](docs/reference-art-audio.md)。本项目不将原作设计归为自己的创作，也不把应用代码的 MIT 许可扩展到所有第三方内容。

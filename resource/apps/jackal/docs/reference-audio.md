@@ -2,21 +2,15 @@
 
 Jackal TV uses a newly written Web Audio scheduler with pulse, triangle and deterministic noise instruments. It does **not** include recordings from another remake, original WAV/OGG files, a ROM, a 6502 interpreter, an NSF player, or a NES emulator. The melodies are transcribed from documented original note tables; they are not newly composed replacements presented as original music.
 
-## Local test data and attribution
+## Preview data and attribution
 
-The synthesizer and transcription tool live in this repository. The original-score transcription is supplied separately for the local fidelity test build at:
-
-```text
-/workspace/library-files/nes-reference/jackal/visual-data/data/audio-score.json
-```
-
-The test APK's external asset mount exposes that file as **`art/data/audio-score.json`**. It is intentionally absent from `src/main/assets/data/`. This matches the separate local original-art reference bundle. A distributable build needs appropriately licensed score data, just as it needs appropriately licensed original artwork; the synthesizer itself does not confer a license to Konami's compositions.
+The synthesizer and transcription tool live in this repository. The published `0.2.0-preview.1` APK contains its reference score at **`assets/art/data/audio-score.json`**. It is intentionally absent from loose source assets. [The preview build instructions](local-preview-build.md) restore the exact score and artwork from the checksum-verified APK for reproducible builds. The synthesizer and the extraction tool do not confer a license to Konami's compositions; the original score is not relabeled as MIT material.
 
 The primary note/timer reference is [RayofJay/NES-Jackal_Disassembly_Fully_Commented](https://github.com/RayofJay/NES-Jackal_Disassembly_Fully_Commented), commit `f6788304f7021cb50938238a66123bb1db03a9e6`, `ASM Source/Code/Bank0.ASM`. `Sound.ASM` names the sound IDs; `Bank7.ASM:3566` maps the six stages to music IDs `38, 3C, 40, 38, 3C, 40` (hexadecimal).
 
 The reference repository's MIT-0 notice applies to its disassembly and comments. Its README explicitly states: **“No claim is made to the code itself.”** Jackal's original music, sound designs and score tables remain credited to **Konami**; this project does not relabel those compositions as MIT assets. No third-party PCM audio files are copied.
 
-For matching the existing local cinematic reference playback, sound-command timestamps are read from the external `cinematics/*/timeline.json` files. Those files identify their historic reference source, `e8fc3391d5b27fcd98b82fd27984141840449708`, from [HungLo2020/Jackal](https://github.com/HungLo2020/Jackal). They have no verified asset license and remain in the same external local reference bundle. The generated score file records SHA-256 hashes of the ASM source and each supplied timeline.
+For matching the existing local cinematic reference playback, sound-command timestamps are read from the external `cinematics/*/timeline.json` files. Those files identify their historic reference source, `e8fc3391d5b27fcd98b82fd27984141840449708`, from [HungLo2020/Jackal](https://github.com/HungLo2020/Jackal). Their original attribution and licensing statements remain recorded with the preview assets. The generated score file records SHA-256 hashes of the ASM source and each supplied timeline.
 
 ## Reproducible transcription
 
