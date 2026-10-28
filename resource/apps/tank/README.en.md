@@ -41,6 +41,10 @@ These images show this rewritten version running its actual bundled game page in
 
 ![Phone controller](docs/controller.en.png)
 
+The stick stays hidden until you hold and drag on the left, appearing at the initial touch point:
+
+![Floating joystick while dragging](docs/controller-active.en.png)
+
 ## Local connections
 
 The TV app runs an HTTP and WebSocket room server on a port assigned at startup. The QR code contains the current TV address, port and random room token. Use the code currently shown by the app after each launch. Controller input is not sent to a pureTV cloud service.
