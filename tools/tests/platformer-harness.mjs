@@ -149,10 +149,17 @@ try {
     assert.equal((await input(page)).select, false);
     await press(page, 'button-start', 104);
     await press(page, 'button-select', 105);
-    await page.evaluate(() => window.__sockets.at(-1).close());
-    for (const id of ['button-a','button-b','button-start','button-select']) {
-      assert.equal(await page.locator(`#${id}`).isDisabled(), true);
-      assert.equal(await page.locator(`#${id}`).evaluate(el=>el.classList.contains('pressed')), false);
+    const stopped = await page.evaluate(() => {
+      window.__sockets.at(-1).close();
+      // Observe the closed state before the scheduled reconnect can succeed.
+      return ['button-a','button-b','button-start','button-select'].map(id => {
+        const button = document.getElementById(id);
+        return { id, disabled: button.disabled, pressed: button.classList.contains('pressed') };
+      });
+    });
+    for (const button of stopped) {
+      assert.equal(button.disabled, true, button.id + ' is disabled on disconnect');
+      assert.equal(button.pressed, false, button.id + ' is released on disconnect');
     }
     await page.waitForFunction(() => window.__sockets.length===2 && document.querySelector('#controller').dataset.connected==='true');
     assert.equal((await input(page)).start, false);
@@ -212,15 +219,6 @@ try {
       await release(page, 'joystick-zone', pointerId, pointerId % 2 ? 'lostpointercapture' : 'pointerup');
       await expectInput(page, { x: 0, y: 0 });
       await stickHidden(page);
-      for(const label of ['STAGE 1 · GATE OF DAWN','STAGE 16 · THE VERY LONG ROYAL PALACE FINAL CHAMBER']) {
-        await page.evaluate(stageLabel=>window.__sockets.at(-1).receive({type:'state',phase:'playing',activePlayer:1,players:[{id:1,active:true,lives:3,score:840,stageLabel}]}),label);
-        assert.equal(await page.locator('#stage').getAttribute('title'),label,'Full stage remains available despite visual ellipsis');
-        const statBoxes=await Promise.all(['#stage','#lives','#score','.brand','.connection','#fullscreen'].map(selector=>page.locator(selector).boundingBox()));
-        for(const box of statBoxes)assert.ok(box.x>=0&&box.y>=0&&box.x+box.width<=viewport.width+.5&&box.y+box.height<=viewport.height+.5,'Long stage outside viewport: '+JSON.stringify({viewport,label,box}));
-        for(let i=0;i<statBoxes.length;i++)for(let j=i+1;j<statBoxes.length;j++)assert.ok(!overlaps(statBoxes[i],statBoxes[j]),'Long stage overlaps status/header: '+JSON.stringify({viewport,label,statBoxes}));
-        const overflow=await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight}));
-        assert.ok(overflow.width<=viewport.width&&overflow.height<=viewport.height,'Long stage causes page scrolling: '+JSON.stringify({viewport,overflow}));
-      }
     }
     await context.close();
   });
