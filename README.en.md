@@ -9,7 +9,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-11-f97316?style=flat-square)](resource/apps/)
+[![App count](https://img.shields.io/badge/apps-14-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
@@ -60,6 +60,9 @@ resource/
 │   ├── circuit/       # Neon circuitry
 │   └── pixel/         # Retro pixels
 └── apps/
+    ├── bomb-jack/     # Mighty Bomb Jack TV
+    ├── adventure-island/ # Adventure Island TV
+    ├── super-mario/   # Super Mario TV
     ├── cctv/          # CCTV Live source, APK, and logo.svg
     ├── hifini/        # HIFINi TV
     ├── jackal/        # Jackal TV
@@ -94,6 +97,8 @@ resource/
 
 | Name | Author | Version | APK size | Purpose | Preview |
 | --- | --- | --- | --- | --- | --- |
+| [Adventure Island TV](resource/apps/adventure-island/) | ecojust | 0.1.0 | 85.4 KB | 32-stage island adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"> |
+| [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust | 0.1.0 | 85.4 KB | 16-stage pyramid adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"> |
 | [CCTV Live](resource/apps/cctv/) | ecojust | 0.1.0 | 40.9 KB | Official CCTV website player with TV channel navigation | <img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"> |
 | [HIFINi TV](resource/apps/hifini/) | ecojust | 0.1.4 | 201.1 KB | HiFiNi music search, shuffle playback and rhythm animation | <img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"> |
 | [Jackal TV](resource/apps/jackal/) | ecojust | 0.3.0 | 11.95 MB | Independently rewritten six-stage jeep rescue with two LAN phone controllers | <img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"> |
@@ -101,6 +106,7 @@ resource/
 | [Magic Jewelry TV](resource/apps/jewel/) | ecojust | 0.1.0 | 81.4 KB | Classic three-gem chain matching with one or two LAN phone controllers | <img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"> |
 | [Music TV](resource/apps/music/) | ecojust | 0.1.3 | 48.8 KB | Native TV music player | <img src="docs/previews/en/app-music.png" width="180" alt="Music TV preview"> |
 | [ShortVideo TV](resource/apps/shortvideo/) | ecojust | 0.1.1 | 32.7 KB | Short video player with remote control support | <img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"> |
+| [Super Mario TV](resource/apps/super-mario/) | ecojust | 0.1.0 | 89.4 KB | 32-course platform adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"> |
 | [Tank TV](resource/apps/tank/) | ecojust | 0.3.1 | 258.3 KB | Independently rewritten 35-stage tank defense with two LAN phone controllers | <img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"> |
 | [Tetris TV](resource/apps/tetris/) | ecojust | 0.1.0 | 77.4 KB | Classic falling-block puzzle with one or two LAN phone controllers | <img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"> |
 | [TV Bro](resource/apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | TV browser with remote control support, using the system WebView | <img src="docs/previews/en/app-tvbro.png" width="180" alt="TV Bro preview"> |

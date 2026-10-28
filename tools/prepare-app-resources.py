@@ -17,7 +17,7 @@ parser.add_argument('--stage-branch', required=True)
 parser.add_argument('--source-sha', required=True)
 parser.add_argument('--build-tools', required=True, type=Path)
 parser.add_argument('--skip-index', action='store_true', help='Defer resource index regeneration until the batch is complete')
-parser.add_argument('--app', action='append', choices=['music', 'shortvideo', 'webtv', 'hifini', 'cctv', 'tank', 'jackal', 'jewel', 'tetris'], help='Update only this app; repeat to select several (default: music, shortvideo, webtv)')
+parser.add_argument('--app', action='append', choices=['music', 'shortvideo', 'webtv', 'hifini', 'cctv', 'tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario'], help='Update only this app; repeat to select several (default: music, shortvideo, webtv)')
 args = parser.parse_args()
 if not re.fullmatch(r'build-assets/resources-\d+', args.stage_branch) or not re.fullmatch(r'[a-f0-9]{40}', args.source_sha):
     parser.error('Expected a build-assets/resources-RUN_ID branch and a complete source SHA')
@@ -53,7 +53,7 @@ require(metadata['sourceSha'] == args.source_sha, 'Staged metadata does not matc
 expected = (root / 'tools/puretv-release-certificate.sha256').read_text().strip()
 key = os.environ['PURETV_KEYSTORE_PATH']
 require(bool(os.environ.get('PURETV_KEYSTORE_PASSWORD')), 'PURETV_KEYSTORE_PASSWORD is required')
-GAMES = ('tank', 'jackal', 'jewel', 'tetris')
+GAMES = ('tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario')
 apps = [
     ('music', 'Music TV', '原生电视音乐播放器', 'music-tv', 'music-tv', 'com.ecojust.music'),
     ('shortvideo', 'ShortVideo TV', '遥控器短视频播放器', 'shortvideo-tv', 'controls-preview', 'com.ecojust.shortvideo'),
@@ -64,6 +64,9 @@ apps = [
     ('jackal', 'Jackal TV', '独立重写的六关吉普车营救游戏，支持手机扫码双人合作', 'jackal-tv', 'jackal-tv', 'com.ecojust.jackaltv'),
     ('jewel', 'Magic Jewelry TV', '经典三宝石连锁消除，支持手机扫码单人或双人比拼', 'jewel-tv', 'jewel-tv', 'com.ecojust.jeweltv'),
     ('tetris', 'Tetris TV', '经典俄罗斯方块，支持手机扫码单人或双人比拼', 'tetris-tv', 'tetris-tv', 'com.ecojust.tetristv'),
+    ('bomb-jack', 'Mighty Bomb Jack TV', '16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流', 'bomb-jack-tv', 'bomb-jack-tv', 'com.ecojust.bombjacktv'),
+    ('adventure-island', 'Adventure Island TV', '8 区域 32 关横版冒险，支持手机扫码单人或双人轮流', 'adventure-island-tv', 'adventure-island-tv', 'com.ecojust.adventureislandtv'),
+    ('super-mario', 'Super Mario TV', '8 世界 32 关平台冒险，支持手机扫码单人或双人轮流', 'super-mario-tv', 'super-mario-tv', 'com.ecojust.supermariotv'),
 ]
 selected_apps = args.app or ['music', 'shortvideo', 'webtv']
 apps = [app for app in apps if app[0] in selected_apps]

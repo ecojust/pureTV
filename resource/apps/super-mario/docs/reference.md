@@ -1,0 +1,78 @@
+# Super Mario TV: reference and reconstruction notes
+
+This is an independently implemented, first-game **Super Mario Bros. (1985)** inspired platform game. It does not run a ROM and does not contain an extracted program, level dump, sprite sheet, sound recording or original soundtrack. It is not Super Mario Bros. 3. Names identify the gameplay reference; this is an unofficial project.
+
+The 32 courses are **independently reconstructed routes, not the original ROM's exact tile coordinates**. Their layouts, movement parameters, enemy timing, graphics and music are not claimed to be pixel-, frame- or cycle-identical to the commercial game.
+
+## References checked
+
+- [Super Mario Bros. — Super Mario Wiki](https://www.mariowiki.com/Super_Mario_Bros.) — checked 2026-10-28 for the eight-world/four-course structure, world themes, power-ups, running/jumping, flagpole scoring, castle axe and alternating Mario/Luigi turns after a lost life.
+- [Super Mario Bros. — Wikipedia](https://en.wikipedia.org/wiki/Super_Mario_Bros.) — background reference for the original 1985 game, rather than later Super Mario titles.
+
+References describe observable rules. No code, tile map, ROM or artwork was copied from them.
+
+## Implemented rules
+
+- A 256 × 240 game view with a fixed score/coins/world/time strip and horizontally scrolling world. Physics advances at a fixed 60.0988 steps per second; display refresh does not change movement speed.
+- Left/right acceleration and inertia; B raises the movement cap from 1.75 to 3.1 pixels per physics step. A begins a jump, and keeping A held while rising produces a higher arc. Water uses repeated A swimming strokes and slower horizontal movement.
+- Small, Super and Fire forms. Mushrooms increase size; a power block yields a flower when the player is already large. A flower collected by a small player first produces Super form. Damage returns a large character to small form with brief invulnerability. Stars grant temporary invulnerability; green mushrooms grant a life.
+- Head collisions open question blocks, collect their coins or release items. A large character breaks bricks. Collecting 100 coins grants an extra life. Collectible coins, item pickups, defeated enemies, flag height and remaining time contribute to score.
+- Goombas, green/red Koopas, Buzzy Beetles, Piranha Plants, fish, Bloopers, Hammer Bros., fire bars and castle bosses. Stomps, stationary/moving shells, fireballs and star collisions have separate behavior. Red Koopas turn at ledges. Buzzy Beetles resist fireballs. A boss takes five fireball hits, or can be defeated by the bridge axe.
+- Only the active player's inputs move the character or pause the game. In two-player mode, losing a life passes the turn; each player retains their own stage, lives, score and checkpoint. Reconnecting the active controller resumes an automatic disconnect pause, but does not cancel a manual pause.
+- Supported pipes lead to a separate coin room, then return to the same course. Non-castle courses end at a flagpole; castles end at a bridge axe. The real stage-clear transition advances through all 32 courses, and 8-4 leads to an ending screen.
+- Timer expiry and falling cost lives. Checkpoint respawn chooses clear, supported ground so a saved position on a pipe or stair cannot trap the returning character.
+- Highest score and music preference persist locally. Current run progress does not persist across application exit.
+
+A and B retain their gameplay roles. SELECT changes the player count on the title screen and toggles music while paused. A separate TV button also controls music. START starts/pauses/resumes. Music uses newly composed short synthesized themes and effects; it does not reproduce the original soundtrack.
+
+## Course sequence
+
+Each entry is generated from its own explicit course recipe: width, pit positions and widths, pipe positions, staircase positions and theme-specific details. The recipes are not a single course repeated with a new palette. Enemy and obstacle density increases through later worlds.
+
+| World | First course                                           | Second course                                          | Third course                                | Fourth course                              |
+| ----- | ------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------- | ------------------------------------------ |
+| 1     | Ground: introductory question blocks, pipes and stairs | Underground: ceiling, brick structures and a coin room | Treetops: raised platforms and moving lifts | Castle: lava, fire bars, boss bridge       |
+| 2     | Ground: longer pipe/gap combinations                   | Underwater: swimming, coral, fish and Bloopers         | Treetops: wider gaps                        | Castle: altered platforms and lava spacing |
+| 3     | Night ground                                           | Night ground with another route                        | Treetops with overhead landing choices      | Castle with four-tile lava gaps            |
+| 4     | Ground: more frequent obstacles                        | Underground: a new pipe/stair route                    | Treetops with late staircase                | Castle: new fire-bar and gap placement     |
+| 5     | Ground with denser enemy patterns                      | Ground with offset pipe and gap sequence               | Treetops with longer progression            | Castle with a longer approach              |
+| 6     | Night ground                                           | Night ground with separate route                       | Treetops with alternate lift timing         | Castle with longer fire bars               |
+| 7     | Ground with later-game enemies                         | Underwater with a longer route                         | Bridge/platform route                       | Castle with later-game obstacle spacing    |
+| 8     | Long ground course                                     | Ground with separated staircase sections               | Ground with late-game enemies and gaps      | Final castle and ending                    |
+
+The first course deliberately presents familiar opening landmarks: the lone question block, a short brick/question group, and successive pipes. The complete map is still independently laid out.
+
+## Scope differences from the original
+
+This release covers the central platforming loop and a full eight-world progression, rather than every original behavior. It does not reproduce exact original map coordinates, warp-zone destinations, vine/cloud bonuses, maze-repetition castle routing, Lakitu or Bullet Bill sequences, every enemy animation, the precise original timing/scoring tables, ROM glitches, or a second harder quest. Underwater and underground exits are simplified into this game's course/flag progression. Castle bosses share one independently implemented boss behavior; original impostor reveal variations are not recreated.
+
+Crouching changes the large character's pose and movement, but does not implement the original low-ceiling crouch-slide collision technique. None of the reconstructed required routes depend on it. The introductory world banner does not block controller input.
+
+## Code and asset boundaries
+
+| File                                | Responsibility                                                                                 |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `src/main/assets/game-model.js`     | Fixed-step rules, collision, 32 explicit course recipes, items, enemies, turns and progression |
+| `src/main/assets/renderer.js`       | Self-drawn pixel sprites, tile textures, backgrounds, HUD, title and ending                    |
+| `src/main/assets/audio.js`          | Original synthesized effects and short melodies; bounded voices and explicit cleanup           |
+| `src/main/assets/runtime.js`        | Native room snapshots, keyboard mapping, player status, visibility/exit cleanup                |
+| `src/main/assets/bootstrap.js`      | Visible startup errors, including failed script loads                                          |
+| `src/main/assets/game.js`           | Game construction and local score/music preferences                                            |
+| `src/main/assets/tv.html`, `tv.css` | TV layout and bilingual room sidebar                                                           |
+| `logo.svg`                          | Self-drawn 64 × 64 static SVG; reusable by the manager/launcher                                |
+
+`MarioHost` is the Android bridge. `MarioTV.game.status()` reports `phase`, a one-based `stage`, `stageLabel`, a one-based `activePlayer`, and the two players' own lives, score, stage and active-turn flags. Only the current player has a moving world actor. `MarioTV.game.player()` returns that actor for rendering and diagnostics. Normal lifecycle methods such as `loseLife()` and `finishStage()` are also used by explicitly identified lifecycle test fixtures; they are not hidden game cheats.
+
+## Verification boundaries
+
+Run:
+
+```sh
+node --test resource/apps/super-mario/tests/model.test.cjs
+```
+
+The 21 model tests cover motion, variable jump height, head collisions, items, coins/lives, damage, stomps, shells, fireballs, boss hits, pipe travel, swimming, player turns, disconnects, timer/game over, checkpoints, distinct geometry, fixed-step behavior, music persistence and progression.
+
+The full-course traversal test starts normally and reaches **all 32 real flag/axe exits in sequence using controller input**. It does not teleport, edit terrain, grant flight, force a stage clear or skip transitions. Enemies are deliberately removed in that particular test to isolate geometric reachability; it is not evidence of an unassisted enemy-complete run. A separate first-course smoke test keeps all real enemies enabled and reaches its flag using normal input without losing a life. Focused enemy collision tests cover the remaining combat mechanics.
+
+Browser/compatibility tests exercise the real bundled TV/controller pages, room-state updates, simultaneous phone controls, alternating turns, startup errors and audio cleanup. Those captures use a simulated native bridge and are not physical television screenshots. Physical-TV performance, real phone Wi-Fi latency and an unassisted 32-course playthrough remain outside the automated verification claim.
