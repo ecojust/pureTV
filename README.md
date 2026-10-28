@@ -58,6 +58,9 @@ resource/
 │   ├── circuit/       # 霓虹电路
 │   └── pixel/         # 复古像素
 └── apps/
+    ├── bomb-jack/     # Mighty Bomb Jack TV
+    ├── adventure-island/ # Adventure Island TV
+    ├── super-mario/   # Super Mario TV
     ├── cctv/          # CCTV Live 源码、APK 与 logo.svg
     ├── hifini/        # HIFINi TV
     ├── jackal/        # Jackal TV

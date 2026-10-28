@@ -60,6 +60,9 @@ resource/
 │   ├── circuit/       # Neon circuitry
 │   └── pixel/         # Retro pixels
 └── apps/
+    ├── bomb-jack/     # Mighty Bomb Jack TV
+    ├── adventure-island/ # Adventure Island TV
+    ├── super-mario/   # Super Mario TV
     ├── cctv/          # CCTV Live source, APK, and logo.svg
     ├── hifini/        # HIFINi TV
     ├── jackal/        # Jackal TV
