@@ -1,0 +1,66 @@
+# 钻石方块 TV
+
+[中文](README.md) · [English](README.en.md)
+
+独立重写经典红白机《Magic Jewelry》：三颗宝石成列下落，在 6×13 棋盘上横、竖、斜三个及以上同色连线消除，支持重力连锁和魔法列。
+
+当前版本 **0.1.0**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.jeweltv`。电视显示棋盘与房间二维码，手机扫码作为手柄；不需要导入 ROM。
+
+<!-- apk-resource:start -->
+[下载 APK](jewel-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+
+此目录内 APK 使用 pureTV 发布证书签名。
+<!-- apk-resource:end -->
+
+## 开始游玩
+
+1. 将手机和电视连接同一局域网，在电视上打开游戏。
+2. 手机浏览器扫描电视二维码；单人一部手机，双人分别扫描加入。
+3. 在标题画面按 SELECT 选择人数，按 START 开始。双人模式需要两名玩家都连接。
+4. 左侧摇杆默认隐藏，按下的位置就是本次中心；拖动控制，松开停止并隐藏。
+
+| 控件 | 功能 |
+| --- | --- |
+| 左侧浮动摇杆 | 左右移动，下拉软降；松手停止 |
+| A / B | 同向循环三颗宝石的顺序 |
+| SELECT + A / B | 交换当前列最上与最下的宝石 |
+| SELECT | 标题画面切换单／双人；暂停时开关音乐 |
+| START | 开始、暂停／继续 |
+| 电视返回键 | 退出确认 |
+
+每消除 70 颗宝石会升级并奖励魔法列，接触普通宝石后清除棋盘上该颜色的宝石。两名玩家使用相同的宝石序列，分别消除、计分，不向对方投放障碍。双人比拼是新增的局域网玩法。
+
+最高分保存在电视本机，覆盖更新可保留；卸载会清除应用数据。
+
+## 画面
+
+以下截图由实际游戏页面在 Chromium 中渲染，使用模拟房间连接；不是电视实机截图。
+
+![游戏画面](docs/jewel-tv.png)
+
+![手机控制器：默认隐藏摇杆](docs/controller.png)
+
+![手机控制器：拖动时显示摇杆](docs/controller-active.png)
+
+## 房间与退出
+
+最多两部手机通过本地 HTTP/WebSocket 房间连接。二维码包含本次启动的端口与随机房间令牌，不经过云端中转。手机切到后台、触控中断或断线会释放按键；参与游戏的玩家断线时暂停棋盘，重连后恢复。
+
+按电视 Home 离开会关闭房间；确认退出会关闭端口与服务线程、断开手机、销毁 WebView 和音频并结束应用进程。重新打开后请扫描新的二维码。
+
+## 构建与验证
+
+```sh
+# 仓库根目录
+node --test resource/apps/jewel/tests/*.test.cjs
+node resource/apps/jewel/tests/controller.mjs
+node resource/apps/jewel/tests/compatibility.mjs
+node resource/apps/jewel/tests/capture.mjs
+
+cd resource/launcher/puretv
+./gradlew :jewel:assembleRelease :jewel:testDebugUnitTest :jewel:lintDebug :jewel:verifyReleaseSize
+```
+
+浏览器测试需要 desktop 的 npm 依赖及 Chromium，可用 `CHROMIUM_PATH` 指定浏览器。Gradle 默认生成未签名 release APK，公开目录中的安装包使用 pureTV 发布证书签名。
+
+玩法依据与独立实现的差异见[参考说明](docs/reference.md)。画面、图标、音效和 8-bit 配乐由项目独立制作，不包含原作 ROM、图像提取或原声音轨；项目自写代码与素材使用 [MIT](LICENSE)。尚未完成电视／手机实机及逐帧对照验证。

@@ -36,6 +36,8 @@ jobs:
         run: |
           node resource/apps/jackal/tools/build-levels.cjs --check
           node --test resource/apps/jackal/tests/game.test.cjs resource/apps/jackal/tests/enemies.test.cjs resource/apps/jackal/tests/scenes.test.cjs
+      - name: Verify classic puzzle game rules
+        run: node --test resource/apps/jewel/tests/*.test.cjs resource/apps/tetris/tests/*.test.cjs
       - name: Prepare verified Jackal preview artwork
         run: |
           python resource/apps/jackal/tools/extract-artwork.py --output "$RUNNER_TEMP/puretv-jackal-art"
@@ -76,6 +78,20 @@ jobs:
           node resource/apps/jackal/tests/compatibility.mjs
           node resource/apps/jackal/tests/controller.mjs
           node resource/apps/jackal/tests/capture.mjs
+      - name: Verify Magic Jewelry TV controls, compatibility and game UI
+        env:
+          JEWEL_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-jewel-previews
+        run: |
+          node resource/apps/jewel/tests/compatibility.mjs
+          node resource/apps/jewel/tests/controller.mjs
+          node resource/apps/jewel/tests/capture.mjs
+      - name: Verify Tetris TV controls, compatibility and game UI
+        env:
+          TETRIS_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tetris-previews
+        run: |
+          node resource/apps/tetris/tests/compatibility.mjs
+          node resource/apps/tetris/tests/controller.mjs
+          node resource/apps/tetris/tests/capture.mjs
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools
@@ -109,7 +125,7 @@ jobs:
         working-directory: resource/launcher/puretv
         run: |
           set -o pipefail
-          ./gradlew --no-daemon --continue "-PjackalArtworkDir=$JACKAL_ART_DIR" assembleDebug assembleRelease lintDebug testDebugUnitTest :music:verifyReleaseSize :music:lintDebug :music:testDebugUnitTest :hifini:verifyReleaseSize :hifini:lintDebug :hifini:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest :cctv:verifyReleaseSize :cctv:lintDebug :cctv:testDebugUnitTest :tank:verifyReleaseSize :tank:lintDebug :tank:testDebugUnitTest :jackal:verifyReleaseSize :jackal:lintDebug :jackal:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/android-build.log"
+          ./gradlew --no-daemon --continue "-PjackalArtworkDir=$JACKAL_ART_DIR" assembleDebug assembleRelease lintDebug testDebugUnitTest :music:verifyReleaseSize :music:lintDebug :music:testDebugUnitTest :hifini:verifyReleaseSize :hifini:lintDebug :hifini:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest :cctv:verifyReleaseSize :cctv:lintDebug :cctv:testDebugUnitTest :tank:verifyReleaseSize :tank:lintDebug :tank:testDebugUnitTest :jackal:verifyReleaseSize :jackal:lintDebug :jackal:testDebugUnitTest :jewel:verifyReleaseSize :tetris:verifyReleaseSize 2>&1 | tee "$RUNNER_TEMP/android-build.log"
       - name: Report Android build or test failures
         if: failure()
         run: |
@@ -213,6 +229,26 @@ jobs:
           name: jackal-tv
           path: resource/apps/jackal/build/outputs/apk/**/*.apk
           if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jewel-tv-previews
+          path: ${{ runner.temp }}/puretv-jewel-previews/*.png
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jewel-tv
+          path: resource/apps/jewel/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tetris-tv-previews
+          path: ${{ runner.temp }}/puretv-tetris-previews/*.png
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tetris-tv
+          path: resource/apps/tetris/build/outputs/apk/**/*.apk
+          if-no-files-found: error
 
   stage-resources:
     name: Stage verified launcher and app resource inputs
@@ -236,13 +272,18 @@ jobs:
           assert info['sourceSha']==os.environ['GITHUB_SHA']
           apk=root/'pureTV-release'/info['releaseName'];assert hashlib.file_digest(apk.open('rb'),'sha256').hexdigest()==info['sha256']
           shutil.copyfile(apk,output/info['releaseName']);shutil.copyfile(root/'pureTV-release-metadata/release-metadata.json',output/'release-metadata.json')
-          for app in ['music','hifini','shortvideo','webtv','cctv','tank','jackal']:
-              apks=list((root/({'music':'music-tv','hifini':'hifini-tv','shortvideo':'shortvideo-tv','webtv':'webtv','cctv':'cctv-tv','tank':'tank-tv','jackal':'jackal-tv'}[app])).rglob('*.apk'))
+          for app in ['music','hifini','shortvideo','webtv','cctv','tank','jackal','jewel','tetris']:
+              apks=list((root/({'music':'music-tv','hifini':'hifini-tv','shortvideo':'shortvideo-tv','webtv':'webtv','cctv':'cctv-tv','tank':'tank-tv','jackal':'jackal-tv','jewel':'jewel-tv','tetris':'tetris-tv'}[app])).rglob('*.apk'))
               apks=[p for p in apks if 'release' in p.name]
               assert len(apks)==1,apks
               shutil.copyfile(apks[0],output/(app+'.apk'))
-          for artifact,names in [('music-tv-previews',['music-tv.png','music-tv.en.png']),('hifini-tv-previews',['hifini-tv.png','hifini-tv.en.png']),('shortvideo-tv-previews',['shortvideo-tv.png','shortvideo-tv.en.png']),('webtv-previews',['webtv-controls.png','webtv-controls.en.png']),('cctv-tv-previews',['cctv-live.png','cctv-live.en.png']),('tank-tv-previews',['tank-tv.png','tank-tv.en.png','tank-controller.png','tank-controller.en.png']),('jackal-tv-previews',['jackal-tv.png','jackal-tv.en.png','jackal-controller.png','jackal-controller.en.png'])]:
+          for artifact,names in [('music-tv-previews',['music-tv.png','music-tv.en.png']),('hifini-tv-previews',['hifini-tv.png','hifini-tv.en.png']),('shortvideo-tv-previews',['shortvideo-tv.png','shortvideo-tv.en.png']),('webtv-previews',['webtv-controls.png','webtv-controls.en.png']),('cctv-tv-previews',['cctv-live.png','cctv-live.en.png'])]:
               for name in names:shutil.copyfile(root/artifact/name,output/name)
+          for game in ['tank','jackal','jewel','tetris']:
+              for scene in ['tv','controller','controller-active']:
+                  for language in ['', '.en']:
+                      name=game+'-'+scene+language+'.png'
+                      shutil.copyfile(root/(game+'-tv-previews')/name,output/name)
           for name in ['home-render.png','apps-render.png','home-render.en.png','apps-render.en.png']:
               shutil.copyfile(root/'pureTV-tv-previews'/name,output/name)
           PYTHON
