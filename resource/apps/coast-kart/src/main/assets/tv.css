@@ -1,0 +1,415 @@
+:root {
+  color-scheme: dark;
+  font-family: Arial, "Noto Sans", sans-serif;
+  color: #e9f4ef;
+  background: #102638;
+  --p1: #ffbd91;
+  --p2: #82e9d0;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  background: radial-gradient(ellipse at 25% 30%, #244e62 0%, #102638 75%);
+}
+[hidden] {
+  display: none !important;
+}
+.app {
+  height: 100vh;
+  width: 100%;
+  max-width: 1920px;
+  margin: auto;
+  padding: 24px 32px 14px;
+  display: flex;
+  flex-direction: column;
+}
+.main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.arena-panel {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.canvas-wrap {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #193d51;
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.24);
+}
+canvas {
+  display: block;
+}
+.sidebar {
+  width: 218px;
+  flex: none;
+  align-self: center;
+  margin-left: 28px;
+}
+.sidebar > * + * {
+  margin-top: 18px;
+}
+.room-brand {
+  text-align: center;
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: 0.4px;
+  margin-bottom: 18px;
+  color: #fff1d9;
+}
+.room-brand span {
+  font-size: 12px;
+  color: #82e9d0;
+}
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #a5c2c7;
+  margin-bottom: 10px;
+}
+.qr-frame {
+  width: 168px;
+  height: 168px;
+  padding: 10px;
+  margin: auto;
+  background: #fff9ed;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.qr-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+#qr-pending {
+  color: #375463;
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.7;
+}
+.join-card h2 {
+  font-size: 16px;
+  text-align: center;
+  margin: 12px 0 7px;
+}
+.join-card p {
+  margin: 0;
+  text-align: center;
+  white-space: pre-line;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #a8c5c9;
+}
+.room-address {
+  text-align: center;
+  font: 10px/1.4 monospace;
+  word-break: break-all;
+  color: #7fb4bc;
+  margin-top: 7px;
+}
+.player-card {
+  display: flex;
+  padding: 9px 11px;
+  border: 1px solid #375361;
+  border-radius: 11px;
+  align-items: center;
+}
+.players > * + * {
+  margin-top: 9px;
+}
+.player-icon {
+  font-size: 23px;
+  font-weight: 800;
+  width: 39px;
+  flex: none;
+  color: var(--p1);
+}
+.p2 .player-icon {
+  color: var(--p2);
+}
+.player-info {
+  min-width: 0;
+}
+.player-info strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #daece7;
+  margin-bottom: 3px;
+}
+.player-info > span {
+  display: block;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #8eabb4;
+}
+.player-card.connected {
+  background: rgba(127, 219, 197, 0.07);
+  border-color: #638d8a;
+}
+.player-card.connected .player-info > span {
+  color: var(--p1);
+}
+.p2.connected .player-info > span {
+  color: var(--p2);
+}
+.menu-help {
+  white-space: pre-line;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #bdcfce;
+  margin-bottom: 0;
+}
+.music-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 7px 20px;
+  background: #284c5c;
+  border: 1px solid #6e9b9d;
+  border-radius: 16px;
+  color: #d1f5e7;
+  font: 600 11px Arial;
+  cursor: pointer;
+}
+.music-button:focus {
+  outline: 2px solid #ffdb9f;
+  outline-offset: 3px;
+}
+.control-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #c3dddc;
+}
+.control-legend > div {
+  display: flex;
+  align-items: center;
+}
+.control-legend > div > * + * {
+  margin-left: 5px;
+}
+.key-pill {
+  display: inline-flex;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  border: 1px solid #85bab8;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff2d5;
+}
+.legend-stick {
+  font-size: 22px;
+}
+.footer {
+  display: flex;
+  justify-content: space-between;
+  flex: none;
+  margin-top: 12px;
+  font-size: 10px;
+  color: #779eab;
+  line-height: 1.4;
+}
+.loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #183b50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 24px;
+  word-break: break-word;
+}
+.loading strong {
+  font-size: 23px;
+  color: #ffe6b4;
+}
+.loading p {
+  max-width: 100%;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #b9d8da;
+}
+@media (min-width: 1600px) {
+  .app {
+    padding: 34px 42px 20px;
+  }
+  .sidebar {
+    width: 270px;
+    margin-left: 36px;
+  }
+  .sidebar > * + * {
+    margin-top: 23px;
+  }
+  .room-brand {
+    font-size: 31px;
+  }
+  .qr-frame {
+    width: 200px;
+    height: 200px;
+  }
+  .join-card h2 {
+    font-size: 19px;
+  }
+  .join-card p,
+  .menu-help {
+    font-size: 13px;
+  }
+  .player-info strong {
+    font-size: 14px;
+  }
+  .player-info > span {
+    font-size: 12px;
+  }
+  .player-icon {
+    font-size: 27px;
+    width: 46px;
+  }
+  .footer,
+  .control-legend {
+    font-size: 12px;
+  }
+  .section-heading {
+    font-size: 11px;
+  }
+}
+@media (max-height: 700px) {
+  .app {
+    padding: 18px 22px 12px;
+  }
+  .sidebar {
+    width: 194px;
+    margin-left: 22px;
+  }
+  .sidebar > * + * {
+    margin-top: 12px;
+  }
+  .room-brand {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  .qr-frame {
+    width: 134px;
+    height: 134px;
+    padding: 8px;
+  }
+  .join-card h2 {
+    font-size: 13px;
+    margin: 9px 0 6px;
+  }
+  .join-card p,
+  .menu-help {
+    font-size: 10px;
+    line-height: 1.45;
+  }
+  .player-card {
+    padding: 7px 9px;
+  }
+  .music-button {
+    padding: 6px 16px;
+  }
+  .footer {
+    font-size: 9px;
+    margin-top: 9px;
+  }
+}
+@media (max-height: 600px) {
+  .app {
+    padding: 12px 14px 9px;
+  }
+  .sidebar {
+    width: 166px;
+    margin-left: 14px;
+  }
+  .sidebar > * + * {
+    margin-top: 9px;
+  }
+  .room-brand {
+    font-size: 18px;
+    margin-bottom: 9px;
+  }
+  .section-heading {
+    font-size: 8px;
+    margin-bottom: 7px;
+  }
+  .qr-frame {
+    width: 110px;
+    height: 110px;
+    padding: 7px;
+    border-radius: 8px;
+  }
+  .join-card h2 {
+    font-size: 11px;
+    margin: 7px 0 4px;
+  }
+  .join-card p,
+  .menu-help {
+    font-size: 9px;
+    line-height: 1.4;
+  }
+  .room-address {
+    font-size: 8px;
+    margin-top: 5px;
+  }
+  .player-card {
+    padding: 5px 7px;
+  }
+  .player-icon {
+    font-size: 18px;
+    width: 31px;
+  }
+  .player-info strong {
+    font-size: 9px;
+    margin-bottom: 2px;
+  }
+  .player-info > span {
+    font-size: 8px;
+  }
+  .players > * + * {
+    margin-top: 6px;
+  }
+  .music-button {
+    font-size: 9px;
+    padding: 5px 14px;
+  }
+  .control-legend {
+    font-size: 8px;
+  }
+  .key-pill {
+    width: 17px;
+    height: 17px;
+  }
+  .footer {
+    font-size: 8px;
+  }
+  .canvas-wrap {
+    border-radius: 9px;
+  }
+}
