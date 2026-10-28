@@ -1,7 +1,7 @@
 # CCTV Live
 
 <!-- apk-resource:start -->
-[Download APK](cctv-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
+[Download APK](cctv-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
 The APK in this directory is signed with the pureTV release certificate.
 <!-- apk-resource:end -->

@@ -2,9 +2,9 @@ import {t,ui} from './i18n';
 import {unavailableLayoutApps} from './layout-apps';
 import {prepareSvg,SvgError} from './svg';
 import {validUnified,defaultSvg,systemUnchanged,textColor,iconColor} from './unified-layout';
-import type {UnifiedLayout,UnifiedComponent} from './types';
+import type {UnifiedLayout,UnifiedComponent,LauncherLayoutApp} from './types';
 const esc=(v:unknown)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
-type Options={json:()=>string;baseline:()=>unknown;write:(text:string)=>void;render:()=>void;busy:()=>boolean;apps:()=>{packageName:string;label:string}[];notice:(message:string)=>void;close:()=>void;apply:()=>void;refresh:()=>void;reset:()=>void;import:()=>void};
+type Options={json:()=>string;baseline:()=>unknown;write:(text:string)=>void;render:()=>void;busy:()=>boolean;apps:()=>LauncherLayoutApp[];notice:(message:string)=>void;close:()=>void;apply:()=>void;refresh:()=>void;reset:()=>void;import:()=>void};
 export class UnifiedEditor {
  selection=new Set<string>();private chooseInitial=true;private suppressClick=false;private error="";
  private svgEdits=new Map<string,{page:'home'|'apps';id:string;value:string;error:string}>();
@@ -24,6 +24,11 @@ export class UnifiedEditor {
  discardSvgEdits():void {this.svgEdits.clear();this.error='';}
  hasSvgEdits():boolean {return this.svgEdits.size>0;}
  private node(d:UnifiedLayout){return this.selected?d[this.page][this.selected.kind].find(n=>n.id===this.selected!.id):undefined;}
+ private appIcon(app:LauncherLayoutApp):string {
+  // Saved market artwork is still validated at the rendering boundary. Missing
+  // or invalid logos use the generic app icon rather than another app's logo.
+  try{return app.logoSvg?prepareSvg(app.logoSvg).svg:defaultSvg;}catch{return defaultSvg;}
+ }
  sync(){const canvas=this.dialog.querySelector<HTMLElement>('.unified-canvas'),d=this.draft();if(canvas&&d)canvas.style.setProperty('--u-unit',`${canvas.clientWidth/d.screen.width}px`);}
  private update(edit:(d:UnifiedLayout)=>void,render=true):boolean{if(this.options.busy())return false;const d=this.draft();if(!d)return false;try{edit(d);if(new TextEncoder().encode(JSON.stringify(d)).length>90*1024)throw Error(t('布局总大小超过 90 KiB，请精简图标或背景图片。'));const baseline=this.options.baseline();if(!validUnified(d)||!validUnified(baseline)||!systemUnchanged(d,baseline))throw Error(t('布局未修改：请检查配置大小、屏幕范围、SVG 和应用属性；系统组件只读。'));this.error='';this.options.write(JSON.stringify(d,null,2));if(render)this.options.render();return true;}catch(error){this.error=error instanceof Error?error.message:String(error);this.options.notice(this.error);return false;}}
  render(d:UnifiedLayout):string {
@@ -57,7 +62,7 @@ export class UnifiedEditor {
   if(action==='discard-svg'&&this.selected){this.svgEdits.delete(`${this.page}:${this.selected.id}`);this.error='';this.options.render();}
   if(action==='background')this.showBackground();
   if(action==='json'){this.preview.innerHTML=`<header><h3>layout.json</h3><button data-close-json>${esc(t('关闭'))}</button></header><pre tabindex="0"></pre>`;this.preview.querySelector('pre')!.textContent=this.options.json();this.preview.showModal();}
-  if(action==='add')this.update(d=>{const app=this.options.apps().find(a=>!d[this.page].users.some(n=>n.action===a.packageName));if(!app||d[this.page].users.some(n=>n.action===app.packageName))return;const id='app-'+[...crypto.getRandomValues(new Uint8Array(16))].map(n=>n.toString(16).padStart(2,'0')).join('');const width=Math.max(1,Math.round(d.screen.width*.21)),height=Math.max(1,Math.round(d.screen.height*.27)),offset=d[this.page].users.length%4*20;const top=Math.max(d.screen.height*.08,...d[this.page].system.filter(n=>n.visible&&n.frame.y<d.screen.height*.4).map(n=>n.frame.y+n.frame.height))+d.screen.height*.03;d[this.page].users.push({id,name:app.label,text:app.label,action:app.packageName,frame:{x:Math.min(d.screen.width-width,Math.round(d.screen.width*.05)+offset),y:Math.min(d.screen.height-height,Math.round(top)+offset),width,height},visible:true,icon:defaultSvg,...(d.version===5?{textColor:'#253E39',iconColor:'#376F60',backgroundColor:'#DCE9E2'}:{color:'#F5F5F5',backgroundColor:'#374959'})} as UnifiedComponent);Object.assign(d[this.page].users.at(-1)!.frame,{width,height});this.selected={kind:'users',id};this.selection=new Set([id]);});
+  if(action==='add')this.update(d=>{const app=this.options.apps().find(a=>!d[this.page].users.some(n=>n.action===a.packageName));if(!app||d[this.page].users.some(n=>n.action===app.packageName))return;const id='app-'+[...crypto.getRandomValues(new Uint8Array(16))].map(n=>n.toString(16).padStart(2,'0')).join('');const width=Math.max(1,Math.round(d.screen.width*.21)),height=Math.max(1,Math.round(d.screen.height*.27)),offset=d[this.page].users.length%4*20;const top=Math.max(d.screen.height*.08,...d[this.page].system.filter(n=>n.visible&&n.frame.y<d.screen.height*.4).map(n=>n.frame.y+n.frame.height))+d.screen.height*.03;d[this.page].users.push({id,name:app.label,text:app.label,action:app.packageName,frame:{x:Math.min(d.screen.width-width,Math.round(d.screen.width*.05)+offset),y:Math.min(d.screen.height-height,Math.round(top)+offset),width,height},visible:true,icon:this.appIcon(app),...(d.version===5?{textColor:'#253E39',iconColor:'#376F60',backgroundColor:'#DCE9E2'}:{color:'#F5F5F5',backgroundColor:'#374959'})} as UnifiedComponent);Object.assign(d[this.page].users.at(-1)!.frame,{width,height});this.selected={kind:'users',id};this.selection=new Set([id]);});
   if(action==='remove'&&this.selected?.kind==='users')this.update(d=>{d[this.page].users=d[this.page].users.filter(n=>n.id!==this.selected!.id);this.selected=null;});
  }
  private change(e:Event){if(!this.active())return;const input=e.target as HTMLInputElement;if(!input.matches('[data-u-selection],[data-u-field],[data-u-frame]'))return;e.stopPropagation();
@@ -83,6 +88,16 @@ export class UnifiedEditor {
     }else{this.svgEdits.set(key,{page:this.page,id:this.selected.id,value:input.value,error:this.error});this.options.render();}
    }
    catch(error){const text=this.svgMessage(error);this.svgEdits.set(key,{page:this.page,id:this.selected.id,value:input.value,error:text});this.error=text;this.options.notice(text);}
+   return;
+  }
+  if(input.dataset.uField==='action'){
+   const app=this.options.apps().find(value=>value.packageName===input.value);
+   const current=this.draft();
+   if(!app||!current||this.node(current)?.action===app.packageName)return;
+   const key=`${this.page}:${this.selected.id}`;
+   let changed=false;
+   const applied=this.update(d=>{const n=this.node(d);if(!n||n.action===app.packageName)return;n.action=app.packageName;n.icon=this.appIcon(app);changed=true;},false);
+   if(applied&&changed){this.svgEdits.delete(key);this.options.render();}
    return;
   }
   this.update(d=>{const n=this.node(d);if(!n)return;if(input.dataset.uFrame)n.frame[input.dataset.uFrame as keyof typeof n.frame]=Number(input.value);else {const field=input.dataset.uField!;if(field==='action'&&!this.options.apps().some(a=>a.packageName===input.value))return;if(field==='transparentBackground')n.backgroundColor=input.checked?'transparent':'#DCE9E2';else if(field==='visible')n.visible=input.checked;else if(['name','text','icon','color','textColor','iconColor','backgroundColor','action'].includes(field))(n as unknown as Record<string,unknown>)[field]=input.value;}});

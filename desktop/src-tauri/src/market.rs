@@ -7,7 +7,7 @@ use reqwest::{
 use serde::{Deserialize, Serialize};
 use sha1::{Digest, Sha1};
 use std::{
-    collections::HashSet,
+    collections::{HashMap, HashSet},
     fs::{self, File, OpenOptions},
     io::{Read, Write},
     path::{Path, PathBuf},
@@ -39,6 +39,12 @@ pub struct Item {
     pub blob_sha: String,
     pub folder_url: String,
     pub cover_url: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub logo_url: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub logo_blob_sha: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub logo_bytes: Option<u64>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -189,6 +195,7 @@ fn item_from_entry(
     entry: &TreeEntry,
     revision: &str,
     paths: &HashSet<String>,
+    files: &HashMap<&str, &TreeEntry>,
 ) -> Result<Item, String> {
     let kind = apk_kind(&entry.path).ok_or("市场 APK 路径无效")?;
     let bytes = entry
@@ -203,6 +210,14 @@ fn item_from_entry(
     let cover = cover_paths(folder, file_name)
         .into_iter()
         .find(|path| paths.contains(path));
+    // A shared logo belongs to this exact APK folder and repository commit.
+    let logo_path = format!("{folder}/logo.svg");
+    let logo = files.get(logo_path.as_str()).filter(|entry| {
+        valid_sha(&entry.sha)
+            && entry
+                .size
+                .is_some_and(|n| n > 0 && n <= crate::app_logos::MAX_LOGO as u64)
+    });
     Ok(Item {
         id: entry.path.clone(),
         kind: kind.into(),
@@ -213,6 +228,9 @@ fn item_from_entry(
         blob_sha: entry.sha.clone(),
         folder_url: repository_url("tree", revision, folder),
         cover_url: cover.map(|path| repository_url("raw", revision, &path)),
+        logo_url: logo.map(|_| repository_url("raw", revision, &logo_path)),
+        logo_blob_sha: logo.map(|entry| entry.sha.clone()),
+        logo_bytes: logo.and_then(|entry| entry.size),
     })
 }
 fn parse_tree(bytes: &[u8], revision: &str, fetched_at: u64) -> Result<Catalog, String> {
@@ -238,9 +256,13 @@ fn parse_tree(bytes: &[u8], revision: &str, fetched_at: u64) -> Result<Catalog, 
         }
     }
     let mut items = Vec::new();
+    let files_by_path = files
+        .iter()
+        .map(|entry| (entry.path.as_str(), *entry))
+        .collect();
     for entry in files {
         if apk_kind(&entry.path).is_some() {
-            items.push(item_from_entry(entry, revision, &paths)?);
+            items.push(item_from_entry(entry, revision, &paths, &files_by_path)?);
             if items.len() > MAX_ITEMS {
                 return Err("市场应用数量超过支持的上限".into());
             }
@@ -283,7 +305,18 @@ fn validate_catalog(catalog: &Catalog) -> bool {
         let (name, version) = name_version(file_name);
         let covers = cover_paths(folder, file_name)
             .map(|path| repository_url("raw", &catalog.revision, &path));
+        let logo_valid = match (&item.logo_url, &item.logo_blob_sha, item.logo_bytes) {
+            (None, None, None) => true,
+            (Some(url), Some(sha), Some(bytes)) => {
+                *url == repository_url("raw", &catalog.revision, &format!("{folder}/logo.svg"))
+                    && valid_sha(sha)
+                    && bytes > 0
+                    && bytes <= crate::app_logos::MAX_LOGO as u64
+            }
+            _ => false,
+        };
         ids.insert(&item.id)
+            && logo_valid
             && item.kind == kind
             && item.file_name == file_name
             && item.name == name
@@ -299,7 +332,8 @@ fn validate_catalog(catalog: &Catalog) -> bool {
     })
 }
 fn read_cache(directory: &Path) -> Option<Catalog> {
-    let path = directory.join("market/catalog.json");
+    // Versioned cache forces the first upgraded client to discover logo metadata.
+    let path = directory.join("market/catalog-v2.json");
     if fs::symlink_metadata(&path)
         .ok()
         .is_none_or(|m| !m.is_file() || m.len() > MAX_CATALOG as u64)
@@ -341,7 +375,7 @@ fn write_cache(directory: &Path, catalog: &Catalog) -> Result<(), String> {
     serde_json::to_writer(&mut file, catalog).map_err(|_| "无法写入市场缓存")?;
     file.sync_all().map_err(|_| "无法保存市场缓存")?;
     drop(file);
-    fs::rename(&temporary.0, root.join("catalog.json")).map_err(|_| "无法保存市场缓存")?;
+    fs::rename(&temporary.0, root.join("catalog-v2.json")).map_err(|_| "无法保存市场缓存")?;
     Ok(())
 }
 fn client() -> Result<Client, String> {
@@ -694,6 +728,7 @@ pub fn download(
             item_id: Some(item.id.clone()),
         })?;
         check_cancel(cancel)?;
+        save_optional_logo(directory, &target, &item, cancel);
         return Ok(Download {
             item,
             path: target.to_string_lossy().into_owned(),
@@ -731,12 +766,117 @@ pub fn download(
     drop(output);
     check_cancel(cancel)?;
     fs::rename(&temporary.0, &target).map_err(|_| "无法完成市场 APK 下载")?;
+    save_optional_logo(directory, &target, &item, cancel);
     Ok(Download {
         item,
         path: target.to_string_lossy().into_owned(),
         home_background: None,
         home_background_color: None,
     })
+}
+
+fn logo_matches(bytes: &[u8], item: &Item, cancel: &AtomicBool) -> bool {
+    item.logo_bytes == Some(bytes.len() as u64)
+        && crate::app_logos::valid_svg(bytes).is_some()
+        && git_hash_reader(std::io::Cursor::new(bytes), bytes.len() as u64, cancel)
+            .ok()
+            .as_ref()
+            == item.logo_blob_sha.as_ref()
+}
+fn cache_logo_with(
+    root: &Path,
+    item: &Item,
+    cancel: &AtomicBool,
+    mut fetch: impl FnMut(&str) -> Result<Vec<u8>, String>,
+) -> Result<Option<String>, String> {
+    let Some(address) = item.logo_url.as_deref() else {
+        return Ok(None);
+    };
+    check_cancel(cancel)?;
+    let target = root.join("logo.svg");
+    if fs::symlink_metadata(&target)
+        .ok()
+        .is_some_and(|m| m.is_file() && m.len() <= crate::app_logos::MAX_LOGO as u64)
+    {
+        let mut bytes = Vec::new();
+        if File::open(&target)
+            .and_then(|file| {
+                file.take(crate::app_logos::MAX_LOGO as u64 + 1)
+                    .read_to_end(&mut bytes)
+            })
+            .is_ok()
+            && logo_matches(&bytes, item, cancel)
+        {
+            return Ok(String::from_utf8(bytes).ok());
+        }
+    }
+    let bytes = fetch(address)?;
+    check_cancel(cancel)?;
+    if !logo_matches(&bytes, item, cancel) {
+        return Err("应用 logo.svg 校验失败".into());
+    }
+    let temporary = Temporary(temporary_path(root, "svg"));
+    let mut file = OpenOptions::new()
+        .create_new(true)
+        .write(true)
+        .open(&temporary.0)
+        .map_err(|_| "无法保存应用图标")?;
+    file.write_all(&bytes).map_err(|_| "无法保存应用图标")?;
+    file.sync_all().map_err(|_| "无法保存应用图标")?;
+    drop(file);
+    check_cancel(cancel)?;
+    if target.exists() {
+        fs::remove_file(&target).map_err(|_| "无法更新应用图标")?;
+    }
+    fs::rename(&temporary.0, &target).map_err(|_| "无法保存应用图标")?;
+    Ok(String::from_utf8(bytes).ok())
+}
+fn save_optional_logo(directory: &Path, apk: &Path, item: &Item, cancel: &AtomicBool) {
+    if item.logo_url.is_none() || cancel.load(Ordering::Acquire) {
+        return;
+    }
+    let Some(root) = apk.parent() else {
+        return;
+    };
+    let result = cache_logo_with(root, item, cancel, |address| {
+        let client = Client::builder()
+            .https_only(true)
+            .redirect(redirect::Policy::none())
+            .connect_timeout(Duration::from_secs(3))
+            .timeout(Duration::from_secs(3))
+            .user_agent(concat!("pureTV-Manager/", env!("CARGO_PKG_VERSION")))
+            .build()
+            .map_err(|_| "无法准备图标下载")?;
+        let mut stream = response(&client, address, cancel)?;
+        if stream
+            .content_length()
+            .is_some_and(|n| n > crate::app_logos::MAX_LOGO as u64)
+        {
+            return Err("应用图标过大".into());
+        }
+        let start = Instant::now();
+        let mut bytes = Vec::new();
+        let mut buffer = [0; 1024];
+        loop {
+            check_cancel(cancel)?;
+            if start.elapsed() > Duration::from_secs(10) {
+                return Err("应用图标下载超时".into());
+            }
+            let count = stream.read(&mut buffer).map_err(|_| "无法读取应用图标")?;
+            if count == 0 {
+                break;
+            }
+            if bytes.len() + count > crate::app_logos::MAX_LOGO {
+                return Err("应用图标过大".into());
+            }
+            bytes.extend_from_slice(&buffer[..count]);
+        }
+        Ok(bytes)
+    });
+    // Optional artwork must never turn a verified APK download into a failure.
+    if let Ok(Some(svg)) = result {
+        let _ = crate::app_logos::save(directory, apk, &svg);
+    }
 }
 
 #[cfg(test)]
@@ -769,7 +909,109 @@ mod tests {
             blob_sha: git_hash_reader(Cursor::new(bytes), bytes.len() as u64, &cancel).unwrap(),
             folder_url: repository_url("tree", REV, "apps/example"),
             cover_url: None,
+            logo_url: None,
+            logo_blob_sha: None,
+            logo_bytes: None,
         }
+    }
+    #[test]
+    fn discovers_commit_pinned_folder_logos_and_rejects_cache_url_tampering() {
+        let catalog = parse_tree(
+            &tree(&[
+                "apps/example/Example-1.0.0.apk",
+                "apps/example/Example-2.0.0.apk",
+                "apps/example/logo.svg",
+                "apps/other/Other.apk",
+                "launcher/home/Home.apk",
+                "launcher/home/logo.svg",
+                "apps/logo.svg",
+            ]),
+            REV,
+            1,
+        )
+        .unwrap();
+        assert!(validate_catalog(&catalog));
+        let first = &catalog.items[0];
+        assert_eq!(first.logo_bytes, Some(25));
+        assert_eq!(
+            first.logo_blob_sha.as_deref(),
+            Some("a".repeat(40).as_str())
+        );
+        assert_eq!(first.logo_url, catalog.items[1].logo_url);
+        assert_eq!(
+            first.logo_url,
+            Some(repository_url("raw", REV, "apps/example/logo.svg"))
+        );
+        assert!(catalog.items[2].logo_url.is_none());
+        assert!(catalog.items[3]
+            .logo_url
+            .as_ref()
+            .unwrap()
+            .ends_with("launcher/home/logo.svg"));
+        let mut tampered = catalog.clone();
+        tampered.items[0].logo_url = Some("https://evil.example/icon.svg".into());
+        assert!(!validate_catalog(&tampered));
+        tampered = catalog;
+        tampered.items[0].logo_blob_sha = None;
+        assert!(!validate_catalog(&tampered));
+    }
+    #[test]
+    fn optional_logo_cache_checks_hash_content_and_revision_before_reuse() {
+        let root = temp();
+        let cancel = AtomicBool::new(false);
+        let bytes = b"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\" viewBox=\"0 0 64 64\"><path d=\"M0 0H64V64H0Z\"/></svg>";
+        let mut selected = item(b"PK\x03\x04test apk");
+        assert_eq!(
+            cache_logo_with(&root.0, &selected, &cancel, |_| panic!(
+                "No logo should not fetch"
+            ))
+            .unwrap(),
+            None
+        );
+        selected.logo_url = Some(repository_url("raw", REV, "apps/example/logo.svg"));
+        selected.logo_bytes = Some(bytes.len() as u64);
+        selected.logo_blob_sha =
+            Some(git_hash_reader(Cursor::new(bytes), bytes.len() as u64, &cancel).unwrap());
+        let result = cache_logo_with(&root.0, &selected, &cancel, |_| Ok(bytes.to_vec()))
+            .unwrap()
+            .unwrap();
+        assert_eq!(result.as_bytes(), bytes);
+        assert_eq!(fs::read(root.0.join("logo.svg")).unwrap(), bytes);
+        assert!(cache_logo_with(&root.0, &selected, &cancel, |_| panic!(
+            "Verified cache must not fetch"
+        ))
+        .unwrap()
+        .is_some());
+        fs::write(root.0.join("logo.svg"), b"<svg onload='evil()'/>").unwrap();
+        assert!(cache_logo_with(&root.0, &selected, &cancel, |_| Err("offline".into())).is_err());
+        assert!(cache_logo_with(&root.0, &selected, &cancel, |_| Ok(b"<svg/>".to_vec())).is_err());
+        let unsafe_svg = b"<svg onload='evil()'/>";
+        selected.logo_bytes = Some(unsafe_svg.len() as u64);
+        selected.logo_blob_sha = Some(
+            git_hash_reader(Cursor::new(unsafe_svg), unsafe_svg.len() as u64, &cancel).unwrap(),
+        );
+        assert!(cache_logo_with(&root.0, &selected, &cancel, |_| Ok(unsafe_svg.to_vec())).is_err());
+        cancel.store(true, Ordering::Release);
+        assert!(cache_logo_with(&root.0, &selected, &cancel, |_| panic!(
+            "Cancelled logo should not fetch"
+        ))
+        .is_err());
+        fs::remove_dir_all(root.0.clone()).unwrap();
+    }
+    #[test]
+    fn old_catalog_cache_is_refetched_once_to_discover_logos() {
+        let root = temp();
+        let value = parse_tree(&tree(&["apps/example/Example.apk"]), REV, now_ms()).unwrap();
+        fs::create_dir_all(root.0.join("market")).unwrap();
+        fs::write(
+            root.0.join("market/catalog.json"),
+            serde_json::to_vec(&value).unwrap(),
+        )
+        .unwrap();
+        assert!(read_cache(&root.0).is_none());
+        write_cache(&root.0, &value).unwrap();
+        assert!(read_cache(&root.0).is_some());
+        fs::remove_dir_all(root.0.clone()).unwrap();
     }
     #[test]
     fn scans_both_roots_and_keeps_multiple_apks_without_hardcoded_names() {

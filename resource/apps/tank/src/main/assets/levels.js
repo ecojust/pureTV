@@ -101,7 +101,7 @@
     return map;
   }
   function wave(stage, hard = false) {
-    return groups[hard ? 34 : (stage - 1) % 35].flatMap(([type, count]) => Array(count).fill(type));
+    return groups[hard ? 34 : (stage - 1) % 35].reduce((wave, [type, count]) => wave.concat(Array(count).fill(type)), []);
   }
   const api = {maps, groups, palette, paint, decode, wave};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

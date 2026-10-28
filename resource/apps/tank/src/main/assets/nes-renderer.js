@@ -417,13 +417,12 @@
       }
     }
     construction(game) {
-      this.field({
-        ...game,
+      this.field(Object.assign({}, game, {
         players: [],
         enemies: [],
         bullets: [],
         powerUp: null,
-      });
+      }));
       const cursor = game.construction || { row: 0, col: 0, tile: 0 },
         x = 16 + (cursor.col || 0) * 16,
         y = 16 + (cursor.row || 0) * 16;

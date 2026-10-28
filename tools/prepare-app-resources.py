@@ -126,6 +126,10 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
             resource['romIncluded'] = False
         resource_path.write_text(json.dumps(resource, ensure_ascii=False, indent=2) + '\n')
         checksums = [apk.name, 'thumb.png', 'docs/' + doc_image + '.png', 'docs/' + doc_image + '.en.png']
+        logo = folder / 'logo.svg'
+        has_logo = logo.is_file() and not logo.is_symlink()
+        if has_logo:
+            checksums.append('logo.svg')
         if slug in ('tank', 'jackal'):
             checksums += ['docs/controller.png', 'docs/controller.en.png']
         (folder / 'SHA256SUMS.txt').write_text(''.join(f'{digest(folder / filename)}  {filename}\n' for filename in checksums))
@@ -133,11 +137,13 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         readme_text = readme.read_text() if readme.exists() else '# ' + name + '\n'
         heading, _, rest = readme_text.partition('\n')
         rest = re.sub(r'\n*<!-- apk-resource:start -->.*?<!-- apk-resource:end -->\n*', '\n', rest, flags=re.S)
-        readme.write_text(heading + '\n\n<!-- apk-resource:start -->\n[下载 APK](' + apk.name + '?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)\n\n此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。\n<!-- apk-resource:end -->\n' + rest)
+        logo_link = ' · [64×64 SVG 图标](logo.svg)' if has_logo else ''
+        readme.write_text(heading + '\n\n<!-- apk-resource:start -->\n[下载 APK](' + apk.name + '?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)' + logo_link + '\n\n此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。\n<!-- apk-resource:end -->\n' + rest)
         english_readme = folder / 'README.en.md'
         if english_readme.exists():
             english_text = english_readme.read_text()
-            block = ('<!-- apk-resource:start -->\n[Download APK](' + apk.name + '?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)\n\n'
+            logo_link_en = ' · [64×64 SVG icon](logo.svg)' if has_logo else ''
+            block = ('<!-- apk-resource:start -->\n[Download APK](' + apk.name + '?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)' + logo_link_en + '\n\n'
                      'The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.\n<!-- apk-resource:end -->')
             if '<!-- apk-resource:start -->' in english_text:
                 english_text = re.sub(r'<!-- apk-resource:start -->.*?<!-- apk-resource:end -->', lambda _: block, english_text, flags=re.S)

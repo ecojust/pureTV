@@ -9,7 +9,7 @@ The published version is **`0.2.0-preview.1`**. Install and play without importi
 ## APK
 
 <!-- apk-resource:start -->
-[Download APK](jackal-0.2.0-preview.1.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)
+[Download APK](jackal-0.2.0-preview.1.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
 The APK in this directory is signed with the pureTV release certificate.
 <!-- apk-resource:end -->

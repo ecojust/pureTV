@@ -9,7 +9,7 @@ Jackal TV 独立重写红白机 NES 版《赤色要塞》的六关玩法：吉�
 ## APK
 
 <!-- apk-resource:start -->
-[下载 APK](jackal-0.2.0-preview.1.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
+[下载 APK](jackal-0.2.0-preview.1.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
 
 此目录内 APK 使用 pureTV 发布证书签名。
 <!-- apk-resource:end -->
