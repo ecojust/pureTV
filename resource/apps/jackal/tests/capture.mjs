@@ -52,6 +52,31 @@ async function release(page, id, pointerId=1) {
 }
 async function tap(page,id) { await press(page,id); await page.waitForTimeout(100); await release(page,id); await page.waitForTimeout(100); }
 async function phase(page, value) { await page.waitForFunction(({api,value})=>window[api]?.game?.phase===value,{api,value},{timeout:20000}); }
+async function resizeTv(page,width,height) {
+  await page.setViewportSize({width,height});
+  // setViewportSize acknowledges the browser viewport before the page's resize
+  // handler necessarily runs. Wait for its canvas dimensions, then allow layout
+  // and compositing to settle before checking the original strict bounds below.
+  await page.evaluate(async()=>{
+    await document.fonts.ready;
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  });
+  try {
+    await page.waitForFunction(({width,height})=>{
+      const canvas=document.getElementById('battlefield'),panel=canvas.parentElement.parentElement;
+      const scale=Math.min(panel.clientWidth/canvas.width,panel.clientHeight/canvas.height);
+      return window.innerWidth===width&&window.innerHeight===height
+        &&canvas.style.width===Math.floor(canvas.width*scale)+'px'
+        &&canvas.style.height===Math.floor(canvas.height*scale)+'px';
+    },{width,height},{timeout:5000});
+  } catch(error) {
+    const bounds=await page.evaluate(()=>{
+      const canvas=document.getElementById('battlefield'),panel=canvas.parentElement.parentElement;
+      return {viewport:{width:innerWidth,height:innerHeight},canvas:canvas.getBoundingClientRect().toJSON(),panel:panel.getBoundingClientRect().toJSON(),style:{width:canvas.style.width,height:canvas.style.height}};
+    });
+    throw new Error(`Canvas resize did not settle at ${width}x${height}: ${JSON.stringify(bounds)}`,{cause:error});
+  }
+}
 async function captureTv(page, path) {
   if (/jackal-(playing|tv)(\.en)?\.png$/.test(path)) {
     // Let the real simulation finish spawn protection; never alter player state
@@ -220,16 +245,16 @@ try {
     assert.equal(await tv.locator('#room-qr').evaluate(img=>img.complete&&img.naturalWidth>0),true);
     if(language==='en')assert.doesNotMatch(await tv.locator('body').innerText(),/[\u3400-\u9fff]/,'English TV UI contains no untranslated Chinese');
     for(const [width,height] of [[720,480],[960,540],[1280,720],[1920,1080]]) {
-      await tv.setViewportSize({width,height});
+      await resizeTv(tv,width,height);
       const bounds=await tv.locator('.sidebar').evaluate(el=>({top:el.getBoundingClientRect().top,bottom:el.getBoundingClientRect().bottom,scrollHeight:document.documentElement.scrollHeight,scrollWidth:document.documentElement.scrollWidth}));
       assert.ok(bounds.top>=0&&bounds.bottom<=height+.5,`Sidebar fits ${width}x${height}: ${JSON.stringify(bounds)}`);
-      assert.ok(bounds.scrollHeight<=height&&bounds.scrollWidth<=width,`No page scrolling at ${width}x${height}`);
+      assert.ok(bounds.scrollHeight<=height&&bounds.scrollWidth<=width,`No page scrolling at ${width}x${height}: ${JSON.stringify(bounds)}`);
       const screen=await tv.locator('#battlefield').boundingBox();
-      assert.ok(Math.abs(screen.width/screen.height-256/240)<.005,`NES aspect ratio at ${width}x${height}`);
-      assert.ok(screen.x>=0&&screen.y>=0&&screen.x+screen.width<=width+.5&&screen.y+screen.height<=height+.5,`Whole NES frame visible at ${width}x${height}`);
+      assert.ok(Math.abs(screen.width/screen.height-256/240)<.005,`NES aspect ratio at ${width}x${height}: ${JSON.stringify(screen)}`);
+      assert.ok(screen.x>=0&&screen.y>=0&&screen.x+screen.width<=width+.5&&screen.y+screen.height<=height+.5,`Whole NES frame visible at ${width}x${height}: ${JSON.stringify(screen)}`);
       await captureTv(tv,resolve(output,`${kind}-tv-${width}x${height}${suffix}.png`));
     }
-    await tv.setViewportSize({width:1280,height:720});
+    await resizeTv(tv,1280,720);
     await captureTv(tv,resolve(output,`${kind}-tv${suffix}.png`));
     await phone.evaluate(state=>window.__sockets.at(-1).receive({type:'state',...state}),await tv.evaluate(()=>window.__lastState));
     assert.equal(await phone.locator('#button-start').isEnabled(),true);
