@@ -26,10 +26,12 @@
 | [CCTV Live](apps/cctv/) | ecojust / 桔子桑 | 0.1.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
 | [HIFINi TV](apps/hifini/) | ecojust / 桔子桑 | 0.1.4 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
 | [Jackal TV](apps/jackal/) | ecojust / 桔子桑 | 0.1.0 | 89.2 KB | 红白机像素风格的双人吉普车营救游戏 | <img src="apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
+| [Jackal NES TV](apps/jackal-nes/) | ecojust / 桔子桑；JSNES contributors | 0.1.0 | 129.4 KB | 导入 NES ROM，扫码双人游玩吉普车营救游戏 | <img src="apps/jackal-nes/thumb.png" width="180" alt="Jackal NES TV 界面"> |
 | [Jellyfin for Android TV](apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Jellyfin 媒体服务器的 Android TV 客户端 | <img src="apps/jellyfin-tv/thumb.png" width="180" alt="Jellyfin for Android TV 界面"> |
 | [Music TV](apps/music/) | ecojust / 桔子桑 | 0.1.3 | 48.8 KB | 原生电视音乐播放器 | <img src="apps/music/thumb.png" width="180" alt="Music TV 界面"> |
 | [ShortVideo TV](apps/shortvideo/) | ecojust / 桔子桑 | 0.1.1 | 32.7 KB | 遥控器短视频播放器 | <img src="apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
 | [Tank TV](apps/tank/) | ecojust / 桔子桑 | 0.1.1 | 73.1 KB | 红白机像素风格的手机扫码合作坦克大战 | <img src="apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
+| [Tank NES TV](apps/tank-nes/) | ecojust / 桔子桑；JSNES contributors | 0.1.0 | 117.4 KB | 导入 NES ROM，扫码双人游玩坦克游戏 | <img src="apps/tank-nes/thumb.png" width="180" alt="Tank NES TV 界面"> |
 | [TV Bro](apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | 适配遥控器的电视浏览器，使用系统 WebView | <img src="apps/tvbro/thumb.png" width="180" alt="TV Bro 界面"> |
 | [WebTV](apps/webtv/) | ecojust / 桔子桑 | 0.1.1 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
 
