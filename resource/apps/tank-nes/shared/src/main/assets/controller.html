@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#0b1017">
+  <title>NES TV · Controller</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/controller.css">
+</head>
+<body>
+  <main class="controller" id="controller" data-connected="false" data-player="1">
+    <header class="header">
+      <div class="brand"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="3" y="10" width="34" height="23" rx="5" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 17h4v4h4v4h-4v4h-4v-4H6v-4h4z" fill="currentColor"/><circle cx="26" cy="25" r="3" fill="currentColor"/><circle cx="32" cy="19" r="3" fill="currentColor"/></svg><div><strong id="app-title">NES TV</strong><span data-i18n="controller">手机控制器</span></div></div>
+      <div class="connection" role="status" aria-live="polite"><i id="connection-dot"></i><span id="connection-text">正在连接</span></div>
+      <button class="fullscreen" id="fullscreen" type="button" aria-label="全屏" title="全屏"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </header>
+
+    <section class="dashboard" aria-label="游戏状态">
+      <div class="player-badge"><span class="player-number" id="player-number">P—</span><div><span class="eyebrow" data-i18n="yourPlayer">你的控制器</span><strong id="player-name">等待加入房间</strong></div></div>
+      <div class="rom-card">
+        <div class="rom-meta"><span class="eyebrow" data-i18n="currentRom">当前 ROM</span><strong id="rom-name">尚未导入 ROM</strong></div>
+        <button type="button" id="import-rom" class="import-rom" disabled data-i18n="importRom">导入 ROM</button>
+        <input id="rom-file" type="file" accept=".nes,application/octet-stream" hidden>
+      </div>
+    </section>
+
+    <div class="message" id="message" role="status" aria-live="polite">正在加入电视上的房间…</div>
+
+    <div id="rom-upload" class="rom-upload" hidden><progress id="rom-progress" max="100" value="0"></progress><span id="rom-status" role="status" aria-live="polite"></span></div>
+
+    <section class="controls" aria-label="游戏操作">
+      <div class="joystick-column">
+        <div class="joystick" id="joystick" role="group" aria-label="方向摇杆" tabindex="0">
+          <div class="joystick-ring"></div><div class="axis axis-x"></div><div class="axis axis-y"></div>
+          <span class="direction up">▲</span><span class="direction down">▼</span><span class="direction left">◀</span><span class="direction right">▶</span>
+          <div class="joystick-thumb" id="joystick-thumb"><div></div></div>
+        </div>
+        <span class="control-caption" data-i18n="move">移动 · 左侧摇杆</span>
+      </div>
+      <div class="system-keys" aria-label="NES menu controls">
+        <button type="button" id="button-select" class="system-button" disabled aria-label="选择游戏模式"><span>SELECT</span><small id="select-caption">选择</small></button>
+        <button type="button" id="button-start" class="system-button" disabled aria-label="开始或暂停"><span>START</span><small id="start-caption">开始 / 暂停</small></button>
+      </div>
+      <div class="actions">
+        <div class="button-wrap b-wrap"><button type="button" id="button-b" class="action-button button-b" disabled aria-label="B"><span>B</span></button><span class="button-caption" id="b-caption">动作 B</span></div>
+        <div class="button-wrap a-wrap"><button type="button" id="button-a" class="action-button button-a" disabled aria-label="A"><span>A</span></button><span class="button-caption" id="a-caption">动作 A</span></div>
+      </div>
+    </section>
+
+    <footer class="footer"><span class="footer-line"></span><span id="footer-hint" data-i18n="hint">SELECT 选择 · START 开始 / 暂停</span><span class="footer-line"></span></footer>
+    <div class="rotate-hint" data-i18n="rotate">横屏握持，体验更好</div>
+    <div class="error-actions" id="error-actions" hidden><button type="button" id="retry" data-i18n="retry">重新连接</button></div>
+  </main>
+  <script src="/controller.js"></script>
+</body>
+</html>

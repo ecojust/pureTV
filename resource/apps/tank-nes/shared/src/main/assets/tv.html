@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; media-src 'self' blob:"
+    />
+    <title>NES TV</title>
+    <link rel="stylesheet" href="tv.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div>
+          <span class="brand-mark" aria-hidden="true">✚</span
+          ><strong id="app-title">NES TV</strong
+          ><span class="core-badge">NES</span>
+        </div>
+        <span id="connection-label"></span>
+      </header>
+      <main class="main">
+        <section class="arena-panel" aria-label="NES game screen">
+          <div class="canvas-wrap">
+            <canvas
+              id="battlefield"
+              width="256"
+              height="240"
+              aria-label="NES game screen"
+            ></canvas>
+            <div
+              class="game-overlay"
+              id="game-overlay"
+              role="status"
+              aria-live="polite"
+            >
+              <div class="cartridge" aria-hidden="true"><span>NES</span></div>
+              <strong id="overlay-title">正在启动 · Starting…</strong>
+              <p id="overlay-detail">
+                如果此画面长时间未消失，请更新电视的 Android System WebView。<br />If
+                this screen remains, update Android System WebView on the TV.
+              </p>
+              <button id="overlay-action" type="button"></button>
+            </div>
+          </div>
+        </section>
+        <aside class="sidebar">
+          <section class="join-card">
+            <div class="section-heading">
+              <strong id="join-label"></strong><span id="lan-label"></span>
+            </div>
+            <div class="qr-frame">
+              <img id="room-qr" alt="Room QR code" hidden /><span
+                id="network-message"
+              ></span>
+            </div>
+            <h1 id="scan-title"></h1>
+            <p id="scan-description"></p>
+            <div id="room-address" class="room-address"></div>
+          </section>
+          <section class="players" aria-label="Players">
+            <div class="player-card" id="player-1">
+              <span class="player-icon">1P</span>
+              <div>
+                <strong id="player-name-1"></strong
+                ><span id="player-status-1"></span>
+              </div>
+            </div>
+            <div class="player-card" id="player-2">
+              <span class="player-icon">2P</span>
+              <div>
+                <strong id="player-name-2"></strong
+                ><span id="player-status-2"></span>
+              </div>
+            </div>
+          </section>
+          <section class="rom-card">
+            <span id="rom-label"></span><strong id="rom-name"></strong
+            ><span id="rom-detail"></span>
+          </section>
+          <div class="actions" id="actions">
+            <button id="import-rom" type="button"></button
+            ><button id="pause-game" type="button" disabled></button
+            ><button id="restart-game" type="button" disabled></button>
+          </div>
+          <p id="menu-help" class="menu-help"></p>
+        </aside>
+      </main>
+      <footer>
+        <span id="footer-left"></span><span id="footer-right"></span>
+      </footer>
+    </div>
+    <script src="vendor/jsnes.min.js"></script>
+    <script src="nes-adapter.js"></script>
+    <script src="nes-audio.js"></script>
+    <script src="runtime.js"></script>
+  </body>
+</html>

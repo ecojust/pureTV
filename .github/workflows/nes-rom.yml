@@ -1,0 +1,121 @@
+name: NES ROM apps
+
+on:
+  push:
+    branches: [master, feat/nes-rom-apps]
+    paths:
+      - '.github/workflows/nes-rom.yml'
+      - 'resource/apps/tank-nes/build.gradle'
+      - 'resource/apps/tank-nes/src/**'
+      - 'resource/apps/tank-nes/shared/src/**'
+      - 'resource/apps/tank-nes/shared/tests/**'
+      - 'resource/apps/tank-nes/shared/tools/**'
+      - 'resource/apps/tank-nes/shared/licenses/**'
+      - 'resource/apps/jackal-nes/build.gradle'
+      - 'resource/apps/jackal-nes/src/**'
+      - 'resource/launcher/puretv/settings.gradle'
+      - 'resource/launcher/puretv/build.gradle'
+      - 'resource/launcher/puretv/gradle/**'
+      - 'resource/launcher/puretv/gradle.properties'
+      - 'desktop/package.json'
+      - 'desktop/package-lock.json'
+  pull_request:
+    paths:
+      - '.github/workflows/nes-rom.yml'
+      - 'resource/apps/tank-nes/build.gradle'
+      - 'resource/apps/tank-nes/src/**'
+      - 'resource/apps/tank-nes/shared/src/**'
+      - 'resource/apps/tank-nes/shared/tests/**'
+      - 'resource/apps/tank-nes/shared/tools/**'
+      - 'resource/apps/tank-nes/shared/licenses/**'
+      - 'resource/apps/jackal-nes/build.gradle'
+      - 'resource/apps/jackal-nes/src/**'
+      - 'resource/launcher/puretv/settings.gradle'
+      - 'resource/launcher/puretv/build.gradle'
+      - 'resource/launcher/puretv/gradle/**'
+      - 'resource/launcher/puretv/gradle.properties'
+      - 'desktop/package.json'
+      - 'desktop/package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nes-rom-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify emulator integration with authored diagnostic cartridges
+        run: node --test resource/apps/tank-nes/shared/tests/*.test.cjs
+      - name: Install browser test tools
+        timeout-minutes: 5
+        working-directory: desktop
+        run: npm ci --prefer-offline --no-audit --no-fund
+      - name: Select browser and install Chinese fonts
+        timeout-minutes: 5
+        working-directory: desktop
+        run: |
+          nes_chrome_path="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -n "$nes_chrome_path" ]; then
+            echo "CHROMIUM_PATH=$nes_chrome_path" >> "$GITHUB_ENV"
+          else
+            npx playwright install --with-deps chromium
+          fi
+          if [ -z "$(fc-list :lang=zh)" ]; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends fonts-wqy-zenhei
+            fc-cache -f
+          fi
+          test -n "$(fc-list :lang=zh)"
+      - name: Verify phone controls, ROM import and emulator lifecycle
+        env:
+          NES_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-nes-previews
+        run: node resource/apps/tank-nes/shared/tests/browser.mjs
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Android SDK
+        run: sdkmanager "platforms;android-35" "build-tools;34.0.0"
+      - name: Build, test and lint both ROM applications
+        working-directory: resource/launcher/puretv
+        run: |
+          ./gradlew --no-daemon --continue \
+            :tank-nes:assembleDebug :tank-nes:verifyReleaseSize :tank-nes:testDebugUnitTest :tank-nes:lintDebug \
+            :jackal-nes:assembleDebug :jackal-nes:verifyReleaseSize :jackal-nes:testDebugUnitTest :jackal-nes:lintDebug
+      - name: Upload application packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: nes-rom-apps-unsigned
+          path: |
+            resource/apps/tank-nes/build/outputs/apk/release/*.apk
+            resource/apps/jackal-nes/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+      - name: Upload actual import and controller previews
+        uses: actions/upload-artifact@v4
+        with:
+          name: nes-rom-apps-previews
+          path: ${{ runner.temp }}/puretv-nes-previews/*.png
+          if-no-files-found: error
+      - name: Upload Android test and lint reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nes-rom-apps-reports
+          path: |
+            resource/apps/tank-nes/build/reports/
+            resource/apps/jackal-nes/build/reports/
+          if-no-files-found: ignore
