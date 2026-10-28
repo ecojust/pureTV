@@ -87,25 +87,23 @@
     73, 74, 78, 83,
   ]);
   const SPECS = Object.freeze(
-    Object.fromEntries(
-      ROWS.map((r) => [
-        r[0],
-        Object.freeze({
-          sourceType: r[0],
-          kind: r[1],
-          hp: r[2],
-          explosiveResistance: !!r[3],
-          gunImmune: GUN_IMMUNE.has(r[0]),
-          grenadeOnly: GUN_IMMUNE.has(r[0]),
-          mainWeaponPassesThrough: r[0] >= 1 && r[0] <= 4,
-          jeepContact: !NO_JEEP_CONTACT.has(r[0]),
-          score: r[4],
-          halfWidth: r[5],
-          halfHeight: r[6],
-          frameId: r[7],
-        }),
-      ]),
-    ),
+    ROWS.reduce((specs, r) => {
+      specs[r[0]] = Object.freeze({
+        sourceType: r[0],
+        kind: r[1],
+        hp: r[2],
+        explosiveResistance: !!r[3],
+        gunImmune: GUN_IMMUNE.has(r[0]),
+        grenadeOnly: GUN_IMMUNE.has(r[0]),
+        mainWeaponPassesThrough: r[0] >= 1 && r[0] <= 4,
+        jeepContact: !NO_JEEP_CONTACT.has(r[0]),
+        score: r[4],
+        halfWidth: r[5],
+        halfHeight: r[6],
+        frameId: r[7],
+      });
+      return specs;
+    }, {}),
   );
   const SHOT_SPEED = [
     0x20, 0x22, 0x31, 0x30, 0x31, 0x20, 0x31, 0x31, 0x40, 0x31, 0x40, 0x41,
@@ -206,48 +204,64 @@
       return this.count() < 16 || !!(priority && this.evictForPriority());
     }
     spawn(e = {}) {
-      const raw = e.raw_source_type ?? e.source_type ?? e.sourceType ?? 0,
-        t = (e.source_type ?? e.sourceType ?? raw) & 127;
+      const raw =
+          e.raw_source_type != null
+            ? e.raw_source_type
+            : e.source_type != null
+              ? e.source_type
+              : e.sourceType != null
+                ? e.sourceType
+                : 0,
+        t =
+          (e.source_type != null
+            ? e.source_type
+            : e.sourceType != null
+              ? e.sourceType
+              : raw) & 127;
       if (CORE_TYPES.has(t) || !SPECS[t]) return null;
       const priority = !!(e.priority_spawn || raw & 128 || e.bossPart);
       if (!this.reserve(priority)) return null;
       const s = SPECS[t];
-      const a = {
-        ...s,
-        id: `enemy:${++this.sequence}`,
-        source_type: t,
-        raw_source_type: raw,
-        x: Number(e.x) || 0,
-        y: Number(e.y) || 0,
-        vx: 0,
-        vy: 0,
-        maxHp: s.hp,
-        alive: true,
-        active: true,
-        dir: e.dir ?? 8,
-        frame: s.frameId,
-        palette: 2,
-        flipX: false,
-        flipY: false,
-        state: "init",
-        timer: 0,
-        age: 0,
-        visible: true,
-        vulnerable: s.hp > 0,
-        priority,
-        contact: s.hp > 0 && s.jeepContact,
-        controller: false,
-        bossPart: !!e.bossPart,
-        data: { ...e },
-        ...("score" in e ? { score: e.score } : {}),
-      };
+      const a = Object.assign(
+        {},
+        s,
+        {
+          id: `enemy:${++this.sequence}`,
+          source_type: t,
+          raw_source_type: raw,
+          x: Number(e.x) || 0,
+          y: Number(e.y) || 0,
+          vx: 0,
+          vy: 0,
+          maxHp: s.hp,
+          alive: true,
+          active: true,
+          dir: e.dir != null ? e.dir : 8,
+          frame: s.frameId,
+          palette: 2,
+          flipX: false,
+          flipY: false,
+          state: "init",
+          timer: 0,
+          age: 0,
+          visible: true,
+          vulnerable: s.hp > 0,
+          priority,
+          contact: s.hp > 0 && s.jeepContact,
+          controller: false,
+          bossPart: !!e.bossPart,
+          data: Object.assign({}, e),
+        },
+        "score" in e ? { score: e.score } : {},
+      );
       const coop =
-        e.coop ??
-        (this.ctx?.players || []).filter(
-          (p) =>
-            p.joined !== false &&
-            (p.lives === undefined ? p.alive : p.lives > 0),
-        ).length === 2;
+        e.coop != null
+          ? e.coop
+          : ((this.ctx && this.ctx.players) || []).filter(
+              (p) =>
+                p.joined !== false &&
+                (p.lives === undefined ? p.alive : p.lives > 0),
+            ).length === 2;
       if (coop && !("score" in e)) {
         const points = [
           0, 50, 100, 200, 300, 500, 800, 1000, 1500, 2000, 3000, 5000, 8000,
@@ -343,7 +357,7 @@
         a.contact = false;
       } else if (t === 49) {
         a.state = "closed";
-        a.timer = [48, 96, 144, 192][d.doorIndex ?? 0];
+        a.timer = [48, 96, 144, 192][d.doorIndex != null ? d.doorIndex : 0];
         a.vulnerable = false;
         a.backgroundFrame = 20;
         d.openings = 0;
@@ -357,7 +371,7 @@
         a.contact = false;
       } else if (t === 66) {
         a.state = "outward";
-        a.timer = [8, 25, 42, 59][d.dropIndex ?? 0];
+        a.timer = [8, 25, 42, 59][d.dropIndex != null ? d.dropIndex : 0];
         a.contact = false;
         a.vulnerable = false;
       } else if (t === 71) {
@@ -386,10 +400,10 @@
         a.vulnerable = false;
       } else if (t === 57) {
         a.alive = false;
-        this.missile(a, d.missileMode ?? 2, a.dir);
+        this.missile(a, d.missileMode != null ? d.missileMode : 2, a.dir);
       } else if (t === 54) {
         a.alive = false;
-        this.shot(a, d.bulletType ?? 0, a.dir);
+        this.shot(a, d.bulletType != null ? d.bulletType : 0, a.dir);
       } else if (t === 72) {
         a.state = "flight";
         a.timer = d.flightTime || 68;
@@ -472,7 +486,7 @@
       a.frame = a.frameId;
     }
     target(a) {
-      return (this.ctx?.players || [])
+      return ((this.ctx && this.ctx.players) || [])
         .filter((p) => p.alive && p.joined !== false && p.connected !== false)
         .reduce(
           (b, p) =>
@@ -497,11 +511,9 @@
       a.vy = v.y;
       if (
         terrain &&
-        this.ctx?.terrainBlocked?.(
-          a.x + v.x,
-          a.y + v.y,
-          Math.min(a.halfWidth, 8),
-        )
+        this.ctx != null &&
+        this.ctx.terrainBlocked != null &&
+        this.ctx.terrainBlocked(a.x + v.x, a.y + v.y, Math.min(a.halfWidth, 8))
       ) {
         a.dir = (a.dir + 4) & 31;
         return false;
@@ -511,42 +523,47 @@
       return true;
     }
     effect(a, kind = "explosion", extra = {}) {
-      this.pendingEffects.push({ x: a.x, y: a.y, kind, ...extra });
+      this.pendingEffects.push(
+        Object.assign({}, { x: a.x, y: a.y, kind }, extra),
+      );
     }
     shot(a, type = 0, dir = this.aim(a), extra = {}) {
       if (!this.reserve(false)) return null;
       type = clamp(type | 0, 0, 15);
       const v = velocity(dir, SHOT_SPEED[type]),
         skill = clamp(
-          ((this.stage - 1 + (this.ctx?.difficulty || 0)) / 2) | 0,
+          ((this.stage - 1 + ((this.ctx && this.ctx.difficulty) || 0)) / 2) | 0,
           0,
           5,
         ),
         life = SHOT_LIFE[type] + skill * 8;
-      const p = {
-        id: `enemy-shot:${++this.sequence}`,
-        sourceType: 54,
-        kind: "bullet",
-        team: "enemy",
-        owner: 0,
-        alive: true,
-        x: a.x,
-        y: a.y,
-        vx: v.x,
-        vy: v.y,
-        dir,
-        damage: 1,
-        life,
-        maxLife: life,
-        hiddenTicks: SHOT_HIDE[type] + 1,
-        visible: false,
-        frameId: SHOT_FRAME[type],
-        frame: SHOT_FRAME[type],
-        palette: SHOT_PALETTE[type],
-        radius: 3,
-        bulletType: type,
-        ...extra,
-      };
+      const p = Object.assign(
+        {},
+        {
+          id: `enemy-shot:${++this.sequence}`,
+          sourceType: 54,
+          kind: "bullet",
+          team: "enemy",
+          owner: 0,
+          alive: true,
+          x: a.x,
+          y: a.y,
+          vx: v.x,
+          vy: v.y,
+          dir,
+          damage: 1,
+          life,
+          maxLife: life,
+          hiddenTicks: SHOT_HIDE[type] + 1,
+          visible: false,
+          frameId: SHOT_FRAME[type],
+          frame: SHOT_FRAME[type],
+          palette: SHOT_PALETTE[type],
+          radius: 3,
+          bulletType: type,
+        },
+        extra,
+      );
       this.projectiles.push(p);
       return p;
     }
@@ -595,7 +612,8 @@
         // Native bazooka splashes do not damage HP-bit7 armored objects.
         if (kind === "blast" && a.explosiveResistance) continue;
         hit = true;
-        this.lastImpactStops ||= kind === "gun" || !a.mainWeaponPassesThrough;
+        if (!this.lastImpactStops)
+          this.lastImpactStops = kind === "gun" || !a.mainWeaponPassesThrough;
         a.hp =
           kind === "gun" || a.explosiveResistance
             ? Math.max(0, a.hp - damage)
@@ -630,7 +648,8 @@
       a.frame = 25;
       if (a.score && award) this.pendingScores.push({ owner, score: a.score });
       this.effect(a, "explosion", { sourceType: a.sourceType });
-      this.ctx?.applyBackgroundPatch?.(a.sourceType, a.x, a.y);
+      if (this.ctx != null && this.ctx.applyBackgroundPatch != null)
+        this.ctx.applyBackgroundPatch(a.sourceType, a.x, a.y);
       if (a.sourceType === 74 && this.boss) {
         this.boss.phase = "hq-dying";
         this.boss.transition = 24;
@@ -667,8 +686,8 @@
               this.trainMask = ~((128 >> (a.data.trainIndex || 0)) >> 1) & 255;
             if (a.sourceType === 16 || a.sourceType === 31)
               this.spawn({ source_type: 30, x: a.x, y: a.y, dir: a.dir });
-            if (a.sourceType === 83)
-              ctx.spawnEntity?.({
+            if (a.sourceType === 83 && ctx.spawnEntity != null)
+              ctx.spawnEntity({
                 source_type: 81,
                 raw_source_type: 209,
                 x: a.x,
@@ -690,14 +709,15 @@
                 this.kill(a, p.id);
                 break;
               }
-              ctx.damagePlayer?.(p);
+              if (ctx.damagePlayer != null) ctx.damagePlayer(p);
             }
           }
         if (
           !a.bossPart &&
           !a.controller &&
           a.age > 30 &&
-          (a.y > (ctx.cameraY ?? 0) + 320 || a.y < (ctx.cameraY ?? 0) - 128)
+          (a.y > (ctx.cameraY != null ? ctx.cameraY : 0) + 320 ||
+            a.y < (ctx.cameraY != null ? ctx.cameraY : 0) - 128)
         )
           a.alive = false;
       }
@@ -705,20 +725,27 @@
       this.actors = this.actors.filter((a) => a.alive);
       this.projectiles = this.projectiles.filter((a) => a.alive);
       this.checkBossComplete();
-      for (const e of this.pendingEffects) ctx.onEffect?.(e.x, e.y, e.kind, e);
-      for (const s of this.pendingScores) ctx.addScore?.(s.owner, s.score);
+      for (const e of this.pendingEffects)
+        if (ctx.onEffect != null) ctx.onEffect(e.x, e.y, e.kind, e);
+      for (const s of this.pendingScores)
+        if (ctx.addScore != null) ctx.addScore(s.owner, s.score);
       this.pendingEffects.length = 0;
       this.pendingScores.length = 0;
     }
     bossPart(t, x, y, extra = {}) {
-      const a = this.spawn({
-        source_type: t,
-        raw_source_type: t | 128,
-        x,
-        y,
-        bossPart: true,
-        ...extra,
-      });
+      const a = this.spawn(
+        Object.assign(
+          {},
+          {
+            source_type: t,
+            raw_source_type: t | 128,
+            x,
+            y,
+            bossPart: true,
+          },
+          extra,
+        ),
+      );
       if (a && this.boss) this.boss.parts.push(a.id);
       return a;
     }
@@ -728,7 +755,7 @@
       if (!b.started) {
         b.started = true;
         b.cameraY = this.ctx.cameraY || 0;
-        this.ctx.onBossStart?.();
+        if (this.ctx.onBossStart != null) this.ctx.onBossStart();
         if (b.stage === 1)
           b.timer = [240, 208, 176, 144][clamp(this.ctx.difficulty || 0, 0, 3)];
       }
@@ -837,9 +864,9 @@
         return;
       }
       b.transitionAge++;
-      if (!finalTank && b.transitionAge === 192)
-        this.ctx.onEffect?.(256, b.cameraY + 48, "final-boss-music");
-      if (((this.ctx.frame ?? this.age) & 15) === 0)
+      if (!finalTank && b.transitionAge === 192 && this.ctx.onEffect != null)
+        this.ctx.onEffect(256, b.cameraY + 48, "final-boss-music");
+      if (((this.ctx.frame != null ? this.ctx.frame : this.age) & 15) === 0)
         for (let i = 0; i < 3; i++) {
           const p =
             FINAL_EXPLOSIONS[b.explosionIndex++ % FINAL_EXPLOSIONS.length];
@@ -852,9 +879,10 @@
       }
       // The original deliberately leaves the byte at1 during row updates.
       b.graphicsIndex++;
-      this.ctx.onEffect?.(256, b.cameraY + 48, "boss-background-row", {
-        index: b.graphicsIndex - 1,
-      });
+      if (this.ctx.onEffect != null)
+        this.ctx.onEffect(256, b.cameraY + 48, "boss-background-row", {
+          index: b.graphicsIndex - 1,
+        });
       if (b.graphicsIndex < b.graphicsEnd) return;
       b.freezePlayers = false;
       if (finalTank) {
@@ -870,7 +898,7 @@
       b.done = true;
       b.phase = "defeated";
       for (const a of this.actors) if (a.controller) a.alive = false;
-      this.ctx.onBossDefeated?.();
+      if (this.ctx.onBossDefeated != null) this.ctx.onBossDefeated();
     }
     updateActor(a) {
       const t = a.sourceType;
@@ -882,7 +910,9 @@
       if (t === 49) return this.door(a);
       if (t === 38) {
         const protectedCore =
-          (this.boss?.stage === 5 && this.boss.pending > 0) ||
+          (this.boss != null &&
+            this.boss.stage === 5 &&
+            this.boss.pending > 0) ||
           this.actors.some((o) => o.sourceType === 49 && o.alive);
         a.vulnerable = !protectedCore;
         a.state = protectedCore ? "shielded" : "exposed";
@@ -898,7 +928,12 @@
           this.spawn({
             source_type: 7,
             x: 128 + this.random() * 256,
-            y: (this.boss?.cameraY ?? this.ctx.cameraY ?? 0) + 239,
+            y:
+              (this.boss != null && this.boss.cameraY != null
+                ? this.boss.cameraY
+                : this.ctx.cameraY != null
+                  ? this.ctx.cameraY
+                  : 0) + 239,
             score: 0,
           });
           a.timer = 192 + ((this.random() * 64) | 0);
@@ -942,8 +977,16 @@
         const i = a.data.trainIndex || 0;
         a.frameId = i === 0 ? 165 : 168;
         const timer = Math.ceil(a.age / 2);
-        if (i % 2 && timer > 0 && (timer & 31) === 0)
-          this.shot(a, 6, (this.target(a)?.x ?? 256) < a.x ? 16 : 0);
+        if (i % 2 && timer > 0 && (timer & 31) === 0) {
+          const target = this.target(a);
+          this.shot(
+            a,
+            6,
+            (target != null && target.x != null ? target.x : 256) < a.x
+              ? 16
+              : 0,
+          );
+        }
         if (timer >= 115) a.frameId += 1;
         if (timer >= 120) a.frameId += 1;
         if (timer >= 128) a.alive = false;
@@ -1362,7 +1405,8 @@
         boss = d.bossVariant,
         last =
           boss &&
-          this.boss?.pending === 0 &&
+          this.boss != null &&
+          this.boss.pending === 0 &&
           this.actors.filter(
             (o) =>
               o.alive &&
@@ -1454,7 +1498,12 @@
       }
     }
     helicopterBoss(a) {
-      const cy = this.boss?.cameraY ?? this.ctx.cameraY ?? 0,
+      const cy =
+          this.boss != null && this.boss.cameraY != null
+            ? this.boss.cameraY
+            : this.ctx.cameraY != null
+              ? this.ctx.cameraY
+              : 0,
         d = a.data;
       if (a.state === "waiting") {
         if (--a.timer <= 0) {
@@ -1770,7 +1819,7 @@
                 player.alive &&
                 Math.hypot(p.x - player.x, p.y - player.y) < 14
               )
-                c.damagePlayer?.(player);
+                if (c.damagePlayer != null) c.damagePlayer(player);
           continue;
         }
         if (p.kind === "missile") {
@@ -1799,15 +1848,15 @@
         if (
           p.x < 0 ||
           p.x > 512 ||
-          p.y < (c.cameraY ?? 0) - 80 ||
-          p.y > (c.cameraY ?? 0) + 320
+          p.y < (c.cameraY != null ? c.cameraY : 0) - 80 ||
+          p.y > (c.cameraY != null ? c.cameraY : 0) + 320
         ) {
           p.alive = false;
           continue;
         }
         const terrain = c.terrainClass
           ? c.terrainClass(p.x, p.y)
-          : c.terrainBlocked?.(p.x, p.y, 2)
+          : c.terrainBlocked != null && c.terrainBlocked(p.x, p.y, 2)
             ? 1
             : 0;
         p.life--;
@@ -1837,7 +1886,7 @@
             player.joined !== false &&
             Math.hypot(p.x - player.x, p.y - player.y) < p.radius + 7
           ) {
-            c.damagePlayer?.(player);
+            if (c.damagePlayer != null) c.damagePlayer(player);
             p.alive = false;
             break;
           }

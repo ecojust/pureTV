@@ -28,13 +28,14 @@ body {
   padding: 24px 32px 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  --app-space: 16px;
 }
 .main {
   flex: 1;
   min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 224px;
+  grid-column-gap: 40px;
   gap: 40px;
 }
 .arena-panel {
@@ -62,7 +63,7 @@ canvas {
   align-self: center;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  --sidebar-space: 20px;
 }
 .join-card {
   text-align: center;
@@ -116,18 +117,19 @@ canvas {
 .room-address {
   color: #888;
   font: 10px/1.5 monospace;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
   margin-top: 9px;
 }
 .players {
   display: flex;
   flex-direction: column;
-  gap: 17px;
+  --players-space: 17px;
 }
 .player-card {
   display: flex;
   align-items: center;
-  gap: 12px;
+  --player-space: 12px;
 }
 .player-icon {
   font: 700 20px monospace;
@@ -142,7 +144,7 @@ canvas {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  --info-space: 5px;
 }
 .player-info strong {
   font-size: 11px;
@@ -153,6 +155,7 @@ canvas {
   color: #888;
   font-size: 10px;
   line-height: 1.4;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
 .player-card.connected .player-info > span {
@@ -173,14 +176,12 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
   color: #aaa;
   font-size: 11px;
 }
 .control-legend > div {
   display: flex;
   align-items: center;
-  gap: 6px;
 }
 .key-pill {
   display: inline-flex;
@@ -204,11 +205,22 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
 }
+/* Margins also work in TV WebViews predating flex gap support. */
+.app > * + * { margin-top: var(--app-space); }
+.sidebar > * + * { margin-top: var(--sidebar-space); }
+.players > * + * { margin-top: var(--players-space); }
+.player-card > * + * { margin-left: var(--player-space); }
+.player-info > * + * { margin-top: var(--info-space); }
+.control-legend > div > * + * { margin-left: 6px; }
+.control-legend > * + * { margin-left: 8px; }
+.footer > * + * { margin-left: 20px; }
 .loading {
   position: absolute;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   background: #101010;
   display: flex;
   flex-direction: column;
@@ -216,6 +228,7 @@ canvas {
   align-items: center;
   padding: 20px;
   text-align: center;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
 .loading strong {
@@ -230,14 +243,15 @@ canvas {
 @media (min-width: 1600px) {
   .app {
     padding: 36px 48px 22px;
-    gap: 20px;
+    --app-space: 20px;
   }
   .main {
     grid-template-columns: minmax(0, 1fr) 268px;
+    grid-column-gap: 56px;
     gap: 56px;
   }
   .sidebar {
-    gap: 26px;
+    --sidebar-space: 26px;
   }
   .room-brand {
     font-size: 29px;
@@ -274,14 +288,15 @@ canvas {
 @media (max-height: 650px) {
   .app {
     padding: 16px 22px 12px;
-    gap: 10px;
+    --app-space: 10px;
   }
   .main {
     grid-template-columns: minmax(0, 1fr) 194px;
+    grid-column-gap: 24px;
     gap: 24px;
   }
   .sidebar {
-    gap: 13px;
+    --sidebar-space: 13px;
   }
   .room-brand {
     font-size: 20px;
@@ -309,17 +324,17 @@ canvas {
     font-size: 9px;
   }
   .players {
-    gap: 12px;
+    --players-space: 12px;
   }
   .player-card {
-    gap: 8px;
+    --player-space: 8px;
   }
   .player-icon {
     font-size: 18px;
     width: 31px;
   }
   .player-info {
-    gap: 3px;
+    --info-space: 3px;
   }
   .player-info strong {
     font-size: 10px;
@@ -333,14 +348,15 @@ canvas {
 @media (max-height: 500px) {
   .app {
     padding: 12px 14px 10px;
-    gap: 8px;
+    --app-space: 8px;
   }
   .main {
     grid-template-columns: minmax(0, 1fr) 176px;
+    grid-column-gap: 18px;
     gap: 18px;
   }
   .sidebar {
-    gap: 10px;
+    --sidebar-space: 10px;
   }
   .room-brand {
     font-size: 18px;
@@ -366,7 +382,7 @@ canvas {
     font-size: 8px;
   }
   .players {
-    gap: 9px;
+    --players-space: 9px;
   }
   .player-info strong {
     font-size: 9px;

@@ -1,8 +1,8 @@
 # Jackal TV 预览版构建
 
-当前发布版本为 `0.2.0-preview.1`，Android `versionCode` 为 `2`。它是可安装的独立重写测试版，尚未完成电视实机逐帧对照；剩余差异见 [reference.md](reference.md)。
+当前发布版本为 `0.3.0`，Android `versionCode` 为 `3`。此版本修复旧版电视 WebView 启动与玩家状态，并提供手机浮动摇杆。尚未完成电视实机逐帧对照；剩余差异见 [reference.md](reference.md)。
 
-[已签名 APK](../jackal-0.2.0-preview.1.apk?raw=1) 与源码版本、签名、大小和摘要记录在 [resource.json](../resource.json)。发布保留此前验证过的 APK 字节，不将它重新标记为正式稳定版。
+[已签名 APK](../jackal-0.3.0.apk?raw=1) 与源码版本、签名、大小和摘要记录在 [resource.json](../resource.json)。本次 APK 从对应源码重新构建，沿用 pureTV 发布证书，可覆盖此前版本。
 
 ## 恢复构建素材
 
@@ -21,6 +21,8 @@ python resource/apps/jackal/tools/extract-artwork.py --output /tmp/puretv-jackal
 
 ```sh
 # 仓库根目录；浏览器测试使用已恢复的素材
+JACKAL_ART_DIR=/tmp/puretv-jackal-art node resource/apps/jackal/tests/compatibility.mjs
+node resource/apps/jackal/tests/controller.mjs
 JACKAL_ART_DIR=/tmp/puretv-jackal-art node resource/apps/jackal/tests/capture.mjs
 node resource/apps/jackal/tools/build-levels.cjs --check
 node --test resource/apps/jackal/tests/game.test.cjs resource/apps/jackal/tests/enemies.test.cjs resource/apps/jackal/tests/scenes.test.cjs

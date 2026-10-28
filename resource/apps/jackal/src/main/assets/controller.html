@@ -25,12 +25,14 @@
 
     <section class="controls" aria-label="游戏操作">
       <div class="joystick-column">
-        <div class="joystick" id="joystick" role="group" aria-label="方向摇杆" tabindex="0">
-          <div class="joystick-ring"></div><div class="axis axis-x"></div><div class="axis axis-y"></div>
-          <span class="direction up">▲</span><span class="direction down">▼</span><span class="direction left">◀</span><span class="direction right">▶</span>
-          <div class="joystick-thumb" id="joystick-thumb"><div></div></div>
+        <div class="joystick-zone" id="joystick-zone" role="group" aria-label="左侧按住滑动" aria-disabled="true" tabindex="0" data-active="false">
+          <div class="joystick" id="joystick" aria-hidden="true">
+            <div class="joystick-ring"></div><div class="axis axis-x"></div><div class="axis axis-y"></div>
+            <span class="direction up">▲</span><span class="direction down">▼</span><span class="direction left">◀</span><span class="direction right">▶</span>
+            <div class="joystick-thumb" id="joystick-thumb"><div></div></div>
+          </div>
         </div>
-        <span class="control-caption" data-i18n="move">移动 · 左侧摇杆</span>
+        <span class="control-caption" data-i18n="move">左侧按住滑动</span>
       </div>
       <div class="system-keys" aria-label="NES menu controls">
         <button type="button" id="button-select" class="system-button" disabled aria-label="选择游戏模式"><span>SELECT</span><small id="select-caption">选择</small></button>

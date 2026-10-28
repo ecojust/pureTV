@@ -16,6 +16,19 @@
     if (!response.ok) throw new Error("Missing game data: " + url);
     return response.json();
   }
+  // Promise.finally is unavailable on the older TV WebViews we support.
+  function clearPending(task, pending, key) {
+    return task.then(
+      (value) => {
+        pending.delete(key);
+        return value;
+      },
+      (error) => {
+        pending.delete(key);
+        throw error;
+      },
+    );
+  }
   class JackalArtwork {
     constructor(base) {
       this.base = base.endsWith("/") ? base : base + "/";
@@ -48,7 +61,7 @@
         return Promise.resolve(this.stages.get(number));
       if (this.pending.has(key)) return this.pending.get(key);
       const stem = "textures/stage_" + String(number).padStart(2, "0");
-      const task = Promise.all([
+      const loading = Promise.all([
         this.texture(stem + "_tiles.png"),
         this.texture(stem + "_sprites.png"),
       ])
@@ -60,8 +73,8 @@
         .catch((error) => {
           this.errors.set(key, error);
           throw error;
-        })
-        .finally(() => this.pending.delete(key));
+        });
+      const task = clearPending(loading, this.pending, key);
       this.pending.set(key, task);
       return task;
     }
@@ -74,7 +87,7 @@
         return Promise.resolve(result);
       }
       if (this.pending.has(key)) return this.pending.get(key);
-      const task = image(this.base + path)
+      const loading = image(this.base + path)
         .then((result) => {
           if (!this.disposed) {
             this.textures.set(path, result);
@@ -86,8 +99,8 @@
         .catch((error) => {
           this.errors.set(key, error);
           throw error;
-        })
-        .finally(() => this.pending.delete(key));
+        });
+      const task = clearPending(loading, this.pending, key);
       this.pending.set(key, task);
       return task;
     }
@@ -95,12 +108,12 @@
       const key = "scene:" + name;
       if (this.scenes.has(name)) return Promise.resolve(this.scenes.get(name));
       if (this.pending.has(key)) return this.pending.get(key);
-      const task = Promise.all([
+      const loading = Promise.all([
         json(this.base + "cinematics/" + name + "/timeline.json"),
         image(this.base + "cinematics/" + name + "/tiles.png"),
       ])
         .then(([data, atlas]) => {
-          const scene = { ...data, atlas, offsets: [] };
+          const scene = Object.assign({}, data, { atlas, offsets: [] });
           let total = 0;
           for (const frame of scene.frames) {
             scene.offsets.push(total);
@@ -117,8 +130,8 @@
         .catch((error) => {
           this.errors.set(key, error);
           throw error;
-        })
-        .finally(() => this.pending.delete(key));
+        });
+      const task = clearPending(loading, this.pending, key);
       this.pending.set(key, task);
       return task;
     }
@@ -577,11 +590,12 @@
                 [1, 0],
                 [-1, 0],
               ])
-            list.push({
-              ...projectile,
-              x: projectile.x + dx * extent,
-              y: projectile.y + dy * extent,
-            });
+            list.push(
+              Object.assign({}, projectile, {
+                x: projectile.x + dx * extent,
+                y: projectile.y + dy * extent,
+              }),
+            );
         } else list.push(projectile);
       }
       for (const actor of list) this.actor(actor, game);

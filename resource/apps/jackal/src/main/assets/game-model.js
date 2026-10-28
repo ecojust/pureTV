@@ -152,12 +152,11 @@
       this.tiles = original.tiles.slice();
       this.palettes = original.palettes.slice();
       this.collision = original.collision.slice();
-      this.level = {
-        ...original,
+      this.level = Object.assign({}, original, {
         tiles: this.tiles,
         palettes: this.palettes,
         collision: this.collision,
-      };
+      });
       this.worldHeight = this.level.height_tiles * TILE;
       this.map = Array.from({ length: this.level.height_tiles }, (_, row) =>
         this.collision.slice(row * 64, row * 64 + 64),
@@ -175,10 +174,10 @@
       this.forcedScroll = false;
       this.paletteStage = 0;
       this.spawnEvents = this.level.events
-        .map((event, index) => ({ ...event, index }))
+        .map((event, index) => Object.assign({}, event, { index }))
         .sort((a, b) => a.distance - b.distance || a.index - b.index);
       this.spawnCommands = (this.level.commands || [])
-        .map((event, index) => ({ ...event, index }))
+        .map((event, index) => Object.assign({}, event, { index }))
         .sort((a, b) => a.distance - b.distance || a.index - b.index);
       this.enemySystem = this.makeEnemySystem();
       this.playerBullets = [];
@@ -280,13 +279,12 @@
       const controls = this.normalizedInputs(inputs);
       const pulses = controls.map((i) => {
         const p = this.players[i.id - 1];
-        return {
-          ...i,
+        return Object.assign({}, i, {
           aPressed: i.connected && i.a && !p.lastA,
           bPressed: i.connected && i.b && !p.lastB,
           startPressed: i.connected && i.start && !p.lastStart,
           selectPressed: i.connected && i.select && !p.lastSelect,
-        };
+        });
       });
       for (const i of controls) {
         const p = this.players[i.id - 1];
@@ -416,7 +414,7 @@
         return;
       }
       if (this.phase !== "playing") return;
-      if (!this.boss?.freezePlayers)
+      if (!(this.boss && this.boss.freezePlayers))
         for (const p of this.players) {
           if (!p.joined) continue;
           const i = pulses[p.id - 1];
@@ -491,17 +489,19 @@
       ) {
         const event = this.spawnEvents[this.eventIndex++];
         if (event.odd_difficulty_only && this.difficulty !== 3) continue;
-        this.spawnEvent({
-          ...event,
-          y: this.worldHeight - event.distance + (event.from_bottom ? 239 : 0),
-        });
+        this.spawnEvent(
+          Object.assign({}, event, {
+            y:
+              this.worldHeight - event.distance + (event.from_bottom ? 239 : 0),
+          }),
+        );
       }
       while (
         this.commandIndex < this.spawnCommands.length &&
         this.spawnCommands[this.commandIndex].distance <= this.scrollDistance
       ) {
         const command = this.spawnCommands[this.commandIndex++];
-        this.commandLog.push({ ...command, frame: this.frame });
+        this.commandLog.push(Object.assign({}, command, { frame: this.frame }));
         if (command.command === "forced_scroll") this.forcedScroll = true;
         else if (command.command === "palette_change") this.paletteStage++;
         this.events.push("map-command");
@@ -509,13 +509,20 @@
     }
     spawnEvent(event) {
       const sourceType =
-          Number(event.source_type ?? event.sourceType ?? 0) & 127,
+          Number(
+            event.source_type != null
+              ? event.source_type
+              : event.sourceType != null
+                ? event.sourceType
+                : 0,
+          ) & 127,
         x = numeric(event.x),
         y = Number.isFinite(event.y) ? event.y : this.cameraY;
       if (sourceType === 0x49) {
         this.commandLog.push({
           command: "headquarters_gate",
-          distance: event.distance ?? this.worldHeight - y,
+          distance:
+            event.distance != null ? event.distance : this.worldHeight - y,
           frame: this.frame,
         });
       }
@@ -536,8 +543,7 @@
       };
       if (HUT_TYPES.has(sourceType)) {
         if (!this.actorRoom(!!event.priority_spawn)) return null;
-        const h = {
-          ...common,
+        const h = Object.assign({}, common, {
           kind: sourceType === 0x19 ? "garage" : "hut",
           halfWidth: 25,
           halfHeight: 25,
@@ -557,7 +563,7 @@
                 : 2,
           special: sourceType === 0x15,
           rawSourceType: event.raw_source_type,
-        };
+        });
         this.huts.push(h);
         return h;
       }
@@ -569,8 +575,7 @@
         });
       if (sourceType === 0x3d || sourceType === 0x3e) {
         if (!this.actorRoom(!!event.priority_spawn)) return null;
-        const h = {
-          ...common,
+        const h = Object.assign({}, common, {
           kind: "rescue-helicopter",
           frameId: 47,
           frame: 47,
@@ -579,44 +584,43 @@
           grace: 256,
           rotor: 0,
           dir: sourceType === 0x3d ? 1 : -1,
-        };
+        });
         this.helicopters.push(h);
         return h;
       }
       if (sourceType === 0x3f) {
-        const h = {
-          ...common,
+        const h = Object.assign({}, common, {
           kind: "rescue-zone",
           halfWidth: 16,
           halfHeight: 16,
           age: 0,
           spawned: 0,
-        };
+        });
         this.helipads.push(h);
         return h;
       }
       if (sourceType >= 0x50 && sourceType <= 0x52) {
         if (!this.actorRoom(true)) return null;
-        const p = {
-          ...common,
+        const p = Object.assign({}, common, {
           kind: "pickup",
           frameId: 46,
           frame: 46,
           halfWidth: 10,
           halfHeight: 10,
           timer: 512,
-        };
+        });
         this.pickups.push(p);
         return p;
       }
       this.enemySystem.externalActorCount = this.externalActorCount();
-      return this.enemySystem.spawn({
-        ...event,
-        source_type: sourceType,
-        x,
-        y,
-        coop: this.players.every((p) => p.joined && p.lives > 0),
-      });
+      return this.enemySystem.spawn(
+        Object.assign({}, event, {
+          source_type: sourceType,
+          x,
+          y,
+          coop: this.players.every((p) => p.joined && p.lives > 0),
+        }),
+      );
     }
     tileClass(x, y) {
       const col = Math.floor(x / TILE),
@@ -905,7 +909,13 @@
       hut.frameId = 25;
       this.awardScore(
         owner,
-        hut.score ?? (hut.special ? 300 : hut.kind === "garage" ? 500 : 800),
+        hut.score != null
+          ? hut.score
+          : hut.special
+            ? 300
+            : hut.kind === "garage"
+              ? 500
+              : 800,
       );
       this.events.push("barracks");
       this.applyBackgroundPatch(hut.sourceType, hut.x, hut.y);
@@ -947,16 +957,17 @@
         );
         this.hitHut(weapon.x, weapon.y, 4, weapon.owner, weapon.kind);
       }
-      this.weapons.push({
-        ...weapon,
-        kind: "weapon-explosion",
-        life: 24,
-        maxLife: 24,
-        frameId: 25,
-        palette: 3,
-        vx: 0,
-        vy: 0,
-      });
+      this.weapons.push(
+        Object.assign({}, weapon, {
+          kind: "weapon-explosion",
+          life: 24,
+          maxLife: 24,
+          frameId: 25,
+          palette: 3,
+          vx: 0,
+          vy: 0,
+        }),
+      );
       if (weapon.power >= 2) {
         this.weapons.push({
           id: "blast-" + ++this.nextEntity,
@@ -1078,7 +1089,12 @@
       }
     }
     hitPlayer(p) {
-      if (!p || !p.alive || p.invulnerable > 0 || this.boss?.freezePlayers)
+      if (
+        !p ||
+        !p.alive ||
+        p.invulnerable > 0 ||
+        (this.boss && this.boss.freezePlayers)
+      )
         return;
       p.alive = false;
       p.state = "exploding";
@@ -1174,7 +1190,7 @@
               const prisoner = this.spawnPrisoner(h.x, h.y, {
                 special: h.special,
                 dir: h.special ? 8 : h.left ? 16 : 0,
-                predecessor: previous?.id,
+                predecessor: previous == null ? undefined : previous.id,
                 state: previous ? "waiting" : "emerging",
               });
               if (prisoner) {
@@ -1389,29 +1405,39 @@
         return;
       }
       if (kind === "boss-background-row") {
-        this.backgroundOperations.push({
-          kind,
-          x,
-          y,
-          frame: this.frame,
-          ...extra,
-        });
+        this.backgroundOperations.push(
+          Object.assign(
+            {},
+            {
+              kind,
+              x,
+              y,
+              frame: this.frame,
+            },
+            extra,
+          ),
+        );
         return;
       }
       this.effect(x, y, kind, extra);
     }
     effect(x, y, kind = "explosion", extra = {}) {
-      this.effects.push({
-        frameId: kind === "pow-unload" ? 37 : kind === "spark" ? 17 : 25,
-        palette: kind === "pow-unload" ? 0 : kind === "spark" ? 1 : 3,
-        id: "effect-" + ++this.nextEntity,
-        x,
-        y,
-        kind,
-        life: 24,
-        maxLife: extra.life || 24,
-        ...extra,
-      });
+      this.effects.push(
+        Object.assign(
+          {},
+          {
+            frameId: kind === "pow-unload" ? 37 : kind === "spark" ? 17 : 25,
+            palette: kind === "pow-unload" ? 0 : kind === "spark" ? 1 : 3,
+            id: "effect-" + ++this.nextEntity,
+            x,
+            y,
+            kind,
+            life: 24,
+            maxLife: extra.life || 24,
+          },
+          extra,
+        ),
+      );
       if (this.effects.length > 64) this.effects.shift();
     }
     tickEffects() {

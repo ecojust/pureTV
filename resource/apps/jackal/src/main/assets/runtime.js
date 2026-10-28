@@ -36,14 +36,15 @@
         "返回：退出游戏 · 播放键：START",
         "Back: exit game · Play: START",
       ],
-      "loading-title": ["正在载入游戏…", "Loading game…"],
     };
+    if (!$("game-loading").hasAttribute("data-failed"))
+      $("loading-title").textContent = tr("正在载入游戏…", "Loading game…");
     for (const [id, text] of Object.entries(labels))
       if ($(id)) $(id).textContent = text[english ? 1 : 0];
     for (let id = 1; id <= 2; id++)
       $("player-name-" + id).textContent = tr("玩家 " + id, "PLAYER " + id);
     function updateRoom(value) {
-      info = { ...info, ...value };
+      info = Object.assign({}, info, value);
       const ready = !!(info.qr && info.url);
       $("room-qr").hidden = !ready;
       $("qr-pending").hidden = ready;
@@ -76,7 +77,6 @@
       sound = null,
       frame = 0,
       last = 0,
-      lastUi = 0,
       lastPublish = 0;
     let suspended = false,
       visible = !document.hidden,
@@ -172,16 +172,19 @@
     }
     function state() {
       const value = game.status();
-      return suspended ? { ...value, phase: "paused" } : value;
+      return suspended ? Object.assign({}, value, { phase: "paused" }) : value;
     }
-    function updateUi() {
-      for (const player of game.players) {
-        const card = $("player-" + player.id);
+    function updateUi(current) {
+      for (const id of [1, 2]) {
+        const player = game && game.players.find((value) => value.id === id);
+        const controller = current.find((value) => value.id === id);
+        const connected = !!(controller && controller.connected);
+        const card = $("player-" + id);
         if (!card) continue;
-        card.classList.toggle("connected", player.connected);
-        $("player-status-" + player.id).textContent = !player.connected
+        card.classList.toggle("connected", connected);
+        $("player-status-" + id).textContent = !connected
           ? tr("等待连接", "Waiting to connect")
-          : !player.joined
+          : !player || !player.joined
             ? tr(
                 "已连接 · 在标题选择人数",
                 "Connected · Choose players at title",
@@ -192,6 +195,11 @@
               String(Math.max(0, player.score)).padStart(6, "0");
       }
     }
+    // A valid room must keep showing its players even if game loading/drawing fails.
+    const roomTimer = root.setInterval(() => {
+      if (visible && !destroyed && !suspended) updateUi(inputs());
+    }, 200);
+    updateUi(inputs());
     function publish() {
       try {
         if (bridge) bridge.publish(JSON.stringify(state()));
@@ -209,14 +217,7 @@
         renderer.draw(game);
       } catch (error) {
         if (sound) sound.pause(true);
-        $("game-loading").hidden = false;
-        $("loading-title").textContent = tr(
-          "游戏资料载入失败",
-          "Game data could not be loaded",
-        );
-        $("loading-detail").textContent = String(
-          (error && error.message) || error,
-        );
+        root.JackalStartup.fail(error);
         return;
       }
       if (sound) {
@@ -228,10 +229,6 @@
           sound.unlock().catch(() => {});
         sound.pause(suspended || !ready || game.phase === "paused");
         if (!suspended && ready) sound.update(game);
-      }
-      if (now - lastUi >= 100) {
-        updateUi();
-        lastUi = now;
       }
       if (now - lastPublish >= 200) {
         publish();
@@ -278,7 +275,7 @@
         try {
           if (bridge)
             bridge.publish(
-              JSON.stringify({ ...game.status(), phase: "paused" }),
+              JSON.stringify(Object.assign({}, game.status(), { phase: "paused" })),
             );
         } catch (_) {}
       }
@@ -287,6 +284,7 @@
       destroyed = true;
       visible = false;
       cancelAnimationFrame(frame);
+      root.clearInterval(roomTimer);
       releaseKeys();
       if (sound) sound.dispose();
       if (renderer && renderer.dispose) renderer.dispose();
@@ -297,19 +295,13 @@
       game = config.createGame(loaded);
       renderer = config.createRenderer(canvas, loaded);
       sound = config.createAudio ? config.createAudio(loaded) : null;
-      $("game-loading").hidden = true;
-      updateUi();
       renderer.draw(game);
+      if (!$("game-loading").hasAttribute("data-failed")) $("game-loading").hidden = true;
+      updateUi(inputs());
       publish();
       if (visible) frame = requestAnimationFrame(animate);
     } catch (error) {
-      $("loading-title").textContent = tr(
-        "游戏资料未就绪",
-        "Game data is not ready",
-      );
-      $("loading-detail").textContent = String(
-        (error && error.message) || error,
-      );
+      root.JackalStartup.fail(error);
     }
     return root[config.api];
   };
