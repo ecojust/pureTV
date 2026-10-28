@@ -1,14 +1,14 @@
 # Tank TV · 经典坦克大战
 
 <!-- apk-resource:start -->
-[下载 APK](tank-0.2.0-preview.2.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)
+[下载 APK](tank-0.3.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
 
 此目录内 APK 使用 pureTV 发布证书签名。
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)
 
-当前发布版本为 **`0.2.0-preview.2`**，独立重写 1985 年红白机《Battle City》的玩法、35 关地图与表现。安装后即可游玩，无须导入 ROM；同包名、同签名，可覆盖此前版本。它仍是预览版，尚未完成电视实机和逐帧对照验证。
+当前发布版本为 **`0.3.0`**，独立重写 1985 年红白机《Battle City》的玩法、35 关地图与表现。安装后即可游玩，无须导入 ROM；同包名、同签名，可覆盖此前版本。尚未完成电视实机和逐帧对照验证。
 
 新版保留电视二维码与手机局域网双人手柄，使用 256×240 原生画面和 208×208 战场。游戏规则独立编写，不加载或运行 ROM。35 关地图、每关 20 辆敌人的顺序、四种敌军、六种道具、星级升级、双人统计与 Construction 均有来源对照；AI、部分碰撞和动画时序仍需进一步逐帧核对。详细依据与局限见[规则和关卡](docs/reference.md)、[图像与声音](docs/reference-art-audio.md)。
 
@@ -16,7 +16,7 @@
 
 ## 本次修复
 
-修复旧版电视 WebView 中的游戏黑屏及扫码后玩家状态不更新；移除较新 JavaScript 语法和 API 依赖。房间状态独立于游戏绘制更新，启动或绘制失败时会显示可读的错误提示。新增旧语法、缺失 API、故障提示、玩家加入／断开和退出清理的回归测试。
+修复旧版电视 WebView 中的游戏黑屏及扫码后玩家状态不更新；移除较新 JavaScript 语法和 API 依赖。房间状态独立于游戏绘制更新，启动或绘制失败时会显示可读的错误提示。新增旧语法、缺失 API、故障提示、玩家加入／断开和退出清理的回归测试。新增 64×64 SVG 图标，并同步到 Android 应用图标。
 
 ## 开始游玩
 
@@ -35,9 +35,9 @@
 
 保护基地，清除敌军。头盔、时钟、铲子、星星、手雷和坦克是地图中拾取的六种道具；B 不再提供自定义护盾。星级影响弹速、并发炮弹与破坏钢墙的能力。玩家炮弹也会摧毁基地，命中队友会暂时冻结队友。
 
-以下图片对应本次重写预览，在 Chromium 中运行实际游戏页面，并使用模拟房间数据；不是电视实机截图。
+以下图片对应当前重写版本，在 Chromium 中运行实际游戏页面，并使用模拟房间数据；不是电视实机截图。
 
-![重写预览游戏页面](docs/tank-tv.png)
+![重写版游戏页面](docs/tank-tv.png)
 
 ![手机控制器](docs/controller.png)
 
@@ -66,7 +66,7 @@ cd resource/launcher/puretv
 
 APK 输出在 `resource/apps/tank/build/outputs/apk/`。Release 开启代码与资源压缩，体积上限为 5 MiB；正式资源 APK 使用 pureTV 发布证书签名。Android 测试验证房间服务及生命周期，Node 测试验证游戏规则，浏览器测试验证手机触控。
 
-设置 `TANK_UI_CAPTURE_DIR` 后运行 `tests/capture.mjs`，可导出中英文游戏页面预览。这些图片由随 APK 打包的真实页面在 Chromium 中渲染，原生桥接使用测试房间数据，不代表电视实机性能或真实手机网络时延。此目录提供修复后的签名预览包，源码提交、APK 校验值及构建方式见 [resource.json](resource.json)；资源目录维护见[资源维护说明](../../../docs/resource-maintenance.md)。
+设置 `TANK_UI_CAPTURE_DIR` 后运行 `tests/capture.mjs`，可导出中英文游戏页面预览。这些图片由随 APK 打包的真实页面在 Chromium 中渲染，原生桥接使用测试房间数据，不代表电视实机性能或真实手机网络时延。此目录提供0.3.0 签名安装包，源码提交、APK 校验值及构建方式见 [resource.json](resource.json)；资源目录维护见[资源维护说明](../../../docs/resource-maintenance.md)。
 
 ## 素材与许可
 
