@@ -17,7 +17,7 @@ parser.add_argument('--stage-branch', required=True)
 parser.add_argument('--source-sha', required=True)
 parser.add_argument('--build-tools', required=True, type=Path)
 parser.add_argument('--skip-index', action='store_true', help='Defer resource index regeneration until the batch is complete')
-parser.add_argument('--app', action='append', choices=['music', 'shortvideo', 'webtv', 'hifini', 'cctv', 'tank', 'jackal'], help='Update only this app; repeat to select several (default: music, shortvideo, webtv)')
+parser.add_argument('--app', action='append', choices=['music', 'shortvideo', 'webtv', 'hifini', 'cctv', 'tank', 'jackal', 'jewel', 'tetris'], help='Update only this app; repeat to select several (default: music, shortvideo, webtv)')
 args = parser.parse_args()
 if not re.fullmatch(r'build-assets/resources-\d+', args.stage_branch) or not re.fullmatch(r'[a-f0-9]{40}', args.source_sha):
     parser.error('Expected a build-assets/resources-RUN_ID branch and a complete source SHA')
@@ -53,6 +53,7 @@ require(metadata['sourceSha'] == args.source_sha, 'Staged metadata does not matc
 expected = (root / 'tools/puretv-release-certificate.sha256').read_text().strip()
 key = os.environ['PURETV_KEYSTORE_PATH']
 require(bool(os.environ.get('PURETV_KEYSTORE_PASSWORD')), 'PURETV_KEYSTORE_PASSWORD is required')
+GAMES = ('tank', 'jackal', 'jewel', 'tetris')
 apps = [
     ('music', 'Music TV', '原生电视音乐播放器', 'music-tv', 'music-tv', 'com.ecojust.music'),
     ('shortvideo', 'ShortVideo TV', '遥控器短视频播放器', 'shortvideo-tv', 'controls-preview', 'com.ecojust.shortvideo'),
@@ -61,6 +62,8 @@ apps = [
     ('cctv', 'CCTV Live', '央视官网播放器与电视频道导航', 'cctv-live', 'cctv-live', 'com.ecojust.cctvlive'),
     ('tank', 'Tank TV', '独立重写的 35 关坦克大战，支持手机扫码双人合作', 'tank-tv', 'tank-tv', 'com.ecojust.tanktv'),
     ('jackal', 'Jackal TV', '独立重写的六关吉普车营救游戏，支持手机扫码双人合作', 'jackal-tv', 'jackal-tv', 'com.ecojust.jackaltv'),
+    ('jewel', 'Magic Jewelry TV', '经典三宝石连锁消除，支持手机扫码单人或双人比拼', 'jewel-tv', 'jewel-tv', 'com.ecojust.jeweltv'),
+    ('tetris', 'Tetris TV', '经典俄罗斯方块，支持手机扫码单人或双人比拼', 'tetris-tv', 'tetris-tv', 'com.ecojust.tetristv'),
 ]
 selected_apps = args.app or ['music', 'shortvideo', 'webtv']
 apps = [app for app in apps if app[0] in selected_apps]
@@ -105,24 +108,25 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         (folder / 'thumb.png').write_bytes(chinese)
         (docs / (doc_image + '.png')).write_bytes(chinese)
         (docs / (doc_image + '.en.png')).write_bytes(english)
-        if slug in ('tank', 'jackal'):
+        if slug in GAMES:
             for suffix in ('', '.en'):
-                (docs / ('controller' + suffix + '.png')).write_bytes(validate_png(artifact(slug + '-controller' + suffix + '.png'))[0])
-        preview_options = {'renderer': 'Chromium', 'provenance': 'Actual bundled game page rendered in Chromium with English locale and a simulated native room bridge; not a physical TV capture.'} if slug in ('tank', 'jackal') else {}
+                for scene in ('controller', 'controller-active'):
+                    (docs / (scene + suffix + '.png')).write_bytes(validate_png(artifact(slug + '-' + scene + suffix + '.png'))[0])
+        preview_options = {'renderer': 'Chromium', 'provenance': 'Actual bundled game page rendered in Chromium with English locale and a simulated native room bridge; not a physical TV capture.'} if slug in GAMES else {}
         write_english_previews(root, 'apps', slug, version, args.source_sha, run_url, english, **preview_options)
         resource = {
             'kind': 'app', 'name': name, 'author': 'ecojust / 桔子桑', 'description': description,
             'version': info['versionName'], 'packageName': info['packageName'], 'versionCode': info['versionCode'],
             'apk': apk.name, 'apkBytes': info['bytes'], 'sha256': info['sha256'], 'certificateSha256': info['certificateSha256'],
             'supportsLayoutJson': False, 'languages': ['zh', 'en'], 'cover': 'thumb.png',
-            'coverSource': ('Actual bundled game page rendered in Chromium with Chinese locale and a simulated native room bridge; not a physical TV capture' if slug in ('tank', 'jackal') else 'Real Android idle UI rendered in Chinese by Robolectric native graphics with the bundled M3U catalog; not a physical TV capture' if slug == 'cctv' else 'Real Android UI rendered in Chinese by Robolectric native graphics with fixture content; not a physical TV capture'),
+            'coverSource': ('Actual bundled game page rendered in Chromium with Chinese locale and a simulated native room bridge; not a physical TV capture' if slug in GAMES else 'Real Android idle UI rendered in Chinese by Robolectric native graphics with the bundled M3U catalog; not a physical TV capture' if slug == 'cctv' else 'Real Android UI rendered in Chinese by Robolectric native graphics with fixture content; not a physical TV capture'),
             'license': old_resource.get('license', 'MIT'), 'sourceCommit': args.source_sha, 'buildRun': run_url,
         }
         if old_resource.get('assetNotices'):
             resource['assetNotices'] = old_resource['assetNotices']
         if '-preview.' in version:
             resource['releaseChannel'] = 'preview'
-        if slug in ('tank', 'jackal'):
+        if slug in GAMES:
             resource['romIncluded'] = False
         resource_path.write_text(json.dumps(resource, ensure_ascii=False, indent=2) + '\n')
         checksums = [apk.name, 'thumb.png', 'docs/' + doc_image + '.png', 'docs/' + doc_image + '.en.png']
@@ -130,8 +134,8 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         has_logo = logo.is_file() and not logo.is_symlink()
         if has_logo:
             checksums.append('logo.svg')
-        if slug in ('tank', 'jackal'):
-            checksums += ['docs/controller.png', 'docs/controller.en.png']
+        if slug in GAMES:
+            checksums += ['docs/controller.png', 'docs/controller.en.png', 'docs/controller-active.png', 'docs/controller-active.en.png']
         (folder / 'SHA256SUMS.txt').write_text(''.join(f'{digest(folder / filename)}  {filename}\n' for filename in checksums))
         readme = folder / 'README.md'
         readme_text = readme.read_text() if readme.exists() else '# ' + name + '\n'

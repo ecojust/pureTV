@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#0b1017">
+  <title>TETRIS TV · Controller</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/controller.css">
+</head>
+<body>
+  <main class="controller" id="controller" data-connected="false" data-player="1">
+    <header class="header">
+      <div class="brand"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M13 4h10v10H13ZM2 15h10v10H2Zm11 0h10v10H13Zm11 0h10v10H24Z" fill="currentColor"/></svg><div><strong>TETRIS TV</strong><span data-i18n="controller">手机控制器</span></div></div>
+      <div class="connection" role="status" aria-live="polite"><i id="connection-dot"></i><span id="connection-text">正在连接</span></div>
+      <button class="fullscreen" id="fullscreen" type="button" aria-label="全屏" title="全屏"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </header>
+
+    <section class="dashboard" aria-label="游戏状态" data-i18n-aria="status">
+      <div class="player-badge"><span class="player-number" id="player-number">P—</span><div><span class="eyebrow" data-i18n="yourPlayer">你的玩家</span><strong id="player-name">等待加入房间</strong></div></div>
+      <div class="stats"><div><span data-i18n="level">等级</span><strong id="level">00</strong></div><div><span data-i18n="cleared">已消行</span><strong id="cleared">0</strong></div><div><span data-i18n="score">得分</span><strong id="score">0000</strong></div></div>
+    </section>
+
+    <div class="message" id="message" role="status" aria-live="polite">正在加入电视上的房间…</div>
+
+    <section class="controls" aria-label="游戏操作" data-i18n-aria="controls">
+      <div class="joystick-column">
+        <div class="joystick-zone" id="joystick-zone" role="group" aria-label="左侧按住滑动" aria-disabled="true" tabindex="0" data-active="false">
+          <div class="joystick" id="joystick" aria-hidden="true">
+            <div class="joystick-ring"></div><div class="axis axis-x"></div><div class="axis axis-y"></div>
+            <span class="direction up">▲</span><span class="direction down">▼</span><span class="direction left">◀</span><span class="direction right">▶</span>
+            <div class="joystick-thumb" id="joystick-thumb"><div></div></div>
+          </div>
+        </div>
+        <span class="control-caption" data-i18n="move">左右移动 · 向下加速</span>
+      </div>
+      <div class="system-keys" aria-label="NES menu controls">
+        <button type="button" id="button-select" class="system-button" disabled aria-label="选择游戏模式"><span>SELECT</span><small id="select-caption">选择</small></button>
+        <button type="button" id="button-start" class="system-button" disabled aria-label="开始或暂停"><span>START</span><small id="start-caption">开始 / 暂停</small></button>
+      </div>
+      <div class="actions">
+        <div class="button-wrap b-wrap"><button type="button" id="button-b" class="action-button button-b" disabled aria-label="B 逆时针旋转"><span>B</span></button><span class="button-caption" id="b-caption">逆时针</span></div>
+        <div class="button-wrap a-wrap"><button type="button" id="button-a" class="action-button button-a" disabled aria-label="A 顺时针旋转"><span>A</span></button><span class="button-caption" id="a-caption">顺时针</span></div>
+      </div>
+    </section>
+
+    <footer class="footer"><span class="footer-line"></span><span id="footer-hint" data-i18n="hint">向下加速 · A / B 旋转</span><span class="footer-line"></span></footer>
+    <div class="rotate-hint" data-i18n="rotate">横屏握持，体验更好</div>
+    <div class="error-actions" id="error-actions" hidden><button type="button" id="retry" data-i18n="retry">重新连接</button></div>
+  </main>
+  <script src="/controller.js"></script>
+</body>
+</html>
