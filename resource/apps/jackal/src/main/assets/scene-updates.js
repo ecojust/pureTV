@@ -40,8 +40,9 @@ function sceneUpdates(game,art){
   if(operation.kind!=='boss-background-row')continue;const row=byIndex.get(operation.index);if(!row)continue;
   // The final arena occupies world rows29..40. PPU row29 wraps to row0 at world240.
   // Palette attributes are unchanged by these writes; retain the live stage attributes.
-  const palettes=row.tiles.map((_,offset)=>game.level?.palettes?.[Math.floor(row.y/8)*64+row.x/8+offset]||0);
-  rows.push({...row,tiles:row.tiles.slice(),palettes,frame:operation.frame});
+  const levelPalettes=game.level&&game.level.palettes;
+  const palettes=row.tiles.map((_,offset)=>(levelPalettes&&levelPalettes[Math.floor(row.y/8)*64+row.x/8+offset])||0);
+  rows.push(Object.assign({},row,{tiles:row.tiles.slice(),palettes,frame:operation.frame}));
  }
  const textureKey=texture.tiles+'|'+texture.sprites;
  return {tilesPath:texture.tiles,spritesPath:texture.sprites,textureKey,phaseKey,rows,

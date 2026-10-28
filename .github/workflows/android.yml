@@ -73,6 +73,7 @@ jobs:
         env:
           JACKAL_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-jackal-previews
         run: |
+          node resource/apps/jackal/tests/compatibility.mjs
           node resource/apps/jackal/tests/controller.mjs
           node resource/apps/jackal/tests/capture.mjs
       - uses: android-actions/setup-android@v3

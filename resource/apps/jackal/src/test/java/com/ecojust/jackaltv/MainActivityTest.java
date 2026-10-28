@@ -143,8 +143,8 @@ public class MainActivityTest {
     }
 
     @Test public void onlyBundledGameAssetsAreReadable() throws Exception {
-        String[] names={"tv.html","tv.css","game.js","game-model.js","levels.js","runtime.js","nes-renderer.js","enemies.js","nes-audio.js","data/entities.json","data/destruction.json","data/stage-1.json","data/stage-2.json","data/stage-3.json","data/stage-4.json","data/stage-5.json","data/stage-6.json"};
-        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/json","application/json","application/json","application/json","application/json","application/json","application/json","application/json"};
+        String[] names={"tv.html","tv.css","bootstrap.js","game.js","game-model.js","levels.js","runtime.js","nes-renderer.js","enemies.js","nes-audio.js","data/entities.json","data/destruction.json","data/stage-1.json","data/stage-2.json","data/stage-3.json","data/stage-4.json","data/stage-5.json","data/stage-6.json"};
+        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/json","application/json","application/json","application/json","application/json","application/json","application/json","application/json"};
         for (int i=0;i<names.length;i++) {
             WebResourceResponse response=activity.localAsset(Uri.parse("https://jackal.invalid/"+names[i]));
             assertEquals(names[i],200,response.getStatusCode());

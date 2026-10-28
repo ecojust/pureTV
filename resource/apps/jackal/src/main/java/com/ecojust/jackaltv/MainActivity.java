@@ -148,6 +148,7 @@ public class MainActivity extends Activity {
         switch (path) {
             case "/tv.html": return "text/html";
             case "/tv.css": return "text/css";
+            case "/bootstrap.js":
             case "/game.js":
             case "/game-model.js":
             case "/levels.js":
