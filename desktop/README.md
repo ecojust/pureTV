@@ -1,8 +1,8 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.4.8** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.4.9** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.4.8 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.8)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.4.9 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.9)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
 ## 功能
 
@@ -26,14 +26,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.4.8 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.8) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.4.9 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.9) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.4.8-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.4.9-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.8-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.9-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -95,7 +95,7 @@
 
 无需连接电视即可浏览、搜索和下载。下载完成后，应用进入「应用管理 → 待安装」，启动器进入「启动器」的待安装区；连接电视后也可选择「下载并安装」。安装失败时保留下载好的 APK，便于重试。安装启动器不会自动切换默认桌面。
 
-目录会缓存，点击刷新可重新读取；网络失败且有缓存时明确提示正在使用旧目录。下载固定到当前目录对应的仓库提交，并校验 APK 大小与 Git blob SHA；取消下载会清理临时文件。市场封面用于浏览资源，已安装启动器的背景仍从电视上的 Home 布局读取。
+目录会缓存，点击刷新可重新读取；网络失败且有缓存时明确提示正在使用旧目录。下载固定到当前目录对应的仓库提交，并校验 APK 大小与 Git blob SHA。若 Gitee 原始文件下载返回 HTTP 403，不超过 32 MiB 的 APK 会通过同一仓库的 Git blob API 重试，保持所选 APK 版本并执行相同的大小与内容校验；更大的受限文件会提示从发布页下载后手动安装。取消下载会清理临时文件。市场封面用于浏览资源，已安装启动器的背景仍从电视上的 Home 布局读取。
 
 ## 当前启动器的自定义布局
 

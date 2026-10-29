@@ -1,5 +1,6 @@
 //! Read-only Gitee catalog and verified APK cache. The repository tree is the catalog;
 //! no launcher names or application IDs are compiled into the manager.
+use base64::{engine::general_purpose::STANDARD, read::DecoderReader};
 use reqwest::{
     blocking::{Client, Response},
     header, redirect, Url,
@@ -7,6 +8,7 @@ use reqwest::{
 use serde::{Deserialize, Serialize};
 use sha1::{Digest, Sha1};
 use std::{
+    borrow::Cow,
     collections::{HashMap, HashSet},
     fs::{self, File, OpenOptions},
     io::{Read, Write},
@@ -22,6 +24,10 @@ const MAX_JSON: u64 = 16 * 1024 * 1024;
 // MCP includes both a JSON value and its escaped textual representation.
 const MAX_CATALOG: usize = 256 * 1024;
 const MAX_APK: u64 = 512 * 1024 * 1024;
+// The JSON API expands APKs to Base64. Keep fallback memory bounded independently
+// of the streamed raw download limit, and decode without a second APK-sized buffer.
+const MAX_BLOB_APK: u64 = 32 * 1024 * 1024;
+const BLOB_METADATA_BYTES: u64 = 8192;
 const MAX_ITEMS: usize = 1024;
 const NETWORK_TIMEOUT: Duration = Duration::from_secs(10);
 const TRANSFER_TIMEOUT: Duration = Duration::from_secs(15 * 60);
@@ -408,7 +414,11 @@ fn allowed_url(url: &Url) -> bool {
                         .path()
                         .starts_with("/api/v5/repos/juzisang331/pure-tv-store/")))
 }
-fn response(client: &Client, address: &str, cancel: &AtomicBool) -> Result<Response, String> {
+fn response_with_status(
+    client: &Client,
+    address: &str,
+    cancel: &AtomicBool,
+) -> Result<Response, String> {
     let mut url = Url::parse(address).map_err(|_| "市场下载地址无效")?;
     for hop in 0..=5 {
         check_cancel(cancel)?;
@@ -437,15 +447,21 @@ fn response(client: &Client, address: &str, cancel: &AtomicBool) -> Result<Respo
             url = url.join(location).map_err(|_| "市场下载重定向无效")?;
             continue;
         }
-        if response.status() != reqwest::StatusCode::OK {
-            return Err(format!(
-                "市场服务器返回 HTTP {}，请稍后重试",
-                response.status().as_u16()
-            ));
-        }
         return Ok(response);
     }
     Err("市场下载失败".into())
+}
+fn require_ok(response: Response) -> Result<Response, String> {
+    if response.status() != reqwest::StatusCode::OK {
+        return Err(format!(
+            "市场服务器返回 HTTP {}，请稍后重试",
+            response.status().as_u16()
+        ));
+    }
+    Ok(response)
+}
+fn response(client: &Client, address: &str, cancel: &AtomicBool) -> Result<Response, String> {
+    require_ok(response_with_status(client, address, cancel)?)
 }
 fn fetch_json(client: &Client, address: &str, cancel: &AtomicBool) -> Result<Vec<u8>, String> {
     let mut response = response(client, address, cancel)?;
@@ -688,6 +704,119 @@ fn copy_apk(
     output.flush().map_err(|_| "无法保存市场 APK")?;
     Ok(())
 }
+#[derive(Deserialize)]
+struct Blob<'a> {
+    sha: String,
+    size: u64,
+    encoding: String,
+    #[serde(borrow)]
+    content: Cow<'a, str>,
+}
+fn copy_blob(
+    mut input: impl Read,
+    output: impl Write,
+    item: &Item,
+    cancel: &AtomicBool,
+    mut report: impl FnMut(Progress) -> Result<(), String>,
+) -> Result<(), String> {
+    check_cancel(cancel)?;
+    if item.bytes > MAX_BLOB_APK {
+        return Err("市场备用下载仅支持不超过 32 MB 的 APK，请从发布页下载后手动安装".into());
+    }
+    let encoded_bytes = item.bytes.div_ceil(3) * 4;
+    let maximum = encoded_bytes + BLOB_METADATA_BYTES;
+    let started = Instant::now();
+    let mut last = Instant::now() - Duration::from_secs(1);
+    let mut json = Vec::new();
+    let mut buffer = [0u8; 65_536];
+    loop {
+        check_cancel(cancel)?;
+        if started.elapsed() > TRANSFER_TIMEOUT {
+            return Err("市场 APK 下载超时".into());
+        }
+        let count = input.read(&mut buffer).map_err(|_| {
+            check_cancel(cancel)
+                .err()
+                .unwrap_or_else(|| "市场 APK 下载中断".into())
+        })?;
+        if count == 0 {
+            break;
+        }
+        if json.len() as u64 + count as u64 > maximum {
+            return Err("市场备用下载数据超过预期大小".into());
+        }
+        json.extend_from_slice(&buffer[..count]);
+        if last.elapsed() >= Duration::from_millis(150) {
+            report(Progress {
+                stage: "downloading".into(),
+                downloaded: ((json.len() as u64).saturating_sub(BLOB_METADATA_BYTES) / 4 * 3)
+                    .min(item.bytes),
+                total: item.bytes,
+                item_id: Some(item.id.clone()),
+            })?;
+            last = Instant::now();
+        }
+    }
+    check_cancel(cancel)?;
+    let blob: Blob<'_> = serde_json::from_slice(&json).map_err(|_| "市场备用下载数据无效")?;
+    if blob.sha != item.blob_sha
+        || blob.size != item.bytes
+        || blob.encoding != "base64"
+        || blob.content.len() as u64 != encoded_bytes
+    {
+        return Err("市场备用下载信息与目录不一致".into());
+    }
+    // Contents API truncates files at 10 MiB, even while reporting the original size.
+    // Only Git blobs is used; decoded bytes still pass exact size and Git SHA checks.
+    copy_apk(
+        DecoderReader::new(blob.content.as_bytes(), &STANDARD),
+        output,
+        item,
+        cancel,
+        |mut progress| {
+            // Network transfer has completed. Decoding/hash verification must not make
+            // the download indicator jump backwards to the first decoded chunk.
+            progress.stage = "verifying".into();
+            progress.downloaded = item.bytes;
+            report(progress)
+        },
+    )
+}
+fn download_apk_with(
+    output: impl Write,
+    item: &Item,
+    revision: &str,
+    cancel: &AtomicBool,
+    report: impl FnMut(Progress) -> Result<(), String>,
+    mut fetch: impl FnMut(&str) -> Result<Response, String>,
+) -> Result<(), String> {
+    check_cancel(cancel)?;
+    let raw = fetch(&repository_url("raw", revision, &item.id))?;
+    check_cancel(cancel)?;
+    if raw.status() == reqwest::StatusCode::FORBIDDEN {
+        // Public Gitee raw endpoints require login for large files. The public Git
+        // blob endpoint addresses the identical immutable bytes without credentials.
+        drop(raw);
+        if item.bytes > MAX_BLOB_APK {
+            return Err("市场备用下载仅支持不超过 32 MB 的 APK，请从发布页下载后手动安装".into());
+        }
+        let blob = require_ok(fetch(&api_path("git/blobs", &item.blob_sha))?)?;
+        let maximum = item.bytes.div_ceil(3) * 4 + BLOB_METADATA_BYTES;
+        if blob.content_length().is_some_and(|bytes| bytes > maximum) {
+            return Err("市场备用下载数据超过预期大小".into());
+        }
+        copy_blob(blob, output, item, cancel, report)
+    } else {
+        let raw = require_ok(raw)?;
+        if raw
+            .content_length()
+            .is_some_and(|bytes| bytes != item.bytes)
+        {
+            return Err("市场 APK 大小与目录不一致".into());
+        }
+        copy_apk(raw, output, item, cancel, report)
+    }
+}
 pub fn download(
     directory: &Path,
     id: &str,
@@ -750,18 +879,14 @@ pub fn download(
         item_id: Some(item.id.clone()),
     })?;
     let client = client()?;
-    let response = response(
-        &client,
-        &repository_url("raw", &catalog.revision, &item.id),
+    download_apk_with(
+        &mut output,
+        &item,
+        &catalog.revision,
         cancel,
+        &mut report,
+        |address| response_with_status(&client, address, cancel),
     )?;
-    if response
-        .content_length()
-        .is_some_and(|bytes| bytes != item.bytes)
-    {
-        return Err("市场 APK 大小与目录不一致".into());
-    }
-    copy_apk(response, &mut output, &item, cancel, &mut report)?;
     output.sync_all().map_err(|_| "无法保存市场 APK")?;
     drop(output);
     check_cancel(cancel)?;
@@ -1219,6 +1344,278 @@ mod tests {
             .is_err()
         );
     }
+    fn blob_json(bytes: &[u8], item: &Item) -> Vec<u8> {
+        use base64::Engine;
+        serde_json::to_vec(&json!({"sha":item.blob_sha,"size":item.bytes,
+            "encoding":"base64","content":STANDARD.encode(bytes)}))
+        .unwrap()
+    }
+    fn mock_response(status: u16, body: Vec<u8>) -> Response {
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        std::thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            let mut request = [0; 4096];
+            stream.read(&mut request).unwrap();
+            write!(
+                stream,
+                "HTTP/1.1 {status} Test\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            )
+            .unwrap();
+            let _ = stream.write_all(&body);
+        });
+        Client::builder()
+            .no_proxy()
+            .timeout(Duration::from_secs(2))
+            .build()
+            .unwrap()
+            .get(format!("http://{address}"))
+            .send()
+            .unwrap()
+    }
+    #[test]
+    fn forbidden_raw_uses_only_the_selected_git_blob_and_verifies_decoded_apk() {
+        let bytes = b"PK\x03\x04large public APK fixture";
+        let item = item(bytes);
+        let cancel = AtomicBool::new(false);
+        let mut addresses = Vec::new();
+        let mut output = Vec::new();
+        let mut stages = Vec::new();
+        download_apk_with(
+            &mut output,
+            &item,
+            REV,
+            &cancel,
+            |p| {
+                stages.push(p);
+                Ok(())
+            },
+            |address| {
+                addresses.push(address.to_owned());
+                Ok(if addresses.len() == 1 {
+                    mock_response(403, b"large file require login for access.".to_vec())
+                } else {
+                    mock_response(200, blob_json(bytes, &item))
+                })
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            addresses,
+            vec![
+                repository_url("raw", REV, &item.id),
+                api_path("git/blobs", &item.blob_sha)
+            ]
+        );
+        assert_eq!(output, bytes);
+        assert!(stages
+            .windows(2)
+            .all(|pair| pair[0].downloaded <= pair[1].downloaded));
+        assert_eq!(stages.last().unwrap().stage, "verifying");
+        assert_eq!(stages.last().unwrap().downloaded, item.bytes);
+    }
+    #[test]
+    fn successful_raw_and_non_forbidden_failures_never_use_blob_api() {
+        let bytes = b"PK\x03\x04raw fixture";
+        let item = item(bytes);
+        let cancel = AtomicBool::new(false);
+        for status in [200, 401, 404, 429, 500] {
+            let mut addresses = Vec::new();
+            let mut output = Vec::new();
+            let result = download_apk_with(
+                &mut output,
+                &item,
+                REV,
+                &cancel,
+                |_| Ok(()),
+                |address| {
+                    addresses.push(address.to_owned());
+                    Ok(mock_response(status, bytes.to_vec()))
+                },
+            );
+            assert_eq!(addresses, vec![repository_url("raw", REV, &item.id)]);
+            if status == 200 {
+                assert_eq!(output, bytes);
+                result.unwrap();
+            } else {
+                assert!(result.unwrap_err().contains(&format!("HTTP {status}")));
+            }
+        }
+        let mut calls = 0;
+        assert!(download_apk_with(
+            Vec::new(),
+            &item,
+            REV,
+            &cancel,
+            |_| Ok(()),
+            |_| {
+                calls += 1;
+                Err("offline".into())
+            }
+        )
+        .unwrap_err()
+        .contains("offline"));
+        assert_eq!(calls, 1);
+        let mut large = item.clone();
+        large.bytes = MAX_BLOB_APK + 1;
+        assert_eq!(
+            download_apk_with(
+                Vec::new(),
+                &large,
+                REV,
+                &cancel,
+                |_| Ok(()),
+                |_| { Ok(mock_response(403, Vec::new())) }
+            )
+            .unwrap_err(),
+            "市场备用下载仅支持不超过 32 MB 的 APK，请从发布页下载后手动安装"
+        );
+        assert_eq!(
+            download_apk_with(
+                Vec::new(),
+                &large,
+                REV,
+                &cancel,
+                |_| Ok(()),
+                |_| { Ok(mock_response(200, bytes.to_vec())) }
+            )
+            .unwrap_err(),
+            "市场 APK 大小与目录不一致",
+            "Raw downloads retain their independent 512 MB limit"
+        );
+    }
+    #[test]
+    fn blob_api_rejects_metadata_truncation_invalid_base64_and_wrong_content() {
+        use base64::Engine;
+        let bytes = b"PK\x03\x04blob fixture";
+        let item = item(bytes);
+        let cancel = AtomicBool::new(false);
+        let original: serde_json::Value = serde_json::from_slice(&blob_json(bytes, &item)).unwrap();
+        for (field, value) in [
+            ("sha", json!("0".repeat(40))),
+            ("size", json!(item.bytes + 1)),
+            ("encoding", json!("utf-8")),
+            ("content", json!(STANDARD.encode(&bytes[..4]))),
+            (
+                "content",
+                json!("!".repeat(item.bytes.div_ceil(3) as usize * 4)),
+            ),
+            ("content", json!(STANDARD.encode(b"PK\x03\x04blob fixturE"))),
+        ] {
+            let mut bad = original.clone();
+            bad[field] = value;
+            assert!(
+                copy_blob(
+                    Cursor::new(serde_json::to_vec(&bad).unwrap()),
+                    Vec::new(),
+                    &item,
+                    &cancel,
+                    |_| Ok(())
+                )
+                .is_err(),
+                "Accepted bad {field}"
+            );
+        }
+        assert!(copy_blob(
+            Cursor::new(b"<html>login</html>"),
+            Vec::new(),
+            &item,
+            &cancel,
+            |_| Ok(())
+        )
+        .is_err());
+        let oversized =
+            std::io::repeat(b' ').take(item.bytes.div_ceil(3) * 4 + BLOB_METADATA_BYTES + 1);
+        assert_eq!(
+            copy_blob(oversized, Vec::new(), &item, &cancel, |_| Ok(())).unwrap_err(),
+            "市场备用下载数据超过预期大小"
+        );
+    }
+    #[test]
+    fn blob_fallback_cancellation_and_errors_leave_no_partial_apk() {
+        let root = temp();
+        let bytes = b"PK\x03\x04cancelled blob fixture";
+        let item = item(bytes);
+        let cancel = AtomicBool::new(false);
+        let partial = temporary_path(&root.0, "part");
+        {
+            let guard = Temporary(partial.clone());
+            let mut output = File::create(&guard.0).unwrap();
+            let mut calls = 0;
+            let error = download_apk_with(
+                &mut output,
+                &item,
+                REV,
+                &cancel,
+                |_| {
+                    cancel.store(true, Ordering::Release);
+                    Ok(())
+                },
+                |_| {
+                    calls += 1;
+                    Ok(if calls == 1 {
+                        mock_response(403, Vec::new())
+                    } else {
+                        mock_response(200, blob_json(bytes, &item))
+                    })
+                },
+            )
+            .unwrap_err();
+            assert!(error.contains("取消"));
+            assert_eq!(calls, 2);
+        }
+        assert!(!partial.exists());
+        assert!(download_apk_with(
+            Vec::new(),
+            &item,
+            REV,
+            &cancel,
+            |_| Ok(()),
+            |_| { panic!("Cancelled download must not request another endpoint") }
+        )
+        .is_err());
+        cancel.store(false, Ordering::Release);
+        let mut calls = 0;
+        let error = download_apk_with(
+            Vec::new(),
+            &item,
+            REV,
+            &cancel,
+            |_| Ok(()),
+            |_| {
+                calls += 1;
+                cancel.store(true, Ordering::Release);
+                Ok(mock_response(403, Vec::new()))
+            },
+        )
+        .unwrap_err();
+        assert!(error.contains("取消"));
+        assert_eq!(
+            calls, 1,
+            "Cancellation after raw response must prevent the API request"
+        );
+        cancel.store(false, Ordering::Release);
+        let mut calls = 0;
+        let error = download_apk_with(
+            Vec::new(),
+            &item,
+            REV,
+            &cancel,
+            |_| Ok(()),
+            |_| {
+                calls += 1;
+                Ok(mock_response(
+                    if calls == 1 { 403 } else { 500 },
+                    Vec::new(),
+                ))
+            },
+        )
+        .unwrap_err();
+        assert!(error.contains("HTTP 500"));
+        assert_eq!(calls, 2);
+        fs::remove_dir_all(&root.0).unwrap();
+    }
     #[test]
     fn cache_hits_are_rehashed_and_cancelled_downloads_drop_partials() {
         let root = temp();
@@ -1305,7 +1702,7 @@ mod tests {
         server.join().unwrap();
     }
     #[test]
-    #[ignore = "downloads the public catalog, one app and one launcher, and reuses verified cache"]
+    #[ignore = "downloads the public catalog, small and large APKs, and reuses verified cache"]
     fn live_store_catalog_and_download() {
         let root = temp();
         let cancel = AtomicBool::new(false);
@@ -1320,13 +1717,28 @@ mod tests {
             catalog.revision,
             catalog.items.len()
         );
-        for kind in ["app", "launcher"] {
-            let item = catalog
+        let mut samples: Vec<_> = ["app", "launcher"]
+            .iter()
+            .map(|kind| {
+                catalog
+                    .items
+                    .iter()
+                    .filter(|i| i.kind == *kind)
+                    .min_by_key(|i| i.bytes)
+                    .unwrap()
+            })
+            .collect();
+        // Raw downloads of APKs above 10 MiB can require login; exercise that
+        // production path too instead of passing with only the smallest files.
+        samples.extend(
+            catalog
                 .items
                 .iter()
-                .filter(|i| i.kind == kind)
-                .min_by_key(|i| i.bytes)
-                .unwrap();
+                .filter(|i| i.bytes >= 10 * 1024 * 1024 && i.bytes <= MAX_BLOB_APK),
+        );
+        samples.sort_by_key(|i| &i.id);
+        samples.dedup_by_key(|i| &i.id);
+        for item in samples {
             let result = download(&root.0, &item.id, Some(&catalog.revision), &cancel, |_| {
                 Ok(())
             })
@@ -1355,8 +1767,8 @@ mod tests {
                 modified
             );
             eprintln!(
-                "verified {kind} {}: {} bytes, Git blob {}, cache reused",
-                item.id, item.bytes, item.blob_sha
+                "verified {} {}: {} bytes, Git blob {}, cache reused",
+                item.kind, item.id, item.bytes, item.blob_sha
             );
         }
         fs::remove_dir_all(&root.0).unwrap();
