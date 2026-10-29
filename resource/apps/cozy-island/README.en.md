@@ -7,7 +7,7 @@ An independently made island-life TV game with smooth isometric graphics. Gather
 Version **0.5.1** requires Android 8.0 or later. Package: `com.ecojust.cozyislandtv`.
 
 <!-- apk-resource:start -->
-[Download APK](cozy-island-0.5.1.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
+[Download APK](cozy-island-0.5.2.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
 The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
