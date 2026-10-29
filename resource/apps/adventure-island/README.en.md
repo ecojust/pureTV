@@ -4,13 +4,19 @@
 
 An independent recreation inspired by Adventure Island 1: eight areas and 32 stages across forests, caves, coasts and ice. Includes vitality, fruit, axes, fireballs, skateboards, hidden eggs and area bosses.
 
-Version **0.1.0** requires Android 8.0 or later. Package: `com.ecojust.adventureislandtv`. The TV displays the game and a room QR code; phones act as controllers.
+The planned **0.5.0** release requires Android 8.0 or later. Package: `com.ecojust.adventureislandtv`. The TV displays the game and a room QR code; phones act as controllers.
 
 <!-- apk-resource:start -->
 [Download APK](adventure-island-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
 The APK is signed with the pureTV release certificate.
 <!-- apk-resource:end -->
+
+## 0.5.0 release preparation and installation
+
+All nine games are being prepared as version 0.5.0 with a new game release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
+
+Publication is complete only when the 0.5.0 APK, checksums and `resource.json` have all been updated.
 
 ## Play
 
@@ -30,13 +36,11 @@ The APK is signed with the pureTV release certificate.
 
 Two players take **alternating turns**, retaining their own lives, score and stage. A lost life passes control to the next player. Phones show whose turn it is; waiting players cannot move the active character. Losing the active controller pauses the game until it reconnects. Manual pause remains paused. High score and music preference are stored on the TV.
 
-## Source upgrade
+## Gameplay changes in 0.5.0
 
 - Broken eggs release physical pickups that rise, land and require contact; shooting an egg from afar no longer equips its contents. Skateboard pickups roll forward.
 - Approaching birds commit to a dive height, then climb away, making their attack readable and avoidable.
 - New item sprites, shell fragments, floating pickup scores and a distinct eggplant companion show each state clearly.
-
-These are source changes; the existing 0.1.0 APK does not include them yet.
 
 ## Screenshots
 

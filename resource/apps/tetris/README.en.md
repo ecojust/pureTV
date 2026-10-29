@@ -4,7 +4,7 @@
 
 An independent recreation of classic NES falling-block play: a 10×20 well, seven tetrominoes, classic rotation, soft drop, line-clear scoring, increasing gravity and a NEXT preview.
 
-Version **0.1.0**, for Android 8.0+ TVs. Package: `com.ecojust.tetristv`. The TV displays the board and room QR code, and phones scan it to become controllers. No ROM import is required.
+The planned **0.5.0** release supports Android 8.0+ TVs. Package: `com.ecojust.tetristv`. The TV displays the board and room QR code, and phones scan it to become controllers. No ROM import is required.
 
 <!-- apk-resource:start -->
 [Download APK](tetris-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
@@ -12,8 +12,11 @@ Version **0.1.0**, for Android 8.0+ TVs. Package: `com.ecojust.tetristv`. The TV
 The APK in this directory uses the pureTV release certificate.
 <!-- apk-resource:end -->
 
-The gameplay and controller upgrades described below are source changes. The linked 0.1.0 APK is the previous release and requires a new build to include them.
+## 0.5.0 release preparation and installation
 
+All nine games are being prepared as version 0.5.0 with a new game release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
+
+Publication is complete only when the 0.5.0 APK, checksums and `resource.json` have all been updated.
 
 ## Play
 
@@ -33,7 +36,7 @@ The gameplay and controller upgrades described below are source changes. The lin
 
 Uses classic rotation without wall kicks and the NES level/gravity curve. There is no modern HOLD, ghost piece or hard drop. A-TYPE starting levels 0–19 are selectable. B-TYPE adds a fixed-speed, 25-line challenge with levels 0–9 and initial obstacle heights 0–5. Both players receive identical obstacles; a completed player waits while the other continues. Two-player mode adds separate wells with the same piece sequence and independent scores, without garbage attacks.
 
-High scores stay on the TV and survive an app update. Uninstalling clears the app data.
+High scores are stored on the TV. Moving from an old-certificate release to 0.5.0 requires uninstalling, which clears those records; there is no automatic migration.
 
 ## Screenshots
 

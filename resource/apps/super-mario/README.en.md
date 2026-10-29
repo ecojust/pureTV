@@ -4,7 +4,7 @@
 
 An independent recreation inspired by Super Mario Bros. 1: eight worlds and 32 stages with overworld, underground, underwater and castle courses. Includes block hits, mushroom transformations, fireballs, shells, pipes, flagpoles and bridge axes.
 
-Version **0.1.0** requires Android 8.0 or later. Package: `com.ecojust.supermariotv`. The TV displays the game and a room QR code; phones act as controllers.
+The planned **0.5.0** release requires Android 8.0 or later. Package: `com.ecojust.supermariotv`. The TV displays the game and a room QR code; phones act as controllers.
 
 <!-- apk-resource:start -->
 [Download APK](super-mario-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
@@ -12,9 +12,15 @@ Version **0.1.0** requires Android 8.0 or later. Package: `com.ecojust.supermari
 The APK is signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
-## Source upgrade
+## 0.5.0 release preparation and installation
 
-The source upgrade adds real crouch-slide collision, moving lifts that carry their rider, and escalating airborne stomp/rolling-shell rewards with score and 1UP feedback. The existing 0.1.0 download predates these changes; build the current source to use them.
+All nine games are being prepared as version 0.5.0 with a new game release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
+
+Publication is complete only when the 0.5.0 APK, checksums and `resource.json` have all been updated.
+
+## Gameplay changes in 0.5.0
+
+Version 0.5.0 adds real crouch-slide collision, moving lifts that carry their rider, and escalating airborne stomp/rolling-shell rewards with score and 1UP feedback.
 
 ## Play
 

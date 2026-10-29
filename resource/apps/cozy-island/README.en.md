@@ -4,7 +4,7 @@
 
 An independently made island-life TV game with smooth isometric graphics. Gather materials, fish, help original residents, craft and place furniture, and upgrade your home on an original island.
 
-Version **0.1.0** requires Android 8.0 or later. Package: `com.ecojust.cozyislandtv`.
+The planned **0.5.0** release requires Android 8.0 or later. Package: `com.ecojust.cozyislandtv`.
 
 <!-- apk-resource:start -->
 [Download APK](cozy-island-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Build provenance](resource.json) · [Source](src/) · [64×64 SVG icon](logo.svg)
@@ -12,8 +12,11 @@ Version **0.1.0** requires Android 8.0 or later. Package: `com.ecojust.cozyislan
 Signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
-The gameplay and controller upgrades described below are source changes. The linked 0.1.0 APK is the previous release and requires a new build to include them.
+## 0.5.0 release preparation and installation
 
+All nine games are being prepared as version 0.5.0 with a new game release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
+
+Publication is complete only when the 0.5.0 APK, checksums and `resource.json` have all been updated.
 
 ## Play
 
@@ -32,9 +35,9 @@ The right third of the phone is the action area: B fills the upper half and A fi
 | SELECT | Cycle tools; rotate while placing; choose 1P/2P on title; toggle music while paused |
 | START | Start, pause / resume |
 
-One or two players can explore simultaneously, with separate inventories and interaction menus and shared island progress. One player can enter the house while the other stays outside. This first release offers a finite set of resident tasks and home upgrades; see the [game notes](docs/reference.md) for content and scope.
+One or two players can explore simultaneously, with separate inventories and interaction menus and shared island progress. One player can enter the house while the other stays outside. The game offers a finite set of resident tasks and home upgrades; see the [game notes](docs/reference.md) for content and scope.
 
-Current source improvements: five fish species appear at different island hours. Watch the bobber distinguish gentle nibbles from the final bite; the reaction window depends on the species. The shared fish journal records catches and largest sizes, saves across sessions and gives 10 coins for each first discovery. Existing saves remain compatible; caught fish still count as the fish resource for requests and selling.
+Changes in 0.5.0: five fish species appear at different island hours. Watch the bobber distinguish gentle nibbles from the final bite; the reaction window depends on the species. The shared fish journal records catches and largest sizes, saves across sessions and gives 10 coins for each first discovery. The save format remains compatible with older data, but this certificate-changing release does not migrate saves from the old installation. Caught fish still count as the fish resource for requests and selling.
 
 ## Screenshots
 
@@ -48,7 +51,7 @@ Actual bundled game pages rendered in Chromium with a simulated native room brid
 
 ## Saves, room and exit
 
-Item and building transactions save immediately; positions save periodically. Updating the same signed app preserves the local save. Uninstalling or confirming a save reset removes progress.
+Item and building transactions save immediately; positions save periodically. The save format remains compatible with older data, but the certificate change in 0.5.0 prevents an in-place update and does not migrate the old installation’s save. Uninstalling or confirming a save reset removes progress.
 
 Up to two phones connect through a local HTTP/WebSocket room with a fresh port and random token on each launch. Input is released on touch cancellation, loss of focus or disconnection. Losing a participating phone pauses play; reconnecting resumes automatic pause but preserves manual pause.
 

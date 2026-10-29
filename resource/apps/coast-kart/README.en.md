@@ -4,7 +4,7 @@
 
 An independently made TV kart racer with smooth perspective graphics, four original tracks, drift boosts, items, computer opponents and split-screen play using LAN phone controllers.
 
-Version **0.1.0** requires Android 8.0 or later. Package: `com.ecojust.coastkarttv`.
+The planned **0.5.0** release requires Android 8.0 or later. Package: `com.ecojust.coastkarttv`.
 
 <!-- apk-resource:start -->
 [Download APK](coast-kart-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Build provenance](resource.json) · [Source](src/) · [64×64 SVG icon](logo.svg)
@@ -12,8 +12,11 @@ Version **0.1.0** requires Android 8.0 or later. Package: `com.ecojust.coastkart
 Signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
-The gameplay and controller upgrades described below are source changes. The linked 0.1.0 APK is the previous release and requires a new build to include them.
+## 0.5.0 release preparation and installation
 
+All nine games are being prepared as version 0.5.0 with a new game release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
+
+Publication is complete only when the 0.5.0 APK, checksums and `resource.json` have all been updated.
 
 ## Play
 
@@ -34,7 +37,7 @@ The right third of the phone is the action area: B fills the upper half and A fi
 
 On the title screen, move the stick left/right to select a course and up/down to select a mode. Choose a quick race, a four-round championship or a time trial. Quick race and championship support 1–2 humans plus six computer opponents. Time trial uses 1P only, without computer opponents or items. Races run for three laps, with ordered checkpoints, off-road slowdown and opponent items. Best times and music preference persist on the TV. See the [game notes](docs/reference.md) for modes, scoring and scope.
 
-Current source improvements: drifting has three charge thresholds (0.65, 1.6 and 2.4 seconds), with blue, gold and purple sparks and stronger release boosts. Staying in a moving rival’s wake for 1.2 seconds grants a slipstream boost. Braking, going off-road or getting hit cancels drift charge.
+Changes in 0.5.0: drifting has three charge thresholds (0.65, 1.6 and 2.4 seconds), with blue, gold and purple sparks and stronger release boosts. Staying in a moving rival’s wake for 1.2 seconds grants a slipstream boost. Braking, going off-road or getting hit cancels drift charge.
 
 ## Screenshots
 

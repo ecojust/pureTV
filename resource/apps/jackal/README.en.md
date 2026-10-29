@@ -4,9 +4,15 @@
 
 Jackal TV independently reimplements the six-stage NES version of Jackal: jeep movement, prisoner rescue, helicopter extraction, weapon upgrades and six distinct boss encounters. The TV displays the game and a room QR code. One or two phones join over the local network with a left joystick, right A/B buttons, and START/SELECT controls.
 
-The published version is **`0.3.0`**. Install and play without importing a ROM; the unchanged package ID and signing certificate allow updating earlier versions. This version includes the six-stage rewrite, with remaining differences in AI, some collisions, animation timing and sound. Physical-TV and frame-by-frame comparisons are incomplete.
+The planned release is **0.5.0**. Install and play without importing a ROM; the package ID stays unchanged. This version includes the six-stage rewrite, with remaining differences in AI, some collisions, animation timing and sound. Physical-TV and frame-by-frame comparisons are incomplete.
 
-## Changes in 0.3.0
+## 0.5.0 release preparation and installation
+
+All nine games are being prepared as version 0.5.0 with a new game release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
+
+Publication is complete only when the 0.5.0 APK, checksums and `resource.json` have all been updated.
+
+## Floating joystick and compatibility
 
 Fixes startup failures and missing player status on older TV WebViews. Room status updates independently of the game; startup and rendering errors display a readable message. The phone joystick is hidden at rest: touch anywhere in the left control area to set its center, drag to move, and release to stop and hide it. Movement and A/B support simultaneous touches; interrupted touches, backgrounding and disconnects clear input. A remains grenade/rocket and B remains the machine gun.
 
@@ -18,11 +24,11 @@ Fixes startup failures and missing player status on older TV WebViews. Room stat
 The APK in this directory is signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
-Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`. The current APK version is `0.3.0`.
+Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`. The planned APK version is `0.5.0`.
 
-## Controller update (source)
+## Controller changes in 0.5.0
 
-The right third of the phone screen is an edge-to-edge action area. The upper half fires the machine gun (B); the lower half throws a grenade or fires a rocket (A). The left area retains the floating joystick. START and SELECT sit separately at the bottom left. Touches are independent, and cancellation, focus loss or disconnect clears held input. Selection, dragging and long-press context menus are suppressed across the controller. These changes require a new APK build; the download above remains the previously published release.
+The right third of the phone screen is an edge-to-edge action area. The upper half fires the machine gun (B); the lower half throws a grenade or fires a rocket (A). The left area retains the floating joystick. START and SELECT sit separately at the bottom left. Touches are independent, and cancellation, focus loss or disconnect clears held input. Selection, dragging and long-press context menus are suppressed across the controller.
 
 ## Controls
 
@@ -77,7 +83,7 @@ APKs appear under `resource/apps/jackal/build/outputs/apk/`. Android tests cover
 
 ## Screenshots
 
-These images show the actual `0.3.0` game page running in Chromium with simulated room data. They are not physical-TV captures.
+These images show the actual game page running in Chromium with simulated room data. They are not physical-TV captures.
 
 ![Game page](docs/jackal-tv.en.png)
 

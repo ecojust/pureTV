@@ -9,7 +9,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from resource_catalog import apk_info, digest
+from resource_catalog import apk_info, digest, expected_release_certificate
 from resource_previews import validate_png, write_english_previews
 
 parser = argparse.ArgumentParser()
@@ -50,7 +50,6 @@ def artifact(name):
 
 metadata = json.loads(artifact('release-metadata.json'))['launcher']
 require(metadata['sourceSha'] == args.source_sha, 'Staged metadata does not match the requested source commit')
-expected = (root / 'tools/puretv-release-certificate.sha256').read_text().strip()
 key = os.environ['PURETV_KEYSTORE_PATH']
 require(bool(os.environ.get('PURETV_KEYSTORE_PASSWORD')), 'PURETV_KEYSTORE_PASSWORD is required')
 GAMES = ('tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario', 'coast-kart', 'cozy-island')
@@ -97,6 +96,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         require(bool(re.fullmatch(r'\d+\.\d+\.\d+(?:-preview\.\d+)?', version)), f'{slug}: invalid application version')
         maximum_bytes = (16 if slug == 'jackal' else 5) * 1024 * 1024
         require(identity['versionName'] == version and identity['versionCode'] == code and 0 < identity['bytes'] < maximum_bytes, f'{slug}: artifact identity or size does not match the source build')
+        expected = expected_release_certificate(root, identity)
         aligned = temporary / (slug + '-aligned.apk')
         signed = temporary / (slug + '-signed.apk')
         subprocess.run([str(args.build_tools / 'zipalign'), '-f', '4', str(unsigned), str(aligned)], check=True)

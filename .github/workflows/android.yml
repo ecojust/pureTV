@@ -26,6 +26,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify release certificate migration policy
+        run: python -m unittest discover -s tools/tests -p 'test_release_certificates.py'
       - name: Verify official login form autofill
         run: node --test resource/apps/hifini/src/test/js/login-autofill.test.mjs
       - name: Verify CCTV website player presentation
@@ -137,7 +139,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Install SDK
         run: sdkmanager "platforms;android-35" "build-tools;34.0.0"
+      # Staged game builds stay unsigned; the game publication workflow owns signing.
       - name: Prepare release signing
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.stage_resources }}
         env:
           PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
         run: |

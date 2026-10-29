@@ -2,6 +2,39 @@
 import hashlib,json,re,subprocess
 from pathlib import Path
 
+# Only these games migrate to the new release certificate at version 0.5.0.
+# Thresholds are the first unpublished version codes after the legacy releases;
+# matching by exact package and code prevents unrelated apps or historical APKs
+# from accepting either certificate indiscriminately.
+GAME_CERTIFICATE_CUTOVERS = {
+    'com.ecojust.tanktv': 7,
+    'com.ecojust.jackaltv': 4,
+    'com.ecojust.jeweltv': 2,
+    'com.ecojust.tetristv': 2,
+    'com.ecojust.bombjacktv': 2,
+    'com.ecojust.adventureislandtv': 2,
+    'com.ecojust.supermariotv': 2,
+    'com.ecojust.coastkarttv': 2,
+    'com.ecojust.cozyislandtv': 2,
+}
+
+def expected_release_certificate(root, identity):
+    """Return the single certificate pinned for an APK's package and version."""
+    package = identity['packageName']
+    assert package.startswith('com.ecojust.'), 'Release certificate pins apply only to pureTV packages'
+    pin = 'puretv-release-certificate.sha256'
+    if package in GAME_CERTIFICATE_CUTOVERS:
+        version = re.fullmatch(r'(\d+)\.(\d+)\.(\d+)(?:-preview\.\d+)?', identity['versionName'])
+        assert version, f'{package}: invalid version name for certificate selection'
+        new_version = tuple(map(int, version.groups())) >= (0, 5, 0)
+        new_code = identity['versionCode'] >= GAME_CERTIFICATE_CUTOVERS[package]
+        assert new_version == new_code, f'{package}: version name and code disagree at the 0.5.0 certificate cutover'
+        if new_code:
+            pin = 'game-release-certificate.sha256'
+    certificate = (root / 'tools' / pin).read_text().strip()
+    assert re.fullmatch(r'[a-f0-9]{64}', certificate), f'Invalid release certificate fingerprint: {pin}'
+    return certificate
+
 def digest(path):
     with path.open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
 def apk_info(path,tools,allow_unsigned=False):
@@ -52,7 +85,7 @@ def verify_catalog(root,tools):
         child(directory,'LICENSE');child(directory,'README.md')
         if info.get('cover'):child(directory,info['cover'])
         if actual['packageName'].startswith('com.ecojust.'):
-            assert actual['certificateSha256']==(root/'tools/puretv-release-certificate.sha256').read_text().strip()
+            assert actual['certificateSha256']==expected_release_certificate(root,actual),f'{directory.name}: unexpected release signing certificate'
         if actual['packageName']=='com.ecojust.puretv':
             assert info.get('sourceTreeSha') and info.get('sourceCommit')
         info['path']=str(apk.relative_to(root));entries.append(info)

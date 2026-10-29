@@ -4,7 +4,7 @@
 
 An independent recreation of the classic NES Magic Jewelry rules: three gems fall as a column onto a 6×13 board. Match three or more of the same color horizontally, vertically or diagonally, with gravity chains and magic columns.
 
-Version **0.1.0**, for Android 8.0+ TVs. Package: `com.ecojust.jeweltv`. The TV displays the board and room QR code, and phones scan it to become controllers. No ROM import is required.
+The planned **0.5.0** release supports Android 8.0+ TVs. Package: `com.ecojust.jeweltv`. The TV displays the board and room QR code, and phones scan it to become controllers. No ROM import is required.
 
 <!-- apk-resource:start -->
 [Download APK](jewel-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
@@ -12,8 +12,11 @@ Version **0.1.0**, for Android 8.0+ TVs. Package: `com.ecojust.jeweltv`. The TV 
 The APK in this directory uses the pureTV release certificate.
 <!-- apk-resource:end -->
 
-The gameplay and controller upgrades described below are source changes. The linked 0.1.0 APK is the previous release and requires a new build to include them.
+## 0.5.0 release preparation and installation
 
+All nine games are being prepared as version 0.5.0 with a new game release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
+
+Publication is complete only when the 0.5.0 APK, checksums and `resource.json` have all been updated.
 
 ## Play
 
@@ -33,7 +36,7 @@ The gameplay and controller upgrades described below are source changes. The lin
 
 Every 70 cleared gems advances the level and awards a magic column, which clears the color it lands on. Unsupported gems visibly fall after a clear; the next chain is checked only after they land. A sidebar meter tracks progress toward the next magic column. Two players receive the same gem sequence and keep separate boards and scores, without sending garbage. This local two-player competition is an additional mode.
 
-High scores stay on the TV and survive an app update. Uninstalling clears the app data.
+High scores are stored on the TV. Moving from an old-certificate release to 0.5.0 requires uninstalling, which clears those records; there is no automatic migration.
 
 ## Screenshots
 
