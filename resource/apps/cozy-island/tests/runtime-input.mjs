@@ -24,10 +24,10 @@ export async function runRuntimeInputTests() {
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const browser = await chromium.launch({ headless: true,
-    ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}), args: ['--no-sandbox'] });
+    ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}), args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
   try {
     for (const scenario of ['native-release', 'native-held', 'native-press-during-pause', 'hidden-release', 'keyboard-blur']) {
-      const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+      const context = await browser.newContext({ viewport: { width: 960, height: 540 } });
       await context.addInitScript(() => {
         window.__phone = { id: 1, connected: true, x: 0, y: 0, a: false };
         window.__hidden = false;
@@ -41,7 +41,7 @@ export async function runRuntimeInputTests() {
       const page = await context.newPage(), errors = [];
       page.on('pageerror', error => errors.push(error.message));
       await page.goto(`http://127.0.0.1:${server.address().port}/tv.html`);
-      await page.waitForFunction(() => window.CozyIslandTV && window.CozyIslandTV.game);
+      await page.waitForFunction(() => window.CozyIslandTV && window.CozyIslandTV.game && document.querySelector('#battlefield').dataset.renderer === 'webgl-3d');
       // Position only the wildlife encounter; input, pause/resume, animation
       // scheduling, inventory changes and persistent storage remain real.
       await page.evaluate(scenario => {
@@ -53,7 +53,9 @@ export async function runRuntimeInputTests() {
           window.__secondPhone = { id: 2, connected: true, a: true };
           g.players[1].tool = 'net';
         }
-        p.x = species.x; p.y = species.y + 1.1; p.facing = { x: 0, y: -1 }; p.tool = 'net';
+        // Stay within reach throughout the insect's wandering cycle, even
+        // when a software-rendered test spends longer waiting between inputs.
+        p.x = species.x; p.y = species.y + .9; p.facing = { x: 0, y: -1 }; p.tool = 'net';
         g.updateInsects(0); g.save(); api.suspend(false);
         window.__phone.a = scenario !== 'native-press-during-pause' && scenario !== 'keyboard-blur';
       }, scenario);
@@ -124,7 +126,11 @@ export async function runRuntimeInputTests() {
 
 async function runPhoneCancellationTests(browser, baseUrl) {
   for (const scenario of ['pointercancel', 'lostpointercapture', 'blur', 'resize']) {
-    const tvContext = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+    const tvContext = await browser.newContext({ viewport: { width: 960, height: 540 } });
+    let phoneContext, relayed = Promise.resolve(), closing = false, lastInput = '', lastFrame;
+    const relayErrors = [];
+    const flushRelay = async () => { await relayed; if (relayErrors.length) throw relayErrors[0]; };
+    try {
     await tvContext.addInitScript(() => {
       window.__phone = { id: 1, connected: true, a: false, cancelSeq: 0 };
       window.CozyIslandHost = {
@@ -135,20 +141,19 @@ async function runPhoneCancellationTests(browser, baseUrl) {
     const tv = await tvContext.newPage(), errors = [];
     tv.on('pageerror', error => errors.push(error.message));
     await tv.goto(baseUrl + '/tv.html');
-    await tv.waitForFunction(() => window.CozyIslandTV && window.CozyIslandTV.game);
+    await tv.waitForFunction(() => window.CozyIslandTV && window.CozyIslandTV.game && document.querySelector('#battlefield').dataset.renderer === 'webgl-3d');
     await tv.evaluate(() => {
       const api = window.CozyIslandTV, g = api.game, p = g.players[0], species = g.constructor.World.insects[0];
       api.suspend(true); g.start(); g.clock = 540; g.elapsed = 0;
-      p.x = species.x; p.y = species.y + 1.1; p.facing = { x: 0, y: -1 }; p.tool = 'net';
+      p.x = species.x; p.y = species.y + .9; p.facing = { x: 0, y: -1 }; p.tool = 'net';
       g.updateInsects(0); g.save(); api.suspend(false);
     });
-    const phoneContext = await browser.newContext({ viewport: { width: 844, height: 390 }, hasTouch: true });
+    phoneContext = await browser.newContext({ viewport: { width: 844, height: 390 }, hasTouch: true });
     const phone = await phoneContext.newPage(), frames = [];
     phone.on('pageerror', error => errors.push(error.message));
     await phone.addInitScript(() => {
       document.addEventListener('pointerdown', event => { window.__pointerId = event.pointerId; }, true);
     });
-    let relayed = Promise.resolve();
     // Route only the room transport: the phone page, WebSocket API, pointer
     // capture, serialized frames, TV runtime and game simulation remain real.
     await phone.routeWebSocket('**/ws?*', socket => {
@@ -159,9 +164,16 @@ async function runPhoneCancellationTests(browser, baseUrl) {
           socket.send(JSON.stringify({ type: 'state', phase: 'playing' }));
         } else if (frame.type === 'input') {
           frames.push(frame);
-          relayed = relayed.then(() => tv.evaluate(frame => {
-            window.__phone = Object.assign({ id: 1, connected: true }, frame);
-          }, frame));
+          lastFrame = frame;
+          // Native input is a current snapshot. Do not build an ever-growing
+          // TV-evaluate queue out of identical heartbeats (whose seq differs).
+          const state = JSON.stringify([frame.x, frame.y, !!frame.a, !!frame.b, !!frame.start, !!frame.select, frame.cancelSeq || 0]);
+          if (closing || state === lastInput || relayErrors.length) return;
+          lastInput = state;
+          relayed = relayed.then(async () => {
+            if (closing) return;
+            await tv.evaluate(frame => { window.__phone = Object.assign({ id: 1, connected: true }, frame); }, frame);
+          }).catch(error => { relayErrors.push(error); });
         }
       });
     });
@@ -177,7 +189,7 @@ async function runPhoneCancellationTests(browser, baseUrl) {
       for (const target of ['joystick-zone', 'button-a']) {
         await phone.locator('#' + target).dispatchEvent('pointerdown', { pointerId: 41, pointerType: 'touch', button: 0 });
         await phone.locator('#' + target).dispatchEvent('pointercancel', { pointerId: 41, pointerType: 'touch', button: 0 });
-        await relayed;
+        await flushRelay();
         assert.equal(frames.at(-1).a, true, target + ': the original A finger remains held');
         assert.equal(frames.at(-1).cancelSeq, 0, target + ': an unrelated canceled finger does not cancel effective A');
         assert.equal(await tv.evaluate(() => window.CozyIslandTV.game.players[0].netRaised), true);
@@ -188,7 +200,10 @@ async function runPhoneCancellationTests(browser, baseUrl) {
         await tv.keyboard.up(key);
         assert.equal(await tv.evaluate(() => window.CozyIslandTV.game.players[0].netRaised), true, key + ': TV keyboard blur preserves the phone finger holding A');
       }
-      await tv.evaluate(() => { window.CozyIslandTV.game.players[0].facing = { x: 0, y: -1 }; });
+      await tv.evaluate(() => {
+        const g = window.CozyIslandTV.game, p = g.players[0], species = g.constructor.World.insects[0];
+        p.x = species.x; p.y = species.y + .9; p.facing = { x: 0, y: -1 };
+      });
     }
     const before = await tv.evaluate(() => {
       const g = window.CozyIslandTV.game;
@@ -200,10 +215,13 @@ async function runPhoneCancellationTests(browser, baseUrl) {
       await phone.locator('#button-a').dispatchEvent('lostpointercapture', { pointerId, pointerType: 'touch' });
     } else if (scenario === 'blur') await phone.evaluate(() => window.dispatchEvent(new Event('blur')));
     else await phone.setViewportSize({ width: 846, height: 390 });
-    await tv.waitForFunction(() => window.__phone.cancelSeq === 1 && !window.CozyIslandTV.game.players[0].netRaised);
+    await tv.waitForFunction(() => {
+      const p = window.CozyIslandTV.game.players[0];
+      return window.__phone.cancelSeq === 1 && !p.netRaised && !p.netNeedsRelease && !p.previous.a;
+    });
     if (scenario !== 'pointercancel') await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     await phone.waitForTimeout(350);
-    await relayed;
+    await flushRelay();
     assert.ok(frames.filter(frame => frame.cancelSeq === 1).length >= 2, scenario + ': cancellation marker survives the immediate event and heartbeat');
     assert.equal(frames.at(-1).cancelSeq, 1, scenario + ': late release/lostcapture does not cancel twice');
     const after = await tv.evaluate(() => {
@@ -219,20 +237,31 @@ async function runPhoneCancellationTests(browser, baseUrl) {
     await tv.waitForFunction(() => window.CozyIslandTV.game.players[0].netRaised);
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     await tv.waitForFunction(() => window.CozyIslandTV.game.insectJournal.meadowButterfly === 1);
-    await relayed;
+    await flushRelay();
     assert.equal(frames.at(-1).cancelSeq, 1, scenario + ': ordinary pointerup and automatic lostcapture do not cancel a catch');
     if (scenario === 'pointercancel') {
       await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [contact] });
       await phone.locator('#button-b').dispatchEvent('pointerdown', { pointerId: 42, pointerType: 'touch', button: 0 });
       await phone.locator('#button-b').dispatchEvent('pointercancel', { pointerId: 42, pointerType: 'touch' });
-      await relayed;
+      await flushRelay();
       assert.equal(frames.at(-1).a, true, 'canceling B leaves the A finger held');
       assert.equal(frames.at(-1).cancelSeq, 1, 'canceling B does not cancel effective A');
       await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-      await relayed;
+      await flushRelay();
     }
     assert.deepEqual(errors, []);
-    await phoneContext.close(); await relayed; await tvContext.close();
+    } catch (error) {
+      console.error(`FAIL cozy-island real phone ${scenario}`, { lastFrame, relayErrors: relayErrors.map(error => error.message) });
+      throw error;
+    } finally {
+      // Stop new work before closing either page. Handle every relay rejection
+      // and drain while the TV is alive, so cleanup cannot mask a test failure.
+      closing = true;
+      if (phoneContext) await phoneContext.close().catch(() => {});
+      await relayed;
+      await tvContext.close().catch(() => {});
+    }
+    if (relayErrors.length) throw relayErrors[0];
     console.log(`PASS cozy-island real phone ${scenario}: persistent marker, no phantom save, normal release catches`);
   }
 }
