@@ -12,6 +12,7 @@ struct FakeTv {
     user: u32,
     status: String,
     failure: Option<String>,
+    install_response: Option<Result<(i32, String), String>>,
     connect_auth_failure: bool,
     connect_error: Option<String>,
     home_failure: bool,
@@ -79,6 +80,9 @@ impl Runner for FakeRunner {
                     "pulled".into()
                 } else if args[2] == "install" {
                     assert!(Path::new(args.last().unwrap()).is_absolute());
+                    if let Some(response) = tv.install_response.clone() {
+                        return response.map(|(code, text)| Output { code, text });
+                    }
                     if tv.failure.as_deref() == args.last().map(String::as_str) {
                         return Ok(Output {
                             code: 0,
@@ -540,6 +544,11 @@ fn local_apk_import_preserves_space_path_and_refreshes() {
         })
         .unwrap();
     assert!(state.history[0].success);
+    assert!(state.install_results[0].success);
+    assert_eq!(
+        state.install_results[0].message,
+        "电视已确认安装成功，已刷新应用列表"
+    );
     assert!(state
         .packages
         .iter()
@@ -1049,6 +1058,134 @@ fn install_results_distinguish_original_paths_even_when_basenames_match() {
     assert_eq!(state.install_results[1].path, paths[1]);
     assert!(state.install_results[0].success);
     assert!(!state.install_results[1].success);
+}
+
+#[test]
+fn install_signature_rejections_are_definitive_even_with_zero_exit_or_long_paths() {
+    let reason = "INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package com.ecojust.tanktv signatures do not match previously installed version; ignoring!";
+    for (code, output) in [
+        (0, format!("Performing Streamed Install\nFailure [{reason}]\n")),
+        (
+            1,
+            format!(
+                "Performing Streamed Install\nadb: failed to install /Users/test/{}/tank-0.5.1.apk: Failure [{reason}]\n",
+                "long-cache-directory/".repeat(40)
+            ),
+        ),
+    ] {
+        let (mut manager, tv) = fixture();
+        connect(&mut manager);
+        let path = manager.data_dir.join("tank-0.5.1.apk");
+        fs::write(&path, b"test APK").unwrap();
+        let installed_before = tv.lock().unwrap().installed.clone();
+        tv.lock().unwrap().install_response = Some(Ok((code, output)));
+        let state = manager
+            .execute(Request::Install {
+                paths: vec![path.to_string_lossy().into_owned()],
+            })
+            .unwrap();
+        let result = &state.install_results[0];
+        assert!(!result.success);
+        assert!(result.message.contains("应用签名不一致，无法覆盖安装"));
+        assert!(result.message.contains("请在电视系统设置中卸载旧版并删除数据后重装"));
+        assert!(result.message.contains("这会清除存档和本地数据"));
+        assert!(result.message.contains("请先备份或使用原签名版本"));
+        assert!(result.message.ends_with(reason), "{}", result.message);
+        assert!(!result.message.contains("可能已生效"));
+        assert_eq!(state.history[0].message, result.message);
+        let tv = tv.lock().unwrap();
+        assert_eq!(tv.installed, installed_before);
+        assert_eq!(
+            tv.calls.iter().filter(|args| args.get(2).is_some_and(|s| s == "install")).count(),
+            1,
+            "A rejection must not trigger an automatic retry"
+        );
+        assert!(!tv.calls.iter().any(|args| args.contains(&"uninstall".into())));
+    }
+}
+
+#[test]
+fn other_package_manager_install_rejections_keep_their_specific_reason() {
+    for reason in [
+        "INSTALL_FAILED_VERSION_DOWNGRADE: Downgrade detected",
+        "INSTALL_PARSE_FAILED_NO_CERTIFICATES: Failed to collect certificates",
+    ] {
+        let (mut manager, tv) = fixture();
+        connect(&mut manager);
+        let path = manager.data_dir.join("app.apk");
+        fs::write(&path, b"test APK").unwrap();
+        tv.lock().unwrap().install_response = Some(Ok((1, format!("Failure [{reason}]"))));
+        let state = manager
+            .execute(Request::Install {
+                paths: vec![path.to_string_lossy().into_owned()],
+            })
+            .unwrap();
+        assert!(!state.install_results[0].success);
+        assert_eq!(
+            state.install_results[0].message,
+            format!("安装失败：{reason}")
+        );
+    }
+}
+
+#[test]
+fn install_rejection_parser_requires_a_complete_package_manager_diagnostic() {
+    for output in [
+        "adb: failed to install /tmp/INSTALL_FAILED_UPDATE_INCOMPATIBLE.apk: device offline",
+        "adb: failed to install /tmp/Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE].apk: connection reset",
+        "Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE",
+        "Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE] trailing transport text",
+        "Failure [install_failed_update_incompatible]",
+        "Failure [NETWORK_ERROR: device offline]",
+        "warning: Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE]",
+    ] {
+        assert_eq!(install_rejection(output), None, "{output}");
+    }
+}
+
+#[test]
+fn install_transport_failures_still_report_that_the_result_is_uncertain() {
+    for response in [
+        Err("ADB 操作超时，请检查电视连接后重试".into()),
+        Err("ADB 输出未正常关闭，请重试".into()),
+        Ok((
+            1,
+            "adb: failed to install /tmp/INSTALL_FAILED_UPDATE_INCOMPATIBLE.apk: device offline"
+                .into(),
+        )),
+    ] {
+        let (mut manager, tv) = fixture();
+        connect(&mut manager);
+        let path = manager.data_dir.join("app.apk");
+        fs::write(&path, b"test APK").unwrap();
+        tv.lock().unwrap().install_response = Some(response);
+        let state = manager
+            .execute(Request::Install {
+                paths: vec![path.to_string_lossy().into_owned()],
+            })
+            .unwrap();
+        assert!(!state.install_results[0].success);
+        assert!(state.install_results[0].message.contains("可能已生效"));
+        assert!(!state.install_results[0].message.contains("签名不一致"));
+    }
+}
+
+#[test]
+fn installed_apk_with_failed_catalogue_refresh_remains_unconfirmed() {
+    let (mut manager, tv) = fixture();
+    connect(&mut manager);
+    let path = manager.data_dir.join("app.apk");
+    fs::write(&path, b"test APK").unwrap();
+    tv.lock().unwrap().failure = Some("scan".into());
+    let state = manager
+        .execute(Request::Install {
+            paths: vec![path.to_string_lossy().into_owned()],
+        })
+        .unwrap();
+    assert!(tv.lock().unwrap().installed.contains("com.imported.app"));
+    assert!(!state.install_results[0].success);
+    assert!(state.install_results[0].message.contains("可能已生效"));
+    assert!(state.install_results[0].message.contains("scan denied"));
 }
 
 #[test]

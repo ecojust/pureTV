@@ -1,8 +1,8 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.4.5** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.4.7** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.4.5 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.5)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.4.7 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.7)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
 ## 功能
 
@@ -26,14 +26,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.4.5 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.5) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.4.7 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.7) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.4.5-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.4.7-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.5-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.7-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -74,6 +74,14 @@
 在「应用管理 → 待安装应用」导入本地普通 APK，勾选后确认安装。每次最多 10 个，每个不超过 2 GiB；不支持 APKS／XAPK。成功项按完整路径移出待安装队列，其他项保留；安装不会因仅导入文件而自动执行。
 
 安装后刷新应用列表，新的可启动应用可在启动器布局中选择。具备服务或其他用途但没有启动入口的 APK 不会被假装成可点击的启动器应用。
+
+### 签名不一致，无法覆盖安装
+
+`INSTALL_FAILED_UPDATE_INCOMPATIBLE` 且提示 `signatures do not match` 表示电视明确拒绝了这次覆盖安装。重复安装或换用同一新证书的更高版本，都无法覆盖旧证书安装。0.4.6 会误把这种明确拒绝加上“操作可能已生效”的提示；这是提示分类问题，不表示安装成功。
+
+需要保留存档时，先保留原安装，备份可导出的数据或使用原证书签名的版本。确认不需要旧数据后，在**电视系统设置 → 应用 → 对应游戏 → 卸载**中删除旧版及数据，再导入新版 APK 安装。管理器的“为当前用户卸载”使用保留数据方式，可能保留旧签名记录，不适合这次换证书重装。卸载会清除该游戏的存档和本地记录。
+
+彻底卸载旧签名安装后，可以重装市场中已提供的版本；例如 0.5.1 与 0.5.2 使用同一张统一发布证书，解决证书冲突不要求先上架或安装 0.5.2。安装前核对待安装列表中的文件名；刷新市场不会替换已经下载并加入队列的旧文件。
 
 应用和启动器的大小统计主 APK 与分包 APK 的合计字节数，不包含应用私有数据、缓存、原生库或优化文件。通过分组查询路径和文件元数据减少 ADB 往返；无法读取或结果不完整时显示「未能读取」。
 

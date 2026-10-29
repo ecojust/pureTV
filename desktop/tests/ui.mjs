@@ -1376,13 +1376,23 @@ try {
     assert.match(await p.locator('.launcher-grid').innerText(),/Nova TV/);
     assert.equal((await requests(p)).some(value=>value.action==='setHome'),false,'Installing does not silently select the launcher');
   },snapshot(),{holdActions:['installMarketItem']});
-  await check('market installation failure keeps the verified APK available for retry',async p=>{
+  const signatureFailure='安装失败：应用签名不一致，无法覆盖安装。请在电视系统设置中卸载旧版并删除数据后重装；这会清除存档和本地数据。如需保留数据，请先备份或使用原签名版本。原始错误：INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package com.ecojust.tanktv signatures do not match previously installed version; ignoring!';
+  for (const [language, expected, uncertainText] of [
+    ['zh-CN', /请在电视系统设置中卸载旧版并删除数据后重装/, /操作可能已生效/],
+    ['zh-TW', /請在電視系統設定中解除安裝舊版並刪除資料後重新安裝/, /操作可能已生效/],
+    ['en', /Uninstall the old app and delete its data in the TV system settings/, /change may have taken effect/],
+  ]) await check('market installation failure explains signature migration and keeps the APK '+language,async p=>{
+    await p.locator('[name="locale"]').selectOption(language);
     await openMarket(p);await act(p,'install-market').click();await p.locator('#confirm-operation').click();
-    assert.match(await (await result(p,'error')).innerText(),/INSTALL_FAILED_UPDATE_INCOMPATIBLE/);await acknowledge(p);
+    const text=await (await result(p,'error')).innerText();
+    assert.match(text,/INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package com\.ecojust\.tanktv/);
+    assert.match(text,expected);assert.doesNotMatch(text,uncertainText);
+    assert.equal((await requests(p)).some(request=>request.action==='uninstall'),false,'A rejected install never deletes the old app automatically');
+    await acknowledge(p);
     await p.locator('[data-act="market-pending"][data-kind="app"]').click();
     assert.equal(await p.locator('.apk-item').count(),1);assert.match(await p.locator('.apk-item').innerText(),/hifini-0\.1\.3\.apk/);
     assert.equal(await act(p,'install-one-apk').isEnabled(),true);
-  },snapshot(),{marketInstallError:'INSTALL_FAILED_UPDATE_INCOMPATIBLE'});
+  },snapshot(),{marketInstallError:signatureFailure});
   await check('market cancellation and failed verification never add a partial APK',async p=>{
     await openMarket(p);await act(p,'download-market').click();await held(p,'downloadMarketItem');
     await act(p,'cancel').click();await release(p,'downloadMarketItem');await p.locator('dialog.operation-feedback[open][data-phase="result"]').waitFor();

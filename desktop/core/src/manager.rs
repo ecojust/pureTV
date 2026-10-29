@@ -203,6 +203,14 @@ impl Manager {
         input: Option<&str>,
         seconds: u64,
     ) -> Result<String, String> {
+        self.run_output(args, input, seconds).and_then(check_output)
+    }
+    fn run_output(
+        &mut self,
+        args: Vec<String>,
+        input: Option<&str>,
+        seconds: u64,
+    ) -> Result<Output, String> {
         let path = self
             .state
             .adb_path
@@ -214,14 +222,13 @@ impl Manager {
         } else {
             self.cancel.as_ref()
         };
-        let output = self.runner.run(
+        self.runner.run(
             Path::new(path),
             &args,
             input,
             flag,
             Duration::from_secs(seconds),
-        )?;
-        check_output(output)
+        )
     }
     fn shell(&mut self, serial: &str, args: &[&str]) -> Result<String, String> {
         let mut values = vec!["-s".to_string(), serial.to_string(), "shell".to_string()];
@@ -969,7 +976,7 @@ impl Manager {
         let file = validate_apk(&file.to_string_lossy())?;
         self.defer_cancel = true;
         let output = self
-            .run(
+            .run_output(
                 vec![
                     "-s".into(),
                     device.serial.clone(),
@@ -983,6 +990,17 @@ impl Manager {
                 180,
             )
             .map_err(uncertain)?;
+        // A package-manager rejection is definitive, even when adb exits zero.
+        // Inspect the raw output before generic diagnostics truncate long paths.
+        if let Some((code, detail)) = install_rejection(&output.text) {
+            let detail = parse::short(detail, 500);
+            return Err(if code == "INSTALL_FAILED_UPDATE_INCOMPATIBLE" {
+                format!("安装失败：应用签名不一致，无法覆盖安装。请在电视系统设置中卸载旧版并删除数据后重装；这会清除存档和本地数据。如需保留数据，请先备份或使用原签名版本。原始错误：{detail}")
+            } else {
+                format!("安装失败：{detail}")
+            });
+        }
+        let output = check_output(output).map_err(uncertain)?;
         if !output.lines().any(|l| l.trim() == "Success") {
             return Err(format!(
                 "电视未确认安装成功：{}",
@@ -1135,6 +1153,29 @@ fn device_key(device: &Device) -> String {
 }
 fn uncertain(error: String) -> String {
     format!("执行结果未确认，操作可能已生效，请重新扫描：{error}")
+}
+fn install_rejection(output: &str) -> Option<(&str, &str)> {
+    output.lines().find_map(|line| {
+        let line = line.trim();
+        let detail = line.strip_prefix("Failure [").or_else(|| {
+            line.strip_prefix("adb: failed to install ")?
+                .rsplit_once(": Failure [")
+                .map(|(_, detail)| detail)
+        })?;
+        let detail = detail.strip_suffix(']')?;
+        let code = detail.split(':').next()?.trim();
+        if (code == "INSTALL_FAILED"
+            || code.starts_with("INSTALL_FAILED_")
+            || code.starts_with("INSTALL_PARSE_FAILED_"))
+            && code
+                .bytes()
+                .all(|b| b.is_ascii_uppercase() || b.is_ascii_digit() || b == b'_')
+        {
+            Some((code, detail))
+        } else {
+            None
+        }
+    })
 }
 fn connection_error(serial: &str, error: String) -> String {
     let lower = error.to_ascii_lowercase();
