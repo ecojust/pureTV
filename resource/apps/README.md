@@ -6,4 +6,4 @@
 
 应用源码在各自 `src/` 中。所用第三方依赖、素材及其许可证和来源声明仍按各应用目录记录保留。启动器位于 [../launcher/](../launcher/)。
 
-从仓库根目录进入 `resource/launcher/puretv/`，运行对应应用模块的 Gradle 任务，例如 `./gradlew :music:assembleDebug`。各应用的具体构建命令见其 README；安装直接使用软件目录内的已签名 APK。
+从仓库根目录进入 `resource/launcher/puretv/`，运行对应应用模块的 Gradle 任务，例如 `./gradlew :hifini:assembleDebug`。各应用的具体构建命令见其 README；安装直接使用软件目录内的已签名 APK。

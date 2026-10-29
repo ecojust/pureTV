@@ -28,7 +28,7 @@ state.packages=[
 ];
 for(const [folder,label] of [
   ['launcher/nova','Nova TV'],['launcher/puretv','pureTV Launcher'],
-  ['apps/music','Music TV'],['apps/shortvideo','ShortVideo TV'],['apps/webtv','WebTV'],
+  ['apps/shortvideo','ShortVideo TV'],['apps/webtv','WebTV'],
 ]){
   const resource=JSON.parse(await readFile(new URL(`../../resource/${folder}/resource.json`,import.meta.url),'utf8'));
   state.packages.push({packageName:resource.packageName,label,system:false,enabled:true,installed:true,protectedReason:folder==='launcher/nova'?'Current default launcher':null,apkSizeBytes:resource.apkBytes});
@@ -61,7 +61,7 @@ try{
   await page.locator('[data-page="apps"]').click();
   await page.locator('.apps-table').waitFor();
   await page.locator('[data-filter="enabled"]').click();
-  await page.locator('[data-select-package="com.ecojust.music"]').check();
+  await page.locator('[data-select-package="com.ecojust.shortvideo"]').check();
   await page.locator('[data-select-package="com.ecojust.webtv"]').check();
   await page.waitForFunction(()=>!document.querySelector('.busy-bar'));
   await page.evaluate(async()=>{await document.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
