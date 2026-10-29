@@ -1,8 +1,16 @@
-# Mono TV · 墨白
+# Mono TV · 墨白 0.5.0
+
+## 0.5.0 安装说明 / Installation
+
+**0.5.0 发布准备 / Release preparation.** 下载包与校验信息以完成发布后的目录为准。
+
+0.5.0 起统一使用新的 pureTV 发布证书，不能直接覆盖此前使用旧证书的版本。请先备份可导出的布局和数据，再卸载旧版后安装；卸载会清除本机应用数据。本项目不提供自动迁移工具。后续使用同一新证书的版本可以覆盖更新。
+
+Version 0.5.0 uses the new shared pureTV signing certificate and cannot update installations signed with the old certificate. Back up any layouts or data you can export before uninstalling the old app; uninstalling deletes its local data. There is no automatic migration tool. Later releases signed with this same new certificate can update 0.5.0 in place.
 
 墨黑与暖白构成的编辑式电视桌面：大时钟、留白、原创几何线稿和右侧非对称应用列。
 
-[下载 MonoTV-0.1.1.apk](MonoTV-0.1.1.apk) · [布局示例](layout.example.json) · [layout v5 协议](../../README-development.md#layoutjson-规范与画面对照)
+[下载 MonoTV-0.5.0.apk](MonoTV-0.5.0.apk) · [布局示例](layout.example.json) · [layout v5 协议](../../README-development.md#layoutjson-规范与画面对照)
 
 | 首页 | 应用页 |
 | --- | --- |
@@ -10,7 +18,7 @@
 
 预览来自实际 Android 界面在 Robolectric 原生图形环境中的渲染，使用测试应用，非电视实拍。默认卡片仅来自当前已安装、可启动的用户应用。
 
-包名 `com.ecojust.monotv`，版本 0.1.0。使用 pureTV Manager 0.3.7 或更新版本导入 APK，安装、激活后点击“调整布局”。管理器通过 `<包名>.layout` 自动发现标准接口。支持 Home / Apps 独立背景、位置、尺寸、SVG、文字与图标颜色；系统组件只读。菜单按钮可打开控制中心，提供桌面、网络、输入源、常用应用及系统设置。首页向下进入应用页，应用页向上返回。
+包名 `com.ecojust.monotv`，版本 0.5.0。使用 pureTV Manager 0.3.7 或更新版本导入 APK，安装、激活后点击“调整布局”。管理器通过 `<包名>.layout` 自动发现标准接口。支持 Home / Apps 独立背景、位置、尺寸、SVG、文字与图标颜色；系统组件只读。菜单按钮可打开控制中心，提供桌面、网络、输入源、常用应用及系统设置。首页向下进入应用页，应用页向上返回。
 
 示例配置包含资源目录中的六个真实应用包名；实际应用需先安装，启动器不会创建伪装成已安装应用的占位入口。
 

@@ -1,8 +1,16 @@
-# Forma TV 0.1.1
+# Forma TV 0.5.0
+
+## 0.5.0 安装说明 / Installation
+
+**0.5.0 发布准备 / Release preparation.** 下载包与校验信息以完成发布后的目录为准。
+
+0.5.0 起统一使用新的 pureTV 发布证书，不能直接覆盖此前使用旧证书的版本。请先备份可导出的布局和数据，再卸载旧版后安装；卸载会清除本机应用数据。本项目不提供自动迁移工具。后续使用同一新证书的版本可以覆盖更新。
+
+Version 0.5.0 uses the new shared pureTV signing certificate and cannot update installations signed with the old certificate. Back up any layouts or data you can export before uninstalling the old app; uninstalling deletes its local data. There is no automatic migration tool. Later releases signed with this same new certificate can update 0.5.0 in place.
 
 包豪斯几何风格，三原色构成与应用拼贴。独立包名 `com.ecojust.formatv`，可以与其他启动器同时安装。
 
-[下载 APK](FormaTV-0.1.1.apk?raw=1) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [协议与接入说明](../../README-development.md#第三方启动器接入与动态检测) · [校验值](SHA256SUMS.txt)
+[下载 APK](FormaTV-0.5.0.apk?raw=1) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [协议与接入说明](../../README-development.md#第三方启动器接入与动态检测) · [校验值](SHA256SUMS.txt)
 
 | 首页 | 应用页 |
 | --- | --- |

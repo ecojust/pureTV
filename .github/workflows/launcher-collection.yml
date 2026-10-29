@@ -106,7 +106,7 @@ jobs:
           if-no-files-found: error
   stage:
     needs: build
-    if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/heads/feat/nova-tv')
+    if: github.event_name == 'workflow_dispatch' || (github.event_name != 'pull_request' && startsWith(github.ref, 'refs/heads/feat/nova-tv'))
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -1,8 +1,16 @@
-# Aster TV · 星轨
+# Aster TV · 星轨 0.5.0
+
+## 0.5.0 安装说明 / Installation
+
+**0.5.0 发布准备 / Release preparation.** 下载包与校验信息以完成发布后的目录为准。
+
+0.5.0 起统一使用新的 pureTV 发布证书，不能直接覆盖此前使用旧证书的版本。请先备份可导出的布局和数据，再卸载旧版后安装；卸载会清除本机应用数据。本项目不提供自动迁移工具。后续使用同一新证书的版本可以覆盖更新。
+
+Version 0.5.0 uses the new shared pureTV signing certificate and cannot update installations signed with the old certificate. Back up any layouts or data you can export before uninstalling the old app; uninstalling deletes its local data. There is no automatic migration tool. Later releases signed with this same new certificate can update 0.5.0 in place.
 
 星轨与轨道构成的深蓝空间桌面，悬浮双排应用与左侧大时钟。基于原生 Android TV，使用遥控器方向键和确认键操作。
 
-[下载 AsterTV-0.1.1.apk](AsterTV-0.1.1.apk) · [布局示例](layout.example.json) · [源码归档](source.tar.gz) · [元数据](resource.json)
+[下载 AsterTV-0.5.0.apk](AsterTV-0.5.0.apk) · [布局示例](layout.example.json) · [源码归档](source.tar.gz) · [元数据](resource.json)
 
 ![首页](thumb.png)
 ![应用页](apps.png)

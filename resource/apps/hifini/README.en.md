@@ -6,9 +6,15 @@
 The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
+## Preparing 0.5.0 and migrating signatures
+
+The planned release is **0.5.0**, using the new pureTV release certificate shared by the project's own apps and launchers. Its certificate differs from the previously published APK, so Android cannot install it over the old version. Back up any data you can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local settings, saved credentials, sessions and the private library, including downloaded songs. This project provides no automatic migration tool and does not guarantee that all local data can be exported.
+
+The new package is still being prepared. The download link and `resource.json` will be updated when publication completes; the current link remains the previous release.
+
 [English](README.en.md) · [中文](README.md)
 
-An independent HiFiNi music client for Android TV remotes, requiring Android 8.0 or later. Package: `com.ecojust.hifinitv`; version: `0.1.4`. It installs alongside Music TV and does not access or modify Music TV data.
+An independent HiFiNi music client for Android TV remotes, requiring Android 8.0 or later. Package: `com.ecojust.hifinitv`; planned version: `0.5.0`. It installs alongside Music TV and does not access or modify Music TV data.
 
 ![Native English UI with fictional test tracks; not a live playback or physical TV capture](docs/hifini-tv.en.png)
 

@@ -40,7 +40,7 @@ jobs:
           PY
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: tools/game-release-certificate.sha256
+          sparse-checkout: tools/puretv-release-certificate-v2.sha256
           sparse-checkout-cone-mode: false
       - uses: actions/setup-java@v4
         with:
@@ -69,7 +69,7 @@ jobs:
               certificate = result.stdout
               fingerprint = hashlib.sha256(certificate).hexdigest()
               print('Configured certificate SHA-256: ' + fingerprint, flush=True)
-              assert fingerprint == Path('tools/game-release-certificate.sha256').read_text().strip(), 'Configured key does not match the published certificate'
+              assert fingerprint == Path('tools/puretv-release-certificate-v2.sha256').read_text().strip(), 'Configured key does not match the published certificate'
               print('Release signing: configured; certificate matches the pinned game release certificate')
           finally:
               key.unlink(missing_ok=True)
@@ -130,7 +130,7 @@ jobs:
           key.write_bytes(base64.b64decode(encoded, validate=True))
           key.chmod(0o600)
           certificate = subprocess.check_output(['keytool', '-exportcert', '-alias', 'puretv', '-keystore', str(key), '-storepass:env', 'PURETV_KEYSTORE_PASSWORD'])
-          expected = Path('tools/game-release-certificate.sha256').read_text().strip()
+          expected = Path('tools/puretv-release-certificate-v2.sha256').read_text().strip()
           assert hashlib.sha256(certificate).hexdigest() == expected, 'Release certificate does not match the pinned game release certificate'
           with open(os.environ['GITHUB_ENV'], 'a') as output:
               output.write(f'PURETV_KEYSTORE_PATH={key}\n')

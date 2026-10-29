@@ -2,7 +2,7 @@
 """Prepare a signed public launcher resource from verified Android CI staging outputs."""
 import argparse,hashlib,json,os,re,shutil,subprocess,tempfile
 from pathlib import Path
-from resource_catalog import apk_info,digest,launcher_source_tree,LAUNCHER_INPUTS
+from resource_catalog import apk_info,digest,launcher_source_tree,LAUNCHER_INPUTS,expected_release_certificate
 from resource_previews import write_english_previews
 
 parser=argparse.ArgumentParser()
@@ -18,19 +18,30 @@ auth=os.environ.get('PURETV_GITHUB_HEADER')
 def git(*arguments):return subprocess.check_output(['git','-C',str(root)]+(['-c','http.extraHeader='+auth] if auth else [])+list(arguments))
 run_id=args.stage_branch.rsplit('-',1)[1]
 status=json.loads(subprocess.check_output(['gh','api']+(['-H',auth] if auth else [])+['repos/ecojust/pureTV/actions/runs/'+run_id]))
-assert status['conclusion']=='success' and status['head_sha']==args.source_sha
+assert status['status']=='completed' and status['conclusion']=='success' and status['head_sha']==args.source_sha
+assert status['repository']['full_name']=='ecojust/pureTV' and status['head_repository']['full_name']=='ecojust/pureTV'
+workflow=json.loads(subprocess.check_output(['gh','api']+(['-H',auth] if auth else [])+[f'repos/ecojust/pureTV/actions/workflows/{status["workflow_id"]}']))
+assert workflow['path']=='.github/workflows/android.yml', 'Unexpected source build workflow'
 stage_ref='refs/remotes/origin/'+args.stage_branch
 git('fetch','origin','refs/heads/'+args.stage_branch+':'+stage_ref)
+assert git('rev-parse',stage_ref+'^').decode().strip()==args.source_sha, 'Staged artifacts must descend directly from the source build'
 metadata=json.loads(git('show',stage_ref+':release-staging/release-metadata.json'))['launcher']
 assert metadata['sourceSha']==args.source_sha and metadata['packageName']=='com.ecojust.puretv'
 assert re.fullmatch(r'\d+\.\d+\.\d+',metadata['versionName'])
 source_tree=launcher_source_tree(root,args.source_sha)
 assert metadata['sourceTreeSha']==source_tree
-expected_cert=(root/'tools/puretv-release-certificate.sha256').read_text().strip()
+expected_cert=expected_release_certificate(root,metadata)
+gradle=git('show',args.source_sha+':resource/launcher/puretv/app/build.gradle').decode()
+assert metadata['versionName']==re.search(r"versionName '([^']+)'",gradle)[1]
+assert metadata['versionCode']==int(re.search(r'versionCode (\d+)',gradle)[1])
 with tempfile.TemporaryDirectory(prefix='puretv-resource-') as temporary:
     temporary=Path(temporary)
     unsigned=temporary/'input.apk';unsigned.write_bytes(git('show',stage_ref+':release-staging/'+metadata['releaseName']))
     assert digest(unsigned)==metadata['sha256'] and unsigned.stat().st_size==metadata['bytes']
+    input_info=apk_info(unsigned,args.build_tools,allow_unsigned=True)
+    assert all(input_info[field]==metadata[field] for field in ('packageName','versionName','versionCode','bytes','sha256'))
+    assert 0<input_info['bytes']<5*1024*1024
+    assert bool(metadata['requiresSigning'])==(input_info['certificateSha256'] is None)
     signed=temporary/metadata['releaseName']
     if metadata['requiresSigning']:
         key=os.environ.get('PURETV_KEYSTORE_PATH')
@@ -49,7 +60,22 @@ with tempfile.TemporaryDirectory(prefix='puretv-resource-') as temporary:
         assert data.startswith(b'\x89PNG\r\n\x1a\n') and len(data)<4*1024*1024
         previews[name]=data
     source=temporary/'source.tar.gz'
-    with source.open('wb') as output:subprocess.run(['git','-C',str(root),'archive','--format=tar.gz',args.source_sha,*['resource/launcher/puretv/'+name for name in LAUNCHER_INPUTS],'resource/launcher/puretv/layout.example.json','resource/launcher/puretv/layout.example.en.json','resource/launcher/puretv/README.md','resource/launcher/puretv/LICENSE','resource/launcher/puretv/NOTICE.md','resource/apps/music/build.gradle','resource/apps/shortvideo/build.gradle','resource/apps/webtv/build.gradle','resource/apps/music/src','resource/apps/shortvideo/src','resource/apps/webtv/src','LICENSE','NOTICE.md'],stdout=output,check=True)
+    # settings.gradle configures every bundled app module, including the games.
+    # Archive their exact build inputs instead of the historical three-app list.
+    archive_paths=['resource/launcher/puretv/'+name for name in LAUNCHER_INPUTS]
+    archive_paths += ['resource/launcher/puretv/'+name for name in ('layout.example.json','layout.example.en.json','README.md','LICENSE','NOTICE.md')]
+    module_inputs={'build.gradle','src','proguard-rules.pro','tools','tests','README.md','README.en.md','LICENSE','NOTICE.md'}
+    for entry in git('ls-tree',args.source_sha+':resource/apps').decode().splitlines():
+        attributes,module=entry.split('\t',1)
+        if attributes.split()[1]!='tree':
+            continue
+        prefix='resource/apps/'+module
+        files=set(git('ls-tree','--name-only',args.source_sha+':'+prefix).decode().splitlines())
+        if 'build.gradle' in files:
+            archive_paths += [prefix+'/'+name for name in sorted(files & module_inputs)]
+    archive_paths += ['tools/tests','LICENSE','NOTICE.md']
+    with source.open('wb') as output:
+        subprocess.run(['git','-C',str(root),'archive','--format=tar.gz',args.source_sha,*archive_paths],stdout=output,check=True)
     folder=root/'resource/launcher/puretv';folder.mkdir(parents=True,exist_ok=True)
     shutil.copyfile(signed,folder/signed.name)
     shutil.copyfile(source,folder/'source.tar.gz')

@@ -8,6 +8,12 @@ English | [Chinese](README.md)
 The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
+## Preparing 0.5.0 and migrating signatures
+
+The planned release is **0.5.0**, using the new pureTV release certificate shared by the project's own apps and launchers. Its certificate differs from the previously published APK, so Android cannot install it over the old version. Back up any data you can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local settings and private app data. This project provides no automatic migration tool and does not guarantee that all local data can be exported.
+
+The new package is still being prepared. The download link and `resource.json` will be updated when publication completes; the current link remains the previous release.
+
 A lightweight native Android TV short-video player designed for a remote control. Requires Android 8.0 (API 26) or later. Package: `com.ecojust.shortvideo`. No account or API key is required.
 
 The interface follows the TV's system language and supports English and Simplified Chinese. English includes playback status, errors, source names, and the source picker. Videos come from third-party providers and are not translated.

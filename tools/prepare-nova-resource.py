@@ -7,7 +7,7 @@ The unsigned artifact is fetched from build-assets/nova-RUN_ID.
 """
 import argparse,hashlib,io,json,os,re,subprocess,tarfile,tempfile
 from pathlib import Path
-from resource_catalog import apk_info,digest
+from resource_catalog import apk_info,digest,expected_release_certificate
 from resource_previews import write_english_previews
 
 parser=argparse.ArgumentParser()
@@ -15,15 +15,19 @@ parser.add_argument('run_id');parser.add_argument('source_sha')
 parser.add_argument('--build-tools',type=Path,required=True)
 parser.add_argument('--keystore',type=Path,required=True)
 args=parser.parse_args()
-assert args.run_id.isdigit() and len(args.source_sha)==40
+assert args.run_id.isdigit() and re.fullmatch(r'[0-9a-f]{40}',args.source_sha)
 root=Path(__file__).resolve().parents[1]
 auth=os.environ.get('PURETV_GITHUB_HEADER')
 def git(*argv):
     prefix=['git','-C',str(root)]+(['-c','http.extraHeader='+auth] if auth else [])
     return subprocess.check_output(prefix+list(argv))
 status=json.loads(subprocess.check_output(['gh','api']+(['-H',auth] if auth else [])+[f'repos/ecojust/pureTV/actions/runs/{args.run_id}']))
-assert status['conclusion']=='success' and status['head_sha']==args.source_sha
+assert status['status']=='completed' and status['conclusion']=='success' and status['head_sha']==args.source_sha
+assert status['repository']['full_name']=='ecojust/pureTV' and status['head_repository']['full_name']=='ecojust/pureTV'
+workflow=json.loads(subprocess.check_output(['gh','api']+(['-H',auth] if auth else [])+[f'repos/ecojust/pureTV/actions/workflows/{status["workflow_id"]}']))
+assert workflow['path']=='.github/workflows/nova.yml', 'Unexpected source build workflow'
 branch='build-assets/nova-'+args.run_id;stage_ref='refs/remotes/origin/'+branch;git('fetch','origin','refs/heads/'+branch+':'+stage_ref)
+assert git('rev-parse',stage_ref+'^').decode().strip()==args.source_sha, 'Staged artifacts must descend directly from the source build'
 def artifact(name):return git('show',stage_ref+':release-staging/nova/'+name)
 info=json.loads(artifact('metadata.json'));assert info['sourceSha']==args.source_sha
 assert info['packageName']=='com.ecojust.novatv'
@@ -34,12 +38,16 @@ folder=root/'resource/launcher/nova';apk=folder/f'NovaTV-{version}.apk'
 with tempfile.TemporaryDirectory(prefix='nova-sign-') as temporary:
     temporary=Path(temporary);unsigned=temporary/'unsigned.apk';unsigned.write_bytes(artifact('nova.apk'))
     assert digest(unsigned)==info['sha256']
+    unsigned_info=apk_info(unsigned,args.build_tools,allow_unsigned=True)
+    assert unsigned_info['certificateSha256'] is None, 'Expected unsigned Nova CI artifact'
+    assert all(unsigned_info[field]==info[field] for field in ('packageName','versionName','versionCode','bytes','sha256'))
+    assert 0<unsigned_info['bytes']<5*1024*1024
     aligned=temporary/'aligned.apk'
     subprocess.run([str(args.build_tools/'zipalign'),'-f','4',str(unsigned),str(aligned)],check=True)
     subprocess.run([str(args.build_tools/'apksigner'),'sign','--v4-signing-enabled','false','--ks',str(args.keystore),'--ks-key-alias','puretv','--ks-pass','env:PURETV_KEYSTORE_PASSWORD','--key-pass','env:PURETV_KEYSTORE_PASSWORD','--out',str(apk),str(aligned)],check=True)
 actual=apk_info(apk,args.build_tools)
 assert actual['packageName']==info['packageName'] and actual['versionCode']==code and actual['versionName']==version
-assert actual['certificateSha256']==(root/'tools/puretv-release-certificate.sha256').read_text().strip()
+assert actual['certificateSha256']==expected_release_certificate(root,actual)
 subprocess.run([str(args.build_tools/'zipalign'),'-c','4',str(apk)],check=True)
 for source,target in [('home-render.png','thumb.png'),('apps-render.png','apps.png')]:
     data=artifact(source);assert data.startswith(b'\x89PNG');(folder/target).write_bytes(data)

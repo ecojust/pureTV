@@ -6,18 +6,21 @@ Credentials: PURETV_KEYSTORE_PASSWORD. Optional GitHub transport header: PURETV_
 """
 import argparse,io,json,os,re,subprocess,tarfile,tempfile
 from pathlib import Path
-from resource_catalog import apk_info,digest
+from resource_catalog import apk_info,digest,expected_release_certificate
 from resource_previews import write_english_previews
 p=argparse.ArgumentParser();p.add_argument('run_id');p.add_argument('source_sha');p.add_argument('--build-tools',type=Path,required=True);p.add_argument('--keystore',type=Path,required=True);args=p.parse_args()
 assert args.run_id.isdigit() and re.fullmatch('[0-9a-f]{40}',args.source_sha)
 root=Path(__file__).resolve().parents[1];auth=os.environ.get('PURETV_GITHUB_HEADER')
 def git(*argv):return subprocess.check_output(['git','-C',str(root)]+(['-c','http.extraHeader='+auth] if auth else [])+list(argv))
 status=json.loads(subprocess.check_output(['gh','api']+(['-H',auth] if auth else [])+[f'repos/ecojust/pureTV/actions/runs/{args.run_id}']))
-assert status['conclusion']=='success' and status['head_sha']==args.source_sha
+assert status['status']=='completed' and status['conclusion']=='success' and status['head_sha']==args.source_sha
+assert status['repository']['full_name']=='ecojust/pureTV' and status['head_repository']['full_name']=='ecojust/pureTV'
+workflow=json.loads(subprocess.check_output(['gh','api']+(['-H',auth] if auth else [])+[f'repos/ecojust/pureTV/actions/workflows/{status["workflow_id"]}']))
+assert workflow['path']=='.github/workflows/launcher-collection.yml', 'Unexpected source build workflow'
 names=json.loads(git('show',args.source_sha+':tools/launcher-builds.json'));assert len(names)==8 and len(set(names))==8
 assert all(re.fullmatch('[a-z][a-z0-9-]*',name) for name in names)
 branch='build-assets/collection-'+args.run_id;stage_ref='refs/remotes/origin/'+branch;git('fetch','origin','refs/heads/'+branch+':'+stage_ref)
-certificate=(root/'tools/puretv-release-certificate.sha256').read_text().strip()
+assert git('rev-parse',stage_ref+'^').decode().strip()==args.source_sha, 'Staged artifacts must descend directly from the source build'
 for name in names:
     folder=root/'resource/launcher'/name;source_path='resource/launcher/'+name
     previous=json.loads((folder/'resource.json').read_text()) if (folder/'resource.json').exists() else None
@@ -26,10 +29,19 @@ for name in names:
     def artifact(filename):return git('show',stage_ref+':release-staging/collection/'+name+'/'+filename)
     info=json.loads(artifact('metadata.json'));assert info['sourceSha']==args.source_sha
     assert info['packageName']==descriptor['packageName'] and info['versionName']==descriptor['version']
+    gradle=git('show',args.source_sha+':'+source_path+'/app/build.gradle').decode()
+    assert info['packageName']==re.search(r"applicationId '([^']+)'",gradle)[1]
+    assert info['versionName']==re.search(r"versionName '([^']+)'",gradle)[1]
+    assert info['versionCode']==int(re.search(r'versionCode (\d+)',gradle)[1])
+    certificate=expected_release_certificate(root,info)
     example=git('show',args.source_sha+':'+source_path+'/layout.example.json');assert example==(folder/'layout.example.json').read_bytes()
     apk=folder/apk_name
     with tempfile.TemporaryDirectory(prefix='launcher-sign-') as temporary:
         temporary=Path(temporary);unsigned=temporary/'unsigned.apk';unsigned.write_bytes(artifact(apk_name));assert digest(unsigned)==info['sha256']
+        unsigned_info=apk_info(unsigned,args.build_tools,allow_unsigned=True)
+        assert unsigned_info['certificateSha256'] is None, f'{name}: expected unsigned CI artifact'
+        assert all(unsigned_info[field]==info[field] for field in ('packageName','versionName','versionCode','bytes','sha256'))
+        assert 0<unsigned_info['bytes']<5*1024*1024
         aligned=temporary/'aligned.apk'
         subprocess.run([str(args.build_tools/'zipalign'),'-f','4',str(unsigned),str(aligned)],check=True)
         subprocess.run([str(args.build_tools/'apksigner'),'sign','--v4-signing-enabled','false','--ks',str(args.keystore),'--ks-key-alias','puretv','--ks-pass','env:PURETV_KEYSTORE_PASSWORD','--key-pass','env:PURETV_KEYSTORE_PASSWORD','--out',str(apk),str(aligned)],check=True)

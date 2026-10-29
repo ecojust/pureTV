@@ -1,8 +1,16 @@
-# Nova TV
+# Nova TV 0.5.0
+
+## 0.5.0 安装说明 / Installation
+
+**0.5.0 发布准备 / Release preparation.** 下载包与校验信息以完成发布后的目录为准。
+
+0.5.0 起统一使用新的 pureTV 发布证书，不能直接覆盖此前使用旧证书的版本。请先备份可导出的布局和数据，再卸载旧版后安装；卸载会清除本机应用数据。本项目不提供自动迁移工具。后续使用同一新证书的版本可以覆盖更新。
+
+Version 0.5.0 uses the new shared pureTV signing certificate and cannot update installations signed with the old certificate. Back up any layouts or data you can export before uninstalling the old app; uninstalling deletes its local data. There is no automatic migration tool. Later releases signed with this same new certificate can update 0.5.0 in place.
 
 采用 Apple TV 风格的独立 Android 电视启动器：大幅峡湾景观、底部六列彩色应用卡片、角落时钟，以及遥控器焦点的平滑放大、柔和阴影与细描边。应用标识 `com.ecojust.novatv`，可与 pureTV Launcher 同时安装。
 
-[下载 NovaTV-0.1.2.apk](NovaTV-0.1.2.apk) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [layout v5 协议](../../README-development.md#layoutjson-规范与画面对照)
+[下载 NovaTV-0.5.0.apk](NovaTV-0.5.0.apk) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [layout v5 协议](../../README-development.md#layoutjson-规范与画面对照)
 
 ## 界面
 
@@ -22,7 +30,7 @@
 
 默认首页展示前六个已安装用户应用；应用页展示已安装用户应用。无用户应用时可以先在管理器安装应用。右上角“控制中心”保留网络、输入源、常用应用、桌面与系统设置；遥控器可选择条目，返回键关闭。
 
-从 0.1.0 升级时，已有自定义应用、位置、背景和页面切换规则会保留，系统组件升级到新的紧凑布局。要完整采用新桌面，可在管理器点击“恢复默认”。
+安装后要完整采用默认桌面，可在管理器点击“恢复默认”。本次更换签名无法自动保留旧应用中的布局和数据，安装要求见上方说明。
 
 默认最多展示 100 个用户应用。应用很多、名称很长时，启动器自动使用同一背景的小图并缩短卡片显示名称，保持协议文件不超过 90 KiB；应用的包名和启动功能不会改变。示例文件使用仓库提供的六款应用，只有电视已安装相应应用后才能直接应用。
 

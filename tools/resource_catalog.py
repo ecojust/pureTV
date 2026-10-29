@@ -2,11 +2,26 @@
 import hashlib,json,re,subprocess
 from pathlib import Path
 
-# Only these games migrate to the new release certificate at version 0.5.0.
+# These applications and launchers migrate to the new certificate at 0.5.0.
 # Thresholds are the first unpublished version codes after the legacy releases;
 # matching by exact package and code prevents unrelated apps or historical APKs
 # from accepting either certificate indiscriminately.
-GAME_CERTIFICATE_CUTOVERS = {
+RELEASE_CERTIFICATE_CUTOVERS = {
+    'com.ecojust.puretv': 14,
+    'com.ecojust.novatv': 4,
+    'com.ecojust.formatv': 3,
+    'com.ecojust.mosstv': 3,
+    'com.ecojust.astertv': 3,
+    'com.ecojust.soltv': 3,
+    'com.ecojust.monotv': 3,
+    'com.ecojust.pixeltv': 3,
+    'com.ecojust.circuittv': 3,
+    'com.ecojust.drifttv': 3,
+    'com.ecojust.music': 5,
+    'com.ecojust.hifinitv': 6,
+    'com.ecojust.cctvlive': 2,
+    'com.ecojust.webtv': 3,
+    'com.ecojust.shortvideo': 3,
     'com.ecojust.tanktv': 7,
     'com.ecojust.jackaltv': 4,
     'com.ecojust.jeweltv': 2,
@@ -23,14 +38,14 @@ def expected_release_certificate(root, identity):
     package = identity['packageName']
     assert package.startswith('com.ecojust.'), 'Release certificate pins apply only to pureTV packages'
     pin = 'puretv-release-certificate.sha256'
-    if package in GAME_CERTIFICATE_CUTOVERS:
+    if package in RELEASE_CERTIFICATE_CUTOVERS:
         version = re.fullmatch(r'(\d+)\.(\d+)\.(\d+)(?:-preview\.\d+)?', identity['versionName'])
         assert version, f'{package}: invalid version name for certificate selection'
         new_version = tuple(map(int, version.groups())) >= (0, 5, 0)
-        new_code = identity['versionCode'] >= GAME_CERTIFICATE_CUTOVERS[package]
+        new_code = identity['versionCode'] >= RELEASE_CERTIFICATE_CUTOVERS[package]
         assert new_version == new_code, f'{package}: version name and code disagree at the 0.5.0 certificate cutover'
         if new_code:
-            pin = 'game-release-certificate.sha256'
+            pin = 'puretv-release-certificate-v2.sha256'
     certificate = (root / 'tools' / pin).read_text().strip()
     assert re.fullmatch(r'[a-f0-9]{64}', certificate), f'Invalid release certificate fingerprint: {pin}'
     return certificate

@@ -6,7 +6,15 @@
 此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
 <!-- apk-resource:end -->
 
-Android TV 卫视／央视直播应用，包名 `com.ecojust.webtv`，版本 0.1.0，支持 Android 8.0 以上。原生 Java View、SurfaceView、MediaPlayer 和 MediaSession，无生产环境第三方依赖。
+[中文](README.md) · [English](README.en.md)
+
+## 0.5.0 发布准备与签名迁移
+
+发布目标为 **0.5.0**，与其他自研应用和启动器统一使用新的 pureTV 发布证书。新证书与此前目录 APK 的证书不同，Android 无法覆盖安装旧版。请先备份能够导出的数据，再卸载旧版并安装 0.5.0；卸载会清除本机收藏、导入的频道列表、元数据缓存和设置。本项目不提供自动迁移工具，也不保证所有本机数据都可导出。
+
+本轮安装包仍在准备中，上方下载链接与 `resource.json` 以发布完成后的更新为准；当前链接仍指向此前版本。
+
+Android TV 卫视／央视直播应用，包名 `com.ecojust.webtv`，发布目标版本 0.5.0，支持 Android 8.0 以上。原生 Java View、SurfaceView、MediaPlayer 和 MediaSession，无生产环境第三方依赖。
 
 ## 使用
 
@@ -26,7 +34,7 @@ WebTV follows the TV system language. English includes navigation, playback stat
 
 ## 体积与资源
 
-Release 开启 R8 和资源压缩，签名 APK 37,731 字节（约 36.8 KiB）；CI 限制不超过 5 MiB。仅申请联网权限，无存储权限、后台服务、视频磁盘缓存、台标下载或多频道并行解码。
+Release 开启 R8 和资源压缩，签名 APK 大小见 `resource.json`；CI 限制不超过 5 MiB。仅申请联网权限，无存储权限、后台服务、视频磁盘缓存、台标下载或多频道并行解码。
 
 仅保留一个播放器，切台先释放旧解码器；退到后台释放播放器、音频焦点和媒体会话。频道列表复用行视图，一个有界后台任务处理元数据；空闲线程自动回收。
 

@@ -6,9 +6,15 @@
 The APK in this directory is signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
+## Preparing 0.5.0 and migrating signatures
+
+The planned release is **0.5.0**, using the new pureTV release certificate shared by the project's own apps and launchers. Its certificate differs from the previously published APK, so Android cannot install it over the old version. Back up any data you can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local favorites, channel selection, website caches and app settings. This project provides no automatic migration tool and does not guarantee that all local data can be exported.
+
+The new package is still being prepared. The download link and `resource.json` will be updated when publication completes; the current link remains the previous release.
+
 [English](README.en.md) · [中文](README.md)
 
-An independent CCTV channel player from the pureTV project, designed for Android TV / Google TV remotes. Package: `com.ecojust.cctvlive`; version: `0.1.0`; Android 8.0 or later. The application shell follows the system language and supports Chinese and English. The playback area retains the CCTV website's own content and messages. This is a third-party client, not an official CCTV application.
+An independent CCTV channel player from the pureTV project, designed for Android TV / Google TV remotes. Package: `com.ecojust.cctvlive`; planned version: `0.5.0`; Android 8.0 or later. The application shell follows the system language and supports Chinese and English. The playback area retains the CCTV website's own content and messages. This is a third-party client, not an official CCTV application.
 
 ## Interface and remote controls
 
