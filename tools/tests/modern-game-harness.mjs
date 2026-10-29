@@ -442,6 +442,7 @@ async function tvBridge(context, config, language, legacy = false) {
     };
     window.__snapshotCalls = 0;
     window.__inputs = [1,2].map(id => ({id,connected:false,x:0,y:0,a:false,b:false,start:false,select:false,cancelSeq:0}));
+    window.__roomPeers={};window.__clientCancelSequences={};
     window[bridge] = {
       getInfo: () => JSON.stringify({language,qr,url:'http://192.168.1.88:38291/?room=modern-preview-room-token'}),
       snapshot: () => { window.__snapshotCalls++; return JSON.stringify({players:window.__inputs}); },
@@ -502,23 +503,47 @@ async function awaitCard(page,id,connected) {
 
 async function addPhone(browser,tv,base,language,id,errors) {
   const context = await browser.newContext({viewport:{width:844,height:390},locale:language,hasTouch:true});
-  let lastInput=null;
+  let lastInput=null,activePeer=null;
   await context.exposeBinding('__roomMessage',async(_source,message) => {
     // Real LAN input is read on a server thread, not serialized behind GPU
     // frames. Coalesce unchanged heartbeat input and use the TV's independently
     // published state so software rendering cannot grow an unbounded RPC queue.
+    if(message.type==='hello'){
+      activePeer=message.connectionId;lastInput=null;
+    }else if(message.connectionId!==activePeer)return publishedRoomStates.get(tv);
     if(message.type==='input'){
       const signature=JSON.stringify([message.x,message.y,!!message.a,!!message.b,!!message.start,!!message.select,message.cancelSeq||0]);
       if(signature===lastInput)return publishedRoomStates.get(tv);
       lastInput=signature;
-    }else lastInput=null;
+    }else if(message.type==='closed'){activePeer=null;lastInput=null;}
     await tv.evaluate(({message,id}) => {
     const player = window.__inputs[id-1];
-    if (message.type==='hello') {player.connected=true;return;}
+    function clearInput(connected){
+      if(player.a)player.cancelSeq++;
+      Object.assign(player,{connected,x:0,y:0,a:false,b:false,start:false,select:false});
+    }
+    if (message.type==='hello') {
+      window.__roomPeers[id]=message.connectionId;
+      if(!(id in window.__clientCancelSequences))window.__clientCancelSequences[id]=0;
+      clearInput(true);
+      return;
+    }
+    // Native peers are also identity-checked: a queued old close or input
+    // must not clear/overwrite a newer connection for the same player slot.
+    if(window.__roomPeers[id]!==message.connectionId)return;
     // As on the native server, input cannot establish/revive a connection.
     // Buffered input from a closed peer must not undo a disconnection.
-    if (message.type==='input'&&player.connected) Object.assign(player,{x:message.x,y:message.y,a:!!message.a,b:!!message.b,start:!!message.start,select:!!message.select,cancelSeq:message.cancelSeq||0});
-    if (message.type==='closed') Object.assign(player,{connected:false,x:0,y:0,a:false,b:false,start:false,select:false});
+    if (message.type==='input'&&player.connected) {
+      const clientCancel=message.cancelSeq||0;
+      if(clientCancel!==window.__clientCancelSequences[id]){
+        window.__clientCancelSequences[id]=clientCancel;player.cancelSeq++;
+      }
+      Object.assign(player,{x:message.x,y:message.y,a:!!message.a,b:!!message.b,start:!!message.start,select:!!message.select});
+    }
+    if (message.type==='closed') {
+      delete window.__roomPeers[id];
+      clearInput(false);
+    }
     },{message,id});
     return publishedRoomStates.get(tv);
   });
@@ -526,10 +551,10 @@ async function addPhone(browser,tv,base,language,id,errors) {
     window.__networkAvailable=true;window.__sockets=[];
     class RoomSocket extends EventTarget {
       static CONNECTING=0;static OPEN=1;static CLOSING=2;static CLOSED=3;
-      constructor(){super();this.readyState=0;this.queue=Promise.resolve();window.__sockets.push(this);setTimeout(()=>{if(!window.__networkAvailable){this.close();return;}this.readyState=1;this.dispatchEvent(new Event('open'));},0);}
+      constructor(){super();this.readyState=0;this.connectionId=Date.now().toString(36)+':'+Math.random().toString(36).slice(2);this.queue=Promise.resolve();window.__sockets.push(this);setTimeout(()=>{if(this.readyState!==0)return;if(!window.__networkAvailable){this.close();return;}this.readyState=1;this.dispatchEvent(new Event('open'));},0);}
       receive(value){if(this.readyState===1)this.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}));}
-      send(raw){if(this.readyState!==1)throw new Error('Socket is not open');const message=JSON.parse(raw);this.queue=this.queue.then(()=>window.__roomMessage(message)).then(state=>{if(message.type==='hello'){this.receive({type:'welcome',player:id,session:'modern-player-'+id,heartbeatMs:250});}if(state)this.receive({type:'state',...state});});}
-      close(){if(this.readyState===3)return;this.readyState=3;this.queue=this.queue.then(()=>window.__roomMessage({type:'closed'}));this.dispatchEvent(new Event('close'));}
+      send(raw){if(this.readyState!==1)throw new Error('Socket is not open');const message=Object.assign(JSON.parse(raw),{connectionId:this.connectionId});this.queue=this.queue.then(()=>this.readyState===1?window.__roomMessage(message):undefined).then(state=>{if(message.type==='hello'){this.receive({type:'welcome',player:id,session:'modern-player-'+id,heartbeatMs:250});}if(state)this.receive({type:'state',...state});});}
+      close(){if(this.readyState===3)return;const wasOpen=this.readyState===1;this.readyState=3;if(wasOpen)this.queue=this.queue.then(()=>window.__roomMessage({type:'closed',connectionId:this.connectionId}));this.dispatchEvent(new Event('close'));}
     }
     window.WebSocket=RoomSocket;
   },{id});
@@ -603,6 +628,7 @@ async function verifyPauseAndReconnect(tv,phones,config) {
   assert.deepEqual(await simulationState(tv,config),paused,'START pauses the actual simulation');
   await disconnectPhone(phones[1]);await awaitCard(tv,2,false);await reconnectPhone(phones[1]);await awaitCard(tv,2,true);
   assert.equal((await gameState(tv,config)).phase,'paused','Rejoining a participant preserves a manual pause');
+  console.log('PASS '+config.kind+' manual pause survives participant reconnection');
   await tapControl(phones[0].page,'button-start');await awaitPhase(tv,config,'playing');
   for(const id of [2,1]) {
     await disconnectPhone(phones[id-1]);await awaitCard(tv,id,false);await awaitPhase(tv,config,'paused');
@@ -610,12 +636,14 @@ async function verifyPauseAndReconnect(tv,phones,config) {
     assert.deepEqual(await simulationState(tv,config),disconnected,'Either simultaneous participant disconnect freezes gameplay');
     await reconnectPhone(phones[id-1]);await awaitCard(tv,id,true);await awaitPhase(tv,config,'playing');
     assert.ok(await phones[id-1].page.locator('#button-a').isEnabled(),'Rejoined participant can act');
+    console.log('PASS '+config.kind+' player '+id+' disconnect/reconnect resumes the shared game');
   }
   await tv.evaluate(api=>window[api].suspend(true),config.api);
   const suspended=await gameState(tv,config);assert.ok(Number.isFinite(suspended.frame),'Model exposes a real finite simulation counter');
   await tv.waitForTimeout(180);assert.deepEqual(await gameState(tv,config),suspended,'Native exit confirmation freezes actual model stepping');
   await tv.evaluate(api=>window[api].suspend(false),config.api);
   await tv.waitForFunction(({api,frame})=>{const g=window[api].game;return (g.frame===undefined?g.tick:g.frame)>frame;},{api:config.api,frame:suspended.frame});
+  console.log('PASS '+config.kind+' native suspend freezes and resumes model stepping');
 }
 async function verifyCleanup(tv,phones,config) {
   await tv.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pagehide')));
