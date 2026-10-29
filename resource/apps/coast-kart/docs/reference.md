@@ -53,6 +53,10 @@ The visual reference is the modern, colorful 3D kart-racing genre exemplified by
 
 The 2D HUD keeps a 960×540 logical layout on a device-adapted canvas capped at 1920×1080. Each 3D view is capped at 1440×900 pixels and is composited in the same frame from a preserved WebGL drawing buffer. One WebGL context serves both split-screen cameras. Road buffers, merged kart geometry, scenery pools and procedural textures are reused; distant karts use simpler geometry. ANGLE instancing reduces draw calls when available; devices without that extension use a smaller ordinary-mesh scenery pool.
 
+每个追车视口独立隐藏落在当前车手后方与镜头之间的近场对手车体，避免后车穿过镜头或放大遮住赛道；当前车手、前方对手和纵向重叠的并排对手仍可见。此处理不修改位置、碰撞、名次或道具规则，并覆盖起终点绕回。
+
+Each chase view omits trailing rival bodies in the near camera corridor, preventing oversized foreground karts and lens clipping. Its own driver, racers ahead and longitudinally overlapping side-by-side rivals stay visible. This is a per-camera presentation rule, including across the lap seam; positions, collisions, ranking and item rules are unchanged.
+
 WebGL 不可用、着色器／GL 失败或上下文丢失时，继续使用原来的矢量透视兼容画面，并显示「兼容画面」标记，游戏规则、HUD、控制器与房间轮询仍工作。上下文恢复后自动返回三维画面；不可恢复的渲染错误会释放 GPU 资源并保留兼容画面。退出时销毁几何、材质、纹理及 WebGL 上下文，避免重复进出泄漏。
 
 When WebGL is unavailable, fails, or loses its context, the original vector perspective view continues with a visible “COMPATIBILITY VIEW” badge. Context restoration returns to 3D; permanent errors dispose GPU resources and retain the fallback. Game state and room/controller polling remain independent of rendering. Exit releases geometry, materials, textures and the WebGL context. Music and effects remain synthesized locally through Web Audio. Source syntax targets Chrome 61; Android owns the QR room, network and lifecycle.

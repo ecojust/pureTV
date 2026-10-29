@@ -344,6 +344,11 @@
       racers.forEach(function(r){
         var distance=preview?0:mod(r.s-s+game.track.length/2,game.track.length)-game.track.length/2;
         if(distance< -110||distance>1350)return;
+        // The chase camera sits about 82 model units behind its driver. Other
+        // karts in that rear corridor grow across the view or cross the lens.
+        // Keep longitudinally overlapping rivals for side-by-side racing, but
+        // omit trailing bodies per camera; simulation and held items are intact.
+        if(r.id!==p.id&&distance< -18)return;
         var k=self.karts[(r.id-1)%8],point=self.at(distance,r.x*6.6);
         k.group.visible=true;k.group.position.set(point.x,point.y,point.z);
         var distant=distance>300;k.details.forEach(function(mesh){mesh.visible=!distant;});k.low.visible=distant;

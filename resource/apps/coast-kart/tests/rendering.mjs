@@ -71,6 +71,34 @@ try{
   assert.ok(stats.calls>20&&stats.calls<250,JSON.stringify(stats));assert.ok(stats.triangles>2000&&stats.triangles<200000,JSON.stringify(stats));
   assert.equal(stats.error,0);assert.equal(stats.lost,false);assert.deepEqual(full.errors,[]);
   console.log('PASS real WebGL1, four 3D themes, split screen and bounded reused resources: '+JSON.stringify(stats));
+  const clearance=await full.page.evaluate(()=>{
+    const api=CoastKartTV,g=api.game,s=api.renderer.scene3d,checks=[];
+    // P2 is chased by three adjacent-lane rivals, with another alongside and
+    // two ahead. Repeat across the lap seam without changing race mechanics.
+    for(const base of [380,10]){
+      g.racers.forEach((p,i)=>{
+        p.s=(base+[55,0,90,-20,-50,-80,0,240][i]+g.track.length)%g.track.length;
+        p.x=[-.6,-.2,.4,.35,.6,.7,.65,-.3][i];
+      });
+      const before=JSON.stringify(g.racers),visible=()=>g.racers.map(p=>s.karts[(p.id-1)%8].group.visible);
+      s.render(g,g.players[0],478,540,1,false);const first=visible();
+      s.render(g,g.players[1],478,540,1,false);const second=visible();
+      checks.push({base,first,second,unchanged:before===JSON.stringify(g.racers)});
+    }
+    api.renderer.draw(g);return checks;
+  });
+  for(const check of clearance){
+    assert.equal(check.first[0],true,'P1 stays visible in its own camera');
+    assert.equal(check.first[1],false,'the same P2 body is omitted behind P1');
+    assert.equal(check.second[1],true,'P2 stays visible in its own camera');
+    assert.deepEqual(check.second.slice(3,6),[false,false,false],'rear -20/-50/-80 rivals cannot fill the foreground');
+    assert.deepEqual([check.second[0],check.second[2],check.second[6],check.second[7]],[true,true,true,true],'front and side-by-side rivals remain visible');
+    assert.equal(check.unchanged,true,'view clearance never changes race state');
+  }
+  await full.page.screenshot({path:resolve(output,'coast-kart-camera-clearance.png')});
+  assert.equal(await full.page.locator('#battlefield').getAttribute('data-renderer'),'webgl1');
+  assert.deepEqual(full.errors,[]);
+  console.log('PASS per-player chase-camera clearance, rear pack, side-by-side rivals and lap seam');
   await full.page.evaluate(()=>{window.__loss=CoastKartTV.renderer.scene3d.renderer.getContext().getExtension('WEBGL_lose_context');window.__loss.loseContext();});
   await full.page.waitForFunction(()=>document.getElementById('battlefield').dataset.renderer==='canvas2d');
   assert.equal(await full.page.evaluate(()=>CoastKartTV.renderer.scene3d.contextLost),true);

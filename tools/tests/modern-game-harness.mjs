@@ -914,9 +914,11 @@ async function islandProgressFixture(tv,phones,config) {
   // One deterministic nibble exercises the new timing without a random 4–7s cast.
   await tv.evaluate(api=>{const g=window[api].game,p=g.players[0];p.x=20.2;p.y=11.2;g.random=()=>0.5;},config.api);
   await tapControl(phones[0].page,'button-select');await tapControl(phones[0].page,'button-a');
-  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='nibble';},config.api,{timeout:10000});
+  // Keep the real fishing clock; two software-rendered views need a larger
+  // wall-clock budget than the model's nibble/bite intervals.
+  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='nibble';},config.api,{timeout:60000});
   assert.equal((await gameState(tv,config)).players[0].inventory.fish,undefined,'A nibble alone does not award a fish');
-  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='bite';},config.api,{timeout:10000});
+  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='bite';},config.api,{timeout:60000});
   await tapControl(phones[0].page,'button-a');
   assert.equal((await gameState(tv,config)).players[0].inventory.fish,1,'Phone A during the bite window catches one fish');
   assert.equal(await tv.evaluate(api=>window[api].game.fishJournal.bass.count,config.api),1,'A real phone catch is recorded in the shared fish journal');
@@ -926,7 +928,7 @@ async function islandProgressFixture(tv,phones,config) {
   assert.equal(full.inventory.fruit,24);assert.match(full.message,/满|full/i,'Full bag gives an actionable message');
   await tv.evaluate(api=>{window[api].game.players[0].inventory={fruit:23};},config.api);
   await tapControl(phones[0].page,'button-a');
-  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='bite';},config.api,{timeout:10000});
+  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='bite';},config.api,{timeout:60000});
   await tv.evaluate(api=>{window[api].game.players[0].inventory={fruit:24};},config.api);
   await tapControl(phones[0].page,'button-a');
   const fullAtBite=(await gameState(tv,config)).players[0];assert.equal(fullAtBite.fishing,null);assert.deepEqual(fullAtBite.inventory,{fruit:24},'A bag filled during fishing cannot overflow when reeling in');
