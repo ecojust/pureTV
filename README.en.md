@@ -101,20 +101,20 @@ resource/
 
 | Name | Author | Version | APK size | Purpose | Preview |
 | --- | --- | --- | --- | --- | --- |
-| [Adventure Island TV](resource/apps/adventure-island/) | ecojust | 0.5.1 | 89.4 KB | 32-stage island adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"> |
-| [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust | 0.5.1 | 85.4 KB | 16-stage pyramid adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"> |
+| [Adventure Island TV](resource/apps/adventure-island/) | ecojust | 0.5.2 | 89.4 KB | 32-stage island adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"> |
+| [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust | 0.5.2 | 85.4 KB | 16-stage pyramid adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"> |
 | [CCTV Live](resource/apps/cctv/) | ecojust | 0.5.0 | 40.9 KB | Official CCTV website player with TV channel navigation | <img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"> |
-| [Coast Kart TV](resource/apps/coast-kart/) | ecojust | 0.5.1 | 93.4 KB | Original kart racing with drifting, items and split-screen LAN phone play | <img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"> |
-| [Cozy Island TV](resource/apps/cozy-island/) | ecojust | 0.5.1 | 97.4 KB | Original island life with gathering, fishing, decorating and LAN phone play | <img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"> |
+| [Coast Kart TV](resource/apps/coast-kart/) | ecojust | 0.5.2 | 257.6 KB | Original kart racing with drifting, items and split-screen LAN phone play | <img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"> |
+| [Cozy Island TV](resource/apps/cozy-island/) | ecojust | 0.5.2 | 269.6 KB | Original island life with gathering, fishing, decorating and LAN phone play | <img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"> |
 | [HIFINi TV](resource/apps/hifini/) | ecojust | 0.5.0 | 201.1 KB | HiFiNi music search, shuffle playback and rhythm animation | <img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"> |
-| [Jackal TV](resource/apps/jackal/) | ecojust | 0.5.1 | 11.95 MB | Independently rewritten six-stage jeep rescue with two LAN phone controllers | <img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"> |
+| [Jackal TV](resource/apps/jackal/) | ecojust | 0.5.2 | 11.95 MB | Independently rewritten six-stage jeep rescue with two LAN phone controllers | <img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"> |
 | [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Android TV client for Jellyfin media servers | <img src="docs/previews/en/app-jellyfin-tv.png" width="180" alt="Jellyfin for Android TV preview"> |
-| [Magic Jewelry TV](resource/apps/jewel/) | ecojust | 0.5.1 | 81.4 KB | Classic three-gem chain matching with one or two LAN phone controllers | <img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"> |
+| [Magic Jewelry TV](resource/apps/jewel/) | ecojust | 0.5.2 | 81.4 KB | Classic three-gem chain matching with one or two LAN phone controllers | <img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"> |
 | [Music TV](resource/apps/music/) | ecojust | 0.5.0 | 48.8 KB | Native TV music player | <img src="docs/previews/en/app-music.png" width="180" alt="Music TV preview"> |
 | [ShortVideo TV](resource/apps/shortvideo/) | ecojust | 0.5.0 | 32.7 KB | Short video player with remote control support | <img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"> |
-| [Super Mario TV](resource/apps/super-mario/) | ecojust | 0.5.1 | 93.4 KB | 32-course platform adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"> |
-| [Tank TV](resource/apps/tank/) | ecojust | 0.5.1 | 258.3 KB | Independently rewritten 35-stage tank defense with two LAN phone controllers | <img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"> |
-| [Tetris TV](resource/apps/tetris/) | ecojust | 0.5.1 | 81.4 KB | Classic falling-block puzzle with one or two LAN phone controllers | <img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"> |
+| [Super Mario TV](resource/apps/super-mario/) | ecojust | 0.5.2 | 93.4 KB | 32-course platform adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"> |
+| [Tank TV](resource/apps/tank/) | ecojust | 0.5.2 | 258.3 KB | Independently rewritten 35-stage tank defense with two LAN phone controllers | <img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"> |
+| [Tetris TV](resource/apps/tetris/) | ecojust | 0.5.2 | 81.4 KB | Classic falling-block puzzle with one or two LAN phone controllers | <img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"> |
 | [TV Bro](resource/apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | TV browser with remote control support, using the system WebView | <img src="docs/previews/en/app-tvbro.png" width="180" alt="TV Bro preview"> |
 | [WebTV](resource/apps/webtv/) | ecojust | 0.5.0 | 44.8 KB | Live TV and M3U player | <img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"> |
 
