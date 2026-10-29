@@ -957,7 +957,9 @@ async function islandProgressFixture(tv,phones,config) {
   await releaseControl(phones[0].page,'button-a',74);
   await tv.waitForFunction(()=>!window.__inputs[0].a);
   await tv.evaluate(api=>window[api].suspend(false),config.api);
-  await tv.waitForTimeout(120);
+  // Receiving a neutral phone snapshot does not prove a resumed model step
+  // sampled it: a software WebGL frame can take longer than a fixed delay.
+  await tv.waitForFunction(api=>{const p=window[api].game.players[0];return !p.previous.a&&!p.netNeedsRelease;},config.api);
   assert.equal((await gameState(tv,config)).players[0].inventory.meadowButterfly,undefined,'TV suspend cancels the raised net without catching on resume');
   for(const reason of ['pointercancel','lostpointercapture','blur','resize']) {
     await pressControl(phones[0].page,'button-a',74);
