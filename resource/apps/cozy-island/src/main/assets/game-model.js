@@ -54,6 +54,7 @@
       netRaised: false,
       netSwing: 0,
       netNeedsRelease: false,
+      cancelSeq: 0,
       movingSpeed: 0,
       message: "",
       messageTime: 0,
@@ -281,8 +282,9 @@
       this.muted = !this.muted;
       this.save();
     }
-    cancelHeldActions() {
+    cancelHeldActions(playerId) {
       this.players.forEach(function (p) {
+        if (playerId !== undefined && p.id !== playerId) return;
         p.netRaised = false;
         p.netSwing = 0;
         p.netNeedsRelease = true;
@@ -1148,7 +1150,7 @@
       var start = false,
         select = false,
         edges = {};
-      this.players.forEach(function (p) {
+      this.players.forEach((p) => {
         var input =
           inputs.find(function (v) {
             return Number(v.id) === p.id;
@@ -1156,6 +1158,14 @@
         var connected = !!input.connected;
         p.connected = connected;
         if (connected) p.everConnected = true;
+        var cancelSeq = Number.isSafeInteger(input.cancelSeq) && input.cancelSeq >= 0 ? input.cancelSeq : 0;
+        if (cancelSeq !== p.cancelSeq) {
+          p.cancelSeq = cancelSeq;
+          this.cancelHeldActions(p.id);
+          // A canceled release is neutral, never a completed swing. If the
+          // marker arrives while A is held, require a fresh press after neutral.
+          p.previous.a = connected && !!input.a;
+        }
         var edge = { releaseA: connected && !input.a && !!p.previous.a };
         ["a", "b", "start", "select"].forEach(function (k) {
           edge[k] = connected && !!input[k] && !p.previous[k];

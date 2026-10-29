@@ -148,6 +148,7 @@
             b: !!p.b,
             start: !!p.start,
             select: !!p.select,
+            cancelSeq: Number.isSafeInteger(p.cancelSeq) && p.cancelSeq >= 0 ? p.cancelSeq : 0,
           };
         });
       var phoneConnected = list.some(function (p) {
@@ -275,8 +276,9 @@
       key(event.key, false);
     });
     root.addEventListener("blur", function () {
+      var hadA = keys.has("a") || performance.now() < pulse.a;
       releaseKeys();
-      if (game) game.cancelHeldActions();
+      if (game && hadA && !inputs().some(function (p) { return p.id === 1 && p.a; })) game.cancelHeldActions(1);
     });
     document.addEventListener("visibilitychange", function () {
       visible = !document.hidden;

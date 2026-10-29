@@ -181,3 +181,39 @@ test('A pressed during a pause cannot activate or arm an item until released aft
     }
   }
 });
+
+test('persistent cancellation markers retract held items even when a neutral packet was missed', () => {
+  for(const item of ['pulse','trap']) for(const neutralObserved of [false,true]) {
+    const g=race(),p=g.players[0];p.item=item;
+    g.step(.05,[input(1,{a:true,cancelSeq:0})]);
+    assert.equal(p.heldItem,true);
+    g.step(.05,[input(1,{a:!neutralObserved,cancelSeq:1})]);
+    assert.equal(p.heldItem,false);
+    assert.equal(p.item,item);
+    assert.equal(g.items.length,0);
+    for(let i=0;i<3;i++)g.step(.05,[input(1,{a:!neutralObserved,cancelSeq:1})]);
+    assert.equal(p.heldItem,false,'heartbeats must not re-arm a cancelled hold');
+    g.step(.05,[input(1,{cancelSeq:1})]);
+    assert.equal(g.items.length,0,'neutral after cancellation cannot throw');
+    g.step(.05,[input(1,{a:true,cancelSeq:1})]);
+    assert.equal(p.heldItem,true,'a fresh gesture works with the same cancellation marker');
+    g.step(.05,[input(1,{cancelSeq:1})]);
+    assert.equal(p.item,null);
+    assert.equal(g.items.length,1,'ordinary release still throws once');
+  }
+});
+
+test('cancellation is per player and a reconnect counter reset also cancels', () => {
+  const g=race(true),p=g.players[0],q=g.players[1];p.item='pulse';q.item='trap';
+  g.step(.05,[input(1,{a:true}),input(2,{a:true})]);
+  g.step(.05,[input(1,{cancelSeq:5}),input(2,{a:true})]);
+  assert.equal(p.heldItem,false);
+  assert.equal(q.heldItem,true);
+  g.step(.05,[input(1,{a:true,cancelSeq:5}),input(2,{a:true})]);
+  assert.equal(p.heldItem,true);
+  g.step(.05,[input(1,{cancelSeq:0}),input(2,{a:true})]);
+  assert.equal(p.item,'pulse');
+  assert.equal(p.heldItem,false);
+  assert.equal(q.heldItem,true);
+  assert.equal(g.items.length,0);
+});

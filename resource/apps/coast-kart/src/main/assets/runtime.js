@@ -12,6 +12,7 @@
       pulse = { a: 0, b: 0, start: 0, select: 0 },
       keyboardActive = false,
       phoneControllerSeen = false,
+      phoneHoldingA = false,
       info = { language: "zh", url: "", qr: "" },
       game = null,
       renderer = null,
@@ -128,6 +129,13 @@
       }
     }
     function release() {
+      var activeA = !!keys.a || pulse.a > performance.now();
+      // Refresh the native source in this event, not the preceding animation
+      // frame: a phone press/release can race a local window blur.
+      if (activeA) inputs();
+      // Cancel only a local A release; direction/B cleanup and a continuing
+      // phone A must not retract another input source's held item.
+      if (activeA && !phoneHoldingA && game && game.players[0]) game.cancelItem(game.players[0]);
       keys = {};
       mapping = {};
       Object.keys(pulse).forEach(function (k) {
@@ -153,12 +161,14 @@
             b: !!p.b,
             start: !!p.start,
             select: !!p.select,
+            cancelSeq: Number.isSafeInteger(p.cancelSeq) && p.cancelSeq >= 0 ? p.cancelSeq : 0,
           };
         });
       var player = list.filter(function (p) {
         return p.id === 1;
       })[0];
       if (player && player.connected) phoneControllerSeen = true;
+      phoneHoldingA = !!(player && player.connected && player.a);
       // Remote-only play is available until a real P1 phone joins. After that,
       // local menu keys must never hide that participating phone disconnecting.
       if (

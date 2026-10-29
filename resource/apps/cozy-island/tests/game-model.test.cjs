@@ -490,6 +490,44 @@ test("disconnect and opening the bag cancel a raised net without a phantom catch
   assert.deepEqual(g.insectJournal, {});
 });
 
+test("persistent cancellation markers discard releases and require neutral before rearming", () => {
+  for (const held of [false, true]) {
+    const storage = memory(), g = playing(false, { storage }), p = g.players[0];
+    atButterfly(g, p);
+    const coins = g.coins;
+    g.step(0, [input(1, { a: true })]);
+    assert.equal(p.netRaised, true);
+    // This can be a phone gesture cancellation or a server stale-input clear.
+    g.step(0, [input(1, { a: held, cancelSeq: 1 })]);
+    assert.equal(p.netRaised, false);
+    for (let n = 0; n < 3; n++) g.step(0, [input(1, { a: held, cancelSeq: 1 })]);
+    assert.equal(p.netRaised, false, "a held heartbeat cannot rearm a canceled gesture");
+    g.step(0, [input(1, { cancelSeq: 1 })]);
+    g.save();
+    assert.deepEqual(p.inventory, {});
+    assert.deepEqual(g.insectJournal, {});
+    assert.equal(g.coins, coins);
+    assert.equal(p.netSwing, 0);
+    assert.deepEqual(JSON.parse(storage.getItem(Game.SAVE_KEY)).insectJournal, {});
+    g.step(0, [input(1, { a: true, cancelSeq: 1 })]);
+    assert.equal(p.netRaised, true, "an unchanged cancellation marker permits a fresh gesture");
+    g.step(0, [input(1, { cancelSeq: 1 })]);
+    assert.equal(p.inventory.meadowButterfly, 1);
+  }
+});
+
+test("cancellation is per resident and a counter reset still cancels a raised net", () => {
+  const g = playing(true), p = g.players[0], q = g.players[1];
+  atButterfly(g, p); atButterfly(g, q);
+  g.step(0, [input(1, { cancelSeq: 9 }), input(2)]);
+  g.step(0, [input(1, { a: true, cancelSeq: 9 }), input(2, { a: true })]);
+  g.step(0, [input(1, { cancelSeq: 0 }), input(2)]);
+  assert.deepEqual(p.inventory, {});
+  assert.equal(p.netSwing, 0);
+  assert.equal(q.inventory.meadowButterfly, 1, "the other resident's ordinary release still catches");
+  assert.equal(g.insectJournal.meadowButterfly, 1);
+});
+
 test("old saves migrate insect discoveries, corrupt records fail closed and reset clears both residents", () => {
   const storage = memory(), g = playing(false, { storage });
   const old = JSON.parse(storage.getItem(Game.SAVE_KEY));

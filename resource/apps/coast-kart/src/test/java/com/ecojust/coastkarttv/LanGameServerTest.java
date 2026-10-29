@@ -152,6 +152,51 @@ public class LanGameServerTest {
         assertFalse("A legacy snapshot releases Select", player().getBoolean("select"));
     }
 
+    @Test public void cancellationMarkersAndTimeoutsPersistAcrossHeartbeats() throws Exception {
+        Socket socket = websocket(); send(socket, "{\"type\":\"hello\"}"); message(socket, "welcome");
+        send(socket, input(1, 0, 0, true, false));
+        await(() -> player().optBoolean("a"));
+        assertEquals("Legacy clients default to zero", 0, player().getLong("cancelSeq"));
+        send(socket, new JSONObject(input(2, 0, 0, false, false)).put("cancelSeq", 7).toString());
+        await(() -> player().optLong("cancelSeq") == 1);
+        send(socket, new JSONObject(input(3, 0, 0, true, false)).put("cancelSeq", 7).toString());
+        await(() -> player().optBoolean("a"));
+        assertEquals("Same client marker is not another cancellation", 1, player().getLong("cancelSeq"));
+        Thread.sleep(800);
+        assertFalse(player().getBoolean("a"));
+        assertTrue(player().getBoolean("connected"));
+        assertEquals("Stale input cancellation reaches the still-connected model", 2, player().getLong("cancelSeq"));
+        assertEquals("Repeated neutral snapshots do not increment", 2, player().getLong("cancelSeq"));
+        send(socket, new JSONObject(input(4, 0, 0, false, false)).put("cancelSeq", 7).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        assertEquals("A heartbeat cannot roll back the server timeout marker", 2, player().getLong("cancelSeq"));
+        send(socket, new JSONObject(input(5, 0, 0, true, false)).put("cancelSeq", 0).toString());
+        await(() -> player().optBoolean("a"));
+        assertEquals("A reloaded page's reset marker is a new cancellation", 3, player().getLong("cancelSeq"));
+        server.releaseInputs();
+        assertEquals(4, player().getLong("cancelSeq"));
+        server.releaseInputs();
+        assertEquals(4, player().getLong("cancelSeq"));
+        send(socket, input(6, 1, 0, false, true));
+        await(() -> player().optBoolean("b"));
+        server.releaseInputs();
+        assertEquals("Direction/B cleanup does not cancel an independent A source", 4, player().getLong("cancelSeq"));
+    }
+
+    @Test public void cancellationSequenceRejectsNonSafeNonNegativeIntegers() throws Exception {
+        String session = null;
+        for (Object invalid : new Object[] {"1", true, JSONObject.NULL, -1, 0.5, 9_007_199_254_740_992d}) {
+            Socket socket = websocket();
+            JSONObject hello = new JSONObject().put("type", "hello");
+            if (session != null) hello.put("session", session);
+            send(socket, hello.toString()); session = message(socket, "welcome").getString("session");
+            send(socket, new JSONObject(input(0, 0, 0, true, false)).put("cancelSeq", invalid).toString());
+            assertEquals("protocol_error", message(socket, "error").getString("code"));
+            await(() -> !player().optBoolean("connected"));
+            assertFalse(player().getBoolean("a"));
+        }
+    }
+
     @Test public void optionalMenuButtonsRejectNonBooleanValues() throws Exception {
         String session = null;
         for (String key : new String[] {"start", "select"}) {

@@ -86,7 +86,7 @@ public final class LanGameServer implements AutoCloseable {
                     if (!live || now - p.inputAt > STALE_INPUT_MS) p.clear();
                     list.put(new JSONObject().put("id", p.id).put("connected", live)
                             .put("x", p.x).put("y", p.y).put("a", p.a).put("b", p.b)
-                            .put("start", p.start).put("select", p.select));
+                            .put("start", p.start).put("select", p.select).put("cancelSeq", p.cancelSeq));
                 }
                 return new JSONObject().put("players", list).put("connections", connected).toString();
             } catch (JSONException impossible) { return "{\"players\":[],\"connections\":0}"; }
@@ -306,9 +306,19 @@ public final class LanGameServer implements AutoCloseable {
                                 || !(message.opt("a") instanceof Boolean) || !(message.opt("b") instanceof Boolean)
                                 || (message.has("start") && !(message.opt("start") instanceof Boolean))
                                 || (message.has("select") && !(message.opt("select") instanceof Boolean))) { fail("protocol_error"); break; }
+                        Object cancelObject = message.opt("cancelSeq");
+                        double cancelNumber = message.has("cancelSeq") ? message.optDouble("cancelSeq", -1) : 0;
+                        if ((message.has("cancelSeq") && !(cancelObject instanceof Number))
+                                || !Double.isFinite(cancelNumber) || cancelNumber < 0
+                                || cancelNumber != Math.floor(cancelNumber) || cancelNumber > 9_007_199_254_740_991d) { fail("protocol_error"); break; }
                         sequence = seq;
                         synchronized (lock) {
                             if (player.peer != this) break;
+                            long clientCancelSeq = (long) cancelNumber;
+                            if (clientCancelSeq != player.lastClientCancelSeq) {
+                                player.lastClientCancelSeq = clientCancelSeq;
+                                player.cancelInput();
+                            }
                             player.x = Math.max(-1, Math.min(1, x)); player.y = Math.max(-1, Math.min(1, y));
                             player.a = message.getBoolean("a"); player.b = message.getBoolean("b");
                             // Older phone controllers omit the system menu buttons.
@@ -368,10 +378,15 @@ public final class LanGameServer implements AutoCloseable {
         Peer peer;
         long disconnectedAt;
         long inputAt;
+        long cancelSeq, lastClientCancelSeq;
         double x, y;
         boolean a, b, start, select;
         Player(int id) { this.id = id; }
-        void clear() { x = 0; y = 0; a = false; b = false; start = false; select = false; }
+        void cancelInput() { cancelSeq = cancelSeq >= 9_007_199_254_740_991L ? 0 : cancelSeq + 1; }
+        void clear() {
+            if (a) cancelInput();
+            x = 0; y = 0; a = false; b = false; start = false; select = false;
+        }
     }
 
     private static final class Request {

@@ -115,6 +115,7 @@
       itemSerial: 0,
       heldItem: false,
       itemButton: false,
+      cancelSeq: 0,
       itemAim: 1,
       itemHeldTime: 0,
       blockFlash: 0,
@@ -239,9 +240,8 @@
       // Require a neutral A after resume. A new press made while paused (or
       // while disconnected) must not activate an item in the reconnect frame.
       this.racers.forEach(function (p) {
-        p.heldItem = false;
-        p.itemButton = p.human;
-      });
+        this.cancelItem(p, p.human);
+      }, this);
       this.emit("pause");
     }
   };
@@ -318,7 +318,19 @@
       });
     this.emit(item, p.id);
   };
+  CoastKartGame.prototype.cancelItem = function (p, pressed) {
+    p.heldItem = false;
+    p.itemButton = pressed !== false;
+  };
   CoastKartGame.prototype.controlItem = function (p, input, dt) {
+    var cancelSeq = Number.isSafeInteger(input.cancelSeq) && input.cancelSeq >= 0 ? input.cancelSeq : 0;
+    if (cancelSeq !== p.cancelSeq) {
+      p.cancelSeq = cancelSeq;
+      // A neutral cancellation packet clears the baseline without throwing. If
+      // polling missed that packet, a held A must be released before re-arming.
+      this.cancelItem(p, !!input.a);
+      return;
+    }
     if (p.finished || p.stun > 0 || p.recover > 0 || this.selectedMode === "time") {
       p.heldItem = false;
       p.itemButton = !!input.a;

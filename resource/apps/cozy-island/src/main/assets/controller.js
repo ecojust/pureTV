@@ -140,7 +140,7 @@
   let stickOriginX = 0, stickOriginY = 0, stickRadius = 1;
   const actionPointers = new Map();
   const keys = new Set();
-  const input = { x: 0, y: 0, a: false, b: false, start: false, select: false };
+  const input = { x: 0, y: 0, a: false, b: false, start: false, select: false, cancelSeq: 0 };
   const isVisible = () => !document.hidden && !leaving;
   const setMessage = (key, error = false) => { $('message').textContent = messages[key] || key; root.dataset.error = String(error); };
   function titlePhase() { return ['title', 'menu', 'lobby', 'ready'].includes(gamePhase); }
@@ -198,7 +198,13 @@
       if (pointer !== null && stickZone.hasPointerCapture(pointer)) stickZone.releasePointerCapture(pointer);
     } catch (_) {}
   }
+  function cancelGesture() {
+    // Retain this marker in every heartbeat so a TV frame cannot miss a
+    // cancellation and mistake the following neutral input for a net swing.
+    input.cancelSeq = input.cancelSeq >= Number.MAX_SAFE_INTEGER ? 0 : input.cancelSeq + 1;
+  }
   function resetControls(send = true) {
+    if (input.a) cancelGesture();
     clearStick(); actionPointers.clear(); keys.clear(); updateInput();
     if (send) sendInput(true);
   }
@@ -339,7 +345,10 @@
     button.addEventListener('pointerdown', event => pressAction(action, event));
     const release = event => {
       if (actionPointers.get(event.pointerId) !== action) return;
-      actionPointers.delete(event.pointerId); updateInput(); sendInput(true);
+      const wasA = input.a;
+      actionPointers.delete(event.pointerId); updateInput();
+      if (event.type !== 'pointerup' && wasA && !input.a) cancelGesture();
+      sendInput(true);
     };
     ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => button.addEventListener(name, release));
     button.addEventListener('keydown', event => {
@@ -351,7 +360,10 @@
       event.preventDefault(); event.stopPropagation(); keys.delete(`button:${action}`); updateInput(); sendInput(true);
     });
     button.addEventListener('blur', () => {
-      if (keys.delete(`button:${action}`)) { updateInput(); sendInput(true); }
+      const wasA = input.a;
+      if (keys.delete(`button:${action}`)) {
+        updateInput(); if (wasA && !input.a) cancelGesture(); sendInput(true);
+      }
     });
   });
   document.addEventListener('keydown', event => {
@@ -393,9 +405,12 @@
   // Pointer capture is best effort on older WebViews. A release outside a zone
   // must still clear its input when capture is unavailable or interrupted.
   ['pointerup', 'pointercancel'].forEach(name => window.addEventListener(name, event => {
+    const wasA = input.a;
     let changed = actionPointers.delete(event.pointerId);
     if (event.pointerId === stickPointer) { clearStick(); changed = true; }
-    if (changed) { updateInput(); sendInput(true); }
+    if (changed) {
+      updateInput(); if (event.type === 'pointercancel' && wasA && !input.a) cancelGesture(); sendInput(true);
+    }
   }));
 
   document.addEventListener('gesturestart', event => event.preventDefault());

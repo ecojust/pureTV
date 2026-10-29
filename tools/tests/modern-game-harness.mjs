@@ -201,7 +201,7 @@ try {
     assert.equal((await input(page)).y, diagonal.y);
     await stickCenter(page, origin);
     await page.evaluate(() => window.dispatchEvent(new Event('blur')));
-    assert.deepEqual(await input(page), { type: 'input', x: 0, y: 0, a: false, b: false, start: false, select: false, seq: (await input(page)).seq });
+    assert.deepEqual(await input(page), { type: 'input', x: 0, y: 0, a: false, b: false, start: false, select: false, cancelSeq: (await input(page)).cancelSeq, seq: (await input(page)).seq });
     await stickHidden(page);
     await context.close();
   });
@@ -421,7 +421,7 @@ async function tvBridge(context, config, language, legacy = false) {
       constructor(...args) { super(...args); window.__audioContexts.push(this); }
     };
     window.__snapshotCalls = 0;
-    window.__inputs = [1,2].map(id => ({id,connected:false,x:0,y:0,a:false,b:false,start:false,select:false}));
+    window.__inputs = [1,2].map(id => ({id,connected:false,x:0,y:0,a:false,b:false,start:false,select:false,cancelSeq:0}));
     window[bridge] = {
       getInfo: () => JSON.stringify({language,qr,url:'http://192.168.1.88:38291/?room=modern-preview-room-token'}),
       snapshot: () => { window.__snapshotCalls++; return JSON.stringify({players:window.__inputs}); },
@@ -435,6 +435,10 @@ async function pressControl(page,id,pointerId=1,coordinates={}) {
 }
 async function releaseControl(page,id,pointerId=1) {
   await page.locator('#'+id).dispatchEvent('pointerup',{pointerId,pointerType:'touch',button:0,buttons:0});
+}
+async function cancelControl(page,id,pointerId,reason) {
+  if(reason==='blur'||reason==='resize')await page.evaluate(reason=>window.dispatchEvent(new Event(reason)),reason);
+  else await page.locator('#'+id).dispatchEvent(reason,{pointerId,pointerType:'touch',button:0,buttons:0});
 }
 async function tapControl(page,id) {
   await pressControl(page,id); await page.waitForTimeout(90); await releaseControl(page,id); await page.waitForTimeout(90);
@@ -462,7 +466,7 @@ async function addPhone(browser,tv,base,language,id,errors) {
   await context.exposeBinding('__roomMessage',async(_source,message) => tv.evaluate(({message,id}) => {
     const player = window.__inputs[id-1];
     if (message.type==='hello') {player.connected=true;return window.__published;}
-    if (message.type==='input') Object.assign(player,{connected:true,x:message.x,y:message.y,a:!!message.a,b:!!message.b,start:!!message.start,select:!!message.select});
+    if (message.type==='input') Object.assign(player,{connected:true,x:message.x,y:message.y,a:!!message.a,b:!!message.b,start:!!message.start,select:!!message.select,cancelSeq:message.cancelSeq||0});
     if (message.type==='closed') Object.assign(player,{connected:false,x:0,y:0,a:false,b:false,start:false,select:false});
     return window.__published;
   },{message,id}));
@@ -598,6 +602,16 @@ async function kartProgressFixture(tv,phones,config) {
   await tv.evaluate(api=>window[api].suspend(false),config.api);
   await tv.waitForFunction(api=>!window[api].game.players[0].itemButton,config.api);
   assert.equal((await gameState(tv,config)).players[0].item,'pulse','TV suspend cancels the gesture and keeps the item');
+  for(const reason of ['pointercancel','lostpointercapture','blur','resize']) {
+    await pressControl(phones[0].page,'button-a',73);
+    await tv.waitForFunction(api=>window[api].game.players[0].heldItem,config.api);
+    const canceledAt=await tv.evaluate(api=>({seq:window.__inputs[0].cancelSeq,tick:window[api].game.tick}),config.api);
+    await cancelControl(phones[0].page,'button-a',73,reason);
+    await tv.waitForFunction(({api,seq})=>{const p=window[api].game.players[0];return window.__inputs[0].cancelSeq!==seq&&!p.heldItem&&!p.itemButton;},{api:config.api,seq:canceledAt.seq});
+    assert.equal((await gameState(tv,config)).players[0].item,'pulse',reason+' keeps the unthrown item');
+    assert.equal(await tv.evaluate(({api,tick})=>window[api].game.events.some(event=>event.id===1&&event.type==='pulse'&&event.tick>=tick),{api:config.api,tick:canceledAt.tick}),false,reason+' cannot fire on cancellation');
+  }
+  await dragControl(phones[0].page,0,120);
   await pressControl(phones[0].page,'button-a',73);
   await tv.waitForFunction(api=>window[api].game.players[0].heldItem,config.api);
   const itemSuffix=await tv.evaluate(()=>document.documentElement.lang==='en'?'.en':'');
@@ -841,6 +855,15 @@ async function islandProgressFixture(tv,phones,config) {
   await tv.evaluate(api=>window[api].suspend(false),config.api);
   await tv.waitForTimeout(120);
   assert.equal((await gameState(tv,config)).players[0].inventory.meadowButterfly,undefined,'TV suspend cancels the raised net without catching on resume');
+  for(const reason of ['pointercancel','lostpointercapture','blur','resize']) {
+    await pressControl(phones[0].page,'button-a',74);
+    await tv.waitForFunction(api=>window[api].game.players[0].netRaised,config.api);
+    const cancelSeq=await tv.evaluate(()=>window.__inputs[0].cancelSeq);
+    await cancelControl(phones[0].page,'button-a',74,reason);
+    await tv.waitForFunction(({api,seq})=>{const p=window[api].game.players[0];return window.__inputs[0].cancelSeq!==seq&&!p.netRaised&&!p.netNeedsRelease;},{api:config.api,seq:cancelSeq});
+    assert.equal((await gameState(tv,config)).players[0].inventory.meadowButterfly,undefined,reason+' cannot catch or award an insect');
+  }
+  await tv.evaluate(api=>{const g=window[api].game,p=g.players[0],insect=g.insects[0];p.x=insect.x;p.y=insect.y+1.1;p.facing={x:0,y:-1};},config.api);
   await pressControl(phones[0].page,'button-a',74);
   await tv.waitForFunction(api=>window[api].game.players[0].netRaised,config.api);
   await releaseControl(phones[0].page,'button-a',74);
