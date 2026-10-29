@@ -51,6 +51,10 @@
       tool: "hand",
       menu: null,
       fishing: null,
+      netRaised: false,
+      netSwing: 0,
+      netNeedsRelease: false,
+      movingSpeed: 0,
       message: "",
       messageTime: 0,
       previous: {},
@@ -82,6 +86,10 @@
       this.decorations = [];
       this.completed = [];
       this.fishJournal = {};
+      this.insectJournal = {};
+      this.insects = W.insects.map(function (species, index) {
+        return { id: species.id, x: species.x, y: species.y, phase: "resting", until: 0, respawnAt: 0, dx: 0, dy: 0, offset: index * 1.7 };
+      });
       this.nextDecoration = 1;
       this.muted = false;
       this.soundEvents = [];
@@ -118,6 +126,10 @@
         s &&
         s.version === 1 &&
         (s.fishJournal === undefined || this.validJournal(s.fishJournal)) &&
+        (s.insectJournal === undefined || (s.insectJournal && typeof s.insectJournal === "object" && !Array.isArray(s.insectJournal) &&
+          Object.keys(s.insectJournal).every(function (id) {
+            return W.insects.some(function (species) { return species.id === id; }) && integer(s.insectJournal[id], 1, 1000000);
+          }))) &&
         integer(s.coins, 0, 999999) &&
         integer(s.houseLevel, 0, 2) &&
         integer(s.selectedPlayers, 1, 2) &&
@@ -200,6 +212,7 @@
         this.decorations = s.decorations;
         this.completed = s.completed;
         this.fishJournal = s.fishJournal || {};
+        this.insectJournal = s.insectJournal || {};
         this.nextDecoration = this.decorations.reduce(function (m, d) {
           return Math.max(m, d.id + 1);
         }, 1);
@@ -227,6 +240,7 @@
         decorations: this.decorations,
         completed: this.completed,
         fishJournal: this.fishJournal,
+        insectJournal: this.insectJournal,
         muted: this.muted,
         players: this.players.map(function (p) {
           return {
@@ -254,6 +268,9 @@
         p.joined = p.active = p.id <= this.selectedPlayers;
         p.menu = null;
         p.fishing = null;
+        p.netRaised = false;
+        p.netSwing = 0;
+        p.netNeedsRelease = false;
       });
       this.phase = "playing";
       this.manualPause = false;
@@ -263,6 +280,16 @@
     toggleMusic() {
       this.muted = !this.muted;
       this.save();
+    }
+    cancelHeldActions() {
+      this.players.forEach(function (p) {
+        p.netRaised = false;
+        p.netSwing = 0;
+        p.netNeedsRelease = true;
+        p.movingSpeed = 0;
+        // A gesture may also start while the runtime is suspended and not
+        // sampling inputs. Require neutral input before arming a fresh swing.
+      });
     }
     has(p, needs) {
       return Object.keys(needs).every(function (k) {
@@ -631,6 +658,66 @@
         return f.from < f.to ? hour >= f.from && hour < f.to : hour >= f.from || hour < f.to;
       });
     }
+    insectVisible(insect) {
+      var species = W.insects.find(function (s) { return s.id === insect.id; }), hour = (this.clock / 60) % 24;
+      return insect.respawnAt <= this.clock && (species.from < species.to
+        ? hour >= species.from && hour < species.to : hour >= species.from || hour < species.to);
+    }
+    frightenInsect(insect, p) {
+      if (insect.phase === "fleeing" || !this.insectVisible(insect)) return;
+      var dx = insect.x - p.x, dy = insect.y - p.y, length = Math.hypot(dx, dy) || 1;
+      insect.phase = "fleeing"; insect.until = this.clock + 0.9;
+      insect.dx = dx / length || 0.7; insect.dy = dy / length || -0.7;
+    }
+    updateInsects(dt) {
+      this.insects.forEach((insect) => {
+        if (!this.insectVisible(insect)) return;
+        var species = W.insects.find(function (s) { return s.id === insect.id; });
+        if (insect.phase === "fleeing") {
+          insect.x += insect.dx * dt * 2.8; insect.y += insect.dy * dt * 2.8;
+          if (this.clock >= insect.until) {
+            insect.phase = "resting"; insect.respawnAt = this.clock + 30;
+            insect.x = species.x; insect.y = species.y;
+          }
+          return;
+        }
+        insect.x = species.x + Math.sin(this.elapsed * 0.7 + insect.offset) * (species.fly ? 0.45 : 0.18);
+        insect.y = species.y + Math.cos(this.elapsed * 0.55 + insect.offset) * (species.fly ? 0.35 : 0.12);
+        var noisy = this.players.find(function (p) {
+          return p.joined && p.location === "island" && p.movingSpeed > 1.2 && distance(p, insect) < 1.65;
+        });
+        if (noisy) this.frightenInsect(insect, noisy);
+      });
+    }
+    swingNet(p) {
+      p.netRaised = false;
+      if (p.netSwing > 0 || p.location !== "island") return false;
+      p.netSwing = 0.4;
+      if (!this.roomFor(p, 1)) {
+        this.notify(p, "背包满了，先腾出位置再捕虫。", "Bag full. Make room before catching insects.", "deny");
+        return false;
+      }
+      var facingLength = Math.hypot(p.facing.x, p.facing.y) || 1,
+        candidates = this.insects.filter((insect) => {
+          var d = distance(p, insect), dot = (insect.x - p.x) * p.facing.x + (insect.y - p.y) * p.facing.y;
+          return this.insectVisible(insect) && insect.phase !== "fleeing" && d <= 1.45 && d >= 0.15 && dot / (d * facingLength) >= 0.65;
+        }).sort(function (a, b) { return distance(p, a) - distance(p, b); });
+      if (!candidates.length) {
+        this.insects.forEach((insect) => { if (distance(p, insect) < 2) this.frightenInsect(insect, p); });
+        this.notify(p, "挥空了…面向昆虫，按住 A 慢慢接近，松开挥网。", "Missed… Face an insect, hold A to sneak closer, release to swing.", "step");
+        return false;
+      }
+      var caught = candidates[0], first = !this.insectJournal[caught.id];
+      caught.phase = "resting"; caught.respawnAt = this.clock + 45;
+      this.add(p, caught.id, 1);
+      this.insectJournal[caught.id] = Math.min(1000000, (this.insectJournal[caught.id] || 0) + 1);
+      if (first) this.coins = Math.min(999999, this.coins + 10);
+      this.particles.push({ x: caught.x, y: caught.y, life: 1, color: W.items[caught.id].color });
+      this.notify(p, "捕到了！" + this.itemName(caught.id) + (first ? " · 图鉴新增 +10 金币" : ""),
+        "Caught! " + this.itemName(caught.id) + (first ? " · New entry +10 coins" : ""));
+      this.commit("collect");
+      return true;
+    }
     rollFish() {
       var available = this.availableFish(),
         total = available.reduce(function (sum, f) { return sum + f.weight; }, 0),
@@ -735,6 +822,7 @@
       return candidates.length ? candidates[0].source : null;
     }
     action(p) {
+      if (p.tool === "net") return;
       if (p.tool === "rod" || p.fishing) {
         this.reel(p);
         return;
@@ -795,12 +883,21 @@
         row("重置小岛…", "Reset island…", "open", "reset");
         row("鱼类图鉴 · " + Object.keys(this.fishJournal).length + "/" + W.fish.length,
           "Fish journal · " + Object.keys(this.fishJournal).length + "/" + W.fish.length, "open", "journal");
+        row("昆虫图鉴 · " + Object.keys(this.insectJournal).length + "/" + W.insects.length,
+          "Insect journal · " + Object.keys(this.insectJournal).length + "/" + W.insects.length, "open", "insectJournal");
         row("继续散步", "Keep exploring", "close");
       } else if (kind === "journal") {
         W.fish.forEach(function (f) {
           var record = self.fishJournal[f.id],
             hours = f.from === 0 && f.to === 24 ? self.tr("全天", "All day") : f.from + ":00–" + f.to + ":00",
             label = f[self.language] + " · " + (record ? record.count + " × / " + record.best + " cm" : self.tr("未发现", "Undiscovered")) + " · " + hours;
+          row(label, label, "none");
+        });
+      } else if (kind === "insectJournal") {
+        W.insects.forEach(function (species) {
+          var catches = self.insectJournal[species.id] || 0,
+            hours = species.from === 0 && species.to === 24 ? self.tr("全天", "All day") : species.from + ":00–" + species.to + ":00",
+            label = species[self.language] + " · " + (catches ? catches + " ×" : self.tr("未发现", "Undiscovered")) + " · " + hours;
           row(label, label, "none");
         });
       } else if (kind === "inventory") {
@@ -930,8 +1027,8 @@
         );
       } else if (kind === "tasks") {
         row(
-          "A 采集/交谈 · B 背包 · SELECT 钓竿",
-          "A gather/talk · B bag · SELECT rod",
+          "SELECT 空手 / 钓竿 / 捕虫网；B 背包",
+          "SELECT hands / rod / net; B opens bag",
           "none",
         );
         row(
@@ -1015,6 +1112,7 @@
         this.players.forEach(function (v) {
           v.menu = null;
           v.fishing = null;
+          v.netRaised = false;
         });
         this.save();
         return;
@@ -1027,6 +1125,8 @@
         this.decorations = [];
         this.completed = [];
         this.fishJournal = {};
+        this.insectJournal = {};
+        this.insects.forEach(function (insect) { insect.phase = "resting"; insect.respawnAt = 0; });
         this.nextDecoration = 1;
         this.players = [makePlayer(1), makePlayer(2)];
         this.phase = "title";
@@ -1056,7 +1156,7 @@
         var connected = !!input.connected;
         p.connected = connected;
         if (connected) p.everConnected = true;
-        var edge = {};
+        var edge = { releaseA: connected && !input.a && !!p.previous.a };
         ["a", "b", "start", "select"].forEach(function (k) {
           edge[k] = connected && !!input[k] && !p.previous[k];
           p.previous[k] = connected && !!input[k];
@@ -1084,6 +1184,7 @@
           : "";
       this.phase = this.pausedReason ? "paused" : "playing";
       if (this.phase === "paused") {
+        this.cancelHeldActions();
         if (select && this.manualPause) this.toggleMusic();
         return;
       }
@@ -1098,6 +1199,7 @@
       });
       for (var i = 0; i < this.players.length; i++) {
         var p = this.players[i];
+        p.movingSpeed = 0;
         if (!p.joined) continue;
         var input =
           inputs.find(function (v) {
@@ -1117,8 +1219,11 @@
           iy = 0;
         }
         p.messageTime = Math.max(0, p.messageTime - dt);
+        p.netSwing = Math.max(0, p.netSwing - dt);
+        if (!input.a) p.netNeedsRelease = false;
         p.menuDelay = Math.max(0, p.menuDelay - dt);
         if (edge.b) {
+          p.netRaised = false;
           if (p.fishing) {
             p.fishing = null;
             this.notify(p, "收起鱼线。", "Line reeled in.");
@@ -1151,15 +1256,16 @@
         }
         if (edge.select) {
           p.fishing = null;
-          p.tool = p.tool === "hand" ? "rod" : "hand";
+          p.netRaised = false;
+          p.tool = p.tool === "hand" ? "rod" : p.tool === "rod" ? "net" : "hand";
           this.notify(
             p,
             p.tool === "rod"
               ? "钓竿：去东侧码头按 A。"
-              : "空手：A 采集、交谈、进屋。",
+              : p.tool === "net" ? "捕虫网：按住 A 慢走，松开朝面前挥网。" : "空手：A 采集、交谈、进屋。",
             p.tool === "rod"
               ? "Fishing rod: press A at the east pier."
-              : "Hands: A gathers, talks and enters buildings.",
+              : p.tool === "net" ? "Net: hold A to sneak, release to swing in front of you." : "Hands: A gathers, talks and enters buildings.",
           );
         }
         if (p.fishing) {
@@ -1193,17 +1299,23 @@
           if (edge.a) this.reel(p);
           continue;
         }
-        var dx = (ix + iy) * 1.7,
-          dy = (iy - ix) * 1.7;
+        if (p.tool === "net" && edge.a && !p.netNeedsRelease && p.netSwing === 0) p.netRaised = true;
+        var pace = p.netRaised ? 0.32 : p.netSwing > 0 ? 0 : 1,
+          dx = (ix + iy) * 1.7 * pace,
+          dy = (iy - ix) * 1.7 * pace;
         if (ix || iy) {
-          p.facing = { x: dx / 2.4, y: dy / 2.4 };
+          p.facing = { x: (ix + iy) / Math.sqrt(2), y: (iy - ix) / Math.sqrt(2) };
+          var oldX = p.x, oldY = p.y;
           var nx = p.x + dx * dt,
             ny = p.y + dy * dt;
           if (!this.blocked(nx, p.y, p.location)) p.x = nx;
           if (!this.blocked(p.x, ny, p.location)) p.y = ny;
+          p.movingSpeed = dt > 0 ? Math.hypot(p.x - oldX, p.y - oldY) / dt : 0;
         }
+        if (p.tool === "net" && edge.releaseA && p.netRaised) this.swingNet(p);
         if (edge.a) this.action(p);
       }
+      this.updateInsects(dt);
       if (this.saveElapsed >= 1) this.save();
     }
     status() {
@@ -1216,6 +1328,7 @@
         houseLevel: this.houseLevel,
         day: Math.floor(this.clock / 1440) + 1,
         fishDiscovered: Object.keys(this.fishJournal).length,
+        insectsDiscovered: Object.keys(this.insectJournal).length,
         muted: this.muted,
         players: this.players.map((p) => ({
           id: p.id,

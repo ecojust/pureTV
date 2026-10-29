@@ -177,13 +177,17 @@
     p.powerTicks = p.power === 3 ? 300 : 1200;
     this.emit("power");
     if (p.power === 3) {
+      p.room.items.forEach(function (item) {
+        if (item.enemy && !item.taken) item.ticks = 300;
+      });
       p.room.enemies.forEach(function (e) {
         if (e.alive) {
           e.alive = false;
-          p.room.items.push({ x: e.x, y: e.y, kind: "coin", taken: false });
+          p.room.items.push({ x: e.x, y: e.y, kind: "coin", taken: false,
+            enemy: e, ticks: 300 });
         }
       });
-      this.notice("GREEN: ENEMIES BECOME COINS");
+      this.notice("GREEN: COLLECT COINS IN 5 SECONDS");
     } else
       this.notice(
         p.power === 1 ? "BLUE: OPEN ORANGE CHESTS" : "ORANGE: TOUCH TO OPEN",
@@ -447,6 +451,14 @@
     }
     for (var ii = 0; ii < r.items.length; ii++) {
       var item = r.items[ii];
+      if (!item.taken && item.enemy && --item.ticks <= 0) {
+        item.taken = true;
+        item.enemy.alive = true;
+        // Brief visible reformation avoids an unavoidable contact death.
+        item.enemy.reformTicks = 30;
+        this.emit("danger");
+        continue;
+      }
       if (!item.taken && overlap(p, item, 10, 12)) {
         item.taken = true;
         p.mightyCoins++;
@@ -461,6 +473,10 @@
     for (var ei = 0; ei < r.enemies.length; ei++) {
       var e = r.enemies[ei];
       if (!e.alive) continue;
+      if (e.reformTicks > 0) {
+        e.reformTicks--;
+        continue;
+      }
       e.age = (e.age || 0) + 1;
       e.phase += 0.035;
       e.morphWarning = e.kind === "mummy" && r.kind !== "torture" && e.age > 180 + (e.id % 3) * 60;

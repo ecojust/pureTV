@@ -165,8 +165,6 @@
       if (p.clearTimer > 0) { if (--p.clearTimer===0) this.finishClear(p); return; }
       if (p.entryTimer > 0) { if (--p.entryTimer===0) this.spawn(p); return; }
       if (!p.piece) return;
-      if (input.a && !p.previous.a) this.rotate(p,1);
-      else if (input.b && !p.previous.b) this.rotate(p,-1);
       if (input.x !== 0) {
         if (input.x !== p.previous.x) {
           p.dasCharge = this.shift(p,input.x) ? 0 : 16;
@@ -175,14 +173,25 @@
           if (p.dasCharge===16 && this.shift(p,input.x)) p.dasCharge -= 6;
         }
       }
-      if (input.y <= 0) { p.softTimer = 0; p.softCells = 0; }
-      else p.softTimer++;
+      // NES resolves shifting before rotation, allowing a tap away from a wall
+      // and a rotation in the same frame to use the newly freed space.
+      if (input.a && !p.previous.a) this.rotate(p,1);
+      else if (input.b && !p.previous.b) this.rotate(p,-1);
+      // NES arms soft drop only on a fresh Down press with no horizontal
+      // direction held. Spawn resets this state, so a held Down cannot drop the
+      // next piece. The first drop takes three frames, repeats take two.
+      let softDrop = false;
+      if (input.y <= 0 || input.x !== 0) { p.softTimer = 0; p.softCells = 0; }
+      else if (p.softTimer === 0) {
+        if (p.previous.y <= 0) p.softTimer = 1;
+      } else if (++p.softTimer >= 3) { softDrop = true; p.softTimer = 1; }
       p.gravityTimer++;
       const autoDrop = p.gravityTimer >= gravity(p.level);
-      const softDrop = input.y > 0 && p.softTimer >= 2;
       if (autoDrop || softDrop) {
         const next = Object.assign({},p.piece,{y:p.piece.y+1});
-        p.gravityTimer = 0; p.softTimer = 0;
+        // Gravity and soft drop share a fall timer, but automatic falls must
+        // not reset Down's repeat state (especially at levels 19 and 29).
+        p.gravityTimer = 0;
         if (this.collides(p,next)) this.lock(p,input.y>0);
         else { p.piece = next; if (softDrop) p.softCells++; }
       }

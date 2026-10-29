@@ -8,15 +8,21 @@ The APK in this directory is signed with the pureTV release certificate. Android
 
 [中文](README.md) · [English](README.en.md)
 
-Version **0.5.0** independently reimplements the 1985 NES Battle City rules, 35 stages and presentation. Install and play without importing a ROM. Physical-TV and frame-by-frame comparisons are incomplete.
+Version **0.5.1** independently reimplements the 1985 NES Battle City rules, 35 stages and presentation. Install and play without importing a ROM. Physical-TV and frame-by-frame comparisons are incomplete.
 
 The rewrite retains QR pairing and two phone controllers over the local network, with a native 256×240 display and 208×208 battlefield. It does not load or execute a ROM. The 35 maps, 20-enemy stage sequences, four enemy classes, six power-ups, upgrades, co-op tallies and Construction mode have source references. AI, some collisions and animation timings still need frame-by-frame comparison. See [rules and maps](docs/reference.md) and [artwork and audio](docs/reference-art-audio.md) for evidence and limitations.
 
 Requires Android 8.0 or later; package `com.ecojust.tanktv`. The room UI and phone controllers support Chinese and English. In-game menus retain the original English labels.
 
-## 0.5.0 release and installation
+## 0.5.1 gameplay review
 
-All nine games are released as version 0.5.0 with the new shared pureTV release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
+Rechecked all 35 maps, enemy waves and co-op rules; the full-area fire control remains available.
+
+Uses the same signing certificate as 0.5.0 and supports an in-place update. See the [fidelity review](../../../docs/game-fidelity-0.5.1.md) for tested behavior and remaining differences.
+
+## Installation and signing
+
+Version 0.5.1 uses the same shared pureTV certificate as 0.5.0, so it updates 0.5.0 in place and keeps local data. Versions signed with the older certificate cannot be updated in place: back up any exportable data before uninstalling them. Uninstalling clears local saves and records; the project has no automatic migration across signing certificates.
 
 ## Floating joystick and compatibility
 
@@ -78,7 +84,7 @@ cd resource/launcher/puretv
 
 APKs are generated under `resource/apps/tank/build/outputs/apk/`. Release builds enable code and resource shrinking and enforce a 5 MiB size limit. Published resource APKs are signed with the pureTV release certificate. Android tests cover the room server and lifecycle, Node tests cover game rules, and browser tests cover phone input.
 
-Set `TANK_UI_CAPTURE_DIR` and run `tests/capture.mjs` to export Chinese and English game previews. These capture the actual bundled page in Chromium using test data for the native room bridge; they are not measurements of physical TV performance or phone network latency. This directory contains the signed 0.5.0 package with full-screen action areas. See [resource.json](resource.json) for its source commit, APK checksum and build method, and [resource maintenance](../../../docs/resource-maintenance.md) for catalog maintenance.
+Set `TANK_UI_CAPTURE_DIR` and run `tests/capture.mjs` to export Chinese and English game previews. These capture the actual bundled page in Chromium using test data for the native room bridge; they are not measurements of physical TV performance or phone network latency. This directory contains the signed 0.5.1 package with full-screen action areas. See [resource.json](resource.json) for its source commit, APK checksum and build method, and [resource maintenance](../../../docs/resource-maintenance.md) for catalog maintenance.
 
 ## Artwork and licensing
 

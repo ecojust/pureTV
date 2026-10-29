@@ -25,6 +25,7 @@
 | 障碍 | 小石头扣两格体力并短暂绊倒；火焰、敌人、首领及敌方投射物导致失命；不能通过踩踏消灭敌人 |
 | 蜜蜂精灵 | 提供 600 帧接触无敌，可碰撞消灭普通敌人；仍需避免坑、水及体力耗尽 |
 | 隐藏奖励 | 隐藏陶壶使关末剩余体力奖励翻倍；部分隐藏蛋包含会加快体力消耗的茄子 |
+| 隐藏云朵 | 武器经过隐藏云点会消失并留下短暂闪光；在该处站稳 90 帧后云朵升起，带角色进入水果奖励段。奖励段水果统一 500 分，仍补充体力；落下不会失命，返回原关下一检查点并保留武器、滑板及原地图已拾取状态 |
 | 敌人 | 蜗牛、蛇、鸟、蝙蝠、蜘蛛、青蛙、鱼、滚石具有不同移动方式，含巡逻、振翅、垂降、跳跃与滚动；飞鸟接近时锁定目标高度俯冲，随后抬升飞离，躲避后不会持续追踪角色 |
 | 检查点 | 每关四个安全落脚点；失命后从当前玩家最近检查点继续，体力恢复 11，武器和滑板失去 |
 | 首领 | 每地区第 4 关，只有头部受武器伤害；生命值从 8 递增至 22，射击间隔及移动速度随地区提高 |
@@ -51,7 +52,8 @@
 ## 独立实现的边界
 
 - 背景、角色、敌人、首领、图标均为本项目自绘像素图；配乐是新编写的短 8-bit 合成循环，音效通过 Web Audio 生成，不是原作旋律或录音。
-- 路线的地形坐标、敌人和道具排列不同于原版，未实现原版隐藏云朵奖励房、全部秘密奖励位置、原版续关秘籍及逐帧敌人行为。
+- 路线的地形坐标、敌人和道具排列不同于原版。隐藏云朵的探查、停留召出、奖励水果及无损返回流程已实现，但每关云点位置和共用的八平台奖励路线为独立重建；并未还原原版所有秘密奖励位置、续关秘籍及逐帧敌人行为。
+- 云朵等待 90 帧、升空 60 帧、奖励段暂停体力计时以及返回时 60 帧保护是本项目的调校选择，不宣称与原版时序完全一致。主关体力和茄子状态在返回后继续，不能把奖励段出口当作过关或跳过首领。
 - 首领采用同一攻击状态机，随地区改变外观配色、血量、移动和火球节奏；不是原版八个首领逐像素移植。
 - 蛋壳碎片、道具弹出/落地、滑板滚动以及拾取分数采用独立绘制的动画；弹出速度、拾取窗口和飞鸟俯冲参数由项目自行调校，未宣称逐帧一致。
 - 原作单人规则以外，**两部手机轮流挑战属于本应用扩展**：各自保存本局生命、积分、关卡和检查点；一方失命后轮到另一方，生命耗尽者跳过。不会同屏同时操纵两名角色。
@@ -74,6 +76,7 @@ node --test resource/apps/adventure-island/tests/game-model.test.cjs
 2. **前两关完整规则通关**：从出生点使用普通方向、A、B 输入走到终点，保留全部敌人、障碍、体力消耗、道具与武器规则。
 3. **8 个首领正常战斗**：测试从各首领区域设置初始位置并取得斧头，其后仅使用方向和 B 输入；保留真实投射物、碰撞、首领 AI、伤害间隔和体力，击败首领并走过出口，最后一关进入结局。
 4. 另测破蛋远程命中不自动装备、道具弹出落地与一次拾取、滑板滚动和落坑、飞鸟锁定俯冲与离屏休眠，以及体力/食物、石头和火焰、斧头/火球、滑板、隐藏蛋、接触无敌、额外生命、关末奖励、双人独立进度、断线与手动暂停。
+5. **隐藏云朵流程**：用实际投射物查探、停留与升空触发奖励段，验证 500 分水果、无损返回与装备保留、32 关入口安全及下一检查点、暂停/断线与玩家状态隔离；奖励路线另外用普通移动/跳跃输入走过全部八个平台并从末端落下返回，没有在路线中修改坐标。
 
 浏览器测试另验证手机多点触控、TV 桥接、启动诊断和退出时音频/定时器释放。截图来自浏览器实际渲染；尚不等于 Android 电视和真实手机的实机验证。
 
@@ -83,6 +86,6 @@ This app independently recreates the core rules of the **first Adventure Island*
 
 **Maps use reconstructed coordinates, not tile-for-tile original stage data.** Terrain, physics, item placement, enemy motion, artwork, sound effects and music are independently authored. No ROM, extracted sprite/map data, commercial recording or original soundtrack is bundled. The public gameplay reference is [Wikipedia's Adventure Island gameplay overview](https://en.wikipedia.org/wiki/Adventure_Island_(video_game)#Gameplay).
 
-Not implemented as exact original features: hidden cloud bonus rooms, every secret location, continuation cheats, exact frame timing, original boss sprite sheets and original per-frame timings. Eggs now release physical pickups with a visible upward arc, landing and contact collection; skateboard pickups roll forward. Birds commit to a target height for their dive and then climb away. Two-phone alternating play is a project extension to the single-player game, with separate lives, scores, stages and checkpoints. Only losing the active controller auto-pauses play.
+Hidden cloud spots now absorb thrown weapons, appear after standing still, and lift Higgins into a fruit bonus route. Each bonus fruit gives 500 points; falling returns to the next main-stage checkpoint without losing a life or equipment. Bonus layouts and secret positions are independently reconstructed. Waiting/lift durations, frozen vitality during the bonus and a short return grace period are project tuning, not verified original frame timings. Still missing: every original secret location, continuation cheats, exact frame timing and original boss sprite sheets. Eggs release physical pickups with a visible upward arc, landing and contact collection; skateboard pickups roll forward. Birds commit to a target height for their dive and then climb away. Two-phone alternating play is a project extension to the single-player game, with separate lives, scores, stages and checkpoints. Only losing the active controller auto-pauses play.
 
 Tests prove terrain reachability through the real movement integrator on all 32 routes (combat and energy isolated), ordinary-input completion of the first two stages with full rules, and ordinary-input defeats of all eight bosses from an explicitly seeded arena position and axe pickup. Boss tests retain real vitality, damage windows and projectiles and walk through the exit. These are automated model/browser checks, not a claim of a complete physical-TV playthrough.

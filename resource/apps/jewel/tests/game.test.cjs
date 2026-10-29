@@ -57,7 +57,7 @@ test('seventy cleared jewels advance level and award a magic column without cons
 });
 test('a magic column clears its contact color across the board and itself',()=>{
  const g=start(),p=g.players[0];p.level=1;p.board=empty();p.board[12][0]=3;p.board[12][5]=3;p.board[11][5]=1;p.active={x:0,y:9,colors:[7,7,7],magic:true};g.lock(p);
- assert.equal(p.clearCells.length,5);assert.equal(p.speedLevel,1);tick(g,40);assert.equal(p.cleared,5);assert.equal(p.status,'settling');tick(g,4);assert.equal(p.board[12][5],1);assert.equal(p.board[12][0],0);
+ assert.equal(p.clearCells.length,5);assert.equal(p.speedLevel,0);tick(g,40);assert.equal(p.cleared,5);assert.equal(p.status,'settling');tick(g,4);assert.equal(p.board[12][5],1);assert.equal(p.board[12][0],0);
 });
 test('magic on an empty floor vanishes without erasing other colors',()=>{
  const g=start(),p=g.players[0];p.board=empty();p.board[12][4]=2;p.active={x:0,y:10,colors:[7,7,7],magic:true};g.lock(p);assert.equal(p.clearCells.length,3);tick(g,40);assert.equal(p.board[12][4],2);
@@ -103,4 +103,46 @@ test('settling blocks new input, freezes during pause and preserves gem order on
  tick(g,90);assert.equal(p.gravityTicks,12);assert.equal(p.board[8][0],2);
  tick(g,1,{start:true});tick(g,11);assert.equal(p.status,'falling');
  assert.equal(p.board[12][0],2);assert.equal(p.board[11][0],3);assert.deepEqual(p.gravityMoves,[]);
+});
+
+test('Excess cleared jewels award consecutive magic columns one level at a time',()=>{
+ const g=start(),p=g.players[0],next=p.next.slice(),seq=p.seq;
+ p.levelCleared=145;p.active=null;g.finishDrop(p);
+ assert.equal(p.level,1);assert.equal(p.levelCleared,75);assert.equal(p.speedLevel,0);assert.equal(p.active.magic,true);
+ p.active.y=10;g.lock(p);assert.equal(p.speedLevel,0);tick(g,39);assert.equal(p.speedLevel,0);tick(g);
+ assert.equal(p.speedLevel,1);assert.equal(p.level,2);assert.equal(p.levelCleared,8);assert.equal(p.active.magic,true);
+ assert.deepEqual(p.next,next);assert.equal(p.seq,seq,'Reward columns do not consume the ordinary queue');
+ p.active.y=10;g.lock(p);tick(g,40);
+ assert.equal(p.speedLevel,2);assert.equal(p.active.magic,false);assert.deepEqual(p.active.colors,next);
+});
+
+test('An earned magic column can rescue hidden jewels in another column before top-out',()=>{
+ const g=start(),p=g.players[0];p.levelCleared=67;p.cleared=67;p.board=empty();
+ for(let y=0;y<13;y++)p.board[y][5]=[1,2,4][y%3];p.hidden[1][5]=2;
+ p.board[12][2]=2;p.active={x:0,y:10,colors:[3,3,3],magic:false};g.lock(p);tick(g,40);
+ assert.equal(p.alive,true);assert.equal(p.active.magic,true);assert.equal(p.hidden[1][5],2);
+ p.active.x=2;p.active.y=9;g.lock(p);
+ assert.ok(p.clearCells.some(cell=>cell.x===5&&cell.y===-1));
+ for(let n=0;n<160&&p.status!=='falling';n++)tick(g);
+ assert.equal(p.alive,true);assert.equal(p.hidden.flat().filter(Boolean).length,0);assert.equal(p.speedLevel,1);
+});
+
+test('Magic reward still loses if its spawn column is obstructed',()=>{
+ const g=start(),p=g.players[0];p.levelCleared=70;p.active=null;p.board[0][3]=4;g.finishDrop(p);
+ assert.equal(p.alive,false);assert.equal(p.active,null);
+});
+
+test('Stage speed changes only after the magic cascade settles, independently for each player',()=>{
+ const g=start(true),[a,b]=g.players;a.level=1;a.board=empty();a.board[12][0]=3;a.board[12][5]=3;a.board[11][5]=1;
+ a.active={x:0,y:9,colors:[7,7,7],magic:true};g.lock(a);tick(g,40,{},{});
+ assert.equal(a.status,'settling');assert.equal(a.speedLevel,0);assert.equal(b.speedLevel,0);
+ tick(g,4,{},{});assert.equal(a.speedLevel,1);assert.equal(b.speedLevel,0);
+});
+
+test('Independent scene palettes change at the completed magic stage and cycle after eight',()=>{
+ const {JewelRenderer}=require('../src/main/assets/renderer.js');
+ const colors=[],ctx={fillRect(){colors.push(this.fillStyle);}};
+ const renderer=new JewelRenderer({getContext:()=>ctx});
+ const sky=level=>{colors.length=0;renderer.background(0,level);return colors[0];};
+ assert.equal(sky(0),sky(8));assert.equal(new Set(Array.from({length:8},(_,level)=>sky(level))).size,8);
 });

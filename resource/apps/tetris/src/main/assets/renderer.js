@@ -102,7 +102,9 @@
     }
     if (player.clearTimer>0 && player.clearRows) {
       ctx.fillStyle = player.clearRows.length === 4 && Math.floor(frame/3)%2 ? "#eef8ff" : "#02040c";
-      var spread=Math.min(40,Math.max(8,Math.floor((22-player.clearTimer)/4)*8));
+      // clearTimer reaches 16/12/8/4/0 on global four-frame boundaries.
+      // Do not erase the center pair before the first animation step.
+      var spread=Math.min(40,Math.max(0,Math.floor((20-player.clearTimer)/4)*8));
       player.clearRows.forEach(function(row){ctx.fillRect(x+40-spread,y+row*8,spread*2,8);});
     }
     if (player.completed) {

@@ -45,7 +45,7 @@
     "playing": "Explore together. Each player has their own bag and menu.",
     "paused": "Island paused · START returns to your day",
     "joystick": "Hold anywhere on the left and slide to walk or choose a menu item",
-    "actionALabel": "A: interact, confirm, cast or reel your fishing rod",
+    "actionALabel": "A: interact, fish; with the net hold to sneak and release to swing",
     "actionBLabel": "B: open your bag or go back",
     "select": "Tool / players",
     "selectLabel": "SELECT: one or two players at the title, switch tools outdoors",
@@ -53,7 +53,8 @@
     "hand": "Hands",
     "hands": "Hands",
     "rod": "Rod",
-    "fishing": "Rod"
+    "fishing": "Rod",
+    "net": "Bug net"
 } : {
     "controller": "手机控制器",
     "status": "游戏状态",
@@ -97,7 +98,7 @@
     "playing": "一起探索，每位玩家都有独立背包和菜单。",
     "paused": "小岛已暂停 · 按 START 继续今天的生活",
     "joystick": "左侧任意位置按住并滑动，步行或选择菜单选项",
-    "actionALabel": "A 互动、确认、抛竿或收竿",
+    "actionALabel": "A 互动、钓鱼；捕虫网按住慢走，松开挥网",
     "actionBLabel": "B 打开背包或返回",
     "select": "工具 / 人数",
     "selectLabel": "SELECT 标题选择单人或双人，在户外切换工具",
@@ -105,7 +106,8 @@
     "hand": "双手",
     "hands": "双手",
     "rod": "鱼竿",
-    "fishing": "鱼竿"
+    "fishing": "鱼竿",
+    "net": "捕虫网"
 };
   messages.hint = english ? 'TOP: ' + messages.actionB + ' · BOTTOM: ' + messages.actionA : '右上：' + messages.actionB + ' · 右下：' + messages.actionA;
   messages.actionALabel += english ? ' (bottom right half)' : '（右下半区）';

@@ -98,9 +98,9 @@ test('Entry delay does not charge DAS and allows an existing charge to be redire
 
 test('Soft drop awards only the final continuous segment and no hard drop exists',()=>{
   const g=game(),p=g.players[0];p.piece={type:'O',rotation:0,x:3,y:3};
-  frames(g,4,{y:1});assert.equal(p.piece.y,5);assert.equal(p.score,0);assert.equal(p.softCells,2);
+  frames(g,5,{y:1});assert.equal(p.piece.y,5);assert.equal(p.score,0);assert.equal(p.softCells,2);
   frames(g,1);assert.equal(p.softCells,0);
-  p.piece.y=15;frames(g,6,{y:1});assert.equal(p.piece,null);assert.equal(p.score,2);
+  p.piece.y=15;frames(g,7,{y:1});assert.equal(p.piece,null);assert.equal(p.score,2);
   const h=game(),q=h.players[0],y=q.piece.y;frames(h,1,{y:-1});assert.equal(q.piece.y,y);
 });
 
@@ -191,4 +191,57 @@ test('B-TYPE completion leaves the other player running and ignores a cleared co
   g.tick([connected(1,{connected:false}),connected(2)]);assert.equal(g.phase,'playing');
   const survivor=g.players[1];survivor.alive=false;survivor.piece=null;
   frames(g,1);assert.equal(g.phase,'gameover');assert.equal(p.completed,true);
+});
+
+test('Soft drop starts on its third frame, then repeats every two frames',()=>{
+  const g=game(),p=g.players[0],y=p.piece.y;
+  frames(g,2,{y:1});assert.equal(p.piece.y,y);
+  frames(g,1,{y:1});assert.equal(p.piece.y,y+1);assert.equal(p.softCells,1);
+  frames(g,1,{y:1});assert.equal(p.piece.y,y+1);
+  frames(g,1,{y:1});assert.equal(p.piece.y,y+2);
+});
+
+test('Holding Down through lock and entry cannot soft-drop the next piece',()=>{
+  const g=game(),p=g.players[0];p.piece={type:'O',rotation:0,x:3,y:17};
+  frames(g,3,{y:1});assert.equal(p.piece,null);
+  frames(g,p.entryTimer,{y:1});const y=p.piece.y;
+  frames(g,8,{y:1});assert.equal(p.piece.y,y);assert.equal(p.softCells,0);
+  frames(g,1);frames(g,3,{y:1});assert.equal(p.piece.y,y+1);
+});
+
+test('Horizontal input cancels soft drop; releasing horizontal alone does not rearm Down',()=>{
+  const g=game(),p=g.players[0],y=p.piece.y;
+  frames(g,3,{y:1});assert.equal(p.softCells,1);
+  frames(g,4,{x:1,y:1});assert.equal(p.piece.y,y+1);assert.equal(p.softCells,0);
+  frames(g,5,{y:1});assert.equal(p.piece.y,y+1);
+  frames(g,1);frames(g,3,{y:1});assert.equal(p.piece.y,y+2);
+});
+
+test('Fast gravity keeps falling while Down repeats; coincident drops move only one row',()=>{
+  const g=game(29),p=g.players[0],y=p.piece.y;
+  frames(g,5,{y:1});assert.equal(p.piece.y,y+5);assert.equal(p.softCells,2);
+});
+
+test('Soft-drop state remains independent between two boards',()=>{
+  const g=game(0,2),[a,b]=g.players,y=b.piece.y;
+  frames(g,3,{y:1});assert.equal(a.softCells,1);assert.equal(b.piece.y,y);
+  frames(g,2,{y:1},{y:1});assert.equal(a.softCells,2);assert.equal(b.piece.y,y);
+  frames(g,1,{y:1},{y:1});assert.equal(b.piece.y,y+1);
+});
+
+test('Line-clear rendering waits for the first global four-frame boundary',()=>{
+  const {TetrisRenderer}=require('../src/main/assets/renderer.js');
+  const fills=[],ctx={fillRect:(...args)=>fills.push(args)};
+  const renderer=new TetrisRenderer({style:{},getContext:()=>ctx});
+  renderer.frame=()=>{};renderer.block=()=>{};
+  const p={board:R.emptyBoard(),alive:true,clearRows:[19],clearTimer:17,level:0};
+  renderer.board(p,0,0,3);assert.ok(!fills.some(rect=>rect[1]===152&&rect[2]>0));
+  fills.length=0;p.clearTimer=16;renderer.board(p,0,0,4);
+  assert.ok(fills.some(rect=>rect[0]===32&&rect[1]===152&&rect[2]===16&&rect[3]===8));
+});
+
+
+test('A same-frame shift away from the wall frees space before rotation is checked',()=>{
+  const g=game(),p=g.players[0];p.piece={type:'I',rotation:1,x:-1,y:5};
+  frames(g,1,{x:1,a:true});assert.equal(p.piece.x,0);assert.equal(p.piece.rotation,0);
 });

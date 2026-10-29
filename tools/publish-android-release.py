@@ -12,6 +12,9 @@ from pathlib import Path
 from resource_catalog import digest, verify_catalog, RELEASE_CERTIFICATE_CUTOVERS
 
 REPOSITORY = 'ecojust/pureTV'
+GAME_PACKAGES = {'com.ecojust.' + name + 'tv' for name in (
+    'tank', 'jackal', 'jewel', 'tetris', 'bombjack', 'adventureisland',
+    'supermario', 'coastkart', 'cozyisland')}
 
 
 def api(path, payload=None):
@@ -26,6 +29,7 @@ def main():
     parser.add_argument('--source-sha', required=True)
     parser.add_argument('--tag', required=True)
     parser.add_argument('--build-tools', required=True, type=Path)
+    parser.add_argument('--scope', choices=('all', 'games'), default='all')
     parser.add_argument('--validate-only', action='store_true')
     args = parser.parse_args()
     assert re.fullmatch(r'[0-9a-f]{40}', args.source_sha), 'Exact source SHA required'
@@ -35,8 +39,9 @@ def main():
     root = Path(__file__).resolve().parents[1]
     assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip() == args.source_sha
     entries = verify_catalog(root, args.build_tools)
-    packages = [entry for entry in entries if entry['packageName'].startswith('com.ecojust.')]
-    assert {entry['packageName'] for entry in packages} == set(RELEASE_CERTIFICATE_CUTOVERS), 'Expected all 24 self-developed packages'
+    selected = GAME_PACKAGES if args.scope == 'games' else set(RELEASE_CERTIFICATE_CUTOVERS)
+    packages = [entry for entry in entries if entry['packageName'] in selected]
+    assert len(packages) == len(selected) and {entry['packageName'] for entry in packages} == selected, 'Incomplete release package scope'
     certificate = (root / 'tools/puretv-release-certificate-v2.sha256').read_text().strip()
     builds = {}
     files = []
@@ -72,7 +77,7 @@ def main():
             path = (folder / name).resolve()
             assert path.is_relative_to(folder.resolve()) and digest(path) == checksum
         files.append(package)
-    assert len(files) == len({file.name for file in files}) == 24
+    assert len(files) == len({file.name for file in files}) == len(selected)
     releases = []
     page = 1
     while True:
@@ -85,8 +90,12 @@ def main():
     assert len(matches) == 1, 'An existing reviewed release draft is required'
     release = matches[0]
     endpoint = f'repos/{REPOSITORY}/releases/{release["id"]}'
+    tag = api(f'repos/{REPOSITORY}/git/ref/tags/{args.tag}')['object']
+    if tag['type'] == 'tag':
+        tag = api(f'repos/{REPOSITORY}/git/tags/{tag["sha"]}')['object']
+    assert tag['type'] == 'commit' and tag['sha'] == args.source_sha, 'Release tag must point to the verified source commit'
     if args.validate_only:
-        print(json.dumps({'verifiedApks': len(files), 'verifiedBuilds': len(builds), 'release': release['html_url']}))
+        print(json.dumps({'scope': args.scope, 'verifiedApks': len(files), 'verifiedBuilds': len(builds), 'release': release['html_url']}))
         return
     with tempfile.TemporaryDirectory(prefix='android-release-') as temporary:
         temporary = Path(temporary)

@@ -437,13 +437,15 @@ test("continuous natural-input traversal reaches all 32 exits and the final endi
     assert.equal(g.player().stageIndex, stage);
     total += traverse(g, stage);
     assert.ok(g.clearTicks);
-    if (g.level.axe)
-      assert.ok(
-        g.level.map[12]
-          .slice(g.level.bridgeStart, g.level.bridgeStart + 15)
-          .every((v) => v === 0),
-      );
-    while (g.clearTicks && g.phase === "playing") tick(g);
+    if (g.level.axe) {
+      // This geometry-only route removed every enemy: with no living boss,
+      // the axe skips the collapse and preserves the intact bridge.
+      assert.equal(g.clearSequence.phase, "walk");
+      assert(g.level.map[12].slice(g.level.bridgeStart, g.level.bridgeStart + 15).every((v) => v === 10));
+    }
+    let clearFrames = 0;
+    while (g.clearTicks && g.phase === "playing" && clearFrames++ < 600) tick(g);
+    assert(clearFrames < 600, "goal sequence must complete without extra input: " + JSON.stringify({stage, sequence:g.clearSequence, x:g.player().x, y:g.player().y}));
   }
   assert.equal(g.phase, "ending");
   assert.equal(g.winner, 1);
@@ -591,4 +593,214 @@ test("a moving shell tracks its own escalating chain independently of player sto
   assert.equal(g.player().score, 16300);
   assert.equal(g.player().lives, 4);
   assert.equal(g.player().stompChain, 0);
+});
+
+function touchGoal(g, time = 213, y = 90) {
+  const p = g.player();
+  g.enemies = [];
+  g.time = time;
+  g.timeTicks = 0;
+  p.x = g.level.flag.x - p.w;
+  p.y = y;
+  p.vx = p.vy = 0;
+  p.grounded = false;
+  tick(g);
+  assert.equal(g.clearSequence.phase, "slide");
+  return p;
+}
+
+test("flag clear locks to the pole, slides before walking, then hides inside the castle", () => {
+  const g = fresh(), p = touchGoal(g, 213, 90), flagX = g.level.flag.x;
+  const score = p.score;
+  assert.equal(score, 2000);
+  assert.equal(p.x + p.w, flagX);
+  const time = g.time;
+  tick(g, { x: -1, a: true, b: true }, 10);
+  assert.equal(p.x + p.w, flagX, "controls cannot pull Mario off the clear animation");
+  assert.equal(p.y, 110.48);
+  assert.equal(g.time, time, "timer tally waits for the castle entry");
+  while (g.clearSequence.phase === "slide") tick(g);
+  assert.equal(p.y + p.h, 192);
+  assert.equal(g.clearSequence.flagY, 178);
+  while (g.clearSequence.phase === "walk") tick(g);
+  assert.equal(p.x, g.level.castleX + 24);
+  assert.equal(p.y + p.h, 208);
+  assert.equal(g.clearSequence.hidden, true);
+  assert.equal(g.clearSequence.phase, "tally");
+});
+
+test("fireworks use the touch-time last digit, award 500 each, and tally time once", () => {
+  for (const time of [210, 211, 213, 216, 218]) {
+    const g = fresh(), p = touchGoal(g, time, 190);
+    const goalScore = p.score;
+    let fireworks = 0, frames = 0;
+    while (p.stageIndex === 0 && frames++ < 600) {
+      g.step(1 / Game.FPS, [pad()]);
+      fireworks += g.events.filter((e) => e.type === "firework").length;
+    }
+    const expected = [1, 3, 6].includes(time % 10) ? time % 10 : 0;
+    assert.equal(fireworks, expected);
+    assert.equal(p.score, goalScore + time * 50 + expected * 500);
+    assert.equal(p.stageIndex, 1);
+    assert.equal(g.clearSequence, null);
+  }
+});
+
+test("flagpole awards all five height tiers without granting a top-of-pole extra life", () => {
+  for (const [y, score] of [[60, 5000], [100, 2000], [140, 800], [170, 400], [190, 100]]) {
+    const g = fresh();
+    touchGoal(g, 210, y);
+    assert.equal(g.player().score, score);
+    assert.equal(g.player().lives, 3);
+  }
+});
+
+test("a living castle boss falls as the axe removes bridge segments in order", () => {
+  const g = fresh();
+  g.loadStage(3, false);
+  const boss = g.enemies.find((e) => e.type === "bowser"), p = g.player();
+  g.enemies = [boss];
+  p.x = g.level.axe.x; p.y = 176; p.vx = p.vy = 0;
+  tick(g);
+  assert.equal(g.clearSequence.phase, "bridge");
+  assert.equal(boss.alive, true);
+  const bridge = () => g.level.map[12].slice(g.level.bridgeStart, g.level.bridgeStart + 15);
+  assert.equal(bridge().filter(Boolean).length, 15);
+  tick(g, {}, 4);
+  assert.equal(bridge().filter(Boolean).length, 14);
+  assert.equal(bridge()[14], 0, "collapse starts at the axe end");
+  const initialY = boss.y;
+  assert(boss.x >= g.cameraX && boss.x + boss.w <= g.cameraX + 256, "boss stays visible during the collapse");
+  let sawFalling = false, frames = 0;
+  while (g.clearSequence.phase === "bridge" && frames++ < 200) {
+    tick(g);
+    if (boss.alive && boss.y > initialY + 4) sawFalling = true;
+  }
+  assert.equal(sawFalling, true);
+  assert.equal(boss.alive, false);
+  assert.equal(bridge().filter(Boolean).length, 0);
+  assert.equal(g.clearSequence.phase, "walk");
+  assert.equal(g.clearSequence.fireworks, 0);
+  assert.equal(p.lives, 3);
+});
+
+test("an already defeated castle boss skips collapse and goal animations freeze while paused or disconnected", () => {
+  const g = fresh();
+  g.loadStage(3, false);
+  g.enemies.find((e) => e.type === "bowser").alive = false;
+  g.time = 216;
+  const p = g.player();
+  p.x = g.level.axe.x; p.y = 176; p.vx = p.vy = 0;
+  tick(g);
+  assert.equal(g.clearSequence.phase, "walk");
+  assert.equal(g.clearSequence.fireworks, 0);
+  assert(g.level.map[12].slice(g.level.bridgeStart, g.level.bridgeStart + 15).every((v) => v === 10));
+  tick(g, { start: true });
+  const paused = JSON.stringify([g.clearSequence, p.x, p.y, g.time, p.score]);
+  tick(g, {}, 60);
+  assert.equal(JSON.stringify([g.clearSequence, p.x, p.y, g.time, p.score]), paused);
+  tick(g, { start: true });
+  g.tick([]);
+  const disconnected = JSON.stringify([g.clearSequence, p.x, p.y, g.time, p.score]);
+  for (let i = 0; i < 60; i++) g.tick([]);
+  assert.equal(JSON.stringify([g.clearSequence, p.x, p.y, g.time, p.score]), disconnected);
+  tick(g);
+  assert.equal(g.phase, "playing");
+});
+
+function fireball(x, y, extra = {}) {
+  return Object.assign({ owner: "player", type: "fire", x, y, w: 6, h: 6, vx: 3.6, vy: 0, life: 180 }, extra);
+}
+test("fireballs stop at brick sides, bounce only when descending onto a top, and cannot damage through walls", () => {
+  const g = fresh();
+  floorFixture(g);
+  g.level.map[10][8] = 2;
+  const protectedEnemy = foe("goomba", 128, 156);
+  g.enemies = [protectedEnemy];
+  g.projectiles = [fireball(123, 156)];
+  g.updateItems();
+  assert.equal(g.projectiles.length, 0);
+  assert.equal(protectedEnemy.alive, true);
+  g.enemies = [];
+  const falling = fireball(130, 152, { vx: 0, vy: 3 });
+  g.projectiles = [falling];
+  g.updateItems();
+  assert.equal(falling.y, 154);
+  assert.equal(falling.vy, -3.2);
+  assert.equal(g.projectiles.length, 1);
+});
+test("one fireball hits one enemy and Buzzy Beetles absorb it without taking damage", () => {
+  const g = fresh();
+  floorFixture(g);
+  const first = foe("goomba", 100, 180), second = foe("goomba", 100, 180);
+  g.enemies = [first, second];
+  g.projectiles = [fireball(100, 180, { vx: 0 })];
+  g.updateItems();
+  assert.equal(first.alive, false);
+  assert.equal(second.alive, true);
+  const beetle = foe("buzzy", 100, 180);
+  g.enemies = [beetle, second];
+  g.projectiles = [fireball(100, 180, { vx: 0 })];
+  g.updateItems();
+  assert.equal(beetle.hp, 1);
+  assert.equal(second.alive, true);
+  assert.equal(g.projectiles.length, 0);
+});
+test("power items rise out of a block before they can move or be collected", () => {
+  const g = fresh();
+  floorFixture(g);
+  g.level.map[9][4] = 3;
+  g.level.items["4:9"] = "power";
+  g.hitBlock(4, 9);
+  const item = g.powerups[0], p = g.player();
+  assert.equal(item.y, 144);
+  const x = item.x;
+  p.x = item.x; p.y = 128; p.vx = p.vy = 0;
+  for (let i = 0; i < 32; i++) {
+    g.updateItems();
+    assert.equal(item.alive, true, "cannot collect an emerging mushroom");
+    assert.equal(item.x, x);
+    assert.equal(p.power, 0);
+  }
+  assert.equal(item.y, 128);
+  assert.equal(item.emergeTicks, 0);
+  g.updateItems();
+  assert.equal(item.alive, false);
+  assert.equal(p.power, 1);
+});
+test("large characters enter bonus rooms above supported ground and all flag exits have clear castle approaches", () => {
+  const g = fresh();
+  g.setPower(1);
+  g.enterBonus(g.level.pipes.find((pipe) => pipe.bonus));
+  assert.equal(g.player().y + g.player().h, 208);
+  assert.equal(g.clearBody(g.player().x, g.player().y, g.player().w, g.player().h), true);
+  for (let stage = 0; stage < 32; stage++) {
+    const level = Game.buildCourse(stage);
+    if (!level.flag) continue;
+    for (let x = level.flag.x / 16; x < level.map[0].length; x++) {
+      assert(level.map.slice(3, 13).every((row) => row[x] === 0), "clear exit in stage " + stage);
+      assert.equal(level.map[13][x], 1);
+    }
+  }
+});
+test("repeated clear requests do not duplicate a two-player stage reward or steal the active turn", () => {
+  const g = new Game();
+  g.selectedPlayers = 2; g.begin();
+  const p = touchGoal(g, 211, 100), other = JSON.stringify(g.players[1]);
+  const sequence = g.clearSequence;
+  g.finishStage(); g.finishStage();
+  assert.equal(g.clearSequence, sequence);
+  for (let frames = 0; p.stageIndex === 0 && frames < 600; frames++) g.tick([pad(), pad(2)]);
+  assert.equal(p.stageIndex, 1);
+  assert.equal(p.score, 2000 + 211 * 50 + 500);
+  assert.equal(g.activePlayer, 1);
+  assert.equal(JSON.stringify(g.players[1]), other);
+});
+
+test("enemy placement stride does not accidentally exclude Koopas from worlds three and six", () => {
+  for (const stage of [8, 9, 10, 20, 21, 22]) {
+    const course = Game.buildCourse(stage);
+    assert(course.enemies.some((e) => e.type === "koopa"), "mixed enemies in " + course.label);
+    assert(course.enemies.some((e) => e.type === "goomba"), "mixed enemies in " + course.label);
+  }
 });

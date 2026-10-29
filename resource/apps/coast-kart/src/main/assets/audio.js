@@ -88,6 +88,8 @@
       if (e.type === "item") self.tone(880, 0.18, 0.45, "sine");
       else if (e.type === "drift" || e.type === "boost" || e.type === "draft")
         self.tone(650, 0.28, 0.5, "triangle");
+      else if (e.type === "block") self.tone(1174, 0.18, 0.5, "sine");
+      else if (e.type === "warning") self.tone(330, 0.16, 0.35, "square");
       else if (e.type === "hit") self.tone(90, 0.2, 0.5, "sawtooth");
       else if (e.type === "lap" || e.type === "finish")
         self.tone(1046, 0.5, 0.4, "triangle");

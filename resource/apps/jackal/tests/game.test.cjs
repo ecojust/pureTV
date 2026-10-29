@@ -76,6 +76,34 @@ test("all six recovered maps preserve tile/collision dimensions, event counts an
   assert.equal(first.events[0].x, 256);
   assert.equal(first.events[0].source_type, 1);
 });
+
+test("stage 3 map events select long screen-7 and short screen-8 laser beams with matching charge endpoints", () => {
+  const events = DATA.stages[2].events.filter((event) => event.source_type === 0x38);
+  assert.deepEqual(events.map((event) => event.source_page), [7, 8]);
+  for (const [index, event] of events.entries()) {
+    const g = ready(1, 3);
+    quiet(g);
+    g.spawnEvents = [event];
+    g.eventIndex = 0;
+    g.commandIndex = 0;
+    g.cameraY = g.worldHeight - event.distance;
+    g.cameraX = 128;
+    g.processSpawns();
+    const laser = g.enemies.find((actor) => actor.sourceType === 0x38);
+    assert.ok(laser, 'the actual stage spawn record reaches the enemy system');
+    assert.equal(laser.data.short, index === 1);
+    const y = laser.y;
+    ticks(g, 1);
+    const flashes = g.enemies.filter((actor) => actor.sourceType === 0x0d);
+    const offset = index === 1 ? 56 : 64;
+    assert.deepEqual(flashes.map((actor) => actor.y).sort((a, b) => a - b), [y - offset, y + offset]);
+    assert.equal(laser.contact, false, 'warning flashes precede the dangerous beam');
+    ticks(g, 32);
+    assert.equal(laser.contact, true);
+    assert.equal(laser.frameId, index === 1 ? 0x60 : 0x5f);
+    assert.equal(laser.y, y, 'scrolling does not change the selected beam or its world anchor');
+  }
+});
 test("Start/Select choose original one/two-player mode and five lives, A does not bypass title", () => {
   const g = new JackalGame();
   ticks(g, 1, [input(1, { a: true })]);

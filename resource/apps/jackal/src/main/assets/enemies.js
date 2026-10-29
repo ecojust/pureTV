@@ -419,7 +419,12 @@
         a.state = "next-laser";
         a.timer = 1;
         d.position = Math.floor(this.random() * 4) % 3;
-        d.short = !!d.shortLaser;
+        // Bank6 Level3LaserState0 selects the long beam on source screen 7
+        // and the short beam on screen 8. Map events retain that screen index;
+        // do not infer it from a camera that may already have scrolled onward.
+        d.short = d.shortLaser != null
+          ? !!d.shortLaser
+          : d.source_page != null && Number(d.source_page) !== 7;
         a.halfWidth = 12;
         a.halfHeight = d.short ? 46 : 54;
         a.visible = false;

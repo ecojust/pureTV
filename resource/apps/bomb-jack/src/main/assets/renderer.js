@@ -299,10 +299,14 @@
       if (!b.collected) this.bomb(b.x, b.y, r.flame === b.id, g.tick);
     }
     for (var ei = 0; ei < r.enemies.length; ei++) {
-      if (r.enemies[ei].alive) this.enemy(r.enemies[ei], g.tick);
+      if (r.enemies[ei].alive && (!r.enemies[ei].reformTicks || g.tick % 8 < 4))
+        this.enemy(r.enemies[ei], g.tick);
     }
-    for (var ii = 0; ii < r.items.length; ii++)
-      if (!r.items[ii].taken) this.coin(r.items[ii].x, r.items[ii].y);
+    for (var ii = 0; ii < r.items.length; ii++) {
+      var item = r.items[ii];
+      if (!item.taken && (!item.enemy || item.ticks > 90 || g.tick % 8 < 4))
+        this.coin(item.x, item.y);
+    }
     if (!p.invulnerable || Math.floor(g.tick / 5) % 2 === 0)
       this.jack(p.x - 1, p.y, p, g.tick, 1);
     if (r.kind === "torture")

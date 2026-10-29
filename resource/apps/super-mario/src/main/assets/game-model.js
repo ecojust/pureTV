@@ -646,7 +646,7 @@
       };
     }
     if (type !== "water") {
-      for (var ex = 22; ex < r.width - 28; ex += 15 + (world % 3)) {
+      for (var ex = 22, enemyIndex = 0; ex < r.width - 28; ex += 15 + (world % 3), enemyIndex++) {
         if (
           r.pits.some(function (g) {
             return ex >= g[0] - 2 && ex < g[0] + g[1] + 2;
@@ -663,7 +663,7 @@
           type:
             world >= 7 && ex % 3 === 0
               ? "hammerbro"
-              : (ex + world) % 3 === 0
+              : (enemyIndex + world) % 3 === 0
                 ? "koopa"
                 : type === "underground" && ex % 2 === 0
                   ? "buzzy"
@@ -673,6 +673,13 @@
           red: world > 2,
         });
       }
+    }
+    // The pole and castle need a level forecourt. Some long staircase recipes
+    // previously overlapped this final stretch, trapping the automatic walk.
+    for (var exitX = r.width - 12; exitX < r.width; exitX++) {
+      for (var exitY = 3; exitY < 13; exitY++) tile(exitX, exitY, 0);
+      tile(exitX, 13, 1);
+      tile(exitX, 14, 1);
     }
     return {
       index: index,
@@ -722,6 +729,7 @@
     this.time = 400;
     this.timeTicks = 0;
     this.clearTicks = 0;
+    this.clearSequence = null;
     this.bannerTicks = 0;
     this.bonusReturn = null;
     this.winner = 0;
@@ -805,6 +813,7 @@
     this.particles = [];
     this.cameraX = 0;
     this.clearTicks = 0;
+    this.clearSequence = null;
     this.time = this.level.time;
     this.timeTicks = 0;
     this.bonusReturn = null;
@@ -932,10 +941,107 @@
     this.last[this.activePlayer - 1] = neutral();
   };
   MarioGame.prototype.finishStage = function () {
-    if (this.clearTicks || this.phase !== "playing") return;
-    this.clearTicks = 150;
-    this.player().invulnerable = 999;
+    if (this.clearTicks || this.phase !== "playing" || (!this.level.flag && !this.level.axe)) return;
+    var p = this.player(), flag = this.level.flag, lastDigit = this.time % 10;
+    this.clearTicks = 1;
+    this.clearSequence = {
+      kind: flag ? "flag" : "axe",
+      phase: flag ? "slide" : this.enemies.some(function (e) { return e.type === "bowser" && e.alive; }) ? "bridge" : "walk",
+      ticks: 0,
+      flagY: flag ? flag.y + 6 : 0,
+      bridgeRemoved: 0,
+      fireworks: flag && (lastDigit === 1 || lastDigit === 3 || lastDigit === 6) ? lastDigit : 0,
+      fired: 0,
+      bursts: [],
+      hidden: false,
+    };
+    p.invulnerable = 999;
+    p.vx = p.vy = 0;
+    p.facing = 1;
+    p.crouching = false;
+    p.y += p.h - (p.power ? 30 : 16);
+    p.h = p.power ? 30 : 16;
+    // Normal goal collisions and the documented lifecycle fixture share the
+    // same safe entry point. A fixture must not auto-walk an entire course.
+    if (flag) {
+      p.x = flag.x - p.w;
+      p.y = clamp(p.y, flag.y, 192 - p.h);
+      p.grounded = false;
+    } else {
+      p.x = this.level.axe.x + 4;
+      p.y = 208 - p.h;
+      p.grounded = true;
+    }
+    this.projectiles = [];
+    this.cameraX = this.clearSequence.phase === "bridge"
+      ? clamp(p.x - 184, 0, Math.max(0, this.level.width - 256))
+      : Math.max(this.cameraX, Math.min(p.x - 104, this.level.width - 256));
     this.emit("clear");
+  };
+  MarioGame.prototype.updateClear = function () {
+    var c = this.clearSequence, p = this.player(), game = this;
+    this.clearTicks++;
+    c.ticks++;
+    c.bursts.forEach(function (b) { b.age++; });
+    c.bursts = c.bursts.filter(function (b) { return b.age < 30; });
+    if (c.phase === "slide") {
+      p.y = Math.min(192 - p.h, p.y + 2);
+      c.flagY = Math.min(178, c.flagY + 2);
+      if (p.y + p.h >= 192 && c.flagY >= 178) {
+        c.phase = "walk";
+        c.ticks = 0;
+        p.x = this.level.flag.x + 4;
+      }
+    } else if (c.phase === "bridge") {
+      if (c.ticks % 4 === 0 && c.bridgeRemoved < 15) {
+        this.level.map[12][this.level.bridgeStart + 14 - c.bridgeRemoved] = 0;
+        c.bridgeRemoved++;
+        this.emit("bridge");
+      }
+      this.enemies.forEach(function (e) {
+        if (e.type !== "bowser" || !e.alive) return;
+        e.vx = 0;
+        e.vy = Math.min(6, e.vy + 0.25);
+        game.moveActor(e, false);
+        e.falling = !e.grounded;
+        if (e.y > 248) e.alive = false;
+      });
+      if (c.bridgeRemoved === 15 && !this.enemies.some(function (e) { return e.type === "bowser" && e.alive; })) {
+        c.phase = "walk";
+        c.ticks = 0;
+      }
+    } else if (c.phase === "walk") {
+      var destination = c.kind === "flag" ? this.level.castleX + 24 : this.level.goal + 64;
+      p.vx = 1.1;
+      p.vy = Math.min(6, p.vy + 0.3);
+      this.moveActor(p, false);
+      if (p.x >= destination) {
+        p.x = destination;
+        p.vx = p.vy = 0;
+        c.hidden = c.kind === "flag";
+        c.phase = "tally";
+        c.ticks = 0;
+      }
+    } else if (c.phase === "tally") {
+      var bonus = Math.min(10, this.time);
+      this.time -= bonus;
+      this.score(bonus * 50);
+      if (!this.time) { c.phase = "fireworks"; c.ticks = 0; }
+    } else if (c.phase === "fireworks") {
+      if (c.fired < c.fireworks && c.ticks % 24 === 1) {
+        var places = [[8, 96], [36, 64], [0, 80], [28, 110], [16, 52], [46, 88]];
+        var place = places[c.fired++];
+        c.bursts.push({ x: this.level.castleX + place[0], y: place[1], age: 0 });
+        this.score(500);
+        this.emit("firework");
+      }
+      if (c.fired === c.fireworks && !c.bursts.length && c.ticks > 30) {
+        this.clearTicks = 0;
+        this.clearSequence = null;
+        this.nextStage();
+      }
+    }
+    if (this.clearTicks && c.phase !== "bridge") this.cameraX = clamp(Math.max(this.cameraX, p.x - 104), 0, Math.max(0, this.level.width - 256));
   };
   MarioGame.prototype.nextStage = function () {
     var p = this.player();
@@ -975,7 +1081,9 @@
         this.powerups.push({
           type: type,
           x: tx * 16 + 1,
-          y: ty * 16 - 16,
+          y: ty * 16,
+          emergeTicks: 32,
+          blockY: ty * 16,
           w: 14,
           h: 16,
           vx: type === "flower" ? 0 : 1,
@@ -1115,7 +1223,7 @@
     this.powerups = [];
     this.projectiles = [];
     p.x = 32;
-    p.y = 192;
+    p.y = 208 - p.h;
     p.vx = p.vy = 0;
     this.cameraX = 0;
     this.emit("pipe");
@@ -1246,22 +1354,13 @@
       return;
     }
     if (this.level.axe && overlap(p, this.level.axe)) {
-      for (
-        var bx = this.level.bridgeStart;
-        bx < this.level.bridgeStart + 15;
-        bx++
-      )
-        this.level.map[12][bx] = 0;
-      this.enemies.forEach(function (e) {
-        if (e.type === "bowser") e.alive = false;
-      });
       this.score(5000);
       this.finishStage();
     } else if (this.level.flag && p.x + p.w >= this.level.flag.x) {
-      this.score(p.y < 80 ? 5000 : p.y < 128 ? 2000 : p.y < 176 ? 800 : 100);
+      this.score(p.y < 80 ? 5000 : p.y < 128 ? 2000 : p.y < 160 ? 800 : p.y < 184 ? 400 : 100);
       this.finishStage();
     }
-    this.cameraX = clamp(
+    if (!this.clearTicks) this.cameraX = clamp(
       Math.max(this.cameraX, p.x - 104),
       0,
       Math.max(0, this.level.width - 256),
@@ -1427,6 +1526,11 @@
       p = this.player();
     this.powerups.forEach(function (item) {
       if (!item.alive) return;
+      if (item.emergeTicks > 0) {
+        item.y -= 0.5;
+        item.emergeTicks--;
+        return; // Emerging items cannot move sideways or be collected yet.
+      }
       if (item.type !== "flower") {
         item.vy = Math.min(5, item.vy + 0.24);
         var vx = item.vx;
@@ -1456,28 +1560,33 @@
     });
     this.projectiles.forEach(function (shot) {
       shot.life--;
+      if (shot.life <= 0) return;
+      var oldBottom = shot.y + shot.h;
       shot.x += shot.vx;
+      var edgeX = shot.x + (shot.vx > 0 ? shot.w : 0);
+      // Resolve side walls before vertical motion. A low side impact must not
+      // snap a fireball up onto a brick's top surface.
+      if (game.isSolid(edgeX, shot.y + 1) || game.isSolid(edgeX, shot.y + shot.h - 1)) {
+        shot.life = 0;
+        return;
+      }
       if (shot.type === "hammer") shot.vy += 0.18;
       if (shot.type === "fire") shot.vy = Math.min(4, shot.vy + 0.24);
       shot.y += shot.vy;
-      if (shot.type === "fire" && game.isSolid(shot.x + 3, shot.y + 6)) {
-        shot.y = Math.floor((shot.y + 6) / 16) * 16 - 6;
-        shot.vy = -3.2;
-      }
-      if (
-        game.isSolid(shot.x + (shot.vx > 0 ? shot.w : 0), shot.y + 2) ||
-        shot.y > 250
-      )
-        shot.life = 0;
+      if (shot.type === "fire") {
+        if (shot.vy >= 0 && (game.isSolid(shot.x + 1, shot.y + shot.h) || game.isSolid(shot.x + shot.w - 1, shot.y + shot.h))) {
+          var top = Math.floor((shot.y + shot.h) / 16) * 16;
+          if (oldBottom <= top + 0.01) { shot.y = top - shot.h; shot.vy = -3.2; }
+          else shot.life = 0;
+        } else if (shot.vy < 0 && (game.isSolid(shot.x + 1, shot.y) || game.isSolid(shot.x + shot.w - 1, shot.y))) shot.life = 0;
+      } else if (game.isSolid(edgeX, shot.y + 2)) shot.life = 0;
+      if (shot.y > 250) shot.life = 0;
+      if (shot.life <= 0) return;
       if (shot.owner === "player") {
         game.enemies.forEach(function (e) {
-          if (
-            e.alive &&
-            e.type !== "firebar" &&
-            e.type !== "buzzy" &&
-            overlap(shot, e)
-          ) {
+          if (shot.life > 0 && e.alive && e.type !== "firebar" && overlap(shot, e)) {
             shot.life = 0;
+            if (e.type === "buzzy") { game.emit("bump"); return; }
             e.hp--;
             if (e.hp <= 0) {
               e.alive = false;
@@ -1576,15 +1685,7 @@
         });
         if (this.bannerTicks) this.bannerTicks--;
         if (this.clearTicks) {
-          this.clearTicks--;
-          var winner = this.player();
-          winner.x += 0.8;
-          if (this.time > 0) {
-            var bonus = Math.min(10, this.time);
-            this.time -= bonus;
-            this.score(bonus * 50);
-          }
-          if (!this.clearTicks) this.nextStage();
+          this.updateClear();
         } else {
           if (++this.timeTicks >= 24) {
             this.timeTicks = 0;
@@ -1592,7 +1693,7 @@
             if (!this.time) this.loseLife("time");
           }
           this.updatePlayer(input, last);
-          if (!this.player().dying) {
+          if (!this.player().dying && !this.clearTicks) {
             this.updateEnemies();
             this.updateItems();
           }

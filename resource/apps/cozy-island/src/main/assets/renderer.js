@@ -522,6 +522,20 @@
           "#a58564",
           2,
         );
+      if (p.tool === "net") {
+        var reach = p.netSwing > 0 ? 1.2 : p.netRaised ? 0.85 : 0.45,
+          tip = this.point(p.x + p.facing.x * reach, p.y + p.facing.y * reach),
+          lift = p.netSwing > 0 ? 6 : p.netRaised ? 28 : 18,
+          c = this.ctx;
+        this.line([{ x: q.x + 4, y: q.y - 10 }, { x: tip.x, y: tip.y - lift }], "#ac8862", 2);
+        c.save(); c.strokeStyle = p.netRaised ? "#fff1bd" : "#e5ead6"; c.lineWidth = 2;
+        c.beginPath(); c.ellipse(tip.x, tip.y - lift, 9, 7, -0.4, 0, Math.PI * 2); c.stroke();
+        c.lineWidth = 0.7;
+        for (var mesh = -4; mesh <= 4; mesh += 4) {
+          c.beginPath(); c.moveTo(tip.x - 7, tip.y - lift + mesh); c.lineTo(tip.x + 7, tip.y - lift + mesh); c.stroke();
+        }
+        c.restore();
+      }
       if (p.fishing) {
         var float = this.point(22.1, 10.5 + p.id * 0.55),
           biting = p.fishing.phase === "bite",
@@ -542,6 +556,21 @@
         p.id === 1 ? "#dc8d7e" : "#669bb9",
       );
       this.text(p.id + "P", q.x, q.y - s * 1.85 + 7, 9, "#fff", "center");
+    }
+    insect(insect, time) {
+      var species = W.insects.find(function (s) { return s.id === insect.id; }),
+        q = this.point(insect.x, insect.y),
+        lift = species.fly ? 13 + Math.sin(time * 5 + insect.offset) * 3 : 2,
+        wing = 3 + Math.abs(Math.sin(time * 13 + insect.offset)) * 4;
+      this.ellipse(q.x, q.y + 1, 5, 2, "rgba(67,92,67,.18)");
+      if (species.id === "eveningFirefly") this.ellipse(q.x, q.y - lift, 13, 13, "rgba(255,240,137,.23)");
+      if (species.fly) {
+        this.ellipse(q.x - 4, q.y - lift - 1, wing, 4, species.color);
+        this.ellipse(q.x + 4, q.y - lift - 1, wing, 4, species.color);
+      }
+      this.ellipse(q.x, q.y - lift, species.fly ? 2 : 5, species.fly ? 5 : 6, species.fly ? "#62735f" : species.color);
+      this.ellipse(q.x, q.y - lift - 5, 2.2, 2, "#52634e");
+      if (insect.phase === "fleeing") this.text("!", q.x, q.y - lift - 19, 15, "#d48b65", "center");
     }
     flower(x, y, index) {
       var p = this.point(x, y),
@@ -669,6 +698,8 @@
         .forEach((d) =>
           objects.push({ depth: d.x + d.y, draw: () => this.furniture(d) }),
         );
+      game.insects.filter((insect) => game.insectVisible(insect)).forEach((insect) =>
+        objects.push({ depth: insect.x + insect.y + 0.1, draw: () => this.insect(insect, game.elapsed) }));
       game.players
         .filter(function (p) {
           return p.joined && p.location === "island";
@@ -886,6 +917,7 @@
         decorate: ["布置小岛", "Decorate"],
         tasks: ["居民任务与指南", "Requests + guide"],
         journal: ["鱼类图鉴", "Fish journal"],
+        insectJournal: ["昆虫图鉴", "Insect journal"],
         mira: ["米拉 · 花园朋友", "Mira · garden friend"],
         pip: ["皮普 · 海边朋友", "Pip · seaside friend"],
         upgrade: ["升级小屋", "Upgrade home"],
@@ -1070,7 +1102,7 @@
                 "P · " +
                 (p.tool === "rod"
                   ? game.tr("钓竿", "Fishing rod")
-                  : game.tr("空手", "Hands")) +
+                  : p.tool === "net" ? game.tr("捕虫网", "Bug net") : game.tr("空手", "Hands")) +
                 "  ·  " +
                 CozyIslandGame.inventoryCount(p.inventory) +
                 "/24",
@@ -1080,6 +1112,9 @@
               p.id === 1 ? "#b27e6d" : "#6f9cb4",
             );
             var message = p.messageTime > 0 ? p.message : "";
+            if (!message && p.tool === "net") message = p.netRaised
+              ? game.tr("轻轻靠近，面向昆虫后松开 A 挥网。", "Sneak close; face the insect and release A to swing.")
+              : game.tr("按住 A 举网慢走，松开挥网；跑近会惊走昆虫。", "Hold A to sneak, release to swing. Running scares insects.");
             if (!message) {
               var target = game.nearby(p);
               message = target
@@ -1088,8 +1123,8 @@
                     ? game.itemName(target.item)
                     : target[game.language])
                 : game.tr(
-                    "B 背包与指南 · SELECT 切换钓竿",
-                    "B bag + guide · SELECT fishing rod",
+                    "B 背包与指南 · SELECT 空手 / 钓竿 / 网",
+                    "B bag + guide · SELECT hands / rod / net",
                   );
             }
             this.wrap(message, x + 16, 491, 418, 13, "#657e70", 2);

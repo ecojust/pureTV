@@ -345,3 +345,49 @@ test("green power converts a transformed hunter into a collectible coin", () => 
   assert.equal(g.room.items.length, 1);
   assert.equal(g.room.items[0].x, mummy.x);
 });
+
+test("green coins expire after five active seconds; collected enemies stay removed", () => {
+  const g = start(), p = g.player;
+  p.mightyCoins = 3;
+  g.usePower(); g.usePower(); g.usePower();
+  const collected = g.room.items[0], missed = g.room.items[1];
+  p.x = collected.x; p.y = collected.y; p.vy = 0;
+  tick(g);
+  assert.equal(collected.taken, true);
+  assert.equal(p.mightyCoins, 1);
+  p.x = 2; p.y = 184; p.vy = 0;
+  tick(g, {}, 298);
+  assert.equal(missed.ticks, 1);
+  assert.equal(missed.enemy.alive, false);
+  // Expiry under Jack must show reformation rather than an unavoidable hit.
+  p.x = missed.x; p.y = missed.y; p.vy = 0; p.invulnerable = 0;
+  const lives = p.lives;
+  tick(g);
+  assert.equal(missed.taken, true);
+  assert.equal(missed.enemy.alive, true);
+  assert.ok(missed.enemy.reformTicks > 0);
+  assert.equal(p.lives, lives);
+  assert.equal(collected.enemy.alive, false);
+  assert.equal(p.mightyCoins, 1, "expired coins cannot be picked up");
+});
+
+test("green refresh extends existing coins without duplicates; pause freezes their window", () => {
+  const g = start(true), p = g.player;
+  p.mightyCoins = 4;
+  g.usePower(); g.usePower(); g.usePower();
+  const coins = g.room.items, count = coins.length;
+  tick(g, {}, 200, neutral(2));
+  g.usePower();
+  assert.equal(g.room.items.length, count);
+  assert.ok(coins.every(c => c.ticks === 300));
+  tick(g, { start: true }, 1, neutral(2));
+  tick(g, {}, 360, neutral(2));
+  assert.ok(coins.every(c => c.ticks === 300));
+  tick(g, { start: true }, 1, neutral(2));
+  assert.ok(coins.every(c => c.ticks === 299));
+  const secondRoom = g.players[1].room;
+  g.loseLife("enemy");
+  assert.equal(g.activePlayer, 2);
+  assert.equal(g.room, secondRoom);
+  assert.equal(g.room.items.length, 0, "the other player does not inherit converted enemies");
+});

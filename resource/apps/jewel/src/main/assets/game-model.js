@@ -42,7 +42,7 @@
   }
   function neutral() { return { connected:false,x:0,y:0,a:false,b:false,start:false,select:false }; }
   function player(id) {
-    return { id:id, joined:false, alive:false, connected:false, board:rows(HEIGHT), hidden:rows(HIDDEN), active:null, next:[1,2,3], score:0, level:0, speedLevel:0, cleared:0, chain:0, clearCells:[], clearTicks:0, gravityMoves:[], gravityTicks:0, gravityDuration:0, status:'waiting', seq:0, streak:0, pendingMagic:0, levelCleared:0, last:neutral(), input:neutral(), dx:0, das:0, fall:0, softArmed:false, lastLockY:12, dropMatched:false };
+    return { id:id, joined:false, alive:false, connected:false, board:rows(HEIGHT), hidden:rows(HIDDEN), active:null, next:[1,2,3], score:0, level:0, speedLevel:0, cleared:0, chain:0, clearCells:[], clearTicks:0, gravityMoves:[], gravityTicks:0, gravityDuration:0, status:'waiting', seq:0, streak:0, pendingMagic:0, levelCleared:0, last:neutral(), input:neutral(), dx:0, das:0, fall:0, softArmed:false, lastLockY:12, dropMatched:false, resolvingMagic:false };
   }
   function JewelGame(options) {
     options = options || {};
@@ -98,17 +98,23 @@
   };
   JewelGame.prototype.finishDrop = function (p) {
     p.streak = p.dropMatched ? Math.min(9,p.streak+1) : Math.max(0,p.streak-2);
-    while (p.levelCleared >= 70) { p.levelCleared -= 70; p.level++; p.pendingMagic++; this.emit('level',p); }
-    if (p.hidden.some(function (row) { return row.some(Boolean); })) { this.topOut(p); return; }
+    // The stage's speed/palette changes after the magic column's entire
+    // clear/cascade resolves, not when it first touches the stack.
+    if (p.resolvingMagic) { p.speedLevel = p.level; p.resolvingMagic = false; }
+    // Classic play awards one level per resolved column. Excess jewels remain
+    // banked for the next magic column, instead of jumping several speeds now.
+    if (p.levelCleared >= 70) { p.levelCleared -= 70; p.level++; p.pendingMagic++; this.emit('level',p); }
+    // The magic reward precedes the hidden-row loss check. With a clear spawn
+    // column, that earned magic column can rescue another overfilled column.
+    if (!p.pendingMagic && p.hidden.some(function (row) { return row.some(Boolean); })) { this.topOut(p); return; }
     this.spawn(p);
   };
   JewelGame.prototype.lock = function (p) {
     var active = p.active, board = fullBoard(p), targetY = active.y + 3 + HIDDEN;
     var target = targetY < board.length ? board[targetY][active.x] : 0;
     for (var i = 0; i < 3; i++) board[active.y+i+HIDDEN][active.x] = active.colors[i];
-    p.lastLockY = active.y+2; p.active = null; this.emit('land',p);
+    p.lastLockY = active.y+2; p.resolvingMagic = active.magic; p.active = null; this.emit('land',p);
     if (active.magic) {
-      p.speedLevel = p.level;
       var cells = [];
       for (var y=0;y<board.length;y++) for(var x=0;x<WIDTH;x++) if (board[y][x] === 7 || (target > 0 && target < 7 && board[y][x] === target)) cells.push({x:x,y:y});
       this.markClear(p,cells);

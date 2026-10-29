@@ -505,11 +505,39 @@
     );
   };
   AdventureRenderer.prototype.world = function (game) {
-    this.background(game);
-    this.terrain(game);
+    if (game.level.bonus) {
+      this.rect(0, 30, 256, 210, "#5298c7");
+      this.cloud(30 - (game.cameraX * 0.1 % 300), 56);
+      this.cloud(186 - (game.cameraX * 0.15 % 300), 94);
+    } else {
+      this.background(game);
+      this.terrain(game);
+    }
     var self = this,
       r = this.rect.bind(this),
       cam = game.cameraX;
+    if (game.level.bonus) {
+      game.level.ground.concat(game.level.platforms).forEach(function (floor) {
+        self.ctx.save();
+        self.ctx.beginPath();
+        self.ctx.rect(floor.x - cam, floor.y - 12, floor.w, 32);
+        self.ctx.clip();
+        for (var x = floor.x; x < floor.x + floor.w; x += 32)
+          self.cloud(x - cam, floor.y - 12);
+        self.ctx.restore();
+      });
+      this.text("BONUS  FRUIT 500", 75, 34, "#fff3b8");
+      this.text("FALL TO RETURN", 80, 228, "#fff3b8");
+    }
+    var cloud = game.level.cloud;
+    if (cloud && cloud.rising) {
+      this.cloud(game.current().x - cam - 17, game.current().y + game.current().h - 12);
+    } else if (cloud && !cloud.used && (cloud.hint || cloud.wait > 30)) {
+      // A brief glint identifies where a thrown weapon disappeared.
+      var sparkleY = 177 + Math.floor(Math.sin(game.frame * 0.2) * 3);
+      r(cloud.x + 10 - cam, sparkleY, 4, 1, "#fff3b8");
+      r(cloud.x + 11 - cam, sparkleY - 1, 1, 4, "#fff3b8");
+    }
     game.level.items.forEach(function (item) {
       if (!item.taken && item.x > cam - 16 && item.x < cam + 260)
         self.fruit(item.type, item.x - cam, item.y, game.frame);
@@ -568,16 +596,13 @@
     });
     if (game.level.boss)
       this.boss(game.level.boss, cam, game.level.world, game.frame);
-    var goal = game.level.goalX - cam;
-    r(goal + 13, 154, 3, 46, "#e4d6a2");
-    r(
-      goal + 16,
-      154,
-      20,
-      13,
-      game.level.boss && game.level.boss.alive ? "#c46b5c" : "#82ce66",
-    );
-    this.text("GO", goal + 19, 157, "#213a37");
+    if (!game.level.bonus) {
+      var goal = game.level.goalX - cam;
+      r(goal + 13, 154, 3, 46, "#e4d6a2");
+      r(goal + 16, 154, 20, 13,
+        game.level.boss && game.level.boss.alive ? "#c46b5c" : "#82ce66");
+      this.text("GO", goal + 19, 157, "#213a37");
+    }
     var p = game.current();
     if (
       !game.transition ||

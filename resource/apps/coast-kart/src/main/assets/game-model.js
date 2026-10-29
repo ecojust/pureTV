@@ -113,6 +113,12 @@
       rank: id,
       item: null,
       itemSerial: 0,
+      heldItem: false,
+      itemButton: false,
+      itemAim: 1,
+      itemHeldTime: 0,
+      blockFlash: 0,
+      incoming: false,
       boost: 0,
       shield: 0,
       stun: 0,
@@ -230,6 +236,12 @@
       this.phase = "paused";
       this.pauseReason = reason || "manual";
       this.manualPause = this.pauseReason === "manual";
+      // Require a neutral A after resume. A new press made while paused (or
+      // while disconnected) must not activate an item in the reconnect frame.
+      this.racers.forEach(function (p) {
+        p.heldItem = false;
+        p.itemButton = p.human;
+      });
       this.emit("pause");
     }
   };
@@ -257,19 +269,31 @@
       -1,
       1,
     );
+    var self = this,
+      ahead = this.racers.some(function (r) {
+        var gap = mod(r.s - p.s, self.track.length);
+        return r !== p && !r.finished && gap > 0 && gap < 650 && Math.abs(r.x - p.x) < 0.4;
+      }),
+      behind = this.racers.some(function (r) {
+        var gap = mod(p.s - r.s, self.track.length);
+        return r !== p && !r.finished && gap > 0 && gap < 300 && Math.abs(r.x - p.x) < 0.4;
+      }),
+      aim = p.item === "trap" ? (ahead && !behind ? 1 : -1) : (behind && !ahead ? -1 : 1),
+      defending = this.rearThreat(p, 400);
     return {
       id: p.id,
       connected: true,
       x: steering,
-      y: Math.abs(bend) > 0.9 && p.speed > 151 ? 0.28 : 0,
-      a: p.item && p.aiTimer < 0,
+      y: p.heldItem && p.itemHeldTime > 0.2 ? -aim * 0.65 : Math.abs(bend) > 0.9 && p.speed > 151 ? 0.28 : 0,
+      a: p.heldItem ? p.itemHeldTime < (defending ? 1.3 : 0.4) : !!p.item && p.aiTimer < 0,
       b: Math.abs(bend) > 0.32 && Math.abs(bend) < 1.18,
     };
   };
-  CoastKartGame.prototype.useItem = function (p) {
-    if (!p.item || p.finished) return;
+  CoastKartGame.prototype.useItem = function (p, direction) {
+    if (!p.item || p.finished || this.selectedMode === "time") return;
     var item = p.item;
     p.item = null;
+    p.heldItem = false;
     p.aiTimer = 1.3 + this.random() * 2;
     if (item === "boost") p.boost = Math.max(p.boost, 2.2);
     if (item === "shield") p.shield = 5;
@@ -277,21 +301,112 @@
       this.items.push({
         type: "trap",
         owner: p.id,
-        s: mod(p.s - 65, this.track.length),
+        s: mod(p.s + (direction === 1 ? 80 : -65), this.track.length),
         x: p.x,
         life: 18,
-        speed: 0,
+        speed: direction === 1 ? 210 : 0,
+        flight: direction === 1 ? 0.65 : 0,
       });
     if (item === "pulse")
       this.items.push({
         type: "pulse",
         owner: p.id,
-        s: mod(p.s + 55, this.track.length),
+        s: mod(p.s + (direction === -1 ? -55 : 55), this.track.length),
         x: p.x,
         life: 5,
-        speed: 300,
+        speed: direction === -1 ? -260 : 300,
       });
     this.emit(item, p.id);
+  };
+  CoastKartGame.prototype.controlItem = function (p, input, dt) {
+    if (p.finished || p.stun > 0 || p.recover > 0 || this.selectedMode === "time") {
+      p.heldItem = false;
+      p.itemButton = !!input.a;
+      return;
+    }
+    if (input.a && !p.itemButton && p.item) {
+      if (p.item === "pulse" || p.item === "trap") {
+        p.heldItem = true;
+        p.itemHeldTime = 0;
+        p.itemAim = p.item === "trap" ? -1 : 1;
+      } else this.useItem(p);
+    }
+    if (p.heldItem) {
+      p.itemHeldTime += dt;
+      if (input.y < -0.45) p.itemAim = 1;
+      else if (input.y > 0.45) p.itemAim = -1;
+      if (!input.a) this.useItem(p, p.itemAim);
+    }
+    p.itemButton = !!input.a;
+  };
+  CoastKartGame.prototype.pickItem = function (p) {
+    var rank = (p.rank - 1) / Math.max(1, this.racers.length - 1),
+      // Leaders get defensive tools; the chasing pack gets more speed/attacks.
+      pool = rank < 0.3 ? ["trap", "trap", "trap", "shield", "shield", "pulse", "boost"]
+        : rank > 0.65 ? ["boost", "boost", "boost", "pulse", "pulse", "shield", "trap"]
+          : ["boost", "shield", "trap", "pulse"];
+    p.itemSerial++;
+    return pool[Math.floor(this.random() * pool.length)];
+  };
+  CoastKartGame.prototype.rearThreat = function (p, range) {
+    var length = this.track.length;
+    return this.items.some(function (item) {
+      var behind = mod(p.s - item.s, length);
+      return item.owner !== p.id && item.type === "pulse" && item.speed > p.speed &&
+        behind > 0 && behind < range && Math.abs(item.x - p.x) < 0.35 && item.life > 0;
+    });
+  };
+  CoastKartGame.prototype.moveItems = function (dt) {
+    var self = this, length = this.track.length;
+    this.items.forEach(function (item) {
+      item.life -= dt;
+      var oldS = item.s, travel = item.speed * dt;
+      if (item.type === "trap" && item.flight > 0) {
+        travel = item.speed * Math.min(dt, item.flight);
+        item.flight = Math.max(0, item.flight - dt);
+        if (!item.flight) item.speed = 0;
+      }
+      item.s = mod(oldS + travel, length);
+      // Swept relative motion catches fast reverse shots and finish-line crossings.
+      function contact(p, offset, radius) {
+        var prior = p.stepS === undefined ? p.s : p.stepS,
+          from = mod(oldS - prior - offset + length / 2, length) - length / 2,
+          to = from + travel - (p.s - prior);
+        if (Math.abs(p.x - item.x) >= 0.27 || Math.min(from, to) > radius || Math.max(from, to) < -radius)
+          return null;
+        if (Math.abs(from) <= radius) return 0;
+        return ((from < 0 ? -radius : radius) - from) / (to - from);
+      }
+      var contacts = [];
+      self.racers.forEach(function (p) {
+        if (item.owner === p.id || p.finished) return;
+        var prior = p.stepS === undefined ? p.s : p.stepS,
+          rear = mod(oldS - prior + length / 2, length) - length / 2;
+        if (item.type === "pulse" && p.heldItem && rear < -30 && travel > p.s - prior) {
+          var guardAt = contact(p, -55, 24);
+          if (guardAt !== null) contacts.push({ p: p, at: guardAt, guard: true });
+        }
+        var bodyAt = contact(p, 0, 37);
+        if (bodyAt !== null) contacts.push({ p: p, at: bodyAt, guard: false });
+      });
+      contacts.sort(function (a, b) { return a.at - b.at || Number(b.guard) - Number(a.guard); });
+      if (item.life > 0 && contacts.length) {
+        var first = contacts[0], p = first.p;
+        if (first.guard) {
+          p.item = null;
+          p.heldItem = false;
+          p.blockFlash = 0.7;
+          self.emit("block", p.id);
+        } else self.hit(p);
+        item.life = 0;
+      }
+    });
+    this.items = this.items.filter(function (item) { return item.life > 0; });
+    this.racers.forEach(function (p) {
+      var incoming = !p.finished && self.rearThreat(p, 400);
+      if (incoming && !p.incoming) self.emit("warning", p.id);
+      p.incoming = incoming;
+    });
   };
   CoastKartGame.prototype.hit = function (p) {
     if (p.shield > 0) {
@@ -300,6 +415,8 @@
       return;
     }
     if (p.stun > 0 || p.finished) return;
+    if (p.heldItem) p.item = null;
+    p.heldItem = false;
     p.stun = 0.85;
     p.speed *= 0.43;
     p.drift = 0;
@@ -324,6 +441,7 @@
           this.emit("lap", p.id);
           if (p.lap > 3) {
             p.finished = true;
+            p.heldItem = false;
             p.finishTime = this.clock;
             p.speed = 0;
             this.resultOrder.push(p.id);
@@ -357,6 +475,7 @@
   CoastKartGame.prototype.drive = function (p, input, dt) {
     if (p.finished) return;
     p.aiTimer -= dt;
+    p.blockFlash = Math.max(0, p.blockFlash - dt);
     p.boost = Math.max(0, p.boost - dt);
     p.shield = Math.max(0, p.shield - dt);
     p.stun = Math.max(0, p.stun - dt);
@@ -425,9 +544,7 @@
           Math.abs(p.x - box.x) < 0.3 &&
           box.ready <= this.clock
         ) {
-          p.item = ["boost", "shield", "trap", "pulse"][
-            (p.itemSerial++ + p.id + this.trackIndex) % 4
-          ];
+          p.item = this.pickItem(p);
           box.ready = this.clock + 2.5;
           this.emit("item", p.id);
           break;
@@ -564,31 +681,11 @@
           this.updateDraft(dt);
           this.racers.forEach(function (p) {
             var input = p.human ? map[p.id] || blank(p.id) : self.aiInput(p);
-            var old = self.previous[p.id] || {};
-            if (input.a && (!p.human || !old.a)) self.useItem(p);
+            p.stepS = p.s;
+            self.controlItem(p, input, dt);
             self.drive(p, input, dt);
           });
-          this.items.forEach(function (item) {
-            item.life -= dt;
-            item.s = mod(item.s + item.speed * dt, self.track.length);
-            self.racers.forEach(function (p) {
-              var d =
-                mod(p.s - item.s + self.track.length / 2, self.track.length) -
-                self.track.length / 2;
-              if (
-                item.life > 0 &&
-                p.id !== item.owner &&
-                Math.abs(d) < 37 &&
-                Math.abs(p.x - item.x) < 0.27
-              ) {
-                self.hit(p);
-                item.life = 0;
-              }
-            });
-          });
-          this.items = this.items.filter(function (i) {
-            return i.life > 0;
-          });
+          this.moveItems(dt);
           for (var i = 0; i < this.racers.length; i++)
             for (var j = i + 1; j < this.racers.length; j++) {
               var a = this.racers[i],
@@ -659,6 +756,9 @@
           lap: Math.min(3, p.lap),
           rank: p.rank,
           item: p.item || "",
+          holding: p.heldItem,
+          itemAim: p.itemAim,
+          incoming: p.incoming,
           finished: p.finished,
         };
       }),

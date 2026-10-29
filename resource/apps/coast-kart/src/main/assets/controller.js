@@ -42,10 +42,10 @@
     "actionB": "DRIFT",
     "hint": "Auto accelerate · Hold B to drift, release to boost",
     "ready": "← → course · ↑ ↓ mode · SELECT players · START race",
-    "playing": "Race together. A uses your item; hold B through a corner.",
+    "playing": "A: hold a trap/pulse to guard, release to throw; ↑↓ aims. B: drift.",
     "paused": "Paused · SELECT toggles music · START resumes",
     "joystick": "Hold anywhere on the left: slide left or right to steer, down to brake or reverse",
-    "actionALabel": "A: use your collected item",
+    "actionALabel": "A: use boost/shield; hold trap/pulse to guard and release to throw",
     "actionBLabel": "B: hold while steering to drift, release for a boost",
     "select": "Players / ♫",
     "selectLabel": "SELECT: one or two players at the title, music while paused",
@@ -95,10 +95,10 @@
     "actionB": "漂移",
     "hint": "自动加速 · 按住 B 漂移，松开冲刺",
     "ready": "左右选赛道 · 上下选模式 · SELECT 人数 · START 开始",
-    "playing": "一起竞速！A 使用道具，转弯时按住 B 漂移。",
+    "playing": "A 按住路障/脉冲防御，松开投掷，↑↓ 选方向；B 漂移。",
     "paused": "已暂停 · SELECT 切换音乐 · START 继续",
     "joystick": "左侧任意位置按住，左右滑动转向，向下刹车或倒车",
-    "actionALabel": "A 使用收集的道具",
+    "actionALabel": "A 使用加速/护盾；按住路障/脉冲防御，松开投掷",
     "actionBLabel": "B 转弯时按住漂移，松开后加速",
     "select": "人数 / 音乐",
     "selectLabel": "SELECT 标题选择单人或双人，暂停时切换音乐",
@@ -135,7 +135,7 @@
   try { session = sessionStorage.getItem(storageKey) || ''; } catch (_) { /* Private browser storage may be unavailable. */ }
   let ws = null, connected = false, player = 0, seq = 0, attempts = 0;
   let reconnectTimer = 0, helloTimer = 0, lastSend = 0, lastSent = '', terminal = false, leaving = false;
-  let gamePhase = 'title';
+  let gamePhase = 'title', rearWarning = false;
   let stickPointer = null, stickX = 0, stickY = 0;
   let stickOriginX = 0, stickOriginY = 0, stickRadius = 1;
   const actionPointers = new Map();
@@ -237,6 +237,12 @@
     updateControlAccess();
     const phaseKey = { title: 'ready', menu: 'ready', lobby: 'ready', ready: 'ready', playing: 'playing', paused: 'paused', results: 'results', ending: 'ending', gameover: 'results', over: 'results', victory: 'results' }[gamePhase];
     if (phaseKey) setMessage(phaseKey);
+    if (gamePhase === 'playing' && mine) {
+      if (mine.holding) setMessage(english ? 'GUARDING · ↑↓ aim · Release A to throw' : '持物防御中 · ↑↓ 选方向 · 松开 A 投掷');
+      if (mine.incoming) setMessage(english ? 'Pulse from behind! Hold a trap/pulse to block.' : '后方脉冲来袭！按住路障/脉冲可拦截。');
+      if (mine.incoming && !rearWarning) vibrate([25, 40, 25]);
+      rearWarning = !!mine.incoming;
+    } else rearWarning = false;
   }
   function connect() {
     if (!isVisible() || terminal) return;

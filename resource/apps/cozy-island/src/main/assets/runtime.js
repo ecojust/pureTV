@@ -27,8 +27,8 @@
         "No phone app needed\nUse the same router as your TV",
       ],
       "menu-help": [
-        "SELECT：标题选人数 / 游戏切换钓竿\nSTART：开始 / 暂停 · 暂停 SELECT：音乐",
-        "SELECT: players / fishing rod\nSTART: begin / pause · Paused SELECT: music",
+        "SELECT：人数 / 空手、钓竿、捕虫网\nSTART：开始 / 暂停 · 暂停 SELECT：音乐",
+        "SELECT: players / hands, rod, net\nSTART: begin / pause · Paused SELECT: music",
       ],
       "move-label": ["走动", "WALK"],
       "a-label": ["互动", "USE"],
@@ -247,6 +247,7 @@
       suspended = !!value;
       releaseKeys();
       last = 0;
+      if (game && suspended) game.cancelHeldActions();
       if (game) game.save();
       if (sound) sound.pause(suspended || !visible);
       publish();
@@ -273,12 +274,16 @@
     document.addEventListener("keyup", function (event) {
       key(event.key, false);
     });
-    root.addEventListener("blur", releaseKeys);
+    root.addEventListener("blur", function () {
+      releaseKeys();
+      if (game) game.cancelHeldActions();
+    });
     document.addEventListener("visibilitychange", function () {
       visible = !document.hidden;
       releaseKeys();
       last = 0;
       root.cancelAnimationFrame(frame);
+      if (game && !visible) game.cancelHeldActions();
       if (game) game.save();
       if (sound) sound.pause(!visible || suspended);
       publish();
@@ -291,6 +296,7 @@
       root.cancelAnimationFrame(frame);
       root.clearInterval(roomTimer);
       releaseKeys();
+      if (game) game.cancelHeldActions();
       if (game) game.save();
       if (sound) sound.dispose();
       if (renderer && renderer.dispose) renderer.dispose();

@@ -89,6 +89,7 @@
       hazards: [],
       checkpoints: [32],
       boss: null,
+      cloud: null,
     };
     function item(type, x, y) {
       level.items.push({ type: type, x: x, y: y, w: 12, h: 12, taken: false });
@@ -256,6 +257,9 @@
     level.ground.push({ x: cursor, y: 200, w: level.width - cursor, h: 40 });
     for (var c = 1; c < 4; c++)
       level.checkpoints.push(300 + Math.floor((parts.length * c) / 4) * 288);
+    // Reconstructed secret positions: the first 28 pixels of each chunk are safe.
+    level.cloud = { x: 304 + (index % 3) * 288, y: 136, w: 24, h: 64,
+      wait: 0, hint: 0, used: false, rising: false };
     level.goalX = level.width - 64;
     if (level.area === 4) {
       egg("axe", level.width - 288, false);
@@ -271,6 +275,22 @@
         flash: 0,
         alive: true,
       };
+    }
+    return level;
+  }
+  function bonusLevel(index) {
+    var level = { index: index, world: Math.floor(index / 4) + 1,
+      area: index % 4 + 1, label: "BONUS", theme: "forest", bonus: true,
+      width: 1120, ground: [{ x: 0, y: 200, w: 128, h: 40 }],
+      platforms: [], ceilings: [], gaps: [], items: [], eggs: [], enemies: [],
+      hazards: [], checkpoints: [], boss: null, cloud: null, goalX: Infinity };
+    for (var i = 0; i < 8; i++) {
+      var x = 176 + i * 112, y = i % 2 ? 152 : 176;
+      level.platforms.push({ x: x, y: y, w: 64, h: 8 });
+      for (var j = 0; j < 3; j++)
+        level.items.push({ type: ["banana", "apple", "grape", "melon"][i % 4],
+          x: x + 8 + j * 20, y: y - 24 - (j === 1 ? 12 : 0),
+          w: 12, h: 12, taken: false });
     }
     return level;
   }
@@ -331,6 +351,7 @@
     this.enemyShots = [];
     this.effects = [];
     this.transition = null;
+    this.bonusReturn = null;
   }
   AdventureGame.prototype.emit = function (type, extra) {
     this.events.push(
@@ -363,9 +384,49 @@
     this.enemyShots = [];
     this.effects = [];
     this.transition = null;
+    this.bonusReturn = null;
     this.players.forEach(function (value) {
       value.active = value.id === p.id && value.joined;
     });
+    this.emit("stage", { stage: p.stage + 1 });
+  };
+  AdventureGame.prototype.enterBonus = function () {
+    var p = this.current(), next = p.checkpoint;
+    this.level.cloud.rising = false;
+    for (var i = 0; i < this.level.checkpoints.length; i++) {
+      if (this.level.checkpoints[i] > this.level.cloud.x) {
+        next = this.level.checkpoints[i];
+        break;
+      }
+    }
+    this.bonusReturn = { level: this.level, checkpoint: next };
+    this.level = bonusLevel(p.stage);
+    this.transition = null;
+    p.x = 32;
+    p.y = 178;
+    p.vx = p.vy = 0;
+    p.grounded = true;
+    this.cameraX = 0;
+    this.projectiles = [];
+    this.enemyShots = [];
+    this.effects = [];
+    this.emit("reveal");
+  };
+  AdventureGame.prototype.leaveBonus = function () {
+    var p = this.current(), back = this.bonusReturn;
+    if (!back) return;
+    this.level = back.level;
+    p.x = p.checkpoint = back.checkpoint;
+    p.checkpointIndex = this.level.checkpoints.indexOf(p.checkpoint);
+    p.y = 178;
+    p.vx = p.vy = 0;
+    p.grounded = true;
+    p.invulnerable = Math.max(60, p.invulnerable);
+    this.cameraX = clamp(p.x - 64, 0, this.level.width - 256);
+    this.bonusReturn = null;
+    this.projectiles = [];
+    this.enemyShots = [];
+    this.effects = [];
     this.emit("stage", { stage: p.stage + 1 });
   };
   AdventureGame.prototype.begin = function () {
@@ -446,7 +507,7 @@
     } else if (type === "eggplant") p.eggplant = true;
     else if (type === "pot") p.pot = true;
     else p.energy = Math.min(MAX_ENERGY, p.energy + 2);
-    var score = points[type] || 100;
+    var score = this.level.bonus ? 500 : points[type] || 100;
     this.addScore(score);
     this.effects.push({ type: "score", x: p.x, y: p.y - 8, life: 40, score: score });
     this.emit("pickup", { item: type });
@@ -593,6 +654,10 @@
       }
     }
     if (p.y > 242) {
+      if (this.level.bonus) {
+        this.leaveBonus();
+        return;
+      }
       this.hit(this.level.theme === "coast" ? "water" : "pit");
       return;
     }
@@ -612,7 +677,7 @@
       level = this.level;
     if (p.invulnerable) p.invulnerable--;
     if (p.fairy) p.fairy--;
-    if (++p.energyTimer >= (p.eggplant ? 25 : 110)) {
+    if (!level.bonus && ++p.energyTimer >= (p.eggplant ? 25 : 110)) {
       p.energyTimer = 0;
       p.energy--;
       if (p.energy <= 0) {
@@ -669,6 +734,21 @@
         game.openEgg(egg);
       }
     });
+    var cloud = level.cloud;
+    if (cloud && !cloud.used) {
+      if (cloud.hint) cloud.hint--;
+      if (p.grounded && Math.abs(p.x + p.w / 2 - cloud.x - cloud.w / 2) < 12 &&
+          Math.abs(p.vx) < 0.1 && Math.abs(p.input.x) < 0.3 && !p.input.a) {
+        cloud.wait++;
+        if (cloud.wait >= 90) {
+          cloud.used = cloud.rising = true;
+          p.vx = p.vy = 0;
+          this.transition = { type: "cloud", ticks: 60 };
+          this.emit("reveal");
+          return;
+        }
+      } else cloud.wait = 0;
+    }
     level.hazards.forEach(function (hazard) {
       if (hazard.dead) return;
       if (hazard.cooldown) hazard.cooldown--;
@@ -773,6 +853,11 @@
           }
         }
       });
+      if (!shot.dead && cloud && !cloud.used && overlap(shot, cloud)) {
+        shot.dead = true;
+        cloud.hint = 60;
+        game.emit("reveal");
+      }
       level.hazards.forEach(function (hazard) {
         if (
           !shot.dead &&
@@ -917,8 +1002,10 @@
       }
       if (this.phase === "playing") {
         if (this.transition) {
+          if (this.transition.type === "cloud") p.y -= 2.5;
           if (--this.transition.ticks <= 0) {
-            if (this.transition.type === "death") this.advanceTurn();
+            if (this.transition.type === "cloud") this.enterBonus();
+            else if (this.transition.type === "death") this.advanceTurn();
             else if (p.stage === 31) {
               this.phase = "ending";
               this.transition = null;

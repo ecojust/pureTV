@@ -39,6 +39,20 @@
     ["#203774","#638bfc","#d2e2ff","#3555b1"],
   ];
 
+  // Independently chosen night palettes. Classic Magic Jewelry advances its
+  // scene palette after a magic column resolves, cycling through eight stages.
+  const SCENES = [
+    {sky:'#080e26',horizon:'#111b38',water:'#1a2341',well:'#0b132a',grid:'#0d162e',rim:'#9a824f'},
+    {sky:'#10102b',horizon:'#241c40',water:'#332440',well:'#151329',grid:'#19162f',rim:'#b69ac9'},
+    {sky:'#071e28',horizon:'#103440',water:'#174649',well:'#091d27',grid:'#0d222e',rim:'#77c3b8'},
+    {sky:'#201023',horizon:'#38203b',water:'#482c40',well:'#201325',grid:'#25182b',rim:'#d198b2'},
+    {sky:'#101d32',horizon:'#21334d',water:'#294656',well:'#101b2c',grid:'#142133',rim:'#90bed8'},
+    {sky:'#251b1b',horizon:'#3b2b2b',water:'#473431',well:'#211a20',grid:'#281f25',rim:'#d7ad7d'},
+    {sky:'#141c24',horizon:'#26382f',water:'#304239',well:'#101d22',grid:'#15242a',rim:'#a7c98d'},
+    {sky:'#1c132e',horizon:'#302445',water:'#3f3453',well:'#1c1630',grid:'#231c38',rim:'#d1b8ee'},
+  ];
+  function scene(level) { return SCENES[Math.max(0, level | 0) % SCENES.length]; }
+
   class JewelRenderer {
     constructor(canvas) {
       this.canvas = canvas;
@@ -103,17 +117,18 @@
       }
       this.ctx.drawImage(tile, x, y, pixel * 10, pixel * 10);
     }
-    background(frame) {
-      this.rect(0, 0, 256, 240, "#080e26");
-      this.rect(0, 84, 256, 82, "#111b38");
-      this.rect(0, 166, 256, 74, "#1a2341");
+    background(frame, level) {
+      const colors = scene(level);
+      this.rect(0, 0, 256, 240, colors.sky);
+      this.rect(0, 84, 256, 82, colors.horizon);
+      this.rect(0, 166, 256, 74, colors.water);
       for (let i = 0; i < 32; i++) {
         const x = (i * 71 + 17) % 254, y = (i * 37 + 19) % 157;
         this.rect(x, y, 1, 1, ((i * 17 + Math.floor(frame / 32)) % 6) ? "#59668b" : "#c7d4ec");
       }
       const moon = [5,9,11,13,13,13,13,13,13,13,11,9,5];
       moon.forEach((width, row) => this.rect(219 + Math.floor((13 - width) / 2), 25 + row, width, 1, "#dcc791"));
-      moon.forEach((width, row) => this.rect(216 + Math.floor((13 - width) / 2), 23 + row, width, 1, "#080e26"));
+      moon.forEach((width, row) => this.rect(216 + Math.floor((13 - width) / 2), 23 + row, width, 1, colors.sky));
       // Original city and torch-bearing statue silhouette, recalling the night skyline.
       for (let i = 0; i < 10; i++) {
         const x = i * 26 - 4, tall = 16 + (i % 4) * 8;
@@ -146,10 +161,11 @@
     }
     well(player, x, y, cell, frame) {
       const w = 6 * cell, h = 13 * cell;
-      this.panel(x - 4, y - 4, w + 8, h + 8, player.id === 2 ? "#b185a7" : "#9a824f");
+      const colors = scene(player.speedLevel);
+      this.panel(x - 4, y - 4, w + 8, h + 8, colors.rim);
       this.ctx.save(); this.ctx.beginPath(); this.ctx.rect(x, y, w, h); this.ctx.clip();
       for (let row = 0; row < 13; row++) for (let col = 0; col < 6; col++) {
-        this.rect(x + col * cell, y + row * cell, cell, cell, (row + col) % 2 ? "#0b132a" : "#0d162e");
+        this.rect(x + col * cell, y + row * cell, cell, cell, (row + col) % 2 ? colors.well : colors.grid);
         const value = player.board && player.board[row] ? player.board[row][col] : 0;
         let glow = false;
         if (player.clearCells && frame % 10 < 5)
@@ -241,7 +257,10 @@
       if (this.disposed) return;
       this.frame = game.frame || 0;
       this.ctx.imageSmoothingEnabled = false;
-      this.background(game.frame || 0);
+      // In a duel, each well follows its own completed magic stages. Keep the
+      // shared skyline at the opening palette so P1 cannot recolor P2's field.
+      const stage = game.phase !== "title" && game.selectedPlayers !== 2 ? game.players[0].speedLevel : 0;
+      this.background(game.frame || 0, stage);
       if (game.phase === "title") this.title(game);
       else {
         if (game.selectedPlayers === 2) this.double(game); else this.single(game);

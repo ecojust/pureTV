@@ -569,6 +569,9 @@
         var d = mod(r.s - s, track.length);
         if (r !== p && d > 85 && d < 1450 && !r.finished)
           objects.push({ type: "kart", at: project(d), p: r });
+        var trailing = mod(r.s - 55 - s, track.length);
+        if (r !== p && r.heldItem && trailing > 85 && trailing < 1450)
+          objects.push({ type: "item", at: project(trailing), item: { type: r.item, x: r.x } });
       });
       (game.boxes || []).forEach(function (b) {
         var d = mod(b.s - s, track.length);
@@ -670,6 +673,22 @@
       p.boost > 0,
       time,
     );
+    if (p.heldItem) {
+      c.strokeStyle = "rgba(187,250,236,.7)";
+      c.lineWidth = 2;
+      c.beginPath();
+      c.moveTo(w / 2, playerY + 7 * sz);
+      c.lineTo(w / 2, playerY + 28 * sz);
+      c.stroke();
+      this.itemIcon(p.item, w / 2, playerY + 30 * sz, sz * 0.65);
+    }
+    if (p.blockFlash > 0) {
+      c.strokeStyle = "rgba(174,255,230," + Math.min(1, p.blockFlash * 2) + ")";
+      c.lineWidth = 4;
+      c.beginPath();
+      c.arc(w / 2, playerY + 24 * sz, 30 * sz * (1.7 - p.blockFlash), 0, Math.PI * 2);
+      c.stroke();
+    }
     if (p.recover > 0) {
       this.round(w * 0.2, h * 0.39, w * 0.6, 48, 12, "rgba(14,34,52,.85)");
       this.text(
@@ -711,7 +730,7 @@
     this.round(w - 88, h - 91, 70, 70, 15, "rgba(16,37,56,.9)");
     this.itemIcon(p.item, w - 53, h - 59, 1.18);
     this.text(
-      p.item ? "A" : this.tr("道具", "ITEM"),
+      p.heldItem ? this.tr("防御中", "GUARD") : p.item ? "A" : this.tr("道具", "ITEM"),
       w - 53,
       h - 29,
       10,
@@ -719,6 +738,16 @@
       "700",
       "center",
     );
+    if (p.heldItem) {
+      this.round(w - 157, h - 141, 139, 42, 10, "rgba(16,37,56,.92)");
+      this.text((p.itemAim > 0 ? "↑ " : "↓ ") + this.tr("松开 A 投掷", "RELEASE A"), w - 87, h - 125, 11, "#b6fff1", "700", "center");
+      this.text(this.tr("摇杆 ↑↓ 选方向", "STICK ↑↓ TO AIM"), w - 87, h - 109, 9, "#c4dfdc", "600", "center");
+    }
+    if (p.incoming || p.blockFlash > 0) {
+      this.round(w / 2 - 95, 101, 190, 31, 10, "rgba(16,37,56,.92)");
+      this.text(p.blockFlash > 0 ? this.tr("成功拦截！", "BLOCKED!") : this.tr("后方脉冲来袭！", "PULSE APPROACHING!"),
+        w / 2, 117, 12, p.blockFlash > 0 ? "#b6fff1" : "#ffd296", "700", "center");
+    }
     var barW = Math.max(80, w - 280);
     this.round(154, h - 38, barW, 7, 3, "rgba(21,42,55,.4)");
     this.round(

@@ -6,9 +6,15 @@ Jackal TV independently reimplements the six-stage NES version of Jackal: jeep m
 
 The current release is **0.5.0**. Install and play without importing a ROM; the package ID stays unchanged. This version includes the six-stage rewrite, with remaining differences in AI, some collisions, animation timing and sound. Physical-TV and frame-by-frame comparisons are incomplete.
 
-## 0.5.0 release and installation
+## 0.5.1 gameplay review
 
-All nine games are released as version 0.5.0 with the new shared pureTV release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
+Stage 3 now selects the correct long or short laser and warning endpoints from the actual map event.
+
+Uses the same signing certificate as 0.5.0 and supports an in-place update. See the [fidelity review](../../../docs/game-fidelity-0.5.1.md) for tested behavior and remaining differences.
+
+## Installation and signing
+
+Version 0.5.1 uses the same shared pureTV certificate as 0.5.0, so it updates 0.5.0 in place and keeps local data. Versions signed with the older certificate cannot be updated in place: back up any exportable data before uninstalling them. Uninstalling clears local saves and records; the project has no automatic migration across signing certificates.
 
 ## Floating joystick and compatibility
 
@@ -22,7 +28,7 @@ Fixes startup failures and missing player status on older TV WebViews. Room stat
 The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
-Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`. The current APK version is `0.5.0`.
+Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`. The current APK version is `0.5.1`.
 
 ## Controller changes in 0.5.0
 

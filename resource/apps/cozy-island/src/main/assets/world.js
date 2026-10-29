@@ -174,9 +174,20 @@
     { id: "ray", zh: "星点鳐", en: "Spotted ray", from: 18, to: 6, weight: 2, min: 55, max: 110, window: 0.9 },
     { id: "moonfish", zh: "月光鱼", en: "Moonlight fish", from: 21, to: 4, weight: 1, min: 35, max: 65, window: 0.8 },
   ];
+  // Original wildlife habitats. Their movement and escape state are shared by
+  // both residents; only catches and journal records persist across visits.
+  var insects = [
+    { id: "meadowButterfly", zh: "花园粉蝶", en: "Meadow butterfly", from: 6, to: 18, x: 6.8, y: 10.5, color: "#efadc9", price: 14, fly: true },
+    { id: "groveBeetle", zh: "翠叶甲虫", en: "Grove beetle", from: 0, to: 24, x: 13.8, y: 5.8, color: "#6f9a68", price: 18, fly: false },
+    { id: "eveningFirefly", zh: "晚星萤火虫", en: "Evening firefly", from: 18, to: 6, x: 10.4, y: 14.9, color: "#f6e486", price: 22, fly: true },
+  ];
+  insects.forEach(function (insect) {
+    items[insect.id] = { zh: insect.zh, en: insect.en, price: insect.price, color: insect.color };
+  });
   var world = {
     items: items,
     fish: fish,
+    insects: insects,
     nodes: nodes,
     landmarks: landmarks,
     tasks: tasks,

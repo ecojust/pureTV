@@ -11,6 +11,14 @@ on:
         required: true
         default: android-v0.5.0
         type: string
+      package_scope:
+        description: Packages included in this release
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - games
 permissions:
   contents: write
   actions: read
@@ -54,9 +62,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ steps.inputs.outputs.source_sha }}
           RELEASE_TAG: ${{ steps.inputs.outputs.release_tag }}
+          PACKAGE_SCOPE: ${{ inputs.package_scope }}
         run: |
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           python tools/publish-android-release.py \
             --source-sha "$SOURCE_SHA" \
             --tag "$RELEASE_TAG" \
-            --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
+            --scope "$PACKAGE_SCOPE"

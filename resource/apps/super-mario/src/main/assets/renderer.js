@@ -588,6 +588,7 @@
   };
   MarioRenderer.prototype.player = function (p, g) {
     if (!p.joined && g.phase !== "title") return;
+    if (g.clearSequence && g.clearSequence.hidden) return;
     if (p.invulnerable > 0 && !g.clearTicks && Math.floor(g.frame / 4) % 2)
       return;
     var palette = p.id === 2 ? { r: "#e9efe0", b: "#418a27" } : {};
@@ -612,6 +613,11 @@
     }
     var sy = p.h / 16;
     this.sprite("plumber", x, y, palette, p.facing < 0, sy);
+    if (g.clearSequence && g.clearSequence.phase === "slide") {
+      c.fillStyle = "#ffe0a2";
+      c.fillRect(x + 12, y + Math.floor(p.h * 0.4), 4, 3);
+      c.fillRect(x + 11, y + Math.floor(p.h * 0.7), 4, 3);
+    }
     if (
       p.grounded &&
       Math.abs(p.vx) > 0.3 &&
@@ -663,9 +669,7 @@
       c.fillRect(fx, f.y, 2, 160);
       c.fillStyle = "#9cb746";
       c.fillRect(fx - 2, f.y - 4, 6, 5);
-      var fy = g.clearTicks
-        ? Math.min(190, f.y + (150 - g.clearTicks) * 1.5)
-        : f.y + 6;
+      var fy = g.clearSequence ? g.clearSequence.flagY : f.y + 6;
       c.fillStyle = "#fffcdd";
       c.beginPath();
       c.moveTo(fx, fy);
@@ -691,13 +695,19 @@
       self.enemy(a, g);
     });
     g.powerups.forEach(function (a) {
-      if (a.alive)
+      if (a.alive) {
+        if (a.emergeTicks > 0) {
+          c.save(); c.beginPath();
+          c.rect(a.x - cam, a.y, a.w + 2, Math.max(0, a.blockY - a.y)); c.clip();
+        }
         self.sprite(
           a.type === "1up" ? "mushroom" : a.type,
           a.x - cam,
           a.y,
           a.type === "1up" ? { r: "#69b62d" } : {},
         );
+        if (a.emergeTicks > 0) c.restore();
+      }
     });
     g.projectiles.forEach(function (a) {
       if (a.life <= 0) return;
@@ -716,6 +726,17 @@
         c.fillRect(Math.floor(a.x - cam), Math.floor(a.y), a.w, a.h);
       }
     });
+    if (g.clearSequence) {
+      g.clearSequence.bursts.forEach(function (burst) {
+        var radius = 2 + burst.age * 0.65, x = burst.x - cam, y = burst.y;
+        c.fillStyle = burst.age < 12 ? "#fff5a0" : "#ffb36b";
+        for (var ray = 0; ray < 8; ray++) {
+          var angle = ray * Math.PI / 4;
+          c.fillRect(Math.round(x + Math.cos(angle) * radius), Math.round(y + Math.sin(angle) * radius), burst.age < 18 ? 3 : 2, burst.age < 18 ? 3 : 2);
+        }
+        if (burst.age < 8) { c.fillStyle = "#fffbe7"; c.fillRect(x - 2, y - 2, 5, 5); }
+      });
+    }
     this.player(p, g);
     // Fixed NES-style information strip, unaffected by world scrolling.
     c.fillStyle =

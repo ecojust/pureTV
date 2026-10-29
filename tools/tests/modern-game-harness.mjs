@@ -585,6 +585,29 @@ async function kartProgressFixture(tv,phones,config) {
   await pressControl(phones[0].page,'button-a',71);await pressControl(phones[1].page,'button-a',72);
   await tv.waitForFunction(api=>{const p=window[api].game.players;return p[0].item===null&&p[0].shield>0&&p[1].item===null&&p[1].boost>0;},config.api);
   await releaseControl(phones[0].page,'button-a',71);await releaseControl(phones[1].page,'button-a',72);
+  // A real held touch now defends with a projectile; releasing with the stick
+  // down throws it rearward. Merely pressing A must not consume the item.
+  await tv.evaluate(api=>{const g=window[api].game,p=g.players[0];p.item='pulse';p.stun=0;p.recover=0;p.shield=5;g.items=[];g.racers.filter(r=>!r.human).forEach(r=>{r.item=null;r.aiTimer=60;});},config.api);
+  await dragControl(phones[0].page,0,120);
+  await pressControl(phones[0].page,'button-a',73);
+  await tv.waitForFunction(api=>{const p=window[api].game.players[0];return p.heldItem&&p.itemAim===-1;},config.api);
+  assert.equal((await gameState(tv,config)).players[0].item,'pulse','Holding A keeps the defensive item');
+  await tv.evaluate(api=>window[api].suspend(true),config.api);
+  await releaseControl(phones[0].page,'button-a',73);
+  await tv.waitForFunction(()=>!window.__inputs[0].a);
+  await tv.evaluate(api=>window[api].suspend(false),config.api);
+  await tv.waitForFunction(api=>!window[api].game.players[0].itemButton,config.api);
+  assert.equal((await gameState(tv,config)).players[0].item,'pulse','TV suspend cancels the gesture and keeps the item');
+  await pressControl(phones[0].page,'button-a',73);
+  await tv.waitForFunction(api=>window[api].game.players[0].heldItem,config.api);
+  const itemSuffix=await tv.evaluate(()=>document.documentElement.lang==='en'?'.en':'');
+  await tv.screenshot({path:resolve(config.output,config.kind+'-held-item-fixture'+itemSuffix+'.png')});
+  const throwTick=await tv.evaluate(api=>window[api].game.tick,config.api);
+  await releaseControl(phones[0].page,'button-a',73);
+  // The projectile may hit a nearby opponent within one frame. Observe its
+  // firing event instead of requiring it to survive until the next browser poll.
+  await tv.waitForFunction(({api,tick})=>{const g=window[api].game,p=g.players[0];return !p.heldItem&&p.itemAim===-1&&g.events.some(event=>event.id===1&&event.type==='pulse'&&event.tick>=tick);},{api:config.api,tick:throwTick});
+  await releaseControl(phones[0].page,'joystick-zone',11);
   // Ordered checkpoint fixture uses the engine's movement rule; it does not set
   // lap/result flags. Keep the second player racing until both finish.
   const result=await tv.evaluate(api=>{
@@ -604,7 +627,7 @@ async function kartProgressFixture(tv,phones,config) {
   finally { await releaseControl(phones[0].page,'button-start'); }
   await tv.waitForFunction(api=>!window.__inputs[0].start&&!window[api].game.previous[1].start,config.api);
   assert.ok((await gameState(tv,config)).countdown>0,'START makes results immediately replayable');
-  console.log('PASS coast-kart controlled item/checkpoint fixture: simultaneous A effects, three laps, shared results, replay');
+  console.log('PASS coast-kart controlled item/checkpoint fixture: simultaneous A effects, held defense/rear throw, three laps, shared results, replay');
 }
 
 export async function runCaptureTests({kind}) {
@@ -804,16 +827,37 @@ async function islandProgressFixture(tv,phones,config) {
   await tv.waitForFunction(api=>window[api].game.decorations.length===1,config.api);
   assert.deepEqual((await gameState(tv,config)).players[0].inventory,{},'Placing a crafted decoration removes it from the bag');
   await islandHomeFixture(tv,phones,config);
-  const saved=await tv.evaluate(api=>{const g=window[api].game;g.save();return {coins:g.coins,decorations:JSON.parse(JSON.stringify(g.decorations)),inventory:JSON.parse(JSON.stringify(g.players[0].inventory)),players:g.players.map(p=>({x:p.x,y:p.y,location:p.location,inventory:JSON.parse(JSON.stringify(p.inventory))}))};},config.api);
+  // Position only the approach to a live insect. SELECT/A still travel from the
+  // actual phone page through the room bridge, including the release edge.
+  await tv.evaluate(api=>{const g=window[api].game,p=g.players[0],insect=g.insects[0];p.x=insect.x;p.y=insect.y+1.1;p.facing={x:0,y:-1};p.tool='hand';p.menu=null;},config.api);
+  await tapControl(phones[0].page,'button-select');await tapControl(phones[0].page,'button-select');
+  await phones[0].page.waitForFunction(()=>/捕虫网|Net/i.test(document.getElementById('tool').textContent));
+  await pressControl(phones[0].page,'button-a',74);
+  await tv.waitForFunction(api=>window[api].game.players[0].netRaised,config.api);
+  assert.equal((await gameState(tv,config)).players[0].inventory.meadowButterfly,undefined,'A must be released to swing the net');
+  await tv.evaluate(api=>window[api].suspend(true),config.api);
+  await releaseControl(phones[0].page,'button-a',74);
+  await tv.waitForFunction(()=>!window.__inputs[0].a);
+  await tv.evaluate(api=>window[api].suspend(false),config.api);
+  await tv.waitForTimeout(120);
+  assert.equal((await gameState(tv,config)).players[0].inventory.meadowButterfly,undefined,'TV suspend cancels the raised net without catching on resume');
+  await pressControl(phones[0].page,'button-a',74);
+  await tv.waitForFunction(api=>window[api].game.players[0].netRaised,config.api);
+  await releaseControl(phones[0].page,'button-a',74);
+  await tv.waitForFunction(api=>window[api].game.players[0].inventory.meadowButterfly===1,config.api);
+  assert.equal(await tv.evaluate(api=>window[api].game.insectJournal.meadowButterfly,config.api),1);
+  const insectSuffix=await tv.evaluate(()=>document.documentElement.lang==='en'?'.en':'');
+  await tv.screenshot({path:resolve(config.output,config.kind+'-insect-fixture'+insectSuffix+'.png')});
+  const saved=await tv.evaluate(api=>{const g=window[api].game;g.save();return {coins:g.coins,decorations:JSON.parse(JSON.stringify(g.decorations)),inventory:JSON.parse(JSON.stringify(g.players[0].inventory)),fishJournal:JSON.parse(JSON.stringify(g.fishJournal)),insectJournal:JSON.parse(JSON.stringify(g.insectJournal)),players:g.players.map(p=>({x:p.x,y:p.y,location:p.location,inventory:JSON.parse(JSON.stringify(p.inventory))}))};},config.api);
   await tv.evaluate(api=>{window[api].game.random=Math.random;},config.api);
-  console.log('PASS cozy-island controlled economy fixture: gathering, nibble/bite timing, fish journal, full bag, phone crafting/decorating');
+  console.log('PASS cozy-island controlled economy fixture: gathering, nibble/bite timing, fish/insect journals, full bag, phone crafting/decorating and release-to-catch net');
   return saved;
 }
 async function islandReload(tv,config,saved) {
   await tv.reload();await awaitPhase(tv,config,'title');await visiblePixels(tv);
-  const restored=await tv.evaluate(api=>{const g=window[api].game;return {coins:g.coins,decorations:g.decorations,inventory:g.players[0].inventory,players:g.players.map(p=>({x:p.x,y:p.y,location:p.location,inventory:p.inventory})),recovered:g.saveRecovered};},config.api);
+  const restored=await tv.evaluate(api=>{const g=window[api].game;return {coins:g.coins,decorations:g.decorations,inventory:g.players[0].inventory,fishJournal:g.fishJournal,insectJournal:g.insectJournal,players:g.players.map(p=>({x:p.x,y:p.y,location:p.location,inventory:p.inventory})),recovered:g.saveRecovered};},config.api);
   assert.equal(restored.recovered,false,'Saved island passes full load validation after a real page reload');
-  assert.deepEqual({coins:restored.coins,decorations:restored.decorations,inventory:restored.inventory,players:restored.players},saved,'Browser reload restores the actual saved crafting/decorating progress');
+  assert.deepEqual({coins:restored.coins,decorations:restored.decorations,inventory:restored.inventory,fishJournal:restored.fishJournal,insectJournal:restored.insectJournal,players:restored.players},saved,'Browser reload restores the actual saved crafting/decorating and wildlife progress');
   await tv.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pagehide')));
   const stopped=await tv.evaluate(()=>({raf:window.__animationFrames,polls:window.__snapshotCalls}));await tv.waitForTimeout(200);
   assert.deepEqual(await tv.evaluate(()=>({raf:window.__animationFrames,polls:window.__snapshotCalls})),stopped,'Reloaded title also shuts down callbacks');

@@ -8,12 +8,13 @@ This is a small original game inspired by the relaxing collection, neighbor inte
 
 1. 标题按 SELECT 选单人或双人，START / A 开始。按摇杆屏幕方向行走；靠近蜜桃树、木桩、石头、贝壳按 A 采集。每人背包容量为 24 件。
 2. 找广场的米拉交 3 个蜜桃，找海边的皮普交 4 份木材。领取金币与家具后，可以继续下一项任务。
-3. SELECT 切换空手／钓竿。在东侧木码头附近按 A 抛线；等待「咬钩！」再按 A。鱼会先轻轻试探零至两次；提前收线或超过鱼种对应的 0.8–1.2 秒反应窗口会失败，B 可以取消。成功获得一条海鱼，并记录到共享鱼类图鉴。
+3. SELECT 依次切换空手／钓竿／捕虫网。在东侧木码头附近持钓竿按 A 抛线；等待「咬钩！」再按 A。鱼会先轻轻试探零至两次；提前收线或超过鱼种对应的 0.8–1.2 秒反应窗口会失败，B 可以取消。成功获得一条海鱼，并记录到共享鱼类图鉴。
 4. 到商店门前按 A 出售一整种背包物品、购买家具或升级小屋。制作台与 B 背包菜单都可制作家具，缺材料时会提示配方。
 5. B → 装饰，选择家具，摇杆移动摆放预览；SELECT 每次旋转 90°，A 放置，B 返回。避开人物、已有物品、建筑入口与海岸。靠近已摆家具，通过「收起附近的装饰」收回背包。地毯可以走过，其他家具会阻挡行走。
 6. 小屋门前 A 进入，屋内门垫处 A 出门。完成米拉与皮普的五个心愿、升级小屋并摆好长椅与星光灯后，会获得友谊纪念像；之后仍可继续采集和布置。
+7. 寻找花地的粉蝶、北侧林地的甲虫及夜晚南侧的萤火虫。切换捕虫网，按住 A 举网慢走，面向昆虫并靠近后松开 A 挥网。跑近和挥空会惊飞昆虫；追上已惊飞的昆虫也无法捕获。捕获的昆虫按物种进入背包，可到商店出售，B → 昆虫图鉴查看共享记录。
 
-Choose 1P/2P with SELECT on the title screen, then START or A to begin. Use the stick to walk in screen directions and A near resources, neighbors and entrances. B opens your own bag and guide; stick up/down and A navigate every menu. Gather peaches and wood for Mira and Pip, then use the east pier for timed fishing. SELECT equips the rod; A casts, and another A during the species-specific 0.8–1.2-second BITE window catches a fish. Gentle nibbles before that signal do not count as bites. Sell stacks at the market, craft or buy furniture, upgrade the shared home, and complete all five requests to earn a friendship keepsake. Furniture placement uses the stick for its preview, SELECT to rotate, A to place and B to return; picking up nearby furniture requires bag space.
+Choose 1P/2P with SELECT on the title screen, then START or A to begin. Use the stick to walk in screen directions and A near resources, neighbors and entrances. B opens your own bag and guide; stick up/down and A navigate every menu. Gather peaches and wood for Mira and Pip, then use the east pier for timed fishing. SELECT cycles hands, rod and bug net. With the rod, A casts, and another A during the species-specific 0.8–1.2-second BITE window catches a fish. Gentle nibbles before that signal do not count as bites. With the net, hold A to walk quietly; face a nearby insect and release A to swing. Running or missing scares wildlife away. Sell stacks at the market, craft or buy furniture, upgrade the shared home, and complete all five requests to earn a friendship keepsake. Furniture placement uses the stick for its preview, SELECT to rotate, A to place and B to return; picking up nearby furniture requires bag space.
 
 START 暂停／继续；手动暂停时 SELECT 切换音乐。B 背包中的音乐项与电视侧栏按钮也可开关。清空小岛需进入 B → 重置小岛，再明确选择「确认清空所有玩家的存档」；默认选择保留。
 
@@ -23,13 +24,15 @@ START pauses/resumes. SELECT toggles music while manually paused; the bag and si
 
 - 一座固定等距小岛、一个共享房屋内部、商店、制作台、两位原创居民。
 - 五种可记录的鱼：银沙丁鱼、海鲈鱼全天；珊瑚蝶鱼 06:00–18:00；星点鳐 18:00–06:00；月光鱼 21:00–04:00。B → 鱼类图鉴可查看捕获次数、最大尺寸及出没时间，首次发现每种奖励 10 金币。两人共享图鉴，同一种首次奖励只发放一次；背包满时不能捕获或登记。背包、出售和居民交付仍统一按海鱼计数。
+- 三种真实场景昆虫：西侧花地粉蝶 06:00–18:00、北侧林地翠叶甲虫全天、南侧晚星萤火虫 18:00–06:00。昆虫会在各自栖息地缓慢移动；快步靠近 1.65 格内会惊飞，举网后以正常 32% 速度移动可安全接近。松 A 挥网捕获面前约 99° 扇形、0.15–1.45 格范围内最近的一只，挥空会惊动 2 格内的昆虫。惊飞后 30 秒、捕获后 45 秒重新出现；出没时间仍须符合昼夜窗口。背包满时不捕获、不登记也不消耗昆虫。
+- 昆虫共享实体和图鉴，两人同一帧争捕只会成功一次。每种首次发现奖励共享 10 金币，重复捕获只增加图鉴计数；粉蝶／甲虫／萤火虫每只可分别出售 14／18／22 金币。举网、挥网、惊飞和夜间发光都有画面反馈。打开背包、切换工具或进入断线／手动暂停会取消举网，恢复时不会自动挥网。
 - 蜜桃、木材、石材、贝壳和海鱼五种物资；长椅、星光灯、花草盆、地毯四种可购买／制作的家具，以及最终任务的纪念像。岛屿与屋内合计最多摆放 60 件。
 - 三棵蜜桃树、三个木桩、三块石头、三个贝壳点。采集后 90 秒恢复；两人同时采集同一点只会成功一次。
 - 五个有限任务：3 蜜桃；4 木材；2 海鱼；3 贝壳加 4 石材；完成前置任务、一级房屋升级并放好长椅和灯。奖励依次为 30、35、60、80、120 金币，部分任务另送家具。任务只能交付一次。
 - 两次房屋升级：100 金币 + 8 木材 + 6 石材；220 金币 + 12 木材 + 10 石材。升级改变屋顶／旗帜和最终屋内地板，并满足庆典目标；首版房屋内部面积固定。
 - 日夜由模拟时钟变化，24 分钟为一个昼夜，不与当地真实日期绑定。再次打开时最多补算 8 小时离线时间用于时钟与资源恢复；没有离线惩罚或债务。
 
-The finite release contains one island, a shared home interior, market, workbench, two residents, five resources, four craftable/buyable furniture types and one reward keepsake. Resource nodes regrow after 90 seconds. Five one-time requests and two home upgrades give a complete progression, with continued decorating afterward. Home upgrades change visual details and satisfy the celebration goal; the interior footprint stays fixed. A simulated day lasts 24 minutes. Offline clock/resource recovery is capped at eight hours, without penalties. Five fish species have day/night availability, distinct reaction windows and recorded sizes. The shared fish journal persists counts and largest catches, with a one-time 10-coin discovery reward per species. Existing version-one saves migrate to an empty journal. There are no seasons, museum building/donations, hundreds of villagers/items, terrain editing, online travel, real-calendar festivals or commercial-game story/content parity.
+The finite release contains one island, a shared home interior, market, workbench, two residents, five gathering resources, three sellable insect species, four craftable/buyable furniture types and one reward keepsake. Resource nodes regrow after 90 seconds. Five one-time requests and two home upgrades give a complete progression, with continued decorating afterward. Home upgrades change visual details and satisfy the celebration goal; the interior footprint stays fixed. A simulated day lasts 24 minutes. Offline clock/resource recovery is capped at eight hours, without penalties. Five fish species have day/night availability, distinct reaction windows and recorded sizes. Three visible wildlife habitats host a daytime butterfly, an all-day beetle and a nighttime firefly. Fast approaches within 1.65 tiles startle insects; holding the net slows walking to 32%. Releasing A catches the nearest calm insect 0.15–1.45 tiles ahead within a roughly 99-degree cone. Misses startle wildlife within two tiles. Fled insects return after 30 seconds, catches after 45 seconds, subject to their active hours. The shared journals persist discoveries and catch counts, with a one-time 10-coin reward for each species; fish additionally record largest size. Wildlife positions and respawn timers reset on a fresh visit, while inventories, journals and island time persist. There are no seasons, museum building/donations, hundreds of villagers/items, terrain editing, online travel, real-calendar festivals or commercial-game story/content parity.
 
 ## 双人、保存和显示 / Cooperation, saving and display
 
@@ -39,13 +42,15 @@ The finite release contains one island, a shared home interior, market, workbenc
 
 Native `CozyIslandHost` supplies the language, room information, controller snapshots and state publication. `CozyIslandTV` exposes `key`, `updateRoom`, `suspend`, `game` and `renderer`. Published state stays below 4,096 bytes, with both joined participants marked active. Each player has separate inventory, tool, messages and menus; coins, the fish journal, resident progress, placed furniture and home upgrades are shared. A participant disconnect pauses simulation, reconnecting resumes automatic pause, and manual pause persists. Each player's controls remain independent, including when one is indoors and the other is outside.
 
-存档位于固定应用来源 `https://cozy-island.invalid` 的本地 DOM 存储，包含版本化数据、个人背包、位置、共享经济、鱼类图鉴和装饰。旧存档缺少图鉴字段时兼容加载；损坏的图鉴记录按存档损坏处理。交易立即写入，位置每秒保存；暂停、隐藏和页面退出时补存。数据结构损坏时恢复新岛并显示提示；存储写入失败会在电视显示提示。更换设备、卸载应用或确认重置会失去本机存档，没有云同步。
+存档位于固定应用来源 `https://cozy-island.invalid` 的本地 DOM 存储，包含版本化数据、个人背包、位置、共享经济、鱼类／昆虫图鉴和装饰。旧存档缺少昆虫图鉴字段时，仅补空图鉴，已有鱼类图鉴、金币、昼夜时钟和背包照常保留；损坏的图鉴记录按存档损坏处理。交易立即写入，位置每秒保存；暂停、隐藏和页面退出时补存。数据结构损坏时恢复新岛并显示提示；存储写入失败会在电视显示提示。更换设备、卸载应用或确认重置会失去本机存档，没有云同步。
 
 Saves use versioned localStorage on the stable native origin. Economic transactions save immediately; positions save every second and on suspension/hide/exit. Corrupt schema restores a fresh island with a notice. Storage errors are shown onscreen. There is no cloud save or cross-device migration. Audio requires an interaction, can be disabled, and releases its context on exit. The game uses ES2017-compatible JavaScript and local assets without external network dependencies.
 
 ## 验证与边界 / Validation and limitations
 
 `tests/game-model.test.cjs` covers transaction rollback, simultaneous resource and wallet contention, five requests and two upgrades, fishing timing, placement/rotation/pickup/collision, full bags, save corruption/reload, reset confirmation, independent menus, real joystick movement and pause semantics. Economy and doorway tests explicitly seed only the state needed for an isolated rule; they do not prove full acquisition or traversal.
+
+捕虫回归另外覆盖真实摇杆快走惊飞和举网潜行、松键捕获、朝向与距离判定、背包容量、昼夜窗口、两人争捕、重复奖励防护、暂停取消、图鉴与物种背包保存和旧档兼容。`tests/runtime-input.mjs` 通过实际页面验证原生退出确认暂停、隐藏和失焦入口取消举网，恢复时即使收到旧手势的松键也不会挥网或增加存档奖励；始终按住的旧手势也必须先释放后重新按下。该回归已接入兼容测试入口。测试中的定位与时间夹具仅用于隔离规则，不代表整段人类游玩路线。
 
 独立审查另完成了从新档出发、仅以 `step()` 摇杆与按键输入的完整路径：真实行走和采集、两次钓鱼、五项任务、屋内摆放纪念像、两次房屋升级和保存重载。该审查没有直接设置背包、金币或人物位置，使用几何寻路规划输入，完成用了约 447 秒模拟时间；它证明模型路径可达与规则可完成，不代表人类游玩时长或电视实机体验。
 

@@ -37,6 +37,146 @@ function clean(g) {
   g.level.eggs = [];
 }
 
+function summonCloud(g) {
+  const p = g.current(), cloud = g.level.cloud;
+  p.x = cloud.x + 5; p.y = 178; p.vx = p.vy = 0; p.grounded = true;
+  frames(g, 90);
+  assert.equal(g.transition && g.transition.type, "cloud");
+  frames(g, 60);
+  assert.equal(g.level.bonus, true);
+}
+
+test("hidden cloud absorbs weapons, requires stillness and lifts into a bonus route", () => {
+  const g = started(), p = g.current(), cloud = g.level.cloud;
+  clean(g);
+  p.weapon = "axe";
+  p.x = cloud.x - 40;
+  frames(g, 1, { b: true });
+  frames(g, 12);
+  assert.equal(g.projectiles.length, 0, "hidden spot absorbs an actual thrown axe");
+  assert.ok(cloud.hint > 0);
+  assert.equal(cloud.used, false);
+  p.x = cloud.x + 5; p.vx = 0;
+  frames(g, 45);
+  assert.equal(cloud.wait, 45);
+  frames(g, 1, { x: 1 });
+  assert.equal(cloud.wait, 0, "movement breaks the waiting condition");
+  p.x = cloud.x + 5; p.vx = 0;
+  frames(g, 90);
+  assert.equal(g.transition.type, "cloud");
+  const y = p.y;
+  frames(g, 20);
+  assert.ok(p.y < y - 40, "the cloud visibly carries Higgins up");
+  frames(g, 40);
+  assert.equal(g.level.bonus, true);
+  assert.equal(p.weapon, "axe");
+  assert.equal(p.stage, 0);
+});
+
+test("bonus fruit is 500 points and falling returns to the next checkpoint with equipment intact", () => {
+  const g = started(), p = g.current(), main = g.level;
+  clean(g);
+  p.weapon = "fire"; p.pot = true; p.eggplant = true;
+  summonCloud(g);
+  const lives = p.lives, energy = p.energy, score = p.score;
+  frames(g, 200);
+  assert.equal(p.energy, energy, "bonus exploration pauses vitality consumption");
+  const fruit = g.level.items[0];
+  p.x = fruit.x; p.y = fruit.y; p.vy = 0;
+  frames(g, 1);
+  assert.equal(fruit.taken, true);
+  assert.equal(p.score, score + 500);
+  assert.equal(p.energy, Math.min(16, energy + 2));
+  p.skateboard = true;
+  p.x = 140; p.y = 244; p.vy = 1;
+  frames(g, 1);
+  assert.equal(g.level, main, "the original collected-item state is restored");
+  assert.equal(g.bonusReturn, null);
+  assert.equal(p.x, main.checkpoints[1]);
+  assert.equal(p.checkpointIndex, 1);
+  assert.equal(p.lives, lives);
+  assert.equal(p.weapon, "fire");
+  assert.equal(p.skateboard, true);
+  assert.equal(p.pot, true);
+  assert.equal(p.eggplant, true);
+  assert.equal(main.cloud.used, true);
+  assert.equal(main.cloud.rising, false, "the lift cloud does not follow Higgins after returning");
+  assert.equal(g.transition, null);
+});
+
+test("cloud ascent and bonus pause correctly; two-player checkpoint and bonus state stay separate", () => {
+  const g = started(true), p = g.current();
+  clean(g);
+  p.x = g.level.cloud.x + 5;
+  frames(g, 90);
+  assert.equal(g.transition.type, "cloud");
+  frames(g, 1, { start: true });
+  const ticks = g.transition.ticks, y = p.y;
+  frames(g, 100);
+  assert.equal(g.transition.ticks, ticks);
+  assert.equal(p.y, y);
+  frames(g, 1, { start: true });
+  frames(g, 60);
+  assert.equal(g.level.bonus, true);
+  g.step(1 / 60, [connected(1, { connected: false }), connected(2)]);
+  assert.equal(g.phase, "paused");
+  frames(g, 1);
+  assert.equal(g.phase, "playing");
+  p.y = 244;
+  frames(g, 1);
+  const checkpoint = p.checkpoint;
+  assert.ok(checkpoint > 32);
+  g.loseLife("enemy");
+  frames(g, 70);
+  assert.equal(g.activePlayer, 2);
+  assert.equal(g.level.bonus, undefined);
+  assert.equal(g.bonusReturn, null);
+  assert.equal(g.current().checkpoint, 32);
+  assert.equal(g.level.cloud.used, false);
+  g.loseLife("enemy");
+  frames(g, 70);
+  assert.equal(g.activePlayer, 1);
+  assert.equal(g.current().checkpoint, checkpoint);
+});
+
+test("every hidden cloud stands on safe ground and returns before its stage exit", () => {
+  for (let stage = 0; stage < 32; stage++) {
+    const g = started();
+    g.loadStage(stage);
+    const main = g.level, cloud = main.cloud;
+    assert.ok(main.ground.some(f => cloud.x >= f.x && cloud.x + cloud.w <= f.x + f.w));
+    clean(g);
+    summonCloud(g);
+    const target = g.bonusReturn.checkpoint;
+    assert.ok(target > cloud.x && target < main.goalX);
+    assert.ok(main.checkpoints.includes(target));
+    assert.equal(g.current().stage, stage);
+  }
+});
+
+test("the whole cloud bonus route is reachable with ordinary movement and jumping", () => {
+  const g = started(), p = g.current();
+  clean(g);
+  summonCloud(g);
+  let hold = 0, furthest = 0;
+  const score = p.score, lives = p.lives;
+  for (let tick = 0; tick < 1000 && g.level.bonus; tick++) {
+    const floor = g.level.ground.concat(g.level.platforms).find(f =>
+      p.x + p.w > f.x && p.x < f.x + f.w && Math.abs(p.y + p.h - f.y) < 1);
+    if (p.grounded && !hold && floor && floor.x + floor.w - p.x - p.w < 25)
+      hold = 22;
+    const a = hold > 0;
+    if (hold) hold--;
+    frames(g, 1, { x: 1, b: true, a });
+    furthest = Math.max(furthest, p.x);
+  }
+  assert.ok(furthest > 1050, "normal inputs reach past all eight cloud platforms");
+  assert.equal(g.level.bonus, undefined, "falling at the end returns to the main stage");
+  assert.equal(p.checkpointIndex, 1);
+  assert.equal(p.lives, lives);
+  assert.ok(p.score - score >= 500 * 12, "fruit is reachable along the jumping route");
+});
+
 test("32 fixed routes, four checkpoints, eight distinct boss arenas and escalating head HP", () => {
   assert.equal(Game.ROUTES.length, 32);
   assert.equal(new Set(Game.ROUTES.map((r) => r.join("/"))).size, 32);
