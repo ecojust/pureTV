@@ -1,0 +1,62 @@
+name: Publish Android release assets
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact 40-character commit containing the verified release resources
+        required: true
+        type: string
+      release_tag:
+        description: Existing Android release tag
+        required: true
+        default: android-v0.5.0
+        type: string
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: publish-android-release-assets
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Validate repository and release inputs
+        id: inputs
+        env:
+          REPOSITORY: ${{ github.repository }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          python3 - <<'PY'
+          import os, re
+          assert os.environ['REPOSITORY'] == 'ecojust/pureTV', 'This publisher is restricted to ecojust/pureTV'
+          source_sha, release_tag = os.environ['SOURCE_SHA'], os.environ['RELEASE_TAG']
+          assert re.fullmatch(r'[0-9a-f]{40}', source_sha), 'An exact source SHA is required'
+          assert re.fullmatch(r'android-v[0-9]+\.[0-9]+\.[0-9]+', release_tag), 'Expected an Android release tag such as android-v0.5.0'
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'source_sha={source_sha}\nrelease_tag={release_tag}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.inputs.outputs.source_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: build-tools;34.0.0
+      - name: Verify and publish existing signed Android resources
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ steps.inputs.outputs.source_sha }}
+          RELEASE_TAG: ${{ steps.inputs.outputs.release_tag }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          python tools/publish-android-release.py \
+            --source-sha "$SOURCE_SHA" \
+            --tag "$RELEASE_TAG" \
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0"
