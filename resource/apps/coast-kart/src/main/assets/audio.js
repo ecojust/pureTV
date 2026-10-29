@@ -86,7 +86,7 @@
     game.events.forEach(function (e) {
       if (e.tick <= self.eventTick) return;
       if (e.type === "item") self.tone(880, 0.18, 0.45, "sine");
-      else if (e.type === "drift" || e.type === "boost")
+      else if (e.type === "drift" || e.type === "boost" || e.type === "draft")
         self.tone(650, 0.28, 0.5, "triangle");
       else if (e.type === "hit") self.tone(90, 0.2, 0.5, "sawtooth");
       else if (e.type === "lap" || e.type === "finish")

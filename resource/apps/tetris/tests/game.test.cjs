@@ -155,3 +155,40 @@ test('SELECT toggles music without resetting progress; high score saves safely',
   g.saveHighScore=()=>{throw new Error('storage disabled');};p.score=100;assert.doesNotThrow(()=>g.updateRecord(p));
   assert.equal(g.status().players[0].cleared,1);assert.equal(g.status().players[0].level,0);
 });
+
+test('B-TYPE selection uses press edges and bounds its fixed level and obstacle height',()=>{
+  const g=new TetrisGame({seed:9});g.startLevel=19;
+  frames(g,1,{a:true});assert.equal(g.mode,'B');assert.equal(g.startLevel,9);
+  frames(g,20,{a:true});assert.equal(g.mode,'B');
+  for(let i=0;i<8;i++){frames(g,1);frames(g,1,{y:1});}
+  assert.equal(g.startHeight,5);frames(g,1,{x:1});assert.equal(g.startLevel,9);
+  frames(g,1);frames(g,1,{b:true});assert.equal(g.mode,'A');
+});
+
+test('B-TYPE gives both players the same incomplete obstacle rows without consuming pieces',()=>{
+  const g=new TetrisGame({seed:12});g.mode='B';g.startHeight=4;g.selectedPlayers=2;g.start(input());
+  const [a,b]=g.players;assert.deepEqual(a.board,b.board);
+  assert.ok(a.board.slice(0,8).every(row=>row.every(value=>value===0)));
+  assert.ok(a.board.slice(8).every(row=>row.some(Boolean)&&row.includes(0)));
+  assert.notEqual(a.board,b.board);assert.notEqual(a.board[19],b.board[19]);
+  const h=new TetrisGame({seed:12});h.start(input());
+  assert.equal(a.piece.type,h.players[0].piece.type);assert.equal(a.nextType,h.players[0].nextType);
+  assert.deepEqual(R.challengeBoard(42,0),R.emptyBoard());
+});
+
+test('B-TYPE holds its speed, counts down 25 lines and stops spawning after completion',()=>{
+  const g=game(5);g.mode='B';const p=clearWithI(g,4);p.cleared=22;
+  frames(g,p.clearTimer);assert.equal(p.completed,true);assert.equal(p.cleared,26);
+  assert.equal(p.level,5);assert.equal(p.score,7200);assert.equal(g.status().players[0].remaining,0);
+  assert.equal(g.phase,'gameover');assert.equal(p.piece,null);assert.equal(p.entryTimer,0);
+  frames(g,120,{x:1,y:1,a:true});assert.equal(p.piece,null);
+  frames(g,1,{start:true});assert.equal(g.phase,'title');assert.equal(g.mode,'B');
+});
+
+test('B-TYPE completion leaves the other player running and ignores a cleared controller disconnect',()=>{
+  const g=game(0,2);g.mode='B';const p=clearWithI(g,1);p.cleared=24;
+  frames(g,p.clearTimer);assert.equal(p.completed,true);assert.equal(g.phase,'playing');
+  g.tick([connected(1,{connected:false}),connected(2)]);assert.equal(g.phase,'playing');
+  const survivor=g.players[1];survivor.alive=false;survivor.piece=null;
+  frames(g,1);assert.equal(g.phase,'gameover');assert.equal(p.completed,true);
+});

@@ -79,9 +79,12 @@ test("A has a rising edge jump, hold gives additional height, B increases runnin
   assert.ok(run.current().x > walk.current().x + 15);
 });
 
-test("touching the first egg equips axe; B fires at most two active shots", () => {
+test("touch opens the first egg, then collecting its axe equips it; at most two active shots", () => {
   const g = started();
   frames(g, 26, { x: 1, b: true });
+  assert.equal(g.level.eggs[0].open, true);
+  assert.equal(g.current().weapon, "none", "opening is distinct from collecting");
+  frames(g, 4, { x: 1, b: true });
   assert.equal(g.current().weapon, "axe");
   frames(g, 1);
   frames(g, 1, { b: true });
@@ -221,7 +224,15 @@ test("two weapon hits open an egg and jumping at hidden spot reveals it", () => 
   assert.equal(egg.open, false);
   shoot();
   assert.equal(egg.open, true);
+  assert.equal(g.current().weapon, "none", "shooting from afar does not equip the item");
+  assert.equal(g.level.items.filter((item) => item.released).length, 1);
+  const released = g.level.items[0];
+  assert.equal(released.type, "axe");
+  assert.equal(released.taken, false);
+  g.current().x = released.x;
+  frames(g, 4);
   assert.equal(g.current().weapon, "axe");
+  assert.equal(released.taken, true);
   egg = {
     type: "pot",
     x: 60,
@@ -234,6 +245,7 @@ test("two weapon hits open an egg and jumping at hidden spot reveals it", () => 
   };
   g.level.eggs = [egg];
   g.current().x = 60;
+  g.cameraX = 0;
   frames(g, 10, { a: true });
   assert.equal(egg.hidden, false);
 });
@@ -493,4 +505,66 @@ test("all eight bosses can be defeated by real B throwing and movement within st
     frames(g, 90);
     assert.equal(g.phase, stage === 31 ? "ending" : "playing");
   }
+});
+
+
+test("released egg contents arc, land on terrain and cannot be collected twice", () => {
+  const g = started();
+  clean(g);
+  const egg = { type: "milk", x: 180, y: 184, w: 16, h: 16, hidden: false, open: false };
+  g.level.eggs = [egg];
+  g.openEgg(egg);
+  g.openEgg(egg);
+  assert.equal(g.level.items.length, 1, "one item per egg");
+  const item = g.level.items[0];
+  frames(g, 8);
+  assert.ok(item.y < egg.y - 15, "contents visibly pop out of the shell");
+  frames(g, 42);
+  assert.equal(item.y, 188, "item settles on the ground");
+  assert.equal(item.vy, 0);
+  assert.equal(item.taken, false);
+  g.current().x = item.x;
+  g.current().energy = 3;
+  frames(g, 1);
+  assert.equal(g.current().energy, 16);
+  assert.equal(g.current().score, 1000);
+  frames(g, 10);
+  assert.equal(g.current().score, 1000);
+});
+
+test("a released skateboard rolls forward; falling contents cannot be picked up remotely", () => {
+  const g = started();
+  clean(g);
+  const egg = { type: "board", x: 180, y: 184, w: 16, h: 16, hidden: false, open: false };
+  g.openEgg(egg);
+  const item = g.level.items[0];
+  frames(g, 40);
+  assert.ok(item.x > 210);
+  assert.equal(g.current().skateboard, false);
+  g.level.ground = [];
+  for (let i = 0; i < 50; i++) g.updateWorld();
+  assert.equal(item.taken, true, "out-of-world items expire");
+  assert.equal(g.current().skateboard, false);
+});
+
+test("birds commit to a readable dive then climb away; offscreen enemies remain asleep", () => {
+  const g = started();
+  clean(g);
+  const bird = { type: "bird", x: 140, y: 110, homeX: 140, homeY: 110,
+    w: 16, h: 14, age: 0, alive: true };
+  const distant = Object.assign({}, bird, { x: 600, homeX: 600 });
+  g.level.enemies = [bird, distant];
+  g.updateWorld();
+  assert.equal(bird.diving, true);
+  const target = bird.targetY;
+  const startY = bird.y;
+  g.current().y = 30;
+  for (let i = 0; i < 20; i++) g.updateWorld();
+  assert.equal(bird.targetY, target, "dive does not unfairly track a dodge");
+  assert.ok(bird.y > startY + 20);
+  for (let i = 0; i < 15; i++) g.updateWorld();
+  const bottom = bird.y;
+  for (let i = 0; i < 10; i++) g.updateWorld();
+  assert.ok(bird.y < bottom - 5);
+  assert.equal(distant.age, 0);
 });

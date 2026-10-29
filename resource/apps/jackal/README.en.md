@@ -20,6 +20,10 @@ The APK in this directory is signed with the pureTV release certificate.
 
 Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`. The current APK version is `0.3.0`.
 
+## Controller update (source)
+
+The right third of the phone screen is an edge-to-edge action area. The upper half fires the machine gun (B); the lower half throws a grenade or fires a rocket (A). The left area retains the floating joystick. START and SELECT sit separately at the bottom left. Touches are independent, and cancellation, focus loss or disconnect clears held input. Selection, dragging and long-press context menus are suppressed across the controller. These changes require a new APK build; the download above remains the previously published release.
+
 ## Controls
 
 1. Connect the phones and TV to the same local network; the TV may use Ethernet.

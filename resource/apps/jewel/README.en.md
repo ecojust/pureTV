@@ -12,23 +12,26 @@ Version **0.1.0**, for Android 8.0+ TVs. Package: `com.ecojust.jeweltv`. The TV 
 The APK in this directory uses the pureTV release certificate.
 <!-- apk-resource:end -->
 
+The gameplay and controller upgrades described below are source changes. The linked 0.1.0 APK is the previous release and requires a new build to include them.
+
+
 ## Play
 
 1. Connect the phones and TV to the same local network and open the TV app.
 2. Scan its QR code in a phone browser. For two players, each phone joins separately.
 3. Press SELECT at the title to choose one or two players, then START. Both players must connect for two-player play.
-4. The left joystick stays hidden until touched. Each initial touch sets its center; drag to control and release to stop and hide it.
+4. The left joystick stays hidden until touched. Each initial touch sets its center; drag to control and release to stop and hide it. The entire right third of the screen accepts action touches. START/SELECT stay separate at the bottom left. Gameplay areas suppress text selection and long-press menus.
 
 | Control | Action |
 | --- | --- |
 | Left floating stick | Move left/right; hold down for soft drop; release to stop |
-| A / B | Cycle the three gems in the same direction |
-| SELECT + A / B | Swap the top and bottom gems of the current column |
+| Entire right action zone A | Cycle the three gems; keyboard B retains the same action |
+| SELECT + right action zone | Swap the top and bottom gems of the current column |
 | SELECT | Choose one/two players at the title; toggle music while paused |
 | START | Start, pause or resume |
 | TV Back | Exit confirmation |
 
-Every 70 cleared gems advances the level and awards a magic column, which clears the color it lands on. Two players receive the same gem sequence and keep separate boards and scores, without sending garbage. This local two-player competition is an additional mode.
+Every 70 cleared gems advances the level and awards a magic column, which clears the color it lands on. Unsupported gems visibly fall after a clear; the next chain is checked only after they land. A sidebar meter tracks progress toward the next magic column. Two players receive the same gem sequence and keep separate boards and scores, without sending garbage. This local two-player competition is an additional mode.
 
 High scores stay on the TV and survive an app update. Uninstalling clears the app data.
 

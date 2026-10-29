@@ -293,7 +293,7 @@
     this.round(15, -10, 11, 5, 2, "#fff3cb");
     if (drift) {
       for (var i = 0; i < 4; i++) {
-        var spark = drift > 1.6 ? "#ffdc82" : "#7ee9ff";
+        var spark = ["#c2d6df", "#7ee9ff", "#ffdc82", "#dc9bff"][CoastKartGame.driftTier(drift)];
         this.poly(
           [
             [-47 - i * 5, 0],
@@ -730,24 +730,27 @@
       COLORS[p.id - 1],
     );
     if (p.drift > 0) {
-      this.round(w / 2 - 70, h - 119, 140, 10, 5, "#344c60");
-      this.round(
-        w / 2 - 70,
-        h - 119,
-        (140 * p.drift) / 2.5,
-        10,
-        5,
-        p.drift > 1.6 ? "#ffcd72" : "#8ae9ff",
-      );
+      var tier = CoastKartGame.driftTier(p.drift),
+        color = ["#c2d6df", "#8ae9ff", "#ffcd72", "#dc9bff"][tier];
+      this.round(18, h - 139, 148, 54, 10, "rgba(16,37,56,.88)");
       this.text(
-        this.tr("松开 B 冲刺", "RELEASE B TO BOOST"),
-        w / 2,
-        h - 130,
-        11,
-        "#fff",
-        "700",
-        "center",
+        tier ? this.tr("松开 B 冲刺", "RELEASE B") + " · " + tier
+          : this.tr("按住 B 蓄力", "HOLD B TO CHARGE"),
+        92, h - 120, 11, color, "700", "center",
       );
+      this.round(30, h - 105, 124, 7, 3, "#344c60");
+      this.round(30, h - 105, 124 * p.drift / 3, 7, 3, color);
+    }
+    if (p.draft > 0 || p.draftCooldown > 1.3) {
+      this.round(18, h - 187, 148, 40, 10, "rgba(16,37,56,.88)");
+      this.text(
+        p.draft > 0 ? this.tr("尾流蓄力", "SLIPSTREAM") : this.tr("尾流冲刺！", "SLIPSTREAM BOOST!"),
+        92, h - 173, 11, "#b6fff1", "700", "center",
+      );
+      if (p.draft > 0) {
+        this.round(30, h - 160, 124, 5, 2, "#344c60");
+        this.round(30, h - 160, 124 * p.draft / 1.2, 5, 2, "#b6fff1");
+      }
     }
     var bend = CoastKartGame.curve(game.track, p.s + 250);
     if (Math.abs(bend) > 0.5)

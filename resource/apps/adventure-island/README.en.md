@@ -17,18 +17,26 @@ The APK is signed with the pureTV release certificate.
 1. Connect the TV and phones to the same LAN and open the game on the TV.
 2. Scan its QR code in a phone browser. Use one phone per player.
 3. Press SELECT on the title screen to choose the player count, then START.
-4. The left joystick stays hidden until touched. Each touch sets its center; drag to move, then release to stop and hide it. A/B support simultaneous touches with the stick.
+4. The left floating joystick stays hidden until touched. Each touch sets its center; drag to move, then release to stop and hide it. The right third of the screen is the action area: touch anywhere in its upper half for B or lower half for A, simultaneously with the stick. START/SELECT remain separate at the bottom left. Long presses in the control area do not select text or open browser menus.
 
 | Control | Action |
 | --- | --- |
 | Floating joystick | Move left/right |
-| A | Jump; hold for a higher jump |
-| B | Throw your weapon / run |
+| Lower right half: A | Jump; hold for a higher jump |
+| Upper right half: B | Throw your weapon / run |
 | SELECT | Change player count on title; toggle music while paused |
 | START | Start, pause / resume |
 | TV Back | Confirm exit |
 
 Two players take **alternating turns**, retaining their own lives, score and stage. A lost life passes control to the next player. Phones show whose turn it is; waiting players cannot move the active character. Losing the active controller pauses the game until it reconnects. Manual pause remains paused. High score and music preference are stored on the TV.
+
+## Source upgrade
+
+- Broken eggs release physical pickups that rise, land and require contact; shooting an egg from afar no longer equips its contents. Skateboard pickups roll forward.
+- Approaching birds commit to a dive height, then climb away, making their attack readable and avoidable.
+- New item sprites, shell fragments, floating pickup scores and a distinct eggplant companion show each state clearly.
+
+These are source changes; the existing 0.1.0 APK does not include them yet.
 
 ## Screenshots
 

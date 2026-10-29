@@ -295,3 +295,53 @@ test('all sixteen action rooms are physically traversable to their key and palac
     assert(g.tick < 3600, 'route fits the ordinary room timer');
   }
 });
+
+test("repressing A in midair brakes a rising jump, floats while held and resumes falling on release", () => {
+  const g = start();
+  g.room.enemies = [];
+  tick(g, { a: true, y: -1 }, 8);
+  assert(g.player.vy < -4);
+  tick(g, {});
+  const height = g.player.y;
+  tick(g, { a: true });
+  assert(g.player.vy >= 0 && g.player.vy <= 0.55);
+  assert.equal(g.player.floating, true);
+  tick(g, { a: true }, 12);
+  assert(g.player.y - height < 7);
+  tick(g, {}, 10);
+  assert.equal(g.player.floating, false);
+  assert(g.player.vy > 1);
+});
+
+test("mummy transforms after its warning period and pursues beyond its former ground patrol", () => {
+  const g = start();
+  const mummy = g.room.enemies.find((e) => e.kind === "mummy");
+  g.room.enemies = [mummy];
+  g.player.invulnerable = 1000;
+  const changeAt = 240 + (mummy.id % 3) * 60;
+  tick(g, {}, changeAt - (mummy.age || 0) - 1);
+  assert.equal(mummy.kind, "mummy");
+  tick(g);
+  assert.equal(mummy.kind, "bat");
+  assert.equal(mummy.hunting, true);
+  assert.equal(mummy.morphTicks, 30);
+  tick(g, {}, 240);
+  assert(mummy.x < mummy.min, "flying form must leave the old ground patrol to follow Jack");
+  assert(mummy.x >= 2 && mummy.x <= g.room.w - 16);
+  assert(mummy.y >= 4 && mummy.y <= g.room.h - 18);
+  assert.equal(g.player.lives, 3);
+});
+
+test("green power converts a transformed hunter into a collectible coin", () => {
+  const g = start();
+  const mummy = g.room.enemies.find((e) => e.kind === "mummy");
+  g.room.enemies = [mummy];
+  mummy.age = 240 + (mummy.id % 3) * 60 - 1;
+  tick(g);
+  assert.equal(mummy.hunting, true);
+  g.player.mightyCoins = 3;
+  g.usePower(); g.usePower(); g.usePower();
+  assert.equal(mummy.alive, false);
+  assert.equal(g.room.items.length, 1);
+  assert.equal(g.room.items[0].x, mummy.x);
+});

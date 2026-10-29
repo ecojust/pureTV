@@ -25,8 +25,8 @@
         "No phone app needed\nConnect to the same router as the TV",
       ],
       "menu-help": [
-        "左右选择等级 · 下方加 10 级\nSELECT 选人数／游戏中切换音乐\nSTART 开始／暂停",
-        "Left / right: level · Down: +10\nSELECT: players / music in game\nSTART: begin / pause",
+        "A/B 切换模式 · 左右选择等级\n上下：A 模式跨 10 级／B 模式选高度\nSELECT 选人数／音乐 · START 开始／暂停",
+        "A/B: type · Left/right: level\nUp/down: A level ±10 / B height\nSELECT: players/music · START: begin/pause",
       ],
       "move-label": ["左右移动／下拉加速", "MOVE / SOFT DROP"],
       "a-label": config.actions.a,

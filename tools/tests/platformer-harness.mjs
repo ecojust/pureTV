@@ -1,3 +1,4 @@
+import { assertControllerLayout, verifyBlindTouchZones, overlaps } from './controller-zones.mjs';
 // Browser regression tests for the bundled platform game pages and native-room protocol.
 // Screenshots are actual Chromium renders with a simulated Android bridge, not TV captures.
 import assert from 'node:assert/strict';
@@ -222,57 +223,9 @@ try {
     }
     await context.close();
   });
-  await test('Real touchscreen hits the edge of the zone, captures dragging outside, and keeps A/B independent', async () => {
+  await test('Real touchscreen covers the full action zones, holds independent fingers and prevents long-press selection', async () => {
     const { context, page } = await fixture();
-    const cdp = await context.newCDPSession(page);
-    await page.evaluate(() => {
-      window.__pointerEvents = [];
-      for (const type of ['pointerdown', 'pointermove', 'pointerup'])
-        document.addEventListener(type, event => window.__pointerEvents.push({ type, target: event.target.id, trusted: event.isTrusted, pointerId: event.pointerId }), true);
-    });
-    const touches = new Map();
-    async function touch(type, id, x, y) {
-      if (type === 'touchEnd') {
-        const point = touches.get(id);
-        await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [point] });
-        touches.delete(id);
-      } else {
-        touches.set(id, { id, x, y, radiusX: 4, radiusY: 4, force: 1 });
-        await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [...touches.values()] });
-      }
-    }
-    const zone = await page.locator('#joystick-zone').boundingBox();
-    const origin = { clientX: zone.x + 3, clientY: zone.y + zone.height * .55 };
-    assert.equal(await page.evaluate(({clientX,clientY}) => document.elementFromPoint(clientX,clientY).id, origin), 'joystick-zone');
-    await touch('touchStart', 1, origin.clientX, origin.clientY);
-    await expectInput(page, { x: 0, y: 0 });
-    await stickCenter(page, origin);
-    await touch('touchMove', 1, origin.clientX + 130, origin.clientY);
-    await expectInput(page, { x: 1, y: 0 });
-    for (const [id, name] of [[2,'button-a'],[3,'button-b']]) {
-      const box = await page.locator('#' + name).boundingBox();
-      await touch('touchStart', id, box.x + box.width / 2, box.y + box.height / 2);
-    }
-    await expectInput(page, { x: 1, y: 0, a: true, b: true });
-    await touch('touchEnd', 2);
-    await expectInput(page, { x: 1, a: false, b: true });
-    await touch('touchStart', 4, zone.x + zone.width * .75, zone.y + zone.height * .25);
-    await touch('touchMove', 4, zone.x + zone.width * .5, zone.y + zone.height * .15);
-    await stickCenter(page, origin);
-    await expectInput(page, { x: 1, y: 0, b: true });
-    const pointerId = await page.evaluate(() => window.__pointerEvents.find(event => event.type === 'pointerdown' && event.target === 'joystick-zone').pointerId);
-    assert.equal(await page.locator('#joystick-zone').evaluate((element,id) => element.hasPointerCapture(id), pointerId), true, 'Real browser pointer capture owns the active stick touch');
-    await touch('touchMove', 1, zone.x + zone.width + 40, Math.min(380, zone.y + zone.height + 20));
-    await touch('touchEnd', 1);
-    await expectInput(page, { x: 0, y: 0, a: false, b: true });
-    await stickHidden(page);
-    await touch('touchEnd', 3);
-    await touch('touchEnd', 4);
-    await expectInput(page, { x: 0, y: 0, a: false, b: false });
-    const events = await page.evaluate(() => window.__pointerEvents);
-    assert.ok(events.length && events.every(event => event.trusted), 'Touch events are browser-generated, not dispatchEvent simulations');
-    assert.ok(events.some(event => event.type === 'pointerup' && event.target === 'joystick-zone' && event.pointerId === pointerId), 'Captured release returns to the joystick after leaving its region');
-    await cdp.detach();
+    await verifyBlindTouchZones(page);
     await context.close();
   });
   await test('Disconnect releases held input; reconnect resumes same player with fresh sequence', async () => {
@@ -383,23 +336,10 @@ try {
   await test('Portrait and small landscape controls remain in viewport without overlap or scrolling', async () => {
     for (const locale of ['zh-CN','en-US']) {
     const { context, page } = await fixture({locale});
-    for (const viewport of [{ width: 844, height: 390 }, { width: 667, height: 375 }, { width: 390, height: 844 }, { width: 320, height: 568 }, {width:568,height:320}]) {
+    for (const viewport of [{ width: 844, height: 390 }, { width: 667, height: 375 }, { width: 390, height: 844 }, { width: 320, height: 568 }, {width:568,height:320}, {width:1366,height:768}]) {
       await page.setViewportSize(viewport);
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      const rectangles = await Promise.all(['joystick-zone', 'button-a', 'button-b', 'button-start', 'button-select'].map(id => page.locator(`#${id}`).boundingBox()));
-      for (const rect of rectangles) {
-        assert.ok(rect.x >= 0 && rect.y >= 0 && rect.x + rect.width <= viewport.width + 1 && rect.y + rect.height <= viewport.height + 1, `${JSON.stringify(viewport)} control outside viewport ${JSON.stringify(rect)}`);
-      }
-      const overlaps = (p, q) => p.x < q.x + q.width && p.x + p.width > q.x && p.y < q.y + q.height && p.y + p.height > q.y;
-      for (let i=0;i<rectangles.length;i++) for (let j=i+1;j<rectangles.length;j++) assert.ok(!overlaps(rectangles[i],rectangles[j]), `overlap at ${JSON.stringify(viewport)} controls ${i}/${j}`);
-      const header = await Promise.all(['.brand','.connection','#fullscreen'].map(selector=>page.locator(selector).boundingBox()));
-      for(const box of header.filter(Boolean))assert.ok(box.x>=0&&box.y>=0&&box.x+box.width<=viewport.width+.5&&box.y+box.height<=viewport.height+.5,'Header outside viewport: '+JSON.stringify({viewport,box}));
-      for(let i=0;i<header.length;i++)for(let j=i+1;j<header.length;j++)if(header[i]&&header[j])assert.ok(!overlaps(header[i],header[j]),'Header labels/buttons overlap: '+JSON.stringify({viewport,header}));
-      const overflow=await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight,headerWidth:document.querySelector('.header').scrollWidth,headerClient:document.querySelector('.header').clientWidth}));
-      assert.ok(overflow.width<=viewport.width&&overflow.height<=viewport.height&&overflow.headerWidth<=overflow.headerClient+1,'Header/page overflows: '+JSON.stringify({viewport,overflow}));
-      assert.equal(await page.evaluate(() => getComputedStyle(document.body).overflow), 'hidden');
-      assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('#joystick-zone')).touchAction), 'none');
-      assert.ok(rectangles[0].width >= 100 && rectangles[0].height >= 100, 'The floating joystick has a usable touch region');
+      await assertControllerLayout(page, viewport);
       await stickHidden(page);
       for(const label of ['STAGE 1 · GATE OF DAWN','STAGE 16 · THE VERY LONG ROYAL PALACE FINAL CHAMBER']) {
         await page.evaluate(stageLabel=>window.__sockets.at(-1).receive({type:'state',phase:'playing',activePlayer:1,players:[{id:1,active:true,lives:3,score:840,stageLabel}]}),label);
@@ -595,40 +535,40 @@ async function waitGround(page,config) {
 async function handoffFixture(tv,phones,config) {
   // Deliberately controlled progression/death setup, after all natural-play
   // screenshots. These are normal engine entry points, not simulated UI claims.
-  const before=await gameState(tv,config);
+  const before=await gameState(tv,config),first=before.activePlayer-1,second=1-first;
   await tv.evaluate(({api,kind})=>{const g=window[api].game;if(kind==='bomb-jack')g.advanceStage();else g.finishStage();},config);
-  await tv.waitForFunction(({api,stage})=>{const p=window[api].game.players[0];return (p.stageIndex===undefined?(p.stage===undefined?p.level:p.stage):p.stageIndex)>stage;},{api:config.api,stage:before.players[0].stage},{timeout:10000});
-  const progressed=(await gameState(tv,config)).players[0];
+  await tv.waitForFunction(({api,stage,first})=>{const p=window[api].game.players[first];return (p.stageIndex===undefined?(p.stage===undefined?p.level:p.stage):p.stageIndex)>stage;},{api:config.api,stage:before.players[first].stage,first},{timeout:10000});
+  const progressed=(await gameState(tv,config)).players[first];
   await tv.evaluate(api=>window[api].game.loseLife('browser-turn-fixture'),config.api);
-  await tv.waitForFunction(api=>window[api].game.activePlayer===2,config.api,{timeout:8000});
-  await phones[1].page.waitForFunction(()=>document.querySelector('#controller').dataset.turn==='active');
-  await phones[0].page.waitForFunction(()=>document.querySelector('#controller').dataset.turn==='waiting');
-  await awaitTurnCard(tv,2,true);await awaitTurnCard(tv,1,false);
+  await tv.waitForFunction(({api,id})=>window[api].game.activePlayer===id,{api:config.api,id:second+1},{timeout:8000});
+  await phones[second].page.waitForFunction(()=>document.querySelector('#controller').dataset.turn==='active');
+  await phones[first].page.waitForFunction(()=>document.querySelector('#controller').dataset.turn==='waiting');
+  await awaitTurnCard(tv,second+1,true);await awaitTurnCard(tv,first+1,false);
   let state=await gameState(tv,config);
-  assert.equal(state.players[0].lives,progressed.lives-1,'Only departing P1 loses a life');
-  assert.equal(state.players[0].stage,progressed.stage,'P1 stage is saved while P2 plays');
-  assert.equal(state.players[0].score,progressed.score,'P1 score is saved');
-  assert.equal(state.players[1].stage,before.players[1].stage,'P2 begins its own first stage');
-  assert.equal(state.players[1].lives,before.players[1].lives,'P2 retains its own lives');
+  assert.equal(state.players[first].lives,progressed.lives-1,'Only the departing player loses a life');
+  assert.equal(state.players[first].stage,progressed.stage,'The departing player keeps its stage during the next turn');
+  assert.equal(state.players[first].score,progressed.score,'The departing player keeps its score');
+  assert.equal(state.players[second].stage,before.players[second].stage,'The next player resumes its own saved stage');
+  assert.equal(state.players[second].lives,before.players[second].lives,'The next player retains its own lives');
   if(config.kind==='bomb-jack') {
-    const p1x=state.players[0].x,priorX=state.players[1].x;
+    const p1x=state.players[first].x,priorX=state.players[second].x;
     await tv.evaluate(api=>window[api].key('ArrowRight',true),config.api);
-    await tv.waitForFunction(({api,x})=>window[api].game.players[1].x>x+3,{api:config.api,x:priorX});
+    await tv.waitForFunction(({api,x,second})=>window[api].game.players[second].x>x+3,{api:config.api,x:priorX,second});
     await tv.evaluate(api=>window[api].key('ArrowRight',false),config.api);
-    assert.equal((await gameState(tv,config)).players[0].x,p1x,'Native remote follows active P2 without moving waiting P1');
+    assert.equal((await gameState(tv,config)).players[first].x,p1x,'Native remote follows the active player without moving the waiting player');
     state=await gameState(tv,config);
   }
-  const p2x=state.players[1].x;
-  await dragControl(phones[1].page,120,0);
-  await tv.waitForFunction(({api,x})=>window[api].game.players[1].x>x+3,{api:config.api,x:p2x});
-  await releaseControl(phones[1].page,'joystick-zone',11);
+  const p2x=state.players[second].x;
+  await dragControl(phones[second].page,120,0);
+  await tv.waitForFunction(({api,x,second})=>window[api].game.players[second].x>x+3,{api:config.api,x:p2x,second});
+  await releaseControl(phones[second].page,'joystick-zone',11);
   await tv.evaluate(api=>window[api].game.loseLife('browser-return-fixture'),config.api);
-  await tv.waitForFunction(api=>window[api].game.activePlayer===1,config.api,{timeout:8000});
+  await tv.waitForFunction(({api,id})=>window[api].game.activePlayer===id,{api:config.api,id:first+1},{timeout:8000});
   state=await gameState(tv,config);
-  assert.equal(state.players[0].stage,progressed.stage,'Returning P1 resumes saved stage');
-  assert.equal(state.players[0].lives,progressed.lives-1,'Returning P1 retains remaining lives');
-  assert.equal(state.players[0].score,progressed.score,'Returning P1 retains score');
-  assert.equal(state.players[1].lives,before.players[1].lives-1,'P2 loss is recorded separately');
+  assert.equal(state.players[first].stage,progressed.stage,'Returning player resumes its saved stage');
+  assert.equal(state.players[first].lives,progressed.lives-1,'Returning player retains remaining lives');
+  assert.equal(state.players[first].score,progressed.score,'Returning player retains its score');
+  assert.equal(state.players[second].lives,before.players[second].lives-1,'Each player loses lives independently');
   console.log('PASS '+config.kind+' controlled stage-clear/death fixture: alternate turns preserve individual progress, lives and score');
 }
 
@@ -719,22 +659,26 @@ export async function runCaptureTests({kind}) {
       for(const [width,height]of [[720,480],[960,540],[1280,720],[1920,1080]]){await resizeGame(tv,width,height);await visiblePixels(tv);}
       await resizeGame(tv,1280,720);
       await tv.screenshot({path:resolve(config.output,kind+'-tv'+suffix+'.png'),animations:'disabled'});
-      if(language==='en-US')assert.doesNotMatch(await phone1.page.locator('body').innerText(),/[\u3400-\u9fff]/,'English controller is translated');
-      await phone1.page.waitForFunction(()=>document.querySelector('#controller').dataset.turn==='active');
-      assert.equal(await phone1.page.locator('#joystick').isHidden(),true);
-      await phone1.page.screenshot({path:resolve(config.output,kind+'-controller'+suffix+'.png')});
-      await dragControl(phone1.page,35,-20,91);
-      assert.equal(await phone1.page.locator('#joystick').isVisible(),true);
-      await phone1.page.screenshot({path:resolve(config.output,kind+'-controller-active'+suffix+'.png'),animations:'disabled'});
-      await releaseControl(phone1.page,'joystick-zone',91);
+      // A natural enemy collision may have handed the turn over while testing
+      // reconnects. Capture the actual active phone, not an assumed P1.
+      const activePhone=phones[(await gameState(tv,config)).activePlayer-1];
+      if(language==='en-US')assert.doesNotMatch(await activePhone.page.locator('body').innerText(),/[\u3400-\u9fff]/,'English controller is translated');
+      await activePhone.page.waitForFunction(()=>document.querySelector('#controller').dataset.turn==='active');
+      assert.equal(await activePhone.page.locator('#joystick').isHidden(),true);
+      await activePhone.page.screenshot({path:resolve(config.output,kind+'-controller'+suffix+'.png')});
+      await dragControl(activePhone.page,35,-20,91);
+      assert.equal(await activePhone.page.locator('#joystick').isVisible(),true);
+      await activePhone.page.screenshot({path:resolve(config.output,kind+'-controller-active'+suffix+'.png'),animations:'disabled'});
+      await releaseControl(activePhone.page,'joystick-zone',91);
       await tv.evaluate(api=>window[api].suspend(false),config.api);
       if(kind!=='super-mario') {
         // A controlled resource grant isolates B from level item placement. The
-        // phone still drives the real action, model and audio implementation.
-        await tv.evaluate(({api,kind})=>{const g=window[api].game,p=g.players[g.activePlayer-1];if(kind==='bomb-jack')p.mightyCoins=1;else p.weapon='axe';},config);
-        await pressControl(phone1.page,'button-b',13);
+        // phone still drives the real action, model and audio implementation. A short
+        // grace period isolates the action assertion from unrelated enemy damage.
+        await tv.evaluate(({api,kind})=>{const g=window[api].game,p=g.players[g.activePlayer-1];if(kind==='bomb-jack'){p.mightyCoins=1;p.invulnerable=Math.max(p.invulnerable,120);}else p.weapon='axe';},config);
+        await pressControl(activePhone.page,'button-b',13);
         await tv.waitForFunction(({api,kind})=>{const g=window[api].game,p=g.players[g.activePlayer-1];return kind==='bomb-jack'?p.mightyCoins===0&&p.power>0:g.projectiles.length>0;},config);
-        await releaseControl(phone1.page,'button-b',13);
+        await releaseControl(activePhone.page,'button-b',13);
         console.log('PASS '+kind+' controlled B-resource fixture: actual phone action changes power/projectiles');
       }
       await handoffFixture(tv,phones,config);

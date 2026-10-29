@@ -24,6 +24,17 @@
   const gravity = level => level < 19 ? SPEEDS[Math.max(0, level | 0)] : level < 29 ? 2 : 1;
   const transitionLines = level => Math.min((level + 1) * 10, Math.max(100, level * 10 - 50));
   function emptyBoard() { return Array.from({length: HEIGHT}, () => Array(WIDTH).fill(0)); }
+  function challengeBoard(seed, height) {
+    const board = emptyBoard(), random = new PieceSequence(seed ^ 0x62c49a1f);
+    // Independently generated obstacles; a separate RNG keeps the piece queue
+    // identical between players and independent of the chosen starting height.
+    for (let y = HEIGHT - clamp(height | 0, 0, 5) * 3; y < HEIGHT; y++) {
+      const hole = random.random(WIDTH);
+      for (let x = 0; x < WIDTH; x++) board[y][x] = x === hole || random.random(4) === 0 ? 0 : random.random(7) + 1;
+      if (!board[y].some(Boolean)) board[y][(hole + 1) % WIDTH] = 1;
+    }
+    return board;
+  }
   function neutral() { return {connected: false, x: 0, y: 0, a: false, b: false, start: false, select: false}; }
   function normalize(value) {
     value = value || {};
@@ -50,7 +61,7 @@
       sequence, nextType: sequence.next(), score: 0, level, startLevel: level, cleared: 0,
       statistics: {T:0,J:0,Z:0,O:0,S:0,L:0,I:0}, clearRows: [], clearTimer: 0, clearDuration: 0,
       entryTimer: 0, entryDuration: 10, gravityTimer: 0, softTimer: 0, softCells: 0,
-      dasCharge: 0, previous: neutral(), lockedPieces: 0 };
+      dasCharge: 0, previous: neutral(), lockedPieces: 0, completed: false };
   }
   class TetrisGame {
     constructor(options) {
@@ -59,6 +70,7 @@
       this.highScore = Math.max(0, Number(options.highScore) || 0);
       this.saveHighScore = typeof options.saveHighScore === "function" ? options.saveHighScore : null;
       this.phase = "title"; this.selectedPlayers = 1; this.startLevel = 0; this.music = true;
+      this.mode = "A"; this.startHeight = 0;
       this.frame = 0; this.accumulator = 0; this.events = []; this.eventId = 0;
       this.pauseReason = ""; this.menuDirection = 0; this.menuTimer = 0;
       this.players = [player(1,0,this.seed), player(2,0,this.seed)];
@@ -95,6 +107,7 @@
       this.players.forEach((p,index) => {
         p.joined = index < this.selectedPlayers; p.alive = p.joined;
         p.previous = Object.assign({}, inputs[index]); p.connected = inputs[index].connected;
+        if (this.mode === "B") p.board = challengeBoard(roundSeed, this.startHeight);
         if (p.joined) this.spawn(p);
       });
       this.phase = "playing"; this.pauseReason = ""; this.emit("start");
@@ -135,16 +148,20 @@
       while (p.board.length < HEIGHT) p.board.unshift(Array(WIDTH).fill(0));
       p.cleared += count;
       const transition = transitionLines(p.startLevel);
-      const level = p.cleared < transition ? p.startLevel : p.startLevel+1+Math.floor((p.cleared-transition)/10);
+      const level = this.mode === "B" ? p.startLevel : p.cleared < transition ? p.startLevel : p.startLevel+1+Math.floor((p.cleared-transition)/10);
       if (level > p.level) this.emit("level",p);
       p.level = level;
       // Nintendo awards the multiplier using the level after the line clear.
       p.score += [0,40,100,300,1200][count] * (p.level+1);
       p.clearRows = []; p.clearTimer = 0; p.entryTimer = p.entryDuration;
+      if (this.mode === "B" && p.cleared >= 25) {
+        p.completed = true; p.entryTimer = 0; p.piece = null;
+        this.emit("complete",p);
+      }
       this.updateRecord(p);
     }
     advancePlayer(p, input) {
-      if (!p.alive) return;
+      if (!p.alive || p.completed) return;
       if (p.clearTimer > 0) { if (--p.clearTimer===0) this.finishClear(p); return; }
       if (p.entryTimer > 0) { if (--p.entryTimer===0) this.spawn(p); return; }
       if (!p.piece) return;
@@ -176,22 +193,31 @@
       const edge = action => current.some((value,index)=>value.connected && value[action] && !this.players[index].previous[action]);
       this.players.forEach((p,index)=>{p.connected=current[index].connected;});
       if (this.phase === "title") {
+        if (edge("a") || edge("b")) {
+          this.mode = this.mode === "A" ? "B" : "A";
+          if (this.mode === "B") this.startLevel = Math.min(9,this.startLevel);
+          this.emit("move");
+        }
         if (edge("select")) { this.selectedPlayers = this.selectedPlayers===1 ? 2 : 1; this.emit("move"); }
         const index = current.findIndex(input=>input.connected && (input.x || input.y));
         const input = index >= 0 ? current[index] : neutral();
         const previous = index >= 0 ? this.players[index].previous : neutral();
-        if (input.y && input.y !== previous.y) { this.startLevel=clamp(this.startLevel+(input.y>0?10:-10),0,19); this.emit("move"); }
+        if (input.y && input.y !== previous.y) {
+          if (this.mode === "B") this.startHeight=clamp(this.startHeight+(input.y>0?1:-1),0,5);
+          else this.startLevel=clamp(this.startLevel+(input.y>0?10:-10),0,19);
+          this.emit("move");
+        }
         if (!input.x) { this.menuDirection=0;this.menuTimer=0; }
         else if (input.x!==this.menuDirection) {
-          this.startLevel=clamp(this.startLevel+input.x,0,19); this.menuDirection=input.x;this.menuTimer=0;this.emit("move");
+          this.startLevel=clamp(this.startLevel+input.x,0,this.mode === "B" ? 9 : 19); this.menuDirection=input.x;this.menuTimer=0;this.emit("move");
         } else if (++this.menuTimer>=16 && (this.menuTimer-16)%6===0) {
-          this.startLevel=clamp(this.startLevel+input.x,0,19);this.emit("move");
+          this.startLevel=clamp(this.startLevel+input.x,0,this.mode === "B" ? 9 : 19);this.emit("move");
         }
         if (edge("start")) this.start(current);
       } else if (this.phase === "gameover") {
         if (edge("start")) { this.phase="title";this.pauseReason=""; }
       } else {
-        const missing = this.players.some((p,index)=>p.joined && p.alive && !current[index].connected);
+        const missing = this.players.some((p,index)=>p.joined && p.alive && !p.completed && !current[index].connected);
         if (edge("select")) this.music = !this.music;
         if (missing && this.phase === "playing") { this.phase="paused";this.pauseReason="disconnect"; }
         else if (!missing && this.phase === "paused" && this.pauseReason === "disconnect") {
@@ -202,7 +228,7 @@
         }
         if (this.phase === "playing") {
           this.players.forEach((p,index)=>{if(p.joined) this.advancePlayer(p,current[index]);});
-          if (this.players.filter(p=>p.joined).every(p=>!p.alive)) this.phase="gameover";
+          if (this.players.filter(p=>p.joined).every(p=>!p.alive || p.completed)) this.phase="gameover";
         }
       }
       this.players.forEach((p,index)=>{p.previous=Object.assign({},current[index]);});
@@ -214,11 +240,11 @@
     }
     status() {
       return {phase:this.phase,stage:(this.players[0].joined?this.players[0].level:this.startLevel)+1,
-        selectedPlayers:this.selectedPlayers,music:this.music,highScore:this.highScore,
-        players:this.players.map(p=>({id:p.id,joined:p.joined,alive:p.alive,connected:p.connected,score:p.score,level:p.level,cleared:p.cleared}))};
+        selectedPlayers:this.selectedPlayers,music:this.music,highScore:this.highScore,mode:this.mode,startHeight:this.startHeight,
+        players:this.players.map(p=>({id:p.id,joined:p.joined,alive:p.alive,connected:p.connected,score:p.score,level:p.level,cleared:p.cleared,completed:p.completed,remaining:this.mode === "B" ? Math.max(0,25-p.cleared) : null}))};
     }
   }
-  const rules = {TYPES,cells,gravity,transitionLines,emptyBoard,PieceSequence,FPS,TICK,WIDTH,HEIGHT};
+  const rules = {TYPES,cells,gravity,transitionLines,emptyBoard,challengeBoard,PieceSequence,FPS,TICK,WIDTH,HEIGHT};
   if (typeof module !== "undefined" && module.exports) module.exports={TetrisGame,TetrisRules:rules};
   else {root.TetrisGame=TetrisGame;root.TetrisRules=rules;}
 })(typeof window !== "undefined" ? window : global);

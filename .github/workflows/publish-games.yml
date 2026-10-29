@@ -1,0 +1,174 @@
+name: Publish signed game resources
+on:
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: Successful Android build run with staged resources
+        required: false
+        type: string
+      source_sha:
+        description: Exact 40-character source commit built by that run
+        required: false
+        type: string
+      check_signing_only:
+        description: Only verify that release secrets are configured and match the public certificate
+        type: boolean
+        default: false
+permissions:
+  actions: read
+  contents: write
+concurrency:
+  group: publish-game-resources
+  cancel-in-progress: false
+jobs:
+  signing-check:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Check signing configuration without exposing secrets
+        env:
+          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+        run: |
+          python3 - <<'PY'
+          import os
+          missing = [name for name in ('PURETV_KEYSTORE_BASE64', 'PURETV_KEYSTORE_PASSWORD') if not os.environ.get(name)]
+          for name in ('PURETV_KEYSTORE_BASE64', 'PURETV_KEYSTORE_PASSWORD'):
+              print(name + ': ' + ('missing' if name in missing else 'configured'))
+          assert not missing, 'Repository release signing secrets are required; no replacement key will be generated'
+          PY
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/puretv-release-certificate.sha256
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Verify configured key matches the existing release certificate
+        env:
+          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, os, subprocess
+          from pathlib import Path
+          key = Path(os.environ['RUNNER_TEMP']) / 'puretv-signing-check.jks'
+          try:
+              key.write_bytes(base64.b64decode(os.environ['PURETV_KEYSTORE_BASE64'], validate=True))
+              key.chmod(0o600)
+              certificate = subprocess.check_output(['keytool', '-exportcert', '-alias', 'puretv', '-keystore', str(key), '-storepass:env', 'PURETV_KEYSTORE_PASSWORD'])
+              assert hashlib.sha256(certificate).hexdigest() == Path('tools/puretv-release-certificate.sha256').read_text().strip(), 'Configured key does not match the published certificate'
+              print('Release signing: configured; certificate matches existing installations')
+          finally:
+              key.unlink(missing_ok=True)
+          PY
+  publish:
+    needs: signing-check
+    if: ${{ !inputs.check_signing_only }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Validate successful source build
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          BUILD_RUN_ID: ${{ inputs.build_run_id }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, subprocess
+          repository = os.environ['REPOSITORY']
+          run_id, source_sha = os.environ['BUILD_RUN_ID'], os.environ['SOURCE_SHA']
+          assert repository == 'ecojust/pureTV', 'This publisher is restricted to ecojust/pureTV'
+          assert re.fullmatch(r'[1-9][0-9]*', run_id), 'Invalid build run ID'
+          assert re.fullmatch(r'[0-9a-f]{40}', source_sha), 'An exact source SHA is required'
+          def api(path):
+              return json.loads(subprocess.check_output(['gh', 'api', path]))
+          run = api(f'repos/{repository}/actions/runs/{run_id}')
+          workflow = api(f'repos/{repository}/actions/workflows/{run["workflow_id"]}')
+          assert workflow['path'] == '.github/workflows/android.yml', 'Expected the Android build workflow'
+          assert run['repository']['full_name'] == repository and run['head_repository']['full_name'] == repository, 'Build must originate in this repository'
+          assert run['event'] == 'workflow_dispatch', 'Expected an explicitly staged build'
+          assert run['head_sha'] == source_sha, 'Build source does not match source_sha'
+          assert run['status'] == 'completed' and run['conclusion'] == 'success', 'Build must have completed successfully'
+          jobs = api(f'repos/{repository}/actions/runs/{run_id}/jobs?per_page=100')['jobs']
+          assert any(job['name'] == 'Stage verified launcher and app resource inputs' and job['conclusion'] == 'success' for job in jobs), 'Resource staging did not succeed'
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'source_sha={source_sha}\nstage_branch=build-assets/resources-{run_id}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.source.outputs.source_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Prepare and verify release signing key
+        env:
+          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, os, subprocess
+          from pathlib import Path
+          encoded = os.environ.get('PURETV_KEYSTORE_BASE64')
+          assert encoded and os.environ.get('PURETV_KEYSTORE_PASSWORD'), 'Repository release signing secrets are required'
+          key = Path(os.environ['RUNNER_TEMP']) / 'puretv-game-release.jks'
+          key.write_bytes(base64.b64decode(encoded, validate=True))
+          key.chmod(0o600)
+          certificate = subprocess.check_output(['keytool', '-exportcert', '-alias', 'puretv', '-keystore', str(key), '-storepass:env', 'PURETV_KEYSTORE_PASSWORD'])
+          expected = Path('tools/puretv-release-certificate.sha256').read_text().strip()
+          assert hashlib.sha256(certificate).hexdigest() == expected, 'Release certificate does not match existing installations'
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write(f'PURETV_KEYSTORE_PATH={key}\n')
+          PY
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: build-tools;34.0.0
+      - name: Sign and prepare the nine game resources
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+          SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+          STAGE_BRANCH: ${{ steps.source.outputs.stage_branch }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git fetch origin "refs/heads/$STAGE_BRANCH:refs/remotes/origin/$STAGE_BRANCH"
+          test "$(git rev-parse "refs/remotes/origin/$STAGE_BRANCH^")" = "$SOURCE_SHA"
+          python tools/prepare-app-resources.py \
+            --stage-branch "$STAGE_BRANCH" --source-sha "$SOURCE_SHA" \
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
+            --app tank --app jackal --app jewel --app tetris --app bomb-jack \
+            --app adventure-island --app super-mario --app coast-kart --app cozy-island
+      - name: Verify packaged source assets, signatures and resource catalog
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+        run: |
+          python tools/verify-game-publication.py --source-sha "$SOURCE_SHA" \
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+          git diff --check
+      - name: Commit verified resources to a publication branch
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+        run: |
+          git switch -c "build-assets/published-games-${GITHUB_RUN_ID}"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add README.md README.en.md resource/README.md docs/previews/en \
+            resource/apps/tank resource/apps/jackal resource/apps/jewel resource/apps/tetris \
+            resource/apps/bomb-jack resource/apps/adventure-island resource/apps/super-mario \
+            resource/apps/coast-kart resource/apps/cozy-island
+          git commit -m "Publish signed game resources from $SOURCE_SHA"
+          git push origin HEAD
+          printf 'Published branch: `build-assets/published-games-%s`\n\nSource: `%s`\n' "$GITHUB_RUN_ID" "$SOURCE_SHA" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signed-game-resources
+          path: ${{ runner.temp }}/published-game-resources/
+          if-no-files-found: error
+      - name: Remove temporary signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/puretv-game-release.jks"

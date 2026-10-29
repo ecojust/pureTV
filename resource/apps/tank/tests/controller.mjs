@@ -1,3 +1,4 @@
+import { assertControllerLayout, verifyBlindTouchZones } from '../../../../tools/tests/controller-zones.mjs';
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
@@ -141,10 +142,10 @@ try {
     await press(page, 'button-start', 104);
     await press(page, 'button-select', 105);
     await page.evaluate(() => window.__sockets.at(-1).close());
-    for (const id of ['button-a','button-b','button-start','button-select']) {
-      assert.equal(await page.locator(`#${id}`).isDisabled(), true);
-      assert.equal(await page.locator(`#${id}`).evaluate(el=>el.classList.contains('pressed')), false);
-    }
+    const disconnectedButtons = await page.evaluate(() => ['button-a','button-b','button-start','button-select'].map(id => {
+      const button=document.getElementById(id); return {disabled:button.disabled,pressed:button.classList.contains('pressed')};
+    }));
+    assert.ok(disconnectedButtons.every(button=>button.disabled&&!button.pressed));
     await page.waitForFunction(() => window.__sockets.length===2 && document.querySelector('#controller').dataset.connected==='true');
     assert.equal((await input(page)).start, false);
     assert.equal((await input(page)).select, false);
@@ -206,57 +207,9 @@ try {
     }
     await context.close();
   });
-  await test('Real touchscreen hits the edge of the zone, captures dragging outside, and keeps A/B independent', async () => {
+  await test('Real touchscreen covers the full action zones, holds independent fingers and prevents long-press selection', async () => {
     const { context, page } = await fixture();
-    const cdp = await context.newCDPSession(page);
-    await page.evaluate(() => {
-      window.__pointerEvents = [];
-      for (const type of ['pointerdown', 'pointermove', 'pointerup'])
-        document.addEventListener(type, event => window.__pointerEvents.push({ type, target: event.target.id, trusted: event.isTrusted, pointerId: event.pointerId }), true);
-    });
-    const touches = new Map();
-    async function touch(type, id, x, y) {
-      if (type === 'touchEnd') {
-        const point = touches.get(id);
-        await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [point] });
-        touches.delete(id);
-      } else {
-        touches.set(id, { id, x, y, radiusX: 4, radiusY: 4, force: 1 });
-        await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [...touches.values()] });
-      }
-    }
-    const zone = await page.locator('#joystick-zone').boundingBox();
-    const origin = { clientX: zone.x + 3, clientY: zone.y + zone.height * .55 };
-    assert.equal(await page.evaluate(({clientX,clientY}) => document.elementFromPoint(clientX,clientY).id, origin), 'joystick-zone');
-    await touch('touchStart', 1, origin.clientX, origin.clientY);
-    await expectInput(page, { x: 0, y: 0 });
-    await stickCenter(page, origin);
-    await touch('touchMove', 1, origin.clientX + 130, origin.clientY);
-    await expectInput(page, { x: 1, y: 0 });
-    for (const [id, name] of [[2,'button-a'],[3,'button-b']]) {
-      const box = await page.locator('#' + name).boundingBox();
-      await touch('touchStart', id, box.x + box.width / 2, box.y + box.height / 2);
-    }
-    await expectInput(page, { x: 1, y: 0, a: true, b: true });
-    await touch('touchEnd', 2);
-    await expectInput(page, { x: 1, a: false, b: true });
-    await touch('touchStart', 4, zone.x + zone.width * .75, zone.y + zone.height * .25);
-    await touch('touchMove', 4, zone.x + zone.width * .5, zone.y + zone.height * .15);
-    await stickCenter(page, origin);
-    await expectInput(page, { x: 1, y: 0, b: true });
-    const pointerId = await page.evaluate(() => window.__pointerEvents.find(event => event.type === 'pointerdown' && event.target === 'joystick-zone').pointerId);
-    assert.equal(await page.locator('#joystick-zone').evaluate((element,id) => element.hasPointerCapture(id), pointerId), true, 'Real browser pointer capture owns the active stick touch');
-    await touch('touchMove', 1, zone.x + zone.width + 40, Math.min(380, zone.y + zone.height + 20));
-    await touch('touchEnd', 1);
-    await expectInput(page, { x: 0, y: 0, a: false, b: true });
-    await stickHidden(page);
-    await touch('touchEnd', 3);
-    await touch('touchEnd', 4);
-    await expectInput(page, { x: 0, y: 0, a: false, b: false });
-    const events = await page.evaluate(() => window.__pointerEvents);
-    assert.ok(events.length && events.every(event => event.trusted), 'Touch events are browser-generated, not dispatchEvent simulations');
-    assert.ok(events.some(event => event.type === 'pointerup' && event.target === 'joystick-zone' && event.pointerId === pointerId), 'Captured release returns to the joystick after leaving its region');
-    await cdp.detach();
+    await verifyBlindTouchZones(page);
     await context.close();
   });
   await test('Disconnect releases held input; reconnect resumes same player with fresh sequence', async () => {
@@ -337,18 +290,10 @@ try {
   });
   await test('Portrait and small landscape controls remain in viewport without overlap or scrolling', async () => {
     const { context, page } = await fixture();
-    for (const viewport of [{ width: 844, height: 390 }, { width: 667, height: 375 }, { width: 390, height: 844 }, { width: 320, height: 568 }]) {
+    for (const viewport of [{ width: 844, height: 390 }, { width: 667, height: 375 }, { width: 390, height: 844 }, { width: 320, height: 568 }, {width:1366,height:768}]) {
       await page.setViewportSize(viewport);
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      const rectangles = await Promise.all(['joystick-zone', 'button-a', 'button-b', 'button-start', 'button-select'].map(id => page.locator(`#${id}`).boundingBox()));
-      for (const rect of rectangles) {
-        assert.ok(rect.x >= 0 && rect.y >= 0 && rect.x + rect.width <= viewport.width + 1 && rect.y + rect.height <= viewport.height + 1, `${JSON.stringify(viewport)} control outside viewport ${JSON.stringify(rect)}`);
-      }
-      const overlaps = (p, q) => p.x < q.x + q.width && p.x + p.width > q.x && p.y < q.y + q.height && p.y + p.height > q.y;
-      for (let i=0;i<rectangles.length;i++) for (let j=i+1;j<rectangles.length;j++) assert.ok(!overlaps(rectangles[i],rectangles[j]), `overlap at ${JSON.stringify(viewport)} controls ${i}/${j}`);
-      assert.equal(await page.evaluate(() => getComputedStyle(document.body).overflow), 'hidden');
-      assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('#joystick-zone')).touchAction), 'none');
-      assert.ok(rectangles[0].width >= 100 && rectangles[0].height >= 100, 'The floating joystick has a usable touch region');
+      await assertControllerLayout(page, viewport);
       await stickHidden(page);
     }
     await context.close();

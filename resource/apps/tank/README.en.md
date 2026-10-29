@@ -18,17 +18,21 @@ Requires Android 8.0 or later; package `com.ecojust.tanktv`. The room UI and pho
 
 The phone controller now uses a floating joystick. It stays hidden until you touch the left control area, and that touch becomes the center for the current gesture. Drag in any direction to move; release to stop and hide the stick. Each new touch establishes a new center. Movement and A/B support simultaneous touches. Cancelling a touch, rotating or hiding the page, and losing the connection clear movement to prevent stuck input. The older TV WebView startup fix from 0.3.0 is retained.
 
+## Controller update (source)
+
+The right third of the phone screen is an edge-to-edge action area. Tap anywhere in it to fire; the left stick also selects stages in either direction. The left area retains the floating joystick. START and SELECT sit separately at the bottom left. Touches are independent, and cancellation, focus loss or disconnect clears held input. Selection, dragging and long-press context menus are suppressed across the controller. These changes require a new APK build; the download above remains the previously published release.
+
 ## Play
 
 1. Install the app and connect the TV and phones to the same router.
 2. Scan the TV's QR code; up to two phones can join.
 3. Use **SELECT** to choose 1 PLAYER, 2 PLAYERS or CONSTRUCTION; confirm with **START**.
-4. On the initial stage selector, A/B changes the stage and START begins. During play, START pauses or resumes.
+4. On the initial stage selector, the stick changes the stage (keyboard A/B also work) and START begins. During play, START pauses or resumes.
 
 | Control | Action |
 | --- | --- |
 | Left touch area | Touch anywhere to set the joystick center; drag to move and turn; release to stop and hide |
-| A / B | Fire on each press; holding does not autofire |
+| Entire right third (A) | Fire on each press anywhere in the area; holding does not autofire |
 | SELECT | Change menu selection |
 | START | Start, confirm, pause or resume |
 | TV Back | Exit confirmation |

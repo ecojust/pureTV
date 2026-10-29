@@ -81,6 +81,7 @@
       this.harvested = {};
       this.decorations = [];
       this.completed = [];
+      this.fishJournal = {};
       this.nextDecoration = 1;
       this.muted = false;
       this.soundEvents = [];
@@ -103,10 +104,20 @@
       p.messageTime = 5;
       if (sound) this.soundEvents.push(sound);
     }
+    validJournal(journal) {
+      return journal && typeof journal === "object" && !Array.isArray(journal) &&
+        Object.keys(journal).every(function (id) {
+          var species = W.fish.find(function (f) { return f.id === id; }),
+            record = journal[id];
+          return species && record && integer(record.count, 1, 1000000) &&
+            integer(record.best, species.min, species.max);
+        });
+    }
     validSave(s) {
       return (
         s &&
         s.version === 1 &&
+        (s.fishJournal === undefined || this.validJournal(s.fishJournal)) &&
         integer(s.coins, 0, 999999) &&
         integer(s.houseLevel, 0, 2) &&
         integer(s.selectedPlayers, 1, 2) &&
@@ -188,6 +199,7 @@
         this.harvested = Object.assign({}, s.harvested);
         this.decorations = s.decorations;
         this.completed = s.completed;
+        this.fishJournal = s.fishJournal || {};
         this.nextDecoration = this.decorations.reduce(function (m, d) {
           return Math.max(m, d.id + 1);
         }, 1);
@@ -214,6 +226,7 @@
         harvested: this.harvested,
         decorations: this.decorations,
         completed: this.completed,
+        fishJournal: this.fishJournal,
         muted: this.muted,
         players: this.players.map(function (p) {
           return {
@@ -612,6 +625,22 @@
       this.commit("collect");
       return true;
     }
+    availableFish() {
+      var hour = (this.clock / 60) % 24;
+      return W.fish.filter(function (f) {
+        return f.from < f.to ? hour >= f.from && hour < f.to : hour >= f.from || hour < f.to;
+      });
+    }
+    rollFish() {
+      var available = this.availableFish(),
+        total = available.reduce(function (sum, f) { return sum + f.weight; }, 0),
+        roll = clamp(this.random(), 0, 0.999999) * total;
+      for (var i = 0; i < available.length; i++) {
+        roll -= available[i].weight;
+        if (roll < 0) return available[i];
+      }
+      return available[0];
+    }
     startFishing(p) {
       if (p.location !== "island" || distance(p, W.landmarks[5]) > 2.3) {
         this.notify(
@@ -630,7 +659,12 @@
         );
         return false;
       }
-      p.fishing = { phase: "waiting", remaining: 1.8 + this.random() * 2.2 };
+      var species = this.rollFish();
+      p.fishing = {
+        phase: "waiting", remaining: 1.8 + this.random() * 2.2,
+        species: species.id, nibbles: Math.floor(clamp(this.random(), 0, 0.999999) * 3),
+        window: species.window,
+      };
       this.notify(
         p,
         "等待浮标下沉…出现「咬钩！」后按 A。",
@@ -642,9 +676,20 @@
     reel(p) {
       if (!p.fishing) return this.startFishing(p);
       if (p.fishing.phase === "bite" && this.roomFor(p, 1)) {
+        var species = W.fish.find(function (f) { return f.id === p.fishing.species; }) || W.fish[0],
+          size = species.min + Math.floor(clamp(this.random(), 0, 0.999999) * (species.max - species.min + 1)),
+          record = this.fishJournal[species.id],
+          first = !record;
         this.add(p, "fish", 1);
+        this.fishJournal[species.id] = {
+          count: Math.min(1000000, (record ? record.count : 0) + 1),
+          best: Math.max(record ? record.best : 0, size),
+        };
+        if (first) this.coins = Math.min(999999, this.coins + 10);
         this.commit("collect");
-        this.notify(p, "钓到了！+1 海鱼", "Caught it! +1 fish");
+        this.notify(p,
+          "钓到了！" + species.zh + " " + size + " cm" + (first ? " · 图鉴新增 +10 金币" : ""),
+          "Caught! " + species.en + " " + size + " cm" + (first ? " · New entry +10 coins" : ""));
       } else if (p.fishing.phase === "bite")
         this.notify(
           p,
@@ -748,7 +793,16 @@
         );
         row("回到标题（已保存）", "Save and return to title", "title");
         row("重置小岛…", "Reset island…", "open", "reset");
+        row("鱼类图鉴 · " + Object.keys(this.fishJournal).length + "/" + W.fish.length,
+          "Fish journal · " + Object.keys(this.fishJournal).length + "/" + W.fish.length, "open", "journal");
         row("继续散步", "Keep exploring", "close");
+      } else if (kind === "journal") {
+        W.fish.forEach(function (f) {
+          var record = self.fishJournal[f.id],
+            hours = f.from === 0 && f.to === 24 ? self.tr("全天", "All day") : f.from + ":00–" + f.to + ":00",
+            label = f[self.language] + " · " + (record ? record.count + " × / " + record.best + " cm" : self.tr("未发现", "Undiscovered")) + " · " + hours;
+          row(label, label, "none");
+        });
       } else if (kind === "inventory") {
         Object.keys(p.inventory).forEach(function (k) {
           row(
@@ -972,6 +1026,7 @@
         this.harvested = {};
         this.decorations = [];
         this.completed = [];
+        this.fishJournal = {};
         this.nextDecoration = 1;
         this.players = [makePlayer(1), makePlayer(2)];
         this.phase = "title";
@@ -1110,10 +1165,21 @@
         if (p.fishing) {
           p.fishing.remaining -= dt;
           if (p.fishing.remaining <= 0) {
-            if (p.fishing.phase === "waiting") {
-              p.fishing = { phase: "bite", remaining: 1.2 };
-              this.soundEvents.push("bite");
-              this.notify(p, "咬钩！现在按 A！", "BITE! Press A now!");
+            if (p.fishing.phase === "nibble") {
+              p.fishing.phase = "waiting";
+              p.fishing.remaining = 0.65 + this.random() * 0.5;
+            } else if (p.fishing.phase === "waiting") {
+              if (p.fishing.nibbles > 0) {
+                p.fishing.nibbles--;
+                p.fishing.phase = "nibble";
+                p.fishing.remaining = 0.3;
+                this.notify(p, "轻轻试探…先别收线。", "A nibble… wait before reeling.");
+              } else {
+                p.fishing.phase = "bite";
+                p.fishing.remaining = p.fishing.window || 1.2;
+                this.soundEvents.push("bite");
+                this.notify(p, "咬钩！现在按 A！", "BITE! Press A now!");
+              }
             } else {
               p.fishing = null;
               this.notify(
@@ -1149,6 +1215,7 @@
         coins: this.coins,
         houseLevel: this.houseLevel,
         day: Math.floor(this.clock / 1440) + 1,
+        fishDiscovered: Object.keys(this.fishJournal).length,
         muted: this.muted,
         players: this.players.map((p) => ({
           id: p.id,

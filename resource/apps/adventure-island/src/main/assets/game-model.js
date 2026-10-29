@@ -398,6 +398,29 @@
       this.emit("life");
     }
   };
+  // Eggs release a real world object: shooting an egg is not a remote pickup.
+  AdventureGame.prototype.openEgg = function (egg) {
+    if (egg.open || egg.hidden) return;
+    egg.open = true;
+    this.level.items.push({
+      type: egg.type,
+      x: egg.x + 2,
+      y: egg.y,
+      w: 12,
+      h: 12,
+      vx: egg.type === "board" ? 0.9 : 0,
+      vy: -3.4,
+      age: 0,
+      released: true,
+      taken: false,
+    });
+    for (var i = 0; i < 4; i++)
+      this.effects.push({
+        type: "shell", x: egg.x + 4 + i * 3, y: egg.y + 6,
+        vx: (i - 1.5) * 0.8, vy: -2 - (i % 2), life: 28,
+      });
+    this.emit("egg-open");
+  };
   AdventureGame.prototype.pickup = function (type) {
     var p = this.current(),
       points = {
@@ -423,7 +446,9 @@
     } else if (type === "eggplant") p.eggplant = true;
     else if (type === "pot") p.pot = true;
     else p.energy = Math.min(MAX_ENERGY, p.energy + 2);
-    this.addScore(points[type] || 100);
+    var score = points[type] || 100;
+    this.addScore(score);
+    this.effects.push({ type: "score", x: p.x, y: p.y - 8, life: 40, score: score });
     this.emit("pickup", { item: type });
   };
   AdventureGame.prototype.loseLife = function (reason) {
@@ -595,8 +620,36 @@
         return;
       }
     }
+    this.effects = this.effects.filter(function (effect) {
+      effect.life--;
+      if (effect.type === "shell") {
+        effect.x += effect.vx;
+        effect.vy += 0.18;
+        effect.y += effect.vy;
+      } else effect.y -= 0.35;
+      return effect.life > 0;
+    });
     level.items.forEach(function (item) {
-      if (!item.taken && overlap(p, item)) {
+      if (item.taken) return;
+      if (item.released) {
+        item.age++;
+        var bottom = item.y + item.h;
+        item.x += item.vx;
+        item.vy = Math.min(5, item.vy + 0.25);
+        item.y += item.vy;
+        level.ground.concat(level.platforms).forEach(function (floor) {
+          if (item.x + item.w > floor.x && item.x < floor.x + floor.w &&
+              item.vy >= 0 && bottom <= floor.y && item.y + item.h >= floor.y) {
+            item.y = floor.y - item.h;
+            item.vy = 0;
+          }
+        });
+        if (item.y > 250 || item.x + item.w < game.cameraX - 32) {
+          item.taken = true;
+          return;
+        }
+      }
+      if ((!item.released || item.age >= 4) && overlap(p, item)) {
         item.taken = true;
         game.pickup(item.type);
       }
@@ -613,8 +666,7 @@
         game.emit("reveal");
       }
       if (!egg.hidden && overlap(p, egg)) {
-        egg.open = true;
-        game.pickup(egg.type);
+        game.openEgg(egg);
       }
     });
     level.hazards.forEach(function (hazard) {
@@ -648,7 +700,19 @@
         e.x += e.vx;
         if (Math.abs(e.x - e.homeX) > 36 || game.surface(e.x, e.w) == null)
           e.vx = -e.vx;
-      } else if (e.type === "bird" || e.type === "bat") {
+      } else if (e.type === "bird") {
+        if (!e.diving && e.x - p.x < 116 && e.x > p.x) {
+          e.diving = true;
+          e.targetY = Math.min(180, p.y + 4);
+          e.diveAge = 0;
+        }
+        if (e.diving) {
+          e.diveAge++;
+          e.x -= 1.35 + level.world * 0.04;
+          if (e.diveAge <= 36) e.y += (e.targetY - e.y) * 0.065;
+          else e.y -= 0.9;
+        } else e.y = e.homeY + Math.sin(e.age / 12) * 4;
+      } else if (e.type === "bat") {
         e.x = e.homeX + Math.sin(e.age / 60) * 32;
         e.y = e.homeY + Math.sin(e.age / 18) * 12;
       } else if (e.type === "spider") {
@@ -705,8 +769,7 @@
             egg.hidden = false;
             game.emit("reveal");
           } else if (++egg.hits >= 2) {
-            egg.open = true;
-            game.pickup(egg.type);
+            game.openEgg(egg);
           }
         }
       });

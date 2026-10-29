@@ -284,7 +284,36 @@
     var r = this.rect.bind(this);
     x = Math.floor(x);
     y = Math.floor(y);
-    if (type === "banana") {
+    if (type === "axe") {
+      r(x + 5, y + 1, 2, 12, "#ae7844");
+      r(x + 1, y + 1, 9, 5, "#e1eaca");
+      r(x + 1, y + 5, 4, 3, "#adc5b1");
+    } else if (type === "fire") {
+      r(x + 3, y + 2, 7, 10, "#ed793b");
+      r(x + 5, y, 3, 10, "#ffbd44");
+      r(x + 4, y + 5, 4, 6, "#fff0a3");
+    } else if (type === "board") {
+      r(x - 3, y + 5, 19, 3, "#eb7653");
+      r(x - 1, y + 8, 4, 4, "#29394a");
+      r(x + 10, y + 8, 4, 4, "#29394a");
+      r(x, y + 4, 12, 1, "#ffd98c");
+    } else if (type === "honey") {
+      var flap = Math.floor(frame / 5) % 2;
+      r(x, y + 1 + flap * 3, 4, 5, "#c1eced");
+      r(x + 8, y + 1 + flap * 3, 4, 5, "#c1eced");
+      r(x + 4, y + 2, 4, 9, "#ffd769");
+      r(x + 4, y + 6, 4, 2, "#91652d");
+    } else if (type === "pot") {
+      r(x + 3, y, 7, 3, "#db9855");
+      r(x + 2, y + 3, 9, 8, "#bb7546");
+      r(x + 4, y + 4, 2, 5, "#f0bd77");
+      r(x + 3, y + 11, 7, 2, "#8d5438");
+    } else if (type === "eggplant") {
+      r(x + 4, y + 3, 6, 9, "#975bc2");
+      r(x + 2, y + 7, 7, 5, "#975bc2");
+      r(x + 5, y, 5, 4, "#77b94e");
+      r(x + 5, y + 5, 2, 4, "#d29ce7");
+    } else if (type === "banana") {
       r(x + 1, y + 2, 3, 7, "#f8d44e");
       r(x + 4, y + 7, 6, 4, "#f8d44e");
       r(x + 9, y + 3, 2, 5, "#f8d44e");
@@ -383,7 +412,7 @@
       this.rect(x - 8, fy + 1, 3, 3, "#8fe2f4");
       this.rect(x - 1, fy + 1, 3, 3, "#8fe2f4");
     }
-    if (p.eggplant) this.fruit("grape", x - 12, y + 3, frame);
+    if (p.eggplant) this.fruit("eggplant", x - 12, y + 3, frame);
   };
   AdventureRenderer.prototype.enemy = function (e, x, y, frame) {
     var r = this.rect.bind(this),
@@ -492,7 +521,11 @@
       r(x + 2, e.y + 3, 12, 10, "#faf1d1");
       r(x + 4, e.y + 13, 8, 3, "#c6c8a9");
       r(x + 4, e.y + 4, 3, 3, "#c7d5c1");
-      if (e.hits) r(x + 7, e.y + 2, 2, 10, "#7d847b");
+      if (e.hits) {
+        r(x + 7, e.y + 2, 2, 4, "#7d847b");
+        r(x + 5, e.y + 6, 4, 2, "#7d847b");
+        r(x + 5, e.y + 8, 2, 5, "#7d847b");
+      }
     });
     game.level.hazards.forEach(function (h) {
       if (h.dead) return;
@@ -522,6 +555,12 @@
         r(x, s.y + 1, 7, 4, "#d7e4c0");
         r(x, s.y + 4, 3, 2, "#a6b8a3");
       }
+    });
+    game.effects.forEach(function (effect) {
+      if (effect.type === "shell") {
+        r(effect.x - cam, effect.y, 3, 3, "#faf1d1");
+        r(effect.x - cam, effect.y + 2, 3, 1, "#c6c8a9");
+      } else self.text(String(effect.score), effect.x - cam, effect.y, "#fff3b8");
     });
     game.enemyShots.forEach(function (s) {
       r(s.x - cam, s.y, 8, 8, "#ec743c");

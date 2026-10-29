@@ -86,8 +86,12 @@
       if (this.phase === 'construction') { this.constructionTick(primary,i); return; }
       if (this.phase === 'stageintro') {
         if (this.stageSelect) {
-          if (primary.a && (this.edge(i,'a') || this.phaseFrames%8===0)) this.stage=Math.min(35,this.stage+1);
-          if (primary.b && (this.edge(i,'b') || this.phaseFrames%8===0)) this.stage=Math.max(1,this.stage-1);
+          const direction = this.direction(primary), previousDir = this.direction(this.previous[i]);
+          const stickEdge = direction !== -1 && (direction !== previousDir || this.phaseFrames%8===0);
+          // The phone has one full-screen fire zone; the stick keeps both stage
+          // selection directions available without reintroducing a small B key.
+          if ((primary.a && (this.edge(i,'a') || this.phaseFrames%8===0)) || (stickEdge && (direction===1 || direction===2))) this.stage=Math.min(35,this.stage+1);
+          if ((primary.b && (this.edge(i,'b') || this.phaseFrames%8===0)) || (stickEdge && (direction===0 || direction===3))) this.stage=Math.max(1,this.stage-1);
           if (this.edge(i,'start')) { this.stageSelect=false; this.phaseFrames=0; this.emit('stage_start'); }
         } else if (this.phaseFrames>=90) { this.loadStage(); this.setPhase('playing'); }
         return;

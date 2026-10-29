@@ -6,14 +6,15 @@
 
 Coast Kart TV is an independent implementation of modern kart-racing mechanics. Mario Kart 8 Deluxe informed the requested genre, not the game's source code or assets. This game does not emulate Switch, load ROMs, or reproduce the commercial game's characters, courses, models, textures, audio, full rules or visual fidelity. All four courses, vector karts, scenery, interface and synthesized score were created for this project.
 
-## 首版内容 / Version 0.1.0
+## 当前源码内容 / Current source features
 
 - **四条原创赛道 / Four original circuits:** 晴海环线 Sunshore Circuit、松林远征 Pinewood Run、赤岩峡谷 Redrock Rally、星港夜航 Neon Harbor。每条赛道拥有不同长度、宽度、弯道顺序、坡度与环境配色及景物，模型为确定性数据。
 - **快速比赛 / Quick race:** 三圈。单人加六位 AI，或双人同时分屏加六位 AI。两位人类车手均冲线后显示赛果；其余尚未冲线的 AI 按前进距离排名。
 - **四站锦标赛 / Grand Tour:** 按海岸、森林、峡谷、夜港顺序进行四场比赛。名次积分为 15、12、10、8、6、4、2、1；每站累计，四站后显示总榜。最终积分相同的车手保持车手列表顺序。保存人类车手最高锦标赛积分。
 - **计时挑战 / Time trial:** 明确限制一人，无 AI、道具与分屏；三圈完成后保存该赛道最佳总时间与最佳单圈。
 - **竞速 / Racing:** 自动加速、左右转向、刹车与倒车、路外减速、车辆轻碰撞、越界返回赛道、三圈计时与名次。弯道产生外甩力，需要主动转向。
-- **漂移 / Drift:** 有速度且转向时按住 B 积蓄漂移。超过 0.65 秒松开，获得短冲刺；超过 1.6 秒获得更强冲刺。最高蓄力 2.5 秒。刹车、离开路面或撞击会中断蓄力。
+- **漂移 / Drift:** 有速度且转向时按住 B 积蓄漂移。达到 0.65／1.6／2.4 秒后松开，分别获得 0.85／1.65／2.35 秒冲刺，火花由蓝转金再转紫。最高蓄力 3 秒。刹车、离开路面或撞击会中断蓄力。Three charge tiers at 0.65, 1.6 and 2.4 seconds award progressively longer boosts; braking, leaving the road or getting hit cancels charge, including on the release frame.
+- **尾流 / Slipstream:** 在路面以足够速度，保持在行驶前车后方 45–220 距离单位、同车道范围内 1.2 秒，获得 1.15 秒冲刺，冷却 2.4 秒。偏离车道会失去蓄力；倒车、静止或已冲线车辆不会产生有效尾流。Both human and AI racers can charge a slipstream boost, including across the start/finish line. A visible gauge shows charge and activation.
 - **四种道具 / Four items:** 冲刺 Boost 提升速度；护盾 Shield 持续五秒并抵挡一次命中；路障 Trap 留在身后；脉冲 Pulse 沿当前横向车道向前飞行。道具碰撞造成短暂减速与打滑。道具箱位于四组固定补给点，拾取后短暂冷却；计时挑战没有道具。
 - **本地记录 / Local records:** 按赛道保存普通赛最佳三圈时间、计时挑战最佳三圈时间、跨模式最佳单圈，及最高锦标赛积分、音乐开关。当前比赛、位置、锦标赛进度不跨退出保存。
 

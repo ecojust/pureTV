@@ -12,12 +12,17 @@ Version **0.1.0** requires Android 8.0 or later. Package: `com.ecojust.cozyislan
 Signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
+The gameplay and controller upgrades described below are source changes. The linked 0.1.0 APK is the previous release and requires a new build to include them.
+
+
 ## Play
 
 1. Connect the TV and phones to the same LAN, then open the game on the TV.
 2. Scan the room QR code with a phone browser. Use one phone per player; no phone app is required.
 3. Choose the player count on the title screen, then press START.
 4. Touch anywhere in the left joystick area to set its center. Drag to move; releasing hides it and clears movement. A/B work simultaneously with the joystick.
+
+The right third of the phone is the action area: B fills the upper half and A fills the lower half. Touch anywhere in either region while using the floating stick on the left. START and SELECT remain separate at the bottom left. Gameplay controls suppress text selection and long-press browser menus.
 
 | Control | Action |
 | --- | --- |
@@ -28,6 +33,8 @@ Signed with the pureTV release certificate.
 | START | Start, pause / resume |
 
 One or two players can explore simultaneously, with separate inventories and interaction menus and shared island progress. One player can enter the house while the other stays outside. This first release offers a finite set of resident tasks and home upgrades; see the [game notes](docs/reference.md) for content and scope.
+
+Current source improvements: five fish species appear at different island hours. Watch the bobber distinguish gentle nibbles from the final bite; the reaction window depends on the species. The shared fish journal records catches and largest sizes, saves across sessions and gives 10 coins for each first discovery. Existing saves remain compatible; caught fish still count as the fish resource for requests and selling.
 
 ## Screenshots
 

@@ -20,6 +20,7 @@
       vx: 0,
       vy: 0,
       onGround: true,
+      floating: false,
       mightyCoins: 0,
       power: 0,
       powerTicks: 0,
@@ -95,6 +96,7 @@
     p.vx = 0;
     p.vy = 0;
     p.onGround = true;
+    p.floating = false;
     p.time = 60;
     p.timer = 0;
     p.power = 0;
@@ -331,7 +333,14 @@
       if (this.phase === "playing" && current && current.connected) {
         if (edge.b) this.usePower();
         if (edge.up) this.enterDoor();
-        if (edge.a && this.player.onGround) this.jump(current);
+        if (edge.a) {
+          if (this.player.onGround) this.jump(current);
+          else {
+            // A second press brakes the jump immediately; holding then floats.
+            this.player.vy = 0;
+            this.player.floating = true;
+          }
+        }
         this.accumulator += Math.min(0.1, Math.max(0, Number(dt) || 0)) * 60;
         while (this.accumulator >= 1 && this.phase === "playing") {
           this.accumulator--;
@@ -359,6 +368,7 @@
     var p = this.player;
     p.vy = input.y < -0.4 ? -6 : input.y > 0.4 ? -3.2 : -4.8;
     p.onGround = false;
+    p.floating = false;
     this.emit("jump");
     if (p.room.kind === "torture") {
       p.room.jumps--;
@@ -389,7 +399,8 @@
     var oldY = p.y;
     p.vx = clamp(Number(input.x) || 0, -1, 1) * 2;
     p.x = clamp(p.x + p.vx, 2, r.w - 12);
-    p.vy = Math.min(p.vy + 0.12, input.a && p.vy > 0 ? 0.55 : 3.5);
+    p.floating = !!input.a && !p.onGround && p.vy >= 0;
+    p.vy = Math.min(p.vy + 0.12, p.floating ? 0.55 : 3.5);
     p.y += p.vy;
     p.onGround = false;
     if (p.y < 4) {
@@ -412,6 +423,7 @@
         p.y = land.y - 16;
         p.vy = 0;
         p.onGround = true;
+        p.floating = false;
       }
     }
     for (var ci = 0; ci < r.chests.length; ci++) {
@@ -449,17 +461,42 @@
     for (var ei = 0; ei < r.enemies.length; ei++) {
       var e = r.enemies[ei];
       if (!e.alive) continue;
+      e.age = (e.age || 0) + 1;
       e.phase += 0.035;
-      e.x += e.vx * (1 + p.stage * 0.025);
-      if (e.x < e.min || e.x > e.max) {
-        e.vx = -e.vx;
-        e.x = clamp(e.x, e.min, e.max);
+      e.morphWarning = e.kind === "mummy" && r.kind !== "torture" && e.age > 180 + (e.id % 3) * 60;
+      if (e.morphTicks > 0) e.morphTicks--;
+      if (e.kind === "mummy" && r.kind !== "torture" && e.age >= 240 + (e.id % 3) * 60) {
+        // Mummies leave their patrol and become airborne hunters. The warning
+        // and acceleration leave room to react instead of teleporting at Jack.
+        e.kind = ["bat", "bird", "fire"][(p.stage + e.id - 1) % 3];
+        e.hunting = true;
+        e.vy = -0.5;
+        e.morphTicks = 30;
+        e.targetX = p.x;
+        e.targetY = p.y;
       }
-      if (e.kind === "bat") e.y = e.baseY + Math.sin(e.phase) * 24;
-      else if (e.kind === "bird") e.y = e.baseY + Math.sin(e.phase * 0.6) * 36;
-      else if (e.kind === "fire") {
-        e.y = e.baseY + Math.sin(e.phase) * 12;
-        e.x += Math.sign(p.x - e.x) * 0.18;
+      if (e.hunting) {
+        if (e.kind !== "bat" || e.age % 90 === 0) {
+          e.targetX = p.x;
+          e.targetY = p.y;
+        }
+        var speed = (e.kind === "fire" ? 0.75 : 1.15) + p.stage * 0.015;
+        e.vx = clamp(e.vx + Math.sign(e.targetX - e.x) * 0.025, -speed, speed);
+        e.vy = clamp(e.vy + Math.sign(e.targetY - e.y) * 0.02, -speed, speed);
+        e.x = clamp(e.x + e.vx, 2, r.w - 16);
+        e.y = clamp(e.y + e.vy, 4, r.h - 18);
+      } else {
+        e.x += e.vx * (1 + p.stage * 0.025);
+        if (e.x < e.min || e.x > e.max) {
+          e.vx = -e.vx;
+          e.x = clamp(e.x, e.min, e.max);
+        }
+        if (e.kind === "bat") e.y = e.baseY + Math.sin(e.phase) * 24;
+        else if (e.kind === "bird") e.y = e.baseY + Math.sin(e.phase * 0.6) * 36;
+        else if (e.kind === "fire") {
+          e.y = e.baseY + Math.sin(e.phase) * 12;
+          e.x += Math.sign(p.x - e.x) * 0.18;
+        }
       }
       if (!p.invulnerable && overlap(p, { x: e.x + 2, y: e.y + 2 }, 9, 10)) {
         this.loseLife("enemy");

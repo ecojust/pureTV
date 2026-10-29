@@ -515,3 +515,80 @@ test("music changes use the same persisted callback for TV button and paused SEL
   assert.equal(g.muted, true);
   assert.deepEqual(saved, [false, true]);
 });
+
+test("large player crouch-slides through a low ceiling and stands only after clearing it", () => {
+  const g = fresh();
+  floorFixture(g);
+  g.setPower(1);
+  const p = g.player();
+  for (let col = 6; col <= 9; col++) g.level.map[11][col] = 2;
+  p.vx = 3.1;
+  tick(g, { y: 1 }, 12);
+  assert.equal(p.h, 16);
+  assert.equal(p.y + p.h, 208);
+  assert(p.x > 90, "momentum should carry the crouching character into the tunnel");
+  tick(g, { x: 1 }, 10);
+  assert.equal(p.crouching, true, "releasing down cannot stand through solid bricks");
+  assert.equal(g.clearBody(p.x, p.y, p.w, p.h), true);
+  tick(g, { x: 1 }, 90);
+  assert(p.x > 160);
+  assert.equal(p.crouching, false);
+  assert.equal(p.h, 30);
+  assert.equal(p.y + p.h, 208);
+});
+
+test("moving lifts carry a grounded player through rising and falling parts of their cycle", () => {
+  const g = fresh();
+  floorFixture(g);
+  const platform = { x: 48, y: 150, w: 64, baseY: 150, phase: -g.frame, range: 20 };
+  g.level.platforms = [platform];
+  const p = g.player();
+  p.y = platform.y - p.h;
+  const heights = [];
+  for (let i = 0; i < 330; i++) {
+    tick(g);
+    heights.push(p.y);
+    assert.equal(p.grounded, true);
+    assert(Math.abs(p.y + p.h - platform.y) < 0.01);
+  }
+  assert(Math.max(...heights) - Math.min(...heights) > 39);
+});
+
+test("successive airborne stomps escalate to an extra life and landing resets the chain", () => {
+  const g = fresh();
+  floorFixture(g);
+  const p = g.player();
+  for (let i = 0; i < 9; i++) {
+    p.x = 64; p.y = 144; p.vy = 1; p.grounded = false;
+    g.previousBottom = 158;
+    const enemy = foe("goomba", 64, 158);
+    g.enemies = [enemy];
+    g.updateEnemies();
+    assert.equal(enemy.alive, false);
+  }
+  assert.equal(p.stompChain, 9);
+  assert.equal(p.score, 16500);
+  assert.equal(p.lives, 4);
+  assert.equal(g.particles.at(-1).text, "1UP");
+  g.enemies = [];
+  tick(g, {}, 80);
+  assert.equal(p.grounded, true);
+  assert.equal(p.stompChain, 0);
+});
+
+test("a moving shell tracks its own escalating chain independently of player stomps", () => {
+  const g = fresh();
+  floorFixture(g);
+  const shell = foe("koopa", 150, 194, { shell: true, vx: 3.4, chain: 0 });
+  g.enemies = [shell];
+  for (let i = 0; i < 7; i++) {
+    const target = foe("goomba", shell.x + 8, 194);
+    g.enemies.push(target);
+    g.updateEnemies();
+    assert.equal(target.alive, false);
+  }
+  assert.equal(shell.chain, 7);
+  assert.equal(g.player().score, 16300);
+  assert.equal(g.player().lives, 4);
+  assert.equal(g.player().stompChain, 0);
+});

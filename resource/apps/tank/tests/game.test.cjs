@@ -50,6 +50,17 @@ test('original title choices, bounded stage selection, Start pause and a 2P game
  press(g,'start');assert.equal(g.phase,'playing');
 });
 
+test('single-action phone layout can select stages in both directions with its stick',()=>{
+ const g=new TankGame();press(g,'start');assert.equal(g.stageSelect,true);
+ frames(g,1,[input(1,{x:1})]);assert.equal(g.stage,2);
+ frames(g,1,[input(1,{x:-1})]);assert.equal(g.stage,1);
+ frames(g,20,[input(1,{y:-1})]);assert.equal(g.stage,1);
+ g.stage=34;frames(g,1,[input(1,{y:1})]);assert.equal(g.stage,35);
+ frames(g,20,[input(1,{y:1})]);assert.equal(g.stage,35);
+ frames(g,1);frames(g,1,[input(1,{x:.2})]);assert.equal(g.stage,35);
+ press(g,'start');assert.equal(g.stageSelect,false);frames(g,90);assert.equal(g.phase,'playing');
+});
+
 test('disconnect and native pause preserve the battle, and stalls never fast-forward seconds',()=>{
  const g=start();frames(g,60);const before=g.battleFrames;frames(g,120,[]);assert.equal(g.phase,'paused');assert.equal(g.battleFrames,before);
  frames(g,1);assert.equal(g.phase,'playing');g.togglePause();frames(g,60);assert.equal(g.battleFrames,before+1);g.togglePause();

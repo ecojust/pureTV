@@ -141,6 +141,13 @@
             : "#4c73d1",
       "#fff0c6",
     ];
+    if (p.floating) {
+      var wing = Math.floor(tick / 5) % 2;
+      this.rect(x - 4, y + 6 + wing, 6, 4, colors[2]);
+      this.rect(x + 10, y + 6 + wing, 6, 4, colors[2]);
+      this.rect(x - 2, y + 12, 1, 3, "#a8bfe0");
+      this.rect(x + 13, y + 12, 1, 3, "#a8bfe0");
+    }
     this.sprite(JACK, x, y, colors, scale || 1, p.vx < 0);
     if (p.onGround && Math.abs(p.vx) > 0 && Math.floor(tick / 6) % 2)
       this.rect(x + 1, y + 14, 3, 2, "#11182b");
@@ -183,6 +190,12 @@
   BombJackRenderer.prototype.enemy = function (e, t) {
     var x = e.x,
       y = e.y;
+    if (e.morphTicks > 0 || (e.morphWarning && Math.floor(t / 5) % 2)) {
+      this.rect(x - 2, y - 2, 18, 1, "#e6b3fa");
+      this.rect(x - 2, y + 17, 18, 1, "#e6b3fa");
+      this.rect(x - 2, y - 2, 1, 20, "#e6b3fa");
+      this.rect(x + 15, y - 2, 1, 20, "#e6b3fa");
+    }
     if (e.kind === "mummy") {
       this.rect(x + 2, y, 9, 13, "#d6d8be");
       for (var i = 0; i < 4; i++)

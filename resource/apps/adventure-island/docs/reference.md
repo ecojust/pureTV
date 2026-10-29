@@ -20,12 +20,12 @@
 | 食物 | 香蕉、苹果、葡萄、西瓜回复 2 格并加分；牛奶补满并解除茄子状态 |
 | 武器 | 每命初始徒手；斧头沿抛物线飞行；已有斧头时火球道具升级为火球，无武器时先得到斧头；同时最多两枚投射物 |
 | 火球 | 比斧头射程长，碰地面可反弹，能够破坏岩石与滚石；斧头不能破坏这些障碍 |
-| 蛋 | 碰到可见蛋或两次武器命中后立即取得内容；隐藏蛋可通过在其位置起跳揭示，武器命中也会揭示 |
+| 蛋 | 碰到可见蛋或两次武器命中后破壳，内容先弹出再落地，需角色接触才能取得；滑板道具会向前滚动，掉入深坑或留在屏幕后方的道具会消失；隐藏蛋可通过在其位置起跳揭示，武器命中也会揭示 |
 | 滑板 | 自动向前移动，B 加速、向左减速；抵挡一次普通碰撞后损坏；不能防止掉坑、落水或体力耗尽 |
 | 障碍 | 小石头扣两格体力并短暂绊倒；火焰、敌人、首领及敌方投射物导致失命；不能通过踩踏消灭敌人 |
 | 蜜蜂精灵 | 提供 600 帧接触无敌，可碰撞消灭普通敌人；仍需避免坑、水及体力耗尽 |
 | 隐藏奖励 | 隐藏陶壶使关末剩余体力奖励翻倍；部分隐藏蛋包含会加快体力消耗的茄子 |
-| 敌人 | 蜗牛、蛇、鸟、蝙蝠、蜘蛛、青蛙、鱼、滚石具有不同移动方式，含巡逻、振翅、垂降、跳跃与滚动 |
+| 敌人 | 蜗牛、蛇、鸟、蝙蝠、蜘蛛、青蛙、鱼、滚石具有不同移动方式，含巡逻、振翅、垂降、跳跃与滚动；飞鸟接近时锁定目标高度俯冲，随后抬升飞离，躲避后不会持续追踪角色 |
 | 检查点 | 每关四个安全落脚点；失命后从当前玩家最近检查点继续，体力恢复 11，武器和滑板失去 |
 | 首领 | 每地区第 4 关，只有头部受武器伤害；生命值从 8 递增至 22，射击间隔及移动速度随地区提高 |
 | 计分与生命 | 吃食物、命中/击败敌人与首领、过关取得积分；50,000、100,000、200,000 分分别奖励一命 |
@@ -53,7 +53,7 @@
 - 背景、角色、敌人、首领、图标均为本项目自绘像素图；配乐是新编写的短 8-bit 合成循环，音效通过 Web Audio 生成，不是原作旋律或录音。
 - 路线的地形坐标、敌人和道具排列不同于原版，未实现原版隐藏云朵奖励房、全部秘密奖励位置、原版续关秘籍及逐帧敌人行为。
 - 首领采用同一攻击状态机，随地区改变外观配色、血量、移动和火球节奏；不是原版八个首领逐像素移植。
-- 蛋打开后立即获得奖励，没有复刻原作道具离蛋后的独立运动过程。
+- 蛋壳碎片、道具弹出/落地、滑板滚动以及拾取分数采用独立绘制的动画；弹出速度、拾取窗口和飞鸟俯冲参数由项目自行调校，未宣称逐帧一致。
 - 原作单人规则以外，**两部手机轮流挑战属于本应用扩展**：各自保存本局生命、积分、关卡和检查点；一方失命后轮到另一方，生命耗尽者跳过。不会同屏同时操纵两名角色。
 - 当前玩家手机断线自动暂停；等待玩家断线不打断游戏；手动暂停不会被自动重连取消。
 - 本局进度不跨应用退出保存。最高分与音乐开关保存在应用本地存储。退出、Home 离开时服务和进程清理由 Android 宿主执行。
@@ -73,7 +73,7 @@ node --test resource/apps/adventure-island/tests/game-model.test.cjs
 1. **32 关地形可达性**：通过真实移动与可变高度跳跃积分器走过每条完整路线，地形不修改；为单独证明跳跃可达性，测试移除敌人、道具并补充体力。
 2. **前两关完整规则通关**：从出生点使用普通方向、A、B 输入走到终点，保留全部敌人、障碍、体力消耗、道具与武器规则。
 3. **8 个首领正常战斗**：测试从各首领区域设置初始位置并取得斧头，其后仅使用方向和 B 输入；保留真实投射物、碰撞、首领 AI、伤害间隔和体力，击败首领并走过出口，最后一关进入结局。
-4. 另测体力/食物、石头和火焰、斧头/火球、滑板、隐藏蛋、接触无敌、额外生命、关末奖励、双人独立进度、断线与手动暂停。
+4. 另测破蛋远程命中不自动装备、道具弹出落地与一次拾取、滑板滚动和落坑、飞鸟锁定俯冲与离屏休眠，以及体力/食物、石头和火焰、斧头/火球、滑板、隐藏蛋、接触无敌、额外生命、关末奖励、双人独立进度、断线与手动暂停。
 
 浏览器测试另验证手机多点触控、TV 桥接、启动诊断和退出时音频/定时器释放。截图来自浏览器实际渲染；尚不等于 Android 电视和真实手机的实机验证。
 
@@ -83,6 +83,6 @@ This app independently recreates the core rules of the **first Adventure Island*
 
 **Maps use reconstructed coordinates, not tile-for-tile original stage data.** Terrain, physics, item placement, enemy motion, artwork, sound effects and music are independently authored. No ROM, extracted sprite/map data, commercial recording or original soundtrack is bundled. The public gameplay reference is [Wikipedia's Adventure Island gameplay overview](https://en.wikipedia.org/wiki/Adventure_Island_(video_game)#Gameplay).
 
-Not implemented as exact original features: hidden cloud bonus rooms, every secret location, continuation cheats, exact frame timing, original boss sprite sheets and the independent item animation after an egg opens. Two-phone alternating play is a project extension to the single-player game, with separate lives, scores, stages and checkpoints. Only losing the active controller auto-pauses play.
+Not implemented as exact original features: hidden cloud bonus rooms, every secret location, continuation cheats, exact frame timing, original boss sprite sheets and original per-frame timings. Eggs now release physical pickups with a visible upward arc, landing and contact collection; skateboard pickups roll forward. Birds commit to a target height for their dive and then climb away. Two-phone alternating play is a project extension to the single-player game, with separate lives, scores, stages and checkpoints. Only losing the active controller auto-pauses play.
 
 Tests prove terrain reachability through the real movement integrator on all 32 routes (combat and energy isolated), ordinary-input completion of the first two stages with full rules, and ordinary-input defeats of all eight bosses from an explicitly seeded arena position and axe pickup. Boss tests retain real vitality, damage windows and projectiles and walk through the exit. These are automated model/browser checks, not a claim of a complete physical-TV playthrough.

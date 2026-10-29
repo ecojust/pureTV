@@ -12,12 +12,18 @@ Version **0.1.0** requires Android 8.0 or later. Package: `com.ecojust.supermari
 The APK is signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
+## Source upgrade
+
+The source upgrade adds real crouch-slide collision, moving lifts that carry their rider, and escalating airborne stomp/rolling-shell rewards with score and 1UP feedback. The existing 0.1.0 download predates these changes; build the current source to use them.
+
 ## Play
 
 1. Connect the TV and phones to the same LAN and open the game on the TV.
 2. Scan its QR code in a phone browser. Use one phone per player.
 3. Press SELECT on the title screen to choose the player count, then START.
-4. The left joystick stays hidden until touched. Each touch sets its center; drag to move, then release to stop and hide it. A/B support simultaneous touches with the stick.
+4. The left joystick stays hidden until touched. Each touch sets its center; drag to move, then release to stop and hide it. The right third of the screen is a full action surface: B on the upper half, A on the lower half. Touch anywhere in a half, including its edges; both actions support simultaneous touches with the stick. START/SELECT stay separate at the bottom left.
+
+The controller disables text selection and long-press browser menus across the play surface.
 
 | Control | Action |
 | --- | --- |

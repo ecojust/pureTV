@@ -356,3 +356,50 @@ test("model output stays bounded and deterministic under the same inputs", () =>
   assert.ok(Number.isFinite(a.players[0].s));
   assert.ok(a.clock > 0);
 });
+
+test("slipstream charges behind a moving rival, including across the finish line", () => {
+  const game = start(), p = game.players[0], rival = game.racers[1];
+  game.racers = [p, rival];
+  p.s = game.track.length - 60;
+  rival.s = 40;
+  p.x = rival.x = 0;
+  p.speed = rival.speed = 160;
+  for (let i = 0; i < 12; i++) game.updateDraft(0.1);
+  assert.ok(p.boost > 1);
+  assert.equal(rival.boost, 0);
+  assert.equal(p.draft, 0);
+  assert.ok(p.draftCooldown > 2);
+  for (let i = 0; i < 5; i++) game.updateDraft(0.1);
+  assert.equal(p.draft, 0, "cooldown prevents repeated boosts in the same wake");
+  p.draftCooldown = 0;
+  game.updateDraft(0.1);
+  assert.ok(p.draft > 0);
+  p.x = 0.5;
+  game.updateDraft(0.1);
+  assert.equal(p.draft, 0, "leaving the wake loses the charge");
+  p.x = 0;
+  p.speed = -40;
+  game.updateDraft(0.1);
+  assert.equal(p.draft, 0, "reverse driving cannot charge a boost");
+  p.speed = 160;
+  rival.finished = true;
+  game.updateDraft(0.1);
+  assert.equal(p.draft, 0, "finished rivals leave no wake");
+});
+
+test("drift release has three distinct rewards and invalid releases cancel the charge", () => {
+  const game = start(), p = game.players[0];
+  for (const [charge, reward] of [[0.5, 0], [0.7, 0.85], [1.7, 1.65], [2.5, 2.35]]) {
+    Object.assign(p, { x: 0, s: 20, speed: 180, drift: charge, drifting: true, boost: 0 });
+    game.drive(p, input(), 0.01);
+    assert.equal(p.boost, reward);
+  }
+  for (const patch of [{ x: 1.2 }, { stun: 0.8 }, { brake: true }]) {
+    Object.assign(p, { x: 0, s: 20, speed: 180, drift: 2.5, drifting: true, boost: 0, stun: 0 });
+    if (patch.x) p.x = patch.x;
+    if (patch.stun) p.stun = patch.stun;
+    game.drive(p, input(1, { y: patch.brake ? 1 : 0 }), 0.01);
+    assert.equal(p.boost, 0);
+    assert.equal(p.drift, 0);
+  }
+});

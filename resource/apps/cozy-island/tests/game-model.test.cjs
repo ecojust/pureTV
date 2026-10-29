@@ -297,3 +297,76 @@ test("reset requires the affirmative choice and erases both players together", (
   );
   assert.equal(JSON.parse(storage.getItem(Game.SAVE_KEY)).coins, 20);
 });
+
+test("fish species follow day and overnight windows without removing common catches", () => {
+  const g = playing();
+  g.clock = 12 * 60;
+  assert.deepEqual(g.availableFish().map((f) => f.id), ["sardine", "bass", "butterfly"]);
+  g.clock = 22 * 60;
+  assert.deepEqual(g.availableFish().map((f) => f.id), ["sardine", "bass", "ray", "moonfish"]);
+  g.clock = 2 * 60;
+  assert.ok(g.availableFish().some((f) => f.id === "moonfish"));
+  g.clock = 6 * 60;
+  assert.ok(!g.availableFish().some((f) => f.id === "ray"));
+  g.random = () => 0.99999;
+  assert.equal(g.rollFish().id, "butterfly");
+});
+
+test("nibbles are not bites; only the final signal awards a catch", () => {
+  const g = playing(false, { random: () => 0.5 }), p = g.players[0];
+  p.x = 20.2;
+  p.y = 11.2;
+  p.tool = "rod";
+  pulse(g, 1, "a");
+  for (let i = 0; i < 30 && p.fishing.phase !== "nibble"; i++) g.step(0.1, [input(1)]);
+  assert.equal(p.fishing.phase, "nibble");
+  pulse(g, 1, "a");
+  assert.equal(p.fishing, null);
+  assert.equal(p.inventory.fish, undefined);
+  assert.deepEqual(g.fishJournal, {});
+  pulse(g, 1, "a");
+  for (let i = 0; i < 70 && p.fishing.phase !== "bite"; i++) g.step(0.1, [input(1)]);
+  assert.equal(p.fishing.phase, "bite");
+  pulse(g, 1, "a");
+  assert.equal(p.inventory.fish, 1);
+  assert.equal(Object.keys(g.fishJournal).length, 1);
+});
+
+test("shared fish journal saves records, awards first discovery once and respects full bags", () => {
+  const storage = memory(), g = playing(true, { storage }), p = g.players[0], q = g.players[1];
+  const coins = g.coins;
+  p.fishing = { phase: "bite", species: "ray", remaining: 0.8 };
+  q.fishing = { phase: "bite", species: "ray", remaining: 0.8 };
+  g.step(0.01, [input(1, { a: true }), input(2, { a: true })]);
+  assert.equal(g.fishJournal.ray.count, 2);
+  assert.equal(g.coins, coins + 10);
+  assert.equal(p.inventory.fish, 1);
+  assert.equal(q.inventory.fish, 1);
+  const restored = new Game({ storage });
+  assert.deepEqual(restored.fishJournal, g.fishJournal);
+  p.inventory = { wood: 24 };
+  p.fishing = { phase: "bite", species: "moonfish", remaining: 1 };
+  g.reel(p);
+  assert.equal(g.fishJournal.moonfish, undefined);
+  assert.equal(g.coins, coins + 10);
+  p.menu = { kind: "journal", index: 0 };
+  assert.match(g.menuRows(p)[3].label, /2 × \/ 55 cm/);
+  p.menu = { kind: "reset", index: 1 };
+  g.choose(p);
+  assert.deepEqual(g.fishJournal, {});
+  assert.deepEqual(JSON.parse(storage.getItem(Game.SAVE_KEY)).fishJournal, {});
+});
+
+test("old saves migrate to an empty journal; invalid journal entries are rejected", () => {
+  const storage = memory(), g = playing(false, { storage });
+  const old = JSON.parse(storage.getItem(Game.SAVE_KEY));
+  delete old.fishJournal;
+  storage.setItem(Game.SAVE_KEY, JSON.stringify(old));
+  const migrated = new Game({ storage });
+  assert.equal(migrated.saveRecovered, false);
+  assert.deepEqual(migrated.fishJournal, {});
+  for (const journal of [{ sardine: { count: -1, best: 20 } }, { ray: { count: 1, best: 500 } }, { unknown: { count: 1, best: 12 } }]) {
+    storage.setItem(Game.SAVE_KEY, JSON.stringify({ ...old, fishJournal: journal }));
+    assert.equal(new Game({ storage }).saveRecovered, true);
+  }
+});

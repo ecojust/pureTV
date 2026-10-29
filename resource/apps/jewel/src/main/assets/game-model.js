@@ -42,7 +42,7 @@
   }
   function neutral() { return { connected:false,x:0,y:0,a:false,b:false,start:false,select:false }; }
   function player(id) {
-    return { id:id, joined:false, alive:false, connected:false, board:rows(HEIGHT), hidden:rows(HIDDEN), active:null, next:[1,2,3], score:0, level:0, speedLevel:0, cleared:0, chain:0, clearCells:[], clearTicks:0, status:'waiting', seq:0, streak:0, pendingMagic:0, levelCleared:0, last:neutral(), input:neutral(), dx:0, das:0, fall:0, softArmed:false, lastLockY:12, dropMatched:false };
+    return { id:id, joined:false, alive:false, connected:false, board:rows(HEIGHT), hidden:rows(HIDDEN), active:null, next:[1,2,3], score:0, level:0, speedLevel:0, cleared:0, chain:0, clearCells:[], clearTicks:0, gravityMoves:[], gravityTicks:0, gravityDuration:0, status:'waiting', seq:0, streak:0, pendingMagic:0, levelCleared:0, last:neutral(), input:neutral(), dx:0, das:0, fall:0, softArmed:false, lastLockY:12, dropMatched:false };
   }
   function JewelGame(options) {
     options = options || {};
@@ -123,7 +123,21 @@
     p.score += waveScore(count,p.chain,p.streak,Math.min(9,Math.max(0,12-p.lastLockY)));
     p.cleared += count; p.levelCleared += count;
     this.highScore = Math.max(this.highScore,p.score);
-    splitBoard(p,collapse(board)); p.clearCells = [];
+    p.clearCells = [];
+    p.gravityMoves = []; var distance = 0;
+    for (var x=0;x<WIDTH;x++) {
+      var dest = board.length-1;
+      for (var y=board.length-1;y>=0;y--) if (board[y][x]) {
+        p.gravityMoves.push({x:x,from:y-HIDDEN,to:dest-HIDDEN,color:board[y][x]});
+        distance=Math.max(distance,dest-y);dest--;
+      }
+    }
+    p.gravityDuration = p.gravityTicks = distance*4;
+    if (distance) p.status='settling';
+    else this.finishGravity(p);
+  };
+  JewelGame.prototype.finishGravity = function (p) {
+    splitBoard(p,collapse(fullBoard(p))); p.gravityMoves=[];p.gravityTicks=0;
     var found = matches(fullBoard(p));
     if (found.length) this.markClear(p,found); else this.finishDrop(p);
   };
@@ -134,6 +148,7 @@
   JewelGame.prototype.tickPlayer = function (p) {
     if (!p.joined || !p.alive) return;
     if (p.status === 'clearing') { if (--p.clearTicks <= 0) this.clearWave(p); return; }
+    if (p.status === 'settling') { if (--p.gravityTicks <= 0) this.finishGravity(p); return; }
     if (!p.active) return;
     var input=p.input,last=p.last;
     if ((input.a&&!last.a)||(input.b&&!last.b)) {

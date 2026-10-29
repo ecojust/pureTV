@@ -16,6 +16,8 @@ References describe observable rules. No code, tile map, ROM or artwork was copi
 - A 256 × 240 game view with a fixed score/coins/world/time strip and horizontally scrolling world. Physics advances at a fixed 60.0988 steps per second; display refresh does not change movement speed.
 - Left/right acceleration and inertia; B raises the movement cap from 1.75 to 3.1 pixels per physics step. A begins a jump, and keeping A held while rising produces a higher arc. Water uses repeated A swimming strokes and slower horizontal movement.
 - Small, Super and Fire forms. Mushrooms increase size; a power block yields a flower when the player is already large. A flower collected by a small player first produces Super form. Damage returns a large character to small form with brief invulnerability. Stars grant temporary invulnerability; green mushrooms grant a life.
+- Large characters use a real short collision body while crouching, preserve running momentum through low passages, and cannot stand up through ceilings. Moving lifts carry standing players on both halves of their cycle.
+- Airborne stomp chains and rolling-shell chains award escalating scores and then extra lives, with floating score/1UP feedback. Landing resets the stomp chain; stopping or kicking a shell starts its next chain.
 - Head collisions open question blocks, collect their coins or release items. A large character breaks bricks. Collecting 100 coins grants an extra life. Collectible coins, item pickups, defeated enemies, flag height and remaining time contribute to score.
 - Goombas, green/red Koopas, Buzzy Beetles, Piranha Plants, fish, Bloopers, Hammer Bros., fire bars and castle bosses. Stomps, stationary/moving shells, fireballs and star collisions have separate behavior. Red Koopas turn at ledges. Buzzy Beetles resist fireballs. A boss takes five fireball hits, or can be defeated by the bridge axe.
 - Only the active player's inputs move the character or pause the game. In two-player mode, losing a life passes the turn; each player retains their own stage, lives, score and checkpoint. Reconnecting the active controller resumes an automatic disconnect pause, but does not cancel a manual pause.
@@ -46,7 +48,7 @@ The first course deliberately presents familiar opening landmarks: the lone ques
 
 This release covers the central platforming loop and a full eight-world progression, rather than every original behavior. It does not reproduce exact original map coordinates, warp-zone destinations, vine/cloud bonuses, maze-repetition castle routing, Lakitu or Bullet Bill sequences, every enemy animation, the precise original timing/scoring tables, ROM glitches, or a second harder quest. Underwater and underground exits are simplified into this game's course/flag progression. Castle bosses share one independently implemented boss behavior; original impostor reveal variations are not recreated.
 
-Crouching changes the large character's pose and movement, but does not implement the original low-ceiling crouch-slide collision technique. None of the reconstructed required routes depend on it. The introductory world banner does not block controller input.
+The introductory world banner does not block controller input. Crouch-slide collision and chain rewards are now supported; their movement and timing remain independently tuned.
 
 ## Code and asset boundaries
 
@@ -71,7 +73,7 @@ Run:
 node --test resource/apps/super-mario/tests/model.test.cjs
 ```
 
-The 21 model tests cover motion, variable jump height, head collisions, items, coins/lives, damage, stomps, shells, fireballs, boss hits, pipe travel, swimming, player turns, disconnects, timer/game over, checkpoints, distinct geometry, fixed-step behavior, music persistence and progression.
+The model tests cover motion, variable jump height, head collisions, items, coins/lives, damage, stomps, shells, fireballs, boss hits, pipe travel, swimming, player turns, disconnects, timer/game over, checkpoints, distinct geometry, fixed-step behavior, music persistence, crouch-slide clearance, full moving-lift cycles, stomp/shell chains and progression.
 
 The full-course traversal test starts normally and reaches **all 32 real flag/axe exits in sequence using controller input**. It does not teleport, edit terrain, grant flight, force a stage clear or skip transitions. Enemies are deliberately removed in that particular test to isolate geometric reachability; it is not evidence of an unassisted enemy-complete run. A separate first-course smoke test keeps all real enemies enabled and reaches its flag using normal input without losing a life. Focused enemy collision tests cover the remaining combat mechanics.
 

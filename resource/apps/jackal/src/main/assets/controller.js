@@ -27,6 +27,9 @@
     select: '选择', start: '开始 / 暂停', selectLabel: 'SELECT 选择模式', startLabel: 'START 开始或暂停',
     connectionError: '暂时无法连接电视，请确认手机和电视处于同一局域网。', cooling: '秒',
   };
+  messages.hint = english ? 'TOP: ' + messages.actionB + ' · BOTTOM: ' + messages.actionA : '右上：' + messages.actionB + ' · 右下：' + messages.actionA;
+  messages.actionALabel += english ? ' (bottom right half)' : '（右下半区）';
+  messages.actionBLabel += english ? ' (top right half)' : '（右上半区）';
   document.documentElement.lang = english ? 'en' : 'zh-CN';
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = messages[el.dataset.i18n]; });
   $('joystick-zone').setAttribute('aria-label', messages.joystick);
@@ -203,14 +206,27 @@
     clearStick(); updateInput(); sendInput(true);
   }
   ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => stickZone.addEventListener(name, releaseStick));
+  function pressAction(action, event) {
+    const button = $(`button-${action}`);
+    if (!connected || event.button > 0) return;
+    event.preventDefault(); actionPointers.set(event.pointerId, action);
+    try { button.setPointerCapture(event.pointerId); } catch (_) {}
+    updateInput(); sendInput(true); vibrate(action === 'a' ? 10 : 20);
+  }
+  // Chromium can adjust a wide fingertip near a divider onto the neighboring
+  // joystick. Classify the actual contact coordinates before target handlers so
+  // every point in the right third keeps its advertised action.
+  document.addEventListener('pointerdown', event => {
+    if (editableTarget(event.target)) return;
+    const bounds = document.querySelector('.actions').getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX >= bounds.right || event.clientY < bounds.top || event.clientY >= bounds.bottom) return;
+    event.preventDefault(); event.stopPropagation();
+    const action = root.dataset.actionLayout === 'single' || event.clientY >= bounds.top + bounds.height / 2 ? 'a' : 'b';
+    pressAction(action, event);
+  }, true);
   ['a', 'b', 'start', 'select'].forEach(action => {
     const button = $(`button-${action}`);
-    button.addEventListener('pointerdown', event => {
-      if (!connected || event.button > 0) return;
-      event.preventDefault(); actionPointers.set(event.pointerId, action);
-      try { button.setPointerCapture(event.pointerId); } catch (_) {}
-      updateInput(); sendInput(true); vibrate(action === 'a' ? 10 : 20);
-    });
+    button.addEventListener('pointerdown', event => pressAction(action, event));
     const release = event => {
       if (actionPointers.get(event.pointerId) !== action) return;
       actionPointers.delete(event.pointerId); updateInput(); sendInput(true);
@@ -229,6 +245,7 @@
     });
   });
   document.addEventListener('keydown', event => {
+    if (editableTarget(event.target)) return;
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
     if (!connected || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', 'Shift', 'z', 'x', 'b'].includes(key)) return;
     if ((event.target === $('retry') || event.target === $('fullscreen')) && [' ', 'Enter'].includes(key)) return;
@@ -248,7 +265,28 @@
   window.addEventListener('pageshow', event => { if (event.persisted) { leaving = false; terminal = false; connect(); } });
   window.addEventListener('online', () => { if (!connected && !terminal) connect(); });
   window.addEventListener('resize', () => resetControls());
-  document.addEventListener('contextmenu', event => event.preventDefault());
+  // Cancel native long-press selection/callouts, including on labels and while
+  // disconnected. Real text fields and ordinary browser buttons remain usable.
+  function editableTarget(target) {
+    return target && target.closest && target.closest('input, textarea, [contenteditable="true"]');
+  }
+  ['contextmenu', 'selectstart', 'dragstart'].forEach(name => {
+    document.addEventListener(name, event => {
+      if (!editableTarget(event.target)) event.preventDefault();
+    });
+  });
+  document.addEventListener('touchstart', event => {
+    if (editableTarget(event.target) || event.target.closest('#fullscreen, #retry')) return;
+    event.preventDefault();
+  }, { passive: false });
+  // Pointer capture is best effort on older WebViews. A release outside a zone
+  // must still clear its input when capture is unavailable or interrupted.
+  ['pointerup', 'pointercancel'].forEach(name => window.addEventListener(name, event => {
+    let changed = actionPointers.delete(event.pointerId);
+    if (event.pointerId === stickPointer) { clearStick(); changed = true; }
+    if (changed) { updateInput(); sendInput(true); }
+  }));
+
   document.addEventListener('gesturestart', event => event.preventDefault());
   $('retry').addEventListener('click', () => { terminal = false; attempts = 0; connect(); });
   $('fullscreen').addEventListener('click', async () => {

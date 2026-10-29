@@ -12,12 +12,17 @@ Version **0.1.0** requires Android 8.0 or later. Package: `com.ecojust.coastkart
 Signed with the pureTV release certificate.
 <!-- apk-resource:end -->
 
+The gameplay and controller upgrades described below are source changes. The linked 0.1.0 APK is the previous release and requires a new build to include them.
+
+
 ## Play
 
 1. Connect the TV and phones to the same LAN, then open the game on the TV.
 2. Scan the room QR code with a phone browser. Use one phone per player; no phone app is required.
 3. Choose the player count on the title screen, then press START.
 4. Touch anywhere in the left joystick area to set its center. Drag to move; releasing hides it and clears movement. A/B work simultaneously with the joystick.
+
+The right third of the phone is the action area: B fills the upper half and A fills the lower half. Touch anywhere in either region while using the floating stick on the left. START and SELECT remain separate at the bottom left. Gameplay controls suppress text selection and long-press browser menus.
 
 | Control | Action |
 | --- | --- |
@@ -28,6 +33,8 @@ Signed with the pureTV release certificate.
 | START | Start, pause / resume |
 
 On the title screen, move the stick left/right to select a course and up/down to select a mode. Choose a quick race, a four-round championship or a time trial. Quick race and championship support 1–2 humans plus six computer opponents. Time trial uses 1P only, without computer opponents or items. Races run for three laps, with ordered checkpoints, off-road slowdown and opponent items. Best times and music preference persist on the TV. See the [game notes](docs/reference.md) for modes, scoring and scope.
+
+Current source improvements: drifting has three charge thresholds (0.65, 1.6 and 2.4 seconds), with blue, gold and purple sparks and stronger release boosts. Staying in a moving rival’s wake for 1.2 seconds grants a slipstream boost. Braking, going off-road or getting hit cancels drift charge.
 
 ## Screenshots
 

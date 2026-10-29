@@ -610,8 +610,7 @@
       c.restore();
       return;
     }
-    if (p.crouching && p.power) y += 10;
-    var sy = p.power ? (p.crouching ? 1.25 : 1.875) : 1;
+    var sy = p.h / 16;
     this.sprite("plumber", x, y, palette, p.facing < 0, sy);
     if (
       p.grounded &&
@@ -711,6 +710,7 @@
     });
     g.particles.forEach(function (a) {
       if (a.type === "coin") self.coin(a.x - cam, a.y, g.frame);
+      else if (a.type === "score") self.text(a.text, a.x - cam, a.y, "#fff2cf");
       else {
         c.fillStyle = "#cb743e";
         c.fillRect(Math.floor(a.x - cam), Math.floor(a.y), a.w, a.h);

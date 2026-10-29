@@ -101,9 +101,14 @@
       });
     }
     if (player.clearTimer>0 && player.clearRows) {
-      ctx.fillStyle = Math.floor(frame/3)%2 ? "#eef8ff" : "#6bb3ee";
+      ctx.fillStyle = player.clearRows.length === 4 && Math.floor(frame/3)%2 ? "#eef8ff" : "#02040c";
       var spread=Math.min(40,Math.max(8,Math.floor((22-player.clearTimer)/4)*8));
       player.clearRows.forEach(function(row){ctx.fillRect(x+40-spread,y+row*8,spread*2,8);});
+    }
+    if (player.completed) {
+      ctx.fillStyle="#071a20";ctx.fillRect(x,y+59,80,33);
+      this.text("CLEAR!",x+22,y+67,"#9ce9ba");
+      this.text("25 LINES",x+16,y+80,"#becbdf");
     }
     if (player.joined && !player.alive) {
       ctx.fillStyle="rgba(3,5,16,0.8)";ctx.fillRect(x,y+59,80,33);
@@ -125,22 +130,22 @@
       this.text(label[i],56+i*24,28,colors[i],4);
     }
     this.center("CLASSIC BLOCK PUZZLE",66,"#789bc4");
-    this.center("A-TYPE",91,"#f2c681");
+    this.center((game.mode || "A")+"-TYPE",91,"#f2c681");
     this.text(game.selectedPlayers===2?" ":">",57,111,"#74c3ff");
     this.text("1 PLAYER",73,111,"#e6edf7");
     this.text(game.selectedPlayers===2?">":" ",57,126,"#74c3ff");
     this.text("2 PLAYERS",73,126,"#e6edf7");
     this.text("LEVEL",67,150,"#9db2d0");
     this.text("< "+number(game.startLevel,2)+" >",113,150,"#f1c67d");
-    this.center("LEFT/RIGHT LEVEL",168,"#738da9");
-    this.center("SELECT PLAYERS",180,"#738da9");
+    this.center(game.mode === "B" ? "HEIGHT < "+game.startHeight+" >  UP/DOWN" : "LEFT/RIGHT LEVEL",168,"#738da9");
+    this.center("A/B TYPE  SELECT PLAYERS",180,"#738da9");
     if(Math.floor((game.frame||0)/30)%2===0)this.center("PRESS START",201,"#f0f5ff");
-    this.center("LOCAL TWO-PLAYER SCORE CHALLENGE",232,"#6985a8");
+    this.center(game.mode === "B" ? "CLEAR 25 LINES AT A FIXED SPEED" : "LOCAL TWO-PLAYER SCORE CHALLENGE",232,"#6985a8");
   };
   TetrisRenderer.prototype.single = function (game) {
     var p=game.players[0],ctx=this.ctx;
     this.text("TETRIS",12,13,"#85b8ed",2);
-    this.text("LINES",88,23,"#e3ebf8");this.text(number(p.cleared,3),128,23,"#f5cb82");
+    this.text(game.mode === "B" ? "LEFT" : "LINES",88,23,"#e3ebf8");this.text(number(game.mode === "B" ? Math.max(0,25-p.cleared) : p.cleared,3),128,23,"#f5cb82");
     this.frame(6,42,72,170);
     this.text("STATISTICS",12,49,"#9bafd0");
     for(var i=0;i<TYPES.length;i++){
@@ -154,16 +159,17 @@
     this.frame(178,78,71,59);this.text("NEXT",186,85,"#b6cbe9");
     this.preview(p.nextType,184,99,58,29,p.level,8);
     this.text("LEVEL",182,153,"#93b0d8");this.text(number(p.level,2),194,166,"#e6edf8",2);
-    this.text("1 PLAYER",181,195,"#7f9cc3");
+    this.text(game.mode === "B" ? "B HEIGHT" : "1 PLAYER",181,195,"#7f9cc3");
+    if(game.mode === "B")this.text(number(game.startHeight,1),207,207,"#f5cb82");
     ctx.fillStyle="#253454";ctx.fillRect(8,219,240,1);
     this.center("A CW  B CCW  DOWN SOFT DROP",225,"#7894b4");
   };
   TetrisRenderer.prototype.dual = function (game) {
-    this.center("TETRIS  2P CHALLENGE",7,"#bdd8f8");
+    this.center(game.mode === "B" ? "B-TYPE  25 LINE CHALLENGE" : "TETRIS  2P CHALLENGE",7,"#bdd8f8");
     for(var i=0;i<2;i++){
       var p=game.players[i],x=i?152:24,label=i?"#efba79":"#75c4ef";
       this.text("P"+(i+1),x,25,label);this.text(number(p.score,7),x+25,25,"#e5edf7");
-      this.text("L"+number(p.level,2),x,36,"#8ea9ca");this.text("ROWS "+number(p.cleared,3),x+27,36,"#a9c0da");
+      this.text("L"+number(p.level,2),x,36,"#8ea9ca");this.text((game.mode === "B" ? "LEFT " : "ROWS ")+number(game.mode === "B" ? Math.max(0,25-p.cleared) : p.cleared,3),x+27,36,"#a9c0da");
       this.board(p,x,48,game.frame);
       this.text("NEXT",x,219,"#8ea9ca");
       this.preview(p.nextType,x+33,215,42,20,p.level,5);
@@ -175,7 +181,8 @@
     var ctx=this.ctx;
     ctx.fillStyle="rgba(3,7,20,0.84)";ctx.fillRect(38,91,180,59);
     ctx.strokeStyle="#728db5";ctx.lineWidth=1;ctx.strokeRect(38.5,91.5,179,58);
-    this.center(game.phase==="paused"?"PAUSED":"GAME OVER",102,"#eaf2ff",2);
+    var cleared = game.players.some(function(p){return p.joined && p.completed;});
+    this.center(game.phase==="paused"?"PAUSED":cleared?"CHALLENGE CLEAR":"GAME OVER",102,"#eaf2ff",2);
     var message=game.phase==="paused"?(game.pauseReason==="disconnect"?"RECONNECT CONTROLLERS":"START TO RESUME"):"START FOR TITLE";
     this.center(message,126,"#a8bbd3");
     if(game.phase==="paused")this.center("SELECT: MUSIC "+(game.music?"ON":"OFF"),139,"#7a9ac1");

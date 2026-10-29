@@ -46,7 +46,7 @@ test('a cleared support row triggers a second wave only after gravity',()=>{
  const g=start(),p=g.players[0];p.active=null;p.status='clearing';p.chain=1;p.clearTicks=1;p.dropMatched=true;p.lastLockY=12;
  p.board=empty();p.board[12][0]=p.board[12][1]=p.board[12][2]=1;
  p.board[11][0]=2;p.board[10][1]=2;p.board[9][2]=2;p.clearCells=[{x:0,y:12},{x:1,y:12},{x:2,y:12}];
- tick(g);assert.equal(p.chain,2);assert.equal(p.status,'clearing');assert.equal(p.clearCells.length,3);tick(g,40);assert.equal(p.cleared,6);assert.equal(p.score,900);assert.ok(p.board.every(r=>r.every(v=>v===0)));
+ tick(g);assert.equal(p.chain,1);assert.equal(p.status,'settling');assert.equal(p.gravityTicks,12);assert.equal(p.board[12][0],0);tick(g,11);assert.equal(p.chain,1);tick(g);assert.equal(p.chain,2);assert.equal(p.status,'clearing');assert.equal(p.clearCells.length,3);tick(g,40);assert.equal(p.cleared,6);assert.equal(p.score,900);assert.ok(p.board.every(r=>r.every(v=>v===0)));
 });
 test('simultaneous crossing matches and long runs have a defined counting bonus',()=>{
  assert.equal(JewelGame.waveScore(3,1,0,0),300);assert.equal(JewelGame.waveScore(4,1,0,0),500);assert.equal(JewelGame.waveScore(5,1,0,0),800);assert.equal(JewelGame.waveScore(3,2,0,0),600);assert.equal(JewelGame.waveScore(3,1,9,9),579);
@@ -57,7 +57,7 @@ test('seventy cleared jewels advance level and award a magic column without cons
 });
 test('a magic column clears its contact color across the board and itself',()=>{
  const g=start(),p=g.players[0];p.level=1;p.board=empty();p.board[12][0]=3;p.board[12][5]=3;p.board[11][5]=1;p.active={x:0,y:9,colors:[7,7,7],magic:true};g.lock(p);
- assert.equal(p.clearCells.length,5);assert.equal(p.speedLevel,1);tick(g,40);assert.equal(p.cleared,5);assert.equal(p.board[12][5],1);assert.equal(p.board[12][0],0);
+ assert.equal(p.clearCells.length,5);assert.equal(p.speedLevel,1);tick(g,40);assert.equal(p.cleared,5);assert.equal(p.status,'settling');tick(g,4);assert.equal(p.board[12][5],1);assert.equal(p.board[12][0],0);
 });
 test('magic on an empty floor vanishes without erasing other colors',()=>{
  const g=start(),p=g.players[0];p.board=empty();p.board[12][4]=2;p.active={x:0,y:10,colors:[7,7,7],magic:true};g.lock(p);assert.equal(p.clearCells.length,3);tick(g,40);assert.equal(p.board[12][4],2);
@@ -91,4 +91,16 @@ test('hidden-row matches can clear before the top-out decision',()=>{
 });
 test('invalid saved high scores cannot corrupt a new game',()=>{
  assert.equal(new JewelGame({highScore:Infinity}).highScore,0);assert.equal(new JewelGame({highScore:'bad'}).highScore,0);assert.equal(new JewelGame({highScore:-3}).highScore,0);assert.equal(new JewelGame({highScore:600}).highScore,600);
+});
+
+test('settling blocks new input, freezes during pause and preserves gem order on landing',()=>{
+ const g=start(),p=g.players[0];p.active=null;p.status='clearing';p.chain=1;p.clearTicks=1;p.dropMatched=true;
+ p.board=empty();p.board[12][0]=p.board[12][1]=p.board[12][2]=1;
+ p.board[8][0]=2;p.board[7][0]=3;p.clearCells=[{x:0,y:12},{x:1,y:12},{x:2,y:12}];
+ tick(g);assert.equal(p.status,'settling');assert.equal(p.gravityDuration,16);
+ tick(g,4,{x:1,a:true});assert.equal(p.active,null);assert.equal(p.gravityTicks,12);
+ tick(g,1,{start:true});assert.equal(g.phase,'paused');
+ tick(g,90);assert.equal(p.gravityTicks,12);assert.equal(p.board[8][0],2);
+ tick(g,1,{start:true});tick(g,11);assert.equal(p.status,'falling');
+ assert.equal(p.board[12][0],2);assert.equal(p.board[11][0],3);assert.deepEqual(p.gravityMoves,[]);
 });

@@ -522,6 +522,17 @@
           "#a58564",
           2,
         );
+      if (p.fishing) {
+        var float = this.point(22.1, 10.5 + p.id * 0.55),
+          biting = p.fishing.phase === "bite",
+          dipping = biting || p.fishing.phase === "nibble",
+          ripple = 5 + (time * (dipping ? 18 : 5)) % 12;
+        this.line([{ x: q.x + 20, y: q.y - 35 }, { x: float.x, y: float.y }], "rgba(255,255,235,.8)", 1);
+        this.ellipse(float.x + 7, float.y + 7, 10, 3, "rgba(35,75,80,.3)");
+        this.ellipse(float.x, float.y, ripple, ripple * 0.4, "rgba(236,255,249,.35)");
+        this.ellipse(float.x, float.y - (dipping ? 0 : 4), 3, dipping ? 2 : 5, biting ? "#ffd471" : "#ef9283");
+        if (biting) this.text("!", float.x, float.y - 19, 21, "#fff1b1", "center");
+      }
       this.round(
         q.x - 11,
         q.y - s * 1.85,
@@ -874,6 +885,7 @@
         craft: ["制作家具", "Craft furniture"],
         decorate: ["布置小岛", "Decorate"],
         tasks: ["居民任务与指南", "Requests + guide"],
+        journal: ["鱼类图鉴", "Fish journal"],
         mira: ["米拉 · 花园朋友", "Mira · garden friend"],
         pip: ["皮普 · 海边朋友", "Pip · seaside friend"],
         upgrade: ["升级小屋", "Upgrade home"],
@@ -1094,13 +1106,18 @@
               this.text(
                 p.fishing.phase === "bite"
                   ? game.tr("咬钩！现在按 A！", "BITE! Press A now!")
-                  : game.tr("等待浮标下沉…", "Wait for the bobber…"),
+                  : p.fishing.phase === "nibble"
+                    ? game.tr("轻轻试探…先别收线", "A nibble… keep waiting")
+                    : game.tr("等待浮标下沉…", "Wait for the bobber…"),
                 x + 225,
                 yy + 20,
                 17,
                 "#756c50",
                 "center",
               );
+              if (p.fishing.phase === "bite") {
+                this.round(x + 78, yy + 34, 294 * Math.min(1, p.fishing.remaining / (p.fishing.window || 1.2)), 3, 1, "#a87742");
+              }
             }
           }
           this.panel(game, p);

@@ -1,3 +1,4 @@
+import { assertControllerLayout, verifyBlindTouchZones, overlaps } from './controller-zones.mjs';
 // Browser regression tests for the bundled modern game pages and native-room protocol.
 // Screenshots are actual Chromium renders with a simulated Android bridge, not TV captures.
 import assert from 'node:assert/strict';
@@ -222,57 +223,9 @@ try {
     }
     await context.close();
   });
-  await test('Real touchscreen hits the edge of the zone, captures dragging outside, and keeps A/B independent', async () => {
+  await test('Real touchscreen covers the full action zones, holds independent fingers and prevents long-press selection', async () => {
     const { context, page } = await fixture();
-    const cdp = await context.newCDPSession(page);
-    await page.evaluate(() => {
-      window.__pointerEvents = [];
-      for (const type of ['pointerdown', 'pointermove', 'pointerup'])
-        document.addEventListener(type, event => window.__pointerEvents.push({ type, target: event.target.id, trusted: event.isTrusted, pointerId: event.pointerId }), true);
-    });
-    const touches = new Map();
-    async function touch(type, id, x, y) {
-      if (type === 'touchEnd') {
-        const point = touches.get(id);
-        await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [point] });
-        touches.delete(id);
-      } else {
-        touches.set(id, { id, x, y, radiusX: 4, radiusY: 4, force: 1 });
-        await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [...touches.values()] });
-      }
-    }
-    const zone = await page.locator('#joystick-zone').boundingBox();
-    const origin = { clientX: zone.x + 3, clientY: zone.y + zone.height * .55 };
-    assert.equal(await page.evaluate(({clientX,clientY}) => document.elementFromPoint(clientX,clientY).id, origin), 'joystick-zone');
-    await touch('touchStart', 1, origin.clientX, origin.clientY);
-    await expectInput(page, { x: 0, y: 0 });
-    await stickCenter(page, origin);
-    await touch('touchMove', 1, origin.clientX + 130, origin.clientY);
-    await expectInput(page, { x: 1, y: 0 });
-    for (const [id, name] of [[2,'button-a'],[3,'button-b']]) {
-      const box = await page.locator('#' + name).boundingBox();
-      await touch('touchStart', id, box.x + box.width / 2, box.y + box.height / 2);
-    }
-    await expectInput(page, { x: 1, y: 0, a: true, b: true });
-    await touch('touchEnd', 2);
-    await expectInput(page, { x: 1, a: false, b: true });
-    await touch('touchStart', 4, zone.x + zone.width * .75, zone.y + zone.height * .25);
-    await touch('touchMove', 4, zone.x + zone.width * .5, zone.y + zone.height * .15);
-    await stickCenter(page, origin);
-    await expectInput(page, { x: 1, y: 0, b: true });
-    const pointerId = await page.evaluate(() => window.__pointerEvents.find(event => event.type === 'pointerdown' && event.target === 'joystick-zone').pointerId);
-    assert.equal(await page.locator('#joystick-zone').evaluate((element,id) => element.hasPointerCapture(id), pointerId), true, 'Real browser pointer capture owns the active stick touch');
-    await touch('touchMove', 1, zone.x + zone.width + 40, Math.min(380, zone.y + zone.height + 20));
-    await touch('touchEnd', 1);
-    await expectInput(page, { x: 0, y: 0, a: false, b: true });
-    await stickHidden(page);
-    await touch('touchEnd', 3);
-    await touch('touchEnd', 4);
-    await expectInput(page, { x: 0, y: 0, a: false, b: false });
-    const events = await page.evaluate(() => window.__pointerEvents);
-    assert.ok(events.length && events.every(event => event.trusted), 'Touch events are browser-generated, not dispatchEvent simulations');
-    assert.ok(events.some(event => event.type === 'pointerup' && event.target === 'joystick-zone' && event.pointerId === pointerId), 'Captured release returns to the joystick after leaving its region');
-    await cdp.detach();
+    await verifyBlindTouchZones(page);
     await context.close();
   });
   await test('Disconnect releases held input; reconnect resumes same player with fresh sequence', async () => {
@@ -383,23 +336,10 @@ try {
   await test('Portrait and small landscape controls remain in viewport without overlap or scrolling', async () => {
     for (const locale of ['zh-CN','en-US']) {
     const { context, page } = await fixture({locale});
-    for (const viewport of [{ width: 844, height: 390 }, { width: 667, height: 375 }, { width: 390, height: 844 }, { width: 320, height: 568 }, {width:568,height:320}]) {
+    for (const viewport of [{ width: 844, height: 390 }, { width: 667, height: 375 }, { width: 390, height: 844 }, { width: 320, height: 568 }, {width:568,height:320}, {width:1366,height:768}]) {
       await page.setViewportSize(viewport);
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      const rectangles = await Promise.all(['joystick-zone', 'button-a', 'button-b', 'button-start', 'button-select'].map(id => page.locator(`#${id}`).boundingBox()));
-      for (const rect of rectangles) {
-        assert.ok(rect.x >= 0 && rect.y >= 0 && rect.x + rect.width <= viewport.width + 1 && rect.y + rect.height <= viewport.height + 1, `${JSON.stringify(viewport)} control outside viewport ${JSON.stringify(rect)}`);
-      }
-      const overlaps = (p, q) => p.x < q.x + q.width && p.x + p.width > q.x && p.y < q.y + q.height && p.y + p.height > q.y;
-      for (let i=0;i<rectangles.length;i++) for (let j=i+1;j<rectangles.length;j++) assert.ok(!overlaps(rectangles[i],rectangles[j]), `overlap at ${JSON.stringify(viewport)} controls ${i}/${j}`);
-      const header = await Promise.all(['.brand','.connection','#fullscreen'].map(selector=>page.locator(selector).boundingBox()));
-      for(const box of header.filter(Boolean))assert.ok(box.x>=0&&box.y>=0&&box.x+box.width<=viewport.width+.5&&box.y+box.height<=viewport.height+.5,'Header outside viewport: '+JSON.stringify({viewport,box}));
-      for(let i=0;i<header.length;i++)for(let j=i+1;j<header.length;j++)if(header[i]&&header[j])assert.ok(!overlaps(header[i],header[j]),'Header labels/buttons overlap: '+JSON.stringify({viewport,header}));
-      const overflow=await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight,headerWidth:document.querySelector('.header').scrollWidth,headerClient:document.querySelector('.header').clientWidth}));
-      assert.ok(overflow.width<=viewport.width&&overflow.height<=viewport.height&&overflow.headerWidth<=overflow.headerClient+1,'Header/page overflows: '+JSON.stringify({viewport,overflow}));
-      assert.equal(await page.evaluate(() => getComputedStyle(document.body).overflow), 'hidden');
-      assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('#joystick-zone')).touchAction), 'none');
-      assert.ok(rectangles[0].width >= 100 && rectangles[0].height >= 100, 'The floating joystick has a usable touch region');
+      await assertControllerLayout(page, viewport);
       await stickHidden(page);
       for(const label of ['STAGE 1 · GATE OF DAWN','STAGE 16 · THE VERY LONG ROYAL PALACE FINAL CHAMBER']) {
         await page.evaluate(stageLabel=>window.__sockets.at(-1).receive({type:'state',phase:'playing',selectedPlayers:2,players:[{id:1,joined:true,active:true,lap:2,rank:3,item:'boost',score:42,coins:42,tool:'rod',bagCount:7,bagCapacity:12,stageLabel}]}),label);
@@ -832,18 +772,22 @@ async function islandProgressFixture(tv,phones,config) {
   await tv.evaluate(api=>{const g=window[api].game,p=g.players[0];p.x=5.5;p.y=9.1;p.location='island';p.tool='hand';p.inventory={};p.menu=null;},config.api);
   await tapControl(phones[0].page,'button-a');
   assert.equal((await gameState(tv,config)).players[0].inventory.fruit,2,'A gathers actual island resources');
-  await tv.evaluate(api=>{const p=window[api].game.players[0];p.x=20.2;p.y=11.2;},config.api);
+  // One deterministic nibble exercises the new timing without a random 4–7s cast.
+  await tv.evaluate(api=>{const g=window[api].game,p=g.players[0];p.x=20.2;p.y=11.2;g.random=()=>0.5;},config.api);
   await tapControl(phones[0].page,'button-select');await tapControl(phones[0].page,'button-a');
-  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='bite';},config.api,{timeout:6000});
+  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='nibble';},config.api,{timeout:10000});
+  assert.equal((await gameState(tv,config)).players[0].inventory.fish,undefined,'A nibble alone does not award a fish');
+  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='bite';},config.api,{timeout:10000});
   await tapControl(phones[0].page,'button-a');
   assert.equal((await gameState(tv,config)).players[0].inventory.fish,1,'Phone A during the bite window catches one fish');
+  assert.equal(await tv.evaluate(api=>window[api].game.fishJournal.bass.count,config.api),1,'A real phone catch is recorded in the shared fish journal');
   await tv.evaluate(api=>{window[api].game.players[0].inventory={fruit:window.CozyIslandGame.CAPACITY};},config.api);
   await tapControl(phones[0].page,'button-a');
   const full=(await gameState(tv,config)).players[0];assert.equal(full.fishing,null,'Full bag prevents starting a fishing attempt');
   assert.equal(full.inventory.fruit,24);assert.match(full.message,/满|full/i,'Full bag gives an actionable message');
   await tv.evaluate(api=>{window[api].game.players[0].inventory={fruit:23};},config.api);
   await tapControl(phones[0].page,'button-a');
-  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='bite';},config.api,{timeout:6000});
+  await tv.waitForFunction(api=>{const f=window[api].game.players[0].fishing;return f&&f.phase==='bite';},config.api,{timeout:10000});
   await tv.evaluate(api=>{window[api].game.players[0].inventory={fruit:24};},config.api);
   await tapControl(phones[0].page,'button-a');
   const fullAtBite=(await gameState(tv,config)).players[0];assert.equal(fullAtBite.fishing,null);assert.deepEqual(fullAtBite.inventory,{fruit:24},'A bag filled during fishing cannot overflow when reeling in');
@@ -861,7 +805,8 @@ async function islandProgressFixture(tv,phones,config) {
   assert.deepEqual((await gameState(tv,config)).players[0].inventory,{},'Placing a crafted decoration removes it from the bag');
   await islandHomeFixture(tv,phones,config);
   const saved=await tv.evaluate(api=>{const g=window[api].game;g.save();return {coins:g.coins,decorations:JSON.parse(JSON.stringify(g.decorations)),inventory:JSON.parse(JSON.stringify(g.players[0].inventory)),players:g.players.map(p=>({x:p.x,y:p.y,location:p.location,inventory:JSON.parse(JSON.stringify(p.inventory))}))};},config.api);
-  console.log('PASS cozy-island controlled economy fixture: gathering, timed fishing, full bag, phone crafting/decorating');
+  await tv.evaluate(api=>{window[api].game.random=Math.random;},config.api);
+  console.log('PASS cozy-island controlled economy fixture: gathering, nibble/bite timing, fish journal, full bag, phone crafting/decorating');
   return saved;
 }
 async function islandReload(tv,config,saved) {

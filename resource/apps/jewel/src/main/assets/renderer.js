@@ -154,7 +154,13 @@
         let glow = false;
         if (player.clearCells && frame % 10 < 5)
           glow = player.clearCells.some(function (point) { return point.x === col && point.y === row; });
-        this.gem(value, x + col * cell, y + row * cell, cell, glow);
+        if (player.status !== 'settling') this.gem(value, x + col * cell, y + row * cell, cell, glow);
+      }
+      if (player.status === 'settling') {
+        const fallen = (player.gravityDuration - player.gravityTicks) / 4;
+        (player.gravityMoves || []).forEach(move => {
+          this.gem(move.color, x + move.x * cell, y + Math.min(move.to, move.from + fallen) * cell, cell, false);
+        });
       }
       if (player.active) {
         const active = player.active;
@@ -165,7 +171,7 @@
         this.rect(x, y + Math.floor(h / 2) - 13, w, 27, "#0b1023");
         this.text("TOP OUT", x + w / 2, y + Math.floor(h / 2) - 4, "#f7adbc", 1, "center");
       }
-      if (player.chain > 1 && player.clearCells && player.clearCells.length) {
+      if (player.chain > 1 && (player.status === 'clearing' || player.status === 'settling')) {
         this.text("CHAIN " + player.chain, x + w / 2, y - 15, "#fff0b1", 1, "center");
       }
     }
@@ -201,7 +207,10 @@
       this.text(String(player.cleared || 0).padStart(4, "0"), 218, 158, "#92e9c0", 1, "right");
       this.text("CHAIN", 137, 175, "#91a0bd");
       this.text(String(player.chain || 0), 218, 175, "#efb4ef", 1, "right");
-      this.text("1 PLAYER", 178, 197, "#727c98", 1, "center");
+      const magic = player.active && player.active.magic;
+      this.text(magic ? "MAGIC COLUMN!" : player.levelCleared >= 70 ? "MAGIC READY" : "NEXT MAGIC " + (70-(player.levelCleared || 0)), 178, 192, magic ? "#fff0b1" : "#92b9cf", 1, "center");
+      this.rect(137,204,81,3,"#202743");
+      this.rect(137,204,Math.min(81,81*(player.levelCleared || 0)/70),3,"#b99ce8");
       this.text("A/B CYCLE   DOWN: SOFT DROP", 128, 222, "#99a6c0", 1, "center");
     }
     double(game) {

@@ -201,9 +201,9 @@ try {
     await tv.waitForTimeout(550);
     if(kind==='tank')await tv.waitForFunction(api=>!window[api].game.bullets.some(bullet=>bullet.owner===1),api,{timeout:5000});
     const shots=await tv.evaluate(()=>window.__shots.fire);
-    await press(phone,'button-b');
+    await press(phone,kind==='tank'?'button-a':'button-b');
     await tv.waitForFunction(shots=>window.__shots.fire>shots,shots,{timeout:5000});
-    await release(phone,'button-b');
+    await release(phone,kind==='tank'?'button-a':'button-b');
     await tap(phone,'button-start'); await phase(tv,'paused');
     const paused=await positions(tv); await tv.waitForTimeout(150);
     assert.deepEqual(await positions(tv),paused,'Phone START freezes gameplay');

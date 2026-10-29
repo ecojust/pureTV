@@ -166,8 +166,17 @@
       (x > 19 && x < 21.9 && y > 10.4 && y < 12)
     );
   }
+  // Hour windows use the island clock; night windows wrap across midnight.
+  var fish = [
+    { id: "sardine", zh: "银沙丁鱼", en: "Silver sardine", from: 0, to: 24, weight: 5, min: 12, max: 28, window: 1.2 },
+    { id: "bass", zh: "海鲈鱼", en: "Sea bass", from: 0, to: 24, weight: 3, min: 30, max: 75, window: 1.05 },
+    { id: "butterfly", zh: "珊瑚蝶鱼", en: "Coral butterflyfish", from: 6, to: 18, weight: 2, min: 10, max: 22, window: 0.95 },
+    { id: "ray", zh: "星点鳐", en: "Spotted ray", from: 18, to: 6, weight: 2, min: 55, max: 110, window: 0.9 },
+    { id: "moonfish", zh: "月光鱼", en: "Moonlight fish", from: 21, to: 4, weight: 1, min: 35, max: 65, window: 0.8 },
+  ];
   var world = {
     items: items,
+    fish: fish,
     nodes: nodes,
     landmarks: landmarks,
     tasks: tasks,

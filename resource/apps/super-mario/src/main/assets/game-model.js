@@ -55,6 +55,7 @@
       swimCooldown: 0,
       fireCooldown: 0,
       crouching: false,
+      stompChain: 0,
       won: false,
     };
   }
@@ -832,6 +833,7 @@
     p.star = 0;
     p.dying = 0;
     p.crouching = false;
+    p.stompChain = 0;
     p.fireCooldown = 0;
     p.swimCooldown = 0;
     this.cameraX = Math.max(0, p.x - 96);
@@ -857,6 +859,35 @@
     p.power = value;
     p.h = value ? 30 : 16;
     p.y = feet - p.h;
+    p.crouching = false;
+    if (value && !this.clearBody(p.x, p.y, p.w, p.h)) {
+      p.h = 16;
+      p.y = feet - p.h;
+      p.crouching = true;
+    }
+  };
+  // Resizing keeps the feet planted, and never stands up through a ceiling.
+  MarioGame.prototype.clearBody = function (x, y, w, h) {
+    for (var row = Math.floor((y + 1) / 16); row <= Math.floor((y + h - 1) / 16); row++)
+      for (var col = Math.floor((x + 1) / 16); col <= Math.floor((x + w - 1) / 16); col++)
+        if (this.isSolid(col * 16 + 8, row * 16 + 8)) return false;
+    return true;
+  };
+  MarioGame.prototype.updateCrouch = function (input, water) {
+    var p = this.player(), feet = p.y + p.h;
+    if (!p.power) { p.crouching = false; return; }
+    var duck = !water && input.y > 0.5 && (p.grounded || p.crouching);
+    if (!duck && p.crouching && !this.clearBody(p.x, feet - 30, p.w, 30)) duck = true;
+    p.crouching = duck;
+    p.h = duck ? 16 : 30;
+    p.y = feet - p.h;
+  };
+  MarioGame.prototype.chainReward = function (count, x, y, shell) {
+    var values = shell ? [500, 800, 1000, 2000, 4000, 8000] : [100, 200, 400, 800, 1000, 2000, 4000, 8000];
+    var reward = values[count - 1];
+    if (reward) this.score(reward);
+    else { this.player().lives++; this.emit("life"); }
+    this.particles.push({ type: "score", text: reward ? String(reward) : "1UP", x: x, y: y - 8, vx: 0, vy: -0.45, life: 50 });
   };
   MarioGame.prototype.loseLife = function (reason) {
     var p = this.player();
@@ -1122,13 +1153,13 @@
       running = !!input.b,
       max = water ? (running ? 1.65 : 1.25) : running ? 3.1 : 1.75,
       acc = p.grounded ? 0.11 : 0.065;
-    p.crouching = p.power > 0 && input.y > 0.5 && p.grounded && !water;
+    this.updateCrouch(input, water);
     if (p.crouching) dx = 0;
     if (dx) {
       p.vx = clamp(p.vx + dx * acc, -max, max);
       p.facing = dx;
     } else {
-      p.vx *= p.grounded ? 0.83 : 0.98;
+      p.vx *= p.grounded && !p.crouching ? 0.83 : 0.98;
       if (Math.abs(p.vx) < 0.03) p.vx = 0;
     }
     if (input.a && !last.a) {
@@ -1171,6 +1202,7 @@
       p.vy + (water ? 0.075 : input.a && p.vy < 0 ? 0.2 : 0.48),
     );
     this.moveActor(p, true);
+    if (p.grounded) p.stompChain = 0;
     p.x = Math.max(this.cameraX, p.x);
     if (p.y < 32) {
       p.y = 32;
@@ -1335,7 +1367,8 @@
             overlap(e, other)
           ) {
             other.alive = false;
-            game.score(200);
+            e.chain = (e.chain || 0) + 1;
+            game.chainReward(e.chain, other.x, other.y, true);
             game.emit("stomp");
           }
         });
@@ -1362,15 +1395,18 @@
             var still = Math.abs(e.vx) < 0.1;
             e.vx = still ? (p.x < e.x ? 3.4 : -3.4) : 0;
             e.shellTicks = still ? 0 : 240;
+            e.chain = 0;
           } else {
             e.shell = true;
             if (e.type === "koopa") e.y += 10;
             e.h = 14;
             e.vx = 0;
             e.shellTicks = 240;
+            e.chain = 0;
           }
         } else e.alive = false;
-        game.score(100);
+        p.stompChain++;
+        game.chainReward(p.stompChain, e.x, e.y, false);
         game.emit("stomp");
       } else if (
         (e.type === "koopa" || e.type === "buzzy") &&
@@ -1379,6 +1415,7 @@
       ) {
         e.vx = p.x < e.x ? 3.4 : -3.4;
         e.shellTicks = 0;
+        e.chain = 0;
         p.invulnerable = Math.max(p.invulnerable, 12);
         game.score(100);
         game.emit("kick");
@@ -1458,7 +1495,7 @@
       q.life--;
       q.x += q.vx || 0;
       q.y += q.vy || 0;
-      q.vy = (q.vy || 0) + 0.16;
+      if (q.type !== "score") q.vy = (q.vy || 0) + 0.16;
     });
     this.particles = this.particles.filter(function (q) {
       return q.life > 0;
@@ -1526,9 +1563,16 @@
       }
       if (this.phase === "playing") {
         this.level.platforms.forEach(function (platform) {
+          var oldY = platform.y;
           platform.y =
             platform.baseY +
             Math.sin((game.frame + platform.phase) / 55) * platform.range;
+          var rider = game.player(), delta = platform.y - oldY;
+          if (!rider.dying && rider.grounded &&
+              Math.abs(rider.y + rider.h - oldY) < 0.1 &&
+              rider.x + rider.w > platform.x && rider.x < platform.x + platform.w &&
+              game.clearBody(rider.x, rider.y + delta, rider.w, rider.h))
+            rider.y += delta;
         });
         if (this.bannerTicks) this.bannerTicks--;
         if (this.clearTicks) {

@@ -12,23 +12,26 @@ Version **0.1.0**, for Android 8.0+ TVs. Package: `com.ecojust.tetristv`. The TV
 The APK in this directory uses the pureTV release certificate.
 <!-- apk-resource:end -->
 
+The gameplay and controller upgrades described below are source changes. The linked 0.1.0 APK is the previous release and requires a new build to include them.
+
+
 ## Play
 
 1. Connect the phones and TV to the same local network and open the TV app.
 2. Scan its QR code in a phone browser. For two players, each phone joins separately.
 3. Press SELECT at the title to choose one or two players, then START. Both players must connect for two-player play.
-4. The left joystick stays hidden until touched. Each initial touch sets its center; drag to control and release to stop and hide it.
+4. The left joystick stays hidden until touched. Each initial touch sets its center; drag to control and release to stop and hide it. The entire right third of the screen accepts action touches. START/SELECT stay separate at the bottom left. Gameplay areas suppress text selection and long-press menus.
 
 | Control | Action |
 | --- | --- |
-| Left floating stick | Move left/right; hold down for soft drop. At the title, left/right selects a level and up/down changes it by ten |
-| A | Rotate clockwise |
-| B | Rotate counterclockwise |
+| Left floating stick | Move left/right; hold down for soft drop. At the title, left/right selects a level; up/down changes A-TYPE level by ten or selects B-TYPE obstacle height |
+| Lower-right half A | Rotate clockwise; switch A-TYPE/B-TYPE at the title |
+| Upper-right half B | Rotate counterclockwise; switch A-TYPE/B-TYPE at the title |
 | SELECT | Choose one/two players at the title; toggle music during play or pause |
 | START | Start, pause or resume |
 | TV Back | Exit confirmation |
 
-Uses classic rotation without wall kicks and the NES level/gravity curve. There is no modern HOLD, ghost piece or hard drop. Starting levels 0–19 are selectable. Two-player mode adds separate wells with the same piece sequence and independent scores, without garbage attacks.
+Uses classic rotation without wall kicks and the NES level/gravity curve. There is no modern HOLD, ghost piece or hard drop. A-TYPE starting levels 0–19 are selectable. B-TYPE adds a fixed-speed, 25-line challenge with levels 0–9 and initial obstacle heights 0–5. Both players receive identical obstacles; a completed player waits while the other continues. Two-player mode adds separate wells with the same piece sequence and independent scores, without garbage attacks.
 
 High scores stay on the TV and survive an app update. Uninstalling clears the app data.
 

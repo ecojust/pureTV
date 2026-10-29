@@ -118,6 +118,8 @@
       stun: 0,
       drift: 0,
       drifting: false,
+      draft: 0,
+      draftCooldown: 0,
       recover: 0,
       finished: false,
       finishTime: 0,
@@ -166,6 +168,9 @@
   CoastKartGame.TRACKS = TRACKS;
   CoastKartGame.curve = curve;
   CoastKartGame.elevation = elevation;
+  CoastKartGame.driftTier = function (charge) {
+    return charge >= 2.4 ? 3 : charge >= 1.6 ? 2 : charge >= 0.65 ? 1 : 0;
+  };
   CoastKartGame.prototype.random = function () {
     this.rng = (Math.imul(this.rng, 1664525) + 1013904223) >>> 0;
     return this.rng / 4294967296;
@@ -298,6 +303,8 @@
     p.stun = 0.85;
     p.speed *= 0.43;
     p.drift = 0;
+    p.drifting = false;
+    p.draft = 0;
     this.emit("hit", p.id);
   };
   CoastKartGame.prototype.advance = function (p, delta) {
@@ -325,6 +332,27 @@
         }
       }
     }
+  };
+  // Sample every kart before movement so drafting is independent of player order.
+  CoastKartGame.prototype.updateDraft = function (dt) {
+    var self = this;
+    this.racers.forEach(function (p) {
+      p.draftCooldown = Math.max(0, p.draftCooldown - dt);
+      var following = !p.finished && p.speed > 110 && p.stun <= 0 &&
+        p.recover <= 0 && Math.abs(p.x) <= self.track.width &&
+        p.draftCooldown <= 0 && self.racers.some(function (other) {
+          var gap = mod(other.s - p.s, self.track.length);
+          return other !== p && !other.finished && other.speed > 90 &&
+            gap > 45 && gap < 220 && Math.abs(other.x - p.x) < 0.23;
+        });
+      p.draft = following ? Math.min(1.2, p.draft + dt) : 0;
+      if (p.draft >= 1.2) {
+        p.boost = Math.max(p.boost, 1.15);
+        p.draft = 0;
+        p.draftCooldown = 2.4;
+        self.emit("draft", p.id);
+      }
+    });
   };
   CoastKartGame.prototype.drive = function (p, input, dt) {
     if (p.finished) return;
@@ -356,13 +384,14 @@
       p.speed > 85 &&
       Math.abs(steer) > 0.14 &&
       !off &&
-      p.stun <= 0;
+      p.stun <= 0 && brake < 0.2;
     if (drift) {
-      p.drift = Math.min(2.5, p.drift + dt);
+      p.drift = Math.min(3, p.drift + dt);
       p.drifting = true;
     } else {
-      if (p.drifting && !input.b && p.drift > 0.65) {
-        p.boost = Math.max(p.boost, p.drift > 1.6 ? 1.65 : 0.85);
+      var tier = CoastKartGame.driftTier(p.drift);
+      if (p.drifting && !input.b && tier && !off && p.stun <= 0 && brake < 0.2) {
+        p.boost = Math.max(p.boost, [0, 0.85, 1.65, 2.35][tier]);
         this.emit("drift", p.id);
       }
       p.drifting = false;
@@ -532,6 +561,7 @@
           if (this.countdown <= 0) this.emit("go");
         } else {
           this.clock += dt;
+          this.updateDraft(dt);
           this.racers.forEach(function (p) {
             var input = p.human ? map[p.id] || blank(p.id) : self.aiInput(p);
             var old = self.previous[p.id] || {};
