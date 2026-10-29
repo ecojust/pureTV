@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-16-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-14-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -46,38 +46,6 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 启动器表格的“支持自定义”指支持本管理器的 **layout.json 版本 5 users/system 接口**。支持布局协议的启动器卡片自动显示 Home 背景颜色和图片，包括未激活的启动器；修改并应用布局后同步更新。列表不提供选择或移除封面的操作，桌面背景统一在「调整布局」中修改。待安装 APK 优先预览内置布局的 Home 背景，仅在无法读取布局背景时使用同目录的 `thumb.png`／`APK名.thumb.png`。
 
-```text
-resource/
-├── launcher/
-│   ├── puretv/        # 各目录均含独立 APK、源码、layout 示例和封面
-│   ├── nova/          # tvOS 风格
-│   ├── aster/         # 星空
-│   ├── sol/           # 北欧日光
-│   ├── moss/          # 森林晨雾
-│   ├── forma/         # 包豪斯
-│   ├── mono/          # 黑白编辑
-│   ├── drift/         # 粉彩梦境
-│   ├── circuit/       # 霓虹电路
-│   └── pixel/         # 复古像素
-└── apps/
-    ├── coast-kart/    # Coast Kart TV
-    ├── cozy-island/   # Cozy Island TV
-    ├── bomb-jack/     # Mighty Bomb Jack TV
-    ├── adventure-island/ # Adventure Island TV
-    ├── super-mario/   # Super Mario TV
-    ├── cctv/          # CCTV Live 源码、APK 与 logo.svg
-    ├── hifini/        # HIFINi TV
-    ├── jackal/        # Jackal TV
-    ├── jewel/         # Magic Jewelry TV
-    ├── music/         # Music TV 源码与 APK
-    ├── shortvideo/    # ShortVideo TV 源码与 APK
-    ├── tank/          # Tank TV
-    ├── webtv/         # WebTV 源码与 APK
-    ├── tetris/        # Tetris TV
-    ├── tvbro/         # TV Bro APK 与对应源码
-    └── jellyfin-tv/   # Jellyfin TV APK 与对应源码
-```
-
 <!-- resource-index:start -->
 
 ### 启动器
@@ -106,19 +74,17 @@ resource/
 | [Cozy Island TV](resource/apps/cozy-island/) | ecojust / 桔子桑 | 0.5.2 | 269.6 KB | 原创岛屿生活，支持采集、钓鱼、布置和手机扫码双人游玩 | <img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"> |
 | [HIFINi TV](resource/apps/hifini/) | ecojust / 桔子桑 | 0.5.0 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="resource/apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
 | [Jackal TV](resource/apps/jackal/) | ecojust / 桔子桑 | 0.5.2 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
-| [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Jellyfin 媒体服务器的 Android TV 客户端 | <img src="resource/apps/jellyfin-tv/thumb.png" width="180" alt="Jellyfin for Android TV 界面"> |
 | [Magic Jewelry TV](resource/apps/jewel/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
 | [Music TV](resource/apps/music/) | ecojust / 桔子桑 | 0.5.0 | 48.8 KB | 原生电视音乐播放器 | <img src="resource/apps/music/thumb.png" width="180" alt="Music TV 界面"> |
 | [ShortVideo TV](resource/apps/shortvideo/) | ecojust / 桔子桑 | 0.5.0 | 32.7 KB | 遥控器短视频播放器 | <img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
 | [Super Mario TV](resource/apps/super-mario/) | ecojust / 桔子桑 | 0.5.2 | 93.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
 | [Tank TV](resource/apps/tank/) | ecojust / 桔子桑 | 0.5.2 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
 | [Tetris TV](resource/apps/tetris/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
-| [TV Bro](resource/apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | 适配遥控器的电视浏览器，使用系统 WebView | <img src="resource/apps/tvbro/thumb.png" width="180" alt="TV Bro 界面"> |
 | [WebTV](resource/apps/webtv/) | ecojust / 桔子桑 | 0.5.0 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
 
 <!-- resource-index:end -->
 
-所有电视应用的 APK 与源码见 [resource/apps/](resource/apps/)。第三方资源保留各自作者、原始签名和许可证，不纳入 pureTV 的 MIT 授权范围。
+桔子桑开发的电视应用 APK 与源码见 [resource/apps/](resource/apps/)。
 
 ## MCP / Agent
 
@@ -144,4 +110,4 @@ resource/
 
 ## 许可与致谢
 
-pureTV 使用 [MIT](LICENSE) 许可。部分电视端启动器代码参考 [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv)，原作者版权与许可保留于 [NOTICE.md](NOTICE.md)。字体见 [OFL 许可](resource/launcher/puretv/FONT-LICENSE-OFL.txt)。第三方 APK、截图与源码使用各资源文件夹内的许可证。
+pureTV 使用 [MIT](LICENSE) 许可。部分电视端启动器代码参考 [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv)，原作者版权与许可保留于 [NOTICE.md](NOTICE.md)。字体见 [OFL 许可](resource/launcher/puretv/FONT-LICENSE-OFL.txt)。应用使用的第三方代码、字体和其他素材保留各自的版权及许可声明。

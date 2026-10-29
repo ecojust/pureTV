@@ -9,7 +9,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-16-f97316?style=flat-square)](resource/apps/)
+[![App count](https://img.shields.io/badge/apps-14-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
@@ -48,38 +48,6 @@ The launchers and first-party TV apps support English. Select English in the TV 
 
 “Customizable” in the launcher table means support for this manager's **layout.json version 5 users/system interface**. Cards for launchers that support the layout protocol automatically display the Home background color and image, including inactive launchers, and update after layout changes are applied. The list has no choose-cover or remove-cover actions; edit the home-screen background in “Adjust layout.” Pending APKs use their embedded Home background when available, falling back to a sibling `thumb.png` or `APK-name.thumb.png` only when no layout background can be read.
 
-```text
-resource/
-├── launcher/
-│   ├── puretv/        # Each folder has its own APK, source, layout example, and cover
-│   ├── nova/          # tvOS style
-│   ├── aster/         # Starry sky
-│   ├── sol/           # Nordic daylight
-│   ├── moss/          # Misty forest
-│   ├── forma/         # Bauhaus
-│   ├── mono/          # Monochrome editorial
-│   ├── drift/         # Pastel dreamscape
-│   ├── circuit/       # Neon circuitry
-│   └── pixel/         # Retro pixels
-└── apps/
-    ├── coast-kart/    # Coast Kart TV
-    ├── cozy-island/   # Cozy Island TV
-    ├── bomb-jack/     # Mighty Bomb Jack TV
-    ├── adventure-island/ # Adventure Island TV
-    ├── super-mario/   # Super Mario TV
-    ├── cctv/          # CCTV Live source, APK, and logo.svg
-    ├── hifini/        # HIFINi TV
-    ├── jackal/        # Jackal TV
-    ├── jewel/         # Magic Jewelry TV
-    ├── music/         # Music TV source and APK
-    ├── shortvideo/    # ShortVideo TV source and APK
-    ├── tank/          # Tank TV
-    ├── webtv/         # WebTV source and APK
-    ├── tetris/        # Tetris TV
-    ├── tvbro/         # TV Bro APK and corresponding source
-    └── jellyfin-tv/   # Jellyfin TV APK and corresponding source
-```
-
 <!-- resource-index:start -->
 
 ### Launchers
@@ -108,19 +76,17 @@ resource/
 | [Cozy Island TV](resource/apps/cozy-island/) | ecojust | 0.5.2 | 269.6 KB | Original island life with gathering, fishing, decorating and LAN phone play | <img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"> |
 | [HIFINi TV](resource/apps/hifini/) | ecojust | 0.5.0 | 201.1 KB | HiFiNi music search, shuffle playback and rhythm animation | <img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"> |
 | [Jackal TV](resource/apps/jackal/) | ecojust | 0.5.2 | 11.95 MB | Independently rewritten six-stage jeep rescue with two LAN phone controllers | <img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"> |
-| [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Android TV client for Jellyfin media servers | <img src="docs/previews/en/app-jellyfin-tv.png" width="180" alt="Jellyfin for Android TV preview"> |
 | [Magic Jewelry TV](resource/apps/jewel/) | ecojust | 0.5.2 | 81.4 KB | Classic three-gem chain matching with one or two LAN phone controllers | <img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"> |
 | [Music TV](resource/apps/music/) | ecojust | 0.5.0 | 48.8 KB | Native TV music player | <img src="docs/previews/en/app-music.png" width="180" alt="Music TV preview"> |
 | [ShortVideo TV](resource/apps/shortvideo/) | ecojust | 0.5.0 | 32.7 KB | Short video player with remote control support | <img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"> |
 | [Super Mario TV](resource/apps/super-mario/) | ecojust | 0.5.2 | 93.4 KB | 32-course platform adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"> |
 | [Tank TV](resource/apps/tank/) | ecojust | 0.5.2 | 258.3 KB | Independently rewritten 35-stage tank defense with two LAN phone controllers | <img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"> |
 | [Tetris TV](resource/apps/tetris/) | ecojust | 0.5.2 | 81.4 KB | Classic falling-block puzzle with one or two LAN phone controllers | <img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"> |
-| [TV Bro](resource/apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | TV browser with remote control support, using the system WebView | <img src="docs/previews/en/app-tvbro.png" width="180" alt="TV Bro preview"> |
 | [WebTV](resource/apps/webtv/) | ecojust | 0.5.0 | 44.8 KB | Live TV and M3U player | <img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"> |
 
 <!-- resource-index:end -->
 
-TV app APKs and source code are available in [resource/apps/](resource/apps/). Third-party resources retain their respective authors, original signatures, and licenses; they are not covered by pureTV's MIT license.
+TV app APKs and source code developed by ecojust are available in [resource/apps/](resource/apps/).
 
 ## MCP / Agent
 
@@ -146,4 +112,4 @@ For field definitions, JSON examples, and comparisons with the rendered screen, 
 
 ## License and acknowledgments
 
-pureTV is licensed under [MIT](LICENSE). Some TV launcher code is based on [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv); the original authors' copyright and license notices are retained in [NOTICE.md](NOTICE.md). See the [OFL license](resource/launcher/puretv/FONT-LICENSE-OFL.txt) for the font. Third-party APKs, screenshots, and source code use the licenses in their respective resource folders.
+pureTV is licensed under [MIT](LICENSE). Some TV launcher code is based on [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv); the original authors' copyright and license notices are retained in [NOTICE.md](NOTICE.md). See the [OFL license](resource/launcher/puretv/FONT-LICENSE-OFL.txt) for the font. Third-party code, fonts, and other assets used by the apps retain their respective copyright and license notices.

@@ -60,7 +60,7 @@ pureTV Manager 与 Launcher **0.3.6 使用 layout.json v5**。布局由电视和
 
 同一份 v5 协议可以支持不同视觉风格：[pureTV](launcher/puretv/) 与 [Nova TV](launcher/nova/) 均使用 `users` / `system`、独立颜色和页面背景。Nova TV 的完整示例见 [layout.example.json](launcher/nova/layout.example.json)，需 Manager 0.3.7 或以上读写；其 provider 为 `content://com.ecojust.novatv.layout`，布局和数据与 pureTV 独立。
 
-完整示例：[layout.example.json](launcher/puretv/layout.example.json)。示例应用来自资源目录，需要先在电视安装对应 APK。`system` 必须使用当前启动器返回的完整内容，不要自行增删或修改。以下为用户块和页面属性的结构片段：
+完整示例：[layout.example.json](launcher/puretv/layout.example.json)。示例中的应用包名用于演示布局，实际使用前需要在电视安装对应应用，或改为电视上已安装的应用。`system` 必须使用当前启动器返回的完整内容，不要自行增删或修改。以下为用户块和页面属性的结构片段：
 
 ```json
 {
