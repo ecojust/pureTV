@@ -4,7 +4,7 @@
 
 An independent recreation of classic NES falling-block play: a 10×20 well, seven tetrominoes, classic rotation, soft drop, line-clear scoring, increasing gravity and a NEXT preview.
 
-Version **0.5.1** supports Android 8.0+ TVs. Package: `com.ecojust.tetristv`. The TV displays the board and room QR code, and phones scan it to become controllers. No ROM import is required.
+Version **0.5.2** supports Android 8.0+ TVs. Package: `com.ecojust.tetristv`. The TV displays the board and room QR code, and phones scan it to become controllers. No ROM import is required.
 
 <!-- apk-resource:start -->
 [Download APK](tetris-0.5.2.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
@@ -13,13 +13,16 @@ The APK in this directory is signed with the pureTV release certificate. Android
 <!-- apk-resource:end -->
 
 <!-- visual-release:start -->
-## 0.5.2 visual update (release pending)
+## 0.5.2 visual update and verification
 
-The source version is **0.5.2**; full-group acceptance, Android CI and the signed release are not yet complete. Existing downloads still point to the published **0.5.1** package. This update keeps the current pureTV release certificate. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for confirmed changes, validation results and pending work.
+The current release is **0.5.2**, with its signed APK available in this directory. It uses the same pureTV certificate as 0.5.0/0.5.1, allowing an in-place update that retains local data. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for per-game changes, verification scope and physical-device test status.
 
 The gray maze background and classic single-player layout were redrawn for Nintendo NES Tetris: statistics on the left, field in the center, and score/NEXT/LEVEL on the right, with corresponding block styles and proportional scaling. The two-player extension retains separate fields; its top metadata no longer touches the frame. This is independent artwork, without a claim of pixel-exact reproduction.
 
 See the [reference notes](docs/reference.md) for the implementation scope.
+
+<!-- final-verification -->
+Final source 0752b658aecbb1322cb7294e3176500639db1b54 passed Android CI 40843467072: 280 model/render-behavior regressions, 36 compatibility scenarios, 131 controller scenarios and 18 bilingual integration scenarios. Cozy Island input-runtime checks passed 9/9; both WebGL 1 rendering scripts and the Coast Kart combat suite also passed. Android builds, lint, size checks and staging succeeded; 15 modules executed JUnit tasks, including all 9 games, without an inferred JUnit case count. Signing run 40846148068 verified all nine APKs’ source assets, signatures and resource catalog. Chrome 61 syntax checks and old-API simulation in modern Chromium do not establish physical legacy-WebView compatibility. Physical TV/phone acceptance, device FPS and in-place installation/data retention remain untested.
 <!-- visual-release:end -->
 
 ## 0.5.1 gameplay review
@@ -30,7 +33,7 @@ Uses the same signing certificate as 0.5.0 and supports an in-place update. See 
 
 ## Installation and signing
 
-Version 0.5.1 uses the same shared pureTV certificate as 0.5.0, so it updates 0.5.0 in place and keeps local data. Versions signed with the older certificate cannot be updated in place: back up any exportable data before uninstalling them. Uninstalling clears local saves and records; the project has no automatic migration across signing certificates.
+Version 0.5.2 uses the same shared pureTV certificate as 0.5.0/0.5.1 and updates those versions in place while retaining local data. Installations of 0.4.x and earlier signed with the old certificate cannot be updated in place: back up exportable data before uninstalling. Uninstalling clears local saves and records; the project has no automatic cross-certificate migration.
 
 ## Play
 

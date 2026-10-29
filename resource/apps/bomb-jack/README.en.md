@@ -4,7 +4,7 @@
 
 An independent recreation inspired by NES Mighty Bomb Jack: 16 pyramid stages, action zones and 24-bomb palace rooms, variable jumps and floating, treasure chests, and blue/orange/green Mighty powers.
 
-Version **0.5.1** requires Android 8.0 or later. Package: `com.ecojust.bombjacktv`. The TV displays the game and a room QR code; phones act as controllers.
+Version **0.5.2** requires Android 8.0 or later. Package: `com.ecojust.bombjacktv`. The TV displays the game and a room QR code; phones act as controllers.
 
 <!-- apk-resource:start -->
 [Download APK](bomb-jack-0.5.2.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
@@ -13,13 +13,16 @@ The APK in this directory is signed with the pureTV release certificate. Android
 <!-- apk-resource:end -->
 
 <!-- visual-release:start -->
-## 0.5.2 visual update (release pending)
+## 0.5.2 visual update and verification
 
-The source version is **0.5.2**; full-group acceptance, Android CI and the signed release are not yet complete. Existing downloads still point to the published **0.5.1** package. This update keeps the current pureTV release certificate. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for confirmed changes, validation results and pending work.
+The current release is **0.5.2**, with its signed APK available in this directory. It uses the same pureTV certificate as 0.5.0/0.5.1, allowing an in-place update that retains local data. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for per-game changes, verification scope and physical-device test status.
 
 This visual change is limited to the 8-pixel HUD font and field alignment for the 1986 FC/NES Mighty Bomb Jack reference. Existing pixel rooms and characters remain. Scenery, characters and animation still contain independent simplifications; this font correction is not a complete visual recreation.
 
 See the [reference notes](docs/reference.md) for the implementation scope.
+
+<!-- final-verification -->
+Final source 0752b658aecbb1322cb7294e3176500639db1b54 passed Android CI 40843467072: 280 model/render-behavior regressions, 36 compatibility scenarios, 131 controller scenarios and 18 bilingual integration scenarios. Cozy Island input-runtime checks passed 9/9; both WebGL 1 rendering scripts and the Coast Kart combat suite also passed. Android builds, lint, size checks and staging succeeded; 15 modules executed JUnit tasks, including all 9 games, without an inferred JUnit case count. Signing run 40846148068 verified all nine APKs’ source assets, signatures and resource catalog. Chrome 61 syntax checks and old-API simulation in modern Chromium do not establish physical legacy-WebView compatibility. Physical TV/phone acceptance, device FPS and in-place installation/data retention remain untested.
 <!-- visual-release:end -->
 
 ## 0.5.1 gameplay review
@@ -30,7 +33,7 @@ Uses the same signing certificate as 0.5.0 and supports an in-place update. See 
 
 ## Installation and signing
 
-Version 0.5.1 uses the same shared pureTV certificate as 0.5.0, so it updates 0.5.0 in place and keeps local data. Versions signed with the older certificate cannot be updated in place: back up any exportable data before uninstalling them. Uninstalling clears local saves and records; the project has no automatic migration across signing certificates.
+Version 0.5.2 uses the same shared pureTV certificate as 0.5.0/0.5.1 and updates those versions in place while retaining local data. Installations of 0.4.x and earlier signed with the old certificate cannot be updated in place: back up exportable data before uninstalling. Uninstalling clears local saves and records; the project has no automatic cross-certificate migration.
 
 ## Gameplay changes in 0.5.0
 

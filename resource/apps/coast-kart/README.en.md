@@ -2,9 +2,9 @@
 
 [中文](README.md) · [English](README.en.md)
 
-An independently made TV kart racer with smooth perspective graphics, four original tracks, drift boosts, items, computer opponents and split-screen play using LAN phone controllers.
+An independently made TV kart racer with actual WebGL 1 3D scenes and a following camera, four original tracks, drift boosts, items, computer opponents and split-screen play using LAN phone controllers.
 
-Version **0.5.1** requires Android 8.0 or later. Package: `com.ecojust.coastkarttv`.
+Version **0.5.2** requires Android 8.0 or later. Package: `com.ecojust.coastkarttv`.
 
 <!-- apk-resource:start -->
 [Download APK](coast-kart-0.5.2.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
@@ -13,13 +13,18 @@ The APK in this directory is signed with the pureTV release certificate. Android
 <!-- apk-resource:end -->
 
 <!-- visual-release:start -->
-## 0.5.2 visual update (release pending)
+## 0.5.2 visual update and verification
 
-The source version is **0.5.2**; full-group acceptance, Android CI and the signed release are not yet complete. Existing downloads still point to the published **0.5.1** package. This update keeps the current pureTV release certificate. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for confirmed changes, validation results and pending work.
+The current release is **0.5.2**, with its signed APK available in this directory. It uses the same pureTV certificate as 0.5.0/0.5.1, allowing an in-place update that retains local data. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for per-game changes, verification scope and physical-device test status.
 
-This round uses Mario Kart 8 Deluxe as the visual reference for rebuilding karts, courses and camera as actual WebGL 1 3D scenes. Visual and runtime acceptance is still pending. Courses and characters are independently created; drift, items, racing and LAN two-player flows remain in acceptance scope. This is not a complete port of the commercial game.
+This round uses Mario Kart 8 Deluxe as the visual reference for rebuilding karts, courses and camera as actual WebGL 1 3D scenes. Courses and characters are independently created; drift, items, racing and LAN two-player flows remain part of the game; focused results are recorded below. This is not a complete port of the commercial game.
 
 See the [reference notes](docs/reference.md) for the implementation scope. 3D rendering uses locally bundled Three.js r124 under MIT, with no CDN dependency.
+
+<!-- final-verification -->
+Final source 0752b658aecbb1322cb7294e3176500639db1b54 passed Android CI 40843467072: 280 model/render-behavior regressions, 36 compatibility scenarios, 131 controller scenarios and 18 bilingual integration scenarios. Cozy Island input-runtime checks passed 9/9; both WebGL 1 rendering scripts and the Coast Kart combat suite also passed. Android builds, lint, size checks and staging succeeded; 15 modules executed JUnit tasks, including all 9 games, without an inferred JUnit case count. Signing run 40846148068 verified all nine APKs’ source assets, signatures and resource catalog. Chrome 61 syntax checks and old-API simulation in modern Chromium do not establish physical legacy-WebView compatibility. Physical TV/phone acceptance, device FPS and in-place installation/data retention remain untested.
+
+Earlier checks in this round verified WebGL 1 drawing for all four themes, split views, resource reuse, no-WebGL fallback, context loss/restoration, the non-instanced 3D path and disposal. Continuous split-view drawing retained 25 geometries and 5 textures. These Chromium checks used ANGLE/SwiftShader software rendering and do not establish TV GPU frame rates. Final source 0752b65 passed the complete browser and native checks in Android CI 40843467072, including the near-camera rival-occlusion regression. Physical-TV image quality, FPS, thermals and long sessions have not been tested.
 <!-- visual-release:end -->
 
 ## 0.5.1 gameplay review
@@ -30,7 +35,7 @@ Uses the same signing certificate as 0.5.0 and supports an in-place update. See 
 
 ## Installation and signing
 
-Version 0.5.1 uses the same shared pureTV certificate as 0.5.0, so it updates 0.5.0 in place and keeps local data. Versions signed with the older certificate cannot be updated in place: back up any exportable data before uninstalling them. Uninstalling clears local saves and records; the project has no automatic migration across signing certificates.
+Version 0.5.2 uses the same shared pureTV certificate as 0.5.0/0.5.1 and updates those versions in place while retaining local data. Installations of 0.4.x and earlier signed with the old certificate cannot be updated in place: back up exportable data before uninstalling. Uninstalling clears local saves and records; the project has no automatic cross-certificate migration.
 
 ## Play
 
