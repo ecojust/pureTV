@@ -1,20 +1,20 @@
 # WebTV
 
 <!-- apk-resource:start -->
-[下载 APK](webtv-0.1.1.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+[下载 APK](webtv-0.5.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
 
 此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)
 
-## 0.5.0 发布准备与签名迁移
+## 0.5.0 与签名迁移
 
-发布目标为 **0.5.0**，与其他自研应用和启动器统一使用新的 pureTV 发布证书。新证书与此前目录 APK 的证书不同，Android 无法覆盖安装旧版。请先备份能够导出的数据，再卸载旧版并安装 0.5.0；卸载会清除本机收藏、导入的频道列表、元数据缓存和设置。本项目不提供自动迁移工具，也不保证所有本机数据都可导出。
+当前版本为 **0.5.0**，与其他自研应用和启动器统一使用新的 pureTV 发布证书。新证书与此前目录 APK 的证书不同，Android 无法覆盖安装旧版。请先备份能够导出的数据，再卸载旧版并安装 0.5.0；卸载会清除本机收藏、导入的频道列表、元数据缓存和设置。本项目不提供自动迁移工具，也不保证所有本机数据都可导出。
 
-本轮安装包仍在准备中，上方下载链接与 `resource.json` 以发布完成后的更新为准；当前链接仍指向此前版本。
+0.5.0 安装包、校验值和构建来源见上方下载链接与 `resource.json`。
 
-Android TV 卫视／央视直播应用，包名 `com.ecojust.webtv`，发布目标版本 0.5.0，支持 Android 8.0 以上。原生 Java View、SurfaceView、MediaPlayer 和 MediaSession，无生产环境第三方依赖。
+Android TV 卫视／央视直播应用，包名 `com.ecojust.webtv`，当前版本 0.5.0，支持 Android 8.0 以上。原生 Java View、SurfaceView、MediaPlayer 和 MediaSession，无生产环境第三方依赖。
 
 ## 使用
 

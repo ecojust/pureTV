@@ -1,24 +1,22 @@
 # Tank TV · 经典坦克大战
 
 <!-- apk-resource:start -->
-[下载 APK](tank-0.3.1.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+[下载 APK](tank-0.5.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
 
-此目录内 APK 使用 pureTV 发布证书签名。
+此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)
 
-本次准备发布 **0.5.0**，独立重写 1985 年红白机《Battle City》的玩法、35 关地图与表现。安装后即可游玩，无须导入 ROM；包名保持不变。尚未完成电视实机和逐帧对照验证。
+当前发布版本为 **0.5.0**，独立重写 1985 年红白机《Battle City》的玩法、35 关地图与表现。安装后即可游玩，无须导入 ROM；包名保持不变。尚未完成电视实机和逐帧对照验证。
 
 新版保留电视二维码与手机局域网双人手柄，使用 256×240 原生画面和 208×208 战场。游戏规则独立编写，不加载或运行 ROM。35 关地图、每关 20 辆敌人的顺序、四种敌军、六种道具、星级升级、双人统计与 Construction 均有来源对照；AI、部分碰撞和动画时序仍需进一步逐帧核对。详细依据与局限见[规则和关卡](docs/reference.md)、[图像与声音](docs/reference-art-audio.md)。
 
 适用于 Android 8.0 及以上电视，包名 `com.ecojust.tanktv`。电视房间界面与手机手柄支持中英文，游戏内部保留原作英文菜单。
 
-## 0.5.0 发布准备与安装
+## 0.5.0 发布与安装
 
-本轮九款游戏统一准备发布 0.5.0，并更换游戏发布证书。包名保持不变，Android 无法用新证书的安装包覆盖旧证书版本。安装前请先备份设备能够导出的数据，再卸载旧版并安装 0.5.0；卸载会清除本机游戏存档和记录。本项目没有自动存档迁移工具，不能保证旧存档恢复。
-
-发布完成以 0.5.0 APK、校验值及 `resource.json` 同步更新为准。
+本轮九款游戏统一发布为 0.5.0，并使用新的 pureTV 统一发布证书。包名保持不变，Android 无法用新证书的安装包覆盖旧证书版本。安装前请先备份设备能够导出的数据，再卸载旧版并安装 0.5.0；卸载会清除本机游戏存档和记录。本项目没有自动存档迁移工具，不能保证旧存档恢复。
 
 ## 浮动摇杆与兼容性
 
@@ -80,7 +78,7 @@ cd resource/launcher/puretv
 
 APK 输出在 `resource/apps/tank/build/outputs/apk/`。Release 开启代码与资源压缩，体积上限为 5 MiB；正式资源 APK 使用 pureTV 发布证书签名。Android 测试验证房间服务及生命周期，Node 测试验证游戏规则，浏览器测试验证手机触控。
 
-设置 `TANK_UI_CAPTURE_DIR` 后运行 `tests/capture.mjs`，可导出中英文游戏页面预览。这些图片由随 APK 打包的真实页面在 Chromium 中渲染，原生桥接使用测试房间数据，不代表电视实机性能或真实手机网络时延。发布完成后，此目录将提供 0.5.0 签名安装包，源码提交、APK 校验值及构建方式见 [resource.json](resource.json)；资源目录维护见[资源维护说明](../../../docs/resource-maintenance.md)。
+设置 `TANK_UI_CAPTURE_DIR` 后运行 `tests/capture.mjs`，可导出中英文游戏页面预览。这些图片由随 APK 打包的真实页面在 Chromium 中渲染，原生桥接使用测试房间数据，不代表电视实机性能或真实手机网络时延。此目录提供 0.5.0 签名安装包，源码提交、APK 校验值及构建方式见 [resource.json](resource.json)；资源目录维护见[资源维护说明](../../../docs/resource-maintenance.md)。
 
 ## 素材与许可
 

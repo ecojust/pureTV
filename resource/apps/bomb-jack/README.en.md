@@ -4,19 +4,17 @@
 
 An independent recreation inspired by NES Mighty Bomb Jack: 16 pyramid stages, action zones and 24-bomb palace rooms, variable jumps and floating, treasure chests, and blue/orange/green Mighty powers.
 
-The planned **0.5.0** release requires Android 8.0 or later. Package: `com.ecojust.bombjacktv`. The TV displays the game and a room QR code; phones act as controllers.
+Version **0.5.0** requires Android 8.0 or later. Package: `com.ecojust.bombjacktv`. The TV displays the game and a room QR code; phones act as controllers.
 
 <!-- apk-resource:start -->
-[Download APK](bomb-jack-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
+[Download APK](bomb-jack-0.5.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
-The APK is signed with the pureTV release certificate.
+The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
-## 0.5.0 release preparation and installation
+## 0.5.0 release and installation
 
-All nine games are being prepared as version 0.5.0 with a new game release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
-
-Publication is complete only when the 0.5.0 APK, checksums and `resource.json` have all been updated.
+All nine games are released as version 0.5.0 with the new shared pureTV release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
 
 ## Gameplay changes in 0.5.0
 

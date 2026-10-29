@@ -1,22 +1,19 @@
 # 炸弹杰克 TV
 
+<!-- apk-resource:start -->
+[下载 APK](bomb-jack-0.5.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+
+此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
+<!-- apk-resource:end -->
+
 [中文](README.md) · [English](README.en.md)
 
 以 NES《Mighty Bomb Jack》为参考的独立重写：16 个金字塔阶段、行动区与 24 弹宫殿、高低跳与空中缓降、宝箱和蓝／橙／绿 Mighty 能力。
 
-发布目标版本 **0.5.0**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.bombjacktv`。电视显示游戏与房间二维码，手机扫码作为手柄。
+当前版本 **0.5.0**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.bombjacktv`。电视显示游戏与房间二维码，手机扫码作为手柄。
+## 0.5.0 发布与安装
 
-<!-- apk-resource:start -->
-[下载 APK](bomb-jack-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
-
-此目录内 APK 使用 pureTV 发布证书签名。
-<!-- apk-resource:end -->
-
-## 0.5.0 发布准备与安装
-
-本轮九款游戏统一准备发布 0.5.0，并更换游戏发布证书。包名保持不变，Android 无法用新证书的安装包覆盖旧证书版本。安装前请先备份设备能够导出的数据，再卸载旧版并安装 0.5.0；卸载会清除本机游戏存档和记录。本项目没有自动存档迁移工具，不能保证旧存档恢复。
-
-发布完成以 0.5.0 APK、校验值及 `resource.json` 同步更新为准。
+本轮九款游戏统一发布为 0.5.0，并使用新的 pureTV 统一发布证书。包名保持不变，Android 无法用新证书的安装包覆盖旧证书版本。安装前请先备份设备能够导出的数据，再卸载旧版并安装 0.5.0；卸载会清除本机游戏存档和记录。本项目没有自动存档迁移工具，不能保证旧存档恢复。
 
 ## 0.5.0 玩法升级
 

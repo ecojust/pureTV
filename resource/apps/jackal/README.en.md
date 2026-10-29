@@ -4,13 +4,11 @@
 
 Jackal TV independently reimplements the six-stage NES version of Jackal: jeep movement, prisoner rescue, helicopter extraction, weapon upgrades and six distinct boss encounters. The TV displays the game and a room QR code. One or two phones join over the local network with a left joystick, right A/B buttons, and START/SELECT controls.
 
-The planned release is **0.5.0**. Install and play without importing a ROM; the package ID stays unchanged. This version includes the six-stage rewrite, with remaining differences in AI, some collisions, animation timing and sound. Physical-TV and frame-by-frame comparisons are incomplete.
+The current release is **0.5.0**. Install and play without importing a ROM; the package ID stays unchanged. This version includes the six-stage rewrite, with remaining differences in AI, some collisions, animation timing and sound. Physical-TV and frame-by-frame comparisons are incomplete.
 
-## 0.5.0 release preparation and installation
+## 0.5.0 release and installation
 
-All nine games are being prepared as version 0.5.0 with a new game release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
-
-Publication is complete only when the 0.5.0 APK, checksums and `resource.json` have all been updated.
+All nine games are released as version 0.5.0 with the new shared pureTV release certificate. Package IDs stay unchanged, so Android cannot use the new certificate to replace an installation signed with the old one. Back up any data your device can export before uninstalling the old app and installing 0.5.0. Uninstalling clears local game saves and records. This project has no automatic save migration tool and cannot guarantee recovery of old saves.
 
 ## Floating joystick and compatibility
 
@@ -19,12 +17,12 @@ Fixes startup failures and missing player status on older TV WebViews. Room stat
 ## APK
 
 <!-- apk-resource:start -->
-[Download APK](jackal-0.3.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
+[Download APK](jackal-0.5.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
-The APK in this directory is signed with the pureTV release certificate.
+The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
-Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`. The planned APK version is `0.5.0`.
+Requires Android 8.0 or later. Package: `com.ecojust.jackaltv`. The current APK version is `0.5.0`.
 
 ## Controller changes in 0.5.0
 

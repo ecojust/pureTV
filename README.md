@@ -82,37 +82,37 @@ resource/
 
 | 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
-| [Aster TV · 星轨](resource/launcher/aster/) | ecojust / 桔子桑 | 0.1.1 | 443.7 KB | 是 | <img src="resource/launcher/aster/thumb.png" width="180" alt="Aster TV · 星轨 界面"> |
-| [Circuit TV · 回路](resource/launcher/circuit/) | ecojust / 桔子桑 | 0.1.1 | 435.7 KB | 是 | <img src="resource/launcher/circuit/thumb.png" width="180" alt="Circuit TV · 回路 界面"> |
-| [Drift TV](resource/launcher/drift/) | ecojust / 桔子桑 | 0.1.1 | 475.7 KB | 是 | <img src="resource/launcher/drift/thumb.png" width="180" alt="Drift TV 界面"> |
-| [Forma TV](resource/launcher/forma/) | ecojust / 桔子桑 | 0.1.1 | 443.7 KB | 是 | <img src="resource/launcher/forma/thumb.png" width="180" alt="Forma TV 界面"> |
-| [Mono TV 墨白](resource/launcher/mono/) | ecojust / 桔子桑 | 0.1.1 | 443.7 KB | 是 | <img src="resource/launcher/mono/thumb.png" width="180" alt="Mono TV 墨白 界面"> |
-| [Moss TV](resource/launcher/moss/) | ecojust / 桔子桑 | 0.1.1 | 487.7 KB | 是 | <img src="resource/launcher/moss/thumb.png" width="180" alt="Moss TV 界面"> |
-| [Nova TV](resource/launcher/nova/) | ecojust / 桔子桑 | 0.1.2 | 495.7 KB | 是 | <img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
-| [Pixel TV 像素](resource/launcher/pixel/) | ecojust / 桔子桑 | 0.1.1 | 443.7 KB | 是 | <img src="resource/launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"> |
-| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.3.7 | 740.1 KB | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
-| [Sol TV](resource/launcher/sol/) | ecojust / 桔子桑 | 0.1.1 | 439.7 KB | 是 | <img src="resource/launcher/sol/thumb.png" width="180" alt="Sol TV 界面"> |
+| [Aster TV · 星轨](resource/launcher/aster/) | ecojust / 桔子桑 | 0.5.0 | 443.7 KB | 是 | <img src="resource/launcher/aster/thumb.png" width="180" alt="Aster TV · 星轨 界面"> |
+| [Circuit TV · 回路](resource/launcher/circuit/) | ecojust / 桔子桑 | 0.5.0 | 435.7 KB | 是 | <img src="resource/launcher/circuit/thumb.png" width="180" alt="Circuit TV · 回路 界面"> |
+| [Drift TV](resource/launcher/drift/) | ecojust / 桔子桑 | 0.5.0 | 475.7 KB | 是 | <img src="resource/launcher/drift/thumb.png" width="180" alt="Drift TV 界面"> |
+| [Forma TV](resource/launcher/forma/) | ecojust / 桔子桑 | 0.5.0 | 443.7 KB | 是 | <img src="resource/launcher/forma/thumb.png" width="180" alt="Forma TV 界面"> |
+| [Mono TV 墨白](resource/launcher/mono/) | ecojust / 桔子桑 | 0.5.0 | 443.7 KB | 是 | <img src="resource/launcher/mono/thumb.png" width="180" alt="Mono TV 墨白 界面"> |
+| [Moss TV](resource/launcher/moss/) | ecojust / 桔子桑 | 0.5.0 | 487.7 KB | 是 | <img src="resource/launcher/moss/thumb.png" width="180" alt="Moss TV 界面"> |
+| [Nova TV](resource/launcher/nova/) | ecojust / 桔子桑 | 0.5.0 | 495.7 KB | 是 | <img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
+| [Pixel TV 像素](resource/launcher/pixel/) | ecojust / 桔子桑 | 0.5.0 | 443.7 KB | 是 | <img src="resource/launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"> |
+| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.5.0 | 740.1 KB | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [Sol TV](resource/launcher/sol/) | ecojust / 桔子桑 | 0.5.0 | 439.7 KB | 是 | <img src="resource/launcher/sol/thumb.png" width="180" alt="Sol TV 界面"> |
 
 ### 电视应用
 
 | 名称 | 作者 | 版本 | APK 大小 | 用途 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
-| [Adventure Island TV](resource/apps/adventure-island/) | ecojust / 桔子桑 | 0.1.0 | 85.4 KB | 8 区域 32 关横版冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"> |
-| [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust / 桔子桑 | 0.1.0 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |
-| [CCTV Live](resource/apps/cctv/) | ecojust / 桔子桑 | 0.1.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="resource/apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
-| [Coast Kart TV](resource/apps/coast-kart/) | ecojust / 桔子桑 | 0.1.0 | 89.4 KB | 原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏 | <img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"> |
-| [Cozy Island TV](resource/apps/cozy-island/) | ecojust / 桔子桑 | 0.1.0 | 93.4 KB | 原创岛屿生活，支持采集、钓鱼、布置和手机扫码双人游玩 | <img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"> |
-| [HIFINi TV](resource/apps/hifini/) | ecojust / 桔子桑 | 0.1.4 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="resource/apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
-| [Jackal TV](resource/apps/jackal/) | ecojust / 桔子桑 | 0.3.0 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
+| [Adventure Island TV](resource/apps/adventure-island/) | ecojust / 桔子桑 | 0.5.0 | 89.4 KB | 8 区域 32 关横版冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"> |
+| [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust / 桔子桑 | 0.5.0 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |
+| [CCTV Live](resource/apps/cctv/) | ecojust / 桔子桑 | 0.5.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="resource/apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
+| [Coast Kart TV](resource/apps/coast-kart/) | ecojust / 桔子桑 | 0.5.0 | 89.4 KB | 原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏 | <img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"> |
+| [Cozy Island TV](resource/apps/cozy-island/) | ecojust / 桔子桑 | 0.5.0 | 97.4 KB | 原创岛屿生活，支持采集、钓鱼、布置和手机扫码双人游玩 | <img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"> |
+| [HIFINi TV](resource/apps/hifini/) | ecojust / 桔子桑 | 0.5.0 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="resource/apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
+| [Jackal TV](resource/apps/jackal/) | ecojust / 桔子桑 | 0.5.0 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
 | [Jellyfin for Android TV](resource/apps/jellyfin-tv/) | Jellyfin contributors | 0.19.10 | 20.93 MB | Jellyfin 媒体服务器的 Android TV 客户端 | <img src="resource/apps/jellyfin-tv/thumb.png" width="180" alt="Jellyfin for Android TV 界面"> |
-| [Magic Jewelry TV](resource/apps/jewel/) | ecojust / 桔子桑 | 0.1.0 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
-| [Music TV](resource/apps/music/) | ecojust / 桔子桑 | 0.1.3 | 48.8 KB | 原生电视音乐播放器 | <img src="resource/apps/music/thumb.png" width="180" alt="Music TV 界面"> |
-| [ShortVideo TV](resource/apps/shortvideo/) | ecojust / 桔子桑 | 0.1.1 | 32.7 KB | 遥控器短视频播放器 | <img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
-| [Super Mario TV](resource/apps/super-mario/) | ecojust / 桔子桑 | 0.1.0 | 89.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
-| [Tank TV](resource/apps/tank/) | ecojust / 桔子桑 | 0.3.1 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
-| [Tetris TV](resource/apps/tetris/) | ecojust / 桔子桑 | 0.1.0 | 77.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
+| [Magic Jewelry TV](resource/apps/jewel/) | ecojust / 桔子桑 | 0.5.0 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
+| [Music TV](resource/apps/music/) | ecojust / 桔子桑 | 0.5.0 | 48.8 KB | 原生电视音乐播放器 | <img src="resource/apps/music/thumb.png" width="180" alt="Music TV 界面"> |
+| [ShortVideo TV](resource/apps/shortvideo/) | ecojust / 桔子桑 | 0.5.0 | 32.7 KB | 遥控器短视频播放器 | <img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
+| [Super Mario TV](resource/apps/super-mario/) | ecojust / 桔子桑 | 0.5.0 | 89.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
+| [Tank TV](resource/apps/tank/) | ecojust / 桔子桑 | 0.5.0 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
+| [Tetris TV](resource/apps/tetris/) | ecojust / 桔子桑 | 0.5.0 | 77.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
 | [TV Bro](resource/apps/tvbro/) | Fedir Tsapana (truefedex) | 2.1.6 | 6.48 MB | 适配遥控器的电视浏览器，使用系统 WebView | <img src="resource/apps/tvbro/thumb.png" width="180" alt="TV Bro 界面"> |
-| [WebTV](resource/apps/webtv/) | ecojust / 桔子桑 | 0.1.1 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
+| [WebTV](resource/apps/webtv/) | ecojust / 桔子桑 | 0.5.0 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
 
 <!-- resource-index:end -->
 
