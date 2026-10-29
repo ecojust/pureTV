@@ -1,7 +1,7 @@
 /* Original pixel artwork for the independently implemented classic block game. */
 (function (root) {
   "use strict";
-  var FONT = {
+  var SMALL_FONT = {
     " ": [0,0,0,0,0,0,0], "A": [14,17,17,31,17,17,17], "B": [30,17,17,30,17,17,30],
     "C": [14,17,16,16,16,17,14], "D": [30,17,17,17,17,17,30], "E": [31,16,16,30,16,16,31],
     "F": [31,16,16,30,16,16,16], "G": [14,17,16,23,17,17,15], "H": [17,17,17,31,17,17,17],
@@ -18,13 +18,34 @@
     "-": [0,0,0,31,0,0,0], "/": [1,1,2,4,8,16,16], "+": [0,4,4,31,4,4,0],
     ">": [16,8,4,2,4,8,16], "<": [1,2,4,8,4,2,1], "!": [4,4,4,4,4,0,4]
   };
+  // NES-sized, heavy 8-pixel HUD cells; the statistics heading has its own
+  // narrow lettering, as in the Nintendo screen. These are newly drawn masks.
+  var FONT = {
+    " ":[0,0,0,0,0,0,0], A:[56,108,198,198,254,198,198], B:[252,102,102,124,102,102,252],
+    C:[60,102,192,192,192,102,60], D:[248,108,102,102,102,108,248], E:[254,192,192,248,192,192,254],
+    F:[254,192,192,248,192,192,192], G:[60,102,192,206,198,102,62], H:[198,198,198,254,198,198,198],
+    I:[126,24,24,24,24,24,126], J:[30,6,6,6,198,198,124], K:[198,204,216,240,216,204,198],
+    L:[192,192,192,192,192,192,254], M:[198,238,254,214,198,198,198], N:[198,230,246,222,206,198,198],
+    O:[124,198,198,198,198,198,124], P:[252,198,198,252,192,192,192], Q:[124,198,198,198,214,204,122],
+    R:[252,198,198,252,216,204,198], S:[124,198,192,124,6,198,124], T:[126,24,24,24,24,24,24],
+    U:[198,198,198,198,198,198,124], V:[198,198,198,198,108,56,16], W:[198,198,198,214,254,238,198],
+    X:[198,108,56,56,56,108,198], Y:[102,102,102,60,24,24,24], Z:[254,12,24,48,96,192,254],
+    "0":[124,198,206,214,230,198,124], "1":[24,56,24,24,24,24,126], "2":[124,198,6,28,48,96,254],
+    "3":[124,198,6,60,6,198,124], "4":[28,60,108,204,254,12,12], "5":[254,192,248,12,6,204,120],
+    "6":[60,96,192,252,198,198,124], "7":[254,198,12,24,48,48,48], "8":[124,198,198,124,198,198,124],
+    "9":[124,198,198,126,6,12,120], ":":[0,24,24,0,24,24,0], ".":[0,0,0,0,0,24,24],
+    "-":[0,0,0,126,0,0,0], "/":[6,12,24,48,96,192,128], "+":[0,24,24,126,24,24,0],
+    ">":[96,48,24,12,24,48,96], "<":[6,12,24,48,24,12,6], "!":[24,24,24,24,24,0,24]
+  };
   var TYPES = ["T", "J", "Z", "O", "S", "L", "I"];
+  // Two saturated NES-like colors plus white; a level changes the entire
+  // tetromino palette, never assigning the modern seven rainbow colors.
   var PALETTES = [
-    ["#46a8ff", "#d5f2ff", "#1556b8"], ["#64c844", "#e2ffd3", "#24792c"],
-    ["#b888ff", "#f1dfff", "#6436ab"], ["#52d8ce", "#d5fff1", "#1a847c"],
-    ["#f2b347", "#fff1bb", "#a85623"], ["#ef727c", "#ffe0d6", "#a73555"],
-    ["#6bc9ff", "#e3faff", "#2c68b4"], ["#f39bd0", "#ffe3f5", "#a34d89"],
-    ["#b9d74e", "#f3ffd0", "#67872c"], ["#f17b3b", "#ffe6c7", "#a33f26"]
+    ["#0000fc", "#fcfcfc", "#3cbcfc"], ["#00a800", "#fcfcfc", "#b8f818"],
+    ["#d800cc", "#fcfcfc", "#f878f8"], ["#0000fc", "#fcfcfc", "#58d854"],
+    ["#e40058", "#fcfcfc", "#58f898"], ["#58f898", "#fcfcfc", "#6888fc"],
+    ["#e40058", "#fcfcfc", "#787878"], ["#6844fc", "#fcfcfc", "#a80020"],
+    ["#0000fc", "#fcfcfc", "#f83800"], ["#f83800", "#fcfcfc", "#fca044"]
   ];
   function number(value, digits) {
     var text = String(Math.max(0, Math.floor(Number(value) || 0)));
@@ -39,38 +60,55 @@
     this.canvas.style.imageRendering = "pixelated";
   }
   TetrisRenderer.prototype.text = function (text, x, y, color, scale) {
-    var ctx = this.ctx, size = scale || 1;
-    ctx.fillStyle = color || "#eef2f6";
-    String(text).toUpperCase().split("").forEach(function (letter, index) {
-      var rows = FONT[letter] || FONT[" "];
-      for (var row = 0; row < 7; row++) for (var col = 0; col < 5; col++)
-        if (rows[row] & (1 << (4-col))) ctx.fillRect(x + (index*6+col)*size, y+row*size, size, size);
+    var ctx=this.ctx,size=scale||1;
+    ctx.fillStyle=color||"#fcfcfc";
+    String(text).toUpperCase().split("").forEach(function(letter,index){
+      var rows=FONT[letter]||FONT[" "];
+      for(var row=0;row<7;row++)for(var col=0;col<8;col++)
+        if(rows[row]&(1<<(7-col)))ctx.fillRect(x+(index*8+col)*size,y+row*size,size,size);
     });
   };
-  TetrisRenderer.prototype.center = function (text, y, color, scale) {
-    var size = scale || 1;
-    this.text(text, Math.floor((256-(String(text).length*6-1)*size)/2), y, color, size);
+  TetrisRenderer.prototype.smallText = function(text,x,y,color){
+    var ctx=this.ctx;ctx.fillStyle=color||"#fcfcfc";
+    String(text).toUpperCase().split("").forEach(function(letter,index){
+      var rows=SMALL_FONT[letter]||SMALL_FONT[" "];
+      for(var row=0;row<7;row++)for(var col=0;col<5;col++)
+        if(rows[row]&(1<<(4-col)))ctx.fillRect(x+index*6+col,y+row,1,1);
+    });
   };
-  TetrisRenderer.prototype.frame = function (x, y, width, height, color) {
-    var ctx = this.ctx;
-    ctx.fillStyle = "#070b19"; ctx.fillRect(x,y,width,height);
-    ctx.fillStyle = color || "#6f7eaa"; ctx.fillRect(x,y,width,2); ctx.fillRect(x,y,2,height);
-    ctx.fillStyle = "#273656"; ctx.fillRect(x,y+height-2,width,2); ctx.fillRect(x+width-2,y,2,height);
-    ctx.fillStyle = "#aab6ce"; ctx.fillRect(x+2,y+2,width-4,1); ctx.fillRect(x+2,y+2,1,height-4);
-    ctx.fillStyle = "#38466b"; ctx.fillRect(x+3,y+height-4,width-6,1); ctx.fillRect(x+width-4,y+3,1,height-6);
+  TetrisRenderer.prototype.center = function(text,y,color,scale){
+    var size=scale||1;
+    this.text(text,Math.floor((256-String(text).length*8*size)/2),y,color,size);
   };
-  TetrisRenderer.prototype.block = function (x, y, type, level, size) {
-    var ctx = this.ctx, width = size || 8;
-    var palette = PALETTES[(Math.max(0,level || 0)) % PALETTES.length];
-    var index = typeof type === "number" ? type-1 : TYPES.indexOf(type);
-    if (index < 0) index = 0;
-    ctx.fillStyle = "#040711"; ctx.fillRect(x,y,width,width);
-    ctx.fillStyle = palette[2]; ctx.fillRect(x+1,y+1,width-1,width-1);
-    ctx.fillStyle = index % 3 === 1 ? palette[1] : palette[0]; ctx.fillRect(x+1,y+1,width-2,width-2);
-    ctx.fillStyle = palette[1]; ctx.fillRect(x+1,y+1,width-2,1); ctx.fillRect(x+1,y+1,1,width-2);
-    if (index % 3 === 1 && width >= 6) {
-      ctx.fillStyle = palette[0]; ctx.fillRect(x+3,y+3,width-5,width-5);
+  TetrisRenderer.prototype.background = function(){
+    var c=this.ctx,pattern=["10111010","10100010","11101111","00101000","11101110","10001010","10111011","10100001"];
+    c.fillStyle="#000000";c.fillRect(0,0,256,240);
+    for(var y=0;y<30;y++)for(var x=0;x<32;x++){
+      if(pattern[y%8][x%8]!=="1")continue;
+      var left=pattern[y%8][(x+7)%8]!=="1",top=pattern[(y+7)%8][x%8]!=="1";
+      var right=pattern[y%8][(x+1)%8]!=="1",bottom=pattern[(y+1)%8][x%8]!=="1";
+      c.fillStyle="#646464";c.fillRect(x*8,y*8,8,8);
+      c.fillStyle="#bcbcbc";if(top)c.fillRect(x*8,y*8,8,1);if(left)c.fillRect(x*8,y*8,1,8);
+      c.fillStyle="#8caaaa";if(top)c.fillRect(x*8+1,y*8+1,7,1);if(left)c.fillRect(x*8+1,y*8+1,1,7);
+      c.fillStyle="#242424";if(bottom)c.fillRect(x*8,y*8+7,8,1);if(right)c.fillRect(x*8+7,y*8,1,8);
     }
+  };
+  TetrisRenderer.prototype.frame = function(x,y,width,height){
+    var c=this.ctx;
+    c.fillStyle="#bcbcbc";c.fillRect(x,y,width,height);
+    c.fillStyle="#242424";c.fillRect(x+1,y+1,width-2,height-2);
+    c.fillStyle="#8caaaa";c.fillRect(x+2,y+2,width-4,height-4);
+    c.fillStyle="#000000";c.fillRect(x+3,y+3,width-6,height-6);
+    c.fillStyle="#bcbcbc";c.fillRect(x+4,y+4,width-8,1);c.fillRect(x+4,y+4,1,height-8);
+  };
+  TetrisRenderer.prototype.block = function(x,y,type,level,size){
+    var c=this.ctx,w=size||8,p=PALETTES[Math.max(0,level||0)%10];
+    var index=typeof type==="number"?type-1:TYPES.indexOf(type),style=[0,1,2,0,1,2,0][Math.max(0,index)]||0;
+    c.fillStyle="#000000";c.fillRect(x,y,w,w);
+    c.fillStyle=style===2?p[2]:p[0];c.fillRect(x+1,y+1,w-1,w-1);
+    c.fillStyle=style===0?p[1]:p[2];c.fillRect(x+1,y+1,w-2,1);c.fillRect(x+1,y+1,1,w-2);
+    if(style===0){c.fillStyle=p[1];c.fillRect(x+2,y+2,Math.max(1,w-4),Math.max(1,w-4));}
+    else {c.fillStyle=p[1];c.fillRect(x+2,y+2,1,1);}
   };
   TetrisRenderer.prototype.piece = function (type, rotation, x, y, level, size) {
     if (!type || !root.TetrisRules) return;
@@ -88,7 +126,7 @@
   TetrisRenderer.prototype.board = function (player, x, y, frame) {
     var ctx = this.ctx, renderer = this;
     this.frame(x-4,y-4,88,168);
-    ctx.fillStyle = "#02040c"; ctx.fillRect(x,y,80,160);
+    ctx.fillStyle = "#000000"; ctx.fillRect(x,y,80,160);
     for (var row=0; row<20; row++) for (var col=0; col<10; col++) {
       var value = player.board && player.board[row] && player.board[row][col];
       if (value) this.block(x+col*8,y+row*8,value,player.level,8);
@@ -101,7 +139,7 @@
       });
     }
     if (player.clearTimer>0 && player.clearRows) {
-      ctx.fillStyle = player.clearRows.length === 4 && Math.floor(frame/3)%2 ? "#eef8ff" : "#02040c";
+      ctx.fillStyle = player.clearRows.length === 4 && Math.floor(frame/3)%2 ? "#eef8ff" : "#000000";
       // clearTimer reaches 16/12/8/4/0 on global four-frame boundaries.
       // Do not erase the center pair before the first animation step.
       var spread=Math.min(40,Math.max(0,Math.floor((20-player.clearTimer)/4)*8));
@@ -109,89 +147,68 @@
     }
     if (player.completed) {
       ctx.fillStyle="#071a20";ctx.fillRect(x,y+59,80,33);
-      this.text("CLEAR!",x+22,y+67,"#9ce9ba");
-      this.text("25 LINES",x+16,y+80,"#becbdf");
+      this.text("CLEAR!",x+16,y+67,"#fcfcfc");
+      this.text("25 LINES",x+8,y+80,"#bcbcbc");
     }
     if (player.joined && !player.alive) {
       ctx.fillStyle="rgba(3,5,16,0.8)";ctx.fillRect(x,y+59,80,33);
-      this.text("TOP OUT",x+19,y+67,"#f39183");
-      this.text("P"+player.id,x+34,y+80,"#becbdf");
+      this.text("TOP OUT",x+12,y+67,"#f83800");
+      this.text("P"+player.id,x+32,y+80,"#bcbcbc");
     }
   };
-  TetrisRenderer.prototype.title = function (game) {
-    var ctx=this.ctx;
-    ctx.fillStyle="#101a35";ctx.fillRect(0,0,256,240);
-    for(var row=0;row<15;row++)for(var col=0;col<16;col++){
-      ctx.fillStyle=(row+col)%2?"#14203e":"#111c38";ctx.fillRect(col*16+(row%2?-8:0),row*16,15,15);
-    }
-    this.frame(14,12,228,216,"#a8b5d0");
-    ctx.fillStyle="#122b55";ctx.fillRect(19,17,218,64);
-    var label="TETRIS",colors=["#e9f5ff","#75baff","#e9f5ff","#75baff","#e9f5ff","#75baff"];
-    for(var i=0;i<label.length;i++){
-      this.text(label[i],58+i*24,30,"#233e78",4);
-      this.text(label[i],56+i*24,28,colors[i],4);
-    }
-    this.center("CLASSIC BLOCK PUZZLE",66,"#789bc4");
-    this.center((game.mode || "A")+"-TYPE",91,"#f2c681");
-    this.text(game.selectedPlayers===2?" ":">",57,111,"#74c3ff");
-    this.text("1 PLAYER",73,111,"#e6edf7");
-    this.text(game.selectedPlayers===2?">":" ",57,126,"#74c3ff");
-    this.text("2 PLAYERS",73,126,"#e6edf7");
-    this.text("LEVEL",67,150,"#9db2d0");
-    this.text("< "+number(game.startLevel,2)+" >",113,150,"#f1c67d");
-    this.center(game.mode === "B" ? "HEIGHT < "+game.startHeight+" >  UP/DOWN" : "LEFT/RIGHT LEVEL",168,"#738da9");
-    this.center("A/B TYPE  SELECT PLAYERS",180,"#738da9");
-    if(Math.floor((game.frame||0)/30)%2===0)this.center("PRESS START",201,"#f0f5ff");
-    this.center(game.mode === "B" ? "CLEAR 25 LINES AT A FIXED SPEED" : "LOCAL TWO-PLAYER SCORE CHALLENGE",232,"#6985a8");
+  TetrisRenderer.prototype.title = function(game){
+    this.background();this.frame(16,16,224,208);
+    this.center("TETRIS",32,"#fcfcfc",3);
+    this.center((game.mode||"A")+"-TYPE",72,"#fcfcfc");
+    this.text(game.selectedPlayers===2?" ":">",56,96,"#fcfcfc");this.text("1 PLAYER",80,96);
+    this.text(game.selectedPlayers===2?">":" ",56,112,"#fcfcfc");this.text("2 PLAYERS",80,112);
+    this.center("LEVEL < "+number(game.startLevel,2)+" >",140,"#fcfcfc");
+    this.center(game.mode==="B"?"HEIGHT < "+game.startHeight+" >":"LEFT/RIGHT LEVEL",160,"#bcbcbc");
+    this.smallText("A/B TYPE   SELECT PLAYERS",56,181,"#bcbcbc");
+    if(Math.floor((game.frame||0)/30)%2===0)this.center("PRESS START",200,"#fcfcfc");
   };
-  TetrisRenderer.prototype.single = function (game) {
-    var p=game.players[0],ctx=this.ctx;
-    this.text("TETRIS",12,13,"#85b8ed",2);
-    this.text(game.mode === "B" ? "LEFT" : "LINES",88,23,"#e3ebf8");this.text(number(game.mode === "B" ? Math.max(0,25-p.cleared) : p.cleared,3),128,23,"#f5cb82");
-    this.frame(6,42,72,170);
-    this.text("STATISTICS",12,49,"#9bafd0");
+  TetrisRenderer.prototype.single = function(game){
+    var p=game.players[0],mode=game.mode||"A";
+    this.frame(16,24,64,24);this.text(mode+"-TYPE",24,32);
+    this.frame(88,16,96,24);
+    this.text((mode==="B"?"LEFT-":"LINES-")+number(mode==="B"?Math.max(0,25-p.cleared):p.cleared,3),104,24);
+    this.frame(8,64,80,152);this.smallText("STATISTICS",18,72,"#fcfcfc");
     for(var i=0;i<TYPES.length;i++){
-      var type=TYPES[i];
-      this.preview(type,12,64+i*20,29,17,p.level,5);
-      this.text(number(p.statistics&&p.statistics[type],3),48,70+i*20,"#c1cfe2");
+      var type=TYPES[i];this.preview(type,20,88+i*17,24,15,p.level,4);
+      this.text(number(p.statistics&&p.statistics[type],3),48,92+i*17,"#f83800");
     }
-    this.board(p,88,48,game.frame);
-    this.text("TOP",182,10,"#93b0d8");this.text(number(Math.max(game.highScore||0,p.score),7),182,21,"#efdcaf");
-    this.text("SCORE",182,42,"#93b0d8");this.text(number(p.score,7),182,53,"#f3f5f8");
-    this.frame(178,78,71,59);this.text("NEXT",186,85,"#b6cbe9");
-    this.preview(p.nextType,184,99,58,29,p.level,8);
-    this.text("LEVEL",182,153,"#93b0d8");this.text(number(p.level,2),194,166,"#e6edf8",2);
-    this.text(game.mode === "B" ? "B HEIGHT" : "1 PLAYER",181,195,"#7f9cc3");
-    if(game.mode === "B")this.text(number(game.startHeight,1),207,207,"#f5cb82");
-    ctx.fillStyle="#253454";ctx.fillRect(8,219,240,1);
-    this.center("A CW  B CCW  DOWN SOFT DROP",225,"#7894b4");
+    this.board(p,96,48,game.frame);
+    this.frame(184,16,64,72);this.text("TOP",192,32);
+    var top=number(Math.max(game.highScore||0,p.score),6),score=number(p.score,6);
+    if(top.length>6)this.smallText(top,192,40);else this.text(top,192,40);
+    this.text("SCORE",192,56);if(score.length>6)this.smallText(score,192,64);else this.text(score,192,64);
+    this.frame(184,96,48,48);this.text("NEXT",192,104);this.preview(p.nextType,190,116,36,20,p.level,8);
+    this.frame(184,152,56,32);this.text("LEVEL",192,160);this.text(number(p.level,2),208,168);
+    if(mode==="B"){this.frame(184,192,64,24);this.smallText("HEIGHT "+game.startHeight,192,200);}
   };
-  TetrisRenderer.prototype.dual = function (game) {
-    this.center(game.mode === "B" ? "B-TYPE  25 LINE CHALLENGE" : "TETRIS  2P CHALLENGE",7,"#bdd8f8");
+  TetrisRenderer.prototype.dual = function(game){
+    this.frame(12,0,232,44);this.center((game.mode||"A")+"-TYPE  2P CHALLENGE",8);
     for(var i=0;i<2;i++){
-      var p=game.players[i],x=i?152:24,label=i?"#efba79":"#75c4ef";
-      this.text("P"+(i+1),x,25,label);this.text(number(p.score,7),x+25,25,"#e5edf7");
-      this.text("L"+number(p.level,2),x,36,"#8ea9ca");this.text((game.mode === "B" ? "LEFT " : "ROWS ")+number(game.mode === "B" ? Math.max(0,25-p.cleared) : p.cleared,3),x+27,36,"#a9c0da");
-      this.board(p,x,48,game.frame);
-      this.text("NEXT",x,219,"#8ea9ca");
-      this.preview(p.nextType,x+33,215,42,20,p.level,5);
+      var p=game.players[i],x=i?156:20;
+      this.smallText("P"+(i+1),x,24,i?"#fca044":"#3cbcfc");this.smallText(number(p.score,7),x+27,24);
+      this.smallText("L"+number(p.level,2),x,33);this.smallText((game.mode==="B"?"LEFT ":"ROWS ")+number(game.mode==="B"?Math.max(0,25-p.cleared):p.cleared,3),x+30,33);
+      this.board(p,x,52,game.frame);this.frame(x-4,216,88,24);this.smallText("NEXT",x,224);this.preview(p.nextType,x+33,218,42,20,p.level,5);
     }
-    this.text("SAME",113,90,"#7089a7");this.text("PIECE",113,103,"#7089a7");this.text("ORDER",113,116,"#7089a7");
-    this.text("VS",122,148,"#9fb7d6");
+    this.frame(108,80,40,88);this.smallText("SAME",116,96);this.smallText("PIECE",113,109);this.smallText("ORDER",113,122);this.text("VS",120,148);
   };
   TetrisRenderer.prototype.overlay = function (game) {
     var ctx=this.ctx;
-    ctx.fillStyle="rgba(3,7,20,0.84)";ctx.fillRect(38,91,180,59);
-    ctx.strokeStyle="#728db5";ctx.lineWidth=1;ctx.strokeRect(38.5,91.5,179,58);
+    ctx.fillStyle="rgba(3,7,20,0.84)";ctx.fillRect(12,91,232,59);
+    ctx.strokeStyle="#728db5";ctx.lineWidth=1;ctx.strokeRect(12.5,91.5,231,58);
     var cleared = game.players.some(function(p){return p.joined && p.completed;});
-    this.center(game.phase==="paused"?"PAUSED":cleared?"CHALLENGE CLEAR":"GAME OVER",102,"#eaf2ff",2);
+    this.center(game.phase==="paused"?"PAUSED":cleared?"CHALLENGE CLEAR":"GAME OVER",102,"#fcfcfc",cleared?1:2);
     var message=game.phase==="paused"?(game.pauseReason==="disconnect"?"RECONNECT CONTROLLERS":"START TO RESUME"):"START FOR TITLE";
     this.center(message,126,"#a8bbd3");
     if(game.phase==="paused")this.center("SELECT: MUSIC "+(game.music?"ON":"OFF"),139,"#7a9ac1");
   };
   TetrisRenderer.prototype.draw = function (game) {
     this.ctx.imageSmoothingEnabled=false;
-    this.ctx.fillStyle="#101a31";this.ctx.fillRect(0,0,256,240);
+    this.background();
     if(game.phase==="title"){this.title(game);return;}
     if(game.selectedPlayers===2)this.dual(game);else this.single(game);
     if(game.phase==="paused"||game.phase==="gameover")this.overlay(game);

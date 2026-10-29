@@ -202,7 +202,7 @@
     while(this.accumulator+1e-9>=1/FPS){this.accumulator-=1/FPS;this.tick(Array.isArray(inputs)?inputs:[]);}
   };
   JewelGame.prototype.status = function () {
-    return {phase:this.phase,stage:this.players[0].level+1,selectedPlayers:this.selectedPlayers,muted:this.muted,players:this.players.map(function(p){return{id:p.id,joined:p.joined,alive:p.alive,score:p.score,level:p.level+1,cleared:p.cleared,chain:p.chain};})};
+    return {phase:this.phase,stage:this.players[0].level,selectedPlayers:this.selectedPlayers,muted:this.muted,players:this.players.map(function(p){return{id:p.id,joined:p.joined,alive:p.alive,score:p.score,level:p.level,cleared:p.cleared,chain:p.chain};})};
   };
   JewelGame.WIDTH=WIDTH;JewelGame.HEIGHT=HEIGHT;JewelGame.findMatches=matches;JewelGame.collapse=collapse;JewelGame.fallFrames=fallFrames;JewelGame.waveScore=waveScore;
   root.JewelGame=JewelGame;

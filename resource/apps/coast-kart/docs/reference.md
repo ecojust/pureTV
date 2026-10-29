@@ -4,7 +4,7 @@
 
 本项目依据用户选择，独立实现现代卡丁车游戏的核心玩法。Mario Kart 8 Deluxe 是类型与体验的参考，不是本项目名称、源码、画面、地图或音乐的来源。本项目不加载 ROM、不模拟 Switch，不包含商业游戏的角色、赛道、模型、纹理、音频或提取数据，也不声称完整移植、准确复刻其画面或全部规则。
 
-Coast Kart TV is an independent implementation of modern kart-racing mechanics. Mario Kart 8 Deluxe informed the requested genre, not the game's source code or assets. This game does not emulate Switch, load ROMs, or reproduce the commercial game's characters, courses, models, textures, audio, full rules or visual fidelity. All four courses, vector karts, scenery, interface and synthesized score were created for this project.
+Coast Kart TV is an independent implementation of modern kart-racing mechanics. Mario Kart 8 Deluxe informed the requested genre, not the game's source code or assets. This game does not emulate Switch, load ROMs, or reproduce the commercial game's characters, courses, models, textures, audio, full rules or visual fidelity. All four courses, kart models, scenery, interface and synthesized score were created for this project.
 
 ## 当前源码内容 / Current source features
 
@@ -45,19 +45,27 @@ Two connected controllers are required to start 2P. Time trial is solo; selectin
 
 ## 渲染与兼容 / Rendering and compatibility
 
-Canvas 2D 使用 960×540 逻辑画布，透视投影绘制道路、坡度、景物及矢量车辆；双人各使用半屏。画面为平滑风格的 2.5D 透视公路，不是像素画，也不是完整 3D 赛道网格。无需 WebGL、GPU 扩展、外部字体、CDN、网络素材或动态资源下载。自行绘制圆角路径，避免依赖较新 Canvas API。
+画面以《Mario Kart 8 Deluxe》所代表的现代卡通 3D 赛车类型为方向，使用本地 Three.js r124、明确创建的 WebGL 1 上下文与程序生成的原创网格。赛车包含有光照的车壳、轮胎／轮毂、驾驶员身体与头盔、尾翼和排气管；追车相机跟随当前车手。现有赛道曲率、坡度、车辆和道具位置映射为真正的三维场景，包含路面／路肩、护栏、树木或岩柱、夜港楼宇、箱子与投射物。海岸、森林、峡谷、夜港保留各自景物和光照配色。道路细纹、海面波纹与路牌箭头均由本地 Canvas 纹理生成，没有网络素材。
 
-The 960×540 Canvas 2D renderer projects road segments, hills, scenery and original vector karts. Each player receives half of the view in 2P. This is smooth perspective 2.5D road rendering, not a full 3D course mesh. It requires no WebGL, external font, CDN or downloaded assets. Rounded paths are drawn without newer Canvas methods. Room state updates and startup failure diagnostics run independently of rendering. Page exit cancels RAF, room polling and audio; visibility/native suspension pauses gameplay.
+The visual reference is the modern, colorful 3D kart-racing genre exemplified by Mario Kart 8 Deluxe. Local Three.js r124 presents original shaded geometry with a third-person chase camera: rounded kart bodies, tires/hubs, helmeted drivers, rear wings, exhausts, elevated curbs, guardrails, themed scenery and actual model-positioned items. Lighting uses gamma-corrected colors, Phong highlights, hemisphere/directional lights, fog and soft contact-shadow textures. It does not copy the commercial game's models, tracks or characters, and is not a complete recreation of its art or rendering pipeline.
 
-音乐与音效使用 Web Audio 本地合成，浏览器可能要求首次按键后才能播放。Chrome 61 级别的语法与 API 用于旧电视 WebView。二维码房间、手机控制器、Android 生命周期由本应用原生外壳提供。
+主画布仍由 Canvas 2D 绘制 HUD、菜单和状态，逻辑尺寸为 960×540，实际分辨率随电视视口／设备像素比变化，最高 1920×1080。三维场景绘制到同帧保留的离屏 WebGL 画布，再合成到主画布；单人和双人分屏复用同一个 WebGL 上下文，每位玩家有各自追车视角。主画布保持平滑缩放，不施加像素化滤镜。
 
-Original music and effects are synthesized with Web Audio after an input gesture permits playback. The implementation targets Chrome 61-era syntax and APIs. Native Android code owns the QR room, controller network and lifecycle.
+The 2D HUD keeps a 960×540 logical layout on a device-adapted canvas capped at 1920×1080. Each 3D view is capped at 1440×900 pixels and is composited in the same frame from a preserved WebGL drawing buffer. One WebGL context serves both split-screen cameras. Road buffers, merged kart geometry, scenery pools and procedural textures are reused; distant karts use simpler geometry. ANGLE instancing reduces draw calls when available; devices without that extension use a smaller ordinary-mesh scenery pool.
+
+WebGL 不可用、着色器／GL 失败或上下文丢失时，继续使用原来的矢量透视兼容画面，并显示「兼容画面」标记，游戏规则、HUD、控制器与房间轮询仍工作。上下文恢复后自动返回三维画面；不可恢复的渲染错误会释放 GPU 资源并保留兼容画面。退出时销毁几何、材质、纹理及 WebGL 上下文，避免重复进出泄漏。
+
+When WebGL is unavailable, fails, or loses its context, the original vector perspective view continues with a visible “COMPATIBILITY VIEW” badge. Context restoration returns to 3D; permanent errors dispose GPU resources and retain the fallback. Game state and room/controller polling remain independent of rendering. Exit releases geometry, materials, textures and the WebGL context. Music and effects remain synthesized locally through Web Audio. Source syntax targets Chrome 61; Android owns the QR room, network and lifecycle.
+
+`tests/rendering.mjs` 验证真实 WebGL 1 绘制、四主题、双人分屏、资源数量不随连续帧增长、无 WebGL 回退、上下文丢失／恢复、缺少实例化扩展时的三维路径及退出清理，并生成实际页面截图。CI 使用 Chromium 的 SwiftShader 软件 WebGL；其 CPU 耗时用于检查渲染成本和泄漏，不代表真实电视 GPU 帧率。当前尚无真机帧率／温度／长时间压力测试结论。
+
+The rendering suite checks real WebGL 1 draw activity, all four themes, split screen, stable GPU resource counts, no-WebGL fallback, context loss/restoration, the non-instanced 3D path and cleanup. Screenshots are actual browser renders of controlled game-state fixtures. SwiftShader software-WebGL timings are not physical-TV GPU performance claims; hardware frame-rate, thermal and long-session measurements remain pending.
 
 ## 与商业参考作的差异 / Deliberate differences
 
-本作没有商业参考作的反重力、滑翔、水下路段、复杂车辆改装、大量角色、授权赛道、线上联机、完整物理碰撞网格、战斗模式与赛事内容。AI 使用相同加速、转向、路外与道具规则，以确定性赛道观察来控制方向。道路模型限制前后行驶加横向移动；无法离开赛道自由探索或做真实三维跳跃。脉冲是可前后发射的直线车道投射物，不自动追踪目标或碰墙反弹。只有一个道具栏，拖曳防御只挡后方脉冲；没有双道具栏、硬币养成、空中/水下道具行为或商业参考作的全部道具库。当前版本重点是四条可完成赛道、双人同时竞速、漂移与道具、计时与积分。
+本作没有商业参考作的反重力、滑翔、水下路段、复杂车辆改装、大量角色、授权赛道、线上联机、完整物理碰撞网格、战斗模式与赛事内容。新增三维渲染并未把既有前进距离＋横向位置模型改成完整三维驾驶物理；可见道路分段由当前赛道数据重建，没有完整商业级场景网格、骨骼动画或后期特效管线。AI 使用相同加速、转向、路外与道具规则，以确定性赛道观察来控制方向。道路模型限制前后行驶加横向移动；无法离开赛道自由探索或做真实三维跳跃。脉冲是可前后发射的直线车道投射物，不自动追踪目标或碰墙反弹。只有一个道具栏，拖曳防御只挡后方脉冲；没有双道具栏、硬币养成、空中/水下道具行为或商业参考作的全部道具库。当前版本重点是四条可完成赛道、双人同时竞速、漂移与道具、计时与积分。
 
-This version omits antigravity, gliding, underwater sections, extensive customization, licensed characters/courses, online play, full mesh collision physics and battle modes. AI drive using the same acceleration, steering, off-road and item rules. The road model combines signed distance with lateral movement; it is not free-roaming three-dimensional vehicle simulation. Pulse items move forward or backward in their launch lane and neither home nor bounce off walls. There is one item slot, and held-item defense only intercepts rear pulses. Dual item slots, coin progression, airborne/underwater interactions and the commercial reference’s full item roster remain outside this implementation. The intended scope is four completable original circuits, simultaneous local racing, drift boosts, items, timing and championship points.
+This version omits antigravity, gliding, underwater sections, extensive customization, licensed characters/courses, online play, full mesh collision physics and battle modes. AI drive using the same acceleration, steering, off-road and item rules. The new 3D presentation retains the existing signed-distance/lateral-position rules; it is not free-roaming three-dimensional vehicle physics. Visible road segments are reconstructed from course data, without commercial-scale scene meshes, skeletal animation or a full post-processing pipeline. Pulse items move forward or backward in their launch lane and neither home nor bounce off walls. There is one item slot, and held-item defense only intercepts rear pulses. Dual item slots, coin progression, airborne/underwater interactions and the commercial reference’s full item roster remain outside this implementation. The intended scope is four completable original circuits, simultaneous local racing, drift boosts, items, timing and championship points.
 
 ## 验证 / Verification
 

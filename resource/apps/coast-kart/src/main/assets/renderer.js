@@ -59,6 +59,7 @@
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     if (!this.ctx) throw new Error("Canvas 2D unavailable");
+    this.scene3d = root.CoastKartScene3D ? new root.CoastKartScene3D() : null;
     this.frames = 0;
     this.language = "zh";
   }
@@ -393,8 +394,18 @@
     h,
     preview,
   ) {
-    var c = this.ctx,
-      track = game.track,
+    var c = this.ctx;
+    if (this.scene3d && this.scene3d.render(game, p, w, h, this.canvas.width / 960, preview)) {
+      c.save();
+      c.drawImage(this.scene3d.canvas, vx, vy, w, h);
+      c.translate(vx, vy);
+      if (!preview) this.hud(game, p, w, h);
+      c.restore();
+      this.canvas.setAttribute("data-renderer", "webgl1");
+      return;
+    }
+    this.canvas.setAttribute("data-renderer", "canvas2d");
+    var track = game.track,
       theme = THEMES[track.theme],
       horizon = h * 0.36,
       time = game.clock;
@@ -1111,13 +1122,23 @@
       "center",
     );
   };
+  CoastKartRenderer.prototype.fallbackBadge = function () {
+    if (this.scene3d && this.scene3d.active) return;
+    this.round(819, 514, 130, 19, 6, "rgba(12,29,46,.88)");
+    this.text(this.tr("兼容画面", "COMPATIBILITY VIEW"), 884, 524, 9, "#d9e7e7", "600", "center");
+  };
+  CoastKartRenderer.prototype.dispose = function () {
+    if (this.scene3d) this.scene3d.dispose();
+  };
   CoastKartRenderer.prototype.draw = function (game) {
     this.frames++;
     this.language = game.language;
     var c = this.ctx;
+    c.setTransform(this.canvas.width / 960, 0, 0, this.canvas.height / 540, 0, 0);
     c.clearRect(0, 0, 960, 540);
     if (game.phase === "title") {
       this.title(game);
+      this.fallbackBadge();
       return;
     }
     if (game.selectedPlayers === 2) {
@@ -1197,6 +1218,7 @@
     }
     if (game.phase === "results" || game.phase === "ending")
       this.results(game, game.phase === "ending");
+    this.fallbackBadge();
   };
   root.CoastKartRenderer = CoastKartRenderer;
 })(window);

@@ -49,24 +49,6 @@
     "!": [4, 4, 4, 4, 4, 0, 4],
   };
   var ART = {
-    plumber: [
-      ".....rrrrr......",
-      "....rrrrrrrrr...",
-      "....bbbssks.....",
-      "...bsbsssksss...",
-      "...bsbbsssksss..",
-      "...bbsssskkkk...",
-      ".....sssssss....",
-      "....rrbrrr......",
-      "...rrrbrrbrrr...",
-      "..rrrrbbbbrrrr..",
-      "..ssrbybbybrss..",
-      "..sssbbbbbbsss..",
-      "....bbbbbbbb....",
-      "....bbb..bbb....",
-      "...bbb....bbb...",
-      "..bbbb....bbbb..",
-    ],
     goomba: [
       ".....bbbbbb.....",
       "....bbbbbbbb....",
@@ -229,6 +211,367 @@
       ".......gg.......",
       ".......gg.......",
     ],
+  };
+  // Separate native grids: large poses are drawn at 16 x 32, never scaled small poses.
+  var PLAYER_ART = {
+  "smallIdle": [
+    ".....rrrrrr.....",
+    "....rrrrrrrrr...",
+    "....bbbssbs.....",
+    "...bsbsssbsss...",
+    "...bsbbsssbsss..",
+    "...bbssssbbbb...",
+    ".....sssssss....",
+    "....rrbrrr......",
+    "...rrrbrrbrrr...",
+    "..rrrrbbbbrrrr..",
+    "..ssrbsbbsbrss..",
+    "..sssbbbbbbsss..",
+    "....bbbbbbbb....",
+    "....bbb..bbb....",
+    "...bbb....bbb...",
+    "..bbbb....bbbb.."
+  ],
+  "smallRun1": [
+    ".....rrrrrr.....",
+    "....rrrrrrrrr...",
+    "....bbbssbs.....",
+    "...bsbsssbsss...",
+    "...bsbbsssbsss..",
+    "...bbssssbbbb...",
+    ".....sssssss....",
+    "....rrbrrr......",
+    "...rrrbrrbrrr...",
+    "..rrrrbbbbrrrr..",
+    "....bbbbbb......",
+    "...bbbbbbb......",
+    "...bbb.bbbb.....",
+    "..bbb...bbb.....",
+    "..bbbb..bbb.....",
+    "........bbbb...."
+  ],
+  "smallRun2": [
+    ".....rrrrrr.....",
+    "....rrrrrrrrr...",
+    "....bbbssbs.....",
+    "...bsbsssbsss...",
+    "...bsbbsssbsss..",
+    "...bbssssbbbb...",
+    ".....sssssss....",
+    "....rrbrrr......",
+    "...rrrbrrbrrr...",
+    "..rrrrbbbbrrrr..",
+    "....bbbbbb......",
+    "....bbbbbbb.....",
+    ".....bbbbbbb....",
+    ".....bbb..bb....",
+    "....bbbb........",
+    "...bbbbb........"
+  ],
+  "smallRun3": [
+    ".....rrrrrr.....",
+    "....rrrrrrrrr...",
+    "....bbbssbs.....",
+    "...bsbsssbsss...",
+    "...bsbbsssbsss..",
+    "...bbssssbbbb...",
+    ".....sssssss....",
+    "....rrbrrr......",
+    "...rrrbrrbrrr...",
+    "..rrrrbbbbrrrr..",
+    "....bbbbbb......",
+    "...bbbbbbb......",
+    "..bbbb.bbb......",
+    "..bbb...bbb.....",
+    ".bbbb...bbbb....",
+    ".bb.......bb...."
+  ],
+  "smallJump": [
+    ".....rrrrrr...ss",
+    "....rrrrrrrrrsss",
+    "....bbbssbssssss",
+    "...bsbsssbssrrr.",
+    "...bsbbsssbsrrr.",
+    "...bbssssbbbbrr.",
+    ".....sssssssrr..",
+    "..rrrrbrrrbrr...",
+    ".rrrrrbbbbbb....",
+    "ssrrrbsbbbsbb...",
+    "sss..bbbbbbbb...",
+    ".....bbbbbbbb...",
+    "....bbbb..bbbb..",
+    "...bbbb....sss..",
+    "..bbbbb....sss..",
+    "..bbb..........."
+  ],
+  "smallClimb": [
+    ".....rrrrrr.....",
+    "....rrrrrrrrr...",
+    "....bbbssbs.....",
+    "...bsbsssbsss...",
+    "...bsbbsssbsss..",
+    "...bbssssbbbb...",
+    ".....sssssss....",
+    "....rrbrrr......",
+    "...rrrbrrbrrr...",
+    "..rrrrbbbbrrrr..",
+    "....bbbbbb......",
+    "....bbbbbbb.....",
+    ".....bbbbbbb....",
+    ".....bbb..bb....",
+    "....bbbb........",
+    "...bbbbb........"
+  ],
+  "bigIdle": [
+    ".....rrrrrr.....",
+    "....rrrrrrrr....",
+    "...rrrrrrrrrr...",
+    "...rrrrrrrrrrr..",
+    "...bbbsssbs.....",
+    "..bsbbsssbsss...",
+    "..bsbbsssbsss...",
+    "..bsbbssssbsss..",
+    "..bsbssssbbbbb..",
+    "..bbbssssbbbbb..",
+    "....ssssssss....",
+    ".....ssssss.....",
+    "....rrrbrrrr....",
+    "...rrrrbrrrrr...",
+    "..rrrrrbrrrrrr..",
+    "..rrrrrbrrbrrr..",
+    "..rrrrrbrrbrrr..",
+    "..rrrrrbbbbrrr..",
+    "..rrrrbbbbbbrr..",
+    "..rrrbsbbbsbrr..",
+    "..rrrbbbbbbbrr..",
+    "..sssbbbbbbbss..",
+    "..sssbbbbbbbss..",
+    "...ssbbbbbbbss..",
+    "....bbbbbbbb....",
+    "....bbbbbbbb....",
+    "....bbbbbbbb....",
+    "....bbb..bbb....",
+    "....bbb..bbb....",
+    "....bbb..bbb....",
+    "...bbbb..bbbb...",
+    "..bbbbb..bbbbb.."
+  ],
+  "bigRun1": [
+    ".....rrrrrr.....",
+    "....rrrrrrrr....",
+    "...rrrrrrrrrr...",
+    "...rrrrrrrrrrr..",
+    "...bbbsssbs.....",
+    "..bsbbsssbsss...",
+    "..bsbbsssbsss...",
+    "..bsbbssssbsss..",
+    "..bsbssssbbbbb..",
+    "..bbbssssbbbbb..",
+    "....ssssssss....",
+    ".....ssssss.....",
+    "....rrrbrrrr....",
+    "...rrrrbrrrrr...",
+    "..rrrrrbrrrrrr..",
+    "..rrrrrbrrbrrr..",
+    "..rrrrrbrrbrrr..",
+    "..rrrrrbbbbrrr..",
+    "..rrrrbbbbbbrr..",
+    "..rrrbsbbbsbrr..",
+    "..rrrbbbbbbbrr..",
+    "..sssbbbbbbbss..",
+    "..sssbbbbbbbss..",
+    "...ssbbbbbbbss..",
+    "...bbbbbbbb.....",
+    "...bbbbbbbbb....",
+    "...bbbb..bbbb...",
+    "...bbbb...bbb...",
+    "..bbbb....bbb...",
+    "..bbbb....bbb...",
+    "..bbbbb..bbbb...",
+    ".........bbbbb.."
+  ],
+  "bigRun2": [
+    ".....rrrrrr.....",
+    "....rrrrrrrr....",
+    "...rrrrrrrrrr...",
+    "...rrrrrrrrrrr..",
+    "...bbbsssbs.....",
+    "..bsbbsssbsss...",
+    "..bsbbsssbsss...",
+    "..bsbbssssbsss..",
+    "..bsbssssbbbbb..",
+    "..bbbssssbbbbb..",
+    "....ssssssss....",
+    ".....ssssss.....",
+    "....rrrbrrrr....",
+    "...rrrrbrrrrr...",
+    "..rrrrrbrrrrrr..",
+    "..rrrrrbrrbrrr..",
+    "..rrrrrbrrbrrr..",
+    "..rrrrrbbbbrrr..",
+    "..rrrrbbbbbbrr..",
+    "..rrrbsbbbsbrr..",
+    "..rrrbbbbbbbrr..",
+    "..sssbbbbbbbss..",
+    "..sssbbbbbbbss..",
+    "...ssbbbbbbbss..",
+    "....bbbbbbbb....",
+    "....bbbbbbbb....",
+    ".....bbbbbbbb...",
+    ".....bbbb..bb...",
+    ".....bbbb.......",
+    "....bbbb........",
+    "...bbbbb........",
+    "..bbbbbb........"
+  ],
+  "bigRun3": [
+    ".....rrrrrr.....",
+    "....rrrrrrrr....",
+    "...rrrrrrrrrr...",
+    "...rrrrrrrrrrr..",
+    "...bbbsssbs.....",
+    "..bsbbsssbsss...",
+    "..bsbbsssbsss...",
+    "..bsbbssssbsss..",
+    "..bsbssssbbbbb..",
+    "..bbbssssbbbbb..",
+    "....ssssssss....",
+    ".....ssssss.....",
+    "....rrrbrrrr....",
+    "...rrrrbrrrrr...",
+    "..rrrrrbrrrrrr..",
+    "..rrrrrbrrbrrr..",
+    "..rrrrrbrrbrrr..",
+    "..rrrrrbbbbrrr..",
+    "..rrrrbbbbbbrr..",
+    "..rrrbsbbbsbrr..",
+    "..rrrbbbbbbbrr..",
+    "..sssbbbbbbbss..",
+    "..sssbbbbbbbss..",
+    "...ssbbbbbbbss..",
+    "....bbbbbbbb....",
+    "...bbbbbbbbb....",
+    "..bbbbb.bbbb....",
+    "..bbbb...bbbb...",
+    ".bbbb.....bbb...",
+    ".bbbb.....bbb...",
+    "bbbbb.....bbbb..",
+    "bbb........bbb.."
+  ],
+  "bigJump": [
+    ".....rrrrrr.....",
+    "....rrrrrrrr....",
+    "...rrrrrrrrrr...",
+    "...rrrrrrrrrrr..",
+    "...bbbsssbs.....",
+    "..bsbbsssbsss...",
+    "..bsbbsssbsss...",
+    "..bsbbssssbsss..",
+    "..bsbssssbbbbb..",
+    "..bbbssssbbbbb..",
+    "....ssssssss....",
+    ".....ssssss.....",
+    "...rrrbrrrrr..ss",
+    "..rrrrbrrrrrrsss",
+    ".rrrrrbrrbrrssss",
+    ".rrrrrbbbbbbrrrr",
+    ".rrrrbbbbbbbrrrr",
+    ".rrrbsbbbbsbrrr.",
+    ".rrrbbbbbbbbrr..",
+    ".sssbbbbbbbb....",
+    ".sssbbbbbbbb....",
+    "..ssbbbbbbbb....",
+    "....bbbbbbbb....",
+    "...bbbbbbbbbb...",
+    "..bbbbb..bbbb...",
+    ".bbbbb....bbbb..",
+    ".bbbb......sss..",
+    "bbbbb......sss..",
+    "bbbb............",
+    "bbb.............",
+    "bb..............",
+    "................"
+  ],
+  "bigCrouch": [
+    ".....rrrrrr.....",
+    "....rrrrrrrr....",
+    "...rrrrrrrrrr...",
+    "...bbbsssbs.....",
+    "..bsbbsssbsss...",
+    "..bsbbssssbsss..",
+    "..bbbssssbbbbb..",
+    "....ssssssss....",
+    ".....ssssss.....",
+    "..rrrrbrrrrrr...",
+    ".rrrrrbbbbrrrss.",
+    ".sssrbsbbsbrrss.",
+    ".sssbbbbbbbbsss.",
+    "...bbbbbbbbbb...",
+    "..bbbbb..bbbbb..",
+    ".bbbbbb..bbbbbb."
+  ],
+  "bigClimb": [
+    ".....rrrrrr.....",
+    "....rrrrrrrr....",
+    "...rrrrrrrrrr...",
+    "...rrrrrrrrrrr..",
+    "...bbbsssbs.....",
+    "..bsbbsssbsss...",
+    "..bsbbsssbsss...",
+    "..bsbbssssbsss..",
+    "..bsbssssbbbbb..",
+    "..bbbssssbbbbb..",
+    "....ssssssss....",
+    ".....ssssss.....",
+    "....rrrbrrrr....",
+    "...rrrrbrrrrr...",
+    "..rrrrrbrrrrrr..",
+    "..rrrrrbrrbrrr..",
+    "..rrrrrbrrbrrr..",
+    "..rrrrrbbbbrrr..",
+    "..rrrrbbbbbbrr..",
+    "..rrrbsbbbsbrr..",
+    "..rrrbbbbbbbrr..",
+    "..sssbbbbbbbss..",
+    "..sssbbbbbbbss..",
+    "...ssbbbbbbbss..",
+    "....bbbbbbbb....",
+    "....bbbbbbbb....",
+    ".....bbbbbbbb...",
+    ".....bbbb..bb...",
+    ".....bbbb.......",
+    "....bbbb........",
+    "...bbbbb........",
+    "..bbbbbb........"
+  ]
+};
+  // SMB1-style bold HUD cells, independently drawn on an 8 x 8 grid.
+  var HUD_FONT = {
+    "M": [99, 119, 127, 107, 99, 99, 99, 0],
+    "A": [28, 54, 99, 99, 127, 99, 99, 0],
+    "R": [126, 99, 99, 126, 108, 102, 99, 0],
+    "I": [62, 12, 12, 12, 12, 12, 62, 0],
+    "O": [62, 99, 99, 99, 99, 99, 62, 0],
+    "L": [96, 96, 96, 96, 96, 96, 127, 0],
+    "U": [99, 99, 99, 99, 99, 99, 62, 0],
+    "G": [62, 99, 96, 111, 99, 99, 63, 0],
+    "W": [99, 99, 99, 107, 127, 119, 99, 0],
+    "D": [124, 102, 99, 99, 99, 102, 124, 0],
+    "T": [127, 12, 12, 12, 12, 12, 12, 0],
+    "E": [127, 96, 96, 124, 96, 96, 127, 0],
+    "0": [62, 99, 103, 107, 115, 99, 62, 0],
+    "1": [12, 28, 60, 12, 12, 12, 63, 0],
+    "2": [62, 99, 3, 14, 56, 96, 127, 0],
+    "3": [62, 99, 3, 30, 3, 99, 62, 0],
+    "4": [14, 30, 54, 102, 127, 6, 6, 0],
+    "5": [127, 96, 126, 3, 3, 99, 62, 0],
+    "6": [30, 48, 96, 126, 99, 99, 62, 0],
+    "7": [127, 99, 6, 12, 24, 24, 24, 0],
+    "8": [62, 99, 99, 62, 99, 99, 62, 0],
+    "9": [62, 99, 99, 63, 3, 6, 60, 0],
+    "X": [0, 99, 54, 28, 54, 99, 0, 0],
+    "-": [0, 0, 0, 62, 0, 0, 0, 0],
+    " ": [0, 0, 0, 0, 0, 0, 0, 0]
   };
   var PALETTE = {
     r: "#d84518",
@@ -586,47 +929,50 @@
       this.sprite(name, x, y, p, e.vx > 0, 1.5);
     else this.sprite(name, x, y, p, e.vx > 0);
   };
+  MarioRenderer.prototype.playerArt = function (name, x, y, colors, flip) {
+    var art = PLAYER_ART[name], c = this.ctx;
+    for (var row = 0; row < art.length; row++)
+      for (var col = 0; col < 16; col++) {
+        var color = colors[art[row][col]];
+        if (color) {
+          c.fillStyle = color;
+          c.fillRect(Math.floor(x) + (flip ? 15 - col : col), Math.floor(y) + row, 1, 1);
+        }
+      }
+  };
+  MarioRenderer.prototype.hudText = function (value, x, y) {
+    var c = this.ctx, text = String(value).toUpperCase();
+    c.fillStyle = "#fff9e8";
+    for (var i = 0; i < text.length; i++) {
+      var glyph = HUD_FONT[text[i]] || HUD_FONT[" "];
+      for (var row = 0; row < 8; row++)
+        for (var col = 0; col < 8; col++)
+          if (glyph[row] & (128 >> col)) c.fillRect(x + i * 8 + col, y + row, 1, 1);
+    }
+  };
   MarioRenderer.prototype.player = function (p, g) {
     if (!p.joined && g.phase !== "title") return;
     if (g.clearSequence && g.clearSequence.hidden) return;
-    if (p.invulnerable > 0 && !g.clearTicks && Math.floor(g.frame / 4) % 2)
-      return;
-    var palette = p.id === 2 ? { r: "#e9efe0", b: "#418a27" } : {};
-    if (p.power === 2) palette = { r: "#fff2cf", b: "#d94e25" };
+    if (p.invulnerable > 0 && !g.clearTicks && Math.floor(g.frame / 4) % 2) return;
+    var palette = p.power === 2
+      ? { r: "#fff4d2", b: "#c84218", s: "#ffb27b" }
+      : p.id === 2
+        ? { r: "#fff4d2", b: "#467b16", s: "#ffb27b" }
+        : { r: "#c84218", b: "#76450d", s: "#ffb27b" };
     if (p.star) {
-      var colors = ["#faff98", "#78defa", "#ee9ae7", "#9de877"];
-      palette = {
-        r: colors[Math.floor(g.frame / 4) % 4],
-        b: colors[(Math.floor(g.frame / 4) + 2) % 4],
-      };
+      var colors = ["#fff4d2", "#63bbfb", "#e69ae9", "#91d969"];
+      palette.r = colors[Math.floor(g.frame / 4) % 4];
+      palette.b = colors[(Math.floor(g.frame / 4) + 2) % 4];
     }
-    var x = Math.floor(p.x - g.cameraX) - 2,
-      y = Math.floor(p.y),
-      c = this.ctx;
-    if (p.dying) {
-      c.save();
-      c.translate(x + 8, y + 8);
-      c.rotate(Math.PI);
-      this.sprite("plumber", -8, -8, palette, false);
-      c.restore();
-      return;
-    }
-    var sy = p.h / 16;
-    this.sprite("plumber", x, y, palette, p.facing < 0, sy);
-    if (g.clearSequence && g.clearSequence.phase === "slide") {
-      c.fillStyle = "#ffe0a2";
-      c.fillRect(x + 12, y + Math.floor(p.h * 0.4), 4, 3);
-      c.fillRect(x + 11, y + Math.floor(p.h * 0.7), 4, 3);
-    }
-    if (
-      p.grounded &&
-      Math.abs(p.vx) > 0.3 &&
-      Math.floor(g.frame / (Math.abs(p.vx) > 2 ? 4 : 7)) % 2
-    ) {
-      c.fillStyle = palette.b || PALETTE.b;
-      c.fillRect(x + 1, y + p.h - 3, 6, 3);
-      c.fillRect(x + 10, y + p.h - 4, 6, 3);
-    }
+    var size = p.power ? "big" : "small", pose = "Idle";
+    if (p.crouching && p.power) pose = "Crouch";
+    else if (g.clearSequence && g.clearSequence.phase === "slide") pose = "Climb";
+    else if (!p.grounded) pose = "Jump";
+    else if (Math.abs(p.vx) > 0.3) pose = "Run" + (1 + Math.floor(g.frame / (Math.abs(p.vx) > 2 ? 4 : 7)) % 3);
+    if (p.dying) { size = "small"; pose = "Jump"; }
+    var name = size + pose, height = PLAYER_ART[name].length;
+    // The 30px collision body remains unchanged; the separate 32px artwork is foot-aligned.
+    this.playerArt(name, p.x - g.cameraX - 2, p.y + p.h - height, palette, p.facing < 0);
   };
   MarioRenderer.prototype.draw = function (g) {
     var c = this.ctx,
@@ -748,14 +1094,15 @@
           ? "#2043aa"
           : "#080c18";
     c.fillRect(0, 0, 256, 32);
-    this.text(p.id === 2 ? "LUIGI" : "MARIO", 12, 8);
-    this.text(number(p.score, 6), 12, 18);
-    this.coin(89, 16, g.frame);
-    this.text("X" + number(p.coins, 2), 98, 18);
-    this.text("WORLD", 144, 8);
-    this.text(g.level.label, 150, 18);
-    this.text("TIME", 210, 8);
-    this.text(number(g.time, 3), 216, 18);
+    this.hudText(p.id === 2 ? "LUIGI" : "MARIO", 24, 16);
+    this.hudText(number(p.score, 6), 24, 24);
+    c.fillStyle = "#f8b844"; c.fillRect(89, 24, 5, 7);
+    c.fillStyle = "#fff1c2"; c.fillRect(90, 25, 1, 5);
+    this.hudText("X" + number(p.coins, 2), 96, 24);
+    this.hudText("WORLD", 144, 16);
+    this.hudText(g.level.label, 152, 24);
+    this.hudText("TIME", 208, 16);
+    this.hudText(number(g.time, 3), 216, 24);
     if (g.bannerTicks > 0 && g.phase === "playing" && !g.clearTicks) {
       c.fillStyle = "rgba(8,12,24,.8)";
       c.fillRect(64, 42, 128, 19);
@@ -815,7 +1162,7 @@
       );
       this.center("YOUR QUEST IS COMPLETE", 78);
       this.center("ALL 8 WORLDS CLEARED", 98, "#9ee495");
-      this.sprite("plumber", 91, 133, {}, false, 1.875);
+      this.playerArt("bigIdle", 91, 133, { r: "#c84218", b: "#76450d", s: "#ffb27b" }, false);
       c.fillStyle = "#f8b8a9";
       c.fillRect(144, 136, 12, 12);
       c.fillStyle = "#e5c168";

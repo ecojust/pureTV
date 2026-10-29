@@ -283,6 +283,10 @@ try {
   });
   await test('Player level/cleared/score, game-specific A/B semantics, English and safe text', async () => {
     const { context, page } = await fixture({ locale: 'en-US' });
+    if(kind==='jewel'){
+      await page.evaluate(()=>window.__sockets.at(-1).receive({type:'state',phase:'playing',players:[{id:1,level:0,cleared:0,score:0}]}));
+      assert.equal(Number(await page.locator('#level').textContent()),0,'Initial Magic Jewelry level is zero on both TV and phone');
+    }
     await page.evaluate(() => window.__sockets.at(-1).receive({ type: 'state', phase: 'playing', players: [{ id: 1, level: 3, cleared: 12, score: 840 }, { id: 2, level: 9, cleared: 99, score: 9999 }] }));
     assert.equal(Number(await page.locator('#level').textContent()), 3);
     assert.equal(Number(await page.locator('#score').textContent()), 840);
@@ -490,6 +494,49 @@ async function softDrop(page,phone,config,id=1) {
   },{...config,id},{timeout:5000});
 }
 
+async function captureSoloPreview(browser,base,config,language) {
+  const context=await browser.newContext({viewport:{width:1280,height:720},locale:language}),errors=[];
+  let phone;
+  try {
+    await context.route('**/*',route=>{
+      const url=route.request().url();
+      if(url.startsWith(base+'/')||/^(data:|blob:)/.test(url))return route.continue();
+      errors.push('External request: '+url);return route.abort();
+    });
+    await tvBridge(context,config,language);
+    const tv=await context.newPage();
+    tv.on('pageerror',error=>errors.push(error.message));
+    tv.on('response',response=>{if(response.status()>=400)errors.push(response.status()+' '+response.url());});
+    await tv.goto(base+'/tv.html');await awaitPhase(tv,config,'title');
+    phone=await addPhone(browser,tv,base,language,1,errors);
+    await awaitCard(tv,1,true);await tapControl(phone.page,'button-start');await awaitPhase(tv,config,'playing');
+    // The primary image now shows the original one-player composition. These
+    // pieces are placed by the real phone page, with no seeded board or score.
+    for(const direction of [-1,1,0]){
+      if(direction){
+        await dragControl(phone.page,direction*120,0);await tv.waitForTimeout(220);
+        await releaseControl(phone.page,'joystick-zone',11);
+      }
+      await softDrop(tv,phone.page,config);
+    }
+    const state=await gameState(tv,config);
+    assert.equal(state.selectedPlayers,1);
+    assert.ok(state.players[0].alive&&state.players[0].board.some(row=>row.some(value=>value!==0)));
+    assert.equal(state.players[1].joined,false);
+    await visiblePixels(tv);
+    await tv.evaluate(()=>document.fonts.ready);
+    const suffix=language==='en-US'?'.en':'';
+    await tv.screenshot({path:resolve(config.output,config.kind+'-tv'+suffix+'.png'),animations:'disabled'});
+    assert.deepEqual(errors,[],'Original single-player composition runs without missing assets');
+    await phone.page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pagehide')));
+    await tv.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pagehide')));
+    console.log(`PASS ${config.kind} ${language}: single-player preview from ordinary phone controls`);
+  }finally{
+    if(phone)await phone.context.close();
+    await context.close();
+  }
+}
+
 export async function runCaptureTests({kind}) {
   const config=gameConfig(kind);await mkdir(config.output,{recursive:true});
   const {server,base}=await assetServer(config.assets),browser=await chromium.launch(launchOptions());
@@ -574,7 +621,7 @@ export async function runCaptureTests({kind}) {
         await resizePuzzle(tv,width,height);await visiblePixels(tv);
       }
       await resizePuzzle(tv,1280,720);
-      await tv.screenshot({path:resolve(config.output,kind+'-tv'+suffix+'.png'),animations:'disabled'});
+      await tv.screenshot({path:resolve(config.output,kind+'-tv-dual'+suffix+'.png'),animations:'disabled'});
       for(const phone of [phone1,phone2])await phone.page.evaluate(state=>window.__sockets.at(-1).receive({type:'state',...state}),await tv.evaluate(()=>window.__published));
       if(language==='en-US')assert.doesNotMatch(await phone1.page.locator('body').innerText(),/[\u3400-\u9fff]/,'English controller is fully translated');
       assert.equal(await phone1.page.locator('#joystick').isHidden(),true);
@@ -594,6 +641,7 @@ export async function runCaptureTests({kind}) {
       await phone1.context.close();await phone2.context.close();await context.close();
       scenarios++;console.log(`PASS ${kind} ${language}: two real phone pages, fair independent boards, movement, A/B, soft drop, pause/reconnect/exit, four TV sizes`);
     }
+    for(const language of ['zh-CN','en-US'])await captureSoloPreview(browser,base,config,language);
   } finally {await browser.close();await new Promise(done=>server.close(done));}
   console.log(`${scenarios} bilingual puzzle capture scenarios passed. Screenshots: ${config.output}`);
 }

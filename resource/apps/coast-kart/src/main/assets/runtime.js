@@ -85,6 +85,12 @@
         h = Math.floor(540 * scale);
       canvas.parentElement.style.width = canvas.style.width = w + "px";
       canvas.parentElement.style.height = canvas.style.height = h + "px";
+      var pixelWidth = Math.min(1920, Math.max(960, Math.round(w * Math.min(root.devicePixelRatio || 1, 1.5))));
+      var pixelHeight = Math.round(pixelWidth * 540 / 960);
+      if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+        canvas.width = pixelWidth;
+        canvas.height = pixelHeight;
+      }
     }
     updateRoom(info);
     root.addEventListener("resize", resize);
@@ -345,6 +351,7 @@
       root.clearInterval(roomTimer);
       release();
       if (sound) sound.dispose();
+      if (renderer && renderer.dispose) renderer.dispose();
       root.removeEventListener("resize", resize);
     });
     try {

@@ -1,4 +1,4 @@
-/* Smooth original geometric island illustrations, rendered at device resolution. */
+/* HUD and menus; local 3D island with the original Canvas scene as a fallback. */
 (function (root) {
   "use strict";
   var W = root.CozyIslandWorld;
@@ -11,6 +11,9 @@
       this.height = 540;
       this.time = 0;
       this.view = { x: 472, y: 245, s: 18 };
+      this.world3d = null;
+      try { if (root.CozyIsland3DRenderer) this.world3d = new root.CozyIsland3DRenderer(); }
+      catch (_) { /* Older TVs without WebGL keep the compatible Canvas scene. */ }
     }
     point(x, y, z) {
       var v = this.view;
@@ -960,13 +963,52 @@
         "#879486",
       );
     }
+    sceneLabels(game) {
+      var world = this.world3d, c = this.ctx;
+      if (world.split) {
+        c.fillStyle = "rgba(255,250,231,.85)"; c.fillRect(478, 0, 4, 540);
+      }
+      world.views.forEach(view => {
+        c.save(); c.beginPath(); c.rect(view.rect.x, 0, view.rect.w, 540); c.clip();
+        if (world.split || view.location === "home") {
+          var label = view.playerIds.join("P + ") + "P · " + (view.location === "home" ? game.tr("海风小屋", "Seabreeze home") : game.tr("小岛生活", "Island life"));
+          this.round(view.rect.x + 18, 92, 205, 28, 12, "rgba(255,251,237,.84)");
+          this.text(label, view.rect.x + 32, 107, 12, "#5f7b6d");
+        }
+        game.players.forEach(p => {
+          if (!p.joined || p.location !== view.location || game.phase === "title") return;
+          var q = world.project(p.x, 2.28, p.y, view);
+          if (q.visible) {
+            this.round(q.x - 15, q.y - 9, 30, 19, 9, p.id === 1 ? "#d48b71" : "#649eb8");
+            this.text(p.id + "P", q.x, q.y + 1, 11, "#fff", "center");
+          }
+          if (p.fishing && p.fishing.phase === "bite") {
+            var float = world.project(22.1, .7, 10.5 + p.id * .55, view);
+            if (float.visible) this.text("!", float.x, float.y, 30, "#fff1a0", "center");
+          }
+        });
+        if (view.location === "island") game.particles.forEach(p => {
+          var q = world.project(p.x, .7 + (1 - p.life), p.y, view);
+          if (q.visible) for (var i = 0; i < 6; i++) this.ellipse(q.x + Math.cos(i) * 27 * (1 - p.life), q.y + Math.sin(i) * 20 * (1 - p.life), 3 * p.life, 3 * p.life, p.color);
+        });
+        c.restore();
+      });
+    }
+    dispose() { if (this.world3d) this.world3d.dispose(); }
     draw(game) {
       this.marketLabel = game.tr("商店", "MARKET");
       var c = this.ctx;
       this.width = this.canvas.width;
       this.height = this.canvas.height;
       c.setTransform(this.width / 960, 0, 0, this.height / 540, 0, 0);
-      this.island(game);
+      var threeDimensional = false;
+      if (this.world3d) {
+        try { threeDimensional = this.world3d.draw(game, c, this.width, this.height); }
+        catch (_) { this.world3d.dispose(); this.world3d = null; }
+      }
+      this.canvas.dataset.renderer = threeDimensional ? "webgl-3d" : "canvas-2d";
+      if (!threeDimensional) this.island(game);
+      else this.sceneLabels(game);
       this.round(18, 16, 280, 64, 20, "rgba(255,251,237,.9)");
       this.text(game.tr("悠岛生活", "Cozy Island"), 36, 39, 23, "#4f7469");
       var hour = Math.floor(game.clock / 60) % 24,
@@ -1003,6 +1045,10 @@
         12,
         "#7b9181",
       );
+      if (!threeDimensional) {
+        this.round(378, 18, 204, 27, 12, "rgba(255,251,237,.92)");
+        this.text(game.tr("兼容画面", "Compatibility display"), 480, 32, 12, "#6f8272", "center");
+      }
       if (game.phase === "title") {
         this.round(194, 105, 572, 350, 28, "rgba(255,252,241,.94)");
         this.text(
@@ -1226,7 +1272,6 @@
           "center",
         );
     }
-    dispose() {}
   }
   root.CozyIslandRenderer = CozyIslandRenderer;
 })(window);

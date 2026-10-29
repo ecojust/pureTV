@@ -12,6 +12,16 @@ Version **0.5.1** requires Android 8.0 or later. Package: `com.ecojust.supermari
 The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
+<!-- visual-release:start -->
+## 0.5.2 visual update (release pending)
+
+The source version is **0.5.2**; full-group acceptance, Android CI and the signed release are not yet complete. Existing downloads still point to the published **0.5.1** package. This update keeps the current pureTV release certificate. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for confirmed changes, validation results and pending work.
+
+Separate small and large standing, running, jumping and crouching poses were drawn for the 1985 FC/NES Super Mario Bros. reference, with Fire and Luigi palettes. Large forms are no longer vertically stretched small forms. The corresponding NES pixel proportions and 2D scenery remain; these independently drawn poses do not establish frame-exact reproduction of every animation.
+
+See the [reference notes](docs/reference.md) for the implementation scope.
+<!-- visual-release:end -->
+
 ## 0.5.1 gameplay review
 
 Adds pole sliding, castle entry, timer-based fireworks and progressive bridge collapse; fixes fireball walls, emerging items and obstructed exits.

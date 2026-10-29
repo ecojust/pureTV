@@ -48,6 +48,20 @@
     "<": [1, 2, 4, 8, 4, 2, 1],
     "!": [4, 4, 4, 4, 4, 0, 4],
   };
+  // Independently drawn Adventure Island HUD digits on native 8px cells.
+  var HUD_DIGITS = {
+    "0": [60, 102, 195, 195, 195, 102, 60, 0],
+    "1": [24, 56, 24, 24, 24, 24, 126, 0],
+    "2": [126, 195, 3, 30, 96, 192, 255, 0],
+    "3": [126, 195, 3, 62, 3, 195, 126, 0],
+    "4": [14, 30, 54, 102, 198, 255, 6, 0],
+    "5": [255, 192, 192, 254, 3, 195, 126, 0],
+    "6": [62, 96, 192, 254, 195, 195, 126, 0],
+    "7": [255, 195, 6, 12, 24, 24, 24, 0],
+    "8": [126, 195, 195, 126, 195, 195, 126, 0],
+    "9": [126, 195, 195, 127, 3, 6, 124, 0],
+    "X": [0, 0, 102, 60, 24, 60, 102, 0]
+  };
   var COLORS = {
     forest: ["#5b9be5", "#bddff0", "#378448", "#79b835", "#a45d2d", "#633825"],
     coast: ["#73c4f0", "#e2f1e0", "#267db5", "#efcc75", "#c48d48", "#856037"],
@@ -611,31 +625,33 @@
     )
       this.hero(p, p.x - cam, p.y, game.frame);
   };
+  AdventureRenderer.prototype.hudNumber = function (value, x, y) {
+    var text = String(value), c = this.ctx;
+    c.fillStyle = "#fff6de";
+    for (var i = 0; i < text.length; i++) {
+      var glyph = HUD_DIGITS[text[i]];
+      if (!glyph) continue;
+      for (var row = 0; row < 8; row++)
+        for (var col = 0; col < 8; col++)
+          if (glyph[row] & (128 >> col)) c.fillRect(x + i * 8 + col, y + row, 1, 1);
+    }
+  };
   AdventureRenderer.prototype.hud = function (game) {
-    var r = this.rect.bind(this),
-      p = game.current();
-    r(0, 0, 256, 30, "#10292b");
-    this.text("P" + p.id, 6, 4, "#f2c672");
-    this.text(n(p.score, 6), 26, 4);
-    this.text("HI " + n(game.highScore, 6), 113, 4, "#a8d8bf");
-    this.text(p.stageLabel, 232, 4, "#f3d073");
-    this.text("VIT", 6, 17, "#a9d0b9");
-    for (var i = 0; i < 16; i++)
-      r(
-        30 + i * 7,
-        17,
-        5,
-        7,
-        i < p.energy ? (p.energy < 4 ? "#ed7758" : "#f1d668") : "#3a514a",
-      );
-    this.text("L" + p.lives, 151, 17);
-    this.text(
-      p.weapon === "none" ? "HAND" : p.weapon === "axe" ? "AXE" : "FIRE",
-      181,
-      17,
-      "#aee2c9",
-    );
-    r(0, 238, 256, 2, "#112d2a");
+    var p = game.current(), r = this.rect.bind(this);
+    // The first NES game overlays score, vitality and a life portrait on the
+    // scene. The former opaque dashboard and weapon labels were project UI.
+    this.hudNumber(n(p.score, 6), 104, 8);
+    var head = ["..rrrr..", ".rrrrrr.", "..bbssb.", ".bssssb.", ".bsssbs.", "..sssss.", "...sss..", "........"];
+    var palette = { r: "#c95a36", b: "#70451d", s: "#f5bf7a" };
+    for (var row = 0; row < 8; row++)
+      for (var col = 0; col < 8; col++)
+        if (palette[head[row][col]]) r(16 + col, 16 + row, 1, 1, palette[head[row][col]]);
+    this.hudNumber("X" + p.lives, 32, 16);
+    for (var i = 0; i < 16; i++) {
+      var live = i < p.energy;
+      r(96 + i * 4, 24, 2, 5, live ? (p.energy < 4 ? "#e74c35" : "#f6d4a5") : "#7c7c63");
+      if (live) r(96 + i * 4, 24, 1, 4, "#fff4cf");
+    }
   };
   AdventureRenderer.prototype.panel = function (y, h) {
     this.rect(16, y, 224, h, "#173e36");

@@ -12,6 +12,16 @@ Version **0.5.1** requires Android 8.0 or later. Package: `com.ecojust.coastkart
 The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
+<!-- visual-release:start -->
+## 0.5.2 visual update (release pending)
+
+The source version is **0.5.2**; full-group acceptance, Android CI and the signed release are not yet complete. Existing downloads still point to the published **0.5.1** package. This update keeps the current pureTV release certificate. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for confirmed changes, validation results and pending work.
+
+This round uses Mario Kart 8 Deluxe as the visual reference for rebuilding karts, courses and camera as actual WebGL 1 3D scenes. Visual and runtime acceptance is still pending. Courses and characters are independently created; drift, items, racing and LAN two-player flows remain in acceptance scope. This is not a complete port of the commercial game.
+
+See the [reference notes](docs/reference.md) for the implementation scope. 3D rendering uses locally bundled Three.js r124 under MIT, with no CDN dependency.
+<!-- visual-release:end -->
+
 ## 0.5.1 gameplay review
 
 Adds held-item defense, directional throws, rank-based item strategy and incoming warnings, with swept collisions across the finish line.

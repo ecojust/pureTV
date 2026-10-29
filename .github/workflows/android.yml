@@ -124,6 +124,7 @@ jobs:
           COAST_KART_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-coast-kart-previews
         run: |
           node resource/apps/coast-kart/tests/compatibility.mjs
+          node resource/apps/coast-kart/tests/rendering.mjs
           node resource/apps/coast-kart/tests/controller.mjs
           node resource/apps/coast-kart/tests/combat.mjs
           node resource/apps/coast-kart/tests/capture.mjs
@@ -132,6 +133,7 @@ jobs:
           COZY_ISLAND_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-cozy-island-previews
         run: |
           node resource/apps/cozy-island/tests/compatibility.mjs
+          node resource/apps/cozy-island/tests/rendering.mjs
           node resource/apps/cozy-island/tests/controller.mjs
           node resource/apps/cozy-island/tests/capture.mjs
       - uses: android-actions/setup-android@v3

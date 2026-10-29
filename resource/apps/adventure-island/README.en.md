@@ -12,6 +12,16 @@ Version **0.5.1** requires Android 8.0 or later. Package: `com.ecojust.adventure
 The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
+<!-- visual-release:start -->
+## 0.5.2 visual update (release pending)
+
+The source version is **0.5.2**; full-group acceptance, Android CI and the signed release are not yet complete. Existing downloads still point to the published **0.5.1** package. This update keeps the current pureTV release certificate. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for confirmed changes, validation results and pending work.
+
+The HUD was adjusted toward the original FC/NES Adventure Island presentation: score, stamina and life indicators appear directly over the scene, without an opaque information bar covering it. The corresponding pixel scenery and character proportions remain; independently reconstructed levels and artwork are documented in the reference notes.
+
+See the [reference notes](docs/reference.md) for the implementation scope.
+<!-- visual-release:end -->
+
 ## 0.5.1 gameplay review
 
 Adds hidden-cloud discovery through weapon clues, a cloud ride, fruit bonuses and a return to the next checkpoint.

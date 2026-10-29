@@ -153,6 +153,8 @@ public class MainActivity extends Activity {
             case "/game-model.js":
             case "/runtime.js":
             case "/renderer.js":
+            case "/three.min.js":
+            case "/renderer-3d.js":
             case "/audio.js":
                 return "application/javascript";
             default: break;

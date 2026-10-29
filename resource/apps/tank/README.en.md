@@ -14,6 +14,16 @@ The rewrite retains QR pairing and two phone controllers over the local network,
 
 Requires Android 8.0 or later; package `com.ecojust.tanktv`. The room UI and phone controllers support Chinese and English. In-game menus retain the original English labels.
 
+<!-- visual-release:start -->
+## 0.5.2 visual update (release pending)
+
+The source version is **0.5.2**; full-group acceptance, Android CI and the signed release are not yet complete. Existing downloads still point to the published **0.5.1** package. This update keeps the current pureTV release certificate. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for confirmed changes, validation results and pending work.
+
+This round reviewed the visual reference to the 1985 FC/NES Battle City and retained the existing pixel battlefield. The Tank renderer was not changed.
+
+See the [reference notes](docs/reference.md) for the implementation scope.
+<!-- visual-release:end -->
+
 ## 0.5.1 gameplay review
 
 Rechecked all 35 maps, enemy waves and co-op rules; the full-area fire control remains available.

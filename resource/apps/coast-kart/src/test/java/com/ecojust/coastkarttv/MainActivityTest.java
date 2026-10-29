@@ -144,10 +144,10 @@ public class MainActivityTest {
     }
 
     @Test public void onlyBundledGameAssetsAreReadable() throws Exception {
-        String[] names={"tv.html","tv.css","bootstrap.js","game.js","game-model.js","runtime.js","renderer.js","audio.js"};
-        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript"};
+        String[] names={"tv.html","tv.css","bootstrap.js","game.js","game-model.js","runtime.js","renderer.js","three.min.js","renderer-3d.js","audio.js"};
+        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript"};
         java.util.Set<String> packaged = new java.util.HashSet<>(java.util.Arrays.asList(activity.getAssets().list("")));
-        packaged.removeAll(java.util.Arrays.asList("controller.html", "controller.css", "controller.js"));
+        packaged.removeAll(java.util.Arrays.asList("controller.html", "controller.css", "controller.js", "THREE-LICENSE.txt"));
         // Robolectric merges these exact Android framework assets into the app's AssetManager.
         // Keep unknown files in the comparison, including any new files under these directories.
         String[] frameworkAssets = {
@@ -176,7 +176,7 @@ public class MainActivityTest {
             response.getData().close();
         }
         for (String url:new String[]{
-            "https://coast-kart.invalid/controller.js","https://coast-kart.invalid/../private",
+            "https://coast-kart.invalid/controller.js","https://coast-kart.invalid/THREE-LICENSE.txt","https://coast-kart.invalid/../private",
             "https://coast-kart.invalid/secret","https://coast-kart.invalid:443/game.js",
             "https://evil.example/game.js","http://coast-kart.invalid/game.js",
             "file:///android_asset/game.js","content://private/data",
@@ -199,15 +199,19 @@ public class MainActivityTest {
         page.getData().close();
         java.util.regex.Matcher dependencies=java.util.regex.Pattern.compile("(?:src|href)=[\"']([^\"']+)[\"']").matcher(html);
         int count=0;
+        java.util.Set<String> loaded = new java.util.HashSet<>();
         while (dependencies.find()) {
             String dependency=dependencies.group(1);
             if (dependency.startsWith("data:") || dependency.startsWith("#")) continue;
+            loaded.add(dependency);
             WebResourceResponse response=activity.localAsset(Uri.parse(new java.net.URI(MainActivity.GAME_URL).resolve(dependency).toString()));
             assertEquals("HTML dependency: "+dependency,200,response.getStatusCode());
             assertTrue(response.getData().readAllBytes().length>0);
             response.getData().close();count++;
         }
         assertTrue("The test must inspect the real script and stylesheet dependencies",count>=7);
+        assertTrue("The TV page must load bundled Three.js",loaded.contains("three.min.js"));
+        assertTrue("The TV page must load its WebGL renderer",loaded.contains("renderer-3d.js"));
     }
 
     @Test public void generatedPngQrDecodesToExactJoinUrl() throws Exception {

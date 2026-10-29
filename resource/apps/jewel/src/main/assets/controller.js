@@ -178,10 +178,10 @@
   }
   function applyState(state) {
     if (!connected) return;
-    if (Number.isFinite(state.stage)) $('level').textContent = String(Math.max(1, state.stage)).padStart(2, '0');
+    if (Number.isFinite(state.stage)) $('level').textContent = String(Math.max(0, state.stage)).padStart(3, '0');
     const mine = Array.isArray(state.players) ? state.players.find(p => Number(p.id) === player) : null;
     if (mine) {
-      if (Number.isFinite(mine.level)) $('level').textContent = String(Math.max(1, mine.level)).padStart(2, '0');
+      if (Number.isFinite(mine.level)) $('level').textContent = String(Math.max(0, mine.level)).padStart(3, '0');
       if (Number.isFinite(mine.cleared)) $('cleared').textContent = String(Math.max(0, mine.cleared));
       if (Number.isFinite(mine.score)) $('score').textContent = String(Math.max(0, mine.score)).padStart(4, '0');
     }

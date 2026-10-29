@@ -6,6 +6,16 @@ Jackal TV independently reimplements the six-stage NES version of Jackal: jeep m
 
 The current release is **0.5.0**. Install and play without importing a ROM; the package ID stays unchanged. This version includes the six-stage rewrite, with remaining differences in AI, some collisions, animation timing and sound. Physical-TV and frame-by-frame comparisons are incomplete.
 
+<!-- visual-release:start -->
+## 0.5.2 visual update (release pending)
+
+The source version is **0.5.2**; full-group acceptance, Android CI and the signed release are not yet complete. Existing downloads still point to the published **0.5.1** package. This update keeps the current pureTV release certificate. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for confirmed changes, validation results and pending work.
+
+This round reviewed the visual reference to NES USA Jackal and retained the existing pixel stages. The Jackal renderer was not changed.
+
+See the [reference notes](docs/reference.md) for the implementation scope.
+<!-- visual-release:end -->
+
 ## 0.5.1 gameplay review
 
 Stage 3 now selects the correct long or short laser and warning endpoints from the actual map event.

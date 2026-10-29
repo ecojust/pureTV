@@ -10,7 +10,9 @@ import { createRequire } from 'node:module';
 const require = createRequire(new URL('../../desktop/package.json', import.meta.url));
 const { chromium } = require('playwright');
 const { transform } = require('esbuild');
-const launchOptions = () => ({ headless: true, ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}), args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
+// CI has no physical GPU. Exercise real WebGL through ANGLE/SwiftShader rather
+// than allowing an unavailable GPU to silently select the compatibility art.
+const launchOptions = () => ({ headless: true, ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}), args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 
 export async function runControllerTests({ kind }) {
 const assets = pathToFileURL(gameConfig(kind).assets + '/');
@@ -394,8 +396,10 @@ async function assetServer(assets) {
   return { server, base: 'http://127.0.0.1:' + server.address().port };
 }
 
+const publishedRoomStates=new WeakMap();
 async function tvBridge(context, config, language, legacy = false) {
   const qr = 'data:image/svg+xml;base64,' + (await readFile(new URL('../../resource/apps/tank/tests/fixtures/room-preview.svg', import.meta.url))).toString('base64');
+  await context.exposeBinding('__publishModernState',({page},state)=>{publishedRoomStates.set(page,state);});
   await context.addInitScript(({ bridge, language, qr, legacy }) => {
     if (legacy) {
       for (const [target,names] of [
@@ -415,6 +419,22 @@ async function tvBridge(context, config, language, legacy = false) {
     window.__animationFrames=0;
     const nativeRaf=window.requestAnimationFrame.bind(window);
     window.requestAnimationFrame=callback=>nativeRaf(now=>{window.__animationFrames++;callback(now);});
+    // Check actual GPU work, so a silently selected 2D fallback cannot become
+    // the published preview for a game whose primary renderer is now 3D.
+    window.__webglContexts=[];
+    const nativeGetContext=HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext=function(type,...args){
+      const gl=nativeGetContext.call(this,type,...args);
+      if(gl && /^(webgl|experimental-webgl|webgl2)$/.test(type) && !window.__webglContexts.some(record=>record.gl===gl)){
+        const record={gl,type,draws:0};
+        for(const name of ['drawElements','drawArrays']){
+          const original=gl[name];
+          gl[name]=function(...args){record.draws++;return original.apply(gl,args);};
+        }
+        window.__webglContexts.push(record);
+      }
+      return gl;
+    };
     window.__audioContexts = [];
     const OriginalAudioContext = window.AudioContext;
     if (OriginalAudioContext) window.AudioContext = class extends OriginalAudioContext {
@@ -425,7 +445,10 @@ async function tvBridge(context, config, language, legacy = false) {
     window[bridge] = {
       getInfo: () => JSON.stringify({language,qr,url:'http://192.168.1.88:38291/?room=modern-preview-room-token'}),
       snapshot: () => { window.__snapshotCalls++; return JSON.stringify({players:window.__inputs}); },
-      publish: raw => { window.__published = JSON.parse(raw); },
+      publish: raw => {
+        window.__published = JSON.parse(raw);
+        window.__publishModernState(window.__published).catch(()=>{});
+      },
     };
   },{bridge:config.bridge,language,qr,legacy});
 }
@@ -440,8 +463,24 @@ async function cancelControl(page,id,pointerId,reason) {
   if(reason==='blur'||reason==='resize')await page.evaluate(reason=>window.dispatchEvent(new Event(reason)),reason);
   else await page.locator('#'+id).dispatchEvent(reason,{pointerId,pointerType:'touch',button:0,buttons:0});
 }
+const phoneTargets=new WeakMap();
 async function tapControl(page,id) {
-  await pressControl(page,id); await page.waitForTimeout(90); await releaseControl(page,id); await page.waitForTimeout(90);
+  const target=phoneTargets.get(page),action=id.replace('button-','');
+  const observed=({player,action,pressed})=>{
+    const game=(window.CoastKartTV||window.CozyIslandTV).game;
+    const previous=game.previous?game.previous[player]:game.players[player-1].previous;
+    return previous&&!!previous[action]===pressed;
+  };
+  await pressControl(page,id);
+  try {
+    // A GPU-less CI frame can exceed a fixed 90 ms hold. Keep the actual phone
+    // press until the model observes it, then observe its real release before
+    // the next gesture. No game state or simulation time is changed here.
+    if(target)await target.tv.waitForFunction(observed,{player:target.id,action,pressed:true});
+    else await page.waitForTimeout(90);
+  }finally{await releaseControl(page,id);}
+  if(target)await target.tv.waitForFunction(observed,{player:target.id,action,pressed:false});
+  else await page.waitForTimeout(90);
 }
 async function dragControl(page,dx,dy,pointerId=11) {
   const box = await page.locator('#joystick-zone').boundingBox();
@@ -454,29 +493,42 @@ async function awaitPhase(page,config,phase) {
   await page.waitForFunction(({api,phase}) => window[api] && window[api].game && window[api].game.phase===phase,{api:config.api,phase},{timeout:15000});
 }
 async function awaitCard(page,id,connected) {
-  await page.waitForFunction(({id,connected}) => document.getElementById('player-'+id).classList.contains('connected')===connected,{id,connected},{timeout:4000});
-  const label=await page.locator('#player-status-'+id).innerText();
-  assert.ok(label.trim().length>0,'Player connection/status card is readable');
-  if(connected)assert.doesNotMatch(label,/等待连接|Waiting to connect/);
-  else assert.match(label,/等待连接|Waiting to connect/);
+  await page.waitForFunction(({id,connected}) => {
+    const card=document.getElementById('player-'+id),label=document.getElementById('player-status-'+id).textContent;
+    return card.classList.contains('connected')===connected&&label.trim().length>0&&
+      (/等待连接|Waiting to connect/.test(label)!==connected);
+  },{id,connected},{timeout:15000});
 }
 
 async function addPhone(browser,tv,base,language,id,errors) {
   const context = await browser.newContext({viewport:{width:844,height:390},locale:language,hasTouch:true});
-  await context.exposeBinding('__roomMessage',async(_source,message) => tv.evaluate(({message,id}) => {
+  let lastInput=null;
+  await context.exposeBinding('__roomMessage',async(_source,message) => {
+    // Real LAN input is read on a server thread, not serialized behind GPU
+    // frames. Coalesce unchanged heartbeat input and use the TV's independently
+    // published state so software rendering cannot grow an unbounded RPC queue.
+    if(message.type==='input'){
+      const signature=JSON.stringify([message.x,message.y,!!message.a,!!message.b,!!message.start,!!message.select,message.cancelSeq||0]);
+      if(signature===lastInput)return publishedRoomStates.get(tv);
+      lastInput=signature;
+    }else lastInput=null;
+    await tv.evaluate(({message,id}) => {
     const player = window.__inputs[id-1];
-    if (message.type==='hello') {player.connected=true;return window.__published;}
-    if (message.type==='input') Object.assign(player,{connected:true,x:message.x,y:message.y,a:!!message.a,b:!!message.b,start:!!message.start,select:!!message.select,cancelSeq:message.cancelSeq||0});
+    if (message.type==='hello') {player.connected=true;return;}
+    // As on the native server, input cannot establish/revive a connection.
+    // Buffered input from a closed peer must not undo a disconnection.
+    if (message.type==='input'&&player.connected) Object.assign(player,{x:message.x,y:message.y,a:!!message.a,b:!!message.b,start:!!message.start,select:!!message.select,cancelSeq:message.cancelSeq||0});
     if (message.type==='closed') Object.assign(player,{connected:false,x:0,y:0,a:false,b:false,start:false,select:false});
-    return window.__published;
-  },{message,id}));
+    },{message,id});
+    return publishedRoomStates.get(tv);
+  });
   await context.addInitScript(({id}) => {
     window.__networkAvailable=true;window.__sockets=[];
     class RoomSocket extends EventTarget {
       static CONNECTING=0;static OPEN=1;static CLOSING=2;static CLOSED=3;
       constructor(){super();this.readyState=0;this.queue=Promise.resolve();window.__sockets.push(this);setTimeout(()=>{if(!window.__networkAvailable){this.close();return;}this.readyState=1;this.dispatchEvent(new Event('open'));},0);}
       receive(value){if(this.readyState===1)this.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}));}
-      send(raw){const message=JSON.parse(raw);this.queue=this.queue.then(()=>window.__roomMessage(message)).then(state=>{if(message.type==='hello'){this.receive({type:'welcome',player:id,session:'modern-player-'+id,heartbeatMs:250});}if(state)this.receive({type:'state',...state});});}
+      send(raw){if(this.readyState!==1)throw new Error('Socket is not open');const message=JSON.parse(raw);this.queue=this.queue.then(()=>window.__roomMessage(message)).then(state=>{if(message.type==='hello'){this.receive({type:'welcome',player:id,session:'modern-player-'+id,heartbeatMs:250});}if(state)this.receive({type:'state',...state});});}
       close(){if(this.readyState===3)return;this.readyState=3;this.queue=this.queue.then(()=>window.__roomMessage({type:'closed'}));this.dispatchEvent(new Event('close'));}
     }
     window.WebSocket=RoomSocket;
@@ -485,6 +537,7 @@ async function addPhone(browser,tv,base,language,id,errors) {
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto(base+'/controller.html?room=modern-preview-room-token');
   await page.waitForFunction(()=>document.querySelector('#controller').dataset.connected==='true');
+  phoneTargets.set(page,{tv,id});
   return {context,page};
 }
 
@@ -504,6 +557,22 @@ async function visiblePixels(page) {
   assert.ok(result.width>=320&&result.height>=180&&Math.abs(result.width/result.height-960/540)<.012,'Canvas backing store preserves declared 960×540 logical aspect: '+JSON.stringify(result));
   assert.ok(result.pixels>10000&&result.colors>40&&result.displayWidth>200&&result.displayHeight>150,'Vivid, visible modern game canvas: '+JSON.stringify(result));
   assert.equal(result.smoothing,true,'Modern scenes retain smooth graphics');
+}
+
+async function verifyLiveWebGL(page) {
+  const before=await page.evaluate(()=>window.__webglContexts.reduce((sum,record)=>sum+record.draws,0));
+  await page.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done))));
+  const result=await page.evaluate(()=>window.__webglContexts.map(record=>({
+    type:record.type,draws:record.draws,lost:record.gl.isContextLost(),
+    version:record.gl.getParameter(record.gl.VERSION),error:record.gl.getError(),
+  })));
+  assert.ok(result.length>0,'Published modern game preview must use a real WebGL scene');
+  assert.ok(result.every(record=>record.type!=='webgl2'&&/^WebGL 1\.0/.test(record.version)),
+    'Exercise the WebGL 1 path used by older TV hardware: '+JSON.stringify(result));
+  assert.ok(result.every(record=>!record.lost&&record.error===0),
+    'No lost GPU context or WebGL error in the published preview: '+JSON.stringify(result));
+  assert.ok(result.reduce((sum,record)=>sum+record.draws,0)>before,
+    'GPU draw calls must continue immediately before capture; fallback is tested separately');
 }
 
 async function gameState(page,config) {
@@ -563,15 +632,18 @@ async function kartNormalPlay(tv,phones,config) {
   const began=await gameState(tv,config);assert.ok(began.countdown>0,'A real race begins with a countdown');
   const before=began.players.map(p=>p.s);await tv.waitForTimeout(250);
   assert.deepEqual((await gameState(tv,config)).players.map(p=>p.s),before,'Countdown holds every racer at the starting grid');
-  await tv.waitForFunction(api=>window[api].game.countdown<=0,config.api,{timeout:6000});
-  await tv.waitForFunction(api=>window[api].game.players.every(p=>p.speed>100),config.api,{timeout:4000});
+  // SwiftShader can take several real seconds per simulation second while
+  // drawing two 3D views. Check the same model/input outcomes without turning
+  // this functional capture into an unsupported physical-GPU frame-rate test.
+  await tv.waitForFunction(api=>window[api].game.countdown<=0,config.api,{timeout:60000});
+  await tv.waitForFunction(api=>window[api].game.players.every(p=>p.speed>100),config.api,{timeout:30000});
   const initial=(await gameState(tv,config)).players;
   await dragControl(phones[0].page,20,0);await dragControl(phones[1].page,-20,0);
   await tv.waitForFunction(({api,positions})=>{const p=window[api].game.players;return p[0].x>positions[0]+.03&&p[1].x<positions[1]-.03;},{api:config.api,positions:initial.map(p=>p.x)});
   assert.ok((await gameState(tv,config)).players.every((p,i)=>p.s>initial[i].s),'Both player karts auto accelerate at the same time');
   await releaseControl(phones[0].page,'joystick-zone',11);await releaseControl(phones[1].page,'joystick-zone',11);
   await dragControl(phones[0].page,18,0);await pressControl(phones[0].page,'button-b',13);
-  await tv.waitForFunction(api=>window[api].game.players[0].drift>.67,config.api,{timeout:3000});
+  await tv.waitForFunction(api=>window[api].game.players[0].drift>.67,config.api,{timeout:30000});
   await releaseControl(phones[0].page,'button-b',13);
   await tv.waitForFunction(api=>window[api].game.players[0].boost>0,config.api);
   await releaseControl(phones[0].page,'joystick-zone',11);
@@ -654,6 +726,7 @@ export async function runCaptureTests({kind}) {
       await context.route('**/*',route=>{const url=route.request().url();if(url.startsWith(base+'/')||/^(data:|blob:)/.test(url))return route.continue();errors.push('External request: '+url);return route.abort();});
       await tvBridge(context,config,language);
       const tv=await context.newPage();tv.on('pageerror',error=>errors.push(error.message));tv.on('response',response=>{if(response.status()>=400)errors.push(response.status()+' '+response.url());});
+      tv.on('console',message=>{if(message.type()==='error'&&/THREE|WebGL|shader|GL_INVALID/i.test(message.text()))errors.push(message.text());});
       await tv.goto(base+'/tv.html');await awaitPhase(tv,config,'title');await visiblePixels(tv);
       assert.equal(await tv.locator('#game-loading').isHidden(),true);
       await tv.screenshot({path:resolve(config.output,kind+'-title'+suffix+'.png')});
@@ -674,6 +747,7 @@ export async function runCaptureTests({kind}) {
       for(const [width,height]of [[720,480],[960,540],[1280,720],[1920,1080]]){await resizeGame(tv,width,height);await visiblePixels(tv);}
       await resizeGame(tv,1280,720);await tv.evaluate(api=>window[api].suspend(false),config.api);await awaitPhase(tv,config,'playing');
       await tv.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done))));
+      await verifyLiveWebGL(tv);
       await tv.screenshot({path:resolve(config.output,kind+'-tv'+suffix+'.png'),animations:'disabled'});
       if(language==='en-US')assert.doesNotMatch(await phones[0].page.locator('body').innerText(),/[\u3400-\u9fff]/,'English phone UI is translated');
       assert.equal(await phones[0].page.locator('#joystick').isHidden(),true);
@@ -785,7 +859,7 @@ async function islandNormalPlay(tv,phones,config) {
   await dragControl(phones[0].page,120,0);await dragControl(phones[1].page,-120,0);
   await tv.waitForFunction(({api,positions})=>{const p=window[api].game.players;return p[0].x>positions[0]+.2&&p[1].x<positions[1]-.2;},{api:config.api,positions:initial.map(p=>p.x)});
   await releaseControl(phones[1].page,'joystick-zone',11);
-  await tv.waitForFunction(api=>{const p=window[api].game.players[0];return Math.hypot(p.x-13.4,p.y-10.3)<1.25;},config.api,{timeout:3000});
+  await tv.waitForFunction(api=>{const p=window[api].game.players[0];return Math.hypot(p.x-13.4,p.y-10.3)<1.25;},config.api,{timeout:30000});
   await releaseControl(phones[0].page,'joystick-zone',11);
   await tapControl(phones[0].page,'button-a');
   await tv.waitForFunction(api=>window[api].game.players[0].menu&&window[api].game.players[0].menu.kind==='craft',config.api);

@@ -78,8 +78,10 @@ test('two players get equal seeded queues but independent board and input state'
 test('one top-out does not end a duel; last top-out produces game over',()=>{
  const g=start(true);g.topOut(g.players[0]);assert.equal(g.phase,'playing');g.topOut(g.players[1]);assert.equal(g.phase,'gameover');release(g);tick(g,1,{start:true});assert.equal(g.phase,'title');
 });
-test('public phone status uses one-based levels and valid counts',()=>{
- const g=start();assert.equal(g.status().players[0].level,1);assert.equal(g.status().stage,1);assert.equal(g.status().players[0].cleared,0);assert.equal(g.status().players[0].alive,true);assert.equal(g.status().players[1].joined,false);
+test('phone status uses the same zero-based classic level as the game screen',()=>{
+ const g=start();assert.equal(g.status().players[0].level,0);assert.equal(g.status().stage,0);assert.equal(g.status().players[0].cleared,0);assert.equal(g.status().players[0].alive,true);assert.equal(g.status().players[1].joined,false);
+ g.players[0].level=3;g.players[1].level=8;
+ assert.equal(g.status().stage,3);assert.equal(g.status().players[0].level,3);assert.equal(g.status().players[1].level,8);
 });
 
 test('duel pauses both fields when either active player disconnects',()=>{

@@ -39,17 +39,17 @@
     ["#203774","#638bfc","#d2e2ff","#3555b1"],
   ];
 
-  // Independently chosen night palettes. Classic Magic Jewelry advances its
-  // scene palette after a magic column resolves, cycling through eight stages.
+  // Original screen structure: dark sky, vivid cloud ribbons, torch-bearing
+  // statue and the bright framed well. Stage hues are independently redrawn.
   const SCENES = [
-    {sky:'#080e26',horizon:'#111b38',water:'#1a2341',well:'#0b132a',grid:'#0d162e',rim:'#9a824f'},
-    {sky:'#10102b',horizon:'#241c40',water:'#332440',well:'#151329',grid:'#19162f',rim:'#b69ac9'},
-    {sky:'#071e28',horizon:'#103440',water:'#174649',well:'#091d27',grid:'#0d222e',rim:'#77c3b8'},
-    {sky:'#201023',horizon:'#38203b',water:'#482c40',well:'#201325',grid:'#25182b',rim:'#d198b2'},
-    {sky:'#101d32',horizon:'#21334d',water:'#294656',well:'#101b2c',grid:'#142133',rim:'#90bed8'},
-    {sky:'#251b1b',horizon:'#3b2b2b',water:'#473431',well:'#211a20',grid:'#281f25',rim:'#d7ad7d'},
-    {sky:'#141c24',horizon:'#26382f',water:'#304239',well:'#101d22',grid:'#15242a',rim:'#a7c98d'},
-    {sky:'#1c132e',horizon:'#302445',water:'#3f3453',well:'#1c1630',grid:'#231c38',rim:'#d1b8ee'},
+    {sky:'#000000',well:'#000000',grid:'#a85000',rim:'#f85898',light:'#f8b800',body:'#f87800',shade:'#e40058',edge:'#780088',cloud:'#f87800'},
+    {sky:'#04000a',well:'#000000',grid:'#6840a0',rim:'#b878f8',light:'#f8d878',body:'#c878e8',shade:'#7838b8',edge:'#401060',cloud:'#c878e8'},
+    {sky:'#000806',well:'#000000',grid:'#008848',rim:'#58d898',light:'#e0f878',body:'#58b880',shade:'#008878',edge:'#004860',cloud:'#58d898'},
+    {sky:'#080004',well:'#000000',grid:'#c03868',rim:'#f8b8d8',light:'#f8d878',body:'#f87898',shade:'#c01868',edge:'#681848',cloud:'#f87898'},
+    {sky:'#000408',well:'#000000',grid:'#1858a0',rim:'#78b8f8',light:'#d8f8f8',body:'#58a8e8',shade:'#3858c8',edge:'#182878',cloud:'#78b8f8'},
+    {sky:'#080400',well:'#000000',grid:'#a87018',rim:'#f8d878',light:'#f8f8b8',body:'#d89838',shade:'#b85818',edge:'#683800',cloud:'#e8b858'},
+    {sky:'#000804',well:'#000000',grid:'#609820',rim:'#a8d858',light:'#e8f8a8',body:'#98c838',shade:'#388858',edge:'#185838',cloud:'#98d858'},
+    {sky:'#040008',well:'#000000',grid:'#8040a0',rim:'#e8b8f8',light:'#f8d8f8',body:'#b878d8',shade:'#6848a8',edge:'#382060',cloud:'#b898e8'},
   ];
   function scene(level) { return SCENES[Math.max(0, level | 0) % SCENES.length]; }
 
@@ -96,6 +96,10 @@
       const pixel = Math.max(1, Math.floor(size / 10));
       x = Math.floor(x + (size - pixel * 10) / 2);
       y = Math.floor(y + (size - pixel * 10) / 2);
+      if (size>=16) {
+        this.rect(x-1,y-2,12,14,palette[2]);
+        this.rect(x,y-1,10,12,palette[1]);
+      }
       if (glow) this.rect(x - 1, y - 1, pixel * 10 + 2, pixel * 10 + 2, "#fff8da");
       const phase = Math.floor((this.frame || 0) / 7) % 6;
       const key = value + ":" + (value === 7 ? phase : 0) + ":" + !!glow;
@@ -117,55 +121,95 @@
       }
       this.ctx.drawImage(tile, x, y, pixel * 10, pixel * 10);
     }
-    background(frame, level) {
-      const colors = scene(level);
-      this.rect(0, 0, 256, 240, colors.sky);
-      this.rect(0, 84, 256, 82, colors.horizon);
-      this.rect(0, 166, 256, 74, colors.water);
-      for (let i = 0; i < 32; i++) {
-        const x = (i * 71 + 17) % 254, y = (i * 37 + 19) % 157;
-        this.rect(x, y, 1, 1, ((i * 17 + Math.floor(frame / 32)) % 6) ? "#59668b" : "#c7d4ec");
+    polygon(points, color) {
+      // Integer scanlines preserve the native pixel grid without antialiasing.
+      let first=240,last=0;
+      points.forEach(p=>{first=Math.min(first,p[1]);last=Math.max(last,p[1]);});
+      for(let y=Math.floor(first);y<Math.ceil(last);y++){
+        const hits=[];
+        for(let i=0;i<points.length;i++){
+          const a=points[i],b=points[(i+1)%points.length];
+          if((a[1]<=y&&b[1]>y)||(b[1]<=y&&a[1]>y))hits.push(a[0]+(y-a[1])*(b[0]-a[0])/(b[1]-a[1]));
+        }
+        hits.sort((a,b)=>a-b);
+        for(let i=0;i+1<hits.length;i+=2)this.rect(Math.ceil(hits[i]),y,Math.floor(hits[i+1])-Math.ceil(hits[i])+1,1,color);
       }
-      const moon = [5,9,11,13,13,13,13,13,13,13,11,9,5];
-      moon.forEach((width, row) => this.rect(219 + Math.floor((13 - width) / 2), 25 + row, width, 1, "#dcc791"));
-      moon.forEach((width, row) => this.rect(216 + Math.floor((13 - width) / 2), 23 + row, width, 1, colors.sky));
-      // Original city and torch-bearing statue silhouette, recalling the night skyline.
-      for (let i = 0; i < 10; i++) {
-        const x = i * 26 - 4, tall = 16 + (i % 4) * 8;
-        this.rect(x, 194 - tall, 19, tall, "#10172c");
-        this.rect(x + 6, 188 - tall, 7, 6, "#141c33");
-        for (let row = 0; row < 3; row++) for (let col = 0; col < 3; col++)
-          this.rect(x + 3 + col * 5, 199 - tall + row * 9, 2, 3, (i + row + col) % 3 ? "#2c3450" : "#69565a");
+    }
+    statue(colors, x, y, scale) {
+      const rect=(a,b,w,h,color)=>this.rect(x+a*scale,y+b*scale,w*scale,h*scale,color);
+      const poly=(points,color)=>this.polygon(points.map(p=>[x+p[0]*scale,y+p[1]*scale]),color);
+      const edge=colors.edge,shade=colors.shade,body=colors.body,light=colors.light;
+      // The raised torch is on the left of the crowned head, with a full robe
+      // and tablet on the right. No score panel obscures the figure.
+      poly([[1,27],[4,15],[7,23],[10,8],[12,22],[16,17],[15,31]],'#58d854');
+      rect(6,5,2,8,'#3cbcfc');rect(10,1,2,10,'#6888fc');rect(14,10,2,7,'#b8f818');
+      poly([[0,31],[16,31],[13,38],[10,40],[11,47],[6,48],[6,39],[2,37]],edge);
+      rect(2,32,12,3,light);rect(5,36,7,3,body);rect(7,40,3,9,light);
+      poly([[5,43],[12,43],[16,75],[26,87],[37,84],[45,83],[54,93],[58,104],[68,109],[74,127],[84,147],[82,174],[1,174],[5,141],[12,111],[18,97],[10,85]],edge);
+      poly([[7,46],[11,47],[13,76],[24,91],[21,102],[16,97],[11,83]],body);
+      poly([[8,51],[10,52],[12,80],[19,92],[16,94],[11,82]],light);
+      poly([[16,93],[26,89],[35,86],[50,91],[57,102],[50,111],[54,130],[72,148],[80,171],[4,171],[10,146],[14,120]],body);
+      poly([[17,98],[25,95],[29,104],[18,120],[13,143],[6,165],[14,125]],light);
+      poly([[31,104],[37,105],[34,132],[21,163],[15,171],[17,153],[26,127]],shade);
+      poly([[42,105],[49,108],[46,134],[57,165],[64,171],[49,159],[38,136]],shade);
+      poly([[31,116],[35,113],[30,149],[28,170],[23,170],[25,151]],light);
+      poly([[39,120],[41,120],[43,144],[51,171],[46,171],[38,145]],edge);
+      poly([[50,119],[57,121],[63,141],[77,171],[70,170],[58,146]],light);
+      poly([[30,70],[34,65],[44,66],[49,72],[48,85],[42,93],[36,91],[30,82]],edge);
+      poly([[32,72],[36,68],[44,70],[46,76],[44,85],[40,89],[35,86],[33,80]],light);
+      rect(33,76,3,2,edge);rect(41,76,3,2,edge);rect(38,78,2,5,shade);rect(36,85,5,1,shade);
+      poly([[27,70],[30,65],[49,65],[52,71],[46,70],[42,67],[35,67],[31,71]],body);
+      [[23,60,30,66],[27,54,34,65],[35,48,37,65],[44,51,42,65],[54,57,46,66],[58,65,49,69]].forEach(a=>poly([[a[0],a[1]],[a[2],a[3]],[a[2]+2,a[3]+2]],light));
+      poly([[58,109],[69,113],[77,135],[65,145],[56,125]],edge);
+      poly([[59,112],[67,115],[74,133],[66,140],[59,124]],light);
+      for(let n=0;n<5;n++)rect(61+n,118+n*3,7,1,shade);
+      poly([[48,103],[55,104],[62,118],[60,125],[54,120]],body);
+      rect(57,119,7,3,light);
+      // Short broken folds give the woven, high-contrast pixel texture of the
+      // reference silhouette without importing a CHR tile or screenshot.
+      for(let n=0;n<25;n++){
+        const a=14+(n*17)%51,b=114+(n*11)%54;
+        if(a<18&&b<137)continue;
+        rect(a,b,1,3+(n%4),n%3===0?light:shade);
       }
-      this.rect(201, 191, 42, 5, "#3c4158");
-      this.rect(207, 182, 30, 9, "#3b4055");
-      this.rect(211, 159, 23, 23, "#1c3a42");
-      this.rect(214, 140, 17, 24, "#244951");
-      this.rect(217, 128, 11, 15, "#2e5960");
-      this.rect(218, 121, 8, 8, "#477073");
-      this.rect(216, 119, 12, 3, "#477073");
-      this.rect(215, 116, 2, 4, "#477073");
-      this.rect(220, 113, 2, 7, "#477073");
-      this.rect(226, 116, 2, 4, "#477073");
-      this.rect(228, 123, 6, 17, "#315d61");
-      this.rect(232, 109, 4, 18, "#3a686b");
-      this.rect(231, 103, 7, 6, "#547775");
-      this.rect(232, 97, 5, 6, "#c48a4d");
-      this.rect(233, 94, 3, 5, "#f0c778");
-      this.rect(212, 138, 5, 15, "#49676c");
-      this.rect(216, 153, 3, 25, "#3a575e");
-      this.rect(224, 150, 2, 30, "#142e37");
-      this.rect(0, 195, 256, 2, "#6b5361");
-      this.rect(0, 197, 256, 43, "#101a34");
-      for (let i = 0; i < 18; i++) this.rect((i * 37 + 9) % 240, 200 + i * 2, 7 + (i % 4) * 4, 1, "#29324c");
+      rect(2,173,82,2,shade);
+    }
+    background(frame, level, duel) {
+      const colors=scene(level);
+      this.rect(0,0,256,240,colors.sky);
+      // The original skyline has swept cloud ribbons, not a generic star field.
+      for(let band=0;band<6;band++)for(let n=0;n<9;n++){
+        const x=(n*31+band*17)%270-12,y=18+band*23+((n*7)%13);
+        for(let k=0;k<10;k++){
+          const dy=Math.floor(Math.sin(k*.33)*5);
+          this.rect(x+k*2,y+dy,2,1,colors.cloud);
+          this.rect(x+k*2,y+dy+2,2,1,colors.light);
+        }
+        this.rect(x+18,y+1,1,3,colors.cloud);
+        this.rect(x+20,y,1,2,colors.light);
+      }
+      // Leave the original upper-right counters legible against the sky.
+      // This is empty scenery, not the large opaque card used by the old UI.
+      if(duel)this.rect(0,0,256,58,colors.sky);
+      else this.rect(179,0,77,95,colors.sky);
+      for(let i=0;i<5;i++){
+        const x=i*8+4,tall=[41,58,51,86,42][i];
+        this.rect(x,232-tall,7,tall,'#604878');this.rect(x,232-tall,7,1,'#d8b8f8');
+        for(let row=0;row<Math.floor(tall/4);row++)for(let col=0;col<2;col++)this.rect(x+1+col*3,234-tall+row*4,2,1,'#b898d8');
+      }
+      this.statue(colors,duel?101:159,duel?112:56,duel ? 0.64 : 1);
     }
     well(player, x, y, cell, frame) {
       const w = 6 * cell, h = 13 * cell;
       const colors = scene(player.speedLevel);
-      this.panel(x - 4, y - 4, w + 8, h + 8, colors.rim);
+      this.rect(x-6,y-6,w+12,h+12,colors.rim);
+      this.rect(x-4,y-4,w+8,h+8,"#fcfcfc");
+      this.rect(x-3,y-3,w+6,h+6,colors.light);
+      this.rect(x-1,y-1,w+2,h+2,colors.well);
       this.ctx.save(); this.ctx.beginPath(); this.ctx.rect(x, y, w, h); this.ctx.clip();
       for (let row = 0; row < 13; row++) for (let col = 0; col < 6; col++) {
-        this.rect(x + col * cell, y + row * cell, cell, cell, (row + col) % 2 ? colors.well : colors.grid);
+        this.rect(x + col * cell, y + row * cell, cell, cell, colors.well);
+        this.rect(x + col * cell, y + (row+1) * cell-1, cell-1, 1, colors.grid);
         const value = player.board && player.board[row] ? player.board[row][col] : 0;
         let glow = false;
         if (player.clearCells && frame % 10 < 5)
@@ -201,50 +245,45 @@
       for (let i = 0; i < 7; i++) this.gem(i + 1, 35 + i * 27, 111 + ((Math.floor(frame / 24) + i) % 2), 20, false);
       this.text((game.selectedPlayers === 2 ? "  " : "> ") + "1 PLAYER", 128, 150, game.selectedPlayers === 2 ? "#929bb5" : "#fff1bf", 1, "center");
       this.text((game.selectedPlayers === 2 ? "> " : "  ") + "2 PLAYERS", 128, 166, game.selectedPlayers === 2 ? "#fff1bf" : "#929bb5", 1, "center");
-      this.text("LEVEL " + String((game.titleLevel || 0) + 1).padStart(2, "0"), 128, 185, "#9baac8", 1, "center");
+      this.text("LEVEL " + String(game.titleLevel || 0).padStart(3, "0"), 128, 185, "#9baac8", 1, "center");
       if (Math.floor(frame / 35) % 2 === 0) this.text("PRESS START", 128, 205, "#f1d684", 1, "center");
       this.text("SELECT MODE  START BEGIN", 128, 222, "#7d8ba9", 1, "center");
     }
     single(game) {
-      const player = game.players[0];
-      this.text("MAGIC JEWELRY", 128, 9, "#efe0b4", 2, "center");
-      this.text("TOP " + String(Math.min(99999999, Math.max(game.highScore || 0, player.score || 0))).padStart(8, "0"), 128, 32, "#91a0bd", 1, "center");
-      this.well(player, 32, 53, 12, game.frame || 0);
-      this.panel(126, 49, 105, 164, "#70688d");
-      this.text("NEXT", 137, 60, "#cabcd9");
-      const next = player.next || [1, 2, 3];
-      for (let i = 0; i < 3; i++) this.gem(next[i], 200, 56 + 12 * i, 12, false);
-      this.rect(135, 97, 87, 1, "#34344b");
-      this.text("SCORE", 137, 106, "#91a0bd");
-      this.text(String(Math.min(99999999, player.score || 0)).padStart(8, "0"), 137, 119, "#fff3ce");
-      this.text("LEVEL", 137, 141, "#91a0bd");
-      this.text(String((player.level || 0) + 1).padStart(2, "0"), 218, 141, "#d2e1ff", 1, "right");
-      this.text("GEMS", 137, 158, "#91a0bd");
-      this.text(String(player.cleared || 0).padStart(4, "0"), 218, 158, "#92e9c0", 1, "right");
-      this.text("CHAIN", 137, 175, "#91a0bd");
-      this.text(String(player.chain || 0), 218, 175, "#efb4ef", 1, "right");
-      const magic = player.active && player.active.magic;
-      this.text(magic ? "MAGIC COLUMN!" : player.levelCleared >= 70 ? "MAGIC READY" : "NEXT MAGIC " + (70-(player.levelCleared || 0)), 178, 192, magic ? "#fff0b1" : "#92b9cf", 1, "center");
-      this.rect(137,204,81,3,"#202743");
-      this.rect(137,204,Math.min(81,81*(player.levelCleared || 0)/70),3,"#b99ce8");
-      this.text("A/B CYCLE   DOWN: SOFT DROP", 128, 222, "#99a6c0", 1, "center");
+      const player=game.players[0],next=player.next||[1,2,3];
+      this.well(player,52,16,16,game.frame||0);
+      this.text("NEXT",26,6,"#3cbcfc",1,"center");
+      for(let i=0;i<3;i++)this.gem(next[i],18,18+i*16,16,false);
+      this.text("SCORE",208,12,"#3cbcfc",1,"center");
+      this.text(String(Math.min(99999999,player.score||0)).padStart(8,"0"),208,23,"#3cbcfc",1,"center");
+      this.text("JEWELRY",208,42,"#f85898",1,"center");
+      this.text(String(Math.min(999999,player.cleared||0)).padStart(6,"0"),208,53,"#f8b800",1,"center");
+      this.text("LEVEL",208,72,"#3cbcfc",1,"center");
+      this.text(String(player.level||0).padStart(3,"0"),208,83,"#b8f818",1,"center");
+      const magic=player.active&&player.active.magic;
+      if(magic||player.levelCleared>=70){
+        this.rect(160,96,92,10,"#000000");
+        this.text(magic?"MAGIC COLUMN!":"MAGIC READY",207,98,"#fff0b1",1,"center");
+      }
     }
     double(game) {
       this.text("JEWELRY DUEL", 128, 10, "#efe0b4", 2, "center");
       this.text("SAME GEMS - BEST SCORE", 128, 31, "#91a0bd", 1, "center");
       for (let index = 0; index < 2; index++) {
-        const p = game.players[index], left = index ? 164 : 28;
-        this.text("P" + (index + 1) + "  LV" + String((p.level || 0) + 1).padStart(2, "0"), left + 30, 48, index ? "#f0bedc" : "#e9d68f", 1, "center");
+        const p = game.players[index], left = index ? 176 : 20;
+        this.text("P" + (index + 1) + "  LV" + String(p.level || 0).padStart(3, "0"), left + 30, 48, index ? "#f0bedc" : "#e9d68f", 1, "center");
         this.well(p, left, 65, 10, game.frame || 0);
         this.rect(left - 4, 199, 68, 30, "#080d21");
         this.rect(left - 4, 199, 68, 1, "#34344b");
         this.text(String(Math.min(9999999, p.score || 0)).padStart(7, "0"), left + 30, 204, "#e5e8f2", 1, "center");
         this.text("GEMS " + String(p.cleared || 0).padStart(3, "0"), left + 30, 219, "#8fa4bb", 1, "center");
-        const nx = index ? 146 : 98;
+        const nx = index ? 158 : 88;
+        this.rect(nx,65,10,11,"#000000");
         this.text("N", nx + 5, 67, "#8a93ab", 1, "center");
         for (let n = 0; n < 3; n++) this.gem((p.next || [1, 2, 3])[n], nx, 80 + 11 * n, 10, false);
       }
-      this.text("VS", 128, 135, "#665976", 1, "center");
+      this.rect(118,113,20,13,"#000000");
+      this.text("VS",128,116,"#f8b800",1,"center");
     }
     overlay(title, detail) {
       this.rect(17, 96, 222, 50, "#080d21");
@@ -260,14 +299,14 @@
       // In a duel, each well follows its own completed magic stages. Keep the
       // shared skyline at the opening palette so P1 cannot recolor P2's field.
       const stage = game.phase !== "title" && game.selectedPlayers !== 2 ? game.players[0].speedLevel : 0;
-      this.background(game.frame || 0, stage);
+      this.background(game.frame || 0, stage,game.phase!=="title"&&game.selectedPlayers===2);
       if (game.phase === "title") this.title(game);
       else {
         if (game.selectedPlayers === 2) this.double(game); else this.single(game);
         if (game.phase === "paused") this.overlay("PAUSED", game.autoPaused ? "WAIT FOR CONTROLLERS" : "START RESUME / SELECT MUSIC");
         else if (game.phase === "gameover") this.overlay("GAME OVER", "START TO RETURN TO TITLE");
       }
-      this.text(game.muted ? "SOUND OFF" : "SOUND ON", 252, 231, "#8a98b4", 1, "right");
+      if(game.phase==="title"||game.selectedPlayers===2)this.text(game.muted?"SOUND OFF":"SOUND ON",252,231,"#8a98b4",1,"right");
     }
     dispose() { this.disposed = true; this.tiles = Object.create(null); }
   }

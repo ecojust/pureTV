@@ -12,6 +12,16 @@ Version **0.5.1** supports Android 8.0+ TVs. Package: `com.ecojust.tetristv`. Th
 The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
+<!-- visual-release:start -->
+## 0.5.2 visual update (release pending)
+
+The source version is **0.5.2**; full-group acceptance, Android CI and the signed release are not yet complete. Existing downloads still point to the published **0.5.1** package. This update keeps the current pureTV release certificate. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for confirmed changes, validation results and pending work.
+
+The gray maze background and classic single-player layout were redrawn for Nintendo NES Tetris: statistics on the left, field in the center, and score/NEXT/LEVEL on the right, with corresponding block styles and proportional scaling. The two-player extension retains separate fields; its top metadata no longer touches the frame. This is independent artwork, without a claim of pixel-exact reproduction.
+
+See the [reference notes](docs/reference.md) for the implementation scope.
+<!-- visual-release:end -->
+
 ## 0.5.1 gameplay review
 
 Corrects soft-drop timing, release/repress between pieces, shift/rotation ordering and line-clear animation cadence.

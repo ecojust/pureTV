@@ -1,8 +1,8 @@
 # 悠岛生活 TV · Cozy Island TV — 玩法与范围
 
-这是参考《集合啦！动物森友会》所代表的轻松岛屿生活、收集、邻里交往与家园布置玩法，独立创作的有限内容小游戏。地图、米拉和皮普两位居民、人物造型、家具、Canvas 几何插画与 WebAudio 音乐均为原创。没有使用商业原作代码、ROM、提取图像、音频或角色，也不宣称商业原作内容或体验的完整移植。
+这是参考《集合啦！动物森友会》的轻松岛屿生活、收集、邻里交往与家园布置，以及圆润卡通 3D 美术方向，独立创作的有限内容小游戏。地图、米拉和皮普两位居民、人物造型、家具、程序生成的三维模型与材质、WebAudio 音乐均为原创。没有使用商业原作代码、ROM、提取模型、图像、音频或角色，也不宣称商业原作内容或体验的完整移植。
 
-This is a small original game inspired by the relaxing collection, neighbor interactions and home decoration associated with Animal Crossing: New Horizons. The island, Mira and Pip, avatars, furniture, Canvas illustrations and synthesized soundtrack are original. It does not include the commercial game's code, ROMs, extracted artwork/audio or characters, and is not a complete port of that game.
+This is a small original game inspired by the relaxing collection, neighbor interactions, home decoration and rounded cartoon 3D art direction of Animal Crossing: New Horizons. The island, Mira and Pip, avatars, furniture, procedural three-dimensional models/materials and synthesized soundtrack are original. It does not include the commercial game's code, ROMs, extracted models/artwork/audio or characters, and is not a complete port of that game.
 
 ## 首次游玩 / First visit
 
@@ -22,7 +22,7 @@ START pauses/resumes. SELECT toggles music while manually paused; the bag and si
 
 ## 内容与经济 / Content and economy
 
-- 一座固定等距小岛、一个共享房屋内部、商店、制作台、两位原创居民。
+- 一座固定小岛、一个共享房屋内部、商店、制作台、两位原创居民。支持 WebGL 1 时使用真实三维近景；旧电视可回退到原有整岛 Canvas 兼容画面。
 - 五种可记录的鱼：银沙丁鱼、海鲈鱼全天；珊瑚蝶鱼 06:00–18:00；星点鳐 18:00–06:00；月光鱼 21:00–04:00。B → 鱼类图鉴可查看捕获次数、最大尺寸及出没时间，首次发现每种奖励 10 金币。两人共享图鉴，同一种首次奖励只发放一次；背包满时不能捕获或登记。背包、出售和居民交付仍统一按海鱼计数。
 - 三种真实场景昆虫：西侧花地粉蝶 06:00–18:00、北侧林地翠叶甲虫全天、南侧晚星萤火虫 18:00–06:00。昆虫会在各自栖息地缓慢移动；快步靠近 1.65 格内会惊飞，举网后以正常 32% 速度移动可安全接近。松 A 挥网捕获面前约 99° 扇形、0.15–1.45 格范围内最近的一只，挥空会惊动 2 格内的昆虫。惊飞后 30 秒、捕获后 45 秒重新出现；出没时间仍须符合昼夜窗口。背包满时不捕获、不登记也不消耗昆虫。
 - 昆虫共享实体和图鉴，两人同一帧争捕只会成功一次。每种首次发现奖励共享 10 金币，重复捕获只增加图鉴计数；粉蝶／甲虫／萤火虫每只可分别出售 14／18／22 金币。举网、挥网、惊飞和夜间发光都有画面反馈。打开背包、切换工具或进入断线／手动暂停会取消举网，恢复时不会自动挥网。
@@ -38,7 +38,15 @@ The finite release contains one island, a shared home interior, market, workbenc
 
 两人可以同时移动、采集、钓鱼和操作各自菜单。背包、工具、消息和菜单分别归属玩家；金币、鱼类图鉴、已交任务、家具摆设和房屋升级共享。所有经济操作按同一模拟步骤顺序检查并立即保存，不能通过同时购买超支或重复领取奖励。共享摆设可以由任一玩家收起到自己的背包。物品菜单不会取消另一人的菜单。
 
-整座小岛始终在电视视野中。进入房屋的玩家获得对应的独立房间视图，另一人可以继续在岛上行走；两人都在屋内时各有标识清楚的房间视图，共享家具与房间人物位置。这里没有远程联网或分岛模式。
+三维画面采用人物附近的生活视角，人物明显大于原先整岛总览中的图标。镜头跟随人物平滑移动；方位保持固定，摇杆的屏幕方向含义不变。两人在同一地点且相近时共享近景，距离拉开或分别在屋内、屋外时自动左右分屏，镜头不会限制另一人的移动；重新靠近后恢复共享视角。分屏切换有距离缓冲，避免在边界反复跳动。屋内使用有厚度木地板、可见背墙和窗帘的开放前墙视图，房间人物与家具仍共享。建筑和树冠挡住近处人物时减淡遮挡，屋后合法位置仍可辨认人物。这里没有远程联网或分岛模式。
+
+The 3D camera follows residents at a nearby life-simulation scale, with a fixed azimuth that preserves screen-relative stick directions. Nearby residents share a view; distance or different indoor/outdoor locations switches to independent left/right views, with hysteresis when rejoining. Neither camera restricts movement. The shared interior has a cutaway front, solid floorboards, walls and curtains. Nearby obstructing tree crowns/buildings fade so residents remain readable behind them. The legacy compatible renderer retains its whole-island view and room insets.
+
+正常显示由本地 Three.js r124 在明确创建的 WebGL 1 上渲染：圆润的人物头部与躯干、摆动四肢、实体树冠／树干／果实、带厚度屋顶与窗框的建筑、海岸／码头、家具、鱼竿浮标和捕虫网均为三维场景对象，环境光、方向光与阴影作用于其表面。材质区分草地、沙滩、木材、衣服和海水；昼夜改变光照、海色及窗灯。离屏 WebGL 画布在同帧合成到现有高分辨率电视画布，菜单和提示继续使用清晰的二维字体。不是将一张概念图、截图或平面插画当作场景背景。
+
+无 WebGL 或图形上下文丢失时，保留可玩的 Canvas 回退，并明确显示「兼容画面 / Compatibility display」；上下文成功恢复后返回三维画面。离开页面释放几何体、贴图、材质与上下文。小花瓣用较低细分，近处人物头和树冠保留圆润轮廓；静态家具模板和所有已摆家具按材质合并，不为每一片花瓣单独提交绘制。更换摆放预览复用几何体，替换场景批次释放旧批次。
+
+The local Three.js r124 renderer explicitly requests WebGL 1. Rounded residents, articulated limbs, trees and fruit, roof/window volumes, coast/pier, furniture, bobbers and nets are actual lit 3D objects. A same-frame offscreen WebGL composite keeps the existing readable Canvas menus and HUD at the display resolution. Unavailable/lost graphics contexts show a labeled playable Canvas fallback; successful context restoration returns to 3D. Geometry, materials, textures and the context are released on exit. Small petals use fewer segments, and furniture is batched by material without requiring instancing extensions. This is a compact original scene, not the commercial game's model/animation library, terrain editor, rolling-world projection, full lighting system or content catalog.
 
 Native `CozyIslandHost` supplies the language, room information, controller snapshots and state publication. `CozyIslandTV` exposes `key`, `updateRoom`, `suspend`, `game` and `renderer`. Published state stays below 4,096 bytes, with both joined participants marked active. Each player has separate inventory, tool, messages and menus; coins, the fish journal, resident progress, placed furniture and home upgrades are shared. A participant disconnect pauses simulation, reconnecting resumes automatic pause, and manual pause persists. Each player's controls remain independent, including when one is indoors and the other is outside.
 
@@ -55,3 +63,5 @@ Saves use versioned localStorage on the stable native origin. Economic transacti
 独立审查另完成了从新档出发、仅以 `step()` 摇杆与按键输入的完整路径：真实行走和采集、两次钓鱼、五项任务、屋内摆放纪念像、两次房屋升级和保存重载。该审查没有直接设置背包、金币或人物位置，使用几何寻路规划输入，完成用了约 447 秒模拟时间；它证明模型路径可达与规则可完成，不代表人类游玩时长或电视实机体验。
 
 Browser tests exercise the actual packaged page with a simulated native room bridge, two separate phone pages, responsive TV layouts, menus, movement, fishing/crafting/placement fixtures, real page reload persistence, independent player status during renderer failure, suspension and cleanup. Chromium screenshots are actual Canvas rendering; they are not photographs of a TV. Browser fixture tests seed selected economic states to reach rare conditions and do not claim a full browser playthrough. Physical Android TV, hardware remote, and real-phone/LAN gameplay remain separate device checks.
+
+`tests/rendering.mjs` 另外验证真实 WebGL 1 绘制调用、近景人物比例、实际按键行走和镜头跟随、同屏／分屏及室内切换、家具摆放预览、屋后遮挡、昼夜画面、上下文丢失／恢复、无 WebGL 启动及页面退出清理；还以 60 个花盆及反复切换预览检查绘制量与几何／贴图复用。测试截图来自实际浏览器三维渲染，家具和位置夹具仅用于隔离视觉状态，不代表完整采集路线。CI 使用 SwiftShader 软件 WebGL，能验证渲染与生命周期，不代表低端 Android TV 的 GPU 帧率；真实电视性能和不同机型驱动仍需实机验证。

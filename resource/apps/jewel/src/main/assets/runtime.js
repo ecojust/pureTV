@@ -190,7 +190,7 @@
                 "Connected · Choose players at title",
               )
             : tr("等级 ", "LEVEL ") +
-              (Math.max(0, player.level) + 1) +
+              String(Math.max(0, player.level)).padStart(3, "0") +
               " · " +
               String(Math.max(0, player.score)).padStart(6, "0");
       }

@@ -50,6 +50,30 @@
     "*": [0, 21, 14, 31, 14, 21, 0],
     "=": [0, 0, 31, 0, 31, 0, 0],
   };
+  // Independent angular 8px HUD; full original HUD placement remains a reference gap.
+  var HUD_FONT = {
+    "0": [126, 195, 195, 195, 195, 195, 126, 0],
+    "1": [24, 56, 120, 24, 24, 24, 126, 0],
+    "2": [126, 195, 3, 14, 56, 224, 255, 0],
+    "3": [254, 3, 3, 62, 3, 3, 254, 0],
+    "4": [198, 198, 198, 254, 6, 6, 6, 0],
+    "5": [255, 192, 192, 254, 3, 3, 254, 0],
+    "6": [126, 192, 192, 254, 195, 195, 126, 0],
+    "7": [255, 3, 6, 12, 24, 48, 48, 0],
+    "8": [126, 195, 195, 126, 195, 195, 126, 0],
+    "9": [126, 195, 195, 127, 3, 3, 126, 0],
+    "P": [254, 195, 195, 254, 192, 192, 192, 0],
+    "S": [127, 192, 192, 126, 3, 3, 254, 0],
+    "T": [255, 24, 24, 24, 24, 24, 24, 0],
+    "A": [60, 102, 195, 195, 255, 195, 195, 0],
+    "G": [126, 195, 192, 207, 195, 195, 126, 0],
+    "E": [255, 192, 192, 252, 192, 192, 255, 0],
+    "L": [192, 192, 192, 192, 192, 192, 255, 0],
+    "I": [126, 24, 24, 24, 24, 24, 126, 0],
+    "F": [255, 192, 192, 252, 192, 192, 192, 0],
+    "M": [195, 231, 255, 219, 195, 195, 195, 0],
+    " ": [0, 0, 0, 0, 0, 0, 0, 0]
+  };
   var PALETTES = [
     ["#080a19", "#2d2440", "#66517a", "#ad8caa", "#edc686"],
     ["#08171c", "#153d48", "#287685", "#54afba", "#b6e3ce"],
@@ -357,6 +381,16 @@
       "center",
     );
   };
+  BombJackRenderer.prototype.hudText = function (value, x, y, color) {
+    var text = String(value), c = this.ctx;
+    c.fillStyle = color || "#fff4da";
+    for (var i = 0; i < text.length; i++) {
+      var glyph = HUD_FONT[text[i]] || HUD_FONT[" "];
+      for (var row = 0; row < 8; row++)
+        for (var col = 0; col < 8; col++)
+          if (glyph[row] & (128 >> col)) c.fillRect(x + i * 8 + col, y + row, 1, 1);
+    }
+  };
   BombJackRenderer.prototype.draw = function (g) {
     if (this.disposed) return;
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -367,23 +401,13 @@
     }
     this.world(g);
     var p = g.player;
-    this.rect(0, 0, 256, 31, "#0c1020");
-    this.text(
-      "P" + p.id + " " + String(p.score).padStart(6, "0"),
-      5,
-      5,
-      "#efcf87",
-    );
-    this.text("STAGE " + p.stage, 157, 5, "#f4d9ae");
-    this.text("LIFE " + p.lives, 5, 18, "#dba0a4");
-    this.text("M " + p.mightyCoins, 72, 18, "#86b8eb");
-    this.text(
-      "TIME " + Math.ceil(p.time),
-      152,
-      18,
-      p.time < 15 ? "#ff745f" : "#b6c8da",
-    );
-    this.rect(0, 30, 256, 2, "#b18a5c");
+    this.rect(0, 0, 256, 32, "#0c1020");
+    this.hudText("P" + p.id, 8, 8);
+    this.hudText(String(p.score).padStart(6, "0"), 32, 8);
+    this.hudText("STAGE" + p.stage, 184, 8);
+    this.hudText("LIFE" + p.lives, 8, 24);
+    this.hudText("M" + p.mightyCoins, 88, 24, "#91b8f5");
+    this.hudText("TIME" + Math.ceil(p.time), 168, 24, p.time < 15 ? "#f66c47" : "#fff4da");
     if (g.messageTicks > 0) {
       this.rect(4, 220, 248, 16, "#0b1026");
       this.text(g.message.substring(0, 40), 128, 225, "#ead3a3", 1, "center");
