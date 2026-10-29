@@ -1,7 +1,7 @@
 # 炸弹杰克 TV
 
 <!-- apk-resource:start -->
-[下载 APK](bomb-jack-0.5.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+[下载 APK](bomb-jack-0.5.1.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
 
 此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
 <!-- apk-resource:end -->
