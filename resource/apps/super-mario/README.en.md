@@ -7,7 +7,7 @@ An independent recreation inspired by Super Mario Bros. 1: eight worlds and 32 s
 Version **0.5.1** requires Android 8.0 or later. Package: `com.ecojust.supermariotv`. The TV displays the game and a room QR code; phones act as controllers.
 
 <!-- apk-resource:start -->
-[Download APK](super-mario-0.5.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
+[Download APK](super-mario-0.5.1.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
 The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
