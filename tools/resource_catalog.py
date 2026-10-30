@@ -94,9 +94,22 @@ def catalog_directories(root):
             if directory.is_dir() and not directory.name.startswith('.'):
                 yield directory
 
-def verify_catalog(root,tools):
+def verify_catalog(root,tools,*,allow_unpublished_used_car=False):
+    """Verify every published resource; the build may bootstrap one source-only app.
+
+    Generated APKs under build/ are build inputs, not catalog resources. Only the
+    exact new app directory can lack both metadata and top-level resource APKs.
+    Publication callers keep the strict default, including the first release.
+    """
     entries=[]
     for directory in catalog_directories(root):
+        metadata=directory/'resource.json'
+        if (allow_unpublished_used_car
+                and directory==root/'resource/apps/used-car-racing'
+                and not directory.is_symlink()
+                and not metadata.exists() and not metadata.is_symlink()
+                and not any(path.suffix.lower()=='.apk' for path in directory.iterdir())):
+            continue
         info=json.loads(child(directory,'resource.json').read_text())
         assert info['kind']==('launcher' if directory.parent.name=='launcher' else 'app') and info['name'] and info['author']
         assert isinstance(info['supportsLayoutJson'],bool)

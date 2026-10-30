@@ -1,6 +1,7 @@
 """Certificate migration must not weaken verification of old or unrelated APKs."""
 import hashlib
 import json
+import shutil
 import sys
 import tempfile
 import unittest
@@ -152,6 +153,108 @@ class ReleaseCertificatesTest(unittest.TestCase):
                 for path in folder.iterdir():
                     path.unlink()
                 folder.rmdir()
+
+    def test_source_only_used_car_requires_build_opt_in_and_keeps_existing_checks(self):
+        identity = self.identity('com.ecojust.tanktv', 7, '0.5.0', self.new)
+        tank = self.fixture('tank', identity)
+        new_app = self.root / 'resource/apps/used-car-racing'
+        new_app.mkdir()
+        generated = new_app / 'build/outputs/apk/release/used-car-racing-release-unsigned.apk'
+        generated.parent.mkdir(parents=True)
+        generated.write_bytes(b'fresh unsigned build')
+        with patch.object(resource_catalog, 'apk_info', return_value=identity) as inspect:
+            with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+                resource_catalog.verify_catalog(self.root, Path('/unused'))
+            inspect.reset_mock()
+            entries = resource_catalog.verify_catalog(
+                self.root, Path('/unused'), allow_unpublished_used_car=True)
+            self.assertEqual([entry['packageName'] for entry in entries], ['com.ecojust.tanktv'])
+            inspect.assert_called_once_with(tank / 'game.apk', Path('/unused'))
+            inspect.return_value = dict(identity, certificateSha256=self.old)
+            with self.assertRaisesRegex(AssertionError, 'certificateSha256 mismatch'):
+                resource_catalog.verify_catalog(
+                    self.root, Path('/unused'), allow_unpublished_used_car=True)
+
+    def test_build_bootstrap_never_skips_old_similar_or_launcher_directories(self):
+        for relative in ('apps/tank', 'apps/used-car-racing-copy', 'launcher/used-car-racing'):
+            with self.subTest(relative=relative):
+                folder = self.root / 'resource' / relative
+                folder.mkdir()
+                with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+                    resource_catalog.verify_catalog(
+                        self.root, Path('/unused'), allow_unpublished_used_car=True)
+                folder.rmdir()
+
+    def test_build_bootstrap_rejects_any_top_level_resource_apk_without_metadata(self):
+        folder = self.root / 'resource/apps/used-car-racing'
+        folder.mkdir()
+        for name, kind in (('game.apk', 'file'), ('game.APK', 'file'),
+                           ('game.apk', 'broken-link'), ('game.apk', 'directory')):
+            with self.subTest(name=name, kind=kind):
+                candidate = folder / name
+                if kind == 'file':
+                    candidate.write_bytes(b'')
+                elif kind == 'broken-link':
+                    candidate.symlink_to(folder / 'missing-target')
+                else:
+                    candidate.mkdir()
+                with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+                    resource_catalog.verify_catalog(
+                        self.root, Path('/unused'), allow_unpublished_used_car=True)
+                candidate.rmdir() if kind == 'directory' else candidate.unlink()
+
+    def test_build_bootstrap_rejects_invalid_or_incomplete_metadata(self):
+        folder = self.root / 'resource/apps/used-car-racing'
+        folder.mkdir()
+        metadata = folder / 'resource.json'
+        metadata.symlink_to(folder / 'missing-target')
+        with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+            resource_catalog.verify_catalog(
+                self.root, Path('/unused'), allow_unpublished_used_car=True)
+        metadata.unlink()
+        metadata.write_text('not JSON')
+        with self.assertRaises(json.JSONDecodeError):
+            resource_catalog.verify_catalog(
+                self.root, Path('/unused'), allow_unpublished_used_car=True)
+        shutil.rmtree(folder)
+        identity = self.identity('com.ecojust.usedcartv', 1, '0.1.0', self.new)
+        folder = self.fixture('used-car-racing', identity)
+        (folder / 'game.apk').unlink()
+        with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+            resource_catalog.verify_catalog(
+                self.root, Path('/unused'), allow_unpublished_used_car=True)
+
+    def test_build_bootstrap_does_not_skip_published_used_car_or_its_certificate(self):
+        identity = self.identity('com.ecojust.usedcartv', 1, '0.1.0', self.new)
+        folder = self.fixture('used-car-racing', identity)
+        with patch.object(resource_catalog, 'apk_info', return_value=identity) as inspect:
+            entries = resource_catalog.verify_catalog(
+                self.root, Path('/unused'), allow_unpublished_used_car=True)
+            self.assertEqual(entries[0]['packageName'], 'com.ecojust.usedcartv')
+            inspect.assert_called_once_with(folder / 'game.apk', Path('/unused'))
+        old_identity = dict(identity, certificateSha256=self.old)
+        metadata_path = folder / 'resource.json'
+        metadata = json.loads(metadata_path.read_text())
+        metadata['certificateSha256'] = self.old
+        metadata_path.write_text(json.dumps(metadata))
+        with patch.object(resource_catalog, 'apk_info', return_value=old_identity):
+            with self.assertRaisesRegex(AssertionError, 'unexpected release signing certificate'):
+                resource_catalog.verify_catalog(
+                    self.root, Path('/unused'), allow_unpublished_used_car=True)
+
+    def test_build_bootstrap_does_not_skip_a_symlinked_app_directory(self):
+        target = self.root / 'outside'
+        target.mkdir()
+        (self.root / 'resource/apps/used-car-racing').symlink_to(target, target_is_directory=True)
+        with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+            resource_catalog.verify_catalog(
+                self.root, Path('/unused'), allow_unpublished_used_car=True)
+
+    def test_build_bootstrap_still_requires_a_published_catalog_entry(self):
+        (self.root / 'resource/apps/used-car-racing').mkdir()
+        with self.assertRaisesRegex(AssertionError, 'No APK resources found'):
+            resource_catalog.verify_catalog(
+                self.root, Path('/unused'), allow_unpublished_used_car=True)
 
 
 if __name__ == '__main__':
