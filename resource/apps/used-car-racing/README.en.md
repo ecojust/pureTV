@@ -1,10 +1,16 @@
 # Used Car Racing TV
 
+<!-- apk-resource:start -->
+[Download APK](used-car-racing-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
+
+The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
+<!-- apk-resource:end -->
+
 [中文](README.md) · [English](README.en.md)
 
 **Used Car Racing TV / 极品二手车** is an original 3D racing game. Each race starts with a randomly assigned used car and condition report. The inspection garage displays the model, power, weight, drivetrain and faults. One or two players use LAN phone controllers; AI drivers fill the remaining places in a six-car field.
 
-Initial version **0.1.0**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. A signed APK and real screenshots are added only after the build and verification succeed.
+Initial version **0.1.0**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. This directory includes an APK and real page captures verified against the successful build, release certificate and packaged source assets.
 
 ## Playing
 
@@ -47,3 +53,15 @@ cd resource/launcher/puretv
 Browser checks use npm dependencies from `desktop/`; `CHROMIUM_PATH` selects Chromium. `USED_CAR_UI_CAPTURE_DIR` selects the directory for captures of the actual pages. Releases use the shared pureTV v2 certificate and the independent tag `android-used-car-v0.1.0`.
 
 Original code, cars, tracks and synthesized sound use [MIT](LICENSE). Three.js retains its [upstream MIT license](src/main/assets/THREE-LICENSE.txt). No commercial racing-game ROMs, vehicle models or extracted maps are included. The project draws its own [64×64 SVG icon](logo.svg).
+
+<!-- verified-previews:start -->
+## Actual game views
+
+Captured from the real game pages in Chromium with a simulated LAN room; these are not physical-TV photographs.
+
+![Used Car Racing TV](docs/used-car-racing-tv.en.png)
+
+![Phone controller](docs/controller.en.png)
+
+![Steering and pedal input](docs/controller-active.en.png)
+<!-- verified-previews:end -->

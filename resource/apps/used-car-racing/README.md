@@ -1,10 +1,16 @@
 # 极品二手车
 
+<!-- apk-resource:start -->
+[下载 APK](used-car-racing-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+
+此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
+<!-- apk-resource:end -->
+
 [中文](README.md) · [English](README.en.md)
 
 **极品二手车 / Used Car Racing TV** 是一款原创三维赛车游戏。开局随机获得车辆和车况，检车台展示车型、动力、重量、驱动形式以及故障说明；比赛支持一人或两人手机操控，其余车位由 AI 补齐，总计六车同场。
 
-首版 **0.1.0**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。APK、签名和真实截图会在成功构建、校验后加入本目录。
+首版 **0.1.0**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。本目录提供经过构建、签名和资源一致性校验的 APK 与真实页面截图。
 
 ## 开始比赛
 
@@ -47,3 +53,15 @@ cd resource/launcher/puretv
 浏览器检查使用 `desktop/` 的 npm 依赖，可通过 `CHROMIUM_PATH` 指定 Chromium。`USED_CAR_UI_CAPTURE_DIR` 指定真实页面截图输出目录。发布使用统一 pureTV v2 证书及独立版本标签 `android-used-car-v0.1.0`。
 
 原创代码、车身模型、赛道与合成音效使用 [MIT](LICENSE)；Three.js 保留其[上游 MIT 许可](src/main/assets/THREE-LICENSE.txt)。游戏不包含商业赛车游戏的 ROM、车型资产或地图提取文件。[64×64 SVG 图标](logo.svg)由本项目绘制。
+
+<!-- verified-previews:start -->
+## 实际画面
+
+截图来自真实游戏页面的 Chromium 渲染与模拟局域网房间，不是电视实机拍摄。
+
+![极品二手车](docs/used-car-racing-tv.png)
+
+![手机手柄](docs/controller.png)
+
+![转向与踏板操作](docs/controller-active.png)
+<!-- verified-previews:end -->
