@@ -10,7 +10,11 @@ The APK in this directory is signed with the pureTV release certificate. Android
 
 **Used Car Racing TV / 极品二手车** is an original 3D racing game. Each race starts with a randomly assigned used car and condition report. The inspection garage displays the model, power, weight, drivetrain and faults. One or two players use LAN phone controllers; AI drivers fill the remaining places in a six-car field.
 
-This source update targets **0.1.2**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. See [resource.json](resource.json) for the downloadable APK’s actual version, signature and verification results.
+This source update targets **0.1.3 / versionCode 4**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. The release retains the pureTV v2 certificate used by 0.1.2, allowing updates over older versions signed with that certificate. See [resource.json](resource.json) for the downloadable APK’s actual version, signature and verification results.
+
+## Steering fixes in 0.1.3
+
+The shared direction mapping for the virtual stick, gyroscope and keyboard is corrected so that the car turns in the requested direction while driving forward. Progressive steering makes small inputs easier to control, reduces the maximum steering angle at speed, and moves the steering wheel gradually toward its target to soften sudden turns and reversals. See the [design and physics notes](docs/design.md) for the rules and validation methods.
 
 ## Playing
 
@@ -116,7 +120,7 @@ cd resource/launcher/puretv
 ./gradlew :used-car-racing:assembleRelease :used-car-racing:testDebugUnitTest :used-car-racing:lintDebug :used-car-racing:verifyReleaseSize
 ```
 
-Browser checks use npm dependencies from `desktop/`; `CHROMIUM_PATH` selects Chromium. `USED_CAR_UI_CAPTURE_DIR` selects the directory for captures of the actual pages. Releases use the shared pureTV v2 certificate and the independent tag `android-used-car-v0.1.2`.
+Browser checks use npm dependencies from `desktop/`; `CHROMIUM_PATH` selects Chromium. `USED_CAR_UI_CAPTURE_DIR` selects the directory for captures of the actual pages. Releases use the shared pureTV v2 certificate; this source update targets the independent release tag `android-used-car-v0.1.3`.
 
 The local HTTPS integration check also needs a full JDK (`java` / `javac`), NSS `certutil` (the Linux `libnss3-tools` package), and a real private IPv4 address. It temporarily trusts an independent test CA, removes it afterward, and never skips certificate validation. CI additionally runs Android API 26 and 35 emulators to verify actual Keystore keys, TLS handshakes, persistent identity, and explicitly enabled pairing reset.
 

@@ -14,6 +14,10 @@
 
 虚拟摇杆默认启用，可完全在局域网内使用。可选的陀螺仪模式读取手机姿态，将首次有效的舒适握持姿态设为中立；约 45° 达到最大转向，中心保留小死区并平滑输入。姿态转向只应用于倒计时和比赛；车库仍保留滑动选赛道。运动权限拒绝、缺少有效数据时回退到摇杆，姿态中断、失焦和平放时释放方向与踏板，并在恢复后重新校准。
 
+摇杆向右、顺时针转动手机和键盘右键采用同一输入约定。赛车输入在进入世界坐标动力学时统一转换：车头沿 +Z 时，追车和引擎盖镜头的屏幕右方是 -X，因此右操作对应负前轮转角；AI 仍直接使用道路的几何方向，选赛道的左右操作不变。倒车不额外反转方向盘，车辆横摆随倒车运动自然改变。
+
+人类输入采用中心较缓、接近满舵逐渐增加的曲线，便于小幅修正。前轮最大转角随车速平方收紧，低速仍保留停车和慢弯需要的转角；前轮转动具有有限速率和渐进响应，松手回中略快，连续反打也不会在一帧内穿过中立位置。这些限制作用于转向机构，不直接改写车辆横摆速度，轮胎侧滑、车况差异和需要弯前减速的规则仍由物理模型决定。
+
 ### 0.1.2 纯局域网 HTTPS 手柄
 
 普通局域网 HTTP 页面通常不能访问运动传感器。0.1.2 在电视 APK 内同时提供 HTTP 与 HTTPS/WSS 服务：HTTP 页面用于首次证书设置和虚拟摇杆，HTTPS 页面在同一套手柄界面中提供虚拟摇杆与陀螺仪选择。证书、网页和游戏输入均在局域网内传输，不需要公网域名、GitHub Pages、后台网页中继或公网游戏服务器。
@@ -74,12 +78,12 @@ node resource/apps/used-car-racing/tests/performance.mjs \
 
 输出 `performance.json`、日志和相同场景的前后截图。记录的 `renderSubmissionWallMs` 是 JavaScript `render()` 的墙钟时间，可能包含驱动等待，不是 GPU 执行时间或硬件 FPS。
 
-本次更新不改变中心线路径、车辆参数、故障阈值或比赛规则。性能验证需要同时检查单人、双人分屏、赛道切换、抽车时的资源释放与 WebGL 上下文恢复，不能只凭单张截图判断。
+0.1.1 的材质与合批优化没有改变中心线路径、车辆参数、故障阈值或比赛规则。性能验证需要同时检查单人、双人分屏、赛道切换、抽车时的资源释放与 WebGL 上下文恢复，不能只凭单张截图判断。
 
 Chrome 61 / ES2017 语法检查用于发现新语法依赖；现代 Chromium 软件渲染用于检查实际三维路径、截图和生命周期。二者都不能替代真实旧 Android WebView、电视 GPU 和手机网络延迟测试。
 
 ## 发布校验
 
-发布链检查成功的 Android 构建、真实页面中英文截图、APK 身份、源码资源与 APK 内资源一致性、签名和 SHA256。新包从 0.1.0 / versionCode 1 开始固定使用 pureTV v2 发布证书，不继承旧包的证书切换阈值。0.1.1 使用 versionCode 2；本次源码目标 0.1.2 使用 versionCode 3，沿用该证书，可覆盖同证书的旧版。实际可下载包与验证结果以 [resource.json](../resource.json) 为准。独立发布标签只包含本游戏 APK、校验清单及公开证书指纹。
+发布链检查成功的 Android 构建、真实页面中英文截图、APK 身份、源码资源与 APK 内资源一致性、签名和 SHA256。新包从 0.1.0 / versionCode 1 开始固定使用 pureTV v2 发布证书，不继承旧包的证书切换阈值。0.1.1 使用 versionCode 2，0.1.2 使用 versionCode 3；本次源码目标 0.1.3 使用 versionCode 4，沿用该证书，可覆盖同证书的旧版。实际可下载包与验证结果以 [resource.json](../resource.json) 为准。独立发布目标标签 `android-used-car-v0.1.3` 只包含本游戏 APK、校验清单及公开证书指纹。
 
 Third-party dependency: Three.js r124, MIT, [license](../src/main/assets/THREE-LICENSE.txt). Original game code, procedural vehicle models, tracks, baked textures and synthesized sound are covered by the application MIT license.

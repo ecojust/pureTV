@@ -55,8 +55,32 @@ test('heat fade reduces effective braking force for bad pads at the same pedal f
 test('reverse is low-speed selected and cannot instantly invert high-speed driving',()=>{
   const s=race({seed:33,track:straight()}),c=clean(s);run(s,3,{throttle:1,reverse:true});assert.equal(c.gear,-1);assert.ok(c.u<-2&&c.u>=-12);const forward=moving(25);run(forward,.2,{reverse:true,throttle:1});assert.ok(forward.players[0].gear>0&&forward.players[0].u>0);
 });
-test('steering has finite slew and a positive steering input turns toward world right',()=>{
+test('signed physical steering turns toward positive world yaw without an instantaneous rack jump',()=>{
   const s=moving(14),c=s.players[0],oldYaw=c.yaw;Model.update(s,1/120,[{steer:1}]);assert.ok(c.steerAngle>0&&c.steerAngle<.1);run(s,1,{steer:.2,throttle:.2});assert.ok(Math.atan2(Math.sin(c.yaw-oldYaw),Math.cos(c.yaw-oldYaw))>0);assert.ok(c.roll<0);
+});
+test('high-speed steering builds gradually while low-speed parking lock remains available',()=>{
+  const fast=moving(25),slow=moving(3),a=fast.players[0],b=slow.players[0];
+  run(fast,.1,{steer:1,throttle:.2});assert.ok(a.steerAngle>0&&a.steerAngle<.065,'90 km/h input must not snap to full steering lock');
+  run(fast,.4,{steer:1,throttle:.2});run(slow,1,{steer:1});
+  assert.ok(a.steerAngle<.15,'High-speed full input stays below a sharp parking angle');
+  assert.ok(b.steerAngle>.38,'Low-speed maneuvers retain useful wheel lock');
+  assert.ok(a.steerAngle<b.steerAngle*.4);
+});
+test('release and countersteering are progressive and reverse retains the same physical wheel direction',()=>{
+  const s=moving(25),car=s.players[0];run(s,.5,{steer:1});const before=car.steerAngle;
+  Model.update(s,Model.STEP,[{steer:-1}]);assert.ok(car.steerAngle>0,'Countersteering cannot jump through center in one frame');assert.ok(before-car.steerAngle<.006);
+  run(s,.5,{steer:-1});assert.ok(car.steerAngle<-.07);run(s,.5);assert.ok(Math.abs(car.steerAngle)<.02,'Letting go returns toward center');
+  const forward=moving(3),reverse=moving(-3);reverse.players[0].gear=-1;
+  const initial=forward.players[0].yaw;run(forward,.5,{steer:.5});run(reverse,.5,{steer:.5,reverse:true});
+  assert.ok(forward.players[0].steerAngle>0&&reverse.players[0].steerAngle>0);
+  const turn=car=>Math.atan2(Math.sin(car.yaw-initial),Math.cos(car.yaw-initial));
+  assert.ok(turn(forward.players[0])>0&&turn(reverse.players[0])<0,'Reversing changes yaw through vehicle motion, not an input flip');
+});
+test('AI facing backward uses its existing recovery without resetting a human driver',()=>{
+  const s=race({seed:4,trackId:'solar',aiCount:1}),human=s.players[0],ai=s.racers[1];
+  for(const car of [human,ai])car.yaw=car._trackPoint.heading+Math.PI;
+  const humanYaw=human.yaw;for(let i=0;i<190;i++){Model.aiInput(s,ai,1/60);Model.aiInput(s,human,1/60);}
+  assert.ok(Math.cos(ai.yaw-ai._trackPoint.heading)>.99);assert.ok(ai._rescueGrace>0);assert.equal(human.yaw,humanYaw);
 });
 test('AI opponents use the same physical cars and progress around every circuit',()=>{
   for(const trackId of ['harbor','ridge','solar']){const s=race({seed:4,trackId,aiCount:5,laps:1});run(s,70);const ai=s.racers.filter(c=>!c.human);assert.ok(ai.filter(c=>c.progress>500).length>=3,trackId);assert.ok(ai.every(c=>Number.isFinite(c.x)&&Number.isFinite(c.yaw)&&c.condition.bodyDamage<=.85));}

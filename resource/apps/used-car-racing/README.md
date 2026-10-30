@@ -10,7 +10,11 @@
 
 **极品二手车 / Used Car Racing TV** 是一款原创三维赛车游戏。开局随机获得车辆和车况，检车台展示车型、动力、重量、驱动形式以及故障说明；比赛支持一人或两人手机操控，其余车位由 AI 补齐，总计六车同场。
 
-本次源码更新版本为 **0.1.2**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。可下载 APK 的实际版本、签名与验证结果以 [resource.json](resource.json) 为准。
+本次源码更新目标为 **0.1.3 / versionCode 4**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。发布时沿用 0.1.2 的 pureTV v2 证书，可覆盖同证书旧版。可下载 APK 的实际版本、签名与验证结果以 [resource.json](resource.json) 为准。
+
+## 0.1.3 操控修复
+
+修正虚拟摇杆、陀螺仪和键盘共用的左右方向映射，使前进时的转弯方向与玩家输入一致。转向采用渐进响应：小幅操作更便于微调，高速时收小最大转角，方向盘逐渐转到目标位置，减少突然猛转和左右反打的突兀感。具体规则与验证方法见[设计与物理说明](docs/design.md)。
 
 ## 开始比赛
 
@@ -116,7 +120,7 @@ cd resource/launcher/puretv
 ./gradlew :used-car-racing:assembleRelease :used-car-racing:testDebugUnitTest :used-car-racing:lintDebug :used-car-racing:verifyReleaseSize
 ```
 
-浏览器检查使用 `desktop/` 的 npm 依赖，可通过 `CHROMIUM_PATH` 指定 Chromium。`USED_CAR_UI_CAPTURE_DIR` 指定真实页面截图输出目录。发布使用统一 pureTV v2 证书及独立版本标签 `android-used-car-v0.1.2`。
+浏览器检查使用 `desktop/` 的 npm 依赖，可通过 `CHROMIUM_PATH` 指定 Chromium。`USED_CAR_UI_CAPTURE_DIR` 指定真实页面截图输出目录。发布使用统一 pureTV v2 证书，本次源码对应的独立发布目标标签为 `android-used-car-v0.1.3`。
 
 本地 HTTPS 集成检查还需要完整 JDK（`java` / `javac`）、NSS `certutil`（Linux 的 `libnss3-tools` 包）及真实私网 IPv4 地址。测试临时信任独立测试 CA，结束后移除，不跳过证书验证。CI 另在 Android API 26 和 35 模拟器上验证真实 Keystore 密钥、TLS 握手、身份持久化及明确授权的重新配对。
 

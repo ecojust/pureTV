@@ -22,9 +22,9 @@ function publish(room,state) {
 }
 const server=http.createServer(async(request,response)=>{
   const file=new URL(request.url,'http://localhost').pathname.slice(1)||'controller.html';
-  if(!['controller.html','controller.js','controller.css','steering.js','secure-controller.js'].includes(file)){response.writeHead(404).end();return;}
-  response.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':'text/html');
-  response.end(await readFile(new URL(file,assets)));
+  if(!/^(?:[a-z0-9.-]+\.(?:html|js|css)|textures\/[a-z0-9-]+\.(?:jpg|png))$/.test(file)){response.writeHead(404).end();return;}
+  response.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.jpg')?'image/jpeg':file.endsWith('.png')?'image/png':'text/html');
+  try{response.end(await readFile(new URL(file,assets)));}catch{response.writeHead(404).end();}
 });
 server.on('upgrade',(request,socket)=>{
   const url=new URL(request.url,'http://localhost'),room=rooms.get(url.searchParams.get('room'));
@@ -57,7 +57,7 @@ server.on('upgrade',(request,socket)=>{
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const origin='http://127.0.0.1:'+server.address().port;
-const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});
+const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const garage={phase:'garage',trackName:'霓虹港湾',trackNameEn:'Neon Harbor',laps:2,players:[{id:1,carName:'旧车测试驾驶席',carNameEn:'Used car test driver',speedKmh:0,gear:0,brakeForce:0,brakeBroken:false,lap:1,rank:1}]};
 async function fixture({locale='zh-CN',viewport={width:844,height:390},legacy=false,mode='welcome',player=1,sensor=null}={}){
   const room={token:randomBytes(16).toString('hex'),session:randomBytes(16).toString('hex'),mode,player,peers:new Set(),connections:[],messages:[],state:structuredClone(garage)};
@@ -242,6 +242,54 @@ try{
   });
   await check('Projected steering angles wrap safely at the Euler seam and reject flat or nonfinite sensor data',async()=>{
     const f=await fixture();const result=await f.page.evaluate(()=>({wrapped:UsedCarSteering.wrap(-359),flat:UsedCarSteering.wheelAngle(0,0,90),invalid:UsedCarSteering.wheelAngle(NaN,30,90),left:UsedCarSteering.wheelAngle(0,-70,90),right:UsedCarSteering.wheelAngle(0,70,270)}));assert.ok(Math.abs(result.wrapped-1)<1e-8);assert.equal(result.flat,null);assert.equal(result.invalid,null);assert.ok(Math.abs(result.left-result.right)<1e-8);await f.close();
+  });
+  await check('Joystick and both landscape gyro orientations turn the real TV car toward screen right and left in both cameras',async()=>{
+    const f=await fixture({sensor:'granted'}),samples=[];await race(f);const cdp=await f.context.newCDPSession(f.page);
+    for(const direction of [-1,1]){
+      await touch(cdp,'touchStart',[[1,260,240]]);await touch(cdp,'touchMove',[[1,260+direction*160,240]]);await expectInput(f.room,{x:direction});
+      samples.push({name:'stick '+direction,direction,frame:{...lastInput(f.room)}});await touch(cdp,'touchEnd',[]);
+    }
+    await f.page.locator('#steering-gyro').click();await f.page.waitForFunction(()=>document.getElementById('controller').dataset.steering==='gyro');
+    for(const orientation of [90,270]){
+      const orientationSign=orientation===90?1:-1;await sensorFrame(f,0,-70*orientationSign,orientation);
+      for(const direction of [-1,1]){
+        await sensorFrame(f,50*direction*orientationSign,-70*orientationSign,orientation,24);assert.ok(lastInput(f.room).x*direction>.96);
+        samples.push({name:'gyro '+orientation+' '+direction,direction,frame:{...lastInput(f.room)}});
+      }
+    }
+    await f.close();
+    // Replay the actual WebSocket frames through the native snapshot boundary,
+    // real game.js controls, physical model and real WebGL camera. The fixed
+    // pre-turn camera catches mirrored turns that a chasing camera would hide.
+    const context=await browser.newContext({viewport:{width:960,height:540}});
+    await context.addInitScript(()=>{
+      window.__USED_CAR_SEED=33;window.__clock=1;window.__phoneFrames=[1,2].map(id=>({id,connected:true,x:0,y:0,a:false,b:false,start:false,select:false,cancelSeq:0}));
+      window.requestAnimationFrame=callback=>{window.__gameFrame=callback;return 1;};window.cancelAnimationFrame=()=>{};
+      window.UsedCarHost={getInfo:()=>JSON.stringify({language:'en',url:'',qr:''}),snapshot:()=>JSON.stringify({players:__phoneFrames}),publish:()=>{}};
+      window.__tick=()=>__gameFrame(__clock+=1000/60);
+    });
+    const tv=await context.newPage(),errors=[];tv.on('pageerror',error=>errors.push(error.message));await tv.goto(origin+'/tv.html');
+    await tv.waitForFunction(()=>window.UsedCarTV&&UsedCarTV.renderer.active);await tv.evaluate(()=>UsedCarTV.renderer.materialLibrary.ready);
+    const results=await tv.evaluate(samples=>{
+      const game=UsedCarTV.game,model=UsedCarModel,view=UsedCarTV.renderer;model.setPlayers(game,2);model.start(game);game.phase='race';game.racers=game.players;
+      __tick();__tick();const results=[];
+      for(const mode of ['chase','hood'])for(const player of [0,1])for(const sample of samples){
+        __phoneFrames.forEach(frame=>Object.assign(frame,{x:0,a:false,b:false,start:false,select:false}));__tick();
+        Object.assign(__phoneFrames[player],{x:sample.frame.x,a:false,b:false});__tick();__tick();
+        game.players.forEach((car,index)=>{
+          const p=UsedCarTracks.sample(game.track,240+index*140);Object.assign(car,{x:p.x,y:p.y,z:p.z,yaw:p.heading,u:14,v:0,speed:14,vx:p.tx*14,vz:p.tz*14,yawRate:0,steerAngle:0,ax:0,ay:0,s:p.s,_lastS:p.s,_trackPoint:p,_sampleTimer:0});
+          Object.assign(car.condition,{steeringPlay:0,steeringResponse:2.75,tireGrip:1,bodyDamage:0});
+        });
+        const car=game.players[player],start={x:car.x,y:car.y,z:car.z,yaw:car.yaw},inputs=game.players.map(c=>({...c.inputs}));
+        view.setCamera(mode);view.cameraFor(car,player,false,0,1/60);const camera=view.camera.clone();camera.updateMatrixWorld(true);
+        const projected=yaw=>new THREE.Vector3(start.x+Math.sin(yaw)*20,start.y+1.15,start.z+Math.cos(yaw)*20).project(camera).x;
+        const before=projected(start.yaw);for(let tick=0;tick<54;tick++)model.update(game,1/120,inputs);
+        results.push({name:sample.name,mode,player,direction:sample.direction,screenDelta:projected(car.yaw)-before,rack:car.steerAngle});
+      }
+      view.render(game,1/60);return results;
+    },samples);
+    for(const result of results){assert.ok(result.screenDelta*result.direction>.015,JSON.stringify(result));assert.ok(result.rack*result.direction<0,JSON.stringify(result));}
+    assert.deepEqual(errors,[]);await context.close();
   });
   for(const locale of ['zh-CN','en-US'])await check(locale+' full-screen zones, selection prevention, portrait layout and real captures',async()=>{
     const f=await fixture({locale,sensor:'granted'});const english=locale==='en-US';assert.equal(await f.page.locator('html').getAttribute('lang'),english?'en':'zh-CN');assert.match(await f.page.locator('#a-caption').innerText(),english?/Throttle/:/油门/);

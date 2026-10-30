@@ -1,6 +1,7 @@
 /* Used Car Racing TV: deterministic SI-unit vehicle dynamics and race rules.
  * An approachable simulation, not a certified real-vehicle engineering model.
- * XZ ground plane, +Z forward at yaw 0, positive yaw/lateral velocity turns right.
+ * XZ ground plane, +Z forward at yaw 0, positive yaw/lateral velocity points to +X.
+ * The TV maps human screen-right input to negative wheel angle; AI uses world geometry.
  * Brake pedal force is simulated from button hold; a phone does not measure Newtons. */
 (function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory(require('./tracks.js'));else root.UsedCarModel=factory(root.UsedCarTracks);})(typeof window!=='undefined'?window:this,function(Tracks){
   'use strict';
@@ -63,21 +64,27 @@
   function setPlayers(state,count){if(state.phase!=='garage')return false;state.playerCount=clamp(Math.floor(finite(count,1)),1,2);state.totalCars=6;fillCars(state,false);return true;}
   function tireForce(slip,load,mu){var b=8.5,c=1.35,e=.20,t=b*slip;return mu*load*Math.sin(c*Math.atan(t-e*(t-Math.atan(t))));}
   function gripCircle(fx,fy,max){var mag=Math.sqrt(fx*fx+fy*fy);if(mag>max&&mag>0){var scale=max/mag;return {x:fx*scale,y:fy*scale};}return {x:fx,y:fy};}
+  // Road-wheel angle, not steering-wheel rotation: retain parking lock but
+  // reduce high-speed sensitivity with speed squared. AI shares the same rack.
+  function steeringLimit(car,speed){return car.spec.maxSteer/(1+Math.pow(speed/14,2));}
   function aiInput(state,car,dt){
     var near=car._trackPoint||Tracks.nearest(state.track,car.x,car.z),speed=Math.abs(car.u),look=12+speed*.9,p=Tracks.sample(state.track,car.s+look),lane=((car.id%3)-1)*1.25;
-    if(!car.human&&!car.finished){if(car.progress>car._advanceMarker+3){car._advanceMarker=car.progress;car._noAdvanceTime=0;}else car._noAdvanceTime+=dt;car._slowTime=speed<1.4&&state.raceTime>7?car._slowTime+dt:0;if(car._slowTime>6||car._noAdvanceTime>10){var recovery=Tracks.sample(state.track,car.s-7);car.x=recovery.x;car.z=recovery.z;car.y=recovery.y;car.yaw=recovery.heading;car.u=0;car.v=0;car.vx=0;car.vz=0;car.yawRate=0;car.steerAngle=0;car.s=recovery.s;car._lastS=recovery.s;car._trackPoint=recovery;car.progress-=7;car._advanceMarker=car.progress;car._noAdvanceTime=0;car._slowTime=0;car._stuckTime=0;car._aiReverse=0;car.pedalForceN=0;car._rescueGrace=1.5;return neutral();}}
+    // Pure pursuit has almost zero steering at a 180-degree heading error.
+    // Include persistent wrong-way driving in the existing AI-only recovery.
+    if(!car.human&&!car.finished){car._wrongWayTime=Math.cos(car.yaw-near.heading)<-.25?car._wrongWayTime+dt:0;if(car.progress>car._advanceMarker+3){car._advanceMarker=car.progress;car._noAdvanceTime=0;}else car._noAdvanceTime+=dt;car._slowTime=speed<1.4&&state.raceTime>7?car._slowTime+dt:0;if(car._slowTime>6||car._noAdvanceTime>10||car._wrongWayTime>3){var recovery=Tracks.sample(state.track,car.s-7);car.x=recovery.x;car.z=recovery.z;car.y=recovery.y;car.yaw=recovery.heading;car.u=0;car.v=0;car.vx=0;car.vz=0;car.yawRate=0;car.steerAngle=0;car.s=recovery.s;car._lastS=recovery.s;car._trackPoint=recovery;car.progress-=7;car._advanceMarker=car.progress;car._noAdvanceTime=0;car._slowTime=0;car._stuckTime=0;car._aiReverse=0;car._wrongWayTime=0;car.pedalForceN=0;car._rescueGrace=1.5;return neutral();}}
     var dx=p.x+p.nx*lane-car.x,dz=p.z+p.nz*lane-car.z,targetAngle=Math.atan2(dx,dz),error=angle(targetAngle-car.yaw),delta=Math.atan2(2*car.spec.wheelbase*Math.sin(error),Math.max(5,Math.sqrt(dx*dx+dz*dz)));
     var curvature=Math.abs(near.curvature);
     for(var i=1;i<=5;i++)curvature=Math.max(curvature,Math.abs(Tracks.sample(state.track,car.s+speed*.5+i*10).curvature));
-    var mu=car.spec.mu*car.condition.tireGrip*near.grip,target=Math.min(43+car.id*.7,Math.sqrt(Math.max(.2,mu)*G*.48/Math.max(.001,curvature)));
+    // Leave cornering grip in reserve while the finite-rate rack builds steering.
+    var mu=car.spec.mu*car.condition.tireGrip*near.grip,target=Math.min(43+car.id*.7,Math.sqrt(Math.max(.2,mu)*G*.42/Math.max(.001,curvature)));
     if(Math.abs(error)>.5)target=Math.min(target,14);if(Math.abs(error)>1.0)target=Math.min(target,6);
     if(Math.abs(near.lateral)>near.width*.48)target=Math.min(target,10);
     for(i=0;i<state.racers.length;i++){var other=state.racers[i];if(other===car||other.finished)continue;var ahead=(other.x-car.x)*Math.sin(car.yaw)+(other.z-car.z)*Math.cos(car.yaw),side=(other.x-car.x)*Math.cos(car.yaw)-(other.z-car.z)*Math.sin(car.yaw);if(ahead>0&&ahead<9+speed*.35&&Math.abs(side)<2.1)target=Math.min(target,Math.max(3,other.speed-2));}
     if(speed<1.3&&state.raceTime>5)car._stuckTime+=dt;else car._stuckTime=0;
     if(car._stuckTime>2.2&&car._aiReverse<=0){car._aiReverse=2.4;car._stuckTime=0;}
-    if(car._aiReverse>0){car._aiReverse-=dt;return {steer:clamp(-delta/(car.spec.maxSteer/(1+speed*.028)),-.28,.28),throttle:.9,brake:0,reverse:true,handbrake:false};}
+    if(car._aiReverse>0){car._aiReverse-=dt;return {steer:clamp(-delta/steeringLimit(car,speed),-.28,.28),throttle:.9,brake:0,reverse:true,handbrake:false};}
     var brake=speed>target+1?clamp((speed-target)/9,.16,car.condition.weakPedal?.76:1):0;
-    var steer=clamp((delta-car.yawRate*.035)/(car.spec.maxSteer/(1+speed*.028)),-1,1);if(steer!==0)steer=sign(steer)*(Math.abs(steer)*(1-car.condition.steeringPlay)+car.condition.steeringPlay);var throttle=brake>0?0:clamp((target-speed)/6,.08,1);if(Math.abs(car.v)>2||Math.abs(near.lateral)>near.width*.35)throttle=Math.min(throttle,.32);return {steer:steer,throttle:throttle,brake:brake,reverse:false,handbrake:false};
+    var steer=clamp((delta-car.yawRate*.035)/steeringLimit(car,speed),-1,1);if(steer!==0)steer=sign(steer)*(Math.abs(steer)*(1-car.condition.steeringPlay)+car.condition.steeringPlay);var throttle=brake>0?0:clamp((target-speed)/6,.08,1);if(Math.abs(car.v)>2||Math.abs(near.lateral)>near.width*.35)throttle=Math.min(throttle,.32);return {steer:steer,throttle:throttle,brake:brake,reverse:false,handbrake:false};
   }
   function shift(car,dt){
     car.shiftCooldown=Math.max(0,car.shiftCooldown-dt);var spec=car.spec,ratio=spec.gears[Math.max(0,car.gear-1)]*spec.finalDrive,wheelRpm=Math.abs(car.u)/spec.wheelRadius*60/TAU;
@@ -95,8 +102,13 @@
     if(car._sampleTimer<=0){car._trackPoint=Tracks.nearest(state.track,car.x,car.z,car._trackPoint.index);car._sampleTimer=1/60;}
     var p=car._trackPoint,speed=Math.abs(car.u),offRoad=Math.abs(p.lateral)>p.width*.5;
     var targetSteer=input.steer;if(Math.abs(targetSteer)<condition.steeringPlay)targetSteer=0;else targetSteer=sign(targetSteer)*(Math.abs(targetSteer)-condition.steeringPlay)/(1-condition.steeringPlay);
-    // Mechanical steering rate is finite; high-speed inputs receive a road-car rack limit.
-    var rackLimit=spec.maxSteer/(1+speed*.028);car.steerAngle=approach(car.steerAngle,targetSteer*rackLimit,condition.steeringResponse,dt);
+    // A finite driver's wheel rate plus rack response prevents one-frame flicks.
+    // Work on wheel angle, not yaw: tire slip and countersteering remain physical.
+    var rackLimit=steeringLimit(car,speed),rackTarget=targetSteer*rackLimit;
+    var rackRate=condition.steeringResponse*.30/(1+speed*.018),response=9/(1+speed*.025);
+    if(targetSteer===0){rackRate*=1.35;response*=1.25;}
+    var smoothTarget=car.steerAngle+(rackTarget-car.steerAngle)*(1-Math.exp(-response*dt));
+    car.steerAngle=approach(car.steerAngle,smoothTarget,rackRate,dt);
     car.throttle=approach(car.throttle,input.throttle,input.throttle>car.throttle?2.4:5.5,dt);
     var requestedForce=input.brake*1800;
     car.pedalForceN=approach(car.pedalForceN,requestedForce,requestedForce>car.pedalForceN?600:12000,dt);
