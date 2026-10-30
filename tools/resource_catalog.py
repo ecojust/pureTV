@@ -33,12 +33,21 @@ RELEASE_CERTIFICATE_CUTOVERS = {
     'com.ecojust.cozyislandtv': 2,
 }
 
+# New applications launched after the certificate rotation have no legacy signer.
+# Register exact package IDs; similar or unknown packages must not inherit this pin.
+NEW_RELEASE_CERTIFICATE_PACKAGES = {'com.ecojust.usedcartv'}
+
 def expected_release_certificate(root, identity):
     """Return the single certificate pinned for an APK's package and version."""
     package = identity['packageName']
     assert package.startswith('com.ecojust.'), 'Release certificate pins apply only to pureTV packages'
     pin = 'puretv-release-certificate.sha256'
-    if package in RELEASE_CERTIFICATE_CUTOVERS:
+    if package in NEW_RELEASE_CERTIFICATE_PACKAGES:
+        assert identity['versionCode'] >= 1, f'{package}: invalid initial version code'
+        version = re.fullmatch(r'(\d+)\.(\d+)\.(\d+)(?:-preview\.\d+)?', identity['versionName'])
+        assert version and tuple(map(int, version.groups())) >= (0, 1, 0), f'{package}: invalid release version'
+        pin = 'puretv-release-certificate-v2.sha256'
+    elif package in RELEASE_CERTIFICATE_CUTOVERS:
         version = re.fullmatch(r'(\d+)\.(\d+)\.(\d+)(?:-preview\.\d+)?', identity['versionName'])
         assert version, f'{package}: invalid version name for certificate selection'
         new_version = tuple(map(int, version.groups())) >= (0, 5, 0)

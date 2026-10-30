@@ -69,9 +69,25 @@ class ReleaseCertificatesTest(unittest.TestCase):
                 self.assertEqual(resource_catalog.expected_release_certificate(
                     self.root, self.identity(package, code + 1, '0.6.0')), self.new)
 
+    def test_used_car_first_release_uses_only_the_new_certificate(self):
+        for code, version in ((1, '0.1.0'), (2, '0.1.1'), (20, '1.0.0')):
+            with self.subTest(code=code, version=version):
+                self.assertEqual(resource_catalog.expected_release_certificate(
+                    self.root, self.identity('com.ecojust.usedcartv', code, version)), self.new)
+        for code, version in ((0, '0.1.0'), (1, '0.0.9'), (1, 'invalid')):
+            with self.subTest(code=code, version=version), self.assertRaises(AssertionError):
+                resource_catalog.expected_release_certificate(
+                    self.root, self.identity('com.ecojust.usedcartv', code, version))
+        identity = self.identity('com.ecojust.usedcartv', 1, '0.1.0', self.old)
+        self.fixture('used-car-racing', identity)
+        with patch.object(resource_catalog, 'apk_info', return_value=identity):
+            with self.assertRaisesRegex(AssertionError, 'unexpected release signing certificate'):
+                resource_catalog.verify_catalog(self.root, Path('/unused'))
+
     def test_unknown_and_similar_package_names_cannot_automatically_use_the_new_pin(self):
         for package in ('com.ecojust.unknown', 'com.ecojust.newapp',
-                        'com.ecojust.coastkarttv.clone', 'com.ecojust.tanktv2'):
+                        'com.ecojust.coastkarttv.clone', 'com.ecojust.tanktv2',
+                        'com.ecojust.usedcartv.clone', 'com.ecojust.usedcartv2'):
             with self.subTest(package=package):
                 self.assertEqual(resource_catalog.expected_release_certificate(
                     self.root, self.identity(package, 999, '99.0.0')), self.old)

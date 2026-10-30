@@ -10,6 +10,14 @@ on:
         description: Exact 40-character source commit built by that run
         required: false
         type: string
+      package_scope:
+        description: Game resources to sign and publish
+        required: true
+        type: choice
+        default: games
+        options:
+          - games
+          - used-car-racing
       check_signing_only:
         description: Only verify that release secrets are configured and match the pinned game release certificate
         type: boolean
@@ -138,27 +146,34 @@ jobs:
       - uses: android-actions/setup-android@v3
         with:
           packages: build-tools;34.0.0
-      - name: Sign and prepare the nine game resources
+      - name: Sign and prepare the selected game resources
         env:
           GH_TOKEN: ${{ github.token }}
           PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
           SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
           STAGE_BRANCH: ${{ steps.source.outputs.stage_branch }}
+          PACKAGE_SCOPE: ${{ inputs.package_scope }}
         run: |
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           git fetch origin "refs/heads/$STAGE_BRANCH:refs/remotes/origin/$STAGE_BRANCH"
           test "$(git rev-parse "refs/remotes/origin/$STAGE_BRANCH^")" = "$SOURCE_SHA"
+          if [ "$PACKAGE_SCOPE" = used-car-racing ]; then
+            game_apps=(--app used-car-racing)
+          elif [ "$PACKAGE_SCOPE" = games ]; then
+            game_apps=(--app tank --app jackal --app jewel --app tetris --app bomb-jack --app adventure-island --app super-mario --app coast-kart --app cozy-island)
+          else
+            exit 1
+          fi
           python tools/prepare-app-resources.py \
             --stage-branch "$STAGE_BRANCH" --source-sha "$SOURCE_SHA" \
-            --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
-            --app tank --app jackal --app jewel --app tetris --app bomb-jack \
-            --app adventure-island --app super-mario --app coast-kart --app cozy-island
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0" "${game_apps[@]}"
       - name: Verify packaged source assets, signatures and resource catalog
         env:
           SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+          PACKAGE_SCOPE: ${{ inputs.package_scope }}
         run: |
           python tools/verify-game-publication.py --source-sha "$SOURCE_SHA" \
-            --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0" --scope "$PACKAGE_SCOPE"
           git diff --check
       - name: Commit verified resources to a publication branch
         env:
@@ -170,7 +185,7 @@ jobs:
           git add README.md README.en.md resource/README.md docs/previews/en \
             resource/apps/tank resource/apps/jackal resource/apps/jewel resource/apps/tetris \
             resource/apps/bomb-jack resource/apps/adventure-island resource/apps/super-mario \
-            resource/apps/coast-kart resource/apps/cozy-island
+            resource/apps/coast-kart resource/apps/cozy-island resource/apps/used-car-racing
           git commit -m "Publish signed game resources from $SOURCE_SHA"
           git push origin HEAD
           printf 'Published branch: `build-assets/published-games-%s`\n\nSource: `%s`\n' "$GITHUB_RUN_ID" "$SOURCE_SHA" >> "$GITHUB_STEP_SUMMARY"

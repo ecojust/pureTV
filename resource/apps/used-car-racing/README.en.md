@@ -1,0 +1,49 @@
+# Used Car Racing TV
+
+[中文](README.md) · [English](README.en.md)
+
+**Used Car Racing TV / 极品二手车** is an original 3D racing game. Each race starts with a randomly assigned used car and condition report. The inspection garage displays the model, power, weight, drivetrain and faults. One or two players use LAN phone controllers; AI drivers fill the remaining places in a six-car field.
+
+Initial version **0.1.0**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. A signed APK and real screenshots are added only after the build and verification succeed.
+
+## Playing
+
+1. Connect the TV and phones to the same LAN, then launch the game on the TV.
+2. Scan the room QR code, using one phone per player, up to two players.
+3. Inspect the assigned car and faults, choose a track and player count, then start.
+4. The large left area steers. The right third of the phone is divided into upper throttle and lower brake regions; steering and pedals work together. Text selection and long-press menus are suppressed in the controls.
+
+Press SELECT in the garage to reroll the assigned cars. During a race, tap SELECT to switch between chase and hood cameras. Below **1.2 m/s**, hold SELECT for about **0.8 seconds** to toggle D forward / R reverse, then apply throttle. START begins or pauses the race.
+
+Keyboard controls: player 1 uses Left/Right to steer, Z for throttle, X for brake and Enter to start/pause. Tap Shift for the camera or hold it at low speed for D/R; R also toggles direction at low speed. Player 2 uses A/D to steer, W for throttle and S for brake.
+
+Braking uses **simulated pedal force**. Holding the brake increases force; releasing it quickly unloads the pedal. A car assigned a weak brake pedal loses its foot brake permanently for the current race when simulated force reaches **1600 N**. The TV displays force and failure status. An ordinary phone does not measure real pedal or finger force; this value is calculated from input and the game model.
+
+## Cars and tracks
+
+Six original vehicle body types cover compact, sedan, coupe, wagon, muscle and rally cars. Drivetrain, torque, mass, tires and brake condition affect handling. Local 3D models include wheels, tires, lights, glazing, interiors, mirrors and body wear.
+
+Three closed circuits cover a neon harbor, mountain ridge and solar desert highway, with curves, elevation, barriers, markings and distinct environments. Real WebGL 1 renders the world using a locally bundled Three.js library; graphical resources need no CDN.
+
+## Handling model
+
+A fixed small timestep updates engine torque and RPM, automatic gears, tire slip and friction-circle grip limits, braking and load transfer, aerodynamic drag and mechanical faults. Steering, speed and grip combine to determine the response. See the [design and physics notes](docs/design.md).
+
+This is a reduced vehicle-dynamics game designed for phone controls and TVs. Model tests and browser rendering do not establish real-vehicle calibration or physical-TV GPU performance. Published verification records describe the checks actually completed.
+
+## Development
+
+```sh
+node --test resource/apps/used-car-racing/tests/*.test.cjs
+node resource/apps/used-car-racing/tests/compatibility.mjs
+node resource/apps/used-car-racing/tests/rendering.mjs
+node resource/apps/used-car-racing/tests/controller.mjs
+node resource/apps/used-car-racing/tests/integration.mjs
+
+cd resource/launcher/puretv
+./gradlew :used-car-racing:assembleRelease :used-car-racing:testDebugUnitTest :used-car-racing:lintDebug :used-car-racing:verifyReleaseSize
+```
+
+Browser checks use npm dependencies from `desktop/`; `CHROMIUM_PATH` selects Chromium. `USED_CAR_UI_CAPTURE_DIR` selects the directory for captures of the actual pages. Releases use the shared pureTV v2 certificate and the independent tag `android-used-car-v0.1.0`.
+
+Original code, cars, tracks and synthesized sound use [MIT](LICENSE). Three.js retains its [upstream MIT license](src/main/assets/THREE-LICENSE.txt). No commercial racing-game ROMs, vehicle models or extracted maps are included. The project draws its own [64×64 SVG icon](logo.svg).

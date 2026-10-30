@@ -9,12 +9,25 @@ import time
 import zipfile
 from pathlib import Path
 
-from resource_catalog import digest, verify_catalog, RELEASE_CERTIFICATE_CUTOVERS
+from resource_catalog import digest, verify_catalog, RELEASE_CERTIFICATE_CUTOVERS, NEW_RELEASE_CERTIFICATE_PACKAGES
 
 REPOSITORY = 'ecojust/pureTV'
 GAME_PACKAGES = {'com.ecojust.' + name + 'tv' for name in (
     'tank', 'jackal', 'jewel', 'tetris', 'bombjack', 'adventureisland',
     'supermario', 'coastkart', 'cozyisland')}
+
+
+def release_scope(tag, scope):
+    if scope == 'used-car-racing':
+        match = re.fullmatch(r'android-used-car-v(\d+\.\d+\.\d+)', tag)
+        assert match, 'Used Car Racing requires its own android-used-car-v tag'
+        return match[1], {'com.ecojust.usedcartv'}
+    assert scope in ('all', 'games'), 'Unknown Android package scope'
+    match = re.fullmatch(r'android-v(\d+\.\d+\.\d+)', tag)
+    assert match, 'Expected an Android collection version tag'
+    # Retired applications remain in certificate history, not in new collections.
+    active_packages = (set(RELEASE_CERTIFICATE_CUTOVERS) - {'com.ecojust.music'}) | NEW_RELEASE_CERTIFICATE_PACKAGES
+    return match[1], GAME_PACKAGES if scope == 'games' else active_packages
 
 
 def api(path, payload=None):
@@ -29,17 +42,14 @@ def main():
     parser.add_argument('--source-sha', required=True)
     parser.add_argument('--tag', required=True)
     parser.add_argument('--build-tools', required=True, type=Path)
-    parser.add_argument('--scope', choices=('all', 'games'), default='all')
+    parser.add_argument('--scope', choices=('all', 'games', 'used-car-racing'), default='all')
     parser.add_argument('--validate-only', action='store_true')
     args = parser.parse_args()
     assert re.fullmatch(r'[0-9a-f]{40}', args.source_sha), 'Exact source SHA required'
-    version_match = re.fullmatch(r'android-v(\d+\.\d+\.\d+)', args.tag)
-    assert version_match, 'Expected an Android version tag'
-    version = version_match[1]
+    version, selected = release_scope(args.tag, args.scope)
     root = Path(__file__).resolve().parents[1]
     assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip() == args.source_sha
     entries = verify_catalog(root, args.build_tools)
-    selected = GAME_PACKAGES if args.scope == 'games' else set(RELEASE_CERTIFICATE_CUTOVERS)
     packages = [entry for entry in entries if entry['packageName'] in selected]
     assert len(packages) == len(selected) and {entry['packageName'] for entry in packages} == selected, 'Incomplete release package scope'
     certificate = (root / 'tools/puretv-release-certificate-v2.sha256').read_text().strip()

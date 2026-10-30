@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify a prepared nine-game publication and export its changed resource files."""
+"""Verify a prepared game publication and export its changed resource files."""
 import argparse
 import hashlib
 import json
@@ -15,24 +15,37 @@ from resource_catalog import digest, verify_catalog
 GAMES = ('tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario', 'coast-kart', 'cozy-island')
 
 
+def validate_version_transition(game, scope, metadata, previous):
+    if previous is not None:
+        assert metadata['versionCode'] > previous['versionCode'], f'{game}: versionCode must increase for an update'
+        return
+    assert scope == 'used-car-racing' and game == 'used-car-racing', 'Only the registered new game may have no previous release'
+    assert metadata['packageName'] == 'com.ecojust.usedcartv', 'Unexpected initial package identity'
+    assert metadata['versionCode'] == 1 and metadata['version'] == '0.1.0', 'Unexpected initial game identity'
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source-sha', required=True)
     parser.add_argument('--build-tools', type=Path, required=True)
+    parser.add_argument('--scope', choices=('games', 'used-car-racing'), default='games')
     args = parser.parse_args()
     assert re.fullmatch(r'[a-f0-9]{40}', args.source_sha), 'Exact source SHA required'
     root = Path(__file__).resolve().parents[1]
     head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
     assert head == args.source_sha, 'Checkout must match the verified source build'
     verify_catalog(root, args.build_tools)
+    games = ('used-car-racing',) if args.scope == 'used-car-racing' else GAMES
     packages = []
-    for game in GAMES:
+    for game in games:
         folder = root / 'resource/apps' / game
         metadata_file = folder / 'resource.json'
         metadata = json.loads(metadata_file.read_text())
         assert metadata['sourceCommit'] == args.source_sha, f'{game}: incorrect build provenance'
-        old = json.loads(subprocess.check_output(['git', 'show', f'{args.source_sha}:resource/apps/{game}/resource.json'], cwd=root))
-        assert metadata['versionCode'] > old['versionCode'], f'{game}: versionCode must increase for an update'
+        old_path = f'{args.source_sha}:resource/apps/{game}/resource.json'
+        has_previous = subprocess.run(['git', 'cat-file', '-e', old_path], cwd=root, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+        old = json.loads(subprocess.check_output(['git', 'show', old_path], cwd=root)) if has_previous else None
+        validate_version_transition(game, args.scope, metadata, old)
         count = 0
         with zipfile.ZipFile(folder / metadata['apk']) as archive:
             assert len(archive.namelist()) == len(set(archive.namelist())), f'{game}: duplicate APK entries'
@@ -58,10 +71,10 @@ def main():
     untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=root).decode().split('\0')
     paths = sorted(set(filter(None, changed + untracked)))
     allowed_files = {'README.md', 'README.en.md', 'resource/README.md', 'docs/previews/en/native-captures.json'}
-    for game in GAMES:
+    for game in games:
         allowed_files.add(f'docs/previews/en/app-{game}.png')
     def allowed(path):
-        return path in allowed_files or any(path.startswith(f'resource/apps/{game}/') and not path.startswith(f'resource/apps/{game}/src/') for game in GAMES)
+        return path in allowed_files or any(path.startswith(f'resource/apps/{game}/') and not path.startswith(f'resource/apps/{game}/src/') for game in games)
     assert paths and all(allowed(path) for path in paths), 'Publication changed files outside the game resource scope'
     output = Path(os.environ['RUNNER_TEMP']) / 'published-game-resources'
     output.mkdir(exist_ok=False)

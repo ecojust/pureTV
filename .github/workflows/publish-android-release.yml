@@ -19,6 +19,7 @@ on:
         options:
           - all
           - games
+          - used-car-racing
 permissions:
   contents: write
   actions: read
@@ -36,13 +37,16 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           SOURCE_SHA: ${{ inputs.source_sha }}
           RELEASE_TAG: ${{ inputs.release_tag }}
+          PACKAGE_SCOPE: ${{ inputs.package_scope }}
         run: |
           python3 - <<'PY'
           import os, re
           assert os.environ['REPOSITORY'] == 'ecojust/pureTV', 'This publisher is restricted to ecojust/pureTV'
           source_sha, release_tag = os.environ['SOURCE_SHA'], os.environ['RELEASE_TAG']
           assert re.fullmatch(r'[0-9a-f]{40}', source_sha), 'An exact source SHA is required'
-          assert re.fullmatch(r'android-v[0-9]+\.[0-9]+\.[0-9]+', release_tag), 'Expected an Android release tag such as android-v0.5.0'
+          scope = os.environ['PACKAGE_SCOPE']
+          pattern = r'android-used-car-v[0-9]+\.[0-9]+\.[0-9]+' if scope == 'used-car-racing' else r'android-v[0-9]+\.[0-9]+\.[0-9]+'
+          assert scope in ('all', 'games', 'used-car-racing') and re.fullmatch(pattern, release_tag), 'Release tag does not match the selected package scope'
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
               output.write(f'source_sha={source_sha}\nrelease_tag={release_tag}\n')
           PY

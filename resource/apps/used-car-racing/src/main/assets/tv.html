@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; media-src 'self' blob:">
+  <title>极品二手车 · Used Car Racing TV</title>
+  <link rel="stylesheet" href="tv.css">
+</head>
+<body>
+  <main id="app" class="app" data-phase="garage">
+    <canvas id="road" width="1280" height="720" aria-label="三维赛车画面"></canvas>
+    <div class="vignette"></div>
+    <header class="masthead">
+      <div class="wordmark"><span class="brand-mark">U<span>/</span>C</span><div><strong>USED CAR</strong><small id="brand-subtitle">不完美的车。真正的驾驶。</small></div></div>
+      <div class="session"><i></i><span id="session-label">车况已揭晓</span><span class="edition">TV / 01</span></div>
+    </header>
+    <section id="garage" class="garage">
+      <div class="intro"><span class="eyebrow">THE SECOND-HAND CHAMPIONSHIP</span><h1 id="game-title">极品二手车<span>好坏，全凭手气。</span></h1><p id="intro-detail">六辆车，同一条起跑线。驾驶你的不完美。</p></div>
+      <div id="vehicle-cards" class="vehicle-cards"></div>
+      <div class="garage-actions"><button id="reroll" class="button secondary">↻ 重新抽车</button><div class="player-picker"><button data-players="1" class="selected">1P</button><button data-players="2">2P</button><span id="ai-label">+ 5 AI</span></div><span class="draw-note" id="draw-note">每场随机车辆与车况</span></div>
+      <section class="track-picker"><div class="track-label"><small id="circuit-label">选择赛道</small><span>01 — 03</span></div><div id="track-options" class="track-options"></div><button id="start" class="button primary"><span id="start-label">驶上起跑线</span><b>↗</b></button></section>
+    </section>
+    <aside id="room" class="room-panel">
+      <div class="room-top"><span id="phone-label">手机即手柄</span><span>LAN</span></div>
+      <div class="qr-box"><img id="room-qr" alt="手机连接二维码" hidden><span id="room-pending">正在建立房间…</span></div>
+      <p id="room-help">手机和电视连接同一 Wi-Fi<br>扫描二维码，直接加入</p><code id="room-address"></code>
+      <div class="room-player" id="room-player-1"><b>1P</b><span id="room-status-1">等待连接</span><i></i></div><div class="room-player" id="room-player-2"><b>2P</b><span id="room-status-2">等待连接</span><i></i></div>
+      <div class="control-help"><div><b>↔</b><span id="steer-help">左侧转向</span></div><div><b>A / B</b><span id="pedal-help">右上油门 · 右下刹车</span></div><div><b>START</b><span id="start-help">开始 / 暂停</span></div><div><b>SELECT</b><span id="select-help">车库抽车 · 比赛切镜头</span></div></div>
+    </aside>
+    <section id="race-hud" class="race-hud" hidden>
+      <div class="race-heading"><div><small id="race-track-label">CIRCUIT</small><strong id="race-track"></strong></div><time id="race-time">00:00.000</time><span id="race-format">6 CARS / 3 LAPS</span></div>
+      <div id="leaderboard" class="leaderboard"></div><canvas id="minimap" width="240" height="160" class="minimap" aria-label="赛道小地图"></canvas>
+      <div id="driver-huds" class="driver-huds"></div><div id="countdown" class="countdown" hidden>3</div><div id="race-message" class="race-message" role="status" hidden></div>
+      <div class="race-controls"><button id="camera-button">追车镜头</button><button id="pause-button">暂停</button></div>
+    </section>
+    <section id="pause-panel" class="pause-scrim" hidden><div class="pause-card"><span class="eyebrow">PIT STOP</span><h2 id="pause-title">比赛暂停</h2><p id="pause-detail"></p><button id="resume" class="button primary">继续比赛 ↗</button><div class="pause-tools"><button id="recover" class="button secondary">拖车复位</button><button id="back-garage" class="button secondary">返回车库</button></div></div></section>
+    <section id="results" class="results-scrim" hidden><div class="results-card"><span class="eyebrow">YOU MADE IT.</span><h2 id="results-title">旧车，也有好成绩。</h2><div id="result-list"></div><button id="new-race" class="button primary">下一场，换一种命运 ↗</button></div></section>
+    <footer class="footer"><span id="footer-hint">方向键选择赛道 · 确定 / START 开始 · SELECT 抽车</span><button id="sound-button">声音 开</button><span class="build-label">ORIGINAL / ECOJUST</span></footer>
+    <section id="startup" class="startup"><strong id="startup-title">正在点火…</strong><p id="startup-detail">准备车辆、赛道和局域网手柄</p></section>
+  </main>
+  <script src="three.min.js"></script><script src="tracks.js"></script><script src="vehicle-models.js"></script><script src="game-model.js"></script><script src="renderer-3d.js"></script><script src="audio.js"></script><script src="game.js"></script>
+</body>
+</html>
