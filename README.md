@@ -79,7 +79,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [Super Mario TV](resource/apps/super-mario/) | ecojust / 桔子桑 | 0.5.2 | 93.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
 | [Tank TV](resource/apps/tank/) | ecojust / 桔子桑 | 0.5.2 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
 | [Tetris TV](resource/apps/tetris/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
-| [极品二手车](resource/apps/used-car-racing/) | ecojust / 桔子桑 | 0.1.1 | 1.64 MB | 随机车况与机械故障的三维赛车，支持手机扫码一至两人竞速和 AI 对手 | <img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"> |
+| [极品二手车](resource/apps/used-car-racing/) | ecojust / 桔子桑 | 0.1.2 | 1.66 MB | 随机车况与机械故障的三维赛车，支持手机扫码一至两人竞速和 AI 对手 | <img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"> |
 | [WebTV](resource/apps/webtv/) | ecojust / 桔子桑 | 0.5.0 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
 
 <!-- resource-index:end -->
