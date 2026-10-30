@@ -1,6 +1,7 @@
 import { Channel, invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
-import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight } from './types';
+import {version as appVersion} from '../package.json';
+import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight, type ClientUpdateInfo, type ClientUpdateProgress, type ClientUpdateResult } from './types';
 
 export const demo = new URLSearchParams(location.search).get('demo') === '1';
 export const desktop = '__TAURI_INTERNALS__' in window;
@@ -135,6 +136,40 @@ export async function openPackageResource(packageName: string, resource: 'source
     window.open(url, '_blank', 'noopener,noreferrer'); return;
   }
   await invoke('open_package_resource', { packageName, resource });
+}
+
+let demoUpdateCancelled = false;
+export async function checkClientUpdate(): Promise<ClientUpdateInfo> {
+  if (demo) {
+    await new Promise(resolve => setTimeout(resolve, 180));
+    const parts = appVersion.split('.').map(Number), latestVersion = `${parts[0]}.${parts[1]}.${parts[2] + 1}`;
+    return { currentVersion: appVersion, platform: 'windows-x64', supported: true, status: 'available', available: true, latestVersion, revision: 'demo-client-revision', fileName: `pureTV-Manager-${latestVersion}-windows-x64-setup.exe`, bytes: 2097152, sourceUrl: 'https://gitee.com/juzisang331/pure-tv-store', checkedAt: Date.now() };
+  }
+  if (!desktop) throw new Error(unavailable);
+  return invoke<ClientUpdateInfo>('check_client_update');
+}
+export async function installClientUpdate(version: string, revision: string, onProgress: (value: ClientUpdateProgress) => void): Promise<void> {
+  if (demo) {
+    demoUpdateCancelled = false;
+    for (const downloaded of [0, 1048576, 2097152]) {
+      onProgress({stage: 'downloading', downloaded, total: 2097152});
+      await new Promise(resolve => setTimeout(resolve, 250));
+      if (demoUpdateCancelled) throw new Error('更新下载已取消');
+    }
+    onProgress({stage: 'verifying', downloaded: 2097152, total: 2097152});
+    return;
+  }
+  if (!desktop) throw new Error(unavailable);
+  return invoke<void>('install_client_update', {version, revision, onProgress: new Channel<ClientUpdateProgress>(onProgress)});
+}
+export async function cancelClientUpdate(): Promise<void> {
+  if (demo) { demoUpdateCancelled = true; return; }
+  if (!desktop) throw new Error(unavailable);
+  await invoke('cancel_client_update');
+}
+export async function clientUpdateResult(): Promise<ClientUpdateResult | null> {
+  if (demo || !desktop) return null;
+  return invoke<ClientUpdateResult | null>('client_update_result');
 }
 
 export interface McpInfo { config: { mcpServers: Record<string, { command: string; args: string[] }> }; sessionPath: string }

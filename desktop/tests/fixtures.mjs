@@ -1,3 +1,6 @@
+import {readFileSync} from 'node:fs';
+const managerVersion=JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8')).version;
+
 export function snapshot() {
   return {
     localNetwork:{addresses:[{interfaceName:'Wi-Fi',ip:'192.168.0.2',prefixLength:24},{interfaceName:'Ethernet',ip:'10.0.0.2',prefixLength:24},{interfaceName:'Test LAN',ip:'192.168.1.2',prefixLength:24}],error:null},
@@ -44,8 +47,16 @@ export function packageInsight(packageName, overrides = {}) {
   };
 }
 
+export function clientUpdate(overrides = {}) {
+  return {
+    currentVersion:managerVersion,platform:'macos-arm64',supported:true,status:'upToDate',available:false,
+    latestVersion:managerVersion,revision:'e'.repeat(40),fileName:`pureTV-Manager-${managerVersion}-macos-arm64.dmg`,bytes:4866503,
+    sourceUrl:'https://gitee.com/juzisang331/pure-tv-store',checkedAt:1793358000000,...overrides,
+  };
+}
+
 export async function mockBridge(page, initial = snapshot(), options = {}) {
-  await page.addInitScript(({initial, options, defaultMarketCatalog}) => {
+  await page.addInitScript(({initial, options, defaultMarketCatalog, defaultClientUpdate}) => {
     const state = structuredClone(initial);
     const defaultLayout=options.layout || {version:2,home:{columns:4,items:[{action:'music',icon:'music',color:'#303338'},{action:'files',icon:'files',color:'#3B4C46'},{action:'apps',icon:'apps',color:'#374959'}]},apps:{columns:3,items:[]}};
     let launcherLayout=structuredClone(defaultLayout), customLayout=false;
@@ -80,6 +91,10 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     window.__packageInsights=structuredClone(options.packageInsights || {});
     window.__packageInsightRequests=[];window.__packageResources=[];
     window.__packageInsightError=options.packageInsightError || null;
+    window.__clientUpdateInfo=structuredClone(options.clientUpdate || defaultClientUpdate);
+    window.__clientUpdateRequests=[];window.__clientUpdateError=options.clientUpdateError || null;
+    window.__clientInstallError=options.clientInstallError || null;window.__clientUpdateResult=structuredClone(options.clientUpdateResult || null);
+    let clientUpdateCancelled=false;
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
     window.__networkReads=0; window.__requests = []; window.__pickerCalls = 0; window.__xss = false; window.__toolsInstalls = 0; window.__resources = [];
@@ -138,6 +153,36 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
           });
         }
         if (command === 'open_package_resource') { window.__packageResources.push(structuredClone(args)); return; }
+        if (command === 'client_update_result') {
+          window.__clientUpdateRequests.push({command});
+          const value=window.__clientUpdateResult;window.__clientUpdateResult=null;return structuredClone(value);
+        }
+        if (command === 'check_client_update') {
+          window.__clientUpdateRequests.push({command});
+          const held=await holdOperation('checkClientUpdate');
+          if(held.response)return structuredClone(held.response);
+          if(window.__clientUpdateError)throw new Error(window.__clientUpdateError);
+          return structuredClone(window.__clientUpdateInfo);
+        }
+        if (command === 'cancel_client_update') {
+          window.__clientUpdateRequests.push({command});clientUpdateCancelled=true;return;
+        }
+        if (command === 'install_client_update') {
+          window.__clientUpdateRequests.push({command,version:args.version,revision:args.revision});
+          clientUpdateCancelled=false;let index=0;
+          const total=window.__clientUpdateInfo.bytes || 0;
+          const emit=(stage,downloaded=0,totalBytes=total)=>callbacks.get(args.onProgress?.id)?.({index:index++,message:{stage,downloaded,total:totalBytes}});
+          window.__emitClientUpdateProgress=emit;
+          try {
+            if(args.version!==window.__clientUpdateInfo.latestVersion || args.revision!==window.__clientUpdateInfo.revision)throw new Error('客户端更新目录已变化，请重新检查');
+            emit('downloading',Math.floor(total/2));
+            await holdOperation('installClientUpdate');
+            if(clientUpdateCancelled)throw new Error('更新下载已取消，当前客户端未更改');
+            if(window.__clientInstallError)throw new Error(window.__clientInstallError);
+            emit('verifying',total);emit('preparing',total);emit('installing',total);
+            return;
+          } finally {callbacks.get(args.onProgress?.id)?.({index,end:true});}
+        }
         if (command === 'platform_tools_info') return {version:'37.0.1',platform:'macos',downloadBytes:16110554,installed:toolsInstalled,supported:!options.unsupportedTools,message:options.unsupportedTools ? '此系统请手动配置 ADB' : ''};
         if (command === 'install_platform_tools') {
           if (args.acceptedLicense !== true) throw new Error('必须先同意 Android SDK 许可协议');
@@ -242,5 +287,5 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         return structuredClone(state);
       },
     };
-  }, {initial, options, defaultMarketCatalog:marketCatalog()});
+  }, {initial, options, defaultMarketCatalog:marketCatalog(), defaultClientUpdate:clientUpdate()});
 }

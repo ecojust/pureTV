@@ -5,6 +5,16 @@ export interface PackageInsight {
   risk: 'low' | 'medium' | 'high' | 'critical' | 'unknown'; list: string | null;
   sourceName: string; sourceUrl: string; licenseUrl: string; fetchedAt: number; stale: boolean; warning: string | null;
 }
+export interface ClientUpdateInfo {
+  currentVersion: string; platform: string; supported: boolean;
+  status: 'available' | 'upToDate' | 'notPublished' | 'unsupported'; available: boolean;
+  latestVersion: string | null; revision: string | null; fileName: string | null;
+  bytes: number | null; sourceUrl: string; checkedAt: number;
+}
+export interface ClientUpdateProgress {
+  stage: 'checking' | 'downloading' | 'verifying' | 'preparing' | 'installing'; downloaded: number; total: number;
+}
+export interface ClientUpdateResult { version: string; success: boolean; message: string }
 export interface LauncherInfo { apkSizeBytes?: number | null; component: string; packageName: string; label: string; isDefault: boolean }
 export interface HistoryEntry { id: string; timestamp: number; action: string; target: string; device: string; userId: number; success: boolean; message: string }
 export interface PlatformToolsInfo {

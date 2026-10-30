@@ -144,7 +144,17 @@ screen defines integer design dimensions (320–7680). Each page contains users,
 
 V5 components use separate textColor/iconColor; backgroundColor may be transparent. Desktop screen dimensions are informational, and the property inspector places its visibility switch beneath the component type. V4 remains accepted with its original coupled color field.
 
-## Market
+## Manager client updates
+
+`check_client_update` is a read-only background/manual request returning `{currentVersion, platform, supported, status, available, latestVersion, revision, fileName, bytes, sourceUrl, checkedAt}`. Status is `available | upToDate | notPublished | unsupported`. Network or invalid-catalog errors reject; they are not represented as up-to-date results. The fixed Gitee repository's default branch is resolved to a commit before inspecting canonical `client/pureTV-Manager-X.Y.Z-<platform>` package names. Each platform is compared separately using numeric stable versions. Startup only checks metadata; it never downloads or installs a client automatically.
+
+`install_client_update {version, revision, onProgress}` accepts the previously displayed selection, without caller-controlled URLs, destinations or hashes. The backend owns the selected tree entry, refuses downgrades and changed selections, verifies the package's size and Git blob SHA, and supplies SHA256 to the native installation preparation and helper. Progress stages are `checking | downloading | verifying | preparing | installing` with measured `downloaded` and `total` byte counts. `cancel_client_update` cancels downloading/preparation; cancellation and the transition into installation share a lock so an acknowledged cancellation cannot initiate installation. `client_update_result` returns `{version, success, message} | null` from the previous helper run.
+
+Download/install reserves the same operation guard as ADB mutations and market installation. After preparation, the updater claims the shutdown state, blocks new device work, stops ADB and starts an independent copied helper. The helper acknowledges readiness and waits for the running manager's `manager.lock` to be released. Only then may it install the verified package. Failed handoff resets the shutdown reservation and retains the current manager. The UI distinguishes handoff from completed installation; a returning install command is not presented as an installed-success result.
+
+Windows invokes the NSIS installer; a portable user transitions to the standard installation. macOS stages a verified app from the read-only DMG, backs up the existing app, replaces it and restarts, with recovery on replacement failure. Running directly from a DMG or App Translocation requires moving the app into Applications first. Linux uses native authorization and the DEB package manager when a corresponding package is published. These actions do not disable platform security controls. See [client-updates.md](docs/client-updates.md) for publisher filenames and first-upgrade requirements.
+
+## Market catalog and packages
 
 The manager reads the fixed public repository `https://gitee.com/juzisang331/pure-tv-store`. It resolves the default branch to a commit and discovers APK blobs under `apps/` and `launcher/`, with sibling thumbnail images. Names and versions fall back to the APK filename. Catalog and APK requests run in Rust; the webview cannot choose an arbitrary source URL or destination. Only the two Gitee image origins are allowed for lazy thumbnail rendering, without remote scripts.
 

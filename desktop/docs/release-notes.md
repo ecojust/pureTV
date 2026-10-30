@@ -1,28 +1,31 @@
-# pureTV Manager 0.4.10
+# pureTV Manager 0.4.11
 
 ## 简体中文
 
-应用列表新增圆圈 **i** 信息按钮。点击后按完整包名查询应用用途、卸载风险和风险依据，展示资料来源、社区原始分类与获取时间，并提供刷新和网页搜索入口。
+新增 Manager 客户端更新：启动后后台检查一次，也可在左下角点击「检查更新」。更新来源为 Gitee 商店的 `client/` 目录，按当前系统匹配安装包并比较版本；仅在点击「下载并安装」后下载，校验通过后安全结束 ADB 连接、退出管理器，再自动安装和重启。
 
-核心组件与当前默认桌面的保护优先于社区分类；未收录、无法查询和过期缓存分别提示，未知包不会被标为安全。用途资料来自 UAD-ng 社区并保留原文，风险分类不代表对具体电视固件的兼容性保证。查询不会停用或卸载应用。
+- 显示当前版本、仓库版本、平台、安装包大小和下载进度；支持取消下载、失败重试及查看上次安装结果。
+- 下载绑定固定仓库提交，核对大小与 Git blob SHA，交接前再次验证 SHA256。缺少当前平台的包或检查失败会明确提示，不会误报最新或自动降级。
+- Windows 使用安装版更新，便携用户会安装为标准版；macOS 更新已安装的应用并保留失败回退路径；系统需要时会弹出授权提示。Linux 在仓库提供对应 DEB 且系统具备授权工具时可更新。
+- 从 0.4.10 或更早版本首次升级，需要先手动安装一次 0.4.11，之后即可使用内置更新。发布者将同命名的新安装包放进 Gitee `client/` 后即可被发现，无需额外更新服务。
 
-保留市场大文件下载修复，以及新增应用块默认 160 × 142 的布局设置。
+保留包名用途与卸载风险查询、市场大文件下载修复和 160 × 142 新应用块默认尺寸。各平台行为及仓库文件约定见 `desktop/docs/client-updates.md`。
 
 ## 繁體中文
 
-應用列表新增圓圈 **i** 資訊按鈕。點擊後依完整套件名稱查詢應用用途、解除安裝風險及判斷依據，顯示資料來源、社群原始分類與取得時間，並提供重新整理和網頁搜尋入口。
+新增 Manager 用戶端更新：啟動後在背景檢查一次，也可在左下角點擊「檢查更新」。來源為 Gitee 商店的 `client/` 目錄，依目前系統選擇安裝包並比較版本。點擊「下載並安裝」後才會下載，驗證通過後結束 ADB 連線、退出管理器，再自動安裝及重新啟動。
 
-核心元件與目前預設桌面的保護優先於社群分類；未收錄、無法查詢和過期快取分別提示，未知套件不會被標為安全。用途資料來自 UAD-ng 社群並保留原文，風險分類不代表對特定電視韌體的相容性保證。查詢不會停用或解除安裝應用。
+顯示版本、平台、檔案大小與下載進度，支援取消下載、失敗重試及上次安裝結果。下載綁定固定提交並核對 Git blob SHA、大小與 SHA256；缺少對應平台或無法查詢會明確提示，不會自動降級。Windows 使用安裝版，便攜使用者會安裝為標準版；macOS 更新已安裝的應用程式；必要時由系統要求授權。Linux 需倉庫提供對應 DEB 及可用的系統授權工具。
 
-保留市場大型檔案下載修正，以及新增應用區塊預設 160 × 142 的佈局設定。
+0.4.10 或更早版本須先手動安裝一次 0.4.11。往後發布者把新安裝包放進 Gitee `client/` 即可被發現。
 
 ## English
 
-App rows now include a circled **i** button. Look up an app's purpose and uninstall risk by its exact package name, with the reasoning, source, original community category and retrieval time. Refresh the information or continue searching for the package in your browser.
+Manager now checks the Gitee store's `client/` directory once after startup, with a manual **Check for updates** action in the sidebar. It matches the running platform and compares stable numeric versions. **Download and install** verifies the package, safely ends the ADB connection, exits the manager, and hands installation and restart to a separate helper.
 
-Protection for core components and the current default launcher takes precedence over community ratings. Missing entries, lookup failures and stale cached data are clearly distinguished; unknown packages are never labeled safe. UAD-ng community descriptions retain their original wording, and risk categories do not guarantee compatibility with a particular TV firmware. Looking up information never disables or uninstalls an app.
+The dialog shows versions, platform, package size and progress, with download cancellation, retry and the previous installation result. Downloads are pinned to the selected repository commit and checked against its Git blob hash and byte count; SHA256 is verified again before installation. Missing platform packages and lookup failures are explicit, and downgrades are rejected.
 
-The large market download fix and the 160 × 142 default size for new app blocks remain included.
+Windows uses the standard installer, including a transition from the portable edition. macOS updates an installed app bundle with recovery on replacement failure. Native authorization may be requested. Linux requires a published DEB and the system authorization tools. Clients at 0.4.10 or earlier need one manual upgrade to 0.4.11 before they can use this updater. Future packages are discovered when the publisher adds them to Gitee's `client/` directory.
 
 ---
 

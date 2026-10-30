@@ -134,6 +134,8 @@ jobs:
         run: npm run test:svg
       - name: Build native desktop and installer
         run: npm run tauri -- build --ci --target "$BUILD_TARGET" --bundles "$BUNDLE_FORMAT" -- --locked
+      - name: Verify actual client update installation
+        run: python scripts/verify-client-update.py --target "$BUILD_TARGET"
       - name: Verify MCP against the running desktop
         if: runner.os == 'Linux'
         run: xvfb-run -a python scripts/verify-mcp.py --binary "src-tauri/target/$BUILD_TARGET/release/puretv-desktop"

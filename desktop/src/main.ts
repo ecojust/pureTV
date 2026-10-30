@@ -2,6 +2,7 @@ import {t,ui,message,locale,setLocale,setTheme,localeOptions,themeOptions} from 
 import './styles.css';
 import {UnifiedEditor} from './unified-editor';
 import {PackageInfoDialog} from './package-info';
+import {ClientUpdater} from './client-updater';
 import {unavailableLayoutApps} from './layout-apps';
 import {validUnified,systemUnchanged} from './unified-layout';
 import {sameSubnet} from './subnet';
@@ -111,6 +112,12 @@ const root = document.querySelector<HTMLDivElement>('#app')!;
 const dialog = document.createElement('dialog');
 dialog.className = 'modal'; document.body.append(dialog);
 const packageInfo = new PackageInfoDialog(() => snapshot);
+const clientUpdater = new ClientUpdater({
+  busy: () => busy,
+  setWorking: value => { localBusy = value; busy = value || !!agentOperation?.running; render(); },
+  changed: () => { const slot = root.querySelector<HTMLElement>('[data-client-update-slot]'); if (slot) { const focused = slot.contains(document.activeElement); slot.innerHTML = clientUpdater.sidebar(); if (focused) slot.querySelector<HTMLButtonElement>('button')?.focus({preventScroll:true}); } },
+  refreshState: async () => { try { applySnapshot(await api.execute({action: 'getState'})); render(); } catch { /* Preserve the last device state if refresh is unavailable. */ } },
+});
 const layoutDialog=document.createElement('dialog');layoutDialog.className='layout-modal';layoutDialog.setAttribute('aria-label',t('调整启动器布局'));document.body.append(layoutDialog);
 type FeedbackRow = { target: string; success: boolean | null; message: string };
 type Feedback = { phase: 'loading' | 'result'; operation: string; description: string; outcome?: NoticeKind; rows: FeedbackRow[]; cancellable: boolean; checkingLayout?:boolean; cancelError?: string };
@@ -256,6 +263,7 @@ function progressText(progress = toolsProgress): string {
   return total > 0 ? `${labels.downloading} ${Math.floor(downloaded / total * 100)}% · ${bytes(downloaded)} / ${bytes(total)}` : labels.downloading;
 }
 function busyIndicator(): string {
+  if (clientUpdater.working) return `<div class="busy-bar" role="status"><span class="spinner"></span><span>${t('正在更新 Manager…')}</span>${actionButton('client-update',t('查看更新进度'),'','small')}</div>`;
   if (!busy) return '';
   const external = !!agentOperation?.running;
   const market = activeMarketOperation(), marketStatus = activeMarketProgress();
@@ -282,7 +290,7 @@ function adbPanel(): string {
 }
 function shell(): string {
   const [label, status] = deviceStatus();
-  return ui`<aside class="sidebar"><nav aria-label="主要页面">${(Object.entries(pages) as [Page, [string, string, string]][]).filter(([key])=>key!=='install').map(([key, data]) => `<button class="nav-item ${page === key || page==='install' && key==='apps' ? 'active' : ''}" data-page="${key}" ${page === key || page==='install' && key==='apps' ? 'aria-current="page"' : ''}>${icon(data[2])}<span>${t(data[0])}</span></button>`).join('')}</nav><section class="appearance-panel" aria-label="语言与外观"><label>语言<select name="locale" aria-label="界面语言">${localeOptions()}</select></label><label>主题<select name="theme" aria-label="界面主题">${themeOptions()}</select></label></section><a class="brand" href="#" aria-label="pureTV 电视管理器"><img src="/puretv-logo.png" alt="" width="42" height="42">pure<span>TV</span></a><p class="brand-caption">电视管理器<span class="app-version">v${esc(appVersion)}</span></p></aside><main class="${page === 'connect' ? '' : 'list-page'}"><header class="page-header"><div><h1>${t(pages[page][0])}</h1><p>${t(pages[page][1])}</p></div><div class="header-actions"><span class="device-badge"><i class="dot ${status}"></i>${online() ? t('已连接 · ') : ''}${esc(label)}</span></div></header>${api.demo ? t('<div class="banner demo-banner">演示模式 · 示例设备和应用，所有操作仅用于预览，不会连接真实电视。</div>') : !api.desktop ? t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用来连接电视和安装 APK。</div>') : ''}${notice ? ui`<div class="banner notice ${noticeKind}" role="status"><span>${esc(message(notice))}</span><button class="icon-button" aria-label="关闭提示" data-act="dismiss">${icon('close')}</button></div>` : ''}${busyIndicator()}<section id="page-content">${content()}</section><footer class="app-footer"><span>pureTV 电视管理器</span><span>${api.demo ? t('演示数据 · 不执行 ADB') : snapshot.device ? (page === 'connect' ? ui`目标 ${esc(snapshot.device.serial)} · 用户 ${snapshot.device.userId}` : ui`当前 Android 用户 ${snapshot.device.userId}`) : t('选择设备后开始管理')}</span></footer></main>`;
+  return ui`<aside class="sidebar"><nav aria-label="主要页面">${(Object.entries(pages) as [Page, [string, string, string]][]).filter(([key])=>key!=='install').map(([key, data]) => `<button class="nav-item ${page === key || page==='install' && key==='apps' ? 'active' : ''}" data-page="${key}" ${page === key || page==='install' && key==='apps' ? 'aria-current="page"' : ''}>${icon(data[2])}<span>${t(data[0])}</span></button>`).join('')}</nav><section class="appearance-panel" aria-label="语言与外观"><label>语言<select name="locale" aria-label="界面语言">${localeOptions()}</select></label><label>主题<select name="theme" aria-label="界面主题">${themeOptions()}</select></label></section><a class="brand" href="#" aria-label="pureTV 电视管理器"><img src="/puretv-logo.png" alt="" width="42" height="42">pure<span>TV</span></a><p class="brand-caption">电视管理器<span class="app-version">v${esc(appVersion)}</span></p><div data-client-update-slot>${clientUpdater.sidebar()}</div></aside><main class="${page === 'connect' ? '' : 'list-page'}"><header class="page-header"><div><h1>${t(pages[page][0])}</h1><p>${t(pages[page][1])}</p></div><div class="header-actions"><span class="device-badge"><i class="dot ${status}"></i>${online() ? t('已连接 · ') : ''}${esc(label)}</span></div></header>${api.demo ? t('<div class="banner demo-banner">演示模式 · 示例设备和应用，所有操作仅用于预览，不会连接真实电视。</div>') : !api.desktop ? t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用来连接电视和安装 APK。</div>') : ''}${notice ? ui`<div class="banner notice ${noticeKind}" role="status"><span>${esc(message(notice))}</span><button class="icon-button" aria-label="关闭提示" data-act="dismiss">${icon('close')}</button></div>` : ''}${busyIndicator()}<section id="page-content">${content()}</section><footer class="app-footer"><span>pureTV 电视管理器</span><span>${api.demo ? t('演示数据 · 不执行 ADB') : snapshot.device ? (page === 'connect' ? ui`目标 ${esc(snapshot.device.serial)} · 用户 ${snapshot.device.userId}` : ui`当前 Android 用户 ${snapshot.device.userId}`) : t('选择设备后开始管理')}</span></footer></main>`;
 }
 function syncSceneScale():void {const canvas=layoutDialog.querySelector<HTMLElement>('.scene-canvas');if(canvas)canvas.style.setProperty('--scene-unit',`${canvas.clientWidth/960}px`);}
 function scrollAreas():HTMLElement[]{return [...root.querySelectorAll<HTMLElement>('[data-scroll]'),...layoutDialog.querySelectorAll<HTMLElement>('[data-scroll]')];}
@@ -308,6 +316,7 @@ function render(): void {
     }
     renderFeedback();
     packageInfo.sync();
+    clientUpdater.sync();
   } finally { rendering = false; }
 }
 function content(): string {
@@ -881,6 +890,7 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
     case 'cancel': await cancelOperation(); break;
     case 'details': details(button.dataset.pkg!); break;
     case 'package-info': packageInfo.open(button.dataset.pkg!, button); break;
+    case 'client-update': clientUpdater.open(button); break;
     case 'clear-selection': selected.clear(); updateList(); break;
     case 'disable': case 'enable': case 'uninstall': case 'restore': await packageAction(action); break;
     case 'enable-one': await packageAction('enable', button.dataset.pkg); break;
@@ -1015,6 +1025,7 @@ document.addEventListener('keydown', event => {
   }
 });
 render();
+clientUpdater.start();
 void api.execute({ action: 'getState' }).then(value => {
   if (!applySnapshot(value)) return;
   adbPath = snapshot.adbPath || ''; notice = snapshot.message;

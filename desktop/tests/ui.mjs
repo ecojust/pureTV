@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 import { mkdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { mockBridge, snapshot, marketCatalog, packageInsight } from './fixtures.mjs';
+import { mockBridge, snapshot, marketCatalog, packageInsight, clientUpdate } from './fixtures.mjs';
 
 const directory = fileURLToPath(new URL('..', import.meta.url));
 const port = 1429, url = `http://127.0.0.1:${port}`;
@@ -272,6 +272,155 @@ try {
     assert.match(await infoDialog(p).innerText(),/com\.vendor\.recommendations/);
     assert.deepEqual(await requests(p),[]);
   },snapshot(),{packageInsights:{[recommended]:recommendationInsight}});
+  const updateDialog=p=>p.locator('dialog.client-update-dialog[open]');
+  const updateAction=(p,name)=>updateDialog(p).locator(`[data-client-update-action="${name}"]`).first();
+  const updateRequests=p=>p.evaluate(()=>window.__clientUpdateRequests);
+  const updateInstalls=async p=>(await updateRequests(p)).filter(item=>item.command==='install_client_update');
+  const newerClient=clientUpdate({status:'available',available:true,latestVersion:'0.4.12',fileName:'pureTV-Manager-0.4.12-macos-arm64.dmg',bytes:5242880});
+  async function startupUpdate(p) {await p.waitForFunction(()=>window.__clientUpdateRequests.some(item=>item.command==='check_client_update'));}
+  async function openUpdate(p,state='available') {
+    await act(p,'client-update').click();
+    await updateDialog(p).locator(`[data-client-update-state="${state}"]`).waitFor();
+  }
+  async function heldUpdate(p,action='installClientUpdate') {await p.waitForFunction(action=>window.__pendingOperations.some(item=>item.action===action),action);}
+  await check('client update: startup checks once in the background without downloading or opening a modal',async p=>{
+    await startupUpdate(p);
+    await act(p,'client-update').filter({hasText:'0.4.12'}).waitFor();
+    assert.equal(await updateDialog(p).count(),0,'An available update does not interrupt device work with a modal');
+    assert.equal((await updateRequests(p)).filter(item=>item.command==='check_client_update').length,1);
+    assert.equal((await updateRequests(p)).filter(item=>item.command==='client_update_result').length,1);
+    assert.deepEqual(await updateInstalls(p),[]);assert.deepEqual(await requests(p),[]);
+  },snapshot(),{clientUpdate:newerClient});
+  await check('client update: completing a background check preserves the current input and caret',async p=>{
+    await startupUpdate(p);await heldUpdate(p,'checkClientUpdate');
+    const host=p.locator('[name="host"]');await host.fill('192.168.1.123');await host.focus();
+    await host.evaluate(input=>input.setSelectionRange(4,7));
+    await release(p,'checkClientUpdate',{response:newerClient});await act(p,'client-update').filter({hasText:'0.4.12'}).waitFor();
+    assert.deepEqual(await host.evaluate(input=>({focused:document.activeElement===input,value:input.value,start:input.selectionStart,end:input.selectionEnd})),{focused:true,value:'192.168.1.123',start:4,end:7});
+    assert.deepEqual(await updateInstalls(p),[]);assert.deepEqual(await requests(p),[]);
+  },snapshot(),{holdActions:['checkClientUpdate']});
+  await check('client update: ordinary browser preview is disabled and demo never downloads or exits',async p=>{
+    assert.equal(await act(p,'client-update').isDisabled(),true);
+    const remote=[];p.on('request',request=>{if(!request.url().startsWith(url))remote.push(request.url());});
+    await p.goto(url+'?demo=1');await p.locator('.demo-banner').waitFor();await openUpdate(p);
+    assert.match(await updateDialog(p).innerText(),/演示模式/);await updateAction(p,'install').click();
+    await updateDialog(p).locator('[data-client-update-state="demoComplete"]').waitFor();
+    assert.match(await updateDialog(p).innerText(),/未下载或安装任何文件/);assert.equal(p.isClosed(),false);assert.deepEqual(remote,[]);
+    assert.equal(await updateAction(p,'close').isEnabled(),true);
+  },null);
+  await check('client update: manual lookup shows the exact platform package and Gitee source before installation',async p=>{
+    await startupUpdate(p);await openUpdate(p);
+    const text=await updateDialog(p).innerText();
+    assert.match(text,/0\.4\.12/);assert.ok(text.includes(newerClient.currentVersion));
+    assert.match(text,/Apple Silicon/);assert.match(text,/5\.0 MiB/);
+    assert.match(text,/pureTV-Manager-0\.4\.12-macos-arm64\.dmg/);
+    assert.match(text,/https:\/\/gitee\.com\/juzisang331\/pure-tv-store/);
+    assert.equal(await updateAction(p,'install').isEnabled(),true);
+    await updateAction(p,'source').click();assert.deepEqual(await p.evaluate(()=>window.__resources),['market']);
+    assert.deepEqual(await updateInstalls(p),[]);
+    await p.keyboard.press('Escape');assert.equal(await updateDialog(p).count(),0);
+    assert.equal(await act(p,'client-update').evaluate(element=>document.activeElement===element),true);
+  },snapshot(),{clientUpdate:newerClient});
+  await check('client update: explicit install pins version and revision and handoff never claims completed installation',async p=>{
+    await startupUpdate(p);await nav(p,'apps');await openUpdate(p);await updateAction(p,'install').click();await heldUpdate(p);
+    await updateDialog(p).locator('[data-client-update-stage="downloading"]').waitFor();
+    const meter=updateDialog(p).locator('[data-client-update-meter]');
+    assert.equal(await meter.getAttribute('max'),String(newerClient.bytes));assert.equal(await meter.getAttribute('value'),String(newerClient.bytes/2));
+    assert.deepEqual(await updateInstalls(p),[{command:'install_client_update',version:newerClient.latestVersion,revision:newerClient.revision}]);
+    assert.equal(await act(p,'scan').isDisabled(),true,'The normal device mutation controls stay locked during installation');
+    assert.equal(await updateAction(p,'close').isDisabled(),true);
+    await release(p,'installClientUpdate');await updateDialog(p).locator('[data-client-update-stage="installing"]').waitFor({state:'attached'});
+    assert.equal(await updateAction(p,'cancel').isDisabled(),true);
+    assert.equal(await updateDialog(p).locator('[data-client-update-result="success"]').count(),0);
+    assert.match(await updateDialog(p).innerText(),/退出并安装|正在安装/);
+    assert.doesNotMatch(await updateDialog(p).innerText(),/更新成功|安装成功|已安装新版本/);
+    assert.deepEqual(await requests(p),[],'The browser never sends a device mutation to install the desktop update');
+  },snapshot(),{clientUpdate:newerClient,holdActions:['installClientUpdate']});
+  await check('client update: a current device operation blocks install without cancelling or replacing it',async p=>{
+    await startupUpdate(p);await openUpdate(p);
+    await p.evaluate(()=>window.__emitMcp('mcp-operation',{running:true,tool:'scan'}));
+    await p.waitForFunction(()=>document.querySelector('[data-client-update-action="install"]').disabled);
+    assert.match(await updateDialog(p).innerText(),/等待当前操作完成/);
+    assert.deepEqual(await updateInstalls(p),[]);assert.deepEqual(await requests(p),[]);
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'scan',snapshot:value}),snapshot());
+    await p.waitForFunction(()=>!document.querySelector('[data-client-update-action="install"]').disabled);
+    assert.deepEqual(await updateInstalls(p),[]);
+  },snapshot(),{clientUpdate:newerClient});
+  await check('client update: cancelling a held download waits for cleanup and leaves the current client usable',async p=>{
+    await startupUpdate(p);await nav(p,'apps');await openUpdate(p);await updateAction(p,'install').click();await heldUpdate(p);
+    await updateAction(p,'cancel').click();
+    assert.equal((await updateRequests(p)).filter(item=>item.command==='cancel_client_update').length,1);
+    assert.equal(await act(p,'scan').isDisabled(),true,'Busy remains set until the native operation acknowledges cleanup');
+    await release(p,'installClientUpdate');await updateDialog(p).locator('[data-client-update-state="cancelled"]').waitFor();
+    assert.match(await updateDialog(p).innerText(),/取消/);assert.ok((await updateDialog(p).innerText()).includes(newerClient.currentVersion));
+    assert.equal(await act(p,'scan').isEnabled(),true);assert.equal(await updateAction(p,'close').isEnabled(),true);
+    assert.equal(await updateDialog(p).locator('[data-client-update-result="success"]').count(),0);assert.deepEqual(await requests(p),[]);
+  },snapshot(),{clientUpdate:newerClient,holdActions:['installClientUpdate']});
+  await check('client update: changed catalog rejection preserves the client and retry requires a fresh selection',async p=>{
+    await startupUpdate(p);await openUpdate(p);
+    const updated=clientUpdate({...newerClient,latestVersion:'0.4.13',fileName:'pureTV-Manager-0.4.13-macos-arm64.dmg',revision:'f'.repeat(40)});
+    await p.evaluate(value=>window.__clientUpdateInfo=value,updated);
+    await updateAction(p,'install').click();await updateDialog(p).locator('[data-client-update-state="error"]').waitFor();
+    assert.match(await updateDialog(p).innerText(),/目录已变化/);assert.equal(await updateAction(p,'install').isDisabled(),true);
+    assert.deepEqual(await updateInstalls(p),[{command:'install_client_update',version:newerClient.latestVersion,revision:newerClient.revision}]);
+    await updateAction(p,'check').click();await updateDialog(p).locator('[data-client-update-state="available"]').waitFor();
+    assert.match(await updateDialog(p).innerText(),/0\.4\.13/);await updateAction(p,'install').click();
+    await updateDialog(p).locator('[data-client-update-stage="installing"]').waitFor({state:'attached'});
+    assert.deepEqual((await updateInstalls(p)).at(-1),{command:'install_client_update',version:updated.latestVersion,revision:updated.revision});
+    assert.deepEqual(await requests(p),[]);
+  },snapshot(),{clientUpdate:newerClient});
+  await check('client update: a background network failure stays non-modal and never reports up to date',async p=>{
+    await startupUpdate(p);await act(p,'client-update').filter({hasText:'失败'}).waitFor();
+    assert.equal(await updateDialog(p).count(),0);await openUpdate(p,'error');
+    assert.match(await updateDialog(p).innerText(),/网络暂时不可用/);
+    assert.equal(await updateDialog(p).locator('[data-client-update-state="upToDate"]').count(),0);
+    assert.equal(await updateDialog(p).locator('[data-client-update-action="install"]:enabled').count(),0);
+    await p.evaluate(()=>window.__clientUpdateError=null);await updateAction(p,'check').click();
+    await updateDialog(p).locator('[data-client-update-state="upToDate"]').waitFor();assert.deepEqual(await updateInstalls(p),[]);
+    assert.deepEqual(await requests(p),[]);
+  },snapshot(),{clientUpdateError:'网络暂时不可用，请重试'});
+  for (const [label,value,expected] of [
+    ['missing platform',clientUpdate({platform:'linux-x64',status:'notPublished',latestVersion:null,fileName:null,revision:null,bytes:null}),/尚未提供当前系统/],
+    ['unsupported platform',clientUpdate({platform:'linux-arm64',supported:false,status:'unsupported',latestVersion:null,fileName:null,revision:null,bytes:null}),/不支持自动更新/],
+    ['older repository version',clientUpdate({latestVersion:'0.1.0',fileName:'pureTV-Manager-0.1.0-macos-arm64.dmg'}),/无需更新/],
+  ]) {
+    await check('client update: '+label+' never offers an incorrect package or downgrade',async p=>{
+      await startupUpdate(p);await openUpdate(p,value.status);assert.match(await updateDialog(p).innerText(),expected);
+      assert.equal(await updateDialog(p).locator('[data-client-update-action="install"]:enabled').count(),0);
+      assert.deepEqual(await updateInstalls(p),[]);assert.deepEqual(await requests(p),[]);
+    },snapshot(),{clientUpdate:value});
+  }
+  await check('client update: closing and reopening a pending check reuses it and late results never reopen a closed dialog',async p=>{
+    await startupUpdate(p);await heldUpdate(p,'checkClientUpdate');await openUpdate(p,'checking');
+    assert.equal(await updateAction(p,'check').isDisabled(),true);await updateAction(p,'close').click();
+    await openUpdate(p,'checking');assert.equal((await updateRequests(p)).filter(item=>item.command==='check_client_update').length,1);
+    await updateAction(p,'close').click();await release(p,'checkClientUpdate',{response:newerClient});
+    await act(p,'client-update').filter({hasText:'0.4.12'}).waitFor();assert.equal(await updateDialog(p).count(),0);
+    await openUpdate(p);assert.equal((await updateRequests(p)).filter(item=>item.command==='check_client_update').length,1);
+    assert.deepEqual(await updateInstalls(p),[]);
+  },snapshot(),{holdActions:['checkClientUpdate']});
+  await check('client update: previous installer failure is visible and untrusted diagnostic text remains plain text',async p=>{
+    await startupUpdate(p);await openUpdate(p,'upToDate');
+    const report=updateDialog(p).locator('[data-client-update-result="error"]');
+    assert.match(await report.innerText(),/上次安装未完成/);assert.match(await report.innerText(),/<img src=x/);
+    assert.equal(await report.locator('img,script').count(),0);assert.equal(await p.evaluate(()=>window.__xss),false);
+    assert.deepEqual(await updateInstalls(p),[]);assert.deepEqual(await requests(p),[]);
+  },snapshot(),{clientUpdateResult:{version:'0.4.10',success:false,message:'上次安装未完成 <img src=x onerror="window.__xss=true">'}});
+  await check('client update: localized update details stay usable in a compact window and all themes',async p=>{
+    await startupUpdate(p);await nav(p,'apps');await p.setViewportSize({width:960,height:640});
+    for(const [language,title] of [['zh-CN',/更新/],['en',/update/i],['zh-TW',/更新/]]) {
+      await p.locator('[name="locale"]').selectOption(language);
+      await p.locator('[name="theme"]').selectOption(language==='en'?'graphite':language==='zh-TW'?'ocean':'emerald');
+      await openUpdate(p);assert.match(await updateDialog(p).locator('h2').innerText(),title);
+      const modal=await updateDialog(p).boundingBox();assert.ok(modal.x>=0&&modal.y>=0&&modal.x+modal.width<=961&&modal.y+modal.height<=641,'The update dialog fits a compact window');
+      assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1&&document.documentElement.scrollHeight<=innerHeight+1),true);
+      const install=await updateAction(p,'install').boundingBox();assert.ok(install.x>=modal.x&&install.y>=modal.y&&install.x+install.width<=modal.x+modal.width+1&&install.y+install.height<=modal.y+modal.height+1,'The primary update action remains visible');
+      assert.ok((await updateDialog(p).innerText()).includes(newerClient.fileName));
+      if(language==='en')assert.doesNotMatch(await updateDialog(p).innerText(),/[\u3400-\u9fff]/);
+      await shot(p,'client-update-'+language);await updateAction(p,'close').click();
+    }
+    assert.deepEqual(await updateInstalls(p),[]);assert.deepEqual(await requests(p),[]);
+  },snapshot(),{clientUpdate:newerClient});
   const longState = snapshot();
   longState.packages = Array.from({length:120},(_,i)=>({packageName:`com.example.app${i}`,label:`应用 ${i}`,installed:true,system:false,enabled:true,protectedReason:null,apkSizeBytes:1048576}));
   longState.launchers = Array.from({length:30},(_,i)=>({packageName:`com.example.home${i}`,component:`com.example.home${i}/.Main`,label:`桌面 ${i}`,isDefault:false}));

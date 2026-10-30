@@ -1,6 +1,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod app_logos;
+mod client_install;
+mod client_updates;
 mod launcher_covers;
 mod market;
 mod mcp;
@@ -79,6 +81,74 @@ struct MarketResult {
 struct Shutdown {
     started: Arc<AtomicBool>,
     complete: AtomicBool,
+}
+
+#[derive(Default, Clone, Copy, PartialEq)]
+enum ClientUpdatePhase {
+    #[default]
+    Idle,
+    Downloading,
+    Installing,
+}
+#[derive(Default)]
+struct ClientUpdateRun {
+    phase: Mutex<ClientUpdatePhase>,
+}
+
+struct ClientUpdateGuard(Arc<ClientUpdateRun>);
+impl Drop for ClientUpdateGuard {
+    fn drop(&mut self) {
+        if let Ok(mut phase) = self.0.phase.lock() {
+            *phase = ClientUpdatePhase::Idle;
+        }
+    }
+}
+
+// Cancellation and the start of the indivisible install handoff share one lock.
+// A cancelled download must never turn into an installation behind the dialog.
+fn cancel_client_work(run: &ClientUpdateRun, cancel: &AtomicBool) -> Result<(), String> {
+    let phase = run.phase.lock().map_err(|_| "客户端更新状态不可用")?;
+    match *phase {
+        ClientUpdatePhase::Downloading => {
+            cancel.store(true, Ordering::Release);
+            Ok(())
+        }
+        ClientUpdatePhase::Installing => {
+            Err("安装交接已开始，无法取消，请等待管理器重新启动".into())
+        }
+        ClientUpdatePhase::Idle => Ok(()),
+    }
+}
+
+struct UpdateShutdownGuard {
+    shutdown: Arc<Shutdown>,
+    committed: bool,
+}
+impl Drop for UpdateShutdownGuard {
+    fn drop(&mut self) {
+        if !self.committed {
+            self.shutdown.started.store(false, Ordering::Release);
+        }
+    }
+}
+fn begin_update_shutdown(
+    run: &ClientUpdateRun,
+    cancel: &AtomicBool,
+    shutdown: Arc<Shutdown>,
+) -> Result<UpdateShutdownGuard, String> {
+    let mut phase = run.phase.lock().map_err(|_| "客户端更新状态不可用")?;
+    if *phase != ClientUpdatePhase::Downloading || cancel.load(Ordering::Acquire) {
+        return Err("客户端更新已取消，当前版本未更改".into());
+    }
+    shutdown
+        .started
+        .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+        .map_err(|_| "管理器正在退出，客户端更新未启动")?;
+    *phase = ClientUpdatePhase::Installing;
+    Ok(UpdateShutdownGuard {
+        shutdown,
+        committed: false,
+    })
 }
 // Returns true while shutdown is pending; callers then prevent the default exit.
 fn request_shutdown(app: &tauri::AppHandle) -> bool {
@@ -499,7 +569,7 @@ fn run_market_item(
             return Err("安装已取消，APK 已保留在待安装列表".into());
         }
         report(market::Progress {
-            stage: "installing".into(),
+            stage: "installing",
             downloaded: 0,
             total: 1,
             item_id: Some(result.download.item.id.clone()),
@@ -672,6 +742,107 @@ fn open_resource(resource: &str, app: tauri::AppHandle) -> Result<(), String> {
     app.opener()
         .open_url(url, None::<&str>)
         .map_err(|_| "无法打开浏览器".into())
+}
+
+#[tauri::command]
+async fn check_client_update(app: tauri::AppHandle) -> Result<client_updates::Info, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let bridge = app.state::<Bridge>();
+        if bridge.closing.load(Ordering::Acquire) {
+            return Err("管理器正在退出".into());
+        }
+        // Metadata checks neither reserve the device-operation lock nor download
+        // an installer. Shutdown is the only cancellation source for this read.
+        app.state::<client_updates::State>()
+            .check(&bridge.closing, |_| Ok(()))
+    })
+    .await
+    .map_err(|_| "客户端更新检查任务异常结束，请重试".to_string())?
+}
+
+#[tauri::command]
+fn client_update_result(
+    app: tauri::AppHandle,
+) -> Result<Option<client_install::InstallResult>, String> {
+    client_install::read_result(&app.path().app_data_dir().map_err(|_| "无法定位数据目录")?)
+}
+
+#[tauri::command]
+fn cancel_client_update(app: tauri::AppHandle) -> Result<(), String> {
+    cancel_client_work(
+        app.state::<Arc<ClientUpdateRun>>().inner(),
+        &app.state::<Bridge>().cancel,
+    )
+}
+
+#[tauri::command]
+async fn install_client_update(
+    version: String,
+    revision: String,
+    on_progress: tauri::ipc::Channel<client_updates::Progress>,
+    app: tauri::AppHandle,
+) -> Result<(), String> {
+    let bridge = app.state::<Bridge>().inner().clone();
+    let operation = begin_market_operation(&bridge)?;
+    let run = app.state::<Arc<ClientUpdateRun>>().inner().clone();
+    *run.phase.lock().map_err(|_| "客户端更新状态不可用")? = ClientUpdatePhase::Downloading;
+    let update = ClientUpdateGuard(run.clone());
+    let shutdown = app.state::<Arc<Shutdown>>().inner().clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let _operation = operation;
+        let _update = update;
+        let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
+        let mut report = |progress| {
+            on_progress
+                .send(progress)
+                .map_err(|_| "客户端更新窗口已关闭，下载已停止".to_string())
+        };
+        let downloaded = app.state::<client_updates::State>().download(
+            &version,
+            &revision,
+            &bridge.cancel,
+            &mut report,
+        )?;
+        report(client_updates::Progress {
+            stage: "preparing",
+            downloaded: downloaded.bytes,
+            total: downloaded.bytes,
+        })?;
+        let prepared = client_install::prepare(&downloaded, &directory, &bridge.cancel)?;
+        let mut exit = begin_update_shutdown(&run, &bridge.cancel, shutdown)?;
+        report(client_updates::Progress {
+            stage: "installing",
+            downloaded: downloaded.bytes,
+            total: downloaded.bytes,
+        })?;
+        // Holding the shared operation reservation prevents a new GUI or MCP
+        // mutation from starting while the existing safe ADB shutdown runs.
+        {
+            let mut manager = bridge.manager.lock().map_err(|_| "管理状态不可用")?;
+            let stopped = manager.shutdown_adb();
+            let snapshot = manager.snapshot();
+            *bridge.snapshot.lock().map_err(|_| "状态缓存不可用")? = snapshot.clone();
+            let _ = app.emit(
+                "mcp-operation",
+                json!({
+                    "running":false,"tool":"client_update","snapshot":snapshot,
+                }),
+            );
+            stopped.map_err(|error| format!("无法安全结束 ADB，客户端更新未启动：{error}"))?;
+        }
+        // The helper acknowledges readiness, then waits for manager.lock to be
+        // released by this process. No application files change before exit.
+        client_install::handoff(&prepared)?;
+        exit.committed = true;
+        exit.shutdown.complete.store(true, Ordering::Release);
+        for window in app.webview_windows().values() {
+            let _ = window.hide();
+        }
+        app.exit(0);
+        Ok(())
+    })
+    .await
+    .map_err(|_| "客户端更新任务异常结束，请重试".to_string())?
 }
 
 #[tauri::command]
@@ -909,6 +1080,9 @@ fn mcp_call(
 
 fn main() {
     let args: Vec<_> = std::env::args_os().collect();
+    if let Some(code) = client_install::helper_entry(&args) {
+        std::process::exit(code);
+    }
     if args.get(1).is_some_and(|arg| arg == "--mcp") {
         let result = args
             .get(2)
@@ -938,6 +1112,8 @@ fn main() {
             app.manage(lock);
             app.manage(ui_preferences::Settings::load(directory.clone()));
             app.manage(package_insights::State::new(directory.clone()));
+            app.manage(client_updates::State::new(directory.clone()));
+            app.manage(Arc::new(ClientUpdateRun::default()));
             let shutdown = Arc::new(Shutdown::default());
             app.manage(shutdown.clone());
             let manager = TvManager::new(directory.clone(), cancel.clone());
@@ -988,6 +1164,10 @@ fn main() {
             download_market_item,
             install_market_item,
             open_resource,
+            check_client_update,
+            install_client_update,
+            cancel_client_update,
+            client_update_result,
             get_package_insight,
             open_package_resource,
             mcp_info
@@ -1001,6 +1181,59 @@ fn main() {
                 }
             }
         });
+}
+
+#[cfg(test)]
+mod client_update_shutdown_tests {
+    use super::*;
+
+    fn downloading() -> Arc<ClientUpdateRun> {
+        Arc::new(ClientUpdateRun {
+            phase: Mutex::new(ClientUpdatePhase::Downloading),
+        })
+    }
+
+    #[test]
+    fn cancelled_download_never_reserves_shutdown_or_installs() {
+        let run = downloading();
+        let cancel = AtomicBool::new(false);
+        let shutdown = Arc::new(Shutdown::default());
+        cancel_client_work(&run, &cancel).unwrap();
+        assert!(begin_update_shutdown(&run, &cancel, shutdown.clone()).is_err());
+        assert!(!shutdown.started.load(Ordering::Acquire));
+    }
+
+    #[test]
+    fn install_handoff_rejects_late_cancellation_and_failure_reopens_manager() {
+        let run = downloading();
+        let cancel = AtomicBool::new(false);
+        let shutdown = Arc::new(Shutdown::default());
+        let exit = begin_update_shutdown(&run, &cancel, shutdown.clone()).unwrap();
+        assert!(shutdown.started.load(Ordering::Acquire));
+        assert!(cancel_client_work(&run, &cancel).is_err());
+        assert!(!cancel.load(Ordering::Acquire));
+        drop(exit); // ADB or helper startup failed: the original manager remains usable.
+        assert!(!shutdown.started.load(Ordering::Acquire));
+        drop(ClientUpdateGuard(run.clone()));
+        assert!(*run.phase.lock().unwrap() == ClientUpdatePhase::Idle);
+    }
+
+    #[test]
+    fn normal_exit_is_not_hijacked_by_update_and_committed_exit_stays_closed() {
+        let run = downloading();
+        let cancel = AtomicBool::new(false);
+        let shutdown = Arc::new(Shutdown::default());
+        shutdown.started.store(true, Ordering::Release);
+        assert!(begin_update_shutdown(&run, &cancel, shutdown.clone()).is_err());
+        assert!(shutdown.started.load(Ordering::Acquire));
+        shutdown.started.store(false, Ordering::Release);
+        let mut exit = begin_update_shutdown(&run, &cancel, shutdown.clone()).unwrap();
+        exit.committed = true;
+        exit.shutdown.complete.store(true, Ordering::Release);
+        drop(exit);
+        assert!(shutdown.started.load(Ordering::Acquire));
+        assert!(shutdown.complete.load(Ordering::Acquire));
+    }
 }
 
 #[cfg(test)]
