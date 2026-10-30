@@ -10,7 +10,7 @@ The APK in this directory is signed with the pureTV release certificate. Android
 
 **Used Car Racing TV / 极品二手车** is an original 3D racing game. Each race starts with a randomly assigned used car and condition report. The inspection garage displays the model, power, weight, drivetrain and faults. One or two players use LAN phone controllers; AI drivers fill the remaining places in a six-car field.
 
-Initial version **0.1.0**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. This directory includes an APK and real page captures verified against the successful build, release certificate and packaged source assets.
+Current version **0.1.1**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. This directory includes an APK and real page captures verified against the successful build, release certificate and packaged source assets.
 
 ## Playing
 
@@ -27,9 +27,46 @@ Braking uses **simulated pedal force**. Holding the brake increases force; relea
 
 ## Cars and tracks
 
-Six original vehicle body types cover compact, sedan, coupe, wagon, muscle and rally cars. Drivetrain, torque, mass, tires and brake condition affect handling. Local 3D models include wheels, tires, lights, glazing, interiors, mirrors and body wear.
+All six cars are original fictional models. These are their base game parameters before the randomly assigned condition affects power, tires and brakes.
 
-Three closed circuits cover a neon harbor, mountain ridge and solar desert highway, with curves, elevation, barriers, markings and distinct environments. Real WebGL 1 renders the world using a locally bundled Three.js library; graphical resources need no CDN.
+| Model | Body / drivetrain | Power | Peak torque | Mass |
+|---|---|---:|---:|---:|
+| POCKET 98 | Compact / FWD | 82 kW | 146 N·m | 970 kg |
+| EXECUTIVE 04 | Sedan / RWD | 141 kW | 255 N·m | 1460 kg |
+| COMET 96 | Coupe / RWD | 161 kW | 262 N·m | 1210 kg |
+| NOMAD 07 | Wagon / AWD | 148 kW | 315 N·m | 1630 kg |
+| IRON 88 | Muscle / RWD | 205 kW | 425 N·m | 1570 kg |
+| STRIDER 02 | Rally / AWD | 173 kW | 305 N·m | 1320 kg |
+
+Each route is a closed circuit raced over three laps. Lengths come from the same centerline data used by rendering and vehicle physics.
+
+| Circuit | Lap length | Actual setting |
+|---|---:|---|
+| NEON DOCKLANDS | Approx. 1.753 km | A harbor viaduct after rain at night, city buildings, cranes, shipping containers and water; road elevations approx. 3.7–21.0 m |
+| CLOUDLINE PASS | Approx. 2.033 km | Winding mountain roads, forest, rocks, distant snowy mountains and a bridge section; elevations approx. 7.5–72.1 m |
+| SOLAR OUTRUN | Approx. 1.894 km | Desert highway, solar arrays, power poles, sandstone and sunset; elevations approx. 1.9–16.1 m |
+
+Version 0.1.1 focuses on graphics while retaining the routes, vehicle physics, random mechanical faults and one/two-player race rules. The real WebGL 1 renderer uses bundled Three.js and local graphical assets, with no texture downloads during play.
+
+## Graphics in 0.1.1
+
+The renderer keeps modest geometry complexity and adds 1024² color maps for asphalt and rock, 512² color maps for the other materials, and 256–512² normal/specular maps for grain, strata, tire tread, lamp lenses and fabric. The six cars share texture images. Paint, glass and metal use static environment reflections selected for the current setting, avoiding a new reflection render each frame.
+
+Roads gain repairs and rubber marks, while buildings and containers use surface-scaled textures. Continuous irregular ridges replace isolated cone mountains; rocks have less regular facets and trees use alpha-tested foliage cards. Clouds, fog and directional light add depth. Route and collision boundaries still use the original road data.
+
+The project’s [generator](../../../tools/generate-used-car-textures.py) bakes the original textures offline and packages them in the APK; see the [asset notice](src/main/assets/TEXTURE-LICENSE.txt). These changes do not use live reflection captures or full-screen post-processing. Actual TV frame rates still require device testing.
+
+## Vehicle and circuit views
+
+These images are produced by the actual game renderer in Chromium to show the vehicles and circuits. They are not concept art or physical-TV photographs.
+
+![Six original vehicle models](docs/car-lineup.png)
+
+![Neon Docklands: night viaduct and harbor city](docs/track-harbor.png)
+
+![Cloudline Pass: mountain bends, rocks and forest](docs/track-ridge.png)
+
+![Solar Outrun: desert and solar arrays](docs/track-solar.png)
 
 ## Handling model
 
@@ -50,9 +87,9 @@ cd resource/launcher/puretv
 ./gradlew :used-car-racing:assembleRelease :used-car-racing:testDebugUnitTest :used-car-racing:lintDebug :used-car-racing:verifyReleaseSize
 ```
 
-Browser checks use npm dependencies from `desktop/`; `CHROMIUM_PATH` selects Chromium. `USED_CAR_UI_CAPTURE_DIR` selects the directory for captures of the actual pages. Releases use the shared pureTV v2 certificate and the independent tag `android-used-car-v0.1.0`.
+Browser checks use npm dependencies from `desktop/`; `CHROMIUM_PATH` selects Chromium. `USED_CAR_UI_CAPTURE_DIR` selects the directory for captures of the actual pages. Releases use the shared pureTV v2 certificate and the independent tag `android-used-car-v0.1.1`.
 
-Original code, cars, tracks and synthesized sound use [MIT](LICENSE). Three.js retains its [upstream MIT license](src/main/assets/THREE-LICENSE.txt). No commercial racing-game ROMs, vehicle models or extracted maps are included. The project draws its own [64×64 SVG icon](logo.svg).
+Original code, cars, tracks, textures and synthesized sound use [MIT](LICENSE). Three.js retains its [upstream MIT license](src/main/assets/THREE-LICENSE.txt). No commercial racing-game ROMs, vehicle models or extracted maps are included. The project draws its own [64×64 SVG icon](logo.svg).
 
 <!-- verified-previews:start -->
 ## Actual game views

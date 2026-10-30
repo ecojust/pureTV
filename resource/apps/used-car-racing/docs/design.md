@@ -22,10 +22,24 @@
 
 场景使用本地 Three.js r124（WebGL 1）渲染。道路几何、地形、建筑及车辆模型由项目代码生成，无需联网加载地图。手机和电视的房间通信只在局域网进行。
 
+### 0.1.1 材质与场景
+
+车辆合批保留 UV，车身面使用投影坐标，轮胎和灯组采用适合各自表面的贴图坐标。颜色贴图采用 sRGB，法线和高光数据采用线性空间；贴图使用 mipmap，并将各向异性过滤限制在设备能力与上限之内。不同车辆共享图片和静态环境立方体，重新抽车只释放车辆自己的几何和材质，不释放仍被其他车辆使用的共享图片。
+
+道路沥青与岩石颜色贴图为 1024²，其余颜色贴图为 512²，法线与高光遮罩为 256–512²。沥青、混凝土、岩石、砂土、草地、外墙、集装箱、光伏板、车漆、橡胶、灯罩、织物和枝叶由本项目离线生成。原创贴图及其生成脚本使用 MIT，见[素材声明](../src/main/assets/TEXTURE-LICENSE.txt)。重新生成需 Python 3、Pillow 和 NumPy，在仓库根目录执行：
+
+```sh
+python3 tools/generate-used-car-textures.py
+```
+
+连续的不规则山脊和岩石轮廓由少量顶点构成，枝叶以透明裁切贴片形成。场景使用共享颜色／法线／高光纹理、顶点颜色、雾及静态环境反射增强层次，不启用实时反射捕获、SSAO 或全屏泛光。贴图像素预算只估算图片与 mipmap 占用，不代表驱动分配、帧缓冲和全部运行时内存。
+
+本次更新不改变中心线路径、车辆参数、故障阈值或比赛规则。性能验证需要同时检查单人、双人分屏、赛道切换、抽车时的资源释放与 WebGL 上下文恢复，不能只凭单张截图判断。
+
 Chrome 61 / ES2017 语法检查用于发现新语法依赖；现代 Chromium 软件渲染用于检查实际三维路径、截图和生命周期。二者都不能替代真实旧 Android WebView、电视 GPU 和手机网络延迟测试。
 
 ## 发布校验
 
-发布链检查成功的 Android 构建、真实页面中英文截图、APK 身份、源码资源与 APK 内资源一致性、签名和 SHA256。新包从 0.1.0 / versionCode 1 开始固定使用 pureTV v2 发布证书，不继承旧包的证书切换阈值。独立发布标签只包含本游戏 APK、校验清单及公开证书指纹。
+发布链检查成功的 Android 构建、真实页面中英文截图、APK 身份、源码资源与 APK 内资源一致性、签名和 SHA256。新包从 0.1.0 / versionCode 1 开始固定使用 pureTV v2 发布证书，不继承旧包的证书切换阈值。0.1.1 使用 versionCode 2，沿用该证书，可覆盖同证书的 0.1.0。独立发布标签只包含本游戏 APK、校验清单及公开证书指纹。
 
-Third-party dependency: Three.js r124, MIT, [license](../src/main/assets/THREE-LICENSE.txt). Original game code, procedural vehicle models, tracks and synthesized sound are covered by the application MIT license.
+Third-party dependency: Three.js r124, MIT, [license](../src/main/assets/THREE-LICENSE.txt). Original game code, procedural vehicle models, tracks, baked textures and synthesized sound are covered by the application MIT license.

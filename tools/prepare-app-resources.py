@@ -117,6 +117,9 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
             for suffix in ('', '.en'):
                 for scene in ('controller', 'controller-active'):
                     (docs / (scene + suffix + '.png')).write_bytes(validate_png(artifact(slug + '-' + scene + suffix + '.png'))[0])
+        if slug == 'used-car-racing':
+            for scene in ('car-lineup', 'track-harbor', 'track-ridge', 'track-solar'):
+                (docs / (scene + '.png')).write_bytes(validate_png(artifact(slug + '-' + scene + '.png'))[0])
         preview_options = {'renderer': 'Chromium', 'provenance': 'Actual bundled game page rendered in Chromium with English locale and a simulated native room bridge; not a physical TV capture.'} if slug in GAMES else {}
         write_english_previews(root, 'apps', slug, version, args.source_sha, run_url, english, **preview_options)
         resource = {
@@ -129,8 +132,10 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         }
         if old_resource.get('assetNotices'):
             resource['assetNotices'] = old_resource['assetNotices']
-        elif slug == 'used-car-racing':
-            resource['assetNotices'] = ['docs/design.md', 'src/main/assets/THREE-LICENSE.txt']
+        if slug == 'used-car-racing':
+            resource['assetNotices'] = list(dict.fromkeys(resource.get('assetNotices', []) + [
+                'docs/design.md', 'src/main/assets/THREE-LICENSE.txt', 'src/main/assets/TEXTURE-LICENSE.txt',
+            ]))
         if '-preview.' in version:
             resource['releaseChannel'] = 'preview'
         if slug in GAMES:
@@ -143,6 +148,8 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
             checksums.append('logo.svg')
         if slug in GAMES:
             checksums += ['docs/controller.png', 'docs/controller.en.png', 'docs/controller-active.png', 'docs/controller-active.en.png']
+        if slug == 'used-car-racing':
+            checksums += ['docs/' + scene + '.png' for scene in ('car-lineup', 'track-harbor', 'track-ridge', 'track-solar')]
         (folder / 'SHA256SUMS.txt').write_text(''.join(f'{digest(folder / filename)}  {filename}\n' for filename in checksums))
         readme = folder / 'README.md'
         readme_text = readme.read_text() if readme.exists() else '# ' + name + '\n'

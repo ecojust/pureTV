@@ -39,7 +39,7 @@
   }
   var all=[
     build({id:'harbor',name:'霓虹港湾',enName:'NEON DOCKLANDS',subtitle:'雨后高架 · 海港夜赛',enSubtitle:'AFTER-RAIN VIADUCT / NIGHT RUN',width:13.8,surfaceGrip:.94,theme:'harbor',laps:3,control:[[-180,-250,5],[20,-300,5],[220,-230,9],[260,-40,20],[180,180,19],[20,260,7],[-180,210,4],[-250,40,4]]}),
-    build({id:'ridge',name:'云脊公路',enName:'CLOUDLINE PASS',subtitle:'悬崖弯道 · 高差 68 米',enSubtitle:'CLIFFSIDE SWITCHBACKS / 68 M CLIMB',width:11.8,surfaceGrip:1.03,theme:'ridge',laps:3,control:[[-150,-300,10],[40,-320,18],[170,-180,36],[100,-30,48],[240,100,60],[140,270,72],[-60,300,55],[-220,160,36],[-100,20,18],[-270,-120,8]]}),
+    build({id:'ridge',name:'云脊公路',enName:'CLOUDLINE PASS',subtitle:'悬崖弯道 · 高差约 65 米',enSubtitle:'CLIFFSIDE SWITCHBACKS / ~65 M ELEVATION RANGE',width:11.8,surfaceGrip:1.03,theme:'ridge',laps:3,control:[[-150,-300,10],[40,-320,18],[170,-180,36],[100,-30,48],[240,100,60],[140,270,72],[-60,300,55],[-220,160,36],[-100,20,18],[-270,-120,8]]}),
     build({id:'solar',name:'落日能源环线',enName:'SOLAR OUTRUN',subtitle:'光伏阵列 · 荒漠高速',enSubtitle:'SOLAR FIELDS / DESERT EXPRESSWAY',width:14.4,surfaceGrip:1.0,theme:'solar',laps:3,control:[[-250,-200,2],[-30,-300,5],[230,-230,2],[340,-40,10],[240,180,16],[0,260,6],[-200,200,3],[-280,20,4]]})
   ];
   function get(id){if(typeof id==='object'&&id&&id.points)return id;if(typeof id==='number')return all[wrap(id,all.length)];for(var i=0;i<all.length;i++)if(all[i].id===id)return all[i];return all[0];}

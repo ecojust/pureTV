@@ -149,6 +149,7 @@ public class MainActivity extends Activity {
             case "/tv.html": return "text/html";
             case "/tv.css": return "text/css";
             case "/game.js":
+            case "/materials.js":
             case "/tracks.js":
             case "/vehicle-models.js":
             case "/game-model.js":
@@ -156,6 +157,35 @@ public class MainActivity extends Activity {
             case "/renderer-3d.js":
             case "/audio.js":
                 return "application/javascript";
+            case "/textures/asphalt-color.jpg":
+            case "/textures/asphalt-normal.jpg":
+            case "/textures/asphalt-specular.jpg":
+            case "/textures/concrete-color.jpg":
+            case "/textures/concrete-normal.jpg":
+            case "/textures/container-color.jpg":
+            case "/textures/container-normal.jpg":
+            case "/textures/fabric-color.jpg":
+            case "/textures/fabric-normal.jpg":
+            case "/textures/facade-color.jpg":
+            case "/textures/grass-color.jpg":
+            case "/textures/grass-normal.jpg":
+            case "/textures/lamp-color.jpg":
+            case "/textures/lamp-normal.jpg":
+            case "/textures/lamp-specular.jpg":
+            case "/textures/paint-color.jpg":
+            case "/textures/paint-normal.jpg":
+            case "/textures/paint-specular.jpg":
+            case "/textures/rock-color.jpg":
+            case "/textures/rock-normal.jpg":
+            case "/textures/rubber-color.jpg":
+            case "/textures/rubber-normal.jpg":
+            case "/textures/sand-color.jpg":
+            case "/textures/sand-normal.jpg":
+            case "/textures/solar-color.jpg":
+            case "/textures/solar-specular.jpg":
+                return "image/jpeg";
+            case "/textures/foliage-color.png":
+                return "image/png";
             default: break;
         }
         return null;

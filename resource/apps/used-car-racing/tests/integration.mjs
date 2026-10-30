@@ -9,7 +9,7 @@ const assets=new URL('../src/main/assets/',import.meta.url);
 const capture=process.env.USED_CAR_UI_CAPTURE_DIR||'/tmp/puretv-used-car-integration';
 const diagnostic=process.env.GAME_RENDER_OUTPUT||'/tmp/puretv-used-car-integration-scenes';
 await mkdir(capture,{recursive:true});await mkdir(diagnostic,{recursive:true});
-const server=http.createServer(async(req,res)=>{const name=new URL(req.url,'http://localhost').pathname.slice(1)||'tv.html';if(!/^[a-z0-9.-]+$/.test(name)){res.writeHead(404).end();return;}try{res.setHeader('Content-Type',name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':'text/html');res.end(await readFile(new URL(name,assets)));}catch{res.writeHead(404).end();}});
+const server=http.createServer(async(req,res)=>{const name=new URL(req.url,'http://localhost').pathname.slice(1)||'tv.html';if(!/^(?:[a-z0-9.-]+|textures\/[a-z0-9-]+\.(?:jpg|png))$/.test(name)){res.writeHead(404).end();return;}try{res.setHeader('Content-Type',name.endsWith('.jpg')?'image/jpeg':name.endsWith('.png')?'image/png':name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':'text/html');res.end(await readFile(new URL(name,assets)));}catch{res.writeHead(404).end();}});
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const browser=await chromium.launch({headless:true,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{}),args:['--no-sandbox','--autoplay-policy=no-user-gesture-required','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const url='http://127.0.0.1:'+server.address().port;
@@ -29,6 +29,7 @@ async function fixture(language='zh',options={}){
   },{language,...options});
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(url);
   if(!options.noWebgl)await page.waitForFunction(()=>window.UsedCarTV&&UsedCarTV.renderer&&UsedCarTV.renderer.active&&document.getElementById('startup').hidden);
+  if(!options.noWebgl){await page.evaluate(()=>UsedCarTV.renderer.materialLibrary.ready);assert.deepEqual(await page.evaluate(()=>UsedCarTV.renderer.materialLibrary.errors),[]);const frames=await page.evaluate(()=>UsedCarTV.renderer.frames);await page.waitForFunction(f=>UsedCarTV.renderer.frames>f,frames);}
   return {context,page,errors};
 }
 async function input(page,index,values){await page.evaluate(({index,values})=>Object.assign(__players[index],values),{index,values});}

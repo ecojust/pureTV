@@ -144,10 +144,10 @@ public class MainActivityTest {
     }
 
     @Test public void onlyBundledGameAssetsAreReadable() throws Exception {
-        String[] names={"tv.html","tv.css","tracks.js","vehicle-models.js","game-model.js","renderer-3d.js","game.js","audio.js","three.min.js"};
-        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript"};
+        String[] names={"tv.html","tv.css","tracks.js","vehicle-models.js","game-model.js","renderer-3d.js","game.js","audio.js","three.min.js","materials.js"};
+        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript"};
         java.util.Set<String> packaged = new java.util.HashSet<>(java.util.Arrays.asList(activity.getAssets().list("")));
-        packaged.removeAll(java.util.Arrays.asList("controller.html", "controller.css", "controller.js", "THREE-LICENSE.txt"));
+        packaged.removeAll(java.util.Arrays.asList("controller.html", "controller.css", "controller.js", "THREE-LICENSE.txt", "TEXTURE-LICENSE.txt", "textures"));
         // Robolectric merges these exact Android framework assets into the app's AssetManager.
         // Keep unknown files in the comparison, including any new files under these directories.
         String[] frameworkAssets = {
@@ -176,7 +176,7 @@ public class MainActivityTest {
             response.getData().close();
         }
         for (String url:new String[]{
-            "https://used-car-racing.invalid/controller.js","https://used-car-racing.invalid/THREE-LICENSE.txt","https://used-car-racing.invalid/../private",
+            "https://used-car-racing.invalid/controller.js","https://used-car-racing.invalid/THREE-LICENSE.txt","https://used-car-racing.invalid/TEXTURE-LICENSE.txt","https://used-car-racing.invalid/../private",
             "https://used-car-racing.invalid/secret","https://used-car-racing.invalid:443/game.js",
             "https://evil.example/game.js","http://used-car-racing.invalid/game.js",
             "file:///android_asset/game.js","content://private/data",
@@ -185,6 +185,86 @@ public class MainActivityTest {
             "https://used-car-racing.invalid/audio/../game.js","https://used-car-racing.invalid/data/../../game.js",
             "https://used-car-racing.invalid/audio/%2e%2e/game.js","https://used-car-racing.invalid/audio/not-bundled.ogg",
             "https://used-car-racing.invalid/data/stage-7.json","https://used-car-racing.invalid/art/unknown.png"
+        }) {
+            WebResourceResponse blocked=activity.localAsset(Uri.parse(url));
+            assertEquals(url,403,blocked.getStatusCode());
+            assertEquals(-1,blocked.getData().read());
+            blocked.getData().close();
+        }
+    }
+
+    @Test public void bundledMaterialTexturesHaveExactBinaryRoutesAndBoundedDimensions() throws Exception {
+        String[] names={
+            "asphalt-color.jpg",
+            "asphalt-normal.jpg",
+            "asphalt-specular.jpg",
+            "concrete-color.jpg",
+            "concrete-normal.jpg",
+            "container-color.jpg",
+            "container-normal.jpg",
+            "fabric-color.jpg",
+            "fabric-normal.jpg",
+            "facade-color.jpg",
+            "foliage-color.png",
+            "grass-color.jpg",
+            "grass-normal.jpg",
+            "lamp-color.jpg",
+            "lamp-normal.jpg",
+            "lamp-specular.jpg",
+            "paint-color.jpg",
+            "paint-normal.jpg",
+            "paint-specular.jpg",
+            "rock-color.jpg",
+            "rock-normal.jpg",
+            "rubber-color.jpg",
+            "rubber-normal.jpg",
+            "sand-color.jpg",
+            "sand-normal.jpg",
+            "solar-color.jpg",
+            "solar-specular.jpg",
+        };
+        java.util.Set<String> packaged = new java.util.HashSet<>(java.util.Arrays.asList(activity.getAssets().list("textures")));
+        assertTrue("The texture manifest must be packaged for provenance",packaged.remove("manifest.json"));
+        assertEquals("Every texture needs a deliberately named native route",new java.util.HashSet<>(java.util.Arrays.asList(names)),packaged);
+        for (String name:names) {
+            String path="textures/"+name;
+            WebResourceResponse response=activity.localAsset(Uri.parse("https://used-car-racing.invalid/"+path));
+            assertEquals(path,200,response.getStatusCode());
+            String mime=name.endsWith(".png")?"image/png":"image/jpeg";
+            assertEquals(path,mime,response.getMimeType());
+            assertNull("Binary image data must not have a character encoding",response.getEncoding());
+            assertEquals("nosniff",response.getResponseHeaders().get("X-Content-Type-Options"));
+            byte[] bytes=response.getData().readAllBytes();
+            response.getData().close();
+            assertTrue(path,bytes.length>0);
+            try (java.io.InputStream bundled=activity.getAssets().open(path)) {
+                assertArrayEquals("The bridge route must preserve image bytes: "+path,bundled.readAllBytes(),bytes);
+            }
+            BitmapFactory.Options bounds=new BitmapFactory.Options();
+            bounds.inJustDecodeBounds=true;
+            BitmapFactory.decodeByteArray(bytes,0,bytes.length,bounds);
+            assertEquals(path,mime,bounds.outMimeType);
+            assertTrue("Texture width must be bounded for WebGL 1: "+path,bounds.outWidth>0 && bounds.outWidth<=1024);
+            assertTrue("Texture height must be bounded for WebGL 1: "+path,bounds.outHeight>0 && bounds.outHeight<=1024);
+            assertEquals("Repeating textures need power-of-two width: "+path,0,bounds.outWidth&(bounds.outWidth-1));
+            assertEquals("Repeating textures need power-of-two height: "+path,0,bounds.outHeight&(bounds.outHeight-1));
+        }
+        for (String url:new String[]{
+            "https://used-car-racing.invalid/textures/manifest.json",
+            "https://used-car-racing.invalid/textures/unknown.jpg",
+            "https://used-car-racing.invalid/textures/asphalt-color.png",
+            "https://used-car-racing.invalid/textures/ASPHALT-color.jpg",
+            "https://used-car-racing.invalid/textures/asphalt-color.jpg/",
+            "https://used-car-racing.invalid/textures/../textures/asphalt-color.jpg",
+            "https://used-car-racing.invalid/textures/%61sphalt-color.jpg",
+            "https://used-car-racing.invalid/textures%2fasphalt-color.jpg",
+            "https://used-car-racing.invalid/textures/asphalt-color.jpg?external=1",
+            "https://used-car-racing.invalid/textures/asphalt-color.jpg#fragment",
+            "https://used-car-racing.invalid:443/textures/asphalt-color.jpg",
+            "https://user@used-car-racing.invalid/textures/asphalt-color.jpg",
+            "https://outside.example/textures/asphalt-color.jpg",
+            "http://used-car-racing.invalid/textures/asphalt-color.jpg",
+            "file:///android_asset/textures/asphalt-color.jpg"
         }) {
             WebResourceResponse blocked=activity.localAsset(Uri.parse(url));
             assertEquals(url,403,blocked.getStatusCode());
@@ -214,6 +294,7 @@ public class MainActivityTest {
         assertTrue("The TV page must load its WebGL renderer",loaded.contains("renderer-3d.js"));
         assertTrue("Physics and graphics must share the bundled tracks",loaded.contains("tracks.js"));
         assertTrue("Vehicle geometry must be local",loaded.contains("vehicle-models.js"));
+        assertTrue("Surface textures must use the local shared material library",loaded.contains("materials.js"));
     }
 
     @Test public void generatedPngQrDecodesToExactJoinUrl() throws Exception {

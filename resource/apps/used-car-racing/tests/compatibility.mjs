@@ -5,7 +5,7 @@ const require = createRequire(new URL('../../../../desktop/package.json', import
 const {transform} = require('esbuild');
 const assets = new URL('../src/main/assets/', import.meta.url);
 const scripts = (await readdir(assets)).filter(name => name.endsWith('.js'));
-for (const required of ['tracks.js', 'vehicle-models.js', 'game-model.js', 'renderer-3d.js', 'game.js', 'audio.js', 'three.min.js', 'controller.js']) {
+for (const required of ['materials.js', 'tracks.js', 'vehicle-models.js', 'game-model.js', 'renderer-3d.js', 'game.js', 'audio.js', 'three.min.js', 'controller.js']) {
   assert.ok(scripts.includes(required), `Missing local game script: ${required}`);
 }
 for (const name of scripts) {
