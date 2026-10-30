@@ -83,7 +83,7 @@ The launchers and first-party TV apps support English. Select English in the TV 
 | [Super Mario TV](resource/apps/super-mario/) | ecojust | 0.5.2 | 93.4 KB | 32-course platform adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"> |
 | [Tank TV](resource/apps/tank/) | ecojust | 0.5.2 | 258.3 KB | Independently rewritten 35-stage tank defense with two LAN phone controllers | <img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"> |
 | [Tetris TV](resource/apps/tetris/) | ecojust | 0.5.2 | 81.4 KB | Classic falling-block puzzle with one or two LAN phone controllers | <img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"> |
-| [Used Car Racing TV](resource/apps/used-car-racing/) | ecojust | 0.1.2 | 1.66 MB | 3D racing with randomized used cars, mechanical failures and one or two LAN phone players alongside AI opponents | <img src="docs/previews/en/app-used-car-racing.png" width="180" alt="Used Car Racing TV preview"> |
+| [Used Car Racing TV](resource/apps/used-car-racing/) | ecojust | 0.1.3 | 1.66 MB | 3D racing with randomized used cars, mechanical failures and one or two LAN phone players alongside AI opponents | <img src="docs/previews/en/app-used-car-racing.png" width="180" alt="Used Car Racing TV preview"> |
 | [WebTV](resource/apps/webtv/) | ecojust | 0.5.0 | 44.8 KB | Live TV and M3U player | <img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"> |
 
 <!-- resource-index:end -->
