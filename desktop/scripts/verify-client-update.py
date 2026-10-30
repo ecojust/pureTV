@@ -103,8 +103,13 @@ def windows_registration():
     import winreg
     try:
         with winreg.OpenKey(winreg.HKEY_CURRENT_USER, UNINSTALL_KEY) as key:
-            return {name: winreg.QueryValueEx(key, name)[0]
-                    for name in ("DisplayName", "DisplayVersion", "InstallLocation", "UninstallString")}
+            registration = {name: winreg.QueryValueEx(key, name)[0]
+                            for name in ("DisplayName", "DisplayVersion", "InstallLocation", "UninstallString")}
+            # Tauri NSIS writes InstallLocation surrounded by literal quotes.
+            location = registration["InstallLocation"]
+            if len(location) >= 2 and location.startswith('"') and location.endswith('"'):
+                registration["InstallLocation"] = location[1:-1]
+            return registration
     except FileNotFoundError:
         return None
 

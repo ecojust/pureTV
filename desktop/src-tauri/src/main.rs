@@ -569,7 +569,7 @@ fn run_market_item(
             return Err("安装已取消，APK 已保留在待安装列表".into());
         }
         report(market::Progress {
-            stage: "installing",
+            stage: "installing".into(),
             downloaded: 0,
             total: 1,
             item_id: Some(result.download.item.id.clone()),
