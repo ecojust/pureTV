@@ -134,7 +134,7 @@ def install_baseline(package, directory, config):
         run([package, "/S", f"/D={installed}"], timeout=240)
         registration = windows_registration()
         assert registration and registration["DisplayVersion"] == BASELINE_VERSION
-        assert Path(registration["InstallLocation"]).resolve() == installed.resolve(), "Baseline escaped the temporary installation"
+        assert Path(registration["InstallLocation"]).samefile(installed), "Baseline escaped the temporary installation"
         executable = installed / "puretv-desktop.exe"
     else:
         mount = directory / "baseline-mount"
@@ -265,9 +265,13 @@ def gui_upgrade(desktop, package, helper_executable, target, directory, config):
             old_digest = digest(old_executable)
             prepared = native_prepare(desktop, package, old_executable, helper_executable, data_dir, directory)
             assert prepared.get("metadataOnly") is not True
-            assert Path(prepared["dataDir"]).resolve() == data_dir.resolve()
+            assert Path(prepared["dataDir"]).samefile(data_dir)
             plan, helper_path = Path(prepared["planPath"]), Path(prepared["helperPath"])
-            assert plan.resolve().is_relative_to(data_dir.resolve()) and helper_path.parent == plan.parent
+            # Rust canonical paths on Windows carry a \\?\ prefix. Compare
+            # filesystem identity, while requiring the private job structure.
+            assert plan.name == "plan.json" and re.fullmatch(r"[0-9a-f]{32}", plan.parent.name)
+            assert plan.parent.parent.name == "client-update-install"
+            assert plan.parent.parent.parent.samefile(data_dir) and helper_path.parent.samefile(plan.parent)
             helper = subprocess.Popen([str(helper_path), "--apply-client-update", str(plan)], stdout=log, stderr=subprocess.STDOUT)
             wait_until(lambda: Path(prepared["readyPath"]).is_file(), "updater helper readiness", timeout=15)
             time.sleep(0.4)
@@ -290,7 +294,7 @@ def gui_upgrade(desktop, package, helper_executable, target, directory, config):
             if sys.platform == "win32":
                 registration = windows_registration()
                 assert registration and registration["DisplayVersion"] == config["version"]
-                assert Path(registration["InstallLocation"]).resolve() == old_executable.parent.resolve(), "Update escaped the temporary installation"
+                assert Path(registration["InstallLocation"]).samefile(old_executable.parent), "Update escaped the temporary installation"
             else:
                 bundle = old_executable.parents[2]
                 with (bundle / "Contents/Info.plist").open("rb") as stream:
@@ -322,7 +326,7 @@ def gui_upgrade(desktop, package, helper_executable, target, directory, config):
                 uninstaller = old_executable.parent / "uninstall.exe"
                 registration = windows_registration()
                 if registration:
-                    assert Path(registration["InstallLocation"]).resolve() == old_executable.parent.resolve(), "Refusing cleanup outside the test installation"
+                    assert Path(registration["InstallLocation"]).samefile(old_executable.parent), "Refusing cleanup outside the test installation"
                     assert uninstaller.is_file(), "Test installation is missing its uninstaller"
                     run([uninstaller, "/S"], timeout=120)
                     wait_until(lambda: windows_registration() is None, "temporary NSIS installation cleanup", timeout=30)
