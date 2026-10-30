@@ -306,9 +306,17 @@ public class MainActivityTest {
         String html=response.substring(response.indexOf("\r\n\r\n")+4);
         java.util.regex.Matcher dependencies=java.util.regex.Pattern.compile("(?:src|href)=[\"']([^\"']+)[\"']").matcher(html);
         java.util.Set<String> loaded=new java.util.HashSet<>();
+        java.net.URI pageUri=java.net.URI.create("http://127.0.0.1:"+roomPort+"/?room="+server().roomToken());
         while(dependencies.find()) {
-            String path=dependencies.group(1);
-            assertTrue("Initial phone dependencies must be bundled same-origin resources: "+path,path.startsWith("/")&&!path.startsWith("//"));
+            String reference=dependencies.group(1);
+            // The explicit empty favicon is inline and makes no network request.
+            if ("data:,".equals(reference)) continue;
+            java.net.URI dependency=pageUri.resolve(reference);
+            assertEquals("Initial phone dependencies must use the LAN page scheme: "+reference,pageUri.getScheme(),dependency.getScheme());
+            assertEquals("Initial phone dependencies must remain on the LAN origin: "+reference,pageUri.getRawAuthority(),dependency.getRawAuthority());
+            assertNull("Bundled dependency has no query: "+reference,dependency.getRawQuery());
+            assertNull("Bundled dependency has no fragment: "+reference,dependency.getRawFragment());
+            String path=dependency.getRawPath();
             String assetResponse=get(roomPort,path);
             assertTrue(path,assetResponse.startsWith("HTTP/1.1 200"));
             assertTrue("Client requests cannot open cross-origin network access",assetResponse.contains("connect-src 'self' ws://127.0.0.1:"+roomPort+";"));
