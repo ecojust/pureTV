@@ -93,7 +93,7 @@ async function expectInput(room,values){
 function neutral(frame){return frame.x===0&&frame.y===0&&!frame.a&&!frame.b&&!frame.start&&!frame.select;}
 async function point(page,id,fx=.5,fy=.5){const r=await page.locator('#'+id).boundingBox();return{x:r.x+r.width*fx,y:r.y+r.height*fy};}
 async function touch(cdp,type,points){await cdp.send('Input.dispatchTouchEvent',{type,touchPoints:points.map(([id,x,y])=>({id,x,y,radiusX:6,radiusY:6,force:1}))});}
-async function check(name,run){if(process.env.USED_CAR_CONTROLLER_PART==='gyro'&&!/gyro|landscape orientations|denied, missing|projected steering/i.test(name))return;await run();passed++;console.log('PASS '+name);}
+async function check(name,run){if(process.env.USED_CAR_CONTROLLER_PART==='layout'&&!/full-screen zones/.test(name))return;if(process.env.USED_CAR_CONTROLLER_PART==='gyro'&&!/gyro|landscape orientations|denied, missing|projected steering/i.test(name))return;await run();passed++;console.log('PASS '+name);}
 const capture=process.env.USED_CAR_UI_CAPTURE_DIR;
 try{
   await check('Native protocol handshake, neutral heartbeat, sequence and session-resume identity',async()=>{
