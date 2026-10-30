@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-13-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-14-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -79,6 +79,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [Super Mario TV](resource/apps/super-mario/) | ecojust / 桔子桑 | 0.5.2 | 93.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
 | [Tank TV](resource/apps/tank/) | ecojust / 桔子桑 | 0.5.2 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
 | [Tetris TV](resource/apps/tetris/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
+| [极品二手车](resource/apps/used-car-racing/) | ecojust / 桔子桑 | 0.1.0 | 273.5 KB | 随机车况与机械故障的三维赛车，支持手机扫码一至两人竞速和 AI 对手 | <img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"> |
 | [WebTV](resource/apps/webtv/) | ecojust / 桔子桑 | 0.5.0 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
 
 <!-- resource-index:end -->
