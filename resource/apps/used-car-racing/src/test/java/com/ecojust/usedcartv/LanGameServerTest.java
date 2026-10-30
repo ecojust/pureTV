@@ -153,6 +153,88 @@ public class LanGameServerTest {
         assertFalse("A legacy snapshot releases Select", player().getBoolean("select"));
     }
 
+    @Test public void quickMenuTapsPersistAcrossRepeatedSnapshots() throws Exception {
+        Socket socket = websocket(); send(socket, "{\"type\":\"hello\"}"); message(socket, "welcome");
+        send(socket, new JSONObject(input(0, 0, 0, false, false)).put("start", true).put("select", true).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        Thread.sleep(30);
+        send(socket, input(1, 0, 0, false, false));
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        // Neither snapshot observed a held button, but the TV must still see the tap.
+        JSONObject first = player(), second = player();
+        assertFalse(first.getBoolean("start")); assertFalse(first.getBoolean("select"));
+        assertEquals(1, first.getLong("startSeq")); assertEquals(1, first.getLong("selectSeq"));
+        assertTrue(first.getLong("selectMs") >= 20);
+        assertEquals(first.getLong("startSeq"), second.getLong("startSeq"));
+        assertEquals(first.getLong("selectSeq"), second.getLong("selectSeq"));
+        assertEquals(first.getLong("selectMs"), second.getLong("selectMs"));
+        assertEquals(0, second.getLong("cancelSeq"));
+        send(socket, input(2, 0, 0, false, false));
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        assertEquals("Neutral heartbeats retain the completed tap's duration", first.getLong("selectMs"), player().getLong("selectMs"));
+    }
+
+    @Test public void heldMenuHeartbeatsAndTimeoutRecoveryDoNotCreatePresses() throws Exception {
+        Socket socket = websocket(); send(socket, "{\"type\":\"hello\"}"); message(socket, "welcome");
+        send(socket, new JSONObject(input(0, 0, 0, false, false)).put("start", true).put("select", true).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        Thread.sleep(30);
+        send(socket, new JSONObject(input(1, 0, 0, false, false)).put("start", true).put("select", true).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        JSONObject held = player();
+        assertEquals(1, held.getLong("startSeq")); assertEquals(1, held.getLong("selectSeq"));
+        assertTrue("Held SELECT counts from the original press, not the heartbeat", held.getLong("selectMs") >= 20);
+        Thread.sleep(800);
+        JSONObject expired = player();
+        assertFalse(expired.getBoolean("start")); assertFalse(expired.getBoolean("select"));
+        assertEquals(1, expired.getLong("cancelSeq")); assertEquals(0, expired.getLong("selectMs"));
+        send(socket, new JSONObject(input(2, 0, 0, false, false)).put("start", true).put("select", true).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        JSONObject delayed = player();
+        assertEquals("An old held heartbeat cannot replay START", 1, delayed.getLong("startSeq"));
+        assertEquals("An old held heartbeat cannot restart SELECT", 1, delayed.getLong("selectSeq"));
+        assertEquals(0, delayed.getLong("selectMs"));
+        send(socket, input(3, 0, 0, false, false));
+        send(socket, new JSONObject(input(4, 0, 0, false, false)).put("start", true).put("select", true).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        assertEquals(2, player().getLong("startSeq")); assertEquals(2, player().getLong("selectSeq"));
+    }
+
+    @Test public void menuCancellationAndDisconnectInvalidateDurationWithoutNewPresses() throws Exception {
+        Socket socket = websocket(); send(socket, "{\"type\":\"hello\"}");
+        String session = message(socket, "welcome").getString("session");
+        send(socket, new JSONObject(input(0, 0, 0, false, false)).put("start", true).put("select", true).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        Thread.sleep(30);
+        send(socket, new JSONObject(input(1, 0, 0, false, false)).put("start", true).put("select", true).put("cancelSeq", 7).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        JSONObject cancelled = player();
+        assertEquals(1, cancelled.getLong("startSeq")); assertEquals(1, cancelled.getLong("selectSeq"));
+        assertEquals(1, cancelled.getLong("cancelSeq")); assertEquals(0, cancelled.getLong("selectMs"));
+        send(socket, new JSONObject(input(2, 0, 0, false, false)).put("cancelSeq", 7).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        assertEquals("A cancelled release never becomes a short tap", 0, player().getLong("selectMs"));
+        send(socket, new JSONObject(input(3, 0, 0, false, false)).put("start", true).put("select", true).put("cancelSeq", 7).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        Thread.sleep(30);
+        send(socket, new JSONObject(input(4, 0, 0, false, false)).put("cancelSeq", 7).toString());
+        send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
+        assertTrue(player().getLong("selectMs") >= 20);
+        socket.close(); await(() -> !player().optBoolean("connected"));
+        JSONObject disconnected = player();
+        assertEquals(2, disconnected.getLong("startSeq")); assertEquals(2, disconnected.getLong("selectSeq"));
+        assertEquals("Disconnect cancels even a tap released before the next TV frame", 2, disconnected.getLong("cancelSeq"));
+        assertEquals(0, disconnected.getLong("selectMs"));
+        Socket resumed = websocket(); send(resumed, new JSONObject().put("type", "hello").put("session", session).toString());
+        assertEquals(1, message(resumed, "welcome").getInt("player"));
+        JSONObject restored = player();
+        assertEquals(2, restored.getLong("startSeq")); assertEquals(2, restored.getLong("selectSeq"));
+        assertEquals(2, restored.getLong("cancelSeq")); assertEquals(0, restored.getLong("selectMs"));
+        send(resumed, new JSONObject(input(0, 0, 0, false, false)).put("start", true).put("select", true).put("cancelSeq", 7).toString());
+        send(resumed, "{\"type\":\"ping\"}"); message(resumed, "pong");
+        assertEquals(3, player().getLong("startSeq")); assertEquals(3, player().getLong("selectSeq"));
+    }
+
     @Test public void cancellationMarkersAndTimeoutsPersistAcrossHeartbeats() throws Exception {
         Socket socket = websocket(); send(socket, "{\"type\":\"hello\"}"); message(socket, "welcome");
         send(socket, input(1, 0, 0, true, false));

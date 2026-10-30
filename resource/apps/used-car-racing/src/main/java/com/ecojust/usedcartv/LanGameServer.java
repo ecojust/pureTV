@@ -86,7 +86,9 @@ public final class LanGameServer implements AutoCloseable {
                     if (!live || now - p.inputAt > STALE_INPUT_MS) p.clear();
                     list.put(new JSONObject().put("id", p.id).put("connected", live)
                             .put("x", p.x).put("y", p.y).put("a", p.a).put("b", p.b)
-                            .put("start", p.start).put("select", p.select).put("cancelSeq", p.cancelSeq));
+                            .put("start", p.start).put("select", p.select).put("cancelSeq", p.cancelSeq)
+                            .put("startSeq", p.startSeq).put("selectSeq", p.selectSeq)
+                            .put("selectMs", p.selectDuration(now)));
                 }
                 return new JSONObject().put("players", list).put("connections", connected).toString();
             } catch (JSONException impossible) { return "{\"players\":[],\"connections\":0}"; }
@@ -115,7 +117,7 @@ public final class LanGameServer implements AutoCloseable {
         synchronized (lock) {
             for (Socket socket : new ArrayList<>(sockets)) closeQuietly(socket);
             sockets.clear();
-            for (Player p : players) { p.clear(); p.peer = null; p.session = null; p.disconnectedAt = 0; }
+            for (Player p : players) { p.clear(p.peer != null); p.peer = null; p.session = null; p.disconnectedAt = 0; }
         }
         if (broadcaster != null) broadcaster.shutdownNow();
         if (workers != null) workers.shutdownNow();
@@ -232,12 +234,13 @@ public final class LanGameServer implements AutoCloseable {
             }
             if (chosen == null) {
                 for (Player p : players) if (p.peer == null && (p.session == null || now - p.disconnectedAt >= RESUME_MS)) {
-                    chosen = p; chosen.session = randomToken(); break;
+                    chosen = p; chosen.session = randomToken();
+                    chosen.startInput = false; chosen.selectInput = false; break;
                 }
             }
             if (chosen == null) return null;
             Peer previous = chosen.peer;
-            chosen.clear(); chosen.peer = peer; chosen.inputAt = now; peer.player = chosen;
+            chosen.clear(previous != null); chosen.peer = peer; chosen.inputAt = now; peer.player = chosen;
             if (previous != null) { previous.closed = true; closeQuietly(previous.socket); }
             return chosen;
         }
@@ -322,8 +325,10 @@ public final class LanGameServer implements AutoCloseable {
                             player.x = Math.max(-1, Math.min(1, x)); player.y = Math.max(-1, Math.min(1, y));
                             player.a = message.getBoolean("a"); player.b = message.getBoolean("b");
                             // Older phone controllers omit the system menu buttons.
-                            player.start = message.optBoolean("start", false);
-                            player.select = message.optBoolean("select", false); player.inputAt = now();
+                            long receivedAt = now();
+                            player.menuInput(message.optBoolean("start", false),
+                                    message.optBoolean("select", false), receivedAt);
+                            player.inputAt = receivedAt;
                         }
                     } else if ("ping".equals(type) && player != null) { text("{\"type\":\"pong\"}"); }
                     else { fail("protocol_error"); break; }
@@ -367,7 +372,7 @@ public final class LanGameServer implements AutoCloseable {
         void disconnect() {
             closed = true; closeQuietly(socket);
             synchronized (lock) {
-                if (player != null && player.peer == this) { player.clear(); player.peer = null; player.disconnectedAt = now(); }
+                if (player != null && player.peer == this) { player.clear(true); player.peer = null; player.disconnectedAt = now(); }
             }
         }
     }
@@ -379,12 +384,34 @@ public final class LanGameServer implements AutoCloseable {
         long disconnectedAt;
         long inputAt;
         long cancelSeq, lastClientCancelSeq;
+        long startSeq, selectSeq, selectPressedAt, selectMs;
         double x, y;
-        boolean a, b, start, select;
+        boolean a, b, start, select, startInput, selectInput, selectTiming;
         Player(int id) { this.id = id; }
-        void cancelInput() { cancelSeq = cancelSeq >= 9_007_199_254_740_991L ? 0 : cancelSeq + 1; }
-        void clear() {
-            if (a || b || x != 0 || y != 0 || start || select) cancelInput();
+        void menuInput(boolean nextStart, boolean nextSelect, long receivedAt) {
+            // Counters outlive a press/release pair between two TV snapshots.
+            if (nextStart && !startInput) startSeq = Math.min(9_007_199_254_740_991L, startSeq + 1);
+            if (nextSelect && !selectInput) {
+                selectSeq = Math.min(9_007_199_254_740_991L, selectSeq + 1);
+                selectPressedAt = receivedAt; selectMs = 0; selectTiming = true;
+            } else if (!nextSelect && selectInput) {
+                selectMs = selectDuration(receivedAt); selectTiming = false;
+            }
+            startInput = start = nextStart; selectInput = select = nextSelect;
+        }
+        long selectDuration(long at) {
+            return select && selectTiming ? Math.max(0, at - selectPressedAt) : selectMs;
+        }
+        void cancelInput() {
+            cancelSeq = cancelSeq >= 9_007_199_254_740_991L ? 0 : cancelSeq + 1;
+            // A cancelled held SELECT must not become a completed tap on release.
+            selectMs = 0; selectTiming = false;
+        }
+        void clear() { clear(false); }
+        void clear(boolean forceCancel) {
+            if (forceCancel || a || b || x != 0 || y != 0 || start || select) cancelInput();
+            // Keep raw menu edges until a real release arrives. A late held
+            // heartbeat after a timeout is not a new press.
             x = 0; y = 0; a = false; b = false; start = false; select = false;
         }
     }
