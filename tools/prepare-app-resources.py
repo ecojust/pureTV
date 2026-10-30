@@ -154,6 +154,11 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         if slug == 'used-car-racing':
             checksums += ['docs/' + scene + '.png' for scene in ('car-lineup', 'track-harbor', 'track-ridge', 'track-solar')]
             checksums += ['docs/' + scene + suffix + '.png' for scene in ('controller-gyro', 'controller-setup') for suffix in ('', '.en')]
+            # Keep existing, versioned gameplay recordings in later release manifests.
+            for recording in sorted(docs.glob('gameplay-*.mp4')):
+                for media in (recording, recording.with_suffix('.json')):
+                    if media.is_file() and not media.is_symlink():
+                        checksums.append(media.relative_to(folder).as_posix())
         (folder / 'SHA256SUMS.txt').write_text(''.join(f'{digest(folder / filename)}  {filename}\n' for filename in checksums))
         readme = folder / 'README.md'
         readme_text = readme.read_text() if readme.exists() else '# ' + name + '\n'

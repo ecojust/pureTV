@@ -12,6 +12,16 @@ The APK in this directory is signed with the pureTV release certificate. Android
 
 This source update targets **0.1.3 / versionCode 4**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. The release retains the pureTV v2 certificate used by 0.1.2, allowing updates over older versions signed with that certificate. See [resource.json](resource.json) for the downloadable APK’s actual version, signature and verification results.
 
+## Gameplay video
+
+[Watch / download the 0.1.3 gameplay video](docs/gameplay-0.1.3.mp4?raw=1) · [Recording details](docs/gameplay-0.1.3.json) · [Checksums](SHA256SUMS.txt)
+
+MP4 (H.264 / AAC), 1280×720 at 25 fps, approximately 2 minutes and 41.66 MB (41,659,881 bytes, below 100 MB). The first 18 seconds show all six cars in the actual inspection garage, including their names and specifications. Racing follows on Neon Docklands, Cloudline Pass and Solar Outrun, with chase and hood cameras and the brake pedal snapping after a sustained press reaches 1600 N. Vehicle and track chapters are available in compatible players.
+
+The original assets from the released 0.1.3 APK run in Chromium with scripted phone inputs against five AI opponents. Frames are captured at fixed game-time intervals; the original game audio code synthesizes synchronized sound from the recorded telemetry. This is actual game imagery, not a physical TV recording or a device frame-rate benchmark.
+
+The recording retains the version's existing behavior, including the hood camera falling back inside the cabin at speed, where the seats obstruct the view.
+
 ## Steering fixes in 0.1.3
 
 The shared direction mapping for the virtual stick, gyroscope and keyboard is corrected so that the car turns in the requested direction while driving forward. Progressive steering makes small inputs easier to control, reduces the maximum steering angle at speed, and moves the steering wheel gradually toward its target to soften sudden turns and reversals. See the [design and physics notes](docs/design.md) for the rules and validation methods.
