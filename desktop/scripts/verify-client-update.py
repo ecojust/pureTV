@@ -67,6 +67,17 @@ def digest(path):
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
+def nsis_payload_digest(executable):
+    # Tauri CLI 2.12.4 bundle.rs patches this marker for NSIS, then restores
+    # the unbundled release executable. No other byte may differ here.
+    # https://github.com/tauri-apps/tauri/blob/tauri-cli-v2.12.4/crates/tauri-bundler/src/bundle.rs
+    payload = executable.read_bytes()
+    original = b"__TAURI_BUNDLE_TYPE_VAR_UNK"
+    packaged = b"__TAURI_BUNDLE_TYPE_VAR_NSS"
+    assert payload.count(original) == 1, "Expected exactly one unpatched Tauri bundle marker"
+    return hashlib.sha256(payload.replace(original, packaged, 1)).hexdigest()
+
+
 def download_baseline(target, directory):
     suffix, expected = BASELINES[target]
     name = f"pureTV-Manager-{BASELINE_VERSION}-{suffix}"
@@ -310,7 +321,8 @@ def gui_upgrade(desktop, package, helper_executable, target, directory, config):
                     info = plistlib.load(stream)
                 assert info["CFBundleIdentifier"] == config["identifier"] and info["CFBundleShortVersionString"] == config["version"]
                 run(["/usr/bin/codesign", "--verify", "--deep", "--strict", bundle])
-            assert digest(old_executable) == digest(helper_executable), "Installed executable differs from the current build"
+            expected_digest = nsis_payload_digest(helper_executable) if sys.platform == "win32" else digest(helper_executable)
+            assert digest(old_executable) == expected_digest, "Installed executable differs from the current build"
             close_manager(new_session)
             print(f"Verified actual {BASELINE_VERSION} -> {config['version']} helper upgrade, normal shutdown, relaunch and retained data", flush=True)
     finally:
