@@ -140,6 +140,10 @@ public class MainActivityTest {
     private LanGameServer server() { return ReflectionHelpers.getField(activity,"server"); }
     private MainActivity.HostBridge bridge() { return (MainActivity.HostBridge) browser().getJavascriptInterface("UsedCarHost"); }
     private void finishWorker() throws Exception {
+        // AlertDialog posts its click listener to the paused main looper. Run
+        // that listener before placing a worker barrier, or the barrier can
+        // finish before the operation it is intended to wait for is queued.
+        shadowOf(Looper.getMainLooper()).idle();
         ((ExecutorService)ReflectionHelpers.getField(activity,"worker")).submit(() -> {}).get(10,TimeUnit.SECONDS);
         shadowOf(Looper.getMainLooper()).idle();
     }
@@ -516,10 +520,15 @@ public class MainActivityTest {
 
     @Test public void failedPairingResetShowsAnErrorWithoutAutomaticallyIssuingAnotherCertificate() throws Exception {
         start();activity.failReset=true;
+        LanGameServer previous=server();
+        int oldHttp=port(),oldHttps=previous.httpsPort();
+        assertTrue(oldHttps>0);
         pairingConfirmation().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
         finishWorker();finishWorker();
         JSONObject info=new JSONObject(bridge().getInfo());
         assertEquals(1,activity.resetCalls);assertEquals(1,activity.tlsConfigurations);
+        assertNotSame("The fallback room must be attached before checking its metadata",previous,server());
+        assertClosed(oldHttp);assertClosed(oldHttps);
         assertEquals("",info.getString("secureUrl"));assertEquals(0,server().httpsPort());
         assertEquals(activity.getString(R.string.reset_certificate_error),info.getString("secureError"));
         assertTrue(get(port(),"/controller.js").startsWith("HTTP/1.1 200"));
