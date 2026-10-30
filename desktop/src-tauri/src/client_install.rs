@@ -616,10 +616,14 @@ fn verify_windows(payload: &Path, version: &str, cancel: &AtomicBool) -> Result<
 #[cfg(target_os = "windows")]
 fn install_windows(payload: &Path, version: &str, cancel: &AtomicBool) -> Result<(), String> {
     verify_windows(payload, version, cancel)?;
+    // /P still opens NSIS's language selector when no saved language exists
+    // (including a portable-to-installed conversion). /S avoids that prompt;
+    // Tauri's .onInstSuccess honors /R in silent mode as well. It does not
+    // bypass Windows elevation or the exit-code/installed-version checks.
     // NSIS /R may pass inherited handles to its restarted app. No output pipe
     // may be used to decide whether the installer itself finished.
     let status = Command::new(payload)
-        .args(["/P", "/UPDATE", "/R"])
+        .args(["/S", "/UPDATE", "/R"])
         .stdin(Stdio::null())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
