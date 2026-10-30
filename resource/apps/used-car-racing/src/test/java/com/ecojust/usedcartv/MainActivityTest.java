@@ -53,6 +53,29 @@ public class MainActivityTest {
         @Override void terminateProcess() { terminated = true; }
     }
 
+    private static final String[] TEXTURE_ASSETS={
+        "asphalt-color.jpg",
+        "asphalt-normal.jpg",
+        "asphalt-specular.jpg",
+        "concrete-color.jpg",
+        "concrete-normal.jpg",
+        "container-color.jpg",
+        "container-normal.jpg",
+        "facade-color.jpg",
+        "foliage-color.png",
+        "grass-color.jpg",
+        "grass-normal.jpg",
+        "rock-color.jpg",
+        "rock-normal.jpg",
+        "sand-color.jpg",
+        "sand-normal.jpg",
+        "solar-color.jpg",
+        "solar-specular.jpg",
+        "vehicle-atlas-color.jpg",
+        "vehicle-atlas-normal.jpg",
+        "vehicle-atlas-specular.jpg",
+    };
+
     private ActivityController<TestActivity> controller;
     private TestActivity activity;
     private boolean started, destroyed;
@@ -147,7 +170,11 @@ public class MainActivityTest {
         String[] names={"tv.html","tv.css","tracks.js","vehicle-models.js","game-model.js","renderer-3d.js","game.js","audio.js","three.min.js","materials.js"};
         String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript"};
         java.util.Set<String> packaged = new java.util.HashSet<>(java.util.Arrays.asList(activity.getAssets().list("")));
-        packaged.removeAll(java.util.Arrays.asList("controller.html", "controller.css", "controller.js", "THREE-LICENSE.txt", "TEXTURE-LICENSE.txt", "textures"));
+        packaged.removeAll(java.util.Arrays.asList("controller.html", "controller.css", "controller.js", "steering.js", "secure-controller.js", "THREE-LICENSE.txt", "TEXTURE-LICENSE.txt", "textures"));
+        // Robolectric may flatten descendant filenames into list(""); remove only
+        // the exact texture inventory also checked through its own directory below.
+        for (String texture:TEXTURE_ASSETS) packaged.remove("textures/"+texture);
+        packaged.remove("textures/manifest.json");
         // Robolectric merges these exact Android framework assets into the app's AssetManager.
         // Keep unknown files in the comparison, including any new files under these directories.
         String[] frameworkAssets = {
@@ -176,7 +203,7 @@ public class MainActivityTest {
             response.getData().close();
         }
         for (String url:new String[]{
-            "https://used-car-racing.invalid/controller.js","https://used-car-racing.invalid/THREE-LICENSE.txt","https://used-car-racing.invalid/TEXTURE-LICENSE.txt","https://used-car-racing.invalid/../private",
+            "https://used-car-racing.invalid/controller.js","https://used-car-racing.invalid/steering.js","https://used-car-racing.invalid/secure-controller.js","https://used-car-racing.invalid/THREE-LICENSE.txt","https://used-car-racing.invalid/TEXTURE-LICENSE.txt","https://used-car-racing.invalid/../private",
             "https://used-car-racing.invalid/secret","https://used-car-racing.invalid:443/game.js",
             "https://evil.example/game.js","http://used-car-racing.invalid/game.js",
             "file:///android_asset/game.js","content://private/data",
@@ -194,35 +221,7 @@ public class MainActivityTest {
     }
 
     @Test public void bundledMaterialTexturesHaveExactBinaryRoutesAndBoundedDimensions() throws Exception {
-        String[] names={
-            "asphalt-color.jpg",
-            "asphalt-normal.jpg",
-            "asphalt-specular.jpg",
-            "concrete-color.jpg",
-            "concrete-normal.jpg",
-            "container-color.jpg",
-            "container-normal.jpg",
-            "fabric-color.jpg",
-            "fabric-normal.jpg",
-            "facade-color.jpg",
-            "foliage-color.png",
-            "grass-color.jpg",
-            "grass-normal.jpg",
-            "lamp-color.jpg",
-            "lamp-normal.jpg",
-            "lamp-specular.jpg",
-            "paint-color.jpg",
-            "paint-normal.jpg",
-            "paint-specular.jpg",
-            "rock-color.jpg",
-            "rock-normal.jpg",
-            "rubber-color.jpg",
-            "rubber-normal.jpg",
-            "sand-color.jpg",
-            "sand-normal.jpg",
-            "solar-color.jpg",
-            "solar-specular.jpg",
-        };
+        String[] names=TEXTURE_ASSETS;
         java.util.Set<String> packaged = new java.util.HashSet<>(java.util.Arrays.asList(activity.getAssets().list("textures")));
         assertTrue("The texture manifest must be packaged for provenance",packaged.remove("manifest.json"));
         assertEquals("Every texture needs a deliberately named native route",new java.util.HashSet<>(java.util.Arrays.asList(names)),packaged);
@@ -252,6 +251,8 @@ public class MainActivityTest {
         for (String url:new String[]{
             "https://used-car-racing.invalid/textures/manifest.json",
             "https://used-car-racing.invalid/textures/unknown.jpg",
+            "https://used-car-racing.invalid/textures/paint-color.jpg",
+            "https://used-car-racing.invalid/textures/lamp-normal.jpg",
             "https://used-car-racing.invalid/textures/asphalt-color.png",
             "https://used-car-racing.invalid/textures/ASPHALT-color.jpg",
             "https://used-car-racing.invalid/textures/asphalt-color.jpg/",
@@ -295,6 +296,32 @@ public class MainActivityTest {
         assertTrue("Physics and graphics must share the bundled tracks",loaded.contains("tracks.js"));
         assertTrue("Vehicle geometry must be local",loaded.contains("vehicle-models.js"));
         assertTrue("Surface textures must use the local shared material library",loaded.contains("materials.js"));
+    }
+
+    @Test public void phoneScriptsAndStylesAreServedFromTheBundledOfflineController() throws Exception {
+        start();
+        int roomPort=port();
+        String response=get(roomPort,"/?room="+server().roomToken());
+        assertTrue(response.startsWith("HTTP/1.1 200"));
+        String html=response.substring(response.indexOf("\r\n\r\n")+4);
+        java.util.regex.Matcher dependencies=java.util.regex.Pattern.compile("(?:src|href)=[\"']([^\"']+)[\"']").matcher(html);
+        java.util.Set<String> loaded=new java.util.HashSet<>();
+        while(dependencies.find()) {
+            String path=dependencies.group(1);
+            assertTrue("Initial phone dependencies must be bundled same-origin resources: "+path,path.startsWith("/")&&!path.startsWith("//"));
+            String assetResponse=get(roomPort,path);
+            assertTrue(path,assetResponse.startsWith("HTTP/1.1 200"));
+            assertTrue("Client requests cannot open cross-origin network access",assetResponse.contains("connect-src 'self' ws://127.0.0.1:"+roomPort+";"));
+            String body=assetResponse.substring(assetResponse.indexOf("\r\n\r\n")+4);
+            try(java.io.InputStream bundled=activity.getAssets().open(path.substring(1))) {
+                assertEquals("Serve exact offline client asset: "+path,new String(bundled.readAllBytes(),StandardCharsets.UTF_8),body);
+            }
+            loaded.add(path);
+        }
+        assertEquals(new java.util.HashSet<>(java.util.Arrays.asList("/controller.css","/controller.js","/steering.js","/secure-controller.js")),loaded);
+        for(String path:new String[]{"/materials.js","/game.js","/textures/vehicle-atlas-color.jpg","/secure-controller.html","/unknown-controller.js","/%73teering.js","/../steering.js"}) {
+            assertTrue(path,get(roomPort,path).startsWith("HTTP/1.1 404"));
+        }
     }
 
     @Test public void generatedPngQrDecodesToExactJoinUrl() throws Exception {

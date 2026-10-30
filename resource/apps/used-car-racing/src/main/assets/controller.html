@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#101414">
   <title>极品二手车 · Used Car Racing TV</title>
   <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="/controller.css">
+  <link rel="stylesheet" href="controller.css">
 </head>
 <body>
   <main class="controller" id="controller" data-action-layout="racing" data-connected="false" data-player="1" data-state="offline">
@@ -29,7 +29,13 @@
       <div class="joystick-column"><div class="joystick-zone" id="joystick-zone" role="group" aria-label="左侧按住左右滑动转向" aria-disabled="true" tabindex="0" data-active="false">
         <div class="steering-guide" aria-hidden="true"><span>−</span><svg viewBox="0 0 130 130"><circle cx="65" cy="65" r="52"/><path d="M15 50h100M65 65v50M65 12v13"/><circle cx="65" cy="65" r="15"/></svg><span>＋</span></div>
         <div class="joystick" id="joystick" aria-hidden="true"><div class="joystick-ring"></div><div class="axis axis-x"></div><span class="direction left">◀</span><span class="direction right">▶</span><div class="joystick-thumb" id="joystick-thumb"><span>◆</span></div></div>
-      </div><span class="control-caption" data-i18n="move">左侧任意位置落指 · 左右滑动转向</span></div>
+      </div><span class="control-caption" id="steering-caption" data-i18n="move">左侧任意位置落指 · 左右滑动转向</span></div>
+      <div class="steering-settings" role="group" aria-label="转向方式" id="steering-settings">
+        <button type="button" id="steering-stick" aria-pressed="true">虚拟摇杆</button>
+        <button type="button" id="steering-gyro" aria-pressed="false">陀螺仪</button>
+        <button type="button" id="steering-center" hidden>校准中立</button>
+        <button type="button" id="steering-local" hidden>返回局域网</button>
+      </div>
       <div class="system-keys" aria-label="游戏菜单"><button type="button" id="button-select" class="system-button" disabled><span>SELECT</span><small id="select-caption">镜头 · 长按换挡</small></button><button type="button" id="button-start" class="system-button" disabled><span>START</span><small id="start-caption">开始 / 暂停</small></button></div>
       <div class="actions">
         <div class="button-wrap a-wrap"><button type="button" id="button-a" class="action-button button-a" disabled><svg class="pedal-icon" viewBox="0 0 36 52" aria-hidden="true"><path d="M12 2h15l5 39-3 8H9L5 41z"/><path d="M13 13h11M12 22h13M11 31h15M10 40h17"/></svg><span class="action-name">GAS</span><span class="button-caption" id="a-caption">油门 · 按住加速</span><span class="action-edge" aria-hidden="true">A / 01</span></button></div>
@@ -40,6 +46,6 @@
     <div class="rotate-hint" data-i18n="rotate">↻ 横屏驾驶，左右手分别操控方向与踏板</div>
     <div class="error-actions" id="error-actions" hidden><button type="button" id="retry" data-i18n="retry">重新连接</button></div>
   </main>
-  <script src="/controller.js"></script>
+  <script src="secure-controller.js"></script><script src="steering.js"></script><script src="controller.js"></script>
 </body>
 </html>

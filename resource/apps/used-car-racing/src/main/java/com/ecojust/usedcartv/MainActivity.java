@@ -164,25 +164,18 @@ public class MainActivity extends Activity {
             case "/textures/concrete-normal.jpg":
             case "/textures/container-color.jpg":
             case "/textures/container-normal.jpg":
-            case "/textures/fabric-color.jpg":
-            case "/textures/fabric-normal.jpg":
             case "/textures/facade-color.jpg":
             case "/textures/grass-color.jpg":
             case "/textures/grass-normal.jpg":
-            case "/textures/lamp-color.jpg":
-            case "/textures/lamp-normal.jpg":
-            case "/textures/lamp-specular.jpg":
-            case "/textures/paint-color.jpg":
-            case "/textures/paint-normal.jpg":
-            case "/textures/paint-specular.jpg":
             case "/textures/rock-color.jpg":
             case "/textures/rock-normal.jpg":
-            case "/textures/rubber-color.jpg":
-            case "/textures/rubber-normal.jpg":
             case "/textures/sand-color.jpg":
             case "/textures/sand-normal.jpg":
             case "/textures/solar-color.jpg":
             case "/textures/solar-specular.jpg":
+            case "/textures/vehicle-atlas-color.jpg":
+            case "/textures/vehicle-atlas-normal.jpg":
+            case "/textures/vehicle-atlas-specular.jpg":
                 return "image/jpeg";
             case "/textures/foliage-color.png":
                 return "image/png";

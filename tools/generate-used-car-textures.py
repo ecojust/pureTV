@@ -244,6 +244,43 @@ def fabric():
     save('fabric',rgb(192+weave*13+f*20),weave*.035,normal_strength=1.4)
 
 
+
+def vehicle_atlas():
+    """Pack four periodic surfaces with wrapped gutters for one vehicle shader.
+
+    Color cells retain 496 x 496 useful texels. The matching linear maps retain
+    248 x 248, and every channel uses identical normalized UV rectangles.
+    Standalone source maps are intermediate bake outputs, not runtime assets.
+    """
+    names = ('paint', 'rubber', 'lamp', 'fabric')
+    entry = {'size': 1024, 'normalSize': 512, 'specularSize': 512, 'rectangles': {}}
+    for channel, suffix, size, gutter in (('map', 'color', 1024, 8), ('normalMap', 'normal', 512, 4), ('specularMap', 'specular', 512, 4)):
+        tile = size // 2
+        inner = tile - gutter * 2
+        atlas = Image.new('RGB', (size, size))
+        for index, name in enumerate(names):
+            source = MANIFEST[name].get(channel)
+            if source:
+                image = Image.open(OUT / source).convert('RGB').resize((inner, inner), Image.Resampling.LANCZOS)
+            else:
+                image = Image.new('RGB', (inner, inner), (128, 128, 255) if channel == 'normalMap' else (255, 255, 255))
+            # Wrapped gutters make repeated texture samples continuous at tile edges;
+            # the shader wraps local UVs before mapping into these bounded rectangles.
+            padded = np.pad(np.asarray(image), ((gutter, gutter), (gutter, gutter), (0, 0)), mode='wrap')
+            col, row = index % 2, index // 2
+            atlas.paste(Image.fromarray(padded), (col * tile, row * tile))
+            entry['rectangles'][name] = [col * .5 + gutter / size, (1 - row) * .5 + gutter / size, inner / size, inner / size]
+        path = OUT / ('vehicle-atlas-' + suffix + '.jpg')
+        atlas.save(path, quality=92 if channel != 'map' else 90, subsampling=0, optimize=True)
+        entry[channel] = path.name
+    for name in names:
+        original = MANIFEST.pop(name)
+        for channel in ('map', 'normalMap', 'specularMap'):
+            if channel in original:
+                (OUT / original[channel]).unlink()
+    MANIFEST['vehicleAtlas'] = entry
+
+
 def foliage():
     """Pine silhouette with transparent air between original needle clusters."""
     n=512
@@ -279,7 +316,7 @@ def foliage():
 
 
 if __name__ == '__main__':
-    for make in (asphalt, concrete, rock, sand, grass, facade, container, solar, paint, rubber, lamp, fabric, foliage):
+    for make in (asphalt, concrete, rock, sand, grass, facade, container, solar, paint, rubber, lamp, fabric, foliage, vehicle_atlas):
         make()
     manifest_json = json.dumps(MANIFEST, indent=2)
     (OUT/'manifest.json').write_text(manifest_json+'\n')

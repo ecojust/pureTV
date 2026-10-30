@@ -37,6 +37,7 @@ jobs:
         run: |
           python -m unittest discover -s tools/tests -p 'test_release_certificates.py'
           python -m unittest discover -s tools/tests -p 'test_game_publication_policy.py'
+          python -m unittest discover -s tools/tests -p 'test_controller_site.py'
       - name: Verify official login form autofill
         run: node --test resource/apps/hifini/src/test/js/login-autofill.test.mjs
       - name: Verify CCTV website player presentation
@@ -165,6 +166,7 @@ jobs:
           node resource/apps/used-car-racing/tests/rendering.mjs
           node resource/apps/used-car-racing/tests/gallery.mjs
           node resource/apps/used-car-racing/tests/controller.mjs
+          node resource/apps/used-car-racing/tests/secure-controller.mjs
           node resource/apps/used-car-racing/tests/integration.mjs
       - uses: android-actions/setup-android@v3
         with:
@@ -444,6 +446,9 @@ jobs:
                       shutil.copyfile(root/(game+'-tv-previews')/name,output/name)
           for scene in ['car-lineup','track-harbor','track-ridge','track-solar']:
               name='used-car-racing-'+scene+'.png'
+              shutil.copyfile(root/'used-car-racing-tv-previews'/name,output/name)
+          for language in ['', '.en']:
+              name='used-car-racing-controller-gyro'+language+'.png'
               shutil.copyfile(root/'used-car-racing-tv-previews'/name,output/name)
           for name in ['home-render.png','apps-render.png','home-render.en.png','apps-render.en.png']:
               shutil.copyfile(root/'pureTV-tv-previews'/name,output/name)

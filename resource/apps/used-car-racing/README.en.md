@@ -10,7 +10,7 @@ The APK in this directory is signed with the pureTV release certificate. Android
 
 **Used Car Racing TV / 极品二手车** is an original 3D racing game. Each race starts with a randomly assigned used car and condition report. The inspection garage displays the model, power, weight, drivetrain and faults. One or two players use LAN phone controllers; AI drivers fill the remaining places in a six-car field.
 
-Current version **0.1.1**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. This directory includes an APK and real page captures verified against the successful build, release certificate and packaged source assets.
+This source update targets **0.1.1**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. See [resource.json](resource.json) for the downloadable APK’s actual version, signature and verification results.
 
 ## Playing
 
@@ -19,11 +19,30 @@ Current version **0.1.1**, package `com.ecojust.usedcartv`, for Android 8.0 or n
 3. Inspect the assigned car and faults, choose a track and player count, then start.
 4. The large left area steers. The right third of the phone is divided into upper throttle and lower brake regions; steering and pedals work together. Text selection and long-press menus are suppressed in the controls.
 
+### Choosing how to steer
+
+The **virtual stick** is the default: touch anywhere on the left and slide sideways. It works on the shared local network without internet access.
+
+**Gyroscope** steering lets you turn the phone like a steering wheel:
+
+1. Choose Gyroscope on the LAN controller to open the project’s HTTPS controller page. Its initial load needs internet access and the browser must allow the new page.
+2. On that page, tap Gyroscope and allow motion access when the browser requests it. A saved preference does not replace permission for this visit.
+3. Hold the phone horizontally in a comfortable, slightly upright position. The first valid pose becomes center; Recenter repeats calibration. A turn of about 45° gives full steering.
+4. Continue using the right-hand throttle and brake areas. In the garage, slide on the left to choose a track; motion steering applies during the countdown and race.
+
+Use the virtual stick if permission is denied, no sensor data arrives, the new page is blocked, or the browser suspends the original LAN page in the background. The secure page has a Back to LAN button. Sensor interruption, laying the phone flat or losing focus releases the controls. Motion permissions and background-page support vary between mobile browsers, so gyroscope mode is not guaranteed on every device.
+
+The HTTPS page serves static controller files only. Driving input still reaches the TV through the original LAN page, without a public game server.
+
 Press SELECT in the garage to reroll the assigned cars. During a race, tap SELECT to switch between chase and hood cameras. Below **1.2 m/s**, hold SELECT for about **0.8 seconds** to toggle D forward / R reverse, then apply throttle. START begins or pauses the race.
 
 Keyboard controls: player 1 uses Left/Right to steer, Z for throttle, X for brake and Enter to start/pause. Tap Shift for the camera or hold it at low speed for D/R; R also toggles direction at low speed. Player 2 uses A/D to steer, W for throttle and S for brake.
 
 Braking uses **simulated pedal force**. Holding the brake increases force; releasing it quickly unloads the pedal. A car assigned a weak brake pedal loses its foot brake permanently for the current race when simulated force reaches **1600 N**. The TV displays force and failure status. An ordinary phone does not measure real pedal or finger force; this value is calculated from input and the game model.
+
+Gyroscope controls (actual Chromium page rendering with test orientation and vehicle data):
+
+![Gyroscope controller](docs/controller-gyro.en.png)
 
 ## Cars and tracks
 
@@ -50,7 +69,9 @@ Version 0.1.1 focuses on graphics while retaining the routes, vehicle physics, r
 
 ## Graphics in 0.1.1
 
-The renderer keeps modest geometry complexity and adds 1024² color maps for asphalt and rock, 512² color maps for the other materials, and 256–512² normal/specular maps for grain, strata, tire tread, lamp lenses and fabric. The six cars share texture images. Paint, glass and metal use static environment reflections selected for the current setting, avoiding a new reflection render each frame.
+The renderer keeps modest geometry complexity and adds 1024² color maps for asphalt, rock and the vehicle atlas, 512² color maps for the remaining environment materials, and 256–512² normal/specular maps for grain, strata, tire tread, lamp lenses and fabric. Paint, rubber, lamp lenses and fabric share a vehicle atlas; body and wheel batches reduce separate draws. The six cars share texture images. Paint, glass and metal use static environment reflections selected for the current setting, avoiding a new reflection render each frame.
+
+In fixed six-car scenes across all three tracks, batching reduces single-player draw calls from 214–218 to 99–104 and combined split-screen calls from 391–403 to 181–195. These compare draw submissions before and after the atlas/batching changes, not TV frame-rate improvements. The [design notes](docs/design.md#合批前后绘制次数) record the environment, baseline and reproduction command.
 
 Roads gain repairs and rubber marks, while buildings and containers use surface-scaled textures. Continuous irregular ridges replace isolated cone mountains; rocks have less regular facets and trees use alpha-tested foliage cards. Clouds, fog and directional light add depth. Route and collision boundaries still use the original road data.
 

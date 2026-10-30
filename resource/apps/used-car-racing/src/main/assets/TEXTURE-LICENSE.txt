@@ -10,8 +10,11 @@ Dependencies: Python 3, Pillow, numpy. Runtime uses the bundled files offline;
 the Android application does not require Python, a CDN, or a texture server.
 
 Base-color maps are sRGB. Normal/specular maps contain linear data. Asphalt
-and rock colors are 1024 x 1024; other colors are 512 x 512. Supporting maps
-are 256 or 512 square. textures/manifest.json records the exact dimensions.
+and rock colors and the shared vehicle color atlas are 1024 x 1024; other
+colors are 512 x 512. Supporting maps are 256 or 512 square. The vehicle
+atlas packs paint, tire, lamp and cloth surfaces with wrapped edge gutters;
+its normal and specular atlases are 512 square. textures/manifest.json
+records the exact dimensions and normalized vehicle UV rectangles.
 Tree silhouette is an alpha-tested original needle/branch drawing.
 
 These assets and their generator are licensed under the repository MIT license:

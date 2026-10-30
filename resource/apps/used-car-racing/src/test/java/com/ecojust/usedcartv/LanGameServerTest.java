@@ -42,11 +42,26 @@ public class LanGameServerTest {
         assertTrue(http("/controller.css", "127.0.0.1:" + port).contains("asset:controller.css"));
         assertTrue(http("/", "127.0.0.1:" + port).startsWith("HTTP/1.1 403"));
         assertTrue(http("/../secret", "127.0.0.1:" + port).startsWith("HTTP/1.1 404"));
-        for (String asset : new String[] {"tv.html", "tv.css", "game.js", "game-model.js", "renderer-3d.js", "audio.js", "vehicle-models.js", "tracks.js", "three.min.js", "THREE-LICENSE.txt"}) {
+        for (String asset : new String[] {"tv.html", "tv.css", "game.js", "game-model.js", "renderer-3d.js", "audio.js", "vehicle-models.js", "tracks.js", "three.min.js", "materials.js", "textures/vehicle-atlas-color.jpg", "THREE-LICENSE.txt", "TEXTURE-LICENSE.txt"}) {
             assertTrue("TV assets never cross onto the phone server", http("/" + asset, "127.0.0.1:" + port).startsWith("HTTP/1.1 404"));
         }
 
         assertTrue(http("/?room=" + server.roomToken(), "attacker.example:" + port).startsWith("HTTP/1.1 403"));
+    }
+
+    @Test public void phoneSteeringAndSecureRelayScriptsUseOnlyNamedLocalRoutes() throws Exception {
+        for(String name:new String[]{"steering.js","secure-controller.js"}) {
+            String response=http("/"+name,"127.0.0.1:"+port);
+            assertTrue(name,response.startsWith("HTTP/1.1 200"));
+            assertTrue(name,response.contains("Content-Type: application/javascript; charset=utf-8"));
+            assertTrue(name,response.endsWith("asset:"+name));
+            assertTrue("Sensor relay does not relax the LAN origin policy",response.contains("connect-src 'self' ws://127.0.0.1:"+port+";"));
+            assertFalse("No CORS wildcard is introduced",response.toLowerCase().contains("access-control-allow-origin"));
+        }
+        for(String path:new String[]{"/steering","/steering.js/","/secure-controller.html","/unknown-controller.js","/%73teering.js","/../steering.js","/secure/../secure-controller.js"}) {
+            assertTrue(path,http(path,"127.0.0.1:"+port).startsWith("HTTP/1.1 404"));
+        }
+        assertTrue("The HTTPS sensor companion cannot connect directly to the room",handshake(socket(),server.roomToken(),"https://ecojust.github.io").startsWith("HTTP/1.1 403"));
     }
 
     @Test public void websocketAuthenticatesRoomAndOrigin() throws Exception {

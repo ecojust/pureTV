@@ -22,7 +22,7 @@ function publish(room,state) {
 }
 const server=http.createServer(async(request,response)=>{
   const file=new URL(request.url,'http://localhost').pathname.slice(1)||'controller.html';
-  if(!['controller.html','controller.js','controller.css'].includes(file)){response.writeHead(404).end();return;}
+  if(!['controller.html','controller.js','controller.css','steering.js','secure-controller.js'].includes(file)){response.writeHead(404).end();return;}
   response.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':'text/html');
   response.end(await readFile(new URL(file,assets)));
 });
@@ -59,11 +59,21 @@ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const origin='http://127.0.0.1:'+server.address().port;
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});
 const garage={phase:'garage',trackName:'霓虹港湾',trackNameEn:'Neon Harbor',laps:2,players:[{id:1,carName:'旧车测试驾驶席',carNameEn:'Used car test driver',speedKmh:0,gear:0,brakeForce:0,brakeBroken:false,lap:1,rank:1}]};
-async function fixture({locale='zh-CN',viewport={width:844,height:390},legacy=false,mode='welcome',player=1}={}){
+async function fixture({locale='zh-CN',viewport={width:844,height:390},legacy=false,mode='welcome',player=1,sensor=null}={}){
   const room={token:randomBytes(16).toString('hex'),session:randomBytes(16).toString('hex'),mode,player,peers:new Set(),connections:[],messages:[],state:structuredClone(garage)};
   room.state.players[0].id=player;rooms.set(room.token,room);
   const context=await browser.newContext({locale,viewport,hasTouch:true});
   if(legacy)await context.addInitScript(()=>{window.PointerEvent=undefined;});
+  if(sensor)await context.addInitScript(sensor=>{
+    window.__permissionCalls=0;
+    // The fixture injects deliberate sensor samples. Ignore host-machine sensor
+    // events (desktop Chromium may asynchronously emit an initial null sample).
+    const add=window.addEventListener.bind(window),remove=window.removeEventListener.bind(window),listeners=new WeakMap();
+    window.addEventListener=(type,listener,options)=>{if(type==='deviceorientation'){const wrapped=event=>{if(!event.isTrusted)listener(event);};listeners.set(listener,wrapped);add(type,wrapped,options);}else add(type,listener,options);};
+    window.removeEventListener=(type,listener,options)=>remove(type,type==='deviceorientation'?listeners.get(listener)||listener:listener,options);
+    if(sensor==='missing')window.DeviceOrientationEvent=undefined;
+    else {window.DeviceOrientationEvent=function(){};if(sensor!=='automatic')window.DeviceOrientationEvent.requestPermission=()=>{window.__permissionCalls++;return Promise.resolve(sensor==='denied'?'denied':'granted');};}
+  },sensor);
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(origin+'/?room='+room.token);
   if(mode==='welcome')await page.waitForFunction(()=>document.getElementById('controller').dataset.connected==='true');
@@ -83,7 +93,7 @@ async function expectInput(room,values){
 function neutral(frame){return frame.x===0&&frame.y===0&&!frame.a&&!frame.b&&!frame.start&&!frame.select;}
 async function point(page,id,fx=.5,fy=.5){const r=await page.locator('#'+id).boundingBox();return{x:r.x+r.width*fx,y:r.y+r.height*fy};}
 async function touch(cdp,type,points){await cdp.send('Input.dispatchTouchEvent',{type,touchPoints:points.map(([id,x,y])=>({id,x,y,radiusX:6,radiusY:6,force:1}))});}
-async function check(name,run){await run();passed++;console.log('PASS '+name);}
+async function check(name,run){if(process.env.USED_CAR_CONTROLLER_PART==='gyro'&&!/gyro|landscape orientations|denied, missing|projected steering/i.test(name))return;await run();passed++;console.log('PASS '+name);}
 const capture=process.env.USED_CAR_UI_CAPTURE_DIR;
 try{
   await check('Native protocol handshake, neutral heartbeat, sequence and session-resume identity',async()=>{
@@ -191,8 +201,50 @@ try{
     await legacy('touchstart',[[1,180,245],[2,720,80],[3,720,300]]);await expectInput(f.room,{x:0,a:true,b:true});await legacy('touchmove',[[1,330,245]]);await expectInput(f.room,{x:1,a:true,b:true});
     const cancel=lastInput(f.room).cancelSeq;await legacy('touchcancel',[[1,330,245],[2,720,80],[3,720,300]]);await expectInput(f.room,{x:0,a:false,b:false});assert.ok(lastInput(f.room).cancelSeq>cancel);await f.close();
   });
+  async function sensorFrame(f,beta,gamma,angle=90,count=1) {
+    for(let n=0;n<count;n++){
+      await f.page.evaluate(({beta,gamma,angle})=>{Object.defineProperty(screen.orientation,'angle',{configurable:true,value:angle});const event=new Event('deviceorientation');Object.defineProperties(event,{beta:{value:beta},gamma:{value:gamma},alpha:{value:0}});window.dispatchEvent(event);},{beta,gamma,angle});
+      if(count>1)await f.page.waitForTimeout(22);
+    }
+  }
+  async function tapSetting(f,id){const cdp=await f.context.newCDPSession(f.page),p=await point(f.page,id);await touch(cdp,'touchStart',[[9,p.x,p.y]]);await touch(cdp,'touchEnd',[]);await cdp.detach();}
+  async function race(f){publish(f.room,{...garage,phase:'race'});await f.page.waitForFunction(()=>document.getElementById('controller').dataset.state==='active');}
+  await check('Gyro permission is user-triggered, garage steering remains touch-based, and first race sample calibrates center',async()=>{
+    const f=await fixture({sensor:'granted'});assert.equal(await f.page.evaluate(()=>__permissionCalls),0);
+    await tapSetting(f,'steering-gyro');await f.page.waitForFunction(()=>document.getElementById('controller').dataset.steering==='gyro');assert.equal(await f.page.evaluate(()=>__permissionCalls),1);
+    await sensorFrame(f,0,-70);await sensorFrame(f,40,-70,90,8);await expectInput(f.room,{x:0});
+    const cdp=await f.context.newCDPSession(f.page);await touch(cdp,'touchStart',[[1,140,240]]);await touch(cdp,'touchMove',[[1,300,240]]);await expectInput(f.room,{x:1});await touch(cdp,'touchEnd',[]);
+    await race(f);await sensorFrame(f,20,-70);await expectInput(f.room,{x:0});await sensorFrame(f,20.5,-70,90,3);await expectInput(f.room,{x:0});
+    await sensorFrame(f,50,-70,90,10);assert.ok(lastInput(f.room).x>.3&&lastInput(f.room).x<1);
+    assert.equal(await f.page.evaluate(()=>localStorage.getItem('used-car-racing-steering')),'gyro');
+    await f.page.reload();await f.page.waitForFunction(()=>document.getElementById('controller').dataset.connected==='true');assert.equal(await f.page.evaluate(()=>__permissionCalls),0);assert.match(await f.page.locator('#steering-caption').innerText(),/偏好/);await expectInput(f.room,{x:0});await f.close();
+  });
+  await check('Landscape orientations steer consistently, calibration and mode changes cancel held pedals, and joystick stays usable',async()=>{
+    const f=await fixture({sensor:'granted'});await race(f);await f.page.locator('#steering-gyro').click();await f.page.waitForFunction(()=>document.getElementById('controller').dataset.steering==='gyro');
+    for(const angle of [90,270]){const sign=angle===90?1:-1;await sensorFrame(f,0,-70*sign,angle);await sensorFrame(f,50*sign,-70*sign,angle,16);assert.ok(lastInput(f.room).x>.96,'Right turn at screen '+angle+' '+JSON.stringify(lastInput(f.room))+' '+await f.page.locator('#steering-caption').innerText());await sensorFrame(f,-50*sign,-70*sign,angle,22);assert.ok(lastInput(f.room).x<-.96,'Left turn at screen '+angle);}
+    await f.page.keyboard.down('ArrowDown');await expectInput(f.room,{b:true});const before=lastInput(f.room).cancelSeq;
+    await tapSetting(f,'steering-center');await expectInput(f.room,{x:0,b:false});assert.ok(lastInput(f.room).cancelSeq>before);await f.page.keyboard.up('ArrowDown');
+    await sensorFrame(f,30,70,270);await expectInput(f.room,{x:0});await sensorFrame(f,-20,70,270,12);assert.ok(lastInput(f.room).x>.6);
+    await tapSetting(f,'steering-stick');await expectInput(f.room,{x:0,a:false,b:false});assert.equal(await f.page.locator('#steering-stick').getAttribute('aria-pressed'),'true');assert.equal(await f.page.evaluate(()=>localStorage.getItem('used-car-racing-steering')),'stick');
+    await sensorFrame(f,55,70,270,4);await expectInput(f.room,{x:0});const cdp=await f.context.newCDPSession(f.page);await touch(cdp,'touchStart',[[1,130,240]]);await touch(cdp,'touchMove',[[1,280,240]]);await expectInput(f.room,{x:1});await touch(cdp,'touchEnd',[]);await f.close();
+  });
+  await check('Gyro and two pedal touches run together; stale, invalid and background samples release inputs and require fresh calibration',async()=>{
+    const f=await fixture({sensor:'granted'});await race(f);await f.page.locator('#steering-gyro').click();await f.page.waitForFunction(()=>document.getElementById('controller').dataset.steering==='gyro');
+    await sensorFrame(f,0,-70);await sensorFrame(f,40,-70,90,12);const cdp=await f.context.newCDPSession(f.page);await touch(cdp,'touchStart',[[1,720,80],[2,720,300]]);await expectInput(f.room,{a:true,b:true});assert.ok(lastInput(f.room).x>.7);
+    const cancel=lastInput(f.room).cancelSeq;await f.page.waitForTimeout(650);await expectInput(f.room,{x:0,a:false,b:false});assert.ok(lastInput(f.room).cancelSeq>cancel);await touch(cdp,'touchEnd',[]);
+    await sensorFrame(f,35,-70);await expectInput(f.room,{x:0});await sensorFrame(f,55,-70,90,8);assert.ok(lastInput(f.room).x>.2);
+    await sensorFrame(f,null,null);await expectInput(f.room,{x:0,a:false,b:false});assert.match(await f.page.locator('#steering-caption').innerText(),/立起/);
+    await sensorFrame(f,0,-70);await sensorFrame(f,30,-70,90,8);assert.ok(lastInput(f.room).x>.3);await f.page.evaluate(()=>window.dispatchEvent(new Event('blur')));await expectInput(f.room,{x:0});await sensorFrame(f,50,-70,90,5);await expectInput(f.room,{x:0});
+    await f.page.evaluate(()=>window.dispatchEvent(new Event('focus')));await sensorFrame(f,40,-70);await expectInput(f.room,{x:0});await f.close();
+  });
+  await check('Denied, missing and silent sensors keep a working virtual stick without automatic permission prompts',async()=>{
+    for(const sensor of ['denied','missing','granted']){const f=await fixture({sensor});await race(f);await f.page.locator('#steering-gyro').click();if(sensor==='granted')await f.page.waitForTimeout(3700);await f.page.waitForFunction(()=>document.getElementById('controller').dataset.steering==='stick');assert.equal(await f.page.locator('#steering-stick').getAttribute('aria-pressed'),'true');assert.match(await f.page.locator('#steering-caption').innerText(),sensor==='denied'?/权限/:/传感器/);await f.page.keyboard.down('ArrowRight');await expectInput(f.room,{x:1});await f.page.keyboard.up('ArrowRight');await f.close();}
+  });
+  await check('Projected steering angles wrap safely at the Euler seam and reject flat or nonfinite sensor data',async()=>{
+    const f=await fixture();const result=await f.page.evaluate(()=>({wrapped:UsedCarSteering.wrap(-359),flat:UsedCarSteering.wheelAngle(0,0,90),invalid:UsedCarSteering.wheelAngle(NaN,30,90),left:UsedCarSteering.wheelAngle(0,-70,90),right:UsedCarSteering.wheelAngle(0,70,270)}));assert.ok(Math.abs(result.wrapped-1)<1e-8);assert.equal(result.flat,null);assert.equal(result.invalid,null);assert.ok(Math.abs(result.left-result.right)<1e-8);await f.close();
+  });
   for(const locale of ['zh-CN','en-US'])await check(locale+' full-screen zones, selection prevention, portrait layout and real captures',async()=>{
-    const f=await fixture({locale});const english=locale==='en-US';assert.equal(await f.page.locator('html').getAttribute('lang'),english?'en':'zh-CN');assert.match(await f.page.locator('#a-caption').innerText(),english?/Throttle/:/油门/);
+    const f=await fixture({locale,sensor:'granted'});const english=locale==='en-US';assert.equal(await f.page.locator('html').getAttribute('lang'),english?'en':'zh-CN');assert.match(await f.page.locator('#a-caption').innerText(),english?/Throttle/:/油门/);
     assert.deepEqual(await f.page.evaluate(()=>['contextmenu','selectstart','dragstart'].map(type=>document.querySelector('.brand').dispatchEvent(new Event(type,{bubbles:true,cancelable:true})))),[false,false,false]);
     assert.equal(await f.page.locator('body').evaluate(el=>getComputedStyle(el).userSelect),'none');assert.equal(await f.page.locator('body').evaluate(el=>getComputedStyle(el).touchAction),'none');
     if(capture){await mkdir(capture,{recursive:true});await f.page.screenshot({path:capture+'/used-car-racing-controller'+(english?'.en':'')+'.png'});}
@@ -200,6 +252,12 @@ try{
     publish(f.room,{...garage,phase:'race',players:[{...garage.players[0],speedKmh:126,gear:4,brakeForce:0,rank:2}]});await f.page.waitForFunction(()=>document.getElementById('speed').textContent==='126');
     if(capture)await f.page.screenshot({path:capture+'/used-car-racing-controller-active'+(english?'.en':'')+'.png'});
     await f.page.waitForTimeout(650);assert.equal(await f.page.evaluate(()=>String(getSelection())), '');await touch(cdp,'touchEnd',[]);
+    if(capture){
+      await tapSetting(f,'steering-gyro');await f.page.waitForFunction(()=>document.getElementById('controller').dataset.steering==='gyro');await sensorFrame(f,0,-70);await sensorFrame(f,30,-70,90,8);
+      await f.page.evaluate(()=>{window.__gyroCaptureTimer=setInterval(()=>{const event=new Event('deviceorientation');Object.defineProperties(event,{beta:{value:30},gamma:{value:-70},alpha:{value:0}});window.dispatchEvent(event);},35);});
+      await touch(cdp,'touchStart',[[2,720,80]]);await expectInput(f.room,{a:true});await f.page.screenshot({path:capture+'/used-car-racing-controller-gyro'+(english?'.en':'')+'.png'});
+      await f.page.evaluate(()=>clearInterval(window.__gyroCaptureTimer));await touch(cdp,'touchEnd',[]);await tapSetting(f,'steering-stick');await expectInput(f.room,{x:0,a:false,b:false});
+    }
     await f.page.setViewportSize({width:390,height:844});await expectInput(f.room,{x:0,a:false,b:false});
     const a=await f.page.locator('#button-a').boundingBox(),b=await f.page.locator('#button-b').boundingBox();assert.ok(Math.abs(a.x-260)<.1&&a.y===0&&a.height===422);assert.ok(Math.abs(b.x-260)<.1&&b.y===422&&b.height===422);assert.equal(await f.page.locator('.rotate-hint').isVisible(),true);assert.ok(await f.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await f.close();
   });

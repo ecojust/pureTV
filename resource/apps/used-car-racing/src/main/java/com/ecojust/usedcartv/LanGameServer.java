@@ -196,6 +196,8 @@ public final class LanGameServer implements AutoCloseable {
                 if (!room.equals(query(uri.getRawQuery(), "room"))) { http(out, 403, "text/plain", new byte[0]); return; }
                 asset = "controller.html"; mime = "text/html; charset=utf-8";
             } else if ("/controller.js".equals(path)) { asset = "controller.js"; mime = "application/javascript; charset=utf-8";
+            } else if ("/steering.js".equals(path)) { asset = "steering.js"; mime = "application/javascript; charset=utf-8";
+            } else if ("/secure-controller.js".equals(path)) { asset = "secure-controller.js"; mime = "application/javascript; charset=utf-8";
             } else if ("/controller.css".equals(path)) { asset = "controller.css"; mime = "text/css; charset=utf-8";
             } else { http(out, 404, "text/plain", new byte[0]); return; }
             try (InputStream file = assets.open(asset)) { http(out, 200, mime, readLimited(file, 512 * 1024), host); }

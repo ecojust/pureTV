@@ -54,38 +54,44 @@ var DEFINITIONS={
     "specularMap": "solar-specular.jpg",
     "specularSize": 256
   },
-  "paint": {
-    "map": "paint-color.jpg",
-    "size": 512,
-    "normalMap": "paint-normal.jpg",
-    "normalSize": 256,
-    "specularMap": "paint-specular.jpg",
-    "specularSize": 256
-  },
-  "rubber": {
-    "map": "rubber-color.jpg",
-    "size": 512,
-    "normalMap": "rubber-normal.jpg",
-    "normalSize": 512
-  },
-  "lamp": {
-    "map": "lamp-color.jpg",
-    "size": 512,
-    "normalMap": "lamp-normal.jpg",
-    "normalSize": 256,
-    "specularMap": "lamp-specular.jpg",
-    "specularSize": 256
-  },
-  "fabric": {
-    "map": "fabric-color.jpg",
-    "size": 512,
-    "normalMap": "fabric-normal.jpg",
-    "normalSize": 256
-  },
   "foliage": {
     "map": "foliage-color.png",
     "size": 512,
     "alpha": true
+  },
+  "vehicleAtlas": {
+    "size": 1024,
+    "normalSize": 512,
+    "specularSize": 512,
+    "rectangles": {
+      "paint": [
+        0.0078125,
+        0.5078125,
+        0.484375,
+        0.484375
+      ],
+      "rubber": [
+        0.5078125,
+        0.5078125,
+        0.484375,
+        0.484375
+      ],
+      "lamp": [
+        0.0078125,
+        0.0078125,
+        0.484375,
+        0.484375
+      ],
+      "fabric": [
+        0.5078125,
+        0.0078125,
+        0.484375,
+        0.484375
+      ]
+    },
+    "map": "vehicle-atlas-color.jpg",
+    "normalMap": "vehicle-atlas-normal.jpg",
+    "specularMap": "vehicle-atlas-specular.jpg"
   }
 };
 /* material-definitions:end */
@@ -113,7 +119,7 @@ function Materials(T,renderer){
     placeholderContext.fillStyle=channel==='normalMap'?'#8080ff':'#ffffff';if(!def.alpha)placeholderContext.fillRect(0,0,2,2);
     texture.image=placeholder;texture.needsUpdate=true;
     texture.name='used-car/'+name+'/'+channel;texture.encoding=channel==='map'?T.sRGBEncoding:T.LinearEncoding;
-    texture.wrapS=texture.wrapT=def.alpha?T.ClampToEdgeWrapping:T.RepeatWrapping;
+    texture.wrapS=texture.wrapT=def.alpha||def.rectangles?T.ClampToEdgeWrapping:T.RepeatWrapping;
     texture.minFilter=T.LinearMipmapLinearFilter;texture.magFilter=T.LinearFilter;texture.generateMipmaps=true;texture.anisotropy=self.stats.anisotropy;
     bundle[channel]=texture;self.owned.push(texture);
    }));
@@ -125,6 +131,7 @@ function Materials(T,renderer){
  this.ready=Promise.all(pending).then(function(){return self;});
 }
 Materials.prototype.get=function(name){return this.maps[ALIASES[name]||name]||{};};
+Materials.prototype.vehicleRect=function(name){var atlas=DEFINITIONS.vehicleAtlas,rect=atlas&&atlas.rectangles[ALIASES[name]||name];return rect?rect.slice():null;};
 Materials.prototype.environment=function(theme){
  theme=theme==='harbor'||theme==='ridge'||theme==='solar'?theme:'garage';
  if(this.environments[theme])return this.environments[theme];

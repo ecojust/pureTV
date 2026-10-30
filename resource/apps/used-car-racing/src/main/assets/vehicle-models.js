@@ -20,7 +20,7 @@
     var group = new T.Group(), body = new T.Group(); group.add(body);
     group.name = 'used-car-' + style;
     var geometries = [], materials = [], textures = [], disposed = false;
-    var batches = {}, shared = {}, wheelMeshes = [], damageMeshes = [];
+    var batches = {}, shared = {}, wheelMeshes = [], damageMeshes = [], atlasMaterial = null, atlasUniforms = null;
     var randomState = (Number(seed) || 97123) >>> 0;
     function rnd() { randomState = (Math.imul(randomState, 1664525) + 1013904223) >>> 0; return randomState / 4294967296; }
     function geo(g) { geometries.push(g); return g; }
@@ -61,6 +61,7 @@
     function updatePaintFinish() {
       paint.shininess = (studioLighting ? 110 : 100) - finishAge * 32 - finishDamage * 45;
       paint.reflectivity = (studioLighting ? .37 : .23) - finishAge * (studioLighting ? .11 : .065) - finishDamage * .10;
+      if (atlasUniforms) atlasUniforms.carPaintFinish.value.set(paint.shininess, paint.reflectivity);
     }
     function setEnvironment(environment) {
       if (currentEnvironment === environment) return;
@@ -95,16 +96,24 @@
       for (var i = 1; i < points.length - 1; i++) positions.push.apply(positions, points[0].concat(points[i], points[i + 1]));
       var g = geo(new T.BufferGeometry()); g.setAttribute('position', new T.Float32BufferAttribute(positions, 3)); g.computeVertexNormals(); push(name, g);
     }
+    var ATLAS_TILE = { paint: 0, rubber: 1, headlamp: 2, taillamp: 2, indicator: 2, fabric: 3 };
+    var DETAIL_STRENGTH = { paint: .0504, rubber: .4875, headlamp: .40, taillamp: .40, indicator: .375, fabric: .144 };
+    function tagged(parts, id) { parts.forEach(function (p) { p.materialId = id; }); return parts; }
     function merge(parts, materialId) {
-      var positions = [], normals = [], uvs = [], colors = [];
+      var positions = [], normals = [], uvs = [], colors = [], surfaces = [], details = [], batched = materialId === 'atlas';
       parts.forEach(function (p) {
+        var id = p.materialId || materialId, source = batched ? mats[id] : null;
         var g = p.geometry.index ? p.geometry.toNonIndexed() : p.geometry.clone(); g.applyMatrix4(p.matrix);
         var a = g.attributes.position.array, n = g.attributes.normal.array, nativeUv = g.attributes.uv && g.attributes.uv.array;
-        var native = p.nativeUv || materialId === 'headlamp' || materialId === 'taillamp' || materialId === 'indicator';
-        var density = materialId === 'fabric' ? 3 : materialId === 'rust' ? 2 : 1;
+        var native = p.nativeUv || id === 'headlamp' || id === 'taillamp' || id === 'indicator';
+        var density = id === 'fabric' ? 3 : id === 'rust' ? 2 : 1;
+        var tile = ATLAS_TILE[id] === undefined ? -1 : ATLAS_TILE[id];
+        var specular = source ? source.specular.r * .2126 + source.specular.g * .7152 + source.specular.b * .0722 : 0;
+        var reflection = id === 'paint' ? -1 : id === 'chrome' || id === 'alloy' ? source && source.reflectivity || 0 : 0;
+        var emission = id === 'headlamp' ? 1 : id === 'taillamp' ? 2 : id === 'indicator' ? 3 : 0;
         for (var j = 0; j < a.length; j += 9) {
-          // Select a projection once per triangle, never once per vertex: interpolated
-          // corner normals could otherwise collapse the normal-map tangent basis.
+          // Project once per triangle so interpolated corner normals never collapse
+          // the tangent basis. The atlas shader wraps these local metre-scale UVs.
           var ax = a[j + 3] - a[j], ay = a[j + 4] - a[j + 1], az = a[j + 5] - a[j + 2];
           var bx = a[j + 6] - a[j], by = a[j + 7] - a[j + 1], bz = a[j + 8] - a[j + 2];
           var nx = ay * bz - az * by, ny = az * bx - ax * bz, nz = ax * by - ay * bx;
@@ -116,17 +125,49 @@
             else if (projection === 0) uvs.push(z * (nx > 0 ? -1 : 1) * density, y * density);
             else if (projection === 1) uvs.push(x * density, z * (ny > 0 ? -1 : 1) * density);
             else uvs.push(x * (nz < 0 ? -1 : 1) * density, y * density);
-            // A subtle baked cavity gradient keeps the sill and underbody grounded,
-            // while retaining the high-frequency detail in the shared paint map.
-            var shade = materialId === 'paint' ? (.72 + .28 * clamp((y - .23) / .70, 0, 1)) * (n[at + 1] < -.1 ? .74 : 1) : 1;
-            colors.push(shade, shade, shade);
+            var shade = id === 'paint' ? (.72 + .28 * clamp((y - .23) / .70, 0, 1)) * (n[at + 1] < -.1 ? .74 : 1) : 1;
+            colors.push(shade * (source ? source.color.r : 1), shade * (source ? source.color.g : 1), shade * (source ? source.color.b : 1));
+            if (batched) {
+              surfaces.push(tile, id === 'paint' ? -1 : source.shininess, reflection, specular);
+              details.push(DETAIL_STRENGTH[id] || 0, emission);
+            }
           }
         }
         g.dispose();
       });
       var merged = geo(new T.BufferGeometry()); merged.setAttribute('position', new T.Float32BufferAttribute(positions, 3)); merged.setAttribute('normal', new T.Float32BufferAttribute(normals, 3));
       merged.setAttribute('uv', new T.Float32BufferAttribute(uvs, 2)); merged.setAttribute('color', new T.Float32BufferAttribute(colors, 3));
+      if (batched) { merged.setAttribute('carSurface', new T.Float32BufferAttribute(surfaces, 4)); merged.setAttribute('carDetail', new T.Float32BufferAttribute(details, 2)); }
       merged.computeBoundingSphere(); return merged;
+    }
+    function makeAtlasMaterial() {
+      var maps = materialLibrary && materialLibrary.get('vehicleAtlas');
+      if (!maps || !maps.map || !maps.normalMap || !maps.specularMap) return null;
+      var m = material({ color: 0xffffff, shininess: 100, specular: 0xffffff, vertexColors: true, map: maps.map, normalMap: maps.normalMap, specularMap: maps.specularMap });
+      m.name = 'used-car-shared-surface-atlas'; m.combine = T.MixOperation;
+      atlasUniforms = {
+        carPaintFinish: { value: new T.Vector2(paint.shininess, paint.reflectivity) },
+        carHeadEmission: { value: headlamp.emissive.clone().multiplyScalar(headlamp.emissiveIntensity) },
+        carTailEmission: { value: taillamp.emissive.clone() },
+        carTailBrightness: { value: taillamp.emissiveIntensity },
+        carIndicatorEmission: { value: indicator.emissive.clone() }
+      };
+      // Preserve independent surface finishes in one opaque draw. Only two extra
+      // varyings are needed, staying within WebGL 1's minimum varying-vector limit.
+      m.onBeforeCompile = function (shader) {
+        Object.keys(atlasUniforms).forEach(function (key) { shader.uniforms[key] = atlasUniforms[key]; });
+        shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\nattribute vec4 carSurface; attribute vec2 carDetail; varying vec4 vCarSurface; varying vec2 vCarDetail;')
+          .replace('#include <color_vertex>', '#include <color_vertex>\nvCarSurface = carSurface; vCarDetail = carDetail;');
+        shader.fragmentShader = shader.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec4 vCarSurface; varying vec2 vCarDetail; uniform vec2 carPaintFinish; uniform vec3 carHeadEmission; uniform vec3 carTailEmission; uniform float carTailBrightness; uniform vec3 carIndicatorEmission;')
+          .replace('#include <map_fragment>', 'float carTile = max(0.0, vCarSurface.x);\nvec2 carAtlasUv = vec2(mod(carTile, 2.0) * .5 + .0078125, (carTile < 1.5 ? .5 : 0.0) + .0078125) + fract(vUv) * .484375;\nif (vCarSurface.x > -.5) diffuseColor *= mapTexelToLinear(texture2D(map, carAtlasUv));')
+          .replace('#include <specularmap_fragment>', 'float specularStrength = vCarSurface.x > -.5 ? texture2D(specularMap, carAtlasUv).r : 1.0;')
+          .replace('#include <normal_fragment_maps>', '#ifdef TANGENTSPACE_NORMALMAP\nvec3 carMapNormal = vec3(0.0, 0.0, 1.0);\nif (vCarSurface.x > -.5) { carMapNormal = texture2D(normalMap, carAtlasUv).xyz * 2.0 - 1.0; carMapNormal.xy *= vCarDetail.x; }\nnormal = perturbNormal2Arb(-vViewPosition, normal, carMapNormal);\n#endif')
+          .replace('#include <emissivemap_fragment>', 'if (vCarDetail.y > .5 && vCarDetail.y < 1.5) totalEmissiveRadiance = carHeadEmission;\nelse if (vCarDetail.y > 1.5 && vCarDetail.y < 2.5) totalEmissiveRadiance = carTailEmission * carTailBrightness;\nelse if (vCarDetail.y > 2.5) totalEmissiveRadiance = carIndicatorEmission;')
+          .replace('#include <lights_phong_fragment>', 'BlinnPhongMaterial material; material.diffuseColor = diffuseColor.rgb; material.specularColor = vec3(vCarSurface.w); material.specularShininess = vCarSurface.y < 0.0 ? carPaintFinish.x : vCarSurface.y; material.specularStrength = specularStrength;')
+          .replace('#include <envmap_fragment>', 'float carReflection = vCarSurface.z < 0.0 ? carPaintFinish.y : vCarSurface.z;\nif (carReflection > .001) {\n' + T.ShaderChunk.envmap_fragment.replace(/\breflectivity\b/g, 'carReflection') + '\n}');
+      };
+      m.customProgramCacheKey = function () { return 'used-car-opaque-atlas-v1'; };
+      reflected.push(m); return m;
     }
     var width = d.width * .5, front = d.length * .5, rear = -front, radius = d.radius, axle = d.wheelbase * .5, wheelY = radius + .015;
     /* Smooth-edged body shell; the lower side edge rises around the wheel arches. */
@@ -297,11 +338,21 @@
       }
     });
     var mats = { paint: paint, black: black, chrome: chrome, alloy: alloy, disc: disc, caliper: caliper, rubber: rubber, cabin: cabin, fabric: fabric, glass: glass, headlamp: headlamp, taillamp: taillamp, indicator: indicator, marks: marks, rust: rust, undercar: undercar };
-    var headLights = [], brakeLights = [];
+    var headLights = [], brakeLights = [], interiorBounds = new T.Box3();
+    (batches.fabric || []).forEach(function (p) { p.geometry.computeBoundingBox(); interiorBounds.union(p.geometry.boundingBox.clone().applyMatrix4(p.matrix)); });
+    group.userData.interiorMaxY = interiorBounds.max.y;
+    atlasMaterial = makeAtlasMaterial();
+    var opaqueParts = [];
     Object.keys(batches).forEach(function (key) {
+      if (atlasMaterial && key !== 'glass' && key !== 'rust') { opaqueParts = opaqueParts.concat(tagged(batches[key], key)); return; }
       var mesh = new T.Mesh(merge(batches[key], key), mats[key]); mesh.name = 'vehicle-' + key; body.add(mesh);
       if (key === 'headlamp') headLights.push(mesh); if (key === 'taillamp') brakeLights.push(mesh); if (key === 'rust') damageMeshes.push(mesh);
     });
+    if (atlasMaterial) {
+      var opaqueMesh = new T.Mesh(merge(opaqueParts, 'atlas'), atlasMaterial); opaqueMesh.name = 'vehicle-opaque'; body.add(opaqueMesh);
+      // Lamps share this mesh but retain independent emission through the shader.
+      headLights.push(opaqueMesh); brakeLights.push(opaqueMesh);
+    }
     /* Rotating five-spoke wheels. The disc/caliper stay readable through the rim. */
     function buildWheel(side, isFront) {
       var pivot = new T.Group(), spin = new T.Group(); pivot.add(spin); group.add(pivot);
@@ -328,20 +379,25 @@
         var angle = stripe * PI * 2 / 24;
         wp(treadParts, box, 0, Math.cos(angle) * (radius + .001), Math.sin(angle) * (radius + .001), .19, .008, .014, -angle, .08, 0);
       }
-      var rotor = new T.Mesh(merge(rotorParts), disc); spin.add(rotor);
-      spin.add(new T.Mesh(merge(rimParts), alloy)); spin.add(new T.Mesh(merge(tireParts.concat(hubParts, treadParts)), rubber));
+      if (atlasMaterial) {
+        var wheelParts = tagged(rotorParts, 'disc').concat(tagged(rimParts, 'alloy'), tagged(tireParts.concat(hubParts, treadParts), 'rubber'));
+        var wheelMesh = new T.Mesh(merge(wheelParts, 'atlas'), atlasMaterial); wheelMesh.name = 'vehicle-wheel-atlas'; spin.add(wheelMesh);
+      } else {
+        spin.add(new T.Mesh(merge(rotorParts), disc)); spin.add(new T.Mesh(merge(rimParts), alloy)); spin.add(new T.Mesh(merge(tireParts.concat(hubParts, treadParts)), rubber));
+      }
       var brake = new T.Mesh(box, caliper); brake.position.set(discX, radius * .28, radius * .38); brake.scale.set(.04, .14, .08); pivot.add(brake);
       var data = { pivot: pivot, mesh: spin, front: isFront, side: side, radius: radius, brake: brake }; wheelMeshes.push(data);
     }
     [-1, 1].forEach(function (side) { buildWheel(side, true); buildWheel(side, false); });
     var steeringWheel = new T.Group(); steeringWheel.position.set(-.37, 1.02, cf - .48); steeringWheel.rotation.x = -.28; body.add(steeringWheel);
     var steeringRing = geo(new T.TorusBufferGeometry(.142, .018, 5, 20));
-    steeringWheel.add(new T.Mesh(merge([{ geometry: steeringRing, matrix: new T.Matrix4() }, { geometry: cylinder, matrix: transform(0, 0, 0, .046, .032, .046, PI / 2) }]), black));
+    var steeringRimParts = [{ geometry: steeringRing, matrix: new T.Matrix4() }, { geometry: cylinder, matrix: transform(0, 0, 0, .046, .032, .046, PI / 2) }];
     var steeringSpokes = [];
     for (var spokeIndex = 0; spokeIndex < 3; spokeIndex++) { var spokeAngle = spokeIndex * PI * 2 / 3; steeringSpokes.push({ geometry: box, matrix: transform(-Math.sin(spokeAngle) * .06, Math.cos(spokeAngle) * .06, 0, .021, .13, .013, 0, 0, spokeAngle) }); }
-    steeringWheel.add(new T.Mesh(merge(steeringSpokes), chrome));
+    if (atlasMaterial) steeringWheel.add(new T.Mesh(merge(tagged(steeringRimParts, 'black').concat(tagged(steeringSpokes, 'chrome')), 'atlas'), atlasMaterial));
+    else { steeringWheel.add(new T.Mesh(merge(steeringRimParts), black)); steeringWheel.add(new T.Mesh(merge(steeringSpokes), chrome)); }
     group.userData.vehicleStyle = style; group.userData.originalArtwork = true;
-    function setBrakeLights(on) { taillamp.emissiveIntensity = on ? 2.35 : .26; }
+    function setBrakeLights(on) { taillamp.emissiveIntensity = on ? 2.35 : .26; if (atlasUniforms) atlasUniforms.carTailBrightness.value = taillamp.emissiveIntensity; }
     function setCondition(condition) {
       condition = condition || {};
       var age = clamp(Number(condition.rust) || 0, 0, 1), damage = clamp(Number(condition.bodyDamage) || 0, 0, 1);
@@ -354,7 +410,7 @@
       if (group.parent) group.parent.remove(group);
       while (group.children.length) group.remove(group.children[0]);
     }
-    return { group: group, body: body, wheels: wheelMeshes, steeringWheel: steeringWheel, brakeLights: brakeLights, headLights: headLights, damageMeshes: damageMeshes, dimensions: { width: d.width, length: d.length, height: d.height, wheelbase: d.wheelbase, wheelRadius: radius }, style: style, setBrakeLights: setBrakeLights, setCondition: setCondition, setEnvironment: setEnvironment, dispose: dispose, resources: { geometries: geometries, materials: materials, textures: textures } };
+    return { group: group, body: body, wheels: wheelMeshes, steeringWheel: steeringWheel, brakeLights: brakeLights, headLights: headLights, damageMeshes: damageMeshes, dimensions: { width: d.width, length: d.length, height: d.height, wheelbase: d.wheelbase, wheelRadius: radius }, style: style, setBrakeLights: setBrakeLights, setCondition: setCondition, setEnvironment: setEnvironment, dispose: dispose, resources: { geometries: geometries, materials: materials, textures: textures, atlasMaterial: atlasMaterial } };
   }
   var api = { create: create, styles: STYLES };
   root.UsedCarVehicles = api;
