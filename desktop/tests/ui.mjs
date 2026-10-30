@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 import { mkdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { mockBridge, snapshot, marketCatalog } from './fixtures.mjs';
+import { mockBridge, snapshot, marketCatalog, packageInsight } from './fixtures.mjs';
 
 const directory = fileURLToPath(new URL('..', import.meta.url));
 const port = 1429, url = `http://127.0.0.1:${port}`;
@@ -149,8 +149,129 @@ try {
     assert.equal(await p.locator('tr[data-package="com.ecojust.puretv"] .size-cell').innerText(),'未能读取');
     assert.equal(await p.locator('tr[data-package="com.android.settings"] .size-cell').innerText(),'未能读取');
     await p.locator('tr[data-package="com.ecojust.webtv"] [data-act="details"]').click();
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/不含私有数据和缓存/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/不含私有数据和缓存/);
   });
+  const infoDialog=p=>p.locator('dialog.package-info-dialog[open]');
+  const infoButton=(p,pkg)=>p.locator(`tr[data-package="${pkg}"] [data-act="package-info"]`);
+  const infoAction=(p,action)=>infoDialog(p).locator(`[data-package-info-action="${action}"]`).first();
+  async function openInfo(p,pkg,state='loaded') {
+    await infoButton(p,pkg).click();
+    await infoDialog(p).locator(`[data-package-info-state="${state}"]`).waitFor();
+  }
+  const recommended='com.vendor.recommendations';
+  const recommendationInsight=packageInsight(recommended);
+  await check('package info: keyboard icon queries the exact package, shows purpose and risk without changing selection or TV',async p=>{
+    await nav(p,'apps');
+    const button=infoButton(p,recommended);
+    assert.ok(await button.getAttribute('aria-label'),'The info icon has an accessible name');
+    await button.focus();await p.keyboard.press('Enter');
+    await infoDialog(p).locator('[data-package-info-state="loaded"]').waitFor();
+    const modalBox=await infoDialog(p).boundingBox(),closeBox=await infoDialog(p).locator('.modal-heading [data-package-info-action="close"]').boundingBox();
+    assert.ok(closeBox.width<=48&&closeBox.height<=48&&closeBox.x>=modalBox.x&&closeBox.x+closeBox.width<=modalBox.x+modalBox.width,'The header close icon is compact and visible inside the modal');
+    assert.equal(await p.locator('[data-select-package]:checked').count(),0);
+    assert.deepEqual((await p.evaluate(()=>window.__packageInsightRequests)).map(r=>r.packageName),[recommended]);
+    assert.match(await infoDialog(p).innerText(),/com\.vendor\.recommendations/);
+    assert.equal(await infoDialog(p).locator('.package-purpose').innerText(),recommendationInsight.description);
+    assert.equal(await infoDialog(p).locator('.package-risk').getAttribute('data-risk'),'low');
+    assert.match(await infoDialog(p).innerText(),/UAD-ng/);
+    await infoAction(p,'source').click();await infoAction(p,'search').click();
+    assert.deepEqual(await p.evaluate(()=>window.__packageResources),[{packageName:recommended,resource:'source'},{packageName:recommended,resource:'search'}]);
+    assert.deepEqual(await requests(p),[],'Reading package guidance does not execute ADB mutations');
+    await p.keyboard.press('Escape');assert.equal(await infoDialog(p).count(),0);
+    assert.equal(await button.evaluate(element=>document.activeElement===element),true,'Closing returns keyboard focus to the info icon');
+  },snapshot(),{packageInsights:{[recommended]:recommendationInsight}});
+  const protectedInfoState=snapshot();protectedInfoState.packages.find(p=>p.packageName==='com.vendor.home').protectedReason=null;
+  await check('package info: protected system apps and current HOME override community low risk',async p=>{
+    await nav(p,'apps');
+    for(const pkg of ['com.android.settings','com.vendor.home']){
+      await openInfo(p,pkg);
+      assert.equal(await infoDialog(p).locator('.package-risk').getAttribute('data-risk'),'critical');
+      assert.match(await infoDialog(p).innerText(),pkg==='com.vendor.home'?/当前默认启动器/:/关键系统组件/);
+      await infoAction(p,'close').click();
+    }
+    assert.deepEqual(await requests(p),[]);
+  },protectedInfoState,{packageInsights:{'com.android.settings':packageInsight('com.android.settings'),'com.vendor.home':packageInsight('com.vendor.home')}});
+  const unknownInfoState=snapshot();unknownInfoState.packages.push({packageName:'com.example.unknown',label:'未知用户应用',system:false,installed:true,enabled:true,protectedReason:null});
+  await check('package info: a user app absent from the source remains unknown rather than safe',async p=>{
+    await nav(p,'apps');await openInfo(p,'com.example.unknown','missing');
+    assert.match(await infoDialog(p).innerText(),/未收录/);
+    assert.equal(await infoDialog(p).locator('.package-risk').getAttribute('data-risk'),'unknown');
+    assert.equal(await infoAction(p,'search').isEnabled(),true);
+    assert.deepEqual(await requests(p),[]);
+  },unknownInfoState);
+  await check('package info: pending lookup is visible and network failure can be retried explicitly',async p=>{
+    await nav(p,'apps');
+    await p.evaluate(pkg=>window.__holdNextOperation('packageInsight:'+pkg),recommended);
+    await infoButton(p,recommended).click();
+    await infoDialog(p).locator('[data-package-info-state="loading"]').waitFor();
+    assert.equal(await infoDialog(p).locator('[data-package-info-content]').getAttribute('aria-busy'),'true');
+    await release(p,'packageInsight:'+recommended,{error:'查询服务暂时不可用'});
+    await infoDialog(p).locator('[data-package-info-state="error"]').waitFor();
+    assert.match(await infoDialog(p).innerText(),/查询失败/);
+    assert.equal(await infoDialog(p).locator('.package-risk').getAttribute('data-risk'),'unknown');
+    await infoAction(p,'retry').click();await infoDialog(p).locator('[data-package-info-state="loaded"]').waitFor();
+    assert.equal((await p.evaluate(()=>window.__packageInsightRequests)).at(-1).refresh,true);
+    assert.equal(await infoDialog(p).locator('.package-risk').getAttribute('data-risk'),'low');
+    assert.deepEqual(await requests(p),[]);
+  },snapshot(),{packageInsights:{[recommended]:recommendationInsight}});
+  await check('package info: cached guidance remains available with an explicit stale notice',async p=>{
+    await nav(p,'apps');await openInfo(p,recommended);
+    assert.match(await infoDialog(p).innerText(),/缓存|过期/);
+    assert.match(await infoDialog(p).innerText(),/资料更新失败，显示上次缓存/);
+    assert.equal(await infoDialog(p).locator('.package-purpose').innerText(),recommendationInsight.description);
+    assert.equal(await infoAction(p,'retry').isEnabled(),true);
+  },snapshot(),{packageInsights:{[recommended]:packageInsight(recommended,{stale:true,warning:'资料更新失败，显示上次缓存'})}});
+  await check('package info: an old response cannot replace another package or reopen a closed dialog',async p=>{
+    await nav(p,'apps');
+    await p.evaluate(pkg=>window.__holdNextOperation('packageInsight:'+pkg),recommended);
+    await infoButton(p,recommended).click();await infoDialog(p).locator('[data-package-info-state="loading"]').waitFor();
+    await infoAction(p,'close').click();
+    await openInfo(p,'com.vendor.disabled');
+    await release(p,'packageInsight:'+recommended,{response:packageInsight(recommended,{description:'OLD RESULT MUST NOT APPEAR'})});
+    assert.equal(await infoDialog(p).locator('.package-purpose').innerText(),'Description for the second package.');
+    assert.doesNotMatch(await infoDialog(p).innerText(),/OLD RESULT/);
+    await infoAction(p,'close').click();
+    await p.evaluate(pkg=>window.__holdNextOperation('packageInsight:'+pkg),recommended);
+    await infoButton(p,recommended).click();await infoDialog(p).locator('[data-package-info-state="loading"]').waitFor();
+    await infoAction(p,'close').click();
+    await release(p,'packageInsight:'+recommended,{response:recommendationInsight});
+    assert.equal(await infoDialog(p).count(),0);
+    assert.deepEqual(await requests(p),[]);
+  },snapshot(),{packageInsights:{'com.vendor.disabled':packageInsight('com.vendor.disabled',{description:'Description for the second package.'})}});
+  await check('package info: switching the selected TV invalidates pending package guidance',async p=>{
+    await nav(p,'apps');
+    await p.evaluate(pkg=>window.__holdNextOperation('packageInsight:'+pkg),recommended);
+    await infoButton(p,recommended).click();await infoDialog(p).locator('[data-package-info-state="loading"]').waitFor();
+    const updated=snapshot();updated.revision=2;updated.device.serial='192.168.1.99:5555';updated.device.model='另一台电视';
+    await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'connect',snapshot:value}),updated);
+    await p.locator('.device-badge').filter({hasText:'另一台电视'}).waitFor();
+    await release(p,'packageInsight:'+recommended,{response:recommendationInsight});
+    assert.equal(await infoDialog(p).count(),0,'A result for the old TV does not remain open');
+    assert.deepEqual(await requests(p),[]);
+  });
+  const hostilePurpose='<img src=x onerror="window.__xss=true"><script>window.__xss=true</script>\nUntrusted package notes are plain text.';
+  await check('package info: remote descriptions are rendered as text and long guidance scrolls in a small window',async p=>{
+    await p.setViewportSize({width:960,height:640});await nav(p,'apps');await openInfo(p,recommended);
+    assert.match(await infoDialog(p).locator('.package-purpose').innerText(),/<img src=x/);
+    assert.equal(await infoDialog(p).locator('.package-purpose img,.package-purpose script').count(),0);
+    assert.equal(await p.evaluate(()=>window.__xss),false);
+    const box=await infoDialog(p).boundingBox();assert.ok(box.y>=0&&box.y+box.height<=641,'The modal fits the viewport');
+    assert.equal(await p.evaluate(()=>document.documentElement.scrollHeight<=innerHeight+1),true);
+    await infoAction(p,'close').click();assert.equal(await infoDialog(p).count(),0);
+  },snapshot(),{packageInsights:{[recommended]:packageInsight(recommended,{description:hostilePurpose+'\n'+('Additional package details.\n'.repeat(100))})}});
+  await check('package info: Chinese, English and Traditional Chinese retain package data and accessible controls',async p=>{
+    await nav(p,'apps');await openInfo(p,recommended);
+    assert.match(await infoDialog(p).innerText(),/用途与卸载风险/);
+    await shot(p,'package-info-zh-CN');await infoAction(p,'close').click();
+    await p.locator('[name="locale"]').selectOption('en');await openInfo(p,recommended);
+    assert.match(await infoDialog(p).innerText(),/purpose/i);assert.match(await infoDialog(p).innerText(),/uninstall risk/i);
+    assert.equal(await infoDialog(p).locator('.package-purpose').innerText(),recommendationInsight.description);
+    await shot(p,'package-info-en');await infoAction(p,'close').click();
+    await p.locator('[name="locale"]').selectOption('zh-TW');await openInfo(p,recommended);
+    assert.match(await infoDialog(p).innerText(),/解除安裝風險/);
+    assert.match(await infoDialog(p).innerText(),/com\.vendor\.recommendations/);
+    assert.deepEqual(await requests(p),[]);
+  },snapshot(),{packageInsights:{[recommended]:recommendationInsight}});
   const longState = snapshot();
   longState.packages = Array.from({length:120},(_,i)=>({packageName:`com.example.app${i}`,label:`应用 ${i}`,installed:true,system:false,enabled:true,protectedReason:null,apkSizeBytes:1048576}));
   longState.launchers = Array.from({length:30},(_,i)=>({packageName:`com.example.home${i}`,component:`com.example.home${i}/.Main`,label:`桌面 ${i}`,isDefault:false}));
@@ -284,11 +405,11 @@ try {
     assert.equal(await act(p,'connect').isDisabled(),true);
     assert.equal(await p.evaluate(()=>window.__toolsInstalls),0,'Startup must not download');
     await act(p,'download-adb').click();
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/37\.0\.1/);
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/macOS/);
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/15\.4 MiB/);
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/dl\.google\.com/);
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/mirrors\.cloud\.tencent\.com/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/37\.0\.1/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/macOS/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/15\.4 MiB/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/dl\.google\.com/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/mirrors\.cloud\.tencent\.com/);
     assert.equal(await p.locator('#platform-tools-license').isChecked(),false);
     assert.equal(await p.locator('#confirm-platform-tools').isDisabled(),true);
     await act(p,'platform-tools-license').click();
@@ -340,9 +461,9 @@ try {
   await check('missing ADB offers download while a verified cache is reused offline', async p => {
     assert.match(await act(p,'download-adb').innerText(),/下载 ADB 工具/);assert.equal(await act(p,'download-adb').isEnabled(),true);
     await act(p,'download-adb').click();
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/优先验证并使用已下载工具/);
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/校验失败时会重新下载并修复/);
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/0 MiB/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/优先验证并使用已下载工具/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/校验失败时会重新下载并修复/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/0 MiB/);
     await acceptTools(p); await settled(p);
     assert.equal(await act(p,'connect').isEnabled(),true);assert.match(await act(p,'download-adb').innerText(),/ADB 已就绪/);assert.equal(await act(p,'download-adb').isDisabled(),true);
     assert.equal(await p.evaluate(()=>window.__toolsInstalls),1);
@@ -351,7 +472,7 @@ try {
   await check('ready ADB can be forcibly re-downloaded with consent and fresh download progress',async p=>{
     assert.equal(await act(p,'download-adb').isDisabled(),true);assert.equal(await act(p,'redownload-adb').isEnabled(),true);
     const previous=await p.locator('[name="adbPath"]').inputValue();await act(p,'redownload-adb').click();
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback) h2').innerText(),/重新下载/);assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/15\.4 MiB/);assert.doesNotMatch(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/0 MiB/);assert.equal(await p.locator('#confirm-platform-tools').isDisabled(),true);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback) h2').innerText(),/重新下载/);assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/15\.4 MiB/);assert.doesNotMatch(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/0 MiB/);assert.equal(await p.locator('#confirm-platform-tools').isDisabled(),true);
     await acceptTools(p);await p.locator('.busy-bar').waitFor();assert.match(await p.locator('.busy-bar').innerText(),/正在下载/);await settled(p);
     assert.deepEqual(await requests(p),[{action:'installPlatformTools',acceptedLicense:true,forceDownload:true}]);assert.notEqual(await p.locator('[name="adbPath"]').inputValue(),previous);assert.match(await act(p,'download-adb').innerText(),/ADB 已就绪/);
     await shot(p,'adb-redownload-ready');
@@ -425,8 +546,8 @@ try {
   await check('cancel confirmation sends no mutation; confirmed disable sends exact target', async p => {
     await nav(p,'apps'); await box(p,'com.vendor.recommendations').check();
     await act(p,'disable').click();
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/192\.168\.1\.50:5555/);
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/com\.vendor\.recommendations/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/192\.168\.1\.50:5555/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/com\.vendor\.recommendations/);
     await p.getByRole('button',{name:'取消',exact:true}).click();
     assert.deepEqual(await requests(p),[]);
     await act(p,'disable').click(); await confirmOperation(p);
@@ -446,8 +567,8 @@ try {
     await p.getByRole('checkbox',{name:'选择 custom music.apk',exact:true}).check();
     await shot(p,'import-apks');
     await act(p,'install-apks').click();
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/C:\\我的安装包\\custom music\.apk/);
-    assert.doesNotMatch(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/second\.apk/);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/C:\\我的安装包\\custom music\.apk/);
+    assert.doesNotMatch(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/second\.apk/);
     assert.deepEqual(await requests(p),[]);
     await confirmOperation(p);
     assert.deepEqual(await requests(p),[{action:'install',paths:['C:\\我的安装包\\custom music.apk']}]);
@@ -506,7 +627,7 @@ try {
   const readyNetwork={...snapshot(),device:null,packages:[],launchers:[],defaultHome:null};
   await check('different subnets warn before connecting and cancellation sends no ADB request',async p=>{
     await p.locator('[name="host"]').fill('192.168.0.191');await act(p,'connect').click();await p.locator('#confirm-operation').waitFor();
-    assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/不在同一网段/);assert.match(await p.locator('dialog.modal:not(.operation-feedback)').innerText(),/10.0.0.2\/24/);assert.deepEqual(await requests(p),[]);
+    assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/不在同一网段/);assert.match(await p.locator('dialog.modal[open]:not(.operation-feedback)').innerText(),/10.0.0.2\/24/);assert.deepEqual(await requests(p),[]);
     await act(p,'close-dialog').click();assert.deepEqual(await requests(p),[]);
     await act(p,'connect').click();await p.locator('#confirm-operation').waitFor();await confirmOperation(p);
     assert.deepEqual(await requests(p),[{action:'connect',host:'192.168.0.191',port:5555}]);assert.equal(await p.evaluate(()=>window.__networkReads),2);

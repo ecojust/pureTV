@@ -1,5 +1,10 @@
 export interface Device { serial: string; model: string; androidVersion: string; userId: number; status: string }
 export interface PackageInfo { apkSizeBytes?: number | null; packageName: string; label: string; system: boolean; enabled: boolean; installed: boolean; protectedReason: string | null }
+export interface PackageInsight {
+  packageName: string; found: boolean; description: string | null; removal: string | null;
+  risk: 'low' | 'medium' | 'high' | 'critical' | 'unknown'; list: string | null;
+  sourceName: string; sourceUrl: string; licenseUrl: string; fetchedAt: number; stale: boolean; warning: string | null;
+}
 export interface LauncherInfo { apkSizeBytes?: number | null; component: string; packageName: string; label: string; isDefault: boolean }
 export interface HistoryEntry { id: string; timestamp: number; action: string; target: string; device: string; userId: number; success: boolean; message: string }
 export interface PlatformToolsInfo {

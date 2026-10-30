@@ -1,6 +1,7 @@
 import {t,ui,message,locale,setLocale,setTheme,localeOptions,themeOptions} from './i18n';
 import './styles.css';
 import {UnifiedEditor} from './unified-editor';
+import {PackageInfoDialog} from './package-info';
 import {unavailableLayoutApps} from './layout-apps';
 import {validUnified,systemUnchanged} from './unified-layout';
 import {sameSubnet} from './subnet';
@@ -109,6 +110,7 @@ function acceptLauncherResult(value: LauncherLayoutInfo): boolean {
 const root = document.querySelector<HTMLDivElement>('#app')!;
 const dialog = document.createElement('dialog');
 dialog.className = 'modal'; document.body.append(dialog);
+const packageInfo = new PackageInfoDialog(() => snapshot);
 const layoutDialog=document.createElement('dialog');layoutDialog.className='layout-modal';layoutDialog.setAttribute('aria-label',t('调整启动器布局'));document.body.append(layoutDialog);
 type FeedbackRow = { target: string; success: boolean | null; message: string };
 type Feedback = { phase: 'loading' | 'result'; operation: string; description: string; outcome?: NoticeKind; rows: FeedbackRow[]; cancellable: boolean; checkingLayout?:boolean; cancelError?: string };
@@ -225,6 +227,7 @@ function icon(name: string): string {
     download: '<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',
     list: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
     search: '<circle cx="10" cy="10" r="6.5"/><path d="m15 15 6 6"/>',
+    info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v.2"/>',
     refresh: '<path d="M20 7a9 9 0 0 0-15-2L2 8m0-6v6h6M4 17a9 9 0 0 0 15 2l3-3m0 6v-6h-6"/>',
     plus: '<path d="M12 5v14M5 12h14"/>',
     link: '<path d="m10 13 4-4m-6 8-2 2a4 4 0 0 1-6-6l5-5a4 4 0 0 1 6 0m2-1 2-2a4 4 0 0 1 6 6l-5 5a4 4 0 0 1-6 0" transform="translate(1 -1)"/>',
@@ -304,6 +307,7 @@ function render(): void {
       const position = scrollPositions.get(area.dataset.scroll!); if (position) { area.scrollTop = position.top; area.scrollLeft = position.left; }
     }
     renderFeedback();
+    packageInfo.sync();
   } finally { rendering = false; }
 }
 function content(): string {
@@ -491,7 +495,7 @@ function packageSize(p: PackageInfo): string {
 function appRows(): string {
   const list = visiblePackages();
   if (!list.length) return `<tr><td colspan="6"><div class="empty-state">${icon(snapshot.device ? 'search' : 'monitor')}<h3>${!online() ? t('先连接一台电视') : query ? t('没有匹配的应用') : filter === 'recoverable' ? t('暂无可恢复的应用') : t('暂无应用')}</h3><p>${!online() ? t('连接并授权后，即可扫描电视当前用户的应用。') : query ? t('试试其他应用名或包名。') : t('重新扫描可获取设备上的最新状态。')}</p>${!online() ? actionButton('go-connect', t('前往连接'), '', 'primary') : ''}</div></td></tr>`;
-  return list.map(p => ui`<tr data-package="${esc(p.packageName)}" class="${selected.has(p.packageName) ? 'selected' : ''}"><td class="check-cell"><input type="checkbox" data-select-package="${esc(p.packageName)}" aria-label="选择 ${esc(p.label)}"${selected.has(p.packageName) ? ' checked' : ''}${disabled(busy || !online() || !!p.protectedReason)}></td><td><div class="app-identity">${appIcon(p)}<div><strong>${esc(p.label || p.packageName)}</strong><code>${esc(p.packageName)}</code></div></div></td><td><span class="type-text">${p.system ? t('系统应用') : t('用户应用')}</span></td><td><span class="status"><i class="dot ${p.protectedReason ? 'muted' : !p.installed || !p.enabled ? 'muted' : 'good'}"></i>${p.protectedReason ? t('受保护') : !p.installed ? t('可恢复') : p.enabled ? t('正常') : t('已停用')}</span></td><td class="size-cell" title="主 APK 与分包 APK 合计，不含私有数据和缓存">${packageSize(p)}</td><td class="row-actions">${actionButton('details', t('详情'), ` data-pkg="${esc(p.packageName)}"`, 'small')}${!p.protectedReason && (!p.installed || !p.enabled) ? actionButton(p.installed ? 'enable-one' : 'restore-one', p.installed ? t('启用') : t('恢复'), ` data-pkg="${esc(p.packageName)}"${disabled(busy || !online())}`, 'small text-button') : ''}</td></tr>`).join('');
+  return list.map(p => ui`<tr data-package="${esc(p.packageName)}" class="${selected.has(p.packageName) ? 'selected' : ''}"><td class="check-cell"><input type="checkbox" data-select-package="${esc(p.packageName)}" aria-label="选择 ${esc(p.label)}"${selected.has(p.packageName) ? ' checked' : ''}${disabled(busy || !online() || !!p.protectedReason)}></td><td><div class="app-identity">${appIcon(p)}<div><strong>${esc(p.label || p.packageName)}</strong><code>${esc(p.packageName)}</code></div></div></td><td><span class="type-text">${p.system ? t('系统应用') : t('用户应用')}</span></td><td><span class="status"><i class="dot ${p.protectedReason ? 'muted' : !p.installed || !p.enabled ? 'muted' : 'good'}"></i>${p.protectedReason ? t('受保护') : !p.installed ? t('可恢复') : p.enabled ? t('正常') : t('已停用')}</span></td><td class="size-cell" title="主 APK 与分包 APK 合计，不含私有数据和缓存">${packageSize(p)}</td><td class="row-actions">${actionButton('package-info', icon('info'), ` data-pkg="${esc(p.packageName)}" title="${t('查询用途与卸载风险')}" aria-label="${t('查询用途与卸载风险')} · ${esc(p.label || p.packageName)}"`, 'icon-button package-info-button')}${actionButton('details', t('详情'), ` data-pkg="${esc(p.packageName)}"`, 'small')}${!p.protectedReason && (!p.installed || !p.enabled) ? actionButton(p.installed ? 'enable-one' : 'restore-one', p.installed ? t('启用') : t('恢复'), ` data-pkg="${esc(p.packageName)}"${disabled(busy || !online())}`, 'small text-button') : ''}</td></tr>`).join('');
 }
 function selectionBar(): string {
   const items = selectedPackages(), ready = !busy && online() && items.length > 0 && !items.some(p => p.protectedReason);
@@ -876,6 +880,7 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
     case 'scan': await run({ action: 'scan' }, t('扫描电视应用，读取当前用户状态…')); if(page==='launchers' && online())await launcherOperation({action:'getLayout'},true);break;
     case 'cancel': await cancelOperation(); break;
     case 'details': details(button.dataset.pkg!); break;
+    case 'package-info': packageInfo.open(button.dataset.pkg!, button); break;
     case 'clear-selection': selected.clear(); updateList(); break;
     case 'disable': case 'enable': case 'uninstall': case 'restore': await packageAction(action); break;
     case 'enable-one': await packageAction('enable', button.dataset.pkg); break;

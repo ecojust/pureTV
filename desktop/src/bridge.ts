@@ -1,6 +1,6 @@
 import { Channel, invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
-import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketProgress, type MarketResult, type MarketEventResult } from './types';
+import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight } from './types';
 
 export const demo = new URLSearchParams(location.search).get('demo') === '1';
 export const desktop = '__TAURI_INTERNALS__' in window;
@@ -116,6 +116,25 @@ export async function openResource(resource: 'catalog' | 'market' | 'repository'
     window.open(url, '_blank', 'noopener,noreferrer'); return;
   }
   await invoke('open_resource', { resource });
+}
+
+export async function getPackageInsight(packageName: string, refresh = false): Promise<PackageInsight> {
+  if (demo) {
+    await new Promise(resolve => setTimeout(resolve, 180));
+    const found = packageName === 'com.vendor.recommendations';
+    return { packageName, found, description: found ? 'Demo recommendation service. This is simulated reference data, not an assessment of a real television package.' : null, removal: found ? 'Recommended' : null, risk: found ? 'low' : 'unknown', list: null, sourceName: 'UAD-ng (demo)', sourceUrl: 'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/resources/assets/uad_lists.json', licenseUrl: 'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/LICENSE', fetchedAt: Date.now(), stale: false, warning: null };
+  }
+  if (!desktop) throw new Error(unavailable);
+  return invoke<PackageInsight>('get_package_insight', { packageName, refresh });
+}
+
+export async function openPackageResource(packageName: string, resource: 'source' | 'search'): Promise<void> {
+  if (demo || !desktop) {
+    if (packageName.length > 255 || !/^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/.test(packageName)) throw new Error('无效的应用包名');
+    const url = resource === 'source' ? 'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/resources/assets/uad_lists.json' : `https://www.bing.com/search?q=${encodeURIComponent('"' + packageName + '" Android package uninstall')}`;
+    window.open(url, '_blank', 'noopener,noreferrer'); return;
+  }
+  await invoke('open_package_resource', { packageName, resource });
 }
 
 export interface McpInfo { config: { mcpServers: Record<string, { command: string; args: string[] }> }; sessionPath: string }

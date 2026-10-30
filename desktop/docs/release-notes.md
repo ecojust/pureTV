@@ -1,22 +1,28 @@
-# pureTV Manager 0.4.9
+# pureTV Manager 0.4.10
 
 ## 简体中文
 
-修复市场中《赤色要塞》（Jackal TV）等较大 APK 的下载：当 Gitee 原始文件接口返回 HTTP 403 时，不超过 32 MiB 的 APK 会自动通过同一仓库的 Git blob API 重试。下载保持用户选择的 APK 版本，并继续核对文件大小与 Git blob SHA，校验通过后才进入待安装列表。
+应用列表新增圆圈 **i** 信息按钮。点击后按完整包名查询应用用途、卸载风险和风险依据，展示资料来源、社区原始分类与获取时间，并提供刷新和网页搜索入口。
 
-保留 0.4.8 的布局设置：Home 和 Apps 新增应用块默认宽 160、高 142，已有块保留原尺寸。
+核心组件与当前默认桌面的保护优先于社区分类；未收录、无法查询和过期缓存分别提示，未知包不会被标为安全。用途资料来自 UAD-ng 社区并保留原文，风险分类不代表对具体电视固件的兼容性保证。查询不会停用或卸载应用。
+
+保留市场大文件下载修复，以及新增应用块默认 160 × 142 的布局设置。
 
 ## 繁體中文
 
-修正市場中《赤色要塞》（Jackal TV）等較大 APK 的下載：當 Gitee 原始檔案介面回傳 HTTP 403 時，不超過 32 MiB 的 APK 會自動透過同一儲存庫的 Git blob API 重試。下載保留使用者選擇的 APK 版本，並繼續核對檔案大小與 Git blob SHA，驗證通過後才加入待安裝清單。
+應用列表新增圓圈 **i** 資訊按鈕。點擊後依完整套件名稱查詢應用用途、解除安裝風險及判斷依據，顯示資料來源、社群原始分類與取得時間，並提供重新整理和網頁搜尋入口。
 
-保留 0.4.8 的佈局設定：Home 和 Apps 新增應用區塊預設寬 160、高 142，現有區塊保留原尺寸。
+核心元件與目前預設桌面的保護優先於社群分類；未收錄、無法查詢和過期快取分別提示，未知套件不會被標為安全。用途資料來自 UAD-ng 社群並保留原文，風險分類不代表對特定電視韌體的相容性保證。查詢不會停用或解除安裝應用。
+
+保留市場大型檔案下載修正，以及新增應用區塊預設 160 × 142 的佈局設定。
 
 ## English
 
-Fix downloads of larger market APKs such as Jackal TV: when Gitee's raw-file endpoint returns HTTP 403, the manager retries APKs up to 32 MiB through the same repository's Git blob API. The download retains the selected APK version and verifies its size and Git blob SHA before adding it to the pending installation list.
+App rows now include a circled **i** button. Look up an app's purpose and uninstall risk by its exact package name, with the reasoning, source, original community category and retrieval time. Refresh the information or continue searching for the package in your browser.
 
-The 0.4.8 layout default remains: new app blocks are 160 wide × 142 high on Home and Apps, while existing blocks retain their sizes.
+Protection for core components and the current default launcher takes precedence over community ratings. Missing entries, lookup failures and stale cached data are clearly distinguished; unknown packages are never labeled safe. UAD-ng community descriptions retain their original wording, and risk categories do not guarantee compatibility with a particular TV firmware. Looking up information never disables or uninstalls an app.
+
+The large market download fix and the 160 × 142 default size for new app blocks remain included.
 
 ---
 

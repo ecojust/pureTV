@@ -92,6 +92,16 @@ The prepared binary is checked using `adb version` before saving it via `setAdbP
 
 No generic shell/exec command is exposed to the webview. Tauri uses a restrictive local CSP and no remote scripts.
 
+## Package purpose and uninstall risk
+
+`get_package_insight { packageName: string, refresh?: boolean }` is an independent read-only lookup. It returns `{packageName, found, description, removal, risk, list, sourceName, sourceUrl, licenseUrl, fetchedAt, stale, warning}`. `risk` is `low | medium | high | critical | unknown`; descriptions and original community categories are nullable strings. `fetchedAt` is the data retrieval time in Unix milliseconds, not its publication date. `found: false` means the successfully read dataset has no exact package match; initial network or invalid-data failures reject instead of claiming the package is unlisted.
+
+The Rust service downloads the fixed HTTPS UAD-ng community package list on demand, with bounded responses and timeouts, and searches it locally. It does not upload the TV's application list. A separate cache lock avoids occupying the ADB operation lock; fresh cached data is reusable for 24 hours. Failed refreshes may return the last valid data with `stale: true` and an explicit warning. The third-party dataset is not bundled with the manager, and the interface identifies its source and GPLv3 license. Remote descriptions are displayed as escaped plain text in their original language.
+
+Community `Recommended`, `Advanced`, `Expert` and `Unsafe` map to lower, medium, high and critical risk respectively. Unknown classifications remain unknown. `Recommended` is not an instruction to uninstall. The info dialog prioritizes the current snapshot's protection reason and default HOME over community categories; these lookups neither relax core protection rules nor perform any device mutation. Missing information never becomes a low-risk conclusion merely because a package is a user app.
+
+`open_package_resource { packageName, resource: "source" | "search" }` opens a fixed source or a search URL constructed from a validated package name. The webview cannot supply an arbitrary URL. Web search only occurs after the user selects that action. The info dialog tracks the selected package and device, discarding responses after closing it or changing targets.
+
 The backend owns validation and protection. On connect, verify devices state and scan only after authorization. Query current user, installed/system/disabled packages and separate `-u` recovery candidates. Protect platform core apps plus current HOME from disable/uninstall, never infer all system apps are removable. Save original HOME before switching, verify the target declares HOME, and verify resulting default. Confirmations in the UI list the actual selected targets, current serial/user and operation; no destructive selection defaults.
 
 Batches are bounded, serial and independently recorded; no success claims from exit status alone. Remote shell arguments must be strictly validated. Paths to local APKs are passed as process arguments. Use explicit `-s SERIAL`, process timeout/output limit, and recheck the connected user's identity before mutation. Persist configured ADB path, original HOME per device/user and bounded history; do not persist pairing codes or APK contents.

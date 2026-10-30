@@ -4,6 +4,7 @@ mod app_logos;
 mod launcher_covers;
 mod market;
 mod mcp;
+mod package_insights;
 mod platform_tools;
 mod ui_preferences;
 
@@ -674,6 +675,37 @@ fn open_resource(resource: &str, app: tauri::AppHandle) -> Result<(), String> {
 }
 
 #[tauri::command]
+async fn get_package_insight(
+    package_name: String,
+    refresh: Option<bool>,
+    app: tauri::AppHandle,
+) -> Result<package_insights::Insight, String> {
+    // Reference lookups have their own cache lock and never reserve the ADB
+    // operation guard, update a device snapshot, or change device protection.
+    tauri::async_runtime::spawn_blocking(move || {
+        if app.state::<Bridge>().closing.load(Ordering::Acquire) {
+            return Err("管理器正在退出".into());
+        }
+        app.state::<package_insights::State>()
+            .lookup(&package_name, refresh.unwrap_or(false))
+    })
+    .await
+    .map_err(|_| "包名资料查询任务异常结束，请重试".to_string())?
+}
+
+#[tauri::command]
+fn open_package_resource(
+    package_name: &str,
+    resource: &str,
+    app: tauri::AppHandle,
+) -> Result<(), String> {
+    let url = package_insights::resource_url(package_name, resource)?;
+    app.opener()
+        .open_url(url, None::<&str>)
+        .map_err(|_| "无法打开浏览器".into())
+}
+
+#[tauri::command]
 fn mcp_info(info: tauri::State<'_, mcp::Info>) -> mcp::Info {
     info.inner().clone()
 }
@@ -905,6 +937,7 @@ fn main() {
                 .map_err(|_| "pureTV 管理器已运行，请使用已有窗口")?;
             app.manage(lock);
             app.manage(ui_preferences::Settings::load(directory.clone()));
+            app.manage(package_insights::State::new(directory.clone()));
             let shutdown = Arc::new(Shutdown::default());
             app.manage(shutdown.clone());
             let manager = TvManager::new(directory.clone(), cancel.clone());
@@ -955,6 +988,8 @@ fn main() {
             download_market_item,
             install_market_item,
             open_resource,
+            get_package_insight,
+            open_package_resource,
             mcp_info
         ])
         .build(tauri::generate_context!())

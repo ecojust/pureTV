@@ -34,6 +34,16 @@ export function marketCatalog() {
   };
 }
 
+export function packageInsight(packageName, overrides = {}) {
+  return {
+    packageName, found: true, description: 'Optional recommendations for the TV home screen.',
+    removal: 'Recommended', risk: 'low', list: 'Oem',
+    sourceName: 'UAD-ng', sourceUrl: 'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/resources/assets/uad_lists.json',
+    licenseUrl: 'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/LICENSE',
+    fetchedAt: 1793318400000, stale: false, warning: null, ...overrides,
+  };
+}
+
 export async function mockBridge(page, initial = snapshot(), options = {}) {
   await page.addInitScript(({initial, options, defaultMarketCatalog}) => {
     const state = structuredClone(initial);
@@ -67,6 +77,9 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     const callbacks = new Map(); let nextCallback = 1, downloadCancelled = false, marketCancelled = false, toolsInstalled = !!options.toolsInstalled;
     window.__marketCatalog=structuredClone(options.marketCatalog || defaultMarketCatalog);
     window.__marketRequests=[];window.__marketCatalogError=options.failMarketCatalog?'无法读取市场目录，请检查网络后重试':null;
+    window.__packageInsights=structuredClone(options.packageInsights || {});
+    window.__packageInsightRequests=[];window.__packageResources=[];
+    window.__packageInsightError=options.packageInsightError || null;
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
     window.__networkReads=0; window.__requests = []; window.__pickerCalls = 0; window.__xss = false; window.__toolsInstalls = 0; window.__resources = [];
@@ -112,6 +125,19 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         if (command === 'choose_adb') return 'C:\\platform-tools\\adb.exe';
         if (command === 'cancel') { window.__requests.push({action:'cancel'}); downloadCancelled = true; marketCancelled = true; return; }
         if (command === 'open_resource') { window.__resources.push(args.resource); return; }
+        if (command === 'get_package_insight') {
+          window.__packageInsightRequests.push(structuredClone(args));
+          const held=await holdOperation('packageInsight:'+args.packageName);
+          if(held.response)return structuredClone(held.response);
+          if(window.__packageInsightError)throw new Error(window.__packageInsightError);
+          return structuredClone(window.__packageInsights[args.packageName] || {
+            packageName:args.packageName,found:false,description:null,removal:null,risk:'unknown',list:null,
+            sourceName:'UAD-ng',sourceUrl:'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/resources/assets/uad_lists.json',
+            licenseUrl:'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/LICENSE',
+            fetchedAt:1793318400000,stale:false,warning:null,
+          });
+        }
+        if (command === 'open_package_resource') { window.__packageResources.push(structuredClone(args)); return; }
         if (command === 'platform_tools_info') return {version:'37.0.1',platform:'macos',downloadBytes:16110554,installed:toolsInstalled,supported:!options.unsupportedTools,message:options.unsupportedTools ? '此系统请手动配置 ADB' : ''};
         if (command === 'install_platform_tools') {
           if (args.acceptedLicense !== true) throw new Error('必须先同意 Android SDK 许可协议');
