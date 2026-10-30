@@ -126,38 +126,47 @@ def reject_existing_windows_install():
                     pass
 
 
-def install_baseline(package, directory, config):
+def extract_macos_package(package, directory, config, version):
     installed = directory / "installed"
     installed.mkdir()
-    if sys.platform == "win32":
-        reject_existing_windows_install()
-        run([package, "/S", f"/D={installed}"], timeout=240)
-        registration = windows_registration()
-        assert registration and registration["DisplayVersion"] == BASELINE_VERSION
-        assert Path(registration["InstallLocation"]).samefile(installed), "Baseline escaped the temporary installation"
-        executable = installed / "puretv-desktop.exe"
-    else:
-        mount = directory / "baseline-mount"
-        mount.mkdir()
-        run(["/usr/bin/hdiutil", "verify", package])
-        mounted = False
-        try:
-            run(["/usr/bin/hdiutil", "attach", "-readonly", "-nobrowse", "-noautoopen",
-                 "-mountpoint", mount, package])
-            mounted = True
-            bundles = list(mount.glob("*.app"))
-            assert len(bundles) == 1 and bundles[0].name == config["productName"] + ".app"
-            target = installed / bundles[0].name
-            run(["/usr/bin/ditto", bundles[0], target])
-            with (target / "Contents/Info.plist").open("rb") as stream:
-                info = plistlib.load(stream)
-            assert info["CFBundleIdentifier"] == config["identifier"]
-            assert info["CFBundleShortVersionString"] == BASELINE_VERSION
-            run(["/usr/bin/codesign", "--verify", "--deep", "--strict", target])
-            executable = target / "Contents/MacOS" / info["CFBundleExecutable"]
-        finally:
-            if mounted:
-                run(["/usr/bin/hdiutil", "detach", mount])
+    mount = directory / "package-mount"
+    mount.mkdir()
+    run(["/usr/bin/hdiutil", "verify", package])
+    mounted = False
+    try:
+        run(["/usr/bin/hdiutil", "attach", "-readonly", "-nobrowse", "-noautoopen",
+             "-mountpoint", mount, package])
+        mounted = True
+        bundles = list(mount.glob("*.app"))
+        assert len(bundles) == 1 and bundles[0].name == config["productName"] + ".app"
+        target = installed / bundles[0].name
+        run(["/usr/bin/ditto", bundles[0], target])
+        with (target / "Contents/Info.plist").open("rb") as stream:
+            info = plistlib.load(stream)
+        assert info["CFBundleIdentifier"] == config["identifier"]
+        assert info["CFBundleShortVersionString"] == version
+        name = info["CFBundleExecutable"]
+        assert name and Path(name).name == name, "Invalid bundle executable name"
+        run(["/usr/bin/codesign", "--verify", "--deep", "--strict", target])
+        executable = target / "Contents/MacOS" / name
+        assert executable.is_file() and os.access(executable, os.X_OK), "Bundle executable is missing"
+        return executable
+    finally:
+        if mounted:
+            run(["/usr/bin/hdiutil", "detach", mount])
+
+
+def install_baseline(package, directory, config):
+    if sys.platform == "darwin":
+        return extract_macos_package(package, directory, config, BASELINE_VERSION)
+    installed = directory / "installed"
+    installed.mkdir()
+    reject_existing_windows_install()
+    run([package, "/S", f"/D={installed}"], timeout=240)
+    registration = windows_registration()
+    assert registration and registration["DisplayVersion"] == BASELINE_VERSION
+    assert Path(registration["InstallLocation"]).samefile(installed), "Baseline escaped the temporary installation"
+    executable = installed / "puretv-desktop.exe"
     assert executable.is_file(), "Baseline executable is missing"
     return executable
 
@@ -359,13 +368,17 @@ def main():
     release = desktop / "src-tauri/target" / args.target / "release"
     packages = list((release / "bundle" / bundle).glob(pattern))
     assert len(packages) == 1 and packages[0].is_file(), "Expected exactly one native update package"
-    # Use the actual signed bundle executable on macOS: bundle signing may
-    # change its bytes after the unbundled cargo binary was built.
-    executable = (release / "bundle/macos" / (config["productName"] + ".app") / "Contents/MacOS/puretv-desktop"
-                  if host == "darwin" else release / ("puretv-desktop.exe" if host == "win32" else "puretv-desktop"))
-    assert executable.is_file()
+    executable = release / ("puretv-desktop.exe" if host == "win32" else "puretv-desktop")
+    if host != "darwin":
+        assert executable.is_file()
     with tempfile.TemporaryDirectory(prefix="puretv-update-ci-", dir=os.environ["RUNNER_TEMP"]) as temporary:
         directory = Path(temporary).resolve()
+        if host == "darwin":
+            # A DMG-only build need not retain its intermediate .app. Extract
+            # the signed executable from the exact package being tested.
+            current_build = directory / "current-build"
+            current_build.mkdir()
+            executable = extract_macos_package(packages[0].resolve(), current_build, config, config["version"])
         if host == "linux":
             linux_check(desktop, packages[0].resolve(), executable.resolve(), directory, config)
         else:
