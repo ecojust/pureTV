@@ -121,7 +121,8 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
             for scene in ('car-lineup', 'track-harbor', 'track-ridge', 'track-solar'):
                 (docs / (scene + '.png')).write_bytes(validate_png(artifact(slug + '-' + scene + '.png'))[0])
             for suffix in ('', '.en'):
-                (docs / ('controller-gyro' + suffix + '.png')).write_bytes(validate_png(artifact(slug + '-controller-gyro' + suffix + '.png'))[0])
+                for scene in ('controller-gyro', 'controller-setup'):
+                    (docs / (scene + suffix + '.png')).write_bytes(validate_png(artifact(slug + '-' + scene + suffix + '.png'))[0])
         preview_options = {'renderer': 'Chromium', 'provenance': 'Actual bundled game page rendered in Chromium with English locale and a simulated native room bridge; not a physical TV capture.'} if slug in GAMES else {}
         write_english_previews(root, 'apps', slug, version, args.source_sha, run_url, english, **preview_options)
         resource = {
@@ -152,7 +153,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
             checksums += ['docs/controller.png', 'docs/controller.en.png', 'docs/controller-active.png', 'docs/controller-active.en.png']
         if slug == 'used-car-racing':
             checksums += ['docs/' + scene + '.png' for scene in ('car-lineup', 'track-harbor', 'track-ridge', 'track-solar')]
-            checksums += ['docs/controller-gyro.png', 'docs/controller-gyro.en.png']
+            checksums += ['docs/' + scene + suffix + '.png' for scene in ('controller-gyro', 'controller-setup') for suffix in ('', '.en')]
         (folder / 'SHA256SUMS.txt').write_text(''.join(f'{digest(folder / filename)}  {filename}\n' for filename in checksums))
         readme = folder / 'README.md'
         readme_text = readme.read_text() if readme.exists() else '# ' + name + '\n'

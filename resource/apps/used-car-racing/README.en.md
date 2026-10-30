@@ -10,7 +10,7 @@ The APK in this directory is signed with the pureTV release certificate. Android
 
 **Used Car Racing TV / 极品二手车** is an original 3D racing game. Each race starts with a randomly assigned used car and condition report. The inspection garage displays the model, power, weight, drivetrain and faults. One or two players use LAN phone controllers; AI drivers fill the remaining places in a six-car field.
 
-This source update targets **0.1.1**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. See [resource.json](resource.json) for the downloadable APK’s actual version, signature and verification results.
+This source update targets **0.1.2**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. See [resource.json](resource.json) for the downloadable APK’s actual version, signature and verification results.
 
 ## Playing
 
@@ -23,16 +23,23 @@ This source update targets **0.1.1**, package `com.ecojust.usedcartv`, for Andro
 
 The **virtual stick** is the default: touch anywhere on the left and slide sideways. It works on the shared local network without internet access.
 
-**Gyroscope** steering lets you turn the phone like a steering wheel:
+**Gyroscope** steering lets you turn the phone like a steering wheel. In 0.1.2, the TV APK serves the HTTPS controller and WSS connection on the local network. No public domain, GitHub Pages site or public input relay is required.
 
-1. Choose Gyroscope on the LAN controller to open the project’s HTTPS controller page. Its initial load needs internet access and the browser must allow the new page.
-2. On that page, tap Gyroscope and allow motion access when the browser requests it. A saved preference does not replace permission for this visit.
-3. Hold the phone horizontally in a comfortable, slightly upright position. The first valid pose becomes center; Recenter repeats calibration. A turn of about 45° gives full steering.
-4. Continue using the right-hand throttle and brake areas. In the garage, slide on the left to choose a track; motion steering applies during the countdown and race.
+Each phone must establish certificate trust when first connecting to this TV:
 
-Use the virtual stick if permission is denied, no sensor data arrives, the new page is blocked, or the browser suspends the original LAN page in the background. The secure page has a Back to LAN button. Sensor interruption, laying the phone flat or losing focus releases the controls. Motion permissions and background-page support vary between mobile browsers, so gyroscope mode is not guaranteed on every device.
+1. Choose Gyroscope on the scanned controller and follow the setup guide on your own trusted LAN to download the TV certificate. In system certificate details or a trusted certificate viewer, compare the full SHA-256 fingerprint of the **downloaded certificate itself** with the TV screen. The HTTP guide’s displayed summary is only a reference.
+2. On Android, install the CA certificate through system settings. On iPhone, install the downloaded certificate profile, then enable full trust under Settings → General → About → Certificate Trust Settings. See the [phone certificate guide](docs/phone-trust.md#english).
+3. Return to the controller and open its HTTPS entry, or scan the TV’s Certificate trusted QR code. Choose Gyroscope on the same controller page and grant motion access when the browser requests it.
+4. Hold the phone horizontally in a comfortable, slightly upright position. The first valid pose becomes center; Recenter repeats calibration. A turn of about 45° gives full steering.
+5. Choose Virtual stick whenever you want touch steering again. Each player chooses their own mode, and both modes use the same right-hand throttle and brake areas. The garage still uses a left-side swipe to choose a track; motion steering applies during the countdown and race.
 
-The HTTPS page serves static controller files only. Driving input still reaches the TV through the original LAN page, without a public game server.
+Installing a CA establishes **system certificate trust**; granting **motion access** is a separate browser permission. Proceeding past a browser certificate warning does not guarantee sensor access. Only install the certificate from your own TV; the [removal steps](docs/phone-trust.md#removing-trust) explain how to revoke it later.
+
+A phone normally needs this installation only once while the TV’s CA remains unchanged. A new LAN IP causes the server certificate to be reissued under the same CA. Clearing TV app data, reinstalling the app or rebuilding its identity may change the CA and require pairing again. The TV serves the certificate and all controller files locally, so setup and racing do not depend on internet access.
+
+If the TV certificate is damaged, expired or needs replacing, press Back on the TV, choose Pair phones again, and confirm. This ends the current race, disconnects all phones and generates a new certificate while preserving local game records. Every phone must install and trust the new certificate. See [identity recovery](docs/phone-trust.md#repairing-the-tv-identity).
+
+Use the virtual stick if permission is denied or valid sensor data is unavailable. Sensor interruption, laying the phone flat or losing focus releases the controls. Certificate installation and permissions still need testing on actual Android browsers and iOS Safari; automated orientation tests do not establish compatibility with every phone.
 
 Press SELECT in the garage to reroll the assigned cars. During a race, tap SELECT to switch between chase and hood cameras. Below **1.2 m/s**, hold SELECT for about **0.8 seconds** to toggle D forward / R reverse, then apply throttle. START begins or pauses the race.
 
@@ -65,7 +72,7 @@ Each route is a closed circuit raced over three laps. Lengths come from the same
 | CLOUDLINE PASS | Approx. 2.033 km | Winding mountain roads, forest, rocks, distant snowy mountains and a bridge section; elevations approx. 7.5–72.1 m |
 | SOLAR OUTRUN | Approx. 1.894 km | Desert highway, solar arrays, power poles, sandstone and sunset; elevations approx. 1.9–16.1 m |
 
-Version 0.1.1 focuses on graphics while retaining the routes, vehicle physics, random mechanical faults and one/two-player race rules. The real WebGL 1 renderer uses bundled Three.js and local graphical assets, with no texture downloads during play.
+Version 0.1.2 adds a local HTTPS phone controller and retains the graphics and batching improvements from 0.1.1, along with the routes, vehicle physics, random mechanical faults and one/two-player race rules. The real WebGL 1 renderer uses bundled Three.js and local graphical assets, with no texture downloads during play.
 
 ## Graphics in 0.1.1
 
@@ -102,13 +109,16 @@ node --test resource/apps/used-car-racing/tests/*.test.cjs
 node resource/apps/used-car-racing/tests/compatibility.mjs
 node resource/apps/used-car-racing/tests/rendering.mjs
 node resource/apps/used-car-racing/tests/controller.mjs
+node resource/apps/used-car-racing/tests/secure-controller.mjs
 node resource/apps/used-car-racing/tests/integration.mjs
 
 cd resource/launcher/puretv
 ./gradlew :used-car-racing:assembleRelease :used-car-racing:testDebugUnitTest :used-car-racing:lintDebug :used-car-racing:verifyReleaseSize
 ```
 
-Browser checks use npm dependencies from `desktop/`; `CHROMIUM_PATH` selects Chromium. `USED_CAR_UI_CAPTURE_DIR` selects the directory for captures of the actual pages. Releases use the shared pureTV v2 certificate and the independent tag `android-used-car-v0.1.1`.
+Browser checks use npm dependencies from `desktop/`; `CHROMIUM_PATH` selects Chromium. `USED_CAR_UI_CAPTURE_DIR` selects the directory for captures of the actual pages. Releases use the shared pureTV v2 certificate and the independent tag `android-used-car-v0.1.2`.
+
+The local HTTPS integration check also needs a full JDK (`java` / `javac`), NSS `certutil` (the Linux `libnss3-tools` package), and a real private IPv4 address. It temporarily trusts an independent test CA, removes it afterward, and never skips certificate validation. CI additionally runs Android API 26 and 35 emulators to verify actual Keystore keys, TLS handshakes, persistent identity, and explicitly enabled pairing reset.
 
 Original code, cars, tracks, textures and synthesized sound use [MIT](LICENSE). Three.js retains its [upstream MIT license](src/main/assets/THREE-LICENSE.txt). No commercial racing-game ROMs, vehicle models or extracted maps are included. The project draws its own [64×64 SVG icon](logo.svg).
 

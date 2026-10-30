@@ -20,12 +20,16 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLSocket;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -36,42 +40,121 @@ import java.util.concurrent.TimeUnit;
 public final class LanGameServer implements AutoCloseable {
     public interface AssetSource { InputStream open(String name) throws IOException; }
 
+    /** Only public pairing material crosses the HTTP boundary. Private keys stay in the TLS context. */
+    public static final class TlsConfig {
+        public final SSLContext context;
+        public final String fingerprint;
+        public final String displayName;
+        private final byte[] certificateDer;
+        private final byte[] mobileConfig;
+
+        public TlsConfig(SSLContext context, byte[] certificateDer, byte[] mobileConfig,
+                         String fingerprint, String displayName) {
+            if (context == null || certificateDer == null || certificateDer.length == 0 || certificateDer.length > 65536
+                    || mobileConfig == null || mobileConfig.length == 0 || mobileConfig.length > 131072
+                    || fingerprint == null || !fingerprint.matches("[0-9a-f]{64}")
+                    || displayName == null || displayName.isEmpty() || displayName.length() > 120) {
+                throw new IllegalArgumentException("Invalid local TLS configuration");
+            }
+            try {
+                byte[] digest = MessageDigest.getInstance("SHA-256").digest(certificateDer);
+                StringBuilder actual = new StringBuilder(64);
+                for (byte value : digest) actual.append(String.format(Locale.ROOT, "%02x", value & 255));
+                if (!fingerprint.equals(actual.toString())) throw new IllegalArgumentException("CA fingerprint mismatch");
+            } catch (java.security.NoSuchAlgorithmException impossible) { throw new IllegalStateException(impossible); }
+            this.context = context;
+            this.certificateDer = certificateDer.clone();
+            this.mobileConfig = mobileConfig.clone();
+            this.fingerprint = fingerprint;
+            this.displayName = displayName;
+        }
+
+        public byte[] certificateDer() { return certificateDer.clone(); }
+        public byte[] mobileConfig() { return mobileConfig.clone(); }
+    }
+
     private static final int MAX_HTTP = 8192;
     private static final int MAX_FRAME = 2048;
     private static final long STALE_INPUT_MS = 750;
     private static final long RESUME_MS = 15_000;
     private final AssetSource assets;
+    private final TlsConfig tls;
     private final String room = randomToken();
     private final Object lock = new Object();
     private final Player[] players = {new Player(1), new Player(2)};
     private final Set<Socket> sockets = new HashSet<>();
+    private final Map<Socket, Long> handshakes = new HashMap<>();
     private volatile ServerSocket listener;
+    private volatile SSLServerSocket tlsListener;
     private volatile boolean running;
     private volatile String published = "{\"type\":\"state\",\"phase\":\"lobby\"}";
     private ThreadPoolExecutor workers;
     private ScheduledExecutorService broadcaster;
     private Thread acceptor;
+    private Thread tlsAcceptor;
 
-    public LanGameServer(AssetSource assets) { this.assets = assets; }
+    public LanGameServer(AssetSource assets) { this(assets, null); }
+
+    public LanGameServer(AssetSource assets, TlsConfig tls) {
+        if (assets == null) throw new IllegalArgumentException("Missing bundled assets");
+        this.assets = assets; this.tls = tls;
+    }
 
     public synchronized int start() throws IOException {
         if (running) return listener.getLocalPort();
-        listener = new ServerSocket();
-        listener.setReuseAddress(true);
-        listener.bind(new InetSocketAddress(InetAddress.getByName("0.0.0.0"), 0), 12);
-        running = true;
-        workers = new ThreadPoolExecutor(0, 12, 15, TimeUnit.SECONDS,
-                new SynchronousQueue<>(), task -> daemon(task, "used-car-racing-lan-client"),
-                new ThreadPoolExecutor.AbortPolicy());
-        broadcaster = Executors.newScheduledThreadPool(2, task -> daemon(task, "used-car-racing-lan-state"));
-        broadcaster.scheduleWithFixedDelay(this::broadcast, 200, 200, TimeUnit.MILLISECONDS);
-        broadcaster.scheduleWithFixedDelay(this::closeSlowWriters, 500, 500, TimeUnit.MILLISECONDS);
-        acceptor = daemon(this::acceptLoop, "used-car-racing-lan-listen");
-        acceptor.start();
-        return listener.getLocalPort();
+        try {
+            listener = new ServerSocket();
+            listener.setReuseAddress(true);
+            listener.bind(new InetSocketAddress(InetAddress.getByName("0.0.0.0"), 0), 12);
+            if (tls != null) {
+                tlsListener = (SSLServerSocket) tls.context.getServerSocketFactory().createServerSocket();
+                configureTls(tlsListener);
+                tlsListener.setReuseAddress(true);
+                tlsListener.bind(new InetSocketAddress(InetAddress.getByName("0.0.0.0"), 0), 12);
+            }
+            workers = new ThreadPoolExecutor(0, 12, 15, TimeUnit.SECONDS,
+                    new SynchronousQueue<>(), task -> daemon(task, "used-car-racing-lan-client"),
+                    new ThreadPoolExecutor.AbortPolicy());
+            broadcaster = Executors.newScheduledThreadPool(2, task -> daemon(task, "used-car-racing-lan-state"));
+            running = true;
+            broadcaster.scheduleWithFixedDelay(this::broadcast, 200, 200, TimeUnit.MILLISECONDS);
+            broadcaster.scheduleWithFixedDelay(this::closeSlowWriters, 500, 500, TimeUnit.MILLISECONDS);
+            final ServerSocket httpServer = listener;
+            acceptor = daemon(() -> acceptLoop(httpServer), "used-car-racing-lan-listen");
+            acceptor.start();
+            if (tlsListener != null) {
+                final SSLServerSocket httpsServer = tlsListener;
+                tlsAcceptor = daemon(() -> acceptLoop(httpsServer), "used-car-racing-lan-tls-listen");
+                tlsAcceptor.start();
+            }
+            return listener.getLocalPort();
+        } catch (IOException | RuntimeException failure) {
+            stop();
+            throw failure;
+        }
     }
 
     public String roomToken() { return room; }
+    public int httpsPort() { SSLServerSocket current = tlsListener; return current == null ? 0 : current.getLocalPort(); }
+
+    private static void configureTls(SSLServerSocket socket) throws IOException {
+        Set<String> supportedProtocols = new HashSet<>(Arrays.asList(socket.getSupportedProtocols()));
+        ArrayList<String> protocols = new ArrayList<>();
+        for (String protocol : new String[]{"TLSv1.3", "TLSv1.2"}) if (supportedProtocols.contains(protocol)) protocols.add(protocol);
+        Set<String> supportedCiphers = new HashSet<>(Arrays.asList(socket.getSupportedCipherSuites()));
+        ArrayList<String> ciphers = new ArrayList<>();
+        // The Android Keystore server key signs ECDHE/TLS 1.3 exchanges; it cannot decrypt RSA key exchanges.
+        for (String cipher : new String[]{"TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256",
+                "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256"}) if (supportedCiphers.contains(cipher)) ciphers.add(cipher);
+        if (!protocols.contains("TLSv1.2") || !ciphers.contains("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256")) {
+            throw new IOException("This device does not support the required TLS 1.2 cipher");
+        }
+        socket.setUseClientMode(false);
+        socket.setNeedClientAuth(false);
+        socket.setEnabledProtocols(protocols.toArray(new String[0]));
+        socket.setEnabledCipherSuites(ciphers.toArray(new String[0]));
+    }
 
     /** No UI or network work here; safe to call for each animation frame. */
     public String snapshot() {
@@ -114,21 +197,28 @@ public final class LanGameServer implements AutoCloseable {
     public synchronized void stop() {
         running = false;
         closeQuietly(listener);
+        closeQuietly(tlsListener);
         synchronized (lock) {
             for (Socket socket : new ArrayList<>(sockets)) closeQuietly(socket);
             sockets.clear();
+            handshakes.clear();
             for (Player p : players) { p.clear(p.peer != null); p.peer = null; p.session = null; p.disconnectedAt = 0; }
         }
         if (broadcaster != null) broadcaster.shutdownNow();
         if (workers != null) workers.shutdownNow();
         listener = null;
+        tlsListener = null;
         // On some JVMs close() wakes accept() before its native listener FD is released.
         // Let that short unwind complete so returning from stop also releases the port.
         Thread stoppedAcceptor = acceptor;
+        Thread stoppedTlsAcceptor = tlsAcceptor;
         acceptor = null;
-        if (stoppedAcceptor != null && stoppedAcceptor != Thread.currentThread()) {
-            try { stoppedAcceptor.join(250); }
-            catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+        tlsAcceptor = null;
+        for (Thread thread : new Thread[]{stoppedAcceptor, stoppedTlsAcceptor}) {
+            if (thread != null && thread != Thread.currentThread()) {
+                try { thread.join(250); }
+                catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+            }
         }
     }
 
@@ -136,9 +226,8 @@ public final class LanGameServer implements AutoCloseable {
         Thread thread = new Thread(task, name); thread.setDaemon(true); return thread;
     }
 
-    private void acceptLoop() {
-        ServerSocket server = listener;
-        while (running && server == listener) {
+    private void acceptLoop(ServerSocket server) {
+        while (running && (server == listener || server == tlsListener)) {
             Socket socket = null;
             try {
                 socket = server.accept();
@@ -148,11 +237,12 @@ public final class LanGameServer implements AutoCloseable {
                 synchronized (lock) {
                     if (!running || sockets.size() >= 12) { socket.close(); continue; }
                     sockets.add(socket);
+                    if (socket instanceof SSLSocket) handshakes.put(socket, now());
                 }
                 final Socket client = socket;
                 try { workers.execute(() -> handle(client)); }
                 catch (RuntimeException rejected) {
-                    synchronized (lock) { sockets.remove(client); }
+                    synchronized (lock) { sockets.remove(client); handshakes.remove(client); }
                     closeQuietly(client);
                 }
             } catch (IOException ignored) { if (socket != null) closeQuietly(socket); }
@@ -162,6 +252,11 @@ public final class LanGameServer implements AutoCloseable {
     private void handle(Socket socket) {
         Peer peer = null;
         try {
+            boolean secure = socket instanceof SSLSocket;
+            if (secure) {
+                ((SSLSocket) socket).startHandshake();
+                synchronized (lock) { handshakes.remove(socket); }
+            }
             InputStream in = socket.getInputStream();
             OutputStream out = socket.getOutputStream();
             Request request = readRequest(in);
@@ -169,10 +264,10 @@ public final class LanGameServer implements AutoCloseable {
             String host = request.headers.get("host");
             if (!validHost(host, socket)) { http(out, 403, "text/plain", new byte[0]); return; }
             URI uri = URI.create(request.target);
-            if (uri.isAbsolute() || uri.getRawFragment() != null || !request.target.startsWith("/")) throw new IOException("Bad target");
+            if (uri.isAbsolute() || uri.getRawAuthority() != null || uri.getRawFragment() != null || !request.target.startsWith("/")) throw new IOException("Bad target");
             String path = uri.getRawPath();
             if ("/ws".equals(path)) {
-                if (!room.equals(query(uri.getRawQuery(), "room")) || !sameOrigin(request.headers.get("origin"), host)) {
+                if (!room.equals(query(uri.getRawQuery(), "room")) || !sameOrigin(request.headers.get("origin"), host, secure)) {
                     http(out, 403, "text/plain", new byte[0]); return;
                 }
                 String key = request.headers.get("sec-websocket-key");
@@ -190,6 +285,18 @@ public final class LanGameServer implements AutoCloseable {
                 peer.run();
                 return;
             }
+            if ("/connection.json".equals(path) || "/ca.crt".equals(path) || "/ca.mobileconfig".equals(path)) {
+                if (!room.equals(query(uri.getRawQuery(), "room"))) { http(out, 403, "text/plain", new byte[0]); return; }
+                if ("/connection.json".equals(path)) {
+                    http(out, 200, "application/json; charset=utf-8", connectionInfo(socket).getBytes(StandardCharsets.UTF_8), host, secure, null);
+                } else if (tls == null) { http(out, 404, "text/plain", new byte[0]); }
+                else if ("/ca.crt".equals(path)) {
+                    http(out, 200, "application/x-x509-ca-cert", tls.certificateDer(), host, secure, "puretv-lan-ca.crt");
+                } else {
+                    http(out, 200, "application/x-apple-aspen-config", tls.mobileConfig(), host, secure, "puretv-lan-ca.mobileconfig");
+                }
+                return;
+            }
             String asset;
             String mime;
             if ("/".equals(path)) {
@@ -200,13 +307,29 @@ public final class LanGameServer implements AutoCloseable {
             } else if ("/secure-controller.js".equals(path)) { asset = "secure-controller.js"; mime = "application/javascript; charset=utf-8";
             } else if ("/controller.css".equals(path)) { asset = "controller.css"; mime = "text/css; charset=utf-8";
             } else { http(out, 404, "text/plain", new byte[0]); return; }
-            try (InputStream file = assets.open(asset)) { http(out, 200, mime, readLimited(file, 512 * 1024), host); }
+            try (InputStream file = assets.open(asset)) { http(out, 200, mime, readLimited(file, 512 * 1024), host, secure, null); }
         } catch (Exception ignored) { /* Bad, slow and disconnected LAN clients must not take down the TV. */ }
         finally {
             if (peer != null) peer.disconnect();
             closeQuietly(socket);
-            synchronized (lock) { sockets.remove(socket); }
+            synchronized (lock) { sockets.remove(socket); handshakes.remove(socket); }
         }
+    }
+
+    private String connectionInfo(Socket socket) throws JSONException {
+        String address = socket.getLocalAddress().getHostAddress();
+        ServerSocket httpServer = listener;
+        String httpOrigin = "http://" + address + ":" + (httpServer == null ? 0 : httpServer.getLocalPort());
+        int securePort = httpsPort();
+        String httpsOrigin = securePort == 0 ? "" : "https://" + address + ":" + securePort;
+        String pairingOrigin = socket instanceof SSLSocket ? httpsOrigin : httpOrigin;
+        return new JSONObject().put("room", room)
+                .put("secureUrl", securePort == 0 ? "" : httpsOrigin + "/?room=" + room)
+                .put("localUrl", httpOrigin + "/?room=" + room)
+                .put("certificateUrl", tls == null ? "" : pairingOrigin + "/ca.crt?room=" + room)
+                .put("profileUrl", tls == null ? "" : pairingOrigin + "/ca.mobileconfig?room=" + room)
+                .put("certificateSha256", tls == null ? "" : tls.fingerprint)
+                .put("certificateName", tls == null ? "" : tls.displayName).toString();
     }
 
     private void broadcast() {
@@ -221,7 +344,15 @@ public final class LanGameServer implements AutoCloseable {
 
     private void closeSlowWriters() {
         Peer[] peers = new Peer[2];
-        synchronized (lock) { for (int i = 0; i < players.length; i++) peers[i] = players[i].peer; }
+        ArrayList<Socket> expiredHandshakes = new ArrayList<>();
+        synchronized (lock) {
+            for (int i = 0; i < players.length; i++) peers[i] = players[i].peer;
+            for (Map.Entry<Socket, Long> entry : handshakes.entrySet()) {
+                if (now() - entry.getValue() > 5000) expiredHandshakes.add(entry.getKey());
+            }
+        }
+        // SO_TIMEOUT alone bounds one read; this also bounds clients that trickle TLS handshake bytes.
+        for (Socket socket : expiredHandshakes) closeQuietly(socket);
         for (Peer peer : peers) if (peer != null && peer.writeStartedAt != 0
                 && now() - peer.writeStartedAt > 2000) peer.disconnect();
     }
@@ -365,10 +496,14 @@ public final class LanGameServer implements AutoCloseable {
             if (closed) throw new IOException("Closed");
             writeStartedAt = now();
             try {
-                out.write(0x80 | opcode);
-                if (data.length < 126) out.write(data.length);
-                else { out.write(126); out.write(data.length >> 8); out.write(data.length & 255); }
-                out.write(data); out.flush();
+                int header = data.length < 126 ? 2 : 4;
+                byte[] packet = new byte[header + data.length];
+                packet[0] = (byte) (0x80 | opcode);
+                packet[1] = (byte) (header == 2 ? data.length : 126);
+                if (header == 4) { packet[2] = (byte) (data.length >> 8); packet[3] = (byte) data.length; }
+                System.arraycopy(data, 0, packet, header, data.length);
+                // A single write avoids making each tiny WebSocket header field its own TLS record.
+                out.write(packet); out.flush();
             } finally { writeStartedAt = 0; }
         }
         void disconnect() {
@@ -455,7 +590,7 @@ public final class LanGameServer implements AutoCloseable {
         // A numeric local Host prevents browser DNS-rebinding access from an unrelated domain.
         return host.equals(socket.getLocalAddress().getHostAddress() + ":" + socket.getLocalPort());
     }
-    private static boolean sameOrigin(String origin, String host) { return ("http://" + host).equals(origin); }
+    private static boolean sameOrigin(String origin, String host, boolean secure) { return ((secure ? "https://" : "http://") + host).equals(origin); }
     private static boolean validKey(String key) {
         if (key == null || key.length() > 32) return false;
         try { return Base64.getDecoder().decode(key).length == 16; } catch (IllegalArgumentException bad) { return false; }
@@ -476,15 +611,17 @@ public final class LanGameServer implements AutoCloseable {
         return result;
     }
     private static void http(OutputStream out, int status, String mime, byte[] body) throws IOException {
-        http(out, status, mime, body, null);
+        http(out, status, mime, body, null, false, null);
     }
-    private static void http(OutputStream out, int status, String mime, byte[] body, String verifiedHost) throws IOException {
+    private static void http(OutputStream out, int status, String mime, byte[] body, String verifiedHost, boolean secure, String attachment) throws IOException {
         // Safari does not consistently include ws: in connect-src 'self'. Host was matched
         // exactly to this socket's numeric local address and port before reaching here.
-        String websocketOrigin = verifiedHost == null ? "" : " ws://" + verifiedHost;
+        String websocketOrigin = verifiedHost == null ? "" : (secure ? " wss://" : " ws://") + verifiedHost;
         String headers = "HTTP/1.1 " + status + " " + (status == 200 ? "OK" : "Error")
                 + "\r\nContent-Type: " + mime + "\r\nContent-Length: " + body.length
                 + "\r\nConnection: close\r\nCache-Control: no-store\r\nX-Content-Type-Options: nosniff"
+                + (attachment == null ? "" : "\r\nContent-Disposition: attachment; filename=\"" + attachment + "\"")
+                + "\r\nPermissions-Policy: accelerometer=(self), gyroscope=(self), magnetometer=(self)"
                 + "\r\nReferrer-Policy: no-referrer\r\nContent-Security-Policy: default-src 'self'; connect-src 'self'" + websocketOrigin
                 + "; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-ancestors 'none'; base-uri 'none'\r\n\r\n";
         out.write(headers.getBytes(StandardCharsets.US_ASCII)); out.write(body); out.flush();

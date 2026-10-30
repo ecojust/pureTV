@@ -1,154 +1,155 @@
-/* A secure, top-level sensor page talks to its explicitly opened LAN controller.
- * Only the LAN opener owns the TV WebSocket. No mixed-content exception, public
- * relay, certificate bypass, or cross-origin permission is required. */
-(function(root){
+/* Local HTTPS pairing. The TV supplies its own per-installation CA and serves
+ * the same controller over HTTPS/WSS after the phone explicitly trusts it.
+ * No public host, popup, background relay, or certificate-error bypass is used. */
+(function (root) {
   'use strict';
-  var ORIGIN='https://ecojust.github.io';
-  var VERSION='0.1.1',PATH='/pureTV/controller/used-car/'+VERSION+'/';
-  var PAGE=ORIGIN+PATH;
-  var KIND='puretv-used-car-bridge-v1';
-  var TOKEN=/^[a-zA-Z0-9_-]{16,128}$/;
-  var CHANNEL=/^[a-f0-9]{32}$/;
-  var MAX_FRAME=2048,MAX_AGE=400,ACK_TIMEOUT=900;
-  function status(state,reason){root.dispatchEvent(new CustomEvent('usedcar-secure-status',{detail:{state:state,reason:reason||''}}));}
-  function privateOrigin(value){
-    try{
-      var url=new URL(value);
-      if(url.origin!==value||url.protocol!=='http:'||url.username||url.password||url.pathname!=='/'||url.search||url.hash)return false;
-      var host=url.hostname;
-      if(host==='localhost'||host==='[::1]')return true;
-      if(!/^\d{1,3}(?:\.\d{1,3}){3}$/.test(host))return false;
-      var parts=host.split('.').map(Number);
-      if(parts.some(function(p){return p<0||p>255;}))return false;
-      return parts[0]===10||parts[0]===127||parts[0]===192&&parts[1]===168||parts[0]===172&&parts[1]>=16&&parts[1]<=31||parts[0]===169&&parts[1]===254;
-    }catch(_){return false;}
+  var TOKEN = /^[a-zA-Z0-9_-]{16,128}$/;
+  var room = new URL(location.href).searchParams.get('room') || '';
+  var fragment = new URLSearchParams(location.hash.slice(1));
+  var handoff = location.protocol === 'https:' && TOKEN.test(fragment.get('session') || '') ? fragment.get('session') : '';
+  var requestedSteering = location.protocol === 'https:' && fragment.get('steering') === 'gyro' ? 'gyro' : '';
+  if (fragment.has('session') || fragment.has('steering')) {
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (_) { handoff = ''; requestedSteering = ''; }
   }
-  function validId(id){return Number.isInteger(id)&&id>0&&id<1000000000;}
-  function validFrame(value){
-    if(typeof value!=='string'||value.length>MAX_FRAME)return null;
-    try{var frame=JSON.parse(value);if(!frame||typeof frame!=='object'||Array.isArray(frame)||!['hello','input'].includes(frame.type))return null;return frame;}catch(_){return null;}
+  root.UsedCarTransport = {
+    room: room,
+    secure: location.protocol === 'https:',
+    preferredSteering: requestedSteering,
+    takeSession: function () { var value = handoff; handoff = ''; return value; },
+    createSocket: function (url) { return new WebSocket(url); }
+  };
+  var $ = function (id) { return document.getElementById(id); };
+  var english = !/^zh\b/i.test(navigator.language || 'zh');
+  var words = english ? {
+    eyebrow: 'THIS TV ONLY · NO INTERNET REQUIRED', title: 'Set up gyroscope steering',
+    intro: 'The virtual stick works now. To use your phone’s motion sensors, first trust this TV’s local certificate in your phone settings. The controller then connects directly to the TV using HTTPS.',
+    loading: 'Reading this TV’s certificate details…', ready: 'Complete these steps once for each phone and TV.',
+    failed: 'Cannot read a valid secure-controller address from this TV. Check the local connection and retry, or continue with the virtual stick.',
+    checkTitle: '1. Check the TV and certificate',
+    checkHint: 'Install only on your own trusted local network. In the downloaded certificate’s system details or a certificate viewer, compare its name and SHA-256 fingerprint with the TV. The summary below is a reference, not proof of the download’s identity.',
+    androidHelp: '2. Download the CA certificate. In Android Settings, open Security → More security settings → Encryption & credentials → Install a certificate → CA certificate. The exact menu varies by phone; install the downloaded file.',
+    iosHelp: '2. Download the certificate profile. Open Settings → Profile Downloaded (or General → VPN & Device Management) and install it. Then open General → About → Certificate Trust Settings and turn on full trust for this TV’s certificate.',
+    android: 'Android: download CA certificate', ios: 'iPhone: download certificate profile',
+    trustNote: 'This grants system-level certificate trust, separately from motion permission. A browser’s “continue anyway” button is not a substitute. Remove this TV’s certificate from your phone settings when you no longer use it.',
+    nextNote: '3. After trusting the certificate, continue below. In the same controller, tap Gyroscope to grant motion access and calibrate, or choose Virtual stick. If the TV’s app data is cleared or its certificate changes, repeat setup.',
+    proceed: 'Certificate trusted — open controller', cancel: 'Continue with virtual stick', retry: 'Retry setup'
+  } : {
+    eyebrow: '仅连接当前电视 · 无需公网', title: '首次连接陀螺仪手柄',
+    intro: '虚拟摇杆现在就能使用。要使用手机运动传感器，请先在手机系统设置中信任这台电视的本地证书，手柄随后通过 HTTPS 直接连接电视。',
+    loading: '正在读取这台电视的证书信息…', ready: '每部手机首次连接这台电视时完成一次。',
+    failed: '暂时无法从这台电视取得有效的安全手柄地址。请检查局域网连接后重试，或继续使用虚拟摇杆。',
+    checkTitle: '1. 核对电视与证书',
+    checkHint: '只在你自己的可信局域网安装。请在系统证书详情或证书查看器中，核对下载证书的名称与 SHA-256 指纹和电视显示一致；下方摘要只作对照，不能代替对下载证书的核验。',
+    androidHelp: '2. 下载 CA 证书，在 Android「设置 → 安全 → 更多安全设置 → 加密与凭据 → 安装证书 → CA 证书」中安装下载的文件；不同手机的菜单名称可能不同。',
+    iosHelp: '2. 下载证书描述文件，在「设置 → 已下载描述文件」（或「通用 → VPN 与设备管理」）中安装，再到「通用 → 关于本机 → 证书信任设置」为这台电视的证书开启完整信任。',
+    android: 'Android：下载 CA 证书', ios: 'iPhone：下载证书描述文件',
+    trustNote: '这是系统级证书信任，与运动传感器授权是两件事。浏览器的“继续访问”不能代替此步骤。不再使用这台电视时，可在手机系统设置中移除它的证书。',
+    nextNote: '3. 完成信任后点击下方按钮，在同一个手柄里点「陀螺仪」授权并校准，也可随时选择「虚拟摇杆」。电视清除应用数据或更换证书后，需要重新设置。',
+    proceed: '已信任，进入安全手柄', cancel: '继续使用摇杆', retry: '重试设置'
+  };
+  var panel = $('tls-setup'), opened = false, generation = 0, configuration = null, timeout = 0;
+  function status(state) { root.dispatchEvent(new CustomEvent('usedcar-secure-status', { detail: { state: state } })); }
+  function privateIpv4(host) {
+    if (!/^\d{1,3}(?:\.\d{1,3}){3}$/.test(host)) return false;
+    var p = host.split('.').map(Number);
+    return p.every(function (part) { return part >= 0 && part <= 255; }) &&
+      (p[0] === 10 || p[0] === 127 || p[0] === 192 && p[1] === 168 || p[0] === 172 && p[1] >= 16 && p[1] <= 31 || p[0] === 169 && p[1] === 254);
   }
-  var fragment=new URLSearchParams(location.hash.slice(1));
-  var secureChild=location.origin===ORIGIN&&location.pathname===PATH;
-  if(secureChild){
-    var parentOrigin=fragment.get('parent')||'',room=fragment.get('room')||'',channel=fragment.get('channel')||'';
-    var opener=root.opener,allowed=!!opener&&privateOrigin(parentOrigin)&&TOKEN.test(room)&&CHANNEL.test(channel)&&root.isSecureContext;
-    var sockets={},nextId=0,closing=false;
-    // Remove room/channel from the visible address after retaining them in memory.
-    // The initial fragment is never part of a request to the static host.
-    try{history.replaceState(null,'',location.pathname);}catch(_){}
-    function post(message){if(!allowed||closing)return false;message.kind=KIND;message.channel=channel;try{opener.postMessage(message,parentOrigin);return true;}catch(_){return false;}}
-    function ProxySocket(){
-      this.readyState=0;this.id=++nextId;this.listeners={};this.lastAck=performance.now();this.created=this.lastAck;this.lastSent=0;this.lastAckSerial=0;this.timer=0;sockets[this.id]=this;
-      var self=this;
-      this.timer=setInterval(function(){
-        if(self.readyState===3)return;
-        if(!allowed||opener.closed){self.fail('opener-closed');return;}
-        if(self.readyState===0&&performance.now()-self.created>6000){self.fail('bridge-unavailable');return;}
-        if(self.readyState===1&&self.lastSent>self.lastAckSerial&&performance.now()-self.lastAck>ACK_TIMEOUT)self.fail('bridge-timeout');
-      },200);
-      if(!allowed||!post({op:'connect',id:this.id}))setTimeout(function(){self.fail('bridge-unavailable');},0);
-    }
-    ProxySocket.prototype.addEventListener=function(type,listener){if(typeof listener==='function')(this.listeners[type]||(this.listeners[type]=[])).push(listener);};
-    ProxySocket.prototype.removeEventListener=function(type,listener){var list=this.listeners[type]||[];this.listeners[type]=list.filter(function(item){return item!==listener;});};
-    ProxySocket.prototype.emit=function(type,data){var event=type==='message'?new MessageEvent(type,{data:data}):new Event(type);(this.listeners[type]||[]).slice().forEach(function(listener){listener(event);});if(typeof this['on'+type]==='function')this['on'+type](event);};
-    ProxySocket.prototype.finish=function(){if(this.readyState===3)return;this.readyState=3;clearInterval(this.timer);delete sockets[this.id];this.emit('close');};
-    ProxySocket.prototype.fail=function(reason){if(this.readyState===3)return;status('failed',reason);post({op:'close',id:this.id});this.emit('error');this.finish();};
-    ProxySocket.prototype.send=function(data){
-      if(this.readyState!==1)throw new Error('Secure controller transport is not open');
-      if(!validFrame(data))throw new Error('Invalid controller frame');
-      var serial=++this.lastSent;
-      if(!post({op:'send',id:this.id,serial:serial,at:Date.now(),data:data}))this.fail('bridge-unavailable');
-    };
-    ProxySocket.prototype.close=function(){if(this.readyState===3)return;post({op:'close',id:this.id});this.finish();};
-    root.addEventListener('message',function(event){
-      var data=event.data;
-      if(event.source!==opener||event.origin!==parentOrigin||!data||data.kind!==KIND||data.channel!==channel||!validId(data.id))return;
-      var socket=sockets[data.id];if(!socket)return;
-      if(data.op==='open'&&socket.readyState===0){socket.readyState=1;socket.lastAck=performance.now();socket.emit('open');}
-      else if(data.op==='message'&&socket.readyState===1&&typeof data.data==='string'&&data.data.length<=32768)socket.emit('message',data.data);
-      else if(data.op==='ack'&&Number.isInteger(data.serial)&&data.serial>socket.lastAckSerial&&data.serial<=socket.lastSent){socket.lastAckSerial=data.serial;socket.lastAck=performance.now();}
-      else if(data.op==='close')socket.finish();
-      else if(data.op==='error')socket.fail('bridge-disconnected');
-    });
-    root.addEventListener('pagehide',function(){Object.keys(sockets).forEach(function(id){sockets[id].close();});post({op:'leave'});closing=true;});
-    root.UsedCarTransport={room:allowed?room:'',secure:true,createSocket:function(){return new ProxySocket();}};
-    root.UsedCarSecureSteering={open:function(){return false;},isCompanion:true,close:function(){Object.keys(sockets).forEach(function(id){sockets[id].close();});post({op:'leave'});try{opener.focus();root.close();}catch(_){} }};
-    if(!allowed)setTimeout(function(){status('failed','bridge-unavailable');},0);
-    return;
+  function pairedUrl(value, scheme, pathname) {
+    if (typeof value !== 'string' || value.length > 512) throw new Error('Invalid local URL');
+    var url = new URL(value);
+    if (url.protocol !== scheme || url.hostname !== location.hostname || !privateIpv4(url.hostname) ||
+        !url.port || url.username || url.password || url.hash || url.pathname !== pathname ||
+        url.searchParams.getAll('room').length !== 1 || url.searchParams.get('room') !== room ||
+        Array.from(url.searchParams.keys()).some(function (key) { return key !== 'room'; })) throw new Error('Invalid paired origin');
+    return url;
   }
-
-  var localRoom=new URL(location.href).searchParams.get('room')||'';
-  var popup=null,nonce='',peer=null,peerId=0,highestId=0,lastSerial=0,lastMessage=0,watcher=0,started=0,relaying=false;
-  var storageKey='used-car-racing-controller:'+localRoom;
-  function session(){
-    var controller=root.UsedCarController;
-    if(controller&&controller.getSession){var current=controller.getSession();if(typeof current==='string'&&TOKEN.test(current))return current;}
-    try{return sessionStorage.getItem(storageKey)||'';}catch(_){return '';}
+  function validate(data) {
+    if (!data || data.room !== room || !TOKEN.test(room) || !privateIpv4(location.hostname) ||
+        !/^[a-f0-9]{64}$/.test(data.certificateSha256) || typeof data.certificateName !== 'string' ||
+        !data.certificateName.length || data.certificateName.length > 120) throw new Error('Invalid pairing details');
+    var secure = pairedUrl(data.secureUrl, 'https:', '/');
+    var local = pairedUrl(data.localUrl, 'http:', '/');
+    if (location.origin !== (location.protocol === 'https:' ? secure.origin : local.origin)) throw new Error('Pairing origin mismatch');
+    var cert = pairedUrl(data.certificateUrl, location.protocol, '/ca.crt');
+    var profile = pairedUrl(data.profileUrl, location.protocol, '/ca.mobileconfig');
+    if (cert.origin !== location.origin || profile.origin !== location.origin) throw new Error('Cross-origin certificate');
+    return { secureUrl: secure.href, certificateUrl: cert.href, profileUrl: profile.href,
+      fingerprint: data.certificateSha256.toUpperCase().match(/.{4}/g).join(' '), name: data.certificateName };
   }
-  function tell(op,id,extra){
-    if(!popup||!nonce)return;
-    var message=Object.assign({kind:KIND,channel:nonce,op:op,id:id},extra||{});
-    try{popup.postMessage(message,ORIGIN);}catch(_){}
+  function setText(id, value) { if ($(id)) $(id).textContent = value; }
+  function renderLanguage() {
+    ['eyebrow', 'title', 'intro', 'android', 'ios', 'cancel', 'retry'].forEach(function (name) { setText('tls-' + name, words[name]); });
+    setText('tls-check-title', words.checkTitle); setText('tls-check-hint', words.checkHint);
+    setText('tls-android-help', words.androidHelp); setText('tls-ios-help', words.iosHelp);
+    $('tls-close').setAttribute('aria-label', words.cancel); $('tls-close').title = words.cancel;
+    setText('tls-trust-note', words.trustNote); setText('tls-next-note', words.nextNote); setText('tls-continue', words.proceed);
   }
-  function disconnect(){var previous=peer;peer=null;peerId=0;lastSerial=0;if(previous)try{previous.close();}catch(_){} }
-  function finish(reason){
-    if(!relaying)return;
-    disconnect();relaying=false;clearInterval(watcher);watcher=0;nonce='';popup=null;
-    status('local',reason);
-    if(root.UsedCarController&&root.UsedCarController.resumeFromRelay)root.UsedCarController.resumeFromRelay();
+  function failed(attempt) {
+    if (!opened || attempt !== generation) return;
+    clearTimeout(timeout); generation++; configuration = null;
+    $('tls-details').hidden = true; $('tls-continue').disabled = true; $('tls-retry').hidden = false;
+    $('tls-status').dataset.error = 'true'; setText('tls-status', words.failed); status('failed');
   }
-  function connect(id){
-    disconnect();peerId=id;lastSerial=0;lastMessage=Date.now();
-    var socket;
-    try{socket=new WebSocket('ws://'+location.host+'/ws?room='+encodeURIComponent(localRoom));}catch(_){tell('error',id);return;}
-    peer=socket;
-    socket.addEventListener('open',function(){if(peer===socket)tell('open',id);});
-    socket.addEventListener('message',function(event){
-      if(peer!==socket||typeof event.data!=='string'||event.data.length>32768)return;
-      try{var message=JSON.parse(event.data);if(message.type==='welcome'&&typeof message.session==='string'&&TOKEN.test(message.session)){if(root.UsedCarController&&root.UsedCarController.setSession)root.UsedCarController.setSession(message.session);try{sessionStorage.setItem(storageKey,message.session);}catch(_){}}}catch(_){}
-      tell('message',id,{data:event.data});
-    });
-    socket.addEventListener('close',function(){if(peer===socket){peer=null;tell('close',id);}});
-    socket.addEventListener('error',function(){if(peer===socket){tell('error',id);socket.close();}});
+  function requestConfiguration() {
+    var attempt = ++generation; configuration = null;
+    clearTimeout(timeout); $('tls-details').hidden = true; $('tls-continue').disabled = true; $('tls-retry').hidden = true;
+    $('tls-status').dataset.error = 'false'; setText('tls-status', words.loading);
+    timeout = setTimeout(function () { failed(attempt); }, 7000);
+    fetch('/connection.json?room=' + encodeURIComponent(room), { cache: 'no-store', credentials: 'omit', redirect: 'error' }).then(function (response) {
+      if (!response.ok) throw new Error('Pairing unavailable');
+      var length = Number(response.headers.get('content-length') || 0);
+      if (length > 4096) throw new Error('Pairing response too large');
+      return response.text();
+    }).then(function (body) {
+      if (!opened || attempt !== generation) return;
+      if (body.length > 4096) throw new Error('Pairing response too large');
+      var value = validate(JSON.parse(body)); clearTimeout(timeout); configuration = value;
+      setText('tls-name', value.name); setText('tls-fingerprint', value.fingerprint);
+      $('tls-android').href = value.certificateUrl; $('tls-ios').href = value.profileUrl;
+      $('tls-details').hidden = false; $('tls-continue').disabled = false;
+      $('tls-status').dataset.error = 'false'; setText('tls-status', words.ready);
+    }).catch(function () { failed(attempt); });
   }
-  root.addEventListener('message',function(event){
-    var data=event.data;
-    if(!relaying||event.source!==popup||event.origin!==ORIGIN||!data||data.kind!==KIND||data.channel!==nonce)return;
-    if(data.op==='leave'){finish('companion-closed');return;}
-    if(!validId(data.id))return;
-    if(data.op==='connect'){if(data.id<=highestId)return;highestId=data.id;connect(data.id);status('remote');return;}
-    if(data.id!==peerId)return;
-    if(data.op==='close'){disconnect();return;}
-    if(data.op!=='send'||!peer||peer.readyState!==WebSocket.OPEN)return;
-    if(!Number.isInteger(data.serial)||data.serial<=lastSerial||!Number.isFinite(data.at)||Date.now()-data.at>MAX_AGE||data.at-Date.now()>1000){tell('error',peerId);disconnect();return;}
-    var frame=validFrame(data.data);if(!frame){tell('error',peerId);disconnect();return;}
-    lastSerial=data.serial;lastMessage=Date.now();
-    if(frame.type==='hello'){var saved=session();frame={type:'hello'};if(saved)frame.session=saved;}
-    try{peer.send(JSON.stringify(frame));tell('ack',peerId,{serial:data.serial});}catch(_){tell('error',peerId);disconnect();}
-  });
-  root.UsedCarSecureSteering={
-    isCompanion:false,
-    open:function(){
-      if(relaying&&popup&&!popup.closed){try{popup.focus();}catch(_){}return true;}
-      if(!TOKEN.test(localRoom)||!privateOrigin(location.origin)||!root.crypto||!root.crypto.getRandomValues){status('failed','bridge-unavailable');return false;}
-      var bytes=new Uint8Array(16);root.crypto.getRandomValues(bytes);nonce=Array.from(bytes,function(n){return ('0'+n.toString(16)).slice(-2);}).join('');
-      var fragment=new URLSearchParams({parent:location.origin,room:localRoom,channel:nonce});
-      // Synchronous in the user's mode-selection gesture; do not request sensors here.
-      try{popup=root.open(PAGE+'#'+fragment.toString(),'puretv-used-car-'+nonce);}catch(_){popup=null;}
-      if(!popup){nonce='';status('failed','popup-blocked');return false;}
-      relaying=true;started=lastMessage=Date.now();peerId=0;highestId=0;
-      if(root.UsedCarController&&root.UsedCarController.suspendForRelay)root.UsedCarController.suspendForRelay();
-      status('opening');
-      watcher=setInterval(function(){
-        if(!popup||popup.closed){finish('companion-closed');return;}
-        if(!peer&&Date.now()-started>15000&&Date.now()-lastMessage>15000){finish('bridge-unavailable');return;}
-        if(peer&&peer.readyState===WebSocket.OPEN&&Date.now()-lastMessage>1500){tell('error',peerId);disconnect();}
-      },250);
+  function close() {
+    if (!opened) return;
+    opened = false; generation++; clearTimeout(timeout); configuration = null; panel.hidden = true;
+    if (root.UsedCarController) root.UsedCarController.setSetupActive(false);
+    status('local');
+    if ($('steering-gyro')) $('steering-gyro').focus();
+  }
+  root.UsedCarSecureSteering = {
+    open: function () {
+      if (!panel || !TOKEN.test(room) || !privateIpv4(location.hostname)) { status('failed'); return false; }
+      renderLanguage(); panel.hidden = false; opened = true;
+      if (root.UsedCarController) root.UsedCarController.setSetupActive(true);
+      status('opening'); requestConfiguration(); $('tls-cancel').focus();
       return true;
     },
-    close:function(){if(popup)try{popup.close();}catch(_){}finish('returned-to-local');}
+    close: close
   };
-  root.UsedCarTransport={room:localRoom,secure:false,createSocket:function(url){return new WebSocket(url);}};
-  root.addEventListener('pagehide',function(){if(relaying){tell('error',peerId);finish('opener-left');}});
+  if (!panel) return;
+  $('tls-cancel').addEventListener('click', close);
+  $('tls-close').addEventListener('click', close);
+  $('tls-retry').addEventListener('click', requestConfiguration);
+  $('tls-continue').addEventListener('click', function () {
+    if (!opened || !configuration) return;
+    var target = new URL(configuration.secureUrl), controller = root.UsedCarController;
+    var session = controller && controller.getSession ? controller.getSession() : '';
+    var hash = new URLSearchParams();
+    if (TOKEN.test(session)) hash.set('session', session);
+    hash.set('steering', 'gyro'); target.hash = hash.toString();
+    if (controller) controller.prepareNavigation();
+    location.assign(target.href);
+  });
+  panel.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') { event.preventDefault(); close(); return; }
+    if (event.key !== 'Tab') return;
+    var focusable = Array.from(panel.querySelectorAll('a[href],button:not([disabled])')).filter(function (el) { return !el.hidden && el.getClientRects().length; });
+    if (!focusable.length) return;
+    var first = focusable[0], last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
+  root.addEventListener('pagehide', function () { generation++; clearTimeout(timeout); });
 })(window);

@@ -20,7 +20,25 @@
   $('game-title').innerHTML=english?'USED CARS.<span>UNEXPECTED STORIES.</span>':'极品二手车<span>好坏，全凭手气。</span>';
   $('room-help').innerHTML=english?'Same Wi-Fi as the TV.<br>Scan to join. No app needed.':'手机和电视连接同一 Wi-Fi<br>扫描二维码，直接加入';
   $('road').setAttribute('aria-label',tr('三维赛车画面','3D racing scene'));$('minimap').setAttribute('aria-label',tr('赛道小地图','Circuit map'));$('room-qr').alt=tr('手机连接二维码','Phone controller QR code');
-  function updateRoom(value){if(disposed)return;info=Object.assign({},info,value||{});var ready=!!(info.url&&info.qr);$('room-qr').hidden=!ready;$('room-pending').hidden=ready;if(ready){if($('room-qr').src!==info.qr)$('room-qr').src=info.qr;set('room-address',String(info.url).split('?')[0]);}else{set('room-address','');set('room-pending',info.error||tr('连接局域网后打开游戏','Open the game on a local network'));}}
+  function updateRoom(value){
+    if(disposed)return;info=Object.assign({},info,value||{});
+    var ready=!!(info.url&&info.qr),fingerprint=String(info.certificateFingerprint||''),secure=!!(ready&&info.secureUrl&&info.secureQr&&/^[a-f0-9]{64}$/i.test(fingerprint));
+    $('room').dataset.secure=String(secure);$('room').dataset.securityError=String(!!info.secureError);
+    $('room-qr').hidden=!ready;$('room-pending').hidden=ready;
+    if(ready){if($('room-qr').src!==info.qr)$('room-qr').src=info.qr;set('room-address',String(info.url).split('?')[0]);}
+    else{set('room-address','');set('room-pending',info.error||tr('连接局域网后打开游戏','Open the game on a local network'));}
+    $('room-setup-label').hidden=!secure;$('room-secure-code').hidden=!secure;$('room-certificate').hidden=!secure;
+    set('room-setup-label',tr('首次连接','First connection'));set('room-secure-label',tr('已信任证书','Certificate trusted'));set('room-certificate-label',tr('核对电视证书','Check TV certificate'));
+    $('room-help').innerHTML=secure?tr('同一 Wi-Fi · 首次按手机引导<br>已信任证书可直接进入手柄','Same Wi-Fi · Follow phone setup<br>Already trusted? Scan the right code.'):tr('手机和电视连接同一 Wi-Fi<br>扫描二维码，直接加入','Same Wi-Fi as the TV.<br>Scan to join. No app needed.');
+    if(secure){
+      if($('room-secure-qr').src!==info.secureQr)$('room-secure-qr').src=info.secureQr;
+      $('room-secure-qr').alt=tr('已信任证书的安全手柄二维码','Secure controller QR for phones that trust this TV');
+      set('room-secure-address',String(info.secureUrl).split('?')[0]);set('room-certificate-name',info.certificateName||'pureTV');
+      var groups=fingerprint.toUpperCase().match(/.{4}/g),lines=[];for(var i=0;i<groups.length;i+=4)lines.push(groups.slice(i,i+4).join(' '));
+      set('room-certificate-fingerprint',lines.join('\n'));
+    }else{set('room-secure-address','');set('room-certificate-name','');set('room-certificate-fingerprint','');}
+    $('room-security-error').hidden=!info.secureError;set('room-security-error',info.secureError||'');
+  }
   function trackName(track){return english?track.enName:track.name;}
   function outline(track){var b=track.bounds,w=b.maxX-b.minX,h=b.maxZ-b.minZ,scale=Math.min(42/w,32/h),path='';for(var i=0;i<track.points.length;i+=8){var p=track.points[i];path+=(i?'L':'M')+((p.x-b.minX)*scale+(47-w*scale)/2).toFixed(1)+','+((p.z-b.minZ)*scale+(38-h*scale)/2).toFixed(1);}return path+'Z';}
   function menu(){if(!game)return;var signature=game.playerCount+':'+game.trackId+':'+game.players.map(function(c){return c.spec.id+':'+c.condition.fault.id+':'+c.condition.mileage;}).join('/');if(signature===cardRevision)return;cardRevision=signature;

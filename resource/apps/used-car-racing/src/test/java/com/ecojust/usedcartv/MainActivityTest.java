@@ -25,6 +25,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.ConscryptMode;
 import org.robolectric.annotation.GraphicsMode;
 import org.robolectric.annotation.LooperMode;
 import org.robolectric.shadows.ShadowWebView;
@@ -33,10 +34,22 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManagerFactory;
 import static org.junit.Assert.*;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -45,12 +58,41 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(sdk=28,qualifiers="zh-rCN-w960dp-h540dp-land-xhdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
+// Keep this JVM's real TLS provider consistent instead of mixing Android's
+// injected Conscrypt with SunJSSE. Device TLS is tested separately on Android.
+@ConscryptMode(ConscryptMode.Mode.OFF)
 public class MainActivityTest {
     public static class TestActivity extends MainActivity {
-        boolean terminated;
+        private static KeyPair caKeys, serverKeys;
+        private static X509Certificate ca;
+        boolean terminated, failTls, failReset, blockReset, resetOnMain, networkAvailable = true;
+        String networkAddress = "192.168.1.45";
+        int tlsConfigurations, resetCalls;
+        final CountDownLatch resetStarted = new CountDownLatch(1), resetContinue = new CountDownLatch(1);
+        LanGameServer.TlsConfig lastTls;
         @Override public void onCreate(Bundle state) { setTheme(R.style.UsedCarTheme); super.onCreate(state); }
-        @Override List<String> lanAddresses() { return Collections.singletonList("192.168.1.45"); }
+        @Override List<String> lanAddresses() { return networkAvailable ? Collections.singletonList(networkAddress) : Collections.emptyList(); }
         @Override void terminateProcess() { terminated = true; }
+        @Override LanGameServer.TlsConfig createTlsConfiguration(List<String> addresses) throws Exception {
+            tlsConfigurations++;
+            if (failTls) throw new java.security.GeneralSecurityException("Injected unavailable device Keystore");
+            if (caKeys == null) {
+                KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA"); generator.initialize(2048);
+                caKeys = generator.generateKeyPair(); serverKeys = generator.generateKeyPair();
+                ca = LanCertificates.createAuthority(caKeys, new Date());
+            }
+            List<String> testAddresses = new ArrayList<>(addresses); testAddresses.add("127.0.0.1");
+            X509Certificate certificate = LanCertificates.createServer(ca, caKeys.getPrivate(), serverKeys.getPublic(), testAddresses, new Date());
+            lastTls = new LanGameServer.TlsConfig(LanCertificates.serverContext(serverKeys.getPrivate(), certificate, ca),
+                ca.getEncoded(), LanCertificates.mobileConfig(ca), LanCertificates.fingerprint(ca), LanCertificates.displayName(caKeys.getPublic()));
+            return lastTls;
+        }
+        @Override void resetTlsIdentity() throws Exception {
+            resetCalls++; resetOnMain = Looper.myLooper() == Looper.getMainLooper(); resetStarted.countDown();
+            if (blockReset) resetContinue.await(10, TimeUnit.SECONDS);
+            if (failReset) throw new java.security.GeneralSecurityException("Injected reset failure");
+            caKeys = serverKeys = null; ca = null;
+        }
     }
 
     private static final String[] TEXTURE_ASSETS={
@@ -97,6 +139,10 @@ public class MainActivityTest {
     private ShadowWebView browser() { return shadowOf(web()); }
     private LanGameServer server() { return ReflectionHelpers.getField(activity,"server"); }
     private MainActivity.HostBridge bridge() { return (MainActivity.HostBridge) browser().getJavascriptInterface("UsedCarHost"); }
+    private void finishWorker() throws Exception {
+        ((ExecutorService)ReflectionHelpers.getField(activity,"worker")).submit(() -> {}).get(10,TimeUnit.SECONDS);
+        shadowOf(Looper.getMainLooper()).idle();
+    }
     private void start() throws Exception {
         controller.start().resume(); started=true;
         // Wait for QR generation/server startup, then dispatch the posted main-thread attachment.
@@ -107,6 +153,20 @@ public class MainActivityTest {
         assertEquals(MainActivity.GAME_URL,browser().getLastLoadedUrl());
     }
     private int port() throws Exception { return Uri.parse(new JSONObject(bridge().getInfo()).getString("url")).getPort(); }
+    private String trustedGet(int port, String path) throws Exception {
+        KeyStore trusted = KeyStore.getInstance(KeyStore.getDefaultType()); trusted.load(null);
+        trusted.setCertificateEntry("this-tv-only", CertificateFactory.getInstance("X.509").generateCertificate(
+            new java.io.ByteArrayInputStream(activity.lastTls.certificateDer())));
+        TrustManagerFactory trust = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm()); trust.init(trusted);
+        SSLContext context = SSLContext.getInstance("TLS"); context.init(null, trust.getTrustManagers(), null);
+        try (SSLSocket socket = (SSLSocket) context.getSocketFactory().createSocket("127.0.0.1", port)) {
+            socket.setSoTimeout(5000);
+            SSLParameters parameters = socket.getSSLParameters(); parameters.setEndpointIdentificationAlgorithm("HTTPS"); socket.setSSLParameters(parameters);
+            socket.startHandshake();
+            socket.getOutputStream().write(("GET "+path+" HTTP/1.1\r\nHost: 127.0.0.1:"+port+"\r\nConnection: close\r\n\r\n").getBytes(StandardCharsets.US_ASCII));
+            return new String(socket.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
     private String get(int port,String path) throws Exception {
         try (Socket socket=new Socket("127.0.0.1",port)) {
             socket.setSoTimeout(2000);
@@ -146,6 +206,15 @@ public class MainActivityTest {
             while (socket.getInputStream().read()!=-1) { }
         } catch (java.net.SocketException reset) { /* An OS TCP reset also proves closure. */ }
         finally { socket.close(); }
+    }
+
+    private AlertDialog pairingConfirmation() {
+        activity.onBackPressed();
+        AlertDialog exit=ReflectionHelpers.getField(activity,"exitDialog");assertNotNull(exit);
+        exit.getButton(AlertDialog.BUTTON_NEUTRAL).performClick();
+        shadowOf(Looper.getMainLooper()).idle();
+        AlertDialog pairing=ReflectionHelpers.getField(activity,"pairingDialog");assertNotNull(pairing);
+        return pairing;
     }
 
     @Test public void gameBridgeIsIsolatedFromExternalPagesAndDeviceFiles() {
@@ -335,6 +404,10 @@ public class MainActivityTest {
     @Test public void generatedPngQrDecodesToExactJoinUrl() throws Exception {
         String url="http://192.168.1.45:49152/?room=0123456789abcdef0123456789abcdef";
         String data=MainActivity.qrData(url);
+        assertQr(url,data);
+    }
+
+    private void assertQr(String url, String data) throws Exception {
         assertTrue(data.startsWith("data:image/png;base64,"));
         byte[] png=Base64.decode(data.substring(data.indexOf(',')+1),Base64.NO_WRAP);
         Bitmap bitmap=BitmapFactory.decodeByteArray(png,0,png.length);
@@ -346,14 +419,156 @@ public class MainActivityTest {
         bitmap.recycle();
     }
 
+    @Test public void roomOffersLocalSetupAndTrustedHttpsWithMatchingCertificate() throws Exception {
+        start();
+        JSONObject info = new JSONObject(bridge().getInfo());
+        assertTrue(info.getString("url").startsWith("http://192.168.1.45:"));
+        assertTrue(info.getString("secureUrl").startsWith("https://192.168.1.45:"));
+        assertEquals(server().httpsPort(), Uri.parse(info.getString("secureUrl")).getPort());
+        assertEquals(server().roomToken(), Uri.parse(info.getString("secureUrl")).getQueryParameter("room"));
+        assertEquals(activity.lastTls.fingerprint, info.getString("certificateFingerprint"));
+        assertEquals(activity.lastTls.displayName, info.getString("certificateName"));
+        assertEquals("", info.getString("secureError"));
+        assertQr(info.getString("url"), info.getString("qr"));
+        assertQr(info.getString("secureUrl"), info.getString("secureQr"));
+        String response = trustedGet(server().httpsPort(), "/controller.js");
+        assertTrue(response.startsWith("HTTP/1.1 200"));
+        assertTrue(response.contains("connect-src 'self' wss://127.0.0.1:"+server().httpsPort()+";"));
+        response = trustedGet(server().httpsPort(), "/connection.json?room="+server().roomToken());
+        JSONObject connection = new JSONObject(response.substring(response.indexOf("\r\n\r\n")+4));
+        assertEquals(info.getString("certificateFingerprint"), connection.getString("certificateSha256"));
+        assertEquals(info.getString("certificateName"), connection.getString("certificateName"));
+        assertEquals(1, activity.tlsConfigurations);
+    }
+
+    @Test public void missingNetworkDoesNotGenerateAnInvalidIpCertificate() throws Exception {
+        activity.networkAvailable = false; start();
+        JSONObject info = new JSONObject(bridge().getInfo());
+        assertEquals(0, activity.tlsConfigurations);
+        assertEquals(0, server().httpsPort());
+        assertEquals("", info.getString("url"));
+        assertEquals("", info.getString("secureUrl"));
+        assertEquals("", info.getString("certificateFingerprint"));
+        assertEquals(activity.getString(R.string.no_network), info.getString("error"));
+    }
+
+    @Test public void unavailableKeystoreKeepsJoystickButReportsMissingSecureControls() throws Exception {
+        activity.failTls = true; start();
+        JSONObject info = new JSONObject(bridge().getInfo());
+        assertEquals(0, server().httpsPort());
+        assertEquals("", info.getString("secureUrl"));
+        assertEquals("", info.getString("certificateFingerprint"));
+        assertEquals(activity.getString(R.string.secure_server_error), info.getString("secureError"));
+        assertTrue(get(port(), "/controller.js").startsWith("HTTP/1.1 200"));
+    }
+
+    @Test public void networkChangeClosesBothListenersAndKeepsTheTelevisionAuthority() throws Exception {
+        start();
+        int oldHttp = port(), oldHttps = server().httpsPort();
+        JSONObject before = new JSONObject(bridge().getInfo());
+        activity.networkAddress = "192.168.1.46";
+        ReflectionHelpers.callInstanceMethod(activity, "startRoom");
+        ((ExecutorService)ReflectionHelpers.getField(activity,"worker")).submit(() -> {}).get(10,TimeUnit.SECONDS);
+        shadowOf(Looper.getMainLooper()).idle();
+        JSONObject after = new JSONObject(bridge().getInfo());
+        assertClosed(oldHttp); assertClosed(oldHttps);
+        assertTrue(after.getString("secureUrl").startsWith("https://192.168.1.46:"));
+        assertNotEquals(Uri.parse(before.getString("url")).getQueryParameter("room"),server().roomToken());
+        assertEquals(before.getString("certificateFingerprint"),after.getString("certificateFingerprint"));
+        assertEquals(2,activity.tlsConfigurations);
+        assertTrue(trustedGet(server().httpsPort(),"/controller.js").startsWith("HTTP/1.1 200"));
+    }
+
+    @Test public void cancellingPairingResetKeepsTheRoomCertificateAndConnectedPhones() throws Exception {
+        start();
+        String oldInfo=bridge().getInfo(), token=server().roomToken();
+        try(Socket client=controllerClient(port(),token)) {
+            AlertDialog dialog=pairingConfirmation();
+            assertTrue((boolean)ReflectionHelpers.getField(activity,"suspended"));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();
+            shadowOf(Looper.getMainLooper()).idle();
+            assertEquals(0,activity.resetCalls);
+            assertEquals(token,server().roomToken());
+            assertEquals(oldInfo,bridge().getInfo());
+            assertEquals(1,new JSONObject(server().snapshot()).getInt("connections"));
+            assertFalse((boolean)ReflectionHelpers.getField(activity,"suspended"));
+        }
+    }
+
+    @Test public void confirmedPairingResetRunsOffMainClosesAllClientsAndCreatesANewAuthority() throws Exception {
+        start();
+        int oldHttp=port(),oldHttps=server().httpsPort();
+        JSONObject before=new JSONObject(bridge().getInfo());
+        Socket client=controllerClient(oldHttp,server().roomToken());
+        pairingConfirmation().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        finishWorker(); // Certificate reset posts the new room startup back to the main thread.
+        finishWorker(); // The new room then completes its own worker task and attachment.
+        assertEquals(1,activity.resetCalls);assertFalse(activity.resetOnMain);
+        assertClosed(oldHttp);assertClosed(oldHttps);assertDisconnected(client);
+        JSONObject after=new JSONObject(bridge().getInfo());
+        assertNotEquals(before.getString("certificateFingerprint"),after.getString("certificateFingerprint"));
+        assertNotEquals(Uri.parse(before.getString("url")).getQueryParameter("room"),server().roomToken());
+        assertEquals("",after.getString("secureError"));
+        assertTrue(trustedGet(server().httpsPort(),"/controller.js").startsWith("HTTP/1.1 200"));
+        assertTrue(web().getSettings().getDomStorageEnabled());
+        assertEquals(MainActivity.GAME_URL,browser().getLastLoadedUrl());
+    }
+
+    @Test public void failedPairingResetShowsAnErrorWithoutAutomaticallyIssuingAnotherCertificate() throws Exception {
+        start();activity.failReset=true;
+        pairingConfirmation().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        finishWorker();finishWorker();
+        JSONObject info=new JSONObject(bridge().getInfo());
+        assertEquals(1,activity.resetCalls);assertEquals(1,activity.tlsConfigurations);
+        assertEquals("",info.getString("secureUrl"));assertEquals(0,server().httpsPort());
+        assertEquals(activity.getString(R.string.reset_certificate_error),info.getString("secureError"));
+        assertTrue(get(port(),"/controller.js").startsWith("HTTP/1.1 200"));
+        activity.networkAddress="192.168.1.46";
+        ReflectionHelpers.callInstanceMethod(activity,"startRoom");finishWorker();
+        assertEquals("A network change must not silently retry the failed reset",1,activity.tlsConfigurations);
+        assertEquals(0,server().httpsPort());
+    }
+
+    @Test public void leavingDuringPairingResetCannotReopenTheRoomOrReviveTheWebView() throws Exception {
+        start();activity.blockReset=true;
+        int oldHttp=port(),oldHttps=server().httpsPort();
+        pairingConfirmation().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        shadowOf(Looper.getMainLooper()).idle();
+        assertTrue(activity.resetStarted.await(5,TimeUnit.SECONDS));
+        controller.pause().stop();started=false;
+        activity.resetContinue.countDown();
+        assertTrue(((ExecutorService)ReflectionHelpers.getField(activity,"worker")).awaitTermination(5,TimeUnit.SECONDS));
+        shadowOf(Looper.getMainLooper()).idle();
+        assertNull(server());assertNull(web());assertTrue(activity.terminated);
+        assertClosed(oldHttp);assertClosed(oldHttps);
+    }
+
+    @Test public void networkChangeDuringPairingResetWaitsAndUsesTheNewAddress() throws Exception {
+        start();activity.blockReset=true;
+        pairingConfirmation().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        shadowOf(Looper.getMainLooper()).idle();
+        assertTrue(activity.resetStarted.await(5,TimeUnit.SECONDS));
+        activity.networkAddress="192.168.1.46";
+        ((Runnable)ReflectionHelpers.getField(activity,"checkNetwork")).run();
+        assertNull("Network changes must not open a room using the identity being reset",server());
+        assertEquals(1,activity.tlsConfigurations);
+        activity.resetContinue.countDown();finishWorker();finishWorker();
+        assertEquals(1,activity.resetCalls);assertEquals(2,activity.tlsConfigurations);
+        assertFalse((boolean)ReflectionHelpers.getField(activity,"pairingResetting"));
+        assertTrue(new JSONObject(bridge().getInfo()).getString("secureUrl").startsWith("https://192.168.1.46:"));
+        activity.onBackPressed();
+        AlertDialog exit=ReflectionHelpers.getField(activity,"exitDialog");assertNotNull(exit);
+        exit.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();shadowOf(Looper.getMainLooper()).idle();
+    }
+
     @Test public void pressingHomeClosesBothClientsAndDestroysBrowserWorkerAndOwnProcess() throws Exception {
         start();
-        int oldPort=port();WebView oldWeb=web();MainActivity.HostBridge oldBridge=bridge();
+        int oldPort=port(),oldSecurePort=server().httpsPort();WebView oldWeb=web();MainActivity.HostBridge oldBridge=bridge();
         Socket first=controllerClient(oldPort,server().roomToken()),second=controllerClient(oldPort,server().roomToken());
         assertTrue(get(oldPort,"/controller.js").startsWith("HTTP/1.1 200"));
         assertTrue((activity.getWindow().getAttributes().flags&WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)!=0);
         controller.pause().stop();started=false;
-        assertNull(server());assertClosed(oldPort);
+        assertNull(server());assertClosed(oldPort);assertClosed(oldSecurePort);
         assertDisconnected(first);assertDisconnected(second);
         assertEquals(0,new JSONObject(oldBridge.snapshot()).getInt("connections"));
         assertEquals(0,activity.getWindow().getAttributes().flags&WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -366,7 +581,7 @@ public class MainActivityTest {
     }
 
     @Test public void confirmedExitDestroysBrowserServerAndOwnProcess() throws Exception {
-        start();int oldPort=port();WebView oldWeb=web();
+        start();int oldPort=port(),oldSecurePort=server().httpsPort();WebView oldWeb=web();
         Socket first=controllerClient(oldPort,server().roomToken()),second=controllerClient(oldPort,server().roomToken());
         assertEquals(2,new JSONObject(server().snapshot()).getInt("connections"));
         activity.onBackPressed();
@@ -374,7 +589,7 @@ public class MainActivityTest {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
         shadowOf(Looper.getMainLooper()).idle();
         assertTrue(activity.isFinishing());
-        assertClosed(oldPort);
+        assertClosed(oldPort);assertClosed(oldSecurePort);
         assertDisconnected(first);assertDisconnected(second);
         controller.pause().stop().destroy();started=false;destroyed=true;
         assertTrue(activity.terminated);
@@ -392,9 +607,10 @@ public class MainActivityTest {
         assertNull(server());
         LanGameServer pending=ReflectionHelpers.getField(activity,"pendingServer");assertNotNull(pending);
         int pendingPort=pending.start();
+        int pendingSecurePort=pending.httpsPort();
         assertTrue(get(pendingPort,"/controller.js").startsWith("HTTP/1.1 200"));
         controller.pause().stop();started=false;
-        assertClosed(pendingPort);
+        assertClosed(pendingPort);assertClosed(pendingSecurePort);
         assertNull(ReflectionHelpers.getField(activity,"pendingServer"));
         shadowOf(Looper.getMainLooper()).idle();
         assertNull(server());assertClosed(pendingPort);
@@ -406,6 +622,13 @@ public class MainActivityTest {
         assertTrue((boolean)ReflectionHelpers.getField(activity,"suspended"));
         assertTrue(browser().getLastEvaluatedJavascript().contains("suspend(true)"));
         AlertDialog dialog=ReflectionHelpers.getField(activity,"exitDialog");
+        String message=((android.widget.TextView)dialog.findViewById(android.R.id.message)).getText().toString();
+        JSONObject info=new JSONObject(bridge().getInfo());
+        assertTrue(message.contains(info.getString("certificateName")));
+        assertTrue(message.contains(activity.getString(R.string.certificate_dialog_check)));
+        String displayedFingerprint=message.substring(message.indexOf("SHA-256\n")+8);
+        assertEquals(4,displayedFingerprint.split("\n").length);
+        assertEquals(info.getString("certificateFingerprint").toUpperCase(java.util.Locale.ROOT),displayedFingerprint.replaceAll("\\s", ""));
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();
         shadowOf(Looper.getMainLooper()).idle();
         assertFalse((boolean)ReflectionHelpers.getField(activity,"suspended"));
@@ -415,9 +638,9 @@ public class MainActivityTest {
     }
 
     @Test public void renderProcessCrashClosesRoomAndDestroysTheFailedWebView() throws Exception {
-        start();int oldPort=port();WebView oldWeb=web();
+        start();int oldPort=port(),oldSecurePort=server().httpsPort();WebView oldWeb=web();
         assertTrue(browser().getWebViewClient().onRenderProcessGone(oldWeb,null));
-        assertNull(server());assertClosed(oldPort);
+        assertNull(server());assertClosed(oldPort);assertClosed(oldSecurePort);
         assertTrue(shadowOf(oldWeb).wasDestroyCalled());
         assertNull(web());
     }

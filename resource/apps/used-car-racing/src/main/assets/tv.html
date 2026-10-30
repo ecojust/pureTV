@@ -23,9 +23,12 @@
     </section>
     <aside id="room" class="room-panel">
       <div class="room-top"><span id="phone-label">手机即手柄</span><span>LAN</span></div>
-      <div class="qr-box"><img id="room-qr" alt="手机连接二维码" hidden><span id="room-pending">正在建立房间…</span></div>
+      <div class="room-join-code"><span id="room-setup-label" class="qr-caption" hidden>首次连接</span><div class="qr-box"><img id="room-qr" alt="手机连接二维码" hidden><span id="room-pending">正在建立房间…</span></div></div>
+      <div class="room-secure-code" id="room-secure-code" hidden><span id="room-secure-label" class="qr-caption">已信任证书</span><div class="qr-box"><img id="room-secure-qr" alt="已信任证书的手机连接二维码"></div><code id="room-secure-address"></code></div>
       <p id="room-help">手机和电视连接同一 Wi-Fi<br>扫描二维码，直接加入</p><code id="room-address"></code>
       <div class="room-player" id="room-player-1"><b>1P</b><span id="room-status-1">等待连接</span><i></i></div><div class="room-player" id="room-player-2"><b>2P</b><span id="room-status-2">等待连接</span><i></i></div>
+      <div class="room-certificate" id="room-certificate" hidden><span id="room-certificate-label">核对电视证书</span><strong id="room-certificate-name"></strong><small>SHA-256</small><code id="room-certificate-fingerprint"></code></div>
+      <p class="room-security-error" id="room-security-error" role="status" hidden></p>
       <div class="control-help"><div><b>↔</b><span id="steer-help">左侧转向</span></div><div><b>A / B</b><span id="pedal-help">右上油门 · 右下刹车</span></div><div><b>START</b><span id="start-help">开始 / 暂停</span></div><div><b>SELECT</b><span id="select-help">车库抽车 · 比赛切镜头</span></div></div>
     </aside>
     <section id="race-hud" class="race-hud" hidden>

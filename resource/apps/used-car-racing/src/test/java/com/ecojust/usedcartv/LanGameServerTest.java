@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.ConscryptMode;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,6 +21,8 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class) @Config(sdk = 28, manifest = Config.NONE)
+// HTTP checks must not inject a different global crypto provider into the JVM TLS suites.
+@ConscryptMode(ConscryptMode.Mode.OFF)
 public class LanGameServerTest {
     private LanGameServer server;
     private int port;
@@ -49,19 +52,35 @@ public class LanGameServerTest {
         assertTrue(http("/?room=" + server.roomToken(), "attacker.example:" + port).startsWith("HTTP/1.1 403"));
     }
 
-    @Test public void phoneSteeringAndSecureRelayScriptsUseOnlyNamedLocalRoutes() throws Exception {
+    @Test public void phoneSteeringAndLocalTlsScriptsUseOnlyNamedLocalRoutes() throws Exception {
         for(String name:new String[]{"steering.js","secure-controller.js"}) {
             String response=http("/"+name,"127.0.0.1:"+port);
             assertTrue(name,response.startsWith("HTTP/1.1 200"));
             assertTrue(name,response.contains("Content-Type: application/javascript; charset=utf-8"));
             assertTrue(name,response.endsWith("asset:"+name));
-            assertTrue("Sensor relay does not relax the LAN origin policy",response.contains("connect-src 'self' ws://127.0.0.1:"+port+";"));
+            assertTrue("TLS pairing does not relax the LAN origin policy",response.contains("connect-src 'self' ws://127.0.0.1:"+port+";"));
             assertFalse("No CORS wildcard is introduced",response.toLowerCase().contains("access-control-allow-origin"));
         }
         for(String path:new String[]{"/steering","/steering.js/","/secure-controller.html","/unknown-controller.js","/%73teering.js","/../steering.js","/secure/../secure-controller.js"}) {
             assertTrue(path,http(path,"127.0.0.1:"+port).startsWith("HTTP/1.1 404"));
         }
-        assertTrue("The HTTPS sensor companion cannot connect directly to the room",handshake(socket(),server.roomToken(),"https://ecojust.github.io").startsWith("HTTP/1.1 403"));
+        assertTrue("An unrelated HTTPS origin cannot connect to the room",handshake(socket(),server.roomToken(),"https://ecojust.github.io").startsWith("HTTP/1.1 403"));
+    }
+
+    @Test public void plainHttpFallbackReportsTlsUnavailableWithoutServingCertificates() throws Exception {
+        String response = http("/connection.json?room=" + server.roomToken(), "127.0.0.1:" + port);
+        assertTrue(response.startsWith("HTTP/1.1 200"));
+        JSONObject configuration = new JSONObject(response.substring(response.indexOf("\r\n\r\n") + 4));
+        assertEquals("", configuration.getString("secureUrl"));
+        assertEquals("http://127.0.0.1:" + port + "/?room=" + server.roomToken(), configuration.getString("localUrl"));
+        assertEquals("", configuration.getString("certificateUrl"));
+        assertEquals("", configuration.getString("profileUrl"));
+        assertEquals("", configuration.getString("certificateSha256"));
+        for (String path : new String[]{"/connection.json", "/ca.crt", "/ca.mobileconfig"}) {
+            assertTrue(http(path, "127.0.0.1:" + port).startsWith("HTTP/1.1 403"));
+        }
+        assertTrue(http("/ca.crt?room=" + server.roomToken(), "127.0.0.1:" + port).startsWith("HTTP/1.1 404"));
+        assertEquals(0, server.httpsPort());
     }
 
     @Test public void websocketAuthenticatesRoomAndOrigin() throws Exception {

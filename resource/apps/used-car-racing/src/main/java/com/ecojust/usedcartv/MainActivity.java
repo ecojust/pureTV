@@ -64,9 +64,14 @@ public class MainActivity extends Activity {
     private boolean active, destroyed, processTerminated;
     private int generation;
     private AlertDialog exitDialog;
+    private AlertDialog pairingDialog;
+    private boolean pairingResetting;
+    private boolean pairingResetFailed;
     private ConnectivityManager connectivity;
     private ConnectivityManager.NetworkCallback networkCallback;
     private List<String> lastAddresses = Collections.emptyList();
+    // Accessed only by the single room worker. A network change keeps the same CA.
+    private LanTlsIdentity tlsIdentity;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -228,10 +233,16 @@ public class MainActivity extends Activity {
         });
     }
     private final Runnable checkNetwork = () -> {
-        if (active && web != null && !lastAddresses.equals(lanAddresses())) startRoom();
+        // The reset completion reads the current addresses. Reopening mid-reset
+        // would invalidate its generation and leave the reset operation stranded.
+        if (active && web != null && !pairingResetting && !lastAddresses.equals(lanAddresses())) startRoom();
     };
 
     private void startRoom() {
+        startRoom(!pairingResetFailed, pairingResetFailed ? getString(R.string.reset_certificate_error) : "");
+    }
+
+    private void startRoom(boolean enableTls, String previousSecureError) {
         closeRoom();
         if (!active || destroyed || web == null) return;
         final int expected = generation;
@@ -240,7 +251,16 @@ public class MainActivity extends Activity {
         status.setText(R.string.starting);
         status.setVisibility(View.VISIBLE);
         worker.execute(() -> {
-            LanGameServer created = new LanGameServer(name -> getAssets().open(name));
+            synchronized (roomLock) {
+                if (generation != expected || !active || destroyed) return;
+            }
+            LanGameServer.TlsConfig tls = null;
+            String secureError = previousSecureError;
+            if (enableTls && !addresses.isEmpty()) {
+                try { tls = createTlsConfiguration(addresses); }
+                catch (Exception failure) { secureError = getString(R.string.secure_server_error); }
+            }
+            LanGameServer created = new LanGameServer(name -> getAssets().open(name), tls);
             String payload;
             try {
                 int port;
@@ -250,10 +270,11 @@ public class MainActivity extends Activity {
                     port = created.start();
                 }
                 String url = addresses.isEmpty() ? "" : "http://" + addresses.get(0) + ":" + port + "/?room=" + created.roomToken();
-                payload = roomInfo(url, addresses, addresses.isEmpty() ? getString(R.string.no_network) : "");
+                String secureUrl = addresses.isEmpty() || created.httpsPort() == 0 ? "" : "https://" + addresses.get(0) + ":" + created.httpsPort() + "/?room=" + created.roomToken();
+                payload = roomInfo(url, secureUrl, tls, addresses, addresses.isEmpty() ? getString(R.string.no_network) : "", secureError);
             } catch (Exception failure) {
                 created.stop();
-                payload = roomInfo("", addresses, getString(R.string.server_error));
+                payload = roomInfo("", "", null, addresses, getString(R.string.server_error), "");
             }
             final String ready = payload;
             main.post(() -> {
@@ -266,16 +287,58 @@ public class MainActivity extends Activity {
         });
     }
 
-    private String roomInfo(String url, List<String> addresses, String error) {
+    /** Production uses non-exportable Android Keystore keys; host tests supply real test TLS keys. */
+    LanGameServer.TlsConfig createTlsConfiguration(List<String> addresses) throws Exception {
+        if (tlsIdentity == null) tlsIdentity = LanTlsIdentity.load(this);
+        return tlsIdentity.configuration(addresses);
+    }
+
+    /** Only called after the user confirms that every phone will need to trust a new certificate. */
+    void resetTlsIdentity() throws Exception {
+        tlsIdentity = null;
+        LanTlsIdentity.reset(this);
+    }
+
+    private void resetPhonePairing() {
+        closeRoom();
+        final int expected = generation;
+        status.setText(R.string.resetting_certificate);
+        status.setVisibility(View.VISIBLE);
+        worker.execute(() -> {
+            synchronized (roomLock) {
+                if (generation != expected || !active || destroyed) return;
+            }
+            boolean completed;
+            try { resetTlsIdentity(); completed = true; }
+            catch (Exception failure) { completed = false; }
+            final boolean reset = completed;
+            main.post(() -> {
+                if (!active || destroyed || generation != expected || web == null) return;
+                pairingResetting = false;
+                pairingResetFailed = !reset;
+                // A failed reset must not silently retry certificate creation or trust a stale key.
+                startRoom(reset, reset ? "" : getString(R.string.reset_certificate_error));
+            });
+        });
+    }
+
+    private String roomInfo(String url, String secureUrl, LanGameServer.TlsConfig tls, List<String> addresses, String error, String secureError) {
         try {
-            return new JSONObject().put("url",url).put("qr",url.isEmpty() ? "" : qrData(url))
+            JSONObject result = new JSONObject().put("url",url).put("qr",qrOrEmpty(url))
+                .put("secureUrl",secureUrl).put("secureQr",qrOrEmpty(secureUrl))
+                .put("certificateFingerprint",tls == null ? "" : tls.fingerprint)
+                .put("certificateName",tls == null ? "" : tls.displayName)
+                .put("secureError",secureError)
                 .put("addresses",new JSONArray(addresses)).put("error",error)
-                .put("language",getResources().getConfiguration().getLocales().get(0).getLanguage().equals("zh") ? "zh" : "en").toString();
-        } catch (Exception failedQr) {
-            // A readable URL still allows joining if a QR encoder ever fails.
-            try { return new JSONObject().put("url",url).put("qr","").put("addresses",new JSONArray(addresses)).put("error",error).put("language","en").toString(); }
-            catch (Exception impossible) { return "{}"; }
-        }
+                .put("language",getResources().getConfiguration().getLocales().get(0).getLanguage().equals("zh") ? "zh" : "en");
+            return result.toString();
+        } catch (Exception impossible) { return "{}"; }
+    }
+
+    private static String qrOrEmpty(String url) {
+        if (url.isEmpty()) return "";
+        try { return qrData(url); }
+        catch (Exception failedQr) { return ""; } // The readable URL remains available.
     }
 
     static String qrData(String url) throws Exception {
@@ -345,6 +408,7 @@ public class MainActivity extends Activity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (web != null) { web.onPause(); web.pauseTimers(); }
         if (exitDialog != null) { exitDialog.dismiss(); exitDialog = null; }
+        if (pairingDialog != null) { pairingDialog.dismiss(); pairingDialog = null; }
         // Home and app switching are exits too: never retain a game or LAN room in the background.
         boolean exit = !isChangingConfigurations();
         if (exit) {
@@ -384,26 +448,64 @@ public class MainActivity extends Activity {
     void terminateProcess() { android.os.Process.killProcess(android.os.Process.myPid()); }
 
     @Override public void onBackPressed() {
-        if (exitDialog != null || destroyed) return;
+        if (exitDialog != null || pairingDialog != null || pairingResetting || destroyed) return;
         suspended = true;
         if (server != null) server.releaseInputs();
         if (web != null) web.evaluateJavascript("window.UsedCarTV && window.UsedCarTV.suspend && window.UsedCarTV.suspend(true)",null);
-        exitDialog = new AlertDialog.Builder(this).setTitle(R.string.exit_title).setMessage(R.string.exit_message)
+        exitDialog = new AlertDialog.Builder(this).setTitle(R.string.exit_title).setMessage(exitMessage())
             .setPositiveButton(R.string.exit,(dialog,which) -> { closeRoom(); finishAndRemoveTask(); })
             .setNegativeButton(R.string.cancel,(dialog,which) -> { })
+            .setNeutralButton(R.string.pair_phones_again,(dialog,which) -> confirmPhonePairing())
             .create();
         exitDialog.setOnDismissListener(dialog -> {
             exitDialog = null;
-            if (active && !isFinishing()) {
-                suspended = false;
-                if (web != null) web.evaluateJavascript("window.UsedCarTV && window.UsedCarTV.suspend && window.UsedCarTV.suspend(false)",null);
-            }
+            resumeAfterDialog();
         });
         exitDialog.show();
     }
 
+    /** The native dialog provides a readable certificate comparison at the TV's normal text size. */
+    private String exitMessage() {
+        String message = getString(R.string.exit_message);
+        try {
+            JSONObject room = new JSONObject(info);
+            String fingerprint = room.optString("certificateFingerprint", "");
+            if (!fingerprint.matches("[a-fA-F0-9]{64}")) return message;
+            StringBuilder details = new StringBuilder(message).append("\n\n")
+                .append(getString(R.string.certificate_dialog_check)).append('\n')
+                .append(room.optString("certificateName", "pureTV")).append("\nSHA-256\n");
+            fingerprint = fingerprint.toUpperCase(java.util.Locale.ROOT);
+            for (int i = 0; i < fingerprint.length(); i += 4) {
+                if (i > 0) details.append(i % 16 == 0 ? '\n' : ' ');
+                details.append(fingerprint, i, i + 4);
+            }
+            return details.toString();
+        } catch (Exception invalidInfo) { return message; }
+    }
+
+    private void confirmPhonePairing() {
+        if (destroyed || !active || pairingDialog != null) return;
+        pairingDialog = new AlertDialog.Builder(this).setTitle(R.string.pair_phones_title)
+            .setMessage(R.string.pair_phones_message)
+            .setPositiveButton(R.string.pair_phones_confirm,(dialog,which) -> {
+                pairingResetting = true;
+                resetPhonePairing();
+            })
+            .setNegativeButton(R.string.cancel,(dialog,which) -> { })
+            .create();
+        pairingDialog.setOnDismissListener(dialog -> { pairingDialog = null; resumeAfterDialog(); });
+        pairingDialog.show();
+    }
+
+    private void resumeAfterDialog() {
+        if (active && !destroyed && !isFinishing() && exitDialog == null && pairingDialog == null && !pairingResetting) {
+            suspended = false;
+            if (web != null) web.evaluateJavascript("window.UsedCarTV && window.UsedCarTV.suspend && window.UsedCarTV.suspend(false)",null);
+        }
+    }
+
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
-        if (exitDialog != null || web == null) return super.dispatchKeyEvent(event);
+        if (exitDialog != null || pairingDialog != null || pairingResetting || web == null) return super.dispatchKeyEvent(event);
         String key;
         switch (event.getKeyCode()) {
             case KeyEvent.KEYCODE_DPAD_UP: key="ArrowUp"; break;

@@ -8,21 +8,21 @@
     title: '极品二手车', controller: '驾驶控制器 / UCR—01', status: '车辆仪表', telemetry: '实时车辆状态', controls: '驾驶操作', yourPlayer: '驾驶席', track: '赛道', gear: '档位', rotate: '↻ 横屏驾驶，左右手分别操控方向与踏板', retry: '重新连接', connecting: '正在连接', connected: '已连接', reconnecting: '正在重连', offline: '连接已断开', waiting: '正在加入电视上的房间…', lost: '连接中断，已释放全部操作，正在重连…', full: '两个驾驶席均已有人，空出位置后可重新连接。', invalid: '房间不可用，请扫描电视上的当前二维码。', waitingPlayer: '正在加入', playerOne: '驾驶员 1', playerTwo: '驾驶员 2', expired: '房间已过期，请扫描电视上的新二维码。', fullscreen: '全屏', leaveFullscreen: '退出全屏', start: '开始 / 暂停', startLabel: 'START 开始、暂停或继续', connectionError: '暂时无法连接电视，请让手机和电视连接同一局域网。', playOffline: '手柄未连接', playReady: '车库 / 准备出发', playActive: '实时车辆状态', playPaused: '比赛已暂停', playFinished: '本场比赛完成', results: '成绩已显示在电视上，按 START 或 SELECT 返回车库。', move: '左侧任意位置落指 · 左右滑动转向', actionA: '油门 · 按住加速', actionB: '刹车 · 按住蓄力', hint: '右上油门 · 右下刹车 · 无需低头找按钮', ready: '左右滑动选赛道 · SELECT 重抽车辆 · START 开赛', playing: 'SELECT 短按切镜头，低速长按 0.8 秒切 D/R；松开刹车降低踏板力。', paused: '已释放全部操作 · 按 START 继续比赛', countdown: '准备起步，比赛开始后车辆才会移动。', joystick: '左侧任意位置按住，左右滑动转向', actionALabel: '油门：右上半区任意位置按住加速', actionBLabel: '刹车：右下半区任意位置按住，持续增加模拟踏板力', select: '镜头 · 长按换挡', selectLabel: 'SELECT 车库中重抽车辆；比赛中短按切换镜头，车速低于 1.2 米每秒时长按 0.8 秒切换前进或倒车', broken: '刹车踏板已断裂', brokenHint: '刹车踏板已断裂，本场比赛后续无法刹车。', forceWarning: '踏板力过高', lapLabel: '圈数', rankLabel: '名次'
   };
   Object.assign(messages, english ? {
-    steeringMode:'Steering mode', stickMode:'Virtual stick', gyroMode:'Gyroscope', center:'Recenter', backLocal:'Back to LAN',
+    steeringMode:'Steering mode', stickMode:'Virtual stick', gyroMode:'Gyroscope', center:'Recenter',
     gyroReady:'Turn the phone like a steering wheel · 45° gives full steering', gyroGarage:'Garage: slide on the left to choose a track · Tilt steering starts with the race',
     gyroCalibrating:'Hold the phone comfortably, slightly upright. This position becomes center.', gyroStandby:'Gyroscope ready · Steering stays neutral until the race',
     gyroRequesting:'Waiting for motion permission…', gyroPermission:'Gyroscope preference saved · Tap Gyroscope to allow motion access',
     gyroDenied:'Motion permission was denied. Virtual stick remains available.', gyroInsecure:'This browser needs a secure page for motion access. Use the virtual stick here.',
     gyroUnavailable:'No motion data received. Virtual stick is active; you can retry Gyroscope.', gyroStale:'Motion data stopped. Controls released; hold still to recenter.',
-    gyroUpright:'Hold the phone slightly upright like a wheel. Controls are released while it is flat.', gyroOpening:'Opening secure gyroscope controls…', gyroFailed:'Secure controls could not open. Allow the new tab or keep using the virtual stick.'
+    gyroUpright:'Hold the phone slightly upright like a wheel. Controls are released while it is flat.', gyroOpening:'Complete this TV’s one-time certificate setup to enable gyroscope steering.', gyroFailed:'This TV’s secure controls are unavailable. Retry setup or keep using the virtual stick.'
   } : {
-    steeringMode:'转向方式', stickMode:'虚拟摇杆', gyroMode:'陀螺仪', center:'校准中立', backLocal:'返回局域网',
+    steeringMode:'转向方式', stickMode:'虚拟摇杆', gyroMode:'陀螺仪', center:'校准中立',
     gyroReady:'像转方向盘一样转动手机 · 约 45° 打满方向', gyroGarage:'车库仍在左侧滑动选赛道 · 开赛后启用陀螺仪转向',
     gyroCalibrating:'请舒适横握并稍立起手机，当前位置将设为中立。', gyroStandby:'陀螺仪已就绪 · 比赛开始前保持中立',
     gyroRequesting:'正在请求运动传感器权限…', gyroPermission:'已记住陀螺仪偏好 · 点击「陀螺仪」授权启用',
     gyroDenied:'运动权限未获允许，可继续使用虚拟摇杆。', gyroInsecure:'此浏览器需要安全页面才能读取运动传感器，可先使用虚拟摇杆。',
     gyroUnavailable:'未收到传感器数据，已使用虚拟摇杆；可再次尝试陀螺仪。', gyroStale:'传感器数据已中断，操作已释放；请握稳手机重新校准。',
-    gyroUpright:'请像方向盘一样稍立起手机，平放时会释放操作。', gyroOpening:'正在打开安全的陀螺仪控制页面…', gyroFailed:'安全手柄未能打开，请允许新页面，或继续使用虚拟摇杆。'
+    gyroUpright:'请像方向盘一样稍立起手机，平放时会释放操作。', gyroOpening:'首次信任这台电视的证书后，即可启用陀螺仪转向。', gyroFailed:'暂时无法开启这台电视的安全手柄，请重试设置或继续使用虚拟摇杆。'
   });
   document.documentElement.lang = english ? 'en' : 'zh-CN';
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = messages[el.dataset.i18n]; });
@@ -44,28 +44,27 @@
   const stick = $('joystick'), stickZone = $('joystick-zone');
   const room = window.UsedCarTransport && window.UsedCarTransport.room || new URL(location.href).searchParams.get('room') || '';
   const storageKey = `used-car-racing-controller:${room}`;
-  let session = '';
-  try { session = sessionStorage.getItem(storageKey) || ''; } catch (_) { /* Private browser storage may be unavailable. */ }
+  let session = window.UsedCarTransport && window.UsedCarTransport.takeSession ? window.UsedCarTransport.takeSession() : '';
+  try { if (session) sessionStorage.setItem(storageKey, session); else session = sessionStorage.getItem(storageKey) || ''; } catch (_) { /* The in-memory handoff also works when private storage is unavailable. */ }
   let ws = null, connected = false, player = 0, seq = 0, attempts = 0;
   let reconnectTimer = 0, helloTimer = 0, lastSend = 0, lastSent = '', terminal = false, leaving = false;
-  let gamePhase = 'garage', brakeWasBroken = false, relaying = false, focused = true;
+  let gamePhase = 'garage', brakeWasBroken = false, setupOpen = false, focused = true;
   let steeringMode = 'stick', gyroValue = 0, gyroDegrees = 0, lastGyroStatus = '', switching = 0, resetting = false, gyro = null;
   let stickPointer = null, stickX = 0, stickY = 0;
   let stickOriginX = 0, stickOriginY = 0, stickRadius = 1;
   const actionPointers = new Map();
   const keys = new Set();
   const input = { x: 0, y: 0, a: false, b: false, start: false, select: false, cancelSeq: 0 };
-  const isVisible = () => !document.hidden && !leaving && !relaying;
+  const isVisible = () => !document.hidden && !leaving;
   const setMessage = (key, error = false) => { $('message').textContent = messages[key] || key; root.dataset.error = String(error); };
   function titlePhase() { return ['garage', 'title', 'menu', 'lobby', 'ready'].includes(gamePhase); }
   function finishedPhase() { return ['results', 'ending', 'gameover', 'over', 'victory'].includes(gamePhase); }
-  function canAct() { return !finishedPhase() && gamePhase !== 'paused'; }
+  function canAct() { return !setupOpen && !finishedPhase() && gamePhase !== 'paused'; }
   function gyroDriving() { return steeringMode === 'gyro' && !titlePhase() && !finishedPhase() && gamePhase !== 'paused'; }
   function updateGyroAccess() { if (gyro) gyro.setActive(gyroDriving() && connected && isVisible() && focused); }
   function updateSteeringUI() {
     root.dataset.steering = steeringMode; root.dataset.gyroStatus = lastGyroStatus;
     $('steering-stick').textContent = messages.stickMode; $('steering-gyro').textContent = messages.gyroMode;
-    $('steering-local').textContent = messages.backLocal; $('steering-local').hidden = !(window.UsedCarSecureSteering && window.UsedCarSecureSteering.isCompanion);
     $('steering-center').textContent = messages.center; $('steering-settings').setAttribute('aria-label', messages.steeringMode);
     $('steering-stick').setAttribute('aria-pressed', String(steeringMode === 'stick'));
     $('steering-gyro').setAttribute('aria-pressed', String(steeringMode === 'gyro'));
@@ -77,7 +76,7 @@
   }
   function updateControlAccess() {
     for (const action of ['a', 'b', 'start', 'select']) {
-      $(`button-${action}`).disabled = !connected || ((action === 'a' || action === 'b') && !canAct());
+      $(`button-${action}`).disabled = !connected || setupOpen || ((action === 'a' || action === 'b') && !canAct());
     }
     stickZone.setAttribute('aria-disabled', String(!connected || !canAct()));
     root.dataset.state = !connected ? 'offline' : finishedPhase() ? 'finished' : titlePhase() ? 'ready' : gamePhase === 'paused' ? 'paused' : 'active';
@@ -107,6 +106,7 @@
     input.select = [...actionPointers.values()].includes('select') || keys.has('Shift') || keys.has('button:select');
     // Both players can act concurrently; completed games keep the menu controls available.
     if (!canAct()) { input.x = input.y = 0; input.a = input.b = false; }
+    if (setupOpen) { input.start = input.select = false; }
     for (const action of ['a', 'b', 'start', 'select']) $(`button-${action}`).classList.toggle('pressed', input[action]);
     updateStick();
   }
@@ -275,7 +275,7 @@
   ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => stickZone.addEventListener(name, releaseStick));
   function pressAction(action, event) {
     const button = $(`button-${action}`);
-    if (!connected || event.button > 0 || ((action === 'a' || action === 'b') && !canAct())) return;
+    if (!connected || setupOpen || event.button > 0 || ((action === 'a' || action === 'b') && !canAct())) return;
     event.preventDefault(); actionPointers.set(event.pointerId, action);
     try { button.setPointerCapture(event.pointerId); } catch (_) {}
     updateInput(); sendInput(true); vibrate(action === 'a' ? 10 : 20);
@@ -284,7 +284,7 @@
   // joystick. Classify the actual contact coordinates before target handlers so
   // every point in the right third keeps its advertised action.
   document.addEventListener('pointerdown', event => {
-    if (editableTarget(event.target)) return;
+    if (editableTarget(event.target) || setupTarget(event.target)) return;
     const bounds = document.querySelector('.actions').getBoundingClientRect();
     if (event.clientX < bounds.left || event.clientX >= bounds.right || event.clientY < bounds.top || event.clientY >= bounds.bottom) return;
     event.preventDefault(); event.stopPropagation();
@@ -303,7 +303,7 @@
     };
     ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(name => button.addEventListener(name, release));
     button.addEventListener('keydown', event => {
-      if (!connected || ![' ', 'Enter'].includes(event.key) || ((action === 'a' || action === 'b') && !canAct())) return;
+      if (!connected || setupOpen || ![' ', 'Enter'].includes(event.key) || ((action === 'a' || action === 'b') && !canAct())) return;
       event.preventDefault(); event.stopPropagation(); keys.add(`button:${action}`); updateInput(); sendInput(true);
     });
     button.addEventListener('keyup', event => {
@@ -320,9 +320,9 @@
     });
   });
   document.addEventListener('keydown', event => {
-    if (editableTarget(event.target)) return;
+    if (editableTarget(event.target) || setupTarget(event.target)) return;
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
-    if (!connected || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', 'Shift', 'z', 'x', 'b'].includes(key)) return;
+    if (!connected || setupOpen || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', 'Shift', 'z', 'x', 'b'].includes(key)) return;
     if (event.target.closest && event.target.closest('#retry, #fullscreen, #steering-settings') && [' ', 'Enter'].includes(key)) return;
     if (!canAct() && !['Enter', 'Shift'].includes(key)) { event.preventDefault(); return; }
     event.preventDefault(); keys.add(key); updateInput(); sendInput(true);
@@ -344,6 +344,7 @@
   window.addEventListener('resize', () => { resetControls(); updateGyroAccess(); });
   // Cancel native long-press selection/callouts, including on labels and while
   // disconnected. Real text fields and ordinary browser buttons remain usable.
+  function setupTarget(target) { return setupOpen || target && target.closest && target.closest('#tls-setup'); }
   function editableTarget(target) {
     return target && target.closest && target.closest('input, textarea, [contenteditable="true"]');
   }
@@ -353,7 +354,7 @@
     });
   });
   document.addEventListener('touchstart', event => {
-    if (editableTarget(event.target) || event.target.closest('#fullscreen, #retry, #steering-settings')) return;
+    if (editableTarget(event.target) || setupTarget(event.target) || event.target.closest('#fullscreen, #retry, #steering-settings')) return;
     event.preventDefault();
   }, { passive: false });
   // Pointer capture is best effort on older WebViews. A release outside a zone
@@ -375,7 +376,7 @@
         preventDefault:() => event.preventDefault()};
     }
     document.addEventListener('touchstart', event => {
-      if (editableTarget(event.target) || event.target.closest('#fullscreen, #retry, #steering-settings')) return;
+      if (editableTarget(event.target) || setupTarget(event.target) || event.target.closest('#fullscreen, #retry, #steering-settings')) return;
       event.preventDefault();
       const bounds = document.querySelector('.actions').getBoundingClientRect();
       Array.from(event.changedTouches).forEach(touch => {
@@ -390,7 +391,7 @@
       });
     }, {passive:false});
     document.addEventListener('touchmove', event => {
-      if (editableTarget(event.target)) return;
+      if (editableTarget(event.target) || setupTarget(event.target)) return;
       event.preventDefault();
       Array.from(event.changedTouches).forEach(touch => {
         const pointer = legacyPointer(touch,event);
@@ -444,15 +445,14 @@
       updateSteeringUI();
     }
   });
-  $('steering-stick').addEventListener('click', () => { if (relaying && window.UsedCarSecureSteering) window.UsedCarSecureSteering.close(); useStick(); });
-  $('steering-local').addEventListener('click', () => { resetControls(); if (window.UsedCarSecureSteering) window.UsedCarSecureSteering.close(); });
+  $('steering-stick').addEventListener('click', () => useStick());
   $('steering-gyro').addEventListener('click', () => useGyro(true));
   $('steering-center').addEventListener('click', () => { resetControls(); markCancellation(); sendInput(true); updateSteeringUI(); });
   window.UsedCarController = {
     getSession() { return session; },
     setSession(value) { if (typeof value === 'string' && /^[a-zA-Z0-9_-]{16,128}$/.test(value)) { session = value; try { sessionStorage.setItem(storageKey, session); } catch (_) {} } },
-    suspendForRelay() { resetControls(); markCancellation(); sendInput(true); relaying = true; clearTimers(); if (ws) ws.close(); ws = null; connected = false; updateControlAccess(); },
-    resumeFromRelay() { relaying = false; lastGyroStatus = ''; if (isVisible()) { focused = true; terminal = false; attempts = 0; connect(); } updateSteeringUI(); }
+    setSetupActive(active) { setupOpen = !!active; root.dataset.setup = String(setupOpen); root.setAttribute('aria-hidden', String(setupOpen)); resetControls(); markCancellation(); sendInput(true); updateControlAccess(); },
+    prepareNavigation() { resetControls(); markCancellation(); sendInput(true); leaving = true; clearTimers(); if (ws) ws.close(); ws = null; connected = false; updateControlAccess(); }
   };
   window.addEventListener('usedcar-secure-status', event => {
     const state = event.detail && event.detail.state;
@@ -463,7 +463,7 @@
   });
   let preference = '';
   try { preference = localStorage.getItem('used-car-racing-steering') || ''; } catch (_) {}
-  if (preference === 'gyro' || new URL(location.href).searchParams.get('steering') === 'gyro' || window.UsedCarSecureSteering && window.UsedCarSecureSteering.isCompanion) useGyro(false);
+  if (preference === 'gyro' || new URL(location.href).searchParams.get('steering') === 'gyro' || window.UsedCarTransport && window.UsedCarTransport.preferredSteering === 'gyro') useGyro(false);
   updateSteeringUI();
 
   document.addEventListener('gesturestart', event => event.preventDefault());

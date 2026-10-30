@@ -34,7 +34,6 @@
         <button type="button" id="steering-stick" aria-pressed="true">虚拟摇杆</button>
         <button type="button" id="steering-gyro" aria-pressed="false">陀螺仪</button>
         <button type="button" id="steering-center" hidden>校准中立</button>
-        <button type="button" id="steering-local" hidden>返回局域网</button>
       </div>
       <div class="system-keys" aria-label="游戏菜单"><button type="button" id="button-select" class="system-button" disabled><span>SELECT</span><small id="select-caption">镜头 · 长按换挡</small></button><button type="button" id="button-start" class="system-button" disabled><span>START</span><small id="start-caption">开始 / 暂停</small></button></div>
       <div class="actions">
@@ -46,6 +45,22 @@
     <div class="rotate-hint" data-i18n="rotate">↻ 横屏驾驶，左右手分别操控方向与踏板</div>
     <div class="error-actions" id="error-actions" hidden><button type="button" id="retry" data-i18n="retry">重新连接</button></div>
   </main>
+  <section class="tls-setup" id="tls-setup" role="dialog" aria-modal="true" aria-labelledby="tls-title" hidden>
+    <div class="tls-card">
+      <header class="tls-header"><button type="button" id="tls-close" class="tls-close" aria-label="继续使用摇杆">×</button><span class="tls-eyebrow" id="tls-eyebrow">仅连接当前电视 · 无需公网</span><h1 id="tls-title">首次连接陀螺仪手柄</h1><p id="tls-intro"></p></header>
+      <p class="tls-status" id="tls-status" role="status" aria-live="polite"></p>
+      <div id="tls-details" hidden>
+        <section class="tls-identity"><h2 id="tls-check-title"></h2><p id="tls-check-hint"></p><strong id="tls-name"></strong><span class="tls-fingerprint-label">SHA-256</span><code id="tls-fingerprint"></code></section>
+        <div class="tls-platforms">
+          <section><h2>Android</h2><p id="tls-android-help"></p><a class="tls-download" id="tls-android" download="puretv-lan-ca.crt"></a></section>
+          <section><h2>iPhone / iPad</h2><p id="tls-ios-help"></p><a class="tls-download" id="tls-ios" download="puretv-lan-ca.mobileconfig"></a></section>
+        </div>
+        <p class="tls-trust-note" id="tls-trust-note"></p>
+        <p class="tls-next-note" id="tls-next-note"></p>
+      </div>
+      <div class="tls-actions"><button type="button" id="tls-continue" disabled></button><button type="button" id="tls-retry" hidden></button><button type="button" id="tls-cancel"></button></div>
+    </div>
+  </section>
   <script src="secure-controller.js"></script><script src="steering.js"></script><script src="controller.js"></script>
 </body>
 </html>

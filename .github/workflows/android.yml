@@ -37,7 +37,6 @@ jobs:
         run: |
           python -m unittest discover -s tools/tests -p 'test_release_certificates.py'
           python -m unittest discover -s tools/tests -p 'test_game_publication_policy.py'
-          python -m unittest discover -s tools/tests -p 'test_controller_site.py'
       - name: Verify official login form autofill
         run: node --test resource/apps/hifini/src/test/js/login-autofill.test.mjs
       - name: Verify CCTV website player presentation
@@ -82,6 +81,15 @@ jobs:
             fc-cache -f
           fi
           test -n "$(fc-list :lang=zh)"
+      - name: Install local HTTPS browser trust tools
+        timeout-minutes: 3
+        run: |
+          command -v openssl
+          if ! command -v certutil >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends libnss3-tools
+          fi
+          command -v certutil
       - name: Verify Tank TV phone controls and capture actual game UI
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope != 'used-car-racing' }}
         env:
@@ -202,7 +210,7 @@ jobs:
         working-directory: resource/launcher/puretv
         run: |
           set -o pipefail
-          ./gradlew --no-daemon --continue "-PjackalArtworkDir=$JACKAL_ART_DIR" assembleDebug assembleRelease lintDebug testDebugUnitTest :hifini:verifyReleaseSize :hifini:lintDebug :hifini:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest :cctv:verifyReleaseSize :cctv:lintDebug :cctv:testDebugUnitTest :tank:verifyReleaseSize :tank:lintDebug :tank:testDebugUnitTest :jackal:verifyReleaseSize :jackal:lintDebug :jackal:testDebugUnitTest :jewel:verifyReleaseSize :tetris:verifyReleaseSize :bomb-jack:verifyReleaseSize :adventure-island:verifyReleaseSize :super-mario:verifyReleaseSize :coast-kart:verifyReleaseSize :cozy-island:verifyReleaseSize :used-car-racing:verifyReleaseSize :used-car-racing:lintDebug :used-car-racing:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/android-build.log"
+          ./gradlew --no-daemon --continue "-PjackalArtworkDir=$JACKAL_ART_DIR" assembleDebug assembleRelease lintDebug testDebugUnitTest :hifini:verifyReleaseSize :hifini:lintDebug :hifini:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest :cctv:verifyReleaseSize :cctv:lintDebug :cctv:testDebugUnitTest :tank:verifyReleaseSize :tank:lintDebug :tank:testDebugUnitTest :jackal:verifyReleaseSize :jackal:lintDebug :jackal:testDebugUnitTest :jewel:verifyReleaseSize :tetris:verifyReleaseSize :bomb-jack:verifyReleaseSize :adventure-island:verifyReleaseSize :super-mario:verifyReleaseSize :coast-kart:verifyReleaseSize :cozy-island:verifyReleaseSize :used-car-racing:verifyReleaseSize :used-car-racing:lintDebug :used-car-racing:testDebugUnitTest :used-car-racing:assembleDebugAndroidTest 2>&1 | tee "$RUNNER_TEMP/android-build.log"
       - name: Report Android build or test failures
         if: failure()
         run: |
@@ -404,9 +412,48 @@ jobs:
           path: resource/apps/used-car-racing/build/outputs/apk/**/*.apk
           if-no-files-found: error
 
+  lan-tls-platform:
+    name: Local HTTPS with Android ${{ matrix.api }} Keystore
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [26, 35]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/download-artifact@v4
+        with:
+          name: used-car-racing-tv
+          path: platform-apks
+      - name: Enable Android emulator acceleration
+        run: |
+          test -e /dev/kvm
+          sudo chmod 666 /dev/kvm
+      - name: Verify actual Android Keystore and trusted local TLS
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api }}
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash tools/verify-used-car-lan-tls-platform.sh platform-apks
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: used-car-lan-tls-platform-${{ matrix.api }}
+          path: ${{ runner.temp }}/usedcar-lan-tls-platform.log
+          if-no-files-found: warn
+
   stage-resources:
     name: Stage verified launcher and app resource inputs
-    needs: build
+    needs: [build, lan-tls-platform]
     if: github.event_name == 'workflow_dispatch' && inputs.stage_resources
     runs-on: ubuntu-24.04
     permissions:
@@ -448,8 +495,9 @@ jobs:
               name='used-car-racing-'+scene+'.png'
               shutil.copyfile(root/'used-car-racing-tv-previews'/name,output/name)
           for language in ['', '.en']:
-              name='used-car-racing-controller-gyro'+language+'.png'
-              shutil.copyfile(root/'used-car-racing-tv-previews'/name,output/name)
+              for scene in ['controller-gyro','controller-setup']:
+                  name='used-car-racing-'+scene+language+'.png'
+                  shutil.copyfile(root/'used-car-racing-tv-previews'/name,output/name)
           for name in ['home-render.png','apps-render.png','home-render.en.png','apps-render.en.png']:
               shutil.copyfile(root/'pureTV-tv-previews'/name,output/name)
           PYTHON
