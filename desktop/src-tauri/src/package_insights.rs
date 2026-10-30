@@ -11,14 +11,36 @@ use std::{
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 
-const DATA_URL: &str = "https://raw.githubusercontent.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/main/resources/assets/uad_lists.json";
+#[derive(Clone, Copy)]
+struct Source<'a> {
+    url: &'a str,
+    accept: &'static str,
+}
+
+// Only these fixed HTTPS locations may supply the same upstream community list.
+// The CDN is first so a blocked GitHub Raw connection does not delay every lookup.
+const SOURCES: &[Source<'static>] = &[
+    Source {
+        url: "https://cdn.jsdelivr.net/gh/Universal-Debloater-Alliance/universal-android-debloater-next-generation@main/resources/assets/uad_lists.json",
+        accept: "application/json",
+    },
+    Source {
+        url: "https://raw.githubusercontent.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/main/resources/assets/uad_lists.json",
+        accept: "application/json",
+    },
+    Source {
+        url: "https://api.github.com/repos/Universal-Debloater-Alliance/universal-android-debloater-next-generation/contents/resources/assets/uad_lists.json?ref=main",
+        accept: "application/vnd.github.raw+json",
+    },
+];
 const SOURCE_URL: &str = "https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/resources/assets/uad_lists.json";
 const LICENSE_URL: &str = "https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/LICENSE";
 const MAX_BYTES: usize = 8 * 1024 * 1024;
 const MAX_PACKAGES: usize = 50_000;
 const CACHE_AGE_MS: u64 = 24 * 60 * 60 * 1000;
-const NETWORK_TIMEOUT: Duration = Duration::from_secs(10);
-const TOTAL_TIMEOUT: Duration = Duration::from_secs(30);
+const CONNECT_TIMEOUT: Duration = Duration::from_secs(3);
+const ATTEMPT_TIMEOUT: Duration = Duration::from_secs(8);
+const TOTAL_TIMEOUT: Duration = Duration::from_secs(24);
 
 #[derive(Clone, Debug, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -203,53 +225,141 @@ fn write_cache(directory: &Path, catalog: &Catalog) -> Result<(), String> {
     write().map_err(|_| "包名资料已更新，但无法保存本地缓存。".into())
 }
 
-fn download() -> Result<Vec<u8>, String> {
-    let client = Client::builder()
-        .https_only(true)
-        .redirect(redirect::Policy::none())
-        .connect_timeout(NETWORK_TIMEOUT)
-        .timeout(NETWORK_TIMEOUT)
-        .user_agent(concat!("pureTV-Manager/", env!("CARGO_PKG_VERSION")))
-        .build()
-        .map_err(|_| "无法准备包名资料 HTTPS 连接".to_string())?;
+#[derive(Clone, Copy, Debug, PartialEq)]
+enum SourceError {
+    Connection,
+    Timeout,
+    Http(u16),
+    Interrupted,
+    TooLarge,
+    Invalid,
+}
+
+impl SourceError {
+    fn priority(self) -> u8 {
+        match self {
+            Self::Connection => 0,
+            Self::Timeout => 1,
+            Self::Interrupted => 2,
+            Self::Http(_) => 3,
+            Self::TooLarge | Self::Invalid => 4,
+        }
+    }
+
+    fn message(self) -> String {
+        // Never forward reqwest errors: they may contain a proxy URL or credentials.
+        match self {
+            Self::Connection => "多个包名资料源均不可用，请检查网络或系统代理后重试".into(),
+            Self::Timeout => "包名资料查询超时，请检查网络或系统代理后重试".into(),
+            Self::Http(status) => {
+                format!("包名资料源返回 HTTP {status}，备用来源也不可用，请稍后重试")
+            }
+            Self::Interrupted => "包名资料下载中断，备用来源也不可用，请检查网络后重试".into(),
+            Self::TooLarge => "包名资料文件过大，备用来源也不可用，请稍后重试".into(),
+            Self::Invalid => "包名资料源返回的内容无效，备用来源也不可用，请稍后重试".into(),
+        }
+    }
+}
+
+fn download_one(
+    client: &Client,
+    source: &Source<'_>,
+    budget: Duration,
+) -> Result<Vec<u8>, SourceError> {
     let started = Instant::now();
     let mut response = client
-        .get(DATA_URL)
+        .get(source.url)
+        .header(header::ACCEPT, source.accept)
         .header(header::ACCEPT_ENCODING, "identity")
+        .timeout(budget)
         .send()
-        .map_err(|_| "无法连接包名资料源，请检查网络后重试".to_string())?;
+        .map_err(|error| {
+            if error.is_timeout() {
+                SourceError::Timeout
+            } else {
+                SourceError::Connection
+            }
+        })?;
     if response.status() != reqwest::StatusCode::OK {
-        return Err(format!(
-            "包名资料服务器返回 HTTP {}，请稍后重试",
-            response.status().as_u16()
-        ));
+        return Err(SourceError::Http(response.status().as_u16()));
     }
     if response
         .content_length()
         .is_some_and(|size| size > MAX_BYTES as u64)
     {
-        return Err("包名资料文件过大".into());
+        return Err(SourceError::TooLarge);
     }
     let mut bytes = Vec::new();
     let mut buffer = [0u8; 16_384];
     loop {
-        if started.elapsed() > TOTAL_TIMEOUT {
-            return Err("包名资料下载超时，请稍后重试".into());
+        if started.elapsed() >= budget {
+            return Err(SourceError::Timeout);
         }
-        let count = response
-            .read(&mut buffer)
-            .map_err(|_| "包名资料下载中断，请检查网络后重试".to_string())?;
-        if started.elapsed() > TOTAL_TIMEOUT {
-            return Err("包名资料下载超时，请稍后重试".into());
+        let count = response.read(&mut buffer).map_err(|error| {
+            if error.kind() == std::io::ErrorKind::TimedOut || started.elapsed() >= budget {
+                SourceError::Timeout
+            } else {
+                SourceError::Interrupted
+            }
+        })?;
+        if started.elapsed() >= budget {
+            return Err(SourceError::Timeout);
         }
         if count == 0 {
             return Ok(bytes);
         }
         if bytes.len() + count > MAX_BYTES {
-            return Err("包名资料文件过大".into());
+            return Err(SourceError::TooLarge);
         }
         bytes.extend_from_slice(&buffer[..count]);
     }
+}
+
+fn download_with(
+    sources: &[Source<'_>],
+    budget: Duration,
+    mut fetch: impl FnMut(&Source<'_>, Duration) -> Result<Vec<u8>, SourceError>,
+) -> Result<Vec<u8>, String> {
+    let started = Instant::now();
+    let mut failure = SourceError::Connection;
+    for source in sources {
+        let remaining = budget.saturating_sub(started.elapsed());
+        if remaining.is_zero() {
+            return Err(SourceError::Timeout.message());
+        }
+        let outcome = fetch(source, remaining.min(ATTEMPT_TIMEOUT)).and_then(|bytes| {
+            // HTML error pages and malformed lists must trigger another source,
+            // never replace a valid cached catalog or become a not-found result.
+            if bytes.len() > MAX_BYTES {
+                return Err(SourceError::TooLarge);
+            }
+            parse_list(&bytes, 1).map_err(|_| SourceError::Invalid)?;
+            Ok(bytes)
+        });
+        if started.elapsed() >= budget {
+            return Err(SourceError::Timeout.message());
+        }
+        match outcome {
+            Ok(bytes) => return Ok(bytes),
+            Err(error) if error.priority() >= failure.priority() => failure = error,
+            Err(_) => {}
+        }
+    }
+    Err(failure.message())
+}
+
+fn download() -> Result<Vec<u8>, String> {
+    let client = Client::builder()
+        .https_only(true)
+        .redirect(redirect::Policy::none())
+        .connect_timeout(CONNECT_TIMEOUT)
+        .timeout(ATTEMPT_TIMEOUT)
+        .user_agent(concat!("pureTV-Manager/", env!("CARGO_PKG_VERSION")))
+        .build()
+        .map_err(|_| "无法准备包名资料 HTTPS 连接".to_string())?;
+    download_with(SOURCES, TOTAL_TIMEOUT, |source, budget| {
+        download_one(&client, source, budget)
+    })
 }
 
 impl State {
@@ -566,6 +676,164 @@ mod tests {
             }
         });
         assert_eq!(requests.load(Ordering::SeqCst), 1);
+    }
+
+    #[test]
+    fn unreachable_or_invalid_primary_uses_another_source_before_caching() {
+        for unavailable in [true, false] {
+            let temporary = Temporary::new();
+            let state = State::new(temporary.0.clone());
+            let mut requests = 0;
+            let insight = state
+                .lookup_with("com.example.video", false, || {
+                    download_with(SOURCES, TOTAL_TIMEOUT, |_, budget| {
+                        assert!(budget <= ATTEMPT_TIMEOUT);
+                        requests += 1;
+                        match (requests, unavailable) {
+                            (1, true) => Err(SourceError::Connection),
+                            (1, false) => Ok(b"<html>Unavailable gateway</html>".to_vec()),
+                            _ => Ok(FIXTURE.to_vec()),
+                        }
+                    })
+                })
+                .unwrap();
+            assert_eq!(requests, 2);
+            assert!(insight.found);
+            assert_eq!(insight.risk, "low");
+            assert!(
+                State::new(temporary.0.clone())
+                    .lookup_with("android", false, || panic!(
+                        "fallback catalog was not cached"
+                    ))
+                    .unwrap()
+                    .found
+            );
+        }
+    }
+
+    #[test]
+    fn source_failures_keep_http_and_invalid_data_distinct_from_network_failure() {
+        let mut requests = 0;
+        let error = download_with(&SOURCES[..2], TOTAL_TIMEOUT, |_, _| {
+            requests += 1;
+            Err(if requests == 1 {
+                SourceError::Http(403)
+            } else {
+                SourceError::Connection
+            })
+        })
+        .unwrap_err();
+        assert!(error.contains("HTTP 403"));
+        assert_eq!(requests, 2);
+        let invalid =
+            download_with(&SOURCES[..2], TOTAL_TIMEOUT, |_, _| Ok(b"{}".to_vec())).unwrap_err();
+        assert_eq!(invalid, SourceError::Invalid.message());
+        let network =
+            download_with(SOURCES, TOTAL_TIMEOUT, |_, _| Err(SourceError::Connection)).unwrap_err();
+        assert_eq!(network, SourceError::Connection.message());
+        assert_ne!(invalid, network);
+        let timeout =
+            download_with(SOURCES, TOTAL_TIMEOUT, |_, _| Err(SourceError::Timeout)).unwrap_err();
+        assert_eq!(timeout, SourceError::Timeout.message());
+        // The messages contain only controlled descriptions/status codes.
+        for text in [error, invalid, network, timeout] {
+            assert!(!text.contains("http://") && !text.contains("https://"));
+        }
+    }
+
+    #[test]
+    fn fallback_budget_never_accepts_a_late_result_or_starts_another_attempt() {
+        let mut requests = 0;
+        assert_eq!(
+            download_with(SOURCES, Duration::ZERO, |_, _| {
+                requests += 1;
+                Ok(FIXTURE.to_vec())
+            })
+            .unwrap_err(),
+            SourceError::Timeout.message()
+        );
+        assert_eq!(requests, 0);
+        let result = download_with(SOURCES, Duration::from_millis(5), |_, budget| {
+            requests += 1;
+            assert!(budget <= Duration::from_millis(5));
+            std::thread::sleep(Duration::from_millis(15));
+            Ok(FIXTURE.to_vec())
+        });
+        assert_eq!(result.unwrap_err(), SourceError::Timeout.message());
+        assert_eq!(requests, 1);
+    }
+
+    #[test]
+    fn http_rejection_falls_back_without_following_redirects() {
+        use std::net::TcpListener;
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        listener.set_nonblocking(true).unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = std::thread::spawn(move || {
+            let started = Instant::now();
+            let mut paths = Vec::new();
+            while paths.len() < 2 && started.elapsed() < Duration::from_secs(5) {
+                let (mut socket, _) = match listener.accept() {
+                    Ok(value) => value,
+                    Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
+                        std::thread::sleep(Duration::from_millis(5));
+                        continue;
+                    }
+                    Err(error) => panic!("{error}"),
+                };
+                socket
+                    .set_read_timeout(Some(Duration::from_secs(2)))
+                    .unwrap();
+                let mut request = Vec::new();
+                let mut byte = [0];
+                while !request.ends_with(b"\r\n\r\n") && request.len() < 8192 {
+                    if socket.read(&mut byte).unwrap() == 0 {
+                        break;
+                    }
+                    request.push(byte[0]);
+                }
+                let request = String::from_utf8(request).unwrap();
+                paths.push(request.lines().next().unwrap().to_owned());
+                if paths.len() == 1 {
+                    socket.write_all(b"HTTP/1.1 302 Found\r\nLocation: /must-not-follow\r\nContent-Length: 0\r\nConnection: close\r\n\r\n").unwrap();
+                } else {
+                    write!(
+                        socket,
+                        "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                        FIXTURE.len()
+                    )
+                    .unwrap();
+                    socket.write_all(FIXTURE).unwrap();
+                }
+            }
+            paths
+        });
+        let first = format!("http://{address}/primary");
+        let second = format!("http://{address}/backup");
+        let sources = [
+            Source {
+                url: &first,
+                accept: "application/json",
+            },
+            Source {
+                url: &second,
+                accept: "application/json",
+            },
+        ];
+        let client = Client::builder()
+            .no_proxy()
+            .redirect(redirect::Policy::none())
+            .build()
+            .unwrap();
+        let bytes = download_with(&sources, Duration::from_secs(4), |source, budget| {
+            download_one(&client, source, budget)
+        })
+        .unwrap();
+        assert_eq!(bytes, FIXTURE);
+        assert_eq!(
+            server.join().unwrap(),
+            vec!["GET /primary HTTP/1.1", "GET /backup HTTP/1.1"]
+        );
     }
 
     #[test]
