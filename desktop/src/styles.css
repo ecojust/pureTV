@@ -1013,15 +1013,18 @@ tr.selected {
   max-height: 85vh;
   overflow: auto;
 }
-.modal::backdrop {
-  background: #14231c66;
+/* Every modal, including editor sub-dialogs, uses the same frosted backdrop.
+   The translucent scrim remains usable if backdrop filtering is unavailable. */
+dialog::backdrop {
+  background: rgba(20, 35, 28, 0.4);
+  -webkit-backdrop-filter: blur(8px) saturate(1.1);
+  backdrop-filter: blur(8px) saturate(1.1);
 }
 .operation-feedback {
   width: min(520px, calc(100vw - 40px));
   padding: 30px;
   text-align: center;
 }
-.operation-feedback::backdrop { background: #10231eb8; backdrop-filter: blur(3px); }
 .operation-feedback .feedback-symbol {
   display: grid;
   place-items: center;
@@ -1454,7 +1457,6 @@ main.list-page { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden;
 .apk-item-actions { flex-shrink:0; flex-wrap:wrap; }
 .layout-modal { width:min(1440px,96vw); height:min(900px,94vh); max-width:96vw; max-height:94vh; border:1px solid var(--line); border-radius:16px; padding:0; background:var(--surface-soft); color:var(--text); box-shadow:0 24px 80px #0004; }
 .layout-modal[open] { display:flex; flex-direction:column; }
-.layout-modal::backdrop { background:#14221dcc; }
 .layout-modal-heading, .layout-modal-toolbar, .layout-modal-actions { display:flex; gap:14px; align-items:center; justify-content:space-between; padding:16px 22px; flex-shrink:0; background:var(--surface); border-bottom:1px solid var(--line); }
 .layout-modal-heading p { margin:6px 0 0; font-size:12px; color:var(--muted); }
 .layout-modal-toolbar { flex-wrap:wrap; padding-block:10px; }
