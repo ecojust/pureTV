@@ -1,7 +1,7 @@
 **简体中文** | [English](README.en.md)
 
 <div align="center">
-  <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV Logo">
+  <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV 生肖龙 Logo">
 </div>
 
 pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连接电视，查看系统信息，安装、卸载、启停应用，选择启动器，并用可视化画布自定义支持的桌面。也可通过 MCP 让 Agent 控制已打开的管理器。
@@ -15,7 +15,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
 [![MIT license](https://img.shields.io/badge/license-MIT-f4c430?style=flat-square)](LICENSE)
 
-![管理器界面示例，使用模拟设备数据](docs/previews/manager-031.png)
+![管理器界面示例，使用模拟设备数据](docs/previews/manager-0414.png)
 
 ## 连接与应用管理
 

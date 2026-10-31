@@ -1,1 +1,1 @@
-Icons generated from [pureTV logo](../../../docs/branding/puretv-logo.png). Regenerate with `npm run tauri -- icon ../docs/branding/puretv-logo.png --output src-tauri/icons` from desktop/.
+Icons generated from the shared [pureTV zodiac dragon artwork](../../../docs/branding/puretv-dragon-source.png). From `desktop/`, run `node scripts/generate-brand-icons.mjs` to regenerate platform icons and synchronize the smaller web/README logos. See [branding notes](../../../docs/branding/README.md) for the source and visual references.

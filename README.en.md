@@ -1,7 +1,7 @@
 [简体中文](README.md) | **English**
 
 <div align="center">
-  <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV logo">
+  <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV Chinese zodiac dragon logo">
 </div>
 
 pureTV is a desktop system manager for Android TV and Google TV. Connect to your TV over ADB to view system information, install and uninstall apps, enable or disable them, choose a launcher, and customize supported home screens with a visual canvas. Agents can also control the open manager through MCP.

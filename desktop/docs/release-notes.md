@@ -1,8 +1,10 @@
-# pureTV Manager 0.4.13
+# pureTV Manager 0.4.14
 
 ## 简体中文
 
-「市场」更名为「APK市场」。每次从其他页面进入时检查最新目录，将本次新增的应用或有更高数字版本的应用排到前面，并在卡片右上角标「新」。首次使用先建立基线，不把全部应用标成新内容；同一次浏览中的搜索、分类切换、版本选择和手动刷新保留本次标记。补传旧版本、同版本替换文件或封面变化不会误标为版本升级。
+采用生肖龙雕刻风格的新 Logo，与 [open-office](https://github.com/ecojust/open-office) 和 [open-media](https://github.com/ecojust/open-media) 的视觉风格保持一致。管理器界面和 Windows、macOS、Linux 安装包中的应用图标统一更新，安装后在系统桌面、启动菜单或应用列表中显示同一套设计。
+
+保留 0.4.13 的「APK市场」更新提示：每次从其他页面进入时检查最新目录，将本次新增的应用或有更高数字版本的应用排到前面，并在卡片右上角标「新」。首次使用先建立基线，不把全部应用标成新内容；同一次浏览中的搜索、分类切换、版本选择和手动刷新保留本次标记。补传旧版本、同版本替换文件或封面变化不会误标为版本升级。
 
 本地 `market/seen-apps.json` 保存每个应用的稳定标识、名称和最新版本，供下一次进入时比较。网络失败、旧缓存回退或取消不会推进记录；离开页面后才返回的检查结果也不会消费更新提示。记录损坏或读写失败会明确提示。
 
@@ -10,7 +12,9 @@
 
 ## 繁體中文
 
-「市場」更名為「APK市場」。每次從其他頁面進入時檢查最新目錄，將本次新增或有較高數字版本的應用程式排到前面，並在卡片右上角標示「新」。首次使用先建立比較基準，不將全部項目標為新內容；同一次瀏覽中的搜尋、分類切換、版本選擇與手動重新整理會保留標記。補傳舊版本、替換相同版本的檔案或更換封面不會誤判為版本升級。
+採用生肖龍雕刻風格的新 Logo，與 [open-office](https://github.com/ecojust/open-office) 和 [open-media](https://github.com/ecojust/open-media) 的視覺風格保持一致。管理器介面與 Windows、macOS、Linux 安裝包中的應用程式圖示統一更新，安裝後在系統桌面、開始功能表或應用程式列表中顯示同一套設計。
+
+保留 0.4.13 的「APK市場」更新提示：每次從其他頁面進入時檢查最新目錄，將本次新增或有較高數字版本的應用程式排到前面，並在卡片右上角標示「新」。首次使用先建立比較基準，不將全部項目標為新內容；同一次瀏覽中的搜尋、分類切換、版本選擇與手動重新整理會保留標記。補傳舊版本、替換相同版本的檔案或更換封面不會誤判為版本升級。
 
 本機 `market/seen-apps.json` 儲存每個應用程式的穩定識別碼、名稱與最新版本，供下次進入時比較。網路失敗、使用舊快取或取消檢查時不會更新記錄；離開頁面後才傳回的結果也不會消除更新提示。記錄損毀或讀寫失敗時會明確提示。
 
@@ -18,7 +22,9 @@
 
 ## English
 
-Market is now named APK Market. Entering it from another page checks the latest catalog, places newly discovered apps and higher numeric versions first, and adds a NEW badge at the top right of each affected card. The first visit establishes a baseline instead of marking every app as new. Searching, switching categories, selecting versions and refreshing during the same visit retain the visit's badges. Older-version uploads, replacement files with the same version and cover changes do not count as version upgrades.
+Introduces a carved zodiac dragon logo, matching the visual style of [open-office](https://github.com/ecojust/open-office) and [open-media](https://github.com/ecojust/open-media). The manager interface and application icons packaged for Windows, macOS and Linux now share the new design, including icons shown on the desktop, in the Start menu or in the application list after installation.
+
+Retains APK Market update indicators from 0.4.13. Entering it from another page checks the latest catalog, places newly discovered apps and higher numeric versions first, and adds a NEW badge at the top right of each affected card. The first visit establishes a baseline instead of marking every app as new. Searching, switching categories, selecting versions and refreshing during the same visit retain the visit's badges. Older-version uploads, replacement files with the same version and cover changes do not count as version upgrades.
 
 The local `market/seen-apps.json` file stores each app's stable identity, name and latest version for comparison on the next visit. Failed checks, stale-cache fallback and cancellation leave the record unchanged. Results arriving after the user leaves the page do not consume update indicators. Damaged records and read/write failures produce an explicit warning.
 
