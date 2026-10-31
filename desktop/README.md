@@ -4,7 +4,7 @@
 
 下载：[0.4.14 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.14)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
-0.4.14 采用生肖龙雕刻风格的新 Logo，与 [open-office](https://github.com/ecojust/open-office) 和 [open-media](https://github.com/ecojust/open-media) 的视觉风格保持一致。管理器界面和 Windows、macOS、Linux 安装包中的应用图标统一使用新设计。
+0.4.14 采用明黄色底的生肖龙雕刻 Logo，与 [open-office](https://github.com/ecojust/open-office) 和 [open-media](https://github.com/ecojust/open-media) 的视觉风格保持一致。管理器界面和 Windows、macOS、Linux 安装包中的应用图标统一使用新设计。
 
 ## 功能
 

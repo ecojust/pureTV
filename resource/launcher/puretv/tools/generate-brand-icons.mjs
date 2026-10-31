@@ -29,7 +29,7 @@ async function verifyPng(path, size) {
 
 try {
   const manifest = join(temporary, 'icons.json');
-  await writeFile(manifest, JSON.stringify({default: source, bg_color: '#10251e'}));
+  await writeFile(manifest, JSON.stringify({default: source, bg_color: '#FFDE00'}));
   const icons = join(temporary, 'icons');
   convert(manifest, icons);
 
