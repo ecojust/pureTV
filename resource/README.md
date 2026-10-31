@@ -16,7 +16,7 @@
 | [Moss TV](launcher/moss/) | ecojust / 桔子桑 | 0.5.0 | 487.7 KB | 是 | <img src="launcher/moss/thumb.png" width="180" alt="Moss TV 界面"> |
 | [Nova TV](launcher/nova/) | ecojust / 桔子桑 | 0.5.0 | 495.7 KB | 是 | <img src="launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
 | [Pixel TV 像素](launcher/pixel/) | ecojust / 桔子桑 | 0.5.0 | 443.7 KB | 是 | <img src="launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"> |
-| [pureTV Launcher](launcher/puretv/) | ecojust / 桔子桑 | 0.5.0 | 740.1 KB | 是 | <img src="launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [pureTV Launcher](launcher/puretv/) | ecojust / 桔子桑 | 0.5.1 | 826.5 KB | 是 | <img src="launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
 | [Sol TV](launcher/sol/) | ecojust / 桔子桑 | 0.5.0 | 439.7 KB | 是 | <img src="launcher/sol/thumb.png" width="180" alt="Sol TV 界面"> |
 
 ### 电视应用

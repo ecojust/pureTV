@@ -62,7 +62,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [Moss TV](resource/launcher/moss/) | ecojust / 桔子桑 | 0.5.0 | 487.7 KB | 是 | <img src="resource/launcher/moss/thumb.png" width="180" alt="Moss TV 界面"> |
 | [Nova TV](resource/launcher/nova/) | ecojust / 桔子桑 | 0.5.0 | 495.7 KB | 是 | <img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
 | [Pixel TV 像素](resource/launcher/pixel/) | ecojust / 桔子桑 | 0.5.0 | 443.7 KB | 是 | <img src="resource/launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"> |
-| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.5.0 | 740.1 KB | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
+| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.5.1 | 826.5 KB | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
 | [Sol TV](resource/launcher/sol/) | ecojust / 桔子桑 | 0.5.0 | 439.7 KB | 是 | <img src="resource/launcher/sol/thumb.png" width="180" alt="Sol TV 界面"> |
 
 ### 电视应用

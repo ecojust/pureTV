@@ -64,7 +64,7 @@ The launchers and first-party TV apps support English. Select English in the TV 
 | [Moss TV](resource/launcher/moss/) | ecojust | 0.5.0 | 487.7 KB | Yes | <img src="docs/previews/en/launcher-moss.png" width="180" alt="Moss TV preview"> |
 | [Nova TV](resource/launcher/nova/) | ecojust | 0.5.0 | 495.7 KB | Yes | <img src="docs/previews/en/launcher-nova.png" width="180" alt="Nova TV preview"> |
 | [Pixel TV](resource/launcher/pixel/) | ecojust | 0.5.0 | 443.7 KB | Yes | <img src="docs/previews/en/launcher-pixel.png" width="180" alt="Pixel TV preview"> |
-| [pureTV Launcher](resource/launcher/puretv/) | ecojust | 0.5.0 | 740.1 KB | Yes | <img src="docs/previews/en/launcher-puretv.png" width="180" alt="pureTV Launcher preview"> |
+| [pureTV Launcher](resource/launcher/puretv/) | ecojust | 0.5.1 | 826.5 KB | Yes | <img src="docs/previews/en/launcher-puretv.png" width="180" alt="pureTV Launcher preview"> |
 | [Sol TV](resource/launcher/sol/) | ecojust | 0.5.0 | 439.7 KB | Yes | <img src="docs/previews/en/launcher-sol.png" width="180" alt="Sol TV preview"> |
 
 ### TV apps
