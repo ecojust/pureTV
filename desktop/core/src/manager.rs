@@ -90,7 +90,7 @@ impl Manager {
         self.state.clone()
     }
 
-    /// Called only during normal GUI shutdown, after any in-flight operation completes.
+    /// Called during GUI shutdown or update handoff, after any in-flight operation completes.
     /// Cancellation must not prevent the final bounded kill-server command.
     pub fn shutdown_adb(&mut self) -> Result<(), String> {
         self.locate_adb();
@@ -106,7 +106,12 @@ impl Manager {
             &uncancelled,
             Duration::from_secs(8),
         )?;
-        check_output(output)?;
+        // `kill-server` succeeds when the daemon is already stopped, even though
+        // adb prints "cannot connect to daemon ... Connection refused". Unlike
+        // device commands, its exit status is sufficient to identify failure.
+        if output.code != 0 {
+            check_output(output)?;
+        }
         self.state.device = None;
         self.state.system_info = None;
         self.state.packages.clear();

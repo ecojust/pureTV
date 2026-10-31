@@ -151,6 +151,21 @@ fn begin_update_shutdown(
         committed: false,
     })
 }
+
+// ADB is optional for Manager itself. Once device operations have finished,
+// failure to stop the external daemon must not prevent exit or an update.
+// Keep the continuation's own errors so a failed installer handoff still leaves
+// the current Manager running.
+fn finish_after_adb_shutdown(
+    stopped: Result<(), String>,
+    finish: impl FnOnce() -> Result<(), String>,
+) -> Result<(), String> {
+    if let Err(error) = stopped {
+        eprintln!("ADB shutdown: {error}");
+    }
+    finish()
+}
+
 // Returns true while shutdown is pending; callers then prevent the default exit.
 fn request_shutdown(app: &tauri::AppHandle) -> bool {
     let Some(state) = app.try_state::<Arc<Shutdown>>() else {
@@ -191,11 +206,11 @@ fn request_shutdown(app: &tauri::AppHandle) -> bool {
                     }
                     result
                 });
-            if let Err(error) = result {
-                eprintln!("ADB shutdown: {error}");
-            }
-            shutdown.complete.store(true, Ordering::Release);
-            app.exit(0);
+            let _ = finish_after_adb_shutdown(result, || {
+                shutdown.complete.store(true, Ordering::Release);
+                app.exit(0);
+                Ok(())
+            });
         });
     }
     true
@@ -837,7 +852,7 @@ async fn install_client_update(
         })?;
         // Holding the shared operation reservation prevents a new GUI or MCP
         // mutation from starting while the existing safe ADB shutdown runs.
-        {
+        let stopped = {
             let mut manager = bridge.manager.lock().map_err(|_| "管理状态不可用")?;
             let stopped = manager.shutdown_adb();
             let snapshot = manager.snapshot();
@@ -848,11 +863,11 @@ async fn install_client_update(
                     "running":false,"tool":"client_update","snapshot":snapshot,
                 }),
             );
-            stopped.map_err(|error| format!("无法安全结束 ADB，客户端更新未启动：{error}"))?;
-        }
+            stopped
+        };
         // The helper acknowledges readiness, then waits for manager.lock to be
         // released by this process. No application files change before exit.
-        client_install::handoff(&prepared)?;
+        finish_after_adb_shutdown(stopped, || client_install::handoff(&prepared))?;
         exit.committed = true;
         exit.shutdown.complete.store(true, Ordering::Release);
         for window in app.webview_windows().values() {
@@ -1213,6 +1228,101 @@ mod client_update_shutdown_tests {
         Arc::new(ClientUpdateRun {
             phase: Mutex::new(ClientUpdatePhase::Downloading),
         })
+    }
+
+    #[test]
+    fn adb_cleanup_failure_does_not_mask_a_failed_install_handoff() {
+        let run = downloading();
+        let cancel = AtomicBool::new(false);
+        let shutdown = Arc::new(Shutdown::default());
+        let exit = begin_update_shutdown(&run, &cancel, shutdown.clone()).unwrap();
+        let mut handed_off = false;
+        let result = finish_after_adb_shutdown(Err("ADB 操作超时".into()), || {
+            handed_off = true;
+            Err("安装助手启动失败".into())
+        });
+        assert!(handed_off);
+        assert_eq!(result, Err("安装助手启动失败".into()));
+        drop(exit);
+        assert!(!shutdown.started.load(Ordering::Acquire));
+        assert!(!shutdown.complete.load(Ordering::Acquire));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn optional_or_broken_adb_does_not_prevent_client_update_handoff() {
+        use std::{fs, os::unix::fs::PermissionsExt, path::PathBuf};
+
+        struct Profile(PathBuf);
+        impl Drop for Profile {
+            fn drop(&mut self) {
+                let _ = fs::remove_dir_all(&self.0);
+            }
+        }
+        for (name, script, executable, expects_error) in [
+            ("missing", None, false, false),
+            ("healthy", Some("exit 0"), true, false),
+            // Official adb exits successfully with this message when no daemon
+            // is running; no active service is a valid shutdown result.
+            (
+                "no-daemon",
+                Some("echo 'cannot connect to daemon at tcp:5037: Connection refused' >&2\nexit 0"),
+                true,
+                false,
+            ),
+            (
+                "failed",
+                Some("echo 'error: test failure' >&2\nexit 1"),
+                true,
+                true,
+            ),
+            ("not-executable", Some("exit 0"), false, true),
+        ] {
+            let mut random = [0u8; 16];
+            getrandom::fill(&mut random).unwrap();
+            let profile = Profile(std::env::temp_dir().join(format!(
+                "puretv-update-adb-{}-{random:02x?}",
+                std::process::id()
+            )));
+            fs::create_dir(&profile.0).unwrap();
+            let adb = profile.0.join("adb");
+            if let Some(script) = script {
+                fs::write(
+                    &adb,
+                    format!("#!/bin/sh\n[ \"$1\" = kill-server ] || exit 99\n{script}\n"),
+                )
+                .unwrap();
+                fs::set_permissions(
+                    &adb,
+                    fs::Permissions::from_mode(if executable { 0o700 } else { 0o600 }),
+                )
+                .unwrap();
+            }
+            fs::write(
+                profile.0.join("state.json"),
+                serde_json::to_vec(&json!({"adb_path": adb})).unwrap(),
+            )
+            .unwrap();
+            let cancel = Arc::new(AtomicBool::new(false));
+            let mut manager = TvManager::new(profile.0.clone(), cancel.clone());
+            assert!(manager.snapshot().device.is_none());
+            let run = downloading();
+            let shutdown = Arc::new(Shutdown::default());
+            let mut exit = begin_update_shutdown(&run, &cancel, shutdown.clone()).unwrap();
+            let stopped = manager.shutdown_adb();
+            assert_eq!(stopped.is_err(), expects_error, "{name}: {stopped:?}");
+            let mut handed_off = false;
+            finish_after_adb_shutdown(stopped, || {
+                handed_off = true;
+                Ok(())
+            })
+            .unwrap();
+            assert!(handed_off, "{name}");
+            exit.committed = true;
+            shutdown.complete.store(true, Ordering::Release);
+            drop(exit);
+            assert!(shutdown.started.load(Ordering::Acquire), "{name}");
+        }
     }
 
     #[test]

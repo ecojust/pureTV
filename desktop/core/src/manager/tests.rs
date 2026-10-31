@@ -13,6 +13,7 @@ struct FakeTv {
     status: String,
     failure: Option<String>,
     install_response: Option<Result<(i32, String), String>>,
+    shutdown_response: Option<Result<(i32, String), String>>,
     connect_auth_failure: bool,
     connect_error: Option<String>,
     home_failure: bool,
@@ -66,7 +67,12 @@ impl Runner for FakeRunner {
                 "connected to 192.168.1.50:5555".into()
             }
             "disconnect" => "disconnected".into(),
-            "kill-server" => String::new(),
+            "kill-server" => {
+                if let Some(response) = tv.shutdown_response.clone() {
+                    return response.map(|(code, text)| Output { code, text });
+                }
+                String::new()
+            }
             "pair" => {
                 assert_eq!(input, Some("123456\n"));
                 "Successfully paired to 192.168.1.50:33111".into()
@@ -1455,6 +1461,59 @@ fn closing_cleans_adb_even_after_cancellation_and_preserves_saved_address() {
         reloaded.snapshot().last_connection.unwrap().host,
         before.host
     );
+}
+
+#[test]
+fn closing_accepts_an_already_stopped_adb_daemon_and_clears_connection_state() {
+    let (mut manager, tv) = fixture();
+    connect(&mut manager);
+    let message = "cannot connect to daemon at tcp:5037: Connection refused";
+    tv.lock().unwrap().shutdown_response = Some(Ok((0, message.into())));
+    manager.shutdown_adb().unwrap();
+    let state = manager.snapshot();
+    assert!(state.device.is_none());
+    assert!(state.system_info.is_none());
+    assert!(state.packages.is_empty());
+    assert!(state.launchers.is_empty());
+    assert!(state.default_home.is_none());
+    assert!(state.original_home.is_none());
+    // Device commands must still reject failure text even when adb returns 0.
+    assert!(check_output(Output {
+        code: 0,
+        text: message.into()
+    })
+    .is_err());
+}
+
+#[test]
+fn closing_reports_real_adb_failures_without_claiming_disconnection() {
+    for response in [
+        Ok((1, "cannot connect to daemon: Permission denied".into())),
+        Err("无法启动 ADB".into()),
+        Err("ADB 操作超时".into()),
+    ] {
+        let (mut manager, tv) = fixture();
+        connect(&mut manager);
+        tv.lock().unwrap().shutdown_response = Some(response);
+        assert!(manager.shutdown_adb().is_err());
+        assert!(manager.snapshot().device.is_some());
+        assert!(!manager.snapshot().packages.is_empty());
+    }
+}
+
+#[test]
+fn closing_without_adb_does_not_start_a_command() {
+    let (mut manager, tv) = fixture();
+    manager.saved.adb_path = Some(
+        manager
+            .data_dir
+            .join("missing-adb")
+            .to_string_lossy()
+            .into_owned(),
+    );
+    manager.shutdown_adb().unwrap();
+    assert!(!manager.snapshot().adb_available);
+    assert!(tv.lock().unwrap().calls.is_empty());
 }
 
 #[test]

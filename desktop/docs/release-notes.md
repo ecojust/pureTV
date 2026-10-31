@@ -1,34 +1,22 @@
-# pureTV Manager 0.4.15
+# pureTV Manager 0.4.16
 
 ## 简体中文
 
-采用明黄色底的生肖龙雕刻 Logo，与 [open-office](https://github.com/ecojust/open-office) 和 [open-media](https://github.com/ecojust/open-media) 的视觉风格保持一致。管理器界面和 Windows、macOS、Linux 安装包中的应用图标统一更新，安装后在系统桌面、启动菜单或应用列表中显示同一套设计。Windows 安装器文件本身的图标也统一为明黄龙 Logo。
+修复「检查更新 → 下载并安装」在下载和校验成功后被 ADB 错误阻止的问题。ADB 服务本来没有启动时，官方 `adb kill-server` 的正常返回不再误报失败；ADB 不可执行、关闭失败或超时只记录清理日志，Manager 仍会交接安装并重启。安装包校验失败、安装助手启动失败和用户取消仍会停止更新，设备操作期间仍不能开始安装。
 
-保留 0.4.13 的「APK市场」更新提示：每次从其他页面进入时检查最新目录，将本次新增的应用或有更高数字版本的应用排到前面，并在卡片右上角标「新」。首次使用先建立基线，不把全部应用标成新内容；同一次浏览中的搜索、分类切换、版本选择和手动刷新保留本次标记。补传旧版本、同版本替换文件或封面变化不会误标为版本升级。
-
-本地 `market/seen-apps.json` 保存每个应用的稳定标识、名称和最新版本，供下一次进入时比较。网络失败、旧缓存回退或取消不会推进记录；离开页面后才返回的检查结果也不会消费更新提示。记录损坏或读写失败会明确提示。
-
-保留统一毛玻璃弹窗、包名查询的系统代理与备用来源，以及 Gitee `client/` 的客户端更新检测、下载校验、自动安装和重启。0.4.10 或更早版本需先手动升级一次；后续安装包上传到 Gitee `client/` 后即可被检测。
+0.4.11–0.4.15 已出现「无法安全结束 ADB，客户端更新未启动」时，请退出 Manager，使用本发布页的对应系统安装包手动覆盖安装一次，保留原有配置。macOS 将新应用拖入原安装位置并选择替换。仅上传新包到 Gitee 不能修复旧客户端本身的交接逻辑；后续包仍需放入 Gitee 商店的 `client/` 目录供检查更新使用。
 
 ## 繁體中文
 
-採用明黃色底的生肖龍雕刻 Logo，與 [open-office](https://github.com/ecojust/open-office) 和 [open-media](https://github.com/ecojust/open-media) 的視覺風格保持一致。管理器介面與 Windows、macOS、Linux 安裝包中的應用程式圖示統一更新，安裝後在系統桌面、開始功能表或應用程式列表中顯示同一套設計。Windows 安裝程式檔案本身的圖示也統一為明黃龍 Logo。
+修正「檢查更新 → 下載並安裝」在下載與驗證成功後被 ADB 錯誤阻止的問題。ADB 服務尚未啟動時，官方 `adb kill-server` 的正常回傳不再誤報失敗；ADB 無法執行、關閉失敗或逾時只記錄清理日誌，Manager 仍會交接安裝並重新啟動。安裝包驗證失敗、安裝助手啟動失敗及使用者取消仍會停止更新，裝置操作期間仍不能開始安裝。
 
-保留 0.4.13 的「APK市場」更新提示：每次從其他頁面進入時檢查最新目錄，將本次新增或有較高數字版本的應用程式排到前面，並在卡片右上角標示「新」。首次使用先建立比較基準，不將全部項目標為新內容；同一次瀏覽中的搜尋、分類切換、版本選擇與手動重新整理會保留標記。補傳舊版本、替換相同版本的檔案或更換封面不會誤判為版本升級。
-
-本機 `market/seen-apps.json` 儲存每個應用程式的穩定識別碼、名稱與最新版本，供下次進入時比較。網路失敗、使用舊快取或取消檢查時不會更新記錄；離開頁面後才傳回的結果也不會消除更新提示。記錄損毀或讀寫失敗時會明確提示。
-
-保留統一毛玻璃彈窗、套件查詢的系統代理與備用來源，以及 Gitee `client/` 的更新檢查、下載驗證、自動安裝與重新啟動。0.4.10 或更早版本需先手動升級一次；後續安裝包上傳到 Gitee `client/` 後即可被偵測。
+0.4.11–0.4.15 若已出現無法結束 ADB 的更新錯誤，請退出 Manager，使用本發布頁的對應系統安裝包手動覆蓋安裝一次，保留原有設定。macOS 將新應用程式拖入原安裝位置並選擇替換。僅上傳新包到 Gitee 無法修正舊用戶端的交接邏輯；後續安裝包仍須放入 Gitee 商店的 `client/` 目錄。
 
 ## English
 
-Uses a carved zodiac dragon logo on a bright yellow background, matching the visual style of [open-office](https://github.com/ecojust/open-office) and [open-media](https://github.com/ecojust/open-media). The manager interface and application icons packaged for Windows, macOS and Linux share the new design, including icons shown on the desktop, in the Start menu or in the application list after installation. The Windows installer file itself now uses the same bright yellow dragon icon.
+Fixes Manager updates stopping after a successful download and verification because ADB cleanup reports an error. A successful `adb kill-server` with no running daemon is now treated as normal. An unavailable ADB executable, shutdown failure or timeout is logged without blocking installer handoff and restart. Invalid packages, failed installer handoff and cancellation still stop the update, and device operations continue to exclude installation.
 
-Retains APK Market update indicators from 0.4.13. Entering it from another page checks the latest catalog, places newly discovered apps and higher numeric versions first, and adds a NEW badge at the top right of each affected card. The first visit establishes a baseline instead of marking every app as new. Searching, switching categories, selecting versions and refreshing during the same visit retain the visit's badges. Older-version uploads, replacement files with the same version and cover changes do not count as version upgrades.
-
-The local `market/seen-apps.json` file stores each app's stable identity, name and latest version for comparison on the next visit. Failed checks, stale-cache fallback and cancellation leave the record unchanged. Results arriving after the user leaves the page do not consume update indicators. Damaged records and read/write failures produce an explicit warning.
-
-Retains the consistent frosted dialog backdrops, system proxy and fallback sources for package lookups, and Gitee `client/` update checks, verified downloads, installation and restart. Clients at 0.4.10 or earlier need one manual upgrade. Future installers must be uploaded to Gitee's `client/` directory for detection.
+If Manager 0.4.11–0.4.15 already fails during ADB shutdown, close it and manually install this release over the existing application once, preserving its settings. On macOS, replace the app at its original installation location. Publishing a newer package cannot change the old client's handoff logic. Future update packages must still be uploaded to the Gitee store's `client/` directory.
 
 ---
 
