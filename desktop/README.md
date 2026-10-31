@@ -1,10 +1,10 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.4.16** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.4.17** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.4.16 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.16)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.4.17 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.17)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
-0.4.16 修复客户端更新被 ADB 清理错误阻止的问题：ADB 服务未启动时不再误报失败，ADB 无法运行或关闭也不会阻止 Manager 自身安装更新。旧版若已遇到这一错误，需要先手动覆盖安装 0.4.16 一次；保留本地配置。
+0.4.17 在每次连接电视前清理本机当前用户的 ADB 服务和残留进程，再重新建立连接。保留 0.4.16 的客户端更新修复：ADB 服务未启动或清理失败不会再阻止 Manager 自身更新。旧版若已遇到更新错误，需要先手动覆盖安装一次；保留本地配置。
 
 ## 功能
 
@@ -36,14 +36,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.4.16 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.16) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.4.17 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.17) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.4.16-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.4.17-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.16-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.17-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -61,7 +61,8 @@
 
 1. 电脑与电视接入可互通的网络，在电视开发者选项开启 ADB／网络调试。
 2. 首页填写 IP／主机名和调试端口，在电视上接受授权。点击连接后会记住有效地址和端口，连接失败也会保存；下次启动自动填入，不自动发起连接。
-3. 首页自动显示系统信息，点击「刷新信息」重新查询。内存来自 `/proc/meminfo`，存储容量来自 `/data` 分区；权限或固件限制时显示未知。
+3. 每次连接前会自动清理当前用户的本机 ADB 服务与残留进程，等待退出后再连接；这也会断开其他工具使用的 ADB 连接。清理失败或取消时不会继续连接。
+4. 首页自动显示系统信息，点击「刷新信息」重新查询。内存来自 `/proc/meminfo`，存储容量来自 `/data` 分区；权限或固件限制时显示未知。
 
 ### 连接失败排查
 

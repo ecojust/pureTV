@@ -74,7 +74,7 @@ pub fn tools() -> Vec<Value> {
         tool("get_state","Get current TV, apps, launchers and history. Cached state remains available during operations.",json!({}),&[],true),
         tool("get_status","Get operation busy/cancellation state, ADB download progress, marketProgress and latest snapshot.",json!({}),&[],true),
         tool("set_adb_path","Select a local adb executable. Empty path automatically discovers ADB; disconnect TV first.",json!({"path":{"type":"string"}}),&["path"],false),
-        tool("connect","Connect to an Android TV and scan when authorized. Accept the TV's authorization prompt if needed.",json!({"host":{"type":"string"},"port":{"type":"integer","minimum":1,"maximum":65535}}),&["host","port"],false),
+        tool("connect","Before every connection, stop the current computer user's ADB server and remaining ADB processes, then connect to an Android TV and scan when authorized. This also interrupts other ADB connections for that user. Accept the TV's authorization prompt if needed.",json!({"host":{"type":"string"},"port":{"type":"integer","minimum":1,"maximum":65535}}),&["host","port"],false),
         tool("disconnect","Disconnect the selected TV.",json!({}),&[],false),
         tool("scan","Refresh apps, recovery candidates, current Android user and HOME launchers.",json!({}),&[],true),
         tool("set_enabled","Enable or disable explicit package names. Core components and current HOME remain protected.",json!({"packages":packages,"enabled":{"type":"boolean"}}),&["packages","enabled"],false),

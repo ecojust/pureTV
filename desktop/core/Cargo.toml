@@ -1,6 +1,6 @@
 [package]
 name = "puretv-core"
-version = "0.4.16"
+version = "0.4.17"
 edition = "2021"
 license = "MIT"
 description = "Bounded ADB operations for the pureTV desktop manager"
@@ -11,3 +11,11 @@ if-addrs = "0.15.0"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 roxmltree = "0.20"
+
+sysinfo = { version = "0.37.2", default-features = false, features = ["system"] }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_System_Threading", "Win32_Security"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2"

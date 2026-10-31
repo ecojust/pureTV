@@ -291,6 +291,15 @@ impl Manager {
         self.state.launchers.clear();
         self.state.default_home = None;
         self.state.original_home = None;
+        // Reset only verified current-user processes on this computer. A
+        // kill-server request can affect another user's or a remote daemon.
+        // The subsequent connect starts a fresh ADB server automatically.
+        if self.cancel.load(Ordering::Relaxed) {
+            return Err("操作已取消".into());
+        }
+        self.runner
+            .clear_adb_processes(self.cancel.as_ref(), Duration::from_secs(5))
+            .map_err(|error| format!("连接前清理 ADB 失败：{error}"))?;
         let connection = self
             .run(vec!["connect".into(), serial.clone()], None, 20)
             .map_err(|error| connection_error(&serial, error));

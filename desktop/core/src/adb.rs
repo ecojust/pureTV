@@ -9,12 +9,18 @@ use std::thread;
 use std::time::{Duration, Instant};
 
 const OUTPUT_LIMIT: usize = 4 * 1024 * 1024;
+mod processes;
+#[cfg(windows)]
+mod windows_process;
 #[derive(Debug)]
 pub(crate) struct Output {
     pub code: i32,
     pub text: String,
 }
 pub(crate) trait Runner: Send {
+    fn clear_adb_processes(&mut self, cancel: &AtomicBool, timeout: Duration)
+        -> Result<(), String>;
+
     fn run(
         &mut self,
         program: &Path,
@@ -143,6 +149,14 @@ impl ProcessRunner {
     }
 }
 impl Runner for ProcessRunner {
+    fn clear_adb_processes(
+        &mut self,
+        cancel: &AtomicBool,
+        timeout: Duration,
+    ) -> Result<(), String> {
+        processes::clear(cancel, timeout)
+    }
+
     fn run(
         &mut self,
         program: &Path,

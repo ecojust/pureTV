@@ -14,6 +14,8 @@ struct FakeTv {
     failure: Option<String>,
     install_response: Option<Result<(i32, String), String>>,
     shutdown_response: Option<Result<(i32, String), String>>,
+    cleanup_error: Option<String>,
+    cancel_during_cleanup: bool,
     connect_auth_failure: bool,
     connect_error: Option<String>,
     home_failure: bool,
@@ -32,6 +34,21 @@ struct FakeRunner {
     cancel_after_change: Option<Arc<AtomicBool>>,
 }
 impl Runner for FakeRunner {
+    fn clear_adb_processes(&mut self, cancel: &AtomicBool, _: Duration) -> Result<(), String> {
+        let mut tv = self.tv.lock().unwrap();
+        tv.calls.push(vec!["clear-local-adb-processes".into()]);
+        if tv.cancel_during_cleanup {
+            cancel.store(true, Ordering::Relaxed);
+        }
+        if cancel.load(Ordering::Relaxed) {
+            Err("操作已取消".into())
+        } else if let Some(error) = &tv.cleanup_error {
+            Err(error.clone())
+        } else {
+            Ok(())
+        }
+    }
+
     fn run(
         &mut self,
         _: &Path,
@@ -1513,6 +1530,111 @@ fn closing_without_adb_does_not_start_a_command() {
     );
     manager.shutdown_adb().unwrap();
     assert!(!manager.snapshot().adb_available);
+    assert!(tv.lock().unwrap().calls.is_empty());
+}
+
+#[test]
+fn every_explicit_connection_cleans_local_adb_before_connecting() {
+    let (mut manager, tv) = fixture();
+    for _ in 0..2 {
+        tv.lock().unwrap().calls.clear();
+        connect(&mut manager);
+        let tv = tv.lock().unwrap();
+        let cleanup = tv
+            .calls
+            .iter()
+            .position(|args| args[0] == "clear-local-adb-processes")
+            .unwrap();
+        let connect = tv
+            .calls
+            .iter()
+            .position(|args| args[0] == "connect")
+            .unwrap();
+        assert!(cleanup < connect);
+        assert_eq!(
+            tv.calls
+                .iter()
+                .filter(|args| args[0] == "clear-local-adb-processes")
+                .count(),
+            1
+        );
+        assert!(tv.calls[..cleanup].iter().any(|args| args[0] == "version"));
+    }
+}
+
+#[test]
+fn failed_or_cancelled_preconnect_cleanup_never_connects_and_clears_old_tv() {
+    for cancelled in [false, true] {
+        let (mut manager, tv) = fixture();
+        connect(&mut manager);
+        {
+            let mut tv = tv.lock().unwrap();
+            tv.calls.clear();
+            tv.cancel_during_cleanup = cancelled;
+            tv.cleanup_error = Some("无法结束残留 ADB 进程".into());
+        }
+        let error = manager
+            .execute(Request::Connect {
+                host: "192.168.1.50".into(),
+                port: 5555,
+            })
+            .unwrap_err();
+        assert!(error.starts_with("连接前清理 ADB 失败："));
+        assert!(tv
+            .lock()
+            .unwrap()
+            .calls
+            .iter()
+            .all(|args| args[0] != "connect"));
+        let state = manager.snapshot();
+        assert!(state.device.is_none());
+        assert!(state.packages.is_empty());
+        assert!(state.system_info.is_none());
+        assert!(state.last_connection.is_some());
+    }
+}
+
+#[test]
+fn connection_cleanup_does_not_send_an_unscoped_kill_server_request() {
+    let (mut manager, tv) = fixture();
+    tv.lock().unwrap().shutdown_response = Some(Err("ADB 操作超时".into()));
+    assert_eq!(connect(&mut manager).device.unwrap().status, "device");
+    assert!(tv
+        .lock()
+        .unwrap()
+        .calls
+        .iter()
+        .any(|args| args[0] == "clear-local-adb-processes"));
+    assert!(tv
+        .lock()
+        .unwrap()
+        .calls
+        .iter()
+        .all(|args| args[0] != "kill-server"));
+}
+
+#[test]
+fn invalid_address_or_missing_adb_never_cleans_processes() {
+    let (mut manager, tv) = fixture();
+    assert!(manager
+        .execute(Request::Connect {
+            host: "bad;host".into(),
+            port: 5555
+        })
+        .is_err());
+    manager.saved.adb_path = Some(
+        manager
+            .data_dir
+            .join("missing-adb")
+            .to_string_lossy()
+            .into_owned(),
+    );
+    assert!(manager
+        .execute(Request::Connect {
+            host: "192.168.1.50".into(),
+            port: 5555
+        })
+        .is_err());
     assert!(tv.lock().unwrap().calls.is_empty());
 }
 

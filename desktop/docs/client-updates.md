@@ -16,7 +16,7 @@ Windows 使用 NSIS 安装版更新；从便携版启动时会安装为标准安
 
 0.4.11–0.4.15 可能在下载和校验完成后提示「无法安全结束 ADB，客户端更新未启动」。例如 ADB 服务本来没有启动，官方 `adb kill-server` 仍会输出 `cannot connect to daemon`，旧版把这条正常结果误判成错误。
 
-遇到此错误时，从 [0.4.16 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.16) 下载对应系统安装包，退出 Manager 后手动覆盖安装一次；无需卸载电视应用或清除 Manager 配置。macOS 将新 `.app` 拖入原安装位置并选择替换。仅在 Gitee 上传新包不能改变旧客户端已经存在的交接逻辑。
+遇到此错误时，从 [0.4.17 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.17) 下载对应系统安装包，退出 Manager 后手动覆盖安装一次；无需卸载电视应用或清除 Manager 配置。macOS 将新 `.app` 拖入原安装位置并选择替换。仅在 Gitee 上传新包不能改变旧客户端已经存在的交接逻辑。
 
 ## 仓库文件约定
 
@@ -37,4 +37,4 @@ Manager 0.4.11 and later check the fixed Gitee `client/` directory once after st
 
 After verification and preparation, the manager attempts to stop ADB, exits and hands installation to a separate helper. Starting with 0.4.16, an absent ADB daemon is a normal result and cleanup failures are logged without blocking Manager updates. Package verification and installer errors still stop the update. Windows uses the standard NSIS installer; portable users move to the installed edition. macOS replaces an installed app bundle with recovery on replacement failure; first move an app running inside a DMG or App Translocation to Applications. Linux requires a published DEB plus `pkexec` and `dpkg`. Native authorization may be requested. Versions without this updater need one manual upgrade first.
 
-Clients at 0.4.11–0.4.15 can reject a successful `adb kill-server` command when its output says `cannot connect to daemon`. If an update stops with an ADB shutdown error, close Manager and manually install 0.4.16 over the existing app once, keeping its settings. Uploading a newer package to Gitee cannot fix the handoff code already running in the old client.
+Clients at 0.4.11–0.4.15 can reject a successful `adb kill-server` command when its output says `cannot connect to daemon`. If an update stops with an ADB shutdown error, close Manager and manually install 0.4.17 over the existing app once, keeping its settings. Uploading a newer package to Gitee cannot fix the handoff code already running in the old client.
