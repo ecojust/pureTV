@@ -1526,6 +1526,114 @@ try {
   const sameNameOtherFolder={...versionedItem('0.10.0'),id:'apps/another/hifini-0.10.0.apk',folderUrl:store.items[0].folderUrl.replace('/hifini','/another')};
   const sameFolderOtherApp={...versionedItem('0.10.0'),id:'apps/hifini/hifini-lite-0.10.0.apk',fileName:'hifini-lite-0.10.0.apk'};
   const sameNameLauncher={...versionedItem('0.99.0'),kind:'launcher',id:'launcher/hifini/hifini-0.99.0.apk',folderUrl:store.items[0].folderUrl.replace('/apps/','/launcher/')};
+  const seenItem=(kind,folder,stem,item)=>({id:JSON.stringify([kind,folder,stem]),name:item.name,version:item.version});
+  const originalSeen=[seenItem('app','apps/hifini','hifini',store.items[0]),seenItem('app','apps/webtv','webtv',store.items[1]),seenItem('launcher','launcher/nova','nova',store.items[2])];
+  const olderSeen=[seenItem('app','apps/hifini','hifini',versionedItem('0.9.0')),...originalSeen.slice(1)];
+  const newMarketApp={...store.items[1],id:'apps/zebra/zebra-1.0.0.apk',name:'Zebra TV',fileName:'zebra-1.0.0.apk',version:'1.0.0'};
+  const updateStore={...store,revision:'e'.repeat(40),items:[store.items[1],newMarketApp,versionedItem('0.9.0'),versionedItem('0.10.0'),store.items[2]]};
+  const seenState=p=>p.evaluate(()=>window.__marketSeenApps);
+  const seenWrites=p=>p.evaluate(()=>window.__marketSeenRequests.filter(value=>value.command==='set_market_seen_apps'));
+  const newMarketIds=p=>p.locator('.market-card').filter({has:p.locator('.market-new')}).evaluateAll(cards=>cards.map(card=>card.dataset.marketId));
+  const waitCatalogHold=p=>p.waitForFunction(()=>window.__pendingOperations.some(operation=>operation.action==='getMarketCatalog'));
+  await check('market updates first visit builds a small persistent baseline and only real reentry checks the network',async p=>{
+    await openMarket(p);await p.waitForFunction(()=>Array.isArray(window.__marketSeenApps));
+    assert.equal(await p.locator('h1').innerText(),'APK市场');assert.equal(await p.locator('[data-page="market"]').innerText(),'APK市场');
+    assert.deepEqual(await newMarketIds(p),[],'The first successful visit establishes a baseline rather than marking every existing app new');
+    const first=await seenState(p);assert.equal(first.length,3);assert.deepEqual(first.map(entry=>Object.keys(entry).sort()),first.map(()=>['id','name','version']));
+    assert.deepEqual(new Set(first.map(entry=>entry.id)),new Set(originalSeen.map(entry=>entry.id)));
+    assert.equal((await marketRequests(p)).length,1);assert.equal((await marketRequests(p))[0].refresh,true);
+    await nav(p,'market');await p.locator('[data-market-kind="launcher"]').click();await p.locator('[data-market-kind="app"]').click();
+    assert.equal((await marketRequests(p)).length,1,'Same-page navigation and categories share the current visit');
+    await nav(p,'apps');await openMarket(p);assert.equal((await marketRequests(p)).length,2);assert.equal((await marketRequests(p))[1].refresh,true);
+    assert.deepEqual(await newMarketIds(p),[]);assert.deepEqual(await seenState(p),first);
+    await p.reload();await p.locator('.connection-strip').waitFor();await openMarket(p);
+    assert.deepEqual(await newMarketIds(p),[],'A restarted window reads the previously saved JSON baseline');assert.deepEqual(await seenState(p),first);
+  },withoutAdb());
+  await check('market updates prioritize new apps and numeric upgrades throughout one visit without changing selected APKs',async p=>{
+    await mockVersionCovers(p);await openMarket(p);await p.waitForFunction(()=>window.__marketSeenApps?.some(entry=>entry.version==='0.10.0'));
+    assert.deepEqual(await newMarketIds(p),[versionedItem('0.10.0').id,newMarketApp.id]);
+    assert.deepEqual(await p.locator('.market-card').evaluateAll(cards=>cards.map(card=>card.dataset.marketId)),[versionedItem('0.10.0').id,newMarketApp.id,store.items[1].id]);
+    assert.equal(await marketCard(p,store.items[1]).locator('.market-new').count(),0);
+    const changed=marketCard(p,versionedItem('0.10.0'));
+    assert.equal(await changed.locator('.market-new').innerText(),'新');
+    const bounds=await changed.evaluate(card=>({card:card.getBoundingClientRect().toJSON(),badge:card.querySelector('.market-new').getBoundingClientRect().toJSON()}));
+    assert.ok(bounds.badge.top>=bounds.card.top&&bounds.badge.top-bounds.card.top<24&&bounds.badge.right<=bounds.card.right&&bounds.card.right-bounds.badge.right<24,'New badge sits inside the card’s upper-right corner');
+    await versionSelect(p,versionedItem('0.10.0')).selectOption(versionedItem('0.9.0').id);
+    assert.equal(await marketCard(p,versionedItem('0.9.0')).locator('.market-new').count(),1,'The update belongs to the app even when an older APK is selected');
+    await p.locator('[name="marketSearch"]').fill('Zebra');assert.deepEqual(await newMarketIds(p),[newMarketApp.id]);await p.locator('[name="marketSearch"]').fill('');
+    await p.locator('[data-market-kind="launcher"]').click();await p.locator('[data-market-kind="app"]').click();
+    await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
+    assert.deepEqual(await newMarketIds(p),[versionedItem('0.9.0').id,newMarketApp.id],'Refreshing the same visit does not consume its new markers');
+    await shot(p,'apk-market-updates-zh');
+    await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'APK Market');assert.equal(await p.locator('.market-new').count(),2);
+    await p.locator('[name="theme"]').selectOption('graphite');await shot(p,'apk-market-updates-graphite');
+    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'APK市場');assert.equal(await p.locator('.market-new').count(),2);
+    await marketCard(p,versionedItem('0.9.0')).locator('[data-act="download-market"]').click();await result(p,'success');await acknowledge(p);
+    assert.equal((await marketRequests(p)).filter(value=>value.command==='download_market_item').at(-1).id,versionedItem('0.9.0').id);
+    await nav(p,'apps');await openMarket(p);assert.deepEqual(await newMarketIds(p),[],'The next visit uses the successful previous visit as its baseline');
+    assert.equal(await versionSelect(p,versionedItem('0.9.0')).inputValue(),versionedItem('0.9.0').id);
+    await p.reload();await p.locator('.connection-strip').waitFor();await openMarket(p);assert.deepEqual(await newMarketIds(p),[],'The saved latest version, not the selected older APK, survives restart');
+  },withoutAdb(),{marketCatalog:updateStore,marketSeenApps:olderSeen});
+  await check('market updates distinguish equal names in different folders filename stems and categories',async p=>{
+    await mockVersionCovers(p);await openMarket(p);
+    assert.equal(await marketCard(p,store.items[0]).locator('.market-new').count(),0);
+    assert.equal(await marketCard(p,sameNameOtherFolder).locator('.market-new').count(),1);
+    assert.equal(await marketCard(p,sameFolderOtherApp).locator('.market-new').count(),1);
+    assert.equal(await p.locator('.market-new').count(),2);
+    await p.locator('[data-market-kind="launcher"]').click();assert.equal(await marketCard(p,sameNameLauncher).locator('.market-new').count(),1);assert.equal(await marketCard(p,store.items[2]).locator('.market-new').count(),0);
+    await p.waitForFunction(()=>window.__marketSeenApps?.length===6);assert.equal(new Set((await seenState(p)).map(entry=>entry.id)).size,6);
+  },withoutAdb(),{marketCatalog:{...store,items:[...store.items,sameNameOtherFolder,sameFolderOtherApp,sameNameLauncher]},marketSeenApps:originalSeen});
+  await check('market updates ignore old-version backfills and same-version blob or cover changes',async p=>{
+    await mockVersionCovers(p);await openMarket(p);assert.deepEqual(await newMarketIds(p),[]);
+    const replacement={...versionedItem('0.10.0'),blobSha:'f'.repeat(40),coverUrl:null};
+    await p.evaluate(value=>window.__marketCatalog=value,{...store,revision:'f'.repeat(40),items:[replacement,versionedItem('0.2.0'),versionedItem('0.9.0'),...store.items.slice(1)]});
+    await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);assert.deepEqual(await newMarketIds(p),[]);
+    await p.evaluate(value=>window.__marketCatalog=value,{...store,revision:'d'.repeat(40),items:[versionedItem('0.9.0'),...store.items.slice(1)]});
+    await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);assert.deepEqual(await newMarketIds(p),[],'A numeric downgrade is not an upgrade');
+  },withoutAdb(),{marketCatalog:{...store,items:[versionedItem('0.10.0'),...store.items.slice(1)]},marketSeenApps:[seenItem('app','apps/hifini','hifini',versionedItem('0.10.0')),...originalSeen.slice(1)]});
+  await check('market updates keep the baseline on stale catalogs failures and failed refreshes',async p=>{
+    await mockVersionCovers(p);await openMarket(p);assert.deepEqual(await seenState(p),olderSeen);assert.deepEqual(await seenWrites(p),[]);assert.deepEqual(await newMarketIds(p),[]);
+    await p.evaluate(value=>window.__marketCatalog=value,updateStore);await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
+    await p.waitForFunction(()=>window.__marketSeenApps?.some(entry=>entry.version==='0.10.0'));const saved=await seenState(p),writeCount=(await seenWrites(p)).length;
+    assert.equal(await p.locator('.market-new').count(),2);
+    await p.evaluate(()=>{window.__marketCatalog.stale=true;window.__marketCatalog.warning='网络暂不可用，正在显示缓存目录';});
+    await act(p,'refresh-market').click();await result(p,'info');await acknowledge(p);assert.equal((await seenWrites(p)).length,writeCount);assert.deepEqual(await seenState(p),saved);assert.equal(await p.locator('.market-new').count(),2);
+    await p.evaluate(()=>window.__marketCatalogError='无法读取市场目录，请检查网络后重试');await act(p,'refresh-market').click();await result(p,'error');await acknowledge(p);
+    assert.equal((await seenWrites(p)).length,writeCount);assert.deepEqual(await seenState(p),saved);assert.equal(await p.locator('.market-new').count(),2);
+  },withoutAdb(),{marketCatalog:{...updateStore,stale:true,warning:'网络暂不可用，正在显示缓存目录'},marketSeenApps:olderSeen});
+  await check('market updates do not consume results that arrive after leaving the market',async p=>{
+    await mockVersionCovers(p);await nav(p,'market');await waitCatalogHold(p);await nav(p,'apps');await release(p,'getMarketCatalog');await settled(p);
+    assert.deepEqual(await seenState(p),olderSeen);assert.deepEqual(await seenWrites(p),[]);
+    await nav(p,'market');await waitCatalogHold(p);await release(p,'getMarketCatalog');await p.locator('.market-card').first().waitFor();await settled(p);
+    assert.equal(await p.locator('.market-new').count(),2);assert.equal((await marketRequests(p)).filter(value=>value.command==='get_market_catalog').length,2);
+    assert.ok((await marketRequests(p)).filter(value=>value.command==='get_market_catalog').every(value=>value.refresh));
+  },withoutAdb(),{marketCatalog:updateStore,marketSeenApps:olderSeen,holdActions:['getMarketCatalog']});
+  await check('market updates check the current visit after leaving and reentering during an earlier request',async p=>{
+    await mockVersionCovers(p);await nav(p,'market');await waitCatalogHold(p);await nav(p,'apps');await nav(p,'market');
+    await release(p,'getMarketCatalog',{response:{...store,items:[versionedItem('0.9.0'),...store.items.slice(1)]}});
+    await p.waitForFunction(()=>window.__marketRequests.filter(value=>value.command==='get_market_catalog').length===2);await waitCatalogHold(p);
+    assert.deepEqual(await seenState(p),olderSeen,'The old visit cannot overwrite the baseline of the returning visit');
+    await release(p,'getMarketCatalog');await settled(p);assert.equal(await p.locator('.market-new').count(),2);
+  },withoutAdb(),{marketCatalog:updateStore,marketSeenApps:olderSeen,holdActions:['getMarketCatalog']});
+  await check('market updates cancellation leaves the stored baseline available for a later retry',async p=>{
+    await mockVersionCovers(p);await p.evaluate(()=>window.__holdNextOperation('getMarketCatalog'));await nav(p,'market');await waitCatalogHold(p);
+    await act(p,'cancel').click();await release(p,'getMarketCatalog');await settled(p);
+    assert.deepEqual(await seenWrites(p),[]);assert.deepEqual(await seenState(p),olderSeen);
+    await nav(p,'apps');await openMarket(p);assert.equal(await p.locator('.market-new').count(),2);
+  },withoutAdb(),{marketCatalog:updateStore,marketSeenApps:olderSeen});
+  await check('market updates do not consume background MCP catalog results before a visible visit',async p=>{
+    await mockVersionCovers(p);
+    await p.evaluate(catalog=>{window.__emitMcp('mcp-operation',{running:true,tool:'get_market_catalog'});window.__emitMcp('mcp-operation',{running:false,tool:'get_market_catalog',marketResult:{operation:'catalog',catalog}});},updateStore);
+    await settled(p);assert.deepEqual(await seenWrites(p),[]);assert.deepEqual(await seenState(p),olderSeen);
+    await openMarket(p);assert.equal(await p.locator('.market-new').count(),2);assert.equal((await marketRequests(p)).filter(value=>value.command==='get_market_catalog').at(-1).refresh,true);
+  },withoutAdb(),{marketCatalog:updateStore,marketSeenApps:olderSeen});
+  await check('market updates preserve unread changes when saving the local baseline fails',async p=>{
+    await mockVersionCovers(p);await openMarket(p);assert.equal(await p.locator('.market-new').count(),2);assert.deepEqual(await seenState(p),olderSeen);
+    assert.match(await p.locator('main').innerText(),/无法保存.*浏览记录/);
+    await nav(p,'apps');await openMarket(p);assert.equal(await p.locator('.market-new').count(),2,'A failed write cannot silently acknowledge updates');
+    await p.evaluate(()=>window.__marketSeenSaveError=null);await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
+    await p.waitForFunction(()=>window.__marketSeenApps?.some(entry=>entry.version==='0.10.0'));await nav(p,'apps');await openMarket(p);assert.deepEqual(await newMarketIds(p),[]);
+  },withoutAdb(),{marketCatalog:updateStore,marketSeenApps:olderSeen,marketSeenSaveError:'无法保存 APK 市场浏览记录，请检查目录权限'});
   await check('market versions group each app separately and offer the latest five in numeric order',async p=>{
     await mockVersionCovers(p);await openMarket(p);
     assert.equal(await p.locator('.market-card').count(),4,'Multiple APK versions share one application card');
@@ -1673,7 +1781,7 @@ try {
   },snapshot(),{holdActions:['downloadMarketItem']});
   await check('market refresh replaces a stale catalog and preserves localized controls',async p=>{
     await openMarket(p);assert.match(await p.locator('main').innerText(),/缓存目录/);
-    await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'Market');
+    await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'APK Market');
     assert.match(await p.locator('[data-market-kind="launcher"]').innerText(),/Launchers/);
     assert.match(await marketCard(p,store.items[0]).innerText(),/HIFINi TV/);
     const updated=marketCatalog();updated.revision='f'.repeat(40);updated.items=[updated.items[1]];
@@ -1681,17 +1789,19 @@ try {
     await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
     assert.equal(await p.locator('.market-card').count(),1);assert.match(await p.locator('.market-card').innerText(),/WebTV/);
     assert.equal((await marketRequests(p)).at(-1).refresh,true,'Manual refresh bypasses catalog cache');
-    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'市場');
+    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'APK市場');
     assert.match(await p.locator('[data-market-kind="launcher"]').innerText(),/啟動器/);
     await p.locator('[data-market-kind="launcher"]').click();assert.equal(await p.locator('.market-card').count(),0);
     await shot(p,'market-traditional-empty');
   },withoutAdb(),{marketCatalog:{...marketCatalog(),stale:true,warning:'网络暂不可用，正在显示缓存目录'}});
   await check('market initial network failure shows an empty error state and can be retried',async p=>{
     await nav(p,'market');await p.waitForFunction(()=>document.querySelector('.market-warning')?.textContent.includes('无法读取市场目录'));await settled(p);
+    assert.equal(await seenState(p),null);assert.deepEqual(await seenWrites(p),[],'An unavailable first catalog cannot initialize the seen JSON');
     assert.equal(await p.locator('.market-card').count(),0,'Failed live requests never display a fabricated catalog');
     assert.match(await p.locator('.market-empty').innerText(),/暂时无法读取市场/);
     await p.evaluate(()=>{window.__marketCatalogError=null;});await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
     assert.equal(await p.locator('.market-card').count(),2);assert.deepEqual(await requests(p),[]);
+    assert.deepEqual(await newMarketIds(p),[],'The first successful retry establishes the initial baseline');
   },withoutAdb(),{failMarketCatalog:true});
   const largeMarket=marketCatalog();largeMarket.items=Array.from({length:45},(_,index)=>({...store.items[0],id:`apps/example${index}/example-${index}.apk`,name:`Example ${index}`,fileName:`example-${index}.apk`}));
   await check('market long catalogs scroll internally in compact windows and all themes',async p=>{
@@ -1711,6 +1821,23 @@ try {
     await p.locator('[name="theme"]').selectOption('graphite');assert.equal(await p.locator('html').getAttribute('data-theme'),'graphite');
     await p.locator('[name="locale"]').selectOption('en');await shot(p,'market-en-graphite');
   },withoutAdb(),{marketCatalog:largeMarket});
+  const scrollMarket={...largeMarket,items:[...largeMarket.items,...largeMarket.items.map(item=>({...item,kind:'launcher',id:item.id.replace(/^apps\//,'launcher/')}))]};
+  await check('market updates preserve scroll within a visit and show new cards at the top after reentry',async p=>{
+    await p.setViewportSize({width:960,height:640});await openMarket(p);
+    const apps=p.locator('[data-scroll="market-app"]'),launchers=p.locator('[data-scroll="market-launcher"]');
+    await apps.evaluate(element=>{element.scrollTop=1000;});const appScroll=await apps.evaluate(element=>element.scrollTop);assert.ok(appScroll>0);
+    await nav(p,'market');assert.equal(await apps.evaluate(element=>element.scrollTop),appScroll,'Clicking the current navigation item keeps the current position');
+    await p.locator('[data-market-kind="launcher"]').click();await launchers.evaluate(element=>{element.scrollTop=900;});const launcherScroll=await launchers.evaluate(element=>element.scrollTop);assert.ok(launcherScroll>0);
+    await p.locator('[data-market-kind="app"]').click();assert.equal(await apps.evaluate(element=>element.scrollTop),appScroll);
+    await p.locator('[data-market-kind="launcher"]').click();assert.equal(await launchers.evaluate(element=>element.scrollTop),launcherScroll,'Categories retain their independent positions during one visit');
+    await p.locator('[data-market-kind="app"]').click();
+    await nav(p,'apps');await p.evaluate(value=>window.__marketCatalog=value,{...scrollMarket,revision:'f'.repeat(40),items:[...scrollMarket.items,newMarketApp]});
+    await openMarket(p);assert.equal(await apps.evaluate(element=>element.scrollTop),0,'A new visit must reveal the new-first ordering instead of restoring an old scroll offset');
+    const first=p.locator('.market-card').first();assert.equal(await first.getAttribute('data-market-id'),newMarketApp.id);assert.equal(await first.locator('.market-new').count(),1);
+    const bounds=await first.evaluate(card=>({card:card.getBoundingClientRect().toJSON(),list:card.closest('.market-grid').getBoundingClientRect().toJSON()}));
+    assert.ok(bounds.card.top>=bounds.list.top&&bounds.card.top<bounds.list.bottom,'The newly published app is immediately visible');
+    await p.locator('[data-market-kind="launcher"]').click();assert.equal(await launchers.evaluate(element=>element.scrollTop),0,'The inactive category’s old position is also reset for a new visit');
+  },withoutAdb(),{marketCatalog:scrollMarket});
   await check('market MCP results synchronize catalog and download/install queues with the window',async p=>{
     await openMarket(p);
     const imported={...store.items[0],id:'apps/agent/agent.apk',name:'Agent import',fileName:'agent.apk'};

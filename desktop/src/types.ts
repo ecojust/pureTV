@@ -32,6 +32,12 @@ export interface MarketItem {
 export interface MarketCatalog {
   sourceUrl: string; revision: string; fetchedAt: number; stale: boolean; warning?: string | null; items: MarketItem[];
 }
+export interface MarketSeenEntry {
+  id: string; name: string; version: string | null;
+}
+export interface MarketSeenApps {
+  entries: MarketSeenEntry[] | null; warning: string | null;
+}
 export interface MarketProgress {
   stage: 'catalog' | 'downloading' | 'verifying' | 'installing'; downloaded: number; total: number; itemId?: string;
 }

@@ -88,6 +88,12 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     const callbacks = new Map(); let nextCallback = 1, downloadCancelled = false, marketCancelled = false, toolsInstalled = !!options.toolsInstalled;
     window.__marketCatalog=structuredClone(options.marketCatalog || defaultMarketCatalog);
     window.__marketRequests=[];window.__marketCatalogError=options.failMarketCatalog?'无法读取市场目录，请检查网络后重试':null;
+    // This fixture models the desktop JSON file across page/application reloads.
+    const marketSeenStorage='puretv-test-market-seen-apps';
+    if(localStorage.getItem(marketSeenStorage)===null && options.marketSeenApps!==undefined)localStorage.setItem(marketSeenStorage,JSON.stringify(options.marketSeenApps));
+    window.__marketSeenApps=JSON.parse(localStorage.getItem(marketSeenStorage) || 'null');
+    window.__marketSeenRequests=[];window.__marketSeenWarning=options.marketSeenWarning || null;
+    window.__marketSeenReadError=options.marketSeenReadError || null;window.__marketSeenSaveError=options.marketSeenSaveError || null;
     window.__packageInsights=structuredClone(options.packageInsights || {});
     window.__packageInsightRequests=[];window.__packageResources=[];
     window.__packageInsightError=options.packageInsightError || null;
@@ -202,6 +208,16 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
             state.adbAvailable = true; toolsInstalled = true; state.message = 'ADB 已就绪，可以连接电视';
             return structuredClone(state);
           } finally { callbacks.get(args.onProgress.id)?.({index,end:true}); }
+        }
+        if(command==='get_market_seen_apps') {
+          window.__marketSeenRequests.push({command});await holdOperation('getMarketSeenApps');
+          if(window.__marketSeenReadError)throw new Error(window.__marketSeenReadError);
+          return {entries:structuredClone(window.__marketSeenApps),warning:window.__marketSeenWarning};
+        }
+        if(command==='set_market_seen_apps') {
+          window.__marketSeenRequests.push({command,entries:structuredClone(args.entries)});await holdOperation('setMarketSeenApps');
+          if(window.__marketSeenSaveError)throw new Error(window.__marketSeenSaveError);
+          window.__marketSeenApps=structuredClone(args.entries);localStorage.setItem(marketSeenStorage,JSON.stringify(args.entries));return;
         }
         if (['get_market_catalog','download_market_item','install_market_item'].includes(command)) {
           const action={get_market_catalog:'getMarketCatalog',download_market_item:'downloadMarketItem',install_market_item:'installMarketItem'}[command];

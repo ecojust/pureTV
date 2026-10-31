@@ -1,7 +1,7 @@
 import { Channel, invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import {version as appVersion} from '../package.json';
-import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight, type ClientUpdateInfo, type ClientUpdateProgress, type ClientUpdateResult } from './types';
+import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketSeenEntry, type MarketSeenApps, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight, type ClientUpdateInfo, type ClientUpdateProgress, type ClientUpdateResult } from './types';
 
 export const demo = new URLSearchParams(location.search).get('demo') === '1';
 export const desktop = '__TAURI_INTERNALS__' in window;
@@ -196,6 +196,25 @@ export async function getMarketCatalog(refresh = false, onProgress?: (progress: 
   if (demo) { onProgress?.({stage: 'catalog', downloaded: 0, total: 0}); return structuredClone(demoMarket); }
   if (!desktop) throw new Error(unavailable);
   return invoke<MarketCatalog>('get_market_catalog', {refresh, onProgress: new Channel<MarketProgress>(onProgress || (() => {}))});
+}
+const demoMarketSeenKey = 'puretv.demo.market-seen-apps';
+export async function getMarketSeenApps(): Promise<MarketSeenApps> {
+  if (demo) {
+    try {
+      const raw = localStorage.getItem(demoMarketSeenKey);
+      if (!raw) return {entries: null, warning: null};
+      const entries = JSON.parse(raw);
+      if (!Array.isArray(entries) || entries.some(entry => !entry || typeof entry.id !== 'string' || typeof entry.name !== 'string' || !(entry.version === null || typeof entry.version === 'string'))) throw new Error();
+      return {entries, warning: null};
+    } catch { return {entries: null, warning: '无法读取本地 APK 市场浏览记录，本次无法比较更新。'}; }
+  }
+  if (!desktop) throw new Error(unavailable);
+  return invoke<MarketSeenApps>('get_market_seen_apps');
+}
+export async function setMarketSeenApps(entries: MarketSeenEntry[]): Promise<void> {
+  if (demo) { localStorage.setItem(demoMarketSeenKey, JSON.stringify(entries)); return; }
+  if (!desktop) throw new Error(unavailable);
+  await invoke('set_market_seen_apps', {entries});
 }
 export async function marketItem(operation: 'download' | 'install', id: string, revision: string, onProgress: (progress: MarketProgress) => void): Promise<MarketResult> {
   if (demo) {

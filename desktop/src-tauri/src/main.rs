@@ -5,6 +5,7 @@ mod client_install;
 mod client_updates;
 mod launcher_covers;
 mod market;
+mod market_seen;
 mod mcp;
 mod package_insights;
 mod platform_tools;
@@ -440,6 +441,25 @@ fn platform_tools_info(app: tauri::AppHandle) -> Result<platform_tools::Info, St
         .app_data_dir()
         .map_err(|_| "无法定位应用数据目录")?;
     platform_tools::info(&directory)
+}
+
+#[tauri::command]
+async fn get_market_seen_apps(app: tauri::AppHandle) -> Result<market_seen::Snapshot, String> {
+    let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
+    tauri::async_runtime::spawn_blocking(move || market_seen::load(&directory))
+        .await
+        .map_err(|_| market_seen::READ_FAILED.to_string())
+}
+
+#[tauri::command]
+async fn set_market_seen_apps(
+    entries: Vec<market_seen::Entry>,
+    app: tauri::AppHandle,
+) -> Result<(), String> {
+    let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
+    tauri::async_runtime::spawn_blocking(move || market_seen::save(&directory, &entries))
+        .await
+        .map_err(|_| market_seen::SAVE_FAILED.to_string())?
 }
 
 #[tauri::command]
@@ -1161,6 +1181,8 @@ fn main() {
             platform_tools_info,
             install_platform_tools,
             get_market_catalog,
+            get_market_seen_apps,
+            set_market_seen_apps,
             download_market_item,
             install_market_item,
             open_resource,
