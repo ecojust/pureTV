@@ -39,6 +39,7 @@
 | [Jackal TV](apps/jackal/) | ecojust / 桔子桑 | 0.5.2 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
 | [Magic Jewelry TV](apps/jewel/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
 | [灯塔节拍](apps/lantern-rhythm/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 观察方向与短长灯号，再按节拍真实按住并松开按钮，依次点亮三座灯塔；两次主动重听、有限失误与90秒有效时间，支持手机扫码单人操作 | <img src="apps/lantern-rhythm/thumb.png" width="180" alt="灯塔节拍 界面"> |
+| [环线果园](apps/loop-orchard/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在格点之间铺设一条连通闭环，经过必经果树、避开禁水花坛并满足数字区域的边数提示；带编号管件可铺拆和精确撤销，剩余库存允许，须主动启动水泵，三次错误或90秒结束，手机扫码单人操作 | <img src="apps/loop-orchard/thumb.png" width="180" alt="环线果园 界面"> |
 | [磁极仓库](apps/magnetic-warehouse/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 切换磁极，隔空吸引或排斥编号货箱；处理墙体遮挡与同步移动，在有限行动内把每箱送到对应货位，支持手机扫码单人操作 | <img src="apps/magnetic-warehouse/thumb.png" width="180" alt="磁极仓库 界面"> |
 | [奇偶花圃](apps/parity-garden/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用十字与斜角喷头翻转4×4花圃，让目标花形和标记花的直接浇水偶数条件同时成立；重复浇水不退水，三道有限水量谜题，支持手机扫码单人操作 | <img src="apps/parity-garden/thumb.png" width="180" alt="奇偶花圃 界面"> |
 | [路径刻印](apps/path-glyphs/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在5×5石板上规划不重复的路径，按入边条件收集方向符号，在出口提交与目标完全一致的刻印；三道公开谜题，支持手机扫码单人操作 | <img src="apps/path-glyphs/thumb.png" width="180" alt="路径刻印 界面"> |

@@ -1,0 +1,1455 @@
+{
+  "schema": 1,
+  "game": "loop-orchard",
+  "version": "0.1.0",
+  "sourceCommit": "132a765db4e0fd42fa86032766ebbc0ac0765280",
+  "automationSha256": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+  "loopModel": "The fixed 4x4 vertex graph has 24 unit edges and 16 unique physical pipe IDs. Every numeric region clue counts its four boundary segments exactly; an interior edge counts once for both adjacent regions and null explicitly means no clue. A single nonempty connected cycle must cover all tree vertices, touch no forbidden flower vertex and satisfy all numeric clues. Spare pipe stock is allowed. A-on-edge places or removes one exact pipe, B restores the most recent successful edit without refunding time/errors/lifetime counts, and PUMP requires an explicit action. Three wrong starts or the active 90-second deadline end a round; this is a discrete graph puzzle, not a fluid simulation.",
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "unresolvedFindings": [],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+      "game.js": "05ed55ecb44476dd0604e8f20962debd5d6d7007bcd287b5456959e69b8d7532",
+      "game-config.json": "7af16cb4f47ce9c4703d9cabec8b94d07c2f3f7a831cb75303d8fb9cde7ef8c6",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game.js": "05ed55ecb44476dd0604e8f20962debd5d6d7007bcd287b5456959e69b8d7532",
+      "src/main/assets/game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+      "tests/automation.mjs": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+      "docs/model-contract.md": "b0f5fdd4611415006dfe23f7336f74c59bf32c08ec1eb7b6d82a87339a691893",
+      "tests/game-model.test.cjs": "5bb7b46a5d641c8cbe33f24293fbfb2b2ae95c962b028edfb2a68179423a13f0"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime/01-menu.png",
+        "sha256": "2de787d40d47d78524bb0a07952ed2965135fb1a6f677cba37a9bfde783a0125",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/02-placed-P1-shared-edge.png",
+        "sha256": "2110bb6dd16ea68875c144bc5ad3ad680923f04d82d7a9e25bb80a2c69454896",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/03-removed-full-stock-empty-graph.png",
+        "sha256": "06a857e7f94b73ab0802003c71d0f68bdd5dab755cd3d79cf8d57b89658d5c59",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/04-B-restores-exact-P1.png",
+        "sha256": "ec60eca4c58b7431c6b874493d5e23053b84b4c4ac6e11beec23ec2f6ace91d0",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/05-later-loop-progress.png",
+        "sha256": "04a647b5b828928a7b6dee1321ac658da12356d07d291e7f4c642bd77fb98e8e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/06-goalReady-pump-before-explicit-A.png",
+        "sha256": "adaf940ae81a2237966a0a7717d3278df50f8e1c910676134b0d3a0a86d6f6d4",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/07-won.png",
+        "sha256": "7dddb47709dd4ead3bd238f9464d9a82af9e383a7e193bde0154927b7fc07cef",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/08-small-won.png",
+        "sha256": "cb458b3895538b375be061b7516ee598d258eb7b6a58891933307cf8400fb0ce",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/09-small-menu.png",
+        "sha256": "e96ccb5e4fa2b59b4445d5a678b8f04e44aea0507c3f1481b2c8ae6b0cbbbb54",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/10-small-playing.png",
+        "sha256": "b4b48347e8086b5b6a34f902f107f9593f151ac6bbb748c32462bbf0fd11efd0",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/11-small-pause.png",
+        "sha256": "c6ddb3c6c83aed025bb251867091e57c591ec5d4910821a25ce07d7491697f87",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "302dc1cd47fd2d5100764f9beaaa927700e35d182295855763fd09403178e46d",
+    "scope": "Actually reviewed software-browser candidate using exactly the final bundled assets before source freeze; separate from final packaged QA and video."
+  },
+  "modelTests": {
+    "passed": 29,
+    "command": "node --test --test-reporter=tap resource/apps/loop-orchard/tests/game-model.test.cjs",
+    "sourceHashesBefore": {
+      "model": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+      "tests": "5bb7b46a5d641c8cbe33f24293fbfb2b2ae95c962b028edfb2a68179423a13f0",
+      "automation": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+      "contract": "b0f5fdd4611415006dfe23f7336f74c59bf32c08ec1eb7b6d82a87339a691893"
+    },
+    "sourceHashesAfter": {
+      "model": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+      "tests": "5bb7b46a5d641c8cbe33f24293fbfb2b2ae95c962b028edfb2a68179423a13f0",
+      "automation": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+      "contract": "b0f5fdd4611415006dfe23f7336f74c59bf32c08ec1eb7b6d82a87339a691893"
+    },
+    "testLogSha256": "e36a6a2b4705a0810ba8ceed6cee303fdd92d75b698241000774ea588dd1ee96",
+    "rawReportSha256": "09a4beeb9d14114189e6f959333d765f52bfe8ad9375e65c0a44fb2da8f69c4a",
+    "scope": "Pipe geometry, exact region clues, topology-only multiple-loop rejection, physical instance inventory/edit/undo and input/clock boundary rules plus three fresh public-planner place/remove/exact-undo explicit-PUMP wins and three ordinary empty-board three-error losses. Authored loop examples and labeled role/clue/clock fixtures are distinct from public-planner normal gameplay evidence.",
+    "scheduling": "Ordinary wins use runtime 60 Hz ticks and public observations every five ticks, genuine A/B edges and no state edits. Losses use ordinary navigation and press/release. These are defined legal-input scenarios, not guarantees for arbitrary input timing."
+  },
+  "independentMathematics": {
+    "passed": true,
+    "file": "independent-cycle-space-review.json",
+    "sha256": "9a987202912314b2499ba3d9c68c1bf31688f4116b20cd7246f10f433003d620",
+    "checksPassed": 8,
+    "summary": {
+      "vertices": 16,
+      "edges": 24,
+      "connectedComponents": 1,
+      "cycleSpaceDimension": 9,
+      "faceSubsetsEnumerated": 512,
+      "uniqueMasks": 512,
+      "histogram": {
+        "empty": 1,
+        "singlecycle": 213,
+        "disjointcycles": 108,
+        "degree4branch": 190,
+        "openchain": 0
+      },
+      "singleCycles": 213,
+      "singleCycleClueVectors": 210,
+      "singleCyclePairsSharingAllClues": 3,
+      "topmostFaceIndependenceWitnesses": 511,
+      "boundaryIncidenceChecks": 512
+    },
+    "completeness": "The grid is connected with V=16 and E=24, so its binary cycle space has dimension E-V+1=9. Nine unit-face boundaries are independent: in any nonempty chosen-face subset, an upper edge of a face in the topmost chosen row cannot cancel against a chosen face above it. Numeric GF(2) rank and all 512 distinct XOR masks confirm that these faces span every even selected-edge subgraph.",
+    "scope": "Fixed synthetic 4x4 grid geometry and its full GF(2) cycle space only. No production Model, QA pilot, authored layout, selected game clues, inventory, tree/forbidden assignments or reference route is read or executed. This is not normal gameplay, browser, recording, APK or hardware evidence.",
+    "rawMathematicalReportSha256": "689978ebde4cef789a7a7bb5ef9567a2a8d0abb6e7bd45b5190ed400bfa45465",
+    "enumerationCertificateSha256": "44daa53fc1a7c65c5821098f9c8acfb9c6cf534318633c39ddd9ed7524890496",
+    "rawEnumerationIncluded": false
+  },
+  "independentLoopReview": {
+    "passed": true,
+    "file": "independent-loop-review.json",
+    "sha256": "b5342de5039057c2b8014232aacf27f5909c75da37963454f0712a5b4c101400",
+    "checksPassed": 10,
+    "totals": {
+      "observations": 11306,
+      "ordinaryWins": 3,
+      "topologyOnlyRejections": 3,
+      "orderedFocusPairs": 625,
+      "navigationInputs": 5398
+    },
+    "publicBoardFiltering": [
+      {
+        "level": 1,
+        "sourceRules": {
+          "requiredTreeIds": [
+            "V8",
+            "V10"
+          ],
+          "forbiddenFlowerIds": [
+            "V1"
+          ],
+          "clues": [
+            1,
+            3,
+            2,
+            1,
+            2,
+            3,
+            null,
+            1,
+            1
+          ],
+          "pipeStock": 16
+        },
+        "candidateCounts": {
+          "evaluatedMasks": 512,
+          "stockEligibleMasks": 507,
+          "singleCyclesWithinStock": 213,
+          "disjointCyclesWithinStock": 108,
+          "matchingRoleClueLayouts": 2,
+          "solutionCount": 1,
+          "topologyOnlyCounterexampleCount": 1
+        },
+        "solutions": [
+          680354
+        ],
+        "topologyOnlyCounterexamples": [
+          3973974
+        ],
+        "topologyByCycleCount": {
+          "2": [
+            3973974
+          ],
+          "3": [],
+          "4": []
+        }
+      },
+      {
+        "level": 2,
+        "sourceRules": {
+          "requiredTreeIds": [
+            "V1",
+            "V8",
+            "V11"
+          ],
+          "forbiddenFlowerIds": [
+            "V16"
+          ],
+          "clues": [
+            3,
+            2,
+            2,
+            2,
+            2,
+            3,
+            null,
+            1,
+            1
+          ],
+          "pipeStock": 16
+        },
+        "candidateCounts": {
+          "evaluatedMasks": 512,
+          "stockEligibleMasks": 507,
+          "singleCyclesWithinStock": 213,
+          "disjointCyclesWithinStock": 108,
+          "matchingRoleClueLayouts": 2,
+          "solutionCount": 1,
+          "topologyOnlyCounterexampleCount": 1
+        },
+        "solutions": [
+          676267
+        ],
+        "topologyOnlyCounterexamples": [
+          3969887
+        ],
+        "topologyByCycleCount": {
+          "2": [
+            3969887
+          ],
+          "3": [],
+          "4": []
+        }
+      },
+      {
+        "level": 3,
+        "sourceRules": {
+          "requiredTreeIds": [
+            "V5",
+            "V7",
+            "V14",
+            "V16"
+          ],
+          "forbiddenFlowerIds": [
+            "V2"
+          ],
+          "clues": [
+            1,
+            1,
+            null,
+            3,
+            2,
+            2,
+            2,
+            2,
+            3
+          ],
+          "pipeStock": 16
+        },
+        "candidateCounts": {
+          "evaluatedMasks": 512,
+          "stockEligibleMasks": 507,
+          "singleCyclesWithinStock": 213,
+          "disjointCyclesWithinStock": 108,
+          "matchingRoleClueLayouts": 2,
+          "solutionCount": 1,
+          "topologyOnlyCounterexampleCount": 1
+        },
+        "solutions": [
+          10816856
+        ],
+        "topologyOnlyCounterexamples": [
+          9686956
+        ],
+        "topologyByCycleCount": {
+          "2": [
+            9686956
+          ],
+          "3": [],
+          "4": []
+        }
+      }
+    ],
+    "ordinaryModelWins": [
+      {
+        "level": 1,
+        "mask": 680354,
+        "pipeCount": 8,
+        "pipesRemaining": 8,
+        "elapsed": 1.5333333333333334,
+        "score": 1760,
+        "selectedEdgeIds": [
+          "E2",
+          "E6",
+          "E8",
+          "E9",
+          "E14",
+          "E15",
+          "E18",
+          "E20"
+        ]
+      },
+      {
+        "level": 2,
+        "mask": 676267,
+        "pipeCount": 10,
+        "pipesRemaining": 6,
+        "elapsed": 1.8666666666666667,
+        "score": 1800,
+        "selectedEdgeIds": [
+          "E1",
+          "E2",
+          "E4",
+          "E6",
+          "E8",
+          "E9",
+          "E13",
+          "E15",
+          "E18",
+          "E20"
+        ]
+      },
+      {
+        "level": 3,
+        "mask": 10816856,
+        "pipeCount": 10,
+        "pipesRemaining": 6,
+        "elapsed": 2.033333333333333,
+        "score": 1815,
+        "selectedEdgeIds": [
+          "E4",
+          "E5",
+          "E7",
+          "E9",
+          "E11",
+          "E12",
+          "E17",
+          "E19",
+          "E22",
+          "E24"
+        ]
+      }
+    ],
+    "ordinaryTopologyOnlyRejections": [
+      {
+        "level": 1,
+        "mask": 3973974,
+        "pipeCount": 12,
+        "componentCount": 2,
+        "checks": {
+          "hasPipes": true,
+          "degreeTwo": true,
+          "singleLoop": false,
+          "trees": true,
+          "flowers": true,
+          "clues": true
+        },
+        "reason": "multiple-loops",
+        "elapsed": 2.4
+      },
+      {
+        "level": 2,
+        "mask": 3969887,
+        "pipeCount": 14,
+        "componentCount": 2,
+        "checks": {
+          "hasPipes": true,
+          "degreeTwo": true,
+          "singleLoop": false,
+          "trees": true,
+          "flowers": true,
+          "clues": true
+        },
+        "reason": "multiple-loops",
+        "elapsed": 2.7333333333333334
+      },
+      {
+        "level": 3,
+        "mask": 9686956,
+        "pipeCount": 14,
+        "componentCount": 2,
+        "checks": {
+          "hasPipes": true,
+          "degreeTwo": true,
+          "singleLoop": false,
+          "trees": true,
+          "flowers": true,
+          "clues": true
+        },
+        "reason": "multiple-loops",
+        "elapsed": 3
+      }
+    ],
+    "scope": {
+      "publicFactsOnlySearch": true,
+      "productionSolverImported": false,
+      "qaSolverImported": false,
+      "authoringSolutionsRead": false,
+      "mathematicalFixturesSeparate": true,
+      "browserExecuted": false,
+      "normalGameplayVideoEvidence": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    },
+    "limitations": [
+      "Cycle-space enumeration covers all even subgraphs; odd/open diagnostics are separate explicit ordinary-input cases.",
+      "Fast legal model inputs are not real-time browser or device evidence.",
+      "One clock boundary is an explicitly labelled fixture; every reported normal win and multiple-loop rejection uses only ordinary inputs."
+    ]
+  },
+  "independentPilotReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "c0638c45bdb891bb63b47af7d4ddd130cd5cbe02cb7c56b8d7978a7344c6f6b0",
+    "checksPassed": 8,
+    "pilotCalls": 56,
+    "exportCalls": 15,
+    "observationCalls": 71,
+    "deepFrozenObservations": 71,
+    "factoriesCreated": 6,
+    "diagnosticCalls": 3,
+    "reviewedApiCallsIncludingFactoriesAndDiagnostics": 80,
+    "sourceHashes": {
+      "tests/automation.mjs": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+      "src/main/assets/game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+      "docs/model-contract.md": "b0f5fdd4611415006dfe23f7336f74c59bf32c08ec1eb7b6d82a87339a691893",
+      "tests/independent-loop-math.mjs": "d108d387fd2d28293b2879dcde34d5768bccd31323ca61c413e42dff44c82667",
+      "tests/independent-loop-board.mjs": "de43d289a62018f314e1369374e8d1d69d2b1caad4eb364cc75e49950afade93"
+    },
+    "syntheticBoard": {
+      "target": "NW unit-square loop",
+      "requiredTreeIds": [
+        "V1",
+        "V6"
+      ],
+      "forbiddenFlowerIds": [
+        "V16"
+      ],
+      "allNineClues": [
+        4,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "physicalPipeStock": 16
+    },
+    "scope": "A hand-constructed NW unit-square target with trees V1/V6 and flower V16, and all nine numeric boundary clues independently derived from that square. This differs from the authored partially hinted boards. Only public synthetic observations are supplied; the reviewed public pilot/planner and independent pure geometry cache derivation execute. No production Model source is read, no create/step or author witness is used, and no normal gameplay/browser/device success is claimed.",
+    "harnessCorrection": {
+      "scope": "The first run stopped at a hand-written shortest-path tie expectation. E1 to E4 has two equally short routes; the public pilot BFS orders N/E/S/W and selects Right via E14, not Down via E13. Only that expected key and the next two selectedId observations were corrected; predictFocus(S)=E13 remains independently asserted.",
+      "previousScript": {
+        "file": "review-pre-navigation-fixture.mjs",
+        "sha256": "75857e6282a7476b0623f0f46dfe9409c281bfd1463f5e33bfb8ddffe18521ff"
+      },
+      "previousReport": {
+        "file": "report-pre-navigation-fixture.json",
+        "sha256": "67d01582e1e5787c1816b8f78870a8022cdd76c56e6292f4bd28602accc6ab08",
+        "passed": false
+      },
+      "productionChanged": false
+    }
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "7195df7d09a2f6ed25135cd5d784eedc06f819908a3e8380cf32d2d98b8e8444",
+    "scope": "Fresh final v2 source art:52 ordinary authored input states and one explicit public-clue visual fixture;2 actual runtime menu/play/place/pause sequences and40 no-op DOM layout snapshots. No APK/device/video/browser-earned-win claim.",
+    "finalSourceHashes": {
+      "game": {
+        "path": "resource/apps/loop-orchard/src/main/assets/game.js",
+        "sha256": "05ed55ecb44476dd0604e8f20962debd5d6d7007bcd287b5456959e69b8d7532"
+      },
+      "model": {
+        "path": "resource/apps/loop-orchard/src/main/assets/game-model.js",
+        "sha256": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139"
+      },
+      "pilot": {
+        "path": "resource/apps/loop-orchard/tests/automation.mjs",
+        "sha256": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "runtime": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
+      },
+      "css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "icon": {
+        "path": "resource/apps/loop-orchard/icon.xml",
+        "sha256": "466b8f99de8ad79e7e2bca507d9b6408ad5f9baeaf55c83f1e1c66bbfbad4af6"
+      },
+      "logo": {
+        "path": "resource/apps/loop-orchard/logo.svg",
+        "sha256": "42ba594ec9c5a16506dc464b79c8b60a05596118a8f00cc7e7b12c86e7fd49e7"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+      "game.js": "05ed55ecb44476dd0604e8f20962debd5d6d7007bcd287b5456959e69b8d7532",
+      "game-config.json": "7af16cb4f47ce9c4703d9cabec8b94d07c2f3f7a831cb75303d8fb9cde7ef8c6",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9"
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "sourceUnchanged": true,
+    "sourceCommitHashesMatched": true,
+    "buildSourceSha": "132a765db4e0fd42fa86032766ebbc0ac0765280",
+    "startHashes": {
+      "tests/automation.mjs": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+      "tests/game-model.test.cjs": "5bb7b46a5d641c8cbe33f24293fbfb2b2ae95c962b028edfb2a68179423a13f0",
+      "src/main/assets/game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+      "src/main/assets/game.js": "05ed55ecb44476dd0604e8f20962debd5d6d7007bcd287b5456959e69b8d7532"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+      "tests/game-model.test.cjs": "5bb7b46a5d641c8cbe33f24293fbfb2b2ae95c962b028edfb2a68179423a13f0",
+      "src/main/assets/game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+      "src/main/assets/game.js": "05ed55ecb44476dd0604e8f20962debd5d6d7007bcd287b5456959e69b8d7532"
+    },
+    "rawReportSha256": "b636d63e212face6b2b1b2987dbeb1d0d7bf82ecff6eae83a694983b0c4c794f"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three public orchards distinguish unhinted plots from numeric zero and spare stock is valid",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick select one orchard per press",
+        "passed": true
+      },
+      {
+        "name": "menu blur and sound controls reflect their actual state",
+        "passed": true
+      },
+      {
+        "name": "held phone START starts once without placing a pipe or starting the pump",
+        "passed": true
+      },
+      {
+        "name": "held phone A places the lowest free physical pipe only once",
+        "passed": true
+      },
+      {
+        "name": "held phone B undoes one real placement without refunding time or lifetime edits",
+        "passed": true
+      },
+      {
+        "name": "phone navigation uses the public axis-biased graph and holds before first repeat",
+        "passed": true
+      },
+      {
+        "name": "one shared edge counts once on each adjacent plot and removal clears degree and connectivity",
+        "passed": true
+      },
+      {
+        "name": "B reverses the actual removal and restores the same physical pipe and exact network",
+        "passed": true
+      },
+      {
+        "name": "sixteen physical pipes are finite and rejected stock use does not mutate history or charge mistakes",
+        "passed": true
+      },
+      {
+        "name": "connected cancelSeq preserves the drawing and requires real A release before another edit",
+        "passed": true
+      },
+      {
+        "name": "held native Enter is one placement edge and does not alternate place and remove",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes exact physical inventory and topology and resume clears stale movement",
+        "passed": true
+      },
+      {
+        "name": "pause primary and header freeze and resume the same pipe graph",
+        "passed": true
+      },
+      {
+        "name": "real empty and open-ended drawings are rejected by explicit PUMP without consuming pipes",
+        "passed": true
+      },
+      {
+        "name": "ordinary two disjoint cycles meet every numeric clue and role yet remain unready",
+        "passed": true
+      },
+      {
+        "name": "three fresh explicit starts lose on multiple loops and held A counts only once",
+        "passed": true
+      },
+      {
+        "name": "R restores exact free physical pipes and initial clue-derived score with clean ledgers",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "mistakes",
+      "submissionReason": "multiple-loops",
+      "level": 1,
+      "score": 360,
+      "elapsed": 10.05,
+      "remaining": 79.95,
+      "pipeCount": 12,
+      "pipesRemaining": 4,
+      "componentCount": 2,
+      "degreeTwo": true,
+      "singleLoop": false,
+      "matchedClueCount": 8,
+      "clueCount": 8,
+      "treesCovered": 2,
+      "allTreesCovered": true,
+      "flowersAvoided": true,
+      "allCluesMet": true,
+      "totalEdits": 12,
+      "placements": 12,
+      "removals": 0,
+      "undos": 0,
+      "submissions": 3,
+      "mistakes": 3,
+      "maxMistakes": 3
+    },
+    "separateOpenPipeRejection": {
+      "reason": "leak",
+      "pipeCount": 1,
+      "componentCount": 1,
+      "checks": {
+        "hasPipes": true,
+        "degreeTwo": false,
+        "singleLoop": false,
+        "trees": false,
+        "flowers": true,
+        "clues": false
+      },
+      "submissions": 2,
+      "mistakes": 2,
+      "elapsed": 3.316666666666667,
+      "score": 60
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+      "game.js": "05ed55ecb44476dd0604e8f20962debd5d6d7007bcd287b5456959e69b8d7532",
+      "game-config.json": "7af16cb4f47ce9c4703d9cabec8b94d07c2f3f7a831cb75303d8fb9cde7ef8c6",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "横杠无目标，余管可保留。撤销不退时间或错次。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "横杠无目标，余管可保留。撤销不退时间或错次。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "横杠无目标，余管可保留。撤销不退时间或错次。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "横杠无目标，余管可保留。撤销不退时间或错次。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "横杠无目标，余管可保留。撤销不退时间或错次。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "横杠无目标，余管可保留。撤销不退时间或错次。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "049578ccb06591d9eb4f6c3a40a50028201b53a9ad8e4ea2dc6504e9b7b9ec78"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 289,
+    "rafIntervalMs": {
+      "count": 289,
+      "min": 16.599999999998545,
+      "median": 33.400000000000546,
+      "p95": 83.29999999999927,
+      "max": 116.60000000000036,
+      "mean": 43.19342560553634
+    },
+    "webglDrawCalls": {
+      "count": 289,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 289,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 52.033780912,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1525,
+      "elapsed": 48.53333333333333,
+      "remaining": 41.46666666666667,
+      "pipeCount": 8,
+      "pipesRemaining": 8,
+      "componentCount": 1,
+      "matchedClueCount": 8,
+      "clueCount": 8,
+      "treesCovered": 2,
+      "degreeTwo": true,
+      "singleLoop": true,
+      "allTreesCovered": true,
+      "flowersAvoided": true,
+      "allCluesMet": true,
+      "goalReady": true,
+      "historyDepth": 8,
+      "totalEdits": 9,
+      "placements": 8,
+      "removals": 1,
+      "undos": 1,
+      "editAttempts": 9,
+      "blockedPlacements": 0,
+      "submissions": 1,
+      "mistakes": 0,
+      "maxMistakes": 3
+    },
+    "trialPlacement": {
+      "observedAt": 10.013225199999999,
+      "physicalAssignments": [
+        {
+          "edgeId": "E6",
+          "pipeId": "P1"
+        }
+      ],
+      "availablePipeIds": [
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16"
+      ],
+      "plotCounts": {
+        "R1": 0,
+        "R2": 0,
+        "R3": 1,
+        "R4": 0,
+        "R5": 0,
+        "R6": 1,
+        "R7": 0,
+        "R8": 0,
+        "R9": 0
+      },
+      "vertexDegrees": {
+        "V1": 0,
+        "V2": 0,
+        "V3": 0,
+        "V4": 0,
+        "V5": 0,
+        "V6": 0,
+        "V7": 1,
+        "V8": 1,
+        "V9": 0,
+        "V10": 0,
+        "V11": 0,
+        "V12": 0,
+        "V13": 0,
+        "V14": 0,
+        "V15": 0,
+        "V16": 0
+      },
+      "components": [
+        {
+          "id": "V7",
+          "vertexIds": [
+            "V7",
+            "V8"
+          ],
+          "edgeIds": [
+            "E6"
+          ]
+        }
+      ],
+      "elapsed": 7.916666666666667,
+      "selectedId": "E6",
+      "pipeCount": 1,
+      "pipesRemaining": 15,
+      "componentCount": 1,
+      "activeVertexCount": 2,
+      "matchedClueCount": 0,
+      "totalEdits": 1,
+      "placements": 1,
+      "removals": 0,
+      "undos": 0,
+      "historyDepth": 1,
+      "editAttempts": 1,
+      "submissions": 0,
+      "mistakes": 0,
+      "lastObservedAt": 12.013106625999999,
+      "removeADispatchedAt": 13.637697651999998,
+      "edit": {
+        "kind": "place",
+        "edgeId": "E6",
+        "beforePipeId": null,
+        "afterPipeId": "P1",
+        "at": 6.316666666666666,
+        "tick": 379
+      },
+      "plotChanges": [
+        {
+          "plotId": "R3",
+          "before": 0,
+          "after": 1
+        },
+        {
+          "plotId": "R6",
+          "before": 0,
+          "after": 1
+        }
+      ],
+      "vertexChanges": [
+        {
+          "vertexId": "V7",
+          "before": 0,
+          "after": 1
+        },
+        {
+          "vertexId": "V8",
+          "before": 0,
+          "after": 1
+        }
+      ]
+    },
+    "trialDisplayedSecondsAtLeast": 3.374472451999999,
+    "trialHoldBasis": "trial-observation-to-next-input-minus-0.25",
+    "removalRestored": {
+      "observedAt": 14.004159529999999,
+      "physicalAssignments": [],
+      "availablePipeIds": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16"
+      ],
+      "plotCounts": {
+        "R1": 0,
+        "R2": 0,
+        "R3": 0,
+        "R4": 0,
+        "R5": 0,
+        "R6": 0,
+        "R7": 0,
+        "R8": 0,
+        "R9": 0
+      },
+      "vertexDegrees": {
+        "V1": 0,
+        "V2": 0,
+        "V3": 0,
+        "V4": 0,
+        "V5": 0,
+        "V6": 0,
+        "V7": 0,
+        "V8": 0,
+        "V9": 0,
+        "V10": 0,
+        "V11": 0,
+        "V12": 0,
+        "V13": 0,
+        "V14": 0,
+        "V15": 0,
+        "V16": 0
+      },
+      "components": [],
+      "elapsed": 11.966666666666667,
+      "selectedId": "E6",
+      "pipeCount": 0,
+      "pipesRemaining": 16,
+      "componentCount": 0,
+      "activeVertexCount": 0,
+      "matchedClueCount": 0,
+      "totalEdits": 2,
+      "placements": 1,
+      "removals": 1,
+      "undos": 0,
+      "historyDepth": 2,
+      "editAttempts": 2,
+      "submissions": 0,
+      "mistakes": 0,
+      "lastObservedAt": 18.013236607000003,
+      "undoBDispatchedAt": 18.038799534000002,
+      "edit": {
+        "kind": "remove",
+        "edgeId": "E6",
+        "beforePipeId": "P1",
+        "afterPipeId": null,
+        "at": 11.55,
+        "tick": 693
+      }
+    },
+    "removalDisplayedSecondsAtLeast": 4.009077077000004,
+    "removalHoldBasis": "removed-samples",
+    "undoRestored": {
+      "observedAt": 20.013112210000003,
+      "physicalAssignments": [
+        {
+          "edgeId": "E6",
+          "pipeId": "P1"
+        }
+      ],
+      "availablePipeIds": [
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16"
+      ],
+      "plotCounts": {
+        "R1": 0,
+        "R2": 0,
+        "R3": 1,
+        "R4": 0,
+        "R5": 0,
+        "R6": 1,
+        "R7": 0,
+        "R8": 0,
+        "R9": 0
+      },
+      "vertexDegrees": {
+        "V1": 0,
+        "V2": 0,
+        "V3": 0,
+        "V4": 0,
+        "V5": 0,
+        "V6": 0,
+        "V7": 1,
+        "V8": 1,
+        "V9": 0,
+        "V10": 0,
+        "V11": 0,
+        "V12": 0,
+        "V13": 0,
+        "V14": 0,
+        "V15": 0,
+        "V16": 0
+      },
+      "components": [
+        {
+          "id": "V7",
+          "vertexIds": [
+            "V7",
+            "V8"
+          ],
+          "edgeIds": [
+            "E6"
+          ]
+        }
+      ],
+      "elapsed": 17.916666666666668,
+      "selectedId": "E6",
+      "pipeCount": 1,
+      "pipesRemaining": 15,
+      "componentCount": 1,
+      "activeVertexCount": 2,
+      "matchedClueCount": 0,
+      "totalEdits": 2,
+      "placements": 1,
+      "removals": 1,
+      "undos": 1,
+      "historyDepth": 1,
+      "editAttempts": 2,
+      "submissions": 0,
+      "mistakes": 0,
+      "lastUndo": {
+        "edit": {
+          "kind": "remove",
+          "edgeId": "E6",
+          "beforePipeId": "P1",
+          "afterPipeId": null,
+          "at": 11.55,
+          "tick": 693
+        },
+        "at": 15.95,
+        "tick": 957
+      }
+    },
+    "finalWinHeldSecondsAtLeast": 17.979515954000007,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "20cbe7426cec3d64e870fbf65ea2c47da9f65428fbd94af41f0789c185ced262"
+      },
+      {
+        "name": "menu-two-0.85s.png",
+        "sha256": "a1dd2afd7df0d526d18da2b8d9f0d420d1767346cba66ca8d912cd90566b5c56"
+      },
+      {
+        "name": "menu-three-1.35s.png",
+        "sha256": "ef0cfd02d0955532f78f1aa17dec69afedbd3a65e1c325ad074bec22af871b29"
+      },
+      {
+        "name": "trial-shared-edge-10.31s.png",
+        "sha256": "fda578fd932d2f8bafce7b138db04bf98b4134126e490c5b2ce3cec2638ab413"
+      },
+      {
+        "name": "removed-stock-restored-14.30s.png",
+        "sha256": "3d517cd41768ab9a6069d51597bb10511942156ae0258dff4f6e41ffd757fc0f"
+      },
+      {
+        "name": "undo-same-physical-pipe-20.31s.png",
+        "sha256": "fff31f33344d6b052f0f544ac2b2d637e4fa7630374ce9e5eb8607d0790e774e"
+      },
+      {
+        "name": "gameplay-thumb-34.46s.png",
+        "sha256": "aabac842dd024160ab4bf05a3bc5010be99c43f24847f42f63ce756050cd24bb"
+      },
+      {
+        "name": "ready-awaiting-PUMP-48.31s.png",
+        "sha256": "f2a87142dbb7bfd40eae4d24c61d53dfc7a08314e926e856f533a9738367cc34"
+      },
+      {
+        "name": "settlement-68.36s.png",
+        "sha256": "8075964b48bf628c577d761e387e9823807e45959f3fdd2763fe42a225e37700"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "7182a139b30a705e7e88b53a912e5966866050b8eee9679182a88100aac55853"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+    "game.js": "05ed55ecb44476dd0604e8f20962debd5d6d7007bcd287b5456959e69b8d7532",
+    "game-config.json": "7af16cb4f47ce9c4703d9cabec8b94d07c2f3f7a831cb75303d8fb9cde7ef8c6",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "8a288c2f3fb7b404ca63ff8c7bb66d6f62ba2573b5311adcfc7d2b094abbb5f1",
+    "sign": "68d703cd457d3f55045b6df4a4a505e52298b5b7c83e5b46918ef6269f08ef79",
+    "fetch": "b80df946301574e446cd442e782da60fa34d909fc4c2894df7c269ca4ab21ec7",
+    "qa": "f7e8b5819ae305afe8c1861514a8afdc4478de08ebc32fe11da9f55e1251f8a5",
+    "ui": "22b00a764680ec24d50b7d6e4eb84afc96ad6f347faf060cad2ae6c8ee80aaf0",
+    "layout": "049578ccb06591d9eb4f6c3a40a50028201b53a9ad8e4ea2dc6504e9b7b9ec78",
+    "viewport": "f70b71d6b3a98cc2f349bfac3eb606952d03aed3e34799305c79d1def063c22a",
+    "summary": "4acac87e10a42e9e81ee18d43a333a0082a29852d0008e7a97e9543ddea4561f",
+    "record": "dd36e4bf55ac6dd590048aaec0ef5b56297a92277f0b039c814671a2aeeddb21",
+    "review": "2e3dea2f390c346765d3aa80b863b00fa3c8573aba73fae03b79425a305c10d3",
+    "videoValidation": "f4676c0dfd952a8023729cfebb450507034b8ef424b1f2f1b603ca4dd0e08a60",
+    "artifacts": "e1f54b858deaf68d017826bbe35ad66504be7284a9706f4168cb682199168148",
+    "independentModel": "b5342de5039057c2b8014232aacf27f5909c75da37963454f0712a5b4c101400",
+    "independentMathematics": "9a987202912314b2499ba3d9c68c1bf31688f4116b20cd7246f10f433003d620",
+    "independentPilot": "c0638c45bdb891bb63b47af7d4ddd130cd5cbe02cb7c56b8d7978a7344c6f6b0",
+    "artReview": "b17464dc79fa3b56c85167c9ceff5735b328b79feef37449b35623ba19542ef5",
+    "modelTests": "09a4beeb9d14114189e6f959333d765f52bfe8ad9375e65c0a44fb2da8f69c4a",
+    "candidateReview": "302dc1cd47fd2d5100764f9beaaa927700e35d182295855763fd09403178e46d",
+    "testProvenance": "b636d63e212face6b2b1b2987dbeb1d0d7bf82ecff6eae83a694983b0c4c794f"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium gameplay uses real browser input events. Mathematical, synthetic observer, native-room/phone and source-layout fixtures are separately labelled; no physical TV/phone installation, device performance or real hydraulic simulation is claimed."
+  },
+  "release": {
+    "sourceSha": "132a765db4e0fd42fa86032766ebbc0ac0765280",
+    "signerCommit": "132a765db4e0fd42fa86032766ebbc0ac0765280",
+    "signingRun": 41358757608,
+    "bytes": 296227,
+    "sha256": "2edbde4e351157866795d68e33ad5208342755dcfa637ff57f117c1e086b65cd",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "fe1a6c7e169d1f62a341eb90b7fb878554b74a50"
+  }
+}

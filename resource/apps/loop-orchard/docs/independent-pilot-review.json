@@ -1,0 +1,875 @@
+{
+  "kind": "independent-synthetic-public-loop-pilot-review",
+  "passed": true,
+  "sourceHashes": {
+    "tests/automation.mjs": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+    "src/main/assets/game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+    "docs/model-contract.md": "b0f5fdd4611415006dfe23f7336f74c59bf32c08ec1eb7b6d82a87339a691893",
+    "tests/independent-loop-math.mjs": "d108d387fd2d28293b2879dcde34d5768bccd31323ca61c413e42dff44c82667",
+    "tests/independent-loop-board.mjs": "de43d289a62018f314e1369374e8d1d69d2b1caad4eb364cc75e49950afade93"
+  },
+  "expectedPilotSha256": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+  "reviewScriptSha256": "cce0ecd10bf0881d8ca8c726b75b5b2a73f097eafb1f67a8a401e9f59e0c3e90",
+  "productionModelImported": false,
+  "productionModelStepCalled": false,
+  "productionModelSourceRead": false,
+  "modelBytesHashedOnly": true,
+  "authorReferenceRoutesRead": false,
+  "normalGameWinsClaimed": 0,
+  "browserExecuted": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "privateTrapNames": [
+    "_accumulator",
+    "_lastA",
+    "_lastB",
+    "_pendingA",
+    "_pendingB",
+    "_heldDirection",
+    "_nextMoveTick",
+    "_cancelEpoch",
+    "_solution",
+    "_referenceLoop",
+    "_authorWitness",
+    "_futureInputs",
+    "_private"
+  ],
+  "privateTrapNameSource": "Declared bookkeeping and hypothetical hidden fields; not extracted from production model source.",
+  "checks": [
+    {
+      "name": "only pinned public pilot and pure independent math are imported; model bytes are hashed without source inspection",
+      "passed": true
+    },
+    {
+      "name": "three factories produce identical keys for paired public histories despite private variants; late real receipt is accepted and stale ticks release",
+      "passed": true,
+      "pairedObservations": 7,
+      "variants": 3,
+      "lateReceiptObservedAfterSeconds": 1.8
+    },
+    {
+      "name": "lowest-free physical P1 and unchanged inventory during navigation are required; misleading P2 observations are rejected",
+      "passed": true
+    },
+    {
+      "name": "record protocol observes A placement, A removal and B restoration of the same P1 and edge without refunding lifetime counts",
+      "passed": true,
+      "syntheticObservations": 12,
+      "edgeId": "E4",
+      "pipeId": "P1",
+      "notNormalGameplay": true
+    },
+    {
+      "name": "interleaved factories keep PUMP and unfinished-edit tasks isolated; pause/menu gates are neutral and retry cannot retain a stale submission",
+      "passed": true
+    },
+    {
+      "name": "an unobserved or canceled transport edge never fabricates progress: after timeout it may only retry the still-missing same edit",
+      "passed": true,
+      "scope": "Unchanged synthetic observation models a lost/canceled transport action. No production cancelEpoch handling or runtime keyboard cancellation is claimed."
+    },
+    {
+      "name": "public exports preserve lowest free IDs, finite stock/removal, zero versus null clues, full public target, cap rejection and spatial focus",
+      "passed": true,
+      "exportScope": "Handmade NW-square board plus explicit full-stock and nullable-clue boundaries; no authored goal is used."
+    },
+    {
+      "name": "every observed snapshot is deeply frozen with zero private reads or mutations",
+      "passed": true
+    }
+  ],
+  "harnessCorrection": {
+    "scope": "The first run stopped at a hand-written shortest-path tie expectation. E1 to E4 has two equally short routes; the public pilot BFS orders N/E/S/W and selects Right via E14, not Down via E13. Only that expected key and the next two selectedId observations were corrected; predictFocus(S)=E13 remains independently asserted.",
+    "previousScript": {
+      "file": "review-pre-navigation-fixture.mjs",
+      "sha256": "75857e6282a7476b0623f0f46dfe9409c281bfd1463f5e33bfb8ddffe18521ff"
+    },
+    "previousReport": {
+      "file": "report-pre-navigation-fixture.json",
+      "sha256": "67d01582e1e5787c1816b8f78870a8022cdd76c56e6292f4bd28602accc6ab08",
+      "passed": false
+    },
+    "productionChanged": false
+  },
+  "scope": "A hand-constructed NW unit-square target with trees V1/V6 and flower V16, and all nine numeric boundary clues independently derived from that square. This differs from the authored partially hinted boards. Only public synthetic observations are supplied; the reviewed public pilot/planner and independent pure geometry cache derivation execute. No production Model source is read, no create/step or author witness is used, and no normal gameplay/browser/device success is claimed.",
+  "afterImportHashes": {
+    "tests/automation.mjs": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+    "src/main/assets/game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+    "docs/model-contract.md": "b0f5fdd4611415006dfe23f7336f74c59bf32c08ec1eb7b6d82a87339a691893",
+    "tests/independent-loop-math.mjs": "d108d387fd2d28293b2879dcde34d5768bccd31323ca61c413e42dff44c82667",
+    "tests/independent-loop-board.mjs": "de43d289a62018f314e1369374e8d1d69d2b1caad4eb364cc75e49950afade93"
+  },
+  "endHashes": {
+    "tests/automation.mjs": "23335ce29c1edd5c52a4cf8d8e1f1dbebcb3704a1d4cb3be62f298af1c6147f9",
+    "src/main/assets/game-model.js": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+    "docs/model-contract.md": "b0f5fdd4611415006dfe23f7336f74c59bf32c08ec1eb7b6d82a87339a691893",
+    "tests/independent-loop-math.mjs": "d108d387fd2d28293b2879dcde34d5768bccd31323ca61c413e42dff44c82667",
+    "tests/independent-loop-board.mjs": "de43d289a62018f314e1369374e8d1d69d2b1caad4eb364cc75e49950afade93"
+  },
+  "reviewScriptEndSha256": "cce0ecd10bf0881d8ca8c726b75b5b2a73f097eafb1f67a8a401e9f59e0c3e90",
+  "sourceUnchanged": true,
+  "pilotCalls": 56,
+  "exportCalls": 15,
+  "observationCalls": 71,
+  "reviewedApiCallsIncludingFactoriesAndDiagnostics": 80,
+  "callLimit": 100,
+  "factoriesCreated": 6,
+  "diagnosticCalls": 3,
+  "deepFrozenObservations": 71,
+  "privateReads": 0,
+  "mutationAttempts": 0,
+  "meaningfulDirectionOutputs": 1,
+  "editSubmitEdgeOutputs": 9,
+  "undoEdgeOutputs": 1,
+  "inputTraceSha256": "5d6f119d67ef32857335094bc63397dfc75afa885f0802f6c0aa7bf075744168",
+  "inputTrace": [
+    {
+      "label": "paired-0-a",
+      "tick": 60,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-0-b",
+      "tick": 60,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-0-getters",
+      "tick": 60,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-1-a",
+      "tick": 84,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-1-b",
+      "tick": 84,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-1-getters",
+      "tick": 84,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-2-a",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-2-b",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-2-getters",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-3-a",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-3-b",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-3-getters",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-a",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-b",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-getters",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-5-a",
+      "tick": 114,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-5-b",
+      "tick": 114,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-5-getters",
+      "tick": 114,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-6-a",
+      "tick": 204,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-6-b",
+      "tick": 204,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "negative-P2-while-lowest-free-P1-was-required",
+      "tick": 204,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P2"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "error": "Actual edit did not preserve exact pipe ID, inventory or counters"
+    },
+    {
+      "label": "paired-6-getters",
+      "tick": 204,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "continue-after-real-placement-direction",
+      "tick": 216,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "navigation-release",
+      "tick": 216,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "negative-navigation-mutated-pipe-inventory",
+      "tick": 222,
+      "phase": "playing",
+      "selectedId": "E14",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "error": "Navigation changed actual pipe inventory or edit ledger"
+    },
+    {
+      "label": "observed-real-navigation",
+      "tick": 222,
+      "phase": "playing",
+      "selectedId": "E14",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-place-remove-undo-0",
+      "tick": 60,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-place-remove-undo-1",
+      "tick": 216,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-place-remove-undo-2",
+      "tick": 270,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "record-place-remove-undo-3",
+      "tick": 270,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-place-remove-undo-4",
+      "tick": 276,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [
+        {
+          "edgeId": "E4",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-place-remove-undo-5",
+      "tick": 534,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [
+        {
+          "edgeId": "E4",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-place-remove-undo-6",
+      "tick": 588,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [
+        {
+          "edgeId": "E4",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "record-place-remove-undo-7",
+      "tick": 588,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [
+        {
+          "edgeId": "E4",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-place-remove-undo-8",
+      "tick": 594,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [],
+      "totalEdits": 2,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-place-remove-undo-9",
+      "tick": 852,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [],
+      "totalEdits": 2,
+      "undos": 0,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "record-place-remove-undo-10",
+      "tick": 852,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [],
+      "totalEdits": 2,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "negative-undo-restoring-P2-instead-of-removed-P1",
+      "tick": 858,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [
+        {
+          "edgeId": "E4",
+          "pipeId": "P2"
+        }
+      ],
+      "totalEdits": 2,
+      "undos": 1,
+      "error": "Undo must restore the removed physical pipe without refunding time or lifetime counters"
+    },
+    {
+      "label": "record-place-remove-undo-11",
+      "tick": 858,
+      "phase": "playing",
+      "selectedId": "E4",
+      "assignments": [
+        {
+          "edgeId": "E4",
+          "pipeId": "P1"
+        }
+      ],
+      "totalEdits": 2,
+      "undos": 1,
+      "keys": []
+    },
+    {
+      "label": "ready-factory-start",
+      "tick": 600,
+      "phase": "playing",
+      "selectedId": "pump",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P1"
+        },
+        {
+          "edgeId": "E4",
+          "pipeId": "P2"
+        },
+        {
+          "edgeId": "E13",
+          "pipeId": "P3"
+        },
+        {
+          "edgeId": "E14",
+          "pipeId": "P4"
+        }
+      ],
+      "totalEdits": 4,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "unobserved-factory-start",
+      "tick": 60,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "ready-inspection-is-not-automatic-victory",
+      "tick": 624,
+      "phase": "playing",
+      "selectedId": "pump",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P1"
+        },
+        {
+          "edgeId": "E4",
+          "pipeId": "P2"
+        },
+        {
+          "edgeId": "E13",
+          "pipeId": "P3"
+        },
+        {
+          "edgeId": "E14",
+          "pipeId": "P4"
+        }
+      ],
+      "totalEdits": 4,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "unobserved-edit-preview",
+      "tick": 84,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "explicit-PUMP-edge",
+      "tick": 642,
+      "phase": "playing",
+      "selectedId": "pump",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P1"
+        },
+        {
+          "edgeId": "E4",
+          "pipeId": "P2"
+        },
+        {
+          "edgeId": "E13",
+          "pipeId": "P3"
+        },
+        {
+          "edgeId": "E14",
+          "pipeId": "P4"
+        }
+      ],
+      "totalEdits": 4,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "unobserved-edit-edge",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "PUMP-release",
+      "tick": 642,
+      "phase": "playing",
+      "selectedId": "pump",
+      "assignments": [
+        {
+          "edgeId": "E1",
+          "pipeId": "P1"
+        },
+        {
+          "edgeId": "E4",
+          "pipeId": "P2"
+        },
+        {
+          "edgeId": "E13",
+          "pipeId": "P3"
+        },
+        {
+          "edgeId": "E14",
+          "pipeId": "P4"
+        }
+      ],
+      "totalEdits": 4,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "unobserved-edit-release",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "pause-does-not-reemit",
+      "tick": 96,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "unchanged-observation-does-not-fabricate-placement",
+      "tick": 102,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "unobserved-edit-timeout-remains-neutral",
+      "tick": 198,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "only-same-unobserved-E1-edit-is-retried",
+      "tick": 216,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "constructed-runtime-neutral-menu",
+      "tick": 642,
+      "phase": "menu",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "constructed-runtime-neutral-won",
+      "tick": 642,
+      "phase": "won",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "fresh-retry-clock-rollback",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "fresh-retry-preview-not-stale-PUMP",
+      "tick": 24,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "fresh-retry-new-E1-placement",
+      "tick": 30,
+      "phase": "playing",
+      "selectedId": "E1",
+      "assignments": [],
+      "totalEdits": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    }
+  ],
+  "calledExports": [
+    "createPilot",
+    "publicAssignments",
+    "evaluateNetwork",
+    "evaluateInventory",
+    "predictEdit",
+    "planVisibleState",
+    "predictFocus",
+    "focusPath",
+    "assertPublicNetwork"
+  ],
+  "syntheticBoard": {
+    "target": "NW unit-square loop",
+    "requiredTreeIds": [
+      "V1",
+      "V6"
+    ],
+    "forbiddenFlowerIds": [
+      "V16"
+    ],
+    "allNineClues": [
+      4,
+      1,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "physicalPipeStock": 16
+  }
+}
