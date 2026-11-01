@@ -1,114 +1,156 @@
-name: Sign one Game Kit APK
+name: Export one verified Game Kit artifact
 
 on:
   workflow_dispatch:
     inputs:
       source_sha:
-        description: Exact source commit containing this game
+        description: Must be the fixed verified source SHA
         type: string
         required: true
       slug:
-        description: Game directory name under resource/apps
+        description: Must be gravity-courier
         type: string
         required: true
       request_branch:
-        description: build-assets/game-kit-requests-SESSION branch containing JSON and unsigned APK
+        description: Must be the isolated signed output branch for this transfer
         type: string
         required: true
 
-permissions:
-  contents: read
+permissions: {}
+concurrency:
+  group: game-kit-export-41322475483
+  cancel-in-progress: false
 
 jobs:
-  sign:
+  export:
+    if: github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/build-assets/game-kit-export-41322475483'
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    env:
+      EXPECTED_SOURCE: 9f911669f4b2e768c00b8f105922afae67affb78
+      EXPECTED_SLUG: gravity-courier
+      OUTPUT_BRANCH: build-assets/game-kit-signed-41322475483
+      ORIGINAL_RUN: '41322475483'
     steps:
-      - name: Validate request coordinates
+      - name: Validate the fixed one-time transfer coordinates
         env:
-          SOURCE_SHA: ${{ inputs.source_sha }}
-          GAME_SLUG: ${{ inputs.slug }}
-          REQUEST_BRANCH: ${{ inputs.request_branch }}
+          INPUT_SOURCE: ${{ inputs.source_sha }}
+          INPUT_SLUG: ${{ inputs.slug }}
+          INPUT_BRANCH: ${{ inputs.request_branch }}
         run: |
           python3 - <<'PY'
-          import os,re
-          assert os.environ['GITHUB_REPOSITORY'] == 'ecojust/pureTV'
-          assert re.fullmatch(r'[a-f0-9]{40}', os.environ['SOURCE_SHA'])
-          assert re.fullmatch(r'[a-z][a-z0-9]*(?:-[a-z0-9]+)*', os.environ['GAME_SLUG'])
-          assert re.fullmatch(r'build-assets/game-kit-requests-[a-z0-9][a-z0-9-]{0,63}', os.environ['REQUEST_BRANCH'])
+          import os
+          for actual, expected in [('INPUT_SOURCE','EXPECTED_SOURCE'),('INPUT_SLUG','EXPECTED_SLUG'),('INPUT_BRANCH','OUTPUT_BRANCH')]:
+              assert os.environ[actual] == os.environ[expected], 'This workflow transfers only the fixed reviewed artifact'
           PY
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
-          path: signer
+          ref: 9f911669f4b2e768c00b8f105922afae67affb78
           persist-credentials: false
           sparse-checkout: |
-            resource/game-kit
+            resource/game-kit/android/src/main
+            resource/game-kit/web
+            resource/apps/gravity-courier
             tools/puretv-release-certificate-v2.sha256
           sparse-checkout-cone-mode: false
-      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
-          ref: ${{ inputs.source_sha }}
-          path: source
-          sparse-checkout: |
-            resource/game-kit
-            resource/apps/${{ inputs.slug }}
-          sparse-checkout-cone-mode: false
+          name: game-kit-signed-gravity-courier-9f911669f4b2e768c00b8f105922afae67affb78
+          run-id: 41322475483
+          repository: ecojust/pureTV
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/signed-input
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
       - uses: android-actions/setup-android@v3
         with:
-          packages: platforms;android-35 build-tools;34.0.0
-      - name: Fetch pinned QR encoder
+          packages: build-tools;34.0.0
+      - name: Verify the original signed APK and its exact source
         run: |
-          curl --fail --silent --show-error --location https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar --output "$RUNNER_TEMP/zxing.jar"
           python3 - <<'PY'
-          import hashlib,os
+          import hashlib,json,os,re,shutil,subprocess,zipfile
           from pathlib import Path
-          assert hashlib.sha256((Path(os.environ['RUNNER_TEMP'])/'zxing.jar').read_bytes()).hexdigest() == '8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82'
+          root=Path(os.environ['GITHUB_WORKSPACE']); folder=Path(os.environ['RUNNER_TEMP'])/'signed-input'
+          assert {p.name for p in folder.iterdir()} == {'gravity-courier-0.1.0.apk','signing-receipt.json'}
+          assert all(p.is_file() and not p.is_symlink() for p in folder.iterdir())
+          apk=folder/'gravity-courier-0.1.0.apk'; raw=apk.read_bytes(); receipt=json.loads((folder/'signing-receipt.json').read_text())
+          assert 0 < len(raw) < 10_000_000 and receipt['bytes']==len(raw)
+          assert receipt['sha256']==hashlib.sha256(raw).hexdigest()
+          assert receipt['sourceSha']==os.environ['EXPECTED_SOURCE'] and receipt['slug']==os.environ['EXPECTED_SLUG']
+          assert str(receipt['workflowRun'])==os.environ['ORIGINAL_RUN']
+          assert receipt['packageName']=='com.ecojust.gravitycouriertv' and receipt['version']=='0.1.0' and receipt['versionCode']==1
+          assert receipt['signatureVerified'] is True and receipt['sourceAssetsMatchApk'] is True
+          pin=(root/'tools/puretv-release-certificate-v2.sha256').read_text().strip()
+          assert pin=='eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23'
+          assert receipt['certificateSha256']==pin
+          tools=Path(os.environ['ANDROID_HOME'])/'build-tools/34.0.0'
+          verified=subprocess.check_output([tools/'apksigner','verify','--verbose','--print-certs',apk],text=True)
+          certificate=re.search(r'Signer #1 certificate SHA-256 digest: ([a-fA-F0-9]+)',verified)
+          assert certificate and certificate[1].lower()==pin
+          badging=subprocess.check_output([tools/'aapt','dump','badging',apk],text=True)
+          identity=re.search(r"^package: name='([^']+)' versionCode='(\d+)' versionName='([^']+)'",badging,re.M)
+          assert identity and identity.groups()==('com.ecojust.gravitycouriertv','1','0.1.0')
+          subprocess.run([tools/'zipalign','-c','4',apk],check=True)
+          game=root/'resource/apps/gravity-courier'; metadata=json.loads((game/'game.json').read_text())
+          expected={}
+          for directory in (root/'resource/game-kit/web',game/'src/main/assets'):
+              for path in sorted(directory.iterdir()):
+                  assert path.is_file() and not path.is_symlink() and path.name not in expected
+                  expected[path.name]=path.read_bytes()
+          expected['game-config.json']=(json.dumps(metadata,ensure_ascii=False,separators=(',',':'))+'\n').encode()
+          expected['assets-index.json']=(json.dumps(sorted(expected),separators=(',',':'))+'\n').encode()
+          with zipfile.ZipFile(apk) as archive:
+              assert len(archive.namelist())==len(set(archive.namelist())) and archive.testzip() is None
+              assert {n[7:]:archive.read(n) for n in archive.namelist() if n.startswith('assets/')}==expected
+              assert archive.read('res/raw/license.txt')==(root/'resource/game-kit/android/src/main/res/raw/license.txt').read_bytes()
+          assert receipt['assetsSha256']=={name:hashlib.sha256(data).hexdigest() for name,data in expected.items()}
+          native={}
+          for path in sorted((root/'resource/game-kit/android/src/main').rglob('*')):
+              assert not path.is_symlink()
+              if path.is_file():native[path.relative_to(root).as_posix()]=hashlib.sha256(path.read_bytes()).hexdigest()
+          icon=game/'icon.xml'
+          assert icon.is_file() and not icon.is_symlink()
+          native[icon.relative_to(root).as_posix()]=hashlib.sha256(icon.read_bytes()).hexdigest()
+          assert receipt['nativeSourceSha256']==native
+          verified_folder=Path(os.environ['RUNNER_TEMP'])/'verified-output';verified_folder.mkdir()
+          for name in ('gravity-courier-0.1.0.apk','signing-receipt.json'):shutil.copyfile(folder/name,verified_folder/name)
+          print(json.dumps({'verifiedSource':receipt['sourceSha'],'apkBytes':len(raw),'apkSha256':receipt['sha256'],'certificateSha256':pin}))
           PY
-      - name: Rebuild committed game without executing source scripts
+      - name: Create only the isolated signed artifact branch
         env:
-          GAME_SLUG: ${{ inputs.slug }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          python3 signer/resource/game-kit/build.py \
-            --kit "$GITHUB_WORKSPACE/source/resource/game-kit" \
-            --game "$GITHUB_WORKSPACE/source/resource/apps/$GAME_SLUG" \
-            --output "$RUNNER_TEMP/rebuilt" --cache "$RUNNER_TEMP/dex-cache" \
-            --sdk "$ANDROID_HOME" --jdk "$JAVA_HOME" --zxing "$RUNNER_TEMP/zxing.jar"
-      - name: Verify source, package, bytecode, resources, assets and size
-        env:
-          SOURCE_SHA: ${{ inputs.source_sha }}
-          GAME_SLUG: ${{ inputs.slug }}
-          REQUEST_BRANCH: ${{ inputs.request_branch }}
-        run: |
-          python3 signer/resource/game-kit/sign-request.py \
-            --source "$GITHUB_WORKSPACE/source" --source-sha "$SOURCE_SHA" \
-            --slug "$GAME_SLUG" --request-branch "$REQUEST_BRANCH" \
-            --rebuilt "$RUNNER_TEMP/rebuilt/unsigned.apk" \
-            --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
-            --output "$RUNNER_TEMP/signed" --validate-only
-      - name: Sign with the existing pinned repository certificate
-        env:
-          SOURCE_SHA: ${{ inputs.source_sha }}
-          GAME_SLUG: ${{ inputs.slug }}
-          REQUEST_BRANCH: ${{ inputs.request_branch }}
-          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
-          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
-        run: |
-          python3 signer/resource/game-kit/sign-request.py \
-            --source "$GITHUB_WORKSPACE/source" --source-sha "$SOURCE_SHA" \
-            --slug "$GAME_SLUG" --request-branch "$REQUEST_BRANCH" \
-            --rebuilt "$RUNNER_TEMP/rebuilt/unsigned.apk" \
-            --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
-            --output "$RUNNER_TEMP/signed"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: game-kit-signed-${{ inputs.slug }}-${{ inputs.source_sha }}
-          path: |
-            ${{ runner.temp }}/signed/${{ inputs.slug }}-*.apk
-            ${{ runner.temp }}/signed/signing-receipt.json
-          if-no-files-found: error
-          retention-days: 14
+          python3 - <<'PY'
+          import base64,json,os,re,urllib.request,urllib.error
+          from pathlib import Path
+          repository='ecojust/pureTV';branch=os.environ['OUTPUT_BRANCH']
+          assert branch=='build-assets/game-kit-signed-41322475483'
+          def api(method,path,payload=None,missing=False):
+              data=None if payload is None else json.dumps(payload).encode()
+              request=urllib.request.Request('https://api.github.com/repos/'+repository+'/'+path,data=data,method=method,
+                  headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'})
+              try:
+                  with urllib.request.urlopen(request,timeout=45) as response:return json.load(response)
+              except urllib.error.HTTPError as error:
+                  if missing and error.code==404:return None
+                  raise RuntimeError('GitHub API operation failed with HTTP '+str(error.code)) from None
+          run=api('GET','actions/runs/'+os.environ['ORIGINAL_RUN'])
+          assert run['status']=='completed' and run['conclusion']=='success' and run['path']=='.github/workflows/sign-game-kit.yml'
+          assert run['repository']['full_name']==repository and run['head_repository']['full_name']==repository
+          assert api('GET','git/ref/heads/'+branch,missing=True) is None,'Output branch already exists; this task never updates refs'
+          folder=Path(os.environ['RUNNER_TEMP'])/'verified-output';entries=[]
+          for name in ('gravity-courier-0.1.0.apk','signing-receipt.json'):
+              blob=api('POST','git/blobs',{'content':base64.b64encode((folder/name).read_bytes()).decode(),'encoding':'base64'})
+              assert re.fullmatch(r'[0-9a-f]{40}',blob['sha'])
+              entries.append({'path':'gravity-courier/'+name,'mode':'100644','type':'blob','sha':blob['sha']})
+          tree=api('POST','git/trees',{'tree':entries})
+          commit=api('POST','git/commits',{'message':'Transfer verified gravity-courier APK from signing run 41322475483','tree':tree['sha'],'parents':[]})
+          created=api('POST','git/refs',{'ref':'refs/heads/'+branch,'sha':commit['sha']})
+          assert created['ref']=='refs/heads/'+branch and created['object']['sha']==commit['sha']
+          print(json.dumps({'createdBranch':branch,'commit':commit['sha'],'files':2}))
+          PY
