@@ -143,9 +143,20 @@ def has(items, text):
     return compact(text) in compact('\n'.join(item['text'] for item in items))
 
 
+def has_version(items, version):
+    # Native evidence from the first run read the real v0.4.19 label as
+    # "vO.4.19". Normalize only OCR version tokens; pixels and bundle metadata
+    # remain untouched. Download hashes and bundle versions are checked above.
+    return any(token.removeprefix('v').replace('o', '0') == version
+               for item in items
+               for token in re.findall(r'v?[0-9o]+\.[0-9o]+\.[0-9o]+', compact(item['text'])))
+
+
 def match(items, text, exact=False, left=False):
     found = [item for item in items if (compact(item['text']) == compact(text) if exact
                                       else compact(text) in compact(item['text']))]
+    if not found and re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', text):
+        found = [item for item in items if has_version([item], text)]
     if exact and not found:
         # Vision sometimes recognizes an adjacent SVG icon as a character. Limit
         # the fallback to a short individual label, never a merged toolbar row.
@@ -232,7 +243,7 @@ def launch(bundle):
         DISPLAY_BOUNDS = main['bounds']
     event('launch', version=bundle['version'], pid=process.pid,
           binarySha256=sha(bundle['executable']), screenshotScale=[SCALE_X, SCALE_Y])
-    return wait_screen('launch-' + bundle['version'], lambda items: has(items, bundle['version']), timeout=40)
+    return wait_screen('launch-' + bundle['version'], lambda items: has_version(items, bundle['version']), timeout=40)
 
 
 def quit_app():
@@ -367,22 +378,24 @@ def main():
     replies = public_json('forum-replies-IKS14W', API + '/issues/IKS14W/comments?page=1&per_page=20&order=asc')
     assert post['number'] == 'IKS14W' and replies, 'Expected public forum evidence unavailable'
     run(['swiftc', ROOT / 'screen.swift', '-o', HELPER], timeout=90)
-    display = run([HELPER, 'display-size', '1600', '1000'], check=False)
+    # This exact mode exists on the observed runner. It leaves room for the
+    # complete 1440x860 window above the native Dock.
+    display = run([HELPER, 'display-size', '1920', '1080'], check=False)
     (OUT / 'display-configuration.txt').write_text(display.stdout + display.stderr)
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
         downloaded = list(pool.map(lambda version: package(version, platform), ('0.4.19', '0.5.0')))
     bundles = {version: extract_package(version, path, metadata) for version, path, metadata in downloaded}
     items = launch(bundles['0.4.19'])
-    items = wait_screen('old-update-ready', lambda items: has(items, '发现新版本') and has(items, '0.5.0'))
+    items = wait_screen('old-update-ready', lambda items: has(items, '发现新版本') and has_version(items, '0.5.0'))
     flags = video_probe()
     with Recording('01-update-0419-to-050', flags):
         time.sleep(2)
         point(items, '发现新版本', click=True)
-        items = wait_screen('old-update-dialog', lambda items: has(items, '当前版本') and has(items, '仓库版本') and has(items, '0.4.19') and has(items, '0.5.0'))
+        items = wait_screen('old-update-dialog', lambda items: has(items, '当前版本') and has(items, '仓库版本') and has_version(items, '0.4.19') and has_version(items, '0.5.0'))
         assert has(items, '有适用于当前系统的新版本') and has(items, 'macOS')
         time.sleep(3)
         point(items, '检查更新', click=True, exact=True)
-        items = wait_screen('old-update-rechecked', lambda items: has(items, '有适用于当前系统的新版本') and has(items, '0.4.19') and has(items, '0.5.0'))
+        items = wait_screen('old-update-rechecked', lambda items: has(items, '有适用于当前系统的新版本') and has_version(items, '0.4.19') and has_version(items, '0.5.0'))
         point(items, '0.4.19')
         time.sleep(2)
         point(items, '0.5.0')
