@@ -138,6 +138,37 @@
       path(c, [[24, 90], [36, 90], [36, 83], [48, 96], [36, 109], [36, 102], [24, 102]], '#edfaff');
       ellipse(c, 54, 36, 3, 3, '#f5a6af'); ellipse(c, 154, 96, 3, 3, '#9cebb7'); ellipse(c, 54, 156, 3, 3, '#91bbff');
     });
+    tile('locomotive', 384, 800, 224, 128, function (c) {
+      // Raised cab, roof vents, steel trucks and warm lamps, with the nose facing right.
+      ellipse(c, 113, 96, 100, 23, radial(c, 113, 96, 101, [[0, 'rgba(0,0,0,.60)'], [1, 'transparent']]));
+      c.fillStyle = '#162433'; c.fillRect(33, 70, 151, 29);
+      [52, 75, 151, 174].forEach(function (x) { ellipse(c, x, 91, 11, 12, '#101c29'); ellipse(c, x, 91, 6, 7, '#778b9b'); ellipse(c, x, 91, 2.5, 3, '#bacbd3'); });
+      path(c, [[24, 50], [181, 50], [201, 62], [201, 85], [182, 96], [24, 96]], linear(c, 20, 52, 20, 99, [[0, '#b7cbd4'], [.22, '#7995a6'], [.53, '#3f6076'], [1, '#264357']]), '#1d3448', 2);
+      path(c, [[30, 43], [182, 43], [201, 58], [179, 71], [30, 71]], linear(c, 60, 37, 173, 76, [[0, '#f1f6f6'], [.5, '#b9d0dc'], [1, '#7193a9']]), '#c3d6df', 2);
+      path(c, [[41, 34], [88, 34], [98, 43], [98, 70], [41, 70]], linear(c, 39, 35, 101, 70, [[0, '#f5fafb'], [.45, '#b8d1df'], [1, '#567c96']]), '#425e75', 2);
+      path(c, [[41, 34], [51, 24], [89, 24], [98, 34]], '#dce9ee', '#eaf4f7', 2);
+      c.fillStyle = '#173a53'; c.fillRect(47, 42, 15, 18); c.fillRect(70, 42, 20, 18);
+      c.fillStyle = '#92d8ed'; c.fillRect(49, 44, 11, 5); c.fillRect(72, 44, 16, 5);
+      c.fillStyle = '#58778b'; c.fillRect(108, 46, 48, 16);
+      c.strokeStyle = '#d2e1e7'; c.lineWidth = 2;
+      for (var v = 112; v < 156; v += 7) { c.beginPath(); c.moveTo(v, 47); c.lineTo(v, 61); c.stroke(); }
+      path(c, [[165, 49], [182, 49], [191, 57], [178, 64], [165, 64]], '#c4d8e2');
+      c.fillStyle = '#e9c879'; c.fillRect(28, 76, 156, 5);
+      c.strokeStyle = '#e8f2f6'; c.lineWidth = 2; c.beginPath(); c.moveTo(28, 50); c.lineTo(28, 89); c.moveTo(184, 76); c.lineTo(195, 69); c.stroke();
+      ellipse(c, 197, 65, 4, 4, '#fff5c9'); ellipse(c, 197, 79, 4, 4, '#fff5c9');
+      c.fillStyle = '#20384b'; c.fillRect(15, 78, 13, 5); c.fillRect(199, 75, 12, 5);
+    });
+    tile('freight', 608, 800, 192, 128, function (c) {
+      ellipse(c, 96, 99, 86, 19, radial(c, 96, 99, 87, [[0, 'rgba(0,0,0,.50)'], [1, 'transparent']]));
+      [42, 63, 132, 153].forEach(function (x) { ellipse(c, x, 94, 10, 11, '#132331'); ellipse(c, x, 94, 5, 6, '#8ca0ac'); });
+      c.fillStyle = '#284454'; c.fillRect(23, 82, 145, 14);
+      path(c, [[27, 47], [165, 47], [165, 89], [27, 89]], linear(c, 20, 43, 20, 90, [[0, '#a8c2d0'], [.4, '#7399ad'], [1, '#426a80']]), '#2b4b60', 2);
+      path(c, [[27, 47], [40, 33], [153, 33], [165, 47]], '#d6e6ec', '#ebf4f8', 2);
+      c.strokeStyle = '#c8dee8'; c.lineWidth = 2;
+      for (var rib = 38; rib < 163; rib += 12) { c.beginPath(); c.moveTo(rib, 51); c.lineTo(rib, 84); c.stroke(); }
+      c.fillStyle = '#b0ccd9'; c.fillRect(77, 56, 36, 22); c.strokeStyle = '#dcecf2'; c.lineWidth = 2; c.strokeRect(77, 56, 36, 22);
+      c.fillStyle = '#2b475c'; c.fillRect(15, 82, 12, 5); c.fillRect(165, 82, 12, 5);
+    });
 
     // A local system font is baked once. No font loading, per-frame canvas text, or network request.
     ctx.font = '600 40px Arial, sans-serif'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#fff';
