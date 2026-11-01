@@ -1,10 +1,10 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.4.17** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.4.18** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.4.17 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.17)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.4.18 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.18)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
-0.4.17 在每次连接电视前清理本机当前用户的 ADB 服务和残留进程，再重新建立连接。保留 0.4.16 的客户端更新修复：ADB 服务未启动或清理失败不会再阻止 Manager 自身更新。旧版若已遇到更新错误，需要先手动覆盖安装一次；保留本地配置。
+0.4.18 在「APK市场」后新增「论坛」，读取 Gitee 商店仓库的公开 Issues。可查看帖子标题、作者、状态、更新时间和回复数，刷新、翻页，并打开 Gitee 原帖。浏览论坛无需连接电视。
 
 ## 功能
 
@@ -19,6 +19,7 @@
 | 应用管理 · 待安装 | 导入本地 APK、逐项或勾选批量安装；成功项移出队列，失败和未执行项保留 |
 | 启动器 | 设置／恢复默认 HOME，查看包大小、导入和逐项安装启动器 APK；支持时读取和编辑 layout.json 布局及应用图标 |
 | APK市场 | 每次进入检查 Gitee 商店中的新增应用和版本更新，将本次更新置顶并标「新」；同一资源合并展示最近 5 个版本，支持搜索、预览、下载及安装 |
+| 论坛 | 浏览 Gitee Issues 帖子列表，按最近更新排序；刷新、翻页及打开原帖 |
 | 操作记录 | 最近 200 项修改记录，包含目标设备／用户、逐项结果与错误 |
 
 应用列表的圆圈 **i** 按钮按完整包名查询用途与卸载风险，并显示资料来源、原始分类与获取时间。社区资料来自 [UAD-ng](https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation)，保留原文；未收录或无法查询时明确提示，不把未知包当作可安全卸载。核心组件与当前默认桌面的保护状态优先于社区分类。可刷新资料，或点击网页搜索继续查找该包；查询本身不会操作电视。
@@ -36,14 +37,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.4.17 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.17) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.4.18 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.4.18) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.4.17-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.4.18-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.17-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.4.18-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -111,6 +112,12 @@
 浏览记录保存在电脑应用数据目录中的 `market/seen-apps.json`，每项仅包含稳定的应用标识、名称和最新版本（`id`、`name`、`version`），同名但不同目录的应用分别记录。只有成功读取并显示的新目录才更新记录；网络失败、旧缓存回退或取消检查不推进记录，离开页面后才返回的旧请求也不会把未浏览内容记为已看。记录损坏或读写失败会显示提示，市场列表仍可浏览。
 
 目录会缓存，网络失败且有缓存时明确提示正在使用旧目录。下载固定到当前目录对应的仓库提交，并校验 APK 大小与 Git blob SHA。若 Gitee 原始文件下载返回 HTTP 403，不超过 32 MiB 的 APK 会通过同一仓库的 Git blob API 重试，保持所选 APK 版本并执行相同的大小与内容校验；更大的受限文件会提示从发布页下载后手动安装。取消下载会清理临时文件。市场封面用于浏览资源，已安装启动器的背景仍从电视上的 Home 布局读取。
+
+## 论坛
+
+侧栏「APK市场」后新增「论坛」，帖子来自 [pure-tv-store 的 Issues](https://gitee.com/juzisang331/pure-tv-store/issues)。显示公开帖子的标题、作者、状态、更新时间、回复数和标签，按最近更新排序，每页 20 条；支持刷新、翻页和在浏览器中打开 Gitee 原帖。无需连接电视或安装 ADB。
+
+页面区分加载、暂无帖子和请求失败。读取失败时如有对应页的缓存，会显示已有内容并提示缓存可能过期；不会把网络失败当作空列表。帖子内容按文本显示。
 
 ## 当前启动器的自定义布局
 

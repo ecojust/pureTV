@@ -1,7 +1,7 @@
 import { Channel, invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import {version as appVersion} from '../package.json';
-import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketSeenEntry, type MarketSeenApps, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight, type ClientUpdateInfo, type ClientUpdateProgress, type ClientUpdateResult } from './types';
+import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketSeenEntry, type MarketSeenApps, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight, type ClientUpdateInfo, type ClientUpdateProgress, type ClientUpdateResult, type ForumPage } from './types';
 
 export const demo = new URLSearchParams(location.search).get('demo') === '1';
 export const desktop = '__TAURI_INTERNALS__' in window;
@@ -111,12 +111,37 @@ export async function installPlatformTools(onProgress: (progress: DownloadProgre
   const progress = new Channel<DownloadProgress>(onProgress);
   return invoke<Snapshot>('install_platform_tools', { acceptedLicense: true, onProgress: progress, ...(forceDownload?{forceDownload:true}:{}) });
 }
-export async function openResource(resource: 'catalog' | 'market' | 'repository' | 'releases' | 'platformTools' | 'platformToolsLicense'): Promise<void> {
+export async function openResource(resource: 'catalog' | 'market' | 'forum' | 'repository' | 'releases' | 'platformTools' | 'platformToolsLicense'): Promise<void> {
   if (demo || !desktop) {
-    const url = resource === 'repository' ? 'https://github.com/ecojust/pureTV' : resource === 'market' ? 'https://gitee.com/juzisang331/pure-tv-store' : resource === 'catalog' ? 'https://github.com/ecojust/pureTV/tree/master/resource' : resource === 'releases' ? 'https://github.com/ecojust/pureTV/releases' : resource === 'platformToolsLicense' ? 'https://developer.android.com/studio/terms' : 'https://developer.android.com/tools/releases/platform-tools';
+    const url = resource === 'repository' ? 'https://github.com/ecojust/pureTV' : resource === 'forum' ? 'https://gitee.com/juzisang331/pure-tv-store/issues' : resource === 'market' ? 'https://gitee.com/juzisang331/pure-tv-store' : resource === 'catalog' ? 'https://github.com/ecojust/pureTV/tree/master/resource' : resource === 'releases' ? 'https://github.com/ecojust/pureTV/releases' : resource === 'platformToolsLicense' ? 'https://developer.android.com/studio/terms' : 'https://developer.android.com/tools/releases/platform-tools';
     window.open(url, '_blank', 'noopener,noreferrer'); return;
   }
   await invoke('open_resource', { resource });
+}
+
+export async function getForumPosts(page = 1, refresh = false): Promise<ForumPage> {
+  if (demo) {
+    await new Promise(resolve => setTimeout(resolve, 180));
+    return { page, hasMore: false, fetchedAt: Date.now(), sourceUrl: 'https://gitee.com/juzisang331/pure-tv-store/issues', stale: false, warning: null,
+      posts: page === 1 ? [
+        { number: 'DEMO1', title: '欢迎交流电视应用的使用体验（演示）', author: '演示用户', state: 'open', comments: 8, updatedAt: '2026-11-01T12:00:00+08:00', labels: ['使用交流'] },
+        { number: 'DEMO2', title: '分享我的电视桌面布局（演示）', author: '演示用户', state: 'progressing', comments: 3, updatedAt: '2026-10-31T16:00:00+08:00', labels: ['桌面布局'] },
+        { number: 'DEMO3', title: '关于无线连接的反馈（演示）', author: '演示用户', state: 'closed', comments: 2, updatedAt: '2026-10-30T09:00:00+08:00', labels: ['问题反馈'] },
+      ] : [],
+    };
+  }
+  if (!desktop) throw new Error('请在桌面管理器中浏览论坛。');
+  return invoke<ForumPage>('get_forum_posts', { page, refresh });
+}
+
+export async function openForumPost(number: string): Promise<void> {
+  if (!/^[A-Za-z0-9]{1,32}$/.test(number)) throw new Error('无效的论坛帖子编号');
+  if (demo) throw new Error('演示帖子仅用于预览，不能打开原帖。');
+  if (!desktop) {
+    window.open(`https://gitee.com/juzisang331/pure-tv-store/issues/${number}`, '_blank', 'noopener,noreferrer');
+    return;
+  }
+  await invoke('open_forum_post', { number });
 }
 
 export async function getPackageInsight(packageName: string, refresh = false): Promise<PackageInsight> {

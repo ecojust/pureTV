@@ -1,28 +1,28 @@
-# pureTV Manager 0.4.17
+# pureTV Manager 0.4.18
 
 ## 简体中文
 
-每次连接电视前先清理本机当前用户的 ADB 服务和残留进程，等待退出后再重新建立连接。界面与 MCP 使用同一流程，清理失败或取消时不会继续连接；连接区域也会提示重置会中断其他工具的 ADB 连接。
+在「APK市场」后新增「论坛」，从 Gitee 商店仓库 pure-tv-store 的公开 Issues 读取帖子列表。显示标题、作者、状态、更新时间、回复数和标签，按最近更新排序，每页 20 条；支持刷新、翻页及打开 Gitee 原帖，浏览无需连接电视或配置 ADB。
 
-修复「检查更新 → 下载并安装」在下载和校验成功后被 ADB 错误阻止的问题。ADB 服务本来没有启动时，官方 `adb kill-server` 的正常返回不再误报失败；ADB 不可执行、关闭失败或超时只记录清理日志，Manager 仍会交接安装并重启。安装包校验失败、安装助手启动失败和用户取消仍会停止更新，设备操作期间仍不能开始安装。
+加载、空列表、网络失败和过期缓存分别提示；切换页面时不会被迟到的请求带回论坛或覆盖当前页。帖子按文本展示，支持简体中文、繁体中文和英文界面及现有主题。
 
-0.4.11–0.4.15 已出现「无法安全结束 ADB，客户端更新未启动」时，请退出 Manager，使用本发布页的对应系统安装包手动覆盖安装一次，保留原有配置。macOS 将新应用拖入原安装位置并选择替换。仅上传新包到 Gitee 不能修复旧客户端本身的交接逻辑；后续包仍需放入 Gitee 商店的 `client/` 目录供检查更新使用。
+保留 0.4.17 的连接前 ADB 进程清理和客户端更新修复。0.4.11–0.4.15 如果更新被 ADB 错误阻止，请退出 Manager 后手动覆盖安装一次，保留原有配置。后续更新包仍需放入 Gitee 商店的 `client/` 目录供自动检测。
 
 ## 繁體中文
 
-每次連接電視前先清理本機目前使用者的 ADB 服務與殘留程序，等待結束後再重新建立連線。介面與 MCP 使用相同流程，清理失敗或取消時不會繼續連線；連接區域也會提示重設會中斷其他工具的 ADB 連線。
+在「APK市場」後新增「論壇」，從 Gitee 商店倉庫 pure-tv-store 的公開 Issues 讀取帖子列表。顯示標題、作者、狀態、更新時間、回覆數與標籤，按最近更新排序，每頁 20 則；支援重新整理、翻頁及開啟 Gitee 原帖，瀏覽不需連接電視或設定 ADB。
 
-修正「檢查更新 → 下載並安裝」在下載與驗證成功後被 ADB 錯誤阻止的問題。ADB 服務尚未啟動時，官方 `adb kill-server` 的正常回傳不再誤報失敗；ADB 無法執行、關閉失敗或逾時只記錄清理日誌，Manager 仍會交接安裝並重新啟動。安裝包驗證失敗、安裝助手啟動失敗及使用者取消仍會停止更新，裝置操作期間仍不能開始安裝。
+載入、空列表、網路失敗及過期快取分別提示；切換頁面時，較晚傳回的請求不會將使用者帶回論壇或覆蓋目前頁面。帖子以文字顯示，支援簡體中文、繁體中文及英文介面與現有佈景主題。
 
-0.4.11–0.4.15 若已出現無法結束 ADB 的更新錯誤，請退出 Manager，使用本發布頁的對應系統安裝包手動覆蓋安裝一次，保留原有設定。macOS 將新應用程式拖入原安裝位置並選擇替換。僅上傳新包到 Gitee 無法修正舊用戶端的交接邏輯；後續安裝包仍須放入 Gitee 商店的 `client/` 目錄。
+保留 0.4.17 的連線前 ADB 程序清理及用戶端更新修正。0.4.11–0.4.15 若更新被 ADB 錯誤阻止，請退出 Manager 後手動覆蓋安裝一次，保留原有設定。後續更新包仍須放入 Gitee 商店的 `client/` 目錄。
 
 ## English
 
-Each TV connection first stops the current user’s local ADB server and remaining ADB processes, waits for them to exit, then establishes a fresh connection. The GUI and MCP share this behavior. Cleanup failure or cancellation stops the connection attempt. The connection screen explains that resetting ADB also disconnects other tools using it.
+Adds Forum immediately after APK Market in the sidebar. It reads public Issues from the Gitee pure-tv-store repository and shows titles, authors, status, update times, reply counts and labels. Posts are ordered by recent updates with 20 per page. Refresh, pagination and opening the original Gitee post are supported without connecting a TV or configuring ADB.
 
-Fixes Manager updates stopping after a successful download and verification because ADB cleanup reports an error. A successful `adb kill-server` with no running daemon is now treated as normal. An unavailable ADB executable, shutdown failure or timeout is logged without blocking installer handoff and restart. Invalid packages, failed installer handoff and cancellation still stop the update, and device operations continue to exclude installation.
+Loading, empty results, network errors and stale cached content are distinguished. Late requests cannot navigate back to the forum or overwrite the selected page. Posts are displayed as text. The page supports Simplified Chinese, Traditional Chinese, English and the existing themes.
 
-If Manager 0.4.11–0.4.15 already fails during ADB shutdown, close it and manually install this release over the existing application once, preserving its settings. On macOS, replace the app at its original installation location. Publishing a newer package cannot change the old client's handoff logic. Future update packages must still be uploaded to the Gitee store's `client/` directory.
+Retains the ADB cleanup before connection and client update fixes from 0.4.17. If Manager 0.4.11–0.4.15 is blocked by an ADB update error, close it and manually install this release over the existing application once, keeping its settings. Future update packages must still be uploaded to the Gitee store's `client/` directory.
 
 ---
 

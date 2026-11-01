@@ -55,8 +55,20 @@ export function clientUpdate(overrides = {}) {
   };
 }
 
+export function forumPage(overrides = {}) {
+  return {
+    posts: [
+      {number:'IABC123',title:'电视应用使用交流',author:'论坛用户',state:'open',comments:3,updatedAt:'2026-11-01T08:00:00+08:00',labels:['使用交流']},
+      {number:'IABC122',title:'已解决的连接问题',author:'桔子桑',state:'closed',comments:5,updatedAt:'2026-10-31T19:30:00+08:00',labels:['问题反馈']},
+    ],
+    page:1,hasMore:false,fetchedAt:1793491200000,
+    sourceUrl:'https://gitee.com/juzisang331/pure-tv-store/issues',stale:false,warning:null,
+    ...overrides,
+  };
+}
+
 export async function mockBridge(page, initial = snapshot(), options = {}) {
-  await page.addInitScript(({initial, options, defaultMarketCatalog, defaultClientUpdate}) => {
+  await page.addInitScript(({initial, options, defaultMarketCatalog, defaultClientUpdate, defaultForumPage}) => {
     const state = structuredClone(initial);
     const defaultLayout=options.layout || {version:2,home:{columns:4,items:[{action:'music',icon:'music',color:'#303338'},{action:'files',icon:'files',color:'#3B4C46'},{action:'apps',icon:'apps',color:'#374959'}]},apps:{columns:3,items:[]}};
     let launcherLayout=structuredClone(defaultLayout), customLayout=false;
@@ -100,6 +112,9 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     window.__clientUpdateInfo=structuredClone(options.clientUpdate || defaultClientUpdate);
     window.__clientUpdateRequests=[];window.__clientUpdateError=options.clientUpdateError || null;
     window.__clientInstallError=options.clientInstallError || null;window.__clientUpdateResult=structuredClone(options.clientUpdateResult || null);
+    window.__forumPages=structuredClone(options.forumPages || {1:defaultForumPage});
+    window.__forumRequests=[];window.__forumOpenRequests=[];
+    window.__forumError=options.forumError || null;window.__forumOpenError=options.forumOpenError || null;
     let clientUpdateCancelled=false;
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
@@ -146,6 +161,18 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         if (command === 'choose_adb') return 'C:\\platform-tools\\adb.exe';
         if (command === 'cancel') { window.__requests.push({action:'cancel'}); downloadCancelled = true; marketCancelled = true; return; }
         if (command === 'open_resource') { window.__resources.push(args.resource); return; }
+        if (command === 'get_forum_posts') {
+          window.__forumRequests.push(structuredClone(args));
+          const held=await holdOperation('forum:'+args.page);
+          if(held.response)return structuredClone(held.response);
+          if(window.__forumError)throw new Error(window.__forumError);
+          return structuredClone(window.__forumPages[args.page] || {...defaultForumPage,page:args.page,posts:[],hasMore:false});
+        }
+        if (command === 'open_forum_post') {
+          window.__forumOpenRequests.push(structuredClone(args));
+          if(window.__forumOpenError)throw new Error(window.__forumOpenError);
+          return;
+        }
         if (command === 'get_package_insight') {
           window.__packageInsightRequests.push(structuredClone(args));
           const held=await holdOperation('packageInsight:'+args.packageName);
@@ -303,5 +330,5 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         return structuredClone(state);
       },
     };
-  }, {initial, options, defaultMarketCatalog:marketCatalog(), defaultClientUpdate:clientUpdate()});
+  }, {initial, options, defaultMarketCatalog:marketCatalog(), defaultClientUpdate:clientUpdate(), defaultForumPage:forumPage()});
 }

@@ -3,6 +3,7 @@
 mod app_logos;
 mod client_install;
 mod client_updates;
+mod forum;
 mod launcher_covers;
 mod market;
 mod market_seen;
@@ -770,12 +771,38 @@ fn open_resource(resource: &str, app: tauri::AppHandle) -> Result<(), String> {
         "catalog" => "https://github.com/ecojust/pureTV/tree/master/resource",
         "releases" => "https://github.com/ecojust/pureTV/releases",
         "market" => "https://gitee.com/juzisang331/pure-tv-store",
+        "forum" => forum::SOURCE_URL,
         "platformTools" => "https://developer.android.com/tools/releases/platform-tools",
         "platformToolsLicense" => "https://developer.android.com/studio/terms",
         _ => return Err("不支持的资源".into()),
     };
     app.opener()
         .open_url(url, None::<&str>)
+        .map_err(|_| "无法打开浏览器".into())
+}
+
+#[tauri::command]
+async fn get_forum_posts(
+    page: u32,
+    refresh: bool,
+    app: tauri::AppHandle,
+) -> Result<forum::Page, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let bridge = app.state::<Bridge>();
+        app.state::<forum::State>()
+            .list(page, refresh, &bridge.closing)
+    })
+    .await
+    .map_err(|_| "论坛读取任务异常结束，请重试".to_string())?
+}
+
+#[tauri::command]
+fn open_forum_post(number: &str, app: tauri::AppHandle) -> Result<(), String> {
+    if app.state::<Bridge>().closing.load(Ordering::Acquire) {
+        return Err("管理器正在退出".into());
+    }
+    app.opener()
+        .open_url(forum::post_url(number)?, None::<&str>)
         .map_err(|_| "无法打开浏览器".into())
 }
 
@@ -1148,6 +1175,7 @@ fn main() {
             app.manage(ui_preferences::Settings::load(directory.clone()));
             app.manage(package_insights::State::new(directory.clone()));
             app.manage(client_updates::State::new(directory.clone()));
+            app.manage(forum::State::default());
             app.manage(Arc::new(ClientUpdateRun::default()));
             let shutdown = Arc::new(Shutdown::default());
             app.manage(shutdown.clone());
@@ -1201,6 +1229,8 @@ fn main() {
             download_market_item,
             install_market_item,
             open_resource,
+            get_forum_posts,
+            open_forum_post,
             check_client_update,
             install_client_update,
             cancel_client_update,

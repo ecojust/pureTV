@@ -15,6 +15,14 @@ export interface ClientUpdateProgress {
   stage: 'checking' | 'downloading' | 'verifying' | 'preparing' | 'installing'; downloaded: number; total: number;
 }
 export interface ClientUpdateResult { version: string; success: boolean; message: string }
+export interface ForumPost {
+  number: string; title: string; author: string; state: string; comments: number;
+  updatedAt: string; labels: string[];
+}
+export interface ForumPage {
+  posts: ForumPost[]; page: number; hasMore: boolean; fetchedAt: number;
+  sourceUrl: string; stale: boolean; warning: string | null;
+}
 export interface LauncherInfo { apkSizeBytes?: number | null; component: string; packageName: string; label: string; isDefault: boolean }
 export interface HistoryEntry { id: string; timestamp: number; action: string; target: string; device: string; userId: number; success: boolean; message: string }
 export interface PlatformToolsInfo {
