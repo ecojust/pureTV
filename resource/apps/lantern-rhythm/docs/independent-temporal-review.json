@@ -1,0 +1,187 @@
+{
+  "kind": "independent-integer-temporal-review",
+  "passed": true,
+  "modelSha256": "39718505330a9cccd9ba30219fc3acad26c9b49f84a1b74fddc9eb8d3fa2a780",
+  "reviewScriptSha256": "cf279f78e28eb741daf536984c72c395ea5f8a474bad5870db11c612eea0adc6",
+  "checks": [
+    {
+      "name": "inclusive disjoint duration intervals agree with rational tick arithmetic",
+      "passed": true,
+      "shortAcceptedTicks": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "longAcceptedTicks": [
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52
+      ],
+      "gapTicks": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ],
+      "zeroDurationNeverEarnsANote": true
+    },
+    {
+      "name": "onset windows match inclusive rational boundaries without changing hold length",
+      "passed": true,
+      "acceptedOffsetsTicks": [
+        -13,
+        -12,
+        -11,
+        -10,
+        -9,
+        -8,
+        -7,
+        -6,
+        -5,
+        -4,
+        -3,
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "name": "direction is latched by the actual press and held buttons cannot farm mistakes",
+      "passed": true,
+      "latchedDirection": "up",
+      "wrongHeldPressMistakes": 1
+    },
+    {
+      "name": "paid replay resets only unfinished progress, costs a credit and never awards",
+      "passed": true,
+      "replayHasPriorityOverSimultaneousA": true,
+      "heldBOnlyOneCredit": true,
+      "unavailableReplayDoesNotSuppressValidA": true,
+      "feedbackReplayCostsNothing": true
+    },
+    {
+      "name": "cancellation retains a prefix without scoring and reanchors only once per epoch",
+      "passed": true,
+      "subTickCancellationRetained": true,
+      "multipleSubstepsNeverTreatSyntheticNeutralAsRelease": true,
+      "preservedAnswered": 1,
+      "reanchorSeconds": 1.8
+    },
+    {
+      "name": "listening cancellation preserves the playback clock and finite time wins priority",
+      "passed": true,
+      "repeatedCancellationCannotStop90SecondClock": true,
+      "timeoutTick": 5400,
+      "terminalStateFrozen": true
+    },
+    {
+      "name": "three complete solutions use only actually displayed cue memory",
+      "passed": true,
+      "observedInputSolutions": [
+        {
+          "level": 1,
+          "phase": "won",
+          "litCount": 3,
+          "correctNotes": 9,
+          "acceptedCount": 9,
+          "modelElapsedSeconds": 33.21666666666667,
+          "mistakes": 0,
+          "replaysRemaining": 2,
+          "observedCueFrames": 567,
+          "inputTraceSha256": "d77f211a107ae127a933f11fb593c9e4959f89ab9b122d1885dd0fe1eb464359"
+        },
+        {
+          "level": 2,
+          "phase": "won",
+          "litCount": 3,
+          "correctNotes": 12,
+          "acceptedCount": 12,
+          "modelElapsedSeconds": 43.05,
+          "mistakes": 0,
+          "replaysRemaining": 2,
+          "observedCueFrames": 756,
+          "inputTraceSha256": "9d64df968756a6a89ea093c1e721cf8d4c14e2b2e763480e180c1a0f8bfdb9a6"
+        },
+        {
+          "level": 3,
+          "phase": "won",
+          "litCount": 3,
+          "correctNotes": 15,
+          "acceptedCount": 15,
+          "modelElapsedSeconds": 51.21666666666667,
+          "mistakes": 0,
+          "replaysRemaining": 2,
+          "observedCueFrames": 945,
+          "inputTraceSha256": "f2da1748064b55d57a7bfaedb732795aa89a2f46071b243168af520fc7feab57"
+        }
+      ],
+      "expectedPatternReads": false,
+      "source": "Actual visibleCue history only; direction/kind is never obtained from private patterns."
+    }
+  ],
+  "totals": {
+    "durationBoundaries": 122,
+    "onsetBoundaries": 33,
+    "observedVisibilityTicks": 3672
+  },
+  "methodology": "Use integer rational comparisons for onset and duration boundaries, cloned normally reached states for isolated inputs, cancellation/replay counter arithmetic, and a separate observer that remembers only displayed current cues.",
+  "scope": {
+    "constructedInputFixtures": true,
+    "normalInputModelSolutions": 3,
+    "privateExpectedPatternsRead": false,
+    "normalGameplayEvidence": false,
+    "browserExecuted": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "limitations": [
+    "Model timing/input fixtures are separate from real runtime cancellation tests, ordinary browser play and encoded video."
+  ]
+}
