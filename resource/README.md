@@ -24,7 +24,7 @@
 | 名称 | 作者 | 版本 | APK 大小 | 用途 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
 | [Adventure Island TV](apps/adventure-island/) | ecojust / 桔子桑 | 0.5.2 | 89.4 KB | 8 区域 32 关横版冒险，支持手机扫码单人或双人轮流 | <img src="apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"> |
-| [孤胆枪手 TV](apps/alien-shooter/) | ecojust / 桔子桑 | 0.1.0 | 269.6 KB | 工业基地异形群潮单人射击，三关战役、五种武器与手机扫码操作 | <img src="apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"> |
+| [孤胆枪手 TV](apps/alien-shooter/) | ecojust / 桔子桑 | 0.1.1 | 1.68 MB | 工业基地异形群潮单人射击，三关战役、五种武器与手机扫码操作 | <img src="apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"> |
 | [Mighty Bomb Jack TV](apps/bomb-jack/) | ecojust / 桔子桑 | 0.5.2 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |
 | [CCTV Live](apps/cctv/) | ecojust / 桔子桑 | 0.5.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
 | [Coast Kart TV](apps/coast-kart/) | ecojust / 桔子桑 | 0.5.2 | 257.6 KB | 原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏 | <img src="apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"> |

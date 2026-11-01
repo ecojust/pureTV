@@ -72,7 +72,7 @@ The launchers and first-party TV apps support English. Select English in the TV 
 | Name | Author | Version | APK size | Purpose | Preview |
 | --- | --- | --- | --- | --- | --- |
 | [Adventure Island TV](resource/apps/adventure-island/) | ecojust | 0.5.2 | 89.4 KB | 32-stage island adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"> |
-| [Alien Shooter TV](resource/apps/alien-shooter/) | ecojust | 0.1.0 | 269.6 KB | Single-player industrial-base alien combat with three campaign stages, five weapons and a LAN phone controller | <img src="docs/previews/en/app-alien-shooter.png" width="180" alt="Alien Shooter TV preview"> |
+| [Alien Shooter TV](resource/apps/alien-shooter/) | ecojust | 0.1.1 | 1.68 MB | Single-player industrial-base alien combat with three campaign stages, five weapons and a LAN phone controller | <img src="docs/previews/en/app-alien-shooter.png" width="180" alt="Alien Shooter TV preview"> |
 | [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust | 0.5.2 | 85.4 KB | 16-stage pyramid adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"> |
 | [CCTV Live](resource/apps/cctv/) | ecojust | 0.5.0 | 40.9 KB | Official CCTV website player with TV channel navigation | <img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"> |
 | [Coast Kart TV](resource/apps/coast-kart/) | ecojust | 0.5.2 | 257.6 KB | Original kart racing with drifting, items and split-screen LAN phone play | <img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"> |
