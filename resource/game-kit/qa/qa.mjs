@@ -87,8 +87,33 @@ try {
     if(automation?.assertRetry) await automation.assertRetry({before:after,after:restarted,initial},assert);
     return restarted;
   });
-  await test('resizing keeps canvas visible',async()=>{
-    for(const viewport of [{width:960,height:540},{width:1280,height:720}]) { await page.setViewportSize(viewport);await delay(100);const file=path.join(output,'resize-'+viewport.width+'.png');report.screenshots.push(file);await inspectFrame(page,file); }
+  await test('resizing keeps canvas and complete sidebar text visible',async()=>{
+    const layouts=[];
+    for(const viewport of [{width:960,height:540},{width:1280,height:720}]) {
+      await page.setViewportSize(viewport);await delay(100);
+      const sidebar=await page.evaluate(()=>{
+        const aside=document.querySelector('aside'), bounds=aside.getBoundingClientRect();
+        const rect=r=>({left:r.left,top:r.top,right:r.right,bottom:r.bottom});
+        const texts=[...aside.querySelectorAll('#tip,#room-address,.control p,.small-help')].map(element=>{
+          const range=document.createRange();range.selectNodeContents(element);
+          return {text:element.textContent,rects:[...range.getClientRects()].filter(r=>r.width>0&&r.height>0).map(rect)};
+        });
+        return {visible:getComputedStyle(aside).display!=='none',bounds:rect(bounds),scrollTop:aside.scrollTop,
+          clientHeight:aside.clientHeight,scrollHeight:aside.scrollHeight,clientWidth:aside.clientWidth,scrollWidth:aside.scrollWidth,
+          tipText:document.querySelector('#tip').textContent,expectedTip:GameDef.tip,texts};
+      });
+      assert.ok(sidebar.visible,'The TV sidebar must remain visible at the tested viewport');
+      assert.equal(sidebar.scrollTop,0,'Sidebar must not require scrolling to its tip');
+      assert.ok(sidebar.scrollHeight<=sidebar.clientHeight+1&&sidebar.scrollWidth<=sidebar.clientWidth+1,'Sidebar content must fit without scrolling');
+      assert.equal(sidebar.tipText,sidebar.expectedTip,'The complete game tip must be present');
+      for(const text of sidebar.texts) {
+        assert.ok(text.text.trim()&&text.rects.length,'Sidebar instructions must not be hidden');
+        for(const box of text.rects) assert.ok(box.left>=sidebar.bounds.left-1&&box.top>=sidebar.bounds.top-1&&box.right<=sidebar.bounds.right+1&&box.bottom<=sidebar.bounds.bottom+1,'Sidebar text is clipped: '+text.text);
+      }
+      layouts.push({viewport,sidebar});
+      const file=path.join(output,'resize-'+viewport.width+'.png');report.screenshots.push(file);await inspectFrame(page,file);
+    }
+    return layouts;
   });
   await test('no page, console or resource errors',async()=>verifyErrors(session));
   await writeFile(path.join(output,'input-state-trace.json'),JSON.stringify(trace,null,2)+'\n');

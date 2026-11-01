@@ -1,0 +1,362 @@
+{
+  "schema": 1,
+  "startedAt": "2026-11-01T16:48:07.631Z",
+  "source": {
+    "modelPath": "resource/apps/tension-span/src/main/assets/game-model.js",
+    "modelSha256": "1243c06fed4a2e908206eaaa3982bc1218feb904519892d36a86e8427a1424cf",
+    "reviewPath": "resource/apps/tension-span/tests/independent-physics-review.mjs",
+    "reviewSha256": "9a82115674f7aaae69dec07094ce82e6a6500241f96cf3d90da28211d98880e8"
+  },
+  "execution": {
+    "runtime": "v24.19.0",
+    "modelApi": [
+      "create",
+      "step"
+    ],
+    "sourceFilesModified": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "fixtureScope": "Isolated force, damping, failure and load boundary tests intentionally construct model states. They are not ordinary gameplay or capture evidence.",
+    "normalSequenceScope": "Separate sequences modify their live state only through create/step inputs; planning clones may explore selectable candidates. Model-time tests are not real-time video."
+  },
+  "assumptions": {
+    "pixelsPerMetre": 50,
+    "tickHz": 120,
+    "gravity": 9.81,
+    "model": "Vertical small-deflection deck; fixed x, fixed bank end reactions, prescribed vehicle speed and equal two-wheel static loads. Not a full vehicle/structural FEM.",
+    "conservedQuantity": "Internal panel forces sum to zero. Fixed supports, anchors, gravity, vehicle drive and damping are external constraints/work, so total closed-system energy conservation is not claimed."
+  },
+  "checks": [
+    {
+      "name": "30000 independent randomized force/load/integration comparisons across all three layouts",
+      "passed": true,
+      "elapsedMs": 1036.156654,
+      "cases": 30000,
+      "seed": 20261101,
+      "layouts": 3,
+      "forceError": 1.4097167877480388e-11,
+      "loadError": 0,
+      "velocityError": 2.3092638912203256e-14,
+      "positionError": 5.684341886080802e-14,
+      "tensionError": 2.114575181622058e-11,
+      "slackCableObservations": 96730,
+      "tautCableObservations": 83270,
+      "missingSupports": 5126
+    },
+    {
+      "name": "No implicit support: disconnected unloaded free nodes accelerate at g; broken panels transfer no force",
+      "passed": true,
+      "elapsedMs": 0.2533220000000256,
+      "gravity": 9.81,
+      "freeNodeCount": 3,
+      "pixelsPerMetre": 50,
+      "internalPanelForceSum": 0
+    },
+    {
+      "name": "Wheel loads sum to actual mg; doubling vehicle mass doubles deck load and increases same-step deflection",
+      "passed": true,
+      "elapsedMs": 0.4784310000000005,
+      "lightN": 882.9000000000001,
+      "heavyN": 1765.8000000000002,
+      "lightLoads": [
+        0,
+        95.08153846153847,
+        692.7369230769232,
+        95.08153846153847,
+        0
+      ],
+      "heavyLoads": [
+        0,
+        190.16307692307694,
+        1385.4738461538464,
+        190.16307692307694,
+        0
+      ]
+    },
+    {
+      "name": "Slack and contracting cables never push; overload breaks once and contributes zero after removal",
+      "passed": true,
+      "elapsedMs": 1.6708200000000488,
+      "breakEvents": 1,
+      "brokenCount": 1,
+      "recordedBreakTime": 0.008333333333333333
+    },
+    {
+      "name": "Geometry-priced integer material ledger resists add/remove, overspend and held input",
+      "passed": true,
+      "elapsedMs": 141.68752500000005,
+      "levels": [
+        {
+          "level": 1,
+          "budget": 255,
+          "costs": [
+            47,
+            87,
+            65,
+            65,
+            87,
+            47
+          ],
+          "roundTrips": 120,
+          "elapsed": 10.983333333333333
+        },
+        {
+          "level": 2,
+          "budget": 285,
+          "costs": [
+            54,
+            98,
+            74,
+            74,
+            98,
+            54
+          ],
+          "roundTrips": 120,
+          "elapsed": 10.983333333333333
+        },
+        {
+          "level": 3,
+          "budget": 260,
+          "costs": [
+            51,
+            89,
+            70,
+            63,
+            94,
+            40
+          ],
+          "roundTrips": 120,
+          "elapsed": 8.8
+        }
+      ],
+      "unit": "one budget unit = one purchased decimetre, each cable rounded up once"
+    },
+    {
+      "name": "Ordinary empty/weak bridges genuinely fall; B restores exact editable design without clock/material reset",
+      "passed": true,
+      "elapsedMs": 15.182706000000053,
+      "normalInputSequences": [
+        {
+          "level": 1,
+          "installed": [],
+          "editingSeconds": 0,
+          "elapsed": 7.808333333333334,
+          "phase": "playing",
+          "mode": "test-failed",
+          "carX": 284.8999999999964,
+          "finishX": 820,
+          "fallen": true,
+          "brokenCount": 0,
+          "breakEvents": 0,
+          "spent": 0,
+          "budget": 255,
+          "stateWrites": false,
+          "afterBMode": "editing",
+          "elapsedAfterB": 7.825,
+          "spentAfterB": 0
+        },
+        {
+          "level": 1,
+          "installed": [
+            "cable-1-2"
+          ],
+          "editingSeconds": 0.06666666666666667,
+          "elapsed": 9.233333333333333,
+          "phase": "playing",
+          "mode": "test-failed",
+          "carX": 312.49999999999955,
+          "finishX": 820,
+          "fallen": true,
+          "brokenCount": 1,
+          "breakEvents": 1,
+          "spent": 87,
+          "budget": 255,
+          "stateWrites": false,
+          "afterBMode": "editing",
+          "elapsedAfterB": 9.25,
+          "spentAfterB": 87
+        }
+      ]
+    },
+    {
+      "name": "Repeated test/edit snapshots preserve installation and geometry; test A cannot modify design",
+      "passed": true,
+      "elapsedMs": 5.136736999999812,
+      "cycles": 30,
+      "spent": 224,
+      "elapsed": 4.15,
+      "attempts": 30
+    },
+    {
+      "name": "Six ordinary input designs cross: two distinct cable sets in each of the three layouts",
+      "passed": true,
+      "elapsedMs": 121.64114400000017,
+      "normalWins": 6,
+      "liveStateWrites": false,
+      "successIsNotSingleCombination": true
+    },
+    {
+      "name": "One ordinary session can fail, wait, restore, remove the wrong cable, rebuild and win",
+      "passed": true,
+      "elapsedMs": 15.890360999999984,
+      "firstFailureAt": 9.233333333333333,
+      "failureDisplayedModelSeconds": 2.6,
+      "wonAt": 46.075,
+      "attempts": 2,
+      "spent": 224,
+      "budget": 255,
+      "liveStateWrites": false
+    },
+    {
+      "name": "Constructed finish boundary rejects a broken rear panel even after all vehicle wheels reach the bank",
+      "passed": true,
+      "elapsedMs": 14.503159000000096,
+      "fixtureOnly": true,
+      "goodPhase": "won",
+      "badPhase": "playing",
+      "badMode": "test-failed",
+      "badReason": "bridge-collapse",
+      "rearWheelBeyondBank": true
+    },
+    {
+      "name": "Fixed integration agrees at 120/60/30Hz; invalid time cannot edit and timeout freezes",
+      "passed": true,
+      "elapsedMs": 34.29919399999994,
+      "frequencies": [
+        120,
+        60,
+        30
+      ],
+      "physicsSeconds": 16,
+      "globalTimeout": 90
+    }
+  ],
+  "normalSequences": [
+    {
+      "level": 1,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.13333333333333333,
+      "elapsed": 34.141666666666666,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 820.1666666666191,
+      "finishX": 820,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 159,
+      "budget": 255,
+      "stateWrites": false
+    },
+    {
+      "level": 1,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-2-2",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.15,
+      "elapsed": 34.15833333333333,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 820.1666666666191,
+      "finishX": 820,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 224,
+      "budget": 255,
+      "stateWrites": false
+    },
+    {
+      "level": 2,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.13333333333333333,
+      "elapsed": 36.141666666666666,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 840.1666666666141,
+      "finishX": 840,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 182,
+      "budget": 285,
+      "stateWrites": false
+    },
+    {
+      "level": 2,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-2-2",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.15,
+      "elapsed": 36.15833333333333,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 840.1666666666141,
+      "finishX": 840,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 256,
+      "budget": 285,
+      "stateWrites": false
+    },
+    {
+      "level": 3,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.11666666666666667,
+      "elapsed": 36.125,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 840.1666666666141,
+      "finishX": 840,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 161,
+      "budget": 260,
+      "stateWrites": false
+    },
+    {
+      "level": 3,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-2-2",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.13333333333333333,
+      "elapsed": 36.141666666666666,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 840.1666666666141,
+      "finishX": 840,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 224,
+      "budget": 260,
+      "stateWrites": false
+    }
+  ],
+  "failures": [],
+  "passed": true,
+  "finishedAt": "2026-11-01T16:48:09.021Z"
+}

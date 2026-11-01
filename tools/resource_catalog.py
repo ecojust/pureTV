@@ -35,7 +35,7 @@ RELEASE_CERTIFICATE_CUTOVERS = {
 
 # New applications launched after the certificate rotation have no legacy signer.
 # Register exact package IDs; similar or unknown packages must not inherit this pin.
-NEW_RELEASE_CERTIFICATE_PACKAGES = {'com.ecojust.usedcartv', 'com.ecojust.alienshootertv', 'com.ecojust.gravitycouriertv', 'com.ecojust.prismrelaytv', 'com.ecojust.switchyardminutetv', 'com.ecojust.tidelocktv'}
+NEW_RELEASE_CERTIFICATE_PACKAGES = {'com.ecojust.usedcartv', 'com.ecojust.alienshootertv', 'com.ecojust.gravitycouriertv', 'com.ecojust.prismrelaytv', 'com.ecojust.switchyardminutetv', 'com.ecojust.tidelocktv', 'com.ecojust.tensionspantv'}
 
 def expected_release_certificate(root, identity):
     """Return the single certificate pinned for an APK's package and version."""
