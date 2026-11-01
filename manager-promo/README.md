@@ -1,9 +1,16 @@
 # Temporary native recording job
 
 Dispatch the temporary branch's `job-diagnostics.yml` with `job_id=050-promo`.
-The job uses a fresh macOS runner, read-only repository permissions, and uploads
-the explicit `evidence/` directory. It never commits, pushes, publishes a release,
-installs a client update, or posts to Gitee.
+The job uses a fresh macOS runner and uploads the explicit `evidence/` directory.
+It also saves a strict allowlist of public recording evidence to a new temporary
+`recordings/manager-050-<run>-<attempt>` branch, because the local environment
+cannot download GitHub's Azure-hosted artifact URLs. It never writes master or
+the diagnostics branch, publishes a release, installs an update, or posts to Gitee.
+The capture process receives no repository token; only the separate evidence-save
+step receives write access. File size must be below 95 MB. No force-push is used.
+
+The fixed `job_id=050-recover` job retrieves only run `41302833278`, attempt 1,
+and saves that same allowlist to `recordings/manager-050-41302833278-1`.
 
 The official 0.4.19 and 0.5.0 DMGs are checked against both their published
 SHA256SUMS and reviewed pinned hashes. Bundle versions and executable hashes are

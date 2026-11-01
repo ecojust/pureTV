@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       job_id:
-        description: Fixed recording marker (050-promo)
+        description: Fixed marker (050-promo or 050-recover)
         required: true
 permissions:
   contents: read
@@ -12,6 +12,8 @@ jobs:
     if: inputs.job_id == '050-promo'
     runs-on: macos-latest
     timeout-minutes: 15
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,3 +31,36 @@ jobs:
           path: manager-promo/evidence/
           if-no-files-found: error
           retention-days: 7
+      - name: Save allowlisted footage to a separate recording branch
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CAPTURE_SOURCE_RUN: ${{ github.run_id }}
+          CAPTURE_SOURCE_ATTEMPT: ${{ github.run_attempt }}
+          CAPTURE_SOURCE_SHA: ${{ github.sha }}
+        run: python3 manager-promo/save-evidence.py
+  recover:
+    if: inputs.job_id == '050-recover'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Recover this task's first native recording evidence
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 41302833278
+          name: manager-050-native-promo-41302833278-1
+          path: manager-promo/evidence/
+      - name: Save only public recording evidence to its separate branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CAPTURE_SOURCE_RUN: '41302833278'
+          CAPTURE_SOURCE_ATTEMPT: '1'
+          CAPTURE_SOURCE_SHA: b2b2f1afc8b8214b101bcf1845df96a1a9074b2a
+        run: python3 manager-promo/save-evidence.py
