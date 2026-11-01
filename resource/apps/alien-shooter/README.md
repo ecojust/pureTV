@@ -1,5 +1,11 @@
 # 孤胆枪手 TV
 
+<!-- apk-resource:start -->
+[下载 APK](alien-shooter-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+
+此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
+<!-- apk-resource:end -->
+
 [中文](README.md) · [English](README.en.md)
 
 一款独立制作的斜俯视基地射击游戏。进入被异形占据的货运站、实验室和反应堆，恢复控制台、守住怪潮、购买补给，击败母巢守卫后撤离。专为单人游玩设计，支持电视大屏与一部手机扫码操作。

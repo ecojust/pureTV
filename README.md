@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-14-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-15-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -70,6 +70,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | 名称 | 作者 | 版本 | APK 大小 | 用途 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
 | [Adventure Island TV](resource/apps/adventure-island/) | ecojust / 桔子桑 | 0.5.2 | 89.4 KB | 8 区域 32 关横版冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"> |
+| [孤胆枪手 TV](resource/apps/alien-shooter/) | ecojust / 桔子桑 | 0.1.0 | 269.6 KB | 工业基地异形群潮单人射击，三关战役、五种武器与手机扫码操作 | <img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"> |
 | [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust / 桔子桑 | 0.5.2 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |
 | [CCTV Live](resource/apps/cctv/) | ecojust / 桔子桑 | 0.5.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="resource/apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
 | [Coast Kart TV](resource/apps/coast-kart/) | ecojust / 桔子桑 | 0.5.2 | 257.6 KB | 原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏 | <img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"> |
