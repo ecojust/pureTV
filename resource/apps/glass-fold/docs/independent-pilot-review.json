@@ -1,0 +1,189 @@
+{
+  "passed": true,
+  "kind": "independent-glass-fold-public-pilot-static-and-bounded-fixture-review",
+  "reviewScriptSha256": "917f3b8de1248e3819948249eab9127d995bf00c919e702f962d253864630d5f",
+  "sourceHashes": {
+    "tests/automation.mjs": "ad0f9c89589b714baa984043dd13e95e62324488114e45b248274449809808ca",
+    "docs/model-contract.md": "6bb46792e0993dfd6711c3024db8b6a7387c7df5156e09b23df2f09b5b7fecab",
+    "src/main/assets/game-model.js": "bbc78a280aefaf04e15a2f4d68f30aa103b5cd8562a918dcd3224f73f2f21174"
+  },
+  "endHashes": {
+    "tests/automation.mjs": "ad0f9c89589b714baa984043dd13e95e62324488114e45b248274449809808ca",
+    "docs/model-contract.md": "6bb46792e0993dfd6711c3024db8b6a7387c7df5156e09b23df2f09b5b7fecab",
+    "src/main/assets/game-model.js": "bbc78a280aefaf04e15a2f4d68f30aa103b5cd8562a918dcd3224f73f2f21174"
+  },
+  "sourceUnchanged": true,
+  "productionModelImported": false,
+  "productionModelStepCalled": false,
+  "browserTested": false,
+  "normalGameWinsClaimed": 0,
+  "privateReads": 0,
+  "mutationAttempts": 0,
+  "pilotAndPredictorCalls": 47,
+  "checks": [
+    {
+      "name": "complete moving stack reverses above stationary layers; vertices and faces reflect exactly",
+      "passed": true,
+      "details": {
+        "destinationLayers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "movingPieceVertexCorners": [
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "horizontal high-side reflection preserves x and reverses moved winding",
+      "passed": true,
+      "details": {
+        "destinationLayers": [
+          0,
+          12
+        ],
+        "reflectedVertices": [
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 0,
+            "y": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "once-rounded RGB is ordered and matches independent dyadic weights",
+      "passed": true,
+      "details": {
+        "ordered": [
+          125,
+          189,
+          59
+        ],
+        "reversed": [
+          189,
+          125,
+          59
+        ]
+      }
+    },
+    {
+      "name": "invalid out-of-frame or one-sided folds preserve the exact public design",
+      "passed": true,
+      "details": {
+        "outOfFrame": true,
+        "allMoving": true,
+        "noMoving": true
+      }
+    },
+    {
+      "name": "search uses exact remaining depth and fully visible RGB footprint",
+      "passed": true,
+      "details": {
+        "oneFoldPlan": [
+          "c1"
+        ],
+        "alreadyMatchingWithBudgetMustNotReturnEmpty": true,
+        "oneRgbChannelDifferenceRejected": true
+      }
+    },
+    {
+      "name": "expansion queue per-search time and inherited absolute deadline caps fail explicitly",
+      "passed": true,
+      "details": {
+        "maxExpandedZero": true,
+        "maxQueuedOne": true,
+        "maxMillisecondsZero": true,
+        "expiredSharedDeadline": true
+      }
+    },
+    {
+      "name": "controller releases ordinary A before observing and verifies predicted geometry",
+      "passed": true,
+      "details": {
+        "ordinarySpaceThenNeutral": true,
+        "validObservedAnimationWaited": true,
+        "changedPieceFaceRejected": true
+      }
+    },
+    {
+      "name": "unexpected count or geometry change cannot be retried as an unobserved edge",
+      "passed": true,
+      "details": {
+        "counterOvershootRejected": true,
+        "changedGeometrySameCounterRejected": true,
+        "unchangedMissedEdgeRemainsRetryable": true
+      }
+    },
+    {
+      "name": "selector navigation releases before a second directional decision",
+      "passed": true,
+      "details": {
+        "rightThenNeutral": true
+      }
+    },
+    {
+      "name": "private history and authored-solution variants do not change public plans or ordinary keys",
+      "passed": true,
+      "details": {
+        "pairedPlans": 1,
+        "pairedControllerObservations": 3
+      }
+    },
+    {
+      "name": "static aggregate demonstration budget shares the initial absolute deadline",
+      "passed": true,
+      "details": {
+        "reviewMethod": "Static data-flow inspection plus expired-deadline fixture; no simulated game clock or browser timing claim.",
+        "initialAndDemonstrationDeadlineMilliseconds": 2000,
+        "candidateOwnSubcapMilliseconds": 500
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "aggregate-demonstration-search-budget",
+      "status": "resolved-in-reviewed-pilot",
+      "detail": "Original per-search-only caps could accumulate across demonstration candidates. Reviewed source now shares one absolute 2000ms deadline across initial plan and demonstration subsearches."
+    },
+    {
+      "id": "unexpected-fold-counter-or-geometry",
+      "status": "resolved-in-reviewed-pilot",
+      "detail": "Original branch retried any foldsUsed mismatch after one second. Reviewed source allows retry only with exactly unchanged count and geometry; both altered-counter and altered-geometry observations now throw."
+    }
+  ],
+  "limitations": [
+    "These authored visible-board and fault-observation fixtures are not three-level gameplay or production-model rule proof.",
+    "Geometry checks are deliberately small representative cases; architecture owns the independent full geometry/solver oracle.",
+    "Time caps are cooperative checks around bounded operations. No operating-system scheduling or physical device responsiveness guarantee is asserted.",
+    "No browser, native input bridge, recording, signed APK or production model was executed."
+  ]
+}
