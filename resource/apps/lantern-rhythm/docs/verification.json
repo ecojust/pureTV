@@ -1,0 +1,707 @@
+{
+  "schema": 1,
+  "game": "lantern-rhythm",
+  "version": "0.1.0",
+  "sourceCommit": "3001e9e13563270cdd2861d5fe53ed923b2e120d",
+  "automationSha256": "d1b73b3990612e093ac51e16e79fa0c6d48ddd3e9ecd60184b28a0861ee30f64",
+  "modelTests": {
+    "passed": 31,
+    "command": "node --test resource/apps/lantern-rhythm/tests/game-model.test.cjs",
+    "sourceHashes": {
+      "src/main/assets/game-model.js": "39718505330a9cccd9ba30219fc3acad26c9b49f84a1b74fddc9eb8d3fa2a780",
+      "tests/game-model.test.cjs": "31229b96c6a57feec59210b479dca97981e9d53772404c13005af46cb921d0a3",
+      "tests/automation.mjs": "d1b73b3990612e093ac51e16e79fa0c6d48ddd3e9ecd60184b28a0861ee30f64",
+      "docs/model-contract.md": "89d87d2949eabc892e8b47060b5c2b908e21a9149b5e72be37a4ae9e205b3ea4"
+    },
+    "testLogSha256": "82efa91e9927c8efc775091fc1e945ee7e5e08c634352a20a706b2d8380e266b",
+    "rawReportSha256": "98f418f12d710e14db3cd485c6e1a0f61098b09ff8de3a7daabb81607ccb3ad1",
+    "scope": "28 temporal/input boundary groups plus three normal 60Hz rounds observed every five ticks with all private model fields removed from pilot snapshots. Level1 uses a genuine paid replay; level2 injects normal cancelEpoch/cancelled metadata during an actual hold; no direct state edits in these complete rounds. Not a browser or physical hardware run."
+  },
+  "independentTemporalReview": {
+    "passed": true,
+    "file": "independent-temporal-review.json",
+    "sha256": "10209252cd7dec074b844a0e75a7a3ac4e229510d4c7864b23a6108f91645044",
+    "checksPassed": 7,
+    "totals": {
+      "durationBoundaries": 122,
+      "onsetBoundaries": 33,
+      "observedVisibilityTicks": 3672
+    },
+    "observedInputModelSolutions": [
+      {
+        "level": 1,
+        "phase": "won",
+        "litCount": 3,
+        "correctNotes": 9,
+        "acceptedCount": 9,
+        "modelElapsedSeconds": 33.21666666666667,
+        "mistakes": 0,
+        "replaysRemaining": 2,
+        "observedCueFrames": 567,
+        "inputTraceSha256": "d77f211a107ae127a933f11fb593c9e4959f89ab9b122d1885dd0fe1eb464359"
+      },
+      {
+        "level": 2,
+        "phase": "won",
+        "litCount": 3,
+        "correctNotes": 12,
+        "acceptedCount": 12,
+        "modelElapsedSeconds": 43.05,
+        "mistakes": 0,
+        "replaysRemaining": 2,
+        "observedCueFrames": 756,
+        "inputTraceSha256": "9d64df968756a6a89ea093c1e721cf8d4c14e2b2e763480e180c1a0f8bfdb9a6"
+      },
+      {
+        "level": 3,
+        "phase": "won",
+        "litCount": 3,
+        "correctNotes": 15,
+        "acceptedCount": 15,
+        "modelElapsedSeconds": 51.21666666666667,
+        "mistakes": 0,
+        "replaysRemaining": 2,
+        "observedCueFrames": 945,
+        "inputTraceSha256": "f2da1748064b55d57a7bfaedb732795aa89a2f46071b243168af520fc7feab57"
+      }
+    ],
+    "scope": {
+      "constructedInputFixtures": true,
+      "normalInputModelSolutions": 3,
+      "privateExpectedPatternsRead": false,
+      "normalGameplayEvidence": false,
+      "browserExecuted": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    }
+  },
+  "independentObserverReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "03c74471a3a30a65a66b2db3976209491fc431df9114676f8a9277664da71a2d",
+    "checksPassed": 11,
+    "pairedObservations": 80,
+    "pilotCalls": 161,
+    "sourceHashes": {
+      "tests/automation.mjs": "d1b73b3990612e093ac51e16e79fa0c6d48ddd3e9ecd60184b28a0861ee30f64",
+      "src/main/assets/game-model.js": "39718505330a9cccd9ba30219fc3acad26c9b49f84a1b74fddc9eb8d3fa2a780",
+      "docs/model-contract.md": "89d87d2949eabc892e8b47060b5c2b908e21a9149b5e72be37a4ae9e205b3ea4"
+    },
+    "scope": "Synthetic public-observation noninterference fixtures; no production Model.step, browser or ordinary complete gameplay is executed."
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "3f48aa2875c1601e9cbd2a44793a83f26682c5de223786fa9db94474171d2255",
+    "renderCases": 44,
+    "scope": "Source-only combined art evidence with explicit title-only change. The original 44 canvas cases and ordinary-browser menu/hold/pause/rearm checks remain bound to original game.js 1e7059; they were not rerun under final game.js 16b0fd. Exact byte restoration proves the only production game change is winTitle. Final source is covered by two targeted title-layout fixtures. Final packaged ordinary-play QA and encoded video are separate root/QA evidence, not claimed here.",
+    "finalSourceHashes": {
+      "game": {
+        "path": "resource/apps/lantern-rhythm/src/main/assets/game.js",
+        "sha256": "16b0fd160b667778c4df58202a0ba84dc90cd0ae7592f2ee8bc37d71703585f9"
+      },
+      "model": {
+        "path": "resource/apps/lantern-rhythm/src/main/assets/game-model.js",
+        "sha256": "39718505330a9cccd9ba30219fc3acad26c9b49f84a1b74fddc9eb8d3fa2a780"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "automation": {
+        "path": "resource/apps/lantern-rhythm/tests/automation.mjs",
+        "sha256": "d1b73b3990612e093ac51e16e79fa0c6d48ddd3e9ecd60184b28a0861ee30f64"
+      },
+      "runtime.js": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
+      },
+      "tv.css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "tv.html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "game.json": {
+        "path": "resource/apps/lantern-rhythm/game.json",
+        "sha256": "dea2bd5f3a157b9f56c66e43859ed6d3170e61975ea7f9ede26d72c45324824d"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "39718505330a9cccd9ba30219fc3acad26c9b49f84a1b74fddc9eb8d3fa2a780",
+      "game.js": "16b0fd160b667778c4df58202a0ba84dc90cd0ae7592f2ee8bc37d71703585f9",
+      "game-config.json": "3903ce6a014ddc7ae45b2eb11919cf9ce3eaca48732c41bbbe3a933610c1194f",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "d1b73b3990612e093ac51e16e79fa0c6d48ddd3e9ecd60184b28a0861ee30f64"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three routes expose three four and five cue phrases",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick choose routes once per press",
+        "passed": true
+      },
+      {
+        "name": "menu glass and sound button expose the actual state",
+        "passed": true
+      },
+      {
+        "name": "held START starts once and never invents a note",
+        "passed": true
+      },
+      {
+        "name": "B is a finite edge-triggered replay and never pauses the clock",
+        "passed": true
+      },
+      {
+        "name": "listening reveals each current cue and response hides every answer",
+        "passed": true
+      },
+      {
+        "name": "phone A holds and releases a remembered signal with its direction latched",
+        "passed": true
+      },
+      {
+        "name": "native Enter callback stays held until its real release and earns one note",
+        "passed": true
+      },
+      {
+        "name": "P cancels a held signal without scoring and preserves the accepted prefix",
+        "passed": true
+      },
+      {
+        "name": "connected phone cancelSeq cancels instead of falsely releasing for credit",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes the active phrase and reconnect keeps stale A quarantined",
+        "passed": true
+      },
+      {
+        "name": "window blur cancels native Enter and requires a genuine callback release",
+        "passed": true
+      },
+      {
+        "name": "fresh neutral and repress after cancellations completes the real phrase",
+        "passed": true
+      },
+      {
+        "name": "pause primary and header buttons preserve the phrase state",
+        "passed": true
+      },
+      {
+        "name": "four genuinely missed response onsets cause a normal mistakes loss",
+        "passed": true
+      },
+      {
+        "name": "R restores every phrase score replay and cancellation counter",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "mistakes",
+      "elapsed": 31.733333333333334,
+      "remaining": 58.266666666666666,
+      "litCount": 0,
+      "score": 0,
+      "mistakes": 4,
+      "acceptedCount": 0,
+      "lastError": "missed",
+      "maxMistakes": 4,
+      "correctNotes": 0,
+      "replayCount": 0,
+      "replaysRemaining": 2
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "39718505330a9cccd9ba30219fc3acad26c9b49f84a1b74fddc9eb8d3fa2a780",
+      "game.js": "16b0fd160b667778c4df58202a0ba84dc90cd0ae7592f2ee8bc37d71703585f9",
+      "game-config.json": "3903ce6a014ddc7ae45b2eb11919cf9ce3eaca48732c41bbbe3a933610c1194f",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "方向在按下 A 时锁定。短按约 0.3 秒，长按约 0.7 秒。B 是有限重播，不是暂停。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1223.25,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "方向在按下 A 时锁定。短按约 0.3 秒，长按约 0.7 秒。B 是有限重播，不是暂停。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 384.5625,
+          "tipTextLeft": 765,
+          "tipTextRight": 927.515625,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "方向在按下 A 时锁定。短按约 0.3 秒，长按约 0.7 秒。B 是有限重播，不是暂停。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 384.5625,
+          "tipTextLeft": 765,
+          "tipTextRight": 927.515625,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "方向在按下 A 时锁定。短按约 0.3 秒，长按约 0.7 秒。B 是有限重播，不是暂停。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1223.25,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "方向在按下 A 时锁定。短按约 0.3 秒，长按约 0.7 秒。B 是有限重播，不是暂停。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1223.25,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "方向在按下 A 时锁定。短按约 0.3 秒，长按约 0.7 秒。B 是有限重播，不是暂停。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 384.5625,
+          "tipTextLeft": 765,
+          "tipTextRight": 927.515625,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "447bfa7fef1d4579161f8cb7e5a401a40da42dad89059552649c7236de5a1111"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 746,
+    "rafIntervalMs": {
+      "count": 746,
+      "min": 16.5,
+      "median": 33.400000000001455,
+      "p95": 83.30000000000291,
+      "max": 133.3000000000029,
+      "mean": 43.94356568364613
+    },
+    "webglDrawCalls": {
+      "count": 746,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 746,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 38.011906192000005,
+      "level": 1,
+      "difficulty": 0,
+      "litCount": 3,
+      "phraseCount": 3,
+      "phraseLength": 3,
+      "correctNotes": 9,
+      "acceptedCount": 9,
+      "score": 3840,
+      "elapsed": 35.25,
+      "remaining": 54.75,
+      "mistakes": 0,
+      "maxMistakes": 4,
+      "replayCount": 1,
+      "replaysRemaining": 1,
+      "cancelCount": 0,
+      "allBeaconsLit": true
+    },
+    "finalWinHeldSecondsAtLeast": 21.9900656,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "419c92217bca7573c153bd167bb2bdc9dbfd48e28c524c0bf32e0597643cf8c3"
+      },
+      {
+        "name": "menu-four-beats-0.85s.png",
+        "sha256": "a4b80700c24439e615447db60ee778f3cf33809874f10123e7d461849717a672"
+      },
+      {
+        "name": "menu-five-beats-1.35s.png",
+        "sha256": "93457b14c2ca592d7814af8e20d10b53ac434ed3e0340559f72bfa71801dd996"
+      },
+      {
+        "name": "first-visible-cue-before-replay-3.63s.png",
+        "sha256": "99313096fcc8829f40da318c9a6760a77b1f06a26e114690b04550d8361a38c9"
+      },
+      {
+        "name": "replayed-cue-8.01s.png",
+        "sha256": "d41d207d2a4283bd9169ce884945122cc62c60bf234ebc431b9dd36337006f7d"
+      },
+      {
+        "name": "short-held-signal-11.49s.png",
+        "sha256": "91cb296aac52279d1c4717b1954658d53e992ac1b2cf6d7f40524fd3f005baf9"
+      },
+      {
+        "name": "long-held-signal-13.42s.png",
+        "sha256": "7f5461eb0173c2cdef10e14b531bdf5f4f0ef80adcdc0c12ffcbc0752f88feb1"
+      },
+      {
+        "name": "gameplay-thumb-16.01s.png",
+        "sha256": "dc9885955eeb48295602965d5dd2cf490c01763a51cf1111244a2b2b1e9b9696"
+      },
+      {
+        "name": "settlement-58.30s.png",
+        "sha256": "587bc4626090633cb363156fe286dbb1a193fbb59710e04f55c9bb16f8757c45"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "9b2bf37f2a1974a09f86065088df816fc5dc823659db5454fd4106e22ff987d2"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "39718505330a9cccd9ba30219fc3acad26c9b49f84a1b74fddc9eb8d3fa2a780",
+    "game.js": "16b0fd160b667778c4df58202a0ba84dc90cd0ae7592f2ee8bc37d71703585f9",
+    "game-config.json": "3903ce6a014ddc7ae45b2eb11919cf9ce3eaca48732c41bbbe3a933610c1194f",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "2edf4e8cdfa79cc9efcfc03d574b3dff0603d7f0253b2b178754c01956817926",
+    "sign": "168dbe58abe740ecd7989f62d57758c0000ba29d26929757c5947f639526d6a5",
+    "fetch": "22e3786b7d5e84d7aea314bf22084ca7edb8aeaee1c94b28da23c2d65f031f92",
+    "qa": "186f58051b6ae28f72b5493a10234047640c257640a18a7d9cb35740dbef4702",
+    "ui": "0921de28bd128b760986dc5f65995389c948993cc7f563be714ca51c911165bc",
+    "layout": "447bfa7fef1d4579161f8cb7e5a401a40da42dad89059552649c7236de5a1111",
+    "viewport": "6ff269c01c9b90b941e465cd181dca89eab4680535324f7bf5f7833c5ebcda82",
+    "summary": "0466f0970b9b7b34f74dc7379c0fde62e46fb279b28b6a28891f582ca445f44e",
+    "record": "c7a3ab76d75d39eb2915d41f634c49b5309d942771bbb85a971c0215713c07ac",
+    "review": "86c66405aabd63bfffd7e9dc5efd98ed94982c660da08c136cc3fe9ab64533bd",
+    "videoValidation": "ccdf0eb13f353b93619016faef4995714eb43b2862f69a4c0dfe19793eb80fb2",
+    "artifacts": "8a0fa3116b650667bcc5234f0d6d111e0009cd8630f0503648c620d4a0fcf168",
+    "independentModel": "10209252cd7dec074b844a0e75a7a3ac4e229510d4c7864b23a6108f91645044",
+    "independentPilot": "03c74471a3a30a65a66b2db3976209491fc431df9114676f8a9277664da71a2d",
+    "artReview": "bfadd5d920b9cf7f3121a66b53e5c52eee45444b3e64fb5e91ac7b9b84688b8b",
+    "modelTests": "98f418f12d710e14db3cd485c6e1a0f61098b09ff8de3a7daabb81607ccb3ad1"
+  },
+  "sharedInputProtocol": {
+    "report": "../../game-kit/docs/input-lifecycle-verification.json",
+    "sha256": "1ed627460a7388079a2c5463906e4a3b063e7fdeb57ad79e29f9fe351f890c3b",
+    "runtimeSha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "scope": "Previously published deterministic browser protocol fixtures and a source-asset compatibility run; separate from this final game recording."
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Actual Chromium keyboard gameplay; phone bridge and room layout use controlled fixtures. Temporal model inputs and paired synthetic observer snapshots are separate from real runtime recording. No physical Android installation is claimed."
+  },
+  "release": {
+    "sourceSha": "3001e9e13563270cdd2861d5fe53ed923b2e120d",
+    "signerCommit": "3001e9e13563270cdd2861d5fe53ed923b2e120d",
+    "signingRun": 41339302889,
+    "bytes": 296227,
+    "sha256": "b9300387e260d54909eaf714b95fd1e68e7310e827e038ae6a8f288c4368f571",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "6ed8c512e22f913f304d2864aa6d31ee8fa873d4"
+  }
+}

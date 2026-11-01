@@ -34,6 +34,7 @@
 | [HIFINi TV](apps/hifini/) | ecojust / 桔子桑 | 0.5.0 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
 | [Jackal TV](apps/jackal/) | ecojust / 桔子桑 | 0.5.2 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
 | [Magic Jewelry TV](apps/jewel/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
+| [灯塔节拍](apps/lantern-rhythm/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 观察方向与短长灯号，再按节拍真实按住并松开按钮，依次点亮三座灯塔；两次主动重听、有限失误与90秒有效时间，支持手机扫码单人操作 | <img src="apps/lantern-rhythm/thumb.png" width="180" alt="灯塔节拍 界面"> |
 | [磁极仓库](apps/magnetic-warehouse/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 切换磁极，隔空吸引或排斥编号货箱；处理墙体遮挡与同步移动，在有限行动内把每箱送到对应货位，支持手机扫码单人操作 | <img src="apps/magnetic-warehouse/thumb.png" width="180" alt="磁极仓库 界面"> |
 | [镜光接力](apps/prism-relay/) | ecojust / 桔子桑 | 0.1.1 | 285.3 KB | 旋转镜片与分色棱镜，让彩色光束准确抵达接收器，包含反射、分色与合光三关，支持手机扫码单人操作 | <img src="apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"> |
 | [ShortVideo TV](apps/shortvideo/) | ecojust / 桔子桑 | 0.5.0 | 32.7 KB | 遥控器短视频播放器 | <img src="apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
