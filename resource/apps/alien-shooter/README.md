@@ -10,7 +10,7 @@
 
 一款独立制作的斜俯视基地射击游戏。进入被异形占据的货运站、实验室和反应堆，恢复控制台、守住怪潮、购买补给，击败母巢守卫后撤离。专为单人游玩设计，支持电视大屏与一部手机扫码操作。
 
-版本 **0.1.0** · 包名 `com.ecojust.alienshootertv` · Android 8.0 及以上。
+版本 **0.1.1** · 包名 `com.ecojust.alienshootertv` · Android 8.0 及以上。
 
 ## 开始游玩
 
@@ -51,7 +51,11 @@
 
 ## 画面与声音
 
-采用本地打包的 WebGL 三维场景、低模角色和程序生成的高清材质，包含工业地板、货箱、设备、管道、培养设施与反应堆。静态场景批处理，重复角色部件采用实例化；弹丸、粒子和尸体有数量上限。枪械、爆炸、拾取与工业环境声由 Web Audio 合成，不依赖在线资源。
+采用本地打包的 WebGL 三维场景和低模角色。0.1.1 将货箱的加固带、铆钉、标签、磨损等细节烘焙进 1024 图集，三关共享高清地板材质，分别使用预烘焙的接触暗部与局部光照图。静态不透明场景合批；同类敌人的身体、步态与尸体共用实例化绘制，屏外对象不提交绘制，动态缓冲只更新使用部分。
+
+界面保留 HUD 节点和小地图静态底图，暂停时停止重复绘制相同场景。弹丸、粒子和尸体保留数量上限，手机输入与游戏逻辑的处理频率保持不变。枪械、爆炸、拾取与工业环境声由 Web Audio 合成，不依赖在线资源。
+
+详见[烘焙方法](docs/baking.md)和[同场景性能对照](docs/performance.md)。
 
 下方截图由实际游戏页面在 Chromium 中渲染，使用模拟的 Android 房间桥接；关卡展示采用测试场景，不代表电视实机画面或完整人工通关录像。
 
@@ -69,6 +73,9 @@
 node --test resource/apps/alien-shooter/tests/*.test.cjs
 node resource/apps/alien-shooter/tests/controller.mjs
 node resource/apps/alien-shooter/tests/integration.mjs
+node resource/apps/alien-shooter/tests/runtime-performance.mjs
+node resource/apps/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions
+node resource/apps/alien-shooter/tools/bake-materials.mjs --verify
 
 cd resource/launcher/puretv
 ./gradlew :alien-shooter:testDebugUnitTest :alien-shooter:lintDebug :alien-shooter:assembleRelease :alien-shooter:verifyReleaseSize

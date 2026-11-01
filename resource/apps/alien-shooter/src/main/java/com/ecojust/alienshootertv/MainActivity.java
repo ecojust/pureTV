@@ -156,7 +156,15 @@ public class MainActivity extends Activity {
             case "/three.min.js":
             case "/audio.js":
             case "/world.js":
+            case "/baked-materials.js":
+            case "/baked-loader.js":
                 return "application/javascript";
+            case "/baked-atlas.png":
+            case "/baked-floor.png":
+            case "/baked-light-0.png":
+            case "/baked-light-1.png":
+            case "/baked-light-2.png":
+                return "image/png";
             default: break;
         }
         return null;

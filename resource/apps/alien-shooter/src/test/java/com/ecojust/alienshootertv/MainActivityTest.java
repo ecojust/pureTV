@@ -144,8 +144,10 @@ public class MainActivityTest {
     }
 
     @Test public void onlyBundledGameAssetsAreReadable() throws Exception {
-        String[] names={"tv.html","tv.css","bootstrap.js","game.js","game-model.js","runtime.js","renderer.js","three.min.js","audio.js","world.js"};
-        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript"};
+        String[] names={"tv.html","tv.css","bootstrap.js","game.js","game-model.js","runtime.js","renderer.js","three.min.js","audio.js","world.js","baked-materials.js","baked-loader.js",
+            "baked-atlas.png","baked-floor.png","baked-light-0.png","baked-light-1.png","baked-light-2.png"};
+        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript",
+            "image/png","image/png","image/png","image/png","image/png"};
         java.util.Set<String> packaged = new java.util.HashSet<>(java.util.Arrays.asList(activity.getAssets().list("")));
         packaged.removeAll(java.util.Arrays.asList("controller.html", "controller.css", "controller.js", "THREE-LICENSE.txt", "ART-NOTICE.txt"));
         // Robolectric merges these exact Android framework assets into the app's AssetManager.
@@ -172,7 +174,8 @@ public class MainActivityTest {
             try (java.io.InputStream bundled = activity.getAssets().open(names[i])) {
                 assertArrayEquals("Native route must serve the exact bundled asset: " + names[i], bundled.readAllBytes(), bytes);
             }
-            assertEquals("UTF-8",response.getEncoding());
+            if (mimes[i].startsWith("image/")) assertNull("PNG responses must retain binary bytes", response.getEncoding());
+            else assertEquals("UTF-8",response.getEncoding());
             response.getData().close();
         }
         for (String url:new String[]{
@@ -184,12 +187,40 @@ public class MainActivityTest {
             "https://user@alien-shooter.invalid/game.js","https://alien-shooter.invalid/%67ame.js",
             "https://alien-shooter.invalid/audio/../game.js","https://alien-shooter.invalid/data/../../game.js",
             "https://alien-shooter.invalid/audio/%2e%2e/game.js","https://alien-shooter.invalid/audio/not-bundled.ogg",
-            "https://alien-shooter.invalid/data/stage-7.json","https://alien-shooter.invalid/art/unknown.png"
+            "https://alien-shooter.invalid/data/stage-7.json","https://alien-shooter.invalid/art/unknown.png",
+            "https://alien-shooter.invalid/baked-light-3.png","https://alien-shooter.invalid/baked-unknown.png",
+            "https://alien-shooter.invalid/baked-atlas.png?fallback=1","https://alien-shooter.invalid/baked-atlas.png#other",
+            "https://alien-shooter.invalid/art/../baked-atlas.png","https://alien-shooter.invalid/art/%2e%2e/baked-atlas.png",
+            "https://alien-shooter.invalid/%62aked-atlas.png","https://alien-shooter.invalid/baked-atlas%2epng",
+            "https://outside.example/baked-atlas.png","http://alien-shooter.invalid/baked-atlas.png",
+            "file:///android_asset/baked-atlas.png","https://alien-shooter.invalid:443/baked-atlas.png"
         }) {
             WebResourceResponse blocked=activity.localAsset(Uri.parse(url));
             assertEquals(url,403,blocked.getStatusCode());
             assertEquals(-1,blocked.getData().read());
             blocked.getData().close();
+        }
+    }
+
+    @Test public void bakedTextureResponsesPreserveCompleteDecodablePngFiles() throws Exception {
+        String[] names={"baked-atlas.png","baked-floor.png","baked-light-0.png","baked-light-1.png","baked-light-2.png"};
+        int[] dimensions={1024,1024,512,512,512};
+        byte[] signature={(byte)137,80,78,71,13,10,26,10};
+        for (int i=0;i<names.length;i++) {
+            WebResourceResponse response=activity.localAsset(Uri.parse("https://alien-shooter.invalid/"+names[i]));
+            assertEquals(names[i],200,response.getStatusCode());
+            assertEquals("image/png",response.getMimeType());
+            assertNull(response.getEncoding());
+            byte[] bytes=response.getData().readAllBytes(); response.getData().close();
+            assertArrayEquals("PNG signature: "+names[i],signature,java.util.Arrays.copyOf(bytes,signature.length));
+            try (java.io.InputStream source=activity.getAssets().open(names[i])) {
+                assertArrayEquals("The whole PNG must survive the native bridge unchanged: "+names[i],source.readAllBytes(),bytes);
+            }
+            Bitmap bitmap=BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+            assertNotNull("Bundled PNG must decode: "+names[i],bitmap);
+            assertEquals(names[i],dimensions[i],bitmap.getWidth());
+            assertEquals(names[i],dimensions[i],bitmap.getHeight());
+            bitmap.recycle();
         }
     }
 
@@ -212,6 +243,8 @@ public class MainActivityTest {
         assertTrue("The test must inspect the real script and stylesheet dependencies",count>=7);
         assertTrue("The TV page must load bundled Three.js",loaded.contains("three.min.js"));
         assertTrue("The TV page must load its WebGL renderer",loaded.contains("renderer.js"));
+        assertTrue("The TV page must load the bundled bake metadata",loaded.contains("baked-materials.js"));
+        assertTrue("The TV page must load its offline texture loader",loaded.contains("baked-loader.js"));
     }
 
     @Test public void generatedPngQrDecodesToExactJoinUrl() throws Exception {

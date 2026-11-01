@@ -23,7 +23,19 @@
     var keys = new Set(), held = new Map(), pending = { a: false, b: false, start: false, select: false };
     var keyboardActive = false, phoneControllerSeen = false, localCancel = 0;
     var pointer = { held: false, id: null, x: 0, y: 0, time: -10000 };
-    var currentInputs = [], menuHtml = "", hudHtml = "", roomHtml = "", lastPhase = "";
+    var currentInputs = [], menuHtml = "", menuKey = "", roomHtml = "", roomConnected = null, lastPhase = "";
+    var hudPlayer = null, lastShop = null, minimapBase = null, minimapMap = null, minimapPhase = "", minimapEvent = -1;
+    var lastPublishedState = "";
+    var sceneDirty = true, renderedPhase = "", renderedMap = null, renderedEvent = -1, renderedTextureRevision = -1;
+    var runtimeStats = { uiPasses: 0, domWrites: 0, minimapDraws: 0, minimapStaticBuilds: 0, skippedSceneFrames: 0, bridgePublishes: 0 };
+    var textValues = new WeakMap();
+    function setText(element, value) {
+      value = String(value == null ? "" : value);
+      if (textValues.get(element) !== value) { element.textContent = value; textValues.set(element, value); runtimeStats.domWrites++; }
+    }
+    function setHidden(element, value) { if (element.hidden !== value) { element.hidden = value; runtimeStats.domWrites++; } }
+    function setAttribute(element, name, value) { if (element.getAttribute(name) !== value) { element.setAttribute(name, value); runtimeStats.domWrites++; } }
+    function setWidth(element, value) { if (element.style.width !== value) { element.style.width = value; runtimeStats.domWrites++; } }
     var mapContext = $("tactical-map").getContext("2d");
     var graphicsLost = false;
     var muted = false;
@@ -87,7 +99,7 @@
       if (code === "d" || code === "ArrowRight") return "right";
       return null;
     }
-    function unlock() { if (sound) sound.unlock().catch(function () {}); }
+    function unlock() { if (sound && (!sound.context || sound.context.state !== "running")) sound.unlock().catch(function () {}); }
     function key(code, pressed, nativeInput) {
       if (destroyed || failed) return;
       var normalized = code.length === 1 ? code.toLowerCase() : code;
@@ -156,12 +168,22 @@
         return { id: p.id, active: !!p.active, alive: !!p.alive, hp: Math.ceil(num(p.hp)), armor: Math.ceil(num(p.armor)), weapon: p.weapon, weaponName: weaponName(p.weapon), ammo: ammo == null ? -1 : ammo, grenades: p.grenades, score: p.score };
       }) };
     }
-    function publish() { try { if (bridge) bridge.publish(JSON.stringify(state())); } catch (_) {} }
+    function publish(force) {
+      if (!bridge) return;
+      try {
+        var value = JSON.stringify(state());
+        // The LAN server broadcasts its cached state independently. Avoid
+        // crossing the Java bridge again when that state has not changed.
+        if (force || value !== lastPublishedState) { bridge.publish(value); lastPublishedState = value; runtimeStats.bridgePublishes++; }
+      } catch (_) {}
+    }
     function updateRoomPlayers(current) {
       var controller = current.find(function (p) { return p.id === 1; });
       var connected = !!(controller && controller.connected);
+      if (connected === roomConnected) return;
+      roomConnected = connected;
       var value = '<div class="room-player' + (connected ? ' connected' : '') + '"><span class="player-tag">LINK</span><strong>' + esc(tr("手机手柄", "CONTROLLER")) + '</strong><span>' + esc(connected ? tr("已就绪", "READY") : tr("等待连接", "WAITING")) + '</span></div>';
-      if (value !== roomHtml) { $("room-players").innerHTML = value; roomHtml = value; }
+      if (value !== roomHtml) { $("room-players").innerHTML = value; roomHtml = value; runtimeStats.domWrites++; }
     }
     function titleMenu() {
       return '<div class="title-kicker">' + esc(tr("封锁区 · 03", "QUARANTINE SECTOR · 03")) + '</div><h1 class="game-title"><span class="title-line">' + tr("孤胆", "ALIEN") + '</span><span class="title-line">' + tr("枪手", "SHOOTER") + '</span></h1><div class="title-english">' + tr("ALIEN SHOOTER / TV", "SURVIVE. REARM. BREAK THROUGH.") + '</div><p class="title-description">' + esc(tr("基地失去联络，异形正从黑暗中涌出。带上武器，重启控制系统，独自杀出一条撤离路线。", "The base has gone silent. Hostiles are pouring out of the dark. Arm up, restore the control systems and fight your way to extraction, alone.")) + '</p><div class="mission-tags"><span>' + esc(tr("三段战役", "3-STAGE CAMPAIGN")) + '</span><span>' + esc(tr("五种武器", "5 WEAPONS")) + '</span><span>' + esc(tr("单人行动", "SINGLE PLAYER")) + '</span></div><div class="title-actions"><button type="button" class="primary wide" id="start-button" data-action="start"><span>' + esc(tr("进入封锁区", "ENTER THE ZONE")) + '</span><em>START / ENTER</em></button><p class="start-hint">' + esc(game.noticeTime > 0 && text(game.notice) ? text(game.notice) : tr("连接一部手机即可开始，也可用遥控器或键盘游玩。", "Connect one phone to begin, or use a TV remote or keyboard.")) + '</p></div>';
@@ -183,18 +205,23 @@
     }
     function updateMenus() {
       var phase = game.phase;
-      var menu = phase === "title" ? titleMenu() : phase === "paused" ? pauseMenu() : phase === "shop" ? shopMenu() : phase === "victory" || phase === "gameover" ? endMenu() : "";
+      var nextKey = [phase, game.pausedReason || "", game.stage, game.kills, game.credits, Math.floor(game.elapsed || 0), game.noticeTime > 0 ? text(game.notice) : "", game.shop && game.shop.selected].join("|");
+      var menu = menuHtml;
+      if (nextKey !== menuKey || game.shop !== lastShop) {
+        menuKey = nextKey; lastShop = game.shop;
+        menu = phase === "title" ? titleMenu() : phase === "paused" ? pauseMenu() : phase === "shop" ? shopMenu() : phase === "victory" || phase === "gameover" ? endMenu() : "";
+      }
       var shown = phase !== "playing";
-      $("menu-layer").hidden = !shown;
-      $("menu-layer").setAttribute("data-dialog", phase !== "title" ? "true" : "false");
-      $("game-shell").setAttribute("data-phase", phase);
-      $("hud").hidden = phase === "title" || phase === "shop" || phase === "victory" || phase === "gameover";
+      setHidden($("menu-layer"), !shown);
+      setAttribute($("menu-layer"), "data-dialog", phase !== "title" ? "true" : "false");
+      setAttribute($("game-shell"), "data-phase", phase);
+      setHidden($("hud"), phase === "title" || phase === "shop" || phase === "victory" || phase === "gameover");
       if (menu !== menuHtml) {
         var focused = document.activeElement;
         var action = focused && focused.dataset ? focused.dataset.action : null;
         var index = focused && focused.dataset ? focused.dataset.index : null;
         var id = focused && focused.id;
-        $("menu-content").innerHTML = menu; menuHtml = menu;
+        $("menu-content").innerHTML = menu; menuHtml = menu; runtimeStats.domWrites++;
         if (action) {
           var next = id ? $(id) : $("menu-content").querySelector('[data-action="' + action + '"]' + (index == null ? '' : '[data-index="' + index + '"]'));
           if (next && next.focus) next.focus({ preventScroll: true });
@@ -202,43 +229,72 @@
       }
       if (phase !== lastPhase) { lastPhase = phase; pointer.held = false; }
     }
+    function updatePlayerHud() {
+      var p = game.players && game.players[0];
+      if (!p || !p.active) {
+        if (hudPlayer) { $("players-hud").textContent = ""; hudPlayer = null; runtimeStats.domWrites++; }
+        return;
+      }
+      if (!hudPlayer) {
+        $("players-hud").innerHTML = '<section class="player-hud" data-player="1"><div class="player-hud-header"><strong>' + esc(tr("突击队员", "OPERATOR")) + '</strong><span class="player-connection"></span></div><div class="health-line"><span>HP</span><div class="health-meter"><i></i></div><b></b></div><div class="armor-line"></div><div class="weapon-line"><span class="weapon-name"></span><span class="weapon-ammo"><b class="ammo-count"></b><small>' + esc(tr("发", "RDS")) + '</small></span></div><div class="grenade-count"></div></section>';
+        var section = $("players-hud");
+        hudPlayer = { connection: section.querySelector(".player-connection"), meter: section.querySelector(".health-meter"), healthBar: section.querySelector(".health-meter i"), health: section.querySelector(".health-line b"), armor: section.querySelector(".armor-line"), weapon: section.querySelector(".weapon-name"), ammo: section.querySelector(".ammo-count"), grenades: section.querySelector(".grenade-count") };
+        runtimeStats.domWrites++;
+      }
+      var health = clamp(num(p.hp) / Math.max(1, num(p.maxHp, 100)), 0, 1), ammo = p.ammo && p.ammo[p.weapon];
+      setText(hudPlayer.connection, p.connected ? tr("已连接", "CONNECTED") : tr("连接中断", "DISCONNECTED"));
+      if (hudPlayer.meter.classList.contains("low") !== (health < .3)) { hudPlayer.meter.classList.toggle("low", health < .3); runtimeStats.domWrites++; }
+      setWidth(hudPlayer.healthBar, Math.round(health * 100) + "%");
+      setText(hudPlayer.health, Math.ceil(num(p.hp)) + "/" + p.maxHp);
+      setText(hudPlayer.armor, tr("护甲 ", "ARMOR ") + Math.ceil(num(p.armor)) + " · " + tr("得分 ", "SCORE ") + num(p.score));
+      setText(hudPlayer.weapon, weaponName(p.weapon));
+      setText(hudPlayer.ammo, ammo == null || ammo < 0 ? "∞" : ammo);
+      setText(hudPlayer.grenades, tr("手雷 × ", "GRENADES × ") + num(p.grenades));
+    }
     function updateHud() {
+      // Hidden menus do not need a minimap repaint or combat HUD reconciliation.
+      if ($("hud").hidden) return;
       var map = game.map || {}, objectives = map.objectives || [];
       var objective = objectives[game.objectiveIndex] || objectives.find(function (value) { return value.status !== "done"; });
       var labels = { locked: ["寻找控制台", "FIND THE CONSOLE"], ready: ["靠近控制台", "APPROACH THE CONSOLE"], charging: ["保持在控制台附近", "STAY NEAR THE CONSOLE"], defending: ["守住阵地", "HOLD YOUR GROUND"], done: ["目标完成", "OBJECTIVE COMPLETE"] };
-      $("stage-number").textContent = tr("封锁区 ", "SECTOR ") + "0" + (game.stage + 1) + " / 03";
-      $("stage-name").textContent = text(map.name);
-      $("objective-label").textContent = game.extractionReady ? tr("撤离通道已开放", "EXTRACTION ROUTE OPEN") : text(labels[objective && objective.status] || labels.ready);
-      $("objective-name").textContent = game.extractionReady ? tr("前往绿色撤离标记", "REACH THE GREEN EXTRACTION MARKER") : text(objective && objective.name) || tr("清理基地", "CLEAR THE BASE");
-      $("objective-progress").style.width = Math.round(game.extractionReady ? 100 : clamp(num(objective && objective.progress), 0, 1) * 100) + "%";
-      $("enemy-count").textContent = String((game.enemies || []).filter(function (enemy) { return enemy.hp > 0; }).length);
-      $("credits-hud").textContent = "¤ " + game.credits + "  ·  " + timeLabel(game.elapsed);
-      $("combat-notice").hidden = !(game.phase === "playing" && game.noticeTime > 0 && text(game.notice));
-      $("combat-notice").textContent = text(game.notice);
-      var value = (game.players || []).filter(function (p) { return p.active; }).map(function (p) {
-        var health = clamp(num(p.hp) / Math.max(1, num(p.maxHp, 100)), 0, 1), ammo = p.ammo && p.ammo[p.weapon];
-        return '<section class="player-hud" data-player="1"><div class="player-hud-header"><strong>' + esc(tr("突击队员", "OPERATOR")) + '</strong><span>' + esc(p.connected ? tr("已连接", "CONNECTED") : tr("连接中断", "DISCONNECTED")) + '</span></div><div class="health-line"><span>HP</span><div class="health-meter' + (health < .3 ? ' low' : '') + '"><i style="width:' + Math.round(health * 100) + '%"></i></div><b>' + Math.ceil(num(p.hp)) + '/' + p.maxHp + '</b></div><div class="armor-line">' + esc(tr("护甲 ", "ARMOR ")) + Math.ceil(num(p.armor)) + ' · ' + esc(tr("得分 ", "SCORE ")) + num(p.score) + '</div><div class="weapon-line"><span class="weapon-name">' + esc(weaponName(p.weapon)) + '</span><span class="weapon-ammo">' + (ammo == null || ammo < 0 ? '∞' : ammo) + '<small>' + esc(tr("发", "RDS")) + '</small></span></div><div class="grenade-count">' + esc(tr("手雷 × ", "GRENADES × ")) + num(p.grenades) + '</div></section>';
-      }).join("");
-      if (value !== hudHtml) { $("players-hud").innerHTML = value; hudHtml = value; }
+      setText($("stage-number"), tr("封锁区 ", "SECTOR ") + "0" + (game.stage + 1) + " / 03");
+      setText($("stage-name"), text(map.name));
+      setText($("objective-label"), game.extractionReady ? tr("撤离通道已开放", "EXTRACTION ROUTE OPEN") : text(labels[objective && objective.status] || labels.ready));
+      setText($("objective-name"), game.extractionReady ? tr("前往绿色撤离标记", "REACH THE GREEN EXTRACTION MARKER") : text(objective && objective.name) || tr("清理基地", "CLEAR THE BASE"));
+      setWidth($("objective-progress"), Math.round(game.extractionReady ? 100 : clamp(num(objective && objective.progress), 0, 1) * 100) + "%");
+      var enemies = 0;
+      for (var i = 0; i < game.enemies.length; i++) if (game.enemies[i].hp > 0) enemies++;
+      setText($("enemy-count"), enemies);
+      setText($("credits-hud"), "¤ " + game.credits + "  ·  " + timeLabel(game.elapsed));
+      setHidden($("combat-notice"), !(game.phase === "playing" && game.noticeTime > 0 && text(game.notice)));
+      setText($("combat-notice"), text(game.notice));
+      updatePlayerHud();
       drawTacticalMap(objective);
     }
     // Small, screen-aligned navigation aid. Called with the HUD at most ten times a second.
     function drawTacticalMap(objective) {
       if (!mapContext || !game.map) return;
       var map = game.map, c = mapContext, width = c.canvas.width, height = c.canvas.height;
+      if (game.phase !== "playing" && minimapMap === map && minimapPhase === game.phase && minimapEvent === game.eventSerial && minimapBase && minimapBase.width === width && minimapBase.height === height) return;
+      minimapPhase = game.phase; minimapEvent = game.eventSerial;
       var target = game.extractionReady ? map.exit : objective;
       var active = (game.players || []).filter(function (p) { return p.active; });
       var distances = active.map(function (p) { return target ? Math.hypot(target.x - p.x, target.y - p.y) : 0; });
       var distance = distances.length ? Math.round(Math.min.apply(Math, distances)) : 0;
-      $("tactical-distance").textContent = target ? distance + " m" : "";
-      $("tactical-target").textContent = game.extractionReady ? tr("绿色标记 · 撤离", "GREEN MARKER · EXTRACT") : text(objective && objective.name) || tr("探索基地", "EXPLORE THE BASE");
-      c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, width, height);
-      c.fillStyle = "#071115"; c.fillRect(0, 0, width, height);
+      setText($("tactical-distance"), target ? distance + " m" : "");
+      setText($("tactical-target"), game.extractionReady ? tr("绿色标记 · 撤离", "GREEN MARKER · EXTRACT") : text(objective && objective.name) || tr("探索基地", "EXPLORE THE BASE"));
+      if (minimapMap !== map || !minimapBase || minimapBase.width !== width || minimapBase.height !== height) {
+        minimapBase = document.createElement("canvas"); minimapBase.width = width; minimapBase.height = height;
+        var base = minimapBase.getContext("2d");
+        base.fillStyle = "#071115"; base.fillRect(0, 0, width, height);
+        base.scale(width / map.width, height / map.height); base.strokeStyle = "#8ba99b12"; base.lineWidth = .12;
+        for (var x = 4; x < map.width; x += 4) { base.beginPath(); base.moveTo(x, 0); base.lineTo(x, map.height); base.stroke(); }
+        for (var y = 4; y < map.height; y += 4) { base.beginPath(); base.moveTo(0, y); base.lineTo(map.width, y); base.stroke(); }
+        (map.solids || []).forEach(function (solid) { base.fillStyle = solid.type === "wall" ? "#728b82" : "#3d534e"; base.fillRect(solid.x, solid.y, solid.w, solid.h); });
+        minimapMap = map; runtimeStats.minimapStaticBuilds++;
+      }
+      c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(minimapBase, 0, 0); runtimeStats.minimapDraws++;
       c.save(); c.scale(width / map.width, height / map.height);
-      c.strokeStyle = "#8ba99b12"; c.lineWidth = .12;
-      for (var x = 4; x < map.width; x += 4) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, map.height); c.stroke(); }
-      for (var y = 4; y < map.height; y += 4) { c.beginPath(); c.moveTo(0, y); c.lineTo(map.width, y); c.stroke(); }
-      (map.solids || []).forEach(function (solid) { c.fillStyle = solid.type === "wall" ? "#728b82" : "#3d534e"; c.fillRect(solid.x, solid.y, solid.w, solid.h); });
       (map.doors || []).forEach(function (door) { c.fillStyle = door.open ? "#489c7966" : "#d8aa57"; c.fillRect(door.x - .1, door.y - .1, door.w + .2, door.h + .2); });
       (map.objectives || []).forEach(function (point) { c.fillStyle = point.status === "done" ? "#6ba889" : "#6b795e"; c.fillRect(point.x - .4, point.y - .4, .8, .8); });
       (game.enemies || []).forEach(function (enemy) { if (enemy.hp > 0) { c.fillStyle = "#cf7569"; c.beginPath(); c.arc(enemy.x, enemy.y, enemy.type === "boss" ? .85 : .33, 0, Math.PI * 2); c.fill(); } });
@@ -257,12 +313,13 @@
     }
     function updateUi(current) {
       if (!game || destroyed) return;
-      updateRoomPlayers(current); updateMenus(); updateHud();
-      $("sound-button").textContent = tr("声音：", "SOUND: ") + (muted ? tr("关", "OFF") : tr("开", "ON"));
-      $("sound-button").setAttribute("aria-pressed", String(!muted));
+      runtimeStats.uiPasses++; updateRoomPlayers(current); updateMenus(); updateHud();
+      setText($("sound-button"), tr("声音：", "SOUND: ") + (muted ? tr("关", "OFF") : tr("开", "ON")));
+      setAttribute($("sound-button"), "aria-pressed", String(!muted));
     }
     function resize() {
       if (renderer && renderer.resize) renderer.resize(root.innerWidth, root.innerHeight);
+      sceneDirty = true;
     }
     function fail(error) {
       failed = true;
@@ -279,14 +336,14 @@
         if (renderer.contextLost) {
           if (!graphicsLost) { graphicsLost = true; releaseKeys(); game.pause("graphics"); }
           accumulator = 0;
-          $("graphics-status").hidden = false;
-          $("graphics-status").textContent = tr("图形显示中断，战斗已暂停，正在等待恢复…", "Graphics interrupted. Combat is paused while the display recovers…");
+          setHidden($("graphics-status"), false);
+          setText($("graphics-status"), tr("图形显示中断，战斗已暂停，正在等待恢复…", "Graphics interrupted. Combat is paused while the display recovers…"));
         } else {
           if (graphicsLost) {
-            graphicsLost = false;
-            $("graphics-status").textContent = tr("图形显示已恢复，按 START 继续行动。", "Graphics restored. Press START to resume the mission.");
+            graphicsLost = false; sceneDirty = true;
+            setText($("graphics-status"), tr("图形显示已恢复，按 START 继续行动。", "Graphics restored. Press START to resume the mission."));
           }
-          $("graphics-status").hidden = game.phase !== "paused" || game.pausedReason !== "graphics";
+          setHidden($("graphics-status"), game.phase !== "paused" || game.pausedReason !== "graphics");
         }
         if (!suspended && !renderer.contextLost) {
           accumulator += dt;
@@ -298,7 +355,13 @@
           }
           if (steps === 5) accumulator = 0;
         }
-        renderer.render(game, dt);
+        // Simulation and controller snapshots continue at 60 Hz. Frozen menu
+        // scenes need a GPU submission only after an actual visual invalidation.
+        var textureRevision = renderer.textureRevision || 0;
+        var drawScene = (!suspended && (game.phase === "playing" || game.phase === "title")) || sceneDirty || !renderer.active || game.phase !== renderedPhase || game.map !== renderedMap || game.eventSerial !== renderedEvent || textureRevision !== renderedTextureRevision;
+        if (!renderer.contextLost && drawScene) {
+          renderer.render(game, dt); sceneDirty = false; renderedPhase = game.phase; renderedMap = game.map; renderedEvent = game.eventSerial; renderedTextureRevision = textureRevision;
+        } else runtimeStats.skippedSceneFrames++;
         if (sound) {
           if (currentInputs.some(function (p) { return p.connected && (p.a || p.b || p.start || p.select); })) unlock();
           sound.setMuted(muted);
@@ -315,7 +378,7 @@
       if (game && suspended && game.pause) game.pause("hidden");
       if (sound) sound.pause(suspended || !visible);
       if (game) updateUi(currentInputs);
-      publish();
+      publish(true);
     }
     function onKeyDown(event) {
       var code = event.key.length === 1 ? event.key.toLowerCase() : event.key;
@@ -332,7 +395,7 @@
       root.cancelAnimationFrame(frame);
       if (!visible && game && game.pause) game.pause("hidden");
       if (sound) sound.pause(!visible || suspended);
-      publish();
+      publish(true);
       if (visible && game && !failed && !destroyed) frame = root.requestAnimationFrame(animate);
     }
     function locatePointer(event) {
@@ -368,7 +431,8 @@
     }
     function dispose() {
       if (destroyed) return;
-      destroyed = true; visible = false; releaseKeys(); root.cancelAnimationFrame(frame); root.clearInterval(roomTimer);
+      destroyed = true; visible = false; releaseKeys(); root.cancelAnimationFrame(frame);
+      minimapBase = null; minimapMap = null; hudPlayer = null;
       if (sound) sound.dispose();
       if (renderer && renderer.dispose) renderer.dispose();
       root.removeEventListener("resize", resize); root.removeEventListener("blur", onBlur); root.removeEventListener("pagehide", dispose);
@@ -376,20 +440,19 @@
       canvas.removeEventListener("pointerdown", onPointerDown); canvas.removeEventListener("pointermove", onPointerMove); canvas.removeEventListener("pointerup", onPointerUp); canvas.removeEventListener("pointercancel", onPointerCancel); canvas.removeEventListener("lostpointercapture", onPointerCancel);
       $("menu-content").removeEventListener("click", onMenuClick); $("sound-button").removeEventListener("click", toggleSound);
     }
-    root.AlienShooterTV = { key: function (code, pressed) { key(code, pressed, true); }, updateRoom: updateRoom, suspend: suspend, dispose: dispose, get game() { return game; }, get renderer() { return renderer; } };
+    root.AlienShooterTV = { key: function (code, pressed) { key(code, pressed, true); }, updateRoom: updateRoom, suspend: suspend, dispose: dispose, get game() { return game; }, get renderer() { return renderer; }, runtimeStats: runtimeStats };
     root.addEventListener("resize", resize); root.addEventListener("blur", onBlur); root.addEventListener("pagehide", dispose);
     document.addEventListener("keydown", onKeyDown); document.addEventListener("keyup", onKeyUp); document.addEventListener("visibilitychange", onVisibility); document.addEventListener("contextmenu", onContextMenu);
     canvas.addEventListener("pointerdown", onPointerDown); canvas.addEventListener("pointermove", onPointerMove); canvas.addEventListener("pointerup", onPointerUp); canvas.addEventListener("pointercancel", onPointerCancel); canvas.addEventListener("lostpointercapture", onPointerCancel);
     $("menu-content").addEventListener("click", onMenuClick); $("sound-button").addEventListener("click", toggleSound);
     $("pause-button").onclick = function () { requestAction("start"); };
-    var roomTimer = root.setInterval(function () { if (visible && !suspended && !destroyed && game) updateRoomPlayers(currentInputs); }, 250);
     try {
       game = new root.AlienShooterGame({ language: info.language, seed: Date.now() >>> 0 });
       renderer = new root.AlienShooterRenderer(canvas, { language: info.language });
       sound = new root.AlienShooterAudio(); sound.setMuted(muted); resize();
       renderer.render(game, 0);
       if (renderer.failed || !renderer.active) throw new Error(renderer.error || tr("此设备暂时无法运行 WebGL 图形，请更新电视的 WebView 后重试。", "This device could not start WebGL graphics. Update the TV WebView and try again."));
-      updateUi(currentInputs); publish();
+      updateUi(currentInputs); publish(true);
       if (!$("game-loading").hasAttribute("data-failed")) $("game-loading").hidden = true;
       if (visible) frame = root.requestAnimationFrame(animate);
     } catch (error) { fail(error); }

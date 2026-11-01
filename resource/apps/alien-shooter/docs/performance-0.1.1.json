@@ -1,0 +1,1286 @@
+{
+  "version": "0.1.1",
+  "baselineCommit": "f68f740697f40bec7615a15e83fdaf6ee7419bfd",
+  "resolution": [
+    1280,
+    720
+  ],
+  "backend": "Chromium / ANGLE SwiftShader software WebGL",
+  "physicalTvTested": false,
+  "samples": 8,
+  "warmup": 2,
+  "timingMeaning": "CPU renderer submission and 1-pixel readback-synchronized software frame milliseconds on this host. Not TV FPS and not a hardware GPU benchmark.",
+  "quantileMethod": "Empirical lower order statistic: sorted[floor((sampleCount-1)*q)]. Small-sample descriptive host timings only.",
+  "fixtureDescription": "Fixed deterministic real game maps and renderer states. 48 is the gameplay enemy cap; 96 is intentionally an over-cap renderer stress fixture. Simulation is frozen, actors are not removed for optimization.",
+  "baselineInventoryNote": "GPU buffer upload byte counts and complete owned/uploaded texture estimate were recorded in a separate single-frame inventory pass on the identical frozen asset snapshot and matching fixture hashes. Original 8-sample timing distributions are retained.",
+  "beforeAssets": {
+    "ART-NOTICE.txt": "b4047cf4e9282c60d5644f7bdefc7b64bfc69adaf9d57427021e3983dd40ac99",
+    "THREE-LICENSE.txt": "b53cfcb10e8642d82814dc14de5b4ea363300aa6a2de35f0669b33cd7d3f5c39",
+    "audio.js": "3273fc39071528a6dae42d486b7f3b37914ff479621a5c7ccd90ad651994d6c6",
+    "bootstrap.js": "f547e329811e0457a324f9df69651b917ffdc0f5c87bb8bc00ef7393d2439359",
+    "controller.css": "60a709cff9a080d07058d920e7445d0df1337058b85e56a631a4401ad4ff8465",
+    "controller.html": "a24981ed9ad3572678e62564d6d00a6c8f4f91afc1c290356486a5b8259e5f7c",
+    "controller.js": "a5f848c8bf550d5b90d45405a628b7bfa8310ace379e7213cf6a82d254769612",
+    "game-model.js": "1cb4cc6b8e47e55ac78da62c681dc2d29a41448b15f340c0736599dc99bec425",
+    "game.js": "b2ce8f476a61b13df366967d87926cbd72d2bf2d5d9d5f247d6233ca013e8f0d",
+    "renderer.js": "21b22fbfb362334142f0daa48c16410b8763b6ad69f524481c414a91ad6e9e2c",
+    "runtime.js": "0439e11314ac79e8718cdc4779ed8cace7ff8c4745ec6758f3d9ee29b6f59f53",
+    "three.min.js": "a8a966c3de0bac23630957e8b6ceb1330725bc2889a0b2dad952d710797ba179",
+    "tv.css": "f00ee58a6eb97d07e104498371e49483735c614ee6f9cf6e623192f80291d73a",
+    "tv.html": "a86c8f34121bf337831e0594de6388629178ce825fa874a65224354ab2d1c867",
+    "world.js": "6a70865f161055e35eb289df1f94bae0229945ee4aca59939b77b9253811e292"
+  },
+  "afterAssets": {
+    "ART-NOTICE.txt": "74d58722934a0dcfcd92bf252444f1f1a926697eee1156732db5902f457574bf",
+    "THREE-LICENSE.txt": "b53cfcb10e8642d82814dc14de5b4ea363300aa6a2de35f0669b33cd7d3f5c39",
+    "audio.js": "3273fc39071528a6dae42d486b7f3b37914ff479621a5c7ccd90ad651994d6c6",
+    "baked-atlas.png": "3a5f0213adb58006831f1475e4c334b514326cf72baa7cbcb545d6fa5d4b9db2",
+    "baked-floor.png": "8352505fb92d92c6d05627dd8613c67ea6ad07c362448631c265b4336cc0d430",
+    "baked-light-0.png": "17566deb026f818dc1aa50a8ba35e1b36c146709ebc0d73720e3cea7ff18dadd",
+    "baked-light-1.png": "f258567a81ec9428e02fcc30524742524b1e43e14d09dd6b6aacda6d05e539ad",
+    "baked-light-2.png": "7828fc60040c27129a66c3f0b607291fd2804f6c64e8fd1d5d9814d9291be51f",
+    "baked-loader.js": "3b53d615c01383e20a60b1a45f3de9ca0e5e34b8c24dec43bcb109ca1e856af7",
+    "baked-materials.js": "212444148427ef49c39713ce1894c1aef0839a147b31e0e30fd99bb72a491aa0",
+    "bootstrap.js": "f547e329811e0457a324f9df69651b917ffdc0f5c87bb8bc00ef7393d2439359",
+    "controller.css": "60a709cff9a080d07058d920e7445d0df1337058b85e56a631a4401ad4ff8465",
+    "controller.html": "a24981ed9ad3572678e62564d6d00a6c8f4f91afc1c290356486a5b8259e5f7c",
+    "controller.js": "a5f848c8bf550d5b90d45405a628b7bfa8310ace379e7213cf6a82d254769612",
+    "game-model.js": "1cb4cc6b8e47e55ac78da62c681dc2d29a41448b15f340c0736599dc99bec425",
+    "game.js": "ae5681ca1519e485f20ec0317f44fcb5953facb61c75b200f429ec58f8171f49",
+    "renderer.js": "f43ab5debcc29648f5c500e30f9ed3486d4e81e130676f5858553c00d943e54e",
+    "runtime.js": "fb511c46c12f18f8ff06d684afa31142f7f0d134ad417a190b2542cc87132040",
+    "three.min.js": "a8a966c3de0bac23630957e8b6ceb1330725bc2889a0b2dad952d710797ba179",
+    "tv.css": "f00ee58a6eb97d07e104498371e49483735c614ee6f9cf6e623192f80291d73a",
+    "tv.html": "58b001ff218e049ce371136d81bd0838cc02c84746dc425bebc4cb7a09ccf144",
+    "world.js": "6a70865f161055e35eb289df1f94bae0229945ee4aca59939b77b9253811e292"
+  },
+  "scenes": [
+    {
+      "before": {
+        "stage": 0,
+        "distribution": "dense",
+        "actors": 48,
+        "fixtureHash": "4d79f45b8ae861380faf7e22230ed33bf3b097056e9e398b369bafb28ffad9a1",
+        "stats": {
+          "mode": "webgl",
+          "calls": 50,
+          "triangles": 87132,
+          "frames": 13
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 1.599999999627471,
+          "p95": 5.199999999254942
+        },
+        "synchronizedFrameMs": {
+          "median": 671.5999999996275,
+          "p95": 1081.7999999988824
+        },
+        "uploadedGeometries": 39,
+        "uploadedTextures": 7,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 3877172,
+        "estimatedTextureBytes": 11446955,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 0,
+        "distribution": "dense",
+        "actors": 48,
+        "fixtureHash": "4d79f45b8ae861380faf7e22230ed33bf3b097056e9e398b369bafb28ffad9a1",
+        "stats": {
+          "mode": "webgl",
+          "calls": 27,
+          "triangles": 48138,
+          "frames": 13,
+          "renderedEnemies": 48,
+          "culledEnemies": 0,
+          "renderedCorpses": 10,
+          "culledCorpses": 0,
+          "uploadedInstances": 185,
+          "staticTriangles": 3636,
+          "geometries": 19,
+          "textures": 6
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 47764,
+          "p95": 47764
+        },
+        "submitMs": {
+          "median": 1.200000001117587,
+          "p95": 1.900000000372529
+        },
+        "synchronizedFrameMs": {
+          "median": 294.7999999988824,
+          "p95": 305.3999999985099
+        },
+        "uploadedGeometries": 19,
+        "uploadedTextures": 6,
+        "shaderPrograms": 13,
+        "geometryBufferBytes": 1321532,
+        "estimatedTextureBytes": 12845056,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 0,
+        "distribution": "dense",
+        "actors": 96,
+        "fixtureHash": "9beb81637ad73332b3fe1fd4146a50f25abf5a65d42a23dcaf5d3688a566bf19",
+        "stats": {
+          "mode": "webgl",
+          "calls": 50,
+          "triangles": 142596,
+          "frames": 26
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 1.1000000014901161,
+          "p95": 1.599999999627471
+        },
+        "synchronizedFrameMs": {
+          "median": 872.7999999988824,
+          "p95": 1205.199999999255
+        },
+        "uploadedGeometries": 39,
+        "uploadedTextures": 7,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 3877172,
+        "estimatedTextureBytes": 11446955,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 0,
+        "distribution": "dense",
+        "actors": 96,
+        "fixtureHash": "9beb81637ad73332b3fe1fd4146a50f25abf5a65d42a23dcaf5d3688a566bf19",
+        "stats": {
+          "mode": "webgl",
+          "calls": 27,
+          "triangles": 83082,
+          "frames": 26,
+          "renderedEnemies": 96,
+          "culledEnemies": 0,
+          "renderedCorpses": 10,
+          "culledCorpses": 0,
+          "uploadedInstances": 281,
+          "staticTriangles": 3636,
+          "geometries": 19,
+          "textures": 6
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 55252,
+          "p95": 55252
+        },
+        "submitMs": {
+          "median": 1,
+          "p95": 1.300000000745058
+        },
+        "synchronizedFrameMs": {
+          "median": 419.2999999988824,
+          "p95": 450.90000000037253
+        },
+        "uploadedGeometries": 19,
+        "uploadedTextures": 6,
+        "shaderPrograms": 13,
+        "geometryBufferBytes": 1321532,
+        "estimatedTextureBytes": 12845056,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 0,
+        "distribution": "map-wide",
+        "actors": 48,
+        "fixtureHash": "e5a465ec448bbf5a294304df9ed6eabe3ae709237a799586cc2323d055056f4b",
+        "stats": {
+          "mode": "webgl",
+          "calls": 50,
+          "triangles": 87132,
+          "frames": 39
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 1.3999999985098839,
+          "p95": 1.5
+        },
+        "synchronizedFrameMs": {
+          "median": 410.09999999962747,
+          "p95": 445.80000000074506
+        },
+        "uploadedGeometries": 39,
+        "uploadedTextures": 7,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 3877172,
+        "estimatedTextureBytes": 11446955,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 0,
+        "distribution": "map-wide",
+        "actors": 48,
+        "fixtureHash": "e5a465ec448bbf5a294304df9ed6eabe3ae709237a799586cc2323d055056f4b",
+        "stats": {
+          "mode": "webgl",
+          "calls": 27,
+          "triangles": 38776,
+          "frames": 39,
+          "renderedEnemies": 37,
+          "culledEnemies": 11,
+          "renderedCorpses": 8,
+          "culledCorpses": 2,
+          "uploadedInstances": 161,
+          "staticTriangles": 3636,
+          "geometries": 19,
+          "textures": 6
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 45888,
+          "p95": 45888
+        },
+        "submitMs": {
+          "median": 0.6999999992549419,
+          "p95": 0.8000000007450581
+        },
+        "synchronizedFrameMs": {
+          "median": 192.2000000011176,
+          "p95": 193.90000000037253
+        },
+        "uploadedGeometries": 19,
+        "uploadedTextures": 6,
+        "shaderPrograms": 13,
+        "geometryBufferBytes": 1321532,
+        "estimatedTextureBytes": 12845056,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 0,
+        "distribution": "map-wide",
+        "actors": 96,
+        "fixtureHash": "732357149b0933af8d1364cb04e2cb6d53708335ac460ef45668ac2c223e329e",
+        "stats": {
+          "mode": "webgl",
+          "calls": 50,
+          "triangles": 142596,
+          "frames": 52
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 1.299999998882413,
+          "p95": 1.599999999627471
+        },
+        "synchronizedFrameMs": {
+          "median": 525.7999999988824,
+          "p95": 557.9000000003725
+        },
+        "uploadedGeometries": 39,
+        "uploadedTextures": 7,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 3877172,
+        "estimatedTextureBytes": 11446955,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 0,
+        "distribution": "map-wide",
+        "actors": 96,
+        "fixtureHash": "732357149b0933af8d1364cb04e2cb6d53708335ac460ef45668ac2c223e329e",
+        "stats": {
+          "mode": "webgl",
+          "calls": 27,
+          "triangles": 65714,
+          "frames": 52,
+          "renderedEnemies": 74,
+          "culledEnemies": 22,
+          "renderedCorpses": 8,
+          "culledCorpses": 2,
+          "uploadedInstances": 235,
+          "staticTriangles": 3636,
+          "geometries": 19,
+          "textures": 6
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 51660,
+          "p95": 51660
+        },
+        "submitMs": {
+          "median": 0.6999999992549419,
+          "p95": 0.7999999988824129
+        },
+        "synchronizedFrameMs": {
+          "median": 243.90000000037253,
+          "p95": 264.80000000074506
+        },
+        "uploadedGeometries": 19,
+        "uploadedTextures": 6,
+        "shaderPrograms": 13,
+        "geometryBufferBytes": 1321532,
+        "estimatedTextureBytes": 12845056,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 1,
+        "distribution": "dense",
+        "actors": 48,
+        "fixtureHash": "eda470e19456bf9b191d1d92a4c175335f614f7528656a383c5527b354e20202",
+        "stats": {
+          "mode": "webgl",
+          "calls": 51,
+          "triangles": 80036,
+          "frames": 65
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 0.900000000372529,
+          "p95": 1.099999999627471
+        },
+        "synchronizedFrameMs": {
+          "median": 577.8000000007451,
+          "p95": 589.0999999996275
+        },
+        "uploadedGeometries": 40,
+        "uploadedTextures": 8,
+        "shaderPrograms": 15,
+        "geometryBufferBytes": 2935220,
+        "estimatedTextureBytes": 17039360,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 1,
+        "distribution": "dense",
+        "actors": 48,
+        "fixtureHash": "eda470e19456bf9b191d1d92a4c175335f614f7528656a383c5527b354e20202",
+        "stats": {
+          "mode": "webgl",
+          "calls": 27,
+          "triangles": 48886,
+          "frames": 65,
+          "renderedEnemies": 48,
+          "culledEnemies": 0,
+          "renderedCorpses": 10,
+          "culledCorpses": 0,
+          "uploadedInstances": 172,
+          "staticTriangles": 4284,
+          "geometries": 20,
+          "textures": 7
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 46680,
+          "p95": 46680
+        },
+        "submitMs": {
+          "median": 0.900000000372529,
+          "p95": 1
+        },
+        "synchronizedFrameMs": {
+          "median": 299,
+          "p95": 302.2999999988824
+        },
+        "uploadedGeometries": 20,
+        "uploadedTextures": 7,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 1459292,
+        "estimatedTextureBytes": 14243157,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 1,
+        "distribution": "dense",
+        "actors": 96,
+        "fixtureHash": "87c6a0d4f781741948e3140d7d3c55c926f9359801eba1f740cc30ac8b3f4604",
+        "stats": {
+          "mode": "webgl",
+          "calls": 51,
+          "triangles": 135500,
+          "frames": 78
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 0.900000000372529,
+          "p95": 1.199999999254942
+        },
+        "synchronizedFrameMs": {
+          "median": 876.3000000007451,
+          "p95": 1287
+        },
+        "uploadedGeometries": 40,
+        "uploadedTextures": 8,
+        "shaderPrograms": 15,
+        "geometryBufferBytes": 2935220,
+        "estimatedTextureBytes": 17039360,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 1,
+        "distribution": "dense",
+        "actors": 96,
+        "fixtureHash": "87c6a0d4f781741948e3140d7d3c55c926f9359801eba1f740cc30ac8b3f4604",
+        "stats": {
+          "mode": "webgl",
+          "calls": 27,
+          "triangles": 83830,
+          "frames": 78,
+          "renderedEnemies": 96,
+          "culledEnemies": 0,
+          "renderedCorpses": 10,
+          "culledCorpses": 0,
+          "uploadedInstances": 268,
+          "staticTriangles": 4284,
+          "geometries": 20,
+          "textures": 7
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 54168,
+          "p95": 54168
+        },
+        "submitMs": {
+          "median": 0.8999999985098839,
+          "p95": 1
+        },
+        "synchronizedFrameMs": {
+          "median": 417,
+          "p95": 454.7999999988824
+        },
+        "uploadedGeometries": 20,
+        "uploadedTextures": 7,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 1459292,
+        "estimatedTextureBytes": 14243157,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 1,
+        "distribution": "map-wide",
+        "actors": 48,
+        "fixtureHash": "3f3b2c6c7a4e26b18e876dc50a0a569ad5723ca1c0d082f76c24e3e792434f93",
+        "stats": {
+          "mode": "webgl",
+          "calls": 51,
+          "triangles": 80036,
+          "frames": 91
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 0.900000000372529,
+          "p95": 1.199999999254942
+        },
+        "synchronizedFrameMs": {
+          "median": 395,
+          "p95": 400.1000000014901
+        },
+        "uploadedGeometries": 40,
+        "uploadedTextures": 8,
+        "shaderPrograms": 15,
+        "geometryBufferBytes": 2935220,
+        "estimatedTextureBytes": 17039360,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 1,
+        "distribution": "map-wide",
+        "actors": 48,
+        "fixtureHash": "3f3b2c6c7a4e26b18e876dc50a0a569ad5723ca1c0d082f76c24e3e792434f93",
+        "stats": {
+          "mode": "webgl",
+          "calls": 27,
+          "triangles": 37372,
+          "frames": 91,
+          "renderedEnemies": 35,
+          "culledEnemies": 13,
+          "renderedCorpses": 7,
+          "culledCorpses": 3,
+          "uploadedInstances": 143,
+          "staticTriangles": 4284,
+          "geometries": 20,
+          "textures": 7
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 44412,
+          "p95": 44412
+        },
+        "submitMs": {
+          "median": 0.6999999992549419,
+          "p95": 0.900000000372529
+        },
+        "synchronizedFrameMs": {
+          "median": 205.5,
+          "p95": 217.7000000011176
+        },
+        "uploadedGeometries": 20,
+        "uploadedTextures": 7,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 1459292,
+        "estimatedTextureBytes": 14243157,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 1,
+        "distribution": "map-wide",
+        "actors": 96,
+        "fixtureHash": "4965a042afd588f643bd2ef80c345295e03ec914cbc15a59bcb1741a12232314",
+        "stats": {
+          "mode": "webgl",
+          "calls": 51,
+          "triangles": 135500,
+          "frames": 104
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 0.900000000372529,
+          "p95": 1
+        },
+        "synchronizedFrameMs": {
+          "median": 510.80000000074506,
+          "p95": 547.0999999996275
+        },
+        "uploadedGeometries": 40,
+        "uploadedTextures": 8,
+        "shaderPrograms": 15,
+        "geometryBufferBytes": 2935220,
+        "estimatedTextureBytes": 17039360,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 1,
+        "distribution": "map-wide",
+        "actors": 96,
+        "fixtureHash": "4965a042afd588f643bd2ef80c345295e03ec914cbc15a59bcb1741a12232314",
+        "stats": {
+          "mode": "webgl",
+          "calls": 27,
+          "triangles": 61344,
+          "frames": 104,
+          "renderedEnemies": 68,
+          "culledEnemies": 28,
+          "renderedCorpses": 7,
+          "culledCorpses": 3,
+          "uploadedInstances": 209,
+          "staticTriangles": 4284,
+          "geometries": 20,
+          "textures": 7
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 49560,
+          "p95": 49560
+        },
+        "submitMs": {
+          "median": 0.7999999988824129,
+          "p95": 1
+        },
+        "synchronizedFrameMs": {
+          "median": 271.59999999962747,
+          "p95": 274.90000000037253
+        },
+        "uploadedGeometries": 20,
+        "uploadedTextures": 7,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 1459292,
+        "estimatedTextureBytes": 14243157,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 2,
+        "distribution": "dense",
+        "actors": 48,
+        "fixtureHash": "1a5b604d8a5645b665549b9465f5af5403fe3caf94cce54ece129035abe182f9",
+        "stats": {
+          "mode": "webgl",
+          "calls": 51,
+          "triangles": 81928,
+          "frames": 117
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 0.900000000372529,
+          "p95": 1.200000001117587
+        },
+        "synchronizedFrameMs": {
+          "median": 574.6999999992549,
+          "p95": 589.5999999996275
+        },
+        "uploadedGeometries": 40,
+        "uploadedTextures": 9,
+        "shaderPrograms": 15,
+        "geometryBufferBytes": 3184964,
+        "estimatedTextureBytes": 22631765,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 2,
+        "distribution": "dense",
+        "actors": 48,
+        "fixtureHash": "1a5b604d8a5645b665549b9465f5af5403fe3caf94cce54ece129035abe182f9",
+        "stats": {
+          "mode": "webgl",
+          "calls": 28,
+          "triangles": 49812,
+          "frames": 117,
+          "renderedEnemies": 48,
+          "culledEnemies": 0,
+          "renderedCorpses": 10,
+          "culledCorpses": 0,
+          "uploadedInstances": 179,
+          "staticTriangles": 5276,
+          "geometries": 20,
+          "textures": 8
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 47292,
+          "p95": 47292
+        },
+        "submitMs": {
+          "median": 0.7999999988824129,
+          "p95": 0.900000000372529
+        },
+        "synchronizedFrameMs": {
+          "median": 300,
+          "p95": 312.80000000074506
+        },
+        "uploadedGeometries": 20,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 1616732,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 2,
+        "distribution": "dense",
+        "actors": 96,
+        "fixtureHash": "08d7e7eaaeb7ce14839516d29e06bb21058dc2cecdbc1544f5fbcb383f79ee62",
+        "stats": {
+          "mode": "webgl",
+          "calls": 51,
+          "triangles": 137392,
+          "frames": 130
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 1,
+          "p95": 1.400000000372529
+        },
+        "synchronizedFrameMs": {
+          "median": 821.5999999996275,
+          "p95": 1182.2000000011176
+        },
+        "uploadedGeometries": 40,
+        "uploadedTextures": 9,
+        "shaderPrograms": 15,
+        "geometryBufferBytes": 3184964,
+        "estimatedTextureBytes": 22631765,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 2,
+        "distribution": "dense",
+        "actors": 96,
+        "fixtureHash": "08d7e7eaaeb7ce14839516d29e06bb21058dc2cecdbc1544f5fbcb383f79ee62",
+        "stats": {
+          "mode": "webgl",
+          "calls": 28,
+          "triangles": 84756,
+          "frames": 130,
+          "renderedEnemies": 96,
+          "culledEnemies": 0,
+          "renderedCorpses": 10,
+          "culledCorpses": 0,
+          "uploadedInstances": 275,
+          "staticTriangles": 5276,
+          "geometries": 20,
+          "textures": 8
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 54780,
+          "p95": 54780
+        },
+        "submitMs": {
+          "median": 0.7000000011175871,
+          "p95": 0.900000000372529
+        },
+        "synchronizedFrameMs": {
+          "median": 424,
+          "p95": 460.59999999962747
+        },
+        "uploadedGeometries": 20,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 1616732,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 2,
+        "distribution": "map-wide",
+        "actors": 48,
+        "fixtureHash": "72b9670089f57491b9bfbdf25561d195438412b64026acf18e22cfc58506cc9d",
+        "stats": {
+          "mode": "webgl",
+          "calls": 51,
+          "triangles": 81928,
+          "frames": 143
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 0.900000000372529,
+          "p95": 1.5
+        },
+        "synchronizedFrameMs": {
+          "median": 384.5,
+          "p95": 394.7999999988824
+        },
+        "uploadedGeometries": 40,
+        "uploadedTextures": 9,
+        "shaderPrograms": 15,
+        "geometryBufferBytes": 3184964,
+        "estimatedTextureBytes": 22631765,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 2,
+        "distribution": "map-wide",
+        "actors": 48,
+        "fixtureHash": "72b9670089f57491b9bfbdf25561d195438412b64026acf18e22cfc58506cc9d",
+        "stats": {
+          "mode": "webgl",
+          "calls": 28,
+          "triangles": 39584,
+          "frames": 143,
+          "renderedEnemies": 37,
+          "culledEnemies": 11,
+          "renderedCorpses": 7,
+          "culledCorpses": 3,
+          "uploadedInstances": 154,
+          "staticTriangles": 5276,
+          "geometries": 20,
+          "textures": 8
+        },
+        "enemyCount": 48,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 45336,
+          "p95": 45336
+        },
+        "submitMs": {
+          "median": 0.7000000011175871,
+          "p95": 0.7999999988824129
+        },
+        "synchronizedFrameMs": {
+          "median": 197.40000000037253,
+          "p95": 201.30000000074506
+        },
+        "uploadedGeometries": 20,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 1616732,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    },
+    {
+      "before": {
+        "stage": 2,
+        "distribution": "map-wide",
+        "actors": 96,
+        "fixtureHash": "fcdf2b1d8abb194ca5e0f8a4e8454b1a81feb0094c9e817eb0c59c7b5917bb67",
+        "stats": {
+          "mode": "webgl",
+          "calls": 51,
+          "triangles": 137392,
+          "frames": 156
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 247612,
+          "p95": 247612
+        },
+        "submitMs": {
+          "median": 1,
+          "p95": 1.5
+        },
+        "synchronizedFrameMs": {
+          "median": 523.5,
+          "p95": 557.6999999992549
+        },
+        "uploadedGeometries": 40,
+        "uploadedTextures": 9,
+        "shaderPrograms": 15,
+        "geometryBufferBytes": 3184964,
+        "estimatedTextureBytes": 22631765,
+        "ownedTextureBytes": 22631765
+      },
+      "after": {
+        "stage": 2,
+        "distribution": "map-wide",
+        "actors": 96,
+        "fixtureHash": "fcdf2b1d8abb194ca5e0f8a4e8454b1a81feb0094c9e817eb0c59c7b5917bb67",
+        "stats": {
+          "mode": "webgl",
+          "calls": 28,
+          "triangles": 66596,
+          "frames": 156,
+          "renderedEnemies": 74,
+          "culledEnemies": 22,
+          "renderedCorpses": 7,
+          "culledCorpses": 3,
+          "uploadedInstances": 228,
+          "staticTriangles": 5276,
+          "geometries": 20,
+          "textures": 8
+        },
+        "enemyCount": 96,
+        "corpseCount": 10,
+        "simulationUnchanged": true,
+        "gpuBufferUploadBytes": {
+          "median": 51108,
+          "p95": 51108
+        },
+        "submitMs": {
+          "median": 0.7000000011175871,
+          "p95": 1
+        },
+        "synchronizedFrameMs": {
+          "median": 286,
+          "p95": 293
+        },
+        "uploadedGeometries": 20,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "geometryBufferBytes": 1616732,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "maxProgramAttributeSlots": 9,
+        "glError": 0,
+        "shaderFailures": []
+      }
+    }
+  ],
+  "regressions": {
+    "actorCullingAndAnimation": {
+      "first": {
+        "mode": "webgl",
+        "calls": 27,
+        "triangles": 32586,
+        "frames": 158,
+        "renderedEnemies": 37,
+        "culledEnemies": 11,
+        "renderedCorpses": 0,
+        "culledCorpses": 0,
+        "uploadedInstances": 153,
+        "staticTriangles": 3636,
+        "geometries": 19,
+        "textures": 8
+      },
+      "far": {
+        "mode": "webgl",
+        "calls": 22,
+        "triangles": 5402,
+        "frames": 159,
+        "renderedEnemies": 0,
+        "culledEnemies": 48,
+        "renderedCorpses": 0,
+        "culledCorpses": 0,
+        "uploadedInstances": 79,
+        "staticTriangles": 3636,
+        "geometries": 19,
+        "textures": 8
+      },
+      "animationChangedPixels": 1186,
+      "animationTotalDifference": 66927,
+      "boundary": [
+        {
+          "edge": [
+            0,
+            0.5
+          ],
+          "stats": {
+            "mode": "webgl",
+            "calls": 12,
+            "triangles": 5200,
+            "frames": 162,
+            "renderedEnemies": 1,
+            "culledEnemies": 0,
+            "renderedCorpses": 0,
+            "culledCorpses": 0,
+            "uploadedInstances": 15,
+            "staticTriangles": 3636,
+            "geometries": 19,
+            "textures": 8
+          }
+        },
+        {
+          "edge": [
+            1,
+            0.5
+          ],
+          "stats": {
+            "mode": "webgl",
+            "calls": 12,
+            "triangles": 5200,
+            "frames": 163,
+            "renderedEnemies": 1,
+            "culledEnemies": 0,
+            "renderedCorpses": 0,
+            "culledCorpses": 0,
+            "uploadedInstances": 15,
+            "staticTriangles": 3636,
+            "geometries": 19,
+            "textures": 8
+          }
+        },
+        {
+          "edge": [
+            0.5,
+            0
+          ],
+          "stats": {
+            "mode": "webgl",
+            "calls": 12,
+            "triangles": 5200,
+            "frames": 164,
+            "renderedEnemies": 1,
+            "culledEnemies": 0,
+            "renderedCorpses": 0,
+            "culledCorpses": 0,
+            "uploadedInstances": 15,
+            "staticTriangles": 3636,
+            "geometries": 19,
+            "textures": 8
+          }
+        },
+        {
+          "edge": [
+            0.5,
+            1
+          ],
+          "stats": {
+            "mode": "webgl",
+            "calls": 12,
+            "triangles": 5200,
+            "frames": 165,
+            "renderedEnemies": 1,
+            "culledEnemies": 0,
+            "renderedCorpses": 0,
+            "culledCorpses": 0,
+            "uploadedInstances": 15,
+            "staticTriangles": 3636,
+            "geometries": 19,
+            "textures": 8
+          }
+        }
+      ],
+      "center": {
+        "x": 22.999999999999993,
+        "y": 17.400000000000006
+      }
+    },
+    "mapChurn": [
+      {
+        "stage": 0,
+        "maxProgramAttributeSlots": 9,
+        "uploadedGeometries": 19,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "sceneGeometries": 22,
+        "sceneMaterials": 31,
+        "sceneTextures": 8,
+        "geometryBufferBytes": 1321532,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "visibleMeshes": 24,
+        "activeInstanceBytes": 7456,
+        "submittedMeshTriangles": 21950
+      },
+      {
+        "stage": 1,
+        "maxProgramAttributeSlots": 9,
+        "uploadedGeometries": 20,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "sceneGeometries": 22,
+        "sceneMaterials": 31,
+        "sceneTextures": 8,
+        "geometryBufferBytes": 1459292,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "visibleMeshes": 26,
+        "activeInstanceBytes": 8712,
+        "submittedMeshTriangles": 24530
+      },
+      {
+        "stage": 2,
+        "maxProgramAttributeSlots": 9,
+        "uploadedGeometries": 19,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "sceneGeometries": 22,
+        "sceneMaterials": 31,
+        "sceneTextures": 8,
+        "geometryBufferBytes": 1616732,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "visibleMeshes": 24,
+        "activeInstanceBytes": 6748,
+        "submittedMeshTriangles": 19186
+      },
+      {
+        "stage": 0,
+        "maxProgramAttributeSlots": 9,
+        "uploadedGeometries": 19,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "sceneGeometries": 22,
+        "sceneMaterials": 31,
+        "sceneTextures": 8,
+        "geometryBufferBytes": 1321532,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "visibleMeshes": 24,
+        "activeInstanceBytes": 7456,
+        "submittedMeshTriangles": 21950
+      },
+      {
+        "stage": 1,
+        "maxProgramAttributeSlots": 9,
+        "uploadedGeometries": 20,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "sceneGeometries": 22,
+        "sceneMaterials": 31,
+        "sceneTextures": 8,
+        "geometryBufferBytes": 1459292,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "visibleMeshes": 26,
+        "activeInstanceBytes": 8712,
+        "submittedMeshTriangles": 24530
+      },
+      {
+        "stage": 2,
+        "maxProgramAttributeSlots": 9,
+        "uploadedGeometries": 19,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "sceneGeometries": 22,
+        "sceneMaterials": 31,
+        "sceneTextures": 8,
+        "geometryBufferBytes": 1616732,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "visibleMeshes": 24,
+        "activeInstanceBytes": 6748,
+        "submittedMeshTriangles": 19186
+      },
+      {
+        "stage": 0,
+        "maxProgramAttributeSlots": 9,
+        "uploadedGeometries": 19,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "sceneGeometries": 22,
+        "sceneMaterials": 31,
+        "sceneTextures": 8,
+        "geometryBufferBytes": 1321532,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "visibleMeshes": 24,
+        "activeInstanceBytes": 7456,
+        "submittedMeshTriangles": 21950
+      },
+      {
+        "stage": 1,
+        "maxProgramAttributeSlots": 9,
+        "uploadedGeometries": 20,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "sceneGeometries": 22,
+        "sceneMaterials": 31,
+        "sceneTextures": 8,
+        "geometryBufferBytes": 1459292,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "visibleMeshes": 26,
+        "activeInstanceBytes": 8712,
+        "submittedMeshTriangles": 24530
+      },
+      {
+        "stage": 2,
+        "maxProgramAttributeSlots": 9,
+        "uploadedGeometries": 19,
+        "uploadedTextures": 8,
+        "shaderPrograms": 14,
+        "sceneGeometries": 22,
+        "sceneMaterials": 31,
+        "sceneTextures": 8,
+        "geometryBufferBytes": 1616732,
+        "estimatedTextureBytes": 15641259,
+        "ownedTextureBytes": 15641259,
+        "visibleMeshes": 24,
+        "activeInstanceBytes": 6748,
+        "submittedMeshTriangles": 19186
+      }
+    ],
+    "contextLoss": {
+      "pausedFrames": 174,
+      "restoredFrames": 175,
+      "restoredCalls": 25
+    },
+    "disposal": {
+      "disposed": true,
+      "active": false,
+      "disposedTextures": 8,
+      "disposedGeometry": 26,
+      "expectedTextures": 8,
+      "expectedGeometry": 26
+    }
+  }
+}

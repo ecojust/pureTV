@@ -9,7 +9,7 @@ const {chromium}=require('playwright');
 const assets=new URL('../src/main/assets/',import.meta.url);
 const output=process.env.ALIEN_SHOOTER_UI_CAPTURE_DIR||'/tmp/puretv-alien-shooter-previews';
 await mkdir(output,{recursive:true});
-const server=http.createServer(async(req,res)=>{const name=new URL(req.url,'http://localhost').pathname.slice(1)||'tv.html';if(!/^[a-z0-9.-]+$/.test(name)){res.writeHead(404).end();return;}try{res.setHeader('content-type',name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.svg')?'image/svg+xml':'text/html');res.end(await readFile(new URL(name,assets)));}catch{res.writeHead(404).end();}});
+const server=http.createServer(async(req,res)=>{const name=new URL(req.url,'http://localhost').pathname.slice(1)||'tv.html';if(!/^[a-z0-9.-]+$/.test(name)){res.writeHead(404).end();return;}try{res.setHeader('content-type',name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.svg')?'image/svg+xml':name.endsWith('.png')?'image/png':'text/html');res.end(await readFile(new URL(name,assets)));}catch{res.writeHead(404).end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{}),args:['--no-sandbox','--autoplay-policy=no-user-gesture-required','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const base='http://127.0.0.1:'+server.address().port;

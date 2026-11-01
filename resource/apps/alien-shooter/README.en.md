@@ -10,7 +10,7 @@ The APK in this directory is signed with the pureTV release certificate. Android
 
 An independently built overhead shooter for Android TV. Fight through a quarantined freight depot, a biotech laboratory and a hive reactor. Restore consoles, survive incoming hostiles, buy supplies and defeat the guardian before extracting. Designed for a single player, using one phone as the controller.
 
-Version **0.1.0** · Package `com.ecojust.alienshootertv` · Android 8.0 or newer.
+Version **0.1.1** · Package `com.ecojust.alienshootertv` · Android 8.0 or newer.
 
 ## Play
 
@@ -51,7 +51,11 @@ Campaign progress lasts for the current session; quitting ends the run. The soun
 
 ## Visuals and sound
 
-The game uses bundled WebGL 3D rendering, detailed low-poly characters and procedural high-resolution materials. Static geometry is batched, repeated character parts are instanced, and projectiles, particles and corpses have fixed limits. Weapons, explosions, pickups and industrial ambience are synthesized locally with Web Audio.
+Version 0.1.1 uses a bundled 1024 texture atlas to bake crate straps, fasteners, labels and wear onto low-poly geometry. All three stages share one detailed floor material with separate baked contact shading and local lighting. Opaque static scenery is batched; each enemy species shares one instanced draw for its body, animated legs and corpses. Offscreen objects are culled and only used buffer ranges are uploaded.
+
+HUD nodes and the static minimap layer are retained, while paused scenes avoid redundant drawing. Projectile, particle and corpse limits remain bounded. Simulation and controller input keep their original update frequency. Weapons, explosions, pickups and industrial ambience are synthesized locally with Web Audio.
+
+See [baking methods](docs/baking.md) and the [controlled performance comparison](docs/performance.md).
 
 These captures show the bundled page rendered in Chromium with a simulated Android room bridge. Sector showcases use test scenarios; they are not physical-TV captures or a recording of a complete human playthrough.
 
@@ -69,6 +73,9 @@ These captures show the bundled page rendered in Chromium with a simulated Andro
 node --test resource/apps/alien-shooter/tests/*.test.cjs
 node resource/apps/alien-shooter/tests/controller.mjs
 node resource/apps/alien-shooter/tests/integration.mjs
+node resource/apps/alien-shooter/tests/runtime-performance.mjs
+node resource/apps/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions
+node resource/apps/alien-shooter/tools/bake-materials.mjs --verify
 
 cd resource/launcher/puretv
 ./gradlew :alien-shooter:testDebugUnitTest :alien-shooter:lintDebug :alien-shooter:assembleRelease :alien-shooter:verifyReleaseSize

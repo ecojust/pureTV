@@ -16,8 +16,8 @@
   function part(list, geometry, color, x, y, z, sx, sy, sz, rx, ry, rz) {
     list.push({ geometry: geometry, color: color, matrix: compose(x, y, z, sx, sy, sz, rx, ry, rz) });
   }
-  function merge(parts, projectedUV) {
-    var positions = [], normals = [], colors = [], uvs = [];
+  function merge(parts, projectedUV, atlas) {
+    var positions = [], normals = [], colors = [], uvs = [], atlasRects = [];
     parts.forEach(function (p) {
       var g = p.geometry.index ? p.geometry.toNonIndexed() : p.geometry.clone();
       g.applyMatrix4(p.matrix);
@@ -25,13 +25,27 @@
       for (var i = 0; i < a.count; i++) {
         positions.push(a.getX(i), a.getY(i), a.getZ(i));
         normals.push(n ? n.getX(i) : 0, n ? n.getY(i) : 1, n ? n.getZ(i) : 0);
-        colors.push(col.r, col.g, col.b);
-        if (projectedUV) {
+        var shade = 1;
+        if (atlas && !p.unlit) {
+          // Static directional irradiance and contact shading are baked once into
+          // vertex colors. Atlas paint/edge AO provides the small surface detail.
+          var light = Math.max(0, (-.444 * n.getX(i) + .778 * n.getY(i) - .444 * n.getZ(i)));
+          var fill = Math.max(0, (.72 * n.getX(i) + .43 * n.getY(i) + .54 * n.getZ(i)));
+          shade = (.58 + light * .42 + fill * .12) * (.83 + .17 * clamp(a.getY(i) / .6, 0, 1));
+        }
+        colors.push(col.r * shade, col.g * shade, col.b * shade);
+        if (atlas) {
+          var tile = p.topTile && n.getY(i) > .5 ? p.topTile : (p.tile || 'white');
+          var rect = atlas[tile] || atlas.white;
+          atlasRects.push(rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1]);
+        }
+        var projection = p.projectedUV === undefined ? projectedUV : p.projectedUV;
+        if (projection) {
           var nx = n ? Math.abs(n.getX(i)) : 0, ny = n ? Math.abs(n.getY(i)) : 1, nz = n ? Math.abs(n.getZ(i)) : 0;
-          if (ny >= nx && ny >= nz) uvs.push(a.getX(i) / projectedUV, a.getZ(i) / projectedUV);
-          else if (nx >= nz) uvs.push(a.getZ(i) / projectedUV, a.getY(i) / projectedUV);
-          else uvs.push(a.getX(i) / projectedUV, a.getY(i) / projectedUV);
-        } else uvs.push(uv ? uv.getX(i) : 0, uv ? uv.getY(i) : 0);
+          if (ny >= nx && ny >= nz) uvs.push(a.getX(i) / projection, a.getZ(i) / projection);
+          else if (nx >= nz) uvs.push(a.getZ(i) / projection, a.getY(i) / projection);
+          else uvs.push(a.getX(i) / projection, a.getY(i) / projection);
+        } else uvs.push((uv ? uv.getX(i) : 0) + (p.limb === 1 ? 2 : p.limb === -1 ? 4 : 0), uv ? uv.getY(i) : 0);
       }
       g.dispose();
     });
@@ -40,6 +54,7 @@
     result.setAttribute('normal', new T.Float32BufferAttribute(normals, 3));
     result.setAttribute('color', new T.Float32BufferAttribute(colors, 3));
     result.setAttribute('uv', new T.Float32BufferAttribute(uvs, 2));
+    if (atlas) result.setAttribute('atlasRect', new T.Float32BufferAttribute(atlasRects, 4));
     result.computeBoundingSphere();
     return result;
   }
@@ -121,7 +136,8 @@
   function Renderer(target, options) {
     this.canvas = target; this.options = options || {}; this.width = 1280; this.height = 720;
     this.geometries = []; this.materials = []; this.textures = []; this.worldGeometries = [];
-    this.stats = { mode: 'webgl', calls: 0, triangles: 0, frames: 0 }; this.active = false; this.failed = false; this.disposed = false; this.error = '';
+    this.stats = { mode: 'webgl', calls: 0, triangles: 0, frames: 0, renderedEnemies: 0, culledEnemies: 0, renderedCorpses: 0, culledCorpses: 0, uploadedInstances: 0 };
+    this.pendingTextures = 0; this.textureRevision = 0; this.baked = root.AlienShooterBaked || null; this.active = false; this.failed = false; this.disposed = false; this.error = '';
     this.cameraCenter = { x: 8, y: 17 }; this.viewHeight = 18; this.time = 0; this.map = null; this.stage = -1;
     if (!T) { this.failed = true; this.error = 'Local Three.js library is unavailable'; return; }
     try {
@@ -136,6 +152,7 @@
       this.fillLight = new T.DirectionalLight(0x689fb7, .34); this.fillLight.position.set(20, 12, 10); this.scene.add(this.fillLight);
       this.world = new T.Group(); this.dynamic = new T.Group(); this.scene.add(this.world, this.dynamic);
       this.dummy = new T.Object3D(); this.color = new T.Color(); this.raycaster = new T.Raycaster(); this.groundPlane = new T.Plane(new T.Vector3(0, 1, 0), 0); this.hitPoint = new T.Vector3();
+      this.frustum = new T.Frustum(); this.viewProjection = new T.Matrix4(); this.cullSphere = new T.Sphere(new T.Vector3(), 1);
       this.buildMaterials(); this.buildModels(); this.buildEffects(); this.resize(target.width || 1280, target.height || 720);
       var self = this;
       this._lost = function (event) { event.preventDefault(); self.contextLost = true; self.active = false; self.error = 'Graphics context lost'; self.canvas.setAttribute('data-renderer', 'unavailable'); };
@@ -149,35 +166,80 @@
     if (repeat) t.wrapS = t.wrapT = T.RepeatWrapping;
     this.textures.push(t); return t;
   };
+  Renderer.prototype.bakedTexture = function (url, repeat, linear) {
+    var self = this, key = url + ':' + !!repeat + ':' + !!linear;
+    this.bakedTextures = this.bakedTextures || {};
+    if (this.bakedTextures[key]) return this.bakedTextures[key];
+    var image = this.baked.images && this.baked.images[url], texture;
+    if (image) { texture = new T.Texture(image); texture.needsUpdate = true; }
+    else {
+      this.pendingTextures++;
+      texture = new T.TextureLoader().load(url, function () { self.pendingTextures--; self.textureRevision++; }, undefined, function () {
+        self.pendingTextures--; self.failed = true; self.active = false; self.error = 'Baked texture could not be loaded: ' + url;
+      });
+    }
+    texture.flipY = false; texture.encoding = linear ? T.LinearEncoding : T.sRGBEncoding;
+    texture.anisotropy = Math.min(4, this.renderer.capabilities.getMaxAnisotropy());
+    if (repeat) texture.wrapS = texture.wrapT = T.RepeatWrapping;
+    this.textures.push(texture); this.bakedTextures[key] = texture; return texture;
+  };
+  Renderer.prototype.atlasMaterial = function (material, mode, tile) {
+    var rect = tile && this.baked.atlas.tiles[tile];
+    material.onBeforeCompile = function (shader) {
+      var declaration;
+      if (mode === 'uniform') {
+        shader.uniforms.atlasRect = { value: new T.Vector4(rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1]) };
+        declaration = 'uniform vec4 atlasRect;\n';
+      } else {
+        var attribute = mode === 'instance' ? 'instanceAtlasRect' : 'atlasRect';
+        shader.vertexShader = 'attribute vec4 ' + attribute + ';\nvarying vec4 vAtlasRect;\n' + shader.vertexShader;
+        shader.vertexShader = shader.vertexShader.replace('#include <uv_vertex>', '#include <uv_vertex>\nvAtlasRect = ' + attribute + ';');
+        declaration = 'varying vec4 vAtlasRect;\n';
+      }
+      var selected = mode === 'uniform' ? 'atlasRect' : 'vAtlasRect';
+      shader.fragmentShader = declaration + shader.fragmentShader;
+      shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', '#ifdef USE_MAP\nvec2 atlasUv = ' + selected + '.xy + fract(vUv) * ' + selected + '.zw;\nvec4 texelColor = texture2D(map, atlasUv);\ntexelColor = mapTexelToLinear(texelColor);\ndiffuseColor *= texelColor;\n#endif');
+    };
+    material.customProgramCacheKey = function () { return 'alien-atlas-v2-' + mode + '-' + (tile || ''); };
+    return material;
+  };
   Renderer.prototype.material = function (params, basic) {
     var m = basic ? new T.MeshBasicMaterial(params) : new T.MeshPhongMaterial(params);
     if (m.color) m.color.convertSRGBToLinear(); if (m.emissive) m.emissive.convertSRGBToLinear(); this.materials.push(m); return m;
   };
   Renderer.prototype.buildMaterials = function () {
     var self = this;
-    this.box = this.geometry(new T.BoxBufferGeometry(1, 1, 1)); this.sphere = this.geometry(new T.SphereBufferGeometry(1, 10, 7));
-    this.cylinder = this.geometry(new T.CylinderBufferGeometry(1, 1, 1, 10)); this.cone = this.geometry(new T.ConeBufferGeometry(1, 1, 7));
-    this.torus = this.geometry(new T.TorusBufferGeometry(1, .065, 6, 24));
-    this.plane = this.geometry(new T.PlaneBufferGeometry(1, 1)); this.ring = this.geometry(new T.RingBufferGeometry(.82, 1, 40));
+    this.box = this.geometry(new T.BoxBufferGeometry(1, 1, 1)); this.sphere = this.geometry(new T.SphereBufferGeometry(1, 8, 5));
+    this.cylinder = this.geometry(new T.CylinderBufferGeometry(1, 1, 1, 8)); this.limbCylinder = this.geometry(new T.CylinderBufferGeometry(1, 1, 1, 6)); this.cone = this.geometry(new T.ConeBufferGeometry(1, 1, 6));
+    this.torus = this.geometry(new T.TorusBufferGeometry(1, .065, 4, 16));
+    this.plane = this.geometry(new T.PlaneBufferGeometry(1, 1)); this.ring = this.geometry(new T.RingBufferGeometry(.82, 1, 28));
     [this.box, this.sphere, this.cylinder, this.cone, this.plane, this.ring, this.torus].forEach(function (g) { var c = new Float32Array(g.attributes.position.count * 3); c.fill(1); g.setAttribute('color', new T.BufferAttribute(c, 3)); });
-    this.floors = PALETTES.map(function (_, stage) { var t = self.texture(floorTexture(stage), true); return self.material({ map: t, color: 0x82958e, shininess: 14, specular: 0x17201d, vertexColors: true }); });
-    var metal = this.texture(metalTexture(), true);
-    this.metal = this.material({ map: metal, color: 0xffffff, shininess: 24, specular: 0x202925, vertexColors: true });
+    if (this.baked) {
+      this.atlas = this.bakedTexture(this.baked.atlas.url, false, false);
+      this.floors = this.baked.stages.map(function (stage) {
+        return self.material({ map: self.bakedTexture(stage.floor, true, false), lightMap: self.bakedTexture(stage.light, false, true), lightMapIntensity: stage.lightMapIntensity || 1, color: stage.floorTint || 0xffffff, vertexColors: true }, true);
+      });
+      this.worldAtlasMaterial = this.atlasMaterial(this.material({ map: this.atlas, color: 0xffffff, vertexColors: true }, true), 'vertex');
+      this.metal = this.atlasMaterial(this.material({ map: this.atlas, color: 0xffffff, shininess: 24, specular: 0x202925, vertexColors: true }), 'uniform', 'metal');
+      this.skin = this.atlasMaterial(this.material({ map: this.atlas, color: 0xffffff, shininess: 15, specular: 0x171f16, vertexColors: true }), 'uniform', 'skin');
+    } else {
+      this.floors = PALETTES.map(function (_, stage) { var t = self.texture(floorTexture(stage), true); return self.material({ map: t, color: 0x82958e, shininess: 14, specular: 0x17201d, vertexColors: true }); });
+      this.metal = this.material({ map: this.texture(metalTexture(), true), color: 0xffffff, shininess: 24, specular: 0x202925, vertexColors: true });
+      this.skin = this.material({ color: 0xffffff, map: this.texture(skinTexture(), true), shininess: 15, specular: 0x171f16, vertexColors: true });
+    }
     this.matte = this.material({ color: 0xffffff, shininess: 10, specular: 0x182027, vertexColors: true });
-    var organic = this.texture(skinTexture(), true);
-    this.skin = this.material({ color: 0xffffff, map: organic, bumpMap: organic, bumpScale: .045, shininess: 18, specular: 0x171f16, vertexColors: true });
     this.glowing = this.material({ color: 0xffffff, vertexColors: true }, true);
     this.glass = this.material({ color: 0x69a9a1, transparent: true, opacity: .28, shininess: 90, specular: 0xaddfdf, depthWrite: false, side: T.DoubleSide });
     this.shadowTexture = this.texture(blobTexture('shadow')); this.glowTexture = this.texture(blobTexture('glow')); this.bloodTexture = this.texture(blobTexture('blood'));
     this.shadowMaterial = this.material({ map: this.shadowTexture, color: 0x000000, transparent: true, opacity: .7, depthWrite: false }, true);
     this.glowMaterial = this.material({ map: this.glowTexture, transparent: true, color: 0xffffff, opacity: .72, vertexColors: true, blending: T.AdditiveBlending, depthWrite: false }, true);
     this.decalMaterial = this.material({ map: this.bloodTexture, color: 0xffffff, transparent: true, opacity: .75, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }, true);
-    this.stencilMaterial = this.material({ map: this.texture(stencilTexture()), color: 0xffffff, transparent: true, opacity: .3, depthWrite: false }, true);
+    if (!this.baked) this.stencilMaterial = this.material({ map: this.texture(stencilTexture()), color: 0xffffff, transparent: true, opacity: .3, depthWrite: false }, true);
   };
   Renderer.prototype.pool = function (g, material, max) {
     // Three r124 caches instancing shader defines on the material. Keep pool
     // materials separate from static meshes and from pools with other attributes.
-    var poolMaterial = material.clone(); this.materials.push(poolMaterial);
+    var poolMaterial = material.clone(); poolMaterial.onBeforeCompile = material.onBeforeCompile; poolMaterial.customProgramCacheKey = material.customProgramCacheKey; this.materials.push(poolMaterial);
     var mesh = new T.InstancedMesh(g, poolMaterial, max);
     // r124 setColorAt allocates from mesh.count; allocate before reducing the
     // visible count to zero, otherwise the initial colour buffer has no entries.
@@ -189,7 +251,37 @@
     var d = this.dummy; d.position.set(x, y, z); d.rotation.set(rx || 0, rx ? 0 : (-angle || 0), rx ? (-angle || 0) : 0); d.scale.set(sx, sy, sz); d.updateMatrix(); mesh.setMatrixAt(index, d.matrix);
     if (color !== undefined) { this.color.set(color).convertSRGBToLinear(); mesh.setColorAt(index, this.color); }
   };
-  Renderer.prototype.finishPool = function (mesh, count) { mesh.count = count; mesh.visible = count > 0; mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true; };
+  Renderer.prototype.finishPool = function (mesh, count) {
+    mesh.count = count; mesh.visible = count > 0;
+    if (!count) return;
+    mesh.instanceMatrix.updateRange.offset = 0; mesh.instanceMatrix.updateRange.count = count * 16; mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) { mesh.instanceColor.updateRange.offset = 0; mesh.instanceColor.updateRange.count = count * 3; mesh.instanceColor.needsUpdate = true; }
+    var pose = mesh.geometry.getAttribute('instanceTintStride');
+    if (pose) { pose.updateRange.offset = 0; pose.updateRange.count = count * 4; pose.needsUpdate = true; }
+    var tile = mesh.geometry.getAttribute('instanceAtlasRect');
+    if (tile) { tile.updateRange.offset = 0; tile.updateRange.count = count * 4; tile.needsUpdate = true; }
+    this.stats.uploadedInstances += count;
+  };
+  Renderer.prototype.visibleAt = function (x, z, radius) {
+    this.cullSphere.center.set(x, .8, z); this.cullSphere.radius = radius;
+    return this.frustum.intersectsSphere(this.cullSphere);
+  };
+  Renderer.prototype.animateLimbs = function (mesh, capacity) {
+    // Pack the limb ID into integer bands of the existing repeat UV and combine
+    // hit tint + stride into one instanced attribute. Active attribute count is
+    // nine, the same as the previous unanimated instanced Phong renderer.
+    mesh.instanceColor = null;
+    mesh.geometry.setAttribute('instanceTintStride', new T.InstancedBufferAttribute(new Float32Array(capacity * 4), 4).setUsage(T.DynamicDrawUsage));
+    var original = mesh.material.onBeforeCompile;
+    mesh.material.onBeforeCompile = function (shader) {
+      if (original) original.call(this, shader);
+      shader.vertexShader = 'attribute vec4 instanceTintStride;\n' + shader.vertexShader;
+      shader.vertexShader = shader.vertexShader.replace('#include <color_vertex>', '#include <color_vertex>\nvColor *= instanceTintStride.rgb;');
+      shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nfloat limbCode = floor(uv.x * 0.5 + 0.00001);\nfloat limb = limbCode < 0.5 ? 0.0 : (limbCode < 1.5 ? 1.0 : -1.0);\nfloat stride = instanceTintStride.a;\ntransformed.x += limb * stride * 0.09;\ntransformed.y += abs(limb) > 0.5 ? max(0.0, limb * stride) * 0.08 : abs(stride) * 0.035;');
+    };
+    mesh.material.customProgramCacheKey = function () { return 'alien-limbs-packed-v3'; };
+    return mesh;
+  };
   Renderer.prototype.buildModels = function () {
     var p = [], self = this;
     // Soldier: armoured vest, belt pouches, helmet, shoulder pads and oxygen pack.
@@ -239,7 +331,7 @@
         part(body, self.cone, 0xd5cc95, .73, heavy ? .56 : .28, side * .22, .055, .23, .055, 0, 0, -Math.PI / 2 - side * .2);
         for (var n = 0; n < 3; n++) {
           var list = (n + (side > 0 ? 1 : 0)) % 2 ? legsA : legsB;
-          part(list, self.cylinder, skin, -.32 + n * .31, .25, side * .44, .065, .46, .065, side * .9, 0, -.3 + n * .3);
+          part(list, self.limbCylinder, skin, -.32 + n * .31, .25, side * .44, .065, .46, .065, side * .9, 0, -.3 + n * .3);
           part(list, self.cone, armor, -.28 + n * .33, .10, side * .69, .07, .38, .065, side * .55, 0, -.35 + n * .25);
         }
       });
@@ -250,15 +342,28 @@
       if (type === 'boss') {
         [-1, 1].forEach(function (side) { part(body, self.cone, 0xa79b67, .23, 1.16, side * .51, .13, .76, .13, side * .6, 0, -.35); part(body, self.sphere, 0xb9be48, -.46, .92, side * .26, .22, .23, .22); });
       }
-      self.monsters[type] = { body: self.pool(self.geometry(merge(body)), self.skin, 110), legsA: self.pool(self.geometry(merge(legsA)), self.skin, 110), legsB: self.pool(self.geometry(merge(legsB)), self.skin, 110), corpses: self.pool(self.geometry(merge(body.concat(legsA, legsB))), self.skin, 48) };
+      legsA.forEach(function (piece) { piece.limb = 1; }); legsB.forEach(function (piece) { piece.limb = -1; });
+      // One geometry and draw per species covers the torso, moving limbs and
+      // resting corpses. No hidden duplicate species geometry is submitted.
+      self.monsters[type] = { body: self.animateLimbs(self.pool(self.geometry(merge(body.concat(legsA, legsB))), self.skin, 158), 158) };
     });
     this.shadows = this.pool(this.plane, this.shadowMaterial, 128);
     this.playerRings = this.pool(this.ring, this.material({ color: 0xffffff, transparent: true, opacity: .8, depthWrite: false }, true), 1);
-    this.pickupBodies = this.pool(this.box, this.material({ color: 0xffffff, shininess: 50 }), 60);
+    if (this.baked && this.baked.atlas.tiles.pickupHealth) {
+      var pickupGeometry = this.geometry(this.box.clone());
+      pickupGeometry.setAttribute('instanceAtlasRect', new T.InstancedBufferAttribute(new Float32Array(60 * 4), 4).setUsage(T.DynamicDrawUsage));
+      this.pickupBodies = this.pool(pickupGeometry, this.atlasMaterial(this.material({ map: this.atlas, color: 0xffffff }, true), 'instance'), 60);
+    } else this.pickupBodies = this.pool(this.box, this.material({ color: 0xffffff, shininess: 50 }), 60);
     this.pickupMarks = this.pool(this.box, this.material({ color: 0xffffff }, true), 120);
     this.pickupGlows = this.pool(this.plane, this.glowMaterial, 60);
-    this.barrelBodies = this.pool(this.cylinder, this.material({ color: 0x947247, shininess: 30 }), 32);
-    this.barrelBands = this.pool(this.cylinder, this.material({ color: 0x262f2c, shininess: 45 }), 64);
+    p = []; part(p, this.cylinder, this.baked ? 0xe0ddd1 : 0x947247, 0, .53, 0, .43, 1.06, .43);
+    if (this.baked) {
+      p[0].tile = 'barrelSide'; p[0].topTile = 'barrelTop';
+      this.barrelBodies = this.pool(this.geometry(merge(p, 0, this.baked.atlas.tiles)), this.worldAtlasMaterial, 32);
+    } else {
+      [-1, 1].forEach(function (side) { part(p, self.cylinder, 0x262f2c, 0, .53 + side * .31, 0, .445, .06, .445); });
+      this.barrelBodies = this.pool(this.geometry(merge(p)), this.matte, 32);
+    }
     this.doors = this.pool(this.box, this.metal, 20);
     this.doorBars = this.pool(this.box, this.material({ color: 0xe6a052 }, true), 20);
     this.objectiveRings = this.pool(this.ring, this.material({ color: 0xffffff, transparent: true, opacity: .8, depthWrite: false }, true), 8);
@@ -287,9 +392,15 @@
   Renderer.prototype.setMap = function (map, stage) {
     if (this.map === map && this.stage === stage) return;
     this.clearWorld(); this.corpses = []; this.mapChanged = true; this.map = map; this.stage = clamp(stage || 0, 0, 2);
-    var p = PALETTES[this.stage], self = this, floor = [], metal = [], matte = [], glow = [], shadows = [], glass = [], w = map.width || 48, h = map.height || 34;
+    var p = PALETTES[this.stage], self = this, floor = [], metal = [], matte = [], glow = [], shadows = [], glass = [], crates = [], w = map.width || 48, h = map.height || 34;
     this.scene.background.setHex(p.shadow); this.keyLight.color.setHex(this.stage === 1 ? 0xc9e7e3 : 0xffe5c3);
-    part(floor, this.box, 0xffffff, w / 2, -.13, h / 2, w, .2, h); this.batch(floor, this.floors[this.stage], 6);
+    part(floor, this.box, 0xffffff, w / 2, -.13, h / 2, w, .2, h);
+    var floorMesh = this.batch(floor, this.floors[this.stage], 6);
+    if (this.baked) {
+      var floorPosition = floorMesh.geometry.attributes.position, floorLightUV = new Float32Array(floorPosition.count * 2);
+      for (var floorIndex = 0; floorIndex < floorPosition.count; floorIndex++) { floorLightUV[floorIndex * 2] = floorPosition.getX(floorIndex) / w; floorLightUV[floorIndex * 2 + 1] = floorPosition.getZ(floorIndex) / h; }
+      floorMesh.geometry.setAttribute('uv2', new T.BufferAttribute(floorLightUV, 2));
+    }
     // Wall sections include coping, recessed panels, vertical supports and pipes.
     (map.solids || []).forEach(function (s, index) {
       var sx = s.w || 1, sz = s.h || 1, x = s.x + sx / 2, z = s.y + sz / 2, type = s.type;
@@ -297,6 +408,12 @@
         var cols = Math.max(1, Math.round(sx / 1.5)), rows = Math.max(1, Math.round(sz / 1.5)), cw = sx / cols, ch = sz / rows;
         for (var ci = 0; ci < cols; ci++) for (var cj = 0; cj < rows; cj++) {
           var bx = s.x + (ci + .5) * cw, bz = s.y + (cj + .5) * ch, ht = .85 + ((ci + cj * 3 + index) % 3) * .19, crateColor = self.stage === 1 ? 0x617c78 : (ci + cj) % 2 ? 0x746b54 : 0x67715c;
+          if (self.baked) {
+            var bakedTint = self.stage === 1 ? ((ci + cj) % 2 ? 0xd5e2dc : 0xbccfc9) : self.stage === 2 ? ((ci + cj) % 2 ? 0xd6d0bd : 0xc5ccd3) : ((ci + cj) % 2 ? 0xd8cfaf : 0xc8d0b9);
+            part(crates, self.box, bakedTint, bx, ht / 2, bz, cw - .045, ht, ch - .045);
+            var crate = crates[crates.length - 1]; crate.tile = 'crateSide'; crate.topTile = 'crateTop'; crate.projectedUV = 0;
+            continue;
+          }
           part(metal, self.box, crateColor, bx, ht / 2, bz, cw - .045, ht, ch - .045);
           part(matte, self.box, 0x24352d, bx, ht + .02, bz, cw - .16, .04, ch - .16);
           part(metal, self.box, crateColor, bx, ht + .045, bz, cw - .26, .035, ch - .26);
@@ -336,7 +453,7 @@
         }
         if (index % 3 === 0 && length > 3) part(glow, self.box, p.light, x, tall + .08, z, horizontal ? Math.min(1.5, sx) : .08, .025, horizontal ? .08 : Math.min(1.5, sz));
       }
-      part(shadows, self.plane, 0xffffff, x + .18, .006, z + .25, sx + 1, sz + 1, 1, -Math.PI / 2);
+      if (!self.baked) part(shadows, self.plane, 0xffffff, x + .18, .006, z + .25, sx + 1, sz + 1, 1, -Math.PI / 2);
     });
     (map.props || []).forEach(function (o, index) {
       var x = o.x, z = o.y, a = o.angle || 0;
@@ -363,28 +480,36 @@
     });
     (map.objectives || []).forEach(function (o) { self.consoleParts(metal, matte, glow, o.x, o.y, 0, p.light); });
     // Floor lanes and tiny inset warning rectangles guide movement through rooms.
-    for (var q = 0; q < 3; q++) {
+    for (var q = 0; !this.baked && q < 3; q++) {
       var cx = w * (q + .5) / 3;
       for (var k = 0; k < 8; k++) part(matte, this.box, p.trim, cx - 2.4 + k * .68, .018, 3.5, .42, .012, .14);
       part(matte, this.box, 0x9da99c, cx, .016, h - 3, 3.8, .01, .055);
     }
-    if (map.exit) {
+    if (map.exit && !this.baked) {
       for (q = -1; q <= 1; q++) { part(glow, this.box, 0x77b99a, map.exit.x + q * .5, .025, map.exit.y, .08, .025, 1.35); }
     }
-    this.batch(shadows, this.shadowMaterial); this.batch(metal, this.metal, 2.4); this.batch(matte, this.matte); this.batch(glow, this.glowing); this.batch(glass, this.glass);
+    if (!this.baked) { this.batch(shadows, this.shadowMaterial); this.batch(metal, this.metal, 2.4); this.batch(matte, this.matte); this.batch(glow, this.glowing); }
+    this.batch(glass, this.glass);
     var labels = [], labelPlane = new T.PlaneBufferGeometry(8, 2.2), uv = labelPlane.attributes.uv;
     for (q = 0; q < uv.count; q++) uv.setY(q, (1 - this.stage / 3) - (1 - uv.getY(q)) / 3);
-    part(labels, labelPlane, 0xffffff, w / 2, .021, h / 2, 1, 1, 1, -Math.PI / 2); this.batch(labels, this.stencilMaterial); labelPlane.dispose();
+    part(labels, labelPlane, 0xffffff, w / 2, .021, h / 2, 1, 1, 1, -Math.PI / 2); if (!this.baked) this.batch(labels, this.stencilMaterial); labelPlane.dispose();
     var glows = [], fixtures = [];
     for (var lampY = 4; lampY < h - 2; lampY += 7) {
       [1.1, w - 1.1].forEach(function (lampX) {
         part(fixtures, self.box, self.stage === 1 ? 0x8ddbd7 : 0xf1be77, lampX, .88, lampY, .12, .12, .65);
-        part(glows, self.plane, self.stage === 1 ? 0x71b9cf : 0xd8a365, lampX, .018, lampY, 5.6, 5.6, 1, -Math.PI / 2);
+        if (!self.baked) part(glows, self.plane, self.stage === 1 ? 0x71b9cf : 0xd8a365, lampX, .018, lampY, 5.6, 5.6, 1, -Math.PI / 2);
       });
     }
-    this.batch(fixtures, this.glowing);
-    (map.lights || []).forEach(function (light) { part(glows, self.plane, light.color ? new T.Color(light.color).getHex() : p.light, light.x, .012, light.y, 4.2, 4.2, 1, -Math.PI / 2); });
-    this.batch(glows, this.glowMaterial);
+    if (!this.baked) this.batch(fixtures, this.glowing);
+    (!this.baked ? map.lights || [] : []).forEach(function (light) { part(glows, self.plane, light.color ? new T.Color(light.color).getHex() : p.light, light.x, .012, light.y, 4.2, 4.2, 1, -Math.PI / 2); });
+    if (this.baked) {
+      metal.forEach(function (piece) { piece.tile = 'metal'; piece.projectedUV = 2.4; });
+      matte.forEach(function (piece) { piece.tile = 'white'; piece.projectedUV = 0; });
+      glow.concat(fixtures).forEach(function (piece) { piece.tile = 'white'; piece.projectedUV = 0; piece.unlit = true; });
+      var opaque = merge(metal.concat(matte, crates, glow, fixtures), 0, this.baked.atlas.tiles);
+      this.worldGeometries.push(opaque); this.world.add(new T.Mesh(opaque, this.worldAtlasMaterial));
+      this.stats.staticTriangles = opaque.attributes.position.count / 3 + floorMesh.geometry.attributes.position.count / 3;
+    } else this.batch(glows, this.glowMaterial);
     this.cameraCenter.x = map.spawn ? map.spawn.x : w / 2; this.cameraCenter.y = map.spawn ? map.spawn.y : h / 2;
   };
   Renderer.prototype.consoleParts = function (metal, matte, glow, x, z, angle, color) {
@@ -404,6 +529,7 @@
     var centerY = clamp(this.cameraCenter.y, Math.min(halfY * 1.15 - 1, (map.height || 34) / 2), Math.max((map.height || 34) - halfY * 1.15 + 1, (map.height || 34) / 2));
     this.camera.left = -halfX; this.camera.right = halfX; this.camera.top = halfY; this.camera.bottom = -halfY; this.camera.updateProjectionMatrix();
     this.camera.position.set(centerX, 40, centerY + 30); this.camera.lookAt(centerX, 0, centerY); this.camera.updateMatrixWorld();
+    this.viewProjection.multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse); this.frustum.setFromProjectionMatrix(this.viewProjection);
   };
   Renderer.prototype.updateActors = function (game) {
     var self = this, shadowCount = 0, soldierCount = 0, legs = 0, muzzleCount = 0, attachments = { shotgun: 0, minigun: 0, plasma: 0 };
@@ -423,14 +549,19 @@
     Object.keys(attachments).forEach(function (type) { self.finishPool(self.weaponParts[type], attachments[type]); });
     this.finishPool(this.soldiers, soldierCount); this.finishPool(this.guns, soldierCount); this.finishPool(this.soldierLegs, legs); this.finishPool(this.playerRings, soldierCount); this.finishPool(this.muzzleFlashes, muzzleCount);
     var counts = { crawler: 0, runner: 0, spitter: 0, brute: 0, boss: 0 };
-    (game.enemies || []).slice(0, 110).forEach(function (e) {
-      var type = self.monsters[e.type] ? e.type : 'crawler', pool = self.monsters[type], i = counts[type]++, a = finite(e.angle, 0), size = Math.max(.4, finite(e.radius, .5) / .5), stride = Math.sin(self.time * (type === 'runner' ? 20 : 12) + e.id * 1.7), color = e.hitFlash > 0 ? 0xffddc1 : 0xffffff;
-      self.setInstance(pool.body, i, e.x, Math.abs(stride) * .035 * size, e.y, size, size, size, a, color);
-      self.setInstance(pool.legsA, i, e.x + Math.cos(a) * stride * .09 * size, Math.max(0, stride) * .08 * size, e.y + Math.sin(a) * stride * .09 * size, size, size, size, a, color);
-      self.setInstance(pool.legsB, i, e.x - Math.cos(a) * stride * .09 * size, Math.max(0, -stride) * .08 * size, e.y - Math.sin(a) * stride * .09 * size, size, size, size, a, color);
-      if (shadowCount < 128) self.setInstance(self.shadows, shadowCount++, e.x, .009, e.y + .08, size * 1.8, size * 1.25, 1, a, undefined, -Math.PI / 2);
-    });
-    Object.keys(counts).forEach(function (type) { var p = self.monsters[type]; self.finishPool(p.body, counts[type]); self.finishPool(p.legsA, counts[type]); self.finishPool(p.legsB, counts[type]); });
+    this.stats.renderedEnemies = 0; this.stats.culledEnemies = 0; this.stats.renderedCorpses = 0; this.stats.culledCorpses = 0;
+    var enemies = game.enemies || [];
+    for (var enemyIndex = 0; enemyIndex < Math.min(enemies.length, 110); enemyIndex++) {
+      var e = enemies[enemyIndex], type = this.monsters[e.type] ? e.type : 'crawler', pool = this.monsters[type], a = finite(e.angle, 0), size = Math.max(.4, finite(e.radius, .5) / .5);
+      // The margin includes body, animated feet, creature shadow and the boss's
+      // horns. Enemies keep simulating normally beyond the rendered view.
+      if (!this.visibleAt(e.x, e.y, size * 2.4)) { this.stats.culledEnemies++; continue; }
+      var i = counts[type]++, stride = Math.sin(this.time * (type === 'runner' ? 20 : 12) + e.id * 1.7), color = e.hitFlash > 0 ? 0xffddc1 : 0xffffff;
+      this.setInstance(pool.body, i, e.x, 0, e.y, size, size, size, a);
+      this.color.setHex(color).convertSRGBToLinear();
+      pool.body.geometry.attributes.instanceTintStride.setXYZW(i, this.color.r, this.color.g, this.color.b, stride); this.stats.renderedEnemies++;
+      if (shadowCount < 128) this.setInstance(this.shadows, shadowCount++, e.x, .009, e.y + .08, size * 1.8, size * 1.25, 1, a, undefined, -Math.PI / 2);
+    }
     this.finishPool(this.shadows, shadowCount);
     if (this.mapChanged) { this.lastDeathEvent = finite(game.eventSerial, 0); this.mapChanged = false; }
     (game.events || []).forEach(function (event) {
@@ -438,27 +569,46 @@
       if (event.kind === 'enemy-death') self.corpses.push({ id: event.id, type: event.enemyType || 'crawler', x: event.x, y: event.y, angle: (event.id * 1.78) % TAU, created: self.time });
       self.lastDeathEvent = Math.max(self.lastDeathEvent, event.id);
     });
-    this.corpses = this.corpses.filter(function (c) { return self.time - c.created < 120; }).slice(-48);
-    var deadCounts = { crawler: 0, runner: 0, spitter: 0, brute: 0, boss: 0 };
-    this.corpses.forEach(function (c) { var type = self.monsters[c.type] ? c.type : 'crawler', spec = root.AlienShooterWorld && root.AlienShooterWorld.enemyTypes[type], size = (spec ? spec.radius : .46) / .5; self.setInstance(self.monsters[type].corpses, deadCounts[type]++, c.x, .015, c.y, size * 1.08, size * .22, size, c.angle, 0x82916e); });
-    Object.keys(deadCounts).forEach(function (type) { self.finishPool(self.monsters[type].corpses, deadCounts[type]); });
+    // Compact the bounded corpse list in place instead of allocating two arrays
+    // every frame. Animation time is frozen while the game is paused.
+    var surviving = 0;
+    for (i = 0; i < this.corpses.length; i++) if (this.time - this.corpses[i].created < 120) this.corpses[surviving++] = this.corpses[i];
+    this.corpses.length = surviving;
+    if (surviving > 48) this.corpses.splice(0, surviving - 48);
+    this.corpses.forEach(function (c) {
+      var type = self.monsters[c.type] ? c.type : 'crawler', spec = root.AlienShooterWorld && root.AlienShooterWorld.enemyTypes[type], size = (spec ? spec.radius : .46) / .5;
+      if (!self.visibleAt(c.x, c.y, size * 2.4)) { self.stats.culledCorpses++; return; }
+      var i = counts[type]++, mesh = self.monsters[type].body;
+      self.setInstance(mesh, i, c.x, .015, c.y, size * 1.08, size * .22, size, c.angle);
+      self.color.setHex(0x82916e).convertSRGBToLinear();
+      mesh.geometry.attributes.instanceTintStride.setXYZW(i, self.color.r, self.color.g, self.color.b, 0); self.stats.renderedCorpses++;
+    });
+    Object.keys(counts).forEach(function (type) { self.finishPool(self.monsters[type].body, counts[type]); });
   };
   Renderer.prototype.updateObjects = function (game) {
     var self = this, bodies = 0, marks = 0, colors = { health: 0xf28e78, armor: 0x73b7cf, ammo: 0xd6bd70, credits: 0xf1d68a, grenade: 0x9dbc6c };
     (game.pickups || []).slice(0, 60).forEach(function (p) {
+      if (!self.visibleAt(p.x, p.y, 1.6)) return;
       var i = bodies++, color = colors[p.type] || 0xffffff, hover = .28 + Math.sin(self.time * 3 + p.id) * .055;
-      self.setInstance(self.pickupBodies, i, p.x, hover, p.y, .4, .25, .32, .15, color);
+      var tileAttribute = self.pickupBodies.geometry.attributes.instanceAtlasRect;
+      self.setInstance(self.pickupBodies, i, p.x, hover, p.y, .4, .25, .32, .15, tileAttribute ? 0xffffff : color);
+      if (tileAttribute) {
+        var names = { health: 'pickupHealth', armor: 'pickupArmor', ammo: 'pickupAmmo', credits: 'pickupCredits', grenade: 'pickupGrenade' };
+        var rect = self.baked.atlas.tiles[names[p.type] || 'pickupAmmo'];
+        tileAttribute.setXYZW(i, rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1]);
+      }
       self.setInstance(self.pickupGlows, i, p.x, .025, p.y, 1.3, 1.3, 1, 0, color, -Math.PI / 2);
+      if (tileAttribute) return;
       if (p.type === 'health') { self.setInstance(self.pickupMarks, marks++, p.x, hover + .135, p.y, .08, .018, .24, 0, 0xffffff); self.setInstance(self.pickupMarks, marks++, p.x, hover + .14, p.y, .24, .018, .08, 0, 0xffffff); }
       else self.setInstance(self.pickupMarks, marks++, p.x, hover + .135, p.y, .26, .018, .06, 0, 0xf1eee0);
     });
     this.finishPool(this.pickupBodies, bodies); this.finishPool(this.pickupGlows, bodies); this.finishPool(this.pickupMarks, marks);
     var count = 0;
-    ((game.map || {}).barrels || []).slice(0, 32).forEach(function (b) { if (b.exploded || b.hp <= 0) return; var i = count++; self.setInstance(self.barrelBodies, i, b.x, .53, b.y, .43, 1.06, .43, 0); [-1, 1].forEach(function (s, n) { self.setInstance(self.barrelBands, i * 2 + n, b.x, .53 + s * .31, b.y, .445, .06, .445, 0); }); });
-    this.finishPool(this.barrelBodies, count); this.finishPool(this.barrelBands, count * 2);
+    ((game.map || {}).barrels || []).slice(0, 32).forEach(function (b) { if (b.exploded || b.hp <= 0 || !self.visibleAt(b.x, b.y, 1.5)) return; self.setInstance(self.barrelBodies, count++, b.x, 0, b.y, 1, 1, 1, 0); });
+    this.finishPool(this.barrelBodies, count);
     count = 0;
     ((game.map || {}).doors || []).slice(0, 20).forEach(function (d) {
-      if (d.open) return;
+      if (d.open || !self.visibleAt(d.x + d.w / 2, d.y + d.h / 2, Math.max(d.w, d.h) / 2 + 1.5)) return;
       var i = count++, x = d.x + d.w / 2, z = d.y + d.h / 2;
       self.setInstance(self.doors, i, x, .65, z, d.w, 1.3, d.h, 0, 0x71857b);
       self.setInstance(self.doorBars, i, x, 1.32, z, d.w > d.h ? d.w * .78 : .08, .035, d.h > d.w ? d.h * .78 : .08, 0);
@@ -466,23 +616,26 @@
     this.finishPool(this.doors, count); this.finishPool(this.doorBars, count);
     count = 0;
     ((game.map || {}).objectives || []).slice(0, 8).forEach(function (o) {
+      if (!self.visibleAt(o.x, o.y, 3)) return;
       var i = count++, color = o.status === 'done' ? 0x8cd39a : o.status === 'locked' ? 0x6d7e75 : o.status === 'defending' ? 0xf1a864 : 0x88d6d4;
       self.setInstance(self.objectiveRings, i, o.x, .03, o.y, 1.1, 1.1, 1.1, 0, color, -Math.PI / 2);
       self.setInstance(self.objectiveGlows, i, o.x, .02, o.y, 2.6 + Math.sin(self.time * 2) * .12, 2.6 + Math.sin(self.time * 2) * .12, 1, 0, color, -Math.PI / 2);
     });
     this.finishPool(this.objectiveRings, count); this.finishPool(this.objectiveGlows, count);
     count = 0;
-    (game.grenades || []).slice(0, 20).forEach(function (g) { var t = clamp((g.age || 0) / (g.fuse || 1.2), 0, 1); self.setInstance(self.grenadeBodies, count++, g.x, .15 + Math.sin(t * Math.PI) * .8, g.y, .13, .16, .13, self.time * 8); }); this.finishPool(this.grenadeBodies, count);
+    (game.grenades || []).slice(0, 20).forEach(function (g) { if (!self.visibleAt(g.x, g.y, 1.5)) return; var t = clamp((g.age || 0) / (g.fuse || 1.2), 0, 1); self.setInstance(self.grenadeBodies, count++, g.x, .15 + Math.sin(t * Math.PI) * .8, g.y, .13, .16, .13, self.time * 8); }); this.finishPool(this.grenadeBodies, count);
   };
   Renderer.prototype.updateEffects = function (game) {
     var self = this, count = 0, scorchCount = 0;
     (game.decals || []).slice(-180).forEach(function (d, index) {
       var size = finite(d.size, 1), scorch = d.type === 'scorch';
+      if (!self.visibleAt(d.x, d.y, size * .8 + 1)) return;
       self.setInstance(scorch ? self.scorches : self.decals, scorch ? scorchCount++ : count++, d.x, .013 + index * .00001, d.y, size, size, 1, finite(d.angle, 0), scorch ? 0xffffff : 0x4f662d, -Math.PI / 2);
     });
     this.finishPool(this.decals, count); this.finishPool(this.scorches, scorchCount);
     count = 0;
     (game.bullets || []).slice(0, 512).forEach(function (b) {
+      if (!self.visibleAt(b.x, b.y, 1.5)) return;
       var i = count++ * 6, vx = finite(b.vx, 0), vy = finite(b.vy, 0), speed = Math.hypot(vx, vy) || 1, length = b.enemy ? .3 : b.type === 'plasma' ? .75 : .65, color = b.enemy ? 0xb8e463 : b.type === 'plasma' ? 0x78dbe6 : 0xffda86;
       self.tracerPositions[i] = b.x - vx / speed * length; self.tracerPositions[i + 1] = b.enemy ? .4 : .96; self.tracerPositions[i + 2] = b.y - vy / speed * length;
       self.tracerPositions[i + 3] = b.x; self.tracerPositions[i + 4] = b.enemy ? .4 : .96; self.tracerPositions[i + 5] = b.y;
@@ -491,6 +644,7 @@
     this.tracerGeometry.setDrawRange(0, count * 2); this.tracerGeometry.attributes.position.needsUpdate = true; this.tracerGeometry.attributes.color.needsUpdate = true; this.tracers.visible = count > 0;
     count = 0; var explosions = 0;
     (game.particles || []).slice(0, 360).forEach(function (p) {
+      if (!self.visibleAt(p.x, p.y, Math.max(2, finite(p.size, 1) * 1.2))) return;
       var ratio = clamp(finite(p.life, 0) / Math.max(.01, finite(p.maxLife, 1)), 0, 1);
       if (p.type === 'explosion' && explosions < 24) { var size = finite(p.size, 1) * (.25 + (1 - ratio) * .8); self.setInstance(self.explosions, explosions++, p.x, .32 + size * .3, p.y, size, size * .55, size, 0, ratio > .55 ? 0xffde87 : 0xca632d); }
       var i = count++ * 3, color = p.color || (p.type === 'blood' ? 0x87a756 : p.type === 'acid' ? 0xb4e668 : 0xffb467);
@@ -510,11 +664,13 @@
     return this.raycaster.ray.intersectPlane(this.groundPlane, this.hitPoint) ? { x: this.hitPoint.x, y: this.hitPoint.z } : null;
   };
   Renderer.prototype.render = function (game, dt) {
-    if (this.failed || this.disposed || this.contextLost || !game || !game.map) return;
+    if (this.failed || this.disposed || this.contextLost || this.pendingTextures || !game || !game.map) return;
     dt = clamp(finite(dt, 1 / 60), 0, .1); if (game.phase === 'playing' || game.phase === 'title') this.time += dt;
+    this.stats.uploadedInstances = 0;
     this.setMap(game.map, game.stage); this.updateCamera(game, dt); this.updateActors(game); this.updateObjects(game); this.updateEffects(game);
     this.renderer.render(this.scene, this.camera); this.active = true;
     this.stats.calls = this.renderer.info.render.calls; this.stats.triangles = this.renderer.info.render.triangles; this.stats.frames++;
+    this.stats.geometries = this.renderer.info.memory.geometries; this.stats.textures = this.renderer.info.memory.textures;
   };
   Renderer.prototype.dispose = function () {
     if (this.disposed) return; this.disposed = true; this.active = false;

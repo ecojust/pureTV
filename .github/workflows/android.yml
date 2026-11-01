@@ -56,8 +56,10 @@ jobs:
         run: node --test resource/apps/coast-kart/tests/*.test.cjs resource/apps/cozy-island/tests/*.test.cjs
       - name: Verify Used Car Racing physics and track rules
         run: node --test resource/apps/used-car-racing/tests/*.test.cjs
-      - name: Verify Alien Shooter combat and campaign rules
-        run: node --test resource/apps/alien-shooter/tests/*.test.cjs
+      - name: Verify Alien Shooter rules and baked resources
+        run: |
+          node --test resource/apps/alien-shooter/tests/*.test.cjs
+          node resource/apps/alien-shooter/tools/bake-materials.mjs --verify
       - name: Prepare verified Jackal preview artwork
         run: |
           python resource/apps/jackal/tools/extract-artwork.py --output "$RUNNER_TEMP/puretv-jackal-art"
@@ -185,7 +187,9 @@ jobs:
           ALIEN_SHOOTER_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-alien-shooter-previews
         run: |
           node resource/apps/alien-shooter/tests/controller.mjs
+          node resource/apps/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions --output "$RUNNER_TEMP/puretv-alien-shooter-performance"
           node resource/apps/alien-shooter/tests/integration.mjs
+          node resource/apps/alien-shooter/tests/runtime-performance.mjs
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools
@@ -428,6 +432,12 @@ jobs:
           name: alien-shooter-tv-previews
           path: ${{ runner.temp }}/puretv-alien-shooter-previews/*.png
           if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter') }}
+        with:
+          name: alien-shooter-rendering-performance
+          path: ${{ runner.temp }}/puretv-alien-shooter-performance/
+          if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter' }}
         with:

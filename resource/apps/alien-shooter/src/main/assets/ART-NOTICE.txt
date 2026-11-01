@@ -4,17 +4,27 @@ All models, procedural textures, effects and logo in this application were
 created for this independent PureTV game. No original game's sprites, maps,
 models, recordings, logo or ROM are bundled.
 
-renderer.js generates the following local CanvasTextures once at startup:
-- Three seeded 1024 x 1024 steel-floor materials, with plate seams, fasteners,
-  vents, scratches, surface noise and oil stains.
-- A 512 x 512 brushed-metal surface and a 512 x 512 mottled organic skin.
-- 128 x 128 contact shadow, light glow and splatter masks.
-- A 1024 x 512 industrial floor-stencil atlas.
+The offline recipe tools/bake-materials.mjs creates the bundled baked textures:
+- A 1024 x 1024 padded material atlas with authored cargo-crate bevels, seams,
+  straps, bolts, labels and wear; metal, organic skin, barrels and pickup marks.
+- A shared 1024 x 1024 steel-floor material, with seams, fasteners, vents,
+  scratches, surface noise and stains. Per-stage tint avoids three full copies.
+- Three 512 x 512 map-space, linear-RGB ground-light maps containing approximate
+  fixed contact occlusion, authored colored light pools and floor markings.
+  These are distance/visibility-based ground approximations, not path-traced
+  lighting. Dynamic doors, breakable barrels and actors are not baked into them.
+- Original block-letter glyphs are drawn by the recipe; no system font or
+  third-party image is needed. Atlas/floor PNGs use 256-color encoding; ground
+  lighting retains RGB. PNG dimensions and source hashes are checked in CI.
+
+Small contact-shadow, light-glow and splatter masks remain local procedural
+textures. Baked files are decoded before rendering, with no network downloads.
 
 Low-poly models are built from authored arrangements of primitive geometry.
-Static scenery is merged by material. Characters, separate gait parts, effects,
-decals and pickups use bounded instanced pools. Textures and geometry are local;
-no network image or model downloads are required.
+Cargo-crate surface detail lives in the atlas instead of many tiny solid parts.
+Static scenery is batched; animated characters, effects, decals and pickups use
+bounded instanced pools. Textures and geometry are local. See docs/baking.md for
+the bake contract, reproduction instructions and honest memory accounting.
 
 Application-specific visuals and code are under the application's MIT license.
 The bundled Three.js r124 library is covered by THREE-LICENSE.txt.
