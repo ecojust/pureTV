@@ -112,7 +112,10 @@ jobs:
           assert run['event'] == 'workflow_dispatch', 'Expected an explicitly staged build'
           assert run['head_sha'] == source_sha, 'Build source does not match source_sha'
           assert run['status'] == 'completed' and run['conclusion'] == 'success', 'Build must have completed successfully'
-          jobs = api(f'repos/{repository}/actions/runs/{run_id}/jobs?per_page=100')['jobs']
+          # Pin the attempt: the aggregate jobs endpoint can lag behind a completed run.
+          attempt = run['run_attempt']
+          assert isinstance(attempt, int) and attempt >= 1, 'Invalid build attempt'
+          jobs = api(f'repos/{repository}/actions/runs/{run_id}/attempts/{attempt}/jobs?per_page=100')['jobs']
           assert any(job['name'] == 'Stage verified launcher and app resource inputs' and job['conclusion'] == 'success' for job in jobs), 'Resource staging did not succeed'
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
               output.write(f'source_sha={source_sha}\nstage_branch=build-assets/resources-{run_id}\n')
