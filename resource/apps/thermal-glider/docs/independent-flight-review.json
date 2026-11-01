@@ -1,0 +1,391 @@
+{
+  "kind": "independent-energy-flight-review",
+  "passed": true,
+  "modelSha256": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+  "contractSha256": "579fc9a822e8bbb5ef2b4479c633c75b87754a7214f28e663eab2680e6ad41c3",
+  "reviewScriptSha256": "ee82801f50cb45417f9ac52cae52fa7bd383bc83d300c88c2762f6fe58f4f28f",
+  "sourceUnchanged": true,
+  "checks": [
+    {
+      "name": "pitch cycling, bank, brakes and mode toggles dissipate energy without thermal input",
+      "passed": true,
+      "activeTicks": 1800,
+      "scope": "Explicit isolated high-altitude fixture; no authored-course or browser claim",
+      "finalEnergy": 39077.7078653124,
+      "energyDissipated": 324.2921346875605
+    },
+    {
+      "name": "thermal input uses starting distance, vanishes at boundary and has no paused-entry award",
+      "passed": true,
+      "samples": [
+        {
+          "x": 0,
+          "thermalEnergyAdded": 0.4905
+        },
+        {
+          "x": 9.9999,
+          "thermalEnergyAdded": 0.000009809950950005752
+        },
+        {
+          "x": 10,
+          "thermalEnergyAdded": 0
+        },
+        {
+          "x": 10.0001,
+          "thermalEnergyAdded": 0
+        },
+        {
+          "x": -10,
+          "thermalEnergyAdded": 0
+        }
+      ],
+      "windAdvectsWithoutEnergy": true,
+      "zeroDtNoFlightTimeOrEnergyChange": true
+    },
+    {
+      "name": "real stall differs from normal sink and flaps trade low-speed lift for high-speed drag",
+      "passed": true,
+      "cases": [
+        {
+          "speed": 9.5,
+          "cleanSink": 4.46847619047619,
+          "flapSink": 0.9444999999999999,
+          "cleanStalled": true,
+          "flapStalled": false
+        },
+        {
+          "speed": 12,
+          "cleanSink": 0.988,
+          "flapSink": 0.6519999999999999,
+          "cleanStalled": false,
+          "flapStalled": false
+        },
+        {
+          "speed": 26,
+          "cleanSink": 1.212,
+          "flapSink": 3.1719999999999997,
+          "cleanStalled": false,
+          "flapStalled": false
+        }
+      ],
+      "ordinarySinkIsNotStall": true,
+      "heldBrakeActive": true,
+      "heldBTogglesOnlyOnce": true,
+      "cancellationDoesNotQueueToggle": true
+    },
+    {
+      "name": "forward swept ring events credit once in segment order and cannot be replayed backwards",
+      "passed": true,
+      "orderedCrossings": 2,
+      "reverseRejected": true,
+      "outOfOrderNotRetroactivelyCredited": true,
+      "fullEnvelopeApertureRequired": true,
+      "contactAtSameFractionWinsTie": true,
+      "scope": "Explicit small-separation ring and ground-contact fixtures"
+    },
+    {
+      "name": "swept mountain intersections include outside endpoints and descending through the top",
+      "passed": true,
+      "results": [
+        {
+          "height": 120,
+          "x": 15.999,
+          "fraction": 0.1520950442005203
+        },
+        {
+          "height": 99.99,
+          "x": 15.999,
+          "fraction": 0.26455026455036995
+        },
+        {
+          "height": 120,
+          "x": 16,
+          "fraction": 0.4875
+        }
+      ],
+      "scope": "Exact quadratic horizontal interval intersected with a linear below-top interval; synthetic mountain fixtures"
+    },
+    {
+      "name": "every landing predicate is required independently at actual swept ground contact",
+      "passed": true,
+      "results": [
+        {
+          "failedPredicate": "inside",
+          "reason": "outside-runway"
+        },
+        {
+          "failedPredicate": "allRings",
+          "reason": "checkpoints"
+        },
+        {
+          "failedPredicate": "airSpeedOk",
+          "reason": "airspeed"
+        },
+        {
+          "failedPredicate": "airSpeedOk",
+          "reason": "airspeed"
+        },
+        {
+          "failedPredicate": "groundSpeedOk",
+          "reason": "ground-speed"
+        },
+        {
+          "failedPredicate": "verticalSpeedOk",
+          "reason": "vertical-speed"
+        },
+        {
+          "failedPredicate": "verticalSpeedOk",
+          "reason": "vertical-speed"
+        },
+        {
+          "failedPredicate": "verticalSpeedOk",
+          "reason": "vertical-speed"
+        },
+        {
+          "failedPredicate": "bankOk",
+          "reason": "bank"
+        },
+        {
+          "failedPredicate": "pitchOk",
+          "reason": "pitch"
+        },
+        {
+          "failedPredicate": "headingOk",
+          "reason": "heading"
+        },
+        {
+          "failedPredicate": "trackOk",
+          "reason": "track"
+        },
+        {
+          "failedPredicate": "notStalled",
+          "reason": "stall"
+        }
+      ],
+      "acceptedControl": true,
+      "scope": "Synthetic near-ground fixtures, each with exactly one landing predicate false; no authored-flight claim"
+    },
+    {
+      "name": "partial contact conserves both thermal and dissipative transfers and wraps heading correctly",
+      "passed": true,
+      "partialFraction": 0.1287671432560644,
+      "thermalEnergy": 0.010526713961148864,
+      "dissipation": 0.012211010612246359,
+      "wrappedContactHeading": -3.1412597003968123,
+      "headingError": 0.0003329531929807672,
+      "trackError": 0.0003329531929807672
+    },
+    {
+      "name": "full aircraft world envelope and equal-time terrain contacts take priority over landing",
+      "passed": true,
+      "worldBoundaryIncludesRadius": true,
+      "mountainWinsGroundTie": true,
+      "boundaryWinsGroundTie": true
+    },
+    {
+      "name": "deadline precedes physics, terminal states freeze, and fresh rounds do not share state",
+      "passed": true,
+      "timeoutBeforeLandingAndInput": true,
+      "terminalFrozen": true,
+      "freshRoundNoAliasing": true
+    },
+    {
+      "name": "three fresh authored courses complete with independent public-geometry feedback and real analog controls",
+      "passed": true,
+      "solutions": [
+        {
+          "level": 1,
+          "phase": "won",
+          "elapsed": 58.416666666666664,
+          "score": 2210,
+          "checkpointsPassed": 3,
+          "checkpointCount": 3,
+          "landingAccepted": true,
+          "landingResult": {
+            "x": -0.39100828363333495,
+            "z": 966.5281022414865,
+            "altitude": 0,
+            "airspeed": 12.326513657134052,
+            "groundSpeed": 12.423735329343105,
+            "verticalSpeed": -0.6304100212250564,
+            "heading": -0.022130466488109235,
+            "bank": -0.00008945850048404274,
+            "pitch": 3.917453253752568e-17,
+            "flaps": true,
+            "at": 58.40384419788354,
+            "flags": {
+              "inside": true,
+              "allRings": true,
+              "airSpeedOk": true,
+              "groundSpeedOk": true,
+              "verticalSpeedOk": true,
+              "bankOk": true,
+              "pitchOk": true,
+              "headingOk": true,
+              "trackOk": true,
+              "notStalled": true,
+              "headingError": 0.022130466488109235,
+              "trackError": 0.006216428825291942,
+              "along": 46.52810224148652,
+              "across": -0.39100828363333495,
+              "ready": true,
+              "reason": "ready"
+            },
+            "accepted": true
+          },
+          "thermalEnergyAdded": 345.7925629315532,
+          "energyDissipated": 1040.0410934617964,
+          "maxEnergyError": 1.2505552149377763e-12,
+          "brakeTicks": 970,
+          "flapToggles": 1,
+          "observationKeys": [
+            "glider",
+            "physics",
+            "runway",
+            "rings",
+            "nextRing",
+            "wind",
+            "thermals"
+          ],
+          "publicTraceSamples": 30,
+          "publicTraceSha256": "a6a685e8225993aa5122e49bbfff2248b3870ee21e5366d738c3dcaa6f90c7fb"
+        },
+        {
+          "level": 2,
+          "phase": "won",
+          "elapsed": 67.06666666666666,
+          "score": 2120,
+          "checkpointsPassed": 3,
+          "checkpointCount": 3,
+          "landingAccepted": true,
+          "landingResult": {
+            "x": 21.974768541587967,
+            "z": 1058.911530887742,
+            "altitude": 0,
+            "airspeed": 11.367537714249364,
+            "groundSpeed": 11.475993920487179,
+            "verticalSpeed": -0.7047374547594136,
+            "heading": 0.09237767324079016,
+            "bank": 0.00019342512797744917,
+            "pitch": -7.085071298512613e-21,
+            "flaps": true,
+            "at": 67.05650024251881,
+            "flags": {
+              "inside": true,
+              "allRings": true,
+              "airSpeedOk": true,
+              "groundSpeedOk": true,
+              "verticalSpeedOk": true,
+              "bankOk": true,
+              "pitchOk": true,
+              "headingOk": true,
+              "trackOk": true,
+              "notStalled": true,
+              "headingError": 0.05237767324079101,
+              "trackError": 0.005258435638143766,
+              "along": 38.95937549252451,
+              "across": 0.4171427250019897,
+              "ready": true,
+              "reason": "ready"
+            },
+            "accepted": true
+          },
+          "thermalEnergyAdded": 366.96129728825673,
+          "energyDissipated": 1101.315840445814,
+          "maxEnergyError": 3.637978807091713e-12,
+          "brakeTicks": 1025,
+          "flapToggles": 1,
+          "observationKeys": [
+            "glider",
+            "physics",
+            "runway",
+            "rings",
+            "nextRing",
+            "wind",
+            "thermals"
+          ],
+          "publicTraceSamples": 34,
+          "publicTraceSha256": "d9c10c7409b2c493b6c540cdad7d7f4efdde96f876c42bb278b43ad39f3e992c"
+        },
+        {
+          "level": 3,
+          "phase": "won",
+          "elapsed": 65.03333333333333,
+          "score": 2440,
+          "checkpointsPassed": 4,
+          "checkpointCount": 4,
+          "landingAccepted": true,
+          "landingResult": {
+            "x": -8.959735831154424,
+            "z": 1060.741376119194,
+            "altitude": 4.336808689942018e-19,
+            "airspeed": 12.315154971060007,
+            "groundSpeed": 11.9502537050063,
+            "verticalSpeed": -0.6310976017010461,
+            "heading": -0.12212905372935268,
+            "bank": 0.001472946662398033,
+            "pitch": 1.035731843165464e-18,
+            "flaps": true,
+            "at": 65.02208298164577,
+            "flags": {
+              "inside": true,
+              "allRings": true,
+              "airSpeedOk": true,
+              "groundSpeedOk": true,
+              "verticalSpeedOk": true,
+              "bankOk": true,
+              "pitchOk": true,
+              "headingOk": true,
+              "trackOk": true,
+              "notStalled": true,
+              "headingError": 0.08712905372935253,
+              "trackError": 0.03201962480853737,
+              "along": 40.680022760803446,
+              "across": 2.465284123002634,
+              "ready": true,
+              "reason": "ready"
+            },
+            "accepted": true
+          },
+          "thermalEnergyAdded": 423.17009930139125,
+          "energyDissipated": 1175.298578320782,
+          "maxEnergyError": 4.092726157978177e-12,
+          "brakeTicks": 1065,
+          "flapToggles": 1,
+          "observationKeys": [
+            "glider",
+            "physics",
+            "runway",
+            "rings",
+            "nextRing",
+            "wind",
+            "thermals"
+          ],
+          "publicTraceSamples": 33,
+          "publicTraceSha256": "a7bd8655f17793c49da7fe8bcf1ab2720cb5230b3165c034c71869bec4dd1868"
+        }
+      ],
+      "scope": "Three untouched fresh production Model.create courses. Every observation is a deep-frozen clone of explicitly selected public fields, with no level number or private state. Only ordinary analog x/y, held A and edge B inputs advance the actual model. These are model flights, not browser footage."
+    }
+  ],
+  "totals": {
+    "energyTicks": 13266,
+    "thermalBoundaryCases": 5,
+    "sweptMountainCases": 3,
+    "landingPredicateCases": 13,
+    "ordinaryPublicFeedbackWins": 3
+  },
+  "methodology": "Independent mechanical-energy balance, exact quadratic swept-cylinder interval intersected with linear altitude, full landing-predicate counterexamples and shortest-angle contact checks. The separate feedback controller uses a closed-form thermal chord integral, public rings/wind/runway and ordinary analog controls; no production flight helper or QA pilot is imported.",
+  "scope": {
+    "syntheticBoundaryFixtures": true,
+    "ordinaryAuthoredModelFlights": 3,
+    "normalGameplayVideoEvidence": false,
+    "browserExecuted": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "limitations": [
+    "The game specifies a deterministic point-mass model, not full CFD or a real aircraft training simulator.",
+    "Synthetic contacts and model flights do not prove actual browser/native timing or physical-device performance; those are separately verified."
+  ]
+}
