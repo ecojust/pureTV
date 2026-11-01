@@ -53,6 +53,7 @@
 | [Tetris TV](apps/tetris/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
 | [热流滑翔](apps/thermal-glider/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 驾驶无引擎滑翔翼利用热流穿过有序观测圈，使用空气刹车与襟翼管理能量，满足位置、速度与姿态后实际降落；三条航线，支持手机扫码单人操作 | <img src="apps/thermal-glider/thumb.png" width="180" alt="热流滑翔 界面"> |
 | [潮汐闸门](apps/tide-lock/) | ecojust / 桔子桑 | 0.1.1 | 289.3 KB | 调节两级船闸水位，安全开启闸门，把货船送往高水位出口；管理水量守恒、溢流和搁浅，支持手机扫码单人操作 | <img src="apps/tide-lock/thumb.png" width="180" alt="潮汐闸门 界面"> |
+| [三角拼域](apps/triangular-tessera/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 旋转与镜像三角彩砖，让共享边同色并形成指定数量的红绿蓝色域；三关各有有限步数和90秒时限，每次操作都消耗一步，支持手机扫码单人操作。 | <img src="apps/triangular-tessera/thumb.png" width="180" alt="三角拼域 界面"> |
 | [极品二手车](apps/used-car-racing/) | ecojust / 桔子桑 | 0.1.3 | 1.66 MB | 随机车况与机械故障的三维赛车，支持手机扫码一至两人竞速和 AI 对手 | <img src="apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"> |
 | [WebTV](apps/webtv/) | ecojust / 桔子桑 | 0.5.0 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
 | [砝码账本](apps/weight-ledger/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 将六枚独立编号的砝码分配到三个共享盘，同时配平三条整数衡式；预选拿取、有限搬动与真实撤销，三道公开谜题，支持手机扫码单人操作 | <img src="apps/weight-ledger/thumb.png" width="180" alt="砝码账本 界面"> |
