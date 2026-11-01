@@ -12,6 +12,8 @@
   let best=0;
   try{const n=Number(localStorage.getItem('puretv.'+def.id+'.best'));if(Number.isFinite(n)&&n>=0&&n<1e9)best=n;}catch(_){}
   document.title=def.title; $('title').textContent=def.title; $('tagline').textContent=def.tagline||'';
+  const levelLabel=def.levelLabel||'航线',levelNames=def.levelNames||['练习','标准','挑战'];
+  $('level-label').textContent=levelLabel;document.querySelectorAll('[data-level]').forEach(b=>b.textContent=levelNames[Number(b.dataset.level)]);
   $('move-help').textContent=def.controls.move; $('a-help').textContent=def.controls.a; $('b-help').textContent=def.controls.b;
   $('tip').textContent=def.tip; document.documentElement.style.setProperty('--accent',def.accent||'#6fe4d6');
   function resize(){const a=$('arena'),w=Math.max(1,Math.min(a.clientWidth-2,(a.clientHeight-2)*16/9));$('scene').style.width=w+'px';$('scene').style.height=w*9/16+'px';}
@@ -71,7 +73,7 @@
     $('message').textContent=disconnected?'手柄断开后已自动暂停，重新连接或按 P 继续。':(state.message||def.tip);
     $('best').textContent='最佳 '+Math.floor(best);$('pause-button').textContent=paused?'继续 P':'暂停 P';$('pause-button').disabled=phase!=='playing';
     const show=phase!=='playing'||paused;$('overlay').hidden=!show;
-    if(show){const won=phase==='won',lost=phase==='lost';$('dialog-kicker').textContent=paused?'休息一下':won?'任务完成':lost?'再试一次':'PURETV ORIGINALS';$('dialog-title').textContent=paused?'已暂停':won?(def.winTitle||'任务完成'):lost?(def.loseTitle||'本次任务结束'):def.title;$('dialog-copy').textContent=paused?'场景与计时已暂停。继续后从当前位置出发。':(won||lost)?def.result(state):def.description;$('primary').textContent=paused?'继续游戏 · P':(won||lost)?'再次出发 · ENTER':'开始游戏 · ENTER';$('difficulty-controls').hidden=paused;$('dialog-help').textContent=paused?'手机 START / 遥控器播放键继续':'左右选择航线 · B 切换声音 · START / 确认开始';}
+    if(show){const won=phase==='won',lost=phase==='lost';$('dialog-kicker').textContent=paused?'休息一下':won?'任务完成':lost?'再试一次':'PURETV ORIGINALS';$('dialog-title').textContent=paused?'已暂停':won?(def.winTitle||'任务完成'):lost?(def.loseTitle||'本次任务结束'):def.title;$('dialog-copy').textContent=paused?'场景与计时已暂停。继续后从当前位置出发。':(won||lost)?def.result(state):def.description;$('primary').textContent=paused?'继续游戏 · P':(won||lost)?'再次出发 · ENTER':'开始游戏 · ENTER';$('difficulty-controls').hidden=paused;$('dialog-help').textContent=paused?'手机 START / 遥控器播放键继续':'左右选择'+levelLabel+' · B 切换声音 · START / 确认开始';}
     if(native){try{native.publish(JSON.stringify({title:def.title,phase:paused?'paused':phase,score:state.score||0,message:state.message||'',actions:def.actionLabels||['操作 A','操作 B']}));}catch(_){}}
   }
   function frame(now){

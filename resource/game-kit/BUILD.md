@@ -69,7 +69,8 @@ Commit only `requests/<slug>/request.json` and `unsigned.apk` to a branch named
 branch, the exact `source_sha`, and `slug`. This file-writing helper neither
 commits nor pushes nor dispatches anything.
 
-The workflow runs once (20-minute cap). It checks out the signing tools at the
+The workflow's `sign` job runs once (20-minute cap) with only `contents: read`.
+It checks out the signing tools at the
 workflow commit and the game at the requested exact SHA. The pinned builder
 compiles the source's Java/resources/assets without executing source Python,
 Gradle or shell scripts. The request's package, version, digest, size and exact
@@ -80,12 +81,64 @@ ZIP-entry comparison; toolchain differences cannot bypass source validation.
 Only the signing step receives existing `PURETV_KEYSTORE_BASE64` and
 `PURETV_KEYSTORE_PASSWORD` secrets. It checks the certificate against
 `tools/puretv-release-certificate-v2.sha256`, signs through password environment
-references, verifies the finished APK and removes the temporary key. The only
-deliverable is Actions artifact `game-kit-signed-<slug>-<source_sha>`, containing
+references, verifies the finished APK and removes the temporary key. It uploads
+Actions artifact `game-kit-signed-<slug>-<source_sha>`, containing
 the signed APK and `signing-receipt.json` with source/native/asset hashes and the
-public certificate fingerprint. The workflow has no repository write
-permission and changes no branch, GitHub Release or Gitee publication.
+public certificate fingerprint. Signing secrets are not available to other steps
+or jobs.
 
-The root owner downloads and verifies this artifact before the individual
+A separate `export` job runs only after `sign` succeeds (15-minute cap). It has
+`actions: read` and `contents: write`, receives no signing secrets, and downloads
+the signed artifact from this same workflow run. Its script and validation
+helpers come from the workflow SHA; the game source SHA is checked out only as
+data. It verifies the source/run/workflow identity, APK hash and actual release
+certificate, package/version, all asset bytes, native source hashes, optional
+game icon and copyright notice.
+
+The export job creates exactly one isolated branch:
+`build-assets/game-kit-signed-<run_id>`. Its root commit contains only
+`<slug>/<slug>-<version>.apk` and `<slug>/signing-receipt.json`. The job uses
+GitHub's create-ref API, refuses an existing ref and never updates, deletes or
+force-pushes a branch. It does not modify `master`, GitHub Releases or Gitee.
+
+After the entire workflow succeeds, download through GitHub's blob API. This
+avoids temporary Azure artifact URLs:
+
+```sh
+python3 resource/game-kit/fetch-signed.py \
+  --run-id SIGNING_WORKFLOW_RUN_ID \
+  --slug gravity-courier \
+  --source-sha EXACT_40_CHARACTER_SOURCE_SHA \
+  --output /path/to/scratch/signed-game
+```
+
+The helper requires authenticated `gh` and Android build-tools 34.0.0. Pass
+`--build-tools /path/to/build-tools/34.0.0` when the local default is unavailable.
+It makes only read-only API requests, checks the isolated ref/tree/blob layout,
+source metadata and receipt, and verifies the APK signature, certificate pin,
+identity, hash, CRC and alignment locally. It does not execute downloaded code
+or print tokens/base64 data. Existing output files with different bytes are
+rejected; matching files can be reused. `fetch-verification.json` records the
+local checks beside the APK and original receipt.
+
+The isolated output branches can be retained or explicitly cleaned up by the
+root workflow owner. Source/request branches can be reused after their history
+has been integrated; output branches are always tied to one numeric run ID.
+
+Run the portable protocol regressions after changing the export/download tools:
+
+```sh
+python3 resource/game-kit/export-test.py
+```
+
+These standard-library tests build temporary data fixtures and simulate GitHub
+responses and Android verification-tool outputs. They need no SDK, network,
+keys, commits or existing game checkout. They cover source/run/certificate
+binding, complete hash manifests, injected files/paths, existing refs,
+concurrent ref creation and concurrent local-file replacement. Actual releases
+still receive real `apksigner`, `aapt` and `zipalign` verification in CI and in
+the download helper.
+
+The root owner downloads and verifies the result before the individual
 game's final commit/push. Do not count the unsigned local build as a published,
 installable release.

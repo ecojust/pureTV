@@ -114,6 +114,31 @@
     tile('disc', 704, 256, 128, 128, function (c) { ellipse(c, 64, 64, 62, 62, '#fff'); });
     tile('white', 848, 272, 16, 16, function (c) { c.fillStyle = '#fff'; c.fillRect(0, 0, 16, 16); });
 
+    // Optical bench hardware, facing right (prism) and / (mirror) by default.
+    tile('mirror', 0, 800, 192, 192, function (c) {
+      ellipse(c, 98, 156, 67, 16, radial(c, 98, 156, 70, [[0, 'rgba(0,0,0,.55)'], [1, 'transparent']]));
+      ellipse(c, 96, 100, 65, 65, linear(c, 50, 45, 130, 155, [[0, '#536b80'], [.47, '#20374c'], [1, '#102438']]));
+      ellipse(c, 96, 97, 57, 57, linear(c, 58, 44, 125, 150, [[0, '#2b4056'], [1, '#102235']]));
+      c.save(); c.translate(96, 96); c.rotate(-Math.PI / 4);
+      path(c, [[-73, -13], [66, -13], [73, -6], [73, 12], [-66, 12], [-73, 5]], linear(c, 0, -13, 0, 12, [[0, '#e5f2f8'], [.3, '#8299aa'], [.66, '#4d6d85'], [1, '#18364c']]), '#9ab6c7', 2);
+      c.fillStyle = linear(c, 0, -8, 0, 8, [[0, '#d8ffff'], [.45, '#b4e7f3'], [.55, '#55a7c6'], [1, '#d9f7ff']]); c.fillRect(-62, -8, 124, 16);
+      c.strokeStyle = '#f4ffff'; c.lineWidth = 2; c.beginPath(); c.moveTo(-60, -6); c.lineTo(60, -6); c.stroke();
+      c.restore();
+      ellipse(c, 54, 54, 5, 5, '#bdd1db'); ellipse(c, 138, 138, 5, 5, '#7896a9');
+      c.strokeStyle = '#274052'; c.lineWidth = 2; c.beginPath(); c.moveTo(51, 54); c.lineTo(57, 54); c.moveTo(135, 138); c.lineTo(141, 138); c.stroke();
+    });
+    tile('prism', 192, 800, 192, 192, function (c) {
+      ellipse(c, 100, 155, 69, 16, radial(c, 100, 155, 72, [[0, 'rgba(0,0,0,.5)'], [1, 'transparent']]));
+      path(c, [[47, 30], [161, 96], [47, 162]], linear(c, 55, 25, 137, 159, [[0, '#eefaff'], [.34, '#86a8bf'], [.72, '#354f6d'], [1, '#9bbdcd']]), '#c0d9e8', 2);
+      path(c, [[56, 45], [145, 96], [56, 147]], linear(c, 50, 58, 133, 125, [[0, '#c7f7ff'], [.42, '#84b5dc'], [.7, '#887db8'], [1, '#98d9e8']]), '#e5faff', 2);
+      path(c, [[59, 49], [97, 96], [59, 143]], linear(c, 58, 55, 95, 131, [[0, '#e4ffff'], [.6, '#82c9e0'], [1, '#688bbc']]));
+      path(c, [[59, 49], [141, 96], [97, 96]], 'rgba(218,247,255,.52)');
+      path(c, [[59, 143], [97, 96], [141, 96]], 'rgba(127,119,218,.44)');
+      c.strokeStyle = 'rgba(241,255,255,.8)'; c.lineWidth = 2; c.beginPath(); c.moveTo(59, 49); c.lineTo(97, 96); c.lineTo(59, 143); c.moveTo(97, 96); c.lineTo(140, 96); c.stroke();
+      path(c, [[24, 90], [36, 90], [36, 83], [48, 96], [36, 109], [36, 102], [24, 102]], '#edfaff');
+      ellipse(c, 54, 36, 3, 3, '#f5a6af'); ellipse(c, 154, 96, 3, 3, '#9cebb7'); ellipse(c, 54, 156, 3, 3, '#91bbff');
+    });
+
     // A local system font is baked once. No font loading, per-frame canvas text, or network request.
     ctx.font = '600 40px Arial, sans-serif'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#fff';
     for (var code = 32; code <= 126; code++) {
