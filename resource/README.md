@@ -34,6 +34,7 @@
 | [引力快递](apps/gravity-courier/) | ecojust / 桔子桑 | 0.1.1 | 285.3 KB | 驾驶惯性小艇绕行引力星体，管理燃料并完成三次星际配送，支持手机扫码单人操作 | <img src="apps/gravity-courier/thumb.png" width="180" alt="引力快递 界面"> |
 | [隐墙测绘](apps/hidden-corridors/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 依据每行通路格数与最短边数，用有限探针推断4×4隐藏墙体，再提交安全且长度正确的路线；三关固定布局，支持手机扫码单人操作 | <img src="apps/hidden-corridors/thumb.png" width="180" alt="隐墙测绘 界面"> |
 | [HIFINi TV](apps/hifini/) | ecojust / 桔子桑 | 0.5.0 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
+| [双岛联结](apps/island-dominoes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 按桥牌的直线长度与目标颜色连结岛屿，避开交叉并用尽所有独立桥牌组成连通网络；支持原片撤销，三关固定布局与90秒时限，手机扫码单人操作 | <img src="apps/island-dominoes/thumb.png" width="180" alt="双岛联结 界面"> |
 | [Jackal TV](apps/jackal/) | ecojust / 桔子桑 | 0.5.2 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
 | [Magic Jewelry TV](apps/jewel/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
 | [灯塔节拍](apps/lantern-rhythm/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 观察方向与短长灯号，再按节拍真实按住并松开按钮，依次点亮三座灯塔；两次主动重听、有限失误与90秒有效时间，支持手机扫码单人操作 | <img src="apps/lantern-rhythm/thumb.png" width="180" alt="灯塔节拍 界面"> |
