@@ -1,38 +1,31 @@
-name: Read failed job diagnostics
+name: Record Manager 0.5.0 promotional footage
 on:
   workflow_dispatch:
     inputs:
       job_id:
-        description: Failed GitHub Actions job ID
+        description: Fixed recording marker (050-promo)
         required: true
 permissions:
-  actions: read
+  contents: read
 jobs:
-  diagnostics:
-    runs-on: ubuntu-latest
+  record:
+    if: inputs.job_id == '050-promo'
+    runs-on: macos-latest
+    timeout-minutes: 15
     steps:
-      - name: Report verification log tail
-        env:
-          GH_TOKEN: ${{ github.token }}
-          JOB_ID: ${{ inputs.job_id }}
-          REPOSITORY: ${{ github.repository }}
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Record official Manager apps and live public Gitee content
         run: |
-          python - <<'PY'
-          import os, re, subprocess
-          job = os.environ['JOB_ID']
-          assert job.isdigit()
-          result = subprocess.run(['gh', 'api', '--allow-escape-sequences', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True)
-          log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', result.stdout + result.stderr)
-          lines = log.splitlines()
-          primary = [i for i, line in enumerate(lines) if re.search(r'FAILURE: Build failed|\* What went wrong:', line) and '##[error]' not in line]
-          fallback = [i for i, line in enumerate(lines) if re.search(r'(?:error:|Error:|TimeoutError|ui\.mjs:|> Task .+ FAILED|Execution failed for task)', line) and '##[error]' not in line]
-          matches = primary or fallback
-          if matches:
-              before = '\n'.join(lines[max(0, matches[0] - 50):matches[0]])[-3500:]
-              print('::notice title=Failure preceding context::' + before.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-              start = max(0, matches[0] - 2)
-              selected = '\n'.join(lines[start:start + 65])[:3500]
-          else:
-              selected = log[-3500:]
-          print('::notice title=Failed job log::' + selected.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-          PY
+          set -o pipefail
+          mkdir -p manager-promo/evidence
+          python3 -u manager-promo/run.py 2>&1 | tee manager-promo/evidence/transcript.txt
+      - name: Preserve recordings and public verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: manager-050-native-promo-${{ github.run_id }}-${{ github.run_attempt }}
+          path: manager-promo/evidence/
+          if-no-files-found: error
+          retention-days: 7
