@@ -4,7 +4,7 @@
   const def=root.GameDef, model=root.PureModel, $=id=>document.getElementById(id);
   if(!def||!model||!root.PureRenderer){$('dialog-title').textContent='游戏资源未就绪';$('dialog-copy').textContent='请重新打开应用。';return;}
   const native=root.PureGameHost, keys=new Set(), pulses={}, pendingActions={a:false,b:false};
-  const renderer=new root.PureRenderer($('game'));
+  const renderer=new root.PureRenderer($('game'),{atlas:def.atlas});
   let state=model.create(def.seed||1,0), phase='menu', paused=false, level=0, tick=0, elapsed=0;
   let last=0, lastUi=0, accumulator=0, endedRecorded=false, phoneSeen=false, disconnected=false;
   let previous={a:false,b:false,start:false,select:false}, info={}, soundEnabled=false, audio=null, disposed=false, nativePauseBefore=false, phoneConnected=false, menuStick=0;
