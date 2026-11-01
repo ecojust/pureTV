@@ -39,6 +39,7 @@
 | [分岔调度](apps/switchyard-minute/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 切换道岔、错开放行，把双向货车送到同色站台，管理追尾风险与累计延误，支持手机扫码单人操作 | <img src="apps/switchyard-minute/thumb.png" width="180" alt="分岔调度 界面"> |
 | [Tank TV](apps/tank/) | ecojust / 桔子桑 | 0.5.2 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
 | [Tetris TV](apps/tetris/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
+| [潮汐闸门](apps/tide-lock/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 调节两级船闸水位，安全开启闸门，把货船送往高水位出口；管理水量守恒、溢流和搁浅，支持手机扫码单人操作 | <img src="apps/tide-lock/thumb.png" width="180" alt="潮汐闸门 界面"> |
 | [极品二手车](apps/used-car-racing/) | ecojust / 桔子桑 | 0.1.3 | 1.66 MB | 随机车况与机械故障的三维赛车，支持手机扫码一至两人竞速和 AI 对手 | <img src="apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"> |
 | [WebTV](apps/webtv/) | ecojust / 桔子桑 | 0.5.0 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
 

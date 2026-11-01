@@ -1,0 +1,158 @@
+{
+  "browser": "Chromium / SwiftShader WebGL",
+  "physicalTVTested": false,
+  "checks": [
+    "All 14 legacy UV rectangles, 95 ASCII cells and missing-name orb fallback",
+    "Default atlas PNG and glyph metrics exactly match baseline",
+    "40 invalid configurations fail before any painter",
+    "Independent per-instance regions/pixels, helpers, clipping, missing-name error and descriptor snapshot",
+    "Empty config retains core; touching tiles and unused glyph cells are usable",
+    "Actual GPU drawElements: 1 call for 1/8192 quads, 2 calls for 8193",
+    "Real WEBGL_lose_context restore reuploads configured atlas once without repaint, identical frame",
+    "Canvas 2D fallback uses custom UV/pixels and core graphics, reports no GPU calls",
+    "Three legacy games × three levels render successfully with one draw per frame, exact baseline frame PNGs"
+  ],
+  "legacyAtlasSha256": "8c07cbd91c14109987ef168cb3f2802c97787df6ab3ff96ce99f57f164d92364",
+  "invalidConfigurations": 40,
+  "gpu": {
+    "batches": [
+      {
+        "n": 1,
+        "actual": 1,
+        "metrics": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 1,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        }
+      },
+      {
+        "n": 8192,
+        "actual": 1,
+        "metrics": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 8192,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        }
+      },
+      {
+        "n": 8193,
+        "actual": 2,
+        "metrics": {
+          "kind": "webgl",
+          "drawCalls": 2,
+          "quads": 8193,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        }
+      }
+    ],
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "restored": {
+      "identical": true,
+      "sameAtlas": true,
+      "paints": 1,
+      "uploads": 1,
+      "actual": 1,
+      "metrics": {
+        "kind": "webgl",
+        "drawCalls": 1,
+        "quads": 8,
+        "textureCount": 1,
+        "atlasSize": 1024,
+        "contextLost": false
+      }
+    }
+  },
+  "canvasFallback": {
+    "kind": "canvas2d",
+    "drawCalls": 0,
+    "quads": 9,
+    "textureCount": 0,
+    "atlasSize": 1024,
+    "contextLost": false
+  },
+  "games": [
+    {
+      "slug": "gravity-courier",
+      "frames": [
+        {
+          "level": 1,
+          "sha256": "1efb41c0ce64b6ddcd3bc3ab67b3b5cfb37ffbcf37351d239032bbd000579d9a",
+          "quads": 289,
+          "drawCalls": 1
+        },
+        {
+          "level": 2,
+          "sha256": "af091a85dba17904092c6459065f7b9c16f9190ea265565a2b4503fd6efb2920",
+          "quads": 289,
+          "drawCalls": 1
+        },
+        {
+          "level": 3,
+          "sha256": "0c06fee335596a8f21df1bd64eb3b4c052ac023e34b021c53c4ae9d387600642",
+          "quads": 289,
+          "drawCalls": 1
+        }
+      ],
+      "baselineExact": true
+    },
+    {
+      "slug": "prism-relay",
+      "frames": [
+        {
+          "level": 1,
+          "sha256": "8f8eb8930bb0a55d60ff896f613c7c15758bc464153ff707df73a38244e912b7",
+          "quads": 374,
+          "drawCalls": 1
+        },
+        {
+          "level": 2,
+          "sha256": "aea2baf106c9e6416d00b368c7cf5fe4b24d1032969d0ce251fe006ad0d91039",
+          "quads": 464,
+          "drawCalls": 1
+        },
+        {
+          "level": 3,
+          "sha256": "9f27f7b5bfbd00d800624c6664a8b6898020e8d3dd67bf06a9b00753c5373e58",
+          "quads": 541,
+          "drawCalls": 1
+        }
+      ],
+      "baselineExact": true
+    },
+    {
+      "slug": "switchyard-minute",
+      "frames": [
+        {
+          "level": 1,
+          "sha256": "3701e7929b2fd576ca335c17eeac32c66238f5c56e7c6a2bf4ba5775ec9a53c4",
+          "quads": 911,
+          "drawCalls": 1
+        },
+        {
+          "level": 2,
+          "sha256": "d84b4593dbe6d0ff530c6f7c9f27ddac315de40d082e3247979b2120052463ec",
+          "quads": 910,
+          "drawCalls": 1
+        },
+        {
+          "level": 3,
+          "sha256": "07c33a2b79d6bfb3640ac5bd369b448e33021ec1d9300ebfd668f0b835fdb6b0",
+          "quads": 910,
+          "drawCalls": 1
+        }
+      ],
+      "baselineExact": true
+    }
+  ],
+  "pageErrors": [],
+  "passed": 9,
+  "baselineProvided": true
+}

@@ -2,8 +2,7 @@
 (function (global) {
   'use strict';
 
-  var WIDTH = 960, HEIGHT = 540, ATLAS_SIZE = 1024, MAX_QUADS = 8192;
-  var sharedAtlas = null;
+  var WIDTH = 960, HEIGHT = 540, ATLAS_SIZE = 1024, MAX_QUADS = 8192, MAX_ATLAS_TILES = 128;
 
   function ellipse(ctx, x, y, rx, ry, color) {
     // Keep the current transform: changing it here would also distort gradient coordinates.
@@ -37,15 +36,63 @@
     return g;
   }
 
+  function atlasError(message) { throw new Error('PureRenderer atlas: ' + message); }
+  function atlasTiles(legacy, config) {
+    var selected = legacy;
+    if (config != null) {
+      if (typeof config !== 'object' || Array.isArray(config)) atlasError('configuration must be an object');
+      var builtins = config.builtins === undefined ? [] : config.builtins;
+      var custom = config.tiles === undefined ? [] : config.tiles;
+      if (!Array.isArray(builtins) || !Array.isArray(custom)) atlasError('builtins and tiles must be arrays');
+      if (builtins.length + custom.length + 2 > MAX_ATLAS_TILES) atlasError('too many active tiles');
+      var known = Object.create(null), wanted = Object.create(null);
+      for (var k = 0; k < legacy.length; k++) known[legacy[k].name] = legacy[k];
+      wanted.white = wanted.disc = true;
+      for (var b = 0; b < builtins.length; b++) {
+        var name = builtins[b];
+        if (typeof name !== 'string' || !known[name]) atlasError('unknown builtin ' + String(name));
+        if (wanted[name]) atlasError('duplicate builtin/core tile ' + name);
+        wanted[name] = true;
+      }
+      selected = legacy.filter(function (entry) { return !!wanted[entry.name]; });
+      for (var c = 0; c < custom.length; c++) {
+        var entry = custom[c];
+        if (!entry || typeof entry !== 'object' || Array.isArray(entry)) atlasError('tile must be an object');
+        // Snapshot descriptors before any painter executes; later caller changes
+        // cannot move a validated tile or replace a subsequent paint callback.
+        selected.push({ name: entry.name, x: entry.x, y: entry.y, w: entry.w, h: entry.h, paint: entry.paint });
+      }
+    }
+    var names = Object.create(null);
+    for (var i = 0; i < selected.length; i++) {
+      var tile = selected[i];
+      if (typeof tile.name !== 'string' || !/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(tile.name)
+          || tile.name === 'constructor' || tile.name === 'prototype') atlasError('invalid tile name');
+      if (names[tile.name]) atlasError('duplicate tile ' + tile.name);
+      names[tile.name] = true;
+      var dimensions = [tile.x, tile.y, tile.w, tile.h];
+      for (var d = 0; d < dimensions.length; d++) {
+        if (typeof dimensions[d] !== 'number' || !isFinite(dimensions[d]) || Math.floor(dimensions[d]) !== dimensions[d]) atlasError('tile ' + tile.name + ' needs finite integer coordinates');
+      }
+      if (tile.x < 0 || tile.y < 0 || tile.w <= 0 || tile.h <= 0 || tile.x + tile.w > ATLAS_SIZE || tile.y + tile.h > ATLAS_SIZE) atlasError('tile ' + tile.name + ' is outside the 1024 atlas');
+      if (typeof tile.paint !== 'function') atlasError('tile ' + tile.name + ' needs a paint function');
+      for (var g = 0; g < 95; g++) {
+        var gx = (g % 20) * 48, gy = 448 + Math.floor(g / 20) * 64;
+        if (tile.x < gx + 48 && tile.x + tile.w > gx && tile.y < gy + 64 && tile.y + tile.h > gy) atlasError('tile ' + tile.name + ' overlaps a reserved glyph');
+      }
+      for (var j = 0; j < i; j++) {
+        var previous = selected[j];
+        if (tile.x < previous.x + previous.w && tile.x + tile.w > previous.x && tile.y < previous.y + previous.h && tile.y + tile.h > previous.y) atlasError('tile ' + tile.name + ' overlaps ' + previous.name);
+      }
+    }
+    return selected;
+  }
+
   // All light, material and shadow work happens once, before the render loop.
-  function bakeAtlas() {
-    if (sharedAtlas) return sharedAtlas;
-    var canvas = document.createElement('canvas'); canvas.width = canvas.height = ATLAS_SIZE;
-    var ctx = canvas.getContext('2d'), regions = {}, glyphs = {};
+  function bakeAtlas(config) {
+    var definitions = [], regions = {}, glyphs = {};
     function tile(name, x, y, w, h, paint) {
-      regions[name] = { x: x, y: y, w: w, h: h };
-      ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.translate(x, y);
-      paint(ctx, w, h); ctx.restore();
+      definitions.push({ name: name, x: x, y: y, w: w, h: h, paint: paint });
     }
     tile('orb', 0, 0, 224, 224, function (c) {
       ellipse(c, 114, 191, 75, 13, radial(c, 114, 191, 76, [[0, 'rgba(0,0,0,.55)'], [1, 'transparent']]));
@@ -170,16 +217,33 @@
       c.fillStyle = '#2b475c'; c.fillRect(15, 82, 12, 5); c.fillRect(165, 82, 12, 5);
     });
 
+    // Validate the complete layout before allocating/painting. Each renderer owns
+    // its atlas, so distinct per-game configurations cannot share stale pixels.
+    var active = atlasTiles(definitions, config);
+    var canvas = document.createElement('canvas'); canvas.width = canvas.height = ATLAS_SIZE;
+    var ctx = canvas.getContext('2d');
+    if (!ctx) atlasError('Canvas 2D is required for baking');
+    var art = Object.freeze({ ellipse: ellipse, path: path, linear: linear, radial: radial });
+    for (var t = 0; t < active.length; t++) {
+      var current = active[t];
+      regions[current.name] = { x: current.x, y: current.y, w: current.w, h: current.h };
+      ctx.save(); ctx.beginPath(); ctx.rect(current.x, current.y, current.w, current.h); ctx.clip(); ctx.translate(current.x, current.y);
+      try { current.paint(ctx, current.w, current.h, art); }
+      finally { ctx.restore(); }
+    }
     // A local system font is baked once. No font loading, per-frame canvas text, or network request.
     ctx.font = '600 40px Arial, sans-serif'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#fff';
     for (var code = 32; code <= 126; code++) {
       var index = code - 32, x = (index % 20) * 48, y = 448 + Math.floor(index / 20) * 64;
       var ch = String.fromCharCode(code), measured = ctx.measureText(ch);
+      // Legacy painting remains byte-for-byte unchanged. Configured layouts can
+      // use adjacent free cells, so clip font substitution ink to its own cell.
+      if (config != null) { ctx.save(); ctx.beginPath(); ctx.rect(x, y, 48, 64); ctx.clip(); }
       ctx.fillText(ch, x + 4, y + 45);
+      if (config != null) ctx.restore();
       glyphs[ch] = { x: x, y: y, w: 48, h: 64, advance: measured.width };
     }
-    sharedAtlas = { canvas: canvas, regions: regions, glyphs: glyphs };
-    return sharedAtlas;
+    return { canvas: canvas, regions: regions, glyphs: glyphs };
   }
 
   function parseColor(value) {
@@ -198,10 +262,12 @@
   }
   function rgba(c) { return 'rgba(' + Math.round(c[0] * 255) + ',' + Math.round(c[1] * 255) + ',' + Math.round(c[2] * 255) + ',' + c[3] + ')'; }
 
-  function PureRenderer(canvas) {
+  function PureRenderer(canvas, options) {
     if (!canvas || !canvas.getContext) throw new TypeError('PureRenderer needs a canvas');
+    if (options != null && (typeof options !== 'object' || Array.isArray(options))) atlasError('renderer options must be an object');
+    var config = options == null ? null : options.atlas;
     this.canvas = canvas; this.width = WIDTH; this.height = HEIGHT;
-    this.atlas = bakeAtlas(); this.disposed = false; this.contextLost = false;
+    this.atlas = bakeAtlas(config); this._configuredAtlas = config != null; this.disposed = false; this.contextLost = false;
     this.metrics = { kind: 'webgl', drawCalls: 0, quads: 0, textureCount: 1, atlasSize: ATLAS_SIZE, contextLost: false };
     this._count = 0; this._colors = Object.create(null); this._colorCount = 0;
     this._vertices = new Float32Array(MAX_QUADS * 4 * 8);
@@ -318,6 +384,7 @@
     this._quad(this.atlas.regions.white, x + w / 2, y + h / 2, w, h, angle || 0, color);
   };
   PureRenderer.prototype.sprite = function (name, cx, cy, w, h, angle, color) {
+    if (this._configuredAtlas && !Object.prototype.hasOwnProperty.call(this.atlas.regions, name)) atlasError('missing configured sprite ' + String(name));
     this._quad(this.atlas.regions[name] || this.atlas.regions.orb, cx, cy, w, h, angle || 0, color);
   };
   PureRenderer.prototype.circle = function (cx, cy, r, color) {

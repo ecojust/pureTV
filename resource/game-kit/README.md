@@ -24,7 +24,7 @@ python3 resource/game-kit/build.py \
 - 输入为 `x/y`、`a/b` 和 `aPressed/bPressed`，摇杆坐标按屏幕方向归一化。
 - `GameDef` 声明标题、说明、手柄标签、HUD、结算文字与 `render(renderer, state, time, input)`。
 - `PureTVQA.snapshot()` 只返回深拷贝，用于观察真实输入的结果；不提供改分数或强制胜利的入口。
-- `PureRenderer` 用单个烘焙图集合并图形与 ASCII 字符；中文界面在 DOM 层绘制。`metrics.drawCalls` 只统计 WebGL 提交，Canvas 降级单独标记。
+- `PureRenderer` 用单个烘焙图集合并图形与 ASCII 字符；中文界面在 DOM 层绘制。可通过 `GameDef.atlas` 使用[每款游戏自己的素材布局](RENDERER.md)。`metrics.drawCalls` 只统计 WebGL 提交，Canvas 降级单独标记。
 
 手机手柄使用左侧自由起点摇杆，右侧三分之一为连续触控区：单动作覆盖整个右区，双动作分上下两半。禁用选字、长按菜单和触摸滚动；指针取消、后台、断线会释放输入。首次连接走随机房间令牌，陈旧输入由服务端超时清零。
 

@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-01T16:32:15.775Z",
+  "source": {
+    "modelPath": "resource/apps/tide-lock/src/main/assets/game-model.js",
+    "modelSha256": "8937b4cca6ebad99417ae9f56b80a0eacf8c051f55c1edc3108b5c60e41342df",
+    "automationPath": "resource/apps/tide-lock/tests/automation.mjs",
+    "automationSha256": "f968f5dcde80c0410b2cea6da14ea8008ffffe72b31877a5813f8967a28b4299",
+    "reviewScript": "resource/apps/tide-lock/tests/independent-water-review.mjs",
+    "reviewScriptSha256": "4c5e3d6d23dd7b86f942af7a2c547b6912cc752c38f26f1b79340b34ff280688"
+  },
+  "execution": {
+    "runtime": "v24.19.0",
+    "command": "node resource/apps/tide-lock/tests/independent-water-review.mjs",
+    "sourceFilesModified": false,
+    "liveStateWinHooksUsed": false,
+    "publicModelApiOnly": true,
+    "fixtureScope": "Physical water inventories, gate/valve opening combinations and isolated rule boundaries; ordinary-input voyage validation has no state writes."
+  },
+  "random": {
+    "seed": 20261101,
+    "generator": "LCG32: rng=(Math.imul(rng,1664525)+1013904223)>>>0; U=rng/4294967296",
+    "drawsInOrder": "Single-step gate cases, multistep gate cases, valve cases",
+    "reference": "Independent signed edge-flow balance from old levels; gate conductivity 4, maximum rate 2.5, dt=1/60. Local old-neighborhood extrema checked independently from volume predictions."
+  },
+  "checks": [
+    {
+      "name": "50000 randomized gate networks: signed balance, local maximum principle, fixed reservoirs",
+      "passed": true,
+      "elapsedMs": 279.108906,
+      "cases": 50000,
+      "actualLayoutsCovered": 3,
+      "initialLevels": "[0,7.95) m independently for all four zones",
+      "gateOpenProbability": 0.5,
+      "maxAbsoluteVolumePredictionError": 1.7763568394002505e-15,
+      "maxAbsoluteConservationError": 3.552713678800501e-15
+    },
+    {
+      "name": "200 randomized open-gate networks remain bounded and conservative over 120 ticks",
+      "passed": true,
+      "elapsedMs": 34.72972000000004,
+      "cases": 200,
+      "ticksPerCase": 120,
+      "maxAbsoluteConservationError": 4.440892098500626e-14
+    },
+    {
+      "name": "5000 randomized fill/drain combinations obey rate, capacity and cumulative flux accounting",
+      "passed": true,
+      "elapsedMs": 62.77596,
+      "cases": 5000,
+      "overflowCases": 2,
+      "maxAbsoluteConservationError": 3.552713678800501e-15
+    },
+    {
+      "name": "closed valves/gates freeze volume; unequal-area isolated middle gate equilibrates conservatively",
+      "passed": true,
+      "elapsedMs": 2.5418399999999792,
+      "ticks": 600,
+      "area1": 1.2,
+      "area2": 1.25,
+      "expectedCommonLevel": 4.551020408163265
+    },
+    {
+      "name": "gate threshold and mutual gate/valve interlocks",
+      "passed": true,
+      "elapsedMs": 0.3133820000000469,
+      "acceptedDifference": 0.15,
+      "rejectedDifference": 0.150001
+    },
+    {
+      "name": "ordinary B crosses only an open safe gate and locks it until the boat has passed",
+      "passed": true,
+      "elapsedMs": 2.421668000000011,
+      "firstCrossingTicks": 388,
+      "firstCrossingModelSeconds": 6.466666666666667,
+      "deliveriesAfterFirstGate": 0
+    },
+    {
+      "name": "overflow is reachable by an ordinary open fill valve; spill ledger balances and terminal freezes",
+      "passed": true,
+      "elapsedMs": 3.4967979999999557,
+      "lostAt": 12.016666666666666,
+      "chamberLevel": 8,
+      "sourceVolume": 6.008333333333422,
+      "spillVolume": 0.008333333333524706
+    },
+    {
+      "name": "ordinary boat admission followed by drainage reaches grounding without floor penetration",
+      "passed": true,
+      "elapsedMs": 2.7262870000000134,
+      "firstGroundedAt": 9.383333333333333,
+      "lostAt": 12.366666666666667,
+      "continuousGroundedSeconds": 2.9999999999999942,
+      "chamberLevel": 0
+    },
+    {
+      "name": "restored water depth resets continuous grounding duration; empty drain cannot create negative inventory",
+      "passed": true,
+      "elapsedMs": 3.2530799999999545,
+      "resetVerified": true,
+      "emptyDrainTicks": 600
+    },
+    {
+      "name": "timeout is exact and terminal state freezes",
+      "passed": true,
+      "elapsedMs": 0.49478499999997894,
+      "boundarySeconds": 0.05
+    }
+  ],
+  "voyages": [
+    {
+      "mode": "qa",
+      "level": 1,
+      "phase": "won",
+      "target": 1,
+      "deliveries": 1,
+      "modelSeconds": 30.766666666666666,
+      "sourceVolume": 4.063414634146041,
+      "sinkVolume": 0,
+      "overflowVolume": 0,
+      "commands": 18,
+      "stateWrites": false
+    },
+    {
+      "mode": "qa",
+      "level": 2,
+      "phase": "won",
+      "target": 2,
+      "deliveries": 2,
+      "modelSeconds": 50.333333333333336,
+      "sourceVolume": 11.177648110212798,
+      "sinkVolume": 5.491537015591297,
+      "overflowVolume": 0,
+      "commands": 46,
+      "stateWrites": false
+    },
+    {
+      "mode": "qa",
+      "level": 3,
+      "phase": "won",
+      "target": 3,
+      "deliveries": 3,
+      "modelSeconds": 66.23333333333333,
+      "sourceVolume": 21.954079036410455,
+      "sinkVolume": 14.53060976208921,
+      "overflowVolume": 0,
+      "commands": 74,
+      "stateWrites": false
+    },
+    {
+      "mode": "record",
+      "level": 1,
+      "phase": "won",
+      "target": 1,
+      "deliveries": 1,
+      "modelSeconds": 32.53333333333333,
+      "sourceVolume": 4.059349593495684,
+      "sinkVolume": 0,
+      "overflowVolume": 0,
+      "commands": 18,
+      "stateWrites": false
+    },
+    {
+      "mode": "record",
+      "level": 2,
+      "phase": "won",
+      "target": 2,
+      "deliveries": 2,
+      "modelSeconds": 53.766666666666666,
+      "sourceVolume": 11.177648119164669,
+      "sinkVolume": 5.491537021348604,
+      "overflowVolume": 0,
+      "commands": 46,
+      "stateWrites": false
+    },
+    {
+      "mode": "record",
+      "level": 3,
+      "phase": "won",
+      "target": 3,
+      "deliveries": 3,
+      "modelSeconds": 71.35,
+      "sourceVolume": 21.943467483426332,
+      "sinkVolume": 14.519998221022963,
+      "overflowVolume": 0,
+      "commands": 74,
+      "stateWrites": false
+    }
+  ],
+  "failures": [],
+  "passed": true,
+  "finishedAt": "2026-11-01T16:32:16.558Z"
+}
