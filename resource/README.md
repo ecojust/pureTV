@@ -49,6 +49,7 @@
 | [潮汐闸门](apps/tide-lock/) | ecojust / 桔子桑 | 0.1.1 | 289.3 KB | 调节两级船闸水位，安全开启闸门，把货船送往高水位出口；管理水量守恒、溢流和搁浅，支持手机扫码单人操作 | <img src="apps/tide-lock/thumb.png" width="180" alt="潮汐闸门 界面"> |
 | [极品二手车](apps/used-car-racing/) | ecojust / 桔子桑 | 0.1.3 | 1.66 MB | 随机车况与机械故障的三维赛车，支持手机扫码一至两人竞速和 AI 对手 | <img src="apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"> |
 | [WebTV](apps/webtv/) | ecojust / 桔子桑 | 0.5.0 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
+| [砝码账本](apps/weight-ledger/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 将六枚独立编号的砝码分配到三个共享盘，同时配平三条整数衡式；预选拿取、有限搬动与真实撤销，三道公开谜题，支持手机扫码单人操作 | <img src="apps/weight-ledger/thumb.png" width="180" alt="砝码账本 界面"> |
 
 开发者请参阅 [开发与协议 README](README-development.md)，包含 layout.json 字段说明、画面对照、构建与测试。
 

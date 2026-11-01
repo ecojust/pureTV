@@ -1,0 +1,356 @@
+{
+  "kind": "independent-shared-integer-weight-review",
+  "passed": true,
+  "modelSha256": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+  "contractSha256": "7e09cf5eaaeebfcd711e34816147c7aca4c9b0757b148fb85d5f3d4fa86386eb",
+  "reviewScriptSha256": "6a1094370d555490ce57dcb5f976b8411a10bf7d478bc71483e8e11a42039e73",
+  "sourceUnchanged": true,
+  "checks": [
+    {
+      "name": "unique repeated-mass instances, shared integer totals and coefficient2 conserve physical mass",
+      "passed": true,
+      "allLayoutsHaveDistinctRepeatedMassIds": true,
+      "ratio2IsLoadNotPhysicalMass": true,
+      "directedTrayPairCases": 36
+    },
+    {
+      "name": "pickup, same-tray return and explicit cancellation do not alter inventory or spend a move",
+      "passed": true,
+      "pickupPreviewOnly": true,
+      "noOpReturnFree": true,
+      "emptyUndoFree": true
+    },
+    {
+      "name": "one relocation changes all affected equations simultaneously and moves one repeated-mass ID",
+      "passed": true,
+      "movedId": 2,
+      "unchangedEqualMassId": 3,
+      "changedScaleIds": [
+        "scale-1",
+        "scale-2"
+      ]
+    },
+    {
+      "name": "B while carrying cancels only; subsequent B restores the previous full allocation and move count",
+      "passed": true,
+      "cancelDoesNotAlsoUndo": true,
+      "selectionAndAllocationRestored": true,
+      "lifetimeMovesNotRefunded": true,
+      "clockNotRefunded": true
+    },
+    {
+      "name": "two committed snapshots undo in reverse order without aliasing or accumulated score",
+      "passed": true,
+      "stackDepth": 2,
+      "allAssignmentsRestored": true,
+      "recomputedScore": 75
+    },
+    {
+      "name": "capacity rejection leaves a carried weight and the actual allocation unchanged",
+      "passed": true,
+      "scope": "Synthetic lowered destination capacity, ordinary pickup and placement keys",
+      "invalidPlacements": 1
+    },
+    {
+      "name": "balanced empty scales cannot win while every physical weight remains in storage",
+      "passed": true,
+      "scope": "Synthetic zero fixed loads and mostly stored starting allocation, followed by a real relocation",
+      "allBalanced": true,
+      "allDeployed": false
+    },
+    {
+      "name": "held buttons, atomic priority, zero-time edges and cancellation preserve deliberate preview",
+      "passed": true,
+      "heldAOnlyOnePick": true,
+      "bDiscardsCoalescedA": true,
+      "zeroDtDoesNotAct": true,
+      "cancelDiscardsPendingButKeepsPreview": true,
+      "directionPrecedesA": true
+    },
+    {
+      "name": "ordinary budget exhaustion and expiry are terminal and cannot be undone",
+      "passed": true,
+      "ordinarySingleWeightShuttleConsumesBudget": true,
+      "deadlineBeforePlacement": true,
+      "terminalFramesFrozen": 30,
+      "deadlineFixture": true
+    },
+    {
+      "name": "independent unique-ID BFS finds shortest public solutions and ordinary inputs win all three",
+      "passed": true,
+      "scope": "Fresh authored models, independently searched public allocations and spatial focus graphs, ordinary direction/A inputs; no production solver, pilot, route or state write",
+      "solutions": [
+        {
+          "level": 1,
+          "phase": "won",
+          "elapsed": 2.3833333333333333,
+          "score": 2185,
+          "movesUsed": 3,
+          "moveBudget": 3,
+          "totalMoves": 3,
+          "allDeployed": true,
+          "allBalanced": true,
+          "totalMass": 15,
+          "allocation": [
+            {
+              "id": 1,
+              "mass": 1,
+              "trayId": "C"
+            },
+            {
+              "id": 2,
+              "mass": 2,
+              "trayId": "B"
+            },
+            {
+              "id": 3,
+              "mass": 2,
+              "trayId": "B"
+            },
+            {
+              "id": 4,
+              "mass": 3,
+              "trayId": "A"
+            },
+            {
+              "id": 5,
+              "mass": 3,
+              "trayId": "B"
+            },
+            {
+              "id": 6,
+              "mass": 4,
+              "trayId": "C"
+            }
+          ],
+          "scales": [
+            {
+              "id": "scale-1",
+              "leftTotal": 10,
+              "rightTotal": 10,
+              "delta": 0
+            },
+            {
+              "id": "scale-2",
+              "leftTotal": 12,
+              "rightTotal": 12,
+              "delta": 0
+            },
+            {
+              "id": "scale-3",
+              "leftTotal": 8,
+              "rightTotal": 8,
+              "delta": 0
+            }
+          ],
+          "publicMoves": [
+            {
+              "id": 1,
+              "to": "C"
+            },
+            {
+              "id": 2,
+              "to": "B"
+            },
+            {
+              "id": 4,
+              "to": "A"
+            }
+          ],
+          "searchExpanded": 338,
+          "maxQueue": 552
+        },
+        {
+          "level": 2,
+          "phase": "won",
+          "elapsed": 3.55,
+          "score": 2180,
+          "movesUsed": 4,
+          "moveBudget": 4,
+          "totalMoves": 4,
+          "allDeployed": true,
+          "allBalanced": true,
+          "totalMass": 16,
+          "allocation": [
+            {
+              "id": 1,
+              "mass": 1,
+              "trayId": "B"
+            },
+            {
+              "id": 2,
+              "mass": 1,
+              "trayId": "C"
+            },
+            {
+              "id": 3,
+              "mass": 2,
+              "trayId": "C"
+            },
+            {
+              "id": 4,
+              "mass": 3,
+              "trayId": "B"
+            },
+            {
+              "id": 5,
+              "mass": 4,
+              "trayId": "C"
+            },
+            {
+              "id": 6,
+              "mass": 5,
+              "trayId": "A"
+            }
+          ],
+          "scales": [
+            {
+              "id": "scale-1",
+              "leftTotal": 9,
+              "rightTotal": 9,
+              "delta": 0
+            },
+            {
+              "id": "scale-2",
+              "leftTotal": 11,
+              "rightTotal": 11,
+              "delta": 0
+            },
+            {
+              "id": "scale-3",
+              "leftTotal": 12,
+              "rightTotal": 12,
+              "delta": 0
+            }
+          ],
+          "publicMoves": [
+            {
+              "id": 1,
+              "to": "B"
+            },
+            {
+              "id": 2,
+              "to": "C"
+            },
+            {
+              "id": 3,
+              "to": "C"
+            },
+            {
+              "id": 6,
+              "to": "A"
+            }
+          ],
+          "searchExpanded": 818,
+          "maxQueue": 1254
+        },
+        {
+          "level": 3,
+          "phase": "won",
+          "elapsed": 4.716666666666667,
+          "score": 2175,
+          "movesUsed": 5,
+          "moveBudget": 5,
+          "totalMoves": 5,
+          "allDeployed": true,
+          "allBalanced": true,
+          "totalMass": 16,
+          "allocation": [
+            {
+              "id": 1,
+              "mass": 1,
+              "trayId": "B"
+            },
+            {
+              "id": 2,
+              "mass": 2,
+              "trayId": "A"
+            },
+            {
+              "id": 3,
+              "mass": 2,
+              "trayId": "A"
+            },
+            {
+              "id": 4,
+              "mass": 3,
+              "trayId": "C"
+            },
+            {
+              "id": 5,
+              "mass": 4,
+              "trayId": "B"
+            },
+            {
+              "id": 6,
+              "mass": 4,
+              "trayId": "C"
+            }
+          ],
+          "scales": [
+            {
+              "id": "scale-1",
+              "leftTotal": 13,
+              "rightTotal": 13,
+              "delta": 0
+            },
+            {
+              "id": "scale-2",
+              "leftTotal": 18,
+              "rightTotal": 18,
+              "delta": 0
+            },
+            {
+              "id": "scale-3",
+              "leftTotal": 16,
+              "rightTotal": 16,
+              "delta": 0
+            }
+          ],
+          "publicMoves": [
+            {
+              "id": 1,
+              "to": "B"
+            },
+            {
+              "id": 2,
+              "to": "A"
+            },
+            {
+              "id": 3,
+              "to": "A"
+            },
+            {
+              "id": 4,
+              "to": "C"
+            },
+            {
+              "id": 6,
+              "to": "C"
+            }
+          ],
+          "searchExpanded": 2326,
+          "maxQueue": 1659
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "allocationChecks": 49,
+    "coefficientPairs": 36,
+    "focusDomains": 46,
+    "focusPairs": 1256,
+    "searchExpanded": 3482,
+    "ordinaryAuthoredWins": 3,
+    "ordinaryRelocations": 12
+  },
+  "methodology": "A separate integer side-sum oracle and bounded breadth-first search over six unique IDs and four locations; no production solving helpers or QA pilot imported. Navigation is reconstructed from current public spatial items after every relocation.",
+  "scope": {
+    "syntheticBoundaryFixtures": true,
+    "ordinaryAuthoredModelWins": 3,
+    "browserExecuted": false,
+    "normalGameplayVideoEvidence": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  }
+}

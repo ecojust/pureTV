@@ -9,7 +9,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-26-f97316?style=flat-square)](resource/apps/)
+[![App count](https://img.shields.io/badge/apps-27-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
@@ -97,6 +97,7 @@ The launchers and first-party TV apps support English. Select English in the TV 
 | [Tide Lock (Chinese UI)](resource/apps/tide-lock/) | ecojust / Juzisang | 0.1.1 | 289.3 KB | Adjust finite chamber water levels, operate interlocked gates and guide cargo boats uphill through two canal locks. Chinese TV interface. | <img src="docs/previews/en/app-tide-lock.png" width="180" alt="Tide Lock (Chinese UI) preview"> |
 | [Used Car Racing TV](resource/apps/used-car-racing/) | ecojust | 0.1.3 | 1.66 MB | 3D racing with randomized used cars, mechanical failures and one or two LAN phone players alongside AI opponents | <img src="docs/previews/en/app-used-car-racing.png" width="180" alt="Used Car Racing TV preview"> |
 | [WebTV](resource/apps/webtv/) | ecojust | 0.5.0 | 44.8 KB | Live TV and M3U player | <img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"> |
+| [Weight Ledger (Chinese UI)](resource/apps/weight-ledger/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Allocate six uniquely identified weights across three shared pans to balance all integer equations and empty storage. Three public puzzles use limited relocations, explicit lever coefficients, pickup previews and undo that preserves elapsed time. Chinese TV interface. | <img src="docs/previews/en/app-weight-ledger.png" width="180" alt="Weight Ledger (Chinese UI) preview"> |
 
 <!-- resource-index:end -->
 

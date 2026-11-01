@@ -1,0 +1,1066 @@
+{
+  "schema": 1,
+  "game": "weight-ledger",
+  "version": "0.1.0",
+  "sourceCommit": "c9c83acffb023593a9399eb2dda13c15d7928fcc",
+  "automationSha256": "0c0169eeb05dea778b1fe1a1054ec037a0b0249af194fd17c4211900fa4cb641",
+  "weightModel": "Six uniquely identified integer-mass weights occupy three shared pans or storage. Every relocation recomputes all three exact integer equations, including explicit 2:1 lever coefficients. Victory requires every weight deployed and all scales balanced. Pickup changes no allocation; undo restores allocation, selection and move budget without refunding active time or lifetime counters.",
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "unresolvedFindings": [],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+      "game.js": "5a001672e0d701fb218b8fad9d510f0ec134a8f424addb8a3caa6f93322b6871",
+      "game-config.json": "3f7a3daaef8d02c03a3b16ca21dfb481a12dc3fcfa3790b97528b244acdc4305",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game-model.js": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+      "src/main/assets/game.js": "5a001672e0d701fb218b8fad9d510f0ec134a8f424addb8a3caa6f93322b6871",
+      "tests/automation.mjs": "0c0169eeb05dea778b1fe1a1054ec037a0b0249af194fd17c4211900fa4cb641",
+      "tests/game-model.test.cjs": "444e62cf71e294aa69f9124e7a2f5cdbe0852c9e6e5db3d39d2548c295a8c8f6",
+      "docs/model-contract.md": "7e09cf5eaaeebfcd711e34816147c7aca4c9b0757b148fb85d5f3d4fa86386eb"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime/01-menu.png",
+        "sha256": "370dddf8b7bf127ddddb1d466896491d2a5393d0a902e7721809020c6e5be802",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/02-picked-weight.png",
+        "sha256": "e9aad3b4954ceca1cbacbd100e355f38a91a5466cc7030a8e2122b494c304b18",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/03-shared-relocation.png",
+        "sha256": "a808010f25cf223087396d047c6d5e0ae0ef6354685a8e6a9fffe407651ac5f1",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/04-undo-restored.png",
+        "sha256": "2983234c5014aa1c21417535969a9a3c89d50720cc986a0d4347a2335901cb2c",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/05-corrected-ledger.png",
+        "sha256": "b871934d7d431d2e9e65d63cfb59c78e761071b93b55d5e269cb77ec7010fbd3",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/06-placement-preview.png",
+        "sha256": "4119990a4ceca7b67fe9403585af7d5da0d994ed844e2f398985d930574d2103",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/07-all-balanced.png",
+        "sha256": "87b7d710219f289267c6b93f883ddd61ce91700f00b2d951ea2a09fa96d1a923",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "9464cb648293cb1b3c66ed2e6386c7321a21624c84821257b37cfca1b05ae61a",
+    "scope": "Actually reviewed candidate software-browser images on the same final bundled assets; this is a prerequisite for source freeze, separate from final packaged QA and recorded gameplay."
+  },
+  "modelTests": {
+    "passed": 32,
+    "command": "node --test resource/apps/weight-ledger/tests/game-model.test.cjs",
+    "sourceHashesBefore": {
+      "model": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+      "tests": "444e62cf71e294aa69f9124e7a2f5cdbe0852c9e6e5db3d39d2548c295a8c8f6",
+      "automation": "0c0169eeb05dea778b1fe1a1054ec037a0b0249af194fd17c4211900fa4cb641",
+      "contract": "7e09cf5eaaeebfcd711e34816147c7aca4c9b0757b148fb85d5f3d4fa86386eb"
+    },
+    "sourceHashesAfter": {
+      "model": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+      "tests": "444e62cf71e294aa69f9124e7a2f5cdbe0852c9e6e5db3d39d2548c295a8c8f6",
+      "automation": "0c0169eeb05dea778b1fe1a1054ec037a0b0249af194fd17c4211900fa4cb641",
+      "contract": "7e09cf5eaaeebfcd711e34816147c7aca4c9b0757b148fb85d5f3d4fa86386eb"
+    },
+    "testLogSha256": "3b142b1d0323f25977170e30d6dfae3d9435de2b8617f3dc6f6d1da2c37f2459",
+    "rawReportSha256": "b3b0f5dc74fef30661b60cc58e5c6c833a48f28452e9bd0755ea7ef8c133a037",
+    "scope": "26 integer/allocation/input/undo boundary rule groups plus 3 fresh authored ordinary-input trial-undo-win demonstrations and 3 fresh ordinary-input budget-loss paths. Synthetic capacity/clock/terminal fixtures are rule tests, not normal-play evidence.",
+    "scheduling": "Winning demonstrations use 60 Hz ticks, public observations every5ticks, normalized directions and actual A/B edges. Loss demonstrations use public spatial focus and ordinary press/release steps, shuttling one weight until the real budget expires. No normal path modifies model state."
+  },
+  "independentWeightReview": {
+    "passed": true,
+    "file": "independent-weight-review.json",
+    "sha256": "895603c8d29555bb2da7f5782d1a988583bcecf0a4a4f0bc6c66396039847438",
+    "checksPassed": 10,
+    "totals": {
+      "allocationChecks": 49,
+      "coefficientPairs": 36,
+      "focusDomains": 46,
+      "focusPairs": 1256,
+      "searchExpanded": 3482,
+      "ordinaryAuthoredWins": 3,
+      "ordinaryRelocations": 12
+    },
+    "ordinaryAuthoredModelWins": [
+      {
+        "level": 1,
+        "phase": "won",
+        "elapsed": 2.3833333333333333,
+        "score": 2185,
+        "movesUsed": 3,
+        "moveBudget": 3,
+        "totalMoves": 3,
+        "allDeployed": true,
+        "allBalanced": true,
+        "totalMass": 15,
+        "allocation": [
+          {
+            "id": 1,
+            "mass": 1,
+            "trayId": "C"
+          },
+          {
+            "id": 2,
+            "mass": 2,
+            "trayId": "B"
+          },
+          {
+            "id": 3,
+            "mass": 2,
+            "trayId": "B"
+          },
+          {
+            "id": 4,
+            "mass": 3,
+            "trayId": "A"
+          },
+          {
+            "id": 5,
+            "mass": 3,
+            "trayId": "B"
+          },
+          {
+            "id": 6,
+            "mass": 4,
+            "trayId": "C"
+          }
+        ],
+        "scales": [
+          {
+            "id": "scale-1",
+            "leftTotal": 10,
+            "rightTotal": 10,
+            "delta": 0
+          },
+          {
+            "id": "scale-2",
+            "leftTotal": 12,
+            "rightTotal": 12,
+            "delta": 0
+          },
+          {
+            "id": "scale-3",
+            "leftTotal": 8,
+            "rightTotal": 8,
+            "delta": 0
+          }
+        ],
+        "publicMoves": [
+          {
+            "id": 1,
+            "to": "C"
+          },
+          {
+            "id": 2,
+            "to": "B"
+          },
+          {
+            "id": 4,
+            "to": "A"
+          }
+        ],
+        "searchExpanded": 338,
+        "maxQueue": 552
+      },
+      {
+        "level": 2,
+        "phase": "won",
+        "elapsed": 3.55,
+        "score": 2180,
+        "movesUsed": 4,
+        "moveBudget": 4,
+        "totalMoves": 4,
+        "allDeployed": true,
+        "allBalanced": true,
+        "totalMass": 16,
+        "allocation": [
+          {
+            "id": 1,
+            "mass": 1,
+            "trayId": "B"
+          },
+          {
+            "id": 2,
+            "mass": 1,
+            "trayId": "C"
+          },
+          {
+            "id": 3,
+            "mass": 2,
+            "trayId": "C"
+          },
+          {
+            "id": 4,
+            "mass": 3,
+            "trayId": "B"
+          },
+          {
+            "id": 5,
+            "mass": 4,
+            "trayId": "C"
+          },
+          {
+            "id": 6,
+            "mass": 5,
+            "trayId": "A"
+          }
+        ],
+        "scales": [
+          {
+            "id": "scale-1",
+            "leftTotal": 9,
+            "rightTotal": 9,
+            "delta": 0
+          },
+          {
+            "id": "scale-2",
+            "leftTotal": 11,
+            "rightTotal": 11,
+            "delta": 0
+          },
+          {
+            "id": "scale-3",
+            "leftTotal": 12,
+            "rightTotal": 12,
+            "delta": 0
+          }
+        ],
+        "publicMoves": [
+          {
+            "id": 1,
+            "to": "B"
+          },
+          {
+            "id": 2,
+            "to": "C"
+          },
+          {
+            "id": 3,
+            "to": "C"
+          },
+          {
+            "id": 6,
+            "to": "A"
+          }
+        ],
+        "searchExpanded": 818,
+        "maxQueue": 1254
+      },
+      {
+        "level": 3,
+        "phase": "won",
+        "elapsed": 4.716666666666667,
+        "score": 2175,
+        "movesUsed": 5,
+        "moveBudget": 5,
+        "totalMoves": 5,
+        "allDeployed": true,
+        "allBalanced": true,
+        "totalMass": 16,
+        "allocation": [
+          {
+            "id": 1,
+            "mass": 1,
+            "trayId": "B"
+          },
+          {
+            "id": 2,
+            "mass": 2,
+            "trayId": "A"
+          },
+          {
+            "id": 3,
+            "mass": 2,
+            "trayId": "A"
+          },
+          {
+            "id": 4,
+            "mass": 3,
+            "trayId": "C"
+          },
+          {
+            "id": 5,
+            "mass": 4,
+            "trayId": "B"
+          },
+          {
+            "id": 6,
+            "mass": 4,
+            "trayId": "C"
+          }
+        ],
+        "scales": [
+          {
+            "id": "scale-1",
+            "leftTotal": 13,
+            "rightTotal": 13,
+            "delta": 0
+          },
+          {
+            "id": "scale-2",
+            "leftTotal": 18,
+            "rightTotal": 18,
+            "delta": 0
+          },
+          {
+            "id": "scale-3",
+            "leftTotal": 16,
+            "rightTotal": 16,
+            "delta": 0
+          }
+        ],
+        "publicMoves": [
+          {
+            "id": 1,
+            "to": "B"
+          },
+          {
+            "id": 2,
+            "to": "A"
+          },
+          {
+            "id": 3,
+            "to": "A"
+          },
+          {
+            "id": 4,
+            "to": "C"
+          },
+          {
+            "id": 6,
+            "to": "C"
+          }
+        ],
+        "searchExpanded": 2326,
+        "maxQueue": 1659
+      }
+    ],
+    "scope": {
+      "syntheticBoundaryFixtures": true,
+      "ordinaryAuthoredModelWins": 3,
+      "browserExecuted": false,
+      "normalGameplayVideoEvidence": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    }
+  },
+  "independentPilotReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "e30ab79c03b1c67aa8bd56e5e9e6fe68c823edbbcd32f21dfc5558746f7dee5c",
+    "checksPassed": 11,
+    "pilotCalls": 79,
+    "predictorPlannerCalls": 10,
+    "observationCalls": 89,
+    "pairedObservations": 11,
+    "sourceHashes": {
+      "tests/automation.mjs": "0c0169eeb05dea778b1fe1a1054ec037a0b0249af194fd17c4211900fa4cb641",
+      "src/main/assets/game-model.js": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+      "docs/model-contract.md": "7e09cf5eaaeebfcd711e34816147c7aca4c9b0757b148fb85d5f3d4fa86386eb"
+    },
+    "scope": "Hand-authored small public-ledger observations, including constructed pickup, placement, cancellation, undo and terminal snapshots. These are synthetic pilot/input-protocol fixtures, not production rule tests, completed games, browser play, footage or device evidence. No production model create/step or model solver/reference route is used; the reviewed public pilot and its own planner/predictor are executed."
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "d673a7f266134d546a3c80980050f486dc14101ee8f1fda36105641f237da18f",
+    "scope": "Final source art: ordinary public-controller model flows for all3 puzzles with shared-pan trial/true undo/full win; ordinary cancel/free-return/empty-undo/budget/timeout states; explicit extended-budget full-six capacity fixtures. Actual browser menu/play/pause plus labelled DOM layout snapshots. No APK/device/video/full-browser-win claim.",
+    "finalSourceHashes": {
+      "game": {
+        "path": "resource/apps/weight-ledger/src/main/assets/game.js",
+        "sha256": "5a001672e0d701fb218b8fad9d510f0ec134a8f424addb8a3caa6f93322b6871"
+      },
+      "model": {
+        "path": "resource/apps/weight-ledger/src/main/assets/game-model.js",
+        "sha256": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92"
+      },
+      "pilot": {
+        "path": "resource/apps/weight-ledger/tests/automation.mjs",
+        "sha256": "0c0169eeb05dea778b1fe1a1054ec037a0b0249af194fd17c4211900fa4cb641"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "runtime": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
+      },
+      "css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "icon": {
+        "path": "resource/apps/weight-ledger/icon.xml",
+        "sha256": "17a5cd439e2884b2861c6b79476167b3aef84dd3fc830d792d2cc7544f249ab1"
+      },
+      "logo": {
+        "path": "resource/apps/weight-ledger/logo.svg",
+        "sha256": "b384dbe3bf19222a1deff089ef1a8f119d15a5bd94dbfc4203948e5fbc9304bf"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+      "game.js": "5a001672e0d701fb218b8fad9d510f0ec134a8f424addb8a3caa6f93322b6871",
+      "game-config.json": "3f7a3daaef8d02c03a3b16ca21dfb481a12dc3fcfa3790b97528b244acdc4305",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "0c0169eeb05dea778b1fe1a1054ec037a0b0249af194fd17c4211900fa4cb641"
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "sourceUnchanged": true,
+    "sourceCommitHashesMatched": true,
+    "buildSourceSha": "c9c83acffb023593a9399eb2dda13c15d7928fcc",
+    "startHashes": {
+      "tests/automation.mjs": "0c0169eeb05dea778b1fe1a1054ec037a0b0249af194fd17c4211900fa4cb641",
+      "tests/game-model.test.cjs": "444e62cf71e294aa69f9124e7a2f5cdbe0852c9e6e5db3d39d2548c295a8c8f6",
+      "src/main/assets/game-model.js": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+      "src/main/assets/game.js": "5a001672e0d701fb218b8fad9d510f0ec134a8f424addb8a3caa6f93322b6871"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "0c0169eeb05dea778b1fe1a1054ec037a0b0249af194fd17c4211900fa4cb641",
+      "tests/game-model.test.cjs": "444e62cf71e294aa69f9124e7a2f5cdbe0852c9e6e5db3d39d2548c295a8c8f6",
+      "src/main/assets/game-model.js": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+      "src/main/assets/game.js": "5a001672e0d701fb218b8fad9d510f0ec134a8f424addb8a3caa6f93322b6871"
+    },
+    "rawReportSha256": "976bd5f5f1b5e9167950bdef4ef14db133e14925b7468fedaa2e57887612af0f"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three ledger pages expose unique repeated-mass IDs shared coefficients and real budgets",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick choose one ledger page per press",
+        "passed": true
+      },
+      {
+        "name": "menu blur and sound buttons match actual visual state",
+        "passed": true
+      },
+      {
+        "name": "held phone START begins one round without pickup placement or pause",
+        "passed": true
+      },
+      {
+        "name": "held phone A picks once while keeping exact inventory and every integer scale unchanged",
+        "passed": true
+      },
+      {
+        "name": "fresh A at the original tray returns the pickup freely without history",
+        "passed": true
+      },
+      {
+        "name": "one held phone A placement moves exactly one physical ID and updates all shared scales",
+        "passed": true
+      },
+      {
+        "name": "B with a later pickup cancels only that preview and preserves prior committed history",
+        "passed": true
+      },
+      {
+        "name": "held empty-hand B undoes once restoring inventory and steps while retaining time and lifetime counters",
+        "passed": true
+      },
+      {
+        "name": "held phone focus follows actual spatial positions and waits twenty ticks before repetition",
+        "passed": true
+      },
+      {
+        "name": "connected phone cancelSeq keeps deliberate pickup but requires neutral before another A edge",
+        "passed": true
+      },
+      {
+        "name": "actual held Enter is one confirm edge and a fresh Enter returns the pickup",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes preview ledger and clock and clears stale direction without canceling pickup",
+        "passed": true
+      },
+      {
+        "name": "pause primary and header controls freeze and resume the same ledger",
+        "passed": true
+      },
+      {
+        "name": "ordinary repeated relocation of one real ID reaches exhausted-budget loss and terminal freeze",
+        "passed": true
+      },
+      {
+        "name": "R restores all unique weights repeated masses scale coefficients and budgets",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "moves",
+      "elapsed": 1.55,
+      "remaining": 88.45,
+      "score": 350,
+      "movesUsed": 3,
+      "moveBudget": 3,
+      "movesRemaining": 0,
+      "totalMoves": 3,
+      "pickups": 3,
+      "cancels": 0,
+      "undos": 0,
+      "balancedCount": 1,
+      "deployedCount": 6,
+      "inventoryCount": 0,
+      "allBalanced": false,
+      "allDeployed": true
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+      "game.js": "5a001672e0d701fb218b8fad9d510f0ec134a8f424addb8a3caa6f93322b6871",
+      "game-config.json": "3f7a3daaef8d02c03a3b16ca21dfb481a12dc3fcfa3790b97528b244acdc4305",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 226.609375,
+          "width": 420,
+          "height": 331.78125,
+          "right": 726.984375,
+          "bottom": 558.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "同重砝码也有独立编号。预选不改盘重；B 取消或撤销，撤销退搬动数但不退时间。最后一搬会立即结算。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "同重砝码也有独立编号。预选不改盘重；B 取消或撤销，撤销退搬动数但不退时间。最后一搬会立即结算。",
+          "tipTextTop": 345.5625,
+          "tipTextBottom": 406.734375,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "同重砝码也有独立编号。预选不改盘重；B 取消或撤销，撤销退搬动数但不退时间。最后一搬会立即结算。",
+          "tipTextTop": 345.5625,
+          "tipTextBottom": 406.734375,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 203.71875,
+          "width": 420,
+          "height": 377.5625,
+          "right": 726.984375,
+          "bottom": 581.28125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "同重砝码也有独立编号。预选不改盘重；B 取消或撤销，撤销退搬动数但不退时间。最后一搬会立即结算。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "同重砝码也有独立编号。预选不改盘重；B 取消或撤销，撤销退搬动数但不退时间。最后一搬会立即结算。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "同重砝码也有独立编号。预选不改盘重；B 取消或撤销，撤销退搬动数但不退时间。最后一搬会立即结算。",
+          "tipTextTop": 345.5625,
+          "tipTextBottom": 406.734375,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "d5f7e526be2d29b513f5d04cb7f66be268179a7808a6df2b92af3c48881597ce"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 165,
+    "rafIntervalMs": {
+      "count": 165,
+      "min": 16.599999999998545,
+      "median": 33.399999999999636,
+      "p95": 83.29999999999927,
+      "max": 83.40000000000055,
+      "mean": 38.28121212121212
+    },
+    "webglDrawCalls": {
+      "count": 165,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 165,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "sharedRelocation": {
+      "observedAt": 10.005763905,
+      "lastObservedAt": 12.041735623000001,
+      "undoBDispatchedAt": 13.650591511,
+      "weightId": 2,
+      "fromTrayId": "A",
+      "toTrayId": "C",
+      "changedScaleIds": [
+        "scale-1",
+        "scale-2"
+      ],
+      "deltasBefore": {
+        "scale-1": 0,
+        "scale-2": 0,
+        "scale-3": -2
+      },
+      "deltasAfter": {
+        "scale-1": -2,
+        "scale-2": 2,
+        "scale-3": -2
+      },
+      "movesUsed": 1,
+      "totalMoves": 1
+    },
+    "undoRestored": {
+      "observedAt": 14.041602704999999,
+      "movesUsed": 0,
+      "movesRemaining": 3,
+      "totalMoves": 1,
+      "undos": 1,
+      "historyDepth": 0,
+      "inventoryIds": [
+        1
+      ],
+      "selectedWeightId": 2,
+      "allocationMatchesInitial": true
+    },
+    "trialDisplayedSecondsAtLeast": 2.0359717180000008,
+    "trialHoldBasis": "trial-samples",
+    "normalWin": {
+      "observedAt": 38.041664784,
+      "level": 1,
+      "difficulty": 0,
+      "score": 2025,
+      "elapsed": 34.333333333333336,
+      "remaining": 55.666666666666664,
+      "movesUsed": 3,
+      "moveBudget": 3,
+      "movesRemaining": 0,
+      "totalMoves": 4,
+      "pickups": 4,
+      "cancels": 0,
+      "undos": 1,
+      "invalidPlacements": 0,
+      "historyDepth": 3,
+      "deployedCount": 6,
+      "inventoryCount": 0,
+      "balancedCount": 3,
+      "allDeployed": true,
+      "allBalanced": true,
+      "totalMass": 15
+    },
+    "finalWinHeldSecondsAtLeast": 22.000951702000002,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "88c5a5bd44cdea7906fb17ae33d542495a0841ce52b31fa30c24457bf684d75b"
+      },
+      {
+        "name": "menu-counterweight-0.85s.png",
+        "sha256": "03c9f478be3054585d9b59cb38d7a95058364fbecab68d565435132f116f99ff"
+      },
+      {
+        "name": "menu-lever-1.35s.png",
+        "sha256": "b764c2d9dcfee2434c3efc1458a6c52dca8e90f67fe9dff8951c03bcf0b8cb39"
+      },
+      {
+        "name": "picked-weight-8.11s.png",
+        "sha256": "ca968a7033f8656821f32ffdb6063d710d909139be69ba018cd8667756092b53"
+      },
+      {
+        "name": "shared-relocation-10.11s.png",
+        "sha256": "cdf8d824186e4eb2e253acf0b376ee8c40eb113f63d4a44615ae59b38c26212d"
+      },
+      {
+        "name": "undo-restored-14.14s.png",
+        "sha256": "dfc6a76f672f4bcb2df1c34c67af62411b0584088144bad5a590ee71bddf6697"
+      },
+      {
+        "name": "gameplay-thumb-24.11s.png",
+        "sha256": "3507bc1f2f5950b84672fcbbd924bd076af8ea73f9e360234a957b5a7cae9f3f"
+      },
+      {
+        "name": "placement-preview-34.14s.png",
+        "sha256": "b13735900540a27b6543392fd2961ef6ceba01673f3220c6fd9c57525f96e8c5"
+      },
+      {
+        "name": "settlement-58.38s.png",
+        "sha256": "fbb0222194a10e365272dad363ba0f3a0937f611426223c7a40e13373b64dcc0"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "99a13ff5ec2de6e7b5585dbbda41131daff2c9b2aa2b5cf6ed87297dada1e39c"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "dc51b7712bf92137c0bd2be533a26408fb702b88a8d9fecd936c50e95335ab92",
+    "game.js": "5a001672e0d701fb218b8fad9d510f0ec134a8f424addb8a3caa6f93322b6871",
+    "game-config.json": "3f7a3daaef8d02c03a3b16ca21dfb481a12dc3fcfa3790b97528b244acdc4305",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "462e16221b6047267748f2c20247ac7b8ced554b0b7a882440ad6be3f3cdcdcf",
+    "sign": "41f2d20274dd2e8dec8a5234edb60aa623d1f404e7c8c01145e480a7423f2d6c",
+    "fetch": "170c049a0e11cd4a27d2cb7cbd5beed869f484b15b6bfc0dff3dae8002eea2d1",
+    "qa": "7265067b61d4c08cc10e1a9862e2ec866255764b6ea82a32b03daf601cc9e48d",
+    "ui": "605d7e1fb60c459718c2f603c40e423965649095cc6a31c3cb6992b95b9d10b6",
+    "layout": "d5f7e526be2d29b513f5d04cb7f66be268179a7808a6df2b92af3c48881597ce",
+    "viewport": "f63c430f5550829279ea97e64238a12ca94e85f5403dde496b5b94140e9fa5e8",
+    "summary": "26a99208966b7779ebbca3a2da8e089a217fcfe88dec2b45e671c6721a51fac1",
+    "record": "734eefda6c06af446d627a9d80cfa55f44de2ef9f1d050822f23e3d8859efc60",
+    "review": "6d2fda4f856be96979e691a6b4f4ba5c477be159dcf8949aad1acccd77ae0249",
+    "videoValidation": "6ef0f6caa6a18526ef565ff9eee7c5f2ebd56fcdc5e50d10324e4a03ca98b125",
+    "artifacts": "1f5549f0cdc8430cfa511788229c2927baa651b2ed62cb279ad43d34443acb5b",
+    "independentModel": "895603c8d29555bb2da7f5782d1a988583bcecf0a4a4f0bc6c66396039847438",
+    "independentPilot": "e30ab79c03b1c67aa8bd56e5e9e6fe68c823edbbcd32f21dfc5558746f7dee5c",
+    "artReview": "ff798f7c665dc10c507d6d2f8a2696fc78bcadfb94aa193053767add0d607be9",
+    "modelTests": "b3b0f5dc74fef30661b60cc58e5c6c833a48f28452e9bd0755ea7ef8c133a037",
+    "candidateReview": "9464cb648293cb1b3c66ed2e6386c7321a21624c84821257b37cfca1b05ae61a",
+    "testProvenance": "976bd5f5f1b5e9167950bdef4ef14db133e14925b7468fedaa2e57887612af0f"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium gameplay driven by real browser input events. Phone/native-room, source layout and mathematical boundary fixtures are separately labelled; no physical TV/phone installation or physical-device performance is claimed."
+  },
+  "release": {
+    "sourceSha": "c9c83acffb023593a9399eb2dda13c15d7928fcc",
+    "signerCommit": "c9c83acffb023593a9399eb2dda13c15d7928fcc",
+    "signingRun": 41347748894,
+    "bytes": 292131,
+    "sha256": "bfc02c4dc2c6475182d7677a00077f9a0ed9d8d4d2e90ad67358e1cebc970d2d",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "6476033ebd75b7fc85ea9919ecce7f256c4416e5"
+  }
+}
