@@ -1,0 +1,953 @@
+{
+  "kind": "independent-synthetic-public-parity-pilot-review",
+  "passed": true,
+  "expectedPilotSha256": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+  "sourceHashes": {
+    "tests/automation.mjs": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+    "src/main/assets/game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+    "docs/model-contract.md": "9016d7184b6eafb607e9ef8fae9186c6a7250476c0145e95cbea4bff13afa6dd"
+  },
+  "reviewScriptSha256": "ccba3976e67523e083fbc737a0bdbd404a255f111e849cc99a3ca4eabec1f775",
+  "productionModelImported": false,
+  "productionModelStepCalled": false,
+  "productionModelSourceReadOnlyForHashAndPrivateKeyNames": true,
+  "normalGameWinsClaimed": 0,
+  "browserExecuted": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "scope": "Hand-authored 2x2 public gardens plus one bounded 1x16 unsigned-bit fixture. Constructed snapshots exercise input observation, double-spray water accounting, expired highlights and dropped inputs; they are not production rule tests, completed games, browser play, footage or device evidence. No production model create/step or model solver/reference route is used; the reviewed public pilot and its own public GF(2) planner/predictor are executed.",
+  "privateKeys": [
+    "_accumulator",
+    "_answerMask",
+    "_cancelEpoch",
+    "_futureInputs",
+    "_goldenActions",
+    "_heldDirection",
+    "_lastA",
+    "_lastB",
+    "_nextSelectTick",
+    "_pendingA",
+    "_pendingB",
+    "_private",
+    "_solution"
+  ],
+  "checks": [
+    {
+      "name": "pilot import and model/contract/pilot source window are pinned without importing the production model",
+      "passed": true
+    },
+    {
+      "name": "identical public watering and switch histories produce identical keys despite different private values or throwing private getters",
+      "passed": true,
+      "pairedObservations": 9,
+      "variants": 3
+    },
+    {
+      "name": "A and B release on the next observation, wait for a later neutral tick, and expose independent diagnostic copies",
+      "passed": true
+    },
+    {
+      "name": "observed double spray restores flowers and parities but retains exact count2 and two permanently spent drops; B changes nozzle before replanning",
+      "passed": true,
+      "syntheticObservations": 24,
+      "waterUsedAfterRestoration": 2,
+      "waterRemainingAfterRestoration": 1,
+      "noSyntheticWinClaimed": true
+    },
+    {
+      "name": "a late observation confirms permanent garden/direct-count/water progress after the .6 second highlight has expired",
+      "passed": true,
+      "observedDelaySeconds": 0.8
+    },
+    {
+      "name": "an externally dropped or canceled key leaves unchanged public state, is released, and is retried only after observation timeout; count-only progress is rejected",
+      "passed": true
+    },
+    {
+      "name": "a B switch that spends or refunds water is rejected instead of being accepted as undo",
+      "passed": true
+    },
+    {
+      "name": "interleaved pilot factories retain distinct public targets and select different ordinary directions",
+      "passed": true
+    },
+    {
+      "name": "menu pause constructed terminal and elapsed rollback retry preserve neutral/fresh input semantics",
+      "passed": true
+    },
+    {
+      "name": "the late-highlight allowance does not accept missing metadata before its documented lifetime",
+      "passed": true
+    },
+    {
+      "name": "bounded public exports respect direct-only counting, marked parity, minimum cost, water budget, unsigned bit31 and candidate caps",
+      "passed": true,
+      "exportFixtureCalls": 12,
+      "bit31Candidates": 65536,
+      "defaultNullspaceRequired": 8,
+      "noFullRuleEnumeration": true
+    },
+    {
+      "name": "all public observations remain deeply frozen with zero private reads and zero detected mutation attempts",
+      "passed": true
+    }
+  ],
+  "afterImportHashes": {
+    "tests/automation.mjs": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+    "src/main/assets/game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+    "docs/model-contract.md": "9016d7184b6eafb607e9ef8fae9186c6a7250476c0145e95cbea4bff13afa6dd"
+  },
+  "endHashes": {
+    "tests/automation.mjs": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+    "src/main/assets/game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+    "docs/model-contract.md": "9016d7184b6eafb607e9ef8fae9186c6a7250476c0145e95cbea4bff13afa6dd"
+  },
+  "reviewScriptEndSha256": "ccba3976e67523e083fbc737a0bdbd404a255f111e849cc99a3ca4eabec1f775",
+  "sourceUnchanged": true,
+  "pilotCalls": 87,
+  "exportCalls": 12,
+  "observationCalls": 99,
+  "observationCallLimit": 100,
+  "factoriesCreated": 10,
+  "privateReads": 0,
+  "mutationAttempts": 0,
+  "deepFrozenObservations": 99,
+  "meaningfulDirectionOutputs": 4,
+  "waterEdgeOutputs": 10,
+  "nozzleSwitchEdgeOutputs": 7,
+  "inputTraceSha256": "1e20ce34275b48636ac0b83d84a3ad5c549009a546878f487f161bc12e0e9db3",
+  "inputTrace": [
+    {
+      "label": "paired-0-a",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-0-b",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-0-getters",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-1-a",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-1-b",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-1-getters",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-2-a",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-2-b",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-2-getters",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-3-a",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-3-b",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-3-getters",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-a",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-b",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-getters",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-5-a",
+      "tick": 84,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "paired-5-b",
+      "tick": 84,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "paired-5-getters",
+      "tick": 84,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "paired-6-a",
+      "tick": 108,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "paired-6-b",
+      "tick": 108,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "paired-6-getters",
+      "tick": 108,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "paired-7-a",
+      "tick": 108,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "paired-7-b",
+      "tick": 108,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "paired-7-getters",
+      "tick": 108,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "paired-8-a",
+      "tick": 114,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "diagonal",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "paired-8-b",
+      "tick": 114,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "diagonal",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "paired-8-getters",
+      "tick": 114,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "diagonal",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "double-trial-0",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "double-trial-1",
+      "tick": 180,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "double-trial-2",
+      "tick": 180,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "double-trial-3",
+      "tick": 186,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "double-trial-4",
+      "tick": 270,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "double-trial-5",
+      "tick": 348,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "double-trial-6",
+      "tick": 348,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "double-trial-7",
+      "tick": 354,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "double-trial-8",
+      "tick": 612,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "double-trial-9",
+      "tick": 690,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 1,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "double-trial-10",
+      "tick": 690,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "double-trial-11",
+      "tick": 696,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 2,
+      "keys": []
+    },
+    {
+      "label": "double-trial-12",
+      "tick": 954,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 2,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "double-trial-13",
+      "tick": 954,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 2,
+      "keys": []
+    },
+    {
+      "label": "double-trial-14",
+      "tick": 960,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 2,
+      "keys": []
+    },
+    {
+      "label": "double-trial-15",
+      "tick": 1044,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 2,
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "double-trial-16",
+      "tick": 1044,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 2,
+      "keys": []
+    },
+    {
+      "label": "double-trial-17",
+      "tick": 1050,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 2,
+      "keys": []
+    },
+    {
+      "label": "double-trial-18",
+      "tick": 1080,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 2,
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "double-trial-19",
+      "tick": 1080,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 2,
+      "keys": []
+    },
+    {
+      "label": "double-trial-20",
+      "tick": 1086,
+      "phase": "playing",
+      "selectedId": 3,
+      "nozzle": "cross",
+      "waterUsed": 2,
+      "keys": []
+    },
+    {
+      "label": "double-trial-21",
+      "tick": 1116,
+      "phase": "playing",
+      "selectedId": 3,
+      "nozzle": "cross",
+      "waterUsed": 2,
+      "keys": []
+    },
+    {
+      "label": "double-trial-22",
+      "tick": 1194,
+      "phase": "playing",
+      "selectedId": 3,
+      "nozzle": "cross",
+      "waterUsed": 2,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "double-trial-23",
+      "tick": 1194,
+      "phase": "playing",
+      "selectedId": 3,
+      "nozzle": "cross",
+      "waterUsed": 2,
+      "keys": []
+    },
+    {
+      "label": "late-0",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "late-1.1",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "late-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "late-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "late-valid-expired-highlight",
+      "tick": 126,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": []
+    },
+    {
+      "label": "late-resumes-public-plan",
+      "tick": 150,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "dropped-0",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-1.1",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "dropped-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-1.4",
+      "tick": 84,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-2.9",
+      "tick": 174,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-3.3",
+      "tick": 198,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-3.6",
+      "tick": 216,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "dropped-3.6",
+      "tick": 216,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "reject-water-count-without-flower-effect",
+      "tick": 222,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "error": "Actual watering differs from independent XOR/direct-parity prediction"
+    },
+    {
+      "label": "fixture",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "fixture",
+      "tick": 180,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "fixture",
+      "tick": 180,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "reject-B-consuming-water",
+      "tick": 186,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "diagonal",
+      "waterUsed": 1,
+      "error": "Nozzle switch undid or spent water"
+    },
+    {
+      "label": "factory-start-0",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "factory-start-1",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "factory-different-public-goal-0",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "factory-different-public-goal-1",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "factory-release-0",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "factory-release-1",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 0,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "menu-neutral",
+      "tick": 150,
+      "phase": "menu",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "pause-neutral",
+      "tick": 150,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "constructed-terminal-neutral",
+      "tick": 150,
+      "phase": "won",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "elapsed-rollback-retry",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "retry-has-fresh-ready-delay",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "early-0",
+      "tick": 0,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "early-1.1",
+      "tick": 66,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "early-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "early-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 0,
+      "keys": []
+    },
+    {
+      "label": "reject-premature-highlight-disappearance",
+      "tick": 84,
+      "phase": "playing",
+      "selectedId": 1,
+      "nozzle": "cross",
+      "waterUsed": 1,
+      "error": "Spray metadata vanished before its public highlight lifetime"
+    }
+  ],
+  "calledExports": [
+    "createPilot",
+    "publicGarden",
+    "assertPublicGarden",
+    "predictWater",
+    "planVisibleState"
+  ]
+}

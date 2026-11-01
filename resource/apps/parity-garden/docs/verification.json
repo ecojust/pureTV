@@ -1,0 +1,1070 @@
+{
+  "schema": 1,
+  "game": "parity-garden",
+  "version": "0.1.0",
+  "sourceCommit": "1b4429ad4fdc64e5a3ca06d9fcf1bc1f010038c1",
+  "automationSha256": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+  "parityModel": "Cross and diagonal nozzles flip a clipped subset of the public4x4 flower grid. Only the selected cell gains a direct watering count. Victory requires the full target pattern and every marked flower both open and even in direct count. Two identical sprays restore flowers/parities but permanently consume two drops; nozzle changes are free and do not undo water.",
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "unresolvedFindings": [],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+      "game.js": "67870766fd4f04ae1831750c44c647219e6bf1538c74d9b80ba33a749737d64c",
+      "game-config.json": "eb2503b2de598834e9a032bd861ac057da8328a24ca0f53e14579e0430be898b",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+      "src/main/assets/game.js": "67870766fd4f04ae1831750c44c647219e6bf1538c74d9b80ba33a749737d64c",
+      "tests/automation.mjs": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+      "tests/game-model.test.cjs": "d39bc59abc43debd90bfc24e08b02e7ce6fd5f056942e5e8dd9b6a22086403ae",
+      "docs/model-contract.md": "9016d7184b6eafb607e9ef8fae9186c6a7250476c0145e95cbea4bff13afa6dd"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime/01-menu.png",
+        "sha256": "e45391e18e6a2f4ce82efb073c1f9f542b368bbbd47ba9bed7f21f65c7a47c31",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/02-diagonal-preview.png",
+        "sha256": "6ba90b8cbcba7aa37d10c2f8518f4a15f086b985c9be3a6321530f4cf819428b",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/03-first-odd-watering.png",
+        "sha256": "bb32d5179db21ce5fecc3adb4b50cf88ab55950ab49fb3aa0bcd623f3a0fc29d",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/04-pattern-restored-water-spent.png",
+        "sha256": "7f2282889b529906193db046eb3f833a93ce487f89c8b6c99fb1799edef7f5c6",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/05-public-solution-progress.png",
+        "sha256": "d637f350659b06d1f312dff8c9dd28cc3c2c7b1c888262d2aa58ac8460800581",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/06-final-spray-preview.png",
+        "sha256": "05d30f21db43bfc0c4e970458311b272145247e0c3c417ec9d7133d81429b0e8",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/07-all-conditions-matched.png",
+        "sha256": "1bcb4c3aac7f49353e24a1e77f73c5eca2e719399e86ef817e5a7e24980e072c",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "35453ecd156abf93d296a6efd70c93c0279b1456476e93edafd5d1408b281c77",
+    "scope": "Actually reviewed candidate software-browser images on the same final bundled assets; this is a prerequisite for source freeze, separate from final packaged QA and recorded gameplay."
+  },
+  "modelTests": {
+    "passed": 33,
+    "command": "node --test resource/apps/parity-garden/tests/game-model.test.cjs",
+    "sourceHashesBefore": {
+      "model": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+      "tests": "d39bc59abc43debd90bfc24e08b02e7ce6fd5f056942e5e8dd9b6a22086403ae",
+      "automation": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+      "contract": "9016d7184b6eafb607e9ef8fae9186c6a7250476c0145e95cbea4bff13afa6dd"
+    },
+    "sourceHashesAfter": {
+      "model": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+      "tests": "d39bc59abc43debd90bfc24e08b02e7ce6fd5f056942e5e8dd9b6a22086403ae",
+      "automation": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+      "contract": "9016d7184b6eafb607e9ef8fae9186c6a7250476c0145e95cbea4bff13afa6dd"
+    },
+    "testLogSha256": "e2891c1331c7c43b3a026c7b15cd76d089abcbfa937d347872aed51b539d392f",
+    "rawReportSha256": "b27e5f44a6032df243ea70929dbed1bed04ab40f5ff8b3891a00a6258b5c8df0",
+    "scope": "27 public rule-boundary groups plus 3 fresh ordinary-input double-spray/public-solution wins and 3 fresh ordinary-input water-exhaustion losses. Synthetic goal/clock/kernel fixtures are rule tests, not normal-play evidence.",
+    "scheduling": "Wins use 60 Hz ticks and public observations every 5 ticks, normalized directions and genuine A/B edges. Losses use ordinary press/release actions at the original cursor/nozzle. No normal path edits model state; these are defined scenarios, not a guarantee for arbitrary timing."
+  },
+  "independentParityReview": {
+    "passed": true,
+    "file": "independent-parity-review.json",
+    "sha256": "13efe5092d08602fd2b0899a5e0aa6c9e6a2d2c7a4435b08dd4384a9dfaba21e",
+    "checksPassed": 10,
+    "totals": {
+      "gardenChecks": 237,
+      "kernelActions": 32,
+      "doubleSprays": 6,
+      "mitmSubsetsEnumerated": 393216,
+      "ordinaryAuthoredWins": 3,
+      "ordinaryPatternOnlyCounterexamples": 3
+    },
+    "ordinaryAuthoredModelWins": [
+      {
+        "level": 1,
+        "minimumDrops": 4,
+        "patternRank": 14,
+        "combinedRank": 18,
+        "crossOnlyMinimumDrops": null,
+        "diagonalOnlyMinimumDrops": null,
+        "optimalSolutionRequiresBothModes": true,
+        "halfUniqueEffects": [
+          16384,
+          8192
+        ],
+        "publicActions": [
+          {
+            "id": 2,
+            "mode": "cross"
+          },
+          {
+            "id": 4,
+            "mode": "cross"
+          },
+          {
+            "id": 6,
+            "mode": "cross"
+          },
+          {
+            "id": 2,
+            "mode": "diagonal"
+          }
+        ],
+        "phase": "won",
+        "elapsed": 0.6166666666666667,
+        "score": 1925,
+        "waterUsed": 6,
+        "waterBudget": 6,
+        "patternMatched": true,
+        "allMarkedSatisfied": true,
+        "demonstrationDrops": 2
+      },
+      {
+        "level": 2,
+        "minimumDrops": 6,
+        "patternRank": 14,
+        "combinedRank": 20,
+        "crossOnlyMinimumDrops": null,
+        "diagonalOnlyMinimumDrops": null,
+        "optimalSolutionRequiresBothModes": true,
+        "halfUniqueEffects": [
+          32768,
+          16384
+        ],
+        "publicActions": [
+          {
+            "id": 1,
+            "mode": "cross"
+          },
+          {
+            "id": 2,
+            "mode": "cross"
+          },
+          {
+            "id": 3,
+            "mode": "cross"
+          },
+          {
+            "id": 13,
+            "mode": "cross"
+          },
+          {
+            "id": 3,
+            "mode": "diagonal"
+          },
+          {
+            "id": 6,
+            "mode": "diagonal"
+          }
+        ],
+        "phase": "won",
+        "elapsed": 0.9166666666666666,
+        "score": 2005,
+        "waterUsed": 8,
+        "waterBudget": 8,
+        "patternMatched": true,
+        "allMarkedSatisfied": true,
+        "demonstrationDrops": 2
+      },
+      {
+        "level": 3,
+        "minimumDrops": 8,
+        "patternRank": 14,
+        "combinedRank": 22,
+        "crossOnlyMinimumDrops": null,
+        "diagonalOnlyMinimumDrops": null,
+        "optimalSolutionRequiresBothModes": true,
+        "halfUniqueEffects": [
+          65536,
+          16384
+        ],
+        "publicActions": [
+          {
+            "id": 5,
+            "mode": "cross"
+          },
+          {
+            "id": 9,
+            "mode": "cross"
+          },
+          {
+            "id": 11,
+            "mode": "cross"
+          },
+          {
+            "id": 12,
+            "mode": "cross"
+          },
+          {
+            "id": 14,
+            "mode": "cross"
+          },
+          {
+            "id": 3,
+            "mode": "diagonal"
+          },
+          {
+            "id": 5,
+            "mode": "diagonal"
+          },
+          {
+            "id": 6,
+            "mode": "diagonal"
+          }
+        ],
+        "phase": "won",
+        "elapsed": 1.1166666666666667,
+        "score": 2080,
+        "waterUsed": 10,
+        "waterBudget": 10,
+        "patternMatched": true,
+        "allMarkedSatisfied": true,
+        "demonstrationDrops": 2
+      }
+    ],
+    "ordinaryPatternOnlyCounterexamples": [
+      {
+        "level": 1,
+        "waterUsed": 3,
+        "waterRemaining": 3,
+        "phase": "playing",
+        "patternMatched": true,
+        "satisfiedMarked": 3,
+        "markedCount": 4,
+        "oddMarkedIds": [
+          5
+        ],
+        "publicActions": [
+          {
+            "id": 1,
+            "mode": "diagonal"
+          },
+          {
+            "id": 3,
+            "mode": "diagonal"
+          },
+          {
+            "id": 5,
+            "mode": "diagonal"
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "waterUsed": 4,
+        "waterRemaining": 4,
+        "phase": "playing",
+        "patternMatched": true,
+        "satisfiedMarked": 4,
+        "markedCount": 6,
+        "oddMarkedIds": [
+          0,
+          3
+        ],
+        "publicActions": [
+          {
+            "id": 3,
+            "mode": "cross"
+          },
+          {
+            "id": 13,
+            "mode": "cross"
+          },
+          {
+            "id": 0,
+            "mode": "diagonal"
+          },
+          {
+            "id": 6,
+            "mode": "diagonal"
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "waterUsed": 4,
+        "waterRemaining": 6,
+        "phase": "playing",
+        "patternMatched": true,
+        "satisfiedMarked": 7,
+        "markedCount": 8,
+        "oddMarkedIds": [
+          13
+        ],
+        "publicActions": [
+          {
+            "id": 3,
+            "mode": "cross"
+          },
+          {
+            "id": 4,
+            "mode": "cross"
+          },
+          {
+            "id": 13,
+            "mode": "cross"
+          },
+          {
+            "id": 3,
+            "mode": "diagonal"
+          }
+        ]
+      }
+    ],
+    "scope": {
+      "syntheticBoundaryFixtures": true,
+      "ordinaryAuthoredModelWins": 3,
+      "ordinaryPatternOnlyCounterexamples": 3,
+      "browserExecuted": false,
+      "normalGameplayVideoEvidence": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    }
+  },
+  "independentPilotReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "c4faa0fbf3076f84f0a1f1026e6bf4b7a4c462bd513eda0268e314fbfe2b0618",
+    "checksPassed": 12,
+    "pilotCalls": 87,
+    "predictorPlannerCalls": 12,
+    "observationCalls": 99,
+    "pairedObservations": 9,
+    "sourceHashes": {
+      "tests/automation.mjs": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+      "src/main/assets/game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+      "docs/model-contract.md": "9016d7184b6eafb607e9ef8fae9186c6a7250476c0145e95cbea4bff13afa6dd"
+    },
+    "scope": "Hand-authored 2x2 public gardens plus one bounded 1x16 unsigned-bit fixture. Constructed snapshots exercise input observation, double-spray water accounting, expired highlights and dropped inputs; they are not production rule tests, completed games, browser play, footage or device evidence. No production model create/step or model solver/reference route is used; the reviewed public pilot and its own public GF(2) planner/predictor are executed."
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "bb283f8b1ec7eaf22f2c7abd6e76050d44baada803c9f5145de5b12d608cc59d",
+    "scope": "Final source art: all3 ordinary public-controller model wins including true double sprays, clipped nozzles and independent pattern/parity states. A real flower-only public plan reaches the target with unmetmarkedparity, without model writes. Only the named10E full-UI legibility state extends water budget. Browser menu/play/pause are ordinary inputs; copied-state DOM frames are explicitly layout fixtures. No APK/device/video/full-browser-win claim.",
+    "finalSourceHashes": {
+      "game": {
+        "path": "resource/apps/parity-garden/src/main/assets/game.js",
+        "sha256": "67870766fd4f04ae1831750c44c647219e6bf1538c74d9b80ba33a749737d64c"
+      },
+      "model": {
+        "path": "resource/apps/parity-garden/src/main/assets/game-model.js",
+        "sha256": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5"
+      },
+      "pilot": {
+        "path": "resource/apps/parity-garden/tests/automation.mjs",
+        "sha256": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "runtime": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
+      },
+      "css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "icon": {
+        "path": "resource/apps/parity-garden/icon.xml",
+        "sha256": "ed58e89da8e660d68ebc3e87c678398deaeddf2dc1bc141b15adbd14c16f3aa1"
+      },
+      "logo": {
+        "path": "resource/apps/parity-garden/logo.svg",
+        "sha256": "c5ee87be760a7e29c61419418ae76d9030c116a0c5cd0082de020bfa6a471a7a"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+      "game.js": "67870766fd4f04ae1831750c44c647219e6bf1538c74d9b80ba33a749737d64c",
+      "game-config.json": "eb2503b2de598834e9a032bd861ac057da8328a24ca0f53e14579e0430be898b",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b"
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "sourceUnchanged": true,
+    "sourceCommitHashesMatched": true,
+    "buildSourceSha": "1b4429ad4fdc64e5a3ca06d9fcf1bc1f010038c1",
+    "startHashes": {
+      "tests/automation.mjs": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+      "tests/game-model.test.cjs": "d39bc59abc43debd90bfc24e08b02e7ce6fd5f056942e5e8dd9b6a22086403ae",
+      "src/main/assets/game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+      "src/main/assets/game.js": "67870766fd4f04ae1831750c44c647219e6bf1538c74d9b80ba33a749737d64c"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "89acd12fa755184b94729c7c6e2f7883c6f7ac8a59e45cbe2aa27de5bd742b4b",
+      "tests/game-model.test.cjs": "d39bc59abc43debd90bfc24e08b02e7ce6fd5f056942e5e8dd9b6a22086403ae",
+      "src/main/assets/game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+      "src/main/assets/game.js": "67870766fd4f04ae1831750c44c647219e6bf1538c74d9b80ba33a749737d64c"
+    },
+    "rawReportSha256": "d466ab1de4e0b458d30eb9ee62e7c474cc521f20b2799a8837805d90ed9f1eb2"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three gardens expose distinct targets independent even markers and finite water budgets",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick choose one garden per press",
+        "passed": true
+      },
+      {
+        "name": "menu blur and sound buttons match actual visual state",
+        "passed": true
+      },
+      {
+        "name": "held phone START begins once without watering switching or pausing",
+        "passed": true
+      },
+      {
+        "name": "held phone A spends one drop and increments only the directly selected cell",
+        "passed": true
+      },
+      {
+        "name": "second ordinary A restores every flower and parity while keeping two drops spent",
+        "passed": true
+      },
+      {
+        "name": "held B changes the real nozzle once without undo and preserves emitted spray origin",
+        "passed": true
+      },
+      {
+        "name": "both corner spray neighborhoods clip without wrapping or counting indirect water",
+        "passed": true
+      },
+      {
+        "name": "held phone cursor waits twenty ticks before repeating and stays inside the grid",
+        "passed": true
+      },
+      {
+        "name": "connected phone cancelSeq preserves garden and quarantines held A until real neutral",
+        "passed": true
+      },
+      {
+        "name": "held Enter is one watering edge and fresh Enter waters once more",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes flowers direct counts water and clock and clears stale input",
+        "passed": true
+      },
+      {
+        "name": "pause primary and header controls freeze and resume the same garden",
+        "passed": true
+      },
+      {
+        "name": "ordinary public pattern-only solution is not a win with odd marked direct counts",
+        "passed": true
+      },
+      {
+        "name": "ordinary repeated watering exhausts finite drops and freezes a real loss",
+        "passed": true
+      },
+      {
+        "name": "R restores target flowers all direct counters nozzle and full water budget",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "water",
+      "elapsed": 1.1833333333333333,
+      "remaining": 88.81666666666666,
+      "score": 200,
+      "waterUsed": 6,
+      "waterBudget": 6,
+      "waterRemaining": 0,
+      "nozzle": "cross",
+      "nozzleSwitches": 0,
+      "totalAffectedToggles": 30,
+      "matchedCells": 8,
+      "markedCount": 4,
+      "satisfiedMarked": 1,
+      "patternMatched": false,
+      "allMarkedSatisfied": false,
+      "goalMatched": false
+    },
+    "segmentedProvenance": {
+      "scope": "Thirteen original passed checks, one fresh ordinary pattern-only preflight confirmation, then fresh ordinary exhausted-water and retry checks; the separate QR fixture makes17. The original scratch planner-cap failure is retained, not counted as passed.",
+      "rawReports": [
+        {
+          "file": "ui-runtime-incomplete-pattern-search-cap.json",
+          "sha256": "7a1c3f3e221f979cdf008dc8747f4c8b6309b59818e2e5efb45357953168209a",
+          "includedInRelease": false
+        },
+        {
+          "file": "ui-pattern-preflight-confirmation.json",
+          "sha256": "2ec5247d8614e20e5a97d47d8819ac8dd83b8e3cdcaf924b978ae5aa962b78c8",
+          "includedInRelease": false
+        },
+        {
+          "file": "ui-runtime-pattern-loss-retry.json",
+          "sha256": "a4536f70e8f8b767da3eb80538d82d5e9b6fba4825d69cb41f2e4aa112c2e7fb",
+          "includedInRelease": false
+        }
+      ],
+      "originalAttemptPassed": false,
+      "originalPassedChecks": 13,
+      "originalFailedCheck": "ordinary public pattern-only solution is not a win with odd marked direct counts",
+      "correction": {
+        "productionFailure": false,
+        "reason": "The scratch pattern-only planner intentionally removes even constraints, yielding rank14/nullity18 and262144 affine candidates, above the normal complete-constraint default65536 cap.",
+        "fix": "Only this scratch relaxed-public planning call passes maxCandidates262144/maxMilliseconds1000. No production or frozen automation source changes.",
+        "priorPassedChecks": 13,
+        "remainingChecks": 3
+      },
+      "correctionReportSha256": "d0e4e872bdbd7f1509389464757eac29413d3e265c55b329429b78bdab6adec9"
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+      "game.js": "67870766fd4f04ae1831750c44c647219e6bf1538c74d9b80ba33a749737d64c",
+      "game-config.json": "eb2503b2de598834e9a032bd861ac057da8328a24ca0f53e14579e0430be898b",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "E 偶数、O 奇数，只数直接浇水。标记格须开放且为 E。同格同喷头浇两次可还原花形，但耗两滴水。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1226.984375,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "E 偶数、O 奇数，只数直接浇水。标记格须开放且为 E。同格同喷头浇两次可还原花形，但耗两滴水。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 399.953125,
+          "tipTextLeft": 765,
+          "tipTextRight": 927.984375,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "E 偶数、O 奇数，只数直接浇水。标记格须开放且为 E。同格同喷头浇两次可还原花形，但耗两滴水。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 399.953125,
+          "tipTextLeft": 765,
+          "tipTextRight": 927.984375,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 203.71875,
+          "width": 420,
+          "height": 377.5625,
+          "right": 726.984375,
+          "bottom": 581.28125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "E 偶数、O 奇数，只数直接浇水。标记格须开放且为 E。同格同喷头浇两次可还原花形，但耗两滴水。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1226.984375,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "E 偶数、O 奇数，只数直接浇水。标记格须开放且为 E。同格同喷头浇两次可还原花形，但耗两滴水。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1226.984375,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "E 偶数、O 奇数，只数直接浇水。标记格须开放且为 E。同格同喷头浇两次可还原花形，但耗两滴水。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 399.953125,
+          "tipTextLeft": 765,
+          "tipTextRight": 927.984375,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "f51f824911dfecc466d4d0b4f3b586462fcc515d7ad3b29a318745190271aeae"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 133,
+    "rafIntervalMs": {
+      "count": 133,
+      "min": 16.599999999999454,
+      "median": 49.899999999999636,
+      "p95": 100,
+      "max": 100.10000000000036,
+      "mean": 47.7421052631579
+    },
+    "webglDrawCalls": {
+      "count": 133,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 133,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "firstWater": {
+      "observedAt": 12.019690072,
+      "lastObservedAt": 16.019658009,
+      "secondWaterDispatchedAt": 16.132122914,
+      "cellId": 15,
+      "nozzle": "diagonal",
+      "affectedIds": [
+        10,
+        15
+      ],
+      "waterUsed": 1,
+      "waterRemaining": 5,
+      "directWaterCount": 1,
+      "directParity": 1,
+      "initialOpen": true,
+      "afterOpen": false
+    },
+    "doubleRestored": {
+      "observedAt": 18.019985681999998,
+      "lastObservedAt": 24.027824661,
+      "cellId": 15,
+      "nozzle": "diagonal",
+      "waterUsed": 2,
+      "waterRemaining": 4,
+      "directWaterCount": 2,
+      "directParity": 0,
+      "totalAffectedToggles": 4,
+      "patternAndAllParitiesMatchInitial": true,
+      "waterRefunded": false
+    },
+    "firstWaterDisplayedSecondsAtLeast": 3.999967937000001,
+    "firstWaterHoldBasis": "first-water-samples",
+    "restoredDisplayedSecondsAtLeast": 6.007838979000002,
+    "normalWin": {
+      "observedAt": 42.019756541,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1735,
+      "elapsed": 38.96666666666667,
+      "remaining": 51.03333333333333,
+      "waterUsed": 6,
+      "waterBudget": 6,
+      "waterRemaining": 0,
+      "nozzle": "cross",
+      "nozzleSwitches": 2,
+      "totalAffectedToggles": 20,
+      "matchedCells": 16,
+      "markedCount": 4,
+      "satisfiedMarked": 4,
+      "patternMatched": true,
+      "allMarkedSatisfied": true,
+      "goalMatched": true
+    },
+    "finalWinHeldSecondsAtLeast": 18.000183232000005,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "a5ac60d43eddf9240f299c60cc5f6af4a84fa7eec616299b9d10a0de766b9c6e"
+      },
+      {
+        "name": "menu-diagonal-0.85s.png",
+        "sha256": "0eb9410571377df219e9513571d2f4cd6d9e3ef30051e35373db4345f9ca566f"
+      },
+      {
+        "name": "menu-combined-1.35s.png",
+        "sha256": "c075f60371913aea3fbd7fbeff901aa8524053d3607eab0b7b1f5eb445747f3c"
+      },
+      {
+        "name": "diagonal-preview-6.12s.png",
+        "sha256": "709d5c98e8925f70309ba70e289bc1b483d3103509ec463b9d9b88210fd38423"
+      },
+      {
+        "name": "first-odd-water-12.12s.png",
+        "sha256": "1196717b5b29746c365ce1a4c69567f5e7d1631365bef6d1ef0e944d336e6fb0"
+      },
+      {
+        "name": "double-restored-18.12s.png",
+        "sha256": "5d8895b65303118e4180c03c9e22f392da9fd546acb890921aca04c18a770669"
+      },
+      {
+        "name": "gameplay-thumb-26.11s.png",
+        "sha256": "a20e0894374b510921398638cec2d01f9a10403d92c95e61aa2cab749a943a42"
+      },
+      {
+        "name": "last-drop-preview-38.12s.png",
+        "sha256": "8951521940eb8c6bdc02011914ec53743d37b69aef54b8bc2d4dad280ede0202"
+      },
+      {
+        "name": "settlement-58.39s.png",
+        "sha256": "1fd324cf3d2b44708e8c5b3e6194068ae65df51f724354168c28d58240f4831a"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "ce44015c0fc7483f669696e81ce13293a3aef92b3b256560c791fd7fbe64f1e1"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+    "game.js": "67870766fd4f04ae1831750c44c647219e6bf1538c74d9b80ba33a749737d64c",
+    "game-config.json": "eb2503b2de598834e9a032bd861ac057da8328a24ca0f53e14579e0430be898b",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "0de3406d452a24ed127db55674deaafb4be282331cc95de93ec1b6fa5317edde",
+    "sign": "89d42d98e958b805035555abf3febb42efc902e20c2e961e097232706c33b4b3",
+    "fetch": "12402751eb59a543ae40c1b19e8ba271686d0d7c1d7656965900d8ce45f80a36",
+    "qa": "bcc4a6a365948a827bad0a43c20d35337367a4dbc1568e067a0f3087b689277d",
+    "ui": "b07d146536860528dc952a5165199a48db88de45394e4d9edaeefdcf4299851c",
+    "layout": "f51f824911dfecc466d4d0b4f3b586462fcc515d7ad3b29a318745190271aeae",
+    "viewport": "b8b7435bb0a84f58710abdd983e0fa8056b60d3c1d8f978d0a3f75a996468a93",
+    "summary": "a9f118063e75cd9d438e1a0ad6293d8b70a4d52cbbc11f5b12be4cd0408c6af2",
+    "record": "e905fe9ec126b9bb335ce452d792db789514660c24e52c405c7884ea325e807f",
+    "review": "e2eeaa2b11338ef2c09870349b6a11f63ca3293285a66b52a40bf0339aa428a1",
+    "videoValidation": "38289c90736ed43cb1e45c856f19359e30b88a7cc645ae42a668877a5607e0ca",
+    "artifacts": "e5072671e656ca216c6fc751c7b9ebc457b9880c0231fbf92e1005598bbe6321",
+    "independentModel": "13efe5092d08602fd2b0899a5e0aa6c9e6a2d2c7a4435b08dd4384a9dfaba21e",
+    "independentPilot": "c4faa0fbf3076f84f0a1f1026e6bf4b7a4c462bd513eda0268e314fbfe2b0618",
+    "artReview": "874ef70955b2a4567150068708e58e31ae3f8bd4dd344ce622221d0264c86bc2",
+    "modelTests": "b27e5f44a6032df243ea70929dbed1bed04ab40f5ff8b3891a00a6258b5c8df0",
+    "candidateReview": "35453ecd156abf93d296a6efd70c93c0279b1456476e93edafd5d1408b281c77",
+    "testProvenance": "d466ab1de4e0b458d30eb9ee62e7c474cc521f20b2799a8837805d90ed9f1eb2",
+    "uiIncomplete": "7a1c3f3e221f979cdf008dc8747f4c8b6309b59818e2e5efb45357953168209a",
+    "uiPatternConfirmation": "2ec5247d8614e20e5a97d47d8819ac8dd83b8e3cdcaf924b978ae5aa962b78c8",
+    "uiRemaining": "a4536f70e8f8b767da3eb80538d82d5e9b6fba4825d69cb41f2e4aa112c2e7fb",
+    "uiCorrection": "d0e4e872bdbd7f1509389464757eac29413d3e265c55b329429b78bdab6adec9"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium gameplay driven by real browser input events. Phone/native-room, source layout and mathematical boundary fixtures are separately labelled; no physical TV/phone installation or physical-device performance is claimed."
+  },
+  "release": {
+    "sourceSha": "1b4429ad4fdc64e5a3ca06d9fcf1bc1f010038c1",
+    "signerCommit": "1b4429ad4fdc64e5a3ca06d9fcf1bc1f010038c1",
+    "signingRun": 41349609487,
+    "bytes": 292131,
+    "sha256": "7ee612be1df58f38e9d6d370fdf135c53daf3533b776736d8aa450309323eeb9",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "8aece92e874b33997ab09e2aeb85d7577e2d65d6"
+  }
+}
