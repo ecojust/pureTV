@@ -133,7 +133,11 @@
     if (s.remaining <= EPS) { finish(s, 'lost', 'timeout'); return; }
     if (s.mode === 'folding') {
       var settled = s.elapsed >= s.foldAnimation.endsAt - EPS;
-      if (settled) { s.foldAnimation = null; s.mode = 'editing'; if (s.foldsUsed === s.foldLimit) review(s); }
+      if (settled) {
+        s.foldAnimation = null; s.mode = 'editing';
+        if (s.foldsUsed === s.foldLimit) review(s);
+        else s.message = '折叠完成 · 请选择下一条折线，或按 B 撤销';
+      }
       s._pendingA = false; s._pendingB = false; s._pendingCancel = false; s._moveDirection = ''; s._repeatTicks = 0;
       if (s.phase === 'playing') refresh(s); return;
     }
