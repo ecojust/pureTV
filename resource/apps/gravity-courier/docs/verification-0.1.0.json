@@ -1,0 +1,457 @@
+{
+  "schema": 1,
+  "game": "gravity-courier",
+  "version": "0.1.0",
+  "modelTests": {
+    "passed": 16,
+    "command": "node --test resource/apps/gravity-courier/tests/game-model.test.cjs",
+    "modelSha256": "b3062c90bc78dac1ff09dc280d67e96da8008bf8a1bfcadd5c7e3511832091d0"
+  },
+  "allDifficultyFlights": [
+    {
+      "level": 0,
+      "seed": 17,
+      "phase": "won",
+      "seconds": 36.08333333333193,
+      "deliveries": 3,
+      "shield": 100
+    },
+    {
+      "level": 0,
+      "seed": 7,
+      "phase": "won",
+      "seconds": 36.249999999998586,
+      "deliveries": 3,
+      "shield": 100
+    },
+    {
+      "level": 0,
+      "seed": 983,
+      "phase": "won",
+      "seconds": 36.08333333333193,
+      "deliveries": 3,
+      "shield": 100
+    },
+    {
+      "level": 1,
+      "seed": 17,
+      "phase": "won",
+      "seconds": 35.49999999999863,
+      "deliveries": 3,
+      "shield": 100
+    },
+    {
+      "level": 1,
+      "seed": 7,
+      "phase": "won",
+      "seconds": 35.49999999999863,
+      "deliveries": 3,
+      "shield": 100
+    },
+    {
+      "level": 1,
+      "seed": 983,
+      "phase": "won",
+      "seconds": 36.08333333333193,
+      "deliveries": 3,
+      "shield": 100
+    },
+    {
+      "level": 2,
+      "seed": 17,
+      "phase": "won",
+      "seconds": 36.08333333333193,
+      "deliveries": 3,
+      "shield": 100
+    },
+    {
+      "level": 2,
+      "seed": 7,
+      "phase": "won",
+      "seconds": 35.49999999999863,
+      "deliveries": 3,
+      "shield": 100
+    },
+    {
+      "level": 2,
+      "seed": 983,
+      "phase": "won",
+      "seconds": 36.08333333333193,
+      "deliveries": 3,
+      "shield": 100
+    }
+  ],
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "15e036789ac050dbd65e9820a364f5da16b3bb8f9f111b5da385296efa34e0af",
+      "game-model.js": "b3062c90bc78dac1ff09dc280d67e96da8008bf8a1bfcadd5c7e3511832091d0",
+      "game.js": "4488785d8703dad837e1744d34cfe0c748e382125fdb397e66cf0ecd5e9f57be",
+      "renderer.js": "56842da32c69e2dd2f8aef88e95ff385c1370d9134526cc8fbd83ab5bc0f0e8f",
+      "runtime.js": "d598e2e8faf06a7c31c1ad03d6899f32bea6ec32bab64c6428fb18e231fcbb6e",
+      "tv.css": "c3a7239739ba1d764e02a39a4140da8fd533a3517f527974fdfff78f53926887",
+      "tv.html": "a8d94f89d61518de8d0d0f4da3fd935d6639bf00049c9a11ecf45442ff51aec8"
+    }
+  },
+  "finalRuntimeFollowups": {
+    "note": "After the shared pass, only runtime menu accessibility and the B sound shortcut changed. Final menu/native-input checks and a fresh full normal-play recording cover these changes. Model and renderer hashes are unchanged.",
+    "uiTests": [
+      {
+        "name": "menu overlay uses a backdrop blur",
+        "passed": true,
+        "details": {
+          "visible": true,
+          "filter": "blur(14px)"
+        }
+      },
+      {
+        "name": "remote left/right keys cycle all three menu difficulty choices",
+        "passed": true,
+        "details": [
+          {
+            "key": "ArrowRight",
+            "level": 1
+          },
+          {
+            "key": "ArrowRight",
+            "level": 2
+          },
+          {
+            "key": "ArrowRight",
+            "level": 0
+          },
+          {
+            "key": "ArrowLeft",
+            "level": 2
+          },
+          {
+            "key": "ArrowLeft",
+            "level": 1
+          },
+          {
+            "key": "ArrowLeft",
+            "level": 0
+          }
+        ]
+      },
+      {
+        "name": "phone joystick cycles difficulty once per direction press including wraparound",
+        "passed": true,
+        "details": [
+          {
+            "x": 1,
+            "level": 1
+          },
+          {
+            "x": 1,
+            "level": 2
+          },
+          {
+            "x": 1,
+            "level": 0
+          },
+          {
+            "x": -1,
+            "level": 2
+          },
+          {
+            "x": -1,
+            "level": 1
+          },
+          {
+            "x": -1,
+            "level": 0
+          }
+        ]
+      },
+      {
+        "name": "all three difficulty buttons create matching model settings",
+        "passed": true,
+        "details": [
+          {
+            "level": 0,
+            "difficulty": 0,
+            "timeLimit": 90
+          },
+          {
+            "level": 1,
+            "difficulty": 1,
+            "timeLimit": 84
+          },
+          {
+            "level": 2,
+            "difficulty": 2,
+            "timeLimit": 78
+          }
+        ]
+      },
+      {
+        "name": "sound toggle updates aria-pressed and visible label",
+        "passed": true,
+        "details": {
+          "on": true,
+          "off": true
+        }
+      },
+      {
+        "name": "start, pause and both resume buttons operate without losing the round",
+        "passed": true,
+        "details": {
+          "pausedTick": 9,
+          "primaryResume": true,
+          "headerResume": true
+        }
+      },
+      {
+        "name": "a normal keyboard win writes its real best score",
+        "passed": true,
+        "details": {
+          "score": 3771,
+          "deliveries": 3,
+          "elapsed": 35.866666666665914,
+          "stored": "3771"
+        }
+      },
+      {
+        "name": "settlement overlay keeps backdrop blur and final controls",
+        "passed": true,
+        "details": {
+          "visible": true,
+          "filter": "blur(14px)"
+        }
+      },
+      {
+        "name": "settlement accepts remote and phone difficulty choices before the next round",
+        "passed": true,
+        "details": {
+          "newDifficulty": 2,
+          "bestPreserved": 3771
+        }
+      },
+      {
+        "name": "best score survives opening a new page in the same browser storage context",
+        "passed": true,
+        "details": {
+          "newPagePhase": "menu",
+          "newRoundScore": 0,
+          "best": 3771,
+          "stored": "3771"
+        }
+      }
+    ],
+    "uiPassed": true,
+    "nativeInputTests": [
+      {
+        "name": "holding native START starts once without pause flicker or reset",
+        "passed": true,
+        "detail": {
+          "startTick": 6,
+          "endTick": 34,
+          "heldMilliseconds": 600,
+          "publishedPhases": [
+            "playing",
+            "playing",
+            "playing",
+            "playing",
+            "playing",
+            "playing"
+          ]
+        }
+      },
+      {
+        "name": "disconnect ignores stale remote controls and freezes the game",
+        "passed": true,
+        "detail": {
+          "pausedTick": 40,
+          "staleBridgeInput": {
+            "x": 1,
+            "b": true,
+            "connected": false
+          }
+        }
+      },
+      {
+        "name": "neutral reconnection remains paused until explicit new START input",
+        "passed": true,
+        "detail": {
+          "reconnectTick": 40,
+          "resumeTick": 49,
+          "clearedThrust": true,
+          "clearedBrake": true
+        }
+      },
+      {
+        "name": "held START pauses exactly once until release",
+        "passed": true,
+        "detail": {
+          "pausedTick": 76
+        }
+      }
+    ],
+    "nativeInputPassed": true,
+    "finalSoundAndPersistence": {
+      "performedAfterCapture": true,
+      "passed": true,
+      "input": "Real browser B key events after recording ended; no native mock",
+      "tests": [
+        {
+          "phase": "won",
+          "defaultSoundOff": true,
+          "bTurnsOn": true,
+          "heldBDoesNotFlicker": true,
+          "bTurnsOff": true,
+          "gamePhasePreserved": true
+        },
+        {
+          "phase": "menu",
+          "defaultSoundOff": true,
+          "bTurnsOn": true,
+          "heldBDoesNotFlicker": true,
+          "bTurnsOff": true,
+          "gamePhasePreserved": true
+        }
+      ],
+      "winningScore": 3770,
+      "bestScoreInNewPage": 3770
+    }
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 959,
+    "rafIntervalMs": {
+      "count": 959,
+      "min": 16.5,
+      "median": 33.30000000000109,
+      "p95": 66.79999999999927,
+      "max": 100,
+      "mean": 37.103128258602716
+    },
+    "webglDrawCalls": {
+      "count": 959,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 959,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "visualReview": [
+    {
+      "file": "review/title-1s.png",
+      "seconds": 1,
+      "finding": "Menu, game title, instructions, difficulty controls and B-sound help are visible without clipping."
+    },
+    {
+      "file": "review/gameplay-20s.png",
+      "seconds": 20,
+      "finding": "Actual flight/refueling frame shows ship, planets, stations, HUD and control guide; suitable thumbnail candidate."
+    },
+    {
+      "file": "review/settlement-43s.png",
+      "seconds": 43,
+      "finding": "3/3 victory, earned score 3770, difficulty choices and blurred backdrop are visible without clipping."
+    }
+  ],
+  "finalAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "15e036789ac050dbd65e9820a364f5da16b3bb8f9f111b5da385296efa34e0af",
+    "game-model.js": "b3062c90bc78dac1ff09dc280d67e96da8008bf8a1bfcadd5c7e3511832091d0",
+    "game.js": "4488785d8703dad837e1744d34cfe0c748e382125fdb397e66cf0ecd5e9f57be",
+    "renderer.js": "56842da32c69e2dd2f8aef88e95ff385c1370d9134526cc8fbd83ab5bc0f0e8f",
+    "runtime.js": "6a42129d6f7ab2c9489616c20fdd4c0b048a216cf6dca9a7e34bf2fdd3aab002",
+    "tv.css": "c3a7239739ba1d764e02a39a4140da8fd533a3517f527974fdfff78f53926887",
+    "tv.html": "a8d94f89d61518de8d0d0f4da3fd935d6639bf00049c9a11ecf45442ff51aec8"
+  },
+  "sharedPlatformTests": {
+    "native": 29,
+    "controller": 9,
+    "signingValidation": 9,
+    "builderPathAndIcon": 15
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Actual bundled page with normal keyboard inputs in Chromium; phone protocol and touches tested using controlled fixtures. No physical Android installation was performed."
+  },
+  "release": {
+    "sourceSha": "9f911669f4b2e768c00b8f105922afae67affb78",
+    "signerCommit": "7b43ff6d0b8c432edcad0cf9669dbf978c745e16",
+    "signingRun": 41322475483,
+    "transferRun": 41323074562,
+    "sha256": "c3af112f89d064f5b74494b1192b6fb3e12c312bf553257c9a00a24dfa6beccd",
+    "bytes": 288035,
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    }
+  }
+}

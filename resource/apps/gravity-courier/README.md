@@ -4,11 +4,11 @@
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.gravitycouriertv`
-- 版本：`0.1.0`
+- 版本：`0.1.1`
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-[下载安装包](gravity-courier-0.1.0.apk) · [查看实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
+[下载安装包](gravity-courier-0.1.1.apk) · [查看实际游玩视频](docs/gameplay-0.1.1.mp4) · [验证记录](docs/verification.json)
 
 ![实际游戏画面](thumb.png)
 
@@ -28,6 +28,10 @@ node --test resource/apps/gravity-courier/tests/game-model.test.cjs
 
 测试涵盖推力、惯性、引力、燃料、交付条件、补给、碰撞、胜负、重试与低帧率稳定性。`tests/automation.mjs` 只通过普通键盘输入导航，不修改模型状态。构建和公共组件见 [game-kit](../../game-kit/README.md)。最终包与录像验证结果随发布产物保存在本目录中。
 
-本次包含 16 项模型回归、三档难度共 9 次正常输入通关、完整浏览器流程、菜单入口与断线输入检查。场景实测每帧一次 WebGL 绘制提交。录像为当前打包资源的 Chromium 实际运行，45 秒、约 2.42 MB，无音轨；没有改分数、强制胜利或加速模拟时钟。此次没有连接实体电视或手机，不把软件渲染帧率或模拟触控报告为真机实测。
+0.1.1 修复侧栏提示裁切与滚动问题，并从打包配置显示版本号。本次重新完成 16 项模型测试、10 项共享浏览器回归和 12 项补充交互检查，核对了 960×540 与 1280×720 的菜单、暂停和真实胜利页面。新录像使用 0.1.1 的实际打包资源，时长 50.4 秒、2.45 MB，正常完成 3/3 配送。此次未连接实体电视或手机。
 
 源码与原创素材遵循仓库 [MIT 许可证](../../../LICENSE)。
+
+## 历史版本
+
+[0.1.0 APK](gravity-courier-0.1.0.apk) · [0.1.0 录像](docs/gameplay-0.1.0.mp4) · [0.1.0 验证记录](docs/verification-0.1.0.json)。这些文件保留原始内容，仅代表历史版本。后续原 APK 检查发现 960×540 侧栏存在裁切，旧记录中“无裁切”的概括已被纠正；当前界面验收与录像以 0.1.1 为准。
