@@ -12,6 +12,7 @@ const output = path.resolve(args.output), assets = path.resolve(args.assets);
 assert.ok(!output.startsWith(assets+path.sep), 'Output must be outside source assets');
 await mkdir(output, { recursive:true });
 const originalHashes = await sourceHashes(assets);
+const gameConfig = JSON.parse(await readFile(path.join(assets,'game-config.json'),'utf8'));
 const automation = args.automation ? await import(pathToFileURL(path.resolve(args.automation)).href) : null;
 if (automation) assert.equal(typeof automation.keys, 'function', 'automation must export keys(snapshot, meta)');
 const server = await serveAssets(assets, args.entry || 'tv.html');
@@ -29,6 +30,7 @@ try {
   const initial = await test('loads title and read-only snapshot', async () => {
     const state = await snapshot(page);
     assert.equal(state.phase, 'menu');
+    await page.waitForFunction(version=>document.querySelector('#version').textContent===version,gameConfig.version);
     const cloneCheck = await page.evaluate(() => {
       const first=PureTVQA.snapshot();
       try { first.phase='__qa_mutation_probe'; } catch(error) { if(!(error instanceof TypeError)) throw error; }

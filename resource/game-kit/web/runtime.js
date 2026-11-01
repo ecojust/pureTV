@@ -12,6 +12,9 @@
   let best=0;
   try{const n=Number(localStorage.getItem('puretv.'+def.id+'.best'));if(Number.isFinite(n)&&n>=0&&n<1e9)best=n;}catch(_){}
   document.title=def.title; $('title').textContent=def.title; $('tagline').textContent=def.tagline||'';
+  fetch('game-config.json',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('config');return response.json();}).then(config=>{
+    if(typeof config.version==='string'&&/^\d+\.\d+\.\d+$/.test(config.version))$('version').textContent=config.version;
+  }).catch(()=>{});
   const levelLabel=def.levelLabel||'航线',levelNames=def.levelNames||['练习','标准','挑战'];
   $('level-label').textContent=levelLabel;document.querySelectorAll('[data-level]').forEach(b=>b.textContent=levelNames[Number(b.dataset.level)]);
   $('move-help').textContent=def.controls.move; $('a-help').textContent=def.controls.a; $('b-help').textContent=def.controls.b;
