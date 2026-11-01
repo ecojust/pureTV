@@ -152,6 +152,13 @@ def has_version(items, version):
                for token in re.findall(r'v?[0-9o]+\.[0-9o]+\.[0-9o]+', compact(item['text'])))
 
 
+def forum_list_ready(items):
+    # The exact public ID is checked in the API evidence. Vision dropped its
+    # small leading I in native screenshots, while these larger labels are clear.
+    return all(has(items, text) for text in (
+        '大家可以在这里提交反馈哦，其他人也能看到', '发布帖子', '桔子桑'))
+
+
 def match(items, text, exact=False, left=False):
     found = [item for item in items if (compact(item['text']) == compact(text) if exact
                                       else compact(text) in compact(item['text']))]
@@ -411,11 +418,11 @@ def main():
     # Explicit app switch, never represented as an installed update.
     items = launch(bundles['0.5.0'])
     point(items, '论坛', click=True, exact=True, left=True)
-    items = wait_screen('forum-preload-list', lambda items: has(items, 'IKS14W') and has(items, '大家可以在这里'))
+    items = wait_screen('forum-preload-list', forum_list_ready)
     point(items, '大家可以在这里', click=True)
     items = wait_screen('forum-preload-detail', lambda items: has(items, '畅所欲言') and has(items, '我来测试一下'))
     point(items, '返回列表', click=True, exact=True)
-    items = wait_screen('forum-ready-list', lambda items: has(items, '发布帖子') and has(items, 'IKS14W'))
+    items = wait_screen('forum-ready-list', forum_list_ready)
     with Recording('02-forum-050', flags):
         time.sleep(2)
         point(items, '发布帖子')  # Hover only; the OCR may include an external-link icon.
@@ -431,7 +438,7 @@ def main():
         point(items, '去回复')  # Hover only.
         time.sleep(3)
         point(items, '返回列表', click=True, exact=True)
-        items = wait_screen('forum-final-list', lambda items: has(items, '发布帖子') and has(items, 'IKS14W'))
+        items = wait_screen('forum-final-list', forum_list_ready)
         time.sleep(3)
         snapshot('forum-final')
     quit_app()
