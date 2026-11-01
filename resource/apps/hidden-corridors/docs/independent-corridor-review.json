@@ -1,0 +1,663 @@
+{
+  "schema": 1,
+  "kind": "independent-hidden-corridor-rule-review",
+  "passed": true,
+  "checks": [
+    {
+      "name": "Fresh ordinary single-cell probes reconstruct clues and fixed retry map",
+      "scope": "Black-box rule oracle, not a normal gameplay route",
+      "passed": true,
+      "levels": [
+        {
+          "level": 1,
+          "freshRuns": 32,
+          "paidSingleCellRuns": 28,
+          "freeEndpointRuns": 4,
+          "observedMapSha256": "e52c47efdc37714536909d9cafc674837b2b53c023cd2e332c0cc3ba66e2e794",
+          "rowCountsVerified": true,
+          "shortestEdgeDistanceVerified": true,
+          "sameAcrossFreshSeeds": true
+        },
+        {
+          "level": 2,
+          "freshRuns": 32,
+          "paidSingleCellRuns": 28,
+          "freeEndpointRuns": 4,
+          "observedMapSha256": "261bf565f8760e5c08382dad443320fcf56ef3a25cd2bc5bc379fc469ee660fe",
+          "rowCountsVerified": true,
+          "shortestEdgeDistanceVerified": true,
+          "sameAcrossFreshSeeds": true
+        },
+        {
+          "level": 3,
+          "freshRuns": 32,
+          "paidSingleCellRuns": 28,
+          "freeEndpointRuns": 4,
+          "observedMapSha256": "cf9e3328b2e534ba63813a0c6ea3ed273dbe4353c0ddae9455d8bf06dfceb56f",
+          "rowCountsVerified": true,
+          "shortestEdgeDistanceVerified": true,
+          "sameAcrossFreshSeeds": true
+        }
+      ]
+    },
+    {
+      "name": "All public candidate worlds and exact minimax probe bounds",
+      "scope": "Independent full 16-bit enumeration and both-outcome certificates; no selected truth input",
+      "passed": true,
+      "levels": [
+        {
+          "level": 1,
+          "clues": {
+            "rowOpenCounts": [
+              2,
+              2,
+              2,
+              2
+            ],
+            "entry": 0,
+            "exit": 15,
+            "requiredDistance": 6,
+            "probeBudget": 3
+          },
+          "candidateCount": 9,
+          "candidateMasksSha256": "a25afaafe6b69d15e93149c8d9c93918a617fd1432045d71a143d08af29b9acc",
+          "initialCommonSafeRoute": false,
+          "minimumWorstCaseProbes": 2,
+          "certificateVerification": {
+            "passed": true,
+            "candidateEnumerationMasksChecked": 65536,
+            "candidateWorlds": 9,
+            "strategyNodes": 7,
+            "leaves": 4,
+            "coveredWorlds": 9,
+            "strategyWorstDepth": 2,
+            "worstBranch": {
+              "probes": [
+                {
+                  "cell": 6,
+                  "open": true
+                },
+                {
+                  "cell": 11,
+                  "open": true
+                }
+              ],
+              "remainingCandidateCount": 3,
+              "safeRoute": [
+                0,
+                1,
+                5,
+                6,
+                10,
+                11,
+                15
+              ]
+            },
+            "lowerBoundProofNodes": 13,
+            "provedLowerBound": 2,
+            "exactMinimum": 2
+          },
+          "decisionStates": 21
+        },
+        {
+          "level": 2,
+          "clues": {
+            "rowOpenCounts": [
+              3,
+              2,
+              2,
+              3
+            ],
+            "entry": 0,
+            "exit": 12,
+            "requiredDistance": 5,
+            "probeBudget": 4
+          },
+          "candidateCount": 40,
+          "candidateMasksSha256": "b43f2bceccc63d79498127ad6917e21eaa49f8cece33f53ac3203eca89fb09a0",
+          "initialCommonSafeRoute": false,
+          "minimumWorstCaseProbes": 2,
+          "certificateVerification": {
+            "passed": true,
+            "candidateEnumerationMasksChecked": 65536,
+            "candidateWorlds": 40,
+            "strategyNodes": 5,
+            "leaves": 3,
+            "coveredWorlds": 40,
+            "strategyWorstDepth": 2,
+            "worstBranch": {
+              "probes": [
+                {
+                  "cell": 4,
+                  "open": false
+                },
+                {
+                  "cell": 8,
+                  "open": true
+                }
+              ],
+              "remainingCandidateCount": 12,
+              "safeRoute": [
+                0,
+                1,
+                5,
+                9,
+                8,
+                12
+              ]
+            },
+            "lowerBoundProofNodes": 13,
+            "provedLowerBound": 2,
+            "exactMinimum": 2
+          },
+          "decisionStates": 83
+        },
+        {
+          "level": 3,
+          "clues": {
+            "rowOpenCounts": [
+              2,
+              3,
+              3,
+              2
+            ],
+            "entry": 1,
+            "exit": 14,
+            "requiredDistance": 4,
+            "probeBudget": 5
+          },
+          "candidateCount": 90,
+          "candidateMasksSha256": "bc31752cf824398c7515fc4be346055adccacbd62e5f739a5233da52af50190e",
+          "initialCommonSafeRoute": false,
+          "minimumWorstCaseProbes": 3,
+          "certificateVerification": {
+            "passed": true,
+            "candidateEnumerationMasksChecked": 65536,
+            "candidateWorlds": 90,
+            "strategyNodes": 15,
+            "leaves": 8,
+            "coveredWorlds": 90,
+            "strategyWorstDepth": 3,
+            "worstBranch": {
+              "probes": [
+                {
+                  "cell": 2,
+                  "open": true
+                },
+                {
+                  "cell": 6,
+                  "open": true
+                },
+                {
+                  "cell": 10,
+                  "open": true
+                }
+              ],
+              "remainingCandidateCount": 27,
+              "safeRoute": [
+                1,
+                2,
+                6,
+                10,
+                14
+              ]
+            },
+            "lowerBoundProofNodes": 106,
+            "provedLowerBound": 3,
+            "exactMinimum": 3
+          },
+          "decisionStates": 244
+        }
+      ],
+      "selectedTruthUsed": false
+    },
+    {
+      "name": "Known/duplicate probes are free and quota exhaustion reveals nothing",
+      "scope": "Ordinary movement and A input",
+      "passed": true
+    },
+    {
+      "name": "Route marking uses public knowledge, no hidden collision or wrapping",
+      "scope": "Ordinary route/probe/back input; black-box map only selects a targeted test route",
+      "passed": true
+    },
+    {
+      "name": "Public validation priority, generic unsafe verdict and actual wall authority",
+      "scope": "Ordinary unsafe route plus labelled invalid-shape/public-state adversarial fixtures",
+      "passed": true,
+      "ordinaryUnsafeSubmission": true,
+      "shapeFixtureCases": 3,
+      "longUnsafeRouteRejectedForPublicLengthFirst": true,
+      "forgedPublicKnowledgeDidNotOverridePrivateWalls": true
+    },
+    {
+      "name": "Only new post-exhaustion submissions charge strikes, exactly once per press",
+      "scope": "Ordinary A/B/probe input including held A and aggregated steps",
+      "passed": true
+    },
+    {
+      "name": "B arbitration, directional repeat and zero-step cancellation",
+      "scope": "Targeted input protocol fixtures; no browser gameplay claim",
+      "passed": true,
+      "cancelledFramesStillConsumeActiveTime": true,
+      "pauseScope": "Shared runtime pause is outside this pure-model test."
+    },
+    {
+      "name": "Only original create states have truth; state identity and terminal isolation",
+      "scope": "State identity boundary and terminal/timeout synthetic fixtures",
+      "passed": true,
+      "clonesRejected": true,
+      "foreignModuleStatesRejected": true,
+      "timeoutBeforePotentialWinningSubmission": true
+    },
+    {
+      "name": "Three ordinary public-only probe/route/submission completions",
+      "scope": "Normal model input, independent public minimax; not browser or real hardware capture",
+      "passed": true,
+      "rounds": [
+        {
+          "level": 1,
+          "phase": "won",
+          "probesUsed": 2,
+          "probeBudget": 3,
+          "remainingCandidateCount": 2,
+          "pathEdges": 6,
+          "requiredDistance": 6,
+          "routeIds": [
+            0,
+            1,
+            5,
+            6,
+            10,
+            14,
+            15
+          ],
+          "observations": [
+            {
+              "cellId": 6,
+              "result": "open",
+              "candidateCountBefore": 9,
+              "candidateCountAfter": 5
+            },
+            {
+              "cellId": 11,
+              "result": "wall",
+              "candidateCountBefore": 5,
+              "candidateCountAfter": 2
+            }
+          ],
+          "elapsed": 0.5166666666666667,
+          "score": 1685,
+          "submissions": 1,
+          "totalWrong": 0,
+          "unprobedCellsRemainUnknown": 12,
+          "safeForEveryRemainingCandidate": true,
+          "selectedTruthReadByPlanner": false
+        },
+        {
+          "level": 2,
+          "phase": "won",
+          "probesUsed": 2,
+          "probeBudget": 4,
+          "remainingCandidateCount": 12,
+          "pathEdges": 5,
+          "requiredDistance": 5,
+          "routeIds": [
+            0,
+            1,
+            5,
+            9,
+            8,
+            12
+          ],
+          "observations": [
+            {
+              "cellId": 4,
+              "result": "wall",
+              "candidateCountBefore": 40,
+              "candidateCountAfter": 28
+            },
+            {
+              "cellId": 8,
+              "result": "open",
+              "candidateCountBefore": 28,
+              "candidateCountAfter": 12
+            }
+          ],
+          "elapsed": 0.38333333333333336,
+          "score": 1775,
+          "submissions": 1,
+          "totalWrong": 0,
+          "unprobedCellsRemainUnknown": 12,
+          "safeForEveryRemainingCandidate": true,
+          "selectedTruthReadByPlanner": false
+        },
+        {
+          "level": 3,
+          "phase": "won",
+          "probesUsed": 3,
+          "probeBudget": 5,
+          "remainingCandidateCount": 24,
+          "pathEdges": 4,
+          "requiredDistance": 4,
+          "routeIds": [
+            1,
+            5,
+            6,
+            10,
+            14
+          ],
+          "observations": [
+            {
+              "cellId": 2,
+              "result": "wall",
+              "candidateCountBefore": 90,
+              "candidateCountAfter": 54
+            },
+            {
+              "cellId": 13,
+              "result": "wall",
+              "candidateCountBefore": 54,
+              "candidateCountAfter": 32
+            },
+            {
+              "cellId": 6,
+              "result": "open",
+              "candidateCountBefore": 32,
+              "candidateCountAfter": 24
+            }
+          ],
+          "elapsed": 0.5833333333333334,
+          "score": 1805,
+          "submissions": 1,
+          "totalWrong": 0,
+          "unprobedCellsRemainUnknown": 11,
+          "safeForEveryRemainingCandidate": true,
+          "selectedTruthReadByPlanner": false
+        }
+      ]
+    }
+  ],
+  "checkCount": 9,
+  "sourceHashes": {
+    "model": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+    "contract": "aefee429bee6fd24bf9ab5133dcddb6ef995997355932a22b8d5b95ca7b06a8d",
+    "review": "abc6c2f1a83e4eee7b37f74c1482847abc898a4eb2e3a5429d43e3d118ab7c62",
+    "mathematics": "34a3ad1d97011c2422f71f71301770752a21f72660037e3290f14342b3f60bd3"
+  },
+  "sourceHashesAfter": {
+    "model": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+    "contract": "aefee429bee6fd24bf9ab5133dcddb6ef995997355932a22b8d5b95ca7b06a8d",
+    "review": "abc6c2f1a83e4eee7b37f74c1482847abc898a4eb2e3a5429d43e3d118ab7c62",
+    "mathematics": "34a3ad1d97011c2422f71f71301770752a21f72660037e3290f14342b3f60bd3"
+  },
+  "sourceUnchanged": true,
+  "mathematics": [
+    {
+      "level": 1,
+      "clues": {
+        "rowOpenCounts": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "entry": 0,
+        "exit": 15,
+        "requiredDistance": 6,
+        "probeBudget": 3
+      },
+      "candidateCount": 9,
+      "candidateMasksSha256": "a25afaafe6b69d15e93149c8d9c93918a617fd1432045d71a143d08af29b9acc",
+      "initialCommonSafeRoute": false,
+      "minimumWorstCaseProbes": 2,
+      "decisionStates": 21,
+      "certificateVerification": {
+        "passed": true,
+        "candidateEnumerationMasksChecked": 65536,
+        "candidateWorlds": 9,
+        "strategyNodes": 7,
+        "leaves": 4,
+        "coveredWorlds": 9,
+        "strategyWorstDepth": 2,
+        "lowerBoundProofNodes": 13,
+        "provedLowerBound": 2,
+        "exactMinimum": 2
+      }
+    },
+    {
+      "level": 2,
+      "clues": {
+        "rowOpenCounts": [
+          3,
+          2,
+          2,
+          3
+        ],
+        "entry": 0,
+        "exit": 12,
+        "requiredDistance": 5,
+        "probeBudget": 4
+      },
+      "candidateCount": 40,
+      "candidateMasksSha256": "b43f2bceccc63d79498127ad6917e21eaa49f8cece33f53ac3203eca89fb09a0",
+      "initialCommonSafeRoute": false,
+      "minimumWorstCaseProbes": 2,
+      "decisionStates": 83,
+      "certificateVerification": {
+        "passed": true,
+        "candidateEnumerationMasksChecked": 65536,
+        "candidateWorlds": 40,
+        "strategyNodes": 5,
+        "leaves": 3,
+        "coveredWorlds": 40,
+        "strategyWorstDepth": 2,
+        "lowerBoundProofNodes": 13,
+        "provedLowerBound": 2,
+        "exactMinimum": 2
+      }
+    },
+    {
+      "level": 3,
+      "clues": {
+        "rowOpenCounts": [
+          2,
+          3,
+          3,
+          2
+        ],
+        "entry": 1,
+        "exit": 14,
+        "requiredDistance": 4,
+        "probeBudget": 5
+      },
+      "candidateCount": 90,
+      "candidateMasksSha256": "bc31752cf824398c7515fc4be346055adccacbd62e5f739a5233da52af50190e",
+      "initialCommonSafeRoute": false,
+      "minimumWorstCaseProbes": 3,
+      "decisionStates": 244,
+      "certificateVerification": {
+        "passed": true,
+        "candidateEnumerationMasksChecked": 65536,
+        "candidateWorlds": 90,
+        "strategyNodes": 15,
+        "leaves": 8,
+        "coveredWorlds": 90,
+        "strategyWorstDepth": 3,
+        "lowerBoundProofNodes": 106,
+        "provedLowerBound": 3,
+        "exactMinimum": 3
+      }
+    }
+  ],
+  "truthAudit": [
+    {
+      "level": 1,
+      "freshRuns": 32,
+      "paidSingleCellRuns": 28,
+      "freeEndpointRuns": 4,
+      "observedMapSha256": "e52c47efdc37714536909d9cafc674837b2b53c023cd2e332c0cc3ba66e2e794",
+      "rowCountsVerified": true,
+      "shortestEdgeDistanceVerified": true,
+      "sameAcrossFreshSeeds": true
+    },
+    {
+      "level": 2,
+      "freshRuns": 32,
+      "paidSingleCellRuns": 28,
+      "freeEndpointRuns": 4,
+      "observedMapSha256": "261bf565f8760e5c08382dad443320fcf56ef3a25cd2bc5bc379fc469ee660fe",
+      "rowCountsVerified": true,
+      "shortestEdgeDistanceVerified": true,
+      "sameAcrossFreshSeeds": true
+    },
+    {
+      "level": 3,
+      "freshRuns": 32,
+      "paidSingleCellRuns": 28,
+      "freeEndpointRuns": 4,
+      "observedMapSha256": "cf9e3328b2e534ba63813a0c6ea3ed273dbe4353c0ddae9455d8bf06dfceb56f",
+      "rowCountsVerified": true,
+      "shortestEdgeDistanceVerified": true,
+      "sameAcrossFreshSeeds": true
+    }
+  ],
+  "ordinaryPublicOnlyRounds": [
+    {
+      "level": 1,
+      "phase": "won",
+      "probesUsed": 2,
+      "probeBudget": 3,
+      "remainingCandidateCount": 2,
+      "pathEdges": 6,
+      "requiredDistance": 6,
+      "routeIds": [
+        0,
+        1,
+        5,
+        6,
+        10,
+        14,
+        15
+      ],
+      "observations": [
+        {
+          "cellId": 6,
+          "result": "open",
+          "candidateCountBefore": 9,
+          "candidateCountAfter": 5
+        },
+        {
+          "cellId": 11,
+          "result": "wall",
+          "candidateCountBefore": 5,
+          "candidateCountAfter": 2
+        }
+      ],
+      "elapsed": 0.5166666666666667,
+      "score": 1685,
+      "submissions": 1,
+      "totalWrong": 0,
+      "unprobedCellsRemainUnknown": 12,
+      "safeForEveryRemainingCandidate": true,
+      "selectedTruthReadByPlanner": false
+    },
+    {
+      "level": 2,
+      "phase": "won",
+      "probesUsed": 2,
+      "probeBudget": 4,
+      "remainingCandidateCount": 12,
+      "pathEdges": 5,
+      "requiredDistance": 5,
+      "routeIds": [
+        0,
+        1,
+        5,
+        9,
+        8,
+        12
+      ],
+      "observations": [
+        {
+          "cellId": 4,
+          "result": "wall",
+          "candidateCountBefore": 40,
+          "candidateCountAfter": 28
+        },
+        {
+          "cellId": 8,
+          "result": "open",
+          "candidateCountBefore": 28,
+          "candidateCountAfter": 12
+        }
+      ],
+      "elapsed": 0.38333333333333336,
+      "score": 1775,
+      "submissions": 1,
+      "totalWrong": 0,
+      "unprobedCellsRemainUnknown": 12,
+      "safeForEveryRemainingCandidate": true,
+      "selectedTruthReadByPlanner": false
+    },
+    {
+      "level": 3,
+      "phase": "won",
+      "probesUsed": 3,
+      "probeBudget": 5,
+      "remainingCandidateCount": 24,
+      "pathEdges": 4,
+      "requiredDistance": 4,
+      "routeIds": [
+        1,
+        5,
+        6,
+        10,
+        14
+      ],
+      "observations": [
+        {
+          "cellId": 2,
+          "result": "wall",
+          "candidateCountBefore": 90,
+          "candidateCountAfter": 54
+        },
+        {
+          "cellId": 13,
+          "result": "wall",
+          "candidateCountBefore": 54,
+          "candidateCountAfter": 32
+        },
+        {
+          "cellId": 6,
+          "result": "open",
+          "candidateCountBefore": 32,
+          "candidateCountAfter": 24
+        }
+      ],
+      "elapsed": 0.5833333333333334,
+      "score": 1805,
+      "submissions": 1,
+      "totalWrong": 0,
+      "unprobedCellsRemainUnknown": 11,
+      "safeForEveryRemainingCandidate": true,
+      "selectedTruthReadByPlanner": false
+    }
+  ],
+  "scope": {
+    "modelRulesExecuted": true,
+    "publicWorldEnumeration": true,
+    "selectedTruthAccess": "Only a separate black-box audit through fresh ordinary single-cell probes; no WeakMap/source constant access by the script or normal planner.",
+    "privateModelReaderExported": false,
+    "fixtureChecksSeparateFromOrdinaryRounds": true,
+    "ordinaryRoundsUseOnlyPublicCluesAndObservedProbeResults": true,
+    "browserExecuted": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "limitations": [
+    "Point-cell fixed-grid puzzle verification, not browser/controller/hardware validation.",
+    "Source-level model audit can see authored constants; the public-state secrecy boundary is specifically runtime snapshots.",
+    "The independent minimax strategy is a test oracle and is not the production observation pilot."
+  ]
+}
