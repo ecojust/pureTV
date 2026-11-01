@@ -35,14 +35,14 @@ function routes(floors, start, visibleHazards) {
 
 // Independent instances permit non-interference tests of hidden observations.
 export function createPilot() {
-  let sessionMode, level, previousTime = -1, waypoint = null;
+  let sessionMode, level, previousTime = -1, waypoint = null, waypointApproach = null;
   let scanRequested = false, nextScanAt = 0, initialScan = true, goal = null;
   const beacons = new Map(), visited = new Set(), scanned = new Set(), scanOrigins = [], hazardMemory = new Map();
   return function pilot(snapshot, { elapsed = 0, mode = 'qa' } = {}) {
     const state = snapshot?.model;
     if (!state?.cells || state.phase !== 'playing' || snapshot.paused) return [];
     if (sessionMode !== mode || level !== state.level || state.elapsed + 0.001 < previousTime) {
-      sessionMode = mode; level = state.level; waypoint = null;
+      sessionMode = mode; level = state.level; waypoint = null; waypointApproach = null;
       scanRequested = false; nextScanAt = 0; initialScan = true; goal = null;
       beacons.clear(); visited.clear(); scanned.clear(); scanOrigins.length = 0; hazardMemory.clear();
     }
@@ -60,12 +60,31 @@ export function createPilot() {
     const threatened = [...hazardMemory.values()].some(hazard => state.elapsed - hazard.seenAt < 2 && distance(player, hazard) < (hazard.alerted ? 180 : 80));
     const urgent = visibleHazards.some(hazard => hazard.alerted && distance(player, hazard) < 80);
     const quiet = !urgent && (visibleHazards.some(hazard => distance(player, hazard) < 200) || (state.elapsed > 2 && state.elapsed < 4));
+    // Turning inside a 40 px cell is safe only while the circular player's
+    // perpendicular offset leaves its radius plus one pixel clear of a wall.
+    const clearance = state.grid.cellSize / 2 - player.radius - 1;
     const move = target => {
-      const dx = target.x - player.x, dy = target.y - player.y;
-      let key;
-      if (Math.abs(dx) >= Math.abs(dy)) key = dx > 0 ? 'ArrowRight' : 'ArrowLeft';
-      else key = dy > 0 ? 'ArrowDown' : 'ArrowUp';
-      return quiet ? [key, 'b'] : [key];
+      const axis = waypointApproach.axis, across = axis === 'x' ? 'y' : 'x';
+      const crossError = target[across] - player[across];
+      const align = Math.abs(crossError) > clearance;
+      // Once a node has an approach axis, small perpendicular centre errors
+      // must not steal its final forward step and cause left/right ping-pong.
+      const direction = align ? Math.sign(crossError) : waypointApproach.sign;
+      const moveAxis = align ? across : axis;
+      const key = moveAxis === 'x' ? direction > 0 ? 'ArrowRight' : 'ArrowLeft' : direction > 0 ? 'ArrowDown' : 'ArrowUp';
+      return quiet || align ? [key, 'b'] : [key];
+    };
+    const approach = target => {
+      waypoint = target;
+      const axis = Math.abs(target.x - player.x) >= Math.abs(target.y - player.y) ? 'x' : 'y';
+      waypointApproach = { axis, sign: Math.sign(target[axis] - player[axis]) || 1 };
+      return move(target);
+    };
+    const passedWaypoint = () => {
+      const { axis, sign } = waypointApproach, across = axis === 'x' ? 'y' : 'x';
+      // Progress is directional: after crossing a node's plane, never reverse
+      // solely to hit a tiny centre circle. The next turn still aligns safely.
+      return sign * (player[axis] - waypoint[axis]) >= -3 && Math.abs(player[across] - waypoint[across]) <= clearance;
     };
     const scan = () => {
       scanRequested = true; initialScan = false; goal = null;
@@ -76,11 +95,9 @@ export function createPilot() {
     if (scanRequested) { scanRequested = false; return []; }
     if (initialScan && state.cooldown <= 0 && state.battery >= state.sonarCost) return scan();
     if (waypoint) {
-      if (distance(player, waypoint) <= 4) { visited.add(waypoint.id); waypoint = null; }
+      if (passedWaypoint()) { visited.add(waypoint.id); waypoint = null; }
       else return move(waypoint);
     }
-    const center = map.floors.get(current);
-    if (center && distance(player, center) > 4) { waypoint = center; return move(center); }
     visited.add(current);
     if (goal?.id === current) goal = null;
     if (state.elapsed < nextScanAt && !threatened) return [];
@@ -110,7 +127,7 @@ export function createPilot() {
       }
     }
     if (target && target !== current && paths.has(target)) {
-      waypoint = map.floors.get(paths.get(target)[0]); return move(waypoint);
+      return approach(map.floors.get(paths.get(target)[0]));
     }
     if (state.collected < state.target && !threatened && state.remaining > 20 && state.cooldown <= 0 && state.battery >= state.sonarCost && state.elapsed >= nextScanAt && !scanned.has(current)) return scan();
     return quiet ? ['b'] : [];
