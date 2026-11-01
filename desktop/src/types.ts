@@ -23,6 +23,17 @@ export interface ForumPage {
   posts: ForumPost[]; page: number; hasMore: boolean; fetchedAt: number;
   sourceUrl: string; stale: boolean; warning: string | null;
 }
+export interface ForumPostDetail {
+  post: ForumPost & { body: string; createdAt: string };
+  fetchedAt: number; stale: boolean; warning: string | null;
+}
+export interface ForumReply {
+  id: string; body: string; author: string; createdAt: string; updatedAt: string;
+}
+export interface ForumRepliesPage {
+  number: string; replies: ForumReply[]; page: number; hasMore: boolean;
+  fetchedAt: number; stale: boolean; warning: string | null;
+}
 export interface LauncherInfo { apkSizeBytes?: number | null; component: string; packageName: string; label: string; isDefault: boolean }
 export interface HistoryEntry { id: string; timestamp: number; action: string; target: string; device: string; userId: number; success: boolean; message: string }
 export interface PlatformToolsInfo {

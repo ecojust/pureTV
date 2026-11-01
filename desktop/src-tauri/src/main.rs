@@ -798,6 +798,37 @@ async fn get_forum_posts(
 }
 
 #[tauri::command]
+async fn get_forum_post(
+    number: String,
+    refresh: bool,
+    app: tauri::AppHandle,
+) -> Result<forum::Detail, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let bridge = app.state::<Bridge>();
+        app.state::<forum::State>()
+            .detail(&number, refresh, &bridge.closing)
+    })
+    .await
+    .map_err(|_| "帖子详情读取任务异常结束，请重试".to_string())?
+}
+
+#[tauri::command]
+async fn get_forum_replies(
+    number: String,
+    page: u32,
+    refresh: bool,
+    app: tauri::AppHandle,
+) -> Result<forum::RepliesPage, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let bridge = app.state::<Bridge>();
+        app.state::<forum::State>()
+            .replies(&number, page, refresh, &bridge.closing)
+    })
+    .await
+    .map_err(|_| "论坛回复读取任务异常结束，请重试".to_string())?
+}
+
+#[tauri::command]
 fn open_forum_post(number: &str, app: tauri::AppHandle) -> Result<(), String> {
     if app.state::<Bridge>().closing.load(Ordering::Acquire) {
         return Err("管理器正在退出".into());
@@ -1231,6 +1262,8 @@ fn main() {
             install_market_item,
             open_resource,
             get_forum_posts,
+            get_forum_post,
+            get_forum_replies,
             open_forum_post,
             check_client_update,
             install_client_update,

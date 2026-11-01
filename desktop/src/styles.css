@@ -1463,10 +1463,27 @@ button.forum-post-title:disabled { opacity:1; color:var(--text-strong); }
 .forum-page-details { display:flex; flex-wrap:wrap; gap:6px 16px; color:var(--muted); font-size:12px; }
 .forum-empty, .forum-preview { padding:48px 20px; }
 .forum-note { margin:12px 0 0; line-height:1.6; }
+.forum-detail-scroll { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; scrollbar-gutter:stable; }
+.forum-article { padding:24px; }
+.forum-detail-title { margin:14px 0 10px; color:var(--text-strong); font-size:20px; line-height:1.5; overflow-wrap:anywhere; }
+.forum-post-body, .forum-reply-body { white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.8; tab-size:4; }
+.forum-post-body { margin-top:24px; }
+.forum-article .forum-loading, .forum-article .forum-error, .forum-article .forum-warning { margin-top:16px; border:1px solid var(--line); border-radius:6px; }
+.forum-replies-section { border-top:1px solid var(--line); }
+.forum-replies-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:18px 24px; }
+.forum-replies-heading h3 { margin:0; font-size:15px; }
+.forum-replies-heading h3 span { margin-left:6px; color:var(--muted); font-size:12px; font-weight:400; }
+.forum-reply-list { margin:0; padding:0; list-style:none; }
+.forum-reply { padding:20px 24px; border-top:1px solid var(--line); }
+.forum-reply .forum-post-meta { margin-top:0; }
+.forum-reply-body { margin-top:12px; }
+.forum-replies-empty { padding:24px; color:var(--muted); }
 @media (max-width:1000px) {
   .forum-toolbar { align-items:flex-start; flex-wrap:wrap; padding:14px; gap:12px; }
   .forum-post { padding:16px 14px; gap:12px; }
   .forum-pagination { padding:10px 14px; }
+  .forum-article, .forum-reply { padding:18px 14px; }
+  .forum-replies-heading { padding:14px; }
 }
 .market-empty { grid-column:1/-1; padding:56px 20px; }
 .market-warning { margin:0; padding:10px 18px; font-size:12px; color:var(--text); background:var(--surface-muted); border-bottom:1px solid var(--line); overflow-wrap:anywhere; }

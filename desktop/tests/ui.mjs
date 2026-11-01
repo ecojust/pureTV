@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 import { mkdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { mockBridge, snapshot, marketCatalog, packageInsight, clientUpdate, forumPage } from './fixtures.mjs';
+import { mockBridge, snapshot, marketCatalog, packageInsight, clientUpdate, forumPage, forumDetail, forumReplies } from './fixtures.mjs';
 
 const directory = fileURLToPath(new URL('..', import.meta.url));
 const port = 1429, url = `http://127.0.0.1:${port}`;
@@ -1886,6 +1886,8 @@ try {
 
   const forumAction=(p,action)=>p.locator(`[data-forum-action="${action}"]`).first();
   const forumPost=(p,number)=>p.locator(`.forum-post[data-forum-number="${number}"]`);
+  const forumDetailPanel=(p,number)=>p.locator(`.forum-detail[data-forum-number="${number}"]`);
+  const forumReply=(p,id)=>p.locator(`.forum-reply[data-forum-reply-id="${id}"]`);
   const forumRequests=p=>p.evaluate(()=>window.__forumRequests);
   const forumFirst=forumPage({hasMore:true});
   const forumSecond=forumPage({page:2,posts:[{number:'IABC121',title:'第二页的帖子',author:'另一位用户',state:'progressing',comments:1,updatedAt:'2026-10-30T10:00:00+08:00',labels:[]}]});
@@ -1902,11 +1904,10 @@ try {
     assert.equal(await p.locator('.busy-bar').count(),0);
     assert.equal(await forumAction(p,'previous').isDisabled(),true);
     assert.equal(await forumAction(p,'next').isEnabled(),true);
-    await forumPost(p,'IABC123').locator('[data-forum-action="open"]').click();
     await forumPost(p,'IABC122').locator('[data-forum-action="reply"]').click();
-    assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[{number:'IABC123'},{number:'IABC122'}]);
+    assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[{number:'IABC122'}]);
     await forumAction(p,'create').click();assert.equal((await p.evaluate(()=>window.__resources)).at(-1),'forumCreate');
-    await forumAction(p,'source').click();assert.equal((await p.evaluate(()=>window.__resources)).at(-1),'forum');
+    assert.equal(await forumAction(p,'source').count(),0,'Forum browsing has no external Gitee browse button');
     await forumAction(p,'next').click();await forumPost(p,'IABC121').waitFor();
     assert.match(await p.locator('.forum-page-number').innerText(),/2/);
     assert.equal(await forumAction(p,'next').isDisabled(),true);
@@ -1916,10 +1917,14 @@ try {
     await forumAction(p,'refresh').click();
     await p.waitForFunction(()=>window.__forumRequests.some(request=>request.page===2&&request.refresh===true));
     await p.waitForFunction(()=>!document.querySelector('.forum-loading'));
-    assert.equal(await p.locator('.busy-bar').count(),1,'Reading posts does not complete or cancel an agent operation');
+    assert.equal(await p.locator('.busy-bar').count(),0,'Independent pages do not show device operation hints');
+    await nav(p,'connect');assert.equal(await p.locator('.busy-bar').count(),1,'Reading posts does not complete or cancel an agent operation');
+    assert.equal(await act(p,'connect').isDisabled(),true);
+    await nav(p,'forum');await forumPost(p,'IABC121').waitFor();
+    await p.waitForFunction(()=>!document.querySelector('.forum-loading'));
     await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'scan',snapshot:value}),withoutAdb());
     await forumAction(p,'previous').click();await forumPost(p,'IABC123').waitFor();
-    assert.deepEqual((await forumRequests(p)).map(({page,refresh})=>({page,refresh})),[{page:1,refresh:false},{page:2,refresh:false},{page:2,refresh:true},{page:1,refresh:false}]);
+    assert.deepEqual((await forumRequests(p)).map(({page,refresh})=>({page,refresh})),[{page:1,refresh:false},{page:2,refresh:false},{page:2,refresh:true},{page:2,refresh:false},{page:1,refresh:false}]);
     assert.deepEqual(await requests(p),[],'Forum browsing never invokes ADB');
     assert.deepEqual(writes,[],'Posting and replying open the Gitee browser pages, without submitting content from Manager');
     await shot(p,'forum-posts-zh-CN');
@@ -1929,7 +1934,7 @@ try {
       if(language==='en')await p.locator('[name="theme"]').selectOption('graphite');
       assert.equal(await p.locator('h1').innerText(),language==='en'?'Forum':'论坛');
       assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true,'The supported minimum window does not overflow horizontally');
-      for(const element of [p.locator('[data-page="forum"]'),forumAction(p,'create'),forumAction(p,'source'),forumAction(p,'refresh'),forumAction(p,'reply'),forumAction(p,'previous'),forumAction(p,'next')]) {
+      for(const element of [p.locator('[data-page="forum"]'),forumAction(p,'create'),forumAction(p,'refresh'),forumAction(p,'reply'),forumAction(p,'previous'),forumAction(p,'next')]) {
         const bounds=await element.boundingBox();assert.ok(bounds&&bounds.x>=0&&bounds.y>=0&&bounds.x+bounds.width<=960&&bounds.y+bounds.height<=640,'Forum toolbar, reply and paging remain visible at the minimum window size');
       }
       await shot(p,language==='en'?'forum-compact-en-graphite':'forum-compact-zh-CN');
@@ -1970,10 +1975,14 @@ try {
     await nav(p,'forum');await p.locator('.forum-post').first().waitFor();
     assert.match(await p.locator('.forum-note').innerText(),/演示帖子/);
     assert.equal(await forumAction(p,'reply').isDisabled(),true);
-    assert.equal(await forumAction(p,'open').isDisabled(),true);
+    assert.equal(await forumAction(p,'open').isEnabled(),true);
     assert.equal(await forumAction(p,'create').isEnabled(),true);
     await forumAction(p,'reply').evaluate(button=>button.click());
     assert.deepEqual(await p.evaluate(()=>window.__openedForumPages),[],'A simulated issue must not open an unrelated real discussion');
+    await forumAction(p,'open').click();await p.locator('.forum-post-body').waitFor();
+    assert.equal(await forumAction(p,'reply').isDisabled(),true);
+    assert.deepEqual(await p.evaluate(()=>window.__openedForumPages),[],'Reading a demo post remains inside Manager');
+    await forumAction(p,'back').click();await p.locator('.forum-post').first().waitFor();
     await forumAction(p,'create').click();
     assert.deepEqual(await p.evaluate(()=>window.__openedForumPages),[{address:'https://gitee.com/juzisang331/pure-tv-store/issues/new',target:'_blank',features:'noopener,noreferrer'}]);
   },null);
@@ -2026,7 +2035,8 @@ try {
     await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'Forum');
     assert.equal(await forumPost(p,'IABC123').locator('.forum-state').innerText(),'Unknown status');
     await p.locator('[name="theme"]').selectOption('graphite');
-    assert.equal(await forumAction(p,'source').isEnabled(),true);
+    assert.equal(await forumAction(p,'source').count(),0);
+    assert.equal(await forumAction(p,'create').isEnabled(),true);
     await shot(p,'forum-posts-en-graphite');
     await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'論壇');
     assert.equal(await forumPost(p,'IABC123').locator('.forum-state').innerText(),'狀態未知');
@@ -2034,6 +2044,123 @@ try {
     await shot(p,'forum-posts-zh-TW');
     assert.deepEqual(await requests(p),[]);
   },withoutAdb(),{forumPages:{1:forumPage({posts:[{...forumFirst.posts[0],state:'unknown',title:untrustedForumTitle,author:'<b data-untrusted="author">用户</b>',labels:[untrustedForumLabel]}]})}});
+
+  const secondPageDetail=forumDetail('IABC121',{post:{...forumSecond.posts[0],body:'第二页帖子的正文。\n保留原有段落供阅读。',createdAt:'2026-10-30T09:00:00+08:00'}});
+  const repliesFirst=forumReplies('IABC121',{hasMore:true});
+  const repliesSecond=forumReplies('IABC121',{page:2,replies:[{id:'R1002',body:'第二页的跟帖内容',author:'第二页回复用户',createdAt:'2026-11-01T08:10:00+08:00',updatedAt:'2026-11-01T08:10:00+08:00'}]});
+  await check('forum detail: titles open inside Manager, replies paginate, refresh reads fresh data and back keeps the list page',async p=>{
+    await nav(p,'forum');await forumPost(p,'IABC123').waitFor();
+    await forumAction(p,'next').click();await forumPost(p,'IABC121').waitFor();
+    await forumPost(p,'IABC121').locator('[data-forum-action="open"]').click();
+    await forumDetailPanel(p,'IABC121').waitFor();await p.locator('.forum-post-body').waitFor();await forumReply(p,'R1001').waitFor();
+    assert.equal(await p.locator('.forum-post-body').innerText(),secondPageDetail.post.body);
+    assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[],'Reading the post must not open a browser');
+    assert.deepEqual(await p.evaluate(()=>window.__forumPostRequests),[{number:'IABC121',refresh:false}]);
+    assert.deepEqual(await p.evaluate(()=>window.__forumReplyRequests),[{number:'IABC121',page:1,refresh:false}]);
+    assert.equal(await forumAction(p,'source').count(),0);
+    await forumAction(p,'replies-next').click();await forumReply(p,'R1002').waitFor();
+    assert.match(await p.locator('.forum-replies-page-number').innerText(),/2/);
+    assert.equal(await forumAction(p,'replies-next').isDisabled(),true);
+    assert.equal(await forumAction(p,'replies-previous').isEnabled(),true);
+    await forumAction(p,'refresh-detail').click();
+    await p.waitForFunction(()=>window.__forumPostRequests.at(-1)?.refresh===true&&window.__forumReplyRequests.at(-1)?.refresh===true);
+    await p.waitForFunction(()=>!document.querySelector('.forum-detail-loading,.forum-replies-loading'));
+    assert.equal(await p.locator('.forum-post-body').innerText(),secondPageDetail.post.body);
+    await forumAction(p,'back').click();await forumPost(p,'IABC121').waitFor();
+    assert.match(await p.locator('.forum-page-number').innerText(),/2/);
+    assert.equal((await forumRequests(p)).length,2,'Returning to the list reuses its successful page');
+    await forumPost(p,'IABC121').locator('[data-forum-action="open"]').click();await p.locator('.forum-post-body').waitFor();await forumReply(p,'R1001').waitFor();
+    await forumAction(p,'reply').click();assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[{number:'IABC121'}]);
+    await shot(p,'forum-detail-zh-CN');
+    await p.setViewportSize({width:960,height:640});
+    for(const language of ['zh-CN','en']) {
+      await p.locator('[name="locale"]').selectOption(language);if(language==='en')await p.locator('[name="theme"]').selectOption('graphite');
+      assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1),true,'Post details scroll internally at the minimum supported window');
+      for(const action of ['back','refresh-detail','reply']) {
+        const bounds=await forumAction(p,action).boundingBox();assert.ok(bounds&&bounds.x>=0&&bounds.y>=0&&bounds.x+bounds.width<=960&&bounds.y+bounds.height<=640,'Detail reading controls remain visible');
+      }
+      assert.equal(await p.locator('.device-badge,.connection-strip').count(),0);
+      await shot(p,language==='en'?'forum-detail-compact-en-graphite':'forum-detail-compact-zh-CN');
+    }
+    assert.deepEqual(await requests(p),[]);
+  },withoutAdb(),{forumPages:{1:forumFirst,2:forumSecond},forumDetails:{IABC121:secondPageDetail},forumReplyPages:{IABC121:{1:repliesFirst,2:repliesSecond}}});
+  await check('forum detail: post and reply failures stay separate from empty content and cached data remains explicit',async p=>{
+    await nav(p,'forum');await forumPost(p,'IABC123').waitFor();await forumPost(p,'IABC123').locator('[data-forum-action="open"]').click();
+    await p.locator('.forum-post-body').waitFor();await p.locator('.forum-replies-error').waitFor();
+    assert.match(await p.locator('.forum-detail-warning').innerText(),/缓存/);
+    assert.equal(await p.locator('.forum-replies-empty').count(),0,'A failed reply request is not an empty discussion');
+    assert.equal(await p.locator('.forum-post-body').innerText(),forumDetail().post.body);
+    await p.evaluate(value=>{window.__forumRepliesError=null;window.__forumReplyPages={IABC123:{1:value}};},forumReplies('IABC123',{replies:[]}));
+    await forumAction(p,'refresh-replies').click();await p.locator('.forum-replies-empty').waitFor();assert.equal(await p.locator('.forum-replies-error').count(),0);
+    await p.evaluate(value=>{window.__forumReplyPages={IABC123:{1:value}};},forumReplies('IABC123',{stale:true,warning:'跟帖更新失败，显示上次缓存'}));
+    await forumAction(p,'refresh-replies').click();await forumReply(p,'R1001').waitFor();assert.match(await p.locator('.forum-replies-warning').innerText(),/缓存/);
+    await p.evaluate(()=>{window.__forumDetailError='帖子正文暂时无法读取，请稍后重试';});
+    await forumAction(p,'refresh-detail').click();await p.locator('.forum-detail-error').waitFor();
+    assert.equal(await p.locator('.forum-post-body').count(),1,'A failed refresh does not erase the readable post');
+    assert.equal(await forumReply(p,'R1001').count(),1,'Post errors do not erase independently loaded replies');
+    const fresh=forumDetail('IABC123',{post:{...forumDetail().post,body:'更新后的正文'}});
+    await p.evaluate(value=>{window.__forumDetailError=null;window.__forumDetails={IABC123:value};},fresh);
+    await forumAction(p,'refresh-detail').click();await p.waitForFunction(()=>document.querySelector('.forum-post-body')?.textContent==='更新后的正文');
+    assert.equal(await p.locator('.forum-detail-error,.forum-detail-warning').count(),0);
+    assert.deepEqual(await requests(p),[]);
+  },withoutAdb(),{forumDetails:{IABC123:forumDetail('IABC123',{stale:true,warning:'帖子更新失败，显示上次缓存'})},forumRepliesError:'跟帖暂时无法读取，请稍后重试'});
+  await check('forum detail: a failed next reply page keeps the successful page and can be retried',async p=>{
+    await nav(p,'forum');await forumPost(p,'IABC123').waitFor();await forumPost(p,'IABC123').locator('[data-forum-action="open"]').click();await forumReply(p,'R1001').waitFor();
+    await p.evaluate(()=>window.__holdNextOperation('forumReplies:IABC123:2'));await forumAction(p,'replies-next').click();await p.locator('.forum-replies-loading').waitFor();
+    assert.match(await p.locator('.forum-replies-page-number').innerText(),/1/);
+    assert.equal(await forumReply(p,'R1001').count(),1);
+    for(const action of ['replies-previous','replies-next','refresh-replies'])assert.equal(await forumAction(p,action).isDisabled(),true);
+    await release(p,'forumReplies:IABC123:2',{error:'跟帖暂时无法读取，请稍后重试'});await p.locator('.forum-replies-error').waitFor();
+    assert.match(await p.locator('.forum-replies-page-number').innerText(),/1/);assert.equal(await forumReply(p,'R1001').count(),1);assert.equal(await p.locator('.forum-replies-empty').count(),0);
+    await forumAction(p,'replies-next').click();await forumReply(p,'R1002').waitFor();assert.match(await p.locator('.forum-replies-page-number').innerText(),/2/);
+    assert.equal(await p.locator('.forum-replies-error').count(),0);
+  },withoutAdb(),{forumReplyPages:{IABC123:{1:forumReplies('IABC123',{hasMore:true}),2:{...repliesSecond,number:'IABC123'}}}});
+  await check('forum detail: responses from a previous post cannot replace another post or reopen a page after leaving',async p=>{
+    await nav(p,'forum');await forumPost(p,'IABC123').waitFor();
+    await p.evaluate(()=>{window.__holdNextOperation('forumPost:IABC123');window.__holdNextOperation('forumReplies:IABC123:1');});
+    await forumPost(p,'IABC123').locator('[data-forum-action="open"]').click();await p.locator('.forum-detail-loading').waitFor();await p.locator('.forum-replies-loading').waitFor();
+    await forumAction(p,'back').click();await forumPost(p,'IABC122').waitFor();await forumPost(p,'IABC122').locator('[data-forum-action="open"]').click();
+    await p.locator('.forum-post-body').waitFor();await forumReply(p,'R2001').waitFor();
+    await release(p,'forumPost:IABC123',{response:forumDetail('IABC123',{post:{...forumDetail().post,body:'迟到的第一篇正文'}})});
+    await release(p,'forumReplies:IABC123:1',{response:forumReplies('IABC123')});await p.waitForTimeout(80);
+    assert.equal(await forumDetailPanel(p,'IABC122').count(),1);assert.equal(await p.locator('.forum-post-body').innerText(),'当前第二篇正文');
+    assert.equal(await forumReply(p,'R2001').count(),1);assert.equal(await forumReply(p,'R1001').count(),0);
+    await p.evaluate(()=>{window.__holdNextOperation('forumPost:IABC122');window.__holdNextOperation('forumReplies:IABC122:1');});
+    await forumAction(p,'refresh-detail').click();await p.locator('.forum-detail-loading').waitFor();await nav(p,'history');
+    await release(p,'forumPost:IABC122',{response:forumDetail('IABC122')});await release(p,'forumReplies:IABC122:1',{response:forumReplies('IABC122')});await p.waitForTimeout(80);
+    assert.match(await p.locator('h1').innerText(),/操作记录/);assert.equal(await p.locator('.forum-detail').count(),0);assert.equal(await p.locator('.device-badge').count(),0);
+    assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[]);
+  },withoutAdb(),{forumDetails:{IABC122:forumDetail('IABC122',{post:{...forumDetail('IABC122').post,body:'当前第二篇正文'}})},forumReplyPages:{IABC122:{1:forumReplies('IABC122',{replies:[{id:'R2001',body:'当前第二篇跟帖',author:'回复者',createdAt:'2026-11-01T08:00:00Z',updatedAt:'2026-11-01T08:00:00Z'}]})}}});
+  const dangerousBody='正文开头\n<img data-forum-untrusted="post" src=x onerror="window.__xss=true">\n[打开](javascript:window.__xss=true)\n</pre><script>window.__xss=true</script>';
+  const dangerousReply='跟帖内容\n<svg data-forum-untrusted="reply" onload="window.__xss=true"></svg>';
+  await check('forum detail: untrusted post and reply text never creates HTML or executable links',async p=>{
+    await nav(p,'forum');await forumPost(p,'IABC123').waitFor();await forumPost(p,'IABC123').locator('[data-forum-action="open"]').click();await p.locator('.forum-post-body').waitFor();await forumReply(p,'R1001').waitFor();
+    assert.equal(await p.locator('.forum-post-body').innerText(),dangerousBody);
+    assert.equal(await forumReply(p,'R1001').locator('.forum-reply-body').innerText(),dangerousReply);
+    assert.equal(await p.locator('.forum-detail [data-forum-untrusted],.forum-detail script,.forum-detail a[href^="javascript:"]').count(),0);
+    assert.equal(await p.evaluate(()=>window.__xss),false);
+    await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('.forum-post-body').innerText(),dangerousBody);
+    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await forumReply(p,'R1001').locator('.forum-reply-body').innerText(),dangerousReply);
+    assert.equal(await p.evaluate(()=>window.__xss),false);assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[]);
+  },withoutAdb(),{forumDetails:{IABC123:forumDetail('IABC123',{post:{...forumDetail().post,body:dangerousBody,author:'<b data-forum-untrusted="author">作者</b>'}})},forumReplyPages:{IABC123:{1:forumReplies('IABC123',{replies:[{...forumReplies().replies[0],body:dangerousReply,author:'<img data-forum-untrusted="reply-author" src=x onerror="window.__xss=true">'}]})}}});
+  await check('independent pages: market, forum and activity hide device status and ADB hints while preserving their own errors',async p=>{
+    const states=[{...withoutAdb(),message:'选择 ADB 后连接电视；首次连接请在电视上授权'},{...snapshot(),device:null,packages:[],launchers:[],defaultHome:null,message:'已断开电视'},{...snapshot(),message:'ADB 操作失败：测试设备读取提示'}];
+    for(const [index,state] of states.entries()) {
+      const update={...state,revision:index+1};
+      await p.evaluate(value=>{window.__setMockState(value);window.__emitMcp('mcp-operation',{running:false,tool:'scan',snapshot:value});},update);
+      await nav(p,'connect');assert.equal(await p.locator('.device-badge').count(),1);assert.equal(await p.locator('.connection-strip').count(),1);
+      assert.ok((await p.locator('.notice').innerText()).includes(state.message));
+      for(const target of ['market','forum','history']) {
+        await nav(p,target);await p.waitForFunction(()=>!document.querySelector('.busy-bar,.forum-loading'));
+        assert.equal(await p.locator('.device-badge,.connection-strip,.adb-panel,.adb-reset-hint').count(),0,`${target} has no device status or setup controls`);
+        assert.equal(await p.locator('.notice').filter({hasText:state.message}).count(),0,`${target} hides device notices`);
+        assert.doesNotMatch(await p.locator('.app-footer').innerText(),/当前 Android 用户|选择设备后开始管理|目标 192/);
+      }
+      await nav(p,'apps');assert.equal(await p.locator('.device-badge').count(),1,'Device application pages keep connection status');
+    }
+    await p.evaluate(()=>{window.__forumError='论坛网络错误，请稍后重试';});await nav(p,'forum');await p.locator('.forum-error').waitFor();assert.match(await p.locator('.forum-error').innerText(),/论坛网络错误/);assert.equal(await p.locator('.device-badge').count(),0);
+    await p.evaluate(()=>{window.__marketCatalogError='市场目录网络错误，请稍后重试';});await nav(p,'market');await p.locator('.market-warning').filter({hasText:'市场目录网络错误'}).waitFor();assert.equal(await p.locator('.device-badge').count(),0);
+  },withoutAdb());
 
   console.log(`${passed} UI scenarios passed`);
 } finally {

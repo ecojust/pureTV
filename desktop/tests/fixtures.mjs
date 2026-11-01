@@ -67,8 +67,23 @@ export function forumPage(overrides = {}) {
   };
 }
 
+export function forumDetail(number = 'IABC123', overrides = {}) {
+  const item=forumPage().posts.find(post=>post.number===number) || {...forumPage().posts[0],number,title:'帖子 '+number};
+  return {
+    post:{...item,createdAt:'2026-10-31T09:00:00+08:00',body:'这是帖子正文。\n第二段记录电视的使用体验。'},
+    fetchedAt:1793491200000,stale:false,warning:null,...overrides,
+  };
+}
+
+export function forumReplies(number = 'IABC123', overrides = {}) {
+  return {
+    number,replies:[{id:'R1001',body:'这是一条跟帖。\n可以在这里阅读完整讨论。',author:'回复用户',createdAt:'2026-11-01T07:00:00+08:00',updatedAt:'2026-11-01T07:30:00+08:00'}],
+    page:1,hasMore:false,fetchedAt:1793491200000,stale:false,warning:null,...overrides,
+  };
+}
+
 export async function mockBridge(page, initial = snapshot(), options = {}) {
-  await page.addInitScript(({initial, options, defaultMarketCatalog, defaultClientUpdate, defaultForumPage}) => {
+  await page.addInitScript(({initial, options, defaultMarketCatalog, defaultClientUpdate, defaultForumPage, defaultForumDetails, defaultForumReplies}) => {
     const state = structuredClone(initial);
     const defaultLayout=options.layout || {version:2,home:{columns:4,items:[{action:'music',icon:'music',color:'#303338'},{action:'files',icon:'files',color:'#3B4C46'},{action:'apps',icon:'apps',color:'#374959'}]},apps:{columns:3,items:[]}};
     let launcherLayout=structuredClone(defaultLayout), customLayout=false;
@@ -115,6 +130,10 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     window.__forumPages=structuredClone(options.forumPages || {1:defaultForumPage});
     window.__forumRequests=[];window.__forumOpenRequests=[];
     window.__forumError=options.forumError || null;window.__forumOpenError=options.forumOpenError || null;
+    window.__forumDetails=structuredClone(options.forumDetails || defaultForumDetails);
+    window.__forumReplyPages=structuredClone(options.forumReplyPages || defaultForumReplies);
+    window.__forumPostRequests=[];window.__forumReplyRequests=[];
+    window.__forumDetailError=options.forumDetailError || null;window.__forumRepliesError=options.forumRepliesError || null;
     window.__resourceErrors=structuredClone(options.resourceErrors || {});
     let clientUpdateCancelled=false;
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
@@ -172,6 +191,21 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
           if(held.response)return structuredClone(held.response);
           if(window.__forumError)throw new Error(window.__forumError);
           return structuredClone(window.__forumPages[args.page] || {...defaultForumPage,page:args.page,posts:[],hasMore:false});
+        }
+        if (command === 'get_forum_post') {
+          window.__forumPostRequests.push(structuredClone(args));
+          const held=await holdOperation('forumPost:'+args.number);
+          if(held.response)return structuredClone(held.response);
+          if(window.__forumDetailError)throw new Error(window.__forumDetailError);
+          if(!window.__forumDetails[args.number])throw new Error('论坛帖子不存在或已不可访问');
+          return structuredClone(window.__forumDetails[args.number]);
+        }
+        if (command === 'get_forum_replies') {
+          window.__forumReplyRequests.push(structuredClone(args));
+          const held=await holdOperation('forumReplies:'+args.number+':'+args.page);
+          if(held.response)return structuredClone(held.response);
+          if(window.__forumRepliesError)throw new Error(window.__forumRepliesError);
+          return structuredClone(window.__forumReplyPages[args.number]?.[args.page] || {number:args.number,replies:[],page:args.page,hasMore:false,fetchedAt:1793491200000,stale:false,warning:null});
         }
         if (command === 'open_forum_post') {
           window.__forumOpenRequests.push(structuredClone(args));
@@ -335,5 +369,8 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         return structuredClone(state);
       },
     };
-  }, {initial, options, defaultMarketCatalog:marketCatalog(), defaultClientUpdate:clientUpdate(), defaultForumPage:forumPage()});
+  }, {initial, options, defaultMarketCatalog:marketCatalog(), defaultClientUpdate:clientUpdate(), defaultForumPage:forumPage(),
+    defaultForumDetails:Object.fromEntries(['IABC123','IABC122','IABC121'].map(number=>[number,forumDetail(number)])),
+    defaultForumReplies:Object.fromEntries(['IABC123','IABC122','IABC121'].map(number=>[number,{1:forumReplies(number)}])),
+  });
 }

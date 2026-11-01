@@ -27,6 +27,7 @@ const pages: Record<Page, [string, string, string]> = {
 let snapshot = emptySnapshot();
 let mcpInfo: api.McpInfo | null = null, mcpError = "";
 let localBusy = false, agentOperation: api.McpOperation | null = null, agentProgress: DownloadProgress | null = null;
+let localOperationRequiresTelevision = true;
 function applySnapshot(value: Snapshot): boolean {
   if ((value.revision ?? 0) < (snapshot.revision ?? 0)) return false;
   if(snapshot.device?.serial!==value.device?.serial || snapshot.device?.userId!==value.device?.userId || snapshot.defaultHome!==value.defaultHome)layoutDirty=true;
@@ -37,6 +38,8 @@ let page: Page = api.demo ? 'apps' : 'connect';
 let filter: Filter = 'all', query = '', busy = false, busyLabel = '', cancelling = false;
 type NoticeKind = 'info' | 'success' | 'error';
 let notice = '', noticeKind: NoticeKind = 'info';
+let noticeRequiresTelevision = false;
+const needsTelevision = (value: Page = page): boolean => !['market', 'forum', 'history'].includes(value);
 let connectionEdited=false;
 let host = api.demo ? '192.168.1.50' : '', port = '5555', adbPath = '';
 let selected = new Set<string>();
@@ -197,7 +200,7 @@ function finishFeedback(outcome: NoticeKind, description: string, rows: Feedback
 }
 function actionError(error: unknown): void {
   const text = error instanceof Error ? error.message : String(error);
-  showNotice(text, 'error'); finishFeedback('error', text);
+  showNotice(text, 'error', needsTelevision()); finishFeedback('error', text);
 }
 async function cancelOperation(): Promise<void> {
   if (!busy || cancelling) return;
@@ -207,7 +210,7 @@ async function cancelOperation(): Promise<void> {
     cancelling = false;
     const text = ui`停止请求失败：${error instanceof Error ? error.message : String(error)}`;
     if (feedback?.phase === 'loading') feedback.cancelError = text;
-    else { notice = text; noticeKind = 'error'; }
+    else { notice = text; noticeKind = 'error'; noticeRequiresTelevision = needsTelevision(); }
     render();
   }
 }
@@ -259,7 +262,7 @@ function deviceStatus(): [string, string] {
   if (online()) return [snapshot.device.model || snapshot.device.serial, 'good'];
   return [snapshot.device.status === 'unauthorized' ? t('等待电视授权') : t('设备离线'), 'warn'];
 }
-function showNotice(message: string, kind: typeof noticeKind = 'info'): void { notice = message; noticeKind = kind; render(); }
+function showNotice(message: string, kind: typeof noticeKind = 'info', requiresTelevision = false): void { notice = message; noticeKind = kind; noticeRequiresTelevision = requiresTelevision; render(); }
 const bytes = (value: number): string => `${(Math.max(0, value) / 1048576).toFixed(1)} MiB`;
 const platformName = (value: string): string => ({ windows: 'Windows', macos: 'macOS', linux: 'Linux', demo: t('演示电脑') }[value] || t('当前电脑'));
 function progressText(progress = toolsProgress): string {
@@ -274,6 +277,7 @@ function busyIndicator(): string {
   if (!busy) return '';
   const external = !!agentOperation?.running;
   const market = activeMarketOperation(), marketStatus = activeMarketProgress();
+  if (!needsTelevision() && !market && (external || localOperationRequiresTelevision)) return '';
   const download = market ? marketStatus?.stage !== 'installing' : external ? agentOperation?.tool === 'install_platform_tools' : downloadingTools;
   const progress = external ? agentProgress : toolsProgress;
   const label = market ? marketProgressText(marketStatus) : download ? progressText(progress) : external ? ui`Agent 正在执行 ${agentOperation?.tool}…` : busyLabel;
@@ -297,7 +301,7 @@ function adbPanel(): string {
 }
 function shell(): string {
   const [label, status] = deviceStatus();
-  return ui`<aside class="sidebar"><nav aria-label="主要页面">${(Object.entries(pages) as [Page, [string, string, string]][]).filter(([key])=>key!=='install').map(([key, data]) => `<button class="nav-item ${page === key || page==='install' && key==='apps' ? 'active' : ''}" data-page="${key}" ${page === key || page==='install' && key==='apps' ? 'aria-current="page"' : ''}>${icon(data[2])}<span>${t(data[0])}</span></button>`).join('')}</nav><section class="appearance-panel" aria-label="语言与外观"><label>语言<select name="locale" aria-label="界面语言">${localeOptions()}</select></label><label>主题<select name="theme" aria-label="界面主题">${themeOptions()}</select></label></section><a class="brand" href="#" aria-label="pureTV 电视管理器"><img src="/puretv-logo.png" alt="" width="42" height="42">pure<span>TV</span></a><p class="brand-caption">电视管理器<span class="app-version">v${esc(appVersion)}</span></p><div data-client-update-slot>${clientUpdater.sidebar()}</div></aside><main class="${page === 'connect' ? '' : 'list-page'}"><header class="page-header"><div><h1>${t(pages[page][0])}</h1><p>${t(pages[page][1])}</p></div><div class="header-actions"><span class="device-badge"><i class="dot ${status}"></i>${online() ? t('已连接 · ') : ''}${esc(label)}</span></div></header>${api.demo ? t('<div class="banner demo-banner">演示模式 · 示例设备和应用，所有操作仅用于预览，不会连接真实电视。</div>') : !api.desktop ? t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用来连接电视和安装 APK。</div>') : ''}${notice ? ui`<div class="banner notice ${noticeKind}" role="status"><span>${esc(message(notice))}</span><button class="icon-button" aria-label="关闭提示" data-act="dismiss">${icon('close')}</button></div>` : ''}${busyIndicator()}<section id="page-content">${content()}</section><footer class="app-footer"><span>pureTV 电视管理器</span><span>${page === 'forum' ? t('浏览论坛无需连接电视') : api.demo ? t('演示数据 · 不执行 ADB') : snapshot.device ? (page === 'connect' ? ui`目标 ${esc(snapshot.device.serial)} · 用户 ${snapshot.device.userId}` : ui`当前 Android 用户 ${snapshot.device.userId}`) : t('选择设备后开始管理')}</span></footer></main>`;
+  return ui`<aside class="sidebar"><nav aria-label="主要页面">${(Object.entries(pages) as [Page, [string, string, string]][]).filter(([key])=>key!=='install').map(([key, data]) => `<button class="nav-item ${page === key || page==='install' && key==='apps' ? 'active' : ''}" data-page="${key}" ${page === key || page==='install' && key==='apps' ? 'aria-current="page"' : ''}>${icon(data[2])}<span>${t(data[0])}</span></button>`).join('')}</nav><section class="appearance-panel" aria-label="语言与外观"><label>语言<select name="locale" aria-label="界面语言">${localeOptions()}</select></label><label>主题<select name="theme" aria-label="界面主题">${themeOptions()}</select></label></section><a class="brand" href="#" aria-label="pureTV 电视管理器"><img src="/puretv-logo.png" alt="" width="42" height="42">pure<span>TV</span></a><p class="brand-caption">电视管理器<span class="app-version">v${esc(appVersion)}</span></p><div data-client-update-slot>${clientUpdater.sidebar()}</div></aside><main class="${page === 'connect' ? '' : 'list-page'}"><header class="page-header"><div><h1>${t(pages[page][0])}</h1><p>${t(pages[page][1])}</p></div>${needsTelevision() ? `<div class="header-actions"><span class="device-badge"><i class="dot ${status}"></i>${online() ? t('已连接 · ') : ''}${esc(label)}</span></div>` : ''}</header>${api.demo ? needsTelevision() ? t('<div class="banner demo-banner">演示模式 · 示例设备和应用，所有操作仅用于预览，不会连接真实电视。</div>') : t('<div class="banner demo-banner">演示模式 · 示例内容，仅用于预览。</div>') : !api.desktop ? needsTelevision() ? t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用来连接电视和安装 APK。</div>') : t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用读取完整内容。</div>') : ''}${notice && (!noticeRequiresTelevision || needsTelevision()) ? ui`<div class="banner notice ${noticeKind}" data-notice-scope="${noticeRequiresTelevision ? 'device' : 'general'}" role="status"><span>${esc(message(notice))}</span><button class="icon-button" aria-label="关闭提示" data-act="dismiss">${icon('close')}</button></div>` : ''}${busyIndicator()}<section id="page-content">${content()}</section><footer class="app-footer"><span>pureTV 电视管理器</span><span>${!needsTelevision() ? (api.demo ? t('演示数据') : page === 'history' ? t('本地操作记录') : 'Gitee · pure-tv-store') : api.demo ? t('演示数据 · 不执行 ADB') : snapshot.device ? (page === 'connect' ? ui`目标 ${esc(snapshot.device.serial)} · 用户 ${snapshot.device.userId}` : ui`当前 Android 用户 ${snapshot.device.userId}`) : t('选择设备后开始管理')}</span></footer></main>`;
 }
 function syncSceneScale():void {const canvas=layoutDialog.querySelector<HTMLElement>('.scene-canvas');if(canvas)canvas.style.setProperty('--scene-unit',`${canvas.clientWidth/960}px`);}
 function scrollAreas():HTMLElement[]{return [...root.querySelectorAll<HTMLElement>('[data-scroll]'),...layoutDialog.querySelectorAll<HTMLElement>('[data-scroll]')];}
@@ -418,7 +422,7 @@ function marketCount(): string {
 function marketPage(): string {
   const pending = marketKind === 'launcher' ? launcherApks.length : apkPaths.length;
   const count = (kind: MarketKind) => marketGroups.filter(group => group.kind === kind).length;
-  return ui`<div class="market-heading"><div class="application-tabs market-tabs" role="tablist" aria-label="市场分类">${(['app','launcher'] as const).map(kind => `<button type="button" role="tab" data-market-kind="${kind}" aria-selected="${marketKind === kind}" class="${marketKind === kind ? 'primary' : ''}">${icon(kind === 'app' ? 'grid' : 'home')}${kind === 'app' ? t('应用') : t('启动器')}<span>${count(kind)}</span></button>`).join('')}</div>${actionButton('market-submission', t('软件上架请联系'), '', 'text-button small')}</div><section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (marketKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${marketKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}${marketSeenWarning() ? `<p class="market-warning market-seen-warning" role="status">${esc(message(marketSeenWarning()))}</p>` : ''}<div class="market-grid" data-scroll="market-${marketKind}" tabindex="0" role="tabpanel" aria-label="市场安装包列表">${marketCards()}</div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 Gitee · pure-tv-store')}</span></div></section><p class="hint market-note">${online() ? marketKind === 'launcher' ? t('安装后请前往“启动器”设为默认桌面，当前桌面不会自动切换。') : t('安装完成后会刷新电视应用列表，也可先下载到待安装列表。') : t('未连接电视也可以浏览和下载，连接后再安装。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
+  return ui`<div class="market-heading"><div class="application-tabs market-tabs" role="tablist" aria-label="市场分类">${(['app','launcher'] as const).map(kind => `<button type="button" role="tab" data-market-kind="${kind}" aria-selected="${marketKind === kind}" class="${marketKind === kind ? 'primary' : ''}">${icon(kind === 'app' ? 'grid' : 'home')}${kind === 'app' ? t('应用') : t('启动器')}<span>${count(kind)}</span></button>`).join('')}</div>${actionButton('market-submission', t('软件上架请联系'), '', 'text-button small')}</div><section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (marketKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${marketKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}${marketSeenWarning() ? `<p class="market-warning market-seen-warning" role="status">${esc(message(marketSeenWarning()))}</p>` : ''}<div class="market-grid" data-scroll="market-${marketKind}" tabindex="0" role="tabpanel" aria-label="市场安装包列表">${marketCards()}</div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 Gitee · pure-tv-store')}</span></div></section><p class="hint market-note">${t('下载的安装包会保存到电脑。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
 }
 function updateMarketList(): void {
   const list = root.querySelector<HTMLElement>('.market-grid');
@@ -522,7 +526,7 @@ async function runMarketItem(id: string, operation: 'download' | 'install'): Pro
   } catch (error) { description = error instanceof Error ? error.message : String(error); outcome = cancelling ? 'info' : 'error'; }
   finally {
     marketWorking = false; marketProgress = null; localBusy = false; busy = !!agentOperation?.running; cancelling = false;
-    notice = description; noticeKind = outcome; finishFeedback(outcome, description, rows); render();
+    notice = description; noticeKind = outcome; noticeRequiresTelevision = false; finishFeedback(outcome, description, rows); render();
   }
 }
 function storageBytes(value: number | null | undefined): string {
@@ -652,7 +656,7 @@ async function launcherOperation(request: LauncherRequest, preserveDraft = false
   let outcome: NoticeKind = 'error', resultMessage = t('设备或启动器已变化，未确认布局应用结果');
   let target=launcherTarget();
   const draftTarget=target;
-  localBusy = true; busy = true; cancelling = false; busyLabel = preflight ? t('正在检查电视应用和启动器布局…') : mutation ? t('正在写入布局并核对电视返回的配置…') : t('读取／应用当前启动器布局…'); notice = '';
+  localBusy = true; localOperationRequiresTelevision = true; busy = true; cancelling = false; busyLabel = preflight ? t('正在检查电视应用和启动器布局…') : mutation ? t('正在写入布局并核对电视返回的配置…') : t('读取／应用当前启动器布局…'); notice = '';
   if (mutation) beginFeedback(t(request.action === 'resetLayout' ? '恢复默认布局' : '应用启动器布局'), busyLabel);
   if (preflight) beginFeedback(t('应用启动器布局'), busyLabel,true,true);
   render();
@@ -679,12 +683,12 @@ async function launcherOperation(request: LauncherRequest, preserveDraft = false
     const state=await api.execute({action:'getState'});
     if(target!==launcherTarget() || !applySnapshot(state))return false;
     if (target !== launcherTarget()) return false;
-    if(request.action!=='getBackgrounds'){notice=value.message||(value.supported?t('布局已读取，可调整后应用'):t('此启动器暂不可编辑'));noticeKind=mutation&&!cancelling?'success':'info';}
+    if(request.action!=='getBackgrounds'){notice=value.message||(value.supported?t('布局已读取，可调整后应用'):t('此启动器暂不可编辑'));noticeRequiresTelevision=true;noticeKind=mutation&&!cancelling?'success':'info';}
     if (mutation) { outcome = cancelling ? 'info' : 'success'; resultMessage = value.message || t('布局已应用并复查'); }
     completed=!cancelling;
     if(completed && request.action==='resetLayout')unifiedEditor.discardSvgEdits();
   }
-  catch (error) { outcome = cancelling ? 'info' : 'error'; resultMessage = error instanceof Error ? error.message : String(error); if(target===launcherTarget()){notice = resultMessage; noticeKind = outcome; if (mutation) layoutJson = originalDraft;} }
+  catch (error) { outcome = cancelling ? 'info' : 'error'; resultMessage = error instanceof Error ? error.message : String(error); if(target===launcherTarget()){notice = resultMessage; noticeKind = outcome; noticeRequiresTelevision = true; if (mutation) layoutJson = originalDraft;} }
   finally {
     const wasCancelled=cancelling;
     localBusy = false; busy = !!agentOperation?.running; cancelling = false;
@@ -753,7 +757,7 @@ async function run(request: Request, label: string, operation?: string): Promise
   const before = snapshot.device, originalHome = snapshot.originalHome;
   const previousEntries = new Set(snapshot.history.map(entry => entry.id));
   const operationNames: Record<string, string> = { connect: '连接电视', disconnect: '断开连接', scan: '扫描应用', refreshSystemInfo: '刷新电视系统信息', refreshLocalNetwork: '刷新本机 IP', setAdbPath: '配置 ADB', install: '安装 APK', setHome: '更换默认桌面', restoreHome: '恢复原桌面', clearHistory: '清空操作记录', setEnabled: request.action === 'setEnabled' && request.enabled ? '启用' : '停用', uninstall: '当前用户卸载', restore: '恢复安装' };
-  localBusy = true; busy = true; cancelling = false; busyLabel = label; notice = '';
+  localBusy = true; localOperationRequiresTelevision = request.action !== 'clearHistory'; busy = true; cancelling = false; busyLabel = label; notice = '';
   beginFeedback(operation || t(operationNames[request.action] || '操作结果'), label); render();
   let rows: FeedbackRow[] = [], outcome: NoticeKind = 'error', resultMessage = '';
   try {
@@ -799,7 +803,7 @@ async function run(request: Request, label: string, operation?: string): Promise
     try { const previousDevice = snapshot.device?.serial; applySnapshot(await api.execute({ action: 'getState' })); if (previousDevice !== snapshot.device?.serial) selected.clear(); cleanSelection(); } catch { /* Keep the last known snapshot if state refresh also fails. */ }
   } finally {
     localBusy = false; busy = !!agentOperation?.running; cancelling = false;
-    notice = resultMessage; noticeKind = outcome;
+    notice = resultMessage; noticeKind = outcome; noticeRequiresTelevision = request.action !== 'clearHistory';
     finishFeedback(outcome, resultMessage, rows); render();
   }
   return result;
@@ -855,7 +859,7 @@ async function downloadTools(forceDownload=false): Promise<void> {
   finally { toolsPreparing = false; render(); }
   if (!info.supported) throw new Error(info.message || t('当前电脑不支持在线配置，请手动选择 ADB'));
   if (!await confirmTools(info,forceDownload) || busy || snapshot.device) return;
-  localBusy = true; busy = true; downloadingTools = true; cancelling = false; notice = '';
+  localBusy = true; localOperationRequiresTelevision = true; busy = true; downloadingTools = true; cancelling = false; notice = '';
   toolsProgress = { stage: info.installed && !forceDownload ? 'checking' : 'downloading', downloaded: 0, total: info.downloadBytes };
   beginFeedback(t(forceDownload ? '重新下载 ADB 工具' : '配置 ADB'), progressText()); render();
   let outcome: NoticeKind = 'error', resultMessage = '';
@@ -870,7 +874,7 @@ async function downloadTools(forceDownload=false): Promise<void> {
     try { applySnapshot(await api.execute({ action: 'getState' })); adbPath = snapshot.adbPath || ''; } catch { /* Retain last known state if refresh fails. */ }
   } finally {
     downloadingTools = false; localBusy = false; busy = !!agentOperation?.running; cancelling = false; toolsProgress = null;
-    notice = resultMessage; noticeKind = outcome; finishFeedback(outcome, resultMessage); render();
+    notice = resultMessage; noticeKind = outcome; noticeRequiresTelevision = true; finishFeedback(outcome, resultMessage); render();
   }
 }
 function details(pkg: string): void {
@@ -1097,10 +1101,10 @@ render();
 clientUpdater.start();
 void api.execute({ action: 'getState' }).then(value => {
   if (!applySnapshot(value)) return;
-  adbPath = snapshot.adbPath || ''; notice = snapshot.message;
+  adbPath = snapshot.adbPath || ''; notice = snapshot.message; noticeRequiresTelevision = true;
   render();
   void refreshToolsInfo().then(render);
-}).catch(e => showNotice(e instanceof Error ? e.message : String(e), 'error'));
+}).catch(e => showNotice(e instanceof Error ? e.message : String(e), 'error', true));
 
 void api.mcpInfo().then(value => { mcpInfo = value; render(); }).catch(error => { mcpError = String(error); render(); });
 void api.watchMcp(value => {
@@ -1121,7 +1125,7 @@ void api.watchMcp(value => {
       adbPath = snapshot.adbPath || '';
       if (previous !== snapshot.device?.serial) selected.clear();
       cleanSelection();
-      notice = value.error || snapshot.message; noticeKind = value.error ? 'error' : 'info';
+      notice = value.error || snapshot.message; noticeKind = value.error ? 'error' : 'info'; noticeRequiresTelevision = !marketOperation && value.tool !== 'clear_history';
     }
   }
   if (!value.running && value.tool === 'install' && !value.error && acceptedSnapshot) {
@@ -1146,7 +1150,7 @@ void api.watchMcp(value => {
     const result = value.marketResult;
     const description = value.error || (result ? result.operation === 'catalog' ? result.catalog.warning ? marketDiagnostic(result.catalog.warning) : ui`市场目录已更新，共 ${result.catalog.items.length} 个安装包。` : marketResultMessage(result) : t('未收到执行结果，请重新扫描确认'));
     const outcome = wasCancelling ? 'info' : value.error || !result || (result.operation !== 'catalog' && (result.error || (result.operation === 'install' && !result.installed))) ? 'error' : result.operation === 'catalog' && result.catalog.stale ? 'info' : 'success';
-    notice = description; noticeKind = outcome; finishFeedback(outcome, description); agentMarketProgress = null;
+    notice = description; noticeKind = outcome; noticeRequiresTelevision = false; finishFeedback(outcome, description); agentMarketProgress = null;
   }
   let acceptedLayout=false;
   if(value.launcherResult){if(value.tool==='get_launcher_backgrounds')acceptLauncherBackgrounds(value.launcherResult);else acceptedLayout=acceptLauncherResult(value.launcherResult);}

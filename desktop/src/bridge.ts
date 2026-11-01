@@ -1,7 +1,7 @@
 import { Channel, invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import {version as appVersion} from '../package.json';
-import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketSeenEntry, type MarketSeenApps, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight, type ClientUpdateInfo, type ClientUpdateProgress, type ClientUpdateResult, type ForumPage } from './types';
+import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketSeenEntry, type MarketSeenApps, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight, type ClientUpdateInfo, type ClientUpdateProgress, type ClientUpdateResult, type ForumPage, type ForumPostDetail, type ForumRepliesPage } from './types';
 
 export const demo = new URLSearchParams(location.search).get('demo') === '1';
 export const desktop = '__TAURI_INTERNALS__' in window;
@@ -142,6 +142,29 @@ export async function openForumPost(number: string): Promise<void> {
     return;
   }
   await invoke('open_forum_post', { number });
+}
+
+export async function getForumPost(number: string, refresh = false): Promise<ForumPostDetail> {
+  if (!/^[A-Za-z0-9]{1,32}$/.test(number)) throw new Error('无效的论坛帖子编号');
+  if (demo) {
+    const post = (await getForumPosts()).posts.find(post => post.number === number);
+    if (!post) throw new Error('论坛返回的帖子详情无效，请稍后重试');
+    return { post: { ...post, createdAt: post.updatedAt, body: '这是演示帖子，用于预览客户端内的阅读体验。\n\n可以在这里查看原帖正文和回复列表。发布帖子与回复仍会打开浏览器中的 Gitee 页面。' }, fetchedAt: Date.now(), stale: false, warning: null };
+  }
+  if (!desktop) throw new Error('请在桌面管理器中浏览论坛。');
+  return invoke<ForumPostDetail>('get_forum_post', { number, refresh });
+}
+
+export async function getForumReplies(number: string, page = 1, refresh = false): Promise<ForumRepliesPage> {
+  if (!/^[A-Za-z0-9]{1,32}$/.test(number)) throw new Error('无效的论坛帖子编号');
+  if (demo) {
+    await new Promise(resolve => setTimeout(resolve, 180));
+    return { number, page, hasMore: false, fetchedAt: Date.now(), stale: false, warning: null, replies: page === 1 ? [
+      { id: 'demo-reply-1', body: '感谢分享，这是用于展示的演示回复。', author: '演示用户', createdAt: '2026-11-01T13:00:00+08:00', updatedAt: '2026-11-01T13:00:00+08:00' },
+    ] : [] };
+  }
+  if (!desktop) throw new Error('请在桌面管理器中浏览论坛。');
+  return invoke<ForumRepliesPage>('get_forum_replies', { number, page, refresh });
 }
 
 export async function getPackageInsight(packageName: string, refresh = false): Promise<PackageInsight> {
