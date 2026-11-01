@@ -19,9 +19,9 @@
     "游戏操作",
     "Game controls"
   ],
-  "yourPlayer": [
-    "你的玩家",
-    "YOUR PLAYER"
+  "soloMission": [
+    "单人行动",
+    "SOLO MISSION"
   ],
   "rotate": [
     "横屏握持，视野更宽",
@@ -56,24 +56,20 @@
     "Connection lost. Controls released — reconnecting…"
   ],
   "full": [
-    "房间已有两名玩家，空出位置后可重新连接。",
-    "Two players already joined. Try again when a place is free."
+    "已有手机连接，请在原手机继续；断开后稍等再试。",
+    "A phone is already connected. Continue on that phone, or wait briefly after it disconnects and retry."
   ],
   "invalid": [
     "房间不可用，请扫描电视上的当前二维码。",
     "Room unavailable. Scan the current QR code on your TV."
   ],
-  "waitingPlayer": [
+  "waitingController": [
     "正在加入",
     "Joining room"
   ],
-  "playerOne": [
-    "玩家 1",
-    "Player 1"
-  ],
-  "playerTwo": [
-    "玩家 2",
-    "Player 2"
+  "operatorReady": [
+    "战士已就绪",
+    "SOLDIER READY"
   ],
   "expired": [
     "房间已过期，请扫描电视上的新二维码。",
@@ -164,8 +160,8 @@
     "TOP RIGHT: FIRE & AIM · BOTTOM RIGHT: GRENADE"
   ],
   "ready": [
-    "SELECT 选择单人 / 双人 · START 开始任务",
-    "SELECT one / two players · START deploys"
+    "START 开始单人任务",
+    "START deploys your solo mission"
   ],
   "playing": [
     "按住右上半区开火，拖动瞄准；点按辅助瞄准。",
@@ -188,12 +184,12 @@
     "Tap anywhere in the bottom right half to throw a grenade"
   ],
   "select": [
-    "武器 / 人数",
-    "Weapon / players"
+    "切换武器",
+    "Next weapon"
   ],
   "selectLabel": [
-    "SELECT 标题选择人数，游戏中切换武器",
-    "SELECT: player count at title, next weapon during gameplay"
+    "SELECT 游戏中切换武器，补给站选择补给",
+    "SELECT: next weapon during gameplay, browse supplies at the supply station"
   ],
   "pistol": [
     "战术手枪",
@@ -237,14 +233,14 @@
   $('start-caption').textContent = messages.start;
   $('fullscreen').setAttribute('aria-label', messages.fullscreen);
   $('fullscreen').title = messages.fullscreen;
-  $('player-name').textContent = messages.waitingPlayer;
+  $('operator-name').textContent = messages.waitingController;
   const root = $('controller');
   const stick = $('joystick'), stickZone = $('joystick-zone');
   const room = new URL(location.href).searchParams.get('room') || '';
   const storageKey = `alien-shooter-controller:${room}`;
   let session = '';
   try { session = sessionStorage.getItem(storageKey) || ''; } catch (_) { /* Private browser storage may be unavailable. */ }
-  let ws = null, connected = false, player = 0, seq = 0, attempts = 0;
+  let ws = null, connected = false, seq = 0, attempts = 0;
   let reconnectTimer = 0, helloTimer = 0, lastSend = 0, lastSent = '', terminal = false, leaving = false;
   let gamePhase = 'title';
   let stickPointer = null, stickX = 0, stickY = 0;
@@ -296,7 +292,7 @@
     input.b = [...actionPointers.values()].includes('b') || keys.has('b') || keys.has('x') || keys.has('button:b');
     input.start = [...actionPointers.values()].includes('start') || keys.has('Enter') || keys.has('button:start');
     input.select = [...actionPointers.values()].includes('select') || keys.has('Shift') || keys.has('button:select');
-    // Both players can act concurrently; completed games keep the menu controls available.
+    // Completed missions keep the menu controls available.
     if (!canAct()) { input.x = input.y = input.aimX = input.aimY = 0; input.a = input.b = false; }
     for (const action of ['a', 'b', 'start', 'select']) $(`button-${action}`).classList.toggle('pressed', input[action]);
     updateStick();
@@ -354,7 +350,7 @@
   }
   function applyState(state) {
     if (!connected) return;
-    const mine = Array.isArray(state.players) ? state.players.find(p => p && Number(p.id) === player) : null;
+    const mine = Array.isArray(state.players) ? state.players.find(p => p && Number(p.id) === 1) : null;
     const label = mine && typeof mine.stageLabel === 'string' ? mine.stageLabel : state.stageLabel;
     if (typeof label === 'string' && label.length) setStat('stage', label);
     else if (mine && Number.isFinite(mine.level)) setStat('stage', Math.max(1, mine.level));
@@ -400,11 +396,13 @@
       if (socket !== ws || typeof event.data !== 'string' || event.data.length > 32768) return;
       let data; try { data = JSON.parse(event.data); } catch (_) { return; }
       if (!data || typeof data !== 'object') return;
-      if (data.type === 'welcome' && [1, 2].includes(data.player) && typeof data.session === 'string') {
+      if (data.type === 'welcome' && (data.player !== 1 || typeof data.session !== 'string' || !data.session)) {
+        fail('invalid', true);
+      } else if (data.type === 'welcome') {
         clearTimeout(helloTimer); helloTimer = 0;
         session = data.session; try { sessionStorage.setItem(storageKey, session); } catch (_) {}
-        player = data.player; connected = true; attempts = 0; root.dataset.player = String(player);
-        $('player-number').textContent = `P${player}`; $('player-name').textContent = messages[player === 1 ? 'playerOne' : 'playerTwo'];
+        connected = true; attempts = 0;
+        $('operator-name').textContent = messages.operatorReady;
         resetControls(false); showConnection('connected'); setMessage('ready'); sendInput(true);
       } else if (data.type === 'state') applyState(data);
       else if (data.type === 'error') {

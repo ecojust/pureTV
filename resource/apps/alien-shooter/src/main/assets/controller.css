@@ -18,7 +18,6 @@ body { background: radial-gradient(ellipse at 10% 90%, rgba(var(--accent-rgb),.0
 input, textarea, [contenteditable="true"] { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; touch-action: manipulation; }
 button { font-family: inherit; cursor: pointer; }
 .controller { position: relative; width: 66.666667%; height: 100%; height: 100dvh; padding: 16px 18px; padding: calc(16px + env(safe-area-inset-top)) 18px calc(16px + env(safe-area-inset-bottom)) calc(18px + env(safe-area-inset-left)); display: flex; flex-direction: column; gap: 10px; }
-.controller[data-player="2"] { --accent: #5ee1d4; --accent-rgb: 94,225,212; }
 .header, .dashboard, .messages, .controller > .message { position: relative; z-index: 2; pointer-events: none; flex-shrink: 0; }
 .header { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .brand { display: flex; align-items: center; gap: 8px; margin-right: auto; min-width: 0; }
@@ -32,10 +31,10 @@ button { font-family: inherit; cursor: pointer; }
 .fullscreen svg { width: 19px; height: 19px; }
 .fullscreen[hidden], .error-actions[hidden] { display: none; }
 .dashboard { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); padding-top: 10px; }
-.player-badge { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.player-number { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border: 1px solid rgba(var(--accent-rgb),.3); border-radius: 10px; color: var(--accent); background: rgba(var(--accent-rgb),.07); font-weight: 800; }
+.operator-badge { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.mode-badge { font-size: 9px; letter-spacing: .5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border: 1px solid rgba(var(--accent-rgb),.3); border-radius: 10px; color: var(--accent); background: rgba(var(--accent-rgb),.07); font-weight: 800; }
 .eyebrow, .stats span { display: block; color: var(--muted); font-size: 8px; }
-.player-badge strong { display: block; font-size: 10px; margin-top: 4px; }
+.operator-badge strong { display: block; font-size: 10px; margin-top: 4px; }
 .stats { display: flex; gap: 18px; text-align: right; min-width: 0; }
 .stats > div { min-width: 0; }
 .stats strong { display: block; max-width: 125px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; margin-top: 3px; font-variant-numeric: tabular-nums; }
@@ -81,11 +80,11 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
 @media (orientation: portrait) {
   .controller { padding: 16px 12px; padding: calc(16px + env(safe-area-inset-top)) 12px 16px calc(12px + env(safe-area-inset-left)); gap: 12px; }
   .header { flex-wrap: wrap; gap: 9px; }.brand { width: 100%; }.brand strong { font-size: 12px; }.brand > svg { width: 24px; height: 24px; }.connection { margin-right: auto; }.fullscreen { width: 32px; height: 32px; }
-  .dashboard { flex-wrap: wrap; }.player-badge { width: 100%; }.stats { width: 100%; justify-content: space-between; gap: 10px; text-align: left; }.stats strong { font-size: 14px; max-width: 85px; }
+  .dashboard { flex-wrap: wrap; }.operator-badge { width: 100%; }.stats { width: 100%; justify-content: space-between; gap: 10px; text-align: left; }.stats strong { font-size: 14px; max-width: 85px; }
   .status-line { flex-wrap: wrap; gap: 3px; }.message { font-size: 9px; }.system-keys { gap: 10px; }.system-button { width: 76px; }.footer { font-size: 8px; }.button-caption { font-size: 10px; letter-spacing: 0; }.joystick { width: 150px; height: 150px; }
 }
 @media (max-height: 360px) and (orientation: landscape) {
-  .controller { padding-top: 8px; gap: 6px; }.dashboard { padding-top: 6px; }.stats strong { font-size: 13px; }.player-number { width: 29px; height: 29px; }.joystick { width: 140px; height: 140px; }.control-caption { bottom: 85px; }
+  .controller { padding-top: 8px; gap: 6px; }.dashboard { padding-top: 6px; }.stats strong { font-size: 13px; }.mode-badge { width: 29px; height: 29px; }.joystick { width: 140px; height: 140px; }.control-caption { bottom: 85px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 

@@ -56,27 +56,59 @@ public class LanGameServerTest {
         assertTrue(handshake(socket(), server.roomToken(), "http://127.0.0.1:" + port).startsWith("HTTP/1.1 101"));
     }
 
-    @Test public void twoPlayersJoinAndThirdCannotTakeTheirSlots() throws Exception {
-        Socket one = websocket(), two = websocket(), three = websocket();
-        send(one, "{\"type\":\"hello\"}");
-        JSONObject first = message(one, "welcome");
-        send(two, "{\"type\":\"hello\",\"session\":\"not-a-session\"}");
-        JSONObject second = message(two, "welcome");
-        assertEquals(1, first.getInt("player")); assertEquals(2, second.getInt("player"));
-        assertNotEquals(first.getString("session"), second.getString("session"));
-        send(three, "{\"type\":\"hello\"}");
-        assertEquals("room_full", message(three, "error").getString("code"));
-        assertEquals(2, new JSONObject(server.snapshot()).getInt("connections"));
-        send(one, input(1, 1, 0, true, false));
-        send(two, input(1, -1, 1, false, true));
-        await(() -> {
-            org.json.JSONArray players = new JSONObject(server.snapshot()).getJSONArray("players");
-            return players.getJSONObject(0).getBoolean("a") && players.getJSONObject(1).getBoolean("b");
-        });
-        org.json.JSONArray live = new JSONObject(server.snapshot()).getJSONArray("players");
-        assertEquals(1, live.getJSONObject(0).getDouble("x"), 0);
-        assertEquals(-1, live.getJSONObject(1).getDouble("x"), 0);
+    @Test public void oneControllerOwnsTheOnlySeatAndOtherPhonesCannotTakeIt() throws Exception {
+        Socket owner = websocket(); send(owner, "{\"type\":\"hello\"}");
+        JSONObject welcome = message(owner, "welcome");
+        assertEquals(1, welcome.getInt("player"));
+        send(owner, input(1, 1, 0, true, false)); await(() -> player().optBoolean("a"));
+        for (String session : new String[] {null, "not-the-owner-session"}) {
+            Socket outsider = websocket(); JSONObject hello = new JSONObject().put("type", "hello");
+            if (session != null) hello.put("session", session);
+            send(outsider, hello.toString());
+            assertEquals("room_full", message(outsider, "error").getString("code"));
+        }
+        JSONObject snapshot = new JSONObject(server.snapshot());
+        assertEquals(1, snapshot.getInt("connections"));
+        assertEquals(1, snapshot.getJSONArray("players").length());
+        assertEquals(1, snapshot.getJSONArray("players").getJSONObject(0).getInt("id"));
+        assertEquals(1, snapshot.getJSONArray("players").getJSONObject(0).getDouble("x"), 0);
+        assertTrue(snapshot.getJSONArray("players").getJSONObject(0).getBoolean("a"));
+        send(owner, "{\"type\":\"ping\"}"); message(owner, "pong");
+    }
 
+    @Test public void onlyTheOwnersSessionCanResumeAndReplaceItsLiveSocket() throws Exception {
+        Socket original = websocket(); send(original, "{\"type\":\"hello\"}");
+        String session = message(original, "welcome").getString("session");
+        send(original, input(1, 1, 0, true, true)); await(() -> player().optBoolean("a"));
+        Socket replacement = websocket();
+        send(replacement, new JSONObject().put("type", "hello").put("session", session).toString());
+        JSONObject welcome = message(replacement, "welcome");
+        assertEquals(1, welcome.getInt("player")); assertEquals(session, welcome.getString("session"));
+        JSONObject resumed = player();
+        assertFalse(resumed.getBoolean("a")); assertFalse(resumed.getBoolean("b"));
+        assertEquals(0, resumed.getDouble("x"), 0); assertEquals(1, resumed.getLong("cancelSeq"));
+        try { while (original.getInputStream().read() != -1) { } }
+        catch (java.net.SocketException reset) { /* The replaced socket is closed. */ }
+        send(replacement, input(0, -1, 0, false, true)); await(() -> player().optBoolean("b"));
+        assertEquals(-1, player().getDouble("x"), 0);
+        assertEquals(1, new JSONObject(server.snapshot()).getInt("connections"));
+    }
+
+    @Test public void foreignPlayerIdsCannotInjectControls() throws Exception {
+        String session = null;
+        for (String field : new String[] {"id", "player"}) {
+            Socket controller = websocket(); JSONObject hello = new JSONObject().put("type", "hello");
+            if (session != null) hello.put("session", session);
+            send(controller, hello.toString()); session = message(controller, "welcome").getString("session");
+            send(controller, new JSONObject(input(1, 1, 1, true, true)).put(field, 2).toString());
+            assertEquals("protocol_error", message(controller, "error").getString("code"));
+            await(() -> !player().optBoolean("connected"));
+            JSONObject snapshot = new JSONObject(server.snapshot());
+            assertEquals(1, snapshot.getJSONArray("players").length());
+            JSONObject only = snapshot.getJSONArray("players").getJSONObject(0);
+            assertEquals(1, only.getInt("id")); assertEquals(0, only.getDouble("x"), 0);
+            assertFalse(only.getBoolean("a")); assertFalse(only.getBoolean("b"));
+        }
     }
 
     @Test public void inputsClampIgnoreOldSequencesAndExpireWithoutSticking() throws Exception {
@@ -106,6 +138,8 @@ public class LanGameServerTest {
         first.close(); await(() -> !player().optBoolean("connected"));
         assertFalse(player().getBoolean("a"));
         assertFalse(player().getBoolean("start")); assertFalse(player().getBoolean("select"));
+        Socket outsider = websocket(); send(outsider, "{\"type\":\"hello\"}");
+        assertEquals("A brief Wi-Fi disconnect reserves the seat for its original phone", "room_full", message(outsider, "error").getString("code"));
         Socket second = websocket(); send(second, new JSONObject().put("type", "hello").put("session", welcome.getString("session")).toString());
         JSONObject resumed = message(second, "welcome");
         assertEquals(1, resumed.getInt("player")); assertEquals(welcome.getString("session"), resumed.getString("session"));
@@ -121,11 +155,10 @@ public class LanGameServerTest {
         assertEquals(3, state.getInt("stage"));
         JSONObject ownState = new JSONObject().put("id", 1).put("joined", true).put("active", true).put("stageLabel", "Industrial quarantine").put("score", 42)
                 .put("hp", 75).put("weapon", "shotgun").put("ammo", 24).put("grenades", 3);
-        JSONObject secondState = new JSONObject().put("id", 2).put("joined", true).put("active", true).put("score", 18);
-        server.publish(new JSONObject().put("phase", "playing").put("coins", 42).put("players", new org.json.JSONArray().put(ownState).put(secondState)).toString());
+        server.publish(new JSONObject().put("phase", "playing").put("credits", 42).put("players", new org.json.JSONArray().put(ownState)).toString());
         do { state = message(socket, "state"); } while (!state.has("players"));
         assertTrue(state.getJSONArray("players").getJSONObject(0).getBoolean("active"));
-        assertTrue(state.getJSONArray("players").getJSONObject(1).getBoolean("active"));
+        assertEquals(1, state.getJSONArray("players").length());
         assertEquals("shotgun", state.getJSONArray("players").getJSONObject(0).getString("weapon"));
         assertEquals(3, state.getJSONArray("players").getJSONObject(0).getInt("grenades"));
         java.lang.reflect.Field published = LanGameServer.class.getDeclaredField("published");
@@ -177,8 +210,8 @@ public class LanGameServerTest {
         send(socket, input(5, 0, 0, false, false));
         await(() -> player().optLong("cancelSeq") == 3);
         assertFalse(player().getBoolean("a"));
-        assertEquals("The other player is independent", 0,
-                new JSONObject(server.snapshot()).getJSONArray("players").getJSONObject(1).getLong("cancelSeq"));
+        assertEquals("The controller snapshot has only the single protagonist", 1,
+                new JSONObject(server.snapshot()).getJSONArray("players").length());
         send(socket, input(6, 1, 0, false, true));
         await(() -> player().optBoolean("b"));
         server.releaseInputs();
@@ -249,7 +282,7 @@ public class LanGameServerTest {
         org.json.JSONArray tap = new JSONObject(server.snapshot()).getJSONArray("players");
         for (String key : new String[] {"a", "b", "start", "select"}) {
             assertTrue("A short tap must reach the next TV frame: " + key, tap.getJSONObject(0).getBoolean(key));
-            assertFalse("Never assign another player this tap: " + key, tap.getJSONObject(1).getBoolean(key));
+            assertEquals("Taps can never create a second player", 1, tap.length());
         }
         JSONObject consumed = player();
         for (String key : new String[] {"a", "b", "start", "select"}) assertFalse("Tap consumed once: " + key, consumed.getBoolean(key));
@@ -336,7 +369,7 @@ public class LanGameServerTest {
 
     @Test public void stopDisconnectsClientsAndPortCanBeReleased() throws Exception {
         Socket client = websocket(); send(client, "{\"type\":\"hello\"}"); message(client, "welcome");
-        Socket second = websocket(); send(second, "{\"type\":\"hello\"}"); message(second, "welcome");
+        Socket second = websocket(); // An unauthenticated pending connection must also close.
         send(client, new JSONObject(input(0, 1, 0, true, true)).put("start", true).put("select", true).toString()); await(() -> player().optBoolean("start"));
         server.stop();
         assertEquals(0, new JSONObject(server.snapshot()).getInt("connections"));
@@ -344,7 +377,7 @@ public class LanGameServerTest {
         assertFalse(player().getBoolean("start")); assertFalse(player().getBoolean("select"));
         for (Socket phone : new Socket[] {client, second}) {
             phone.setSoTimeout(1000);
-            // Drain any already-buffered state; both phones must then observe a closed socket.
+            // Drain buffered state; the controller and unjoined client must both close.
             byte[] buffered = new byte[4096];
             int total = 0, count;
             while ((count = phone.getInputStream().read(buffered)) != -1) {

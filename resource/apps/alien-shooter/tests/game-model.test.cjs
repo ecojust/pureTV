@@ -5,16 +5,15 @@ const Game = require('../src/main/assets/game-model.js');
 const World = Game.World;
 function input(id = 1, extra = {}) { return { id, connected: true, x: 0, y: 0, aimX: 0, aimY: 0, a: false, b: false, start: false, select: false, cancelSeq: 0, ...extra }; }
 function advance(game, seconds, values = [input()]) { for (let t = 0; t < seconds - 1e-8; t += 1 / 60) game.update(1 / 60, values); }
-function begin(count = 1, id = 1) {
+function begin() {
   const game = new Game({ seed: 93416 });
-  const values = count === 2 ? [input(1), input(2)] : [input(id)];
-  game.selectedPlayers = count;
-  game.update(1 / 60, values.map(p => ({ ...p, start: p.id === id })));
-  game.update(1 / 60, values);
+  game.update(1 / 60, [input(1, { start: true })]);
+  game.update(1 / 60, [input()]);
   assert.equal(game.phase, 'playing');
+  assert.deepEqual(game.players.map(p => p.id), [1]);
   return game;
 }
-function clearEnemies(game) { for (const e of game.enemies) game.damageEnemy(e, 100000, game.participantIds[0]); game.enemies = game.enemies.filter(e => e.hp > 0); }
+function clearEnemies(game) { for (const e of game.enemies) game.damageEnemy(e, 100000, 1); game.enemies = game.enemies.filter(e => e.hp > 0); }
 function battlefield(game) { game.enemies = []; game.pickups = []; game.players.filter(p => p.active).forEach(p => p.invulnerable = 999); }
 
 test('three authored maps have traversable mission consoles and connected gate routes', () => {
@@ -38,24 +37,31 @@ test('three authored maps have traversable mission consoles and connected gate r
   }
 });
 
-test('solo can use the only online slot 2, and a later spectator cannot pause or change equipment', () => {
-  const game = begin(1, 2);
-  assert.deepEqual(game.participantIds, [2]);
-  assert.equal(game.players[0].active, false);
-  assert.equal(game.players[1].active, true);
-  battlefield(game);
-  advance(game, .1, [input(1), input(2)]);
-  game.update(1 / 60, [input(1, { start: true, select: true, b: true }), input(2)]);
-  assert.equal(game.phase, 'playing');
-  assert.equal(game.players[1].weapon, 'pistol');
-  assert.equal(game.grenades.length, 0);
-  game.loadStage(1);
-  assert.equal(game.players[1].active, true);
-  assert.equal(game.players[0].active, false);
-  game.pause('manual'); game.update(.02, [input(1), input(2)]);
-  game.update(.02, [input(1, { start: true }), input(2)]); assert.equal(game.phase, 'paused');
-  game.phase = 'shop'; game.credits = 500; game.update(.02, [input(1), input(2)]);
-  game.update(.02, [input(1, { start: true, a: true }), input(2)]); assert.equal(game.phase, 'shop'); assert.equal(game.credits, 500);
+test('the game always has one character and SELECT or start(2) cannot enable another', () => {
+  const game = new Game();
+  assert.equal(game.selectedPlayers, 1);
+  assert.deepEqual(game.players.map(p => p.id), [1]);
+  game.update(.02, [input(1, { select: true }), input(2, { start: true, select: true })]);
+  assert.equal(game.phase, 'title'); assert.equal(game.selectedPlayers, 1);
+  assert.equal(game.start(2), true); assert.deepEqual(game.players.map(p => p.id), [1]);
+  assert.equal(game.selectedPlayers, 1);
+  assert.throws(() => { game.selectedPlayers = 2; }, TypeError);
+  for (let stage = 0; stage < 3; stage++) { game.loadStage(stage); assert.deepEqual(game.players.map(p => p.id), [1]); }
+});
+
+test('forged second-player input cannot start, move, attack, pause, shop, resume or restart', () => {
+  const forged = input(2, { x: 1, y: -1, aimX: -1, aimY: 1, a: true, b: true, start: true, select: true, cancelSeq: 99 });
+  const title = new Game(); advance(title, .2, [forged]); assert.equal(title.phase, 'title'); assert.equal(title.players[0].connected, false);
+  const clean = begin(), attacked = begin();
+  for (let frame = 0; frame < 180; frame++) {
+    const valid = input(1, { a: frame > 30, x: frame < 40 ? 1 : 0 });
+    clean.update(1 / 60, [valid]); attacked.update(1 / 60, [forged, valid]);
+  }
+  for (const field of ['players', 'phase', 'stage', 'enemies', 'bullets', 'grenades', 'pickups', 'credits', 'kills', 'events']) assert.deepEqual(attacked[field], clean[field]);
+  attacked.pause('manual'); attacked.update(.02, [input(), forged]); assert.equal(attacked.phase, 'paused');
+  attacked.phase = 'shop'; attacked.credits = 500; attacked.update(.02, [input(), forged]);
+  assert.equal(attacked.phase, 'shop'); assert.equal(attacked.credits, 500); assert.equal(attacked.shop.selected, 0);
+  attacked.phase = 'gameover'; attacked.update(.02, [input(), forged]); assert.equal(attacked.phase, 'gameover');
 });
 
 test('the first remote START works after an empty title screen, but true reconnect cannot replay held actions', () => {
@@ -66,15 +72,12 @@ test('the first remote START works after an empty title screen, but true reconne
   game.update(.02, [input(1)]); game.update(.02, [input(1, { start: true })]); assert.equal(game.phase, 'playing');
 });
 
-test('two-player start requires both controllers, and disconnect pauses until an explicit connected resume', () => {
-  const title = new Game(); title.selectedPlayers = 2;
-  title.update(.02, [input(1, { start: true })]); assert.equal(title.phase, 'title');
-  const game = begin(2); battlefield(game);
-  const elapsed = game.elapsed;
-  game.update(.05, [input(1)]); assert.equal(game.phase, 'paused'); assert.equal(game.pausedReason, 'disconnected');
-  advance(game, .5, [input(1), input(2)]); assert.equal(game.elapsed, elapsed); assert.equal(game.phase, 'paused');
-  game.update(.02, [input(1, { start: true }), input(2)]); assert.equal(game.phase, 'playing');
-  game.update(.02, [input(1), input(2)]); assert.ok(game.elapsed > elapsed);
+test('disconnect pauses even if a forged second controller stays online, and reconnect requires explicit resume', () => {
+  const game = begin(); battlefield(game); const elapsed = game.elapsed;
+  game.update(.05, [input(2)]); assert.equal(game.phase, 'paused'); assert.equal(game.pausedReason, 'disconnected');
+  advance(game, .5, [input(), input(2)]); assert.equal(game.elapsed, elapsed); assert.equal(game.phase, 'paused');
+  game.update(.02, [input(1, { start: true })]); assert.equal(game.phase, 'playing');
+  game.update(.02, [input()]); assert.ok(game.elapsed > elapsed);
 });
 
 test('movement follows screen directions, normalizes diagonals and cannot cross solid walls', () => {
@@ -151,30 +154,33 @@ test('a round heavy alien can navigate the reactor diagonal gap without square-c
   assert.equal(game.blocked(e.x, e.y, e.radius * .99), false);
 });
 
-test('co-op damage, revival and all-down gameover are meaningful and cannot trigger empty-team extraction', () => {
-  const game = begin(2); battlefield(game); const [a, b] = game.players; a.invulnerable = 0; a.armor = 0;
-  game.damagePlayer(a, 150); assert.equal(a.downed, true); assert.equal(a.alive, false);
-  b.x = a.x + .7; b.y = a.y;
-  advance(game, 3.2, [input(1), input(2)]); assert.equal(a.downed, false); assert.equal(a.hp, 50); assert.ok(a.invulnerable > 0);
-  a.invulnerable = b.invulnerable = 0; a.armor = b.armor = 0;
-  game.damagePlayer(a, 200); game.damagePlayer(b, 200); game.extractionReady = true;
-  game.update(.02, [input(1), input(2)]); assert.equal(game.phase, 'gameover');
+test('player death immediately ends the game without revival or accidental extraction', () => {
+  const game = begin(); battlefield(game); const p = game.players[0]; p.invulnerable = 0; p.armor = 0;
+  game.extractionReady = true; p.x = game.map.exit.x; p.y = game.map.exit.y;
+  game.damagePlayer(p, 150);
+  assert.equal(game.phase, 'gameover'); assert.equal(p.alive, false); assert.equal(p.hp, 0);
+  assert.equal(Object.hasOwn(p, 'downed'), false); assert.equal(Object.hasOwn(p, 'reviveProgress'), false);
+  assert.equal(typeof game.stepRevive, 'undefined');
+  const elapsed = game.elapsed; advance(game, 4, [input(1), input(2, { a: true, start: true })]);
+  assert.equal(game.phase, 'gameover'); assert.equal(game.elapsed, elapsed); assert.equal(p.alive, false);
+  assert.equal(game.events.filter(e => e.kind === 'gameover').length, 1);
 });
 
-test('shared-screen tether bounds separation without reversing movement', () => {
-  const game = begin(2); battlefield(game); const [a, b] = game.players; a.x = 3; a.y = 30; b.x = 8; b.y = 30;
-  advance(game, 4, [input(1), input(2, { x: 1 })]);
-  assert.ok(b.x >= 8); assert.ok(Math.hypot(a.x - b.x, a.y - b.y) <= 13.01);
+test('single-character movement has no shared-screen distance tether', () => {
+  const game = begin(); battlefield(game); const p = game.players[0]; p.x = 14; p.y = 30;
+  advance(game, 4, [input(1, { y: -1 })]);
+  assert.ok(30 - p.y > 17); assert.equal(game.players.length, 1);
 });
 
-test('shop purchases are charged once, shared with the squad and capped', () => {
-  const game = begin(2); battlefield(game); game.phase = 'shop'; game.credits = 500;
+test('shop purchases are charged once and equip only the single player within upgrade limits', () => {
+  const game = begin(); battlefield(game); game.phase = 'shop'; game.credits = 500;
   assert.equal(game.buy(0), true); assert.equal(game.credits, 380);
-  for (const p of game.players) { assert.ok(p.owned.includes('smg')); assert.equal(p.ammo.smg, 240); assert.equal(p.weapon, 'smg'); }
+  assert.equal(game.players.length, 1); const p = game.players[0];
+  assert.ok(p.owned.includes('smg')); assert.equal(p.ammo.smg, 240); assert.equal(p.weapon, 'smg');
   assert.equal(game.buy(3), false); assert.equal(game.credits, 380);
-  game.players.forEach(p => { p.maxHp = 200; }); assert.equal(game.buy(8), false); assert.equal(game.credits, 380);
+  p.maxHp = 200; assert.equal(game.buy(8), false); assert.equal(game.credits, 380);
   assert.equal(game.continueCampaign(), true); assert.equal(game.stage, 1); assert.equal(game.phase, 'playing');
-  assert.equal(game.buy(0), false);
+  assert.equal(game.players.length, 1); assert.equal(game.buy(0), false);
 });
 
 test('all nine mission objectives, two shops, final boss and extraction form a complete campaign', () => {

@@ -228,10 +228,11 @@ public class MainActivityTest {
         bitmap.recycle();
     }
 
-    @Test public void pressingHomeClosesBothClientsAndDestroysBrowserWorkerAndOwnProcess() throws Exception {
+    @Test public void pressingHomeClosesControllerAndPendingClientAndDestroysBrowserWorkerAndOwnProcess() throws Exception {
         start();
         int oldPort=port();WebView oldWeb=web();MainActivity.HostBridge oldBridge=bridge();
-        Socket first=controllerClient(oldPort,server().roomToken()),second=controllerClient(oldPort,server().roomToken());
+        Socket first=controllerClient(oldPort,server().roomToken()),second=new Socket("127.0.0.1",oldPort);
+        second.setSoTimeout(2000);
         assertTrue(get(oldPort,"/controller.js").startsWith("HTTP/1.1 200"));
         assertTrue((activity.getWindow().getAttributes().flags&WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)!=0);
         controller.pause().stop();started=false;
@@ -249,8 +250,9 @@ public class MainActivityTest {
 
     @Test public void confirmedExitDestroysBrowserServerAndOwnProcess() throws Exception {
         start();int oldPort=port();WebView oldWeb=web();
-        Socket first=controllerClient(oldPort,server().roomToken()),second=controllerClient(oldPort,server().roomToken());
-        assertEquals(2,new JSONObject(server().snapshot()).getInt("connections"));
+        Socket first=controllerClient(oldPort,server().roomToken()),second=new Socket("127.0.0.1",oldPort);
+        second.setSoTimeout(2000);
+        assertEquals(1,new JSONObject(server().snapshot()).getInt("connections"));
         activity.onBackPressed();
         AlertDialog dialog=ReflectionHelpers.getField(activity,"exitDialog");assertNotNull(dialog);
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();

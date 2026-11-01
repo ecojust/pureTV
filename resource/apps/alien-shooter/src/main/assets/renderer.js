@@ -206,11 +206,11 @@
       part(p, self.box, 0x65756a, .15, .94, side * .31, .32, .16, .16, 0, 0, side * .14);
       part(p, self.box, 0x2d3b2c, .1, .67, side * .26, .2, .18, .1);
     });
-    this.soldiers = this.pool(this.geometry(merge(p)), this.matte, 2);
+    this.soldiers = this.pool(this.geometry(merge(p)), this.matte, 1);
     p = []; part(p, this.box, 0x425449, 0, .32, 0, .18, .4, .17); part(p, this.box, 0x17201e, .07, .09, 0, .3, .18, .2); part(p, this.box, 0x829286, .07, .42, 0, .1, .15, .2);
-    this.soldierLegs = this.pool(this.geometry(merge(p)), this.matte, 4);
+    this.soldierLegs = this.pool(this.geometry(merge(p)), this.matte, 2);
     p = []; part(p, this.box, 0x192124, .52, .99, 0, .65, .14, .13); part(p, this.cylinder, 0x879794, .93, 1.01, 0, .045, .37, .045, 0, 0, Math.PI / 2); part(p, this.box, 0x56716b, .52, 1.1, 0, .25, .08, .1); part(p, this.box, 0x162122, .5, .85, 0, .16, .21, .09, 0, 0, -.2);
-    this.guns = this.pool(this.geometry(merge(p)), this.metal, 2);
+    this.guns = this.pool(this.geometry(merge(p)), this.metal, 1);
     this.weaponParts = {};
     ['shotgun', 'minigun', 'plasma'].forEach(function (type) {
       var parts = [];
@@ -224,7 +224,7 @@
         part(parts, self.box, 0x446a6a, .78, 1.01, 0, .44, .24, .28);
         for (var coil = 0; coil < 4; coil++) part(parts, self.box, 0x7de5dc, .64 + coil * .09, 1.15, 0, .035, .04, .25);
       }
-      self.weaponParts[type] = self.pool(self.geometry(merge(parts)), self.metal, 2);
+      self.weaponParts[type] = self.pool(self.geometry(merge(parts)), self.metal, 1);
     });
     this.monsters = {}; this.corpses = []; this.lastDeathEvent = 0;
     ['crawler', 'runner', 'spitter', 'brute', 'boss'].forEach(function (type) {
@@ -253,7 +253,7 @@
       self.monsters[type] = { body: self.pool(self.geometry(merge(body)), self.skin, 110), legsA: self.pool(self.geometry(merge(legsA)), self.skin, 110), legsB: self.pool(self.geometry(merge(legsB)), self.skin, 110), corpses: self.pool(self.geometry(merge(body.concat(legsA, legsB))), self.skin, 48) };
     });
     this.shadows = this.pool(this.plane, this.shadowMaterial, 128);
-    this.playerRings = this.pool(this.ring, this.material({ color: 0xffffff, transparent: true, opacity: .8, depthWrite: false }, true), 2);
+    this.playerRings = this.pool(this.ring, this.material({ color: 0xffffff, transparent: true, opacity: .8, depthWrite: false }, true), 1);
     this.pickupBodies = this.pool(this.box, this.material({ color: 0xffffff, shininess: 50 }), 60);
     this.pickupMarks = this.pool(this.box, this.material({ color: 0xffffff }, true), 120);
     this.pickupGlows = this.pool(this.plane, this.glowMaterial, 60);
@@ -263,7 +263,7 @@
     this.doorBars = this.pool(this.box, this.material({ color: 0xe6a052 }, true), 20);
     this.objectiveRings = this.pool(this.ring, this.material({ color: 0xffffff, transparent: true, opacity: .8, depthWrite: false }, true), 8);
     this.objectiveGlows = this.pool(this.plane, this.glowMaterial, 8);
-    this.muzzleFlashes = this.pool(this.sphere, this.material({ color: 0xffe39a }, true), 2);
+    this.muzzleFlashes = this.pool(this.sphere, this.material({ color: 0xffe39a }, true), 1);
     this.grenadeBodies = this.pool(this.sphere, this.material({ color: 0x617545, shininess: 30 }), 20);
   };
   Renderer.prototype.buildEffects = function () {
@@ -394,10 +394,10 @@
     for (var n = 0; n < 3; n++) part(glow, this.box, n ? 0xecc370 : 0x83ca9e, x - .25 + n * .22, 1.01, z + .2, .08, .025, .055, .32, -angle);
   };
   Renderer.prototype.updateCamera = function (game, dt) {
-    var active = (game.players || []).filter(function (p) { return p.active && (p.alive || p.downed); }), map = game.map || {}, x = this.cameraCenter.x, y = this.cameraCenter.y, span = 0;
-    if (active.length) { x = active.reduce(function (n, p) { return n + p.x; }, 0) / active.length; y = active.reduce(function (n, p) { return n + p.y; }, 0) / active.length; if (active.length > 1) span = Math.max(Math.abs(active[0].x - active[1].x) / (this.width / this.height), Math.abs(active[0].y - active[1].y) * .8); }
-    var maxView = Math.max(32, (map.height || 34) * 1.3, (map.width || 48) / (this.width / this.height) + 12);
-    var wanted = clamp(17 + span, 18, maxView), lerp = game.phase === 'title' ? 1 : 1 - Math.exp(-Math.max(dt, .001) * 7);
+    var player = (game.players || []).find(function (p) { return p.id === 1 && p.active; }), map = game.map || {};
+    var x = player ? player.x : this.cameraCenter.x, y = player ? player.y : this.cameraCenter.y;
+    // A fixed combat scale follows the sole player, including the death screen.
+    var wanted = 18, lerp = game.phase === 'title' ? 1 : 1 - Math.exp(-Math.max(dt, .001) * 7);
     this.viewHeight += (wanted - this.viewHeight) * lerp; this.cameraCenter.x += (x - this.cameraCenter.x) * lerp; this.cameraCenter.y += (y - this.cameraCenter.y) * lerp;
     var halfY = this.viewHeight / 2, halfX = halfY * this.width / this.height;
     var centerX = clamp(this.cameraCenter.x, Math.min(halfX - 1, (map.width || 48) / 2), Math.max((map.width || 48) - halfX + 1, (map.width || 48) / 2));
@@ -407,10 +407,9 @@
   };
   Renderer.prototype.updateActors = function (game) {
     var self = this, shadowCount = 0, soldierCount = 0, legs = 0, muzzleCount = 0, attachments = { shotgun: 0, minigun: 0, plasma: 0 };
-    (game.players || []).forEach(function (p) {
-      if (!p.active) return;
-      var index = soldierCount++, a = finite(p.angle, 0), movement = p.moving ? 1 : 0, wave = Math.sin(self.time * 15 + p.id), scale = p.downed || !p.alive ? .45 : 1;
-      self.setInstance(self.soldiers, index, p.x, 0, p.y, 1, scale, 1, a, p.id === 2 ? 0xbad1ec : 0xe5e9cd);
+    (game.players || []).filter(function (p) { return p.id === 1 && p.active; }).slice(0, 1).forEach(function (p) {
+      var index = soldierCount++, a = finite(p.angle, 0), movement = p.moving ? 1 : 0, wave = Math.sin(self.time * 15 + p.id), scale = !p.alive ? .45 : 1;
+      self.setInstance(self.soldiers, index, p.x, 0, p.y, 1, scale, 1, a, 0xe5e9cd);
       self.setInstance(self.guns, index, p.x, 0, p.y, p.weapon === 'minigun' ? 1.25 : p.weapon === 'pistol' ? .72 : 1, scale, 1, a);
       if (self.weaponParts[p.weapon]) self.setInstance(self.weaponParts[p.weapon], attachments[p.weapon]++, p.x, 0, p.y, 1, scale, 1, a);
       [-1, 1].forEach(function (side) {
@@ -418,7 +417,7 @@
         self.setInstance(self.soldierLegs, legs++, p.x + ox, Math.max(0, wave * side) * .06 * (movement ? 1 : 0), p.y + oz, 1, scale, 1, a);
       });
       self.setInstance(self.shadows, shadowCount++, p.x, .008, p.y + .07, 1.5, 1.15, 1, 0, undefined, -Math.PI / 2);
-      self.setInstance(self.playerRings, index, p.x, .022, p.y, .68, .68, .68, 0, p.downed ? 0xf07a5c : p.id === 2 ? 0x74b6ed : 0xc4d99a, -Math.PI / 2);
+      self.setInstance(self.playerRings, index, p.x, .022, p.y, .68, .68, .68, 0, !p.alive ? 0xf07a5c : 0xc4d99a, -Math.PI / 2);
       if (p.fireFlash > 0 && p.alive) { var length = p.weapon === 'pistol' ? .85 : 1.16; self.setInstance(self.muzzleFlashes, muzzleCount++, p.x + Math.cos(a) * length, 1.02, p.y + Math.sin(a) * length, .22 + Math.sin(self.time * 91) * .08, .12, .12, a); }
     });
     Object.keys(attachments).forEach(function (type) { self.finishPool(self.weaponParts[type], attachments[type]); });

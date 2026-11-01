@@ -33,18 +33,19 @@
     }
     return low >= 0 && low <= 1 ? low : Infinity;
   }
-  function player(id) {
-    return { id: id, active: id === 1, connected: false, x: 0, y: 0, radius: .38, angle: -Math.PI / 2,
+  function player() {
+    return { id: 1, active: true, connected: false, x: 0, y: 0, radius: .38, angle: -Math.PI / 2,
       hp: 100, maxHp: 100, armor: 40, weapon: 'pistol', owned: ['pistol'], ammo: { pistol: -1, smg: 0, shotgun: 0, minigun: 0, plasma: 0 },
-      grenades: 3, alive: true, downed: false, reviveProgress: 0, moving: false, fireFlash: 0, hitFlash: 0, score: 0,
-      fireCooldown: 0, invulnerable: 1.5, dryCooldown: 0, damageTimer: 0 };
+      grenades: 3, alive: true, moving: false, fireFlash: 0, hitFlash: 0, score: 0,
+      fireCooldown: 0, invulnerable: 1.5, dryCooldown: 0 };
   }
   class AlienShooterGame {
     constructor(options) {
       options = options || {};
       this.language = String(options.language || 'zh').indexOf('en') === 0 ? 'en' : 'zh';
       this.randomState = (finite(options.seed, 19790503) >>> 0) || 1;
-      this.phase = 'title'; this.pausedReason = ''; this.selectedPlayers = 1; this.participantIds = [1]; this.players = [player(1), player(2)];
+      this.phase = 'title'; this.pausedReason = ''; this.players = [player()];
+      Object.defineProperty(this, 'selectedPlayers', { value: 1, enumerable: true });
       this.stage = 0; this.wave = 0; this.kills = 0; this.credits = 0; this.elapsed = 0; this.stageElapsed = 0;
       this.events = []; this.serial = 0; this.eventSerial = 0; this.notice = ['', '']; this.noticeTime = 0;
       this.shop = { selected: 0, items: World.shopItems }; this._controls = {}; this._accumulator = 0; this._navTimer = 0;
@@ -63,9 +64,9 @@
       this.stage = index; this.map = copy(World.stages[index]); this.objectiveIndex = 0; this.wave = 0; this.extractionReady = false;
       this.enemies = []; this.bullets = []; this.grenades = []; this.particles = []; this.decals = []; this.pickups = [];
       this.waveRemaining = 0; this.bossPending = false; this.spawnTimer = 0; this.stageElapsed = 0; this._navTimer = 0; this._flows = {};
-      this.players.forEach(function (p, i) {
-        p.x = this.map.spawn.x + (this.selectedPlayers === 2 ? (i === 0 ? -.7 : .7) : 0); p.y = this.map.spawn.y;
-        p.active = this.participantIds.indexOf(p.id) >= 0; p.alive = true; p.downed = false; p.reviveProgress = 0; p.hp = Math.max(p.hp, Math.round(p.maxHp * .5));
+      this.players.forEach(function (p) {
+        p.x = this.map.spawn.x; p.y = this.map.spawn.y;
+        p.active = true; p.alive = true; p.hp = Math.max(p.hp, Math.round(p.maxHp * .5));
         p.angle = -Math.PI / 2; p.fireCooldown = 0; p.fireFlash = 0; p.invulnerable = 2; p.moving = false;
       }, this);
       this.rebuildNavigation();
@@ -73,11 +74,9 @@
       this.addPickup('health', this.map.spawn.x + 2, this.map.spawn.y, 35);
       this.addPickup('ammo', this.map.spawn.x - 2, this.map.spawn.y, 1);
     }
-    start(count) {
+    start() {
       if (this.phase !== 'title') return false;
-      this.selectedPlayers = count === 2 ? 2 : 1;
-      this.participantIds = this.selectedPlayers === 2 ? [1, 2] : [(this._inputs.find(function (i) { return i.connected; }) || { id: 1 }).id];
-      this.players = [player(1), player(2)];
+      this.players = [player()];
       this.players.forEach(function (p) { p.connected = !!(this._inputs.find(function (i) { return i.id === p.id; }) || {}).connected; }, this);
       this.kills = 0; this.credits = 0; this.elapsed = 0; this.events = []; this._accumulator = 0; this.shop.selected = 0;
       this.loadStage(0); this.phase = 'playing'; this.pausedReason = ''; this.message('靠近亮起的控制台恢复电力', 'Approach the lit console to restore power');
@@ -89,15 +88,15 @@
       this.players.forEach(function (p) { p.moving = false; p.fireFlash = 0; });
       return true;
     }
-    connected() { return this.players.filter(function (p) { return p.active; }).every(function (p) { return p.connected; }); }
+    connected() { return this.players[0].connected; }
     resume() {
       if (this.phase !== 'paused') return false;
-      if (!this.connected()) { this.message('等待所有队员的手柄重新连接', 'Waiting for every squad controller to reconnect'); return false; }
+      if (!this.connected()) { this.message('等待手柄重新连接', 'Waiting for the controller to reconnect'); return false; }
       this.phase = 'playing'; this.pausedReason = ''; this._accumulator = 0; return true;
     }
     readInputs(inputs) {
       var self = this, actions = ['a', 'b', 'start', 'select'];
-      this._inputs = [1, 2].map(function (id) {
+      this._inputs = [1].map(function (id) {
         var raw = Array.isArray(inputs) ? inputs.find(function (p) { return p && p.id === id; }) || {} : {};
         var memory = self._controls[id] || (self._controls[id] = { seen: false, everConnected: false, seq: 0, connected: false, previous: {}, blocked: {} });
         var seq = Math.max(0, Math.floor(finite(raw.cancelSeq, 0))), online = raw.connected === true;
@@ -119,18 +118,17 @@
     update(dt, inputs) {
       dt = clamp(finite(dt, 0), 0, .1);
       var controls = this.readInputs(inputs), authorized = this.phase === 'title' ? controls : controls.filter(function (i) { return this.players[i.id - 1].active; }, this);
-      var start = authorized.some(function (i) { return i.edges.start; }), select = authorized.some(function (i) { return i.edges.select; });
+      var start = authorized.some(function (i) { return i.edges.start; });
       this.noticeTime = Math.max(0, this.noticeTime - dt);
       if (this.phase === 'title') {
-        if (select) this.selectedPlayers = this.selectedPlayers === 1 ? 2 : 1;
         if (start) {
-          if (controls.filter(function (i) { return i.connected; }).length >= this.selectedPlayers) this.start(this.selectedPlayers);
-          else this.message('请先连接所选人数的手机手柄', 'Connect a controller for each selected player');
+          if (controls[0].connected) this.start();
+          else this.message('请先连接手机手柄', 'Connect the phone controller first');
         }
         return;
       }
       if (this.phase === 'victory' || this.phase === 'gameover') {
-        if (start) { this.phase = 'title'; this.selectedPlayers = 1; this.participantIds = [1]; this.players = [player(1), player(2)]; this.loadStage(0); }
+        if (start) { this.phase = 'title'; this.players = [player()]; this.loadStage(0); }
         return;
       }
       if (this.phase === 'shop') { this.updateShop(dt, authorized); return; }
@@ -138,7 +136,7 @@
       if (!this.connected()) { this.pause('disconnected'); return; }
       if (start) { this.pause('manual'); return; }
       controls.forEach(function (input) {
-        var p = this.players[input.id - 1]; if (!p.active || p.downed) return;
+        var p = this.players[0]; if (!p.alive) return;
         if (input.edges.select) this.cycleWeapon(p);
         if (input.edges.b) this.throwGrenade(p);
       }, this);
@@ -161,21 +159,20 @@
       index = index === undefined ? this.shop.selected : index;
       var item = this.shop.items[index]; if (!item) return false;
       if (this.credits < item.price) { this.message('补给点数不足', 'Not enough supply credits'); this.emit('deny'); return false; }
-      if (item.kind === 'vitality' && this.players.filter(function (p) { return p.active; }).every(function (p) { return p.maxHp >= 200; })) { this.message('生存强化已达上限', 'Survival training is already at maximum'); return false; }
+      if (item.kind === 'vitality' && this.players[0].maxHp >= 200) { this.message('生存强化已达上限', 'Survival training is already at maximum'); return false; }
       this.credits -= item.price;
-      this.players.filter(function (p) { return p.active; }).forEach(function (p) {
-        if (item.kind === 'weapon') { if (p.owned.indexOf(item.weapon) < 0) p.owned.push(item.weapon); p.ammo[item.weapon] = Math.min(2000, p.ammo[item.weapon] + weaponById[item.weapon].capacity); p.weapon = item.weapon; }
-        if (item.kind === 'health') p.hp = p.maxHp;
-        if (item.kind === 'armor') p.armor = 100;
-        if (item.kind === 'ammo') p.owned.forEach(function (id) { if (id !== 'pistol') p.ammo[id] = Math.min(2000, p.ammo[id] + weaponById[id].capacity); });
-        if (item.kind === 'grenades') p.grenades = Math.min(12, p.grenades + 3);
-        if (item.kind === 'vitality') { p.maxHp = Math.min(200, p.maxHp + 25); p.hp = p.maxHp; }
-      });
-      this.message('补给已分配给全队', 'Supplies delivered to the entire squad'); this.emit('buy'); return true;
+      var p = this.players[0];
+      if (item.kind === 'weapon') { if (p.owned.indexOf(item.weapon) < 0) p.owned.push(item.weapon); p.ammo[item.weapon] = Math.min(2000, p.ammo[item.weapon] + weaponById[item.weapon].capacity); p.weapon = item.weapon; }
+      if (item.kind === 'health') p.hp = p.maxHp;
+      if (item.kind === 'armor') p.armor = 100;
+      if (item.kind === 'ammo') p.owned.forEach(function (id) { if (id !== 'pistol') p.ammo[id] = Math.min(2000, p.ammo[id] + weaponById[id].capacity); });
+      if (item.kind === 'grenades') p.grenades = Math.min(12, p.grenades + 3);
+      if (item.kind === 'vitality') { p.maxHp = Math.min(200, p.maxHp + 25); p.hp = p.maxHp; }
+      this.message('补给已装备', 'Supplies equipped'); this.emit('buy'); return true;
     }
     continueCampaign() {
       if (this.phase !== 'shop' || this.stage >= 2) return false;
-      if (!this.connected()) { this.message('等待队员重新连接后再出发', 'Reconnect all squad controllers before continuing'); return false; }
+      if (!this.connected()) { this.message('手柄重新连接后可继续出发', 'Reconnect the controller before continuing'); return false; }
       this.loadStage(this.stage + 1); this.phase = 'playing'; this._accumulator = 0; this.message('前往亮起的任务控制台', 'Reach the illuminated mission console'); return true;
     }
     solidRects() { return this.map.solids.concat(this.map.doors.filter(function (d) { return !d.open; })); }
@@ -240,7 +237,7 @@
     }
     spawnEnemy(type, zone) {
       if (this.enemies.length >= LIMITS.enemies) return false;
-      var spec = World.enemyTypes[type], points = this.map.spawnPoints[zone], live = this.players.filter(function (p) { return p.active && !p.downed; });
+      var spec = World.enemyTypes[type], points = this.map.spawnPoints[zone], live = this.players.filter(function (p) { return p.active && p.alive; });
       var ranked = points.map(function (p) { var pos = { x: p[0], y: p[1] }; return { x: pos.x, y: pos.y, distance: Math.min.apply(null, live.map(function (human) { return distance(pos, human); })) }; }).sort(function (a, b) { return b.distance - a.distance; });
       var pos = null;
       for (var attempt = 0; attempt < 20; attempt++) {
@@ -248,7 +245,7 @@
         if (!this.blocked(x, y, spec.radius) && live.every(function (p) { return Math.hypot(p.x - x, p.y - y) > 3.2; })) { pos = { x: x, y: y }; break; }
       }
       if (!pos) return false;
-      var hp = Math.round(spec.hp * (this.selectedPlayers === 2 ? 1.4 : 1) * (1 + this.stage * .1));
+      var hp = Math.round(spec.hp * (1 + this.stage * .1));
       this.enemies.push({ id: this.id(), type: type, x: pos.x, y: pos.y, radius: spec.radius, angle: 0, hp: hp, maxHp: hp, speed: spec.speed, damage: spec.damage, attackCooldown: .7 + this.random(), hitFlash: 0, summoned: 0, moving: true }); return true;
     }
     waveType() {
@@ -264,26 +261,24 @@
         this._flows = {};
         this.enemies.forEach(function (e) {
           var key = e.radius.toFixed(2);
-          if (!this._flows[key]) this._flows[key] = this.players.map(function (p) { return p.active && !p.downed ? this.flowFor(p, e.radius) : null; }, this);
+          if (!this._flows[key]) this._flows[key] = this.players.map(function (p) { return p.active && p.alive ? this.flowFor(p, e.radius) : null; }, this);
         }, this);
         this._navTimer = .35;
       }
-      this.stepEnemies(dt); this.stepBullets(dt); this.stepGrenades(dt); this.stepPickups(dt); this.stepObjectives(dt); this.stepRevive(dt);
+      this.stepEnemies(dt); if (this.phase !== 'playing') return;
+      this.stepBullets(dt); if (this.phase !== 'playing') return;
+      this.stepGrenades(dt); this.stepPickups(dt); this.stepObjectives(dt);
       this.particles.forEach(function (p) { p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= .94; p.vy *= .94; });
       this.particles = this.particles.filter(function (p) { return p.life > 0; });
-      if (this.players.filter(function (p) { return p.active; }).every(function (p) { return p.downed; })) { this.phase = 'gameover'; this.emit('gameover'); }
     }
     stepPlayer(p, input, dt) {
       if (!p.active) return;
       p.fireCooldown = Math.max(0, p.fireCooldown - dt); p.fireFlash = Math.max(0, p.fireFlash - dt); p.hitFlash = Math.max(0, p.hitFlash - dt);
-      p.invulnerable = Math.max(0, p.invulnerable - dt); p.dryCooldown = Math.max(0, p.dryCooldown - dt); p.damageTimer = Math.max(0, p.damageTimer - dt);
-      if (p.downed) { p.moving = false; return; }
+      p.invulnerable = Math.max(0, p.invulnerable - dt); p.dryCooldown = Math.max(0, p.dryCooldown - dt);
+      if (!p.alive) { p.moving = false; return; }
       var x = input.x, y = input.y, magnitude = Math.hypot(x, y); if (magnitude > 1) { x /= magnitude; y /= magnitude; }
       if (magnitude < .13) { x = 0; y = 0; }
       var speed = p.weapon === 'minigun' && input.a ? 3.0 : 4.6, dx = x * speed * dt, dy = y * speed * dt;
-      var ally = this.players.find(function (q) { return q.active && q.id !== p.id && !q.downed; });
-      // A finite tether keeps both humans legible in the shared television view.
-      if (ally && Math.hypot(p.x + dx - ally.x, p.y + dy - ally.y) > 13 && (p.x - ally.x) * dx + (p.y - ally.y) * dy > 0) { dx = 0; dy = 0; }
       var beforeX = p.x, beforeY = p.y; this.move(p, dx, dy); p.moving = Math.hypot(p.x - beforeX, p.y - beforeY) > .001;
       if (Math.hypot(input.aimX, input.aimY) > .2) p.angle = Math.atan2(input.aimY, input.aimX);
       else if (input.a) {
@@ -317,7 +312,7 @@
       this.emit('grenade', p);
     }
     stepEnemies(dt) {
-      var live = this.players.filter(function (p) { return p.active && !p.downed; }), buckets = new Map();
+      var live = this.players.filter(function (p) { return p.active && p.alive; }), buckets = new Map();
       this.enemies.forEach(function (e) { var key = Math.floor(e.x / 2) + ',' + Math.floor(e.y / 2); if (!buckets.has(key)) buckets.set(key, []); buckets.get(key).push(e); });
       this.enemies.forEach(function (e) {
         if (!live.length || e.hp <= 0) return;
@@ -325,7 +320,7 @@
         var target = live.reduce(function (a, b) { return distance(e, a) < distance(e, b) ? a : b; }), d = distance(e, target), clear = this.lineOfSight(e, target), tx = target.x, ty = target.y;
         if (this.circleWallHit(e.x, e.y, target.x, target.y, e.radius) !== Infinity) {
           var key = e.radius.toFixed(2);
-          if (!this._flows[key]) this._flows[key] = this.players.map(function (p) { return p.active && !p.downed ? this.flowFor(p, e.radius) : null; }, this);
+          if (!this._flows[key]) this._flows[key] = this.players.map(function (p) { return p.active && p.alive ? this.flowFor(p, e.radius) : null; }, this);
           var flow = this._flows[key][target.id - 1], cx = Math.floor(e.x), cy = Math.floor(e.y), best = flow ? flow[cy * this.map.width + cx] : -1;
           // Align inside the current cell before turning around a wall corner.
           // Without this waypoint a valid lower-cost neighbor can be hidden by
@@ -369,7 +364,7 @@
         if (b.life <= 0) return;
         b.prevX = b.x; b.prevY = b.y; var nx = b.x + b.vx * dt, ny = b.y + b.vy * dt;
         var hit = this.wallHit(b.x, b.y, nx, ny, b.radius || .04), target = null, barrel = null;
-        var candidates = b.enemy ? this.players.filter(function (p) { return p.active && !p.downed; }) : this.enemies;
+        var candidates = b.enemy ? this.players.filter(function (p) { return p.active && p.alive; }) : this.enemies;
         candidates.forEach(function (p) { var t = segmentCircle(b.x, b.y, nx, ny, p.x, p.y, p.radius + (b.radius || .04)); if (t < hit) { hit = t; target = p; barrel = null; } });
         if (!b.enemy) this.map.barrels.forEach(function (p) { if (p.exploded) return; var t = segmentCircle(b.x, b.y, nx, ny, p.x, p.y, p.radius); if (t < hit) { hit = t; barrel = p; target = null; } });
         if (hit !== Infinity) {
@@ -400,10 +395,10 @@
       else if (roll < .45) this.addPickup('credits', enemy.x, enemy.y, 12);
     }
     damagePlayer(p, amount) {
-      if (p.downed || p.invulnerable > 0) return;
-      var absorbed = Math.min(p.armor, amount * .7); p.armor -= absorbed; p.hp = Math.max(0, p.hp - (amount - absorbed)); p.hitFlash = .18; p.invulnerable = .24; p.damageTimer = 1;
+      if (!p.alive || p.invulnerable > 0) return;
+      var absorbed = Math.min(p.armor, amount * .7); p.armor -= absorbed; p.hp = Math.max(0, p.hp - (amount - absorbed)); p.hitFlash = .18; p.invulnerable = .24;
       this.emit('player-hit', p);
-      if (p.hp <= 0) { p.downed = true; p.alive = false; p.moving = false; p.reviveProgress = 0; this.message('队员倒地！靠近队员进行救援', 'Squad member down! Stand nearby to revive'); }
+      if (p.hp <= 0) { p.alive = false; p.moving = false; p.fireFlash = 0; this.phase = 'gameover'; this._accumulator = 0; this.emit('gameover', p); }
     }
     stepGrenades(dt) {
       this.grenades.forEach(function (g) {
@@ -420,7 +415,7 @@
     explode(x, y, radius, damage, owner, large) {
       var pos = { x: x, y: y };
       this.enemies.forEach(function (e) { var d = distance(pos, e); if (d < radius + e.radius && this.lineOfSight(pos, e)) this.damageEnemy(e, damage * (1 - .55 * clamp(d / radius, 0, 1)), owner); }, this);
-      // Cooperative ammunition never hurts teammates. Chain reactions still respect walls.
+      // Player explosives affect enemies and scenery; chain reactions respect walls.
       this.map.barrels.forEach(function (b) { if (!b.exploded && distance(pos, b) < radius && this.lineOfSight(pos, b)) { b.hp -= damage; if (b.hp <= 0) this.explodeBarrel(b, owner); } }, this);
       this.effect('explosion', x, y, large ? 22 : 8, large ? '#ffb34d' : '#72ffe5', large ? .65 : .3, large ? .35 : .15);
       this.effect('smoke', x, y, large ? 9 : 3, '#45494c', 1.15, large ? .55 : .2);
@@ -437,7 +432,7 @@
     addPickup(type, x, y, amount) { if (this.pickups.length >= LIMITS.pickups) this.pickups.shift(); this.pickups.push({ id: this.id(), type: type, x: x, y: y, amount: amount, age: 0 }); }
     stepPickups(dt) {
       this.pickups.forEach(function (item) {
-        item.age += dt; var p = this.players.find(function (p) { return p.active && !p.downed && distance(p, item) < 1; }); if (!p) return;
+        item.age += dt; var p = this.players.find(function (p) { return p.active && p.alive && distance(p, item) < 1; }); if (!p) return;
         if (item.type === 'health' && p.hp >= p.maxHp) return;
         if (item.type === 'armor' && p.armor >= 100) return;
         if (item.type === 'grenade' && p.grenades >= 12) return;
@@ -456,19 +451,19 @@
     stepObjectives(dt) {
       var current = this.map.objectives[this.objectiveIndex];
       if (current && (current.status === 'ready' || current.status === 'charging')) {
-        var near = this.players.some(function (p) { return p.active && !p.downed && distance(p, current) < 1.65; });
+        var near = this.players.some(function (p) { return p.active && p.alive && distance(p, current) < 1.65; });
         if (near) { current.status = 'charging'; current.progress = Math.min(1, current.progress + dt / 2.5); }
         else if (current.status === 'charging') { current.progress = Math.max(0, current.progress - dt / 6); if (current.progress === 0) current.status = 'ready'; }
         if (current.progress >= 1) {
-          current.status = 'defending'; this.wave++; this.waveRemaining = 16 + this.stage * 9 + this.objectiveIndex * 5 + (this.selectedPlayers === 2 ? 10 : 0); this.spawnTimer = 0;
-          if (this.stage === 2 && this.objectiveIndex === 2) { this.bossPending = true; this.waveRemaining = 20 + (this.selectedPlayers === 2 ? 12 : 0); }
+          current.status = 'defending'; this.wave++; this.waveRemaining = 16 + this.stage * 9 + this.objectiveIndex * 5; this.spawnTimer = 0;
+          if (this.stage === 2 && this.objectiveIndex === 2) { this.bossPending = true; this.waveRemaining = 20; }
           this.emit('objective', current); this.message('警报！守住控制台，清除异形', 'ALARM! Hold the console and eliminate the swarm');
         }
       }
       if (current && current.status === 'defending') {
         if (this.bossPending && this.spawnEnemy('boss', 2)) this.bossPending = false;
         this.spawnTimer -= dt;
-        if (this.waveRemaining > 0 && this.spawnTimer <= 0 && this.enemies.length < (this.selectedPlayers === 2 ? 44 : 34)) {
+        if (this.waveRemaining > 0 && this.spawnTimer <= 0 && this.enemies.length < 34) {
           if (this.spawnEnemy(this.waveType(), this.objectiveIndex)) this.waveRemaining--;
           this.spawnTimer = .35 + this.random() * .25;
         }
@@ -480,22 +475,14 @@
           else { this.extractionReady = true; this.message('区域已清理，前往撤离标记', 'Sector clear — reach the extraction marker'); }
         }
       }
-      var survivingPlayers = this.players.filter(function (p) { return p.active && !p.downed; });
-      if (this.extractionReady && survivingPlayers.length > 0 && survivingPlayers.every(function (p) { return distance(p, this.map.exit) < 2.5; }, this)) {
+      var p = this.players[0];
+      if (this.extractionReady && p.alive && distance(p, this.map.exit) < 2.5) {
         this.credits += 100; this.emit('stage-clear', this.map.exit);
-        this.players.forEach(function (p) { if (p.active) { p.downed = false; p.alive = true; p.hp = Math.max(p.hp, p.maxHp * .5); p.grenades = Math.min(12, p.grenades + 1); } });
+        p.hp = Math.max(p.hp, p.maxHp * .5); p.grenades = Math.min(12, p.grenades + 1);
         this.bullets = []; this.grenades = [];
         if (this.stage === 2) { this.phase = 'victory'; this.emit('victory'); }
         else { this.phase = 'shop'; this.shop.selected = 0; this._shopRepeat = 0; }
       }
-    }
-    stepRevive(dt) {
-      this.players.forEach(function (p) {
-        if (!p.active || !p.downed) return;
-        var rescuer = this.players.find(function (q) { return q.active && !q.downed && q.connected && distance(p, q) < 1.7 && q.damageTimer <= 0; });
-        p.reviveProgress = rescuer ? Math.min(1, p.reviveProgress + dt / 3) : Math.max(0, p.reviveProgress - dt / 2);
-        if (p.reviveProgress >= 1) { p.downed = false; p.alive = true; p.hp = p.maxHp * .5; p.invulnerable = 3; p.reviveProgress = 0; this.emit('revive', p); this.message('队员已恢复战斗能力', 'Squad member revived'); }
-      }, this);
     }
   }
   AlienShooterGame.World = World; AlienShooterGame.LIMITS = LIMITS;

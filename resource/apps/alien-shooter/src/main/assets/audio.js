@@ -108,8 +108,8 @@
       }
     }
     play(event, game) {
-      var players = (game.players || []).filter(function (p) { return p.active; });
-      var center = players.length ? players.reduce(function (sum, p) { return sum + p.x; }, 0) / players.length : 24;
+      var player = game.players && game.players[0];
+      var center = player ? player.x : 24;
       var pan = (event.x - center) / 18;
       switch (event.kind) {
         case "shot": this.gun(event.weapon, pan); break;
@@ -136,7 +136,6 @@
           this.tone(480, 480, .24, "sine", .18, .17);
           this.noise(.6, 340, "lowpass", .22, .12);
           break;
-        case "revive":
         case "stage-clear":
           this.tone(330, 330, .2, "triangle", .22);
           this.tone(440, 440, .23, "triangle", .19, .13);
@@ -154,7 +153,7 @@
       this.lastEvent = newest;
       if (!this.allowed()) return;
       var step = Math.floor(game.elapsed / .29);
-      if (step !== this.lastFootstep && game.players.some(function (p) { return p.active && p.moving && !p.downed; })) {
+      if (step !== this.lastFootstep && game.players.some(function (p) { return p.active && p.moving && p.alive; })) {
         this.lastFootstep = step; this.noise(.065, step % 2 ? 620 : 510, "lowpass", .095); this.tone(68, 42, .06, "sine", .09);
       }
       var beat = Math.floor(game.elapsed / 3.1);

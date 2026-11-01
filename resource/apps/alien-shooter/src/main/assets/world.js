@@ -23,10 +23,10 @@
     { id: 'shotgun', kind: 'weapon', weapon: 'shotgun', name: ['霰弹枪与弹药', 'SHOTGUN + SHELLS'], description: ['解锁霰弹枪，并补充 48 发霰弹', 'Unlock the shotgun and add 48 shells'], price: 150 },
     { id: 'minigun', kind: 'weapon', weapon: 'minigun', name: ['重机枪与弹药', 'ROTARY CANNON + AMMO'], description: ['解锁重机枪，并补充 360 发弹药', 'Unlock the rotary cannon and add 360 rounds'], price: 300 },
     { id: 'plasma', kind: 'weapon', weapon: 'plasma', name: ['等离子武器', 'PLASMA LANCE'], description: ['解锁等离子枪，并补充 80 发电池', 'Unlock the plasma lance and add 80 cells'], price: 420 },
-    { id: 'medical', kind: 'health', name: ['医疗补给', 'MEDICAL SUPPLIES'], description: ['全队恢复至最大生命', 'Restore the entire squad to full health'], price: 55 },
-    { id: 'armor', kind: 'armor', name: ['装甲板', 'ARMOR PLATES'], description: ['全队护甲补充至 100', 'Restore squad armor to 100'], price: 80 },
+    { id: 'medical', kind: 'health', name: ['医疗补给', 'MEDICAL SUPPLIES'], description: ['恢复至最大生命', 'Restore your health to maximum'], price: 55 },
+    { id: 'armor', kind: 'armor', name: ['装甲板', 'ARMOR PLATES'], description: ['护甲补充至 100', 'Restore your armor to 100'], price: 80 },
     { id: 'ammo', kind: 'ammo', name: ['综合弹药箱', 'AMMUNITION CRATE'], description: ['补充所有已解锁武器的弹药', 'Refill every unlocked weapon'], price: 100 },
-    { id: 'grenades', kind: 'grenades', name: ['破片手雷', 'FRAGMENTATION GRENADES'], description: ['每位队员补充 3 枚手雷', 'Add three grenades per squad member'], price: 60 },
+    { id: 'grenades', kind: 'grenades', name: ['破片手雷', 'FRAGMENTATION GRENADES'], description: ['补充 3 枚手雷', 'Add three grenades'], price: 60 },
     { id: 'vitality', kind: 'vitality', name: ['生存强化', 'SURVIVAL TRAINING'], description: ['最大生命 +25，并恢复生命（最多 200）', '+25 maximum health and heal; maximum 200'], price: 160 }
   ];
   function rect(id, type, x, y, w, h) { return { id: id, type: type, x: x, y: y, w: w, h: h }; }

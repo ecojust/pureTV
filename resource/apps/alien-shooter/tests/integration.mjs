@@ -19,7 +19,7 @@ function pass(message){console.log('PASS '+(++checks)+': '+message);}
 async function fixture(language='zh',options={}){
   const context=await browser.newContext({viewport:{width:1280,height:720},locale:language==='en'?'en-US':'zh-CN'});
   await context.addInitScript(({language,options})=>{
-    window.__players=[1,2].map(id=>({id,connected:id===1,x:0,y:0,aimX:0,aimY:0,a:false,b:false,start:false,select:false,cancelSeq:0}));
+    window.__players=[1].map(id=>({id,connected:id===1,x:0,y:0,aimX:0,aimY:0,a:false,b:false,start:false,select:false,cancelSeq:0}));
     window.__published=[];window.__snapshots=0;
     const svg='<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="160" height="160" fill="#e7e7d8"/><g fill="none" stroke="#17292c" stroke-width="8"><rect x="12" y="12" width="35" height="35"/><rect x="113" y="12" width="35" height="35"/><rect x="12" y="113" width="35" height="35"/></g><text x="80" y="88" text-anchor="middle" font-family="monospace" font-size="18" fill="#17292c">DEMO</text></svg>';
     window.__roomInfo={language,url:'http://192.168.1.8:34123/?room=demo',qr:'data:image/svg+xml;base64,'+btoa(svg)};
@@ -78,29 +78,29 @@ try{
     assert.ok(await page.evaluate(()=>__published.some(s=>s.phase==='playing'&&s.players?.length)));
     assert.deepEqual(errors,[]);await context.close();pass(language+': real WebGL and native-room loop, screen-aligned movement/aim/fire, one grenade per hold, blurred pause and safe reconnect/suspend');
   }
-  if(part==='all'||part==='coop'){
-    const {context,page,errors}=await fixture();await input(page,2,{connected:true});await pulse(page,1,'select');
-    assert.equal(await page.evaluate(()=>AlienShooterTV.game.selectedPlayers),2);
-    await page.evaluate(()=>__players.forEach(p=>p.start=true));await page.waitForFunction(()=>AlienShooterTV.game.phase==='playing');await neutral(page);
-    await input(page,1,{x:-1,a:true});await input(page,2,{x:1,a:true});const original=await page.evaluate(()=>AlienShooterTV.game.players.map(p=>p.x));
-    await page.waitForFunction(xs=>AlienShooterTV.game.players[0].x<xs[0]-.8&&AlienShooterTV.game.players[1].x>xs[1]+.8,original);
-    assert.equal(await page.evaluate(()=>AlienShooterTV.game.players.filter(p=>p.active).length),2);await neutral(page);
-    await page.screenshot({path:output+'/alien-shooter-coop.png'});
-    await input(page,2,{connected:false});await page.waitForFunction(()=>AlienShooterTV.game.phase==='paused');
-    await input(page,2,{connected:true});await page.waitForTimeout(100);await pulse(page,1,'start','playing');
-    assert.deepEqual(errors,[]);await context.close();pass('two simultaneous controllers move and fire independently; participant disconnect pauses the shared battle');
-  }
-  if(part==='all'||part==='slot2'){
+  if(part==='all'||part==='single'){
     const {context,page,errors}=await fixture();
-    await page.evaluate(()=>{__players[0].connected=false;__players[1].connected=true;});
-    await page.waitForFunction(()=>AlienShooterTV.game._inputs.find(p=>p.id===2)?.connected&&!AlienShooterTV.game._inputs.find(p=>p.id===1)?.connected);
-    await page.locator('#start-button').click();
-    try{await page.waitForFunction(()=>AlienShooterTV.game.phase==='playing');}
-    catch(error){console.error('Slot2 start timeout',await page.evaluate(()=>({phase:AlienShooterTV.game.phase,inputs:AlienShooterTV.game._inputs,controls:AlienShooterTV.game._controls,notice:AlienShooterTV.game.notice,raw:__players})));throw error;}
-    assert.deepEqual(await page.evaluate(()=>AlienShooterTV.game.players.filter(p=>p.active).map(p=>p.id)),[2]);
-    const x=await page.evaluate(()=>AlienShooterTV.game.players[1].x);await input(page,2,{x:1,a:true});await page.waitForFunction(x=>AlienShooterTV.game.players[1].x>x+.8,x);await neutral(page);
-    await input(page,1,{connected:true,start:true,select:true});await page.waitForTimeout(250);assert.equal(await page.evaluate(()=>AlienShooterTV.game.phase),'playing');
-    assert.deepEqual(errors,[]);await context.close();pass('a lone phone in slot two remains the active player when TV start is clicked; late spectators cannot pause the battle');
+    assert.equal(await page.locator('#mode-one,#mode-two,.player-mode').count(),0);
+    await pulse(page,1,'start','playing');
+    assert.deepEqual(await page.evaluate(()=>AlienShooterTV.game.players.map(p=>p.id)),[1]);
+    assert.equal(await page.locator('#players-hud .player-hud').count(),1);
+    const before=await page.evaluate(()=>({weapon:AlienShooterTV.game.players[0].weapon,grenades:AlienShooterTV.game.players[0].grenades,snapshots:__snapshots}));
+    await page.evaluate(()=>__players.push({id:2,connected:true,x:1,y:1,a:true,b:true,start:true,select:true,aimX:1,aimY:0,cancelSeq:0}));
+    await page.waitForFunction(n=>__snapshots>n+3,before.snapshots);
+    assert.equal(await page.evaluate(()=>AlienShooterTV.game.phase),'playing');
+    assert.deepEqual(await page.evaluate(()=>AlienShooterTV.game.players.map(p=>p.id)),[1]);
+    assert.equal(await page.evaluate(()=>AlienShooterTV.game.players[0].weapon),before.weapon);
+    assert.equal(await page.evaluate(()=>AlienShooterTV.game.players[0].grenades),before.grenades);
+    await input(page,1,{connected:false});await page.waitForFunction(()=>AlienShooterTV.game.phase==='paused');
+    await input(page,1,{connected:true});await page.waitForFunction(()=>AlienShooterTV.game.players[0].connected);
+    assert.equal(await page.evaluate(()=>AlienShooterTV.game.phase),'paused');
+    await pulse(page,1,'start','playing');
+    // Controlled failure fixture checks the single-player end screen, not a playthrough.
+    await page.evaluate(()=>{const g=AlienShooterTV.game;g.players[0].invulnerable=0;g.damagePlayer(g.players[0],1000);});
+    await page.waitForFunction(()=>AlienShooterTV.game.phase==='gameover');
+    await page.locator('#restart-button').waitFor({state:'visible'});
+    assert.ok(await page.locator('#restart-button').isVisible());
+    assert.deepEqual(errors,[]);await context.close();pass('single-player only: no player-count selector, one character, foreign slot input ignored, exclusive controller disconnect pauses, and death ends the mission');
   }
   if(part==='all'||part==='scenes'){
     const {context,page,errors}=await fixture('en');await pulse(page,1,'start','playing');

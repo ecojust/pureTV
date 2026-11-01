@@ -44,7 +44,7 @@
     $("menu-footer-help").textContent = tr("方向键 / WASD 移动 · Z 射击 · X 手雷 · SELECT 切换", "Arrows / WASD move · Z fire · X grenade · SELECT switch");
     $("enemy-label").textContent = tr("当前威胁", "HOSTILES");
     $("tactical-label").textContent = tr("战术地图", "TACTICAL MAP");
-    $("tactical-map").setAttribute("aria-label", tr("墙体、闸门、玩家与当前目标的战术地图", "Tactical map showing walls, gates, players and the current objective"));
+    $("tactical-map").setAttribute("aria-label", tr("墙体、闸门、玩家与当前目标的战术地图", "Tactical map showing walls, gates, your position and the current objective"));
     $("pause-button").setAttribute("aria-label", tr("暂停", "Pause"));
     $("battle-help").textContent = tr("SELECT 切换武器  ·  START 暂停 / 扫码", "SELECT switch weapon  ·  START pause / QR code");
 
@@ -119,19 +119,15 @@
     function inputs() {
       var list = [];
       try { if (bridge) list = JSON.parse(bridge.snapshot()).players || []; } catch (_) {}
-      list = list.filter(function (p) { return p && (Number(p.id) === 1 || Number(p.id) === 2); }).map(function (p) {
+      list = list.filter(function (p) { return p && Number(p.id) === 1; }).map(function (p) {
         return { id: Number(p.id), connected: !!p.connected, x: clamp(num(p.x), -1, 1), y: clamp(num(p.y), -1, 1), aimX: clamp(num(p.aimX), -1, 1), aimY: clamp(num(p.aimY), -1, 1), a: !!p.a, b: !!p.b, start: !!p.start, select: !!p.select, cancelSeq: Number.isSafeInteger(p.cancelSeq) && p.cancelSeq >= 0 ? p.cancelSeq : 0 };
       });
-      var online = list.filter(function (p) { return p.connected; });
-      if (online.length) phoneControllerSeen = true;
-      // Local controls follow an online squad member, including a sole phone in slot 2.
-      // Old keyboard activity must never fabricate a reconnect after phones drop out.
-      var local = online.find(function (p) { return game && game.players[p.id - 1] && game.players[p.id - 1].active; }) || online[0];
-      if (keyboardActive && (!phoneControllerSeen || online.length)) {
-        if (!local) {
-          local = list.find(function (p) { return p.id === 1; });
-          if (!local) { local = { id: 1, connected: true, x: 0, y: 0, aimX: 0, aimY: 0, a: false, b: false, start: false, select: false, cancelSeq: 0 }; list.push(local); }
-        }
+      var local = list[0];
+      var phoneConnected = !!(local && local.connected);
+      if (phoneConnected) phoneControllerSeen = true;
+      // Old keyboard activity must never fabricate a reconnect after the phone drops out.
+      if (keyboardActive && (!phoneControllerSeen || phoneConnected)) {
+        if (!local) { local = { id: 1, connected: true, x: 0, y: 0, aimX: 0, aimY: 0, a: false, b: false, start: false, select: false, cancelSeq: 0 }; list.push(local); }
         local.connected = true;
         var x = Number(keys.has("right")) - Number(keys.has("left"));
         var y = Number(keys.has("down")) - Number(keys.has("up"));
@@ -139,7 +135,7 @@
         ["a", "b", "start", "select"].forEach(function (action) { local[action] = local[action] || keys.has(action) || pending[action]; });
         local.a = local.a || pointer.held;
         if (renderer && renderer.screenToWorld && game && (pointer.held || performance.now() - pointer.time < 1800)) {
-          var player = game.players && game.players[local.id - 1];
+          var player = game.players && game.players[0];
           var point = renderer.screenToWorld(pointer.x, pointer.y);
           if (player && point) {
             var dx = point.x - player.x, dy = point.y - player.y, length = Math.hypot(dx, dy);
@@ -155,31 +151,29 @@
     }
     function state() {
       if (!game) return { phase: "loading", selectedPlayers: 1, players: [] };
-      return { phase: suspended || !visible ? "paused" : game.phase, selectedPlayers: game.selectedPlayers, stage: game.stage + 1, stageLabel: text(game.map && game.map.name), wave: game.wave, kills: game.kills, credits: game.credits, players: (game.players || []).map(function (p) {
+      return { phase: suspended || !visible ? "paused" : game.phase, selectedPlayers: 1, stage: game.stage + 1, stageLabel: text(game.map && game.map.name), wave: game.wave, kills: game.kills, credits: game.credits, players: (game.players || []).map(function (p) {
         var ammo = p.ammo && p.ammo[p.weapon];
-        return { id: p.id, active: !!p.active, alive: !!p.alive, downed: !!p.downed, hp: Math.ceil(num(p.hp)), armor: Math.ceil(num(p.armor)), weapon: p.weapon, weaponName: weaponName(p.weapon), ammo: ammo == null ? -1 : ammo, grenades: p.grenades, score: p.score };
+        return { id: p.id, active: !!p.active, alive: !!p.alive, hp: Math.ceil(num(p.hp)), armor: Math.ceil(num(p.armor)), weapon: p.weapon, weaponName: weaponName(p.weapon), ammo: ammo == null ? -1 : ammo, grenades: p.grenades, score: p.score };
       }) };
     }
     function publish() { try { if (bridge) bridge.publish(JSON.stringify(state())); } catch (_) {} }
     function updateRoomPlayers(current) {
-      var value = [1, 2].map(function (id) {
-        var controller = current.find(function (p) { return p.id === id; });
-        var connected = !!(controller && controller.connected);
-        return '<div class="room-player' + (connected ? ' connected' : '') + '"><span class="player-tag">' + id + 'P</span><strong>' + esc(tr("玩家 ", "Player ") + id) + '</strong><span>' + esc(connected ? tr("已就绪", "READY") : tr("等待连接", "WAITING")) + '</span></div>';
-      }).join("");
+      var controller = current.find(function (p) { return p.id === 1; });
+      var connected = !!(controller && controller.connected);
+      var value = '<div class="room-player' + (connected ? ' connected' : '') + '"><span class="player-tag">LINK</span><strong>' + esc(tr("手机手柄", "CONTROLLER")) + '</strong><span>' + esc(connected ? tr("已就绪", "READY") : tr("等待连接", "WAITING")) + '</span></div>';
       if (value !== roomHtml) { $("room-players").innerHTML = value; roomHtml = value; }
     }
     function titleMenu() {
-      return '<div class="title-kicker">' + esc(tr("封锁区 · 03", "QUARANTINE SECTOR · 03")) + '</div><h1 class="game-title"><span class="title-line">' + tr("孤胆", "ALIEN") + '</span><span class="title-line">' + tr("枪手", "SHOOTER") + '</span></h1><div class="title-english">' + tr("ALIEN SHOOTER / TV", "SURVIVE. REARM. BREAK THROUGH.") + '</div><p class="title-description">' + esc(tr("基地失去联络，异形正从黑暗中涌出。带上武器，重启控制系统，杀出一条撤离路线。", "The base has gone silent. Hostiles are pouring out of the dark. Arm up, restore the control systems and fight your way to extraction.")) + '</p><div class="mission-tags"><span>' + esc(tr("三段战役", "3-STAGE CAMPAIGN")) + '</span><span>' + esc(tr("五种武器", "5 WEAPONS")) + '</span><span>' + esc(tr("双人合作", "LOCAL CO-OP")) + '</span></div><div class="title-actions"><div class="player-mode"><button type="button" id="mode-one" data-action="mode" data-players="1" class="' + (game.selectedPlayers === 1 ? 'selected' : '') + '" aria-pressed="' + (game.selectedPlayers === 1) + '">' + esc(tr("1P · 单人行动", "1P · SOLO")) + '</button><button type="button" id="mode-two" data-action="mode" data-players="2" class="' + (game.selectedPlayers === 2 ? 'selected' : '') + '" aria-pressed="' + (game.selectedPlayers === 2) + '">' + esc(tr("2P · 并肩作战", "2P · CO-OP")) + '</button></div><button type="button" class="primary wide" id="start-button" data-action="start"><span>' + esc(tr("进入封锁区", "ENTER THE ZONE")) + '</span><em>START / ENTER</em></button><p class="start-hint">' + esc(game.noticeTime > 0 && text(game.notice) ? text(game.notice) : game.selectedPlayers === 2 ? tr("连接两个手机手柄，共享火力与补给。", "Connect two phones and share firepower and supplies.") : tr("可用手机手柄、电视遥控器或键盘游玩。", "Play with a phone, TV remote or keyboard.")) + '</p></div>';
+      return '<div class="title-kicker">' + esc(tr("封锁区 · 03", "QUARANTINE SECTOR · 03")) + '</div><h1 class="game-title"><span class="title-line">' + tr("孤胆", "ALIEN") + '</span><span class="title-line">' + tr("枪手", "SHOOTER") + '</span></h1><div class="title-english">' + tr("ALIEN SHOOTER / TV", "SURVIVE. REARM. BREAK THROUGH.") + '</div><p class="title-description">' + esc(tr("基地失去联络，异形正从黑暗中涌出。带上武器，重启控制系统，独自杀出一条撤离路线。", "The base has gone silent. Hostiles are pouring out of the dark. Arm up, restore the control systems and fight your way to extraction, alone.")) + '</p><div class="mission-tags"><span>' + esc(tr("三段战役", "3-STAGE CAMPAIGN")) + '</span><span>' + esc(tr("五种武器", "5 WEAPONS")) + '</span><span>' + esc(tr("单人行动", "SINGLE PLAYER")) + '</span></div><div class="title-actions"><button type="button" class="primary wide" id="start-button" data-action="start"><span>' + esc(tr("进入封锁区", "ENTER THE ZONE")) + '</span><em>START / ENTER</em></button><p class="start-hint">' + esc(game.noticeTime > 0 && text(game.notice) ? text(game.notice) : tr("连接一部手机即可开始，也可用遥控器或键盘游玩。", "Connect one phone to begin, or use a TV remote or keyboard.")) + '</p></div>';
     }
     function pauseMenu() {
       var disconnected = game.pausedReason === "disconnected";
-      return '<span class="eyebrow">' + esc(tr("行动暂停", "MISSION PAUSED")) + '</span><h1 class="dialog-title">' + esc(disconnected ? tr("等待队员归队", "WAITING FOR YOU") : tr("喘口气，再继续", "TAKE A BREATHER")) + '</h1><p class="dialog-description">' + esc(disconnected ? tr("手柄已断开，战斗已暂停。重新连接后按 START 继续，当前进度保留。", "A controller disconnected. The fight is paused. Reconnect, then press START to continue where you left off.") : tr("战斗已暂停。你可以在右侧扫码连接手柄，准备好后继续行动。", "The fight is paused. Scan the code to connect a controller, then resume when you are ready.")) + '</p><div class="end-stats"><div class="end-stat"><span>' + esc(tr("已消灭", "ELIMINATED")) + '</span><strong>' + game.kills + '</strong></div><div class="end-stat"><span>' + esc(tr("行动用时", "TIME")) + '</span><strong>' + timeLabel(game.elapsed) + '</strong></div><div class="end-stat"><span>' + esc(tr("补给资金", "CREDITS")) + '</span><strong>' + game.credits + '</strong></div></div><div class="dialog-actions"><button type="button" id="resume-button" class="primary" data-action="start">' + esc(tr("继续行动", "RESUME MISSION")) + '</button></div><p class="dialog-hint">' + esc(tr("START / ENTER 继续 · SELECT 切枪 · 右下区域投掷手雷", "START / ENTER resumes · SELECT switches weapons · Lower-right zone throws grenades")) + '</p>';
+      return '<span class="eyebrow">' + esc(tr("行动暂停", "MISSION PAUSED")) + '</span><h1 class="dialog-title">' + esc(disconnected ? tr("等待手柄连接", "CONTROLLER DISCONNECTED") : tr("喘口气，再继续", "TAKE A BREATHER")) + '</h1><p class="dialog-description">' + esc(disconnected ? tr("手柄已断开，战斗已暂停。重新连接后按 START 继续，当前进度保留。", "A controller disconnected. The fight is paused. Reconnect, then press START to continue where you left off.") : tr("战斗已暂停。你可以在右侧扫码连接手柄，准备好后继续行动。", "The fight is paused. Scan the code to connect a controller, then resume when you are ready.")) + '</p><div class="end-stats"><div class="end-stat"><span>' + esc(tr("已消灭", "ELIMINATED")) + '</span><strong>' + game.kills + '</strong></div><div class="end-stat"><span>' + esc(tr("行动用时", "TIME")) + '</span><strong>' + timeLabel(game.elapsed) + '</strong></div><div class="end-stat"><span>' + esc(tr("补给资金", "CREDITS")) + '</span><strong>' + game.credits + '</strong></div></div><div class="dialog-actions"><button type="button" id="resume-button" class="primary" data-action="start">' + esc(tr("继续行动", "RESUME MISSION")) + '</button></div><p class="dialog-hint">' + esc(tr("START / ENTER 继续 · SELECT 切枪 · 右下区域投掷手雷", "START / ENTER resumes · SELECT switches weapons · Lower-right zone throws grenades")) + '</p>';
     }
     function shopMenu() {
       var shop = game.shop || { items: [], selected: 0 };
       var items = shop.items || [];
-      return '<span class="eyebrow">' + esc(tr("区域肃清 · 补给站", "SECTOR CLEAR · REARM")) + '</span><div class="shop-top"><h1 class="dialog-title">' + esc(tr("整备，深入基地", "REARM & ADVANCE")) + '</h1><span class="shop-balance">¤ ' + game.credits + '</span></div><p class="shop-intro">' + esc(tr("补充弹药、修复护甲或更换火力。双人模式共享补给资金。", "Restock ammunition, repair armor or upgrade your firepower. Credits are shared in co-op.")) + '</p><div class="shop-grid">' + items.map(function (item, index) {
+      return '<span class="eyebrow">' + esc(tr("区域肃清 · 补给站", "SECTOR CLEAR · REARM")) + '</span><div class="shop-top"><h1 class="dialog-title">' + esc(tr("整备，深入基地", "REARM & ADVANCE")) + '</h1><span class="shop-balance">¤ ' + game.credits + '</span></div><p class="shop-intro">' + esc(tr("补充弹药、修复护甲或更换火力，为下一段行动做好准备。", "Restock ammunition, repair armor or upgrade your firepower before the next sector.")) + '</p><div class="shop-grid">' + items.map(function (item, index) {
         return '<button type="button" class="shop-item' + (shop.selected === index ? ' selected' : '') + (game.credits < item.price ? ' unaffordable' : '') + '" data-action="buy" data-index="' + index + '" aria-label="' + esc(text(item.name) + ', ' + item.price) + '" aria-pressed="' + (shop.selected === index) + '"><strong>' + esc(item.name) + '</strong><p>' + esc(item.description) + '</p><span>¤ ' + item.price + '</span></button>';
       }).join("") + '</div><p class="shop-notice" role="status">' + (game.noticeTime > 0 ? esc(game.notice) : '&nbsp;') + '</p><div class="shop-bottom"><span>' + esc(tr("方向 / SELECT 选购 · 射击键购买\nSTART / 手雷键前往下一关", "Directions / SELECT browse · Fire buys\nSTART / grenade advances")) + '</span><button type="button" class="primary" id="continue-button" data-action="continue">' + esc(tr("前往下一区域", "NEXT SECTOR")) + '</button></div>';
     }
@@ -223,10 +217,9 @@
       $("combat-notice").textContent = text(game.notice);
       var value = (game.players || []).filter(function (p) { return p.active; }).map(function (p) {
         var health = clamp(num(p.hp) / Math.max(1, num(p.maxHp, 100)), 0, 1), ammo = p.ammo && p.ammo[p.weapon];
-        return '<section class="player-hud p' + p.id + (p.downed ? ' downed' : '') + '" data-player="' + p.id + '"><div class="player-hud-header"><strong>' + p.id + 'P / ' + esc(tr("突击队员", "OPERATOR")) + '</strong><span>' + esc(p.downed ? tr("靠近队友救援", "TEAMMATE CAN REVIVE") : p.connected ? tr("已连接", "CONNECTED") : tr("连接中断", "DISCONNECTED")) + '</span></div><div class="health-line"><span>HP</span><div class="health-meter' + (health < .3 ? ' low' : '') + '"><i style="width:' + Math.round(health * 100) + '%"></i></div><b>' + Math.ceil(num(p.hp)) + '/' + p.maxHp + '</b></div><div class="armor-line">' + esc(tr("护甲 ", "ARMOR ")) + Math.ceil(num(p.armor)) + ' · ' + esc(tr("得分 ", "SCORE ")) + num(p.score) + '</div><div class="weapon-line"><span class="weapon-name">' + esc(weaponName(p.weapon)) + '</span><span class="weapon-ammo">' + (ammo == null || ammo < 0 ? '∞' : ammo) + '<small>' + esc(tr("发", "RDS")) + '</small></span></div><div class="grenade-count">' + esc(tr("手雷 × ", "GRENADES × ")) + num(p.grenades) + '</div>' + (p.downed ? '<div class="revive-meter"><i style="width:' + Math.round(clamp(num(p.reviveProgress), 0, 1) * 100) + '%"></i></div>' : '') + '</section>';
+        return '<section class="player-hud" data-player="1"><div class="player-hud-header"><strong>' + esc(tr("突击队员", "OPERATOR")) + '</strong><span>' + esc(p.connected ? tr("已连接", "CONNECTED") : tr("连接中断", "DISCONNECTED")) + '</span></div><div class="health-line"><span>HP</span><div class="health-meter' + (health < .3 ? ' low' : '') + '"><i style="width:' + Math.round(health * 100) + '%"></i></div><b>' + Math.ceil(num(p.hp)) + '/' + p.maxHp + '</b></div><div class="armor-line">' + esc(tr("护甲 ", "ARMOR ")) + Math.ceil(num(p.armor)) + ' · ' + esc(tr("得分 ", "SCORE ")) + num(p.score) + '</div><div class="weapon-line"><span class="weapon-name">' + esc(weaponName(p.weapon)) + '</span><span class="weapon-ammo">' + (ammo == null || ammo < 0 ? '∞' : ammo) + '<small>' + esc(tr("发", "RDS")) + '</small></span></div><div class="grenade-count">' + esc(tr("手雷 × ", "GRENADES × ")) + num(p.grenades) + '</div></section>';
       }).join("");
       if (value !== hudHtml) { $("players-hud").innerHTML = value; hudHtml = value; }
-      $("hud").setAttribute("data-coop", String((game.players || []).filter(function (p) { return p.active; }).length > 1));
       drawTacticalMap(objective);
     }
     // Small, screen-aligned navigation aid. Called with the HUD at most ten times a second.
@@ -255,7 +248,7 @@
         c.fillStyle = game.extractionReady ? "#8aefaa" : "#f5cf77"; c.fillRect(target.x - .45, target.y - .45, .9, .9);
       }
       active.forEach(function (p) {
-        c.fillStyle = p.downed ? "#f08370" : p.id === 1 ? "#9bffe0" : "#ffe5a8";
+        c.fillStyle = p.alive ? "#9bffe0" : "#f08370";
         c.strokeStyle = "#06120d"; c.lineWidth = .2;
         c.beginPath(); c.arc(p.x, p.y, .7, 0, Math.PI * 2); c.fill(); c.stroke();
         c.strokeStyle = c.fillStyle; c.lineWidth = .25; c.beginPath(); c.moveTo(p.x, p.y); c.lineTo(p.x + Math.cos(p.angle) * 1.7, p.y + Math.sin(p.angle) * 1.7); c.stroke();
@@ -362,8 +355,7 @@
       var button = event.target.closest("button[data-action]");
       if (!button || !game || destroyed) return;
       unlock();
-      if (button.dataset.action === "mode" && game.phase === "title") game.selectedPlayers = Number(button.dataset.players) === 2 ? 2 : 1;
-      else if (button.dataset.action === "start") requestAction("start");
+      if (button.dataset.action === "start") requestAction("start");
       else if (button.dataset.action === "continue" && game.phase === "shop") game.continueCampaign();
       else if (button.dataset.action === "buy" && game.phase === "shop") { var index = Number(button.dataset.index); if (Number.isInteger(index)) { game.shop.selected = index; game.buy(index); } }
       updateUi(currentInputs);

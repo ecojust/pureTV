@@ -4,7 +4,7 @@
 
 本作参考经典《孤胆枪手》所代表的斜俯视异形射击玩法：工业设施中的密集敌群、持续射击、掉落补给、武器升级、破坏性爆炸与任务推进。它是 pureTV 的独立实现，使用新地图、角色、材质与音效；不是商业原作的移植，也不包含原作关卡、贴图、音乐、录音、ROM 或可执行程序。
 
-首版提供三段有独立布局的战役，每关有三个顺序控制台目标与可开启的通道，完成战斗后前往出口。两次关间补给、最终首领与失败重开构成完整循环。与原作相比，本版内容规模、物理和敌人行为更简化；增加了手机盲操作区域、辅助瞄准和两人同屏合作。
+首版提供三段有独立布局的战役，每关有三个顺序控制台目标与可开启的通道，完成战斗后前往出口。两次关间补给、最终首领与失败重开构成完整循环。与原作相比，本版内容规模、物理和敌人行为更简化；采用单人行动，提供手机盲操作区域和辅助瞄准。
 
 ## 本地素材与依赖
 
@@ -24,7 +24,7 @@
 
 移动采用屏幕相对坐标，左右不会随镜头旋转颠倒。右侧三分之一按上下分为两个大动作区：上半区持续射击和拖动瞄准，下半区单次手雷。没有拖动瞄准输入时，游戏辅助选择视线内目标；墙体会阻挡射线与弹丸。
 
-进入后台、参与者断线、图形上下文丢失会暂停战斗。重新连接或恢复图形后必须明确按 START 继续。取消手势和连接恢复携带的旧按键会被释放或抑制，避免误投手雷。系统退出确认与游戏内暂停、补给、结算界面均使用虚化背景。原生应用在按 Home 切出或确认退出时结束当前战役并关闭房间，不保留后台游戏进程。
+进入后台、手柄断线、图形上下文丢失会暂停战斗。重新连接或恢复图形后必须明确按 START 继续。取消手势和连接恢复携带的旧按键会被释放或抑制，避免误投手雷。系统退出确认与游戏内暂停、补给、结算界面均使用虚化背景。原生应用在按 Home 切出或确认退出时结束当前战役并关闭房间，不保留后台游戏进程。
 
 ## 性能与验证边界
 
@@ -34,7 +34,7 @@
 
 ## English
 
-This is an independent pureTV implementation inspired by classic industrial-base alien shooters. It uses original maps, geometry, procedural textures and synthesized sound, with no extracted commercial game assets. It provides three mission sectors, sequential objectives, two supply stops, a final guardian, failure/restart and one- or two-player local cooperative play.
+This is an independent pureTV implementation inspired by classic industrial-base alien shooters. It uses original maps, geometry, procedural textures and synthesized sound, with no extracted commercial game assets. It provides three mission sectors, sequential objectives, two supply stops, a final guardian, failure/restart and a single-player campaign controlled by one phone.
 
 Rendering and audio are fully bundled and do not request external assets. The phone controller uses local HTTP/WebSocket communication and does not require gyroscope access or installation of an HTTPS certificate. Movement stays aligned with screen directions; firing supports drag aiming and line-of-sight assistance.
 

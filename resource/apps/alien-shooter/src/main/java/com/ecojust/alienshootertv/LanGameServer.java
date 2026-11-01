@@ -43,7 +43,9 @@ public final class LanGameServer implements AutoCloseable {
     private final AssetSource assets;
     private final String room = randomToken();
     private final Object lock = new Object();
-    private final Player[] players = {new Player(1), new Player(2)};
+    // Alien Shooter is a single-player game. A session authenticates the only
+    // control seat; another phone may not create a second actor or take it over.
+    private final Player[] players = {new Player(1)};
     private final Set<Socket> sockets = new HashSet<>();
     private volatile ServerSocket listener;
     private volatile boolean running;
@@ -210,7 +212,7 @@ public final class LanGameServer implements AutoCloseable {
 
     private void broadcast() {
         if (!running) return;
-        Peer[] peers = new Peer[2];
+        Peer[] peers = new Peer[players.length];
         synchronized (lock) { for (int i = 0; i < players.length; i++) peers[i] = players[i].peer; }
         for (Peer peer : peers) {
             if (peer == null || peer.closed) continue;
@@ -219,7 +221,7 @@ public final class LanGameServer implements AutoCloseable {
     }
 
     private void closeSlowWriters() {
-        Peer[] peers = new Peer[2];
+        Peer[] peers = new Peer[players.length];
         synchronized (lock) { for (int i = 0; i < players.length; i++) peers[i] = players[i].peer; }
         for (Peer peer : peers) if (peer != null && peer.writeStartedAt != 0
                 && now() - peer.writeStartedAt > 2000) peer.disconnect();
@@ -298,6 +300,10 @@ public final class LanGameServer implements AutoCloseable {
                                 .put("session", joined.session).put("heartbeatMs", 250).toString());
                         text(published);
                     } else if ("input".equals(type) && player != null) {
+                        if ((message.has("id") && (!(message.opt("id") instanceof Number) || message.optDouble("id") != 1))
+                                || (message.has("player") && (!(message.opt("player") instanceof Number) || message.optDouble("player") != 1))) {
+                            fail("protocol_error"); break;
+                        }
                         Object seqObject = message.opt("seq");
                         double seqNumber = message.optDouble("seq", -1);
                         if (!(seqObject instanceof Number) || !Double.isFinite(seqNumber) || seqNumber < 0

@@ -68,7 +68,7 @@ apps = [
     ('coast-kart', 'Coast Kart TV', '原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏', 'coast-kart-tv', 'coast-kart-tv', 'com.ecojust.coastkarttv'),
     ('cozy-island', 'Cozy Island TV', '原创岛屿生活，支持采集、钓鱼、布置和手机扫码双人游玩', 'cozy-island-tv', 'cozy-island-tv', 'com.ecojust.cozyislandtv'),
     ('used-car-racing', '极品二手车', '随机车况与机械故障的三维赛车，支持手机扫码一至两人竞速和 AI 对手', 'used-car-racing-tv', 'used-car-racing-tv', 'com.ecojust.usedcartv'),
-    ('alien-shooter', '孤胆枪手 TV', '工业基地异形群潮射击，三关战役、五种武器与手机扫码双人合作', 'alien-shooter-tv', 'alien-shooter-tv', 'com.ecojust.alienshootertv'),
+    ('alien-shooter', '孤胆枪手 TV', '工业基地异形群潮单人射击，三关战役、五种武器与手机扫码操作', 'alien-shooter-tv', 'alien-shooter-tv', 'com.ecojust.alienshootertv'),
 ]
 selected_apps = args.app or ['shortvideo', 'webtv']
 apps = [app for app in apps if app[0] in selected_apps]
@@ -119,7 +119,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
                 for scene in ('controller', 'controller-active'):
                     (docs / (scene + suffix + '.png')).write_bytes(validate_png(artifact(slug + '-' + scene + suffix + '.png'))[0])
         if slug == 'alien-shooter':
-            for scene in ('title', 'title.en', 'coop', 'stage-1', 'stage-2', 'stage-3'):
+            for scene in ('title', 'title.en', 'stage-1', 'stage-2', 'stage-3'):
                 (docs / (slug + '-' + scene + '.png')).write_bytes(validate_png(artifact(slug + '-' + scene + '.png'))[0])
         if slug == 'used-car-racing':
             for scene in ('car-lineup', 'track-harbor', 'track-ridge', 'track-solar'):
@@ -158,7 +158,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         if slug in GAMES:
             checksums += ['docs/controller.png', 'docs/controller.en.png', 'docs/controller-active.png', 'docs/controller-active.en.png']
         if slug == 'alien-shooter':
-            checksums += ['docs/' + slug + '-' + scene + '.png' for scene in ('title', 'title.en', 'coop', 'stage-1', 'stage-2', 'stage-3')]
+            checksums += ['docs/' + slug + '-' + scene + '.png' for scene in ('title', 'title.en', 'stage-1', 'stage-2', 'stage-3')]
         if slug == 'used-car-racing':
             checksums += ['docs/' + scene + '.png' for scene in ('car-lineup', 'track-harbor', 'track-ridge', 'track-solar')]
             checksums += ['docs/' + scene + suffix + '.png' for scene in ('controller-gyro', 'controller-setup') for suffix in ('', '.en')]
