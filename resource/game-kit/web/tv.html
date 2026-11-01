@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>pureTV 游戏</title><link rel="stylesheet" href="tv.css"></head>
+<body>
+<main class="app">
+  <header><div class="brand"><span class="brand-mark">P</span><div><p class="eyebrow">PURETV ORIGINALS</p><h1 id="title">正在准备游戏</h1></div></div><div class="top-actions"><span id="connection" class="connection">遥控器 / 键盘可直接游玩</span><button id="pause-button" type="button">暂停 P</button><button id="sound-button" type="button" aria-pressed="false">声音：关</button></div></header>
+  <section class="workspace">
+    <section class="stage" aria-label="游戏画面">
+      <div id="hud" class="hud" aria-live="off"></div>
+      <div id="arena"><div id="scene"><canvas id="game" width="960" height="540" aria-label="游戏场景"></canvas>
+        <div id="overlay" class="overlay"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><p id="dialog-kicker" class="eyebrow">第一次出发</p><h2 id="dialog-title">准备好了吗？</h2><p id="dialog-copy"></p><div id="difficulty-controls" class="difficulty"><span>航线</span><button type="button" data-level="0" class="selected">练习</button><button type="button" data-level="1">标准</button><button type="button" data-level="2">挑战</button></div><button id="primary" class="primary" type="button">开始游戏 · ENTER</button><p id="dialog-help" class="fine">手机点击 START，或按遥控器确认键</p></section></div>
+      </div></div>
+      <div class="message"><span class="live-dot"></span><p id="message">正在准备场景…</p><span id="best">最佳 0</span></div>
+    </section>
+    <aside><div class="side-heading"><span class="eyebrow">手机就是手柄</span><span id="room-status" class="badge">LOCAL</span></div><div id="qr-wrap" class="qr-wrap"><img id="qr" alt="扫码连接手机手柄" hidden><div id="qr-empty"><span class="phone-icon">▣</span><p>在电视上打开应用<br>扫码连接手机</p></div></div><p id="room-address" class="address">手机与电视连接同一 Wi-Fi</p><div class="divider"></div><h3>怎么操作</h3><div class="control"><span class="key">↔</span><p id="move-help">方向键 / 手机摇杆</p></div><div class="control"><span class="key">A</span><p id="a-help">空格键 / 右侧上半屏</p></div><div class="control"><span class="key">B</span><p id="b-help">B 键 / 右侧下半屏</p></div><p class="small-help">P 暂停　R 重试<br>遥控器确认开始 / A，播放键暂停</p><div class="tip"><span class="eyebrow">小提示</span><p id="tip"></p></div></aside>
+  </section>
+  <footer><span>桔子桑 · 原创小游戏</span><span id="tagline"></span><span id="version">0.1.0</span></footer>
+</main><script src="renderer.js"></script><script src="game-model.js"></script><script src="game.js"></script><script src="runtime.js"></script>
+</body></html>

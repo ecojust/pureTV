@@ -1,0 +1,114 @@
+name: Sign one Game Kit APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact source commit containing this game
+        type: string
+        required: true
+      slug:
+        description: Game directory name under resource/apps
+        type: string
+        required: true
+      request_branch:
+        description: build-assets/game-kit-requests-SESSION branch containing JSON and unsigned APK
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  sign:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Validate request coordinates
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          GAME_SLUG: ${{ inputs.slug }}
+          REQUEST_BRANCH: ${{ inputs.request_branch }}
+        run: |
+          python3 - <<'PY'
+          import os,re
+          assert os.environ['GITHUB_REPOSITORY'] == 'ecojust/pureTV'
+          assert re.fullmatch(r'[a-f0-9]{40}', os.environ['SOURCE_SHA'])
+          assert re.fullmatch(r'[a-z][a-z0-9]*(?:-[a-z0-9]+)*', os.environ['GAME_SLUG'])
+          assert re.fullmatch(r'build-assets/game-kit-requests-[a-z0-9][a-z0-9-]{0,63}', os.environ['REQUEST_BRANCH'])
+          PY
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: signer
+          persist-credentials: false
+          sparse-checkout: |
+            resource/game-kit
+            tools/puretv-release-certificate-v2.sha256
+          sparse-checkout-cone-mode: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+          path: source
+          sparse-checkout: |
+            resource/game-kit
+            resource/apps/${{ inputs.slug }}
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platforms;android-35 build-tools;34.0.0
+      - name: Fetch pinned QR encoder
+        run: |
+          curl --fail --silent --show-error --location https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar --output "$RUNNER_TEMP/zxing.jar"
+          python3 - <<'PY'
+          import hashlib,os
+          from pathlib import Path
+          assert hashlib.sha256((Path(os.environ['RUNNER_TEMP'])/'zxing.jar').read_bytes()).hexdigest() == '8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82'
+          PY
+      - name: Rebuild committed game without executing source scripts
+        env:
+          GAME_SLUG: ${{ inputs.slug }}
+        run: |
+          python3 signer/resource/game-kit/build.py \
+            --kit "$GITHUB_WORKSPACE/source/resource/game-kit" \
+            --game "$GITHUB_WORKSPACE/source/resource/apps/$GAME_SLUG" \
+            --output "$RUNNER_TEMP/rebuilt" --cache "$RUNNER_TEMP/dex-cache" \
+            --sdk "$ANDROID_HOME" --jdk "$JAVA_HOME" --zxing "$RUNNER_TEMP/zxing.jar"
+      - name: Verify source, package, bytecode, resources, assets and size
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          GAME_SLUG: ${{ inputs.slug }}
+          REQUEST_BRANCH: ${{ inputs.request_branch }}
+        run: |
+          python3 signer/resource/game-kit/sign-request.py \
+            --source "$GITHUB_WORKSPACE/source" --source-sha "$SOURCE_SHA" \
+            --slug "$GAME_SLUG" --request-branch "$REQUEST_BRANCH" \
+            --rebuilt "$RUNNER_TEMP/rebuilt/unsigned.apk" \
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
+            --output "$RUNNER_TEMP/signed" --validate-only
+      - name: Sign with the existing pinned repository certificate
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          GAME_SLUG: ${{ inputs.slug }}
+          REQUEST_BRANCH: ${{ inputs.request_branch }}
+          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+        run: |
+          python3 signer/resource/game-kit/sign-request.py \
+            --source "$GITHUB_WORKSPACE/source" --source-sha "$SOURCE_SHA" \
+            --slug "$GAME_SLUG" --request-branch "$REQUEST_BRANCH" \
+            --rebuilt "$RUNNER_TEMP/rebuilt/unsigned.apk" \
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
+            --output "$RUNNER_TEMP/signed"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: game-kit-signed-${{ inputs.slug }}-${{ inputs.source_sha }}
+          path: |
+            ${{ runner.temp }}/signed/${{ inputs.slug }}-*.apk
+            ${{ runner.temp }}/signed/signing-receipt.json
+          if-no-files-found: error
+          retention-days: 14

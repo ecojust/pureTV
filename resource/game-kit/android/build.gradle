@@ -1,0 +1,16 @@
+// Native host regression fixture only. Shipping APKs use ../build.py.
+plugins { id 'com.android.application' version '8.5.2' }
+android {
+    namespace 'com.ecojust.gamekit'
+    compileSdk 35
+    defaultConfig { applicationId 'com.ecojust.gamekitfixture'; minSdk 26; targetSdk 29; versionCode 1; versionName '0.1.0' }
+    sourceSets { main { assets.srcDirs = ['src/test/assets'] } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    testOptions { unitTests.includeAndroidResources = true }
+    lint { disable 'ExpiredTargetSdkVersion' }
+}
+dependencies {
+    implementation 'com.google.zxing:core:3.5.3'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.14.1'
+}
