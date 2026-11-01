@@ -1,12 +1,12 @@
 # 可执行浏览器 QA / 实际操作录像
 
-这些工具仅位于 scratch，不修改游戏源码、构建文件或 Git 状态。模型规则的 Node 测试由每款游戏实现；通用流程通过不能代替独特规则覆盖。
+这些工具读取构建后的游戏资源，将结果写入指定的 scratch 目录，不修改游戏源码、构建文件或 Git 状态。模型规则的 Node 测试由每款游戏实现；通用流程通过不能代替独特规则覆盖。
 
 ## 最短调用
 
 ```sh
 node resource/game-kit/qa/qa.mjs \
-  --assets /absolute/path/to/game/src/main/assets \
+  --assets /absolute/path/to/extracted-apk-assets \
   --output /workspace/scratch/hundred-games/results/gravity-courier \
   --automation /absolute/path/to/automation.mjs \
   --seconds 25 --record \
@@ -14,7 +14,7 @@ node resource/game-kit/qa/qa.mjs \
   --package com.ecojust.gravitycouriertv
 ```
 
-入口默认 `tv.html`，可传 `--entry index.html`。`--seconds` 控制普通操作回归时长，默认 15 秒。录像默认 30 秒；`--recipe recipe.json` 可指定 `{ "durationSeconds": 45 }`。省略 `--record` 或 `--apk` 时报告不声称相应项目已通过。
+`--assets` 应指向 APK 解出的完整 assets 目录，包含公共运行时和本游戏资源。入口默认 `tv.html`，可传 `--entry index.html`。`--seconds` 控制普通操作回归时长，默认 15 秒。录像默认 30 秒；`--recipe recipe.json` 可指定 `{ "durationSeconds": 45 }`。省略 `--record` 或 `--apk` 时报告不声称相应项目已通过。
 
 产物：`report.json`、实际截图、性能样本、输入状态轨迹；`recording/gameplay.mp4`、`recording/recording.json` 与完整解码结果。`gameplay.mp4` 严格小于 10,000,000 字节。
 
@@ -42,7 +42,7 @@ python3 resource/game-kit/qa/verify-artifacts.py --apk /game.apk --assets /game/
 
 ## 每款 automation.mjs
 
-策略只能取得从浏览器读出的快照和墙钟时间，不能取得 page/context。返回需要保持按下的键名；harness 发出真实浏览器键盘事件，并在释放、结束、暂停时清理按键。
+策略只能取得从浏览器读出的快照和墙钟时间，不能取得 page/context。返回需要保持按下的键名；harness 发出真实浏览器键盘事件，并在释放、结束、暂停时清理按键。录像也允许策略在胜负结算页用普通按键选择下一关；初始菜单由 recipe 启动，暂停期间不操作。
 
 ```js
 export const budgets = { maxWebGLDrawCalls: 8 }; // Canvas 游戏改用 maxCanvasPaintCommands
@@ -84,4 +84,4 @@ export function assertRetry({ before, after }, assert) {
 
 Node 24、Playwright 1.64.1、`/usr/bin/chromium`、系统 ffmpeg 7.1.5、Python 3。默认 Playwright headless-shell/ffmpeg 缓存缺失，所以指定系统 Chromium 并使用系统 ffmpeg；无需下载浏览器附件。`CHROMIUM_PATH` 可覆盖浏览器，`PURETV_PACKAGE` 可覆盖依赖解析用的 desktop/package.json。
 
-`node selftest.mjs` 用明确标记的合成画布 fixture 验证 harness 自身、按键、暂停/重开、性能采样和 4 秒录制。它不是一款交付游戏，不能计入游戏完成数量。现有 tetris APK 已通过 artifact 检查，结果在 `tetris-artifact-check.json`。
+公共工具的验证不能计入游戏完成数量。每款游戏的规则回归、实际游玩视频、最终 APK 资源一致性及完整解码结果分别保存在其发布目录的 `docs/verification.json` 中。

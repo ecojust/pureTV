@@ -23,6 +23,8 @@ jobs:
   sign:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    permissions:
+      contents: read
     steps:
       - name: Validate request coordinates
         env:
@@ -112,3 +114,60 @@ jobs:
             ${{ runner.temp }}/signed/signing-receipt.json
           if-no-files-found: error
           retention-days: 14
+
+  export:
+    needs: sign
+    if: github.repository == 'ecojust/pureTV'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: exporter
+          persist-credentials: false
+          sparse-checkout: |
+            resource/game-kit/build.py
+            resource/game-kit/export-signed.py
+            tools/puretv-release-certificate-v2.sha256
+          sparse-checkout-cone-mode: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+          path: source
+          persist-credentials: false
+          sparse-checkout: |
+            resource/game-kit/android/src/main
+            resource/game-kit/web
+            resource/apps/${{ inputs.slug }}/game.json
+            resource/apps/${{ inputs.slug }}/icon.xml
+            resource/apps/${{ inputs.slug }}/src/main/assets
+          sparse-checkout-cone-mode: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: game-kit-signed-${{ inputs.slug }}-${{ inputs.source_sha }}
+          run-id: ${{ github.run_id }}
+          repository: ecojust/pureTV
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/signed-input
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: build-tools;34.0.0
+      - name: Verify and create the isolated signed result branch
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          GAME_SLUG: ${{ inputs.slug }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 exporter/resource/game-kit/export-signed.py \
+            --source "$GITHUB_WORKSPACE/source" --source-sha "$SOURCE_SHA" \
+            --workflow-sha "$GITHUB_SHA" --slug "$GAME_SLUG" --run-id "$GITHUB_RUN_ID" \
+            --artifact "$RUNNER_TEMP/signed-input" \
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0"

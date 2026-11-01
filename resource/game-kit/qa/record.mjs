@@ -45,7 +45,7 @@ export async function recordGameplay({ browser, url, output, recipe = {}, assetH
       }
       if (automation && elapsed >= nextDecision) {
         const state = await snapshot(page);
-        const requested = state.phase === 'playing' && !state.paused ? await automation.keys(state, { elapsed:elapsed-1.2, mode:'record' }) : [];
+        const requested = ['playing','won','lost'].includes(state.phase) && !state.paused ? await automation.keys(state, { elapsed:elapsed-1.2, mode:'record' }) : [];
         for (const change of await applyKeys(page, requested, held)) inputs.push({ ...change, dispatchedAt:(performance.now()-started)/1000 });
         nextDecision=elapsed+.08;
       }
