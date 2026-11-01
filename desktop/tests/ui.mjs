@@ -1890,6 +1890,7 @@ try {
   const forumFirst=forumPage({hasMore:true});
   const forumSecond=forumPage({page:2,posts:[{number:'IABC121',title:'第二页的帖子',author:'另一位用户',state:'progressing',comments:1,updatedAt:'2026-10-30T10:00:00+08:00',labels:[]}]});
   await check('forum: navigation follows APK Market and browsing never requires ADB or reserves device operations',async p=>{
+    const writes=[];p.on('request',request=>{if(request.url().includes('gitee.com')&&['POST','PUT','PATCH','DELETE'].includes(request.method()))writes.push({url:request.url(),method:request.method()});});
     const pages=await p.locator('.sidebar nav [data-page]').evaluateAll(elements=>elements.map(element=>element.dataset.page));
     assert.equal(pages[pages.indexOf('market')+1],'forum');
     await nav(p,'forum');await forumPost(p,'IABC123').waitFor();
@@ -1902,7 +1903,9 @@ try {
     assert.equal(await forumAction(p,'previous').isDisabled(),true);
     assert.equal(await forumAction(p,'next').isEnabled(),true);
     await forumPost(p,'IABC123').locator('[data-forum-action="open"]').click();
-    assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[{number:'IABC123'}]);
+    await forumPost(p,'IABC122').locator('[data-forum-action="reply"]').click();
+    assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[{number:'IABC123'},{number:'IABC122'}]);
+    await forumAction(p,'create').click();assert.equal((await p.evaluate(()=>window.__resources)).at(-1),'forumCreate');
     await forumAction(p,'source').click();assert.equal((await p.evaluate(()=>window.__resources)).at(-1),'forum');
     await forumAction(p,'next').click();await forumPost(p,'IABC121').waitFor();
     assert.match(await p.locator('.forum-page-number').innerText(),/2/);
@@ -1918,15 +1921,19 @@ try {
     await forumAction(p,'previous').click();await forumPost(p,'IABC123').waitFor();
     assert.deepEqual((await forumRequests(p)).map(({page,refresh})=>({page,refresh})),[{page:1,refresh:false},{page:2,refresh:false},{page:2,refresh:true},{page:1,refresh:false}]);
     assert.deepEqual(await requests(p),[],'Forum browsing never invokes ADB');
+    assert.deepEqual(writes,[],'Posting and replying open the Gitee browser pages, without submitting content from Manager');
     await shot(p,'forum-posts-zh-CN');
     await p.setViewportSize({width:960,height:640});
-    await p.locator('[name="locale"]').selectOption('en');await p.locator('[name="theme"]').selectOption('graphite');
-    assert.equal(await p.locator('h1').innerText(),'Forum');
-    assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true,'The supported minimum window does not overflow horizontally');
-    for(const element of [p.locator('[data-page="forum"]'),forumAction(p,'previous'),forumAction(p,'next')]) {
-      const bounds=await element.boundingBox();assert.ok(bounds&&bounds.x>=0&&bounds.y>=0&&bounds.x+bounds.width<=960&&bounds.y+bounds.height<=640,'Forum navigation and paging remain visible at the minimum window size');
+    for(const language of ['zh-CN','en']) {
+      await p.locator('[name="locale"]').selectOption(language);
+      if(language==='en')await p.locator('[name="theme"]').selectOption('graphite');
+      assert.equal(await p.locator('h1').innerText(),language==='en'?'Forum':'论坛');
+      assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true,'The supported minimum window does not overflow horizontally');
+      for(const element of [p.locator('[data-page="forum"]'),forumAction(p,'create'),forumAction(p,'source'),forumAction(p,'refresh'),forumAction(p,'reply'),forumAction(p,'previous'),forumAction(p,'next')]) {
+        const bounds=await element.boundingBox();assert.ok(bounds&&bounds.x>=0&&bounds.y>=0&&bounds.x+bounds.width<=960&&bounds.y+bounds.height<=640,'Forum toolbar, reply and paging remain visible at the minimum window size');
+      }
+      await shot(p,language==='en'?'forum-compact-en-graphite':'forum-compact-zh-CN');
     }
-    await shot(p,'forum-compact-en-graphite');
   },withoutAdb(),{forumPages:{1:forumFirst,2:forumSecond}});
   await check('forum: network failure remains distinct from an empty repository and can be retried',async p=>{
     await nav(p,'forum');await p.locator('.forum-error').waitFor();
@@ -1941,17 +1948,35 @@ try {
     assert.equal(await forumAction(p,'next').isDisabled(),true);
     assert.deepEqual(await requests(p),[]);
   },withoutAdb(),{forumError:'无法读取论坛帖子，请检查网络后重试'});
-  await check('forum: stale posts remain readable and an opener failure is reported without claiming success',async p=>{
+  await check('forum: stale posts remain readable and composer/reply opener failures are reported without claiming success',async p=>{
     await nav(p,'forum');await forumPost(p,'IABC123').waitFor();
     assert.match(await p.locator('.forum-warning').innerText(),/缓存/);
-    await forumPost(p,'IABC123').locator('[data-forum-action="open"]').click();
+    await forumPost(p,'IABC123').locator('[data-forum-action="reply"]').click();
     await p.locator('.forum-error').waitFor();assert.match(await p.locator('.forum-error').innerText(),/无法打开/);
     assert.equal(await p.locator('.forum-post').count(),2);
     await p.evaluate(()=>{window.__forumOpenError=null;});
-    await forumPost(p,'IABC123').locator('[data-forum-action="open"]').click();
+    await forumPost(p,'IABC123').locator('[data-forum-action="reply"]').click();
     assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[{number:'IABC123'},{number:'IABC123'}]);
+    await forumAction(p,'create').click();await p.locator('.forum-link-error').waitFor();
+    assert.match(await p.locator('.forum-link-error').innerText(),/无法打开论坛发帖页/);
+    await p.evaluate(()=>{window.__resourceErrors={};});await forumAction(p,'create').click();
+    assert.deepEqual(await p.evaluate(()=>window.__resources),['forumCreate','forumCreate']);
+    assert.equal(await p.locator('.forum-link-error').count(),0);
     assert.deepEqual(await requests(p),[]);
-  },withoutAdb(),{forumPages:{1:forumPage({stale:true,warning:'论坛更新失败，显示上次缓存'})},forumOpenError:'无法打开论坛帖子，请重试'});
+  },withoutAdb(),{forumPages:{1:forumPage({stale:true,warning:'论坛更新失败，显示上次缓存'})},forumOpenError:'无法打开论坛帖子，请重试',resourceErrors:{forumCreate:'无法打开论坛发帖页，请重试'}});
+  await check('forum: demo posts cannot be replied to, while the real Gitee composer remains accessible',async p=>{
+    await p.addInitScript(()=>{window.__openedForumPages=[];window.open=(address,target,features)=>{window.__openedForumPages.push({address,target,features});return null;};});
+    await p.goto(url+'?demo=1');await p.locator('.demo-banner').waitFor();
+    await nav(p,'forum');await p.locator('.forum-post').first().waitFor();
+    assert.match(await p.locator('.forum-note').innerText(),/演示帖子/);
+    assert.equal(await forumAction(p,'reply').isDisabled(),true);
+    assert.equal(await forumAction(p,'open').isDisabled(),true);
+    assert.equal(await forumAction(p,'create').isEnabled(),true);
+    await forumAction(p,'reply').evaluate(button=>button.click());
+    assert.deepEqual(await p.evaluate(()=>window.__openedForumPages),[],'A simulated issue must not open an unrelated real discussion');
+    await forumAction(p,'create').click();
+    assert.deepEqual(await p.evaluate(()=>window.__openedForumPages),[{address:'https://gitee.com/juzisang331/pure-tv-store/issues/new',target:'_blank',features:'noopener,noreferrer'}]);
+  },null);
   await check('forum: late responses cannot replace a new visit or navigate away from the selected page',async p=>{
     await p.evaluate(()=>window.__holdNextOperation('forum:1'));
     await nav(p,'forum');await p.locator('.forum-loading').waitFor();

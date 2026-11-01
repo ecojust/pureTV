@@ -115,6 +115,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     window.__forumPages=structuredClone(options.forumPages || {1:defaultForumPage});
     window.__forumRequests=[];window.__forumOpenRequests=[];
     window.__forumError=options.forumError || null;window.__forumOpenError=options.forumOpenError || null;
+    window.__resourceErrors=structuredClone(options.resourceErrors || {});
     let clientUpdateCancelled=false;
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
@@ -160,7 +161,11 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         }
         if (command === 'choose_adb') return 'C:\\platform-tools\\adb.exe';
         if (command === 'cancel') { window.__requests.push({action:'cancel'}); downloadCancelled = true; marketCancelled = true; return; }
-        if (command === 'open_resource') { window.__resources.push(args.resource); return; }
+        if (command === 'open_resource') {
+          window.__resources.push(args.resource);
+          if(window.__resourceErrors[args.resource])throw new Error(window.__resourceErrors[args.resource]);
+          return;
+        }
         if (command === 'get_forum_posts') {
           window.__forumRequests.push(structuredClone(args));
           const held=await holdOperation('forum:'+args.page);

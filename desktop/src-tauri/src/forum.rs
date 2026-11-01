@@ -13,6 +13,7 @@ use std::{
 };
 
 pub const SOURCE_URL: &str = "https://gitee.com/juzisang331/pure-tv-store/issues";
+pub const NEW_POST_URL: &str = "https://gitee.com/juzisang331/pure-tv-store/issues/new";
 const API: &str = "https://gitee.com/api/v5/repos/juzisang331/pure-tv-store/issues";
 const PER_PAGE: usize = 20;
 const MAX_PAGE: u32 = 1000;

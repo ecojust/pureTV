@@ -111,9 +111,9 @@ export async function installPlatformTools(onProgress: (progress: DownloadProgre
   const progress = new Channel<DownloadProgress>(onProgress);
   return invoke<Snapshot>('install_platform_tools', { acceptedLicense: true, onProgress: progress, ...(forceDownload?{forceDownload:true}:{}) });
 }
-export async function openResource(resource: 'catalog' | 'market' | 'forum' | 'repository' | 'releases' | 'platformTools' | 'platformToolsLicense'): Promise<void> {
+export async function openResource(resource: 'catalog' | 'market' | 'forum' | 'forumCreate' | 'repository' | 'releases' | 'platformTools' | 'platformToolsLicense'): Promise<void> {
   if (demo || !desktop) {
-    const url = resource === 'repository' ? 'https://github.com/ecojust/pureTV' : resource === 'forum' ? 'https://gitee.com/juzisang331/pure-tv-store/issues' : resource === 'market' ? 'https://gitee.com/juzisang331/pure-tv-store' : resource === 'catalog' ? 'https://github.com/ecojust/pureTV/tree/master/resource' : resource === 'releases' ? 'https://github.com/ecojust/pureTV/releases' : resource === 'platformToolsLicense' ? 'https://developer.android.com/studio/terms' : 'https://developer.android.com/tools/releases/platform-tools';
+    const url = resource === 'repository' ? 'https://github.com/ecojust/pureTV' : resource === 'forumCreate' ? 'https://gitee.com/juzisang331/pure-tv-store/issues/new' : resource === 'forum' ? 'https://gitee.com/juzisang331/pure-tv-store/issues' : resource === 'market' ? 'https://gitee.com/juzisang331/pure-tv-store' : resource === 'catalog' ? 'https://github.com/ecojust/pureTV/tree/master/resource' : resource === 'releases' ? 'https://github.com/ecojust/pureTV/releases' : resource === 'platformToolsLicense' ? 'https://developer.android.com/studio/terms' : 'https://developer.android.com/tools/releases/platform-tools';
     window.open(url, '_blank', 'noopener,noreferrer'); return;
   }
   await invoke('open_resource', { resource });

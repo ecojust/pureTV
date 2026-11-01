@@ -772,6 +772,7 @@ fn open_resource(resource: &str, app: tauri::AppHandle) -> Result<(), String> {
         "releases" => "https://github.com/ecojust/pureTV/releases",
         "market" => "https://gitee.com/juzisang331/pure-tv-store",
         "forum" => forum::SOURCE_URL,
+        "forumCreate" => forum::NEW_POST_URL,
         "platformTools" => "https://developer.android.com/tools/releases/platform-tools",
         "platformToolsLicense" => "https://developer.android.com/studio/terms",
         _ => return Err("不支持的资源".into()),
