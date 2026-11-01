@@ -36,7 +36,7 @@
 | [镜光接力](apps/prism-relay/) | ecojust / 桔子桑 | 0.1.1 | 285.3 KB | 旋转镜片与分色棱镜，让彩色光束准确抵达接收器，包含反射、分色与合光三关，支持手机扫码单人操作 | <img src="apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"> |
 | [ShortVideo TV](apps/shortvideo/) | ecojust / 桔子桑 | 0.5.0 | 32.7 KB | 遥控器短视频播放器 | <img src="apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
 | [Super Mario TV](apps/super-mario/) | ecojust / 桔子桑 | 0.5.2 | 93.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
-| [分岔调度](apps/switchyard-minute/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 切换道岔、错开放行，把双向货车送到同色站台，管理追尾风险与累计延误，支持手机扫码单人操作 | <img src="apps/switchyard-minute/thumb.png" width="180" alt="分岔调度 界面"> |
+| [分岔调度](apps/switchyard-minute/) | ecojust / 桔子桑 | 0.1.1 | 289.3 KB | 切换道岔、错开放行，把双向货车送到同色站台，管理追尾风险与累计延误，支持手机扫码单人操作 | <img src="apps/switchyard-minute/thumb.png" width="180" alt="分岔调度 界面"> |
 | [Tank TV](apps/tank/) | ecojust / 桔子桑 | 0.5.2 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
 | [拉索桥梁](apps/tension-span/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在材料预算内搭建拉索桥，观察索线张力和桥面变形；失败后恢复方案、改索重试，让货车完整驶过桥面，支持手机扫码单人操作 | <img src="apps/tension-span/thumb.png" width="180" alt="拉索桥梁 界面"> |
 | [Tetris TV](apps/tetris/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
