@@ -23,6 +23,7 @@
 
 | 名称 | 作者 | 版本 | APK 大小 | 用途 | 封面截图 |
 | --- | --- | --- | --- | --- | --- |
+| [邻接铸造](apps/adjacency-forge/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 交换七格金属块，满足各自精确邻接配方并按固定方向优先级将热流导向铸模，再主动提交；三张固定布局、精确编号撤销与90秒有效时间，手机扫码单人操作 | <img src="apps/adjacency-forge/thumb.png" width="180" alt="邻接铸造 界面"> |
 | [Adventure Island TV](apps/adventure-island/) | ecojust / 桔子桑 | 0.5.2 | 89.4 KB | 8 区域 32 关横版冒险，支持手机扫码单人或双人轮流 | <img src="apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"> |
 | [孤胆枪手 TV](apps/alien-shooter/) | ecojust / 桔子桑 | 0.1.2 | 1.68 MB | 工业基地异形群潮单人射击，三关战役、五种武器与手机扫码操作 | <img src="apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"> |
 | [Mighty Bomb Jack TV](apps/bomb-jack/) | ecojust / 桔子桑 | 0.5.2 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |

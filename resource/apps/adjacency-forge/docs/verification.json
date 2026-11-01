@@ -1,0 +1,1726 @@
+{
+  "schema": 1,
+  "game": "adjacency-forge",
+  "version": "0.1.0",
+  "sourceCommit": "5b27dde35b2e1d430facac7bf30fe9598be92869",
+  "automationSha256": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+  "forgeModel": "Seven occupied axial hex cells retain seven unique physical metal IDs. Each material has one exact required count of one neighbor material; other counts are informational. Actual outlets select the first target-material neighbor in fixed world order E,SE,SW,W,NW,NE; the mold absorbs and has no outlet. Discrete current-layout heat routing is separate from local counts and is not a temperature simulation. Empty-hand FORGE submission requires every local recipe plus actual heat delivery. Exact pair undo restores assignments without refunding time, errors or lifetime counters; three wrong submissions or the active 90-second deadline end a round.",
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "unresolvedFindings": [],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+      "game.js": "dbf871041ad7ff42b2891f16f3ac69b6a0a2a6724a27cb994f63b1bd86e9c6b9",
+      "game-config.json": "a08541028be9af26f0c9e1fddf37a322980640339d848b4a66baf0b2b75fc95d",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+      "src/main/assets/game.js": "dbf871041ad7ff42b2891f16f3ac69b6a0a2a6724a27cb994f63b1bd86e9c6b9",
+      "tests/automation.mjs": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+      "tests/game-model.test.cjs": "00a8505fe7e10cbec40bbd058906eefd9d6c79263d9b10d0d5cc98cca4330edf",
+      "docs/model-contract.md": "266769598052c76a6ce6bbbfd0b931283842c79ef44a6b7a9ed3026fb2d6c0b7"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime-v2/01-menu.png",
+        "sha256": "deae1b3671c79d1225b5ed6a57869d3ad92ca6c4f4fc7dd5b0807e5086888d4a",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/02-held-original-tile.png",
+        "sha256": "56d84ffcecb17aac1c37d7908de4e9eab47fa186abe577dad9348cd32700af9b",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/03-trial-neighbors-and-heat.png",
+        "sha256": "a83465eeb5f59ddd8c83797e969fb072130e9cf124452ec7693af40e2605793e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/04-undo-exact-tile-ids.png",
+        "sha256": "ad8f5504263a76066ffc09c5cd0400f23157d6da42ca5ff8cd59419eee090407",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/05-repaired-swap.png",
+        "sha256": "ca9d40c3ba8ca70c53e4e2c3b36fcae0c1d4c677f2217671c03c5d6bf6f4db94",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/06-ready-before-explicit-forge.png",
+        "sha256": "23a5059eb07b425b870c24529d943574ad49e09e7438eee885a95a342a4d1511",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/07-recipes-and-heat-submitted-won.png",
+        "sha256": "98b16b7e0cf6bf0197a22f19e936c362cb4656004220846d51f40868617d6810",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/08-small-won.png",
+        "sha256": "432b67543c8428bb2fc742da616d4cb1322bc74736a81a0c0c1115a9f68010fc",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/09-small-menu.png",
+        "sha256": "85039ca7ee647b34b56ab316a6d1abd243ee826723c34ec5ce81f504d7a258f1",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/10-small-playing.png",
+        "sha256": "fc22c4a462e23600c1e03dfeafc8a9f3cca3e44a390c7b10a67fd92d8f891d6e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/11-small-pause.png",
+        "sha256": "39c1af49fb5146870783fed2f3b49a7255cd2784ef1e82efceecc8738fa4050c",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "2c65637be782a4618b259ad909db33d1b03b1d3721f6b55e467fa4c5845d0991",
+    "scope": "Actually reviewed software-browser candidate using exactly the final bundled assets, before source freeze; separate from final packaged QA and video."
+  },
+  "modelTests": {
+    "passed": 35,
+    "command": "node --test --test-reporter=tap resource/apps/adjacency-forge/tests/game-model.test.cjs",
+    "sourceHashesBefore": {
+      "model": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+      "tests": "00a8505fe7e10cbec40bbd058906eefd9d6c79263d9b10d0d5cc98cca4330edf",
+      "automation": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+      "contract": "266769598052c76a6ce6bbbfd0b931283842c79ef44a6b7a9ed3026fb2d6c0b7"
+    },
+    "sourceHashesAfter": {
+      "model": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+      "tests": "00a8505fe7e10cbec40bbd058906eefd9d6c79263d9b10d0d5cc98cca4330edf",
+      "automation": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+      "contract": "266769598052c76a6ce6bbbfd0b931283842c79ef44a6b7a9ed3026fb2d6c0b7"
+    },
+    "testLogSha256": "116cf74ccdf208aecfc76f9f9a56db03eed9b6adc48629477cc48a2705065ac7",
+    "rawReportSha256": "0ea6c64348b12afa12895b229c908b575cb80225a011aefd6144bc7d8c1f5898",
+    "scope": "Hex adjacency, directed heat, exact instance exchange/undo and input boundary rules plus three fresh public-planner different-material trial/undo/repair wins and three ordinary explicit-FORGE three-error losses. Authored rule examples and synthetic thermal/clock fixtures are distinct from public-planner normal gameplay evidence.",
+    "scheduling": "Ordinary wins use runtime 60 Hz ticks and public observations every five ticks, genuine A/B edges and no state edits. Losses use ordinary navigation and press/release. These are defined legal-input scenarios, not guarantees for arbitrary input timing."
+  },
+  "independentForgeReview": {
+    "passed": true,
+    "file": "independent-forge-review.json",
+    "sha256": "f34ee0f71bfd381b38496fea96e6dd0ab379311ca00378ffa5d0a74515e2da4f",
+    "checksPassed": 10,
+    "totals": {
+      "enumeratedPhysicalAssignments": 15120,
+      "orderedFocusPairs": 192,
+      "navigationTransitions": 669,
+      "modelObservations": 1543,
+      "ordinaryWins": 3,
+      "ordinaryHeatRejections": 3,
+      "ordinaryRecipeRejections": 3
+    },
+    "configurationEnumeration": [
+      {
+        "level": 1,
+        "complete": true,
+        "assignments": 5040,
+        "recipeAssignments": 72,
+        "heatDeliveredAssignments": 2556,
+        "goalAssignments": 36,
+        "materialAssignments": 140,
+        "recipeMaterialAssignments": 2,
+        "goalMaterialAssignments": 1,
+        "minimumSwaps": 2
+      },
+      {
+        "level": 2,
+        "complete": true,
+        "assignments": 5040,
+        "recipeAssignments": 72,
+        "heatDeliveredAssignments": 1152,
+        "goalAssignments": 24,
+        "materialAssignments": 210,
+        "recipeMaterialAssignments": 3,
+        "goalMaterialAssignments": 1,
+        "minimumSwaps": 3
+      },
+      {
+        "level": 3,
+        "complete": true,
+        "assignments": 5040,
+        "recipeAssignments": 144,
+        "heatDeliveredAssignments": 720,
+        "goalAssignments": 24,
+        "materialAssignments": 210,
+        "recipeMaterialAssignments": 6,
+        "goalMaterialAssignments": 1,
+        "minimumSwaps": 4
+      }
+    ],
+    "ordinaryModelWins": [
+      {
+        "level": 1,
+        "phase": "won",
+        "score": 1845,
+        "elapsed": 0.6666666666666666,
+        "totalSwaps": 2,
+        "submissions": 1,
+        "assignment": [
+          "T2",
+          "T1",
+          "T6",
+          "T4",
+          "T5",
+          "T3",
+          "T7"
+        ],
+        "heat": {
+          "status": "delivered",
+          "delivered": true,
+          "pathCellIds": [
+            "C1",
+            "C2"
+          ],
+          "edges": [
+            {
+              "fromId": "C1",
+              "toId": "C2",
+              "direction": 0
+            }
+          ],
+          "stopCellId": "C2",
+          "hops": 1
+        }
+      },
+      {
+        "level": 2,
+        "phase": "won",
+        "score": 1845,
+        "elapsed": 0.7333333333333333,
+        "totalSwaps": 3,
+        "submissions": 1,
+        "assignment": [
+          "T1",
+          "T4",
+          "T6",
+          "T2",
+          "T7",
+          "T3",
+          "T5"
+        ],
+        "heat": {
+          "status": "delivered",
+          "delivered": true,
+          "pathCellIds": [
+            "C1",
+            "C4",
+            "C5",
+            "C6",
+            "C7"
+          ],
+          "edges": [
+            {
+              "fromId": "C1",
+              "toId": "C4",
+              "direction": 1
+            },
+            {
+              "fromId": "C4",
+              "toId": "C5",
+              "direction": 0
+            },
+            {
+              "fromId": "C5",
+              "toId": "C6",
+              "direction": 0
+            },
+            {
+              "fromId": "C6",
+              "toId": "C7",
+              "direction": 2
+            }
+          ],
+          "stopCellId": "C7",
+          "hops": 4
+        }
+      },
+      {
+        "level": 3,
+        "phase": "won",
+        "score": 1845,
+        "elapsed": 0.9,
+        "totalSwaps": 4,
+        "submissions": 1,
+        "assignment": [
+          "T3",
+          "T5",
+          "T1",
+          "T6",
+          "T7",
+          "T4",
+          "T2"
+        ],
+        "heat": {
+          "status": "delivered",
+          "delivered": true,
+          "pathCellIds": [
+            "C7",
+            "C5",
+            "C4",
+            "C3"
+          ],
+          "edges": [
+            {
+              "fromId": "C7",
+              "toId": "C5",
+              "direction": 4
+            },
+            {
+              "fromId": "C5",
+              "toId": "C4",
+              "direction": 5
+            },
+            {
+              "fromId": "C4",
+              "toId": "C3",
+              "direction": 3
+            }
+          ],
+          "stopCellId": "C3",
+          "hops": 3
+        }
+      }
+    ],
+    "ordinaryHeatRejections": [
+      {
+        "level": 1,
+        "reason": "heat",
+        "matchedCells": 7,
+        "allRecipesMet": true,
+        "heat": {
+          "status": "loop",
+          "delivered": false,
+          "pathCellIds": [
+            "C1",
+            "C3",
+            "C4"
+          ],
+          "edges": [
+            {
+              "fromId": "C1",
+              "toId": "C3",
+              "direction": 1
+            },
+            {
+              "fromId": "C3",
+              "toId": "C4",
+              "direction": 3
+            },
+            {
+              "fromId": "C4",
+              "toId": "C1",
+              "direction": 5
+            }
+          ],
+          "stopCellId": "C1",
+          "hops": 3
+        },
+        "assignment": [
+          "T2",
+          "T5",
+          "T3",
+          "T6",
+          "T1",
+          "T7",
+          "T4"
+        ],
+        "submissions": 1,
+        "mistakes": 1,
+        "elapsed": 0.6
+      },
+      {
+        "level": 2,
+        "reason": "heat",
+        "matchedCells": 7,
+        "allRecipesMet": true,
+        "heat": {
+          "status": "loop",
+          "delivered": false,
+          "pathCellIds": [
+            "C1",
+            "C4",
+            "C5",
+            "C6",
+            "C3"
+          ],
+          "edges": [
+            {
+              "fromId": "C1",
+              "toId": "C4",
+              "direction": 1
+            },
+            {
+              "fromId": "C4",
+              "toId": "C5",
+              "direction": 0
+            },
+            {
+              "fromId": "C5",
+              "toId": "C6",
+              "direction": 0
+            },
+            {
+              "fromId": "C6",
+              "toId": "C3",
+              "direction": 4
+            },
+            {
+              "fromId": "C3",
+              "toId": "C5",
+              "direction": 2
+            }
+          ],
+          "stopCellId": "C5",
+          "hops": 5
+        },
+        "assignment": [
+          "T2",
+          "T1",
+          "T6",
+          "T7",
+          "T3",
+          "T5",
+          "T4"
+        ],
+        "submissions": 1,
+        "mistakes": 1,
+        "elapsed": 0.6
+      },
+      {
+        "level": 3,
+        "reason": "heat",
+        "matchedCells": 7,
+        "allRecipesMet": true,
+        "heat": {
+          "status": "loop",
+          "delivered": false,
+          "pathCellIds": [
+            "C7",
+            "C6",
+            "C5"
+          ],
+          "edges": [
+            {
+              "fromId": "C7",
+              "toId": "C6",
+              "direction": 5
+            },
+            {
+              "fromId": "C6",
+              "toId": "C5",
+              "direction": 3
+            },
+            {
+              "fromId": "C5",
+              "toId": "C7",
+              "direction": 1
+            }
+          ],
+          "stopCellId": "C7",
+          "hops": 3
+        },
+        "assignment": [
+          "T1",
+          "T3",
+          "T4",
+          "T5",
+          "T2",
+          "T6",
+          "T7"
+        ],
+        "submissions": 1,
+        "mistakes": 1,
+        "elapsed": 0.4666666666666667
+      }
+    ],
+    "ordinaryRecipeRejections": [
+      {
+        "level": 1,
+        "reason": "recipes",
+        "matchedCells": 2,
+        "allRecipesMet": false,
+        "heat": {
+          "status": "delivered",
+          "delivered": true,
+          "pathCellIds": [
+            "C1",
+            "C3",
+            "C2"
+          ],
+          "edges": [
+            {
+              "fromId": "C1",
+              "toId": "C3",
+              "direction": 1
+            },
+            {
+              "fromId": "C3",
+              "toId": "C2",
+              "direction": 5
+            }
+          ],
+          "stopCellId": "C2",
+          "hops": 2
+        },
+        "assignment": [
+          "T1",
+          "T2",
+          "T5",
+          "T4",
+          "T3",
+          "T6",
+          "T7"
+        ],
+        "submissions": 1,
+        "mistakes": 1,
+        "elapsed": 0.26666666666666666
+      },
+      {
+        "level": 2,
+        "reason": "recipes",
+        "matchedCells": 5,
+        "allRecipesMet": false,
+        "heat": {
+          "status": "delivered",
+          "delivered": true,
+          "pathCellIds": [
+            "C1",
+            "C2",
+            "C5",
+            "C7"
+          ],
+          "edges": [
+            {
+              "fromId": "C1",
+              "toId": "C2",
+              "direction": 0
+            },
+            {
+              "fromId": "C2",
+              "toId": "C5",
+              "direction": 1
+            },
+            {
+              "fromId": "C5",
+              "toId": "C7",
+              "direction": 1
+            }
+          ],
+          "stopCellId": "C7",
+          "hops": 3
+        },
+        "assignment": [
+          "T1",
+          "T2",
+          "T3",
+          "T5",
+          "T6",
+          "T7",
+          "T4"
+        ],
+        "submissions": 1,
+        "mistakes": 1,
+        "elapsed": 0.4
+      },
+      {
+        "level": 3,
+        "reason": "recipes",
+        "matchedCells": 2,
+        "allRecipesMet": false,
+        "heat": {
+          "status": "delivered",
+          "delivered": true,
+          "pathCellIds": [
+            "C7",
+            "C5",
+            "C3"
+          ],
+          "edges": [
+            {
+              "fromId": "C7",
+              "toId": "C5",
+              "direction": 4
+            },
+            {
+              "fromId": "C5",
+              "toId": "C3",
+              "direction": 4
+            }
+          ],
+          "stopCellId": "C3",
+          "hops": 2
+        },
+        "assignment": [
+          "T1",
+          "T3",
+          "T2",
+          "T4",
+          "T5",
+          "T6",
+          "T7"
+        ],
+        "submissions": 1,
+        "mistakes": 1,
+        "elapsed": 0.26666666666666666
+      }
+    ],
+    "scope": {
+      "publicFactsOnlySearch": true,
+      "productionSolverImported": false,
+      "qaSolverImported": false,
+      "authoringSolutionsRead": false,
+      "mathematicalFixturesSeparate": true,
+      "browserExecuted": false,
+      "normalGameplayVideoEvidence": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    },
+    "limitations": [
+      "Enumeration counts distinct physical IDs even when material labels repeat.",
+      "Ordinary model sequences use genuine input fields at60Hz without browser wall-clock delays.",
+      "Synthetic mathematical, pending-input and last-tick clock fixtures do not represent recorded gameplay."
+    ]
+  },
+  "independentPilotReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "cdb5d189a1fce93e4417fd2400052f9f8d7ad752a0bd1fbd0521afd822e33d56",
+    "checksPassed": 8,
+    "pilotCalls": 76,
+    "exportCalls": 10,
+    "observationCalls": 86,
+    "deepFrozenObservations": 86,
+    "factoryCalls": 6,
+    "diagnosticCalls": 3,
+    "totalCalls": 95,
+    "sourceHashes": {
+      "tests/automation.mjs": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+      "src/main/assets/game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+      "docs/model-contract.md": "266769598052c76a6ce6bbbfd0b931283842c79ef44a6b7a9ed3026fb2d6c0b7",
+      "tests/independent-forge-math.mjs": "7211b65e1077b18a4e8a28c7066495c76a954a564b9107876e745ae9bcfd8d2d"
+    },
+    "syntheticGeometry": {
+      "axialCells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "sourceCellId": "C1",
+      "moldCellId": "C2",
+      "materialTotals": {
+        "copper": 3,
+        "iron": 2,
+        "silver": 2
+      },
+      "requiredCounts": {
+        "copper": 1,
+        "iron": 1,
+        "silver": 1
+      },
+      "disconnectedFootprint": true
+    },
+    "scope": "Hand-constructed seven-cell disconnected geometry: two Cu/Fe/Ag triangles and one Cu leaf, with requiredCount=1 for every material. Public observations are independently derived from that synthetic board by the reviewed pure cube/heat oracle. No production model, authored board, reference assignment or model solver is executed. The reviewed public pilot and its own public planner/predictor are executed. These are synthetic observation/input-protocol fixtures, not normal gameplay, footage or device evidence."
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "02060bc70c327c360e27d4b3dfea5774e9b9cebc28759062f1fcb7c28e6dc8e1",
+    "scope": "Final source art; ordinary authored model input states and explicit no-op public-snapshot DOM layout fixtures. Actual runtime menu/play/pick/pause uses original states. No APK/device/video/browser-earned-win claim.",
+    "finalSourceHashes": {
+      "game": {
+        "path": "resource/apps/adjacency-forge/src/main/assets/game.js",
+        "sha256": "dbf871041ad7ff42b2891f16f3ac69b6a0a2a6724a27cb994f63b1bd86e9c6b9"
+      },
+      "model": {
+        "path": "resource/apps/adjacency-forge/src/main/assets/game-model.js",
+        "sha256": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491"
+      },
+      "pilot": {
+        "path": "resource/apps/adjacency-forge/tests/automation.mjs",
+        "sha256": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "runtime": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
+      },
+      "css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "icon": {
+        "path": "resource/apps/adjacency-forge/icon.xml",
+        "sha256": "00bd7926835c6e320006c6e15d7f6449476a1728f5a854861c5a64ba8a3dc45c"
+      },
+      "logo": {
+        "path": "resource/apps/adjacency-forge/logo.svg",
+        "sha256": "e425adb8313f3abba727d49dd495a44d0850ccd7e18c7affa0713622b0ef9549"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+      "game.js": "dbf871041ad7ff42b2891f16f3ac69b6a0a2a6724a27cb994f63b1bd86e9c6b9",
+      "game-config.json": "a08541028be9af26f0c9e1fddf37a322980640339d848b4a66baf0b2b75fc95d",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa"
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "sourceUnchanged": true,
+    "sourceCommitHashesMatched": true,
+    "buildSourceSha": "5b27dde35b2e1d430facac7bf30fe9598be92869",
+    "startHashes": {
+      "tests/automation.mjs": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+      "tests/game-model.test.cjs": "00a8505fe7e10cbec40bbd058906eefd9d6c79263d9b10d0d5cc98cca4330edf",
+      "src/main/assets/game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+      "src/main/assets/game.js": "dbf871041ad7ff42b2891f16f3ac69b6a0a2a6724a27cb994f63b1bd86e9c6b9"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+      "tests/game-model.test.cjs": "00a8505fe7e10cbec40bbd058906eefd9d6c79263d9b10d0d5cc98cca4330edf",
+      "src/main/assets/game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+      "src/main/assets/game.js": "dbf871041ad7ff42b2891f16f3ac69b6a0a2a6724a27cb994f63b1bd86e9c6b9"
+    },
+    "rawReportSha256": "932567553452c93eb616ea15ef628a9ebba64e35134717469907c4c6471281df"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three public hex layouts preserve seven unique IDs and independent recipe and heat rules",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick select one puzzle per press",
+        "passed": true
+      },
+      {
+        "name": "menu blur and sound controls reflect their actual state",
+        "passed": true
+      },
+      {
+        "name": "held phone START begins once without pickup or submission",
+        "passed": true
+      },
+      {
+        "name": "held phone A picks only one physical tile and holding over FORGE never submits",
+        "passed": true
+      },
+      {
+        "name": "held phone B cancels only the pickup and restores its original focus",
+        "passed": true
+      },
+      {
+        "name": "phone navigation follows the axis-biased screen metric without an immediate repeat",
+        "passed": true
+      },
+      {
+        "name": "held A swaps the exact two IDs once and atomically changes actual neighbor counts and outlets",
+        "passed": true
+      },
+      {
+        "name": "both held B and same-origin A cancel a pickup without removing existing swap history",
+        "passed": true
+      },
+      {
+        "name": "empty-handed B restores the exact original assignment while keeping time and lifetime then repairs the same IDs",
+        "passed": true
+      },
+      {
+        "name": "swapping equal-material unique IDs is real inventory movement and undo restores those exact IDs",
+        "passed": true
+      },
+      {
+        "name": "connected cancelSeq preserves a held preview and quarantines A until actual release",
+        "passed": true
+      },
+      {
+        "name": "held native Enter is one pickup edge and does not repeatedly cancel or swap",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes pickup and exact hex/heat state and resume clears stale directions",
+        "passed": true
+      },
+      {
+        "name": "pause primary and header freeze and resume the actual held preview",
+        "passed": true
+      },
+      {
+        "name": "correct global material inventory with wrong local recipes is actually rejected at FORGE",
+        "passed": true
+      },
+      {
+        "name": "all seven recipes can pass while real heat loops and three fresh submissions then lose",
+        "passed": true
+      },
+      {
+        "name": "R restores exact original IDs, initial local score and clean submission/history ledgers",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "mistakes",
+      "tileCount": 7,
+      "elapsed": 3.4166666666666665,
+      "remaining": 86.58333333333333,
+      "score": 280,
+      "matchedCells": 7,
+      "allRecipesMet": true,
+      "goalReady": false,
+      "heat": {
+        "status": "loop",
+        "delivered": false,
+        "pathCellIds": [
+          "C1",
+          "C3",
+          "C4"
+        ],
+        "edges": [
+          {
+            "fromId": "C1",
+            "toId": "C3",
+            "direction": 1
+          },
+          {
+            "fromId": "C3",
+            "toId": "C4",
+            "direction": 3
+          },
+          {
+            "fromId": "C4",
+            "toId": "C1",
+            "direction": 5
+          }
+        ],
+        "stopCellId": "C1",
+        "hops": 3
+      },
+      "historyDepth": 3,
+      "totalSwaps": 3,
+      "undos": 0,
+      "cancels": 0,
+      "submissions": 3,
+      "mistakes": 3,
+      "maxMistakes": 3
+    },
+    "separateLocalRecipeRejection": {
+      "reason": "recipes-and-heat",
+      "matchedCells": 1,
+      "allRecipesMet": false,
+      "heat": {
+        "status": "blocked",
+        "delivered": false,
+        "pathCellIds": [
+          "C1",
+          "C5"
+        ],
+        "edges": [
+          {
+            "fromId": "C1",
+            "toId": "C5",
+            "direction": 3
+          }
+        ],
+        "stopCellId": "C5",
+        "hops": 1
+      },
+      "submissions": 1,
+      "mistakes": 1,
+      "elapsed": 1.05,
+      "score": 40
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+      "game.js": "dbf871041ad7ff42b2891f16f3ac69b6a0a2a6724a27cb994f63b1bd86e9c6b9",
+      "game-config.json": "a08541028be9af26f0c9e1fddf37a322980640339d848b4a66baf0b2b75fc95d",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "拿起不移块。配方正确仍要检查热路；撤销不退用时和错误次数。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "拿起不移块。配方正确仍要检查热路；撤销不退用时和错误次数。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "拿起不移块。配方正确仍要检查热路；撤销不退用时和错误次数。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "拿起不移块。配方正确仍要检查热路；撤销不退用时和错误次数。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "拿起不移块。配方正确仍要检查热路；撤销不退用时和错误次数。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "拿起不移块。配方正确仍要检查热路；撤销不退用时和错误次数。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "17ee6099cc5548dcd9c54991d44bdca39f88da72c71f2f9d169f513eff645f18"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 120,
+    "rafIntervalMs": {
+      "count": 120,
+      "min": 16.599999999999454,
+      "median": 33.30000000000018,
+      "p95": 66.70000000000073,
+      "max": 100,
+      "mean": 37.77583333333333
+    },
+    "webglDrawCalls": {
+      "count": 120,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 120,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 38.005994421000004,
+      "tileCount": 7,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1670,
+      "elapsed": 35.43333333333333,
+      "remaining": 54.56666666666667,
+      "matchedCells": 7,
+      "allRecipesMet": true,
+      "goalReady": true,
+      "heat": {
+        "status": "delivered",
+        "delivered": true,
+        "pathCellIds": [
+          "C1",
+          "C2"
+        ],
+        "edges": [
+          {
+            "fromId": "C1",
+            "toId": "C2",
+            "direction": 0
+          }
+        ],
+        "stopCellId": "C2",
+        "hops": 1
+      },
+      "historyDepth": 2,
+      "totalSwaps": 3,
+      "undos": 1,
+      "cancels": 0,
+      "submissions": 1,
+      "mistakes": 0,
+      "maxMistakes": 3
+    },
+    "trialSwap": {
+      "observedAt": 10.037641189,
+      "lastObservedAt": 12.037611036,
+      "undoBDispatchedAt": 13.249730027,
+      "swap": {
+        "aCellId": "C1",
+        "bCellId": "C2",
+        "aTileId": "T1",
+        "bTileId": "T2",
+        "beforeTileIds": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5",
+          "T6",
+          "T7"
+        ],
+        "at": 6.666666666666667,
+        "tick": 400
+      },
+      "beforeAssignment": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7"
+      ],
+      "assignment": [
+        "T2",
+        "T1",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7"
+      ],
+      "heatBefore": {
+        "status": "blocked",
+        "delivered": false,
+        "pathCellIds": [
+          "C1",
+          "C5"
+        ],
+        "edges": [
+          {
+            "fromId": "C1",
+            "toId": "C5",
+            "direction": 3
+          }
+        ],
+        "stopCellId": "C5",
+        "hops": 1
+      },
+      "ruleChanges": [
+        {
+          "cellId": "C1",
+          "changes": {
+            "neighborCounts": {
+              "before": {
+                "copper": 1,
+                "iron": 2,
+                "silver": 3
+              },
+              "after": {
+                "copper": 0,
+                "iron": 3,
+                "silver": 3
+              }
+            },
+            "recipeMet": {
+              "before": false,
+              "after": true
+            },
+            "outletCellId": {
+              "before": "C5",
+              "after": "C2"
+            },
+            "outletDirection": {
+              "before": 3,
+              "after": 0
+            }
+          }
+        },
+        {
+          "cellId": "C2",
+          "changes": {
+            "neighborCounts": {
+              "before": {
+                "copper": 0,
+                "iron": 2,
+                "silver": 1
+              },
+              "after": {
+                "copper": 1,
+                "iron": 1,
+                "silver": 1
+              }
+            },
+            "actualCount": {
+              "before": 2,
+              "after": 1
+            }
+          }
+        },
+        {
+          "cellId": "C4",
+          "changes": {
+            "neighborCounts": {
+              "before": {
+                "copper": 0,
+                "iron": 2,
+                "silver": 1
+              },
+              "after": {
+                "copper": 1,
+                "iron": 1,
+                "silver": 1
+              }
+            }
+          }
+        },
+        {
+          "cellId": "C5",
+          "changes": {
+            "neighborCounts": {
+              "before": {
+                "copper": 0,
+                "iron": 2,
+                "silver": 1
+              },
+              "after": {
+                "copper": 1,
+                "iron": 1,
+                "silver": 1
+              }
+            },
+            "actualCount": {
+              "before": 0,
+              "after": 1
+            },
+            "recipeMet": {
+              "before": false,
+              "after": true
+            },
+            "outletCellId": {
+              "before": null,
+              "after": "C1"
+            },
+            "outletDirection": {
+              "before": null,
+              "after": 0
+            }
+          }
+        },
+        {
+          "cellId": "C6",
+          "changes": {
+            "neighborCounts": {
+              "before": {
+                "copper": 0,
+                "iron": 1,
+                "silver": 2
+              },
+              "after": {
+                "copper": 1,
+                "iron": 0,
+                "silver": 2
+              }
+            },
+            "actualCount": {
+              "before": 0,
+              "after": 1
+            },
+            "recipeMet": {
+              "before": false,
+              "after": true
+            },
+            "outletCellId": {
+              "before": null,
+              "after": "C1"
+            },
+            "outletDirection": {
+              "before": null,
+              "after": 1
+            }
+          }
+        },
+        {
+          "cellId": "C7",
+          "changes": {
+            "outletCellId": {
+              "before": "C2",
+              "after": "C1"
+            },
+            "outletDirection": {
+              "before": 1,
+              "after": 2
+            }
+          }
+        }
+      ],
+      "elapsed": 7.933333333333334,
+      "selectedId": "C2",
+      "matchedCells": 4,
+      "heat": {
+        "status": "delivered",
+        "delivered": true,
+        "pathCellIds": [
+          "C1",
+          "C2"
+        ],
+        "edges": [
+          {
+            "fromId": "C1",
+            "toId": "C2",
+            "direction": 0
+          }
+        ],
+        "stopCellId": "C2",
+        "hops": 1
+      },
+      "historyDepth": 1,
+      "totalSwaps": 1,
+      "undos": 0,
+      "cancels": 0,
+      "submissions": 0,
+      "mistakes": 0
+    },
+    "trialDisplayedSecondsAtLeast": 2.9620888379999997,
+    "trialHoldBasis": "trial-observation-to-undo-input-minus-0.25",
+    "undoRestored": {
+      "observedAt": 14.03770485,
+      "assignment": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7"
+      ],
+      "lastUndo": {
+        "swap": {
+          "aCellId": "C1",
+          "bCellId": "C2",
+          "aTileId": "T1",
+          "bTileId": "T2",
+          "beforeTileIds": [
+            "T1",
+            "T2",
+            "T3",
+            "T4",
+            "T5",
+            "T6",
+            "T7"
+          ],
+          "at": 6.666666666666667,
+          "tick": 400
+        },
+        "at": 11.15,
+        "tick": 669
+      },
+      "elapsed": 11.916666666666666,
+      "selectedId": "C1",
+      "matchedCells": 1,
+      "heat": {
+        "status": "blocked",
+        "delivered": false,
+        "pathCellIds": [
+          "C1",
+          "C5"
+        ],
+        "edges": [
+          {
+            "fromId": "C1",
+            "toId": "C5",
+            "direction": 3
+          }
+        ],
+        "stopCellId": "C5",
+        "hops": 1
+      },
+      "historyDepth": 0,
+      "totalSwaps": 1,
+      "undos": 1,
+      "cancels": 0,
+      "submissions": 0,
+      "mistakes": 0
+    },
+    "repairedSwap": {
+      "observedAt": 22.037559248,
+      "swap": {
+        "aCellId": "C1",
+        "bCellId": "C2",
+        "aTileId": "T1",
+        "bTileId": "T2",
+        "beforeTileIds": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5",
+          "T6",
+          "T7"
+        ],
+        "at": 19.733333333333334,
+        "tick": 1184
+      },
+      "assignment": [
+        "T2",
+        "T1",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7"
+      ],
+      "elapsed": 19.883333333333333,
+      "selectedId": "C2",
+      "matchedCells": 4,
+      "heat": {
+        "status": "delivered",
+        "delivered": true,
+        "pathCellIds": [
+          "C1",
+          "C2"
+        ],
+        "edges": [
+          {
+            "fromId": "C1",
+            "toId": "C2",
+            "direction": 0
+          }
+        ],
+        "stopCellId": "C2",
+        "hops": 1
+      },
+      "historyDepth": 1,
+      "totalSwaps": 2,
+      "undos": 1,
+      "cancels": 0,
+      "submissions": 0,
+      "mistakes": 0
+    },
+    "finalWinHeldSecondsAtLeast": 21.999667801999998,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "9dd037bd96be6a023dc2815db476e64b81bd5cda3ca2a093b9fc1700d521049c"
+      },
+      {
+        "name": "menu-two-0.85s.png",
+        "sha256": "c5297f33c4e8587553d18e940c72d2b7f6437d4433d64107dbd6fda79913b7aa"
+      },
+      {
+        "name": "menu-three-1.35s.png",
+        "sha256": "cbe7d099892c0df713f1955b56f905890196bab124df00b75824907e8cfae45e"
+      },
+      {
+        "name": "trial-local-and-heat-10.34s.png",
+        "sha256": "8cba92f0d5d1f95168fc5ab5b99e048de60c4f191d64678e0ad37094d2e7616f"
+      },
+      {
+        "name": "undo-exact-IDs-14.34s.png",
+        "sha256": "03c4b059cfabb4451b60fb5122a8f24b457a7d930ac76f1ddbe7ebc6fd7efeb7"
+      },
+      {
+        "name": "repaired-same-pair-22.34s.png",
+        "sha256": "48743ce8809a4a65da20789e81082b44ed791649299f9fc833f00e3921caa444"
+      },
+      {
+        "name": "gameplay-thumb-26.34s.png",
+        "sha256": "d13d0eeebfaa22eda37e4fe5dd07c841126bb82d88e3a8dfa697adf70bcaefef"
+      },
+      {
+        "name": "ready-awaiting-FORGE-34.34s.png",
+        "sha256": "f0bf284a9f8e94eb60e50ce96607d764591fccfefe98b393b8401f45209a92b4"
+      },
+      {
+        "name": "settlement-58.37s.png",
+        "sha256": "4d60e5c5bfc036e11adb7869e0e596763439b937679f3337a2d3c31e955457f4"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "5b9cee956266ffc7eb397d6103651eed73d8ef94bec7d079c0e5e3dc68b0dbe9"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+    "game.js": "dbf871041ad7ff42b2891f16f3ac69b6a0a2a6724a27cb994f63b1bd86e9c6b9",
+    "game-config.json": "a08541028be9af26f0c9e1fddf37a322980640339d848b4a66baf0b2b75fc95d",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "be3d56710b288dce62ad63ff255e3e8af484db39b817f54f6d57201f566c958d",
+    "sign": "f860ad76f7a920a4e1ce55d7b63c13a5cf02cb5733e0f6919a7884ab4802ec9a",
+    "fetch": "a65a031dfae0ab74f0bacdc3704c943092b3907428f6ff7796b1ee9dbcf3ab64",
+    "qa": "30ab82f2c16473480f9136272ff205ce342ddaa3d65692e93cacc6538f577baa",
+    "ui": "a569a8ec249017d487c5a06826fac47a260947ab8c44304b51539aaafcc80959",
+    "layout": "17ee6099cc5548dcd9c54991d44bdca39f88da72c71f2f9d169f513eff645f18",
+    "viewport": "d8ca64a798cb10c945e5e5afe8b19b337aee6ed2e0dfbdd49b7fee242b6dac3c",
+    "summary": "5dc38d50e601bf4ba8419ed4651aaea5d6eb13b0b940e0d35aa20205506ae887",
+    "record": "51216a119613e39f1dd0bcfcbe4fdc5b33a0e5b12e50c79edaa8cc9ff99a7f2d",
+    "review": "08efacb49b80794b9bea4b921f94bb5dceaf75bafe81ed5573844516cdbd40b2",
+    "videoValidation": "94cd4c194aec499d7079e69e8dda70bc123f40bed1fc7faec9f8fed758ff6fca",
+    "artifacts": "7ccb723fb9eeb3e1e152df97e29f0adc044fb91415976248c5f9372fec58a685",
+    "independentModel": "f34ee0f71bfd381b38496fea96e6dd0ab379311ca00378ffa5d0a74515e2da4f",
+    "independentPilot": "cdb5d189a1fce93e4417fd2400052f9f8d7ad752a0bd1fbd0521afd822e33d56",
+    "artReview": "2add60f5bd805b2924c4143f060d1a5d758a664041e48eac8081e802d5bb0268",
+    "modelTests": "0ea6c64348b12afa12895b229c908b575cb80225a011aefd6144bc7d8c1f5898",
+    "candidateReview": "2c65637be782a4618b259ad909db33d1b03b1d3721f6b55e467fa4c5845d0991",
+    "testProvenance": "932567553452c93eb616ea15ef628a9ebba64e35134717469907c4c6471281df"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium gameplay uses real browser input events. Synthetic mathematical/observer, native-room/phone and source layout fixtures are separately labelled; no physical TV/phone installation or device performance is claimed."
+  },
+  "release": {
+    "sourceSha": "5b27dde35b2e1d430facac7bf30fe9598be92869",
+    "signerCommit": "5b27dde35b2e1d430facac7bf30fe9598be92869",
+    "signingRun": 41356352767,
+    "bytes": 296227,
+    "sha256": "c85e89c92fb37394582668d791ae2b58f54d2b69803f8215561e8d940bc49d67",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "36890a3a5eb2abd6becf1b0e2143a5fa29af0b3e"
+  }
+}
