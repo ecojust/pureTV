@@ -1,0 +1,759 @@
+{
+  "kind": "independent-synthetic-public-route-pilot-review",
+  "passed": true,
+  "sourceHashes": {
+    "tests/automation.mjs": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75",
+    "src/main/assets/game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+    "docs/model-contract.md": "c44fab87f29c0adc852961aad6d1be08306e70f0fb3cfc2dc07080c039601e69"
+  },
+  "reviewScriptSha256": "5683d374f75ec2fb59989231a496c6adeeb5fb7bf62a5d54b883241def7d6d5e",
+  "productionModelImported": false,
+  "productionModelStepCalled": false,
+  "productionModelSourceReadOnlyForHashAndPrivateKeyNames": true,
+  "normalGameWinsClaimed": 0,
+  "browserExecuted": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "scope": "Hand-authored small public-board observations, including fabricated terminal and rejection snapshots. These are synthetic pilot/input-protocol fixtures, not production rule tests, completed games, browser play, footage or device evidence. No production model create/step or model solver/reference route is used; the reviewed public pilot and its own planner/predictor are executed.",
+  "privateKeys": [
+    "_accumulator",
+    "_cancelEpoch",
+    "_expectedSymbols",
+    "_futureInputs",
+    "_goldenRoute",
+    "_heldDirection",
+    "_lastA",
+    "_lastB",
+    "_nextMoveTick",
+    "_pendingA",
+    "_pendingB",
+    "_private",
+    "_solution"
+  ],
+  "checks": [
+    {
+      "name": "pilot imports without a production model dependency and source window stays pinned",
+      "passed": true
+    },
+    {
+      "name": "same public observation history yields identical keys for different hidden values and throwing private getters",
+      "passed": true,
+      "pairedObservations": 17,
+      "variants": 3
+    },
+    {
+      "name": "ordinary direction and submit edges release on the next call and wait for a later neutral tick",
+      "passed": true,
+      "directionEdgesPerVariant": 4,
+      "submitEdgesPerVariant": 1,
+      "sameTickNeutralObservation": true
+    },
+    {
+      "name": "public conditional entry and observed progression are respected; diagnostics copies do not expose mutable internal arrays",
+      "passed": true
+    },
+    {
+      "name": "interleaved factories independently select different routes from their own public targets",
+      "passed": true
+    },
+    {
+      "name": "record controller submits a visible wrong exit, waits on rejection, releases B, observes full clear without refunded mistakes, then replans from target",
+      "passed": true,
+      "syntheticObservationCalls": 19,
+      "rejectionHoldSeconds": 4.6,
+      "clearObservedBeforeReplan": true
+    },
+    {
+      "name": "fabricated clear that refunds the failure ledger is rejected instead of treated as a valid reset",
+      "passed": true
+    },
+    {
+      "name": "menu pause and terminal observations are neutral; a lower elapsed fresh round resets pilot history",
+      "passed": true
+    },
+    {
+      "name": "small direct predictor fixtures respect entry-side glyphs and visited cells; an explicit one-node queue cap fails closed",
+      "passed": true,
+      "exportCalls": 4,
+      "noFullRuleEnumeration": true
+    },
+    {
+      "name": "all observation objects remain deeply frozen with zero private reads and zero write attempts",
+      "passed": true
+    }
+  ],
+  "afterImportHashes": {
+    "tests/automation.mjs": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75",
+    "src/main/assets/game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+    "docs/model-contract.md": "c44fab87f29c0adc852961aad6d1be08306e70f0fb3cfc2dc07080c039601e69"
+  },
+  "endHashes": {
+    "tests/automation.mjs": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75",
+    "src/main/assets/game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+    "docs/model-contract.md": "c44fab87f29c0adc852961aad6d1be08306e70f0fb3cfc2dc07080c039601e69"
+  },
+  "reviewScriptEndSha256": "5683d374f75ec2fb59989231a496c6adeeb5fb7bf62a5d54b883241def7d6d5e",
+  "sourceUnchanged": true,
+  "pilotCalls": 86,
+  "exportCalls": 4,
+  "observationCalls": 90,
+  "observationCallLimit": 100,
+  "factoriesCreated": 8,
+  "privateReads": 0,
+  "mutationAttempts": 0,
+  "deepFrozenObservations": 90,
+  "meaningfulDirectionOutputs": 18,
+  "submitEdgeOutputs": 4,
+  "clearEdgeOutputs": 2,
+  "inputTraceSha256": "0d10f7bc46f2432e8dcb697f7acba771a705fcffd43b6526f3994e31305f97e7",
+  "inputTrace": [
+    {
+      "label": "paired-0-a",
+      "tick": 0,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-0-b",
+      "tick": 0,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-0-getters",
+      "tick": 0,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-1-a",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "paired-1-b",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "paired-1-getters",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "paired-2-a",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-2-b",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-2-getters",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-3-a",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-3-b",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-3-getters",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-4-a",
+      "tick": 126,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-4-b",
+      "tick": 126,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-4-getters",
+      "tick": 126,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-5-a",
+      "tick": 210,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "paired-5-b",
+      "tick": 210,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "paired-5-getters",
+      "tick": 210,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "paired-6-a",
+      "tick": 210,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-6-b",
+      "tick": 210,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-6-getters",
+      "tick": 210,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-7-a",
+      "tick": 216,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-7-b",
+      "tick": 216,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-7-getters",
+      "tick": 216,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-8-a",
+      "tick": 300,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "paired-8-b",
+      "tick": 300,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "paired-8-getters",
+      "tick": 300,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "paired-9-a",
+      "tick": 300,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-9-b",
+      "tick": 300,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-9-getters",
+      "tick": 300,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-10-a",
+      "tick": 306,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-10-b",
+      "tick": 306,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-10-getters",
+      "tick": 306,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-11-a",
+      "tick": 390,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowUp"
+      ]
+    },
+    {
+      "label": "paired-11-b",
+      "tick": 390,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowUp"
+      ]
+    },
+    {
+      "label": "paired-11-getters",
+      "tick": 390,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowUp"
+      ]
+    },
+    {
+      "label": "paired-12-a",
+      "tick": 390,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-12-b",
+      "tick": 390,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-12-getters",
+      "tick": 390,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "paired-13-a",
+      "tick": 396,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "paired-13-b",
+      "tick": 396,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "paired-13-getters",
+      "tick": 396,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "paired-14-a",
+      "tick": 480,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "paired-14-b",
+      "tick": 480,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "paired-14-getters",
+      "tick": 480,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "paired-15-a",
+      "tick": 1800,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-15-b",
+      "tick": 1800,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-15-getters",
+      "tick": 1800,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-16-a",
+      "tick": 1800,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "paired-16-b",
+      "tick": 1800,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "paired-16-getters",
+      "tick": 1800,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "isolated-a-wait",
+      "tick": 0,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "isolated-b-wait",
+      "tick": 0,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "isolated-a-move",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "isolated-b-move",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "isolated-a-release",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "isolated-b-release",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-0",
+      "tick": 0,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-1",
+      "tick": 180,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "reject-clear-2",
+      "tick": 180,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-3",
+      "tick": 186,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-4",
+      "tick": 240,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "reject-clear-5",
+      "tick": 240,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-6",
+      "tick": 246,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-7",
+      "tick": 300,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-8",
+      "tick": 438,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "reject-clear-9",
+      "tick": 438,
+      "phase": "playing",
+      "routeStatus": "at-exit",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-10",
+      "tick": 444,
+      "phase": "playing",
+      "routeStatus": "rejected",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-11",
+      "tick": 708,
+      "phase": "playing",
+      "routeStatus": "rejected",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-12",
+      "tick": 720,
+      "phase": "playing",
+      "routeStatus": "rejected",
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "reject-clear-13",
+      "tick": 720,
+      "phase": "playing",
+      "routeStatus": "rejected",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-14",
+      "tick": 720,
+      "phase": "playing",
+      "routeStatus": "rejected",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-15",
+      "tick": 723,
+      "phase": "playing",
+      "routeStatus": "rejected",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-16",
+      "tick": 726,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-17",
+      "tick": 912,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "reject-clear-18",
+      "tick": 924,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "bad-clear-rejected",
+      "tick": 0,
+      "phase": "playing",
+      "routeStatus": "rejected",
+      "keys": []
+    },
+    {
+      "label": "bad-clear-edge",
+      "tick": 276,
+      "phase": "playing",
+      "routeStatus": "rejected",
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "bad-clear-release",
+      "tick": 276,
+      "phase": "playing",
+      "routeStatus": "rejected",
+      "keys": []
+    },
+    {
+      "label": "inactive-menu",
+      "tick": 0,
+      "phase": "menu",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "inactive-playing-paused",
+      "tick": 0,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "inactive-won",
+      "tick": 0,
+      "phase": "won",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "inactive-lost",
+      "tick": 0,
+      "phase": "lost",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "elapsed-rollback-fresh-wait",
+      "tick": 0,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": []
+    },
+    {
+      "label": "elapsed-rollback-fresh-route",
+      "tick": 120,
+      "phase": "playing",
+      "routeStatus": "drawing",
+      "keys": [
+        "ArrowDown"
+      ]
+    }
+  ],
+  "calledExports": [
+    "createPilot",
+    "predictVisibleMove",
+    "planVisibleState"
+  ]
+}
