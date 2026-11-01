@@ -59,6 +59,8 @@
 
 详见[角色动作与对照视频](docs/character-motion.md)、[烘焙方法](docs/baking.md)和 [0.1.1 环境优化性能对照](docs/performance.md)。
 
+[观看正常关卡游玩视频](docs/gameplay-0.1.2.mp4) · [录制说明](docs/gameplay.md)。视频使用正式游戏页面与正常操作输入，展示自动操控下的战斗过程；不是电视实拍或人工操作录像。
+
 下方截图由实际游戏页面在 Chromium 中渲染，使用模拟的 Android 房间桥接；关卡展示采用测试场景，不代表电视实机画面或完整人工通关录像。
 
 ![标题画面](docs/alien-shooter-title.png)

@@ -59,6 +59,8 @@ HUD nodes and the static minimap layer are retained, while paused scenes avoid r
 
 See the [character motion comparison and video](docs/character-motion.md), [baking methods](docs/baking.md) and the [0.1.1 environment performance comparison](docs/performance.md).
 
+[Watch normal campaign gameplay](docs/gameplay-0.1.2.mp4) · [Recording details](docs/gameplay.md). The recording uses the released game page and normal control inputs to demonstrate automated play. It is not physical-TV footage or a human-operated recording.
+
 These captures show the bundled page rendered in Chromium with a simulated Android room bridge. Sector showcases use test scenarios; they are not physical-TV captures or a recording of a complete human playthrough.
 
 ![Title](docs/alien-shooter-title.en.png)
