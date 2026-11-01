@@ -9,7 +9,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-15-f97316?style=flat-square)](resource/apps/)
+[![App count](https://img.shields.io/badge/apps-16-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
@@ -77,6 +77,7 @@ The launchers and first-party TV apps support English. Select English in the TV 
 | [CCTV Live](resource/apps/cctv/) | ecojust | 0.5.0 | 40.9 KB | Official CCTV website player with TV channel navigation | <img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"> |
 | [Coast Kart TV](resource/apps/coast-kart/) | ecojust | 0.5.2 | 257.6 KB | Original kart racing with drifting, items and split-screen LAN phone play | <img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"> |
 | [Cozy Island TV](resource/apps/cozy-island/) | ecojust | 0.5.2 | 269.6 KB | Original island life with gathering, fishing, decorating and LAN phone play | <img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"> |
+| [Gravity Courier (Chinese UI)](resource/apps/gravity-courier/) | ecojust / Juzisang | 0.1.0 | 281.3 KB | Pilot an inertial courier ship, manage fuel and deliver three parcels around gravity sources. Chinese TV interface. | <img src="docs/previews/en/app-gravity-courier.png" width="180" alt="Gravity Courier (Chinese UI) preview"> |
 | [HIFINi TV](resource/apps/hifini/) | ecojust | 0.5.0 | 201.1 KB | HiFiNi music search, shuffle playback and rhythm animation | <img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"> |
 | [Jackal TV](resource/apps/jackal/) | ecojust | 0.5.2 | 11.95 MB | Independently rewritten six-stage jeep rescue with two LAN phone controllers | <img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"> |
 | [Magic Jewelry TV](resource/apps/jewel/) | ecojust | 0.5.2 | 81.4 KB | Classic three-gem chain matching with one or two LAN phone controllers | <img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"> |

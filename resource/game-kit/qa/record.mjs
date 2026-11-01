@@ -5,7 +5,7 @@ import { mkdir, readFile, writeFile, stat } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { parseArgs, sourceHashes, serveAssets, launch, preparePage, snapshot, applyStep, applyKeys, releaseAll, verifyErrors, delay, run, sha256 } from './common.mjs';
 
-export async function recordGameplay({ browser, url, output, recipe = {}, assetHashes, automation }) {
+export async function recordGameplay({ browser, url, output, recipe = {}, assetHashes, automation, afterCapture }) {
   await mkdir(path.join(output, 'frames'), { recursive:true });
   const seconds = Number(recipe.durationSeconds || 30);
   assert.ok(seconds >= 3 && seconds <= 120, 'Recording duration must be 3..120 seconds');
@@ -66,6 +66,8 @@ export async function recordGameplay({ browser, url, output, recipe = {}, assetH
     const file='frame-'+String(frames.length).padStart(5,'0')+'.jpg';
     frames.push({file,timestamp:last.timestamp+(receivedAt-last.receivedAt)/1000,receivedAt,sha256:sha256(buffer),finalActualScreenshot:true});
     await writeFile(path.join(output,'frames',file),buffer);
+    let postCaptureChecks;
+    if(afterCapture){postCaptureChecks=await afterCapture({page,context,url});await writeFile(path.join(output,'post-capture-checks.json'),JSON.stringify({performedAfterCapture:true,...postCaptureChecks},null,2)+'\n');verifyErrors(session);}
     assert.ok(frames.every(f=>Number.isFinite(f.timestamp)), 'Missing actual frame timestamps');
     const capturedSeconds = frames.at(-1).timestamp - frames[0].timestamp;
     assert.ok(capturedSeconds > seconds*.75, 'Screencast did not cover requested real-time interval');
@@ -88,7 +90,7 @@ export async function recordGameplay({ browser, url, output, recipe = {}, assetH
     const manifest = { kind:'normal-runtime-browser-play', capture:'Chromium CDP screencast with real frame timestamps; no virtual time or state writes', input:'Ordinary browser keyboard/mouse events, automatically operated', sourceAssetHashes:assetHashes,
       requestedSeconds:seconds, capturedSeconds, frames:frames.length, videoSha256:sha256(await readFile(video)), videoBytes:(await stat(video)).size,
       audio:false, physicalTvTested:false, physicalPhoneTested:false, exportFps:30, exportFpsIsNotMeasuredDeviceFps:true,
-      rendering:'Chromium / ANGLE SwiftShader', inputs, states, frameManifest:frames, errors:session.errors, consoleErrors:session.consoleErrors, network:session.network };
+      rendering:'Chromium / ANGLE SwiftShader', inputs, states, frameManifest:frames, postCaptureChecks:postCaptureChecks?{performedAfterCapture:true,...postCaptureChecks}:undefined, errors:session.errors, consoleErrors:session.consoleErrors, network:session.network };
     await writeFile(path.join(output,'recording.json'), JSON.stringify(manifest,null,2)+'\n');
     return { video, bytes:manifest.videoBytes, capturedSeconds, frames:frames.length, manifest:path.join(output,'recording.json') };
   } finally {
@@ -104,7 +106,8 @@ if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === imp
   const server = await serveAssets(args.assets, args.entry || 'tv.html'), browser = await launch();
   try {
     const automation = args.automation ? await import(pathToFileURL(path.resolve(args.automation)).href) : null;
-    const result = await recordGameplay({ browser, url:server.url, output:path.resolve(args.output), recipe:args.recipe ? JSON.parse(await readFile(args.recipe,'utf8')) : {}, assetHashes:hashes, automation });
+    const afterCapture=args['post-check']?(await import(pathToFileURL(path.resolve(args['post-check'])).href)).default:undefined;
+    const result = await recordGameplay({ browser, url:server.url, output:path.resolve(args.output), recipe:args.recipe ? JSON.parse(await readFile(args.recipe,'utf8')) : {}, assetHashes:hashes, automation, afterCapture });
     assert.deepEqual(await sourceHashes(path.resolve(args.assets)), hashes, 'Source assets changed while recording');
     console.log(JSON.stringify(result,null,2));
   } finally { await browser.close(); await server.close(); }

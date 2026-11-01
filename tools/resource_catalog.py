@@ -35,7 +35,7 @@ RELEASE_CERTIFICATE_CUTOVERS = {
 
 # New applications launched after the certificate rotation have no legacy signer.
 # Register exact package IDs; similar or unknown packages must not inherit this pin.
-NEW_RELEASE_CERTIFICATE_PACKAGES = {'com.ecojust.usedcartv', 'com.ecojust.alienshootertv'}
+NEW_RELEASE_CERTIFICATE_PACKAGES = {'com.ecojust.usedcartv', 'com.ecojust.alienshootertv', 'com.ecojust.gravitycouriertv'}
 
 def expected_release_certificate(root, identity):
     """Return the single certificate pinned for an APK's package and version."""
@@ -86,7 +86,13 @@ def launcher_source_tree(root,ref='HEAD'):
     return subprocess.check_output(['git','mktree'],cwd=root,input=selected).decode().strip()
 
 def catalog_directories(root):
-    assert {p.name for p in (root/'resource').iterdir() if p.is_dir()}=={'launcher','apps'},'Classify software under resource/launcher or resource/apps'
+    directories={p.name for p in (root/'resource').iterdir() if p.is_dir()}
+    assert {'launcher','apps'} <= directories <= {'launcher','apps','game-kit'},'Classify software under resource/launcher or resource/apps'
+    # Shared game source/build tools are infrastructure, never a catalog item.
+    kit=root/'resource/game-kit'
+    if kit.exists():
+        assert kit.is_dir() and not kit.is_symlink(),'Game Kit must be a regular source directory'
+        assert not (kit/'resource.json').exists() and not any(kit.glob('*.apk')),'Publish Game Kit applications under resource/apps'
     for category in ('launcher','apps'):
         parent=root/'resource'/category
         assert parent.is_dir(),f'Missing resource/{category}'
