@@ -117,11 +117,13 @@ try{
       const r=__bench.renderer,g=__bench.fixture(0,48);r.time=4;r.render(g,0);r.cameraCenter.x=g.players[0].x;r.cameraCenter.y=g.players[0].y;r.render(g,0);
       const first={...r.stats},before=__bench.snapshot(g),offscreen=g.enemies.map(e=>({...e,x:-1000-e.id,y:-1000}));g.enemies=offscreen;r.render(g,0);const far={...r.stats};
       const free={x:g.players[0].x+2,y:g.players[0].y+1};g.enemies=[{...offscreen[0],x:free.x,y:free.y,type:'crawler',radius:.46,angle:0,hitFlash:0,moving:true}];g.pickups=[];g.particles=[];g.bullets=[];g.grenades=[];g.decals=[];g.players[0].moving=false;g.players[0].fireFlash=0;g.map.objectives=[];
-      r.time=4;r.render(g,0);const a=__bench.capture();r.time=4.17;r.render(g,0);const b=__bench.capture();let changed=0,total=0;for(let i=0;i<a.length;i+=4){const d=Math.abs(a[i]-b[i])+Math.abs(a[i+1]-b[i+1])+Math.abs(a[i+2]-b[i+2]);total+=d;if(d>6)changed++;}
+      // Locomotion follows real displacement and simulation time. Merely changing
+      // renderer wall time while an actor is stationary must no longer step legs.
+      r.render(g,0);const a=__bench.capture();g.enemies[0].x+=.18;g.elapsed+=.1;r.render(g,.1);const b=__bench.capture();let changed=0,total=0;for(let i=0;i<a.length;i+=4){const d=Math.abs(a[i]-b[i])+Math.abs(a[i+1]-b[i+1])+Math.abs(a[i+2]-b[i+2]);total+=d;if(d>6)changed++;}
       let boundary=[];const center=r.screenToWorld(.5,.5);for(const edge of [[0,.5],[1,.5],[.5,0],[.5,1]]){const at=r.screenToWorld(...edge);g.enemies[0].x=at.x;g.enemies[0].y=at.y;r.render(g,0);boundary.push({edge,stats:{...r.stats}});}
-      return{first,far,animationChangedPixels:changed,animationTotalDifference:total,boundary,center};
+      return{first,far,locomotionChangedPixels:changed,locomotionTotalDifference:total,boundary,center};
     });
-    assert.ok(invariants.animationChangedPixels>20,'Animated low-poly limbs must still change rendered pixels');
+    assert.ok(invariants.locomotionChangedPixels>20,'Real displacement must update the rendered actor; joint articulation is covered by animation.mjs');
     assert.equal(invariants.far.renderedEnemies,0,'Far off-screen enemies must not upload drawable instances');
     assert.equal(invariants.far.culledEnemies,48);assert.ok(invariants.far.calls<invariants.first.calls,'Culling removes draw submission, not simulation');
     for(const edge of invariants.boundary)assert.equal(edge.stats.renderedEnemies,1,'Actors centred on a camera edge must not disappear: '+JSON.stringify(edge));

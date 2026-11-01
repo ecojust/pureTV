@@ -190,6 +190,7 @@ jobs:
           node resource/apps/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions --output "$RUNNER_TEMP/puretv-alien-shooter-performance"
           node resource/apps/alien-shooter/tests/integration.mjs
           node resource/apps/alien-shooter/tests/runtime-performance.mjs
+          node resource/apps/alien-shooter/tests/animation.mjs --output "$RUNNER_TEMP/puretv-alien-shooter-animation"
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools
@@ -437,6 +438,12 @@ jobs:
         with:
           name: alien-shooter-rendering-performance
           path: ${{ runner.temp }}/puretv-alien-shooter-performance/
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter') }}
+        with:
+          name: alien-shooter-character-motion
+          path: ${{ runner.temp }}/puretv-alien-shooter-animation/
           if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter' }}

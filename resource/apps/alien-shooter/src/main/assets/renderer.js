@@ -45,7 +45,7 @@
           if (ny >= nx && ny >= nz) uvs.push(a.getX(i) / projection, a.getZ(i) / projection);
           else if (nx >= nz) uvs.push(a.getZ(i) / projection, a.getY(i) / projection);
           else uvs.push(a.getX(i) / projection, a.getY(i) / projection);
-        } else uvs.push((uv ? uv.getX(i) : 0) + (p.limb === 1 ? 2 : p.limb === -1 ? 4 : 0), uv ? uv.getY(i) : 0);
+        } else uvs.push(clamp(uv ? uv.getX(i) : 0, 0, .9999) + (p.rig || 0) * 2, uv ? uv.getY(i) : 0);
       }
       g.dispose();
     });
@@ -58,6 +58,77 @@
     result.computeBoundingSphere();
     return result;
   }
+  function angleDelta(a, b) { return Math.atan2(Math.sin(a - b), Math.cos(a - b)); }
+  function angleToward(a, b, rate) { return a + angleDelta(b, a) * rate; }
+  function bone(list, geometry, color, from, to, width, depth, group) {
+    var mid = new T.Vector3().fromArray(from).add(new T.Vector3().fromArray(to)).multiplyScalar(.5);
+    var direction = new T.Vector3().fromArray(to).sub(new T.Vector3().fromArray(from));
+    var matrix = new T.Matrix4().compose(mid, new T.Quaternion().setFromUnitVectors(new T.Vector3(0, 1, 0), direction.clone().normalize()), new T.Vector3(width, direction.length(), depth || width));
+    list.push({ geometry: geometry, color: color, matrix: matrix, rig: group });
+  }
+  function rigPart(list, geometry, color, group, x, y, z, sx, sy, sz, rx, ry, rz) {
+    part(list, geometry, color, x, y, z, sx, sy, sz, rx, ry, rz); list[list.length - 1].rig = group;
+  }
+  function legSpec(hip, knee, foot, offset, bend) { return { hip: hip, knee: knee, foot: foot, offset: offset, bend: bend || [1, 0, 0] }; }
+  function armSpec(shoulder, elbow, hand, bend) { return { shoulder: shoulder, elbow: elbow, hand: hand, bend: bend || [0, -1, 0] }; }
+  var ACTOR_RIGS = {
+    human: { kind: 0, nominalSpeed: 4.6, sweep: .92, walkDuty: .66, runDuty: .42, lift: .23, drop: .085, bob: .025, lean: .075, turn: 10, head: [0, 1.5, 0], tail: [], legs: [
+      legSpec([0, 1.02, -.16], [.21, .56, -.17], [.04, .10, -.18], 0), legSpec([0, 1.02, .16], [.21, .56, .17], [.04, .10, .18], .5)
+    ], arms: [armSpec([0, 1.43, -.25], [.14, 1.12, -.32], [.60, 1.28, -.04], [0, -.6, -1]), armSpec([0, 1.43, .25], [.10, 1.13, .32], [.42, 1.27, .05], [0, -.6, 1])] },
+    crawler: { kind: 1, nominalSpeed: 1.65, sweep: .64, walkDuty: .72, runDuty: .64, lift: .15, drop: .025, bob: .025, lean: .035, turn: 7, head: [.45, .49, 0], tail: [[-.45,.42,0],[-.88,.28,0],[-1.18,.19,0],[-1.42,.13,0]], legs: [
+      legSpec([.36,.43,-.24],[.22,.22,-.77],[.63,.055,-.72],0,[-1,-.3,-1]),legSpec([.36,.43,.24],[.22,.22,.77],[.63,.055,.72],.5,[-1,-.3,1]),
+      legSpec([-.38,.45,-.25],[-.19,.23,-.79],[-.62,.055,-.72],.5,[.9,-.3,-1]),legSpec([-.38,.45,.25],[-.19,.23,.79],[-.62,.055,.72],0,[.9,-.3,1])
+    ], arms: [] },
+    runner: { kind: 2, nominalSpeed: 2.8, sweep: .82, walkDuty: .58, runDuty: .40, lift: .25, drop: .07, bob: .055, lean: .11, turn: 12, head: [.40, 1.0, 0], tail: [[-.37,.68,0],[-.85,.56,0],[-1.24,.38,0],[-1.61,.24,0]], legs: [
+      legSpec([-.16,.83,-.17],[-.46,.43,-.22],[.12,.07,-.25],0,[-1,0,-.1]),legSpec([-.16,.83,.17],[-.46,.43,.22],[.12,.07,.25],.5,[-1,0,.1])
+    ], arms: [armSpec([.35,.91,-.21],[.45,.66,-.55],[.85,.39,-.39],[0,-.4,-1]),armSpec([.35,.91,.21],[.45,.66,.55],[.85,.39,.39],[0,-.4,1])] },
+    spitter: { kind: 3, nominalSpeed: 1.25, sweep: .58, walkDuty: .79, runDuty: .72, lift: .12, drop: .02, bob: .035, lean: .025, turn: 5, head: [.42,.60,0], tail: [[-.52,.51,0],[-.92,.33,0],[-1.19,.19,0],[-1.38,.12,0]], legs: [
+      legSpec([.38,.47,-.27],[.52,.32,-.92],[.65,.06,-.76],0,[0,.1,-1]),legSpec([.38,.47,.27],[.52,.32,.92],[.65,.06,.76],.52,[0,.1,1]),
+      legSpec([-.45,.52,-.32],[-.70,.34,-1.05],[-.62,.06,-.88],.30,[-.2,.1,-1]),legSpec([-.45,.52,.32],[-.70,.34,1.05],[-.62,.06,.88],.80,[-.2,.1,1])
+    ], arms: [] },
+    brute: { kind: 4, nominalSpeed: .94, sweep: .72, walkDuty: .73, runDuty: .67, lift: .17, drop: .045, bob: .04, lean: .035, turn: 4, head: [.38,1.35,0], tail: [[-.43,.69,0],[-.78,.46,0],[-1.08,.31,0],[-1.30,.21,0]], legs: [
+      legSpec([-.08,.79,-.30],[.36,.43,-.36],[.14,.09,-.39],0,[1,0,-.15]),legSpec([-.08,.79,.30],[.36,.43,.36],[.14,.09,.39],.5,[1,0,.15])
+    ], arms: [armSpec([.04,1.33,-.49],[.30,.87,-.85],[.59,.35,-.61],[0,-.2,-1]),armSpec([.04,1.33,.49],[.30,.87,.85],[.59,.35,.61],[0,-.2,1])] },
+    boss: { kind: 5, nominalSpeed: .82, sweep: .84, walkDuty: .78, runDuty: .71, lift: .20, drop: .045, bob: .045, lean: .04, turn: 2.8, head: [.43,1.53,0], tail: [[-.48,.81,0],[-.96,.55,0],[-1.37,.31,0],[-1.76,.19,0]], legs: [
+      legSpec([-.12,.86,-.36],[.40,.46,-.44],[.17,.10,-.47],0,[1,0,-.18]),legSpec([-.12,.86,.36],[.40,.46,.44],[.17,.10,.47],.5,[1,0,.18])
+    ], arms: [armSpec([.03,1.53,-.62],[.36,1.02,-1.00],[.88,.42,-.78],[0,-.2,-1]),armSpec([.03,1.53,.62],[.36,1.02,1.00],[.88,.42,.78],[0,-.2,1])] }
+  };
+  var RIG_SHADER = [
+    'uniform float rigTime; uniform float rigMuzzle; uniform vec4 rigGait; uniform vec4 rigBody; uniform vec3 rigHead;',
+    'uniform vec3 rigHip[4]; uniform vec3 rigKnee[4]; uniform vec3 rigFoot[4]; uniform vec3 rigBend[4]; uniform vec4 rigLeg[4];',
+    'uniform vec3 rigShoulder[2]; uniform vec3 rigElbow[2]; uniform vec3 rigHand[2]; uniform vec3 rigArmBend[2]; uniform vec2 rigArmLength[2];',
+    'uniform vec3 rigTail[4]; uniform vec3 rigSupportHand; uniform vec3 rigTriggerHand;',
+    'vec3 alienRotateY(vec3 p,float a){float c=cos(a),s=sin(a);return vec3(c*p.x-s*p.z,p.y,s*p.x+c*p.z);}',
+    'vec3 alienRotateZ(vec3 p,float a){float c=cos(a),s=sin(a);return vec3(c*p.x-s*p.y,s*p.x+c*p.y,p.z);}',
+    'vec3 alienRotateX(vec3 p,float a){float c=cos(a),s=sin(a);return vec3(p.x,c*p.y-s*p.z,s*p.y+c*p.z);}',
+    'vec3 alienBetween(vec3 p,vec3 from,vec3 to){vec3 a=normalize(from),b=normalize(to);float c=clamp(dot(a,b),-1.0,1.0);vec3 v=cross(a,b);float s=length(v);if(s<.00001){if(c>0.)return p;vec3 axis=normalize(cross(a,abs(a.y)<.9?vec3(0.,1.,0.):vec3(1.,0.,0.)));return 2.*axis*dot(axis,p)-p;}vec3 axis=v/s;return p*c+cross(axis,p)*s+axis*dot(axis,p)*(1.-c);}',
+    'vec3 alienKnee(vec3 h,vec3 f,vec3 bend,vec2 lengths){vec3 d=f-h;float dist=clamp(length(d),.015,lengths.x+lengths.y-.001);vec3 axis=normalize(d);float a=(lengths.x*lengths.x-lengths.y*lengths.y+dist*dist)/(2.*dist);vec3 side=bend-axis*dot(bend,axis);if(dot(side,side)<.001)side=vec3(0.,0.,1.)-axis*axis.z;return h+axis*a+normalize(side)*sqrt(max(.000001,lengths.x*lengths.x-a*a));}',
+    'float alienAmount(vec4 pose){return clamp(pose.y,0.,1.25);} float alienWeight(vec4 pose){return clamp(pose.y*3.,0.,1.);}',
+    'float alienBob(vec4 pose){float a=alienAmount(pose);return pose.x>=4.?0.:-rigBody.x*a+rigBody.y*sin(fract(pose.x)*12.5663706)*a+sin(rigTime*2.2)*.007*(1.-clamp(a*2.,0.,1.));}',
+    'void alienBody(inout vec3 p,inout vec3 n,vec4 pose,float yaw){float a=alienAmount(pose);p=alienRotateY(p,yaw);n=alienRotateY(n,yaw);float lean=-rigBody.z*a*cos(pose.z);p-=vec3(0.,.8,0.);p=alienRotateZ(p,lean);n=alienRotateZ(n,lean);float side=rigBody.z*.45*a*sin(pose.z);p=alienRotateX(p,side);n=alienRotateX(n,side);p+=vec3(0.,.8+alienBob(pose),0.);}',
+    'void alienRigTransform(inout vec3 p,inout vec3 n,float group,vec4 pose){',
+    'p.x+=rigMuzzle;float kind=rigBody.w, amount=alienAmount(pose), weight=alienWeight(pose), phase=fract(pose.x), yaw=pose.w;',
+    'if(group>=10.&&group<22.){',
+    'int leg=int(floor((group-10.)/3.+.01));float segment=mod(group-10.,3.);vec3 h0=rigHip[leg],k0=rigKnee[leg],f0=rigFoot[leg];',
+    'float duty=mix(rigGait.y,rigGait.z,clamp(amount,0.,1.));float t=fract(phase+rigLeg[leg].x);float sweep=rigGait.x*mix(.65,1.,clamp(amount,0.,1.))*weight;float forward;float lift=0.;float roll=0.;',
+    'if(t<duty)forward=sweep*(.5-t/duty);else{float u=(t-duty)/(1.-duty);forward=sweep*(u*u*(3.-2.*u)-.5);lift=sin(u*3.14159265)*rigGait.w*weight;roll=-sin(u*3.14159265)*.26*weight;}',
+    'vec3 h=h0;vec3 hn=vec3(0.,1.,0.);alienBody(h,hn,pose,yaw);vec3 f=alienRotateY(f0,yaw)+vec3(cos(pose.z)*forward,lift,sin(pose.z)*forward);vec3 bend=alienRotateY(rigBend[leg],yaw);vec3 k=alienKnee(h,f,bend,rigLeg[leg].yz);',
+    'if(segment<.5){p=alienBetween(p-h0,k0-h0,k-h)+h;n=alienBetween(n,k0-h0,k-h);}else if(segment<1.5){p=alienBetween(p-k0,f0-k0,f-k)+k;n=alienBetween(n,f0-k0,f-k);}else{p=alienRotateY(alienRotateZ(p-f0,roll),yaw)+f;n=alienRotateY(alienRotateZ(n,roll),yaw);}',
+    '}else if(group>=40.&&group<46.){',
+    'int arm=int(floor((group-40.)/3.+.01));float segment=mod(group-40.,3.);vec3 h0=rigShoulder[arm],k0=rigElbow[arm],f0=rigHand[arm],f=f0;',
+    'if(kind<.5)f=arm==0?rigSupportHand:rigTriggerHand;else{float counter=sin(phase*6.2831853+float(arm)*3.14159265)*weight;f+=vec3(counter*.10,abs(counter)*.04,0.);}',
+    'vec3 k=alienKnee(h0,f,rigArmBend[arm],rigArmLength[arm]);if(segment<.5){p=alienBetween(p-h0,k0-h0,k-h0)+h0;n=alienBetween(n,k0-h0,k-h0);}else if(segment<1.5){p=alienBetween(p-k0,f0-k0,f-k)+k;n=alienBetween(n,f0-k0,f-k);}else p+=f-f0;',
+    'alienBody(p,n,pose,kind<.5?0.:yaw);',
+    '}else if(group>=30.&&group<33.){',
+    'int segment=int(group-30.);vec3 start=rigTail[0];vec3 oldStart=rigTail[0];float turn=0.;for(int j=0;j<3;j++){vec3 delta=rigTail[j+1]-rigTail[j];float bend=sin(phase*6.2831853-float(j)*.65)*weight*.07-sin(yaw)*.20;turn+=bend;if(j==segment){p=alienRotateY(p-rigTail[j],turn)+start;n=alienRotateY(n,turn);break;}start+=alienRotateY(delta,turn);}',
+    'alienBody(p,n,pose,yaw);',
+    '}else if(group>1.5&&group<2.5&&kind>.5){vec3 h=alienRotateY(rigHead,yaw);p=p-rigHead+h;alienBody(p,n,pose,0.);}',
+    'else alienBody(p,n,pose,kind<.5?(group>.5?yaw:0.):yaw);',
+    'if(pose.x>=4.){p=vec3(p.x,.15-p.z*.13,p.y-.6);n=normalize(vec3(n.x,-n.z/.13,n.y));}',
+    '}',
+    'vec3 alienRigPosition(vec3 p,float group,vec4 pose){vec3 n=vec3(0.,1.,0.);alienRigTransform(p,n,group,pose);return p;}'
+  ].join('\n');
+
   var PALETTES = [
     { floor: '#65716e', plate: '#5b6663', metal: 0x72827e, trim: 0xe2b75b, light: 0xffc877, shadow: 0x101c1a, label: 'CARGO / SECTOR 01' },
     { floor: '#73868a', plate: '#697b7f', metal: 0x8aafb5, trim: 0x79ded5, light: 0x8bffe5, shadow: 0x111d24, label: 'BIOLAB / SECTOR 02' },
@@ -138,6 +209,7 @@
     this.geometries = []; this.materials = []; this.textures = []; this.worldGeometries = [];
     this.stats = { mode: 'webgl', calls: 0, triangles: 0, frames: 0, renderedEnemies: 0, culledEnemies: 0, renderedCorpses: 0, culledCorpses: 0, uploadedInstances: 0 };
     this.pendingTextures = 0; this.textureRevision = 0; this.baked = root.AlienShooterBaked || null; this.active = false; this.failed = false; this.disposed = false; this.error = '';
+    this.actorStates = new Map(); this.actorFrame = 0;
     this.cameraCenter = { x: 8, y: 17 }; this.viewHeight = 18; this.time = 0; this.map = null; this.stage = -1;
     if (!T) { this.failed = true; this.error = 'Local Three.js library is unavailable'; return; }
     try {
@@ -155,11 +227,23 @@
       this.frustum = new T.Frustum(); this.viewProjection = new T.Matrix4(); this.cullSphere = new T.Sphere(new T.Vector3(), 1);
       this.buildMaterials(); this.buildModels(); this.buildEffects(); this.resize(target.width || 1280, target.height || 720);
       var self = this;
-      this._lost = function (event) { event.preventDefault(); self.contextLost = true; self.active = false; self.error = 'Graphics context lost'; self.canvas.setAttribute('data-renderer', 'unavailable'); };
+      this._lost = function (event) { event.preventDefault(); self.contextLost = true; self.active = false; self.releaseGpuResources(); self.error = 'Graphics context lost'; self.canvas.setAttribute('data-renderer', 'unavailable'); };
       this._restored = function () { if (!self.disposed) { self.contextLost = false; self.error = ''; self.canvas.setAttribute('data-renderer', 'webgl'); } };
       target.addEventListener('webglcontextlost', this._lost); target.addEventListener('webglcontextrestored', this._restored); target.setAttribute('data-renderer', 'webgl');
     } catch (error) { this.failed = true; this.error = String(error.message || error); target.setAttribute('data-renderer', 'unavailable'); }
   }
+  Renderer.prototype.releaseGpuResources = function () {
+    // Three r124 rebuilds its GL caches after restoration. Dispose listeners
+    // from the lost context must be released while that context is still lost;
+    // otherwise a later map change tries to delete its stale WebGLBuffer handles.
+    // dispose() preserves CPU arrays/images, rig uniforms and locomotion state,
+    // which Three uploads normally when the real context is restored.
+    this.worldGeometries.forEach(function (g) { g.dispose(); });
+    this.geometries.forEach(function (g) { g.dispose(); });
+    this.materials.forEach(function (m) { m.dispose(); });
+    this.textures.forEach(function (t) { t.dispose(); });
+    this.dynamic.children.forEach(function (mesh) { if (mesh.isInstancedMesh && mesh.dispose) mesh.dispose(); });
+  };
   Renderer.prototype.geometry = function (g) { this.geometries.push(g); return g; };
   Renderer.prototype.texture = function (image, repeat) {
     var t = new T.CanvasTexture(image); t.encoding = T.sRGBEncoding; t.anisotropy = Math.min(4, this.renderer.capabilities.getMaxAnisotropy());
@@ -211,6 +295,13 @@
     var self = this;
     this.box = this.geometry(new T.BoxBufferGeometry(1, 1, 1)); this.sphere = this.geometry(new T.SphereBufferGeometry(1, 8, 5));
     this.cylinder = this.geometry(new T.CylinderBufferGeometry(1, 1, 1, 8)); this.limbCylinder = this.geometry(new T.CylinderBufferGeometry(1, 1, 1, 6)); this.cone = this.geometry(new T.ConeBufferGeometry(1, 1, 6));
+    this.tailSegment = this.geometry(new T.CylinderBufferGeometry(.72, 1, 1, 6, 1, true));
+    this.shirt = this.geometry(new T.CylinderBufferGeometry(1, .76, 1, 8));
+    this.boot = this.geometry(new T.CylinderBufferGeometry(1, 1, 1, 8));
+    var bootPosition = this.boot.attributes.position;
+    for (var bv = 0; bv < bootPosition.count; bv++) if (bootPosition.getX(bv) > .3 && bootPosition.getY(bv) > 0) bootPosition.setY(bv, .25);
+    this.boot.computeVertexNormals();
+    this.detailSphere = this.geometry(new T.SphereBufferGeometry(1, 6, 3));
     this.torus = this.geometry(new T.TorusBufferGeometry(1, .065, 4, 16));
     this.plane = this.geometry(new T.PlaneBufferGeometry(1, 1)); this.ring = this.geometry(new T.RingBufferGeometry(.82, 1, 28));
     [this.box, this.sphere, this.cylinder, this.cone, this.plane, this.ring, this.torus].forEach(function (g) { var c = new Float32Array(g.attributes.position.count * 3); c.fill(1); g.setAttribute('color', new T.BufferAttribute(c, 3)); });
@@ -256,7 +347,7 @@
     if (!count) return;
     mesh.instanceMatrix.updateRange.offset = 0; mesh.instanceMatrix.updateRange.count = count * 16; mesh.instanceMatrix.needsUpdate = true;
     if (mesh.instanceColor) { mesh.instanceColor.updateRange.offset = 0; mesh.instanceColor.updateRange.count = count * 3; mesh.instanceColor.needsUpdate = true; }
-    var pose = mesh.geometry.getAttribute('instanceTintStride');
+    var pose = mesh.geometry.getAttribute('instancePose');
     if (pose) { pose.updateRange.offset = 0; pose.updateRange.count = count * 4; pose.needsUpdate = true; }
     var tile = mesh.geometry.getAttribute('instanceAtlasRect');
     if (tile) { tile.updateRange.offset = 0; tile.updateRange.count = count * 4; tile.needsUpdate = true; }
@@ -266,86 +357,133 @@
     this.cullSphere.center.set(x, .8, z); this.cullSphere.radius = radius;
     return this.frustum.intersectsSphere(this.cullSphere);
   };
-  Renderer.prototype.animateLimbs = function (mesh, capacity) {
-    // Pack the limb ID into integer bands of the existing repeat UV and combine
-    // hit tint + stride into one instanced attribute. Active attribute count is
-    // nine, the same as the previous unanimated instanced Phong renderer.
+  Renderer.prototype.rigPool = function (mesh, capacity, type) {
+    var spec = ACTOR_RIGS[type], vec = function (a) { return new T.Vector3().fromArray(a || [0, 0, 0]); };
+    var u = { rigTime: { value: 0 }, rigMuzzle: { value: 0 }, rigGait: { value: new T.Vector4(spec.sweep, spec.walkDuty, spec.runDuty, spec.lift) }, rigBody: { value: new T.Vector4(spec.drop, spec.bob, spec.lean, spec.kind) }, rigHead: { value: vec(spec.head) },
+      rigHip: { value: [] }, rigKnee: { value: [] }, rigFoot: { value: [] }, rigBend: { value: [] }, rigLeg: { value: [] }, rigShoulder: { value: [] }, rigElbow: { value: [] }, rigHand: { value: [] }, rigArmBend: { value: [] }, rigArmLength: { value: [] }, rigTail: { value: [] },
+      rigSupportHand: { value: vec([.60, 1.28, -.04]) }, rigTriggerHand: { value: vec([.42, 1.27, .05]) } };
+    for (var i = 0; i < 4; i++) {
+      var l = spec.legs[i] || spec.legs[0];
+      u.rigHip.value.push(vec(l.hip)); u.rigKnee.value.push(vec(l.knee)); u.rigFoot.value.push(vec(l.foot)); u.rigBend.value.push(vec(l.bend));
+      u.rigLeg.value.push(new T.Vector4(l.offset, vec(l.hip).distanceTo(vec(l.knee)), vec(l.knee).distanceTo(vec(l.foot)), 0)); u.rigTail.value.push(vec(spec.tail[i]));
+    }
+    for (i = 0; i < 2; i++) {
+      var a = spec.arms[i] || ACTOR_RIGS.human.arms[i];
+      u.rigShoulder.value.push(vec(a.shoulder)); u.rigElbow.value.push(vec(a.elbow)); u.rigHand.value.push(vec(a.hand)); u.rigArmBend.value.push(vec(a.bend));
+      u.rigArmLength.value.push(new T.Vector2(vec(a.shoulder).distanceTo(vec(a.elbow)), vec(a.elbow).distanceTo(vec(a.hand))));
+    }
+    // UV integer bands hold rigid-bone membership; one vec4 replaces the old
+    // instance colour. Mat4 + position/normal/colour/UV/pose still use 9 slots.
     mesh.instanceColor = null;
-    mesh.geometry.setAttribute('instanceTintStride', new T.InstancedBufferAttribute(new Float32Array(capacity * 4), 4).setUsage(T.DynamicDrawUsage));
-    var original = mesh.material.onBeforeCompile;
+    mesh.geometry.setAttribute('instancePose', new T.InstancedBufferAttribute(new Float32Array(capacity * 4), 4).setUsage(T.DynamicDrawUsage));
+    var original = mesh.material.onBeforeCompile, originalKey = mesh.material.customProgramCacheKey.call(mesh.material);
+    mesh.material.userData.rigShader = RIG_SHADER; mesh.material.userData.rigUniforms = u;
+    mesh.geometry.userData.rig = { type: type, legs: spec.legs.map(function (l, i) { return { hip: l.hip.slice(), knee: l.knee.slice(), foot: l.foot.slice(), groups: [10 + i * 3, 11 + i * 3, 12 + i * 3] }; }), arms: spec.arms.map(function (a, i) { return { shoulder: a.shoulder.slice(), elbow: a.elbow.slice(), hand: a.hand.slice(), groups: [40 + i * 3, 41 + i * 3, 42 + i * 3] }; }), tail: spec.tail, bodyGroup: 0, pelvisGroup: 1, headGroup: 2 };
     mesh.material.onBeforeCompile = function (shader) {
       if (original) original.call(this, shader);
-      shader.vertexShader = 'attribute vec4 instanceTintStride;\n' + shader.vertexShader;
-      shader.vertexShader = shader.vertexShader.replace('#include <color_vertex>', '#include <color_vertex>\nvColor *= instanceTintStride.rgb;');
-      shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nfloat limbCode = floor(uv.x * 0.5 + 0.00001);\nfloat limb = limbCode < 0.5 ? 0.0 : (limbCode < 1.5 ? 1.0 : -1.0);\nfloat stride = instanceTintStride.a;\ntransformed.x += limb * stride * 0.09;\ntransformed.y += abs(limb) > 0.5 ? max(0.0, limb * stride) * 0.08 : abs(stride) * 0.035;');
+      Object.keys(u).forEach(function (key) { shader.uniforms[key] = u[key]; });
+      shader.vertexShader = 'attribute vec4 instancePose;\n' + RIG_SHADER + '\n' + shader.vertexShader;
+      shader.vertexShader = shader.vertexShader.replace('#include <color_vertex>', '#include <color_vertex>\nvColor *= instancePose.x >= 4.0 ? vec3(.34,.40,.28) : (mod(floor(instancePose.x / 2.0),2.0) > .5 ? vec3(1.0,.72,.53) : vec3(1.0));');
+      shader.vertexShader = shader.vertexShader.replace('#include <beginnormal_vertex>', '#include <beginnormal_vertex>\nvec3 rigPosition=position;\nalienRigTransform(rigPosition,objectNormal,floor(uv.x*.5+.00001),instancePose);');
+      shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', 'vec3 transformed=rigPosition;');
     };
-    mesh.material.customProgramCacheKey = function () { return 'alien-limbs-packed-v3'; };
+    mesh.material.customProgramCacheKey = function () { return originalKey + '-joint-rig-v1'; };
     return mesh;
   };
   Renderer.prototype.buildModels = function () {
-    var p = [], self = this;
-    // Soldier: armoured vest, belt pouches, helmet, shoulder pads and oxygen pack.
-    part(p, this.box, 0x475a66, 0, .88, 0, .37, .53, .45);
-    part(p, this.box, 0xa6b0ad, .075, .96, 0, .25, .37, .49);
-    part(p, this.box, 0x21312e, -.22, .97, 0, .17, .42, .35);
-    part(p, this.sphere, 0x778c95, .03, 1.32, 0, .23, .23, .23);
-    part(p, this.box, 0x101c1a, .23, 1.32, 0, .065, .095, .34);
-    part(p, this.box, 0x94d5c2, .267, 1.325, 0, .018, .04, .24);
-    part(p, this.box, 0x141e1b, .03, .61, 0, .42, .13, .48);
-    [-1, 1].forEach(function (side) {
-      part(p, self.sphere, 0x8c9fa2, -.01, 1.08, side * .29, .19, .2, .16);
-      part(p, self.box, 0xdeaa62, -.01, 1.27, side * .29, .12, .025, .14);
-      part(p, self.box, 0x65756a, .15, .94, side * .31, .32, .16, .16, 0, 0, side * .14);
-      part(p, self.box, 0x2d3b2c, .1, .67, side * .26, .2, .18, .1);
+    var p = [], self = this, human = ACTOR_RIGS.human;
+    // Original anatomy: short hair, black shirt, exposed forearms and long
+    // trousered legs. Each limb is two rigid bones, not a sliding foot mesh.
+    rigPart(p, this.shirt, 0x222a2b, 0, 0, 1.28, 0, .17, .43, .24);
+    rigPart(p, this.sphere, 0x252d2e, 0, -.015, 1.43, 0, .17, .13, .25);
+    rigPart(p, this.box, 0x596875, 1, -.015, 1.015, 0, .31, .20, .39);
+    rigPart(p, this.box, 0x252a28, 1, .005, 1.10, 0, .33, .075, .40);
+    rigPart(p, this.box, 0xa2a68e, 1, .176, 1.10, 0, .025, .055, .06);
+    rigPart(p, this.limbCylinder, 0xc39b79, 0, .01, 1.53, 0, .064, .15, .064);
+    rigPart(p, this.sphere, 0xd2ae8b, 0, .02, 1.685, 0, .098, .128, .098);
+    rigPart(p, this.sphere, 0x393a30, 0, -.012, 1.758, 0, .099, .061, .100);
+    rigPart(p, this.box, 0xc79f7a, 0, .119, 1.68, 0, .039, .053, .052);
+    human.legs.forEach(function (l, i) {
+      var g = 10 + i * 3;
+      bone(p, self.limbCylinder, 0x60707e, l.hip, l.knee, .096, .092, g);
+      rigPart(p, self.sphere, 0x566673, g, l.knee[0], l.knee[1], l.knee[2], .10, .095, .095);
+      bone(p, self.limbCylinder, 0x536371, l.knee, l.foot, .075, .082, g + 1);
+      rigPart(p, self.boot, 0x272e2b, g + 2, l.foot[0] + .045, .09, l.foot[2], .16, .14, .095);
+      rigPart(p, self.cylinder, 0x41483e, g + 2, l.foot[0] + .045, .027, l.foot[2], .16, .026, .095);
     });
-    this.soldiers = this.pool(this.geometry(merge(p)), this.matte, 1);
-    p = []; part(p, this.box, 0x425449, 0, .32, 0, .18, .4, .17); part(p, this.box, 0x17201e, .07, .09, 0, .3, .18, .2); part(p, this.box, 0x829286, .07, .42, 0, .1, .15, .2);
-    this.soldierLegs = this.pool(this.geometry(merge(p)), this.matte, 2);
-    p = []; part(p, this.box, 0x192124, .52, .99, 0, .65, .14, .13); part(p, this.cylinder, 0x879794, .93, 1.01, 0, .045, .37, .045, 0, 0, Math.PI / 2); part(p, this.box, 0x56716b, .52, 1.1, 0, .25, .08, .1); part(p, this.box, 0x162122, .5, .85, 0, .16, .21, .09, 0, 0, -.2);
-    this.guns = this.pool(this.geometry(merge(p)), this.metal, 1);
-    this.weaponParts = {};
-    ['shotgun', 'minigun', 'plasma'].forEach(function (type) {
-      var parts = [];
+    human.arms.forEach(function (a, i) {
+      var g = 40 + i * 3, sleeve = a.shoulder.map(function (v, j) { return v + (a.elbow[j] - v) * .48; });
+      bone(p, self.limbCylinder, 0xc19b79, a.shoulder, a.elbow, .067, .064, g);
+      bone(p, self.limbCylinder, 0x232c2c, a.shoulder, sleeve, .09, .078, g);
+      bone(p, self.limbCylinder, 0xd2ac86, a.elbow, a.hand, .057, .06, g + 1);
+      rigPart(p, self.sphere, 0xc69f78, g + 2, a.hand[0], a.hand[1], a.hand[2], .074, .057, .063);
+    });
+    this.soldiers = this.rigPool(this.pool(this.geometry(merge(p)), this.matte, 1), 1, 'human');
+    this.weapons = {}; this.weaponParts = {}; this.weaponSpecs = {
+      pistol: { muzzle: .80, support: [.41, 1.27, -.04] }, smg: { muzzle: 1.13, support: [.66, 1.28, -.04] },
+      shotgun: { muzzle: 1.22, support: [.70, 1.28, -.04] }, minigun: { muzzle: 1.28, support: [.65, 1.28, -.08] }, plasma: { muzzle: 1.13, support: [.65, 1.28, -.08] }
+    };
+    Object.keys(this.weaponSpecs).forEach(function (type) {
+      var spec = self.weaponSpecs[type], pieces = [], pistol = type === 'pistol';
+      part(pieces, self.box, 0x303c3e, pistol ? .56 : .61, 1.34, 0, pistol ? .33 : .56, .12, pistol ? .09 : .14);
+      part(pieces, self.box, 0x292e2b, .42, 1.245, .015, .105, .16, .075, 0, 0, -.15);
+      if (!pistol) { part(pieces, self.box, 0x5b6255, .285, 1.32, 0, .18, .13, .12); part(pieces, self.box, 0x384744, .59, 1.235, .015, .11, .17, .09, 0, 0, -.12); }
       if (type === 'minigun') {
-        for (var barrel = 0; barrel < 6; barrel++) { var phi = barrel * TAU / 6; part(parts, self.cylinder, 0x8d9b98, .95, 1.01 + Math.cos(phi) * .09, Math.sin(phi) * .09, .027, .6, .027, 0, 0, Math.PI / 2); }
-        part(parts, self.cylinder, 0x3d514b, .48, .9, .12, .19, .2, .19, Math.PI / 2);
-      } else if (type === 'shotgun') {
-        part(parts, self.cylinder, 0x8b9890, .88, 1.01, .065, .042, .55, .042, 0, 0, Math.PI / 2);
-        part(parts, self.box, 0x917552, .67, .95, 0, .28, .13, .19);
+        for (var b = 0; b < 6; b++) { var phi = b * TAU / 6; part(pieces, self.limbCylinder, 0x9da9a7, 1.0, 1.34 + Math.cos(phi) * .065, Math.sin(phi) * .065, .026, .56, .026, 0, 0, Math.PI / 2); }
+        part(pieces, self.cylinder, 0x58685e, .62, 1.24, .13, .145, .16, .145, Math.PI / 2);
       } else {
-        part(parts, self.box, 0x446a6a, .78, 1.01, 0, .44, .24, .28);
-        for (var coil = 0; coil < 4; coil++) part(parts, self.box, 0x7de5dc, .64 + coil * .09, 1.15, 0, .035, .04, .25);
+        part(pieces, self.limbCylinder, 0x9aa8a1, (spec.muzzle + .70) * .5, 1.34, 0, type === 'plasma' ? .075 : .037, spec.muzzle - .70, type === 'plasma' ? .075 : .037, 0, 0, Math.PI / 2);
+        if (type === 'shotgun') { part(pieces, self.limbCylinder, 0x778981, .98, 1.34, .065, .033, .48, .033, 0, 0, Math.PI / 2); part(pieces, self.box, 0x9b7f55, .70, 1.28, 0, .26, .09, .18); }
+        if (type === 'plasma') for (var c = 0; c < 4; c++) part(pieces, self.box, 0x7eddd7, .71 + c * .085, 1.40, 0, .035, .08, .19);
       }
-      self.weaponParts[type] = self.pool(self.geometry(merge(parts)), self.metal, 1);
+      var mesh = self.rigPool(self.pool(self.geometry(merge(pieces)), self.metal, 1), 1, 'human');
+      mesh.geometry.userData.rig.weapon = { base: [.42, 1.34, 0], muzzle: [spec.muzzle, 1.34, 0], group: 0, support: spec.support.slice(), trigger: [.42,1.27,.05] };
+      self.weapons[type] = mesh;
     });
+    this.guns = this.weapons.smg;
     this.monsters = {}; this.corpses = []; this.lastDeathEvent = 0;
     ['crawler', 'runner', 'spitter', 'brute', 'boss'].forEach(function (type) {
-      var heavy = type === 'brute' || type === 'boss', spit = type === 'spitter', runner = type === 'runner', body = [], legsA = [], legsB = [];
-      var skin = heavy ? 0x596449 : spit ? 0x587b4a : runner ? 0x8a6b4c : 0x687854, armor = heavy ? 0x3b4138 : 0x3c4c38;
-      part(body, self.sphere, skin, -.05, heavy ? .68 : .43, 0, heavy ? .64 : .52, heavy ? .54 : .32, heavy ? .51 : .37);
-      part(body, self.sphere, armor, -.19, heavy ? .96 : .59, 0, heavy ? .57 : .45, heavy ? .27 : .17, heavy ? .48 : .35);
-      part(body, self.sphere, skin, .48, heavy ? .66 : .38, 0, .32, .24, .31);
-      part(body, self.box, 0x1e281c, .69, heavy ? .6 : .33, 0, .2, .12, .37);
-      [-1, 1].forEach(function (side) {
-        part(body, self.sphere, 0xffb74e, .67, heavy ? .81 : .49, side * .18, .055, .05, .045);
-        part(body, self.cone, 0xd5cc95, .73, heavy ? .56 : .28, side * .22, .055, .23, .055, 0, 0, -Math.PI / 2 - side * .2);
-        for (var n = 0; n < 3; n++) {
-          var list = (n + (side > 0 ? 1 : 0)) % 2 ? legsA : legsB;
-          part(list, self.limbCylinder, skin, -.32 + n * .31, .25, side * .44, .065, .46, .065, side * .9, 0, -.3 + n * .3);
-          part(list, self.cone, armor, -.28 + n * .33, .10, side * .69, .07, .38, .065, side * .55, 0, -.35 + n * .25);
-        }
-      });
-      for (var n = 0; n < 4; n++) part(body, self.cone, armor, -.45 + n * .25, heavy ? 1.22 : .75, 0, .11, heavy ? .4 : .24, .13, 0, 0, .4);
-      if (spit) { part(body, self.sphere, 0xb2cb56, -.38, .59, 0, .38, .4, .4); part(body, self.cone, 0x476534, .85, .39, 0, .16, .3, .16, 0, 0, -Math.PI / 2); }
-      if (runner) part(body, self.cone, 0x6a543d, -.87, .28, 0, .23, .9, .25, 0, 0, Math.PI / 2 + .2);
-      if (heavy) for (n = 0; n < 3; n++) part(body, self.box, 0x5f6657, -.35 + n * .3, 1.05, 0, .2, .12, .89, 0, 0, .1);
-      if (type === 'boss') {
-        [-1, 1].forEach(function (side) { part(body, self.cone, 0xa79b67, .23, 1.16, side * .51, .13, .76, .13, side * .6, 0, -.35); part(body, self.sphere, 0xb9be48, -.46, .92, side * .26, .22, .23, .22); });
+      var spec = ACTOR_RIGS[type], pieces = [], heavy = type === 'brute' || type === 'boss', boss = type === 'boss', runner = type === 'runner', spit = type === 'spitter';
+      var skin = boss ? 0x9b8860 : heavy ? 0x9c9a61 : runner ? 0x9b9d60 : spit ? 0x7b9563 : 0x72936b, ridge = heavy ? 0x676b45 : 0x425f49, tooth = 0xd7ce99;
+      if (heavy) {
+        rigPart(pieces, self.sphere, skin, 0, -.13, boss ? 1.14 : 1.0, 0, boss ? .62 : .51, boss ? .57 : .46, boss ? .62 : .51);
+        rigPart(pieces, self.sphere, ridge, 0, -.27, boss ? 1.42 : 1.25, 0, boss ? .49 : .43, .30, boss ? .61 : .49);
+        rigPart(pieces, self.sphere, skin, 1, -.16, .76, 0, .36, .24, boss ? .40 : .34);
+      } else if (runner) {
+        rigPart(pieces, self.sphere, skin, 0, -.13, .85, 0, .42, .30, .24, 0, 0, -.36);
+        rigPart(pieces, self.sphere, ridge, 0, -.25, 1.03, 0, .33, .14, .23, 0, 0, -.25);
+      } else {
+        rigPart(pieces, self.sphere, skin, 0, -.15, spit ? .56 : .43, 0, spit ? .63 : .53, spit ? .36 : .25, spit ? .48 : .30);
+        rigPart(pieces, self.sphere, ridge, 0, -.18, spit ? .73 : .57, 0, .48, .14, spit ? .42 : .25);
+        if (spit) [-1, 1].forEach(function (side) { rigPart(pieces, self.detailSphere, 0xa6b96a, 0, -.38, .61, side * .36, .32, .23, .23); });
       }
-      legsA.forEach(function (piece) { piece.limb = 1; }); legsB.forEach(function (piece) { piece.limb = -1; });
-      // One geometry and draw per species covers the torso, moving limbs and
-      // resting corpses. No hidden duplicate species geometry is submitted.
-      self.monsters[type] = { body: self.animateLimbs(self.pool(self.geometry(merge(body.concat(legsA, legsB))), self.skin, 158), 158) };
+      bone(pieces, self.limbCylinder, skin, [heavy ? .12 : .25, heavy ? (boss ? 1.39 : 1.20) : runner ? .97 : spit ? .56 : .43, 0], spec.head, heavy ? .18 : .15, heavy ? .19 : .14, 0);
+      var h = spec.head, hx = h[0] + .18, hy = h[1];
+      rigPart(pieces, self.sphere, skin, 2, hx, hy, 0, heavy ? .31 : .34, heavy ? .23 : .17, heavy ? .31 : .22);
+      rigPart(pieces, self.cone, ridge, 2, hx + .22, hy + .025, 0, heavy ? .25 : .19, .46, heavy ? .25 : .19, 0, 0, -Math.PI / 2);
+      rigPart(pieces, self.box, 0x354633, 2, hx + .23, hy - .12, 0, .29, .085, heavy ? .39 : .27);
+      [-1, 1].forEach(function (side) {
+        rigPart(pieces, self.box, spit ? 0xdeeb80 : 0xe4b35c, 2, hx + .17, hy + .06, side * (heavy ? .25 : .19), .045, .035, .035);
+        rigPart(pieces, self.cone, tooth, 2, hx + .34, hy - .13, side * (heavy ? .16 : .11), .041, .17, .041, 0, 0, Math.PI);
+      });
+      spec.legs.forEach(function (l, i) {
+        var g = 10 + i * 3, width = heavy ? .14 : runner ? .09 : .085;
+        bone(pieces, self.limbCylinder, skin, l.hip, l.knee, width, width * .90, g);
+        bone(pieces, self.limbCylinder, ridge, l.knee, l.foot, width * .65, width * .72, g + 1);
+        rigPart(pieces, self.box, skin, g + 2, l.foot[0] + .045, l.foot[1], l.foot[2], heavy ? .28 : .20, heavy ? .13 : .075, heavy ? .22 : .12);
+        [-1, 1].forEach(function (side) { rigPart(pieces, self.cone, tooth, g + 2, l.foot[0] + (heavy ? .20 : .14), l.foot[1] - .015, l.foot[2] + side * (heavy ? .07 : .035), heavy ? .034 : .022, heavy ? .19 : .14, heavy ? .034 : .022, 0, 0, -Math.PI / 2); });
+      });
+      spec.arms.forEach(function (a, i) {
+        var g = 40 + i * 3, width = heavy ? (boss ? .20 : .165) : .065;
+        bone(pieces, self.limbCylinder, skin, a.shoulder, a.elbow, width, width * .9, g);
+        bone(pieces, self.limbCylinder, ridge, a.elbow, a.hand, width * .70, width * .8, g + 1);
+        rigPart(pieces, self.detailSphere, skin, g + 2, a.hand[0], a.hand[1], a.hand[2], width, width * .7, width);
+        [-1, 1].forEach(function (side) { rigPart(pieces, self.cone, tooth, g + 2, a.hand[0] + .12, a.hand[1] - .05, a.hand[2] + side * width * .6, width * .23, heavy ? .30 : .18, width * .23, 0, 0, -1.9); });
+      });
+      for (var t = 0; t < 3; t++) bone(pieces, t < 2 ? self.tailSegment : self.cone, t ? skin : ridge, spec.tail[t], spec.tail[t + 1], (heavy ? .19 : .14) * (1 - t * .26), (heavy ? .19 : .14) * (1 - t * .26), 30 + t);
+      for (var s = 0; s < (boss ? 5 : 3); s++) rigPart(pieces, self.cone, ridge, 0, -.42 + s * .19, heavy ? (boss ? 1.73 : 1.51) : runner ? 1.17 : spit ? .91 : .78, 0, boss ? .10 : .065, boss ? .37 : .20, boss ? .10 : .065, 0, 0, .25);
+      if (boss) [-1,1].forEach(function (side) { rigPart(pieces, self.cone, tooth, 0, -.01, 1.62, side * .57, .12, .53, .12, side * .45, 0, -.25); });
+      self.monsters[type] = { body: self.rigPool(self.pool(self.geometry(merge(pieces)), self.skin, 158), 158, type) };
     });
     this.shadows = this.pool(this.plane, this.shadowMaterial, 128);
     this.playerRings = this.pool(this.ring, this.material({ color: 0xffffff, transparent: true, opacity: .8, depthWrite: false }, true), 1);
@@ -368,7 +506,8 @@
     this.doorBars = this.pool(this.box, this.material({ color: 0xe6a052 }, true), 20);
     this.objectiveRings = this.pool(this.ring, this.material({ color: 0xffffff, transparent: true, opacity: .8, depthWrite: false }, true), 8);
     this.objectiveGlows = this.pool(this.plane, this.glowMaterial, 8);
-    this.muzzleFlashes = this.pool(this.sphere, this.material({ color: 0xffe39a }, true), 1);
+    p = []; part(p, this.sphere, 0xffe7a8, .10, 1.34, 0, .20, .09, .09);
+    this.muzzleFlashes = this.rigPool(this.pool(this.geometry(merge(p)), this.material({ color: 0xffe39a, emissive: 0xffc76b, vertexColors: true }), 1), 1, 'human');
     this.grenadeBodies = this.pool(this.sphere, this.material({ color: 0x617545, shininess: 30 }), 20);
   };
   Renderer.prototype.buildEffects = function () {
@@ -391,7 +530,7 @@
   };
   Renderer.prototype.setMap = function (map, stage) {
     if (this.map === map && this.stage === stage) return;
-    this.clearWorld(); this.corpses = []; this.mapChanged = true; this.map = map; this.stage = clamp(stage || 0, 0, 2);
+    this.clearWorld(); this.actorStates.clear(); this.corpses = []; this.mapChanged = true; this.map = map; this.stage = clamp(stage || 0, 0, 2);
     var p = PALETTES[this.stage], self = this, floor = [], metal = [], matte = [], glow = [], shadows = [], glass = [], crates = [], w = map.width || 48, h = map.height || 34;
     this.scene.background.setHex(p.shadow); this.keyLight.color.setHex(this.stage === 1 ? 0xc9e7e3 : 0xffe5c3);
     part(floor, this.box, 0xffffff, w / 2, -.13, h / 2, w, .2, h);
@@ -531,46 +670,102 @@
     this.camera.position.set(centerX, 40, centerY + 30); this.camera.lookAt(centerX, 0, centerY); this.camera.updateMatrixWorld();
     this.viewProjection.multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse); this.frustum.setFromProjectionMatrix(this.viewProjection);
   };
-  Renderer.prototype.updateActors = function (game) {
-    var self = this, shadowCount = 0, soldierCount = 0, legs = 0, muzzleCount = 0, attachments = { shotgun: 0, minigun: 0, plasma: 0 };
+  Renderer.prototype.sampleActor = function (game, entity, domain, type, scale, dt) {
+    var key = domain + ':' + entity.id, state = this.actorStates.get(key), aim = finite(entity.angle, 0), tick = finite(game.elapsed, 0), spec = ACTOR_RIGS[type];
+    if (!state || state.entityRef !== entity || state.type !== type) {
+      state = { key: key, entityRef: entity, type: type, phase: 0, speed: 0, normalizedSpeed: 0, distance: 0, travelAngle: aim, facingAngle: aim, aimAngle: aim, lastX: entity.x, lastY: entity.y, sampleTick: tick, teleportReset: 0, instanceIndex: -1, mesh: null };
+      this.actorStates.set(key, state);
+    } else if (game.phase === 'playing' && dt > 0 && tick > state.sampleTick) {
+      var elapsed = Math.min(.2, tick - state.sampleTick), dx = entity.x - state.lastX, dy = entity.y - state.lastY, distance = Math.hypot(dx, dy);
+      if (distance > Math.max(.8, spec.nominalSpeed * elapsed * 3.5)) {
+        state.phase = 0; state.speed = 0; state.normalizedSpeed = 0; state.teleportReset++; state.travelAngle = aim; state.facingAngle = aim;
+      } else {
+        var speed = distance / Math.max(elapsed, .00001), moving = distance > .00005;
+        state.speed += (speed - state.speed) * (1 - Math.exp(-elapsed / (moving ? .08 : .12)));
+        if (state.speed < .002) state.speed = 0;
+        state.normalizedSpeed = clamp(state.speed / spec.nominalSpeed, 0, 1.25);
+        if (moving) state.travelAngle = Math.atan2(dy, dx);
+        var turnTarget = aim;
+        if (type === 'human' && moving) {
+          var relative = angleDelta(state.travelAngle, aim);
+          if (Math.abs(relative) > Math.PI / 2) relative = angleDelta(relative + Math.PI, 0);
+          turnTarget = aim + clamp(relative, -1.05, 1.05);
+        }
+        state.facingAngle = angleToward(state.facingAngle, turnTarget, 1 - Math.exp(-elapsed * spec.turn));
+        if (moving) {
+          var amount = clamp(state.normalizedSpeed, 0, 1), weight = clamp(state.normalizedSpeed * 3, 0, 1), duty = spec.walkDuty + (spec.runDuty - spec.walkDuty) * amount;
+          var cycle = spec.sweep * (.65 + .35 * amount) * Math.max(.3, weight) / duty * scale;
+          state.phase += distance / Math.max(.15, cycle); state.distance += distance;
+        }
+      }
+      state.lastX = entity.x; state.lastY = entity.y; state.sampleTick = tick;
+    }
+    state.aimAngle = aim; state.instanceIndex = -1; state.mesh = null;
+    state.seen = this.actorFrame;
+    return state;
+  };
+  Renderer.prototype.writeActor = function (mesh, index, entity, state, scale, dead) {
+    this.setInstance(mesh, index, entity.x, 0, entity.y, scale, scale, scale, state.aimAngle);
+    var pose = mesh.geometry.attributes.instancePose;
+    pose.setXYZW(index, state.phase % 1 + (dead ? 4 : entity.hitFlash > 0 ? 2 : 0), dead ? 0 : state.normalizedSpeed, angleDelta(state.travelAngle, state.aimAngle), angleDelta(state.facingAngle, state.aimAngle));
+    state.instanceIndex = index; state.mesh = mesh;
+  };
+  // Read-only diagnostics expose the exact data sent to the shared rig shader,
+  // not a second CPU implementation of its joint transforms.
+  Renderer.prototype.inspectActor = function (domain, id) {
+    var state = this.actorStates.get(domain + ':' + id); if (!state) return null;
+    var result = { type: state.type, phase: state.phase, speed: state.speed, normalizedSpeed: state.normalizedSpeed, distance: state.distance, travelAngle: state.travelAngle, facingAngle: state.facingAngle, aimAngle: state.aimAngle, sampleTick: state.sampleTick, teleportReset: state.teleportReset, instanceIndex: state.instanceIndex };
+    if (state.mesh && state.instanceIndex >= 0) { var i = state.instanceIndex; result.packedPose = Array.prototype.slice.call(state.mesh.geometry.attributes.instancePose.array, i * 4, i * 4 + 4); result.instanceMatrix = Array.prototype.slice.call(state.mesh.instanceMatrix.array, i * 16, i * 16 + 16); }
+    return result;
+  };
+  Renderer.prototype.updateActors = function (game, dt) {
+    var self = this, shadowCount = 0, soldierCount = 0, muzzleCount = 0, activeWeapon = '', counts = { crawler: 0, runner: 0, spitter: 0, brute: 0, boss: 0 };
+    this.actorFrame++;
+    this.soldiers.material.userData.rigUniforms.rigTime.value = finite(game.elapsed, 0);
+    this.muzzleFlashes.material.userData.rigUniforms.rigTime.value = finite(game.elapsed, 0);
+    Object.keys(this.weapons).forEach(function (type) { self.weapons[type].material.userData.rigUniforms.rigTime.value = finite(game.elapsed, 0); });
+    Object.keys(this.monsters).forEach(function (type) { self.monsters[type].body.material.userData.rigUniforms.rigTime.value = finite(game.elapsed, 0); });
+    this.stats.renderedEnemies = 0; this.stats.culledEnemies = 0; this.stats.renderedCorpses = 0; this.stats.culledCorpses = 0;
     (game.players || []).filter(function (p) { return p.id === 1 && p.active; }).slice(0, 1).forEach(function (p) {
-      var index = soldierCount++, a = finite(p.angle, 0), movement = p.moving ? 1 : 0, wave = Math.sin(self.time * 15 + p.id), scale = !p.alive ? .45 : 1;
-      self.setInstance(self.soldiers, index, p.x, 0, p.y, 1, scale, 1, a, 0xe5e9cd);
-      self.setInstance(self.guns, index, p.x, 0, p.y, p.weapon === 'minigun' ? 1.25 : p.weapon === 'pistol' ? .72 : 1, scale, 1, a);
-      if (self.weaponParts[p.weapon]) self.setInstance(self.weaponParts[p.weapon], attachments[p.weapon]++, p.x, 0, p.y, 1, scale, 1, a);
-      [-1, 1].forEach(function (side) {
-        var stride = wave * .13 * (movement ? 1 : 0) * side, ox = Math.cos(a) * stride - Math.sin(a) * side * .14, oz = Math.sin(a) * stride + Math.cos(a) * side * .14;
-        self.setInstance(self.soldierLegs, legs++, p.x + ox, Math.max(0, wave * side) * .06 * (movement ? 1 : 0), p.y + oz, 1, scale, 1, a);
-      });
+      var state = self.sampleActor(game, p, 'player', 'human', 1, dt), index = soldierCount++, a = state.aimAngle;
+      activeWeapon = self.weapons[p.weapon] ? p.weapon : 'smg'; var weapon = self.weapons[activeWeapon], spec = self.weaponSpecs[activeWeapon]; self.guns = weapon;
+      self.soldiers.material.userData.rigUniforms.rigSupportHand.value.fromArray(spec.support);
+      self.writeActor(self.soldiers, index, p, state, 1, !p.alive);
+      self.setInstance(weapon, index, p.x, 0, p.y, 1, 1, 1, a);
+      weapon.geometry.attributes.instancePose.array.set(self.soldiers.geometry.attributes.instancePose.array.subarray(0, 4));
       self.setInstance(self.shadows, shadowCount++, p.x, .008, p.y + .07, 1.5, 1.15, 1, 0, undefined, -Math.PI / 2);
       self.setInstance(self.playerRings, index, p.x, .022, p.y, .68, .68, .68, 0, !p.alive ? 0xf07a5c : 0xc4d99a, -Math.PI / 2);
-      if (p.fireFlash > 0 && p.alive) { var length = p.weapon === 'pistol' ? .85 : 1.16; self.setInstance(self.muzzleFlashes, muzzleCount++, p.x + Math.cos(a) * length, 1.02, p.y + Math.sin(a) * length, .22 + Math.sin(self.time * 91) * .08, .12, .12, a); }
+      if (p.fireFlash > 0 && p.alive) {
+        // Flash uses the same upper-body transform as the barrel, including lean.
+        self.muzzleFlashes.material.userData.rigUniforms.rigMuzzle.value = spec.muzzle;
+        self.setInstance(self.muzzleFlashes, muzzleCount++, p.x, 0, p.y, 1, 1, 1, a);
+        self.muzzleFlashes.geometry.attributes.instancePose.array.set(self.soldiers.geometry.attributes.instancePose.array.subarray(0, 4));
+      }
     });
-    Object.keys(attachments).forEach(function (type) { self.finishPool(self.weaponParts[type], attachments[type]); });
-    this.finishPool(this.soldiers, soldierCount); this.finishPool(this.guns, soldierCount); this.finishPool(this.soldierLegs, legs); this.finishPool(this.playerRings, soldierCount); this.finishPool(this.muzzleFlashes, muzzleCount);
-    var counts = { crawler: 0, runner: 0, spitter: 0, brute: 0, boss: 0 };
-    this.stats.renderedEnemies = 0; this.stats.culledEnemies = 0; this.stats.renderedCorpses = 0; this.stats.culledCorpses = 0;
+    Object.keys(this.weapons).forEach(function (type) { self.finishPool(self.weapons[type], type === activeWeapon ? soldierCount : 0); });
+    this.finishPool(this.soldiers, soldierCount); this.finishPool(this.playerRings, soldierCount); this.finishPool(this.muzzleFlashes, muzzleCount);
     var enemies = game.enemies || [];
     for (var enemyIndex = 0; enemyIndex < Math.min(enemies.length, 110); enemyIndex++) {
-      var e = enemies[enemyIndex], type = this.monsters[e.type] ? e.type : 'crawler', pool = this.monsters[type], a = finite(e.angle, 0), size = Math.max(.4, finite(e.radius, .5) / .5);
-      // The margin includes body, animated feet, creature shadow and the boss's
-      // horns. Enemies keep simulating normally beyond the rendered view.
+      var e = enemies[enemyIndex], type = this.monsters[e.type] ? e.type : 'crawler', mesh = this.monsters[type].body, size = Math.max(.4, finite(e.radius, .5) / .5);
+      var state = this.sampleActor(game, e, 'enemy', type, size, dt);
+      // Track real travel even when hidden; the cull margin covers tails and feet.
       if (!this.visibleAt(e.x, e.y, size * 2.4)) { this.stats.culledEnemies++; continue; }
-      var i = counts[type]++, stride = Math.sin(this.time * (type === 'runner' ? 20 : 12) + e.id * 1.7), color = e.hitFlash > 0 ? 0xffddc1 : 0xffffff;
-      this.setInstance(pool.body, i, e.x, 0, e.y, size, size, size, a);
-      this.color.setHex(color).convertSRGBToLinear();
-      pool.body.geometry.attributes.instanceTintStride.setXYZW(i, this.color.r, this.color.g, this.color.b, stride); this.stats.renderedEnemies++;
-      if (shadowCount < 128) this.setInstance(this.shadows, shadowCount++, e.x, .009, e.y + .08, size * 1.8, size * 1.25, 1, a, undefined, -Math.PI / 2);
+      var i = counts[type]++;
+      this.writeActor(mesh, i, e, state, size, false); this.stats.renderedEnemies++;
+      if (shadowCount < 128) this.setInstance(this.shadows, shadowCount++, e.x, .009, e.y + .08, size * 1.8, size * 1.25, 1, state.aimAngle, undefined, -Math.PI / 2);
     }
     this.finishPool(this.shadows, shadowCount);
     if (this.mapChanged) { this.lastDeathEvent = finite(game.eventSerial, 0); this.mapChanged = false; }
     (game.events || []).forEach(function (event) {
       if (event.id <= self.lastDeathEvent) return;
-      if (event.kind === 'enemy-death') self.corpses.push({ id: event.id, type: event.enemyType || 'crawler', x: event.x, y: event.y, angle: (event.id * 1.78) % TAU, created: self.time });
+      if (event.kind === 'enemy-death') {
+        var angle = (event.id * 1.78) % TAU;
+        self.actorStates.forEach(function (s) { if (s.type === event.enemyType && s.entityRef.hp <= 0 && Math.hypot(s.lastX - event.x, s.lastY - event.y) < .6) angle = s.aimAngle; });
+        self.corpses.push({ id: event.id, type: event.enemyType || 'crawler', x: event.x, y: event.y, angle: angle, created: self.time });
+      }
       self.lastDeathEvent = Math.max(self.lastDeathEvent, event.id);
     });
-    // Compact the bounded corpse list in place instead of allocating two arrays
-    // every frame. Animation time is frozen while the game is paused.
+    this.actorStates.forEach(function (s, key) { if (s.seen !== self.actorFrame) self.actorStates.delete(key); });
     var surviving = 0;
     for (i = 0; i < this.corpses.length; i++) if (this.time - this.corpses[i].created < 120) this.corpses[surviving++] = this.corpses[i];
     this.corpses.length = surviving;
@@ -579,9 +774,8 @@
       var type = self.monsters[c.type] ? c.type : 'crawler', spec = root.AlienShooterWorld && root.AlienShooterWorld.enemyTypes[type], size = (spec ? spec.radius : .46) / .5;
       if (!self.visibleAt(c.x, c.y, size * 2.4)) { self.stats.culledCorpses++; return; }
       var i = counts[type]++, mesh = self.monsters[type].body;
-      self.setInstance(mesh, i, c.x, .015, c.y, size * 1.08, size * .22, size, c.angle);
-      self.color.setHex(0x82916e).convertSRGBToLinear();
-      mesh.geometry.attributes.instanceTintStride.setXYZW(i, self.color.r, self.color.g, self.color.b, 0); self.stats.renderedCorpses++;
+      self.setInstance(mesh, i, c.x, .015, c.y, size, size, size, c.angle);
+      mesh.geometry.attributes.instancePose.setXYZW(i, 4, 0, 0, 0); self.stats.renderedCorpses++;
     });
     Object.keys(counts).forEach(function (type) { self.finishPool(self.monsters[type].body, counts[type]); });
   };
@@ -637,8 +831,8 @@
     (game.bullets || []).slice(0, 512).forEach(function (b) {
       if (!self.visibleAt(b.x, b.y, 1.5)) return;
       var i = count++ * 6, vx = finite(b.vx, 0), vy = finite(b.vy, 0), speed = Math.hypot(vx, vy) || 1, length = b.enemy ? .3 : b.type === 'plasma' ? .75 : .65, color = b.enemy ? 0xb8e463 : b.type === 'plasma' ? 0x78dbe6 : 0xffda86;
-      self.tracerPositions[i] = b.x - vx / speed * length; self.tracerPositions[i + 1] = b.enemy ? .4 : .96; self.tracerPositions[i + 2] = b.y - vy / speed * length;
-      self.tracerPositions[i + 3] = b.x; self.tracerPositions[i + 4] = b.enemy ? .4 : .96; self.tracerPositions[i + 5] = b.y;
+      self.tracerPositions[i] = b.x - vx / speed * length; self.tracerPositions[i + 1] = b.enemy ? .4 : 1.34; self.tracerPositions[i + 2] = b.y - vy / speed * length;
+      self.tracerPositions[i + 3] = b.x; self.tracerPositions[i + 4] = b.enemy ? .4 : 1.34; self.tracerPositions[i + 5] = b.y;
       self.color.setHex(color).convertSRGBToLinear(); for (var j = 0; j < 2; j++) { self.tracerColors[i + j * 3] = self.color.r; self.tracerColors[i + j * 3 + 1] = self.color.g; self.tracerColors[i + j * 3 + 2] = self.color.b; }
     });
     this.tracerGeometry.setDrawRange(0, count * 2); this.tracerGeometry.attributes.position.needsUpdate = true; this.tracerGeometry.attributes.color.needsUpdate = true; this.tracers.visible = count > 0;
@@ -667,13 +861,13 @@
     if (this.failed || this.disposed || this.contextLost || this.pendingTextures || !game || !game.map) return;
     dt = clamp(finite(dt, 1 / 60), 0, .1); if (game.phase === 'playing' || game.phase === 'title') this.time += dt;
     this.stats.uploadedInstances = 0;
-    this.setMap(game.map, game.stage); this.updateCamera(game, dt); this.updateActors(game); this.updateObjects(game); this.updateEffects(game);
+    this.setMap(game.map, game.stage); this.updateCamera(game, dt); this.updateActors(game, dt); this.updateObjects(game); this.updateEffects(game);
     this.renderer.render(this.scene, this.camera); this.active = true;
     this.stats.calls = this.renderer.info.render.calls; this.stats.triangles = this.renderer.info.render.triangles; this.stats.frames++;
     this.stats.geometries = this.renderer.info.memory.geometries; this.stats.textures = this.renderer.info.memory.textures;
   };
   Renderer.prototype.dispose = function () {
-    if (this.disposed) return; this.disposed = true; this.active = false;
+    if (this.disposed) return; this.disposed = true; this.active = false; if (this.actorStates) this.actorStates.clear();
     this.canvas.removeEventListener('webglcontextlost', this._lost); this.canvas.removeEventListener('webglcontextrestored', this._restored);
     if (this.world) this.clearWorld(); this.geometries.forEach(function (g) { g.dispose(); }); this.materials.forEach(function (m) { m.dispose(); }); this.textures.forEach(function (t) { t.dispose(); });
     if (this.renderer) { this.renderer.dispose(); if (this.renderer.forceContextLoss) this.renderer.forceContextLoss(); }

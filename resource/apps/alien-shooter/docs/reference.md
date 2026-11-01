@@ -6,13 +6,21 @@
 
 首版提供三段有独立布局的战役，每关有三个顺序控制台目标与可开启的通道，完成战斗后前往出口。两次关间补给、最终首领与失败重开构成完整循环。与原作相比，本版内容规模、物理和敌人行为更简化；采用单人行动，提供手机盲操作区域和辅助瞄准。
 
+## 角色与移动动作参考
+
+0.1.2 的角色研究使用 [Steam 上的原版 Alien Shooter 商品页](https://store.steampowered.com/app/33100/Alien_Shooter/)（App 33100，Sigma Team 开发/发行）的官方截图和“Gameplay video”宣传实机视频。观察了商店中的人物全身像、普通战斗跑姿，以及视频约 8–10、22、98、115 秒附近的连续动作帧。Sigma 旧链接目前会导向较新的 Alien Shooter World，因此没有把该新作的形象混作原版依据。
+
+原版画面可见人物的深色上衣、露出的手臂、蓝灰长裤、短发裸头和较修长的比例；持枪移动时，上躯相对稳定，双腿交替屈伸。绿色基础异形较低伏，头背细长、四肢呈爪状；较大的黄橙色异形抬高前躯，以后腿承重，前爪和长尾构成明显轮廓。这些观察用于改进本作的原创低模和关节动作，替换之前相近的圆壳六足造型。
+
+本作五类怪物仍对应自己的战斗规则，并不宣称与原版敌种一一对应。公开的小尺寸精灵和压缩视频不足以确定原版完整骨架、所有敌种的腿数或精确步频。研究资料仅用于观察，未把官方截图、视频帧或提取的商业素材打入 APK；项目内的模型、关节参数和材质仍为独立制作。
+
 ## 本地素材与依赖
 
 | 内容 | 来源 |
 | --- | --- |
 | 地图与任务 | `world.js` 中为本项目编写的关卡布局 |
 | 规则、寻路与战斗 | `game-model.js` 中独立实现的确定性模拟 |
-| 三维角色、环境与纹理 | `renderer.js` 中构造的几何和程序绘制材质，无在线素材请求 |
+| 三维角色、环境与纹理 | `renderer.js` 中构造的几何、关节动画和本地烘焙材质，制作脚本见 `tools/bake-materials.mjs`，无在线素材请求 |
 | 音效与工业环境声 | `audio.js` 中合成的振荡器、滤波噪声与包络，无采样录音 |
 | 图标与 Android 横幅 | 本项目绘制的矢量图形 |
 | 三维库 | 仓库已有 Three.js 的本地副本，许可证见 `src/main/assets/THREE-LICENSE.txt` |
@@ -35,6 +43,8 @@
 ## English
 
 This is an independent pureTV implementation inspired by classic industrial-base alien shooters. It uses original maps, geometry, procedural textures and synthesized sound, with no extracted commercial game assets. It provides three mission sectors, sequential objectives, two supply stops, a final guardian, failure/restart and a single-player campaign controlled by one phone.
+
+Version 0.1.2 studies the original game's [official Steam screenshots and gameplay trailer](https://store.steampowered.com/app/33100/Alien_Shooter/) for the lightly dressed human silhouette, stable two-handed aiming, alternating steps, low crouched creatures, and taller hind-leg-supported aliens with claw arms and tails. Relevant trailer observations are around 8–10, 22, 98 and 115 seconds. Our five gameplay classes are original adaptations, not claims of a one-to-one match to the original enemy catalog. No reference images, video frames or extracted rigs are bundled.
 
 Rendering and audio are fully bundled and do not request external assets. The phone controller uses local HTTP/WebSocket communication and does not require gyroscope access or installation of an HTTPS certificate. Movement stays aligned with screen directions; firing supports drag aiming and line-of-sight assistance.
 
