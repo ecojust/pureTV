@@ -1,0 +1,144 @@
+{
+  "kind": "independent-magnetic-subset-review",
+  "passed": true,
+  "modelSha256": "5cc14803afb281b801134533b0d8f1014cffa21a0966bdaa36bfa1d176b7eaaf",
+  "reviewScriptSha256": "1f009aca55cd44aa344145e30be49318d84841c18240118ef606228de0bc1e75",
+  "checks": [
+    {
+      "name": "simultaneous chains, conflicts, swaps and rejected-occupant dependencies",
+      "passed": true,
+      "cases": [
+        "repelling chain to empty tile",
+        "repelling chain to wall",
+        "attracting chain blocked by player",
+        "attracting chain to empty tile",
+        "same destination and blocked dependent with independent mover",
+        "adjacent swap",
+        "wall occludes distant crates",
+        "crates do not occlude field",
+        "rejected scrap conflicts do not lose",
+        "accepted scrap and independent move commit together"
+      ],
+      "allCrateArrayPermutations": true,
+      "scope": "Constructed pulse fixtures; longer cycles are prohibited by the oracle, not claimed reachable in ordinary radial play."
+    },
+    {
+      "name": "four-way magnetic symmetry and both player polarities",
+      "passed": true,
+      "directionAndPolarityCases": 16
+    },
+    {
+      "name": "deterministic scattered occupancy agrees with the independent subset oracle",
+      "passed": true,
+      "seed": 20261102,
+      "cases": 240,
+      "cratesPerCase": "2–4",
+      "allCrateArrayPermutations": true
+    },
+    {
+      "name": "numbered docks are exact identities and do not lock delivered crates",
+      "passed": true,
+      "wrongNumberOccupants": [
+        2,
+        1
+      ],
+      "deliveredCrateRemainsMovable": true
+    },
+    {
+      "name": "budget, scrap and deadline priorities terminate each atomic action",
+      "passed": true,
+      "lastActionCanWin": true,
+      "scrapOverridesCompleteDocks": true,
+      "deadlinePrecedesPendingActions": true,
+      "flipStopsLaterPulseAndMoveAtBudgetZero": true,
+      "terminalStateFullyFrozen": true
+    },
+    {
+      "name": "blocked walking is free, repeats are bounded, and button edges are cached",
+      "passed": true,
+      "blockedAttemptsOver31Ticks": 3,
+      "firstRepeatTicks": 20,
+      "laterRepeatTicks": 10,
+      "blockedActionsSpent": 0,
+      "heldButtonsDoNotRepeat": true,
+      "subTickEdgesRetained": true
+    },
+    {
+      "name": "pulse origin and targets remain emission snapshots; retry arrays are independent",
+      "passed": true,
+      "pulseLifetimeSeconds": 0.45,
+      "freshCreateRestoresIndependentPublicArrays": true
+    },
+    {
+      "name": "three authored puzzles have independently derived legal ordinary-input solutions",
+      "passed": true,
+      "normalInputModelSolutions": [
+        {
+          "level": 1,
+          "phase": "won",
+          "matched": 2,
+          "target": 2,
+          "actionsUsed": 24,
+          "actionsRemaining": 76,
+          "flipCount": 1,
+          "pulseCount": 9,
+          "attractedMoves": 5,
+          "repelledMoves": 4,
+          "modelElapsedSeconds": 2.3166666666666664,
+          "ordinaryInputCommands": 24,
+          "inputsSha256": "2dcc74feaeafb148bb75e3fce3028a6ebd905afd516a0f67eddc29e51ce3b9a3"
+        },
+        {
+          "level": 2,
+          "phase": "won",
+          "matched": 3,
+          "target": 3,
+          "actionsUsed": 26,
+          "actionsRemaining": 104,
+          "flipCount": 1,
+          "pulseCount": 8,
+          "attractedMoves": 5,
+          "repelledMoves": 4,
+          "modelElapsedSeconds": 2.5166666666666666,
+          "ordinaryInputCommands": 26,
+          "inputsSha256": "6dc48b08d047a87d4f235e8a95be33664a5169f669d62a52b89fa1ff6a3b6d16"
+        },
+        {
+          "level": 3,
+          "phase": "won",
+          "matched": 4,
+          "target": 4,
+          "actionsUsed": 45,
+          "actionsRemaining": 115,
+          "flipCount": 3,
+          "pulseCount": 10,
+          "attractedMoves": 9,
+          "repelledMoves": 3,
+          "modelElapsedSeconds": 4.416666666666667,
+          "ordinaryInputCommands": 45,
+          "inputsSha256": "00817b120c3c8764b0341ea51d7ee9f452d7ce248ec35853c44bded6264df7b5"
+        }
+      ],
+      "routeSource": "Independent manual reasoning over the fully visible authored diagrams; no production solver, pilot or state writes."
+    }
+  ],
+  "totals": {
+    "pulseFixtures": 266,
+    "subsetCandidates": 1341,
+    "permutationComparisons": 2414
+  },
+  "methodology": "Compute radial proposals geometrically, reject all original shared destinations, then enumerate every movement subset with pre-pulse occupancy closure and acyclic dependencies. Compare its unique maximum against production across all crate-array permutations. Separate boundary fixtures verify terminal/input rules. Three independently derived routes use ordinary inputs with every pulse checked by the oracle.",
+  "scope": {
+    "constructedFixtures": true,
+    "fixtureInitialConditionsModified": true,
+    "normalInputModelRoutes": 3,
+    "ordinaryRouteStateWrites": false,
+    "normalGameplayEvidence": false,
+    "browserExecuted": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "limitations": [
+    "Bounded fixture coverage and accelerated ordinary-input model routes are separate from real runtime gameplay and recording; modelElapsedSeconds is not recorded video duration. No continuous magnetic-force simulation is claimed."
+  ]
+}
