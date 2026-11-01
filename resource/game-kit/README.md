@@ -22,15 +22,25 @@ python3 resource/game-kit/build.py \
 
 - `PureModel.create(seed, difficulty)` 创建独立状态；`step(state, dt, input)` 更新规则，终局冻结。
 - 输入为 `x/y`、`a/b` 和 `aPressed/bPressed`，摇杆坐标按屏幕方向归一化。
+- `GameDef.holdConfirmAsA=true` 可把键盘/遥控器确认键作为持续按住的 A；默认仍为每次确认触发一次 A。开始、暂停恢复与结算菜单的确认操作不算游戏动作。
+- `input.cancelEpoch` 在输入清除或手机 `cancelSeq` 变化时递增，暂停或没有物理步时保留到下一次 `step`。`input.cancelled=true` 表示取消所属的整帧，或被取消的 A/B/确认键仍未真实松开；这种合成中立输入不能用于“松开后计分”或重新武装按键。需要按住时长的游戏应在新 epoch 清除未完成信号，并等下一次非取消输入中的真实松开后再接收信号。
 - `GameDef` 声明标题、说明、手柄标签、HUD、结算文字与 `render(renderer, state, time, input)`。
 - `PureTVQA.snapshot()` 只返回深拷贝，用于观察真实输入的结果；不提供改分数或强制胜利的入口。
 - `PureRenderer` 用单个烘焙图集合并图形与 ASCII 字符；中文界面在 DOM 层绘制。可通过 `GameDef.atlas` 使用[每款游戏自己的素材布局](RENDERER.md)。`metrics.drawCalls` 只统计 WebGL 提交，Canvas 降级单独标记。
 
 手机手柄使用左侧自由起点摇杆，右侧三分之一为连续触控区：单动作覆盖整个右区，双动作分上下两半。禁用选字、长按菜单和触摸滚动；指针取消、后台、断线会释放输入。首次连接走随机房间令牌，陈旧输入由服务端超时清零。
 
+输入取消后，本地 A/B/确认键必须收到真实 `keyup`，手机 A/B 必须收到仍连接客户端的原始 `false`，才能解除按住隔离；手机暂时缺席不代表松手。断线取消送达后可用本地键盘继续，远端隔离记录仍保留；手机重连会再次取消旧输入，持键仍须松开。DOM 自动重复 `keydown` 被忽略，方向连走由各游戏模型处理。其他游戏可忽略新增取消字段，默认确认键行为不变。
+
 ## 验证与计数
 
 原生安全/生命周期/LAN 测试位于 `android/src/test`，`controller-test.mjs` 验证手机触摸交互。每款还需规则测试、浏览器真实输入回归、界面目视核对、最终签名与资源一致性检查，以及正常游玩录像。
+
+```bash
+node resource/game-kit/qa/input-lifecycle-test.mjs --output /tmp/puretv-input-lifecycle
+```
+
+此项在 Chromium 中用手动推进的 RAF、探针模型和受控手机快照验证输入协议，包括持续确认键、短按、取消、暂停及断线恢复；它不代表实际游玩、帧率或实体硬件测试。旧游戏兼容性和新游戏的实际操作仍需分别回归。
 
 进度见 [progress.json](progress.json)。只有完成上述项目并逐款提交到 GitHub 后才计数，草稿与公共组件不计数。浏览器软件渲染的帧耗时不代表实体电视表现；报告必须说明是否做过真机验证。
 

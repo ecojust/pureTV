@@ -84,4 +84,12 @@ export function assertRetry({ before, after }, assert) {
 
 Node 24、Playwright 1.64.1、`/usr/bin/chromium`、系统 ffmpeg 7.1.5、Python 3。默认 Playwright headless-shell/ffmpeg 缓存缺失，所以指定系统 Chromium 并使用系统 ffmpeg；无需下载浏览器附件。`CHROMIUM_PATH` 可覆盖浏览器，`PURETV_PACKAGE` 可覆盖依赖解析用的 desktop/package.json。
 
+输入生命周期的独立协议检查：
+
+```sh
+node resource/game-kit/qa/input-lifecycle-test.mjs --output /tmp/puretv-input-lifecycle
+```
+
+这个专项在 Chromium 中使用探针模型、受控手机快照和手动推进的 RAF，验证确认键持续按住、取消标识跨帧保留、按键重新武装及断线后的键盘接管。它不会运行游戏策略或录制视频，不能当作实际游玩、性能或硬件证据；正常录像仍遵守上面的真实墙钟流程。结果绑定实际运行时与检查脚本的哈希，见 [输入协议及默认游戏兼容验证](../docs/input-lifecycle-verification.json)。
+
 公共工具的验证不能计入游戏完成数量。每款游戏的规则回归、实际游玩视频、最终 APK 资源一致性及完整解码结果分别保存在其发布目录的 `docs/verification.json` 中。

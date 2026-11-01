@@ -8,6 +8,8 @@
   let state=model.create(def.seed||1,0), phase='menu', paused=false, level=0, tick=0, elapsed=0;
   let last=0, lastUi=0, accumulator=0, endedRecorded=false, phoneSeen=false, disconnected=false;
   let previous={a:false,b:false,start:false,select:false}, info={}, soundEnabled=false, audio=null, disposed=false, nativePauseBefore=false, phoneConnected=false, menuStick=0;
+  let cancelEpoch=0, cancelPending=false, phoneIdentity=null, phoneCancelSeq=null;
+  const localQuarantine=new Set(), remoteHeld={a:false,b:false}, remoteQuarantine={a:false,b:false};
   const frameTimes=[], soundQueue=new Set();
   let best=0;
   try{const n=Number(localStorage.getItem('puretv.'+def.id+'.best'));if(Number.isFinite(n)&&n>=0&&n<1e9)best=n;}catch(_){}
@@ -28,17 +30,24 @@
     else if(info.error)$('room-address').textContent=info.error;
   }
   try{if(native)syncInfo(JSON.parse(native.getInfo()));}catch(_){}
-  function clearInput(){keys.clear();Object.keys(pulses).forEach(k=>delete pulses[k]);pendingActions.a=pendingActions.b=false;accumulator=0;}
+  function clearInput(){
+    for(const k of ['a','b','confirm'])if(keys.has(k))localQuarantine.add(k);
+    for(const k of ['a','b'])if(remoteHeld[k])remoteQuarantine[k]=true;
+    keys.clear();Object.keys(pulses).forEach(k=>delete pulses[k]);pendingActions.a=pendingActions.b=false;accumulator=0;
+    cancelEpoch++;cancelPending=true;
+  }
+  function cancelSample(input){input.x=input.y=0;input.a=input.b=input.aPressed=input.bPressed=false;input.cancelEpoch=cancelEpoch;input.cancelled=true;}
   function start(){state=model.create(def.seed||1,level);phase='playing';paused=false;disconnected=false;tick=0;elapsed=0;last=0;accumulator=0;endedRecorded=false;clearInput();updateUi();}
   function setPaused(value){if(phase!=='playing')return;paused=!!value;clearInput();updateUi();}
   function togglePause(){if(phase==='playing')setPaused(!paused);else start();}
   function normalKey(name){const n=String(name);const lower=n.toLowerCase();const map={arrowleft:'left',a:'left',arrowright:'right',d:'right',arrowup:'up',w:'up',arrowdown:'down',s:'down',' ':'a',space:'a',spacebar:'a',z:'a',b:'b',x:'b',enter:'confirm',start:'start',p:'start',select:'select',shift:'select',r:'retry',escape:'start'};return map[lower]||null;}
   function key(name,down){
     const action=normalKey(name);if(!action)return false;
-    if(down){if(!keys.has(action))pulses[action]=true;keys.add(action);}else keys.delete(action);return true;
+    if(down){if(localQuarantine.has(action))return true;if(!keys.has(action))pulses[action]=true;keys.add(action);}
+    else{keys.delete(action);localQuarantine.delete(action);}return true;
   }
   function unlock(){if(!audio&&soundEnabled){try{audio=new(root.AudioContext||root.webkitAudioContext)();}catch(_){}}if(audio&&audio.state==='suspended')audio.resume().catch(()=>{});}
-  root.addEventListener('keydown',e=>{if(key(e.key,true)){e.preventDefault();unlock();}});
+  root.addEventListener('keydown',e=>{if(e.repeat){if(normalKey(e.key))e.preventDefault();return;}if(key(e.key,true)){e.preventDefault();unlock();}});
   root.addEventListener('keyup',e=>{if(key(e.key,false))e.preventDefault();});
   root.addEventListener('blur',()=>{if(phase==='playing')setPaused(true);else clearInput();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&phase==='playing')setPaused(true);});
@@ -53,12 +62,28 @@
     let player=null;
     try{if(native){const room=JSON.parse(native.snapshot());player=(room.players||[]).find(p=>p.connected);}}catch(_){}
     phoneConnected=!!player;
-    if(player){phoneSeen=true;disconnected=false;}
-    else if(phoneSeen&&!disconnected){disconnected=true;if(phase==='playing')setPaused(true);}
+    if(player){
+      const identity=String(player.id==null?1:player.id)+'|'+String(player.session||''), sequence=Number.isSafeInteger(player.cancelSeq)&&player.cancelSeq>=0?player.cancelSeq:0;
+      const raw={a:!!player.a,b:!!player.b};
+      // The first connection only establishes a baseline. Replacement, reconnect
+      // and explicit cancellation invalidate any hold, even without a lost frame.
+      if(phoneIdentity!==null&&(identity!==phoneIdentity||sequence!==phoneCancelSeq||disconnected)){
+        for(const k of ['a','b'])if(raw[k])remoteQuarantine[k]=true;
+        clearInput();
+      }
+      phoneIdentity=identity;phoneCancelSeq=sequence;
+      for(const k of ['a','b']){remoteHeld[k]=raw[k];if(!raw[k])remoteQuarantine[k]=false;}
+      phoneSeen=true;disconnected=false;
+    }else if(phoneSeen&&!disconnected){disconnected=true;if(phase==='playing')setPaused(true);else clearInput();}
+    // An absent phone is not a release. Only a received raw false or a real
+    // local keyup removes quarantine; synthesized neutral input never does.
+    const cancelled=cancelPending||localQuarantine.size>0||!!(player&&(remoteQuarantine.a||remoteQuarantine.b));
     const localX=Number(keys.has('right'))-Number(keys.has('left')),localY=Number(keys.has('down'))-Number(keys.has('up'));
-    const val={x:localX||(Number(player&&player.x)||0),y:localY||(Number(player&&player.y)||0),a:keys.has('a')||!!(player&&player.a),b:keys.has('b')||!!(player&&player.b),start:keys.has('start')||!!(player&&player.start),select:keys.has('select')||!!(player&&player.select)};
+    const val={x:localX||(Number(player&&player.x)||0),y:localY||(Number(player&&player.y)||0),a:keys.has('a')||(def.holdConfirmAsA===true&&keys.has('confirm'))||!!(player&&player.a&&!remoteQuarantine.a),b:keys.has('b')||!!(player&&player.b&&!remoteQuarantine.b),start:keys.has('start')||!!(player&&player.start),select:keys.has('select')||!!(player&&player.select),cancelEpoch,cancelled};
+    if(cancelled){val.x=val.y=0;val.a=val.b=false;}
     const length=Math.hypot(val.x,val.y);if(length>1){val.x/=length;val.y/=length;}
     ['a','b','start','select'].forEach(k=>{val[k+'Pressed']=!!pulses[k]||(val[k]&&!previous[k]);previous[k]=val[k];});
+    if(def.holdConfirmAsA===true&&pulses.confirm)val.aPressed=true;
     const horizontal=player&&Math.abs(Number(player.x)||0)>.6?Math.sign(player.x):0;
     val.menuDelta=(pulses.right?1:0)-(pulses.left?1:0)||(horizontal&&horizontal!==menuStick?horizontal:0);menuStick=horizontal;
     val.confirm=!!pulses.confirm;val.retry=!!pulses.retry;
@@ -87,12 +112,16 @@
     if(phase!=='playing'&&input.bPressed)toggleSound();
     if(input.retry)start();
     else if(input.startPressed||(input.confirm&&phase!=='playing')){if(phase==='playing')setPaused(!paused);else start();}
-    else if(input.confirm){if(paused)setPaused(false);else{input.a=true;input.aPressed=true;}}
+    else if(input.confirm){if(paused)setPaused(false);else if(def.holdConfirmAsA!==true){input.a=true;input.aPressed=true;}}
+    // start/resume can clear input AFTER inputs() sampled this frame. Cancel the
+    // stale sample and keep its epoch/flag for every substep, not only the first.
+    if(input.cancelEpoch!==cancelEpoch||input.cancelled)cancelSample(input);
     if(phase==='playing'&&!paused){
       pendingActions.a=pendingActions.a||input.aPressed;pendingActions.b=pendingActions.b||input.bPressed;
       input.aPressed=pendingActions.a;input.bPressed=pendingActions.b;
       accumulator+=delta;let steps=0;
       while(accumulator>=1/60&&steps<6){model.step(state,1/60,input);tick++;elapsed+=1/60;accumulator-=1/60;steps++;input.aPressed=false;input.bPressed=false;pendingActions.a=pendingActions.b=false;(state.events||[]).forEach(e=>soundQueue.add(e.type));if(state.phase==='won'||state.phase==='lost'){phase=state.phase;accumulator=0;break;}}
+      if(steps>0)cancelPending=false;
       if(phase!=='playing'&&!endedRecorded){endedRecorded=true;const score=Number(state.score)||0;if(score>best){best=score;try{localStorage.setItem('puretv.'+def.id+'.best',String(Math.floor(best)));}catch(_){}}updateUi();}
     }else accumulator=0;
     if(soundQueue.size){beep(soundQueue.values().next().value);soundQueue.clear();}
