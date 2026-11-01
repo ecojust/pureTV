@@ -1,0 +1,556 @@
+{
+  "schema": 1,
+  "kind": "independent-loop-cycle-space-review",
+  "passed": true,
+  "checkCount": 10,
+  "checks": [
+    {
+      "name": "public-puzzles-complete-cycle-space-solutions-and-topology-only-counterexamples",
+      "passed": true,
+      "scope": "All 512 fixed-geometry cycle-space masks are filtered using only each actual public board; no reference edge list, production solver or QA planner.",
+      "counts": [
+        {
+          "level": 1,
+          "solutions": 1,
+          "topologyOnlyCounterexamples": 1,
+          "candidateCounts": {
+            "evaluatedMasks": 512,
+            "stockEligibleMasks": 507,
+            "singleCyclesWithinStock": 213,
+            "disjointCyclesWithinStock": 108,
+            "matchingRoleClueLayouts": 2,
+            "solutionCount": 1,
+            "topologyOnlyCounterexampleCount": 1
+          }
+        },
+        {
+          "level": 2,
+          "solutions": 1,
+          "topologyOnlyCounterexamples": 1,
+          "candidateCounts": {
+            "evaluatedMasks": 512,
+            "stockEligibleMasks": 507,
+            "singleCyclesWithinStock": 213,
+            "disjointCyclesWithinStock": 108,
+            "matchingRoleClueLayouts": 2,
+            "solutionCount": 1,
+            "topologyOnlyCounterexampleCount": 1
+          }
+        },
+        {
+          "level": 3,
+          "solutions": 1,
+          "topologyOnlyCounterexamples": 1,
+          "candidateCounts": {
+            "evaluatedMasks": 512,
+            "stockEligibleMasks": 507,
+            "singleCyclesWithinStock": 213,
+            "disjointCyclesWithinStock": 108,
+            "matchingRoleClueLayouts": 2,
+            "solutionCount": 1,
+            "topologyOnlyCounterexampleCount": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "public-focus-graph-and-ordinary-navigation-reach-every-pair",
+      "passed": true,
+      "orderedPairs": 625,
+      "maximumShortestDistance": 10,
+      "scope": "Ordinary direction press/release inputs; no selectedId assignment."
+    },
+    {
+      "name": "all-unit-edges-removal-and-undo-update-incidence-regions-and-same-pipe",
+      "passed": true,
+      "ordinaryEdgeCases": 24,
+      "scope": "Each real edge is placed, removed and reversed twice; isolated vertices and shared plot counts independently recomputed."
+    },
+    {
+      "name": "finite-stock-lowest-free-ID-and-blocked-attempts-do-not-enter-history",
+      "passed": true,
+      "stock": 16,
+      "blockedPlacements": 1,
+      "returnedAndRestoredId": "P5",
+      "totalEdits": 18,
+      "undos": 2
+    },
+    {
+      "name": "ordinary-public-single-loops-require-explicit-PUMP-and-allow-unused-stock",
+      "passed": true,
+      "rounds": [
+        {
+          "level": 1,
+          "mask": 680354,
+          "pipeCount": 8,
+          "pipesRemaining": 8,
+          "elapsed": 1.5333333333333334,
+          "score": 1760,
+          "selectedEdgeIds": [
+            "E2",
+            "E6",
+            "E8",
+            "E9",
+            "E14",
+            "E15",
+            "E18",
+            "E20"
+          ]
+        },
+        {
+          "level": 2,
+          "mask": 676267,
+          "pipeCount": 10,
+          "pipesRemaining": 6,
+          "elapsed": 1.8666666666666667,
+          "score": 1800,
+          "selectedEdgeIds": [
+            "E1",
+            "E2",
+            "E4",
+            "E6",
+            "E8",
+            "E9",
+            "E13",
+            "E15",
+            "E18",
+            "E20"
+          ]
+        },
+        {
+          "level": 3,
+          "mask": 10816856,
+          "pipeCount": 10,
+          "pipesRemaining": 6,
+          "elapsed": 2.033333333333333,
+          "score": 1815,
+          "selectedEdgeIds": [
+            "E4",
+            "E5",
+            "E7",
+            "E9",
+            "E11",
+            "E12",
+            "E17",
+            "E19",
+            "E22",
+            "E24"
+          ]
+        }
+      ],
+      "scope": "Fast ordinary model input only; these sub-minute simulation timings are not a video or browser play duration."
+    },
+    {
+      "name": "ordinary-multiple-loops-pass-all-local-rules-but-reject-and-lose-after-three-edges",
+      "passed": true,
+      "rounds": [
+        {
+          "level": 1,
+          "mask": 3973974,
+          "pipeCount": 12,
+          "componentCount": 2,
+          "checks": {
+            "hasPipes": true,
+            "degreeTwo": true,
+            "singleLoop": false,
+            "trees": true,
+            "flowers": true,
+            "clues": true
+          },
+          "reason": "multiple-loops",
+          "elapsed": 2.4
+        },
+        {
+          "level": 2,
+          "mask": 3969887,
+          "pipeCount": 14,
+          "componentCount": 2,
+          "checks": {
+            "hasPipes": true,
+            "degreeTwo": true,
+            "singleLoop": false,
+            "trees": true,
+            "flowers": true,
+            "clues": true
+          },
+          "reason": "multiple-loops",
+          "elapsed": 2.7333333333333334
+        },
+        {
+          "level": 3,
+          "mask": 9686956,
+          "pipeCount": 14,
+          "componentCount": 2,
+          "checks": {
+            "hasPipes": true,
+            "degreeTwo": true,
+            "singleLoop": false,
+            "trees": true,
+            "flowers": true,
+            "clues": true
+          },
+          "reason": "multiple-loops",
+          "elapsed": 3
+        }
+      ],
+      "scope": "Every counterexample is independently found from public clues; all non-topology requirements are true, no geometry fixture is applied."
+    },
+    {
+      "name": "numeric-zero-is-not-null-and-diagnostic-priority-is-real",
+      "passed": true,
+      "unhintedPlot": "R7",
+      "unhintedSelectedCount": 0,
+      "ordinaryDiagnostics": [
+        {
+          "kind": "empty",
+          "reason": "empty",
+          "checks": {
+            "hasPipes": false,
+            "degreeTwo": false,
+            "singleLoop": false,
+            "trees": false,
+            "flowers": true,
+            "clues": false
+          }
+        },
+        {
+          "kind": "leak",
+          "reason": "leak",
+          "checks": {
+            "hasPipes": true,
+            "degreeTwo": false,
+            "singleLoop": false,
+            "trees": false,
+            "flowers": false,
+            "clues": false
+          }
+        },
+        {
+          "kind": "branch",
+          "reason": "branch",
+          "checks": {
+            "hasPipes": true,
+            "degreeTwo": false,
+            "singleLoop": false,
+            "trees": false,
+            "flowers": true,
+            "clues": false
+          }
+        }
+      ],
+      "scope": "Only the null-to-zero comparison is a cloned-public-rule mathematical fixture; PUMP diagnostics use ordinary input."
+    },
+    {
+      "name": "undo-preserves-error-receipts-time-and-lifetime-counters",
+      "passed": true,
+      "receiptRemainsDetached": true,
+      "lifetimeCountersNotRefunded": true
+    },
+    {
+      "name": "subtick-cancellation-and-B-priority-do-not-create-extra-edits",
+      "passed": true,
+      "scope": "Explicit protocol boundary inputs on original model states; no forced geometry or terminal state."
+    },
+    {
+      "name": "deadline-precedes-winning-PUMP-and-retry-is-the-same-fixed-puzzle",
+      "passed": true,
+      "scope": "Only this deadline case moves the existing model clock to tick5399; it is explicitly a rule boundary fixture, never ordinary gameplay or recording evidence.",
+      "terminalFrozen": true,
+      "sameLayoutRetry": true
+    }
+  ],
+  "sourceHashes": {
+    "model": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+    "contract": "b0f5fdd4611415006dfe23f7336f74c59bf32c08ec1eb7b6d82a87339a691893",
+    "review": "6fcb9bb9fd7870969755def6afc64de43db5998c8098bcfca6ee5d43b9070598",
+    "math": "d108d387fd2d28293b2879dcde34d5768bccd31323ca61c413e42dff44c82667",
+    "boardOracle": "de43d289a62018f314e1369374e8d1d69d2b1caad4eb364cc75e49950afade93"
+  },
+  "sourceHashesAfter": {
+    "model": "371723cffc6f81fa7ec536b04531d1184ef30a36d88172f3d268316515b01139",
+    "contract": "b0f5fdd4611415006dfe23f7336f74c59bf32c08ec1eb7b6d82a87339a691893",
+    "review": "6fcb9bb9fd7870969755def6afc64de43db5998c8098bcfca6ee5d43b9070598",
+    "math": "d108d387fd2d28293b2879dcde34d5768bccd31323ca61c413e42dff44c82667",
+    "boardOracle": "de43d289a62018f314e1369374e8d1d69d2b1caad4eb364cc75e49950afade93"
+  },
+  "sourceUnchanged": true,
+  "totals": {
+    "observations": 11306,
+    "ordinaryWins": 3,
+    "topologyOnlyRejections": 3,
+    "orderedFocusPairs": 625,
+    "navigationInputs": 5398
+  },
+  "publicPuzzles": [
+    {
+      "level": 1,
+      "solutions": [
+        680354
+      ],
+      "topologyOnlyCounterexamples": [
+        3973974
+      ],
+      "topologyByCycleCount": {
+        "2": [
+          3973974
+        ],
+        "3": [],
+        "4": []
+      },
+      "candidateCounts": {
+        "evaluatedMasks": 512,
+        "stockEligibleMasks": 507,
+        "singleCyclesWithinStock": 213,
+        "disjointCyclesWithinStock": 108,
+        "matchingRoleClueLayouts": 2,
+        "solutionCount": 1,
+        "topologyOnlyCounterexampleCount": 1
+      },
+      "sourceRules": {
+        "requiredTreeIds": [
+          "V8",
+          "V10"
+        ],
+        "forbiddenFlowerIds": [
+          "V1"
+        ],
+        "clues": [
+          1,
+          3,
+          2,
+          1,
+          2,
+          3,
+          null,
+          1,
+          1
+        ],
+        "pipeStock": 16
+      },
+      "scope": "Exact filtering of fixed public GF(2) candidates only; no ordinary input, physical-ID, history, time or gameplay evidence."
+    },
+    {
+      "level": 2,
+      "solutions": [
+        676267
+      ],
+      "topologyOnlyCounterexamples": [
+        3969887
+      ],
+      "topologyByCycleCount": {
+        "2": [
+          3969887
+        ],
+        "3": [],
+        "4": []
+      },
+      "candidateCounts": {
+        "evaluatedMasks": 512,
+        "stockEligibleMasks": 507,
+        "singleCyclesWithinStock": 213,
+        "disjointCyclesWithinStock": 108,
+        "matchingRoleClueLayouts": 2,
+        "solutionCount": 1,
+        "topologyOnlyCounterexampleCount": 1
+      },
+      "sourceRules": {
+        "requiredTreeIds": [
+          "V1",
+          "V8",
+          "V11"
+        ],
+        "forbiddenFlowerIds": [
+          "V16"
+        ],
+        "clues": [
+          3,
+          2,
+          2,
+          2,
+          2,
+          3,
+          null,
+          1,
+          1
+        ],
+        "pipeStock": 16
+      },
+      "scope": "Exact filtering of fixed public GF(2) candidates only; no ordinary input, physical-ID, history, time or gameplay evidence."
+    },
+    {
+      "level": 3,
+      "solutions": [
+        10816856
+      ],
+      "topologyOnlyCounterexamples": [
+        9686956
+      ],
+      "topologyByCycleCount": {
+        "2": [
+          9686956
+        ],
+        "3": [],
+        "4": []
+      },
+      "candidateCounts": {
+        "evaluatedMasks": 512,
+        "stockEligibleMasks": 507,
+        "singleCyclesWithinStock": 213,
+        "disjointCyclesWithinStock": 108,
+        "matchingRoleClueLayouts": 2,
+        "solutionCount": 1,
+        "topologyOnlyCounterexampleCount": 1
+      },
+      "sourceRules": {
+        "requiredTreeIds": [
+          "V5",
+          "V7",
+          "V14",
+          "V16"
+        ],
+        "forbiddenFlowerIds": [
+          "V2"
+        ],
+        "clues": [
+          1,
+          1,
+          null,
+          3,
+          2,
+          2,
+          2,
+          2,
+          3
+        ],
+        "pipeStock": 16
+      },
+      "scope": "Exact filtering of fixed public GF(2) candidates only; no ordinary input, physical-ID, history, time or gameplay evidence."
+    }
+  ],
+  "ordinaryWins": [
+    {
+      "level": 1,
+      "mask": 680354,
+      "pipeCount": 8,
+      "pipesRemaining": 8,
+      "elapsed": 1.5333333333333334,
+      "score": 1760,
+      "selectedEdgeIds": [
+        "E2",
+        "E6",
+        "E8",
+        "E9",
+        "E14",
+        "E15",
+        "E18",
+        "E20"
+      ]
+    },
+    {
+      "level": 2,
+      "mask": 676267,
+      "pipeCount": 10,
+      "pipesRemaining": 6,
+      "elapsed": 1.8666666666666667,
+      "score": 1800,
+      "selectedEdgeIds": [
+        "E1",
+        "E2",
+        "E4",
+        "E6",
+        "E8",
+        "E9",
+        "E13",
+        "E15",
+        "E18",
+        "E20"
+      ]
+    },
+    {
+      "level": 3,
+      "mask": 10816856,
+      "pipeCount": 10,
+      "pipesRemaining": 6,
+      "elapsed": 2.033333333333333,
+      "score": 1815,
+      "selectedEdgeIds": [
+        "E4",
+        "E5",
+        "E7",
+        "E9",
+        "E11",
+        "E12",
+        "E17",
+        "E19",
+        "E22",
+        "E24"
+      ]
+    }
+  ],
+  "ordinaryTopologyOnlyRejections": [
+    {
+      "level": 1,
+      "mask": 3973974,
+      "pipeCount": 12,
+      "componentCount": 2,
+      "checks": {
+        "hasPipes": true,
+        "degreeTwo": true,
+        "singleLoop": false,
+        "trees": true,
+        "flowers": true,
+        "clues": true
+      },
+      "reason": "multiple-loops",
+      "elapsed": 2.4
+    },
+    {
+      "level": 2,
+      "mask": 3969887,
+      "pipeCount": 14,
+      "componentCount": 2,
+      "checks": {
+        "hasPipes": true,
+        "degreeTwo": true,
+        "singleLoop": false,
+        "trees": true,
+        "flowers": true,
+        "clues": true
+      },
+      "reason": "multiple-loops",
+      "elapsed": 2.7333333333333334
+    },
+    {
+      "level": 3,
+      "mask": 9686956,
+      "pipeCount": 14,
+      "componentCount": 2,
+      "checks": {
+        "hasPipes": true,
+        "degreeTwo": true,
+        "singleLoop": false,
+        "trees": true,
+        "flowers": true,
+        "clues": true
+      },
+      "reason": "multiple-loops",
+      "elapsed": 3
+    }
+  ],
+  "scope": {
+    "publicFactsOnlySearch": true,
+    "productionSolverImported": false,
+    "qaSolverImported": false,
+    "authoringSolutionsRead": false,
+    "mathematicalFixturesSeparate": true,
+    "browserExecuted": false,
+    "normalGameplayVideoEvidence": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "limitations": [
+    "Cycle-space enumeration covers all even subgraphs; odd/open diagnostics are separate explicit ordinary-input cases.",
+    "Fast legal model inputs are not real-time browser or device evidence.",
+    "One clock boundary is an explicitly labelled fixture; every reported normal win and multiple-loop rejection uses only ordinary inputs."
+  ]
+}
