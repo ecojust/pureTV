@@ -275,15 +275,22 @@ test('retry restores fog, wave origin, patrols, beacon state, inputs and reserve
   assert.equal(retry.cells.filter(c=>c.seen).length,baseline.cells.filter(c=>c.seen).length);assert.equal(retry.reserve,10);
 });
 
-test('observational normal-key exploration collects and returns on all three maps', async () => {
+test('observational normal-key exploration returns on all three maps at five-tick polling', async () => {
   const {createPilot}=await import(pathToFileURL(path.join(__dirname,'automation.mjs')).href);
   for(let d=0;d<3;d++){
     const pilot=createPilot(),s=Model.create(61,d);let held=new Set(),scans=0,pickups=0,sawQuiet=false;const startSeen=s.revealedCount;
-    for(let elapsed=0;elapsed<91&&s.phase==='playing';elapsed+=.08){
+    // One defined ordinary-input scenario: runtime-sized physics ticks and a
+    // fresh observation every five ticks. This does not promise every polling
+    // schedule wins; other risky timing traces are retained separately.
+    for(let tick=0;tick<91*60&&s.phase==='playing';tick+=5){
+      const elapsed=tick/60;
       const snapshot={phase:s.phase,paused:false,level:d,model:copy(s)},unchanged=copy(snapshot);
       const desired=pilot(snapshot,{elapsed,mode:'qa'});assert.deepEqual(snapshot,unchanged,'pilot may only read its snapshot');
       const down=new Set(desired),input={x:Number(down.has('ArrowRight'))-Number(down.has('ArrowLeft')),y:Number(down.has('ArrowDown'))-Number(down.has('ArrowUp')),a:down.has('Space'),b:down.has('b'),aPressed:down.has('Space')&&!held.has('Space'),bPressed:down.has('b')&&!held.has('b')};
-      Model.step(s,.08,input);held=down;scans=s.sonarCount;pickups=s.collected;sawQuiet=sawQuiet||s.player.quiet;
+      for(let i=0;i<5&&s.phase==='playing';i++){
+        Model.step(s,1/60,input);input.aPressed=false;input.bPressed=false;
+      }
+      held=down;scans=s.sonarCount;pickups=s.collected;sawQuiet=sawQuiet||s.player.quiet;
     }
     assert.equal(s.phase,'won',`map${d+1}: ${s.lostReason}; player=${s.player.col},${s.player.row}; ${s.message}`);
     assert.equal(pickups,s.target);assert.ok(scans>0);assert.ok(s.revealedCount>startSeen);assert.ok(s.elapsed>=30&&s.elapsed<=90);assert.ok(s.player.shield>0);assert.ok(s.beacons.every(b=>b.collected));
