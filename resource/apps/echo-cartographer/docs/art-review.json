@@ -1,0 +1,713 @@
+{
+  "schema": 1,
+  "passed": true,
+  "scope": "Final candidate SOURCE art and layout review only. No APK build/signing, native-phone connection or final video claim. Actual model states use ordinary observational-pilot inputs; terminal DOM screenshots are explicitly layout fixtures populated from actual terminal states.",
+  "buildSourceSha": "a7aba79c3c061903c5729abb3c05be25fc1a5f1e",
+  "sourceHashes": {
+    "game": {
+      "path": "resource/apps/echo-cartographer/src/main/assets/game.js",
+      "sha256": "b6fe50fc72f95d5a7bc6667dbdaea337839b407485573fb8b0ba38eacb656b95"
+    },
+    "model": {
+      "path": "resource/apps/echo-cartographer/src/main/assets/game-model.js",
+      "sha256": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c"
+    },
+    "renderer": {
+      "path": "resource/game-kit/web/renderer.js",
+      "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+    },
+    "automation": {
+      "path": "resource/apps/echo-cartographer/tests/automation.mjs",
+      "sha256": "ca3f48742c97968ddf33afa7b87e4558d82a37b913701270fe078bff14f2f200"
+    },
+    "tv.css": {
+      "path": "resource/game-kit/web/tv.css",
+      "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+    },
+    "tv.html": {
+      "path": "resource/game-kit/web/tv.html",
+      "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+    },
+    "runtime.js": {
+      "path": "resource/game-kit/web/runtime.js",
+      "sha256": "1bddd5f7a765992305679b41e4f40b8d39b717a40c233b0c87294017760e0633"
+    }
+  },
+  "rawReportSha256": "12707a5cb54a04429aa23c5a00fdd5a35fdcdcf431952f37222a4d4775f39e32",
+  "assets": {
+    "logo.svg": {
+      "bytes": 1369,
+      "sha256": "305933d223f6e40885138b91f021aa66a7bef646553b46765d2f7c26e7cd87e1",
+      "xmlParsed": true
+    },
+    "icon.xml": {
+      "bytes": 1981,
+      "sha256": "a5e116655e09ee5f32a597d397f06cdb46c1c0fdc33a10671759a68defe73cd8",
+      "xmlParsed": true
+    }
+  },
+  "summary": {
+    "renderCases": 26,
+    "actualDrawCallsPerCase": 1,
+    "maxQuads": 1478,
+    "allGlErrorsZero": true,
+    "deepFrozenStatesUnchanged": true,
+    "hiddenWorldCommandAndPixelEquality": true,
+    "visibleHazardBodiesSurviveTerrainMasks": true,
+    "hazardBodyWithinPhysicalRadius": true,
+    "contextRestoreIdentical": true,
+    "threeOrdinaryInputWins": [
+      {
+        "level": 1,
+        "phase": "won",
+        "elapsed": 52.483333333333334,
+        "shield": 2,
+        "collected": 2,
+        "target": 2,
+        "sonarCount": 5,
+        "score": 1931
+      },
+      {
+        "level": 2,
+        "phase": "won",
+        "elapsed": 62.516666666666666,
+        "shield": 1,
+        "collected": 3,
+        "target": 3,
+        "sonarCount": 7,
+        "score": 2204
+      },
+      {
+        "level": 3,
+        "phase": "won",
+        "elapsed": 57.05,
+        "shield": 2,
+        "collected": 3,
+        "target": 3,
+        "sonarCount": 5,
+        "score": 2402
+      }
+    ],
+    "menuAndSidebarSizes": [
+      [
+        960,
+        540
+      ],
+      [
+        1280,
+        720
+      ]
+    ],
+    "terminalDialogLayoutCases": 6
+  },
+  "visualReview": {
+    "passed": true,
+    "reviewed": [
+      "level1-initial.png",
+      "level1-echo.png",
+      "level1-exploring.png",
+      "level2-exploring.png",
+      "level3-exploring.png",
+      "level1-hazard.png",
+      "level2-hazard.png",
+      "level3-hazard.png",
+      "visible-hazard-dark-cell.png",
+      "level1-won.png",
+      "level2-won.png",
+      "level3-won.png",
+      "menu-960.png",
+      "playing-1280.png",
+      "dialog-layout-fixture-shield-960.png",
+      "dialog-layout-fixture-darkness-960.png"
+    ],
+    "findings": "Unknown terrain stays opaque; current sonar detail and dim memory are distinct. Authorized visible hazards remain readable even when their cell center is dark. Beacons, entry and physical drone/hazard envelopes align with model positions. Shield/darkness dialogs state the cause and correct response; both fit 960 and1280. No further art issue found."
+  },
+  "pilotScope": "These source-only art states use the original build-source pilot. They are historical rendering evidence, not the corrected final runtime pilot, final browser success or recorded gameplay.",
+  "renderReview": {
+    "scope": "Direct final-candidate source rendering, ordinary-input three-map exploration/quiet/hazard/victory and genuine darkness/shield losses. Hidden-world mutation copies are art noninterference fixtures only. Boundary case kind declares actual/fixture provenance. Not APK, video or phone evidence.",
+    "passed": true,
+    "cases": 26,
+    "flows": [
+      {
+        "level": 1,
+        "phase": "won",
+        "elapsed": 52.483333333333334,
+        "shield": 2,
+        "collected": 2,
+        "target": 2,
+        "sonarCount": 5,
+        "score": 1931
+      },
+      {
+        "level": 2,
+        "phase": "won",
+        "elapsed": 62.516666666666666,
+        "shield": 1,
+        "collected": 3,
+        "target": 3,
+        "sonarCount": 7,
+        "score": 2204
+      },
+      {
+        "level": 3,
+        "phase": "won",
+        "elapsed": 57.05,
+        "shield": 2,
+        "collected": 3,
+        "target": 3,
+        "sonarCount": 5,
+        "score": 2402
+      }
+    ],
+    "context": {
+      "lost": true,
+      "restored": true,
+      "drawCalls": 1,
+      "glError": 0,
+      "pixelsIdentical": true
+    },
+    "errors": [],
+    "results": [
+      {
+        "name": "level1-initial",
+        "kind": "actual initial model",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 569,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 5,
+        "visible": 5
+      },
+      {
+        "name": "level1-echo",
+        "kind": "actual model after one ordinary sonar input",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 583,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 21,
+        "visible": 21
+      },
+      {
+        "name": "level1-memory",
+        "kind": "actual post-echo illumination expiry",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 873,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 70,
+        "visible": 5
+      },
+      {
+        "name": "level1-lost",
+        "kind": "actual resource exhaustion while idle",
+        "phase": "lost",
+        "lostReason": "darkness",
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 886,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 70,
+        "visible": 0
+      },
+      {
+        "name": "level2-initial",
+        "kind": "actual initial model",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 569,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 5,
+        "visible": 5
+      },
+      {
+        "name": "level2-echo",
+        "kind": "actual model after one ordinary sonar input",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 576,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 16,
+        "visible": 16
+      },
+      {
+        "name": "level2-memory",
+        "kind": "actual post-echo illumination expiry",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 771,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 48,
+        "visible": 5
+      },
+      {
+        "name": "level2-lost",
+        "kind": "actual resource exhaustion while idle",
+        "phase": "lost",
+        "lostReason": "darkness",
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 786,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 48,
+        "visible": 0
+      },
+      {
+        "name": "level3-initial",
+        "kind": "actual initial model",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 569,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 5,
+        "visible": 5
+      },
+      {
+        "name": "level3-echo",
+        "kind": "actual model after one ordinary sonar input",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 577,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 19,
+        "visible": 19
+      },
+      {
+        "name": "level3-memory",
+        "kind": "actual post-echo illumination expiry",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 862,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 68,
+        "visible": 5
+      },
+      {
+        "name": "level3-lost",
+        "kind": "actual resource exhaustion while idle",
+        "phase": "lost",
+        "lostReason": "darkness",
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 875,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 68,
+        "visible": 0
+      },
+      {
+        "name": "level1-exploring",
+        "kind": "ordinary observational pilot: actual illuminated exploration",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 1094,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 1,
+        "seen": 192,
+        "visible": 78
+      },
+      {
+        "name": "level1-hazard",
+        "kind": "ordinary observational pilot: actual visible moving hazard",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 1440,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 1,
+        "seen": 192,
+        "visible": 5
+      },
+      {
+        "name": "level1-quiet",
+        "kind": "ordinary observational pilot: held-B quiet movement near visible hazard",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 965,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 1,
+        "seen": 162,
+        "visible": 63
+      },
+      {
+        "name": "level1-won",
+        "kind": "ordinary observational pilot: physical collection and return victory",
+        "phase": "won",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 1436,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 195,
+        "visible": 6
+      },
+      {
+        "name": "level2-exploring",
+        "kind": "ordinary observational pilot: actual illuminated exploration",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 659,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 1,
+        "seen": 103,
+        "visible": 71
+      },
+      {
+        "name": "level2-hazard",
+        "kind": "ordinary observational pilot: actual visible moving hazard",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 1076,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 2,
+        "seen": 165,
+        "visible": 49
+      },
+      {
+        "name": "level2-quiet",
+        "kind": "ordinary observational pilot: held-B quiet movement near visible hazard",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 780,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 1,
+        "seen": 90,
+        "visible": 46
+      },
+      {
+        "name": "level2-won",
+        "kind": "ordinary observational pilot: physical collection and return victory",
+        "phase": "won",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 1478,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 199,
+        "visible": 6
+      },
+      {
+        "name": "level3-exploring",
+        "kind": "ordinary observational pilot: actual illuminated exploration",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 1031,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 1,
+        "seen": 170,
+        "visible": 65
+      },
+      {
+        "name": "level3-hazard",
+        "kind": "ordinary observational pilot: actual visible moving hazard",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 690,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 2,
+        "seen": 86,
+        "visible": 51
+      },
+      {
+        "name": "level3-quiet",
+        "kind": "ordinary observational pilot: held-B quiet movement near visible hazard",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 506,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 1,
+        "seen": 68,
+        "visible": 68
+      },
+      {
+        "name": "level3-won",
+        "kind": "ordinary observational pilot: physical collection and return victory",
+        "phase": "won",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 1439,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 0,
+        "seen": 190,
+        "visible": 5
+      },
+      {
+        "name": "visible-hazard-dark-cell",
+        "kind": "actual ordinary-input model frame: visible hazard point while its cell center is not visible",
+        "phase": "playing",
+        "lostReason": null,
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 1299,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 1,
+        "seen": 162,
+        "visible": 5
+      },
+      {
+        "name": "shield-lost",
+        "kind": "actual ordinary-input approach to a currently visible hazard; no state injection",
+        "phase": "lost",
+        "lostReason": "shield",
+        "drawCalls": 1,
+        "glError": 0,
+        "quads": 1425,
+        "deepFrozenStateUnchanged": true,
+        "hiddenWorldCommandsAndPixelsIdentical": true,
+        "visibleBodiesAfterTerrain": true,
+        "hazardRadiusWithinModel": true,
+        "visibleHazards": 1,
+        "seen": 192,
+        "visible": 5
+      }
+    ]
+  },
+  "layoutReview": {
+    "scope": "Current source served directly with current shared kit; not a build or APK test. Menu/play use ordinary Enter/A inputs. Terminal dialog screenshots are explicitly DOM layout fixtures using copy and HUD from actual ordinary-input terminal model states; they are not runtime completion evidence.",
+    "gameSha": "b6fe50fc72f95d5a7bc6667dbdaea337839b407485573fb8b0ba38eacb656b95",
+    "modelSha": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c",
+    "cssSha": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "passed": true,
+    "results": [
+      {
+        "width": 960,
+        "height": 540,
+        "dialog": {
+          "y": 139.796875,
+          "bottom": 454.1875
+        },
+        "scene": {
+          "y": 118,
+          "bottom": 476
+        },
+        "fits": true,
+        "tipFits": true,
+        "asideFits": true,
+        "descriptionLength": 93
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "dialog": {
+          "y": 203.71875,
+          "bottom": 581.28125
+        },
+        "scene": {
+          "y": 161,
+          "bottom": 624
+        },
+        "fits": true,
+        "tipFits": true,
+        "asideFits": true,
+        "descriptionLength": 93
+      }
+    ],
+    "dialogFixtures": [
+      {
+        "width": 960,
+        "height": 540,
+        "reason": "shield",
+        "kind": "DOM layout fixture only, populated using actual ordinary-input terminal state",
+        "copy": "护盾耗尽，探测机失去保护。已取得 1 / 2 枚信标。遇追击先松开 B 拉开距离；接近危险前再按住 B 静行。",
+        "dialogFits": true,
+        "copyFits": true,
+        "dialogTop": 149.203125,
+        "dialogBottom": 444.796875,
+        "sceneTop": 118,
+        "sceneBottom": 476
+      },
+      {
+        "width": 960,
+        "height": 540,
+        "reason": "darkness",
+        "kind": "DOM layout fixture only, populated using actual ordinary-input terminal state",
+        "copy": "电池与应急照明均已耗尽。已取得 0 / 2 枚信标。减少无效扫描，预留返航电量。",
+        "dialogFits": true,
+        "copyFits": true,
+        "dialogTop": 149.203125,
+        "dialogBottom": 444.796875,
+        "sceneTop": 118,
+        "sceneBottom": 476
+      },
+      {
+        "width": 960,
+        "height": 540,
+        "reason": "won",
+        "kind": "DOM layout fixture only, populated using actual ordinary-input terminal state",
+        "copy": "已带回全部 2 枚信标，完成海图测绘。",
+        "dialogFits": true,
+        "copyFits": true,
+        "dialogTop": 159.09375,
+        "dialogBottom": 434.890625,
+        "sceneTop": 118,
+        "sceneBottom": 476
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "reason": "shield",
+        "kind": "DOM layout fixture only, populated using actual ordinary-input terminal state",
+        "copy": "护盾耗尽，探测机失去保护。已取得 1 / 2 枚信标。遇追击先松开 B 拉开距离；接近危险前再按住 B 静行。",
+        "dialogFits": true,
+        "copyFits": true,
+        "dialogTop": 226.609375,
+        "dialogBottom": 558.390625,
+        "sceneTop": 161,
+        "sceneBottom": 624
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "reason": "darkness",
+        "kind": "DOM layout fixture only, populated using actual ordinary-input terminal state",
+        "copy": "电池与应急照明均已耗尽。已取得 0 / 2 枚信标。减少无效扫描，预留返航电量。",
+        "dialogFits": true,
+        "copyFits": true,
+        "dialogTop": 226.609375,
+        "dialogBottom": 558.390625,
+        "sceneTop": 161,
+        "sceneBottom": 624
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "reason": "won",
+        "kind": "DOM layout fixture only, populated using actual ordinary-input terminal state",
+        "copy": "已带回全部 2 枚信标，完成海图测绘。",
+        "dialogFits": true,
+        "copyFits": true,
+        "dialogTop": 238.296875,
+        "dialogBottom": 546.6875,
+        "sceneTop": 161,
+        "sceneBottom": 624
+      }
+    ],
+    "errors": []
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

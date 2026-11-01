@@ -1,0 +1,165 @@
+{
+  "kind": "independent-echo-model-review",
+  "passed": true,
+  "modelSha256": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c",
+  "reviewScriptSha256": "2a2250ffb1532ce0f04c54c754f909144b7de88cb80eba2039ed7abc0003e033",
+  "checks": [
+    {
+      "name": "three distinct maps connect every beacon to the entrance",
+      "passed": true,
+      "levels": 3,
+      "layoutSha256": [
+        "3576c7ba37c4494e5334cff8e6d935128e0311a94ff52501927e8d5e797d43fb",
+        "84e2535c044e48f89a9a3a3a1e79d891acf13d6ac7c0323931e71164042e42c0",
+        "4789b35cd9ea4d2b3624a9407daef9d50b47ca1e46be40e0c2fd087e214bff51"
+      ]
+    },
+    {
+      "name": "scan distances match independent all-pairs floor paths, including off-center emission",
+      "passed": true,
+      "levels": 3,
+      "emissionFixtures": 14,
+      "comparisons": 2926
+    },
+    {
+      "name": "moving after a scan preserves its origin, arrival times and four-second reveal deadline",
+      "passed": true,
+      "checkedTicks": [
+        1,
+        11,
+        12,
+        13,
+        23,
+        24,
+        25,
+        95,
+        96,
+        97,
+        251,
+        252,
+        253,
+        335,
+        336,
+        337
+      ],
+      "comparisons": 3344,
+      "rememberedAfterFade": 58
+    },
+    {
+      "name": "near light matches independent closed-wall segment intersections",
+      "passed": true,
+      "positionFixtures": 36,
+      "comparisons": 7524
+    },
+    {
+      "name": "a visible floor center does not expose a hazard behind a corner or beyond lamp range",
+      "passed": true,
+      "pointVisibilityFixtures": [
+        {
+          "name": "wall-corner",
+          "distanceBeforeEcho": 45.63188411818685,
+          "lineOfSightOccluded": true,
+          "echoRevealPassed": true
+        },
+        {
+          "name": "lamp-radius",
+          "distanceBeforeEcho": 58.633333333333326,
+          "lineOfSightOccluded": false,
+          "echoRevealPassed": true
+        }
+      ]
+    },
+    {
+      "name": "quiet movement changes actual patrol alert behavior and speed",
+      "passed": true,
+      "ordinaryNoiseRadius": 180,
+      "quietNoiseRadius": 35,
+      "alertedSpeed": 42,
+      "patrolSpeed": 22
+    },
+    {
+      "name": "hearing boundaries include both endpoint offsets and actual same-cell separation",
+      "passed": true,
+      "boundaryCases": [
+        {
+          "metric": "same-cell-euclidean",
+          "radius": 35,
+          "delta": -0.01,
+          "measured": 34.99000000000001,
+          "alerted": true
+        },
+        {
+          "metric": "same-cell-euclidean",
+          "radius": 35,
+          "delta": 0,
+          "measured": 35,
+          "alerted": true
+        },
+        {
+          "metric": "same-cell-euclidean",
+          "radius": 35,
+          "delta": 0.01,
+          "measured": 35.00999999999999,
+          "alerted": false
+        },
+        {
+          "metric": "floor-path-plus-both-endpoints",
+          "radius": 180,
+          "delta": -0.01,
+          "measured": 179.99,
+          "alerted": true
+        },
+        {
+          "metric": "floor-path-plus-both-endpoints",
+          "radius": 180,
+          "delta": 0,
+          "measured": 180,
+          "alerted": true
+        },
+        {
+          "metric": "floor-path-plus-both-endpoints",
+          "radius": 180,
+          "delta": 0.01,
+          "measured": 180.01,
+          "alerted": false
+        }
+      ],
+      "disconnectedFixturePassed": true
+    },
+    {
+      "name": "scan edge and finite reserve cannot create free scans or indefinite light",
+      "passed": true,
+      "heldFrames": 91,
+      "reserveTicks": 600
+    },
+    {
+      "name": "collected beacons and physical return are separate conditions; failure takes precedence",
+      "passed": true,
+      "winConditions": [
+        "all-beacons",
+        "physical-return"
+      ],
+      "failureCases": 2
+    }
+  ],
+  "totals": {
+    "distanceComparisons": 2926,
+    "temporalComparisons": 3344,
+    "lampComparisons": 7524
+  },
+  "methods": [
+    "Floyd-Warshall reference on the floor adjacency matrix; terminal wall arrival from neighboring floors",
+    "Independent segment-edge geometry for near-light occlusion",
+    "Bounded temporal, power, quiet-mode and terminal-priority fixtures"
+  ],
+  "scope": {
+    "fixturesModifyState": true,
+    "normalGameplayEvidence": false,
+    "browserExecuted": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "limitations": [
+    "These mathematical fixtures do not establish ordinary-play solvability or visual quality. Fresh observational pilot and browser recording are separate gates."
+  ]
+}
