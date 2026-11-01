@@ -1,0 +1,1125 @@
+{
+  "schema": 1,
+  "game": "hidden-corridors",
+  "version": "0.1.0",
+  "sourceCommit": "2da9b23c220b5d2993d4913af66f00024e897ae8",
+  "automationSha256": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+  "hiddenCorridorModel": "Fixed4x4 hidden walls remain in a model-private WeakMap. Public row counts, shortest edge distance and paid one-cell observations constrain candidate boards. A marked route may cross unknown cells, but manual submission must match public shape/endpoints/distance and actual hidden safety. Only wrong submissions made after probe exhaustion charge one of three strikes; earlier errors are not charged retroactively.",
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "unresolvedFindings": [],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+      "game.js": "e86dfa72f06d56a0fccbec7c6296616e72b6bc448644b22e2d800a84957076aa",
+      "game-config.json": "947ea1c58a58525ffcc83e835bd0cbed1a17dfda4b5e24ff0be311b840d2abf0",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+      "src/main/assets/game.js": "e86dfa72f06d56a0fccbec7c6296616e72b6bc448644b22e2d800a84957076aa",
+      "tests/automation.mjs": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+      "tests/game-model.test.cjs": "0453d9b13dc8b6d88786af61d1afc9ddbe676e0cdbc72adcbe394afa7e618024",
+      "docs/model-contract.md": "aefee429bee6fd24bf9ab5133dcddb6ef995997355932a22b8d5b95ca7b06a8d"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime/01-menu.png",
+        "sha256": "c5ee8b10265df318d19540fcd52719cd66930b8b4e4fb48bb720f08d7d8fcece",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/02-probed-open.png",
+        "sha256": "0cf3c2473d8f8b0a765af5816243b65802da276d365e962fe2cb03a18933e117",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/03-probed-wall.png",
+        "sha256": "1d18ca8c9ef3f0588e58d0b72440f5391f7e5ef640354403083f7bb84a9ad94a",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/04-guaranteed-route-start.png",
+        "sha256": "80207e7439d7b8326ad39583c50cfb27038c904195232e869f9a5a2ab5f63856",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/05-inferred-route-progress.png",
+        "sha256": "2938404c273086079503c5674a4f641b35b2e659efdda63f5627b963793f7071",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/06-exit-before-submit.png",
+        "sha256": "5e1047cfba34e229aa735918fb261c7b9900fcc393cc969752deb3e707e88ad5",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/07-safe-route-accepted.png",
+        "sha256": "dc1cac5da5f7d34a5f7418ca4c52435cd0884a6fbb2be0240a1b11bbd896354a",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/08-small-won.png",
+        "sha256": "e86ef2d14c283b0b516806b9e6c51ae68edddb671026233bb655b59a83084a3d",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/09-small-menu.png",
+        "sha256": "d1c42d281ebd6a1d2403f349c07dffea44575bbd46914905ef7dcd9246d4d196",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/10-small-playing.png",
+        "sha256": "9d4f27cea01335676160b511f5bcaef826c08c4a1c7892920572c1a4f0a44043",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/11-small-pause.png",
+        "sha256": "44576552d39c359214e431ee48a16e4f87924ed78648b1b685c0c36415f652af",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "e117f8ae4e1b709d1b95a978f5b059bf7092ff2c0a9392872ecd38613b58582e",
+    "scope": "Actually reviewed software-browser candidate using exactly the final bundled assets, before source freeze; separate from final packaged QA and video."
+  },
+  "modelTests": {
+    "passed": 30,
+    "command": "node --test --test-reporter=tap resource/apps/hidden-corridors/tests/game-model.test.cjs",
+    "sourceHashesBefore": {
+      "model": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+      "tests": "0453d9b13dc8b6d88786af61d1afc9ddbe676e0cdbc72adcbe394afa7e618024",
+      "automation": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+      "contract": "aefee429bee6fd24bf9ab5133dcddb6ef995997355932a22b8d5b95ca7b06a8d"
+    },
+    "sourceHashesAfter": {
+      "model": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+      "tests": "0453d9b13dc8b6d88786af61d1afc9ddbe676e0cdbc72adcbe394afa7e618024",
+      "automation": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+      "contract": "aefee429bee6fd24bf9ab5133dcddb6ef995997355932a22b8d5b95ca7b06a8d"
+    },
+    "testLogSha256": "ea1c11ab5fbc29554f5c0da90d0495fa0ea1232b95316c5fa66cc158e69d4680",
+    "rawReportSha256": "8da2dac2ecde445d408defb3c1215fcb0b44e6c9f1c92d7d63aba20b96277121",
+    "scope": "Public rule-boundary tests plus three fresh public-clue inference wins and three fresh ordinary-input probe-exhaustion/three-strike losses. Explicit synthetic structural/knowledge/clock fixtures mutate original registered states only and are not normal-play evidence.",
+    "scheduling": "Ordinary wins use runtime 60 Hz ticks and public observations every five ticks, genuine A/B edges and no state edits. Losses use ordinary navigation and press/release. These are defined legal-input scenarios, not guarantees for arbitrary input timing."
+  },
+  "independentCorridorReview": {
+    "passed": true,
+    "file": "independent-corridor-review.json",
+    "sha256": "36d949e485c6ec04d6c9a9d04f0ddbabef425553eb2cebfc526a6b9a46c73c07",
+    "checksPassed": 9,
+    "mathematics": [
+      {
+        "level": 1,
+        "clues": {
+          "rowOpenCounts": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "entry": 0,
+          "exit": 15,
+          "requiredDistance": 6,
+          "probeBudget": 3
+        },
+        "candidateCount": 9,
+        "candidateMasksSha256": "a25afaafe6b69d15e93149c8d9c93918a617fd1432045d71a143d08af29b9acc",
+        "initialCommonSafeRoute": false,
+        "minimumWorstCaseProbes": 2,
+        "decisionStates": 21,
+        "certificateVerification": {
+          "passed": true,
+          "candidateEnumerationMasksChecked": 65536,
+          "candidateWorlds": 9,
+          "strategyNodes": 7,
+          "leaves": 4,
+          "coveredWorlds": 9,
+          "strategyWorstDepth": 2,
+          "lowerBoundProofNodes": 13,
+          "provedLowerBound": 2,
+          "exactMinimum": 2
+        }
+      },
+      {
+        "level": 2,
+        "clues": {
+          "rowOpenCounts": [
+            3,
+            2,
+            2,
+            3
+          ],
+          "entry": 0,
+          "exit": 12,
+          "requiredDistance": 5,
+          "probeBudget": 4
+        },
+        "candidateCount": 40,
+        "candidateMasksSha256": "b43f2bceccc63d79498127ad6917e21eaa49f8cece33f53ac3203eca89fb09a0",
+        "initialCommonSafeRoute": false,
+        "minimumWorstCaseProbes": 2,
+        "decisionStates": 83,
+        "certificateVerification": {
+          "passed": true,
+          "candidateEnumerationMasksChecked": 65536,
+          "candidateWorlds": 40,
+          "strategyNodes": 5,
+          "leaves": 3,
+          "coveredWorlds": 40,
+          "strategyWorstDepth": 2,
+          "lowerBoundProofNodes": 13,
+          "provedLowerBound": 2,
+          "exactMinimum": 2
+        }
+      },
+      {
+        "level": 3,
+        "clues": {
+          "rowOpenCounts": [
+            2,
+            3,
+            3,
+            2
+          ],
+          "entry": 1,
+          "exit": 14,
+          "requiredDistance": 4,
+          "probeBudget": 5
+        },
+        "candidateCount": 90,
+        "candidateMasksSha256": "bc31752cf824398c7515fc4be346055adccacbd62e5f739a5233da52af50190e",
+        "initialCommonSafeRoute": false,
+        "minimumWorstCaseProbes": 3,
+        "decisionStates": 244,
+        "certificateVerification": {
+          "passed": true,
+          "candidateEnumerationMasksChecked": 65536,
+          "candidateWorlds": 90,
+          "strategyNodes": 15,
+          "leaves": 8,
+          "coveredWorlds": 90,
+          "strategyWorstDepth": 3,
+          "lowerBoundProofNodes": 106,
+          "provedLowerBound": 3,
+          "exactMinimum": 3
+        }
+      }
+    ],
+    "blackBoxClueAndRetryAudit": [
+      {
+        "level": 1,
+        "freshRuns": 32,
+        "paidSingleCellRuns": 28,
+        "freeEndpointRuns": 4,
+        "observedMapSha256": "e52c47efdc37714536909d9cafc674837b2b53c023cd2e332c0cc3ba66e2e794",
+        "rowCountsVerified": true,
+        "shortestEdgeDistanceVerified": true,
+        "sameAcrossFreshSeeds": true
+      },
+      {
+        "level": 2,
+        "freshRuns": 32,
+        "paidSingleCellRuns": 28,
+        "freeEndpointRuns": 4,
+        "observedMapSha256": "261bf565f8760e5c08382dad443320fcf56ef3a25cd2bc5bc379fc469ee660fe",
+        "rowCountsVerified": true,
+        "shortestEdgeDistanceVerified": true,
+        "sameAcrossFreshSeeds": true
+      },
+      {
+        "level": 3,
+        "freshRuns": 32,
+        "paidSingleCellRuns": 28,
+        "freeEndpointRuns": 4,
+        "observedMapSha256": "cf9e3328b2e534ba63813a0c6ea3ed273dbe4353c0ddae9455d8bf06dfceb56f",
+        "rowCountsVerified": true,
+        "shortestEdgeDistanceVerified": true,
+        "sameAcrossFreshSeeds": true
+      }
+    ],
+    "ordinaryPublicModelRounds": [
+      {
+        "level": 1,
+        "phase": "won",
+        "probesUsed": 2,
+        "probeBudget": 3,
+        "remainingCandidateCount": 2,
+        "pathEdges": 6,
+        "requiredDistance": 6,
+        "routeIds": [
+          0,
+          1,
+          5,
+          6,
+          10,
+          14,
+          15
+        ],
+        "observations": [
+          {
+            "cellId": 6,
+            "result": "open",
+            "candidateCountBefore": 9,
+            "candidateCountAfter": 5
+          },
+          {
+            "cellId": 11,
+            "result": "wall",
+            "candidateCountBefore": 5,
+            "candidateCountAfter": 2
+          }
+        ],
+        "elapsed": 0.5166666666666667,
+        "score": 1685,
+        "submissions": 1,
+        "totalWrong": 0,
+        "unprobedCellsRemainUnknown": 12,
+        "safeForEveryRemainingCandidate": true,
+        "selectedTruthReadByPlanner": false
+      },
+      {
+        "level": 2,
+        "phase": "won",
+        "probesUsed": 2,
+        "probeBudget": 4,
+        "remainingCandidateCount": 12,
+        "pathEdges": 5,
+        "requiredDistance": 5,
+        "routeIds": [
+          0,
+          1,
+          5,
+          9,
+          8,
+          12
+        ],
+        "observations": [
+          {
+            "cellId": 4,
+            "result": "wall",
+            "candidateCountBefore": 40,
+            "candidateCountAfter": 28
+          },
+          {
+            "cellId": 8,
+            "result": "open",
+            "candidateCountBefore": 28,
+            "candidateCountAfter": 12
+          }
+        ],
+        "elapsed": 0.38333333333333336,
+        "score": 1775,
+        "submissions": 1,
+        "totalWrong": 0,
+        "unprobedCellsRemainUnknown": 12,
+        "safeForEveryRemainingCandidate": true,
+        "selectedTruthReadByPlanner": false
+      },
+      {
+        "level": 3,
+        "phase": "won",
+        "probesUsed": 3,
+        "probeBudget": 5,
+        "remainingCandidateCount": 24,
+        "pathEdges": 4,
+        "requiredDistance": 4,
+        "routeIds": [
+          1,
+          5,
+          6,
+          10,
+          14
+        ],
+        "observations": [
+          {
+            "cellId": 2,
+            "result": "wall",
+            "candidateCountBefore": 90,
+            "candidateCountAfter": 54
+          },
+          {
+            "cellId": 13,
+            "result": "wall",
+            "candidateCountBefore": 54,
+            "candidateCountAfter": 32
+          },
+          {
+            "cellId": 6,
+            "result": "open",
+            "candidateCountBefore": 32,
+            "candidateCountAfter": 24
+          }
+        ],
+        "elapsed": 0.5833333333333334,
+        "score": 1805,
+        "submissions": 1,
+        "totalWrong": 0,
+        "unprobedCellsRemainUnknown": 11,
+        "safeForEveryRemainingCandidate": true,
+        "selectedTruthReadByPlanner": false
+      }
+    ],
+    "scope": {
+      "modelRulesExecuted": true,
+      "publicWorldEnumeration": true,
+      "selectedTruthAccess": "Only a separate black-box audit through fresh ordinary single-cell probes; no WeakMap/source constant access by the script or normal planner.",
+      "privateModelReaderExported": false,
+      "fixtureChecksSeparateFromOrdinaryRounds": true,
+      "ordinaryRoundsUseOnlyPublicCluesAndObservedProbeResults": true,
+      "browserExecuted": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    }
+  },
+  "independentPilotReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "fc66c1589598f9a6c656fbeb275f3f727af5da1806472969ae2319aa0315e03d",
+    "checksPassed": 12,
+    "pilotCalls": 83,
+    "exportCalls": 12,
+    "observationCalls": 95,
+    "deepFrozenObservations": 94,
+    "scalarGeometryCalls": 1,
+    "sourceHashes": {
+      "tests/automation.mjs": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+      "src/main/assets/game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+      "docs/model-contract.md": "aefee429bee6fd24bf9ab5133dcddb6ef995997355932a22b8d5b95ca7b06a8d"
+    },
+    "scope": "Hand-authored public observation histories using published row clues and hypothetical probe outcomes. Constructed probe/route/terminal snapshots test observer and input protocols, not production transitions, actual games, footage or devices. No production model create/step, true layout, authoring report or reference route is used. The reviewed public pilot and its own public inference/planner are executed; the full mathematical proof remains separate."
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "148819c829743e683270208f1bfb95c7cf492a642a8f2915ea1af3f1880875c5",
+    "scope": "Final source art; genuine model ordinary-input snapshots and explicit no-op public-snapshot DOM fixtures. Actual runtime menu/play/route/pause uses registered original states. No APK/device/video/browser-earned-win claim.",
+    "finalSourceHashes": {
+      "game": {
+        "path": "resource/apps/hidden-corridors/src/main/assets/game.js",
+        "sha256": "e86dfa72f06d56a0fccbec7c6296616e72b6bc448644b22e2d800a84957076aa"
+      },
+      "model": {
+        "path": "resource/apps/hidden-corridors/src/main/assets/game-model.js",
+        "sha256": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb"
+      },
+      "pilot": {
+        "path": "resource/apps/hidden-corridors/tests/automation.mjs",
+        "sha256": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "runtime": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
+      },
+      "css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "icon": {
+        "path": "resource/apps/hidden-corridors/icon.xml",
+        "sha256": "b9c424dab7dcc4f935a358628f154bc6fd588d2a215228526def1d3af8496a6d"
+      },
+      "logo": {
+        "path": "resource/apps/hidden-corridors/logo.svg",
+        "sha256": "e6df9a66e49de76f4450f99e53688884180fd803f20f8f85719b71f5a44412e9"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+      "game.js": "e86dfa72f06d56a0fccbec7c6296616e72b6bc448644b22e2d800a84957076aa",
+      "game-config.json": "947ea1c58a58525ffcc83e835bd0cbed1a17dfda4b5e24ff0be311b840d2abf0",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b"
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "sourceUnchanged": true,
+    "sourceCommitHashesMatched": true,
+    "buildSourceSha": "2da9b23c220b5d2993d4913af66f00024e897ae8",
+    "startHashes": {
+      "tests/automation.mjs": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+      "tests/game-model.test.cjs": "0453d9b13dc8b6d88786af61d1afc9ddbe676e0cdbc72adcbe394afa7e618024",
+      "src/main/assets/game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+      "src/main/assets/game.js": "e86dfa72f06d56a0fccbec7c6296616e72b6bc448644b22e2d800a84957076aa"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+      "tests/game-model.test.cjs": "0453d9b13dc8b6d88786af61d1afc9ddbe676e0cdbc72adcbe394afa7e618024",
+      "src/main/assets/game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+      "src/main/assets/game.js": "e86dfa72f06d56a0fccbec7c6296616e72b6bc448644b22e2d800a84957076aa"
+    },
+    "rawReportSha256": "80ef5f32462057d03b5267750d699061a3359a74527bf3d5c3e15bc1e149b1cc"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three public clue sets are ambiguous and require genuine observation",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick choose one survey per press",
+        "passed": true
+      },
+      {
+        "name": "menu blur and sound buttons match actual visual state",
+        "passed": true
+      },
+      {
+        "name": "held phone START begins once without probing or switching mode",
+        "passed": true
+      },
+      {
+        "name": "held phone A pays once and a fresh repeat reports the same known cell without another charge",
+        "passed": true
+      },
+      {
+        "name": "B enters route then held B pops only one step and fresh B restores the saved probe cursor",
+        "passed": true
+      },
+      {
+        "name": "known walls and reentry block route marking while unknown cells remain unqueried",
+        "passed": true
+      },
+      {
+        "name": "public endpoint and edge length reject before any private wall verdict without spending probes",
+        "passed": true
+      },
+      {
+        "name": "a complete correct-length route through a previously observed wall receives only generic unsafe rejection",
+        "passed": true
+      },
+      {
+        "name": "held phone cursor waits twenty ticks before repeat and clamps to grid without probes",
+        "passed": true
+      },
+      {
+        "name": "connected cancelSeq preserves a charged observation and quarantines held A until real neutral",
+        "passed": true
+      },
+      {
+        "name": "held Enter is one probe edge and a fresh Enter does not repay an already known cell",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes observations route resource counters and time and clears stale direction",
+        "passed": true
+      },
+      {
+        "name": "pause primary and header controls freeze and resume the same survey",
+        "passed": true
+      },
+      {
+        "name": "ordinary last probe does not retroactively charge prior wrong submissions and exhausted probing does not leak truth",
+        "passed": true
+      },
+      {
+        "name": "three fresh wrong submissions only after exhausted probes produce a real terminal loss",
+        "passed": true
+      },
+      {
+        "name": "R restores all public ledgers and ordinary reprobes reproduce the same previously observed layout",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "strikes",
+      "elapsed": 3.1166666666666667,
+      "remaining": 86.88333333333334,
+      "score": 120,
+      "probesUsed": 3,
+      "probeBudget": 3,
+      "probesRemaining": 0,
+      "revealedCount": 5,
+      "probeAttempts": 5,
+      "repeatedProbes": 1,
+      "blockedProbes": 1,
+      "requiredDistance": 6,
+      "pathEdges": 0,
+      "submissions": 4,
+      "totalWrong": 4,
+      "exhaustedStrikes": 3,
+      "routeMoves": 0,
+      "backtracks": 0,
+      "modeSwitches": 3,
+      "atExit": false,
+      "lengthMatches": false
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+      "game.js": "e86dfa72f06d56a0fccbec7c6296616e72b6bc448644b22e2d800a84957076aa",
+      "game-config.json": "947ea1c58a58525ffcc83e835bd0cbed1a17dfda4b5e24ff0be311b840d2abf0",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "画线不揭墙，重复探测免费；回退保留探针消耗、用时和错误次数。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "画线不揭墙，重复探测免费；回退保留探针消耗、用时和错误次数。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 384.5625,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "画线不揭墙，重复探测免费；回退保留探针消耗、用时和错误次数。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 384.5625,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 203.71875,
+          "width": 420,
+          "height": 377.5625,
+          "right": 726.984375,
+          "bottom": 581.28125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "画线不揭墙，重复探测免费；回退保留探针消耗、用时和错误次数。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "画线不揭墙，重复探测免费；回退保留探针消耗、用时和错误次数。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "画线不揭墙，重复探测免费；回退保留探针消耗、用时和错误次数。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 384.5625,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "d39394fd5d8dc03562e3905cb741c59d936462304a982820fc9ae5755b22f393"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 134,
+    "rafIntervalMs": {
+      "count": 134,
+      "min": 16.599999999999454,
+      "median": 33.400000000000546,
+      "p95": 83.30000000000109,
+      "max": 100,
+      "mean": 43.903731343283575
+    },
+    "webglDrawCalls": {
+      "count": 134,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 134,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 38.005964479,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1515,
+      "elapsed": 34.86666666666667,
+      "remaining": 55.13333333333333,
+      "probesUsed": 2,
+      "probeBudget": 3,
+      "probesRemaining": 1,
+      "revealedCount": 4,
+      "probeAttempts": 2,
+      "repeatedProbes": 0,
+      "blockedProbes": 0,
+      "requiredDistance": 6,
+      "pathEdges": 6,
+      "submissions": 1,
+      "totalWrong": 0,
+      "exhaustedStrikes": 0,
+      "routeMoves": 6,
+      "backtracks": 0,
+      "modeSwitches": 1,
+      "atExit": true,
+      "lengthMatches": true
+    },
+    "publicInference": {
+      "initialCandidateCount": 9,
+      "finalCandidateCount": 2,
+      "routeIds": [
+        0,
+        1,
+        5,
+        6,
+        10,
+        14,
+        15
+      ],
+      "safeForEveryConsistentBoard": true,
+      "unprobedRouteCellIds": [
+        0,
+        1,
+        5,
+        10,
+        14,
+        15
+      ],
+      "unknownRouteCellIds": [
+        1,
+        5,
+        10,
+        14
+      ],
+      "chargedProbes": [
+        {
+          "observedAt": 10.015657643,
+          "cellId": 6,
+          "result": "open",
+          "at": 5.883333333333334,
+          "tick": 353,
+          "candidatesBefore": 9,
+          "candidatesAfter": 5,
+          "probesUsed": 1,
+          "probesRemaining": 2
+        },
+        {
+          "observedAt": 16.005331136,
+          "cellId": 11,
+          "result": "wall",
+          "at": 12.633333333333333,
+          "tick": 758,
+          "candidatesBefore": 5,
+          "candidatesAfter": 2,
+          "probesUsed": 2,
+          "probesRemaining": 1
+        }
+      ]
+    },
+    "openObservation": {
+      "observedAt": 10.015657643,
+      "lastObservedAt": 12.007730985,
+      "nextInputDispatchedAt": 12.394019918,
+      "cellId": 6,
+      "result": "open",
+      "probesUsed": 1,
+      "probesRemaining": 2,
+      "displayedSecondsAtLeast": 2.128362274999999,
+      "displayBasis": "selected-observation-to-next-input-minus-0.25"
+    },
+    "wallObservation": {
+      "observedAt": 16.005331136,
+      "lastObservedAt": 18.001292777,
+      "nextInputDispatchedAt": 19.242668335999998,
+      "cellId": 11,
+      "result": "wall",
+      "probesUsed": 2,
+      "probesRemaining": 1,
+      "displayedSecondsAtLeast": 2.987337199999999,
+      "displayBasis": "selected-observation-to-next-input-minus-0.25"
+    },
+    "finalWinHeldSecondsAtLeast": 22.004358601,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "b767a3d3167445275b4f6b479fd0a0906acb330bc5ad318b2e0b0fb25eead1d1"
+      },
+      {
+        "name": "menu-detour-0.85s.png",
+        "sha256": "8810b4d0a7f1d79217395226fa68e1aa114a041c8fb8df3597cd0b63429bf104"
+      },
+      {
+        "name": "menu-joint-1.35s.png",
+        "sha256": "f23d20ba0c01b49d8044aebf06fea18af4eca74c9ad67ad5a8c2b115a6959a82"
+      },
+      {
+        "name": "probed-open-10.12s.png",
+        "sha256": "f7d10c1ac5ecebcf4825cec93930c79aa691ceea80f00b5f458260a8a082c12d"
+      },
+      {
+        "name": "probed-wall-16.11s.png",
+        "sha256": "c10acf4ac0e11be182c009b9ec2fba32413e15ea7355f695e18ed5bdd69a447e"
+      },
+      {
+        "name": "route-inference-20.10s.png",
+        "sha256": "7a9477cc3bb1867d45cd6eb89dfad0be9fffabf5d5e5ddf8716b10a502c5fc21"
+      },
+      {
+        "name": "gameplay-thumb-22.11s.png",
+        "sha256": "c66e16977d4fb193b5a0eb3ef5a211fb3cad6f39c3858b7bf96cf570e21ea531"
+      },
+      {
+        "name": "exit-before-submit-36.11s.png",
+        "sha256": "30efab6cb2e754d93c64ffabcbe0a00cd919baa8209cc873a4c9cda866de5df6"
+      },
+      {
+        "name": "settlement-58.42s.png",
+        "sha256": "73ed113916ba64f34fa033fc9767c5fe306173523b2533044da1db7437082e47"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "c0ff6d0b0907b9f443ad8598440b7f8c9ea5736be102521345b655adcdd3bcd9"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+    "game.js": "e86dfa72f06d56a0fccbec7c6296616e72b6bc448644b22e2d800a84957076aa",
+    "game-config.json": "947ea1c58a58525ffcc83e835bd0cbed1a17dfda4b5e24ff0be311b840d2abf0",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "105d7cd6a4ccb2d5ef7c2d73d5db72a9944202030d0fa6a3ca40fa7d9c8953c5",
+    "sign": "42d74be89deaf809e6cb093b6fe5644b8a2257a8f8f07ef82607d20e18a43d7d",
+    "fetch": "684cf7c222ada552d51951513d59558c376e4a3e84a26345e38cdf40dc3f4102",
+    "qa": "b166d4f762e2879e430f73a217c5ee9635f8307310ccea8dd33ab7eec78f7f70",
+    "ui": "3299b33fbc166dee253666530ab66450f5fc89ec0652b2c6a46accf7d9e03a70",
+    "layout": "d39394fd5d8dc03562e3905cb741c59d936462304a982820fc9ae5755b22f393",
+    "viewport": "8a2e1655e9f13f4cdf5445ca889d769ac1973b87681d441ece93b3fe398e10ec",
+    "summary": "94abfeb46d907e49b1df6583cce3dfbea88af343709e1b46ab1b05401896312f",
+    "record": "7d450ce759945027e70506e2b7356a4e43927e9346b2dc2deb731d395f0780df",
+    "review": "48b713a8ab254fa8e0f3b2e10aa71e4889d6e81814bedb4b1cc6a26f40c85201",
+    "videoValidation": "a8bf9703e9d20fae6aab30e8faa19a85bac80cf1f8f5b304435dc58b3ba5486c",
+    "artifacts": "009af4da9c3d4e3eeb104d73410d02a902c501ad01abd8cd16b2513fb10f16b2",
+    "independentModel": "36d949e485c6ec04d6c9a9d04f0ddbabef425553eb2cebfc526a6b9a46c73c07",
+    "independentPilot": "fc66c1589598f9a6c656fbeb275f3f727af5da1806472969ae2319aa0315e03d",
+    "artReview": "640741c9e3fdf3dba29e3a5e9eafc55740eb281df3709d31e7c66e16106cea57",
+    "modelTests": "8da2dac2ecde445d408defb3c1215fcb0b44e6c9f1c92d7d63aba20b96277121",
+    "candidateReview": "e117f8ae4e1b709d1b95a978f5b059bf7092ff2c0a9392872ecd38613b58582e",
+    "testProvenance": "80ef5f32462057d03b5267750d699061a3359a74527bf3d5c3e15bc1e149b1cc"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium gameplay uses real browser input events. Synthetic observer, native-room/phone and no-op source layout fixtures are separately labelled; no physical TV/phone installation or device performance is claimed."
+  },
+  "release": {
+    "sourceSha": "2da9b23c220b5d2993d4913af66f00024e897ae8",
+    "signerCommit": "2da9b23c220b5d2993d4913af66f00024e897ae8",
+    "signingRun": 41351987014,
+    "bytes": 296227,
+    "sha256": "14f2860cefb4a282a8858e3d651f20711c8f8adaf5d901fa4465287dc43f498e",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "99fb1570c495cf69261e77d2440ac8b576e0917b"
+  }
+}

@@ -1,0 +1,1016 @@
+{
+  "kind": "independent-synthetic-public-corridor-pilot-review",
+  "passed": true,
+  "expectedPilotSha256": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+  "sourceHashes": {
+    "tests/automation.mjs": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+    "src/main/assets/game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+    "docs/model-contract.md": "aefee429bee6fd24bf9ab5133dcddb6ef995997355932a22b8d5b95ca7b06a8d"
+  },
+  "reviewScriptSha256": "9828a6e1b8ffcc1957401e9dd6d3e1f31b7c6e0af986819ab0812aec8b8bfb54",
+  "productionModelImported": false,
+  "productionModelStepCalled": false,
+  "productionModelSourceReadOnlyForHashAndPrivateKeyNames": true,
+  "normalGameWinsClaimed": 0,
+  "browserExecuted": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "privateKeys": [
+    "_accumulator",
+    "_answerMask",
+    "_cancelEpoch",
+    "_futureInputs",
+    "_heldDirection",
+    "_lastA",
+    "_lastB",
+    "_nextMoveTick",
+    "_pendingA",
+    "_pendingB",
+    "_solution",
+    "floorMask",
+    "hiddenWalls",
+    "referencePath",
+    "trueMap",
+    "wallMask"
+  ],
+  "cellPrivateKeys": [
+    "wall",
+    "isWall",
+    "passable",
+    "truth"
+  ],
+  "checks": [
+    {
+      "name": "pilot import and public-source window are pinned without production model execution",
+      "passed": true
+    },
+    {
+      "name": "equal public probe histories produce identical keys across private root/model/cell variants and throwing getters",
+      "passed": true,
+      "pairedObservations": 6,
+      "variants": 3
+    },
+    {
+      "name": "ordinary A releases immediately, waits for a later neutral tick, and records public information gain with isolated diagnostics",
+      "passed": true,
+      "candidatesBefore": 9,
+      "candidatesAfter": 5
+    },
+    {
+      "name": "delayed charged probe progress remains valid after feedback expiry measured from permanent log.at",
+      "passed": true,
+      "issuedAt": 1.3,
+      "chargedAt": 2,
+      "observedAt": 2.7,
+      "lastProbe": null
+    },
+    {
+      "name": "time since issued input cannot substitute for charged log time; mismatched feedback and uncharged extra revelations are rejected",
+      "passed": true
+    },
+    {
+      "name": "two explicit public observations yield a guaranteed route through unrevealed cells, ordinary cardinal appends and final A submission without revealing a true map",
+      "passed": true,
+      "syntheticObservations": 24,
+      "routeEdges": 6,
+      "syntheticSubmissionIssued": true,
+      "normalWinClaimed": false
+    },
+    {
+      "name": "B pops one route edge at a time then returns from entry to probe mode, preserving charged knowledge and probe budget",
+      "passed": true,
+      "syntheticObservations": 10,
+      "paidProbesRetained": 1
+    },
+    {
+      "name": "interleaved factories keep separate public knowledge: one surveys while the other enters its guaranteed route",
+      "passed": true
+    },
+    {
+      "name": "an externally dropped or canceled probe input is released and retried after timeout without inventing a paid observation",
+      "passed": true
+    },
+    {
+      "name": "menu pause constructed terminal and elapsed rollback retry keep ordinary input neutral or freshly delayed",
+      "passed": true
+    },
+    {
+      "name": "public exports preserve exact-distance inference, resource ledgers and geometry while board/policy/time/domain caps fail closed",
+      "passed": true,
+      "exportFixtureCalls": 12,
+      "initialCandidates": 9,
+      "initialRowProductsVisited": 1296,
+      "noFullRuleEnumeration": true
+    },
+    {
+      "name": "every object observation stays deeply frozen, including cells/path/log, with zero private reads or writes",
+      "passed": true
+    }
+  ],
+  "scope": "Hand-authored public observation histories using published row clues and hypothetical probe outcomes. Constructed probe/route/terminal snapshots test observer and input protocols, not production transitions, actual games, footage or devices. No production model create/step, true layout, authoring report or reference route is used. The reviewed public pilot and its own public inference/planner are executed; the full mathematical proof remains separate.",
+  "afterImportHashes": {
+    "tests/automation.mjs": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+    "src/main/assets/game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+    "docs/model-contract.md": "aefee429bee6fd24bf9ab5133dcddb6ef995997355932a22b8d5b95ca7b06a8d"
+  },
+  "endHashes": {
+    "tests/automation.mjs": "867570ce81b461971c1fa214e18a94de69b3e0796724c59cba09808ee4c4e86b",
+    "src/main/assets/game-model.js": "22d4539efb20e00b67125507f93b6d4f157d9b136fc31eb43e4a373cdd1288eb",
+    "docs/model-contract.md": "aefee429bee6fd24bf9ab5133dcddb6ef995997355932a22b8d5b95ca7b06a8d"
+  },
+  "reviewScriptEndSha256": "9828a6e1b8ffcc1957401e9dd6d3e1f31b7c6e0af986819ab0812aec8b8bfb54",
+  "sourceUnchanged": true,
+  "pilotCalls": 83,
+  "exportCalls": 12,
+  "observationCalls": 95,
+  "observationCallLimit": 100,
+  "factoriesCreated": 10,
+  "privateReads": 0,
+  "mutationAttempts": 0,
+  "deepFrozenObservations": 94,
+  "scalarGeometryCalls": 1,
+  "meaningfulDirectionOutputs": 7,
+  "probeSubmitEdgeOutputs": 8,
+  "modeBacktrackEdgeOutputs": 5,
+  "inputTraceSha256": "616177a65c510554104183a83761837bc532e80881a4813812b3d619ab847268",
+  "inputTrace": [
+    {
+      "label": "paired-0-a",
+      "tick": 0,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-0-b",
+      "tick": 0,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-0-getters",
+      "tick": 0,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-1-a",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-1-b",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-1-getters",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-2-a",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-2-b",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-2-getters",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-3-a",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-3-b",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-3-getters",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-a",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-b",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-getters",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-5-a",
+      "tick": 84,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-5-b",
+      "tick": 84,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-5-getters",
+      "tick": 84,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "late-0",
+      "tick": 0,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "late-1.1",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "late-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "late-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "late-valid-charged-event",
+      "tick": 162,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "early-0",
+      "tick": 0,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "early-1.1",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "early-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "early-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "reject-early-null-after-delayed-charge",
+      "tick": 126,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "error": "Probe feedback disappeared before its highlight lifetime"
+    },
+    {
+      "label": "reject-highlight-log-time-mismatch",
+      "tick": 132,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "error": "Visible probe emission disagrees with the observation"
+    },
+    {
+      "label": "reject-free-extra-wall-revelation",
+      "tick": 132,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "error": "Paid probe did not preserve the public observation/resource ledger"
+    },
+    {
+      "label": "safe-public-route-0",
+      "tick": 600,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 11,
+      "probesUsed": 2,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-1",
+      "tick": 666,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 11,
+      "probesUsed": 2,
+      "pathEdges": 0,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "safe-public-route-2",
+      "tick": 666,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 11,
+      "probesUsed": 2,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-3",
+      "tick": 672,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 0,
+      "probesUsed": 2,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-4",
+      "tick": 690,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 0,
+      "probesUsed": 2,
+      "pathEdges": 0,
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "safe-public-route-5",
+      "tick": 690,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 0,
+      "probesUsed": 2,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-6",
+      "tick": 696,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 1,
+      "probesUsed": 2,
+      "pathEdges": 1,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-7",
+      "tick": 708,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 1,
+      "probesUsed": 2,
+      "pathEdges": 1,
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "safe-public-route-8",
+      "tick": 708,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 1,
+      "probesUsed": 2,
+      "pathEdges": 1,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-9",
+      "tick": 714,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 5,
+      "probesUsed": 2,
+      "pathEdges": 2,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-10",
+      "tick": 726,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 5,
+      "probesUsed": 2,
+      "pathEdges": 2,
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "safe-public-route-11",
+      "tick": 726,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 5,
+      "probesUsed": 2,
+      "pathEdges": 2,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-12",
+      "tick": 732,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 6,
+      "probesUsed": 2,
+      "pathEdges": 3,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-13",
+      "tick": 744,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 6,
+      "probesUsed": 2,
+      "pathEdges": 3,
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "safe-public-route-14",
+      "tick": 744,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 6,
+      "probesUsed": 2,
+      "pathEdges": 3,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-15",
+      "tick": 750,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 10,
+      "probesUsed": 2,
+      "pathEdges": 4,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-16",
+      "tick": 762,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 10,
+      "probesUsed": 2,
+      "pathEdges": 4,
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "safe-public-route-17",
+      "tick": 762,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 10,
+      "probesUsed": 2,
+      "pathEdges": 4,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-18",
+      "tick": 768,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 11,
+      "probesUsed": 2,
+      "pathEdges": 5,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-19",
+      "tick": 780,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 11,
+      "probesUsed": 2,
+      "pathEdges": 5,
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "safe-public-route-20",
+      "tick": 780,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 11,
+      "probesUsed": 2,
+      "pathEdges": 5,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-21",
+      "tick": 786,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 15,
+      "probesUsed": 2,
+      "pathEdges": 6,
+      "keys": []
+    },
+    {
+      "label": "safe-public-route-22",
+      "tick": 798,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 15,
+      "probesUsed": 2,
+      "pathEdges": 6,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "safe-public-route-23",
+      "tick": 798,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 15,
+      "probesUsed": 2,
+      "pathEdges": 6,
+      "keys": []
+    },
+    {
+      "label": "B-pop-no-refund-0",
+      "tick": 300,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 8,
+      "probesUsed": 1,
+      "pathEdges": 2,
+      "keys": []
+    },
+    {
+      "label": "B-pop-no-refund-1",
+      "tick": 366,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 8,
+      "probesUsed": 1,
+      "pathEdges": 2,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "B-pop-no-refund-2",
+      "tick": 366,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 8,
+      "probesUsed": 1,
+      "pathEdges": 2,
+      "keys": []
+    },
+    {
+      "label": "B-pop-no-refund-3",
+      "tick": 372,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 4,
+      "probesUsed": 1,
+      "pathEdges": 1,
+      "keys": []
+    },
+    {
+      "label": "B-pop-no-refund-4",
+      "tick": 384,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 4,
+      "probesUsed": 1,
+      "pathEdges": 1,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "B-pop-no-refund-5",
+      "tick": 384,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 4,
+      "probesUsed": 1,
+      "pathEdges": 1,
+      "keys": []
+    },
+    {
+      "label": "B-pop-no-refund-6",
+      "tick": 390,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 0,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "B-pop-no-refund-7",
+      "tick": 402,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 0,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "B-pop-no-refund-8",
+      "tick": 402,
+      "phase": "playing",
+      "mode": "route",
+      "selectedId": 0,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "B-pop-no-refund-9",
+      "tick": 408,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 1,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "factory-start-0",
+      "tick": 0,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 0,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "factory-start-1",
+      "tick": 0,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 0,
+      "probesUsed": 2,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "factory-public-knowledge-0",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 0,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": [
+        "ArrowRight"
+      ]
+    },
+    {
+      "label": "factory-public-knowledge-1",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 0,
+      "probesUsed": 2,
+      "pathEdges": 0,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "factory-release-0",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 0,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "factory-release-1",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 0,
+      "probesUsed": 2,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-0",
+      "tick": 0,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-1.1",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "dropped-1.3",
+      "tick": 78,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-key-1.4",
+      "tick": 84,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-key-2.9",
+      "tick": 174,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "dropped-key-3.3",
+      "tick": 198,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "dropped-key-3.3",
+      "tick": 198,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "menu-neutral",
+      "tick": 198,
+      "phase": "menu",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "pause-neutral",
+      "tick": 198,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "synthetic-terminal-control-neutral",
+      "tick": 198,
+      "phase": "won",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "retry-clock-rollback",
+      "tick": 0,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    },
+    {
+      "label": "retry-fresh-ready-delay",
+      "tick": 66,
+      "phase": "playing",
+      "mode": "probe",
+      "selectedId": 6,
+      "probesUsed": 0,
+      "pathEdges": 0,
+      "keys": []
+    }
+  ],
+  "calledExports": [
+    "createPilot",
+    "publicKnowledge",
+    "inferVisibleState",
+    "planVisibleState",
+    "shortestPublicPath",
+    "assertPublicSurvey"
+  ]
+}
