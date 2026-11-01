@@ -237,13 +237,17 @@ def launch(bundle):
     run(['osascript', '-e', f'tell application "System Events" to tell (first process whose unix id is {process.pid}) to set size of window 1 to {{1440, 860}}'], check=False)
     metadata = json.loads(run([HELPER, 'metadata', process.pid]).stdout)
     save(f'window-{bundle["version"]}.json', metadata)
+    assert any(window.get('title') == 'pure TV' for window in metadata['windows']), 'Native Manager window missing'
     main = next((display for display in metadata.get('displays', []) if display.get('main')), None)
     if main:
         SCALE_X, SCALE_Y = main['scaleX'], main['scaleY']
         DISPLAY_BOUNDS = main['bounds']
     event('launch', version=bundle['version'], pid=process.pid,
           binarySha256=sha(bundle['executable']), screenshotScale=[SCALE_X, SCALE_Y])
-    return wait_screen('launch-' + bundle['version'], lambda items: has_version(items, bundle['version']), timeout=40)
+    # Vision can omit the tiny sidebar version entirely. Verified bundle and
+    # executable identify the launch; larger update-dialog versions are checked
+    # separately before the updater footage can succeed.
+    return wait_screen('launch-' + bundle['version'], lambda items: has(items, '设备连接') and has(items, '论坛'), timeout=40)
 
 
 def quit_app():
