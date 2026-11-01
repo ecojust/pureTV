@@ -253,6 +253,7 @@ test('native fold budgets are 3/3/4 and review runs only after the last permitte
       assert.equal(s.reviewCount, i + 1 === limit ? 1 : 0);
     }
     assert.equal(s.mode, 'review'); assert.equal(s.foldCount, limit);
+    assert.match(s.message, /验收未匹配/, 'final review keeps its own result message');
   }
 });
 
@@ -267,7 +268,10 @@ test('fold geometry updates atomically and .6 second animation has independent s
   ticks(s, 18); assert.equal(s.mode, 'folding'); assert.ok(Math.abs(s.foldAnimation.progress - 0.5) < 1e-12);
   assert.deepEqual(geometry(s), end, 'logical vertices never become compressed intermediate drawing coordinates');
   ticks(s, 17); assert.equal(s.mode, 'folding'); assert.ok(s.foldAnimation.progress < 1);
+  assert.match(s.message, /正在折叠/, 'the working message belongs only to the active animation');
   tick(s); assert.equal(s.mode, 'editing'); assert.equal(s.foldAnimation, null);
+  assert.match(s.message, /折叠完成.*下一条折线/);
+  assert.doesNotMatch(s.message, /正在折叠/, 'settled editing must not tell the user an operation is still running');
   assert.deepEqual(geometry(s), end); assert.deepEqual(animation.beforePieces, before.pieces);
   assert.equal(s.elapsed - animation.startedAt, 0.6);
 });
