@@ -20,6 +20,7 @@ on:
           - all
           - games
           - used-car-racing
+          - alien-shooter
 permissions:
   contents: write
   actions: read
@@ -45,8 +46,9 @@ jobs:
           source_sha, release_tag = os.environ['SOURCE_SHA'], os.environ['RELEASE_TAG']
           assert re.fullmatch(r'[0-9a-f]{40}', source_sha), 'An exact source SHA is required'
           scope = os.environ['PACKAGE_SCOPE']
-          pattern = r'android-used-car-v[0-9]+\.[0-9]+\.[0-9]+' if scope == 'used-car-racing' else r'android-v[0-9]+\.[0-9]+\.[0-9]+'
-          assert scope in ('all', 'games', 'used-car-racing') and re.fullmatch(pattern, release_tag), 'Release tag does not match the selected package scope'
+          prefix = {'used-car-racing': 'android-used-car-v', 'alien-shooter': 'android-alien-shooter-v'}.get(scope, 'android-v')
+          pattern = re.escape(prefix) + r'[0-9]+\.[0-9]+\.[0-9]+'
+          assert scope in ('all', 'games', 'used-car-racing', 'alien-shooter') and re.fullmatch(pattern, release_tag), 'Release tag does not match the selected package scope'
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
               output.write(f'source_sha={source_sha}\nrelease_tag={release_tag}\n')
           PY

@@ -18,6 +18,7 @@ on:
         options:
           - games
           - used-car-racing
+          - alien-shooter
       check_signing_only:
         description: Only verify that release secrets are configured and match the pinned game release certificate
         type: boolean
@@ -159,6 +160,8 @@ jobs:
           test "$(git rev-parse "refs/remotes/origin/$STAGE_BRANCH^")" = "$SOURCE_SHA"
           if [ "$PACKAGE_SCOPE" = used-car-racing ]; then
             game_apps=(--app used-car-racing)
+          elif [ "$PACKAGE_SCOPE" = alien-shooter ]; then
+            game_apps=(--app alien-shooter)
           elif [ "$PACKAGE_SCOPE" = games ]; then
             game_apps=(--app tank --app jackal --app jewel --app tetris --app bomb-jack --app adventure-island --app super-mario --app coast-kart --app cozy-island)
           else
@@ -185,7 +188,7 @@ jobs:
           git add README.md README.en.md resource/README.md docs/previews/en \
             resource/apps/tank resource/apps/jackal resource/apps/jewel resource/apps/tetris \
             resource/apps/bomb-jack resource/apps/adventure-island resource/apps/super-mario \
-            resource/apps/coast-kart resource/apps/cozy-island resource/apps/used-car-racing
+            resource/apps/coast-kart resource/apps/cozy-island resource/apps/used-car-racing resource/apps/alien-shooter
           git commit -m "Publish signed game resources from $SOURCE_SHA"
           git push origin HEAD
           printf 'Published branch: `build-assets/published-games-%s`\n\nSource: `%s`\n' "$GITHUB_RUN_ID" "$SOURCE_SHA" >> "$GITHUB_STEP_SUMMARY"

@@ -18,6 +18,10 @@ GAME_PACKAGES = {'com.ecojust.' + name + 'tv' for name in (
 
 
 def release_scope(tag, scope):
+    if scope == 'alien-shooter':
+        match = re.fullmatch(r'android-alien-shooter-v(\d+\.\d+\.\d+)', tag)
+        assert match, 'Alien Shooter requires its own android-alien-shooter-v tag'
+        return match[1], {'com.ecojust.alienshootertv'}
     if scope == 'used-car-racing':
         match = re.fullmatch(r'android-used-car-v(\d+\.\d+\.\d+)', tag)
         assert match, 'Used Car Racing requires its own android-used-car-v tag'
@@ -42,7 +46,7 @@ def main():
     parser.add_argument('--source-sha', required=True)
     parser.add_argument('--tag', required=True)
     parser.add_argument('--build-tools', required=True, type=Path)
-    parser.add_argument('--scope', choices=('all', 'games', 'used-car-racing'), default='all')
+    parser.add_argument('--scope', choices=('all', 'games', 'used-car-racing', 'alien-shooter'), default='all')
     parser.add_argument('--validate-only', action='store_true')
     args = parser.parse_args()
     assert re.fullmatch(r'[0-9a-f]{40}', args.source_sha), 'Exact source SHA required'

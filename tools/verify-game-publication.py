@@ -19,8 +19,9 @@ def validate_version_transition(game, scope, metadata, previous):
     if previous is not None:
         assert metadata['versionCode'] > previous['versionCode'], f'{game}: versionCode must increase for an update'
         return
-    assert scope == 'used-car-racing' and game == 'used-car-racing', 'Only the registered new game may have no previous release'
-    assert metadata['packageName'] == 'com.ecojust.usedcartv', 'Unexpected initial package identity'
+    initial_packages = {'used-car-racing': 'com.ecojust.usedcartv', 'alien-shooter': 'com.ecojust.alienshootertv'}
+    assert scope == game and game in initial_packages, 'Only a registered new game may have no previous release'
+    assert metadata['packageName'] == initial_packages[game], 'Unexpected initial package identity'
     assert metadata['versionCode'] == 1 and metadata['version'] == '0.1.0', 'Unexpected initial game identity'
 
 
@@ -28,14 +29,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source-sha', required=True)
     parser.add_argument('--build-tools', type=Path, required=True)
-    parser.add_argument('--scope', choices=('games', 'used-car-racing'), default='games')
+    parser.add_argument('--scope', choices=('games', 'used-car-racing', 'alien-shooter'), default='games')
     args = parser.parse_args()
     assert re.fullmatch(r'[a-f0-9]{40}', args.source_sha), 'Exact source SHA required'
     root = Path(__file__).resolve().parents[1]
     head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
     assert head == args.source_sha, 'Checkout must match the verified source build'
     verify_catalog(root, args.build_tools)
-    games = ('used-car-racing',) if args.scope == 'used-car-racing' else GAMES
+    games = GAMES if args.scope == 'games' else (args.scope,)
     packages = []
     for game in games:
         folder = root / 'resource/apps' / game

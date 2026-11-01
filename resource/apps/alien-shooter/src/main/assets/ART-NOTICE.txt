@@ -1,0 +1,20 @@
+Alien Shooter TV — original visual assets
+
+All models, procedural textures, effects and logo in this application were
+created for this independent PureTV game. No original game's sprites, maps,
+models, recordings, logo or ROM are bundled.
+
+renderer.js generates the following local CanvasTextures once at startup:
+- Three seeded 1024 x 1024 steel-floor materials, with plate seams, fasteners,
+  vents, scratches, surface noise and oil stains.
+- A 512 x 512 brushed-metal surface and a 512 x 512 mottled organic skin.
+- 128 x 128 contact shadow, light glow and splatter masks.
+- A 1024 x 512 industrial floor-stencil atlas.
+
+Low-poly models are built from authored arrangements of primitive geometry.
+Static scenery is merged by material. Characters, separate gait parts, effects,
+decals and pickups use bounded instanced pools. Textures and geometry are local;
+no network image or model downloads are required.
+
+Application-specific visuals and code are under the application's MIT license.
+The bundled Three.js r124 library is covered by THREE-LICENSE.txt.

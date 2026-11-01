@@ -35,7 +35,7 @@ RELEASE_CERTIFICATE_CUTOVERS = {
 
 # New applications launched after the certificate rotation have no legacy signer.
 # Register exact package IDs; similar or unknown packages must not inherit this pin.
-NEW_RELEASE_CERTIFICATE_PACKAGES = {'com.ecojust.usedcartv'}
+NEW_RELEASE_CERTIFICATE_PACKAGES = {'com.ecojust.usedcartv', 'com.ecojust.alienshootertv'}
 
 def expected_release_certificate(root, identity):
     """Return the single certificate pinned for an APK's package and version."""
@@ -94,8 +94,8 @@ def catalog_directories(root):
             if directory.is_dir() and not directory.name.startswith('.'):
                 yield directory
 
-def verify_catalog(root,tools,*,allow_unpublished_used_car=False):
-    """Verify every published resource; the build may bootstrap one source-only app.
+def verify_catalog(root,tools,*,allow_unpublished_used_car=False,allow_unpublished_alien_shooter=False):
+    """Verify every published resource; builds may bootstrap registered new apps.
 
     Generated APKs under build/ are build inputs, not catalog resources. Only the
     exact new app directory can lack both metadata and top-level resource APKs.
@@ -104,8 +104,9 @@ def verify_catalog(root,tools,*,allow_unpublished_used_car=False):
     entries=[]
     for directory in catalog_directories(root):
         metadata=directory/'resource.json'
-        if (allow_unpublished_used_car
-                and directory==root/'resource/apps/used-car-racing'
+        source_only = ((allow_unpublished_used_car and directory==root/'resource/apps/used-car-racing')
+                       or (allow_unpublished_alien_shooter and directory==root/'resource/apps/alien-shooter'))
+        if (source_only
                 and not directory.is_symlink()
                 and not metadata.exists() and not metadata.is_symlink()
                 and not any(path.suffix.lower()=='.apk' for path in directory.iterdir())):

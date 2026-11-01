@@ -88,7 +88,8 @@ class ReleaseCertificatesTest(unittest.TestCase):
     def test_unknown_and_similar_package_names_cannot_automatically_use_the_new_pin(self):
         for package in ('com.ecojust.unknown', 'com.ecojust.newapp',
                         'com.ecojust.coastkarttv.clone', 'com.ecojust.tanktv2',
-                        'com.ecojust.usedcartv.clone', 'com.ecojust.usedcartv2'):
+                        'com.ecojust.usedcartv.clone', 'com.ecojust.usedcartv2',
+                        'com.ecojust.alienshootertv.clone', 'com.ecojust.alienshootertv2'):
             with self.subTest(package=package):
                 self.assertEqual(resource_catalog.expected_release_certificate(
                     self.root, self.identity(package, 999, '99.0.0')), self.old)
@@ -255,6 +256,32 @@ class ReleaseCertificatesTest(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, 'No APK resources found'):
             resource_catalog.verify_catalog(
                 self.root, Path('/unused'), allow_unpublished_used_car=True)
+
+    def test_alien_shooter_initial_certificate_and_bootstrap_are_exact(self):
+        identity = self.identity('com.ecojust.alienshootertv', 1, '0.1.0', self.new)
+        self.assertEqual(resource_catalog.expected_release_certificate(self.root, identity), self.new)
+        for code, version in ((0, '0.1.0'), (1, '0.0.9'), (1, 'invalid')):
+            with self.subTest(code=code, version=version), self.assertRaises(AssertionError):
+                resource_catalog.expected_release_certificate(self.root, self.identity('com.ecojust.alienshootertv', code, version))
+        tank_identity = self.identity('com.ecojust.tanktv', 7, '0.5.0', self.new)
+        tank = self.fixture('tank', tank_identity)
+        folder = self.root / 'resource/apps/alien-shooter'
+        folder.mkdir()
+        with patch.object(resource_catalog, 'apk_info', return_value=tank_identity) as inspect:
+            for options in ({}, {'allow_unpublished_used_car': True}):
+                with self.subTest(options=options), self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+                    resource_catalog.verify_catalog(self.root, Path('/unused'), **options)
+            inspect.reset_mock()
+            entries = resource_catalog.verify_catalog(self.root, Path('/unused'), allow_unpublished_alien_shooter=True)
+            self.assertEqual(len(entries), 1)
+            inspect.assert_called_once_with(tank / 'game.apk', Path('/unused'))
+            (folder / 'game.apk').write_bytes(b'unsigned')
+            with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+                resource_catalog.verify_catalog(self.root, Path('/unused'), allow_unpublished_alien_shooter=True)
+            (folder / 'game.apk').unlink()
+            folder.rename(folder.with_name('alien-shooter-copy'))
+            with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+                resource_catalog.verify_catalog(self.root, Path('/unused'), allow_unpublished_alien_shooter=True)
 
 
 if __name__ == '__main__':

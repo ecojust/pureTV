@@ -23,7 +23,7 @@ if key_path:
 else:assert built['certificateSha256'] is None,'Unexpected build signing certificate'
 # A first build must precede signing the new app's resource.json and resource APK.
 # This exception belongs only to build verification; publishers remain strict.
-entries=verify_catalog(root,tools,allow_unpublished_used_car=True)
+entries=verify_catalog(root,tools,allow_unpublished_used_car=True,allow_unpublished_alien_shooter=True)
 source_tree=launcher_source_tree(root)
 resource=next((entry for entry in entries if entry['packageName']==built['packageName'] and entry['version']==built['versionName'] and entry['sourceTreeSha']==source_tree),None)
 selected=root/resource['path'] if resource else paths[0]

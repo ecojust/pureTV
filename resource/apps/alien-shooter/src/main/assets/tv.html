@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; media-src 'self' blob:">
+  <title>孤胆枪手 TV</title>
+  <link rel="stylesheet" href="tv.css">
+</head>
+<body>
+  <main id="game-shell" data-phase="title">
+    <canvas id="battlefield" aria-label="孤胆枪手游戏场景"></canvas>
+    <div class="screen-grain" aria-hidden="true"></div>
+    <section id="hud" class="hud" aria-label="战斗状态" hidden>
+      <header class="mission-strip">
+        <div class="mission-name"><span id="stage-number" class="eyebrow"></span><strong id="stage-name"></strong></div>
+        <div class="mission-objective"><span id="objective-label"></span><strong id="objective-name"></strong><div class="objective-meter"><i id="objective-progress"></i></div></div>
+        <div class="mission-count"><span id="enemy-label"></span><strong id="enemy-count">0</strong></div>
+        <button class="icon-button" id="pause-button" type="button" aria-label="暂停"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></button>
+      </header>
+      <div id="combat-notice" class="combat-notice" role="status" hidden></div>
+      <aside id="tactical-panel" class="tactical-panel"><div class="tactical-heading"><span id="tactical-label"></span><span id="tactical-distance"></span></div><canvas id="tactical-map" width="320" height="228" aria-label="战术地图"></canvas><div class="tactical-legend"><i></i><span id="tactical-target"></span></div></aside>
+      <div id="players-hud" class="players-hud"></div>
+      <div class="battle-footer"><span id="battle-help"></span><span id="credits-hud"></span></div>
+    </section>
+    <div id="menu-layer" class="menu-layer">
+      <section id="menu-content" class="menu-content"></section>
+      <aside id="room-panel" class="room-panel">
+        <div class="room-heading"><span class="status-dot"></span><span id="room-heading"></span></div>
+        <div class="qr-frame"><img id="room-qr" alt="手机手柄连接二维码" hidden><div id="qr-pending"><span class="qr-symbol">⌘</span><span id="network-message"></span></div></div>
+        <h2 id="scan-title"></h2><p id="scan-description"></p>
+        <div id="room-address" class="room-address"></div>
+        <div id="room-players" class="room-players"></div>
+        <div class="control-diagram" aria-hidden="true"><div><i class="stick"></i><span id="move-guide"></span></div><div class="diagram-actions"><span id="fire-guide"></span><span id="grenade-guide"></span></div></div>
+        <p id="room-note" class="room-note"></p>
+      </aside>
+      <footer class="menu-footer"><span>pureTV <b>·</b> <span id="version-label">0.1.0</span></span><span id="menu-footer-help"></span><button id="sound-button" class="text-button" type="button"></button></footer>
+    </div>
+    <div id="graphics-status" class="graphics-status" role="status" hidden></div>
+    <div class="loading" id="game-loading" role="status"><div class="loading-mark"></div><strong id="loading-title">正在进入封锁区…</strong><p id="loading-detail"></p></div>
+  </main>
+  <script src="bootstrap.js"></script>
+  <script src="world.js"></script>
+  <script src="game-model.js"></script>
+  <script src="three.min.js"></script>
+  <script src="renderer.js"></script>
+  <script src="audio.js"></script>
+  <script src="runtime.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
