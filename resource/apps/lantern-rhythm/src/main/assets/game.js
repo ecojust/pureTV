@@ -198,7 +198,7 @@
     description:'先看灯塔示范，记住方向和短长。轮到你时，按节拍选择方向并按住 A：短按约 0.3 秒，长按约 0.7 秒，再松开。每段全部正确才点亮信标。B 花一次机会重播整段；重播不暂停计时。',
     controls:{move:'摇杆 / 方向键：选择本拍朝向',a:'按住再松 · 空格 / 确认 / 右上半屏',b:'重播整段 · B / 右下半屏'},actionLabels:['按住 / 松开','重播本段'],
     tip:'方向在按下 A 时锁定。短按约 0.3 秒，长按约 0.7 秒。B 是有限重播，不是暂停。',
-    winTitle:'整片海岸都收到了你的信号',loseTitle:'再听一次海上的节拍',
+    winTitle:'海岸收到了你的信号',loseTitle:'再听一次海上的节拍',
     result(s){
       if(s.phase==='won')return '已点亮全部 '+s.phraseCount+' 座信标，完成 '+s.correctNotes+' 拍，剩余 '+s.replaysRemaining+' 次重播机会。';
       if(s.lostReason==='timeout')return '90 秒已到，已点亮 '+s.litCount+' / '+s.phraseCount+' 座信标。重播仍会耗时；先记住方向与长短，再按节拍回应。';
