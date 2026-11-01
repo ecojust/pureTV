@@ -506,7 +506,8 @@ try {
     assert.equal(await p.locator('[data-page="install"]').count(),0,'No separate install navigation');
     for(const page of ['apps','launchers','install','history']) {
       await nav(p,page);assert.equal(await p.locator('.connection-strip').count(),0,`No connection form on ${page}`);
-      assert.match(await p.locator('.device-badge').innerText(),/已连接/);
+      if(page==='history') assert.equal(await p.locator('.device-badge').count(),0,'Activity is independent of the television connection');
+      else assert.match(await p.locator('.device-badge').innerText(),/已连接/);
     }
     await nav(p,'connect');assert.equal(await p.locator('[name="host"]').count(),1);
   });
