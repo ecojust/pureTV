@@ -57,6 +57,7 @@
 | [奇偶花圃](apps/parity-garden/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用十字与斜角喷头翻转4×4花圃，让目标花形和标记花的直接浇水偶数条件同时成立；重复浇水不退水，三道有限水量谜题，支持手机扫码单人操作 | <img src="apps/parity-garden/thumb.png" width="180" alt="奇偶花圃 界面"> |
 | [路径刻印](apps/path-glyphs/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在5×5石板上规划不重复的路径，按入边条件收集方向符号，在出口提交与目标完全一致的刻印；三道公开谜题，支持手机扫码单人操作 | <img src="apps/path-glyphs/thumb.png" width="180" alt="路径刻印 界面"> |
 | [传粉契约](apps/pollinator-contract/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 调度两支蜂群，在有限花期和前置任务间完成授粉；途中改派并及时返巢恢复耐力，完成三关花园契约。 | <img src="apps/pollinator-contract/thumb.png" width="180" alt="传粉契约 界面"> |
+| [压力封装](apps/pressure-seal/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 控制加热与泄压，让三种包装依次在目标压力内完成密封；松手后的余热仍会改变压力。 | <img src="apps/pressure-seal/thumb.png" width="180" alt="压力封装 界面"> |
 | [镜光接力](apps/prism-relay/) | ecojust / 桔子桑 | 0.1.1 | 285.3 KB | 旋转镜片与分色棱镜，让彩色光束准确抵达接收器，包含反射、分色与合光三关，支持手机扫码单人操作 | <img src="apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"> |
 | [脉冲储库](apps/pulse-vault/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 按住收集有限脉冲，选择档位向顺序门锁放电；控制储能溢出和热峰，开启四门并保留终储备，完成三种供能关卡。 | <img src="apps/pulse-vault/thumb.png" width="180" alt="脉冲储库 界面"> |
 | [四季蓄水](apps/reservoir-seasons/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 根据四季天气预报向居民、农田和生态河流配水；撤销尚未提交的计划，守住居民每季用水底线，并分别完成三方年度目标。 | <img src="apps/reservoir-seasons/thumb.png" width="180" alt="四季蓄水 界面"> |
