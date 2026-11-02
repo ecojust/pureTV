@@ -32,6 +32,7 @@
 | [电芯交换](apps/battery-exchange/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 在断电窗口中交换六枚不同电量与内阻的电芯，为两组负载切换串联或并联；按阶段完成供电任务，同时保留电量余裕并避免电芯或负载过热。 | <img src="apps/battery-exchange/thumb.png" width="180" alt="电芯交换 界面"> |
 | [双线节律](apps/beat-braid/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 一线持续按住，另一线按节拍点按，交替编织并保持连续；完成三个节奏关卡。 | <img src="apps/beat-braid/thumb.png" width="180" alt="双线节律 界面"> |
 | [Mighty Bomb Jack TV](apps/bomb-jack/) | ecojust / 桔子桑 | 0.5.2 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |
+| [解线工](apps/cable-unweaver/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 沿轨道移动接线端子，保持金属线夹整组联动，消除直线电缆的非法交叉与端子重合；三种工作台，最后一次调整也能完成接线。 | <img src="apps/cable-unweaver/thumb.png" width="180" alt="解线工 界面"> |
 | [CCTV Live](apps/cctv/) | ecojust / 桔子桑 | 0.5.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
 | [齿轮同刻](apps/clockwork-align/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 调节齿轮列的离合与制动，在有限调节次数内让所有指针于预约时间窗中持续对齐目标；挑战三种齿比结构。 | <img src="apps/clockwork-align/thumb.png" width="180" alt="齿轮同刻 界面"> |
 | [Coast Kart TV](apps/coast-kart/) | ecojust / 桔子桑 | 0.5.2 | 257.6 KB | 原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏 | <img src="apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"> |
