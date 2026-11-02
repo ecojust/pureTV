@@ -34,6 +34,7 @@
 | [回声探图](apps/echo-cartographer/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在有限照明下发射声呐测绘暗室，控制脚步噪声避开巡逻机，收集信标后返回入口，支持手机扫码单人操作 | <img src="apps/echo-cartographer/thumb.png" width="180" alt="回声探图 界面"> |
 | [折光工坊](apps/glass-fold/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 沿折线翻叠半透明彩片，用轮廓与叠色匹配目标花窗；三张谜题、有限折叠与90秒有效时间，支持撤销修正和手机扫码单人操作 | <img src="apps/glass-fold/thumb.png" width="180" alt="折光工坊 界面"> |
 | [引力快递](apps/gravity-courier/) | ecojust / 桔子桑 | 0.1.1 | 285.3 KB | 驾驶惯性小艇绕行引力星体，管理燃料并完成三次星际配送，支持手机扫码单人操作 | <img src="apps/gravity-courier/thumb.png" width="180" alt="引力快递 界面"> |
+| [温室旋钮](apps/greenhouse-dials/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 通过延迟生效的通风、遮阳和滴灌控制调节共享温湿度与土壤水分，管理有限水量，使三种作物分别达到成熟度并避免枯死。 | <img src="apps/greenhouse-dials/thumb.png" width="180" alt="温室旋钮 界面"> |
 | [隐墙测绘](apps/hidden-corridors/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 依据每行通路格数与最短边数，用有限探针推断4×4隐藏墙体，再提交安全且长度正确的路线；三关固定布局，支持手机扫码单人操作 | <img src="apps/hidden-corridors/thumb.png" width="180" alt="隐墙测绘 界面"> |
 | [HIFINi TV](apps/hifini/) | ecojust / 桔子桑 | 0.5.0 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
 | [双岛联结](apps/island-dominoes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 按桥牌的直线长度与目标颜色连结岛屿，避开交叉并用尽所有独立桥牌组成连通网络；支持原片撤销，三关固定布局与90秒时限，手机扫码单人操作 | <img src="apps/island-dominoes/thumb.png" width="180" alt="双岛联结 界面"> |

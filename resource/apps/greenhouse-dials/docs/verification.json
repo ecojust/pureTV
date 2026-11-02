@@ -1,0 +1,1835 @@
+{
+  "schema": 1,
+  "game": "greenhouse-dials",
+  "version": "0.1.0",
+  "sourceCommit": "3661f471386f1153a3f0e4b35f37750ac8bfe50c",
+  "automationSha256": "65e0289ee241c8c3cecdf97e29e270fbd52858010fce4b6110917293797eedb3",
+  "gameRules": {
+    "contract": "model-contract.md",
+    "contractSha256": "da85252bbb36e5c15214311aac90ccde7a036b2da8da20bd1afcdf8c21d80ad7",
+    "formalProvenance": {
+      "originalReportSha256": "6d28674503517cfd4248cfbf42badad0c28fd20815def25e4400e47e84ede9c0",
+      "parserCorrectionBeforeSha256": "651d51b94f2fbed4dcf8fad28b465ddd9e96afc1f57f905c5af1c69c34b3502d",
+      "sourceWindowScope": "Root accepted these exact model/test/contract pins before authorizing the first run; this tool independently hashed them later. This is a wider review-to-later-recheck window, NOT a separately recorded immediate test-end hash snapshot. Original runner report contains only one source-hash set.",
+      "rerun": false
+    },
+    "ordinaryRounds": [
+      {
+        "name": "level1-record",
+        "rawFileSha256": "06bd913cbafc36956cdc16487a9b6afcac148fc8933b3bd54a6c682cd5815354",
+        "level": 1,
+        "phase": "won",
+        "lostReason": null,
+        "tick": 2280,
+        "elapsed": 38,
+        "commandCount": 37,
+        "appliedCommandCount": 37,
+        "matureCount": 3,
+        "score": 1614,
+        "remainingLitres": 14.416666666667211,
+        "uniqueSavedStates": 81
+      },
+      {
+        "name": "level1-loss",
+        "rawFileSha256": "16eb0565d0d27bd61b19095f293e91697d0781cacafe414ccd05e338ff087205",
+        "level": 1,
+        "phase": "lost",
+        "lostReason": "crop",
+        "tick": 1904,
+        "elapsed": 31.733333333333334,
+        "commandCount": 0,
+        "appliedCommandCount": 0,
+        "matureCount": 0,
+        "score": 31,
+        "remainingLitres": 24,
+        "uniqueSavedStates": 31
+      },
+      {
+        "name": "level2-record",
+        "rawFileSha256": "091ba4fe615c76286a5c2edec4ab8ab866496300c84a08204b32199350055cae",
+        "level": 2,
+        "phase": "won",
+        "lostReason": null,
+        "tick": 2519,
+        "elapsed": 41.983333333333334,
+        "commandCount": 34,
+        "appliedCommandCount": 34,
+        "matureCount": 3,
+        "score": 1609,
+        "remainingLitres": 9.708333333334089,
+        "uniqueSavedStates": 80
+      },
+      {
+        "name": "level2-loss",
+        "rawFileSha256": "c3e1612030f52a481a5b28bf036998d58a10c04901ac510447136004edd110b6",
+        "level": 2,
+        "phase": "lost",
+        "lostReason": "crop",
+        "tick": 5099,
+        "elapsed": 84.98333333333333,
+        "commandCount": 34,
+        "appliedCommandCount": 34,
+        "matureCount": 0,
+        "score": 112,
+        "remainingLitres": 23,
+        "uniqueSavedStates": 126
+      },
+      {
+        "name": "level3-record",
+        "rawFileSha256": "fc83c4e1dbed59b6c209ff93fa9e594e891e2cb9084ef0673e9acfc3c2c163ac",
+        "level": 3,
+        "phase": "won",
+        "lostReason": null,
+        "tick": 2640,
+        "elapsed": 44,
+        "commandCount": 38,
+        "appliedCommandCount": 38,
+        "matureCount": 3,
+        "score": 1612,
+        "remainingLitres": 12.950000000000514,
+        "uniqueSavedStates": 92
+      },
+      {
+        "name": "level3-loss",
+        "rawFileSha256": "54403d33ea0a646902632213c7ab2a2e5d7a167330329d60aff8d682891d8fa8",
+        "level": 3,
+        "phase": "lost",
+        "lostReason": "water",
+        "tick": 1688,
+        "elapsed": 28.133333333333333,
+        "commandCount": 2,
+        "appliedCommandCount": 2,
+        "matureCount": 0,
+        "score": 56,
+        "remainingLitres": 0,
+        "uniqueSavedStates": 31
+      }
+    ],
+    "independentReview": {
+      "file": "independent-greenhouse-review.json",
+      "sha256": "9263c9bb872d41d7b983ad3e6ac9a26df6fa5d400a2bb552db5a5efef5b5d316",
+      "rawReportSha256": "2e351d5dde53ef2529c0dfaa7f7ed69f971d61a8512e5bff430dab148cf7d399",
+      "scope": "Independent offline arithmetic review of the existing first six ordinary model rounds; no model or pilot execution.",
+      "method": [
+        "Reconstruct accepted command receipts from recorded held/released keys; check absolute targets, fixed delay, FIFO application and each checkpoint pending queue.",
+        "Partition at old-tick weather boundaries, application ticks and water phases. T/H use discrete geometric decay; soil uses the cumulative old-temperature positive part, split at T=24 and soil increment sign/clamp changes.",
+        "Evaluate the closed form at integer endpoints, then independently count each crop comfort conjunction, danger union, maturity cap, continued mature damage, unfinished-crop dry stall and first terminal tick.",
+        "Compare every retained/command/application/initial/final full state and every compact climate/progress checkpoint; no observed climate is used to restart the oracle."
+      ],
+      "limitations": [
+        "Double-precision geometric formulas rearrange the contract arithmetic and are not bit-identical to repeated IEEE-754 Euler updates.",
+        "Only six existing ordinary rounds are evidence. Oracle hand fixtures are separate arithmetic checks, not game runs or production boundary tests.",
+        "Input evidence has one key at a time, direction holds below 20 ticks, and no pause/retry/cancel/subtick events; those behaviors are outside this review.",
+        "The six rounds do not establish simultaneous terminal precedence or post-terminal freeze behavior. The terminal rule is independently evaluated along the observed trajectories.",
+        "T/H equilibrium bounds under authored controls stay inside their clamps; soil clamp handling is explicit but ordinary coverage is reported rather than presumed.",
+        "Recorded keyboard mapping is evidence-specific; this review makes no browser or physical-device claim."
+      ],
+      "actualCases": [
+        {
+          "name": "level1-record",
+          "rawSha256": "06bd913cbafc36956cdc16487a9b6afcac148fc8933b3bd54a6c682cd5815354",
+          "distinctFullTicks": 81,
+          "fullStateOccurrences": 157,
+          "compactCheckpoints": 285,
+          "commands": 37,
+          "applications": 37,
+          "terminal": {
+            "tick": 2280,
+            "reason": "won"
+          },
+          "growthTicks": [
+            1800,
+            2280,
+            2040
+          ],
+          "damageTicks": [
+            0,
+            0,
+            0
+          ],
+          "water": 14.416666666666666,
+          "partialFlowIntervals": 0
+        },
+        {
+          "name": "level1-loss",
+          "rawSha256": "16eb0565d0d27bd61b19095f293e91697d0781cacafe414ccd05e338ff087205",
+          "distinctFullTicks": 31,
+          "fullStateOccurrences": 33,
+          "compactCheckpoints": 239,
+          "commands": 0,
+          "applications": 0,
+          "terminal": {
+            "tick": 1904,
+            "reason": "crop"
+          },
+          "growthTicks": [
+            0,
+            359,
+            0
+          ],
+          "damageTicks": [
+            480,
+            0,
+            109
+          ],
+          "water": 24,
+          "partialFlowIntervals": 0
+        },
+        {
+          "name": "level2-record",
+          "rawSha256": "091ba4fe615c76286a5c2edec4ab8ab866496300c84a08204b32199350055cae",
+          "distinctFullTicks": 80,
+          "fullStateOccurrences": 150,
+          "compactCheckpoints": 315,
+          "commands": 34,
+          "applications": 34,
+          "terminal": {
+            "tick": 2519,
+            "reason": "won"
+          },
+          "growthTicks": [
+            1980,
+            2460,
+            2220
+          ],
+          "damageTicks": [
+            0,
+            0,
+            0
+          ],
+          "water": 9.708333333333334,
+          "partialFlowIntervals": 0
+        },
+        {
+          "name": "level2-loss",
+          "rawSha256": "c3e1612030f52a481a5b28bf036998d58a10c04901ac510447136004edd110b6",
+          "distinctFullTicks": 126,
+          "fullStateOccurrences": 196,
+          "compactCheckpoints": 638,
+          "commands": 34,
+          "applications": 34,
+          "terminal": {
+            "tick": 5099,
+            "reason": "crop"
+          },
+          "growthTicks": [
+            0,
+            1237,
+            137
+          ],
+          "damageTicks": [
+            480,
+            0,
+            0
+          ],
+          "water": 23,
+          "partialFlowIntervals": 0
+        },
+        {
+          "name": "level3-record",
+          "rawSha256": "fc83c4e1dbed59b6c209ff93fa9e594e891e2cb9084ef0673e9acfc3c2c163ac",
+          "distinctFullTicks": 92,
+          "fullStateOccurrences": 170,
+          "compactCheckpoints": 330,
+          "commands": 38,
+          "applications": 38,
+          "terminal": {
+            "tick": 2640,
+            "reason": "won"
+          },
+          "growthTicks": [
+            2160,
+            2640,
+            2400
+          ],
+          "damageTicks": [
+            0,
+            0,
+            0
+          ],
+          "water": 12.95,
+          "partialFlowIntervals": 0
+        },
+        {
+          "name": "level3-loss",
+          "rawSha256": "54403d33ea0a646902632213c7ab2a2e5d7a167330329d60aff8d682891d8fa8",
+          "distinctFullTicks": 31,
+          "fullStateOccurrences": 37,
+          "compactCheckpoints": 212,
+          "commands": 2,
+          "applications": 2,
+          "terminal": {
+            "tick": 1688,
+            "reason": "water"
+          },
+          "growthTicks": [
+            0,
+            576,
+            167
+          ],
+          "damageTicks": [
+            230,
+            0,
+            0
+          ],
+          "water": 0,
+          "partialFlowIntervals": 1
+        }
+      ],
+      "assertions": 96615,
+      "oracleOnlyFixtures": {
+        "count": 2,
+        "descriptions": [
+          "One tick at T=24 with drip1 confirms old-temperature evaporation.",
+          "0.025 litre with drip2 over three ticks separates full, partial and dry flow."
+        ],
+        "maximumErrors": {
+          "hand fixture temperature": 0,
+          "hand fixture humidity": 0,
+          "hand fixture soil uses old T=24": 0
+        }
+      },
+      "correction": {
+        "firstReviewSha256": "01857b3a7f40e878eca08dbbc2bc260ab75ade216e9a919c25b8ea4f0b8d53f2",
+        "reason": "Correct partial-flow coverage classification relative to the applied drip level. A final drip2 tick using 1/120 litre was incorrectly counted as full flow. Climate arithmetic, integer counters and terminal checks are unchanged; the first review is preserved."
+      },
+      "ordinaryRoundsExecutedAgain": 0
+    },
+    "candidateNormalPlay": {
+      "rawReportSha256": "816e06189ed7e726bbb45df9d578b63ac760cb784c994786a97982f08cbcb7f4",
+      "normalElapsed": 38,
+      "acceptedCommands": 39,
+      "appliedCommands": 39,
+      "score": 1614,
+      "screenshotWindows": [
+        {
+          "name": "01-menu-one",
+          "continuousWindow": false,
+          "observedTickRange": [
+            0,
+            0
+          ],
+          "phaseRange": [
+            "menu",
+            "menu"
+          ],
+          "scope": "Stable menu, pause or terminal model and labels."
+        },
+        {
+          "name": "02-menu-two",
+          "continuousWindow": false,
+          "observedTickRange": [
+            0,
+            0
+          ],
+          "phaseRange": [
+            "menu",
+            "menu"
+          ],
+          "scope": "Stable menu, pause or terminal model and labels."
+        },
+        {
+          "name": "03-menu-three",
+          "continuousWindow": false,
+          "observedTickRange": [
+            0,
+            0
+          ],
+          "phaseRange": [
+            "menu",
+            "menu"
+          ],
+          "scope": "Stable menu, pause or terminal model and labels."
+        },
+        {
+          "name": "04-command-pending-window",
+          "continuousWindow": true,
+          "observedTickRange": [
+            12,
+            33
+          ],
+          "phaseRange": [
+            "playing",
+            "playing"
+          ],
+          "scope": "Real continuous window, not a single-state image alias. Queued applications, climate, growth, water and phase changes may occur during capture."
+        },
+        {
+          "name": "05-applied-water-window",
+          "continuousWindow": true,
+          "observedTickRange": [
+            194,
+            209
+          ],
+          "phaseRange": [
+            "playing",
+            "playing"
+          ],
+          "scope": "Real continuous window, not a single-state image alias. Queued applications, climate, growth, water and phase changes may occur during capture."
+        },
+        {
+          "name": "06-growing-crops-window",
+          "continuousWindow": true,
+          "observedTickRange": [
+            1213,
+            1235
+          ],
+          "phaseRange": [
+            "playing",
+            "playing"
+          ],
+          "scope": "Real continuous window, not a single-state image alias. Queued applications, climate, growth, water and phase changes may occur during capture."
+        },
+        {
+          "name": "07-won",
+          "continuousWindow": false,
+          "observedTickRange": [
+            2280,
+            2280
+          ],
+          "phaseRange": [
+            "won",
+            "won"
+          ],
+          "scope": "Stable menu, pause or terminal model and labels."
+        },
+        {
+          "name": "08-small-won",
+          "continuousWindow": false,
+          "observedTickRange": [
+            2280,
+            2280
+          ],
+          "phaseRange": [
+            "won",
+            "won"
+          ],
+          "scope": "Stable menu, pause or terminal model and labels."
+        },
+        {
+          "name": "09-small-menu",
+          "continuousWindow": false,
+          "observedTickRange": [
+            0,
+            0
+          ],
+          "phaseRange": [
+            "menu",
+            "menu"
+          ],
+          "scope": "Stable menu, pause or terminal model and labels."
+        },
+        {
+          "name": "10-small-pause",
+          "continuousWindow": false,
+          "observedTickRange": [
+            6,
+            6
+          ],
+          "phaseRange": [
+            "playing",
+            "playing"
+          ],
+          "scope": "Stable menu, pause or terminal model and labels."
+        }
+      ],
+      "applicationScope": "Trace holds real public samples. A missing lastAppliedCommands event is not fabricated; accepted commands, current applied levels and pending counters remain available."
+    },
+    "scope": "Separate crop maturity and damage, shared climate, finite water and delayed absolute actuator queues. Climate integration is independently reviewed from the sole six-round corpus; recording uses only actual sampled facts."
+  },
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "fccfbbc33ace0d180b696305fffc6865c1e319a8925c957c1f7dfc7a09dddf2b",
+      "game.js": "e42f33ea15dd826b6ebdd604d00932f6b26d01a48a39f8a4cb72d49836db6818",
+      "game-config.json": "0a474eaa350e40571a0a1fba80c5233790dc3d15e84d1072c8e56e4d94de42b4",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "README.md": "13eaaac78f911f1de58337e7a01b124dbf542a4fb517cb1492c83b5b7f797964",
+      "LICENSE": "93a8777f8776e6aa280f486fb84a5a12b64fcb00d9b58086ee1cc203e7311a15",
+      "icon.xml": "0b10b8a15749207f115ea9c66af9cb81cf1096ea54d9056dc4457b55409486e6",
+      "game.json": "45c87d72166724c235591fda144c2b6337ae91df628f0feca7d0d8868fa5bbce",
+      "logo.svg": "03f9f6618fcaa402eadc2baa3f6d47627d3ad60d867bad330c76d63f2b4891f9",
+      "tests/game-model.test.cjs": "799b6cb127cf91318cc21dd04006ee703cc0fd05ae3894244e2a02e74f69f162",
+      "tests/independent-greenhouse-review.mjs": "e2c285d6ca8340abb4d62fe9dd2d0f9506603f86bbb556e766d72b43b7ecd6af",
+      "tests/automation.mjs": "65e0289ee241c8c3cecdf97e29e270fbd52858010fce4b6110917293797eedb3",
+      "tests/greenhouse-interval-oracle.mjs": "1d96627968c7fbe04d5609f36251740286ceacb81bccaf12b955b3013f1b9608",
+      "docs/model-contract.md": "da85252bbb36e5c15214311aac90ccde7a036b2da8da20bd1afcdf8c21d80ad7",
+      "docs/independent-greenhouse-review.json": "9263c9bb872d41d7b983ad3e6ac9a26df6fa5d400a2bb552db5a5efef5b5d316",
+      "src/main/assets/game-model.js": "fccfbbc33ace0d180b696305fffc6865c1e319a8925c957c1f7dfc7a09dddf2b",
+      "src/main/assets/game.js": "e42f33ea15dd826b6ebdd604d00932f6b26d01a48a39f8a4cb72d49836db6818"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime/01-menu-one.png",
+        "sha256": "b4474b873c673e036391a7c1a5f29108b5cb47dffe7d43a00ae56d04dcf37b19",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/02-menu-two.png",
+        "sha256": "efa5bffb593624680aafcdb9a3fa7c1958e56f0109723d9761ba5077c3d971de",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/03-menu-three.png",
+        "sha256": "b58ec96ec55da3b2c6e0a62a538bdd9626aa1d0cd24584a63f59eaf0337413ee",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/04-command-pending-window.png",
+        "sha256": "8ac816e73468cf539d98b677dc2572c56e2c55ba18dfcf4bcaf54b3b2f105c12",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/05-applied-water-window.png",
+        "sha256": "c23cf80d8ec08b41ac22d24428518e10e296572456904bd163555e8b0311707f",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/06-growing-crops-window.png",
+        "sha256": "6ef07a6b2ab616ac85ee4919f303fb35c10900bd211b6956be4e758afbc9dfdf",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/07-won.png",
+        "sha256": "634f6c9debe89eb92436a9664ac77fe34d42954f97612aed09b1929e75e7ba86",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/08-small-won.png",
+        "sha256": "d7b80cb07e89af8dddcf8f57d030e869763882369d9e9da4568a6a68b32f0224",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/09-small-menu.png",
+        "sha256": "7c8fe33a3a3cc1ef329162e6b8ea912bfccd3923adbbce18920b05a106c97a00",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/10-small-pause.png",
+        "sha256": "e91da24dc094dd9cf163da6c6a28ea08673e1db2f771102c263232aa0995ce00",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "d1f86f372a478a6440e2fc64e6d3880acd0220bb552b59d199f96e47aab1fb60",
+    "unresolvedFindings": []
+  },
+  "modelTests": {
+    "passed": 14,
+    "sourceHashesBefore": {
+      "model": "fccfbbc33ace0d180b696305fffc6865c1e319a8925c957c1f7dfc7a09dddf2b",
+      "test": "799b6cb127cf91318cc21dd04006ee703cc0fd05ae3894244e2a02e74f69f162",
+      "contract": "da85252bbb36e5c15214311aac90ccde7a036b2da8da20bd1afcdf8c21d80ad7"
+    },
+    "sourceHashesAfter": {
+      "model": "fccfbbc33ace0d180b696305fffc6865c1e319a8925c957c1f7dfc7a09dddf2b",
+      "test": "799b6cb127cf91318cc21dd04006ee703cc0fd05ae3894244e2a02e74f69f162",
+      "contract": "da85252bbb36e5c15214311aac90ccde7a036b2da8da20bd1afcdf8c21d80ad7"
+    },
+    "testLogSha256": "c846c59814e94a343f91146857c3995e5c64e1a9d43004eb0f156441029af70c",
+    "rawReportSha256": "8e5e6c8d4b2c4dd087b65706990751fcf9e7d8dbfd3a20de2f888c5a6652207f",
+    "scope": "14 directed model rule/input tests, including explicitly labeled synthetic mutated fixtures. No ordinary-play, browser, recording, or physical-TV result is claimed. Source identity compares the root-approved pre-run pins with a delayed root recheck; no immediate test-end source snapshot was recorded. Original spec output and metadata parser correction are preserved; no rerun."
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ]
+  },
+  "supplementaryChecks": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "three menus show distinct initial climates and delays with empty queues and no accumulated growth",
+        "passed": true
+      },
+      {
+        "name": "held START starts once and phone direction changes selection without enqueuing a command",
+        "passed": true
+      },
+      {
+        "name": "held phone A and native Enter each enqueue one delayed absolute command and cannot act immediately",
+        "passed": true
+      },
+      {
+        "name": "B decreases the requested level without cancelling FIFO history; pause freezes queued deadlines and climate",
+        "passed": true
+      },
+      {
+        "name": "connected cancellation suppresses stale input but deliberately queued actuation and climate continue",
+        "passed": true
+      },
+      {
+        "name": "disconnect pauses a pending actuator and clears held selection; intentional resume preserves its original due tick",
+        "passed": true
+      },
+      {
+        "name": "ordinary unmanaged drip naturally spends the reservoir and reaches the unfinished-crop dry-stall limit",
+        "passed": true
+      },
+      {
+        "name": "R restores initial climate, water, growth, damage and empty actuator queues before actual ticks resume",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ]
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "buildSourceSha": "3661f471386f1153a3f0e4b35f37750ac8bfe50c",
+    "startHashes": {
+      "tests/automation.mjs": "65e0289ee241c8c3cecdf97e29e270fbd52858010fce4b6110917293797eedb3",
+      "tests/game-model.test.cjs": "799b6cb127cf91318cc21dd04006ee703cc0fd05ae3894244e2a02e74f69f162",
+      "src/main/assets/game-model.js": "fccfbbc33ace0d180b696305fffc6865c1e319a8925c957c1f7dfc7a09dddf2b",
+      "src/main/assets/game.js": "e42f33ea15dd826b6ebdd604d00932f6b26d01a48a39f8a4cb72d49836db6818"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "65e0289ee241c8c3cecdf97e29e270fbd52858010fce4b6110917293797eedb3",
+      "tests/game-model.test.cjs": "799b6cb127cf91318cc21dd04006ee703cc0fd05ae3894244e2a02e74f69f162",
+      "src/main/assets/game-model.js": "fccfbbc33ace0d180b696305fffc6865c1e319a8925c957c1f7dfc7a09dddf2b",
+      "src/main/assets/game.js": "e42f33ea15dd826b6ebdd604d00932f6b26d01a48a39f8a4cb72d49836db6818"
+    },
+    "rawReportSha256": "b517cf4d14e57041655a6129f750e40190c65a0bb72daefcb80c627725d8cf6d"
+  },
+  "sourceArtReview": {
+    "file": "art-review.json",
+    "sha256": "2ddebd544a726fbd95cc657a88d05505901e87e10689fadc6d37c65c171d1a2c"
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "看实际档位，不只看请求值。缺水后土壤余水仍可支持生长。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "看实际档位，不只看请求值。缺水后土壤余水仍可支持生长。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "看实际档位，不只看请求值。缺水后土壤余水仍可支持生长。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "看实际档位，不只看请求值。缺水后土壤余水仍可支持生长。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "看实际档位，不只看请求值。缺水后土壤余水仍可支持生长。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "看实际档位，不只看请求值。缺水后土壤余水仍可支持生长。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "4c642c57ff50e80c1b1b474582937386283b875308f9ff7739ec4c03d3b5f677"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 869,
+    "rafIntervalMs": {
+      "count": 869,
+      "min": 16.599999999998545,
+      "median": 33.400000000000546,
+      "p95": 83.30000000000291,
+      "max": 116.70000000000073,
+      "mean": 43.01714614499424
+    },
+    "webglDrawCalls": {
+      "count": 869,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 869,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {}
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 46.002081368,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1614,
+      "tick": 2280,
+      "elapsed": 38,
+      "remaining": 52,
+      "commandCount": 33,
+      "appliedCommandCount": 33,
+      "blockedCommands": 0,
+      "delayTicks": 90,
+      "dryStallTicks": 0,
+      "matureCount": 3,
+      "deadCropIds": [],
+      "unfinishedCropIds": [],
+      "environment": {
+        "temperature": 26.997525805854465,
+        "humidity": 56.236626190228236,
+        "soilMoisture": 51.15635181432851
+      },
+      "reservoir": {
+        "initialLitres": 24,
+        "remainingLitres": 14.96666666666718,
+        "usedLitres": 9.033333333333463
+      },
+      "dials": [
+        {
+          "id": "vent",
+          "name": "通风",
+          "nameEn": "VENT",
+          "requestedLevel": 2,
+          "appliedLevel": 2
+        },
+        {
+          "id": "shade",
+          "name": "遮阳",
+          "nameEn": "SHADE",
+          "requestedLevel": 2,
+          "appliedLevel": 2
+        },
+        {
+          "id": "drip",
+          "name": "滴灌",
+          "nameEn": "DRIP",
+          "requestedLevel": 1,
+          "appliedLevel": 1
+        }
+      ],
+      "crops": [
+        {
+          "id": "C1",
+          "name": "叶菜",
+          "nameEn": "LEAF",
+          "comfort": {
+            "temperature": [
+              22,
+              28.5
+            ],
+            "humidity": [
+              55,
+              75
+            ],
+            "soilMoisture": [
+              45,
+              68
+            ]
+          },
+          "safe": {
+            "temperature": [
+              12,
+              37
+            ],
+            "humidity": [
+              25,
+              95
+            ],
+            "soilMoisture": [
+              15,
+              90
+            ]
+          },
+          "maturityTicks": 1800,
+          "damageLimitTicks": 480,
+          "growthTicks": 1800,
+          "damageTicks": 0,
+          "mature": true,
+          "dead": false,
+          "inRange": true,
+          "growing": false,
+          "dangerous": false,
+          "comfortChecks": {
+            "temperature": true,
+            "humidity": true,
+            "soilMoisture": true
+          },
+          "failedComfortDimensions": [],
+          "unsafeDimensions": []
+        },
+        {
+          "id": "C2",
+          "name": "豆苗",
+          "nameEn": "BEAN",
+          "comfort": {
+            "temperature": [
+              25,
+              32
+            ],
+            "humidity": [
+              45,
+              68
+            ],
+            "soilMoisture": [
+              35,
+              60
+            ]
+          },
+          "safe": {
+            "temperature": [
+              12,
+              41
+            ],
+            "humidity": [
+              20,
+              95
+            ],
+            "soilMoisture": [
+              10,
+              88
+            ]
+          },
+          "maturityTicks": 2280,
+          "damageLimitTicks": 600,
+          "growthTicks": 2280,
+          "damageTicks": 0,
+          "mature": true,
+          "dead": false,
+          "inRange": true,
+          "growing": true,
+          "dangerous": false,
+          "comfortChecks": {
+            "temperature": true,
+            "humidity": true,
+            "soilMoisture": true
+          },
+          "failedComfortDimensions": [],
+          "unsafeDimensions": []
+        },
+        {
+          "id": "C3",
+          "name": "香草",
+          "nameEn": "HERB",
+          "comfort": {
+            "temperature": [
+              24,
+              30
+            ],
+            "humidity": [
+              50,
+              72
+            ],
+            "soilMoisture": [
+              40,
+              64
+            ]
+          },
+          "safe": {
+            "temperature": [
+              12,
+              39
+            ],
+            "humidity": [
+              25,
+              95
+            ],
+            "soilMoisture": [
+              12,
+              90
+            ]
+          },
+          "maturityTicks": 2040,
+          "damageLimitTicks": 540,
+          "growthTicks": 2040,
+          "damageTicks": 0,
+          "mature": true,
+          "dead": false,
+          "inRange": true,
+          "growing": false,
+          "dangerous": false,
+          "comfortChecks": {
+            "temperature": true,
+            "humidity": true,
+            "soilMoisture": true
+          },
+          "failedComfortDimensions": [],
+          "unsafeDimensions": []
+        }
+      ],
+      "pendingCommands": []
+    },
+    "normalFailure": {
+      "reason": "water",
+      "level": 3,
+      "difficulty": 2,
+      "score": 55,
+      "tick": 1680,
+      "elapsed": 28,
+      "remaining": 62,
+      "commandCount": 2,
+      "appliedCommandCount": 2,
+      "blockedCommands": 0,
+      "delayTicks": 150,
+      "dryStallTicks": 180,
+      "matureCount": 0,
+      "deadCropIds": [],
+      "unfinishedCropIds": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "environment": {
+        "temperature": 38.63329148644082,
+        "humidity": 72.25226998271437,
+        "soilMoisture": 79.86665358951005
+      },
+      "reservoir": {
+        "initialLitres": 22,
+        "remainingLitres": 0,
+        "usedLitres": 22.000000000000004
+      },
+      "dials": [
+        {
+          "id": "vent",
+          "name": "通风",
+          "nameEn": "VENT",
+          "requestedLevel": 0,
+          "appliedLevel": 0
+        },
+        {
+          "id": "shade",
+          "name": "遮阳",
+          "nameEn": "SHADE",
+          "requestedLevel": 0,
+          "appliedLevel": 0
+        },
+        {
+          "id": "drip",
+          "name": "滴灌",
+          "nameEn": "DRIP",
+          "requestedLevel": 2,
+          "appliedLevel": 2
+        }
+      ],
+      "crops": [
+        {
+          "id": "C1",
+          "name": "叶菜",
+          "nameEn": "LEAF",
+          "comfort": {
+            "temperature": [
+              22,
+              28.5
+            ],
+            "humidity": [
+              55,
+              75
+            ],
+            "soilMoisture": [
+              45,
+              68
+            ]
+          },
+          "safe": {
+            "temperature": [
+              12,
+              37
+            ],
+            "humidity": [
+              25,
+              95
+            ],
+            "soilMoisture": [
+              15,
+              90
+            ]
+          },
+          "maturityTicks": 2160,
+          "damageLimitTicks": 480,
+          "growthTicks": 0,
+          "damageTicks": 222,
+          "mature": false,
+          "dead": false,
+          "inRange": false,
+          "growing": false,
+          "dangerous": true,
+          "comfortChecks": {
+            "temperature": false,
+            "humidity": true,
+            "soilMoisture": false
+          },
+          "failedComfortDimensions": [
+            "temperature",
+            "soilMoisture"
+          ],
+          "unsafeDimensions": [
+            "temperature"
+          ]
+        },
+        {
+          "id": "C2",
+          "name": "豆苗",
+          "nameEn": "BEAN",
+          "comfort": {
+            "temperature": [
+              25,
+              32
+            ],
+            "humidity": [
+              45,
+              68
+            ],
+            "soilMoisture": [
+              35,
+              60
+            ]
+          },
+          "safe": {
+            "temperature": [
+              12,
+              41
+            ],
+            "humidity": [
+              20,
+              95
+            ],
+            "soilMoisture": [
+              10,
+              88
+            ]
+          },
+          "maturityTicks": 2640,
+          "damageLimitTicks": 600,
+          "growthTicks": 565,
+          "damageTicks": 0,
+          "mature": false,
+          "dead": false,
+          "inRange": false,
+          "growing": false,
+          "dangerous": false,
+          "comfortChecks": {
+            "temperature": false,
+            "humidity": false,
+            "soilMoisture": false
+          },
+          "failedComfortDimensions": [
+            "temperature",
+            "humidity",
+            "soilMoisture"
+          ],
+          "unsafeDimensions": []
+        },
+        {
+          "id": "C3",
+          "name": "香草",
+          "nameEn": "HERB",
+          "comfort": {
+            "temperature": [
+              24,
+              30
+            ],
+            "humidity": [
+              50,
+              72
+            ],
+            "soilMoisture": [
+              40,
+              64
+            ]
+          },
+          "safe": {
+            "temperature": [
+              12,
+              39
+            ],
+            "humidity": [
+              25,
+              95
+            ],
+            "soilMoisture": [
+              12,
+              90
+            ]
+          },
+          "maturityTicks": 2400,
+          "damageLimitTicks": 540,
+          "growthTicks": 167,
+          "damageTicks": 0,
+          "mature": false,
+          "dead": false,
+          "inRange": false,
+          "growing": false,
+          "dangerous": false,
+          "comfortChecks": {
+            "temperature": false,
+            "humidity": false,
+            "soilMoisture": false
+          },
+          "failedComfortDimensions": [
+            "temperature",
+            "humidity",
+            "soilMoisture"
+          ],
+          "unsafeDimensions": []
+        }
+      ],
+      "pendingCommands": []
+    },
+    "ordinaryDelayedControl": {
+      "actualRaisePressCount": 19,
+      "actualLowerPressCount": 14,
+      "observedCommands": [
+        {
+          "firstObservedAt": 8.019627327,
+          "command": {
+            "id": 1,
+            "dialId": "vent",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 5,
+            "dueTick": 95
+          }
+        },
+        {
+          "firstObservedAt": 8.019627327,
+          "command": {
+            "id": 2,
+            "dialId": "vent",
+            "beforeRequested": 1,
+            "afterRequested": 2,
+            "issuedTick": 9,
+            "dueTick": 99
+          }
+        },
+        {
+          "firstObservedAt": 10.01026612,
+          "command": {
+            "id": 5,
+            "dialId": "drip",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 69,
+            "dueTick": 159
+          }
+        },
+        {
+          "firstObservedAt": 10.01026612,
+          "command": {
+            "id": 6,
+            "dialId": "drip",
+            "beforeRequested": 1,
+            "afterRequested": 2,
+            "issuedTick": 81,
+            "dueTick": 171
+          }
+        },
+        {
+          "firstObservedAt": 12.001196528000001,
+          "command": {
+            "id": 7,
+            "dialId": "drip",
+            "beforeRequested": 2,
+            "afterRequested": 1,
+            "issuedTick": 243,
+            "dueTick": 333
+          }
+        },
+        {
+          "firstObservedAt": 14.013905376,
+          "command": {
+            "id": 8,
+            "dialId": "vent",
+            "beforeRequested": 2,
+            "afterRequested": 1,
+            "issuedTick": 277,
+            "dueTick": 367
+          }
+        },
+        {
+          "firstObservedAt": 16.003787959,
+          "command": {
+            "id": 9,
+            "dialId": "drip",
+            "beforeRequested": 1,
+            "afterRequested": 0,
+            "issuedTick": 459,
+            "dueTick": 549
+          }
+        },
+        {
+          "firstObservedAt": 16.003787959,
+          "command": {
+            "id": 10,
+            "dialId": "vent",
+            "beforeRequested": 1,
+            "afterRequested": 0,
+            "issuedTick": 493,
+            "dueTick": 583
+          }
+        },
+        {
+          "firstObservedAt": 20.006623531,
+          "command": {
+            "id": 11,
+            "dialId": "vent",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 655,
+            "dueTick": 745
+          }
+        },
+        {
+          "firstObservedAt": 20.006623531,
+          "command": {
+            "id": 12,
+            "dialId": "drip",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 694,
+            "dueTick": 784
+          }
+        },
+        {
+          "firstObservedAt": 22.012574655999998,
+          "command": {
+            "id": 13,
+            "dialId": "vent",
+            "beforeRequested": 1,
+            "afterRequested": 0,
+            "issuedTick": 820,
+            "dueTick": 910
+          }
+        },
+        {
+          "firstObservedAt": 22.012574655999998,
+          "command": {
+            "id": 14,
+            "dialId": "drip",
+            "beforeRequested": 1,
+            "afterRequested": 0,
+            "issuedTick": 854,
+            "dueTick": 944
+          }
+        },
+        {
+          "firstObservedAt": 24.007508983,
+          "command": {
+            "id": 15,
+            "dialId": "vent",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 937,
+            "dueTick": 1027
+          }
+        },
+        {
+          "firstObservedAt": 26.014939976,
+          "command": {
+            "id": 16,
+            "dialId": "drip",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 1093,
+            "dueTick": 1183
+          }
+        },
+        {
+          "firstObservedAt": 28.004526132,
+          "command": {
+            "id": 17,
+            "dialId": "drip",
+            "beforeRequested": 1,
+            "afterRequested": 0,
+            "issuedTick": 1141,
+            "dueTick": 1231
+          }
+        },
+        {
+          "firstObservedAt": 28.004526132,
+          "command": {
+            "id": 18,
+            "dialId": "drip",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 1191,
+            "dueTick": 1281
+          }
+        },
+        {
+          "firstObservedAt": 30.014364931999996,
+          "command": {
+            "id": 20,
+            "dialId": "drip",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 1314,
+            "dueTick": 1404
+          }
+        },
+        {
+          "firstObservedAt": 32.001906588000004,
+          "command": {
+            "id": 22,
+            "dialId": "drip",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 1444,
+            "dueTick": 1534
+          }
+        },
+        {
+          "firstObservedAt": 34.007812576000006,
+          "command": {
+            "id": 23,
+            "dialId": "drip",
+            "beforeRequested": 1,
+            "afterRequested": 0,
+            "issuedTick": 1489,
+            "dueTick": 1579
+          }
+        },
+        {
+          "firstObservedAt": 34.007812576000006,
+          "command": {
+            "id": 24,
+            "dialId": "drip",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 1530,
+            "dueTick": 1620
+          }
+        },
+        {
+          "firstObservedAt": 34.007812576000006,
+          "command": {
+            "id": 25,
+            "dialId": "drip",
+            "beforeRequested": 1,
+            "afterRequested": 0,
+            "issuedTick": 1572,
+            "dueTick": 1662
+          }
+        },
+        {
+          "firstObservedAt": 36.01518489200001,
+          "command": {
+            "id": 26,
+            "dialId": "drip",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 1630,
+            "dueTick": 1720
+          }
+        },
+        {
+          "firstObservedAt": 36.01518489200001,
+          "command": {
+            "id": 27,
+            "dialId": "drip",
+            "beforeRequested": 1,
+            "afterRequested": 0,
+            "issuedTick": 1663,
+            "dueTick": 1753
+          }
+        },
+        {
+          "firstObservedAt": 38.015291324,
+          "command": {
+            "id": 28,
+            "dialId": "drip",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 1727,
+            "dueTick": 1817
+          }
+        },
+        {
+          "firstObservedAt": 38.015291324,
+          "command": {
+            "id": 29,
+            "dialId": "drip",
+            "beforeRequested": 1,
+            "afterRequested": 0,
+            "issuedTick": 1789,
+            "dueTick": 1879
+          }
+        },
+        {
+          "firstObservedAt": 40.010623299,
+          "command": {
+            "id": 30,
+            "dialId": "vent",
+            "beforeRequested": 1,
+            "afterRequested": 0,
+            "issuedTick": 1877,
+            "dueTick": 1967
+          }
+        },
+        {
+          "firstObservedAt": 42.011332055,
+          "command": {
+            "id": 31,
+            "dialId": "vent",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 2029,
+            "dueTick": 2119
+          }
+        },
+        {
+          "firstObservedAt": 44.003609912,
+          "command": {
+            "id": 32,
+            "dialId": "vent",
+            "beforeRequested": 1,
+            "afterRequested": 2,
+            "issuedTick": 2107,
+            "dueTick": 2197
+          }
+        },
+        {
+          "firstObservedAt": 44.003609912,
+          "command": {
+            "id": 33,
+            "dialId": "drip",
+            "beforeRequested": 0,
+            "afterRequested": 1,
+            "issuedTick": 2143,
+            "dueTick": 2233
+          }
+        }
+      ],
+      "observedApplications": [],
+      "allAcceptedCommandsObserved": false,
+      "unobservedAcceptedCommandIds": [
+        3,
+        4,
+        19,
+        21
+      ],
+      "commandSamplingGaps": [
+        {
+          "fromTick": 0,
+          "toTick": 23,
+          "actualCommandIncrease": 2,
+          "lastCommandId": 2
+        },
+        {
+          "fromTick": 23,
+          "toTick": 143,
+          "actualCommandIncrease": 4,
+          "lastCommandId": 6
+        },
+        {
+          "fromTick": 378,
+          "toTick": 497,
+          "actualCommandIncrease": 2,
+          "lastCommandId": 10
+        },
+        {
+          "fromTick": 615,
+          "toTick": 736,
+          "actualCommandIncrease": 2,
+          "lastCommandId": 12
+        },
+        {
+          "fromTick": 736,
+          "toTick": 857,
+          "actualCommandIncrease": 2,
+          "lastCommandId": 14
+        },
+        {
+          "fromTick": 1097,
+          "toTick": 1215,
+          "actualCommandIncrease": 2,
+          "lastCommandId": 18
+        },
+        {
+          "fromTick": 1215,
+          "toTick": 1335,
+          "actualCommandIncrease": 2,
+          "lastCommandId": 20
+        },
+        {
+          "fromTick": 1335,
+          "toTick": 1455,
+          "actualCommandIncrease": 2,
+          "lastCommandId": 22
+        },
+        {
+          "fromTick": 1455,
+          "toTick": 1575,
+          "actualCommandIncrease": 3,
+          "lastCommandId": 25
+        },
+        {
+          "fromTick": 1575,
+          "toTick": 1695,
+          "actualCommandIncrease": 2,
+          "lastCommandId": 27
+        },
+        {
+          "fromTick": 1695,
+          "toTick": 1815,
+          "actualCommandIncrease": 2,
+          "lastCommandId": 29
+        },
+        {
+          "fromTick": 2055,
+          "toTick": 2172,
+          "actualCommandIncrease": 2,
+          "lastCommandId": 33
+        }
+      ],
+      "pendingRequestedAppliedDifferenceSampleCount": 14,
+      "actualDripSampleCount": 12,
+      "finalAppliedCommandCount": 33,
+      "finalPendingCommandIds": [],
+      "finalIndependentMaturityCount": 3,
+      "waterUsedLitres": 9.033333333333463,
+      "scope": "Real key edges, permanent counters and saved command/application receipts only. Missing issue/application observations remain explicit; no control tick, climate trajectory or exact screenshot state is fabricated."
+    }
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "fccfbbc33ace0d180b696305fffc6865c1e319a8925c957c1f7dfc7a09dddf2b",
+    "game.js": "e42f33ea15dd826b6ebdd604d00932f6b26d01a48a39f8a4cb72d49836db6818",
+    "game-config.json": "0a474eaa350e40571a0a1fba80c5233790dc3d15e84d1072c8e56e4d94de42b4",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "c31b43f4c2271c96b95bc8ed7675be9cb48895a88f1a8bc0712fa9a6be1a4d11",
+    "formal": "8e5e6c8d4b2c4dd087b65706990751fcf9e7d8dbfd3a20de2f888c5a6652207f",
+    "ordinary": "1e7d505a3cb038727d4b4f0f2639fcfd903fe7502cc0f7de0bca0af4fc741705",
+    "art": "7a8b58edb70db3d4a22ca1690a652976739a4a38a93573a535ab70ac89e11a07",
+    "independent": "2e351d5dde53ef2529c0dfaa7f7ed69f971d61a8512e5bff430dab148cf7d399",
+    "independentArchive": "9263c9bb872d41d7b983ad3e6ac9a26df6fa5d400a2bb552db5a5efef5b5d316",
+    "candidate": "d1f86f372a478a6440e2fc64e6d3880acd0220bb552b59d199f96e47aab1fb60",
+    "candidateRaw": "816e06189ed7e726bbb45df9d578b63ac760cb784c994786a97982f08cbcb7f4",
+    "candidateQaVisual": "5c91f8f6af88d9d4c463f4734bfed30d6c2d757170c3185d1437400774e12abc",
+    "sign": "f38031e18b766df1f8c6e42f833c52a384aea859b51bca701255016eb4e50507",
+    "fetch": "eec5c8a99f1b0c07959ec36116fb187f7f76698388164409994b33ccdc71bb37",
+    "qa": "235b8391ca0923adca6eb9593418a2a039ba09ccd74e11dbc59d4f424541d4ed",
+    "supplementary": "494e30c327aec7998c6ef5b569fb079d10a2a67a63dda0c485775a1ffcf67824",
+    "record": "44ab13bf10f33ad230ec0b9a5933c77d672753f1c137cbda8673552d4e1db515",
+    "decode": "6b8c6c84787b148de640adda277601c17c4033c16f2c950baa0511b0ab4af62b",
+    "viewport": "19d2922985a972fbf7173a8436947f5527cf710cbab80aa4036032df64448739",
+    "videoValidation": "76ed2870c421e4b2811f5496498dc1dec76d88766634c0a913378abeadb51f6a",
+    "layout": "4c642c57ff50e80c1b1b474582937386283b875308f9ff7739ec4c03d3b5f677",
+    "summary": "a93f9b12536e0c195c5469def628d6b23bb0dd554ac2af3fc24add5477811568",
+    "review": "b621a631c64b189bceb1cb98baf2d5e7df9edf5961a1959d8c8b80a07d9a0921",
+    "provenance": "b517cf4d14e57041655a6129f750e40190c65a0bb72daefcb80c627725d8cf6d",
+    "rootEncoded": "021bae2632a395280ee8ce196bef5a97648b249275ef7dacac8ec2a2ed08a40e",
+    "artifacts": "5d1330ad0c9624841efb3c89d0b1dd7a41996e4d53edde00a83da9a42da8dd15"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium with ordinary input. Synthetic fixtures are labelled separately; export FPS is not device FPS."
+  },
+  "release": {
+    "sourceSha": "3661f471386f1153a3f0e4b35f37750ac8bfe50c",
+    "requestCommit": "f4021fc3eee86ee9bf18ce8e0f6f01b27c203a45",
+    "signerCommit": "3661f471386f1153a3f0e4b35f37750ac8bfe50c",
+    "signingRun": 41372205890,
+    "bytes": 296227,
+    "sha256": "e30655b2fb5129ee5d2ae0ea3ba5b7ae2d8d0ebff2991669635d1a6a6fde7621",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "cba70032a1bebf752342d53e92524091386fe83d"
+  }
+}
