@@ -1,0 +1,1346 @@
+{
+  "schema": 1,
+  "game": "solar-shift",
+  "version": "0.1.0",
+  "sourceCommit": "93710ae0382c5dfefdfa3b9dae51810179c9569a",
+  "automationSha256": "0d4854d0a034129816b8fac488524038714a295e3b69bae6c5766540bb173b87",
+  "gameRules": {
+    "description": "A rotates the global E/S/W panel; B switches the selected priority device. Each 60Hz interval uses its start-time weather, one shared battery charge/discharge limit and priority allocation. Individual energy quotas do not end the day early. Heat and continuous critical-service failures precede the 60-second quota decision, including critical devices switched OFF.",
+    "physicsScope": "Disclosed compressed resource and Euler thermal approximation; no real solar installation or battery-chemistry claim.",
+    "ordinaryModelRounds": [
+      {
+        "name": "level1-record",
+        "rawFileSha256": "53a507d1bd322243fafedbff9f141aba021e47523c60c17b7d0d57e219357195",
+        "level": 1,
+        "phase": "won",
+        "lostReason": null,
+        "tick": 3600,
+        "elapsed": 60,
+        "panelTurns": 2,
+        "toggleCount": 8,
+        "quotaMetCount": 3,
+        "score": 1636,
+        "energyJ": 17.99999999999994,
+        "temperatureC": 40.632225635333036,
+        "deviceDeliveredJ": [
+          239.9999999999915,
+          71.99999999999805,
+          60.00000000000061
+        ],
+        "savedEvidenceChecks": {
+          "observations": 68,
+          "adjacentIntervalsChecked": 2,
+          "scope": "Existing observations and completed-interval arithmetic; unobserved controls or intervening trajectories are not fabricated."
+        }
+      },
+      {
+        "name": "level1-loss",
+        "rawFileSha256": "3a00111befb571d2a50d27d3a4662d475dcf07a113c0a27c81d88d759bb06d75",
+        "level": 1,
+        "phase": "lost",
+        "lostReason": "brownout",
+        "tick": 150,
+        "elapsed": 2.5,
+        "panelTurns": 0,
+        "toggleCount": 1,
+        "quotaMetCount": 0,
+        "score": 61,
+        "energyJ": 46.0000000000005,
+        "temperatureC": 27.451028006912665,
+        "deviceDeliveredJ": [
+          0,
+          7.499999999999981,
+          12.50000000000002
+        ],
+        "savedEvidenceChecks": {
+          "observations": 7,
+          "adjacentIntervalsChecked": 1,
+          "scope": "Existing observations and completed-interval arithmetic; unobserved controls or intervening trajectories are not fabricated."
+        }
+      },
+      {
+        "name": "level2-record",
+        "rawFileSha256": "b369ee55eda096f417d371f47fff927b0a8b9262e4d538017222dc60aa34c841",
+        "level": 2,
+        "phase": "won",
+        "lostReason": null,
+        "tick": 3600,
+        "elapsed": 60,
+        "panelTurns": 2,
+        "toggleCount": 10,
+        "quotaMetCount": 3,
+        "score": 1666,
+        "energyJ": 33.00000000000079,
+        "temperatureC": 40.15437813895146,
+        "deviceDeliveredJ": [
+          239.9999999999915,
+          76.26666666666746,
+          70.41666666666703
+        ],
+        "savedEvidenceChecks": {
+          "observations": 71,
+          "adjacentIntervalsChecked": 4,
+          "scope": "Existing observations and completed-interval arithmetic; unobserved controls or intervening trajectories are not fabricated."
+        }
+      },
+      {
+        "name": "level2-loss",
+        "rawFileSha256": "f405913905406f9389f2978f1837348cec00f68799b6fdb1a509886cf9c83788",
+        "level": 2,
+        "phase": "lost",
+        "lostReason": "heat",
+        "tick": 608,
+        "elapsed": 10.133333333333333,
+        "panelTurns": 0,
+        "toggleCount": 0,
+        "quotaMetCount": 0,
+        "score": 213,
+        "energyJ": 18.933333333333195,
+        "temperatureC": 54.00654717992768,
+        "deviceDeliveredJ": [
+          40.533333333333665,
+          40.533333333333665,
+          24.999999999999915
+        ],
+        "savedEvidenceChecks": {
+          "observations": 13,
+          "adjacentIntervalsChecked": 0,
+          "scope": "Existing observations and completed-interval arithmetic; unobserved controls or intervening trajectories are not fabricated."
+        }
+      },
+      {
+        "name": "level3-record",
+        "rawFileSha256": "aa1b9a434dbc7ab6f0b125d1803534c031459ff4b01449bc5274de981c567b1c",
+        "level": 3,
+        "phase": "won",
+        "lostReason": null,
+        "tick": 3600,
+        "elapsed": 60,
+        "panelTurns": 2,
+        "toggleCount": 5,
+        "quotaMetCount": 3,
+        "score": 1660,
+        "energyJ": 30.000000000002302,
+        "temperatureC": 46.71468216398811,
+        "deviceDeliveredJ": [
+          180.00000000000668,
+          119.99999999999575,
+          100.41666666666532
+        ],
+        "savedEvidenceChecks": {
+          "observations": 66,
+          "adjacentIntervalsChecked": 1,
+          "scope": "Existing observations and completed-interval arithmetic; unobserved controls or intervening trajectories are not fabricated."
+        }
+      },
+      {
+        "name": "level3-loss",
+        "rawFileSha256": "526deb1ffd37ad3a0c54612081e54a50730303746dbbeb4d5ea70005132ad6cd",
+        "level": 3,
+        "phase": "lost",
+        "lostReason": "quota",
+        "tick": 3600,
+        "elapsed": 60,
+        "panelTurns": 2,
+        "toggleCount": 1,
+        "quotaMetCount": 2,
+        "score": 404,
+        "energyJ": 30.000000000002302,
+        "temperatureC": 46.71468216398811,
+        "deviceDeliveredJ": [
+          180.00000000000668,
+          119.99999999999575,
+          2.4166666666666665
+        ],
+        "savedEvidenceChecks": {
+          "observations": 64,
+          "adjacentIntervalsChecked": 0,
+          "scope": "Existing observations and completed-interval arithmetic; unobserved controls or intervening trajectories are not fabricated."
+        }
+      }
+    ],
+    "independentRules": {
+      "file": "independent-solar-review.json",
+      "sha256": "4ce97f92aaca9dcf6cefed8d61f3f7dde1aa3e33718242ce8ba7d42fd8e0e484",
+      "scope": "Integer1/240J constant-flow integration and closed-form fixed-step Euler heat, read-only over QA unique six actual ordinary rounds. No Model/pilot import, author witness, policy search, extra ordinary games, browser or hardware test.",
+      "checks": 3,
+      "uniqueCheckpoints": 277,
+      "constantFlowIntegrationSegments": 320,
+      "existingOrdinaryRoundsVerified": 6,
+      "ordinaryRoundsExecutedAgain": 0,
+      "pureArithmeticExamples": [
+        "Power-limited discharge empties1J in15ticks with priority shares .75/.25/0J",
+        "Charge power/capacity intersection stores .5J and spills1.5J",
+        "Closed-form Euler equals two hand-calculated updates"
+      ],
+      "archivedSources": {
+        "math": {
+          "path": "tests/solar-interval-oracle.mjs",
+          "sha256": "c8fa752e8a4e5ea9d12d50ba1908d59bba7faf6ed157f4201cd41d0e3c9b60b2"
+        },
+        "review": {
+          "path": "tests/independent-solar-review.mjs",
+          "sha256": "72cab07d9bc793d79abbad3d511ab15d7a0e958287a89bc00445f9111ecb82c1"
+        }
+      }
+    },
+    "actualCandidate": {
+      "rawReportSha256": "8c201efa99f6b6563b01560420943f67888422473e8486d8aebbb2ebdba69757",
+      "scope": "Actual sampled telemetry and controls; no claim that screenshots or polling retain every integration tick.",
+      "completedTicks": 3600,
+      "observedPeriods": [
+        "dawn",
+        "noon",
+        "dusk",
+        "night"
+      ],
+      "actualOperationsObserved": 10,
+      "panelTurns": 2,
+      "toggleCount": 8,
+      "actualCaptureWindows": [
+        {
+          "name": "01-menu",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/01-menu.png",
+            "sha256": "1786e50d227181385fffebbd9dcbae191ece961589732db331e6e82271648ca3",
+            "includedInRelease": false
+          },
+          "livePlaying": false,
+          "phase": "menu",
+          "paused": false,
+          "tick": 0
+        },
+        {
+          "name": "02-initial-supply-window",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/02-initial-supply-window.png",
+            "sha256": "d607666ec329bc23aa221229e342d278acf8dae89897fcede702d65209b66a4d",
+            "includedInRelease": false
+          },
+          "livePlaying": true,
+          "scope": "Actual continuous interval between these observations; image is not assigned to either endpoint. Energy, thermal, quota and phase changes are preserved.",
+          "observedTickRange": [
+            6,
+            24
+          ],
+          "observedPhaseRange": [
+            "playing",
+            "playing"
+          ],
+          "observedEnergyJ": [
+            36,
+            36
+          ],
+          "observedTemperatureC": [
+            25.98405323861328,
+            25.936971804884173
+          ],
+          "footerMatchesBeforeSample": true,
+          "footerMatchesAfterSample": true
+        },
+        {
+          "name": "03-shadow-discharge-window",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/03-shadow-discharge-window.png",
+            "sha256": "c7231550fc6f875a333289d67b37225fc3fc464affc6a631bc7bfe40042a9eb8",
+            "includedInRelease": false
+          },
+          "livePlaying": true,
+          "scope": "Actual continuous interval between these observations; image is not assigned to either endpoint. Energy, thermal, quota and phase changes are preserved.",
+          "observedTickRange": [
+            606,
+            627
+          ],
+          "observedPhaseRange": [
+            "playing",
+            "playing"
+          ],
+          "observedEnergyJ": [
+            43.333333333333435,
+            41.933333333333366
+          ],
+          "observedTemperatureC": [
+            26.75289500464822,
+            27.229429073650397
+          ],
+          "footerMatchesBeforeSample": true,
+          "footerMatchesAfterSample": true
+        },
+        {
+          "name": "04-noon-panel-window",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/04-noon-panel-window.png",
+            "sha256": "02972e28367e4f49f7e5d1ee7e0c8dd0281f427b16b8d0eec73477e16dd0be34",
+            "includedInRelease": false
+          },
+          "livePlaying": true,
+          "scope": "Actual continuous interval between these observations; image is not assigned to either endpoint. Energy, thermal, quota and phase changes are preserved.",
+          "observedTickRange": [
+            858,
+            874
+          ],
+          "observedPhaseRange": [
+            "playing",
+            "playing"
+          ],
+          "observedEnergyJ": [
+            37.558333333333024,
+            38.891666666666396
+          ],
+          "observedTemperatureC": [
+            31.062736122631655,
+            31.243582452240407
+          ],
+          "footerMatchesBeforeSample": true,
+          "footerMatchesAfterSample": true
+        },
+        {
+          "name": "05-dusk-panel-window",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/05-dusk-panel-window.png",
+            "sha256": "499203d5a114f44144f67f2a287829feab185a50c2aafbc514600f945eb4a614",
+            "includedInRelease": false
+          },
+          "livePlaying": true,
+          "scope": "Actual continuous interval between these observations; image is not assigned to either endpoint. Energy, thermal, quota and phase changes are preserved.",
+          "observedTickRange": [
+            1692,
+            1713
+          ],
+          "observedPhaseRange": [
+            "playing",
+            "playing"
+          ],
+          "observedEnergyJ": [
+            73.25833333333239,
+            75.00833333333229
+          ],
+          "observedTemperatureC": [
+            36.64769627623795,
+            36.72995858394249
+          ],
+          "footerMatchesBeforeSample": true,
+          "footerMatchesAfterSample": true
+        },
+        {
+          "name": "06-night-service-window",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/06-night-service-window.png",
+            "sha256": "de5503a7163c767f4e7d712df09d8fe8a8fbe58e8b923f758f0b1416ec61e1b9",
+            "includedInRelease": false
+          },
+          "livePlaying": true,
+          "scope": "Actual continuous interval between these observations; image is not assigned to either endpoint. Energy, thermal, quota and phase changes are preserved.",
+          "observedTickRange": [
+            2527,
+            2544
+          ],
+          "observedPhaseRange": [
+            "playing",
+            "playing"
+          ],
+          "observedEnergyJ": [
+            89.53333333333336,
+            88.40000000000009
+          ],
+          "observedTemperatureC": [
+            29.912830449007668,
+            30.228756261780955
+          ],
+          "footerMatchesBeforeSample": true,
+          "footerMatchesAfterSample": true
+        },
+        {
+          "name": "07-won",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/07-won.png",
+            "sha256": "8984e725bd8feae2bed569fd4fd381927d012b68a10e6e5525044a2ff6655329",
+            "includedInRelease": false
+          },
+          "livePlaying": false,
+          "phase": "won",
+          "paused": false,
+          "tick": 3600
+        },
+        {
+          "name": "08-small-won",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/08-small-won.png",
+            "sha256": "fff5eb373a7cbbf64fa821cd9f008c2db56d3ef33df096078b2554d397040ef7",
+            "includedInRelease": false
+          },
+          "livePlaying": false,
+          "phase": "won",
+          "paused": false,
+          "tick": 3600
+        },
+        {
+          "name": "09-small-menu",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/09-small-menu.png",
+            "sha256": "13e6a1a1acbd0cea4b48b1cbb02a009ea765371784604ca480ea864d7adf8971",
+            "includedInRelease": false
+          },
+          "livePlaying": false,
+          "phase": "menu",
+          "paused": false,
+          "tick": 0
+        },
+        {
+          "name": "10-small-playing-window",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/10-small-playing-window.png",
+            "sha256": "586e551f0f0ba974d8686d479d5299b9e31a544a579befefa2db29072562d213",
+            "includedInRelease": false
+          },
+          "livePlaying": true,
+          "scope": "Actual continuous interval between these observations; image is not assigned to either endpoint. Energy, thermal, quota and phase changes are preserved.",
+          "observedTickRange": [
+            6,
+            21
+          ],
+          "observedPhaseRange": [
+            "playing",
+            "playing"
+          ],
+          "observedEnergyJ": [
+            36,
+            36
+          ],
+          "observedTemperatureC": [
+            25.98405323861328,
+            25.9447403991417
+          ],
+          "footerMatchesBeforeSample": true,
+          "footerMatchesAfterSample": true
+        },
+        {
+          "name": "11-small-pause",
+          "image": {
+            "scratchRelativePath": "candidate-runtime-v2/11-small-pause.png",
+            "sha256": "b45e6079a85c2ff066a88cddacf7fc8969a6249033fff320542480f0d2edd053",
+            "includedInRelease": false
+          },
+          "livePlaying": false,
+          "phase": "playing",
+          "paused": true,
+          "tick": 21
+        }
+      ],
+      "sampledMaximumTemperatureC": 40.63427588849887,
+      "sampledMinimumEnergyJ": 17.99999999999994
+    }
+  },
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "0d5255597f677850d78ad9281dac5e23b4c8795cd73a62797e9b63d3420a39ef",
+      "game.js": "ed6a4169fb747c89dedd0a59e2fe983102c9b571c4cd699080d0fd597ce94407",
+      "game-config.json": "218c0385d5112973d646264fcdc54c39e56a50726b39a3e92b5f8e774be1c65d",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game.js": "ed6a4169fb747c89dedd0a59e2fe983102c9b571c4cd699080d0fd597ce94407",
+      "src/main/assets/game-model.js": "0d5255597f677850d78ad9281dac5e23b4c8795cd73a62797e9b63d3420a39ef",
+      "tests/automation.mjs": "0d4854d0a034129816b8fac488524038714a295e3b69bae6c5766540bb173b87",
+      "docs/model-contract.md": "0a6ed163dd87b09413ab328ee305d9f670dde85694af0ff9ca9ebdb9361ba26a",
+      "tests/game-model.test.cjs": "08371cdf7268d76d97bb0c25f9e4e3915cd6c4740ba71ff1d548629632d44e38"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime-v2/01-menu.png",
+        "sha256": "1786e50d227181385fffebbd9dcbae191ece961589732db331e6e82271648ca3",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/02-initial-supply-window.png",
+        "sha256": "d607666ec329bc23aa221229e342d278acf8dae89897fcede702d65209b66a4d",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/03-shadow-discharge-window.png",
+        "sha256": "c7231550fc6f875a333289d67b37225fc3fc464affc6a631bc7bfe40042a9eb8",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/04-noon-panel-window.png",
+        "sha256": "02972e28367e4f49f7e5d1ee7e0c8dd0281f427b16b8d0eec73477e16dd0be34",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/05-dusk-panel-window.png",
+        "sha256": "499203d5a114f44144f67f2a287829feab185a50c2aafbc514600f945eb4a614",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/06-night-service-window.png",
+        "sha256": "de5503a7163c767f4e7d712df09d8fe8a8fbe58e8b923f758f0b1416ec61e1b9",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/07-won.png",
+        "sha256": "8984e725bd8feae2bed569fd4fd381927d012b68a10e6e5525044a2ff6655329",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/08-small-won.png",
+        "sha256": "fff5eb373a7cbbf64fa821cd9f008c2db56d3ef33df096078b2554d397040ef7",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/09-small-menu.png",
+        "sha256": "13e6a1a1acbd0cea4b48b1cbb02a009ea765371784604ca480ea864d7adf8971",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/10-small-playing-window.png",
+        "sha256": "586e551f0f0ba974d8686d479d5299b9e31a544a579befefa2db29072562d213",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/11-small-pause.png",
+        "sha256": "b45e6079a85c2ff066a88cddacf7fc8969a6249033fff320542480f0d2edd053",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "755077c995f5cff0cf8bbbde40a35c74b1d82e1b263af5270f9bf56a695918a3",
+    "unresolvedFindings": []
+  },
+  "modelTests": {
+    "passed": 14,
+    "sourceHashesBefore": {
+      "model": "0d5255597f677850d78ad9281dac5e23b4c8795cd73a62797e9b63d3420a39ef",
+      "contract": "0a6ed163dd87b09413ab328ee305d9f670dde85694af0ff9ca9ebdb9361ba26a",
+      "test": "08371cdf7268d76d97bb0c25f9e4e3915cd6c4740ba71ff1d548629632d44e38"
+    },
+    "sourceHashesAfter": {
+      "model": "0d5255597f677850d78ad9281dac5e23b4c8795cd73a62797e9b63d3420a39ef",
+      "contract": "0a6ed163dd87b09413ab328ee305d9f670dde85694af0ff9ca9ebdb9361ba26a",
+      "test": "08371cdf7268d76d97bb0c25f9e4e3915cd6c4740ba71ff1d548629632d44e38"
+    },
+    "testLogSha256": "7bf5a774e960ea3aafaec9aa8e48b72e52a31d214c8da55385ebdc3ec07c826f",
+    "rawReportSha256": "2f70d28e400346df7ed6bab3c9176c5668331804d582221047d0aed5e5062237",
+    "scope": "Formal arithmetic/input/terminal rule tests only, with explicitly labelled synthetic energy and last-interval fixtures. One two-second ordinary-input flow exercise; no full-game controller, author witness, browser or independent QA integration claim. First execution after root reviewed source."
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ]
+  },
+  "supplementaryChecks": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "three menu levels expose independent quotas, initial battery and no integrated sample",
+        "passed": true
+      },
+      {
+        "name": "held START starts once and phone direction selects the actual device without operating it",
+        "passed": true
+      },
+      {
+        "name": "held phone A and native Enter each rotate the global panel once independently of device selection",
+        "passed": true
+      },
+      {
+        "name": "held phone B toggles only the selected optional load; actual pause freezes every physical quantity",
+        "passed": true
+      },
+      {
+        "name": "connected cancellation suppresses stale A and B while energy still advances, then real release rearms",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes sunlight, heat, energy and quotas and clears held selection before intentional resume",
+        "passed": true
+      },
+      {
+        "name": "ordinary critical OFF remains an obligation and naturally loses on its continuous brownout limit",
+        "passed": true
+      },
+      {
+        "name": "R restores original controls, energy and quota accumulators before real time integrates again",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ]
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "buildSourceSha": "93710ae0382c5dfefdfa3b9dae51810179c9569a",
+    "startHashes": {
+      "tests/automation.mjs": "0d4854d0a034129816b8fac488524038714a295e3b69bae6c5766540bb173b87",
+      "tests/game-model.test.cjs": "08371cdf7268d76d97bb0c25f9e4e3915cd6c4740ba71ff1d548629632d44e38",
+      "src/main/assets/game-model.js": "0d5255597f677850d78ad9281dac5e23b4c8795cd73a62797e9b63d3420a39ef",
+      "src/main/assets/game.js": "ed6a4169fb747c89dedd0a59e2fe983102c9b571c4cd699080d0fd597ce94407"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "0d4854d0a034129816b8fac488524038714a295e3b69bae6c5766540bb173b87",
+      "tests/game-model.test.cjs": "08371cdf7268d76d97bb0c25f9e4e3915cd6c4740ba71ff1d548629632d44e38",
+      "src/main/assets/game-model.js": "0d5255597f677850d78ad9281dac5e23b4c8795cd73a62797e9b63d3420a39ef",
+      "src/main/assets/game.js": "ed6a4169fb747c89dedd0a59e2fe983102c9b571c4cd699080d0fd597ce94407"
+    },
+    "rawReportSha256": "30fcd9ad6bddc475f2f88428c4655b52ae4e84dbdbd9d5ba5004117f17b53ccf"
+  },
+  "sourceArtReview": {
+    "file": "art-review.json",
+    "sha256": "c4c230159005c545c7e494cd042653394e110789d464204e3bf6c0f6dd0fa80b"
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "设备达标后不会自动关闭。关键设备关着也算欠供。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "设备达标后不会自动关闭。关键设备关着也算欠供。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "设备达标后不会自动关闭。关键设备关着也算欠供。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "设备达标后不会自动关闭。关键设备关着也算欠供。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "设备达标后不会自动关闭。关键设备关着也算欠供。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "设备达标后不会自动关闭。关键设备关着也算欠供。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "0371bd8e95c25289adf4bb3189343b437524574ca401cc187cfe05f5590d517d"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 1542,
+    "rafIntervalMs": {
+      "count": 1542,
+      "min": 16.5,
+      "median": 33.30000000000291,
+      "p95": 83.29999999999563,
+      "max": 116.59999999999854,
+      "mean": 38.487483787289236
+    },
+    "webglDrawCalls": {
+      "count": 1542,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 1542,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {}
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 68.01800241100001,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1636,
+      "elapsed": 60,
+      "remaining": 0,
+      "panelTurns": 2,
+      "toggleCount": 8,
+      "quotaMetCount": 3,
+      "allQuotasMet": true,
+      "solar": {
+        "ratedW": 15,
+        "orientationIndex": 2,
+        "orientation": "W",
+        "panelAngleDeg": 60,
+        "periodId": "night",
+        "sunAngleDeg": null,
+        "irradiance": 0,
+        "shadowed": false,
+        "alignment": 0,
+        "generationW": 0
+      },
+      "battery": {
+        "capacityJ": 90,
+        "initialEnergyJ": 36,
+        "energyJ": 17.99999999999994,
+        "maxChargeW": 5,
+        "maxDischargeW": 8,
+        "chargeW": 0,
+        "dischargeW": 4,
+        "ambientC": 24,
+        "initialTemperatureC": 26,
+        "temperatureC": 40.62739958480232,
+        "thermalLimitC": 58,
+        "heatChargeCoefficient": 0.05,
+        "heatDischargeCoefficient": 0.1,
+        "coolingPerSecond": 0.08,
+        "thermalRateCPerSecond": 0.270168257559227
+      },
+      "devices": [
+        {
+          "id": "D1",
+          "name": "信标",
+          "nameEn": "BEACON",
+          "priority": 1,
+          "demandW": 4,
+          "quotaJ": 224,
+          "critical": true,
+          "maxBrownoutTicks": 150,
+          "enabled": true,
+          "requestedW": 4,
+          "deliveredW": 4,
+          "deliveredJ": 239.9999999999915,
+          "quotaMet": true,
+          "brownoutTicks": 0,
+          "brownoutSeconds": 0
+        },
+        {
+          "id": "D2",
+          "name": "水泵",
+          "nameEn": "PUMP",
+          "priority": 2,
+          "demandW": 3,
+          "quotaJ": 72,
+          "critical": false,
+          "maxBrownoutTicks": null,
+          "enabled": false,
+          "requestedW": 0,
+          "deliveredW": 0,
+          "deliveredJ": 71.99999999999805,
+          "quotaMet": true,
+          "brownoutTicks": 0,
+          "brownoutSeconds": 0
+        },
+        {
+          "id": "D3",
+          "name": "工坊",
+          "nameEn": "WORKSHOP",
+          "priority": 3,
+          "demandW": 5,
+          "quotaJ": 60,
+          "critical": false,
+          "maxBrownoutTicks": null,
+          "enabled": false,
+          "requestedW": 0,
+          "deliveredW": 0,
+          "deliveredJ": 60.08333333333395,
+          "quotaMet": true,
+          "brownoutTicks": 0,
+          "brownoutSeconds": 0
+        }
+      ],
+      "ledger": {
+        "initialBatteryJ": 36,
+        "solarJ": 463.87499999999164,
+        "deliveredJ": 372.0833333333235,
+        "spilledJ": 109.79166666666765,
+        "chargedJ": 78.00000000000207,
+        "dischargedJ": 95.99999999999967,
+        "energyErrorJ": 5.684341886080801e-13
+      }
+    },
+    "ordinaryPowerManagement": {
+      "actualPanelPressCount": 2,
+      "actualTogglePressCount": 8,
+      "observedOperationReceipts": [
+        {
+          "observedAt": 16.015334763,
+          "receipt": {
+            "id": 497,
+            "kind": "toggle",
+            "at": 8.283333333333333,
+            "tick": 497,
+            "before": true,
+            "after": false,
+            "deviceId": "D2"
+          }
+        },
+        {
+          "observedAt": 18.015532281,
+          "receipt": {
+            "id": 524,
+            "kind": "toggle",
+            "at": 8.733333333333333,
+            "tick": 524,
+            "before": true,
+            "after": false,
+            "deviceId": "D3"
+          }
+        },
+        {
+          "observedAt": 22.041108344,
+          "receipt": {
+            "id": 846,
+            "kind": "rotate",
+            "at": 14.1,
+            "tick": 846,
+            "before": "E",
+            "after": "S",
+            "deviceId": null
+          }
+        },
+        {
+          "observedAt": 24.006438843,
+          "receipt": {
+            "id": 872,
+            "kind": "toggle",
+            "at": 14.533333333333333,
+            "tick": 872,
+            "before": false,
+            "after": true,
+            "deviceId": "D3"
+          }
+        },
+        {
+          "observedAt": 26.015453729,
+          "receipt": {
+            "id": 1070,
+            "kind": "toggle",
+            "at": 17.833333333333332,
+            "tick": 1070,
+            "before": true,
+            "after": false,
+            "deviceId": "D3"
+          }
+        },
+        {
+          "observedAt": 32.017011896,
+          "receipt": {
+            "id": 1396,
+            "kind": "toggle",
+            "at": 23.266666666666666,
+            "tick": 1396,
+            "before": true,
+            "after": false,
+            "deviceId": "D2"
+          }
+        },
+        {
+          "observedAt": 36.019502227,
+          "receipt": {
+            "id": 1696,
+            "kind": "toggle",
+            "at": 28.266666666666666,
+            "tick": 1696,
+            "before": false,
+            "after": true,
+            "deviceId": "D2"
+          }
+        },
+        {
+          "observedAt": 42.015543982,
+          "receipt": {
+            "id": 2044,
+            "kind": "toggle",
+            "at": 34.06666666666667,
+            "tick": 2044,
+            "before": true,
+            "after": false,
+            "deviceId": "D2"
+          }
+        }
+      ],
+      "allOperationReceiptsObserved": false,
+      "operationSamplingGaps": [
+        {
+          "fromTick": 751,
+          "toTick": 871,
+          "actualCounterIncrease": 2,
+          "onlyLastReceiptObserved": 846
+        },
+        {
+          "fromTick": 1589,
+          "toTick": 1711,
+          "actualCounterIncrease": 2,
+          "onlyLastReceiptObserved": 1696
+        }
+      ],
+      "observedPeriods": [
+        "dawn",
+        "noon",
+        "dusk",
+        "night"
+      ],
+      "shadowZeroGenerationSampleCount": 3,
+      "nightSampleCount": 9,
+      "sampledMaximumTemperatureC": 40.62739958480232,
+      "sampledMinimumEnergyJ": 17.99999999999994,
+      "finalIndependentQuotaCount": 3,
+      "scope": "Actual key edges, counters and saved telemetry only. Sparse operation gaps remain explicit; no missing control tick, thermal trajectory or continuous-frame state is fabricated."
+    },
+    "normalFailure": {
+      "reason": "brownout",
+      "failure": {
+        "reason": "brownout",
+        "deviceIds": [
+          "D1"
+        ],
+        "missingQuotaDeviceIds": [
+          "D1",
+          "D2",
+          "D3"
+        ],
+        "temperatureC": 27.425023370882794
+      },
+      "level": 1,
+      "difficulty": 0,
+      "score": 67,
+      "elapsed": 2.7,
+      "remaining": 57.3,
+      "panelTurns": 0,
+      "toggleCount": 1,
+      "quotaMetCount": 0,
+      "allQuotasMet": false,
+      "solar": {
+        "ratedW": 15,
+        "orientationIndex": 0,
+        "orientation": "E",
+        "panelAngleDeg": -60,
+        "periodId": "dawn",
+        "sunAngleDeg": -60,
+        "irradiance": 0.8,
+        "shadowed": false,
+        "alignment": 1,
+        "generationW": 12
+      },
+      "battery": {
+        "capacityJ": 90,
+        "initialEnergyJ": 36,
+        "energyJ": 46.0000000000005,
+        "maxChargeW": 5,
+        "maxDischargeW": 8,
+        "chargeW": 4.000000000000001,
+        "dischargeW": 0,
+        "ambientC": 24,
+        "initialTemperatureC": 26,
+        "temperatureC": 27.425023370882794,
+        "thermalLimitC": 58,
+        "heatChargeCoefficient": 0.05,
+        "heatDischargeCoefficient": 0.1,
+        "coolingPerSecond": 0.08,
+        "thermalRateCPerSecond": 0.5267003975260782
+      },
+      "devices": [
+        {
+          "id": "D1",
+          "name": "信标",
+          "nameEn": "BEACON",
+          "priority": 1,
+          "demandW": 4,
+          "quotaJ": 224,
+          "critical": true,
+          "maxBrownoutTicks": 150,
+          "enabled": false,
+          "requestedW": 0,
+          "deliveredW": 0,
+          "deliveredJ": 0.7999999999999999,
+          "quotaMet": false,
+          "brownoutTicks": 150,
+          "brownoutSeconds": 2.5
+        },
+        {
+          "id": "D2",
+          "name": "水泵",
+          "nameEn": "PUMP",
+          "priority": 2,
+          "demandW": 3,
+          "quotaJ": 72,
+          "critical": false,
+          "maxBrownoutTicks": null,
+          "enabled": true,
+          "requestedW": 3,
+          "deliveredW": 3,
+          "deliveredJ": 8.09999999999998,
+          "quotaMet": false,
+          "brownoutTicks": 0,
+          "brownoutSeconds": 0
+        },
+        {
+          "id": "D3",
+          "name": "工坊",
+          "nameEn": "WORKSHOP",
+          "priority": 3,
+          "demandW": 5,
+          "quotaJ": 60,
+          "critical": false,
+          "maxBrownoutTicks": null,
+          "enabled": true,
+          "requestedW": 5,
+          "deliveredW": 5,
+          "deliveredJ": 13.500000000000027,
+          "quotaMet": false,
+          "brownoutTicks": 0,
+          "brownoutSeconds": 0
+        }
+      ],
+      "ledger": {
+        "initialBatteryJ": 36,
+        "solarJ": 32.39999999999992,
+        "deliveredJ": 22.400000000000006,
+        "spilledJ": 0,
+        "chargedJ": 9.999999999999984,
+        "dischargedJ": 0,
+        "energyErrorJ": -5.826450433232822e-13
+      }
+    },
+    "recordedStateDerivation": {
+      "observations": 35,
+      "adjacentIntervalsChecked": 0,
+      "scope": "Existing observations and completed-interval arithmetic; unobserved controls or intervening trajectories are not fabricated."
+    }
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "0d5255597f677850d78ad9281dac5e23b4c8795cd73a62797e9b63d3420a39ef",
+    "game.js": "ed6a4169fb747c89dedd0a59e2fe983102c9b571c4cd699080d0fd597ce94407",
+    "game-config.json": "218c0385d5112973d646264fcdc54c39e56a50726b39a3e92b5f8e774be1c65d",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "b111a7bbaa0ec37396bf5aaf86cca3e0863361f9fd8be7f7bfc96e14fea7140b",
+    "formal": "2f70d28e400346df7ed6bab3c9176c5668331804d582221047d0aed5e5062237",
+    "ordinary": "bfc81209a654871283cc77bef3eb1dd3936307f8a0f2ce989a5de92f1908276f",
+    "independent": "4ce97f92aaca9dcf6cefed8d61f3f7dde1aa3e33718242ce8ba7d42fd8e0e484",
+    "art": "0424d1b996616dec509af4826c48a2fcaa9020f44aaecf638ff84d4a45f85348",
+    "candidateRaw": "8c201efa99f6b6563b01560420943f67888422473e8486d8aebbb2ebdba69757",
+    "candidateQaVisual": "cccd834be2c3690a7062a686d08c7b17d383a33a749e5edb436b779db190b65f",
+    "candidate": "755077c995f5cff0cf8bbbde40a35c74b1d82e1b263af5270f9bf56a695918a3",
+    "sign": "f65a653095b4a2cdfa70544281ad2c910d3a4aa118dbc212d1d8137f48925e2a",
+    "fetch": "65541ca853b9042331ef7c19cbf4b3596a1c918ecdee0fce8e48df8c0a76698e",
+    "qa": "ed4ba5e3a1116e5248bf3d446a0a92af25d3ea8a7902be66a0f86e6127d5a48d",
+    "supplementary": "efc0742fcb9ebf50a778a9c73709694f89ed7d298508b23f1c35ff72294cf427",
+    "record": "d247812b7b759db72294bc59977955120270237453641a5f5383e69e73a8c68d",
+    "decode": "268a7448d7e70f71bd86702d1f74ba4c925097f221b0dc854d965e68c5f7525a",
+    "viewport": "a87616cf9ae177a612610f41534c6663a89f8d9c6a51cfec45ed23e33a95f5d9",
+    "videoValidation": "f8197a36f9c7dc5734058edb58158b3df0ba865fce536104f9b1d520fe40773b",
+    "artifacts": "d1891a92428f214959b9223a32eae833f326768a51165c55944ef779baf8e9d5",
+    "rootEncoded": "095f7cf4b248c1fdaaf4a40a2cd444b4dd03ea62067e534d80ba504c4fa8b785",
+    "layout": "0371bd8e95c25289adf4bb3189343b437524574ca401cc187cfe05f5590d517d",
+    "summary": "5735f230a8c7e8a98d27e903154949c7279a42a511a1bd88896272ae642a9096",
+    "review": "8b4415f8e10f6a1488ff36ddd1453b8f0447ceb9fa839809dc5226f1a807a789",
+    "provenance": "30fcd9ad6bddc475f2f88428c4655b52ae4e84dbdbd9d5ba5004117f17b53ccf"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium with ordinary input. Synthetic fixtures are labelled separately; export FPS is not device FPS."
+  },
+  "release": {
+    "sourceSha": "93710ae0382c5dfefdfa3b9dae51810179c9569a",
+    "requestCommit": "475356cd1c4b68375408cb873e9f08e299f7dd12",
+    "signerCommit": "93710ae0382c5dfefdfa3b9dae51810179c9569a",
+    "signingRun": 41369803642,
+    "bytes": 296227,
+    "sha256": "f1c9955fb5afcdaa3df203dcdb362edaa5cbe749efdbb533a616f84ca34dc809",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "fe6a6c98da8de9bbedf56eb240d7f230894fec19"
+  }
+}
