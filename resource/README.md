@@ -34,6 +34,7 @@
 | [CCTV Live](apps/cctv/) | ecojust / 桔子桑 | 0.5.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
 | [齿轮同刻](apps/clockwork-align/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 调节齿轮列的离合与制动，在有限调节次数内让所有指针于预约时间窗中持续对齐目标；挑战三种齿比结构。 | <img src="apps/clockwork-align/thumb.png" width="180" alt="齿轮同刻 界面"> |
 | [Coast Kart TV](apps/coast-kart/) | ecojust / 桔子桑 | 0.5.2 | 257.6 KB | 原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏 | <img src="apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"> |
+| [窗口装配](apps/conveyor-window/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 左右移动夹具抓取零件，旋转到正确朝向，在快门开放时投送到匹配槽位；避免损坏、保持连续装配，完成三条传送线关卡。 | <img src="apps/conveyor-window/thumb.png" width="180" alt="窗口装配 界面"> |
 | [Cozy Island TV](apps/cozy-island/) | ecojust / 桔子桑 | 0.5.2 | 269.6 KB | 原创岛屿生活，支持采集、钓鱼、布置和手机扫码双人游玩 | <img src="apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"> |
 | [回声探图](apps/echo-cartographer/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在有限照明下发射声呐测绘暗室，控制脚步噪声避开巡逻机，收集信标后返回入口，支持手机扫码单人操作 | <img src="apps/echo-cartographer/thumb.png" width="180" alt="回声探图 界面"> |
 | [防火带](apps/firebreak-planner/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 用有限行动点提前清理防火带，依据固定变风与累积热量阻断同时蔓延的山火；保护全部村落与至少七成存活森林，清理本身也会减少林木。 | <img src="apps/firebreak-planner/thumb.png" width="180" alt="防火带 界面"> |

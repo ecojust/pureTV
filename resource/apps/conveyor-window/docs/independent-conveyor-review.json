@@ -1,0 +1,670 @@
+{
+  "schemaVersion": 1,
+  "game": "conveyor-window",
+  "passed": true,
+  "method": "Absolute modular belt positions and closed-form generation/wrap calendar; constant-input clamped gripper segments; ownership and counter versions only at independently derived actual actions and wrap events. Every current part and actual interval is checked. No Model/pilot import, tick physics replay, search or new gameplay.",
+  "limitations": [
+    "Only the root-approved existing six public ordinary cases. Earlier retained attempts, formal synthetic boundary coverage, browser controls, pause/retry, video and rendering are separate.",
+    "Serialized observations prove values and exact historical copies, not runtime object identity or Object.freeze. Only actionReceipts/wrapReceipts use bank prefixes; every mutable parts registry remains a full observation.",
+    "All integer position, phase, generation, ownership, counter and terminal gates use zero tolerance. Observed coverage counters do not claim unencountered boundary actions.",
+    "Input checks cover recorded ordinary held keys and public latch semantics; unobserved cancellation/pulses/invalid dt calls are not synthesized.",
+    "Original source hashes and raw report hashes are bound through the root-reviewed lossless public manifest; no diagnostic-bearing raw case or production implementation is read."
+  ],
+  "sources": {
+    "contract": {
+      "repoRelative": "resource/apps/conveyor-window/docs/model-contract.md",
+      "sha256": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1"
+    },
+    "oracle": {
+      "repoRelative": "resource/apps/conveyor-window/tests/conveyor-interval-oracle.mjs",
+      "sha256": "8fb7d4fbb528a6874b7e664a82a79839ecd4bc79ccab672481645c42d6db6fd3"
+    },
+    "runner": {
+      "repoRelative": "resource/apps/conveyor-window/tests/independent-conveyor-review.mjs",
+      "sha256": "20a92d59585bfc5fd719f85e5e26efaf69c050ee7a3faad26db8e7396e90f770"
+    },
+    "publicIndex": {
+      "scratchRelative": "hundred-games/conveyor-window/public-observations-final/index.json",
+      "sha256": "dff7e494b0d1df785f4a712d3aaa7cc177784c721baf0434ec44d110b4bf5e15"
+    },
+    "originalReportSha256": "523097fc2839cd86507dd134e09e5b1b31c529157b3ab870373e0965ce571fb0",
+    "sourceRuns": [
+      {
+        "scratchRelative": "hundred-games/conveyor-window/ordinary-rounds-final/report.json",
+        "sha256": "523097fc2839cd86507dd134e09e5b1b31c529157b3ab870373e0965ce571fb0",
+        "startHashes": {
+          "automation": "b700f881597f9391ea0eb15eff3aec50f84834c071838a914c5efe84a8b68903",
+          "model": "9aec5d1c97af08188591e9185b44f183c011ebd3cba8853f24ef19a500cf6428",
+          "contract": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1",
+          "harness": "5ff1709144452e8abcb7f23681426cef62b60ffd5d1c869c31d13618e6d31c90",
+          "evidenceFormat": "ee9e4f8ce4f55b97dd2a417b9675ebd876fc4de89224abfbab953e443cbe8b42"
+        },
+        "endHashes": {
+          "automation": "b700f881597f9391ea0eb15eff3aec50f84834c071838a914c5efe84a8b68903",
+          "model": "9aec5d1c97af08188591e9185b44f183c011ebd3cba8853f24ef19a500cf6428",
+          "contract": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1",
+          "harness": "5ff1709144452e8abcb7f23681426cef62b60ffd5d1c869c31d13618e6d31c90",
+          "evidenceFormat": "ee9e4f8ce4f55b97dd2a417b9675ebd876fc4de89224abfbab953e443cbe8b42"
+        }
+      }
+    ]
+  },
+  "sourceWindow": {
+    "startedAt": "2026-11-02T14:24:52.335Z",
+    "completedAt": "2026-11-02T14:24:57.530Z",
+    "startHashes": {
+      "repo:resource/apps/conveyor-window/tests/independent-conveyor-review.mjs": "20a92d59585bfc5fd719f85e5e26efaf69c050ee7a3faad26db8e7396e90f770",
+      "repo:resource/apps/conveyor-window/tests/conveyor-interval-oracle.mjs": "8fb7d4fbb528a6874b7e664a82a79839ecd4bc79ccab672481645c42d6db6fd3",
+      "repo:resource/apps/conveyor-window/docs/model-contract.md": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1",
+      "scratch:hundred-games/conveyor-window/public-observations-final/index.json": "dff7e494b0d1df785f4a712d3aaa7cc177784c721baf0434ec44d110b4bf5e15",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level1-record.json": "5d293b7898bfd0cd66ae71347c09d16157f1432b1457b6ef6d2de578d45646ee",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level1-loss.json": "d8c678174090bd7c5273b878064b229fc795f75c4e3046f6df9ff0aa10bfad49",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level2-record.json": "42c0e925bd7ea6ccf02e3df539bac4fe24f2b9a03065a5d983957edc3ae656c9",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level2-loss.json": "e16771ab0262709be258c8b7be8ff85de54941e1012e5065429a68b0acf8ae10",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level3-record.json": "43dc76add8c6bee620003a3ef2c29ab0c6592d4c52cbabdf58d42d11ef541582",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level3-loss.json": "13fe70610d8ae228f36748c17a5ba9a92ddf6142e575894a0f2c59fa00c5bcc5"
+    },
+    "endHashes": {
+      "repo:resource/apps/conveyor-window/tests/independent-conveyor-review.mjs": "20a92d59585bfc5fd719f85e5e26efaf69c050ee7a3faad26db8e7396e90f770",
+      "repo:resource/apps/conveyor-window/tests/conveyor-interval-oracle.mjs": "8fb7d4fbb528a6874b7e664a82a79839ecd4bc79ccab672481645c42d6db6fd3",
+      "repo:resource/apps/conveyor-window/docs/model-contract.md": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1",
+      "scratch:hundred-games/conveyor-window/public-observations-final/index.json": "dff7e494b0d1df785f4a712d3aaa7cc177784c721baf0434ec44d110b4bf5e15",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level1-record.json": "5d293b7898bfd0cd66ae71347c09d16157f1432b1457b6ef6d2de578d45646ee",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level1-loss.json": "d8c678174090bd7c5273b878064b229fc795f75c4e3046f6df9ff0aa10bfad49",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level2-record.json": "42c0e925bd7ea6ccf02e3df539bac4fe24f2b9a03065a5d983957edc3ae656c9",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level2-loss.json": "e16771ab0262709be258c8b7be8ff85de54941e1012e5065429a68b0acf8ae10",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level3-record.json": "43dc76add8c6bee620003a3ef2c29ab0c6592d4c52cbabdf58d42d11ef541582",
+      "scratch:hundred-games/conveyor-window/public-observations-final/level3-loss.json": "13fe70610d8ae228f36748c17a5ba9a92ddf6142e575894a0f2c59fa00c5bcc5"
+    },
+    "unchanged": true
+  },
+  "assertions": 11778845,
+  "roundAssertions": 11778820,
+  "globalAssertions": 25,
+  "failureCount": 0,
+  "failures": [],
+  "exception": null,
+  "comparisonTolerance": {
+    "positionUnits": 0,
+    "generation": 0,
+    "ownership": 0,
+    "counters": 0,
+    "ticks": 0
+  },
+  "maximumErrors": {
+    "positionUnits": 0,
+    "generation": 0,
+    "counters": 0,
+    "ticks": 0
+  },
+  "totals": {
+    "frames": 13749,
+    "intervals": 13743,
+    "fullSnapshots": 13761,
+    "retained": 370,
+    "compactSamples": 1723,
+    "eventWindows": 257,
+    "operations": 258,
+    "inputChanges": 287,
+    "gripperSegments": 132,
+    "ownershipVersions": 264,
+    "createdParts": 135,
+    "actionReceipts": 83,
+    "wrapReceipts": 175
+  },
+  "rounds": [
+    {
+      "label": "level1-record",
+      "difficulty": 0,
+      "level": 1,
+      "passed": true,
+      "assertions": 1255263,
+      "counts": {
+        "frames": 1922,
+        "intervals": 1921,
+        "fullSnapshots": 1924,
+        "retained": 56,
+        "compactSamples": 241,
+        "eventWindows": 40,
+        "operations": 40,
+        "inputChanges": 81,
+        "gripperSegments": 35,
+        "ownershipVersions": 41,
+        "createdParts": 13,
+        "actionReceipts": 24,
+        "wrapReceipts": 16
+      },
+      "coverage": {
+        "actionResults": {
+          "grabbed": 6,
+          "rotated": 12,
+          "seated": 6
+        },
+        "wrapBelts": {
+          "source": 11,
+          "target": 5
+        },
+        "openingBoundaryDispatches": 3,
+        "closingBoundaryDispatches": 0,
+        "actionGateDiffersFromNextTick": 0,
+        "pickupAtReachLimit": 0,
+        "dispatchAtReachLimit": 0,
+        "footprintAtWindowEdge": 0,
+        "rotateAndSeatSameTick": 0,
+        "emptyRotateThenGrab": 0,
+        "grabBeforeSourceWrap": 0,
+        "seatBeforeTargetWrap": 0,
+        "heldAcrossOriginalSourceWrap": 5,
+        "negativeWrapFromZero": 0,
+        "sourceRetirements": 5,
+        "targetCompletions": 4,
+        "streakResetAfterSuccess": 0,
+        "heldPartIntervals": 1571,
+        "cancelledIntervals": 0,
+        "epochChangedIntervals": 1,
+        "neutralAcknowledgements": 1,
+        "heldASuppressed": 74,
+        "movedIntervals": 510,
+        "gateTransitions": 11,
+        "terminalIncludesFinalInterval": 1,
+        "finalBoundaryWin": 0
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "required_streak",
+          "actionBoundaryTick": 1920,
+          "endedTick": 1921
+        },
+        "tick": 1921,
+        "elapsed": 32.016666666666666,
+        "score": 1900,
+        "streak": 6,
+        "totalCorrect": 6,
+        "faults": 0,
+        "heldPartId": null,
+        "ownerCounts": {
+          "source": 2,
+          "held": 0,
+          "slot": 2,
+          "completed": 4,
+          "retired": 5,
+          "damaged": 0
+        }
+      },
+      "source": {
+        "file": "level1-record.json",
+        "projectedSha256": "5d293b7898bfd0cd66ae71347c09d16157f1432b1457b6ef6d2de578d45646ee",
+        "originalRawSha256": "4f76b5b15da0037924f1f460b58f3a4462708855b46059dd6b5f1bcaf34a2d73",
+        "originalReportSha256": "523097fc2839cd86507dd134e09e5b1b31c529157b3ab870373e0965ce571fb0",
+        "sourceHashes": {
+          "automation": "b700f881597f9391ea0eb15eff3aec50f84834c071838a914c5efe84a8b68903",
+          "model": "9aec5d1c97af08188591e9185b44f183c011ebd3cba8853f24ef19a500cf6428",
+          "contract": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1",
+          "harness": "5ff1709144452e8abcb7f23681426cef62b60ffd5d1c869c31d13618e6d31c90",
+          "evidenceFormat": "ee9e4f8ce4f55b97dd2a417b9675ebd876fc4de89224abfbab953e443cbe8b42"
+        }
+      }
+    },
+    {
+      "label": "level1-loss",
+      "difficulty": 0,
+      "level": 1,
+      "passed": true,
+      "assertions": 186035,
+      "counts": {
+        "frames": 319,
+        "intervals": 318,
+        "fullSnapshots": 321,
+        "retained": 12,
+        "compactSamples": 41,
+        "eventWindows": 9,
+        "operations": 9,
+        "inputChanges": 19,
+        "gripperSegments": 9,
+        "ownershipVersions": 10,
+        "createdParts": 4,
+        "actionReceipts": 6,
+        "wrapReceipts": 3
+      },
+      "coverage": {
+        "actionResults": {
+          "grabbed": 3,
+          "shutter_closed": 3
+        },
+        "wrapBelts": {
+          "source": 2,
+          "target": 1
+        },
+        "openingBoundaryDispatches": 0,
+        "closingBoundaryDispatches": 1,
+        "actionGateDiffersFromNextTick": 0,
+        "pickupAtReachLimit": 0,
+        "dispatchAtReachLimit": 0,
+        "footprintAtWindowEdge": 0,
+        "rotateAndSeatSameTick": 0,
+        "emptyRotateThenGrab": 0,
+        "grabBeforeSourceWrap": 0,
+        "seatBeforeTargetWrap": 0,
+        "heldAcrossOriginalSourceWrap": 0,
+        "negativeWrapFromZero": 0,
+        "sourceRetirements": 1,
+        "targetCompletions": 0,
+        "streakResetAfterSuccess": 0,
+        "heldPartIntervals": 109,
+        "cancelledIntervals": 0,
+        "epochChangedIntervals": 1,
+        "neutralAcknowledgements": 1,
+        "heldASuppressed": 38,
+        "movedIntervals": 115,
+        "gateTransitions": 2,
+        "terminalIncludesFinalInterval": 1,
+        "finalBoundaryWin": 0
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "fault_limit",
+          "actionBoundaryTick": 317,
+          "endedTick": 318
+        },
+        "tick": 318,
+        "elapsed": 5.3,
+        "score": 0,
+        "streak": 0,
+        "totalCorrect": 0,
+        "faults": 3,
+        "heldPartId": null,
+        "ownerCounts": {
+          "source": 0,
+          "held": 0,
+          "slot": 0,
+          "completed": 0,
+          "retired": 1,
+          "damaged": 3
+        }
+      },
+      "source": {
+        "file": "level1-loss.json",
+        "projectedSha256": "d8c678174090bd7c5273b878064b229fc795f75c4e3046f6df9ff0aa10bfad49",
+        "originalRawSha256": "7ab2ba78e03499c492370810b1b5d9077bb8852b0928a019efd50623be7cb34c",
+        "originalReportSha256": "523097fc2839cd86507dd134e09e5b1b31c529157b3ab870373e0965ce571fb0",
+        "sourceHashes": {
+          "automation": "b700f881597f9391ea0eb15eff3aec50f84834c071838a914c5efe84a8b68903",
+          "model": "9aec5d1c97af08188591e9185b44f183c011ebd3cba8853f24ef19a500cf6428",
+          "contract": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1",
+          "harness": "5ff1709144452e8abcb7f23681426cef62b60ffd5d1c869c31d13618e6d31c90",
+          "evidenceFormat": "ee9e4f8ce4f55b97dd2a417b9675ebd876fc4de89224abfbab953e443cbe8b42"
+        }
+      }
+    },
+    {
+      "label": "level2-record",
+      "difficulty": 1,
+      "level": 2,
+      "passed": true,
+      "assertions": 2072642,
+      "counts": {
+        "frames": 2594,
+        "intervals": 2593,
+        "fullSnapshots": 2596,
+        "retained": 75,
+        "compactSamples": 325,
+        "eventWindows": 53,
+        "operations": 53,
+        "inputChanges": 87,
+        "gripperSegments": 45,
+        "ownershipVersions": 54,
+        "createdParts": 24,
+        "actionReceipts": 22,
+        "wrapReceipts": 31
+      },
+      "coverage": {
+        "actionResults": {
+          "grabbed": 6,
+          "rotated": 10,
+          "seated": 6
+        },
+        "wrapBelts": {
+          "source": 21,
+          "target": 10
+        },
+        "openingBoundaryDispatches": 0,
+        "closingBoundaryDispatches": 0,
+        "actionGateDiffersFromNextTick": 0,
+        "pickupAtReachLimit": 0,
+        "dispatchAtReachLimit": 0,
+        "footprintAtWindowEdge": 0,
+        "rotateAndSeatSameTick": 0,
+        "emptyRotateThenGrab": 0,
+        "grabBeforeSourceWrap": 0,
+        "seatBeforeTargetWrap": 0,
+        "heldAcrossOriginalSourceWrap": 5,
+        "negativeWrapFromZero": 21,
+        "sourceRetirements": 15,
+        "targetCompletions": 5,
+        "streakResetAfterSuccess": 0,
+        "heldPartIntervals": 2348,
+        "cancelledIntervals": 0,
+        "epochChangedIntervals": 1,
+        "neutralAcknowledgements": 1,
+        "heldASuppressed": 77,
+        "movedIntervals": 288,
+        "gateTransitions": 11,
+        "terminalIncludesFinalInterval": 1,
+        "finalBoundaryWin": 0
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "required_streak",
+          "actionBoundaryTick": 2592,
+          "endedTick": 2593
+        },
+        "tick": 2593,
+        "elapsed": 43.21666666666667,
+        "score": 1900,
+        "streak": 6,
+        "totalCorrect": 6,
+        "faults": 0,
+        "heldPartId": null,
+        "ownerCounts": {
+          "source": 3,
+          "held": 0,
+          "slot": 1,
+          "completed": 5,
+          "retired": 15,
+          "damaged": 0
+        }
+      },
+      "source": {
+        "file": "level2-record.json",
+        "projectedSha256": "42c0e925bd7ea6ccf02e3df539bac4fe24f2b9a03065a5d983957edc3ae656c9",
+        "originalRawSha256": "95bfeedf36ed72a63e0e1c55ba45c699c1967990c01bda45565c85651309bb7e",
+        "originalReportSha256": "523097fc2839cd86507dd134e09e5b1b31c529157b3ab870373e0965ce571fb0",
+        "sourceHashes": {
+          "automation": "b700f881597f9391ea0eb15eff3aec50f84834c071838a914c5efe84a8b68903",
+          "model": "9aec5d1c97af08188591e9185b44f183c011ebd3cba8853f24ef19a500cf6428",
+          "contract": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1",
+          "harness": "5ff1709144452e8abcb7f23681426cef62b60ffd5d1c869c31d13618e6d31c90",
+          "evidenceFormat": "ee9e4f8ce4f55b97dd2a417b9675ebd876fc4de89224abfbab953e443cbe8b42"
+        }
+      }
+    },
+    {
+      "label": "level2-loss",
+      "difficulty": 1,
+      "level": 2,
+      "passed": true,
+      "assertions": 5243939,
+      "counts": {
+        "frames": 5401,
+        "intervals": 5400,
+        "fullSnapshots": 5403,
+        "retained": 114,
+        "compactSamples": 675,
+        "eventWindows": 68,
+        "operations": 67,
+        "inputChanges": 0,
+        "gripperSegments": 1,
+        "ownershipVersions": 68,
+        "createdParts": 48,
+        "actionReceipts": 0,
+        "wrapReceipts": 67
+      },
+      "coverage": {
+        "actionResults": {},
+        "wrapBelts": {
+          "source": 45,
+          "target": 22
+        },
+        "openingBoundaryDispatches": 0,
+        "closingBoundaryDispatches": 0,
+        "actionGateDiffersFromNextTick": 0,
+        "pickupAtReachLimit": 0,
+        "dispatchAtReachLimit": 0,
+        "footprintAtWindowEdge": 0,
+        "rotateAndSeatSameTick": 0,
+        "emptyRotateThenGrab": 0,
+        "grabBeforeSourceWrap": 0,
+        "seatBeforeTargetWrap": 0,
+        "heldAcrossOriginalSourceWrap": 0,
+        "negativeWrapFromZero": 45,
+        "sourceRetirements": 45,
+        "targetCompletions": 0,
+        "streakResetAfterSuccess": 0,
+        "heldPartIntervals": 0,
+        "cancelledIntervals": 0,
+        "epochChangedIntervals": 1,
+        "neutralAcknowledgements": 1,
+        "heldASuppressed": 0,
+        "movedIntervals": 0,
+        "gateTransitions": 22,
+        "terminalIncludesFinalInterval": 1,
+        "finalBoundaryWin": 0
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "deadline",
+          "actionBoundaryTick": null,
+          "endedTick": 5400
+        },
+        "tick": 5400,
+        "elapsed": 90,
+        "score": 0,
+        "streak": 0,
+        "totalCorrect": 0,
+        "faults": 0,
+        "heldPartId": null,
+        "ownerCounts": {
+          "source": 3,
+          "held": 0,
+          "slot": 0,
+          "completed": 0,
+          "retired": 45,
+          "damaged": 0
+        }
+      },
+      "source": {
+        "file": "level2-loss.json",
+        "projectedSha256": "e16771ab0262709be258c8b7be8ff85de54941e1012e5065429a68b0acf8ae10",
+        "originalRawSha256": "47a65d85712b7519a65267d4ccaedea9a992d1afe820ff4fbd804f97bf997296",
+        "originalReportSha256": "523097fc2839cd86507dd134e09e5b1b31c529157b3ab870373e0965ce571fb0",
+        "sourceHashes": {
+          "automation": "b700f881597f9391ea0eb15eff3aec50f84834c071838a914c5efe84a8b68903",
+          "model": "9aec5d1c97af08188591e9185b44f183c011ebd3cba8853f24ef19a500cf6428",
+          "contract": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1",
+          "harness": "5ff1709144452e8abcb7f23681426cef62b60ffd5d1c869c31d13618e6d31c90",
+          "evidenceFormat": "ee9e4f8ce4f55b97dd2a417b9675ebd876fc4de89224abfbab953e443cbe8b42"
+        }
+      }
+    },
+    {
+      "label": "level3-record",
+      "difficulty": 2,
+      "level": 3,
+      "passed": true,
+      "assertions": 2055869,
+      "counts": {
+        "frames": 2306,
+        "intervals": 2305,
+        "fullSnapshots": 2308,
+        "retained": 75,
+        "compactSamples": 289,
+        "eventWindows": 57,
+        "operations": 58,
+        "inputChanges": 63,
+        "gripperSegments": 25,
+        "ownershipVersions": 59,
+        "createdParts": 29,
+        "actionReceipts": 20,
+        "wrapReceipts": 38
+      },
+      "coverage": {
+        "actionResults": {
+          "grabbed": 5,
+          "rotated": 10,
+          "seated": 5
+        },
+        "wrapBelts": {
+          "target": 13,
+          "source": 25
+        },
+        "openingBoundaryDispatches": 0,
+        "closingBoundaryDispatches": 0,
+        "actionGateDiffersFromNextTick": 0,
+        "pickupAtReachLimit": 0,
+        "dispatchAtReachLimit": 0,
+        "footprintAtWindowEdge": 0,
+        "rotateAndSeatSameTick": 0,
+        "emptyRotateThenGrab": 0,
+        "grabBeforeSourceWrap": 0,
+        "seatBeforeTargetWrap": 0,
+        "heldAcrossOriginalSourceWrap": 4,
+        "negativeWrapFromZero": 13,
+        "sourceRetirements": 20,
+        "targetCompletions": 4,
+        "streakResetAfterSuccess": 0,
+        "heldPartIntervals": 1870,
+        "cancelledIntervals": 0,
+        "epochChangedIntervals": 1,
+        "neutralAcknowledgements": 1,
+        "heldASuppressed": 66,
+        "movedIntervals": 347,
+        "gateTransitions": 9,
+        "terminalIncludesFinalInterval": 1,
+        "finalBoundaryWin": 0
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "required_streak",
+          "actionBoundaryTick": 2304,
+          "endedTick": 2305
+        },
+        "tick": 2305,
+        "elapsed": 38.416666666666664,
+        "score": 1800,
+        "streak": 5,
+        "totalCorrect": 5,
+        "faults": 0,
+        "heldPartId": null,
+        "ownerCounts": {
+          "source": 4,
+          "held": 0,
+          "slot": 1,
+          "completed": 4,
+          "retired": 20,
+          "damaged": 0
+        }
+      },
+      "source": {
+        "file": "level3-record.json",
+        "projectedSha256": "43dc76add8c6bee620003a3ef2c29ab0c6592d4c52cbabdf58d42d11ef541582",
+        "originalRawSha256": "b4c9109a0eb912ec9559f367ff091458afd152a76f0cf5bc28d8365b67c6e49b",
+        "originalReportSha256": "523097fc2839cd86507dd134e09e5b1b31c529157b3ab870373e0965ce571fb0",
+        "sourceHashes": {
+          "automation": "b700f881597f9391ea0eb15eff3aec50f84834c071838a914c5efe84a8b68903",
+          "model": "9aec5d1c97af08188591e9185b44f183c011ebd3cba8853f24ef19a500cf6428",
+          "contract": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1",
+          "harness": "5ff1709144452e8abcb7f23681426cef62b60ffd5d1c869c31d13618e6d31c90",
+          "evidenceFormat": "ee9e4f8ce4f55b97dd2a417b9675ebd876fc4de89224abfbab953e443cbe8b42"
+        }
+      }
+    },
+    {
+      "label": "level3-loss",
+      "difficulty": 2,
+      "level": 3,
+      "passed": true,
+      "assertions": 965072,
+      "counts": {
+        "frames": 1207,
+        "intervals": 1206,
+        "fullSnapshots": 1209,
+        "retained": 38,
+        "compactSamples": 152,
+        "eventWindows": 30,
+        "operations": 31,
+        "inputChanges": 37,
+        "gripperSegments": 17,
+        "ownershipVersions": 32,
+        "createdParts": 17,
+        "actionReceipts": 11,
+        "wrapReceipts": 20
+      },
+      "coverage": {
+        "actionResults": {
+          "grabbed": 3,
+          "wrong_orientation": 3,
+          "rotated": 5
+        },
+        "wrapBelts": {
+          "target": 7,
+          "source": 13
+        },
+        "openingBoundaryDispatches": 0,
+        "closingBoundaryDispatches": 0,
+        "actionGateDiffersFromNextTick": 0,
+        "pickupAtReachLimit": 0,
+        "dispatchAtReachLimit": 0,
+        "footprintAtWindowEdge": 0,
+        "rotateAndSeatSameTick": 0,
+        "emptyRotateThenGrab": 0,
+        "grabBeforeSourceWrap": 0,
+        "seatBeforeTargetWrap": 0,
+        "heldAcrossOriginalSourceWrap": 2,
+        "negativeWrapFromZero": 7,
+        "sourceRetirements": 10,
+        "targetCompletions": 0,
+        "streakResetAfterSuccess": 0,
+        "heldPartIntervals": 909,
+        "cancelledIntervals": 0,
+        "epochChangedIntervals": 1,
+        "neutralAcknowledgements": 1,
+        "heldASuppressed": 35,
+        "movedIntervals": 243,
+        "gateTransitions": 5,
+        "terminalIncludesFinalInterval": 1,
+        "finalBoundaryWin": 0
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "fault_limit",
+          "actionBoundaryTick": 1205,
+          "endedTick": 1206
+        },
+        "tick": 1206,
+        "elapsed": 20.1,
+        "score": 0,
+        "streak": 0,
+        "totalCorrect": 0,
+        "faults": 3,
+        "heldPartId": null,
+        "ownerCounts": {
+          "source": 4,
+          "held": 0,
+          "slot": 0,
+          "completed": 0,
+          "retired": 10,
+          "damaged": 3
+        }
+      },
+      "source": {
+        "file": "level3-loss.json",
+        "projectedSha256": "13fe70610d8ae228f36748c17a5ba9a92ddf6142e575894a0f2c59fa00c5bcc5",
+        "originalRawSha256": "56b9b27ceca5b9ab07b9d5ea866b3ff643c04ebd55302c5267f95cae619fd459",
+        "originalReportSha256": "523097fc2839cd86507dd134e09e5b1b31c529157b3ab870373e0965ce571fb0",
+        "sourceHashes": {
+          "automation": "b700f881597f9391ea0eb15eff3aec50f84834c071838a914c5efe84a8b68903",
+          "model": "9aec5d1c97af08188591e9185b44f183c011ebd3cba8853f24ef19a500cf6428",
+          "contract": "aedd91ef43b66ebe6fe40351509ef612ea6f1fe9e9ad3315634ebbf529f80ba1",
+          "harness": "5ff1709144452e8abcb7f23681426cef62b60ffd5d1c869c31d13618e6d31c90",
+          "evidenceFormat": "ee9e4f8ce4f55b97dd2a417b9675ebd876fc4de89224abfbab953e443cbe8b42"
+        }
+      }
+    }
+  ]
+}
