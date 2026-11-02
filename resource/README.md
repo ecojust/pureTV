@@ -54,6 +54,7 @@
 | [磁极仓库](apps/magnetic-warehouse/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 切换磁极，隔空吸引或排斥编号货箱；处理墙体遮挡与同步移动，在有限行动内把每箱送到对应货位，支持手机扫码单人操作 | <img src="apps/magnetic-warehouse/thumb.png" width="180" alt="磁极仓库 界面"> |
 | [节拍闸道](apps/metronome-gates/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 先排方向和等待，按固定节拍穿过周期闸门；在拍数预算内收齐标记并抵达出口，B 可撤回未执行的队尾命令。 | <img src="apps/metronome-gates/thumb.png" width="180" alt="节拍闸道 界面"> |
 | [沙丘数列](apps/number-dunes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 选择一行或一列，保持段内顺序压实数字石，不合并、不跨岩柱；蛇形读数严格递增且全部空洞吻合目标才能获胜，撤销恢复原石原格但不退已用步数或时间，手机扫码单人操作 | <img src="apps/number-dunes/thumb.png" width="180" alt="沙丘数列 界面"> |
+| [视差天际](apps/parallax-skyline/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 移动近远两层建筑，在两个观察点同时对齐天际线与屋顶标记；小心只匹配主视角的错觉，撤销移动不会返还容错次数。 | <img src="apps/parallax-skyline/thumb.png" width="180" alt="视差天际 界面"> |
 | [奇偶花圃](apps/parity-garden/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用十字与斜角喷头翻转4×4花圃，让目标花形和标记花的直接浇水偶数条件同时成立；重复浇水不退水，三道有限水量谜题，支持手机扫码单人操作 | <img src="apps/parity-garden/thumb.png" width="180" alt="奇偶花圃 界面"> |
 | [路径刻印](apps/path-glyphs/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在5×5石板上规划不重复的路径，按入边条件收集方向符号，在出口提交与目标完全一致的刻印；三道公开谜题，支持手机扫码单人操作 | <img src="apps/path-glyphs/thumb.png" width="180" alt="路径刻印 界面"> |
 | [传粉契约](apps/pollinator-contract/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 调度两支蜂群，在有限花期和前置任务间完成授粉；途中改派并及时返巢恢复耐力，完成三关花园契约。 | <img src="apps/pollinator-contract/thumb.png" width="180" alt="传粉契约 界面"> |
