@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-39-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-40-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -74,6 +74,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [气闸值守](resource/apps/airlock-budget/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在待援舱、气闸与安全舱之间安排三组人员，权衡慢回收保氧和快排赶期限；管理有限储罐与共享泵，及时封堵漏点并满足最终储氧底线。 | <img src="resource/apps/airlock-budget/thumb.png" width="180" alt="气闸值守 界面"> |
 | [孤胆枪手 TV](resource/apps/alien-shooter/) | ecojust / 桔子桑 | 0.1.2 | 1.68 MB | 工业基地异形群潮单人射击，三关战役、五种武器与手机扫码操作 | <img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"> |
 | [箭田收获](resource/apps/arrow-harvest/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 设置单向箭头并播种，让种子覆盖所有目标田块且不重复、不进入禁地；传播期间箭头不可修改。 | <img src="resource/apps/arrow-harvest/thumb.png" width="180" alt="箭田收获 界面"> |
+| [装配厨房](resource/apps/assembly-kitchen/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 安排煮、冷却与装盒三个共享工位并行工作，切换风速掌握温度，在保温时限与关门前按指定顺序交付三份订单；错温、错序或过期的食物会退回重做并累计失误。 | <img src="resource/apps/assembly-kitchen/thumb.png" width="180" alt="装配厨房 界面"> |
 | [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust / 桔子桑 | 0.5.2 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |
 | [CCTV Live](resource/apps/cctv/) | ecojust / 桔子桑 | 0.5.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="resource/apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
 | [Coast Kart TV](resource/apps/coast-kart/) | ecojust / 桔子桑 | 0.5.2 | 257.6 KB | 原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏 | <img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"> |
