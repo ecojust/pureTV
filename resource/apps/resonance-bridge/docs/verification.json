@@ -1,0 +1,3623 @@
+{
+  "schema": 1,
+  "game": "resonance-bridge",
+  "version": "0.1.0",
+  "sourceCommit": "02a76317f69f1db0e879ba00bf8f8add5dec9765",
+  "automationSha256": "46a29cfa51d9999e4dc4be4f6f8d728e2abe3cd78c3bdb3543c8d851d80474e9",
+  "gameRules": {
+    "contract": "model-contract.md",
+    "contractSha256": "142339acc92a0c2738caf5813409064b5495ba039fc0444a44dd660df10c5e40",
+    "formalEvidence": {
+      "metadataSha256": "b44d2bb092bfe9a69c2474eb255efd24a8901b83951a41cf2bcadf7e0fc05009",
+      "formalReportSha256": "cc9ec4cd2b1ce3aa8c04cc69a036cfee92ff587d196975ecb03c949a0c472004",
+      "scope": "Synthetic rule-boundary tests against the frozen public contract. No complete ordinary route, private author witness, browser execution, rendering performance, or physical-device testing is claimed."
+    },
+    "ordinaryRounds": [
+      {
+        "name": "level1-record",
+        "difficulty": 0,
+        "mode": "record",
+        "policy": "normal",
+        "expectedReason": null,
+        "passed": true,
+        "phase": "won",
+        "stage": "finished",
+        "reason": null,
+        "elapsed": 37.4,
+        "score": 1352,
+        "dispatchAtTick": 336,
+        "passedCount": 3,
+        "fallenCount": 0,
+        "remainingCount": 0,
+        "boardPhases": [
+          24190,
+          24165,
+          24050
+        ],
+        "resonanceUnits": [
+          0,
+          0,
+          0
+        ],
+        "failures": [],
+        "receiptCounts": {
+          "actionReceipts": 15,
+          "phasePulseReceipts": 11,
+          "pedestrianEvents": 36
+        },
+        "observations": 282,
+        "frameCount": 2245,
+        "retainedCount": 76,
+        "eventTransitionCount": 61,
+        "intervalTraceCount": 2244,
+        "wallMilliseconds": 581.400913,
+        "report": "level1-record.json",
+        "reportSha256": "8f92783b190be0b9d246a442c0840f547cdcd4f263c597d80fbe42e6f79b7e7d",
+        "failure": null
+      },
+      {
+        "name": "level1-loss",
+        "difficulty": 0,
+        "mode": "loss",
+        "policy": "leave-resonance-running",
+        "expectedReason": "unstable-amplitude",
+        "passed": true,
+        "phase": "lost",
+        "stage": "finished",
+        "reason": "unstable-amplitude",
+        "elapsed": 18.016666666666666,
+        "score": 0,
+        "dispatchAtTick": null,
+        "passedCount": 0,
+        "fallenCount": 0,
+        "remainingCount": 3,
+        "boardPhases": [
+          10810,
+          16715,
+          22620
+        ],
+        "resonanceUnits": [
+          0,
+          1201,
+          0
+        ],
+        "failures": [
+          {
+            "kind": "unstable-amplitude",
+            "fromTick": 1080,
+            "tick": 1081,
+            "boardIndex": 1,
+            "resonanceUnits": 1201,
+            "amplitudeMetres": 1.2003333333333335,
+            "maximumSafeResonanceUnits": 1200
+          }
+        ],
+        "receiptCounts": {
+          "actionReceipts": 0,
+          "phasePulseReceipts": 0,
+          "pedestrianEvents": 0
+        },
+        "observations": 137,
+        "frameCount": 1082,
+        "retainedCount": 20,
+        "eventTransitionCount": 1,
+        "intervalTraceCount": 1081,
+        "wallMilliseconds": 179.832494,
+        "report": "level1-loss.json",
+        "reportSha256": "c93e6567b57f394d8b0d3e722769daba07a4ccfb73bb0c9311df0a0ae1bbde13",
+        "failure": null
+      },
+      {
+        "name": "level2-record",
+        "difficulty": 1,
+        "mode": "record",
+        "policy": "normal",
+        "expectedReason": null,
+        "passed": true,
+        "phase": "won",
+        "stage": "finished",
+        "reason": null,
+        "elapsed": 50.916666666666664,
+        "score": 1439,
+        "dispatchAtTick": 312,
+        "passedCount": 4,
+        "fallenCount": 0,
+        "remainingCount": 0,
+        "boardPhases": [
+          33180,
+          33280,
+          33050
+        ],
+        "resonanceUnits": [
+          0,
+          0,
+          0
+        ],
+        "failures": [],
+        "receiptCounts": {
+          "actionReceipts": 12,
+          "phasePulseReceipts": 8,
+          "pedestrianEvents": 48
+        },
+        "observations": 384,
+        "frameCount": 3056,
+        "retainedCount": 96,
+        "eventTransitionCount": 67,
+        "intervalTraceCount": 3055,
+        "wallMilliseconds": 708.4915349999999,
+        "report": "level2-record.json",
+        "reportSha256": "67495605b44a5219eca1c8a2dfcfbbc7f2b6abb52606466800a0b7d9bcadabf3",
+        "failure": null
+      },
+      {
+        "name": "level2-loss",
+        "difficulty": 1,
+        "mode": "loss",
+        "policy": "disturb-live-crossing",
+        "expectedReason": "pedestrian-fall",
+        "passed": true,
+        "phase": "lost",
+        "stage": "finished",
+        "reason": "pedestrian-fall",
+        "elapsed": 8.933333333333334,
+        "score": 0,
+        "dispatchAtTick": 360,
+        "passedCount": 0,
+        "fallenCount": 1,
+        "remainingCount": 3,
+        "boardPhases": [
+          9405,
+          8090,
+          7860
+        ],
+        "resonanceUnits": [
+          219,
+          0,
+          0
+        ],
+        "failures": [
+          {
+            "kind": "pedestrian-fall",
+            "fromTick": 535,
+            "tick": 536,
+            "personId": 1,
+            "edgeIndex": 0,
+            "eventId": 3,
+            "gapFrom": -0.3258669927103985,
+            "gapTo": -0.35925203506226006,
+            "maxGapMetres": 0.35925203506226006,
+            "maximumContactGapMetres": 0.35
+          }
+        ],
+        "receiptCounts": {
+          "actionReceipts": 14,
+          "phasePulseReceipts": 8,
+          "pedestrianEvents": 3
+        },
+        "observations": 69,
+        "frameCount": 537,
+        "retainedCount": 29,
+        "eventTransitionCount": 24,
+        "intervalTraceCount": 536,
+        "wallMilliseconds": 107.02174799999966,
+        "report": "level2-loss.json",
+        "reportSha256": "0ab40f88a1c82be95ffff76781bb4589d102ccb3970fabe45ce2d6dbbbe18fef",
+        "failure": null
+      },
+      {
+        "name": "level3-record",
+        "difficulty": 2,
+        "mode": "record",
+        "policy": "normal",
+        "expectedReason": null,
+        "passed": true,
+        "phase": "won",
+        "stage": "finished",
+        "reason": null,
+        "elapsed": 60.05,
+        "score": 1529,
+        "dispatchAtTick": 461,
+        "passedCount": 5,
+        "fallenCount": 0,
+        "remainingCount": 0,
+        "boardPhases": [
+          42280,
+          42115,
+          42050
+        ],
+        "resonanceUnits": [
+          0,
+          0,
+          0
+        ],
+        "failures": [],
+        "receiptCounts": {
+          "actionReceipts": 23,
+          "phasePulseReceipts": 18,
+          "pedestrianEvents": 60
+        },
+        "observations": 452,
+        "frameCount": 3604,
+        "retainedCount": 123,
+        "eventTransitionCount": 100,
+        "intervalTraceCount": 3603,
+        "wallMilliseconds": 989.7840550000001,
+        "report": "level3-record.json",
+        "reportSha256": "48f853a6d947b6ef9c942f7087deaeab2ba0d1d0a87b079d08840459dae65da1",
+        "failure": null
+      },
+      {
+        "name": "level3-loss",
+        "difficulty": 2,
+        "mode": "loss",
+        "policy": "leave-resonance-running",
+        "expectedReason": "unstable-amplitude",
+        "passed": true,
+        "phase": "lost",
+        "stage": "finished",
+        "reason": "unstable-amplitude",
+        "elapsed": 8.016666666666667,
+        "score": 0,
+        "dispatchAtTick": null,
+        "passedCount": 0,
+        "fallenCount": 0,
+        "remainingCount": 5,
+        "boardPhases": [
+          12870,
+          11465,
+          14870
+        ],
+        "resonanceUnits": [
+          0,
+          1201,
+          0
+        ],
+        "failures": [
+          {
+            "kind": "unstable-amplitude",
+            "fromTick": 480,
+            "tick": 481,
+            "boardIndex": 1,
+            "resonanceUnits": 1201,
+            "amplitudeMetres": 1.2003333333333335,
+            "maximumSafeResonanceUnits": 1200
+          }
+        ],
+        "receiptCounts": {
+          "actionReceipts": 0,
+          "phasePulseReceipts": 0,
+          "pedestrianEvents": 0
+        },
+        "observations": 62,
+        "frameCount": 482,
+        "retainedCount": 10,
+        "eventTransitionCount": 1,
+        "intervalTraceCount": 481,
+        "wallMilliseconds": 104.32584700000007,
+        "report": "level3-loss.json",
+        "reportSha256": "ced8d8a26050c8580061d2c58a6d44db09b2e97f8a7653963b74957eb07da8f8",
+        "failure": null
+      }
+    ],
+    "independentReview": {
+      "reportSha256": "3c1d10f1db6fbed16260a28ec44a728b0a41924f4c561f29ed9491a4850e1bef",
+      "assertions": 14729628,
+      "caseAssertions": 14729605,
+      "globalSourceAssertions": 23,
+      "totals": {
+        "actualFrames": 11006,
+        "fullSnapshotChecks": 11018,
+        "intervals": 11000,
+        "retained": 354,
+        "compact": 1380,
+        "eventWindows": 254,
+        "operations": 256,
+        "inputChanges": 186,
+        "oscillatorSegments": 246,
+        "fullBoardEndpointChecks": 33054,
+        "contactIntervals": 44000,
+        "safeRuns": 125,
+        "personCalendars": 24
+      },
+      "numericalComparison": {
+        "heightAmplitudeToleranceMetres": 1e-10,
+        "phaseRadiansTolerance": 1e-12,
+        "integerAndGateTolerance": 0,
+        "maximumErrors": {
+          "metres": 2.7755575615628914e-17,
+          "radians": 0
+        },
+        "minimumContactThresholdMarginMetres": 1.2367169074711803e-05,
+        "minimumClosingComparisonMarginMetres": 0,
+        "comparison": "Tolerances compare derived numbers only. All contact/closing booleans must agree exactly with both the independently derived endpoints and the recorded endpoints; resonance safety uses exact integer units. Exact boundary equalities are counted only where observed."
+      },
+      "method": "Actual action times partition each oscillator into constant effective-speed spans. Integer phase and clipped resonance are evaluated by span formulas from the original initial state; sine endpoints define the declared linear physical intervals. Independent safe-run/closing sets locate each person's earliest contact qualification, then fixed crossing/walking dates and the first unsafe crossing interval determine every observed state and receipt. No observed endpoint resets the independent trajectory and no production controller is imported or replayed.",
+      "limitations": [
+        "Only these existing six public ordinary rounds are audited. No gameplay, fixture, Model/pilot import, private witness or design-feasibility result is used.",
+        "Actual normalized input, reported armed edges, cancellation/quarantine, navigation deltas and command selection are bound. Full navigation-repeat and ordinary button-rearming latches are not independently replayed.",
+        "The physical contact path is the public linear interpolation between 60 Hz sine endpoints; this does not verify extrema of a continuously evaluated sine between endpoints.",
+        "The full actual tick corpus permits exact receipt-prefix restoration; sparse browser/video captures are outside this audit. No missing physical interval is synthesized.",
+        "Invalid dt, extra post-terminal calls, runtime pause/retry and boundaries absent from these six rounds are not claimed as independently exercised."
+      ],
+      "rounds": [
+        {
+          "name": "level1-record",
+          "result": {
+            "tick": 2244,
+            "elapsed": 37.4,
+            "phase": "won",
+            "stage": "finished",
+            "score": 1352,
+            "lostReason": null,
+            "failures": [],
+            "dispatchAtTick": 336,
+            "scheduledReleaseTicks": [
+              336,
+              936,
+              1536
+            ],
+            "passedCount": 3,
+            "fallenCount": 0,
+            "remainingCount": 0,
+            "boards": [
+              {
+                "index": 0,
+                "label": "桥板 1",
+                "phaseUnits": 24190,
+                "phaseWrappedUnits": 190,
+                "phaseRadians": 0.19896753472735357,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": 0.15812587230330094,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 7
+              },
+              {
+                "index": 1,
+                "label": "桥板 2",
+                "phaseUnits": 24165,
+                "phaseWrappedUnits": 165,
+                "phaseRadians": 0.17278759594743862,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": 0.13754328022352763,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 4
+              },
+              {
+                "index": 2,
+                "label": "桥板 3",
+                "phaseUnits": 24050,
+                "phaseWrappedUnits": 50,
+                "phaseRadians": 0.05235987755982989,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": 0.04186876499435507,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 0
+              }
+            ],
+            "pedestrians": [
+              {
+                "id": 1,
+                "stage": "passed",
+                "scheduledReleaseTick": 336,
+                "releasedAtTick": 336,
+                "passedAtTick": 1044,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 2,
+                "stage": "passed",
+                "scheduledReleaseTick": 936,
+                "releasedAtTick": 936,
+                "passedAtTick": 1644,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 3,
+                "stage": "passed",
+                "scheduledReleaseTick": 1536,
+                "releasedAtTick": 1536,
+                "passedAtTick": 2244,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              }
+            ]
+          },
+          "counts": {
+            "actualFrames": 2245,
+            "fullSnapshotChecks": 2247,
+            "intervals": 2244,
+            "retained": 76,
+            "compact": 281,
+            "eventWindows": 61,
+            "operations": 62,
+            "inputChanges": 44,
+            "receipts": {
+              "actionReceipts": 15,
+              "phasePulseReceipts": 11,
+              "pedestrianEvents": 36
+            },
+            "oscillatorSegments": 59,
+            "fullBoardEndpointChecks": 6741,
+            "contactIntervals": 8976,
+            "safeRuns": 21,
+            "personCalendars": 3
+          },
+          "coverage": {
+            "acceptedFrequencyChanges": 3,
+            "acceptedPulses": 11,
+            "rejectedReasons": {},
+            "completedPulses": 11,
+            "unfinishedPulsesAtTerminal": 0,
+            "safeContactIntervals": 5492,
+            "exactContactThresholds": 0,
+            "exactClosingEqualities": 0,
+            "crossingStarts": 12,
+            "completedCrossings": 12,
+            "failedCrossings": 0,
+            "failedFinalCrossingIntervals": 0,
+            "hazardWithSameTickPass": false,
+            "wonExactlyAtDeadline": false,
+            "failureKinds": []
+          },
+          "projectionSha256": "4f2985544fe009a4258f3618bfff11c2dddd796b2c343f22f168d58483425ed1",
+          "originalRawSha256": "8f92783b190be0b9d246a442c0840f547cdcd4f263c597d80fbe42e6f79b7e7d"
+        },
+        {
+          "name": "level1-loss",
+          "result": {
+            "tick": 1081,
+            "elapsed": 18.016666666666666,
+            "phase": "lost",
+            "stage": "finished",
+            "score": 0,
+            "lostReason": "unstable-amplitude",
+            "failures": [
+              {
+                "kind": "unstable-amplitude",
+                "fromTick": 1080,
+                "tick": 1081,
+                "boardIndex": 1,
+                "resonanceUnits": 1201,
+                "amplitudeMetres": 1.2003333333333335,
+                "maximumSafeResonanceUnits": 1200
+              }
+            ],
+            "dispatchAtTick": null,
+            "scheduledReleaseTicks": [],
+            "passedCount": 0,
+            "fallenCount": 0,
+            "remainingCount": 3,
+            "boards": [
+              {
+                "index": 0,
+                "label": "桥板 1",
+                "phaseUnits": 10810,
+                "phaseWrappedUnits": 4810,
+                "phaseRadians": 5.037020221255635,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": -0.7582147280076685,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 0
+              },
+              {
+                "index": 1,
+                "label": "桥板 2",
+                "phaseUnits": 16715,
+                "phaseWrappedUnits": 4715,
+                "phaseRadians": 4.937536453891958,
+                "resonanceUnits": 1201,
+                "amplitudeMetres": 1.2003333333333335,
+                "heightMetres": -1.17003835342753,
+                "frequencyIndex": 1,
+                "basePhaseUnitsPerTick": 15,
+                "effectivePhaseUnitsPerTick": 15,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 0
+              },
+              {
+                "index": 2,
+                "label": "桥板 3",
+                "phaseUnits": 22620,
+                "phaseWrappedUnits": 4620,
+                "phaseRadians": 4.838052686528282,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": -0.7936917610515823,
+                "frequencyIndex": 2,
+                "basePhaseUnitsPerTick": 20,
+                "effectivePhaseUnitsPerTick": 20,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 0
+              }
+            ],
+            "pedestrians": [
+              {
+                "id": 1,
+                "stage": "pending",
+                "scheduledReleaseTick": null,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 2,
+                "stage": "pending",
+                "scheduledReleaseTick": null,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 3,
+                "stage": "pending",
+                "scheduledReleaseTick": null,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              }
+            ]
+          },
+          "counts": {
+            "actualFrames": 1082,
+            "fullSnapshotChecks": 1084,
+            "intervals": 1081,
+            "retained": 20,
+            "compact": 136,
+            "eventWindows": 1,
+            "operations": 0,
+            "inputChanges": 0,
+            "receipts": {
+              "actionReceipts": 0,
+              "phasePulseReceipts": 0,
+              "pedestrianEvents": 0
+            },
+            "oscillatorSegments": 3,
+            "fullBoardEndpointChecks": 3252,
+            "contactIntervals": 4324,
+            "safeRuns": 22,
+            "personCalendars": 3
+          },
+          "coverage": {
+            "acceptedFrequencyChanges": 0,
+            "acceptedPulses": 0,
+            "rejectedReasons": {},
+            "completedPulses": 0,
+            "unfinishedPulsesAtTerminal": 0,
+            "safeContactIntervals": 1040,
+            "exactContactThresholds": 0,
+            "exactClosingEqualities": 0,
+            "crossingStarts": 0,
+            "completedCrossings": 0,
+            "failedCrossings": 0,
+            "failedFinalCrossingIntervals": 0,
+            "hazardWithSameTickPass": false,
+            "wonExactlyAtDeadline": false,
+            "failureKinds": [
+              "unstable-amplitude"
+            ]
+          },
+          "projectionSha256": "1f36fa16d67bf69bea0fafe9a05e3de6845982dc5f77f4c90899e5fd488aef77",
+          "originalRawSha256": "c93e6567b57f394d8b0d3e722769daba07a4ccfb73bb0c9311df0a0ae1bbde13"
+        },
+        {
+          "name": "level2-record",
+          "result": {
+            "tick": 3055,
+            "elapsed": 50.916666666666664,
+            "phase": "won",
+            "stage": "finished",
+            "score": 1439,
+            "lostReason": null,
+            "failures": [],
+            "dispatchAtTick": 312,
+            "scheduledReleaseTicks": [
+              312,
+              912,
+              1512,
+              2112
+            ],
+            "passedCount": 4,
+            "fallenCount": 0,
+            "remainingCount": 0,
+            "boards": [
+              {
+                "index": 0,
+                "label": "桥板 1",
+                "phaseUnits": 33180,
+                "phaseWrappedUnits": 3180,
+                "phaseRadians": 3.3300882128051805,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": -0.14990505166857945,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 6
+              },
+              {
+                "index": 1,
+                "label": "桥板 2",
+                "phaseUnits": 33280,
+                "phaseWrappedUnits": 3280,
+                "phaseRadians": 3.4348079679248404,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": -0.23122543755557717,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 2
+              },
+              {
+                "index": 2,
+                "label": "桥板 3",
+                "phaseUnits": 33050,
+                "phaseWrappedUnits": 3050,
+                "phaseRadians": 3.193952531149623,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": -0.04186876499435485,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 0
+              }
+            ],
+            "pedestrians": [
+              {
+                "id": 1,
+                "stage": "passed",
+                "scheduledReleaseTick": 312,
+                "releasedAtTick": 312,
+                "passedAtTick": 1255,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 2,
+                "stage": "passed",
+                "scheduledReleaseTick": 912,
+                "releasedAtTick": 912,
+                "passedAtTick": 1855,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 3,
+                "stage": "passed",
+                "scheduledReleaseTick": 1512,
+                "releasedAtTick": 1512,
+                "passedAtTick": 2455,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 4,
+                "stage": "passed",
+                "scheduledReleaseTick": 2112,
+                "releasedAtTick": 2112,
+                "passedAtTick": 3055,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              }
+            ]
+          },
+          "counts": {
+            "actualFrames": 3056,
+            "fullSnapshotChecks": 3058,
+            "intervals": 3055,
+            "retained": 96,
+            "compact": 383,
+            "eventWindows": 67,
+            "operations": 68,
+            "inputChanges": 34,
+            "receipts": {
+              "actionReceipts": 12,
+              "phasePulseReceipts": 8,
+              "pedestrianEvents": 48
+            },
+            "oscillatorSegments": 44,
+            "fullBoardEndpointChecks": 9174,
+            "contactIntervals": 12220,
+            "safeRuns": 26,
+            "personCalendars": 4
+          },
+          "coverage": {
+            "acceptedFrequencyChanges": 3,
+            "acceptedPulses": 8,
+            "rejectedReasons": {},
+            "completedPulses": 8,
+            "unfinishedPulsesAtTerminal": 0,
+            "safeContactIntervals": 7758,
+            "exactContactThresholds": 0,
+            "exactClosingEqualities": 5,
+            "crossingStarts": 16,
+            "completedCrossings": 16,
+            "failedCrossings": 0,
+            "failedFinalCrossingIntervals": 0,
+            "hazardWithSameTickPass": false,
+            "wonExactlyAtDeadline": false,
+            "failureKinds": []
+          },
+          "projectionSha256": "a38cab1d3caec6a5db52256870ca18b7b0c0502315ded7c1ba1f5cfac0ec49be",
+          "originalRawSha256": "67495605b44a5219eca1c8a2dfcfbbc7f2b6abb52606466800a0b7d9bcadabf3"
+        },
+        {
+          "name": "level2-loss",
+          "result": {
+            "tick": 536,
+            "elapsed": 8.933333333333334,
+            "phase": "lost",
+            "stage": "finished",
+            "score": 0,
+            "lostReason": "pedestrian-fall",
+            "failures": [
+              {
+                "kind": "pedestrian-fall",
+                "fromTick": 535,
+                "tick": 536,
+                "personId": 1,
+                "edgeIndex": 0,
+                "eventId": 3,
+                "gapFrom": -0.3258669927103985,
+                "gapTo": -0.35925203506226006,
+                "maxGapMetres": 0.35925203506226006,
+                "maximumContactGapMetres": 0.35
+              }
+            ],
+            "dispatchAtTick": 360,
+            "scheduledReleaseTicks": [
+              360,
+              960,
+              1560,
+              2160
+            ],
+            "passedCount": 0,
+            "fallenCount": 1,
+            "remainingCount": 3,
+            "boards": [
+              {
+                "index": 0,
+                "label": "桥板 1",
+                "phaseUnits": 9405,
+                "phaseWrappedUnits": 3405,
+                "phaseRadians": 3.5657076618244155,
+                "resonanceUnits": 219,
+                "amplitudeMetres": 0.873,
+                "heightMetres": -0.35925203506226006,
+                "frequencyIndex": 1,
+                "basePhaseUnitsPerTick": 15,
+                "effectivePhaseUnitsPerTick": 40,
+                "trimTicksRemaining": 2,
+                "activePulseId": 9,
+                "activePulseStartedAtTick": 528,
+                "completedPulseCount": 6
+              },
+              {
+                "index": 1,
+                "label": "桥板 2",
+                "phaseUnits": 8090,
+                "phaseWrappedUnits": 2090,
+                "phaseRadians": 2.1886428820008894,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": 0.6521022365828434,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 2
+              },
+              {
+                "index": 2,
+                "label": "桥板 3",
+                "phaseUnits": 7860,
+                "phaseWrappedUnits": 1860,
+                "phaseRadians": 1.9477874452256716,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": 0.7438211887106012,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 0
+              }
+            ],
+            "pedestrians": [
+              {
+                "id": 1,
+                "stage": "fallen",
+                "scheduledReleaseTick": 360,
+                "releasedAtTick": 360,
+                "passedAtTick": null,
+                "fallenAtTick": 536,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 15,
+                "heightMetres": -0.20366687044399906,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": 0
+              },
+              {
+                "id": 2,
+                "stage": "pending",
+                "scheduledReleaseTick": 960,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 3,
+                "stage": "pending",
+                "scheduledReleaseTick": 1560,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 4,
+                "stage": "pending",
+                "scheduledReleaseTick": 2160,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              }
+            ]
+          },
+          "counts": {
+            "actualFrames": 537,
+            "fullSnapshotChecks": 539,
+            "intervals": 536,
+            "retained": 29,
+            "compact": 68,
+            "eventWindows": 24,
+            "operations": 25,
+            "inputChanges": 48,
+            "receipts": {
+              "actionReceipts": 14,
+              "phasePulseReceipts": 8,
+              "pedestrianEvents": 3
+            },
+            "oscillatorSegments": 50,
+            "fullBoardEndpointChecks": 1617,
+            "contactIntervals": 2144,
+            "safeRuns": 9,
+            "personCalendars": 4
+          },
+          "coverage": {
+            "acceptedFrequencyChanges": 4,
+            "acceptedPulses": 9,
+            "rejectedReasons": {},
+            "completedPulses": 8,
+            "unfinishedPulsesAtTerminal": 1,
+            "safeContactIntervals": 1195,
+            "exactContactThresholds": 0,
+            "exactClosingEqualities": 1,
+            "crossingStarts": 1,
+            "completedCrossings": 0,
+            "failedCrossings": 1,
+            "failedFinalCrossingIntervals": 0,
+            "hazardWithSameTickPass": false,
+            "wonExactlyAtDeadline": false,
+            "failureKinds": [
+              "pedestrian-fall"
+            ]
+          },
+          "projectionSha256": "abca33e3b59ae8db5e3c4b3859c2a573f0b0e78207ce509ee155c5f566281b19",
+          "originalRawSha256": "0ab40f88a1c82be95ffff76781bb4589d102ccb3970fabe45ce2d6dbbbe18fef"
+        },
+        {
+          "name": "level3-record",
+          "result": {
+            "tick": 3603,
+            "elapsed": 60.05,
+            "phase": "won",
+            "stage": "finished",
+            "score": 1529,
+            "lostReason": null,
+            "failures": [],
+            "dispatchAtTick": 461,
+            "scheduledReleaseTicks": [
+              461,
+              1061,
+              1661,
+              2261,
+              2861
+            ],
+            "passedCount": 5,
+            "fallenCount": 0,
+            "remainingCount": 0,
+            "boards": [
+              {
+                "index": 0,
+                "label": "桥板 1",
+                "phaseUnits": 42280,
+                "phaseWrappedUnits": 280,
+                "phaseRadians": 0.29321531433504733,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": 0.23122543755557726,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 12
+              },
+              {
+                "index": 1,
+                "label": "桥板 2",
+                "phaseUnits": 42115,
+                "phaseWrappedUnits": 115,
+                "phaseRadians": 0.12042771838760874,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": 0.09610947106771768,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 6
+              },
+              {
+                "index": 2,
+                "label": "桥板 3",
+                "phaseUnits": 42050,
+                "phaseWrappedUnits": 50,
+                "phaseRadians": 0.05235987755982989,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": 0.04186876499435507,
+                "frequencyIndex": 0,
+                "basePhaseUnitsPerTick": 10,
+                "effectivePhaseUnitsPerTick": 10,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 0
+              }
+            ],
+            "pedestrians": [
+              {
+                "id": 1,
+                "stage": "passed",
+                "scheduledReleaseTick": 461,
+                "releasedAtTick": 461,
+                "passedAtTick": 1203,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 2,
+                "stage": "passed",
+                "scheduledReleaseTick": 1061,
+                "releasedAtTick": 1061,
+                "passedAtTick": 1803,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 3,
+                "stage": "passed",
+                "scheduledReleaseTick": 1661,
+                "releasedAtTick": 1661,
+                "passedAtTick": 2403,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 4,
+                "stage": "passed",
+                "scheduledReleaseTick": 2261,
+                "releasedAtTick": 2261,
+                "passedAtTick": 3003,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 5,
+                "stage": "passed",
+                "scheduledReleaseTick": 2861,
+                "releasedAtTick": 2861,
+                "passedAtTick": 3603,
+                "fallenAtTick": null,
+                "node": 4,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 456,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              }
+            ]
+          },
+          "counts": {
+            "actualFrames": 3604,
+            "fullSnapshotChecks": 3606,
+            "intervals": 3603,
+            "retained": 123,
+            "compact": 451,
+            "eventWindows": 100,
+            "operations": 101,
+            "inputChanges": 60,
+            "receipts": {
+              "actionReceipts": 23,
+              "phasePulseReceipts": 18,
+              "pedestrianEvents": 60
+            },
+            "oscillatorSegments": 87,
+            "fullBoardEndpointChecks": 10818,
+            "contactIntervals": 14412,
+            "safeRuns": 33,
+            "personCalendars": 5
+          },
+          "coverage": {
+            "acceptedFrequencyChanges": 4,
+            "acceptedPulses": 18,
+            "rejectedReasons": {},
+            "completedPulses": 18,
+            "unfinishedPulsesAtTerminal": 0,
+            "safeContactIntervals": 8656,
+            "exactContactThresholds": 0,
+            "exactClosingEqualities": 0,
+            "crossingStarts": 20,
+            "completedCrossings": 20,
+            "failedCrossings": 0,
+            "failedFinalCrossingIntervals": 0,
+            "hazardWithSameTickPass": false,
+            "wonExactlyAtDeadline": false,
+            "failureKinds": []
+          },
+          "projectionSha256": "ed5de7349ed0bb1ab464ab43103f534816535625ff3de049c776edfc431439d6",
+          "originalRawSha256": "48f853a6d947b6ef9c942f7087deaeab2ba0d1d0a87b079d08840459dae65da1"
+        },
+        {
+          "name": "level3-loss",
+          "result": {
+            "tick": 481,
+            "elapsed": 8.016666666666667,
+            "phase": "lost",
+            "stage": "finished",
+            "score": 0,
+            "lostReason": "unstable-amplitude",
+            "failures": [
+              {
+                "kind": "unstable-amplitude",
+                "fromTick": 480,
+                "tick": 481,
+                "boardIndex": 1,
+                "resonanceUnits": 1201,
+                "amplitudeMetres": 1.2003333333333335,
+                "maximumSafeResonanceUnits": 1200
+              }
+            ],
+            "dispatchAtTick": null,
+            "scheduledReleaseTicks": [],
+            "passedCount": 0,
+            "fallenCount": 0,
+            "remainingCount": 5,
+            "boards": [
+              {
+                "index": 0,
+                "label": "桥板 1",
+                "phaseUnits": 12870,
+                "phaseWrappedUnits": 870,
+                "phaseRadians": 0.9110618695410401,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": 0.6321240099005524,
+                "frequencyIndex": 2,
+                "basePhaseUnitsPerTick": 20,
+                "effectivePhaseUnitsPerTick": 20,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 0
+              },
+              {
+                "index": 1,
+                "label": "桥板 2",
+                "phaseUnits": 11465,
+                "phaseWrappedUnits": 5465,
+                "phaseRadians": 5.722934617289407,
+                "resonanceUnits": 1201,
+                "amplitudeMetres": 1.2003333333333335,
+                "heightMetres": -0.637855428281539,
+                "frequencyIndex": 1,
+                "basePhaseUnitsPerTick": 15,
+                "effectivePhaseUnitsPerTick": 15,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 0
+              },
+              {
+                "index": 2,
+                "label": "桥板 3",
+                "phaseUnits": 14870,
+                "phaseWrappedUnits": 2870,
+                "phaseRadians": 3.0054569719342354,
+                "resonanceUnits": 0,
+                "amplitudeMetres": 0.8,
+                "heightMetres": 0.10857245794744359,
+                "frequencyIndex": 2,
+                "basePhaseUnitsPerTick": 20,
+                "effectivePhaseUnitsPerTick": 20,
+                "trimTicksRemaining": 0,
+                "activePulseId": null,
+                "activePulseStartedAtTick": null,
+                "completedPulseCount": 0
+              }
+            ],
+            "pedestrians": [
+              {
+                "id": 1,
+                "stage": "pending",
+                "scheduledReleaseTick": null,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 2,
+                "stage": "pending",
+                "scheduledReleaseTick": null,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 3,
+                "stage": "pending",
+                "scheduledReleaseTick": null,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 4,
+                "stage": "pending",
+                "scheduledReleaseTick": null,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              },
+              {
+                "id": 5,
+                "stage": "pending",
+                "scheduledReleaseTick": null,
+                "releasedAtTick": null,
+                "passedAtTick": null,
+                "fallenAtTick": null,
+                "node": 0,
+                "edgeIndex": null,
+                "contactTicks": 0,
+                "crossingAgeTicks": 0,
+                "crossingStartedAtTick": null,
+                "walkingAgeTicks": 0,
+                "movementTicks": 0,
+                "heightMetres": 0,
+                "crossingMaxGapMetres": 0,
+                "failedEdgeIndex": null
+              }
+            ]
+          },
+          "counts": {
+            "actualFrames": 482,
+            "fullSnapshotChecks": 484,
+            "intervals": 481,
+            "retained": 10,
+            "compact": 61,
+            "eventWindows": 1,
+            "operations": 0,
+            "inputChanges": 0,
+            "receipts": {
+              "actionReceipts": 0,
+              "phasePulseReceipts": 0,
+              "pedestrianEvents": 0
+            },
+            "oscillatorSegments": 3,
+            "fullBoardEndpointChecks": 1452,
+            "contactIntervals": 1924,
+            "safeRuns": 14,
+            "personCalendars": 5
+          },
+          "coverage": {
+            "acceptedFrequencyChanges": 0,
+            "acceptedPulses": 0,
+            "rejectedReasons": {},
+            "completedPulses": 0,
+            "unfinishedPulsesAtTerminal": 0,
+            "safeContactIntervals": 523,
+            "exactContactThresholds": 0,
+            "exactClosingEqualities": 2,
+            "crossingStarts": 0,
+            "completedCrossings": 0,
+            "failedCrossings": 0,
+            "failedFinalCrossingIntervals": 0,
+            "hazardWithSameTickPass": false,
+            "wonExactlyAtDeadline": false,
+            "failureKinds": [
+              "unstable-amplitude"
+            ]
+          },
+          "projectionSha256": "7c43cc1eaf6a5c7dab8ab761ac2249c58302df9656a3c1dbbf96e1ddab9ea353",
+          "originalRawSha256": "ced8d8a26050c8580061d2c58a6d44db09b2e97f8a7653963b74957eb07da8f8"
+        }
+      ]
+    },
+    "candidateNormalPlay": {
+      "rawReportSha256": "b984778024a85e362a73b274a1ee3391c037bd98f5469026a272ab97a21716cc",
+      "rootReviewSha256": "b5fe96e719b59c83915edb85c3916c25b9bde16b8270833341543388d655d41e",
+      "actualNormalWin": {
+        "level": 1,
+        "tick": 2520,
+        "elapsed": 42,
+        "score": 1348,
+        "dispatchAtTick": 393,
+        "passedCount": 3,
+        "fallenCount": 0,
+        "remainingCount": 0
+      },
+      "actualActionReceipts": 16,
+      "actualCompletedPulses": 12,
+      "actualPedestrianEvents": 36,
+      "liveCaptureWindows": [
+        {
+          "scratchRelativePath": "candidate-runtime/05-actual-frequency-and-phase-adjustment.png",
+          "observedTickRange": [
+            151,
+            169
+          ],
+          "scope": "Real continuous window, not a single-state image alias. Actual oscillator phases, heights, resonance, pulses, contacts and people may advance during capture. A completed pulse or crossing qualification is proved by its permanent receipt; the image only depicts the actual current motion, not a claimed exact pulse or qualification instant."
+        },
+        {
+          "scratchRelativePath": "candidate-runtime/06-actual-qualified-pedestrian-movement.png",
+          "observedTickRange": [
+            691,
+            710
+          ],
+          "scope": "Real continuous window, not a single-state image alias. Actual oscillator phases, heights, resonance, pulses, contacts and people may advance during capture. A completed pulse or crossing qualification is proved by its permanent receipt; the image only depicts the actual current motion, not a claimed exact pulse or qualification instant."
+        },
+        {
+          "scratchRelativePath": "candidate-runtime/07-actual-plate-walking.png",
+          "observedTickRange": [
+            715,
+            738
+          ],
+          "scope": "Real continuous window, not a single-state image alias. Actual oscillator phases, heights, resonance, pulses, contacts and people may advance during capture. A completed pulse or crossing qualification is proved by its permanent receipt; the image only depicts the actual current motion, not a claimed exact pulse or qualification instant."
+        },
+        {
+          "scratchRelativePath": "candidate-runtime/08-actual-passed-and-remaining-queue.png",
+          "observedTickRange": [
+            1323,
+            1343
+          ],
+          "scope": "Real continuous window, not a single-state image alias. Actual oscillator phases, heights, resonance, pulses, contacts and people may advance during capture. A completed pulse or crossing qualification is proved by its permanent receipt; the image only depicts the actual current motion, not a claimed exact pulse or qualification instant."
+        }
+      ],
+      "scope": "Only actual public observations. Sparse trace does not claim every 60 Hz interval; all three permanent receipt arrays are retained. Command before/after physical position is separate from the following continuous interval. Pulse completion and qualified crossing receipts do not claim exact screenshot timing. Menu prime does not advance the model, and screenshots never pause or force its state.",
+      "rootScope": "Root personally opened all 12 original-resolution actual candidate PNGs: three menus, large pause, real frequency/phase tuning, qualified pedestrian crossing, plate walking, passed/remaining queue, large/small victory, small menu/pause. Scene, complete sidebar, instructions and frosted dialogs fit. Pedestrian feet and bridge height match their actual motion; live captures are continuous windows, not exact interval aliases. No physical TV or phone test.",
+      "qaScope": "All twelve original candidate PNGs personally opened. Four active pictures retain real before/after observation windows; no image is claimed to be an exact endpoint state. Eight menu/pause/terminal pictures are stable. This visual review does not alter raw visual flags, claim a source freeze, or create any additional gameplay run."
+    },
+    "scope": "Bind actual bridge endpoints, command/pulse/pedestrian receipts and source reports. Oscillator paths and complete contact/movement intervals were audited by the existing independent oracle; this release check does not run a model, planner, new game or missing-interval reconstruction."
+  },
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "179f01e0b4207b984271cbac5b953da642f973506a30282a481b8e9eac93ff00",
+      "game.js": "086bb660900bbc4184ccc057757efe89ed15cec41e9d6976558d14d870f9d393",
+      "game-config.json": "c3d9ecee9a7e3d202fa5354cb546f470670ff6a72faa78f589455b62e37a6f7a",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "LICENSE": "93a8777f8776e6aa280f486fb84a5a12b64fcb00d9b58086ee1cc203e7311a15",
+      "README.md": "990cd0ecf91f3f4339a2d01ed099605afca8b793153f986e2679a5422426885e",
+      "docs/independent-resonance-review.json": "3c1d10f1db6fbed16260a28ec44a728b0a41924f4c561f29ed9491a4850e1bef",
+      "docs/model-contract.md": "142339acc92a0c2738caf5813409064b5495ba039fc0444a44dd660df10c5e40",
+      "game.json": "b44d2bb092bfe9a69c2474eb255efd24a8901b83951a41cf2bcadf7e0fc05009",
+      "icon.xml": "d9ec9d5d2feaacd666f2447ddd1e8d7ba78e0ba2951656e42d0bae69a7cdede3",
+      "logo.svg": "15236f027fce67a1f4f97cdfc45a7d1771ec1e882e4b6aed3ba26cd28d877e4c",
+      "src/main/assets/game-model.js": "179f01e0b4207b984271cbac5b953da642f973506a30282a481b8e9eac93ff00",
+      "src/main/assets/game.js": "086bb660900bbc4184ccc057757efe89ed15cec41e9d6976558d14d870f9d393",
+      "tests/automation.mjs": "46a29cfa51d9999e4dc4be4f6f8d728e2abe3cd78c3bdb3543c8d851d80474e9",
+      "tests/game-model.test.cjs": "bc695e57185b2c4aa0e59885944fef9f85776f55ba42cb43a1e6e22badadea85",
+      "tests/independent-resonance-review.mjs": "5283579b8bd88a2fdbd562b488ac77669bd6d876f18f7c2c1a9c2564709e2367",
+      "tests/resonance-interval-oracle.mjs": "41a718db458cffb4ecf78107ba8e4389450262813382a99a9d1dbb3a2128ad49"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime/01-menu-one.png",
+        "sha256": "a48a38ba2467e60ff0217106ea964aa9ca157566228c215d8dceb07fd3db9b2e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/02-menu-two.png",
+        "sha256": "828cabe58b59b8bee607865ff6ab77a13143873b2b6800ffbf67745af0c4b3fa",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/03-menu-three.png",
+        "sha256": "a2dfec0b1f687d4d68a2071c496261e521b1ba1a6a1bfa22f848672d2128e39f",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/04-large-pause.png",
+        "sha256": "7a98a7988918c7a722ccb38c99f1679215a906284c0d580b8b13d1722a4f009a",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/05-actual-frequency-and-phase-adjustment.png",
+        "sha256": "5cb999de491fc5b5012d7cf1ed56b3e798e8da32908214edc784886182567a64",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/06-actual-qualified-pedestrian-movement.png",
+        "sha256": "da3bae373f8a605f5176e3658e657d33fbadbc7b0bf46bf53b14fb290a768d04",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/07-actual-plate-walking.png",
+        "sha256": "1f92a7157bc6f4d4fe40e50c8e754d28e4155d192fbd69c9bda33bc204f6c5df",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/08-actual-passed-and-remaining-queue.png",
+        "sha256": "ada04e0bbf65ddaa0f7d9a3f5ced6dddf3e272f588c7c5f6d4a1235553f71e89",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/09-won.png",
+        "sha256": "e1a0d6bac1c4b69852e80bfe8fe570675b324699da1bcaaa71d46bb3e9b33424",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/10-small-won.png",
+        "sha256": "bcbe2776d57c7104428110d457ee78ea02d0cb4ae8b4131e43952cfcfb0c0345",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/11-small-menu.png",
+        "sha256": "72b3b3e30dc59592b4e9b88bf4949ac66db898d2ad1cb52d4f7a1f776622b029",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/12-small-pause.png",
+        "sha256": "934d78483dd172a6dc7cf95173e33c3ac73351364fb09510ea99e4a343cc85d9",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "b5fe96e719b59c83915edb85c3916c25b9bde16b8270833341543388d655d41e",
+    "unresolvedFindings": []
+  },
+  "modelTests": {
+    "passed": 30,
+    "sourceHashesBefore": {
+      "model": "179f01e0b4207b984271cbac5b953da642f973506a30282a481b8e9eac93ff00",
+      "test": "bc695e57185b2c4aa0e59885944fef9f85776f55ba42cb43a1e6e22badadea85",
+      "contract": "142339acc92a0c2738caf5813409064b5495ba039fc0444a44dd660df10c5e40"
+    },
+    "sourceHashesAfter": {
+      "model": "179f01e0b4207b984271cbac5b953da642f973506a30282a481b8e9eac93ff00",
+      "test": "bc695e57185b2c4aa0e59885944fef9f85776f55ba42cb43a1e6e22badadea85",
+      "contract": "142339acc92a0c2738caf5813409064b5495ba039fc0444a44dd660df10c5e40"
+    },
+    "testLogSha256": "6c849fe39df6abe969fd28edd40dbe62001dac9a30715be6822ef4a808c7cea5",
+    "rawReportSha256": "cc9ec4cd2b1ce3aa8c04cc69a036cfee92ff587d196975ecb03c949a0c472004",
+    "scope": "Synthetic rule-boundary tests against the frozen public contract. No complete ordinary route, private author witness, browser execution, rendering performance, or physical-device testing is claimed."
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ]
+  },
+  "supplementaryChecks": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "three menus expose initial phases, frequencies, resonance and distinct pedestrian queues",
+        "passed": true
+      },
+      {
+        "name": "held START starts once; held phone A and native Enter change frequency once without instantaneous movement",
+        "passed": true
+      },
+      {
+        "name": "held B schedules exactly one ten-interval pulse, a fresh B schedules another, and gate B is rejected",
+        "passed": true
+      },
+      {
+        "name": "cancellation and partial neutral suppress stale commands while phases and the accepted pulse continue",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes all oscillator state and explicit resume ignores stale navigation",
+        "passed": true
+      },
+      {
+        "name": "tuning and actual qualified pedestrian movement both pause fully, with the complete 960 sidebar visible",
+        "passed": true
+      },
+      {
+        "name": "ordinary frequency input and sustained resonant driving naturally lose on amplitude, with the queue undispatched",
+        "passed": true
+      },
+      {
+        "name": "R restores the same initial scenario, pending people and empty command and motion histories",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ]
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "buildSourceSha": "02a76317f69f1db0e879ba00bf8f8add5dec9765",
+    "startHashes": {
+      "tests/automation.mjs": "46a29cfa51d9999e4dc4be4f6f8d728e2abe3cd78c3bdb3543c8d851d80474e9",
+      "tests/game-model.test.cjs": "bc695e57185b2c4aa0e59885944fef9f85776f55ba42cb43a1e6e22badadea85",
+      "src/main/assets/game-model.js": "179f01e0b4207b984271cbac5b953da642f973506a30282a481b8e9eac93ff00",
+      "src/main/assets/game.js": "086bb660900bbc4184ccc057757efe89ed15cec41e9d6976558d14d870f9d393"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "46a29cfa51d9999e4dc4be4f6f8d728e2abe3cd78c3bdb3543c8d851d80474e9",
+      "tests/game-model.test.cjs": "bc695e57185b2c4aa0e59885944fef9f85776f55ba42cb43a1e6e22badadea85",
+      "src/main/assets/game-model.js": "179f01e0b4207b984271cbac5b953da642f973506a30282a481b8e9eac93ff00",
+      "src/main/assets/game.js": "086bb660900bbc4184ccc057757efe89ed15cec41e9d6976558d14d870f9d393"
+    },
+    "rawReportSha256": "57b97fee88ed489d2ffe3099424904bf136af3a49fe85c9c4c25f30108f6fc63"
+  },
+  "sourceArtReview": {
+    "file": "art-review.json",
+    "sha256": "3f1311efc9e3c5a31be823e58fbe03311e996cdd1fa519215875a33d0cb634a7"
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "瞬间对齐不够，需积满接触时间。放行后仍可调节，但正在跨板的行人也会受影响。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1229,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "瞬间对齐不够，需积满接触时间。放行后仍可调节，但正在跨板的行人也会受影响。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 149.703125,
+          "width": 420,
+          "height": 294.59375,
+          "right": 586.5,
+          "bottom": 444.296875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "瞬间对齐不够，需积满接触时间。放行后仍可调节，但正在跨板的行人也会受影响。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "瞬间对齐不够，需积满接触时间。放行后仍可调节，但正在跨板的行人也会受影响。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1229,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "瞬间对齐不够，需积满接触时间。放行后仍可调节，但正在跨板的行人也会受影响。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1229,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "瞬间对齐不够，需积满接触时间。放行后仍可调节，但正在跨板的行人也会受影响。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "787f4f3124f525d463f147fc4c378f767654831bf6706785e49c63e0b820ad6a"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 938,
+    "rafIntervalMs": {
+      "count": 938,
+      "min": 16.5,
+      "median": 33.400000000001455,
+      "p95": 83.39999999999418,
+      "max": 100.10000000000218,
+      "mean": 44.33006396588486
+    },
+    "webglDrawCalls": {
+      "count": 938,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 938,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 46.006025875000006,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1352,
+      "tick": 2247,
+      "elapsed": 37.45,
+      "stage": "finished",
+      "dispatchAtTick": 263,
+      "scheduledReleaseTicks": [
+        263,
+        863,
+        1463
+      ],
+      "passedCount": 3,
+      "fallenCount": 0,
+      "remainingCount": 0,
+      "deadlineTicksRemaining": 3153,
+      "boards": [
+        {
+          "index": 0,
+          "label": "桥板 1",
+          "phaseUnits": 24220,
+          "phaseWrappedUnits": 220,
+          "phaseRadians": 0.23038346126325152,
+          "frequencyIndex": 0,
+          "basePhaseUnitsPerTick": 10,
+          "effectivePhaseUnitsPerTick": 10,
+          "resonanceUnits": 0,
+          "amplitudeMetres": 0.8,
+          "heightMetres": 0.1826806960885246,
+          "trimTicksRemaining": 0,
+          "activePulseId": null,
+          "activePulseStartedAtTick": null,
+          "completedPulseCount": 7
+        },
+        {
+          "index": 1,
+          "label": "桥板 2",
+          "phaseUnits": 24170,
+          "phaseWrappedUnits": 170,
+          "phaseRadians": 0.1780235837034216,
+          "frequencyIndex": 0,
+          "basePhaseUnitsPerTick": 10,
+          "effectivePhaseUnitsPerTick": 10,
+          "resonanceUnits": 0,
+          "amplitudeMetres": 0.8,
+          "heightMetres": 0.14166779225566664,
+          "trimTicksRemaining": 0,
+          "activePulseId": null,
+          "activePulseStartedAtTick": null,
+          "completedPulseCount": 4
+        },
+        {
+          "index": 2,
+          "label": "桥板 3",
+          "phaseUnits": 24050,
+          "phaseWrappedUnits": 50,
+          "phaseRadians": 0.05235987755982989,
+          "frequencyIndex": 0,
+          "basePhaseUnitsPerTick": 10,
+          "effectivePhaseUnitsPerTick": 10,
+          "resonanceUnits": 0,
+          "amplitudeMetres": 0.8,
+          "heightMetres": 0.04186876499435507,
+          "trimTicksRemaining": 0,
+          "activePulseId": null,
+          "activePulseStartedAtTick": null,
+          "completedPulseCount": 0
+        }
+      ],
+      "pedestrians": [
+        {
+          "id": 1,
+          "stage": "passed",
+          "scheduledReleaseTick": 263,
+          "releasedAtTick": 263,
+          "passedAtTick": 1047,
+          "fallenAtTick": null,
+          "node": 4,
+          "edgeIndex": null,
+          "failedEdgeIndex": null,
+          "contactTicks": 0,
+          "crossingAgeTicks": 0,
+          "crossingStartedAtTick": null,
+          "walkingAgeTicks": 0,
+          "movementTicks": 456,
+          "heightMetres": 0,
+          "crossingMaxGapMetres": 0
+        },
+        {
+          "id": 2,
+          "stage": "passed",
+          "scheduledReleaseTick": 863,
+          "releasedAtTick": 863,
+          "passedAtTick": 1647,
+          "fallenAtTick": null,
+          "node": 4,
+          "edgeIndex": null,
+          "failedEdgeIndex": null,
+          "contactTicks": 0,
+          "crossingAgeTicks": 0,
+          "crossingStartedAtTick": null,
+          "walkingAgeTicks": 0,
+          "movementTicks": 456,
+          "heightMetres": 0,
+          "crossingMaxGapMetres": 0
+        },
+        {
+          "id": 3,
+          "stage": "passed",
+          "scheduledReleaseTick": 1463,
+          "releasedAtTick": 1463,
+          "passedAtTick": 2247,
+          "fallenAtTick": null,
+          "node": 4,
+          "edgeIndex": null,
+          "failedEdgeIndex": null,
+          "contactTicks": 0,
+          "crossingAgeTicks": 0,
+          "crossingStartedAtTick": null,
+          "walkingAgeTicks": 0,
+          "movementTicks": 456,
+          "heightMetres": 0,
+          "crossingMaxGapMetres": 0
+        }
+      ],
+      "actionReceipts": [
+        {
+          "fromTick": 22,
+          "tick": 23,
+          "key": "a",
+          "kind": "frequency",
+          "boardIndex": 1,
+          "accepted": true,
+          "reason": null,
+          "cursor": 1,
+          "before": {
+            "phaseUnits": 830,
+            "resonanceUnits": 142,
+            "amplitudeMetres": 0.8473333333333334,
+            "heightMetres": 0.6471898349297535,
+            "frequencyIndex": 1,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 830,
+            "resonanceUnits": 142,
+            "amplitudeMetres": 0.8473333333333334,
+            "heightMetres": 0.6471898349297535,
+            "frequencyIndex": 2,
+            "trimTicksRemaining": 0
+          },
+          "pulseId": null,
+          "pulseStartedAtTick": null,
+          "extraPhaseUnits": 0,
+          "scheduledReleaseTicks": null,
+          "id": 1
+        },
+        {
+          "fromTick": 31,
+          "tick": 32,
+          "key": "a",
+          "kind": "frequency",
+          "boardIndex": 1,
+          "accepted": true,
+          "reason": null,
+          "cursor": 1,
+          "before": {
+            "phaseUnits": 1010,
+            "resonanceUnits": 124,
+            "amplitudeMetres": 0.8413333333333334,
+            "heightMetres": 0.732981219755786,
+            "frequencyIndex": 2,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 1010,
+            "resonanceUnits": 124,
+            "amplitudeMetres": 0.8413333333333334,
+            "heightMetres": 0.732981219755786,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "pulseId": null,
+          "pulseStartedAtTick": null,
+          "extraPhaseUnits": 0,
+          "scheduledReleaseTicks": null,
+          "id": 2
+        },
+        {
+          "fromTick": 58,
+          "tick": 59,
+          "key": "a",
+          "kind": "frequency",
+          "boardIndex": 2,
+          "accepted": true,
+          "reason": null,
+          "cursor": 2,
+          "before": {
+            "phaseUnits": 2160,
+            "resonanceUnits": 124,
+            "amplitudeMetres": 0.8413333333333334,
+            "heightMetres": 0.6482584749220307,
+            "frequencyIndex": 2,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 2160,
+            "resonanceUnits": 124,
+            "amplitudeMetres": 0.8413333333333334,
+            "heightMetres": 0.6482584749220307,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "pulseId": null,
+          "pulseStartedAtTick": null,
+          "extraPhaseUnits": 0,
+          "scheduledReleaseTicks": null,
+          "id": 3
+        },
+        {
+          "fromTick": 91,
+          "tick": 92,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 0,
+          "accepted": true,
+          "reason": null,
+          "cursor": 0,
+          "before": {
+            "phaseUnits": 910,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.6521022365828434,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 910,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.6521022365828434,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 1,
+          "pulseStartedAtTick": 91,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 4
+        },
+        {
+          "fromTick": 103,
+          "tick": 104,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 0,
+          "accepted": true,
+          "reason": null,
+          "cursor": 0,
+          "before": {
+            "phaseUnits": 1280,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.7788631222985282,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 1280,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.7788631222985282,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 2,
+          "pulseStartedAtTick": 103,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 5
+        },
+        {
+          "fromTick": 115,
+          "tick": 116,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 0,
+          "accepted": true,
+          "reason": null,
+          "cursor": 0,
+          "before": {
+            "phaseUnits": 1650,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.7901506724761101,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 1650,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.7901506724761101,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 3,
+          "pulseStartedAtTick": 115,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 6
+        },
+        {
+          "fromTick": 131,
+          "tick": 132,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 0,
+          "accepted": true,
+          "reason": null,
+          "cursor": 0,
+          "before": {
+            "phaseUnits": 2060,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.6663369925680797,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 2060,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.6663369925680797,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 4,
+          "pulseStartedAtTick": 131,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 7
+        },
+        {
+          "fromTick": 145,
+          "tick": 146,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 0,
+          "accepted": true,
+          "reason": null,
+          "cursor": 0,
+          "before": {
+            "phaseUnits": 2450,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.4357112280120219,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 2450,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.4357112280120219,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 5,
+          "pulseStartedAtTick": 145,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 8
+        },
+        {
+          "fromTick": 156,
+          "tick": 157,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 0,
+          "accepted": true,
+          "reason": null,
+          "cursor": 0,
+          "before": {
+            "phaseUnits": 2810,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.15812587230330072,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 2810,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.15812587230330072,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 6,
+          "pulseStartedAtTick": 156,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 9
+        },
+        {
+          "fromTick": 168,
+          "tick": 169,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 0,
+          "accepted": true,
+          "reason": null,
+          "cursor": 0,
+          "before": {
+            "phaseUnits": 3180,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": -0.14990505166857945,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 3180,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": -0.14990505166857945,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 7,
+          "pulseStartedAtTick": 168,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 10
+        },
+        {
+          "fromTick": 190,
+          "tick": 191,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 1,
+          "accepted": true,
+          "reason": null,
+          "cursor": 1,
+          "before": {
+            "phaseUnits": 2600,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.32538931446064034,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 2600,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.32538931446064034,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 8,
+          "pulseStartedAtTick": 190,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 11
+        },
+        {
+          "fromTick": 202,
+          "tick": 203,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 1,
+          "accepted": true,
+          "reason": null,
+          "cursor": 1,
+          "before": {
+            "phaseUnits": 2970,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.02512860726250259,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 2970,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.02512860726250259,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 9,
+          "pulseStartedAtTick": 202,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 12
+        },
+        {
+          "fromTick": 216,
+          "tick": 217,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 1,
+          "accepted": true,
+          "reason": null,
+          "cursor": 1,
+          "before": {
+            "phaseUnits": 3360,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": -0.2944996421477423,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 3360,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": -0.2944996421477423,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 10,
+          "pulseStartedAtTick": 216,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 13
+        },
+        {
+          "fromTick": 228,
+          "tick": 229,
+          "key": "b",
+          "kind": "phase",
+          "boardIndex": 1,
+          "accepted": true,
+          "reason": null,
+          "cursor": 1,
+          "before": {
+            "phaseUnits": 3730,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": -0.5537145390963251,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 3730,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": -0.5537145390963251,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 10
+          },
+          "pulseId": 11,
+          "pulseStartedAtTick": 228,
+          "extraPhaseUnits": 250,
+          "scheduledReleaseTicks": null,
+          "id": 14
+        },
+        {
+          "fromTick": 263,
+          "tick": 264,
+          "key": "a",
+          "kind": "dispatch",
+          "boardIndex": null,
+          "accepted": true,
+          "reason": null,
+          "cursor": 3,
+          "before": {
+            "dispatchAtTick": null,
+            "scheduledReleaseTicks": []
+          },
+          "after": {
+            "dispatchAtTick": 263,
+            "scheduledReleaseTicks": [
+              263,
+              863,
+              1463
+            ]
+          },
+          "pulseId": null,
+          "pulseStartedAtTick": null,
+          "extraPhaseUnits": 0,
+          "scheduledReleaseTicks": [
+            263,
+            863,
+            1463
+          ],
+          "id": 15
+        }
+      ],
+      "phasePulseReceipts": [
+        {
+          "fromTick": 100,
+          "tick": 101,
+          "pulseId": 1,
+          "actionReceiptId": 4,
+          "boardIndex": 0,
+          "startedAtTick": 91,
+          "completedAtTick": 101,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 1
+        },
+        {
+          "fromTick": 112,
+          "tick": 113,
+          "pulseId": 2,
+          "actionReceiptId": 5,
+          "boardIndex": 0,
+          "startedAtTick": 103,
+          "completedAtTick": 113,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 2
+        },
+        {
+          "fromTick": 124,
+          "tick": 125,
+          "pulseId": 3,
+          "actionReceiptId": 6,
+          "boardIndex": 0,
+          "startedAtTick": 115,
+          "completedAtTick": 125,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 3
+        },
+        {
+          "fromTick": 140,
+          "tick": 141,
+          "pulseId": 4,
+          "actionReceiptId": 7,
+          "boardIndex": 0,
+          "startedAtTick": 131,
+          "completedAtTick": 141,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 4
+        },
+        {
+          "fromTick": 154,
+          "tick": 155,
+          "pulseId": 5,
+          "actionReceiptId": 8,
+          "boardIndex": 0,
+          "startedAtTick": 145,
+          "completedAtTick": 155,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 5
+        },
+        {
+          "fromTick": 165,
+          "tick": 166,
+          "pulseId": 6,
+          "actionReceiptId": 9,
+          "boardIndex": 0,
+          "startedAtTick": 156,
+          "completedAtTick": 166,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 6
+        },
+        {
+          "fromTick": 177,
+          "tick": 178,
+          "pulseId": 7,
+          "actionReceiptId": 10,
+          "boardIndex": 0,
+          "startedAtTick": 168,
+          "completedAtTick": 178,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 7
+        },
+        {
+          "fromTick": 199,
+          "tick": 200,
+          "pulseId": 8,
+          "actionReceiptId": 11,
+          "boardIndex": 1,
+          "startedAtTick": 190,
+          "completedAtTick": 200,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 8
+        },
+        {
+          "fromTick": 211,
+          "tick": 212,
+          "pulseId": 9,
+          "actionReceiptId": 12,
+          "boardIndex": 1,
+          "startedAtTick": 202,
+          "completedAtTick": 212,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 9
+        },
+        {
+          "fromTick": 225,
+          "tick": 226,
+          "pulseId": 10,
+          "actionReceiptId": 13,
+          "boardIndex": 1,
+          "startedAtTick": 216,
+          "completedAtTick": 226,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 10
+        },
+        {
+          "fromTick": 237,
+          "tick": 238,
+          "pulseId": 11,
+          "actionReceiptId": 14,
+          "boardIndex": 1,
+          "startedAtTick": 228,
+          "completedAtTick": 238,
+          "intervalCount": 10,
+          "extraPhaseUnits": 250,
+          "id": 11
+        }
+      ],
+      "pedestrianEvents": [
+        {
+          "fromTick": 263,
+          "tick": 264,
+          "kind": "released",
+          "personId": 1,
+          "scheduledReleaseTick": 263,
+          "releasedAtTick": 263,
+          "node": 0,
+          "id": 1
+        },
+        {
+          "fromTick": 405,
+          "tick": 406,
+          "kind": "crossing-started",
+          "personId": 1,
+          "edgeIndex": 0,
+          "startedAtTick": 406,
+          "qualifiedContactTicks": 24,
+          "gapFrom": -0.1663293526542079,
+          "gapTo": -0.15812587230330116,
+          "closing": true,
+          "movementTicks": 0,
+          "id": 2
+        },
+        {
+          "fromTick": 429,
+          "tick": 430,
+          "kind": "crossing-completed",
+          "personId": 1,
+          "edgeIndex": 0,
+          "sourceNode": 0,
+          "destinationNode": 1,
+          "startedAtTick": 406,
+          "completedAtTick": 430,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.15812587230330116,
+          "movementTicks": 24,
+          "id": 3
+        },
+        {
+          "fromTick": 549,
+          "tick": 550,
+          "kind": "walking-completed",
+          "personId": 1,
+          "node": 1,
+          "completedAtTick": 550,
+          "successfulWalkingIntervals": 120,
+          "movementTicks": 144,
+          "id": 4
+        },
+        {
+          "fromTick": 573,
+          "tick": 574,
+          "kind": "crossing-started",
+          "personId": 1,
+          "edgeIndex": 1,
+          "startedAtTick": 574,
+          "qualifiedContactTicks": 24,
+          "gapFrom": -0.0019729650003099675,
+          "gapTo": -0.001534752749792423,
+          "closing": true,
+          "movementTicks": 144,
+          "id": 5
+        },
+        {
+          "fromTick": 597,
+          "tick": 598,
+          "kind": "crossing-completed",
+          "personId": 1,
+          "edgeIndex": 1,
+          "sourceNode": 1,
+          "destinationNode": 2,
+          "startedAtTick": 574,
+          "completedAtTick": 598,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.008922376655242092,
+          "movementTicks": 168,
+          "id": 6
+        },
+        {
+          "fromTick": 717,
+          "tick": 718,
+          "kind": "walking-completed",
+          "personId": 1,
+          "node": 2,
+          "completedAtTick": 718,
+          "successfulWalkingIntervals": 120,
+          "movementTicks": 288,
+          "id": 7
+        },
+        {
+          "fromTick": 741,
+          "tick": 742,
+          "kind": "crossing-started",
+          "personId": 1,
+          "edgeIndex": 2,
+          "startedAtTick": 742,
+          "qualifiedContactTicks": 24,
+          "gapFrom": 0.10032714768728972,
+          "gapTo": 0.10026658685144317,
+          "closing": true,
+          "movementTicks": 288,
+          "id": 8
+        },
+        {
+          "fromTick": 765,
+          "tick": 766,
+          "kind": "crossing-completed",
+          "personId": 1,
+          "edgeIndex": 2,
+          "sourceNode": 2,
+          "destinationNode": 3,
+          "startedAtTick": 742,
+          "completedAtTick": 766,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.10026658685144317,
+          "movementTicks": 312,
+          "id": 9
+        },
+        {
+          "fromTick": 863,
+          "tick": 864,
+          "kind": "released",
+          "personId": 2,
+          "scheduledReleaseTick": 863,
+          "releasedAtTick": 863,
+          "node": 0,
+          "id": 10
+        },
+        {
+          "fromTick": 885,
+          "tick": 886,
+          "kind": "walking-completed",
+          "personId": 1,
+          "node": 3,
+          "completedAtTick": 886,
+          "successfulWalkingIntervals": 120,
+          "movementTicks": 432,
+          "id": 11
+        },
+        {
+          "fromTick": 1005,
+          "tick": 1006,
+          "kind": "crossing-started",
+          "personId": 2,
+          "edgeIndex": 0,
+          "startedAtTick": 1006,
+          "qualifiedContactTicks": 24,
+          "gapFrom": -0.1663293526542079,
+          "gapTo": -0.15812587230330116,
+          "closing": true,
+          "movementTicks": 0,
+          "id": 12
+        },
+        {
+          "fromTick": 1022,
+          "tick": 1023,
+          "kind": "crossing-started",
+          "personId": 1,
+          "edgeIndex": 3,
+          "startedAtTick": 1023,
+          "qualifiedContactTicks": 24,
+          "gapFrom": 0.1663293526542079,
+          "gapTo": 0.15812587230330116,
+          "closing": true,
+          "movementTicks": 432,
+          "id": 13
+        },
+        {
+          "fromTick": 1029,
+          "tick": 1030,
+          "kind": "crossing-completed",
+          "personId": 2,
+          "edgeIndex": 0,
+          "sourceNode": 0,
+          "destinationNode": 1,
+          "startedAtTick": 1006,
+          "completedAtTick": 1030,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.15812587230330116,
+          "movementTicks": 24,
+          "id": 14
+        },
+        {
+          "fromTick": 1046,
+          "tick": 1047,
+          "kind": "passed",
+          "personId": 1,
+          "edgeIndex": 3,
+          "sourceNode": 3,
+          "destinationNode": 4,
+          "startedAtTick": 1023,
+          "completedAtTick": 1047,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.15812587230330116,
+          "movementTicks": 456,
+          "id": 15
+        },
+        {
+          "fromTick": 1149,
+          "tick": 1150,
+          "kind": "walking-completed",
+          "personId": 2,
+          "node": 1,
+          "completedAtTick": 1150,
+          "successfulWalkingIntervals": 120,
+          "movementTicks": 144,
+          "id": 16
+        },
+        {
+          "fromTick": 1173,
+          "tick": 1174,
+          "kind": "crossing-started",
+          "personId": 2,
+          "edgeIndex": 1,
+          "startedAtTick": 1174,
+          "qualifiedContactTicks": 24,
+          "gapFrom": -0.0019729650003099675,
+          "gapTo": -0.001534752749792423,
+          "closing": true,
+          "movementTicks": 144,
+          "id": 17
+        },
+        {
+          "fromTick": 1197,
+          "tick": 1198,
+          "kind": "crossing-completed",
+          "personId": 2,
+          "edgeIndex": 1,
+          "sourceNode": 1,
+          "destinationNode": 2,
+          "startedAtTick": 1174,
+          "completedAtTick": 1198,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.008922376655242092,
+          "movementTicks": 168,
+          "id": 18
+        },
+        {
+          "fromTick": 1317,
+          "tick": 1318,
+          "kind": "walking-completed",
+          "personId": 2,
+          "node": 2,
+          "completedAtTick": 1318,
+          "successfulWalkingIntervals": 120,
+          "movementTicks": 288,
+          "id": 19
+        },
+        {
+          "fromTick": 1341,
+          "tick": 1342,
+          "kind": "crossing-started",
+          "personId": 2,
+          "edgeIndex": 2,
+          "startedAtTick": 1342,
+          "qualifiedContactTicks": 24,
+          "gapFrom": 0.10032714768728972,
+          "gapTo": 0.10026658685144317,
+          "closing": true,
+          "movementTicks": 288,
+          "id": 20
+        },
+        {
+          "fromTick": 1365,
+          "tick": 1366,
+          "kind": "crossing-completed",
+          "personId": 2,
+          "edgeIndex": 2,
+          "sourceNode": 2,
+          "destinationNode": 3,
+          "startedAtTick": 1342,
+          "completedAtTick": 1366,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.10026658685144317,
+          "movementTicks": 312,
+          "id": 21
+        },
+        {
+          "fromTick": 1463,
+          "tick": 1464,
+          "kind": "released",
+          "personId": 3,
+          "scheduledReleaseTick": 1463,
+          "releasedAtTick": 1463,
+          "node": 0,
+          "id": 22
+        },
+        {
+          "fromTick": 1485,
+          "tick": 1486,
+          "kind": "walking-completed",
+          "personId": 2,
+          "node": 3,
+          "completedAtTick": 1486,
+          "successfulWalkingIntervals": 120,
+          "movementTicks": 432,
+          "id": 23
+        },
+        {
+          "fromTick": 1605,
+          "tick": 1606,
+          "kind": "crossing-started",
+          "personId": 3,
+          "edgeIndex": 0,
+          "startedAtTick": 1606,
+          "qualifiedContactTicks": 24,
+          "gapFrom": -0.1663293526542079,
+          "gapTo": -0.15812587230330116,
+          "closing": true,
+          "movementTicks": 0,
+          "id": 24
+        },
+        {
+          "fromTick": 1622,
+          "tick": 1623,
+          "kind": "crossing-started",
+          "personId": 2,
+          "edgeIndex": 3,
+          "startedAtTick": 1623,
+          "qualifiedContactTicks": 24,
+          "gapFrom": 0.1663293526542079,
+          "gapTo": 0.15812587230330116,
+          "closing": true,
+          "movementTicks": 432,
+          "id": 25
+        },
+        {
+          "fromTick": 1629,
+          "tick": 1630,
+          "kind": "crossing-completed",
+          "personId": 3,
+          "edgeIndex": 0,
+          "sourceNode": 0,
+          "destinationNode": 1,
+          "startedAtTick": 1606,
+          "completedAtTick": 1630,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.15812587230330116,
+          "movementTicks": 24,
+          "id": 26
+        },
+        {
+          "fromTick": 1646,
+          "tick": 1647,
+          "kind": "passed",
+          "personId": 2,
+          "edgeIndex": 3,
+          "sourceNode": 3,
+          "destinationNode": 4,
+          "startedAtTick": 1623,
+          "completedAtTick": 1647,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.15812587230330116,
+          "movementTicks": 456,
+          "id": 27
+        },
+        {
+          "fromTick": 1749,
+          "tick": 1750,
+          "kind": "walking-completed",
+          "personId": 3,
+          "node": 1,
+          "completedAtTick": 1750,
+          "successfulWalkingIntervals": 120,
+          "movementTicks": 144,
+          "id": 28
+        },
+        {
+          "fromTick": 1773,
+          "tick": 1774,
+          "kind": "crossing-started",
+          "personId": 3,
+          "edgeIndex": 1,
+          "startedAtTick": 1774,
+          "qualifiedContactTicks": 24,
+          "gapFrom": -0.0019729650003099675,
+          "gapTo": -0.001534752749792423,
+          "closing": true,
+          "movementTicks": 144,
+          "id": 29
+        },
+        {
+          "fromTick": 1797,
+          "tick": 1798,
+          "kind": "crossing-completed",
+          "personId": 3,
+          "edgeIndex": 1,
+          "sourceNode": 1,
+          "destinationNode": 2,
+          "startedAtTick": 1774,
+          "completedAtTick": 1798,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.008922376655242092,
+          "movementTicks": 168,
+          "id": 30
+        },
+        {
+          "fromTick": 1917,
+          "tick": 1918,
+          "kind": "walking-completed",
+          "personId": 3,
+          "node": 2,
+          "completedAtTick": 1918,
+          "successfulWalkingIntervals": 120,
+          "movementTicks": 288,
+          "id": 31
+        },
+        {
+          "fromTick": 1941,
+          "tick": 1942,
+          "kind": "crossing-started",
+          "personId": 3,
+          "edgeIndex": 2,
+          "startedAtTick": 1942,
+          "qualifiedContactTicks": 24,
+          "gapFrom": 0.10032714768728972,
+          "gapTo": 0.10026658685144317,
+          "closing": true,
+          "movementTicks": 288,
+          "id": 32
+        },
+        {
+          "fromTick": 1965,
+          "tick": 1966,
+          "kind": "crossing-completed",
+          "personId": 3,
+          "edgeIndex": 2,
+          "sourceNode": 2,
+          "destinationNode": 3,
+          "startedAtTick": 1942,
+          "completedAtTick": 1966,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.10026658685144317,
+          "movementTicks": 312,
+          "id": 33
+        },
+        {
+          "fromTick": 2085,
+          "tick": 2086,
+          "kind": "walking-completed",
+          "personId": 3,
+          "node": 3,
+          "completedAtTick": 2086,
+          "successfulWalkingIntervals": 120,
+          "movementTicks": 432,
+          "id": 34
+        },
+        {
+          "fromTick": 2222,
+          "tick": 2223,
+          "kind": "crossing-started",
+          "personId": 3,
+          "edgeIndex": 3,
+          "startedAtTick": 2223,
+          "qualifiedContactTicks": 24,
+          "gapFrom": 0.1663293526542079,
+          "gapTo": 0.15812587230330116,
+          "closing": true,
+          "movementTicks": 432,
+          "id": 35
+        },
+        {
+          "fromTick": 2246,
+          "tick": 2247,
+          "kind": "passed",
+          "personId": 3,
+          "edgeIndex": 3,
+          "sourceNode": 3,
+          "destinationNode": 4,
+          "startedAtTick": 2223,
+          "completedAtTick": 2247,
+          "successfulCrossingIntervals": 24,
+          "maxGapMetres": 0.15812587230330116,
+          "movementTicks": 456,
+          "id": 36
+        }
+      ],
+      "failures": []
+    },
+    "actualAPressCount": 4,
+    "actualBPressCount": 11,
+    "actualCompletedPulses": 11,
+    "actualPedestrianEvents": 36,
+    "observedIntervalCount": 20,
+    "unobservedLastActionIds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "encodingOrder": {
+      "receivedManifestSha256": "0c1103263a771ab8e34664e0a8bf57f266b5e102105b1a3fc59df218bac7532f",
+      "orderMappingSha256": "a98a1472a7944994f36097ebb3c5676dc5bf49d7fd9681c4a11e36cdd783f1c7",
+      "rawRecordingSha256": "bb5b10ce0029294e74bf6e1d949687363f60cd48b94ff5e2c6abdaf934223ca8",
+      "frames": 954,
+      "reorderedPositions": 0
+    },
+    "scope": "Actual key edges, three immutable receipt histories and the sparse snapshots of actual oscillator/contact/person intervals. Interval records are deduplicated by model tick, including a frozen final result; crossing-window references point only to those stored intervals. Receipt relationships establish completed actions and journeys, not observation of every physical interval. Gaps, unobserved last-action updates and any pulse still active at victory remain explicit. No missing tick, intermediate crossing position or future control schedule is reconstructed. Menu preparation does not advance the model or count as gameplay.",
+    "normalFailure": {
+      "reason": "unstable-amplitude",
+      "level": 1,
+      "difficulty": 0,
+      "score": 0,
+      "tick": 1081,
+      "elapsed": 18.016666666666666,
+      "stage": "finished",
+      "dispatchAtTick": null,
+      "scheduledReleaseTicks": [],
+      "passedCount": 0,
+      "fallenCount": 0,
+      "remainingCount": 3,
+      "deadlineTicksRemaining": 4319,
+      "boards": [
+        {
+          "index": 0,
+          "label": "桥板 1",
+          "phaseUnits": 16155,
+          "phaseWrappedUnits": 4155,
+          "phaseRadians": 4.351105825221864,
+          "frequencyIndex": 1,
+          "basePhaseUnitsPerTick": 15,
+          "effectivePhaseUnitsPerTick": 15,
+          "resonanceUnits": 1069,
+          "amplitudeMetres": 1.1563333333333334,
+          "heightMetres": -1.08168511431627,
+          "trimTicksRemaining": 0,
+          "activePulseId": null,
+          "activePulseStartedAtTick": null,
+          "completedPulseCount": 0
+        },
+        {
+          "index": 1,
+          "label": "桥板 2",
+          "phaseUnits": 16715,
+          "phaseWrappedUnits": 4715,
+          "phaseRadians": 4.937536453891958,
+          "frequencyIndex": 1,
+          "basePhaseUnitsPerTick": 15,
+          "effectivePhaseUnitsPerTick": 15,
+          "resonanceUnits": 1201,
+          "amplitudeMetres": 1.2003333333333335,
+          "heightMetres": -1.17003835342753,
+          "trimTicksRemaining": 0,
+          "activePulseId": null,
+          "activePulseStartedAtTick": null,
+          "completedPulseCount": 0
+        },
+        {
+          "index": 2,
+          "label": "桥板 3",
+          "phaseUnits": 22620,
+          "phaseWrappedUnits": 4620,
+          "phaseRadians": 4.838052686528282,
+          "frequencyIndex": 2,
+          "basePhaseUnitsPerTick": 20,
+          "effectivePhaseUnitsPerTick": 20,
+          "resonanceUnits": 0,
+          "amplitudeMetres": 0.8,
+          "heightMetres": -0.7936917610515823,
+          "trimTicksRemaining": 0,
+          "activePulseId": null,
+          "activePulseStartedAtTick": null,
+          "completedPulseCount": 0
+        }
+      ],
+      "pedestrians": [
+        {
+          "id": 1,
+          "stage": "pending",
+          "scheduledReleaseTick": null,
+          "releasedAtTick": null,
+          "passedAtTick": null,
+          "fallenAtTick": null,
+          "node": 0,
+          "edgeIndex": null,
+          "failedEdgeIndex": null,
+          "contactTicks": 0,
+          "crossingAgeTicks": 0,
+          "crossingStartedAtTick": null,
+          "walkingAgeTicks": 0,
+          "movementTicks": 0,
+          "heightMetres": 0,
+          "crossingMaxGapMetres": 0
+        },
+        {
+          "id": 2,
+          "stage": "pending",
+          "scheduledReleaseTick": null,
+          "releasedAtTick": null,
+          "passedAtTick": null,
+          "fallenAtTick": null,
+          "node": 0,
+          "edgeIndex": null,
+          "failedEdgeIndex": null,
+          "contactTicks": 0,
+          "crossingAgeTicks": 0,
+          "crossingStartedAtTick": null,
+          "walkingAgeTicks": 0,
+          "movementTicks": 0,
+          "heightMetres": 0,
+          "crossingMaxGapMetres": 0
+        },
+        {
+          "id": 3,
+          "stage": "pending",
+          "scheduledReleaseTick": null,
+          "releasedAtTick": null,
+          "passedAtTick": null,
+          "fallenAtTick": null,
+          "node": 0,
+          "edgeIndex": null,
+          "failedEdgeIndex": null,
+          "contactTicks": 0,
+          "crossingAgeTicks": 0,
+          "crossingStartedAtTick": null,
+          "walkingAgeTicks": 0,
+          "movementTicks": 0,
+          "heightMetres": 0,
+          "crossingMaxGapMetres": 0
+        }
+      ],
+      "actionReceipts": [
+        {
+          "fromTick": 12,
+          "tick": 13,
+          "key": "a",
+          "kind": "frequency",
+          "boardIndex": 0,
+          "accepted": true,
+          "reason": null,
+          "cursor": 0,
+          "before": {
+            "phaseUnits": 120,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.10026658685144339,
+            "frequencyIndex": 0,
+            "trimTicksRemaining": 0
+          },
+          "after": {
+            "phaseUnits": 120,
+            "resonanceUnits": 0,
+            "amplitudeMetres": 0.8,
+            "heightMetres": 0.10026658685144339,
+            "frequencyIndex": 1,
+            "trimTicksRemaining": 0
+          },
+          "pulseId": null,
+          "pulseStartedAtTick": null,
+          "extraPhaseUnits": 0,
+          "scheduledReleaseTicks": null,
+          "id": 1
+        }
+      ],
+      "phasePulseReceipts": [],
+      "pedestrianEvents": [],
+      "failures": [
+        {
+          "kind": "unstable-amplitude",
+          "fromTick": 1080,
+          "tick": 1081,
+          "boardIndex": 1,
+          "resonanceUnits": 1201,
+          "amplitudeMetres": 1.2003333333333335,
+          "maximumSafeResonanceUnits": 1200
+        }
+      ]
+    },
+    "actualConsolidationWindow": {
+      "startedAt": "2026-11-02T11:04:52.593697+00:00",
+      "completedAt": "2026-11-02T11:04:53.189748+00:00",
+      "startHashes": {
+        "qa-tools/record_proofs.py": "9f922aa5da480171c2a15d68d8380516de81c868c4f549ddd9240d2aa1e461df",
+        "qa-tools/report_fields.py": "39fd9214f8902bd348d77763dadfcacfe98295327a9fecc59ff3149111a9fdec",
+        "qa-tools/finalize-review.py": "1a4e2cd789f391f15e67b1c578d8906eb507dcb8e75eb289bfe2b5dd08f57721",
+        "qa-tools/aggregate-supplementary.py": "85fc2df203b1eaa87a89b178577320c44fca31ac0c7adde91ef89a46f2e8beb5",
+        "qa-final/report.json": "940ebeb89c357607aa6dcd6a69c516b03c3210ca44f654657fd32aa8318a5470",
+        "qa-final/ui-native-loss.json": "aab1f61adb0daca39c64c18552b1ac1e820f4e2cef2cd055e800e167e1b66763",
+        "qa-final/final-viewport-checks.json": "2e2b918b2ff2ce571e5fcd265cc4800f88ae8f60473b2a5cb35ef6dcead8eeda",
+        "qa-final/test-provenance.json": "57b97fee88ed489d2ffe3099424904bf136af3a49fe85c9c4c25f30108f6fc63",
+        "recording-final/recording.json": "bb5b10ce0029294e74bf6e1d949687363f60cd48b94ff5e2c6abdaf934223ca8",
+        "recording-final/review/frames.json": "e180af3cfe4695748bd4a114df4ea31246bd8ba7307c935dc4db7fac99c46f56",
+        "recording-final/decode-verification.json": "db5b884449ac1ab3e693162f6f46f2be22ece59d6d4edcd9b27499642053bd08",
+        "recording-final/video-validation.json": "71982a966ff1a83fefbaac76b4a807981d50735a03b117992051e5a36149ccdd",
+        "recording-final/post-capture-checks.json": "2e2b918b2ff2ce571e5fcd265cc4800f88ae8f60473b2a5cb35ef6dcead8eeda",
+        "recording-final/frame-manifest-received.json": "0c1103263a771ab8e34664e0a8bf57f266b5e102105b1a3fc59df218bac7532f",
+        "recording-final/frame-order-mapping.json": "a98a1472a7944994f36097ebb3c5676dc5bf49d7fd9681c4a11e36cdd783f1c7",
+        "build-final/build-receipt.json": "60054a851061c444ba942e0fe2890751fc64fc90d17a0f26811e55404a127a49",
+        "build-final/assets/game-config.json": "c3d9ecee9a7e3d202fa5354cb546f470670ff6a72faa78f589455b62e37a6f7a",
+        "public-observations-first/index.json": "68f61b5f3d09259a7f04479609b720eb77d47dc9f46d9c929f1ba693b09bbf0a",
+        "qa-tools/record-recipe.json": "5f6e6548227a85ed8877162c0ed96cac31795f49251b39d1669113983490cb50",
+        "qa-tools/record-with-dispatch-barrier.mjs": "d5d6d519b15cd673525b8ad1e3b9865e43ecafce4d3bb05542ef3603613cfbbc",
+        "candidate-runtime/report.json": "b984778024a85e362a73b274a1ee3391c037bd98f5469026a272ab97a21716cc"
+      },
+      "endHashes": {
+        "qa-tools/record_proofs.py": "9f922aa5da480171c2a15d68d8380516de81c868c4f549ddd9240d2aa1e461df",
+        "qa-tools/report_fields.py": "39fd9214f8902bd348d77763dadfcacfe98295327a9fecc59ff3149111a9fdec",
+        "qa-tools/finalize-review.py": "1a4e2cd789f391f15e67b1c578d8906eb507dcb8e75eb289bfe2b5dd08f57721",
+        "qa-tools/aggregate-supplementary.py": "85fc2df203b1eaa87a89b178577320c44fca31ac0c7adde91ef89a46f2e8beb5",
+        "qa-final/report.json": "940ebeb89c357607aa6dcd6a69c516b03c3210ca44f654657fd32aa8318a5470",
+        "qa-final/ui-native-loss.json": "aab1f61adb0daca39c64c18552b1ac1e820f4e2cef2cd055e800e167e1b66763",
+        "qa-final/final-viewport-checks.json": "2e2b918b2ff2ce571e5fcd265cc4800f88ae8f60473b2a5cb35ef6dcead8eeda",
+        "qa-final/test-provenance.json": "57b97fee88ed489d2ffe3099424904bf136af3a49fe85c9c4c25f30108f6fc63",
+        "recording-final/recording.json": "bb5b10ce0029294e74bf6e1d949687363f60cd48b94ff5e2c6abdaf934223ca8",
+        "recording-final/review/frames.json": "e180af3cfe4695748bd4a114df4ea31246bd8ba7307c935dc4db7fac99c46f56",
+        "recording-final/decode-verification.json": "db5b884449ac1ab3e693162f6f46f2be22ece59d6d4edcd9b27499642053bd08",
+        "recording-final/video-validation.json": "71982a966ff1a83fefbaac76b4a807981d50735a03b117992051e5a36149ccdd",
+        "recording-final/post-capture-checks.json": "2e2b918b2ff2ce571e5fcd265cc4800f88ae8f60473b2a5cb35ef6dcead8eeda",
+        "recording-final/frame-manifest-received.json": "0c1103263a771ab8e34664e0a8bf57f266b5e102105b1a3fc59df218bac7532f",
+        "recording-final/frame-order-mapping.json": "a98a1472a7944994f36097ebb3c5676dc5bf49d7fd9681c4a11e36cdd783f1c7",
+        "build-final/build-receipt.json": "60054a851061c444ba942e0fe2890751fc64fc90d17a0f26811e55404a127a49",
+        "build-final/assets/game-config.json": "c3d9ecee9a7e3d202fa5354cb546f470670ff6a72faa78f589455b62e37a6f7a",
+        "public-observations-first/index.json": "68f61b5f3d09259a7f04479609b720eb77d47dc9f46d9c929f1ba693b09bbf0a",
+        "qa-tools/record-recipe.json": "5f6e6548227a85ed8877162c0ed96cac31795f49251b39d1669113983490cb50",
+        "qa-tools/record-with-dispatch-barrier.mjs": "d5d6d519b15cd673525b8ad1e3b9865e43ecafce4d3bb05542ef3603613cfbbc",
+        "candidate-runtime/report.json": "b984778024a85e362a73b274a1ee3391c037bd98f5469026a272ab97a21716cc"
+      },
+      "sourceUnchanged": true
+    },
+    "ordinarySourceHistoryIndexSha256": "68f61b5f3d09259a7f04479609b720eb77d47dc9f46d9c929f1ba693b09bbf0a",
+    "additionalImageReview": {
+      "images": 12,
+      "frameReviewManifestSha256": "e180af3cfe4695748bd4a114df4ea31246bd8ba7307c935dc4db7fac99c46f56"
+    },
+    "encodedObservationAnchors": {
+      "reviewedEncodedImages": 9,
+      "exactImageStateClaimed": false,
+      "clockMapping": {
+        "captureStartedPerformanceMs": 2710.897299,
+        "firstCompositorReceiptPerformanceMs": 2701.312762,
+        "sampleToEncodedReceiptOffsetSeconds": 0.009584537000000183,
+        "firstCompositorTimestampSeconds": 1793617217.774792,
+        "originManifest": "encodingFrameManifest",
+        "firstEncodedReceivedIndex": 0,
+        "receiptIsNotCaptureTimestamp": true
+      },
+      "scope": "Nine unmodified encoded images from actual periodic observations: three stable menu samples, undispatched tuning, first queue transit, actual walking, first arrival, last remaining person and observed win after at least two seconds of terminal hold. Short phase pulses or crossing stages are not asserted unless actually observed; no post-dispatch edge selection, predicted win time, extra Model run or recapture. Original reception order and complete stable encoding-order mapping remain bound. Every image semantic awaits personal review."
+    },
+    "actualInputDispatch": {
+      "automaticObservations": 44,
+      "automaticEdges": 44,
+      "actualTerminalExceptions": 0
+    }
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "179f01e0b4207b984271cbac5b953da642f973506a30282a481b8e9eac93ff00",
+    "game.js": "086bb660900bbc4184ccc057757efe89ed15cec41e9d6976558d14d870f9d393",
+    "game-config.json": "c3d9ecee9a7e3d202fa5354cb546f470670ff6a72faa78f589455b62e37a6f7a",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "formal": "cc9ec4cd2b1ce3aa8c04cc69a036cfee92ff587d196975ecb03c949a0c472004",
+    "ordinary": "b86d4a08bec87af0e51fc364b816085ae3f15f6e3361004abb2edc0717df0f9f",
+    "publicObservations": "68f61b5f3d09259a7f04479609b720eb77d47dc9f46d9c929f1ba693b09bbf0a",
+    "build": "60054a851061c444ba942e0fe2890751fc64fc90d17a0f26811e55404a127a49",
+    "independent": "3c1d10f1db6fbed16260a28ec44a728b0a41924f4c561f29ed9491a4850e1bef",
+    "art": "5e5efc26dcb68ff67c77e4bd2131b19c847ed5d6e3b837ee0b58bb6f8476d07e",
+    "candidate": "b5fe96e719b59c83915edb85c3916c25b9bde16b8270833341543388d655d41e",
+    "candidateRaw": "b984778024a85e362a73b274a1ee3391c037bd98f5469026a272ab97a21716cc",
+    "candidateQaVisual": "2cc0c7da264fbbcaf3e6d2a6c4008e3efc5b76ec6873eea66bb0ae7c0b744e72",
+    "candidateRootVisual": "f9c86d6969c669b3caa1ebe1120d4bf6cc81879bc52db9037aa108d87bb46232",
+    "sign": "bc54eba1832997735a5ea1930e4889e99f399671ec3d5260e6139e9eaa39acf6",
+    "fetch": "71ae8d19da8308fa7c70b490cfb1bb2052c6de22074d09421b53c4ea7a999762",
+    "apkValidation": "6a752a4f9b3a192e69a6e3a79f85ac4f9a68e00bed891c2b9cfded9e45fe0d3d",
+    "qa": "940ebeb89c357607aa6dcd6a69c516b03c3210ca44f654657fd32aa8318a5470",
+    "uiRaw": "85b050d7eec0b32247c33683d85d5c59513a6f833fa0f6d8008517cb4a744c8e",
+    "roomRaw": "28c20680c381e4de5fc39c7fe28016e885274f6d79aea79a5342009d09b4dc4b",
+    "supplementary": "aab1f61adb0daca39c64c18552b1ac1e820f4e2cef2cd055e800e167e1b66763",
+    "rootPreCaptureUi": "dce5a03a2d1547de930ffd37579d74ce04610d19ccfc8fde98bd1bcbc0403778",
+    "record": "bb5b10ce0029294e74bf6e1d949687363f60cd48b94ff5e2c6abdaf934223ca8",
+    "videoValidation": "71982a966ff1a83fefbaac76b4a807981d50735a03b117992051e5a36149ccdd",
+    "decode": "db5b884449ac1ab3e693162f6f46f2be22ece59d6d4edcd9b27499642053bd08",
+    "viewport": "2e2b918b2ff2ce571e5fcd265cc4800f88ae8f60473b2a5cb35ef6dcead8eeda",
+    "rootEncoded": "64f40fe0164624fa581a1fd9dd781bad8edf56f7a2a379b3911d9282e924ea20",
+    "artifacts": "10db29819359754b3429614e6179e2af851675eb07b0f7718c0cefd8b2ebecbc",
+    "provenance": "57b97fee88ed489d2ffe3099424904bf136af3a49fe85c9c4c25f30108f6fc63",
+    "summary": "b9c89031571b00fa9ca52f2adc1d231a539ec6ebb11fd353413aee34fee9646d",
+    "layout": "787f4f3124f525d463f147fc4c378f767654831bf6706785e49c63e0b820ad6a",
+    "review": "3e9321a6d9e011191d8e95ac99c977e54c071621c69c2c73e002c306d6d2d474"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium with ordinary input. Synthetic fixtures are labelled separately; export FPS is not device FPS."
+  },
+  "release": {
+    "sourceSha": "02a76317f69f1db0e879ba00bf8f8add5dec9765",
+    "requestCommit": "9fd0637b9f6f4940cc15925d18aa38113eeefeed",
+    "signerCommit": "02a76317f69f1db0e879ba00bf8f8add5dec9765",
+    "signingRun": 41432819098,
+    "bytes": 296227,
+    "sha256": "f97293db250c2365c042c772fc69fb8a5e89ab3989e44f68996c2a487b6c48dc",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "d8dcd42e3a7a1ba3e9c69a3658ffbbf06e47e373"
+  }
+}
