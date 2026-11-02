@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-37-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-38-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -71,6 +71,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | --- | --- | --- | --- | --- | --- |
 | [邻接铸造](resource/apps/adjacency-forge/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 交换七格金属块，满足各自精确邻接配方并按固定方向优先级将热流导向铸模，再主动提交；三张固定布局、精确编号撤销与90秒有效时间，手机扫码单人操作 | <img src="resource/apps/adjacency-forge/thumb.png" width="180" alt="邻接铸造 界面"> |
 | [Adventure Island TV](resource/apps/adventure-island/) | ecojust / 桔子桑 | 0.5.2 | 89.4 KB | 8 区域 32 关横版冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"> |
+| [气闸值守](resource/apps/airlock-budget/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在待援舱、气闸与安全舱之间安排三组人员，权衡慢回收保氧和快排赶期限；管理有限储罐与共享泵，及时封堵漏点并满足最终储氧底线。 | <img src="resource/apps/airlock-budget/thumb.png" width="180" alt="气闸值守 界面"> |
 | [孤胆枪手 TV](resource/apps/alien-shooter/) | ecojust / 桔子桑 | 0.1.2 | 1.68 MB | 工业基地异形群潮单人射击，三关战役、五种武器与手机扫码操作 | <img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"> |
 | [箭田收获](resource/apps/arrow-harvest/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 设置单向箭头并播种，让种子覆盖所有目标田块且不重复、不进入禁地；传播期间箭头不可修改。 | <img src="resource/apps/arrow-harvest/thumb.png" width="180" alt="箭田收获 界面"> |
 | [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust / 桔子桑 | 0.5.2 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |
