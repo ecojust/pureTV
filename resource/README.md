@@ -51,6 +51,7 @@
 | [沙丘数列](apps/number-dunes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 选择一行或一列，保持段内顺序压实数字石，不合并、不跨岩柱；蛇形读数严格递增且全部空洞吻合目标才能获胜，撤销恢复原石原格但不退已用步数或时间，手机扫码单人操作 | <img src="apps/number-dunes/thumb.png" width="180" alt="沙丘数列 界面"> |
 | [奇偶花圃](apps/parity-garden/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用十字与斜角喷头翻转4×4花圃，让目标花形和标记花的直接浇水偶数条件同时成立；重复浇水不退水，三道有限水量谜题，支持手机扫码单人操作 | <img src="apps/parity-garden/thumb.png" width="180" alt="奇偶花圃 界面"> |
 | [路径刻印](apps/path-glyphs/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在5×5石板上规划不重复的路径，按入边条件收集方向符号，在出口提交与目标完全一致的刻印；三道公开谜题，支持手机扫码单人操作 | <img src="apps/path-glyphs/thumb.png" width="180" alt="路径刻印 界面"> |
+| [传粉契约](apps/pollinator-contract/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 调度两支蜂群，在有限花期和前置任务间完成授粉；途中改派并及时返巢恢复耐力，完成三关花园契约。 | <img src="apps/pollinator-contract/thumb.png" width="180" alt="传粉契约 界面"> |
 | [镜光接力](apps/prism-relay/) | ecojust / 桔子桑 | 0.1.1 | 285.3 KB | 旋转镜片与分色棱镜，让彩色光束准确抵达接收器，包含反射、分色与合光三关，支持手机扫码单人操作 | <img src="apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"> |
 | [分流沙漏](apps/sandglass-split/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 开关共享料斗并旋转两块挡片，把连续落沙分给三只计量杯；在途沙束保留已确定的路线，耗尽沙量后让三杯都处于目标容差内且没有溢出。 | <img src="apps/sandglass-split/thumb.png" width="180" alt="分流沙漏 界面"> |
 | [ShortVideo TV](apps/shortvideo/) | ecojust / 桔子桑 | 0.5.0 | 32.7 KB | 遥控器短视频播放器 | <img src="apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
