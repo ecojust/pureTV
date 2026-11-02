@@ -35,7 +35,7 @@ RELEASE_CERTIFICATE_CUTOVERS = {
 
 # New applications launched after the certificate rotation have no legacy signer.
 # Register exact package IDs; similar or unknown packages must not inherit this pin.
-NEW_RELEASE_CERTIFICATE_PACKAGES = {'com.ecojust.usedcartv', 'com.ecojust.alienshootertv', 'com.ecojust.gravitycouriertv', 'com.ecojust.prismrelaytv', 'com.ecojust.switchyardminutetv', 'com.ecojust.tidelocktv', 'com.ecojust.tensionspantv', 'com.ecojust.echocartographertv', 'com.ecojust.magneticwarehousetv', 'com.ecojust.lanternrhythmtv', 'com.ecojust.glassfoldtv', 'com.ecojust.thermalglidertv', 'com.ecojust.pathglyphstv', 'com.ecojust.weightledgertv', 'com.ecojust.paritygardentv', 'com.ecojust.hiddencorridorstv', 'com.ecojust.islanddominoestv', 'com.ecojust.adjacencyforgetv', 'com.ecojust.looporchardtv', 'com.ecojust.numberdunestv', 'com.ecojust.triangulartesseratv'}
+NEW_RELEASE_CERTIFICATE_PACKAGES = {'com.ecojust.usedcartv', 'com.ecojust.alienshootertv', 'com.ecojust.gravitycouriertv', 'com.ecojust.prismrelaytv', 'com.ecojust.switchyardminutetv', 'com.ecojust.tidelocktv', 'com.ecojust.tensionspantv', 'com.ecojust.echocartographertv', 'com.ecojust.magneticwarehousetv', 'com.ecojust.lanternrhythmtv', 'com.ecojust.glassfoldtv', 'com.ecojust.thermalglidertv', 'com.ecojust.pathglyphstv', 'com.ecojust.weightledgertv', 'com.ecojust.paritygardentv', 'com.ecojust.hiddencorridorstv', 'com.ecojust.islanddominoestv', 'com.ecojust.adjacencyforgetv', 'com.ecojust.looporchardtv', 'com.ecojust.numberdunestv', 'com.ecojust.triangulartesseratv', 'com.ecojust.arrowharvesttv'}
 
 def expected_release_certificate(root, identity):
     """Return the single certificate pinned for an APK's package and version."""

@@ -9,7 +9,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-34-f97316?style=flat-square)](resource/apps/)
+[![App count](https://img.shields.io/badge/apps-35-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
@@ -74,6 +74,7 @@ The launchers and first-party TV apps support English. Select English in the TV 
 | [Adjacency Forge (Chinese UI)](resource/apps/adjacency-forge/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Swap unique metal tiles on seven hexagonal cells. Satisfy every exact local neighbor recipe and route heat from furnace to mold using fixed world-direction outlet priorities, then submit explicitly. Exact-ID undo, three wrong submissions and a 90-second active timer. Chinese TV interface. | <img src="docs/previews/en/app-adjacency-forge.png" width="180" alt="Adjacency Forge (Chinese UI) preview"> |
 | [Adventure Island TV](resource/apps/adventure-island/) | ecojust | 0.5.2 | 89.4 KB | 32-stage island adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"> |
 | [Alien Shooter TV](resource/apps/alien-shooter/) | ecojust | 0.1.2 | 1.68 MB | Single-player industrial-base alien combat with three campaign stages, five weapons and a LAN phone controller | <img src="docs/previews/en/app-alien-shooter.png" width="180" alt="Alien Shooter TV preview"> |
+| [Arrow Harvest (Chinese UI)](resource/apps/arrow-harvest/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Route seeds along one-way arrows to cover every target field exactly once without entering forbidden ground. Arrows are locked during propagation. Chinese TV interface. | <img src="docs/previews/en/app-arrow-harvest.png" width="180" alt="Arrow Harvest (Chinese UI) preview"> |
 | [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust | 0.5.2 | 85.4 KB | 16-stage pyramid adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"> |
 | [CCTV Live](resource/apps/cctv/) | ecojust | 0.5.0 | 40.9 KB | Official CCTV website player with TV channel navigation | <img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"> |
 | [Coast Kart TV](resource/apps/coast-kart/) | ecojust | 0.5.2 | 257.6 KB | Original kart racing with drifting, items and split-screen LAN phone play | <img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"> |
