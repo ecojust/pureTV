@@ -30,6 +30,7 @@
 | [箭田收获](apps/arrow-harvest/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 设置单向箭头并播种，让种子覆盖所有目标田块且不重复、不进入禁地；传播期间箭头不可修改。 | <img src="apps/arrow-harvest/thumb.png" width="180" alt="箭田收获 界面"> |
 | [装配厨房](apps/assembly-kitchen/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 安排煮、冷却与装盒三个共享工位并行工作，切换风速掌握温度，在保温时限与关门前按指定顺序交付三份订单；错温、错序或过期的食物会退回重做并累计失误。 | <img src="apps/assembly-kitchen/thumb.png" width="180" alt="装配厨房 界面"> |
 | [电芯交换](apps/battery-exchange/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 在断电窗口中交换六枚不同电量与内阻的电芯，为两组负载切换串联或并联；按阶段完成供电任务，同时保留电量余裕并避免电芯或负载过热。 | <img src="apps/battery-exchange/thumb.png" width="180" alt="电芯交换 界面"> |
+| [双线节律](apps/beat-braid/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 一线持续按住，另一线按节拍点按，交替编织并保持连续；完成三个节奏关卡。 | <img src="apps/beat-braid/thumb.png" width="180" alt="双线节律 界面"> |
 | [Mighty Bomb Jack TV](apps/bomb-jack/) | ecojust / 桔子桑 | 0.5.2 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |
 | [CCTV Live](apps/cctv/) | ecojust / 桔子桑 | 0.5.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
 | [齿轮同刻](apps/clockwork-align/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 调节齿轮列的离合与制动，在有限调节次数内让所有指针于预约时间窗中持续对齐目标；挑战三种齿比结构。 | <img src="apps/clockwork-align/thumb.png" width="180" alt="齿轮同刻 界面"> |
