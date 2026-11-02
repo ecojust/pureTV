@@ -1,0 +1,753 @@
+{
+  "schemaVersion": 1,
+  "game": "pulse-vault",
+  "passed": true,
+  "method": "Absolute finite periodic source prefixes; original-input-derived B attempts and effective charging; sparse discharge/pulse resource accounts; closed-form clipped cooling between heat-event anchors. All actual frames, complete intervals, lock and terminal outcomes and receipt copies are compared. No Model/pilot import, per-tick thermal integration, search or new gameplay.",
+  "limitations": [
+    "Only the root-approved first six actual public ordinary cases. Formal synthetic boundaries, browser controls, pause/retry, rendering and video are separate evidence.",
+    "Serialized observations prove values and historical copies, not object identity or Object.freeze. Only the two append-only receipt arrays use prefixes; mutable locks and ledgers remain full observations.",
+    "Integer energy, heat, times, IDs and all threshold comparisons have zero tolerance. Elapsed time is derived from the explicitly parsed 60 Hz unit and also compared exactly.",
+    "The necessary-energy failure is independently derived from optimistic remaining finite supply and minimum outstanding payments plus reserve; a nonnegative margin is not a proof that every such state can win.",
+    "Original recorded keys and public input latch semantics are checked; unencountered cancellation, pressed aliases, pause, dt0 and invalid-dt behavior are not synthesized.",
+    "Observed coverage is counted only from this corpus. Original raw/source hashes are bound via the approved lossless public manifest without reading diagnostic-bearing originals or production implementations."
+  ],
+  "sources": {
+    "contract": {
+      "repoRelative": "resource/apps/pulse-vault/docs/model-contract.md",
+      "sha256": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8"
+    },
+    "publicInterface": {
+      "repoRelative": "resource/apps/pulse-vault/docs/public-interface.md",
+      "sha256": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b"
+    },
+    "oracle": {
+      "repoRelative": "resource/apps/pulse-vault/tests/pulse-interval-oracle.mjs",
+      "sha256": "6392cefdaedc45cd41d0e70f00cf143238a57be0a5d37f8adbbf92c18aaadc51"
+    },
+    "runner": {
+      "repoRelative": "resource/apps/pulse-vault/tests/independent-pulse-review.mjs",
+      "sha256": "ec3472932a64c780e4735319cf98bee638dcb4e7c41950e5845a01ad95b38de8"
+    },
+    "publicIndex": {
+      "scratchRelative": "hundred-games/pulse-vault/public-observations-first/index.json",
+      "sha256": "44788ab86f6e6d1fc2dbde1e35add5a63ea1b4cd3a4df964111457dc90a6b0ff"
+    },
+    "originalReportSha256": "cb9f2bc1492aa51cd313f46e1bfb8ccebe751552348597b2a83efe5ecd562d91",
+    "sourceRuns": [
+      {
+        "scratchRelative": "hundred-games/pulse-vault/ordinary-rounds-first/report.json",
+        "sha256": "cb9f2bc1492aa51cd313f46e1bfb8ccebe751552348597b2a83efe5ecd562d91",
+        "startHashes": {
+          "automation": "d8e6fa95d85ab2456367bec4643ee6b18f20276709d024e4c6595a55558e54a7",
+          "model": "fc9315e0183af4e7e09e620e0efd98059f2fc9d0264244292bd6f461595885b7",
+          "contract": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8",
+          "publicInterface": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b",
+          "harness": "6b722c442bd5d286ba53f8cfc669a89731cb4bbd7dbb7e6b291b3eacfabd271c",
+          "evidenceFormat": "5bf311e36366bb46ce7aa6c745768b1a063a3c5b8b5319b0b52a088bf8c77fc1"
+        },
+        "endHashes": {
+          "automation": "d8e6fa95d85ab2456367bec4643ee6b18f20276709d024e4c6595a55558e54a7",
+          "model": "fc9315e0183af4e7e09e620e0efd98059f2fc9d0264244292bd6f461595885b7",
+          "contract": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8",
+          "publicInterface": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b",
+          "harness": "6b722c442bd5d286ba53f8cfc669a89731cb4bbd7dbb7e6b291b3eacfabd271c",
+          "evidenceFormat": "5bf311e36366bb46ce7aa6c745768b1a063a3c5b8b5319b0b52a088bf8c77fc1"
+        }
+      }
+    ]
+  },
+  "sourceWindow": {
+    "startedAt": "2026-11-02T15:35:00.137Z",
+    "completedAt": "2026-11-02T15:35:01.786Z",
+    "startHashes": {
+      "repo:resource/apps/pulse-vault/tests/independent-pulse-review.mjs": "ec3472932a64c780e4735319cf98bee638dcb4e7c41950e5845a01ad95b38de8",
+      "repo:resource/apps/pulse-vault/tests/pulse-interval-oracle.mjs": "6392cefdaedc45cd41d0e70f00cf143238a57be0a5d37f8adbbf92c18aaadc51",
+      "repo:resource/apps/pulse-vault/docs/model-contract.md": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8",
+      "repo:resource/apps/pulse-vault/docs/public-interface.md": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b",
+      "scratch:hundred-games/pulse-vault/public-observations-first/index.json": "44788ab86f6e6d1fc2dbde1e35add5a63ea1b4cd3a4df964111457dc90a6b0ff",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level1-record.json": "bc6850a54644c77357ec39a78b85688f766827a03335f74b6fdc539fca8fa710",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level1-loss.json": "c3d586c4fcb6b28af45fe7ce0fc0f5df6f676cfc507747c8e6198b2719638aa5",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level2-record.json": "6bca8eb4f8aba4c2a0f7f25ca78d6085dbcc643bb4961f9babeef82ea3189d0c",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level2-loss.json": "103ee48d34b8f9c89b9c516fad8e809f440c8c1b3787e5f68cc20d3e3bdd8c0b",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level3-record.json": "3c249141e1ca25d3b0a39a5cddb60e8852529ccd162b6f4750939f89fbe93d2a",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level3-loss.json": "51cbb0a06502d43f4147e9c03931f4b98197d004ccf322de6d1aca284fbfe52c"
+    },
+    "endHashes": {
+      "repo:resource/apps/pulse-vault/tests/independent-pulse-review.mjs": "ec3472932a64c780e4735319cf98bee638dcb4e7c41950e5845a01ad95b38de8",
+      "repo:resource/apps/pulse-vault/tests/pulse-interval-oracle.mjs": "6392cefdaedc45cd41d0e70f00cf143238a57be0a5d37f8adbbf92c18aaadc51",
+      "repo:resource/apps/pulse-vault/docs/model-contract.md": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8",
+      "repo:resource/apps/pulse-vault/docs/public-interface.md": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b",
+      "scratch:hundred-games/pulse-vault/public-observations-first/index.json": "44788ab86f6e6d1fc2dbde1e35add5a63ea1b4cd3a4df964111457dc90a6b0ff",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level1-record.json": "bc6850a54644c77357ec39a78b85688f766827a03335f74b6fdc539fca8fa710",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level1-loss.json": "c3d586c4fcb6b28af45fe7ce0fc0f5df6f676cfc507747c8e6198b2719638aa5",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level2-record.json": "6bca8eb4f8aba4c2a0f7f25ca78d6085dbcc643bb4961f9babeef82ea3189d0c",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level2-loss.json": "103ee48d34b8f9c89b9c516fad8e809f440c8c1b3787e5f68cc20d3e3bdd8c0b",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level3-record.json": "3c249141e1ca25d3b0a39a5cddb60e8852529ccd162b6f4750939f89fbe93d2a",
+      "scratch:hundred-games/pulse-vault/public-observations-first/level3-loss.json": "51cbb0a06502d43f4147e9c03931f4b98197d004ccf322de6d1aca284fbfe52c"
+    },
+    "unchanged": true
+  },
+  "assertions": 2982629,
+  "roundAssertions": 2982602,
+  "globalAssertions": 27,
+  "failureCount": 0,
+  "failures": [],
+  "exception": null,
+  "comparisonTolerance": {
+    "energyEU": 0,
+    "heatHU": 0,
+    "ticks": 0,
+    "elapsedSeconds": 0,
+    "gates": 0
+  },
+  "maximumErrors": {
+    "energyEU": 0,
+    "heatHU": 0,
+    "ticks": 0,
+    "elapsedSeconds": 0
+  },
+  "totals": {
+    "frames": 11228,
+    "intervals": 11222,
+    "fullSnapshots": 11240,
+    "retained": 222,
+    "compactSamples": 1404,
+    "eventWindows": 84,
+    "operations": 84,
+    "inputChanges": 76,
+    "resourceEventIntervals": 84,
+    "heatAnchors": 90,
+    "dischargeReceipts": 18,
+    "pulseReceipts": 66,
+    "coolingIntervals": 374
+  },
+  "rounds": [
+    {
+      "label": "level1-record",
+      "difficulty": 0,
+      "level": 1,
+      "passed": true,
+      "assertions": 571965,
+      "counts": {
+        "frames": 2161,
+        "intervals": 2160,
+        "fullSnapshots": 2163,
+        "retained": 41,
+        "compactSamples": 270,
+        "eventWindows": 16,
+        "operations": 16,
+        "inputChanges": 17,
+        "resourceEventIntervals": 16,
+        "heatAnchors": 17,
+        "dischargeReceipts": 4,
+        "pulseReceipts": 12,
+        "coolingIntervals": 72
+      },
+      "coverage": {
+        "dischargeResults": {
+          "opened": 4
+        },
+        "pulseResults": {
+          "collected": 12
+        },
+        "exactThresholdOpens": 4,
+        "overThresholdOpens": 0,
+        "dischargeAndPulseSameInterval": 0,
+        "insufficientBeforeIncomingPulse": 0,
+        "chargingIntervals": 2155,
+        "capacityEndpoints": 0,
+        "zeroHeatCooling": 5,
+        "cancelledIntervals": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "suppressedHeldB": 34,
+        "clippedAxisAttempts": 0,
+        "waitingForReserveIntervals": 178,
+        "optimisticEqualityStates": 0,
+        "coldAfterHotPeak": 0,
+        "finalBoundaryWin": 0,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "reserve_ready",
+          "endedTick": 2160,
+          "peakHeatHU": 52
+        },
+        "tick": 2160,
+        "elapsed": 36,
+        "score": 1412,
+        "energyEU": 12,
+        "heatHU": 51,
+        "openedCount": 4,
+        "pulseCursor": 12,
+        "energyLedger": {
+          "offeredEU": 144,
+          "harvestedGrossEU": 144,
+          "missedEU": 0,
+          "dischargedEU": 132,
+          "overflowLostEU": 0,
+          "usefulToLocksEU": 132,
+          "dischargeWasteEU": 0
+        },
+        "thermalLedger": {
+          "captureAddedHU": 96,
+          "overflowAddedHU": 0,
+          "dischargeAddedHU": 22,
+          "cooledHU": 67
+        },
+        "supply": {
+          "nextPulse": {
+            "index": 13,
+            "dueTick": 2340,
+            "amountEU": 12,
+            "ticksUntil": 180
+          },
+          "remainingPulseCount": 6,
+          "futureSupplyEU": 72,
+          "minimumSpendEU": 0,
+          "requiredEU": 12,
+          "optimisticAvailableEU": 84,
+          "feasibleByEnergy": true
+        }
+      },
+      "source": {
+        "file": "level1-record.json",
+        "projectedSha256": "bc6850a54644c77357ec39a78b85688f766827a03335f74b6fdc539fca8fa710",
+        "originalRawSha256": "343c3b648561265246557d02e3d912eab4bca7b60e278d750691b6f443f9edfb",
+        "originalReportSha256": "cb9f2bc1492aa51cd313f46e1bfb8ccebe751552348597b2a83efe5ecd562d91",
+        "sourceHashes": {
+          "automation": "d8e6fa95d85ab2456367bec4643ee6b18f20276709d024e4c6595a55558e54a7",
+          "model": "fc9315e0183af4e7e09e620e0efd98059f2fc9d0264244292bd6f461595885b7",
+          "contract": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8",
+          "publicInterface": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b",
+          "harness": "6b722c442bd5d286ba53f8cfc669a89731cb4bbd7dbb7e6b291b3eacfabd271c",
+          "evidenceFormat": "5bf311e36366bb46ce7aa6c745768b1a063a3c5b8b5319b0b52a088bf8c77fc1"
+        }
+      }
+    },
+    {
+      "label": "level1-loss",
+      "difficulty": 0,
+      "level": 1,
+      "passed": true,
+      "assertions": 476378,
+      "counts": {
+        "frames": 1801,
+        "intervals": 1800,
+        "fullSnapshots": 1803,
+        "retained": 31,
+        "compactSamples": 225,
+        "eventWindows": 10,
+        "operations": 10,
+        "inputChanges": 1,
+        "resourceEventIntervals": 10,
+        "heatAnchors": 11,
+        "dischargeReceipts": 0,
+        "pulseReceipts": 10,
+        "coolingIntervals": 60
+      },
+      "coverage": {
+        "dischargeResults": {},
+        "pulseResults": {
+          "collected": 6,
+          "overflow": 4
+        },
+        "exactThresholdOpens": 0,
+        "overThresholdOpens": 0,
+        "dischargeAndPulseSameInterval": 0,
+        "insufficientBeforeIncomingPulse": 0,
+        "chargingIntervals": 1795,
+        "capacityEndpoints": 721,
+        "zeroHeatCooling": 5,
+        "cancelledIntervals": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "suppressedHeldB": 0,
+        "clippedAxisAttempts": 0,
+        "waitingForReserveIntervals": 0,
+        "optimisticEqualityStates": 0,
+        "coldAfterHotPeak": 0,
+        "finalBoundaryWin": 0,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "overheat",
+          "endedTick": 1800,
+          "peakHeatHU": 122
+        },
+        "tick": 1800,
+        "elapsed": 30,
+        "score": 0,
+        "energyEU": 72,
+        "heatHU": 121,
+        "openedCount": 0,
+        "pulseCursor": 10,
+        "energyLedger": {
+          "offeredEU": 120,
+          "harvestedGrossEU": 120,
+          "missedEU": 0,
+          "dischargedEU": 0,
+          "overflowLostEU": 48,
+          "usefulToLocksEU": 0,
+          "dischargeWasteEU": 0
+        },
+        "thermalLedger": {
+          "captureAddedHU": 80,
+          "overflowAddedHU": 96,
+          "dischargeAddedHU": 0,
+          "cooledHU": 55
+        },
+        "supply": {
+          "nextPulse": {
+            "index": 11,
+            "dueTick": 1980,
+            "amountEU": 12,
+            "ticksUntil": 180
+          },
+          "remainingPulseCount": 8,
+          "futureSupplyEU": 96,
+          "minimumSpendEU": 132,
+          "requiredEU": 144,
+          "optimisticAvailableEU": 168,
+          "feasibleByEnergy": true
+        }
+      },
+      "source": {
+        "file": "level1-loss.json",
+        "projectedSha256": "c3d586c4fcb6b28af45fe7ce0fc0f5df6f676cfc507747c8e6198b2719638aa5",
+        "originalRawSha256": "b252366df18a78959cc957526d45777fec69de4eb3ae724df8461aedb3f48eec",
+        "originalReportSha256": "cb9f2bc1492aa51cd313f46e1bfb8ccebe751552348597b2a83efe5ecd562d91",
+        "sourceHashes": {
+          "automation": "d8e6fa95d85ab2456367bec4643ee6b18f20276709d024e4c6595a55558e54a7",
+          "model": "fc9315e0183af4e7e09e620e0efd98059f2fc9d0264244292bd6f461595885b7",
+          "contract": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8",
+          "publicInterface": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b",
+          "harness": "6b722c442bd5d286ba53f8cfc669a89731cb4bbd7dbb7e6b291b3eacfabd271c",
+          "evidenceFormat": "5bf311e36366bb46ce7aa6c745768b1a063a3c5b8b5319b0b52a088bf8c77fc1"
+        }
+      }
+    },
+    {
+      "label": "level2-record",
+      "difficulty": 1,
+      "level": 2,
+      "passed": true,
+      "assertions": 669635,
+      "counts": {
+        "frames": 2521,
+        "intervals": 2520,
+        "fullSnapshots": 2523,
+        "retained": 47,
+        "compactSamples": 315,
+        "eventWindows": 18,
+        "operations": 18,
+        "inputChanges": 19,
+        "resourceEventIntervals": 18,
+        "heatAnchors": 19,
+        "dischargeReceipts": 4,
+        "pulseReceipts": 14,
+        "coolingIntervals": 84
+      },
+      "coverage": {
+        "dischargeResults": {
+          "opened": 4
+        },
+        "pulseResults": {
+          "collected": 14
+        },
+        "exactThresholdOpens": 4,
+        "overThresholdOpens": 0,
+        "dischargeAndPulseSameInterval": 0,
+        "insufficientBeforeIncomingPulse": 0,
+        "chargingIntervals": 2515,
+        "capacityEndpoints": 0,
+        "zeroHeatCooling": 5,
+        "cancelledIntervals": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "suppressedHeldB": 16,
+        "clippedAxisAttempts": 0,
+        "waitingForReserveIntervals": 359,
+        "optimisticEqualityStates": 0,
+        "coldAfterHotPeak": 0,
+        "finalBoundaryWin": 0,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "reserve_ready",
+          "endedTick": 2520,
+          "peakHeatHU": 58
+        },
+        "tick": 2520,
+        "elapsed": 42,
+        "score": 1424,
+        "energyEU": 24,
+        "heatHU": 57,
+        "openedCount": 4,
+        "pulseCursor": 14,
+        "energyLedger": {
+          "offeredEU": 168,
+          "harvestedGrossEU": 168,
+          "missedEU": 0,
+          "dischargedEU": 144,
+          "overflowLostEU": 0,
+          "usefulToLocksEU": 144,
+          "dischargeWasteEU": 0
+        },
+        "thermalLedger": {
+          "captureAddedHU": 112,
+          "overflowAddedHU": 0,
+          "dischargeAddedHU": 24,
+          "cooledHU": 79
+        },
+        "supply": {
+          "nextPulse": {
+            "index": 15,
+            "dueTick": 2700,
+            "amountEU": 8,
+            "ticksUntil": 180
+          },
+          "remainingPulseCount": 6,
+          "futureSupplyEU": 72,
+          "minimumSpendEU": 0,
+          "requiredEU": 16,
+          "optimisticAvailableEU": 96,
+          "feasibleByEnergy": true
+        }
+      },
+      "source": {
+        "file": "level2-record.json",
+        "projectedSha256": "6bca8eb4f8aba4c2a0f7f25ca78d6085dbcc643bb4961f9babeef82ea3189d0c",
+        "originalRawSha256": "9ac3bce2b784db0f14367b59ed6a4fe7b754912c1a155a36e99cfcfb160a5435",
+        "originalReportSha256": "cb9f2bc1492aa51cd313f46e1bfb8ccebe751552348597b2a83efe5ecd562d91",
+        "sourceHashes": {
+          "automation": "d8e6fa95d85ab2456367bec4643ee6b18f20276709d024e4c6595a55558e54a7",
+          "model": "fc9315e0183af4e7e09e620e0efd98059f2fc9d0264244292bd6f461595885b7",
+          "contract": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8",
+          "publicInterface": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b",
+          "harness": "6b722c442bd5d286ba53f8cfc669a89731cb4bbd7dbb7e6b291b3eacfabd271c",
+          "evidenceFormat": "5bf311e36366bb46ce7aa6c745768b1a063a3c5b8b5319b0b52a088bf8c77fc1"
+        }
+      }
+    },
+    {
+      "label": "level2-loss",
+      "difficulty": 1,
+      "level": 2,
+      "passed": true,
+      "assertions": 382675,
+      "counts": {
+        "frames": 1441,
+        "intervals": 1440,
+        "fullSnapshots": 1443,
+        "retained": 25,
+        "compactSamples": 180,
+        "eventWindows": 8,
+        "operations": 8,
+        "inputChanges": 0,
+        "resourceEventIntervals": 8,
+        "heatAnchors": 9,
+        "dischargeReceipts": 0,
+        "pulseReceipts": 8,
+        "coolingIntervals": 48
+      },
+      "coverage": {
+        "dischargeResults": {},
+        "pulseResults": {
+          "missed": 8
+        },
+        "exactThresholdOpens": 0,
+        "overThresholdOpens": 0,
+        "dischargeAndPulseSameInterval": 0,
+        "insufficientBeforeIncomingPulse": 0,
+        "chargingIntervals": 0,
+        "capacityEndpoints": 0,
+        "zeroHeatCooling": 48,
+        "cancelledIntervals": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "suppressedHeldB": 0,
+        "clippedAxisAttempts": 0,
+        "waitingForReserveIntervals": 0,
+        "optimisticEqualityStates": 180,
+        "coldAfterHotPeak": 0,
+        "finalBoundaryWin": 0,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "energy_exhausted",
+          "endedTick": 1440,
+          "peakHeatHU": 0
+        },
+        "tick": 1440,
+        "elapsed": 24,
+        "score": 0,
+        "energyEU": 0,
+        "heatHU": 0,
+        "openedCount": 0,
+        "pulseCursor": 8,
+        "energyLedger": {
+          "offeredEU": 96,
+          "harvestedGrossEU": 0,
+          "missedEU": 96,
+          "dischargedEU": 0,
+          "overflowLostEU": 0,
+          "usefulToLocksEU": 0,
+          "dischargeWasteEU": 0
+        },
+        "thermalLedger": {
+          "captureAddedHU": 0,
+          "overflowAddedHU": 0,
+          "dischargeAddedHU": 0,
+          "cooledHU": 0
+        },
+        "supply": {
+          "nextPulse": {
+            "index": 9,
+            "dueTick": 1620,
+            "amountEU": 8,
+            "ticksUntil": 180
+          },
+          "remainingPulseCount": 12,
+          "futureSupplyEU": 144,
+          "minimumSpendEU": 144,
+          "requiredEU": 160,
+          "optimisticAvailableEU": 144,
+          "feasibleByEnergy": false
+        }
+      },
+      "source": {
+        "file": "level2-loss.json",
+        "projectedSha256": "103ee48d34b8f9c89b9c516fad8e809f440c8c1b3787e5f68cc20d3e3bdd8c0b",
+        "originalRawSha256": "217f848733bf8c10f9165ebbaa410e765d3237f785d2fa6d7211aa7831b475cc",
+        "originalReportSha256": "cb9f2bc1492aa51cd313f46e1bfb8ccebe751552348597b2a83efe5ecd562d91",
+        "sourceHashes": {
+          "automation": "d8e6fa95d85ab2456367bec4643ee6b18f20276709d024e4c6595a55558e54a7",
+          "model": "fc9315e0183af4e7e09e620e0efd98059f2fc9d0264244292bd6f461595885b7",
+          "contract": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8",
+          "publicInterface": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b",
+          "harness": "6b722c442bd5d286ba53f8cfc669a89731cb4bbd7dbb7e6b291b3eacfabd271c",
+          "evidenceFormat": "5bf311e36366bb46ce7aa6c745768b1a063a3c5b8b5319b0b52a088bf8c77fc1"
+        }
+      }
+    },
+    {
+      "label": "level3-record",
+      "difficulty": 2,
+      "level": 3,
+      "passed": true,
+      "assertions": 640369,
+      "counts": {
+        "frames": 2401,
+        "intervals": 2400,
+        "fullSnapshots": 2403,
+        "retained": 53,
+        "compactSamples": 300,
+        "eventWindows": 20,
+        "operations": 20,
+        "inputChanges": 25,
+        "resourceEventIntervals": 20,
+        "heatAnchors": 21,
+        "dischargeReceipts": 4,
+        "pulseReceipts": 16,
+        "coolingIntervals": 80
+      },
+      "coverage": {
+        "dischargeResults": {
+          "opened": 4
+        },
+        "pulseResults": {
+          "collected": 16
+        },
+        "exactThresholdOpens": 4,
+        "overThresholdOpens": 0,
+        "dischargeAndPulseSameInterval": 0,
+        "insufficientBeforeIncomingPulse": 0,
+        "chargingIntervals": 2395,
+        "capacityEndpoints": 0,
+        "zeroHeatCooling": 4,
+        "cancelledIntervals": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "suppressedHeldB": 22,
+        "clippedAxisAttempts": 0,
+        "waitingForReserveIntervals": 298,
+        "optimisticEqualityStates": 0,
+        "coldAfterHotPeak": 0,
+        "finalBoundaryWin": 0,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "reserve_ready",
+          "endedTick": 2400,
+          "peakHeatHU": 81
+        },
+        "tick": 2400,
+        "elapsed": 40,
+        "score": 1430,
+        "energyEU": 30,
+        "heatHU": 80,
+        "openedCount": 4,
+        "pulseCursor": 16,
+        "energyLedger": {
+          "offeredEU": 198,
+          "harvestedGrossEU": 198,
+          "missedEU": 0,
+          "dischargedEU": 168,
+          "overflowLostEU": 0,
+          "usefulToLocksEU": 168,
+          "dischargeWasteEU": 0
+        },
+        "thermalLedger": {
+          "captureAddedHU": 128,
+          "overflowAddedHU": 0,
+          "dischargeAddedHU": 28,
+          "cooledHU": 76
+        },
+        "supply": {
+          "nextPulse": {
+            "index": 17,
+            "dueTick": 2550,
+            "amountEU": 6,
+            "ticksUntil": 150
+          },
+          "remainingPulseCount": 5,
+          "futureSupplyEU": 54,
+          "minimumSpendEU": 0,
+          "requiredEU": 18,
+          "optimisticAvailableEU": 84,
+          "feasibleByEnergy": true
+        }
+      },
+      "source": {
+        "file": "level3-record.json",
+        "projectedSha256": "3c249141e1ca25d3b0a39a5cddb60e8852529ccd162b6f4750939f89fbe93d2a",
+        "originalRawSha256": "302d1de16d2e23323a18af94f96a188c7157701496fd6fdc5824a041b6b89f53",
+        "originalReportSha256": "cb9f2bc1492aa51cd313f46e1bfb8ccebe751552348597b2a83efe5ecd562d91",
+        "sourceHashes": {
+          "automation": "d8e6fa95d85ab2456367bec4643ee6b18f20276709d024e4c6595a55558e54a7",
+          "model": "fc9315e0183af4e7e09e620e0efd98059f2fc9d0264244292bd6f461595885b7",
+          "contract": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8",
+          "publicInterface": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b",
+          "harness": "6b722c442bd5d286ba53f8cfc669a89731cb4bbd7dbb7e6b291b3eacfabd271c",
+          "evidenceFormat": "5bf311e36366bb46ce7aa6c745768b1a063a3c5b8b5319b0b52a088bf8c77fc1"
+        }
+      }
+    },
+    {
+      "label": "level3-loss",
+      "difficulty": 2,
+      "level": 3,
+      "passed": true,
+      "assertions": 241580,
+      "counts": {
+        "frames": 903,
+        "intervals": 902,
+        "fullSnapshots": 905,
+        "retained": 25,
+        "compactSamples": 114,
+        "eventWindows": 12,
+        "operations": 12,
+        "inputChanges": 14,
+        "resourceEventIntervals": 12,
+        "heatAnchors": 13,
+        "dischargeReceipts": 6,
+        "pulseReceipts": 6,
+        "coolingIntervals": 30
+      },
+      "coverage": {
+        "dischargeResults": {
+          "below_threshold": 6
+        },
+        "pulseResults": {
+          "collected": 6
+        },
+        "exactThresholdOpens": 0,
+        "overThresholdOpens": 0,
+        "dischargeAndPulseSameInterval": 0,
+        "insufficientBeforeIncomingPulse": 0,
+        "chargingIntervals": 897,
+        "capacityEndpoints": 0,
+        "zeroHeatCooling": 4,
+        "cancelledIntervals": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "suppressedHeldB": 38,
+        "clippedAxisAttempts": 0,
+        "waitingForReserveIntervals": 0,
+        "optimisticEqualityStates": 0,
+        "coldAfterHotPeak": 0,
+        "finalBoundaryWin": 0,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "energy_exhausted",
+          "endedTick": 902,
+          "peakHeatHU": 34
+        },
+        "tick": 902,
+        "elapsed": 15.033333333333333,
+        "score": 0,
+        "energyEU": 0,
+        "heatHU": 34,
+        "openedCount": 0,
+        "pulseCursor": 6,
+        "energyLedger": {
+          "offeredEU": 72,
+          "harvestedGrossEU": 72,
+          "missedEU": 0,
+          "dischargedEU": 72,
+          "overflowLostEU": 0,
+          "usefulToLocksEU": 0,
+          "dischargeWasteEU": 72
+        },
+        "thermalLedger": {
+          "captureAddedHU": 48,
+          "overflowAddedHU": 0,
+          "dischargeAddedHU": 12,
+          "cooledHU": 26
+        },
+        "supply": {
+          "nextPulse": {
+            "index": 7,
+            "dueTick": 1050,
+            "amountEU": 18,
+            "ticksUntil": 148
+          },
+          "remainingPulseCount": 15,
+          "futureSupplyEU": 180,
+          "minimumSpendEU": 168,
+          "requiredEU": 186,
+          "optimisticAvailableEU": 180,
+          "feasibleByEnergy": false
+        }
+      },
+      "source": {
+        "file": "level3-loss.json",
+        "projectedSha256": "51cbb0a06502d43f4147e9c03931f4b98197d004ccf322de6d1aca284fbfe52c",
+        "originalRawSha256": "a08d23a3797e2ef175b2988739b24d34753b74f9435ce5561cfabb53e1ff4ad5",
+        "originalReportSha256": "cb9f2bc1492aa51cd313f46e1bfb8ccebe751552348597b2a83efe5ecd562d91",
+        "sourceHashes": {
+          "automation": "d8e6fa95d85ab2456367bec4643ee6b18f20276709d024e4c6595a55558e54a7",
+          "model": "fc9315e0183af4e7e09e620e0efd98059f2fc9d0264244292bd6f461595885b7",
+          "contract": "22d484b37dcbbff64375d8992a2dd93b948a89a5ab06e9288799e2c6511a6dd8",
+          "publicInterface": "a3c5fc54ac0b20513bad24f967204de1901b1479d45959588af270d231b0ac5b",
+          "harness": "6b722c442bd5d286ba53f8cfc669a89731cb4bbd7dbb7e6b291b3eacfabd271c",
+          "evidenceFormat": "5bf311e36366bb46ce7aa6c745768b1a063a3c5b8b5319b0b52a088bf8c77fc1"
+        }
+      }
+    }
+  ]
+}
