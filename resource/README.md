@@ -60,6 +60,7 @@
 | [脉冲储库](apps/pulse-vault/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 按住收集有限脉冲，选择档位向顺序门锁放电；控制储能溢出和热峰，开启四门并保留终储备，完成三种供能关卡。 | <img src="apps/pulse-vault/thumb.png" width="180" alt="脉冲储库 界面"> |
 | [四季蓄水](apps/reservoir-seasons/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 根据四季天气预报向居民、农田和生态河流配水；撤销尚未提交的计划，守住居民每季用水底线，并分别完成三方年度目标。 | <img src="apps/reservoir-seasons/thumb.png" width="180" alt="四季蓄水 界面"> |
 | [共振浮桥](apps/resonance-bridge/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 调节三块浮桥的频率和相位，派遣行人在持续安全接触时过桥；控制共振增幅，完成三个渡口关卡。 | <img src="apps/resonance-bridge/thumb.png" width="180" alt="共振浮桥 界面"> |
+| [旋环锁匠](apps/rotor-locksmith/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 左右拨转三层锁环，按住 A 推进、B 退回；进入核心取得钥匙，再将完整钥匙带出，避开碰壁造成的耐久损失和阻力。 | <img src="apps/rotor-locksmith/thumb.png" width="180" alt="旋环锁匠 界面"> |
 | [分流沙漏](apps/sandglass-split/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 开关共享料斗并旋转两块挡片，把连续落沙分给三只计量杯；在途沙束保留已确定的路线，耗尽沙量后让三杯都处于目标容差内且没有溢出。 | <img src="apps/sandglass-split/thumb.png" width="180" alt="分流沙漏 界面"> |
 | [影窗快门](apps/shadow-shutter/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 移动取景框并切换横竖画幅，避开遮光纸带，让三片剪影完整入窗并依序拍成目标；用有限胶片完成三组影窗作品。 | <img src="apps/shadow-shutter/thumb.png" width="180" alt="影窗快门 界面"> |
 | [ShortVideo TV](apps/shortvideo/) | ecojust / 桔子桑 | 0.5.0 | 32.7 KB | 遥控器短视频播放器 | <img src="apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
