@@ -1,0 +1,53 @@
+# Shadow Foundry — public interface and evidence
+
+This normative public interface defines host, presentation and evidence requirements. Read with the [public design](public-design.md) and [model contract](model-contract.md). It does not report test or performance results.
+
+## Existing host and phone integration
+
+Use unchanged `resource/game-kit/web/runtime.js` integration: `PureModel.create(seed,level)`, `PureModel.step(state,1/60,input)`, GameDef render receiving renderer, state and host inputs. GameDef seed742, three task menu labels from config, action labels `CW` / `CCW`, actions2 and `holdConfirmAsA=true`. Enter and phone A therefore share the documented held-edge model; aPressed/bPressed pulses are ignored. Host tick/time and model admitted calls/elapsed are different measurements and must not be conflated.
+
+Up/left chooses WORK; down/right chooses LIGHT; A/B rotate that current focus clockwise/counterclockwise. A/B rising simultaneously with a focus direction rotates the old focus and consumes the focus edge; select focus before pressing an action. Shared pause and retry remain independent. B during play is neither menu nor undo. Retry creates the original complete model and starts a new observed run; it must not patch only yaw/lamp, transfer receipts or refund the existing round.
+
+The entire phone right third has two large touch regions: upper half A, lower half B, with the midpoint belonging to the lower half. Both prevent browser text selection/context actions and track real held touch values. Pointerup/cancel, blur, hidden, disconnect/reconnect, source-session changes, pause/resume and start/retry quarantine stale holds. A host synthetic cancelled neutral cannot acknowledge release. The host must represent an absent/disconnected phone as cancelledtrue rather than bare undefined; the latter is ordinary neutral under the model normalizer and can arm. Verify genuine release followed by renewed press, not merely a private cancellation helper. Local and remote inputs follow the same gate.
+
+`PureTVQA.snapshot()` remains observation-only: actual host phase/paused/level/time, full model state, render metrics and connection state. `PureGame.key(name,down)` remains the ordinary keyboard input. Neither grants state mutation, hidden helper calls, solver/route search, precomputed future-state injection or unreported warmups.
+
+## Renderer consumes public geometry
+
+The main workbench draws all three actual prism centers/heights/vertices from geometry. Use the existing sprite/rect/line/circle renderer; no shared API extension is needed. Bake smooth low-poly metal surfaces for the three fixed unit-prism heights into one atlas, use stable back-to-front object ordering, and draw ground first. The source compass uses lightVector; the traveling ray uses lightRay. Do not replace the physical shadow with a target-shaped sprite or rotate only the decorative body while retaining stale model geometry.
+
+Draw coveredCells once each as smooth isometric floor diamonds, plus line outlines from shadowHulls2. This truthfully visualizes judged center samples and their source polygons without claiming exact continuous filled union area. The complete plan-view panel shows every board center, target outline, forbidden inlay and actual sampled hit, all derived from config and current geometry. TargetHitCells and forbiddenHitCells drive their distinct highlights. Never sum overlapping individual prism shadow counts or omit the footprint. Outside-board hull outline may be visible but carries no coverage credit.
+
+The marked foot, hollow guideFoot, tall prism height, actual tipPoint and hollow guideTip must be visible to an ordinary viewer, with coordinate or compass readouts supporting the public geometric clue. The plan view prevents occlusion by physical prisms. Explain the source/ray direction distinction with an arrow pointing from the lamp toward the shadow; compass labels name the source. Guides use distinct glyphs and a legend, so they are not confused with the cyan target or amber forbidden samples. Guides are aids, not pass/fail checks.
+
+Always show `TARGET actual / required`, `FORBIDDEN actual / allowed`, separate pass indicators, `ADJUSTMENTS LEFT`, selected focus and current yaw/lamp bearings. Actual coverage is live, receipt results are historical. All authored forbidden limits are0; target denominators are7,7,11. A matched rotation wins immediately, so do not show a “submit now” state or button. Failure names exhausted adjustments. Keep the final actual geometry and final receipt visible after either outcome.
+
+Use real captures at960×540 and1280×720 to inspect smallest critical text, complete board, both focus states, different compass quadrants, overlapping shadows, the diagonal closed-boundary samples, both outcomes, pause and retry. Essential ASCII canvas labels should be at least24 logical pixels; Chinese instructions are DOM. Actual texture count, draw calls and device FPS must be observed after implementation; the single-atlas design is a plan, not a measured guarantee. Exported video FPS is not measured device FPS.
+
+## Ordinary public-feedback policy
+
+A permissible pilot reads only current public observations and the same blueprint clues exposed to players. First align the marked foot with its hollow registration point using the four visible workpiece bearings. Then derive the lamp vector from displayed tall center, height and desired tip, and rotate toward that visible compass sector. Use the shortest signed modular turn, with clockwise chosen on an exact tie. Release between presses, respect focus selection and the unarmed gate, and inspect actual target/forbidden feedback after every rotation. A spontaneous earlier valid coverage result ends the run normally.
+
+The pilot must not enumerate the32 joint poses, simulate candidate future shadows, import Model internals, inspect a hidden goal pose, replay a private witness or mutate state. The public mathematical clue is allowed because it is literally drawn and explained to the player; selecting a result solely from cached expected-win data is not. Preserve every actual adjustment and failed run. A failed policy attempt must remain reported and must not be silently replaced by a patched start or edited recording.
+
+Natural loss evidence uses ordinary rotations until the unchanged initial lamp and exhausted budget produce the actual invalid result. Public geometry explains why such a run cannot cover its far target, but only real observed calls establish that the run occurred. There is no fabricated last-chance state in an ordinary run; specifically labeled synthetic model fixtures may separately verify terminal priority. All legal task hulls stay inside the board. An exterior-clipping check is a separately labeled synthetic mathematical boundary test, not a reachable game posture; it requires no added public geometry-fixture API.
+
+## Observation records and independent checking
+
+Each ordinary model run records actual create origin with normalized seed/level. Each ordinary browser/video run visibly starts at menu/start or result/retry with a fresh model. Record runId, channel, selected task, origin kind, source hashes and monotone observation sequence outside the model. A retry is a different runId. A model-only create does not establish a visible browser lifecycle transition.
+
+For complete ordinary model receipts retain every actual call's exact dt, recognized raw own-data values with missing distinct from false, and actual before/after snapshots. Preserve cancellation/epoch/held fields, yaw/lamp/focus, complete geometry, all receipts, counters, gates, elapsed and terminal outcome. An independent checker reads only these public docs/config and each actual observed before state; it must not import the Model, renderer, pilot, private helpers or witness, nor carry calculated states forward as if they had been observed.
+
+The checker can independently construct each prism's projected integer hull, sample the finite board, OR unique cell memberships, intersect target/forbidden separately, check visible guide coordinates, and validate an actual adjacent transition and unchanged previous receipts. It can check last-adjustment win priority and loss only from actual observed adjacent data. It cannot infer a phone release, browser lifecycle, unseen rotation, no-input interval or hardware performance from sparse screenshots.
+
+Browser and recording reads are sparse. Preserve actual read timestamps/windows and source observation indices. Missing intervals remain `not-observed` or `review-required`; do not invent intermediate poses, gate transitions, call times or input edges. An unchanged orientation at two endpoints does not rule out a full intervening revolution. A correct final mask proves that observed geometry is consistent, not a complete ordinary action history.
+
+## Required evidence before release
+
+Obtain three fresh ordinary wins and three natural budget losses, each from public create through ordinary controls. Visibly demonstrate workpiece rotation and lamp rotation as separate operations, opposite projection directions from opposite lamp sources, a diagonal light, genuine overlap union, and a state with plausible total shadow count but failing target/forbidden checks. Include all task start counts and final actual mask/counts in evidence.
+
+Exercise actual menu/start with A still held, phone release/repress, focus change, pause/resume, disconnect/reconnect or equivalent real source cancellation, result/retry and task selection. Record precisely which behaviors were observed on browser versus phone versus synthetic model fixtures. Shared-host behavior is not proved by a model-only test. Preserve all errors, policy adjustments and retries as separate attempts rather than editing them out of the audit trail.
+
+The final readable 30–90 second game clip should begin with its actual menu/start, show the workpiece and lamp clues, deliberate visible adjustments, coverage changes and actual outcome. Record the game itself, not slides or an animation of expected states. Keep the complete video strictly below10,000,000 bytes and record original resolution, duration, byte size and capture source. Do not use title-card padding or hidden accelerated input as evidence of a readable playthrough. Any performance claim must cite the actual observed frame/draw-call sample and hardware/runtime context.
+
+These public documents specify reviewable behavior and acceptance work only. They do not claim that implementation, tests, screenshots, recordings, independent verification, packaging or publication have happened.
