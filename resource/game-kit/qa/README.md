@@ -75,6 +75,7 @@ export function assertRetry({ before, after }, assert) {
 - 通用 QA：菜单加载、页脚版本与打包配置一致、快照隔离、画布可见、Enter 开始、P 暂停时 tick/model 冻结、继续、普通输入推动模拟、特有玩法断言、R 重开、960×540 / 1280×720 视口、无页面/控制台/资源错误。两种视口都检查侧栏无需滚动，连接地址、操作说明和提示正文的所有文字边界完整可见，提示内容与 `GameDef.tip` 一致。
 - 性能单独测试会话：拦截实际 WebGL drawArrays/drawElements/instanced 调用；Canvas 仅统计 paint API 命令，不能称 GPU drawcall。WebGL multi_draw 记录 API 提交次数，不能等同子 draw 数；worker OffscreenCanvas 不在观察范围。RAF 间隔是这台 Chromium/SwiftShader 机器的事件循环观测，不能推断电视 FPS。阈值必须由游戏显式提供。
 - 录像全新 context：不注入性能 instrumentation，正常墙钟推进，CDP screencast 记录真实时间戳，普通键盘自动操作。视频为静音 H.264/yuv420p/30 fps 导出，30 fps 不是设备实测帧率。保留源文件哈希、输入时间、状态样本、帧哈希。不能描述为人工操作或手机/电视实拍。
+- CDP偶发乱序、重复或无效时间戳时，仍确认收到该帧，但只保留时间戳严格递增的实际画面，不排序或改写时间戳。`frameAdmission` 记录原始／保留／遗漏数量及每次遗漏的时间、原因和帧哈希；`frame-admission.json` 也用于失败诊断。录像清单绑定录制工具及帧筛选模块的SHA256；最终实际截图和最低真实时长检查仍保留。
 - 画面自动检查只能发现空白或单色帧，不能替代人工打开截图/视频核对构图、文字和玩法。`visualReviewCompleted` 默认 false，完成后应由审阅流程另行留证。
 - APK：小于 10 MB、ZIP 完整性、包名/版本/可启动 activity、apksigner 签名校验、APK assets 与测试源码逐文件哈希完全一致。
 - 视频：小于 10 MB、H.264/yuv420p、有效时长、全片 ffmpeg 解码。缺少音频已如实标记。
@@ -83,6 +84,8 @@ export function assertRetry({ before, after }, assert) {
 ## 工具链与自检
 
 Node 24、Playwright 1.64.1、`/usr/bin/chromium`、系统 ffmpeg 7.1.5、Python 3。默认 Playwright headless-shell/ffmpeg 缓存缺失，所以指定系统 Chromium 并使用系统 ffmpeg；无需下载浏览器附件。`CHROMIUM_PATH` 可覆盖浏览器，`PURETV_PACKAGE` 可覆盖依赖解析用的 desktop/package.json。
+
+录制帧接收规则的无浏览器回归：`node --test resource/game-kit/qa/frame-stream.test.mjs`，覆盖乱序／重复／无效时间戳、停止后回调和文件名隔离。该测试不能代替实际录像及完整解码。
 
 输入生命周期的独立协议检查：
 

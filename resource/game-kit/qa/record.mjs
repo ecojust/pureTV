@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import { mkdir, readFile, writeFile, stat } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
+import { createFrameStream } from './frame-stream.mjs';
 import { parseArgs, sourceHashes, serveAssets, launch, preparePage, snapshot, applyStep, applyKeys, releaseAll, verifyErrors, delay, run, sha256 } from './common.mjs';
 
 export async function recordGameplay({ browser, url, output, recipe = {}, assetHashes, automation, afterCapture }) {
@@ -18,15 +19,17 @@ export async function recordGameplay({ browser, url, output, recipe = {}, assetH
   const session = await preparePage(browser, url);
   const { context, page } = session;
   const cdp = await context.newCDPSession(page), frames = [], writes = [], inputs = [], states = [];
+  const recorderSourceSha256 = sha256(await readFile(new URL('./record.mjs', import.meta.url)));
+  const recorderHelperSourceSha256 = { 'frame-stream.mjs':sha256(await readFile(new URL('./frame-stream.mjs', import.meta.url))) };
+  const frameStream = createFrameStream({ acknowledge:sessionId => { void cdp.send('Page.screencastFrameAck', { sessionId }).catch(() => {}); } });
   let streamStarted = false;
   try {
     cdp.on('Page.screencastFrame', event => {
-      const number = frames.length;
-      const file = 'frame-'+String(number).padStart(5, '0')+'.jpg';
-      const buffer = Buffer.from(event.data, 'base64');
-      frames.push({ file, timestamp:event.metadata.timestamp, receivedAt:performance.now(), sha256:sha256(buffer) });
-      writes.push(writeFile(path.join(output, 'frames', file), buffer));
-      void cdp.send('Page.screencastFrameAck', { sessionId:event.sessionId }).catch(() => {});
+      const receivedAt = performance.now(), buffer = Buffer.from(event.data, 'base64');
+      const frame = frameStream.observe({ timestamp:event.metadata?.timestamp, receivedAt, sha256:sha256(buffer), sessionId:event.sessionId });
+      if (!frame) return;
+      frames.push(frame);
+      writes.push(writeFile(path.join(output, 'frames', frame.file), buffer));
     });
     await cdp.send('Page.startScreencast', { format:'jpeg', quality:88, maxWidth:1280, maxHeight:720, everyNthFrame:1 });
     streamStarted = true;
@@ -54,6 +57,7 @@ export async function recordGameplay({ browser, url, output, recipe = {}, assetH
     }
     states.push({seconds:(performance.now()-started)/1000,state:await snapshot(page),final:true});
     await releaseAll(page, [...steps.map(s=>s.key), ...held]);
+    frameStream.stop();
     await cdp.send('Page.stopScreencast'); streamStarted = false;
     await delay(100); await Promise.all(writes);
     verifyErrors(session);
@@ -63,7 +67,7 @@ export async function recordGameplay({ browser, url, output, recipe = {}, assetH
     assert.ok(frames.length >= 2, 'Insufficient screencast frames');
     const last=frames.at(-1), finalCapture=await cdp.send('Page.captureScreenshot',{format:'jpeg',quality:88});
     const receivedAt=performance.now(), buffer=Buffer.from(finalCapture.data,'base64');
-    const file='frame-'+String(frames.length).padStart(5,'0')+'.jpg';
+    const file=frameStream.finalFilename();
     frames.push({file,timestamp:last.timestamp+(receivedAt-last.receivedAt)/1000,receivedAt,sha256:sha256(buffer),finalActualScreenshot:true});
     await writeFile(path.join(output,'frames',file),buffer);
     let postCaptureChecks;
@@ -74,8 +78,8 @@ export async function recordGameplay({ browser, url, output, recipe = {}, assetH
     const concat = ['ffconcat version 1.0'];
     for (let i=0; i<frames.length; i++) {
       const duration = i+1<frames.length ? frames[i+1].timestamp-frames[i].timestamp : 1/30;
-      assert.ok(duration >= 0, 'Non-monotonic frame timestamps');
-      concat.push("file 'frames/"+frames[i].file+"'", 'duration '+Math.max(.001, duration).toFixed(6));
+      assert.ok(duration > 0, 'Non-increasing retained frame timestamps');
+      concat.push("file 'frames/"+frames[i].file+"'", 'duration '+duration.toFixed(9));
     }
     concat.push("file 'frames/"+frames.at(-1).file+"'");
     await writeFile(path.join(output, 'frames.ffconcat'), concat.join('\n')+'\n');
@@ -87,15 +91,17 @@ export async function recordGameplay({ browser, url, output, recipe = {}, assetH
       bitrate = Math.floor(bitrate*.75);
     }
     await run('python3', [new URL('./verify-artifacts.py', import.meta.url).pathname, '--video',video,'--output',path.join(output,'video-validation.json')]);
-    const manifest = { kind:'normal-runtime-browser-play', capture:'Chromium CDP screencast with real frame timestamps; no virtual time or state writes', input:'Ordinary browser keyboard/mouse events, automatically operated', sourceAssetHashes:assetHashes,
+    const manifest = { recorderSourceSha256, recorderHelperSourceSha256, frameAdmission:frameStream.stats(), kind:'normal-runtime-browser-play', capture:'Chromium CDP screencast with real frame timestamps; no virtual time or state writes', input:'Ordinary browser keyboard/mouse events, automatically operated', sourceAssetHashes:assetHashes,
       requestedSeconds:seconds, capturedSeconds, frames:frames.length, videoSha256:sha256(await readFile(video)), videoBytes:(await stat(video)).size,
       audio:false, physicalTvTested:false, physicalPhoneTested:false, exportFps:30, exportFpsIsNotMeasuredDeviceFps:true,
       rendering:'Chromium / ANGLE SwiftShader', inputs, states, frameManifest:frames, postCaptureChecks:postCaptureChecks?{performedAfterCapture:true,...postCaptureChecks}:undefined, errors:session.errors, consoleErrors:session.consoleErrors, network:session.network };
     await writeFile(path.join(output,'recording.json'), JSON.stringify(manifest,null,2)+'\n');
     return { video, bytes:manifest.videoBytes, capturedSeconds, frames:frames.length, manifest:path.join(output,'recording.json') };
   } finally {
+    frameStream.stop();
     if (streamStarted) await cdp.send('Page.stopScreencast').catch(()=>{});
     await context.close();
+    await writeFile(path.join(output, 'frame-admission.json'), JSON.stringify({ recorderSourceSha256, recorderHelperSourceSha256, ...frameStream.stats() },null,2)+'\n');
   }
 }
 
