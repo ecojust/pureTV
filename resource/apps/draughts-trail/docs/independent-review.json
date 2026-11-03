@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "method": "Independent full-turn enumeration, mandatory capture, promotion termination and public deterministic AI; shortest public-position BFS; ordinary cursor/A/B replay compares complete boards and receipts after every opponent turn.",
+  "layouts": [
+    {
+      "level": 0,
+      "minimumHumanTurns": 6,
+      "searchedStates": 261,
+      "playerCaptures": 3,
+      "aiCaptures": 0,
+      "halfTurns": 11,
+      "chainLocks": 0,
+      "promotions": 1
+    },
+    {
+      "level": 1,
+      "minimumHumanTurns": 6,
+      "searchedStates": 432,
+      "playerCaptures": 4,
+      "aiCaptures": 0,
+      "halfTurns": 11,
+      "chainLocks": 0,
+      "promotions": 1
+    },
+    {
+      "level": 2,
+      "minimumHumanTurns": 6,
+      "searchedStates": 523,
+      "playerCaptures": 5,
+      "aiCaptures": 1,
+      "halfTurns": 11,
+      "chainLocks": 2,
+      "promotions": 1
+    }
+  ],
+  "naturalLoss": {
+    "humanTurns": 5,
+    "reason": "player-empty",
+    "searchedStates": 141
+  },
+  "reviewer": "independent_review agent",
+  "scope": "Independent turn enumeration and complete opponent response prediction; ordinary model inputs only. Browser and hardware evidence separate.",
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "74af417867561b837830c4bd69530cd48a04aa8e3a8b048d9228ef715195f5ef",
+    "docs/model-contract.md": "6cb73776bec16bd6b59d88413f83d0d4ef3d71e1a4927a90d9bd95cf48a5f048",
+    "tests/reference.mjs": "954a73c4b8a594fc2f8c782cd200ffb4ab87adb9727cf353456929828ef1a40d",
+    "tests/independent-check.mjs": "e5165360229bb1bed62a609b19fb161c51cbd80ea24bc8767b00ad33ca551ec6",
+    "tests/automation.mjs": "eb8059263f8a4051d7147a4449e5e29677fdcbd2c10307ce8040c523def0c1fe"
+  },
+  "findings": [],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}
