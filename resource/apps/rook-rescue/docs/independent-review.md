@@ -1,0 +1,7 @@
+# Independent rule review
+
+Test-only `tests/reference.mjs` implements king geometry by enumerating all cells, rook attacks with coordinate intervals, and the documented capture/mobility/distance/ID opponent policy. It imports no production move helpers. Breadth-first exploration proves shortest mates of4/5/6 white moves, examining2,400/13,174/72,439 reference transitions respectively. These counts include the additional search needed to obtain natural stalemate and rook-capture routes, rather than claiming every explored edge was replayed through production.
+
+`tests/independent-check.mjs` passed14 ordinary groups and442 ordinary create/step turns: early BFS samples, every initial destination for both pieces, all three shortest wins, natural rook-capture and stalemate losses, and surviving sequences exhausting12/16/20 moves. Selection, switching, blocked moves and cancellation consume no move; terminal states freeze. One separately labelled synthetic budget group adjusts only the public position's move limit to the independently derived winning path length;15 further turns verify mate priority at the budget boundary. This synthetic group is not described as ordinary gameplay under the original budgets.
+
+Run `node resource/apps/rook-rescue/tests/independent-check.mjs /absolute/scratch/rook-rescue/independent`. The source hash and exact routes are retained in `independent-report.json`, outside shipped assets. Browser QA and actual recording are separate pending stages; no physical TV or phone claim is made.
