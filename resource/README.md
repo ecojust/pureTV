@@ -39,6 +39,7 @@
 | [Coast Kart TV](apps/coast-kart/) | ecojust / 桔子桑 | 0.5.2 | 257.6 KB | 原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏 | <img src="apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"> |
 | [纹码破译](apps/codebreaker/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 利用位置正确和颜色正确的数量反馈，在有限尝试内破解允许重复图形的四位密码。 | <img src="apps/codebreaker/thumb.png" width="180" alt="纹码破译 界面"> |
 | [染色连疆](apps/color-frontier/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 选择染料扩展左上角连通区域，在有限次数内统一全图；只沿四边连通，撤回会恢复地图但不返还染料次数，三张公开地图，支持手机扫码单人操作。 | <img src="apps/color-frontier/thumb.png" width="180" alt="染色连疆 界面"> |
+| [彩径连点](apps/color-paths/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 给网格设色，用互不交叉的单一路径连接每对同号端点并覆盖全盘，不能分叉或形成独立环。 | <img src="apps/color-paths/thumb.png" width="180" alt="彩径连点 界面"> |
 | [窗口装配](apps/conveyor-window/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 左右移动夹具抓取零件，旋转到正确朝向，在快门开放时投送到匹配槽位；避免损坏、保持连续装配，完成三条传送线关卡。 | <img src="apps/conveyor-window/thumb.png" width="180" alt="窗口装配 界面"> |
 | [Cozy Island TV](apps/cozy-island/) | ecojust / 桔子桑 | 0.5.2 | 269.6 KB | 原创岛屿生活，支持采集、钓鱼、布置和手机扫码双人游玩 | <img src="apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"> |
 | [骨牌接龙](apps/domino-chain/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 明牌双六骨牌接龙，选择端点匹配牌面；无牌可接时摸牌或跳过，堵局比较剩余点数。 | <img src="apps/domino-chain/thumb.png" width="180" alt="骨牌接龙 界面"> |
