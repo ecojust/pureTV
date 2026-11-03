@@ -1,0 +1,150 @@
+{
+  "passed": true,
+  "method": "Independent search over disjoint layer matchings and their transformations of every binary vector, using only wire/layer/inventory dimensions. Found networks also sort every distinct-value permutation. All model construction, cancellation, removal, stale checks and terminal outcomes use normal inputs; no answer templates or state fixtures.",
+  "checks": [
+    "independent transformation search finds valid networks within every public inventory",
+    "three normal constructions require explicit B and then pass all binary vectors",
+    "failed input traces match independent propagation and stay visibly stale after edits",
+    "mark cancellation is free and crossing layers or occupied endpoints cannot install",
+    "inventory exhaustion blocks a new mark; removing an endpoint refunds the pair",
+    "correct third check wins and third incorrect check loses through ordinary inputs"
+  ],
+  "layouts": [
+    {
+      "level": 0,
+      "wires": 3,
+      "layers": 3,
+      "inventory": 3,
+      "comparators": 3,
+      "searchNodes": 4,
+      "distinctDeadStates": 0,
+      "binaryInputs": 8,
+      "distinctValuePermutations": 6,
+      "network": [
+        [
+          {
+            "a": 0,
+            "b": 1
+          }
+        ],
+        [
+          {
+            "a": 0,
+            "b": 2
+          }
+        ],
+        [
+          {
+            "a": 1,
+            "b": 2
+          }
+        ]
+      ]
+    },
+    {
+      "level": 1,
+      "wires": 4,
+      "layers": 3,
+      "inventory": 5,
+      "comparators": 5,
+      "searchNodes": 4,
+      "distinctDeadStates": 0,
+      "binaryInputs": 16,
+      "distinctValuePermutations": 24,
+      "network": [
+        [
+          {
+            "a": 0,
+            "b": 1
+          },
+          {
+            "a": 2,
+            "b": 3
+          }
+        ],
+        [
+          {
+            "a": 0,
+            "b": 2
+          },
+          {
+            "a": 1,
+            "b": 3
+          }
+        ],
+        [
+          {
+            "a": 1,
+            "b": 2
+          }
+        ]
+      ]
+    },
+    {
+      "level": 2,
+      "wires": 5,
+      "layers": 5,
+      "inventory": 9,
+      "comparators": 9,
+      "searchNodes": 3170,
+      "distinctDeadStates": 269,
+      "binaryInputs": 32,
+      "distinctValuePermutations": 120,
+      "network": [
+        [
+          {
+            "a": 0,
+            "b": 1
+          },
+          {
+            "a": 2,
+            "b": 3
+          }
+        ],
+        [
+          {
+            "a": 0,
+            "b": 2
+          },
+          {
+            "a": 1,
+            "b": 3
+          }
+        ],
+        [
+          {
+            "a": 0,
+            "b": 4
+          },
+          {
+            "a": 1,
+            "b": 2
+          }
+        ],
+        [
+          {
+            "a": 2,
+            "b": 4
+          }
+        ],
+        [
+          {
+            "a": 1,
+            "b": 2
+          },
+          {
+            "a": 3,
+            "b": 4
+          }
+        ]
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "cba16bbc9a3ab69d3022a3405934abb7436c8457bcc22fbf1799784358dede0c",
+    "tests/reference.cjs": "0a0ce3fc23103cc3ac25739563dfd9ebf9f17b544943a683e29c39c753876510",
+    "tests/independent-check.cjs": "d70ff4f487db6cce6ee2035855d02d0848686e404bf66e3be08d42800d1217bf"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

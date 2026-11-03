@@ -1,0 +1,14 @@
+'use strict';
+// Test-only search over transformations of all binary vectors, without answer templates.
+const assert=require('node:assert/strict');
+function run(input,network){const trace=[input.slice()];for(const layer of network){const previous=trace.at(-1),next=previous.slice();for(const {a,b}of layer){next[a]=Math.min(previous[a],previous[b]);next[b]=Math.max(previous[a],previous[b]);}trace.push(next);}return{output:trace.at(-1),trace};}
+function binary(index,n){return Array.from({length:n},(_,wire)=>(index>>(n-1-wire))&1);}
+function evaluate(network,n){let sortedCount=0,firstFailure=null;for(let index=0;index<2**n;index++){const input=binary(index,n),r=run(input,network),sorted=r.output.every((v,i,a)=>!i||a[i-1]<=v);if(sorted)sortedCount++;else if(!firstFailure)firstFailure={index,input,output:r.output,trace:r.trace};}return{passed:sortedCount===2**n,total:2**n,sortedCount,firstFailure};}
+function matchings(n){const result=[];function build(left,pairs){if(!left.length){result.push(pairs);return;}const a=left[0],rest=left.slice(1);build(rest,pairs);for(const b of rest)build(rest.filter(w=>w!==b),[...pairs,{a,b}]);}build(Array.from({length:n},(_,i)=>i),[]);return result.sort((a,b)=>b.length-a.length||JSON.stringify(a).localeCompare(JSON.stringify(b)));}
+function solve({wires,layers,inventory}){const options=matchings(wires),tables=options.map(layer=>Array.from({length:2**wires},(_,pattern)=>run(binary(pattern,wires),[layer]).output.reduce((n,v)=>n*2+v,0))),dead=new Set(),transforms=new Map();let nodes=0;const all=(2**(2**wires)-1)>>>0;let goal=0;for(let ones=0;ones<=wires;ones++)goal=(goal|(1<<((1<<ones)-1)))>>>0;
+ function transform(mask,index){const key=mask+':'+index;if(transforms.has(key))return transforms.get(key);let result=0;for(let p=0;p<2**wires;p++)if((mask>>>p)&1)result=(result|(1<<tables[index][p]))>>>0;transforms.set(key,result);return result;}
+ function search(mask,depth,budget){assert.ok(++nodes<=500000,'Independent comparator search exceeded500000 states');if(mask===goal)return Array.from({length:depth},()=>[]);if(!depth||!budget)return null;const key=mask+':'+depth+':'+budget;if(dead.has(key))return null;for(let i=0;i<options.length;i++){const layer=options[i];if(!layer.length||layer.length>budget)continue;const next=transform(mask,i);if(next===mask)continue;const tail=search(next,depth-1,budget-layer.length);if(tail)return[layer.map(p=>({...p})),...tail];}dead.add(key);return null;}
+ const network=search(all,layers,inventory);return{found:network!==null,network,nodes,distinctDeadStates:dead.size,transformations:transforms.size,comparators:network?.reduce((n,l)=>n+l.length,0)??null};
+}
+function permutations(n){const result=[];function add(a){if(a.length===n){result.push(a);return;}for(let v=1;v<=n;v++)if(!a.includes(v))add([...a,v]);}add([]);return result;}
+module.exports={run,binary,evaluate,matchings,solve,permutations};

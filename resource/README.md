@@ -95,6 +95,7 @@
 | [数塔天际](apps/skyline-numbers/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 按照行列数字不重复和边缘可见塔数线索，完成逐渐扩大的数字天际棋盘。 | <img src="apps/skyline-numbers/thumb.png" width="180" alt="数塔天际 界面"> |
 | [滑格归序](apps/sliding-order/) | ecojust / 桔子桑 | 0.1.0 | 281.3 KB | 移动九宫格中的空格，让八块数字瓷砖按顺序归位；管理有限滑动次数，撤销恢复棋盘但不退步数。三种独立初始布局，支持手机扫码单人操作。 | <img src="apps/sliding-order/thumb.png" width="180" alt="滑格归序 界面"> |
 | [逐日供电](apps/solar-shift/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 随日照与阴影调整太阳板朝向，为不同优先级的设备供电；管理有限电池与温度，完成昼夜周期及各设备的独立供电配额。 | <img src="apps/solar-shift/thumb.png" width="180" alt="逐日供电 界面"> |
+| [比较器工坊](apps/sorting-wires/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在有限层数与比较器库存内连接排序线网，检查全部二值输入，利用失败见证逐步修正网络。 | <img src="apps/sorting-wires/thumb.png" width="180" alt="比较器工坊 界面"> |
 | [序栈货运](apps/stack-dispatch/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用单件吊机和三个后进先出的货栈，按公开货单顺序出港；管理有限容量与搬动额度，三次错序出货失败。三个调度关卡，支持手机扫码单人操作。 | <img src="apps/stack-dispatch/thumb.png" width="180" alt="序栈货运 界面"> |
 | [石箱归位](apps/stone-bay/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在三座庭院里推动石箱，让每个石座都被占据；只能推、不能拉，步行不扣推力，撤回恢复位置但不返还推力。管理有限推动额度，支持手机扫码单人操作。 | <img src="apps/stone-bay/thumb.png" width="180" alt="石箱归位 界面"> |
 | [Super Mario TV](apps/super-mario/) | ecojust / 桔子桑 | 0.5.2 | 93.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
