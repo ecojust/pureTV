@@ -1,0 +1,18 @@
+PASS public geometry only, detached frozen layouts and physically open starts/cups
+  level 0: 1 strokes, wall hits 0, capture speed 64.07027391856757
+  level 1: 3 strokes, wall hits 1, capture speed 65
+  level 2: 2 strokes, wall hits 0, capture speed 65
+PASS three normal angle/power routes win by actual low-speed capture, including bank and dogleg
+PASS all three normal last-allowed-stroke routes win before budget loss
+PASS natural weak shots exhaust all three stroke budgets only after the final ball rests
+PASS ordinary strong shot passes the cup at high speed without capture
+PASS synthetic low-speed entry captures; crossing speed is evaluated before late substep slowdown
+PASS fixed substeps preserve free-flight friction distance and exact dt partition positions
+PASS synthetic top-left corner reflects both components with nonincreasing energy
+PASS synthetic rounded obstacle corner uses diagonal normal and an outgoing contact does not bounce again
+PASS maximum admitted dt cannot tunnel through obstacle, and all frame speeds stay bounded
+PASS held A cannot auto-fire after settling, and moving direction/shot commands do not queue
+PASS angle wrap, power clamps, B unused and initial neutral gate
+PASS cancel disarms control while ball physics continues, pause freezes all and neutral restores input
+PASS invalid time, own descriptors, saturated counters, detached receipts and terminal freeze
+{"passed":true,"checks":14,"ordinaryWins":3,"ordinaryLastStrokeWins":3,"ordinaryBudgetLosses":3,"realMotion":true,"authorRouteStrokes":[1,3,2],"syntheticFixturesExplicit":true,"physicalDeviceTested":false}
