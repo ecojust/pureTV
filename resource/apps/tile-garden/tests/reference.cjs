@@ -1,0 +1,12 @@
+'use strict';
+// Independent face-up tile accessibility and test-only pair-order search.
+const assert=require('node:assert/strict');
+function free(tiles){const live=tiles.filter(t=>!t.removed),at=new Set(live.map(t=>t.layer+':'+t.x+':'+t.y));return live.filter(t=>!live.some(u=>u.layer>t.layer&&u.x===t.x&&u.y===t.y)&&(!at.has(t.layer+':'+(t.x-1)+':'+t.y)||!at.has(t.layer+':'+(t.x+1)+':'+t.y))).map(t=>t.id).sort((a,b)=>a-b);}
+function pairs(tiles){const ids=new Set(free(tiles)),available=tiles.filter(t=>ids.has(t.id)).sort((a,b)=>a.id-b.id),out=[];for(let a=0;a<available.length;a++)for(let b=a+1;b<available.length;b++)if(available[a].family===available[b].family)out.push([available[a].id,available[b].id]);return out;}
+function solve(tiles){assert.ok(tiles.length<=30);const n=tiles.length,initial=tiles.reduce((mask,t,i)=>t.removed?mask:mask|(1<<i),0),blocking=tiles.map(t=>{let top=0,left=0,right=0;tiles.forEach((u,i)=>{if(u.x===t.x&&u.y===t.y&&u.layer>t.layer)top|=1<<i;if(u.layer===t.layer&&u.y===t.y&&u.x===t.x-1)left|=1<<i;if(u.layer===t.layer&&u.y===t.y&&u.x===t.x+1)right|=1<<i;});return{top,left,right};});
+ function options(mask){const free=[];for(let i=0;i<n;i++)if(mask&(1<<i)){const b=blocking[i];if(!(mask&b.top)&&(!(mask&b.left)||!(mask&b.right)))free.push(i);}const out=[];for(let a=0;a<free.length;a++)for(let b=a+1;b<free.length;b++)if(tiles[free[a]].family===tiles[free[b]].family)out.push([free[a],free[b]]);return out;}
+ function find(kind){const dead=new Set();let nodes=0;function visit(mask){assert.ok(++nodes<=500000,'Independent pair-order search exceeded500000 states');if(!mask)return kind==='win'?[]:null;if(dead.has(mask))return null;const choices=options(mask);if(!choices.length)return kind==='deadlock'?[]:null;for(const pair of choices){const next=mask&~((1<<pair[0])|(1<<pair[1])),tail=visit(next);if(tail!==null)return[[tiles[pair[0]].id,tiles[pair[1]].id],...tail];}dead.add(mask);return null;}return{route:visit(initial),nodes,rejectedStates:dead.size};}
+ const win=find('win'),deadlock=find('deadlock');return{win:win.route,deadlock:deadlock.route,winningSearchNodes:win.nodes,deadlockSearchNodes:deadlock.nodes,winningRejectedStates:win.rejectedStates,deadlockRejectedStates:deadlock.rejectedStates};
+}
+function after(tiles,pair){assert.ok(pairs(tiles).some(p=>p[0]===Math.min(...pair)&&p[1]===Math.max(...pair)));return tiles.map(t=>({...t,removed:!!t.removed||pair.includes(t.id)}));}
+module.exports={free,pairs,solve,after};

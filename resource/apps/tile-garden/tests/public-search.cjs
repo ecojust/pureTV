@@ -1,0 +1,6 @@
+'use strict';
+// Test-only public geometry/search. Removed positions are a finite bit set (<=28 tiles).
+function free(tiles,mask){const live=tiles.filter(t=>!(mask&(1<<t.id))),out=[];for(const t of live){const covered=live.some(u=>u.layer>t.layer&&u.x===t.x&&u.y===t.y);if(covered)continue;const left=live.some(u=>u.layer===t.layer&&u.y===t.y&&u.x===t.x-1),right=live.some(u=>u.layer===t.layer&&u.y===t.y&&u.x===t.x+1);if(!left||!right)out.push(t.id);}return out;}
+function pairs(tiles,mask){const ids=free(tiles,mask),out=[];for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)if(tiles[ids[i]].family===tiles[ids[j]].family)out.push([ids[i],ids[j]]);return out;}
+function analyse(tiles){const full=(1<<tiles.length)-1,memo=new Map();function walk(mask){if(mask===full)return {win:[],loss:null};if(memo.has(mask))return memo.get(mask);const choices=pairs(tiles,mask);if(!choices.length)return {win:null,loss:[]};let win=null,loss=null;for(const pair of choices){const child=walk(mask|(1<<pair[0])|(1<<pair[1]));if(!win&&child.win)win=[pair,...child.win];if(!loss&&child.loss)loss=[pair,...child.loss];if(win&&loss)break;}const result={win,loss};memo.set(mask,result);return result;}return {...walk(0),states:memo.size};}
+module.exports={free,pairs,analyse};
