@@ -1,0 +1,97 @@
+{
+  "passed": true,
+  "sourceCommit": "b2adfd522092480e44f9b4990a1488299f8862af",
+  "testedAssets": "/workspace/scratch/pocket-solitaire/assets",
+  "dedicatedDirectory": "/workspace/scratch/pocket-solitaire/browser",
+  "sharedDirectory": "/workspace/scratch/pocket-solitaire/qa",
+  "dedicatedChecksPassed": 7,
+  "sharedChecksPassed": 10,
+  "ordinaryRecordedWins": [
+    {
+      "level": 0,
+      "seconds": 24.006339389,
+      "movesUsed": 20,
+      "foundationCount": 12
+    },
+    {
+      "level": 1,
+      "encodedSeconds": 57,
+      "movesUsed": 25,
+      "foundationCount": 16,
+      "evidence": "manually viewed actual encoded video frame",
+      "note": "The 2-second state samples show 15/16 at56s and next level at58s; the actual encoded57s frame visibly shows the middle-level16/16 success with25moves.",
+      "encodedScreenshot": "screenshots/encoded-level-2-win-57.png",
+      "encodedScreenshotSha256": "a1c75cdaccdd48b7cde3c19bb634ebf8b57d9206f4f5f07eaaeaa04559d3d03e"
+    },
+    {
+      "level": 2,
+      "seconds": 106.004584986,
+      "movesUsed": 39,
+      "foundationCount": 20
+    }
+  ],
+  "video": {
+    "path": "/workspace/scratch/pocket-solitaire/qa/recording/gameplay.mp4",
+    "bytes": 5500529,
+    "sha256": "71c75d6e24b4798f3da6c6f2eb0d7b26965721fe84038411dcff853fdc5486c4",
+    "capturedSeconds": 115.48783230781555,
+    "fullDecodePassed": true
+  },
+  "frameAdmission": {
+    "policy": "Acknowledge every observed CDP frame; retain strictly increasing finite timestamps. Omit and log invalid, duplicate, backward, or post-stop events. Never sort or rewrite retained timestamps.",
+    "rawCdpFrames": 1708,
+    "acceptedCdpFrames": 1707,
+    "droppedCdpFrames": 1,
+    "droppedFrames": [
+      {
+        "rawIndex": 872,
+        "timestamp": 1793724903.987016,
+        "priorTimestamp": 1793724904.027034,
+        "receivedAt": 90584.6268,
+        "reason": "backward-timestamp",
+        "sha256": "6d9a4f613176405f6550040126af4f0336fe553e17b250cd13a1c72a19efde0c"
+      }
+    ]
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 515,
+    "rafIntervalMs": {
+      "count": 515,
+      "min": 16.599999999998545,
+      "median": 33.400000000001455,
+      "p95": 83.39999999999964,
+      "max": 183.39999999999782,
+      "mean": 43.978834951456314
+    },
+    "webglDrawCalls": {
+      "count": 515,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 515,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "visualReview": {
+    "playing960": true,
+    "playing1280": true,
+    "encodedSample": "screenshots/encoded-gameplay-85.png",
+    "note": "Viewed largest deal at960/1280 with8-card column, source/freecells/foundations; encoded85-second play is clear. The actual encoded57-second middle-level terminal frame separately proves16/16 complete in25moves, which fell between2-second state samples."
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

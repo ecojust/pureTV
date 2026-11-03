@@ -1,0 +1,73 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T16:50:57.758Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "e3309c128daf8d73879025bc472417fd5144802581538c60151818abdc8d3c78",
+    "game-model.js": "a21aa18a696949e3b6991fe7c5df398bc1286287f8c5bf613af7809721271ac9",
+    "game.js": "caf9a02f8ebf9083cac1aa71bd9592a17571f29d3152c95d6c618cea7a47eb8e",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "level 1: ordinary one-card transfers complete all foundations",
+      "passed": true,
+      "level": 0,
+      "moves": 20,
+      "temporary": 8
+    },
+    {
+      "name": "level 2: ordinary one-card transfers complete all foundations",
+      "passed": true,
+      "level": 1,
+      "moves": 25,
+      "temporary": 9
+    },
+    {
+      "name": "level 3: ordinary one-card transfers complete all foundations",
+      "passed": true,
+      "level": 2,
+      "moves": 39,
+      "temporary": 19
+    },
+    {
+      "name": "same-source cancel and blocked destinations are free; occupied freecell stays occupied",
+      "passed": true,
+      "sameSourceCancel": true,
+      "foundationRule": true,
+      "tableauRule": true,
+      "occupiedFreecellBlocked": true
+    },
+    {
+      "name": "B restores a foundation card with no move refund and only two undo tickets",
+      "passed": true,
+      "foundationSourceBlocked": true,
+      "foundationUndoException": true,
+      "moveBudgetNotRefunded": true,
+      "ticketsBounded": 2
+    },
+    {
+      "name": "held A selects only once and pause requires a genuine release",
+      "passed": true,
+      "heldSelectOnly": true,
+      "pauseFreeze": true,
+      "realReleaseAllowsCancel": true
+    },
+    {
+      "name": "ordinary freecell shuttling naturally exhausts the move budget and freezes",
+      "passed": true,
+      "moves": 50,
+      "terminalFrozen": true
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T16:53:29.142Z"
+}
