@@ -19,6 +19,13 @@
 - 新游戏的规则、素材、测试和说明放在自己的目录。只有确有共性需求或缺陷时才改公共组件，修改后运行相关共享回归。
 - 优先沿用仓库现有技术和接口，避免无关重构、依赖升级或全仓库格式调整。查找文件和文本优先使用 `rg`。
 
+## 管理器与启动器
+
+- 桌面端沿用 TypeScript／Vite 与 Tauri／Rust 结构。修改界面时维护既有中英文文案与焦点、滚动、等待和结果反馈；模拟设备界面不能描述为真实设备执行。
+- 在 `desktop/` 中按改动选择 `npm run build`、`npm run test:ui`、`npm run test:svg`、`npm run test:network`；Rust 核心和宿主分别使用 `cargo test --locked --manifest-path core/Cargo.toml`、`cargo test --locked --manifest-path src-tauri/Cargo.toml`。依赖安装和浏览器要求见其 README，不因修改文档而重跑全部检查。
+- ADB 操作保留既有核心组件与当前默认启动器保护，明确目标设备；不能把模拟成功、下载成功或命令发出当作设备上的操作成功。
+- 启动器与管理器共享 `layout.json` v5 协议。修改协议时同时核对两端兼容性、默认布局、导入导出和实际渲染，遵循 `resource/README-development.md`；Android 构建／测试使用对应软件目录的说明。
+
 ## 百款游戏与验收
 
 以 `resource/game-kit/progress.json` 的实际验证状态为准，不能从应用目录总数推算游戏数量。公共组件、草稿和未签名构建不计数。
