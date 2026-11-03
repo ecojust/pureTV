@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-100-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-101-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -92,6 +92,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [跳吃棋径](resource/apps/draughts-trail/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在六路跳棋残局中强制连跳吃子，保护兵并升为王棋，遵循合法移动击败公开规则的对手。 | <img src="resource/apps/draughts-trail/thumb.png" width="180" alt="跳吃棋径 界面"> |
 | [回声探图](resource/apps/echo-cartographer/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在有限照明下发射声呐测绘暗室，控制脚步噪声避开巡逻机，收集信标后返回入口，支持手机扫码单人操作 | <img src="resource/apps/echo-cartographer/thumb.png" width="180" alt="回声探图 界面"> |
 | [防火带](resource/apps/firebreak-planner/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 用有限行动点提前清理防火带，依据固定变风与累积热量阻断同时蔓延的山火；保护全部村落与至少七成存活森林，清理本身也会减少林木。 | <img src="resource/apps/firebreak-planner/thumb.png" width="180" alt="防火带 界面"> |
+| [舰队账册](resource/apps/fleet-ledger/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 依据行列数量与舰船长度清单标注船海，舰船必须笔直且互不接触；保留固定线索并完成全部格子。 | <img src="resource/apps/fleet-ledger/thumb.png" width="180" alt="舰队账册 界面"> |
 | [四子列阵](resource/apps/four-in-row/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在七列棋盘中让棋子按重力落下，与会预判落点的对手较量，率先横、竖或斜连四子。 | <img src="resource/apps/four-in-row/thumb.png" width="180" alt="四子列阵 界面"> |
 | [冰面刹停](resource/apps/frost-brake/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 左右推动惯性货橇，按住 A 放下冰爪，只有结霜带提供额外制动；完整停入逐渐收窄的交付区并驻留，避开冰面边界和急刹造成的货损。 | <img src="resource/apps/frost-brake/thumb.png" width="180" alt="冰面刹停 界面"> |
 | [折光工坊](resource/apps/glass-fold/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 沿折线翻叠半透明彩片，用轮廓与叠色匹配目标花窗；三张谜题、有限折叠与90秒有效时间，支持撤销修正和手机扫码单人操作 | <img src="resource/apps/glass-fold/thumb.png" width="180" alt="折光工坊 界面"> |

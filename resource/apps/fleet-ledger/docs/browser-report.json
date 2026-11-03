@@ -1,0 +1,276 @@
+{
+  "kind": "ordinary-browser-fleet-ledger-regression",
+  "startedAt": "2026-11-03T17:16:17.803Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "35c2b2b775e3313e1fbb11cbd96829cdcdee35a4dad35ed5768f5e961274520f",
+    "game-model.js": "b5cc3e52e1cf5c1eabe84cfb58fe529b235830023cee8b6f90a02261cfb29756",
+    "game.js": "ae3840adb406a2512777567ff2e24d39cf64c2eb3e5c683d230152b2c306cf79",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "largest public ledger, fixed clues and fleet manifest fit both viewports",
+      "passed": true,
+      "milliseconds": 4627.093147,
+      "screenshots": [
+        "/workspace/scratch/fleet-ledger/browser-checks/initial-1280.png",
+        "/workspace/scratch/fleet-ledger/browser-checks/initial-960.png"
+      ]
+    },
+    {
+      "name": "level 1: ordinary full annotations and public fleet constraints win after B",
+      "passed": true,
+      "milliseconds": 16802.403761,
+      "level": 0,
+      "fleet": [
+        3,
+        2,
+        1
+      ],
+      "checks": 1,
+      "incompleteChecks": 0
+    },
+    {
+      "name": "level 2: ordinary full annotations and public fleet constraints win after B",
+      "passed": true,
+      "milliseconds": 22269.355515000003,
+      "level": 1,
+      "fleet": [
+        3,
+        2,
+        2,
+        1
+      ],
+      "checks": 1,
+      "incompleteChecks": 0
+    },
+    {
+      "name": "level 3: ordinary full annotations and public fleet constraints win after B",
+      "passed": true,
+      "milliseconds": 39830.177123999994,
+      "level": 2,
+      "fleet": [
+        4,
+        3,
+        2,
+        1,
+        1
+      ],
+      "checks": 1,
+      "incompleteChecks": 2
+    },
+    {
+      "name": "two complete rejected charts followed by the exact third repaired check win",
+      "passed": true,
+      "milliseconds": 23782.32564699999,
+      "checks": 3,
+      "phase": "won"
+    },
+    {
+      "name": "free incomplete hints preserve attempts, then three full wrong charts lose",
+      "passed": true,
+      "milliseconds": 18590.70932200001,
+      "checks": 3,
+      "incompleteChecks": 2,
+      "lastCheck": {
+        "complete": true,
+        "rowsExact": false,
+        "colsExact": false,
+        "straight": true,
+        "noTouch": true,
+        "fleetExact": false,
+        "matched": false,
+        "unknown": 0,
+        "actualFleet": [
+          1
+        ],
+        "rowCounts": [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "colCounts": [
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "components": [
+          {
+            "id": 0,
+            "cells": [
+              8
+            ],
+            "length": 1,
+            "straight": true,
+            "orientation": "single"
+          }
+        ],
+        "diagonalContacts": [],
+        "editVersion": 46,
+        "charged": true
+      }
+    },
+    {
+      "name": "normal full charts expose bent components and diagonal inter-ship contact",
+      "passed": true,
+      "milliseconds": 33712.69213899999,
+      "evidence": [
+        {
+          "kind": "bent",
+          "lastCheck": {
+            "complete": true,
+            "rowsExact": false,
+            "colsExact": false,
+            "straight": false,
+            "noTouch": true,
+            "fleetExact": false,
+            "matched": false,
+            "unknown": 0,
+            "actualFleet": [
+              3,
+              1
+            ],
+            "rowCounts": [
+              0,
+              1,
+              0,
+              2,
+              1
+            ],
+            "colCounts": [
+              0,
+              0,
+              0,
+              3,
+              1
+            ],
+            "components": [
+              {
+                "id": 0,
+                "cells": [
+                  8
+                ],
+                "length": 1,
+                "straight": true,
+                "orientation": "single"
+              },
+              {
+                "id": 1,
+                "cells": [
+                  18,
+                  19,
+                  23
+                ],
+                "length": 3,
+                "straight": false,
+                "orientation": "bent"
+              }
+            ],
+            "diagonalContacts": [],
+            "editVersion": 43,
+            "charged": true
+          }
+        },
+        {
+          "kind": "diagonal",
+          "lastCheck": {
+            "complete": true,
+            "rowsExact": false,
+            "colsExact": false,
+            "straight": true,
+            "noTouch": false,
+            "fleetExact": false,
+            "matched": false,
+            "unknown": 0,
+            "actualFleet": [
+              1,
+              1,
+              1
+            ],
+            "rowCounts": [
+              0,
+              1,
+              0,
+              1,
+              1
+            ],
+            "colCounts": [
+              0,
+              0,
+              0,
+              2,
+              1
+            ],
+            "components": [
+              {
+                "id": 0,
+                "cells": [
+                  8
+                ],
+                "length": 1,
+                "straight": true,
+                "orientation": "single"
+              },
+              {
+                "id": 1,
+                "cells": [
+                  18
+                ],
+                "length": 1,
+                "straight": true,
+                "orientation": "single"
+              },
+              {
+                "id": 2,
+                "cells": [
+                  24
+                ],
+                "length": 1,
+                "straight": true,
+                "orientation": "single"
+              }
+            ],
+            "diagonalContacts": [
+              [
+                18,
+                24
+              ]
+            ],
+            "editVersion": 44,
+            "charged": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "fixed ship and sea clues, free boundaries and all three mark states behave normally",
+      "passed": true,
+      "milliseconds": 4056.0253780000203,
+      "fixedClues": 2,
+      "edits": 3,
+      "blockedActions": 4
+    },
+    {
+      "name": "held annotation edits once across pause and needs release to become sea",
+      "passed": true,
+      "milliseconds": 2714.0986070000217,
+      "edits": 2,
+      "mark": 2
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T17:19:04.296Z"
+}
