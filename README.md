@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-76-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-77-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -129,6 +129,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [影形铸坊](resource/apps/shadow-foundry/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 旋转金属工件与侧向光源，覆盖全部青色目标格并避开禁区；两种控制独立调整，最后一次机会也能完成铸影。 | <img src="resource/apps/shadow-foundry/thumb.png" width="180" alt="影形铸坊 界面"> |
 | [影窗快门](resource/apps/shadow-shutter/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 移动取景框并切换横竖画幅，避开遮光纸带，让三片剪影完整入窗并依序拍成目标；用有限胶片完成三组影窗作品。 | <img src="resource/apps/shadow-shutter/thumb.png" width="180" alt="影窗快门 界面"> |
 | [ShortVideo TV](resource/apps/shortvideo/) | ecojust / 桔子桑 | 0.5.0 | 32.7 KB | 遥控器短视频播放器 | <img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
+| [数塔天际](resource/apps/skyline-numbers/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 按照行列数字不重复和边缘可见塔数线索，完成逐渐扩大的数字天际棋盘。 | <img src="resource/apps/skyline-numbers/thumb.png" width="180" alt="数塔天际 界面"> |
 | [滑格归序](resource/apps/sliding-order/) | ecojust / 桔子桑 | 0.1.0 | 281.3 KB | 移动九宫格中的空格，让八块数字瓷砖按顺序归位；管理有限滑动次数，撤销恢复棋盘但不退步数。三种独立初始布局，支持手机扫码单人操作。 | <img src="resource/apps/sliding-order/thumb.png" width="180" alt="滑格归序 界面"> |
 | [逐日供电](resource/apps/solar-shift/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 随日照与阴影调整太阳板朝向，为不同优先级的设备供电；管理有限电池与温度，完成昼夜周期及各设备的独立供电配额。 | <img src="resource/apps/solar-shift/thumb.png" width="180" alt="逐日供电 界面"> |
 | [序栈货运](resource/apps/stack-dispatch/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用单件吊机和三个后进先出的货栈，按公开货单顺序出港；管理有限容量与搬动额度，三次错序出货失败。三个调度关卡，支持手机扫码单人操作。 | <img src="resource/apps/stack-dispatch/thumb.png" width="180" alt="序栈货运 界面"> |

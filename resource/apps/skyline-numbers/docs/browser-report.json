@@ -1,0 +1,88 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T14:49:43.087Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "338e8aa3737018459f92b1d010ca99e8cb7cf18b843d391c6e0ae98c92887465",
+    "game-model.js": "c8f4041c98e8c7380d30f535f249d03727ac934071ef758e778a697cdeb26a36",
+    "game.js": "b1c9ceb9c302d458d34facaed4ed962784870e3b82dbc1d2c8de7e3b2bfd1c14",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "largest city, fixed towers and all four clue sides remain readable at both viewports",
+      "passed": true,
+      "milliseconds": 5396.731122,
+      "screenshots": [
+        "/workspace/scratch/skyline-numbers/browser-checks/initial-1280.png",
+        "/workspace/scratch/skyline-numbers/browser-checks/initial-960.png"
+      ]
+    },
+    {
+      "name": "level 1: ordinary edits and explicit B check win the unique public puzzle",
+      "passed": true,
+      "milliseconds": 15555.314537,
+      "level": 0,
+      "edits": 36,
+      "checks": 1,
+      "screenshot": "/workspace/scratch/skyline-numbers/browser-checks/level-1-won.png"
+    },
+    {
+      "name": "level 2: ordinary edits and explicit B check win the unique public puzzle",
+      "passed": true,
+      "milliseconds": 24997.232776999997,
+      "level": 1,
+      "edits": 72,
+      "checks": 1,
+      "screenshot": "/workspace/scratch/skyline-numbers/browser-checks/level-2-won.png"
+    },
+    {
+      "name": "level 3: ordinary edits and explicit B check win the unique public puzzle",
+      "passed": true,
+      "milliseconds": 30798.344322999998,
+      "level": 2,
+      "edits": 90,
+      "checks": 1,
+      "screenshot": "/workspace/scratch/skyline-numbers/browser-checks/level-3-won.png"
+    },
+    {
+      "name": "the correct third check wins after two ordinary incomplete submissions",
+      "passed": true,
+      "milliseconds": 13298.868277999994,
+      "checks": 3,
+      "attemptsLeft": 0
+    },
+    {
+      "name": "a complete Latin city with incorrect skyline clues loses only on the third check",
+      "passed": true,
+      "milliseconds": 14983.225758,
+      "checks": 3,
+      "latin": true,
+      "edges": false
+    },
+    {
+      "name": "fixed towers reject edits and duplicate marks clear after a full height cycle",
+      "passed": true,
+      "milliseconds": 2916.6775389999966,
+      "edits": 5,
+      "checks": 0
+    },
+    {
+      "name": "holding B consumes one check across pause and a new press requires physical release",
+      "passed": true,
+      "milliseconds": 2886.949760000003,
+      "checks": 2,
+      "attemptsLeft": 1
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T14:51:34.047Z"
+}
