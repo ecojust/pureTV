@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-106-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-107-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -110,6 +110,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [Magic Jewelry TV](resource/apps/jewel/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
 | [万花钥匙](resource/apps/kaleido-keys/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 把有限图符摆进源扇区，旋转并选择万花阶数，让整圈镜像钥匙与目标完全一致；核对左右交换、朝向与空格后验收，四次错误即失败，无倒计时。 | <img src="resource/apps/kaleido-keys/thumb.png" width="180" alt="万花钥匙 界面"> |
 | [马步巡游](resource/apps/knight-circuit/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 按国际象棋马的跳法巡游棋盘，每个可走格只能访问一次；规划三种不同棋盘的完整路线，管理三张回退券，避免走入死路，支持手机扫码单人操作。 | <img src="resource/apps/knight-circuit/thumb.png" width="180" alt="马步巡游 界面"> |
+| [球道击柱](resource/apps/lane-bowling/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 调整角度和力度投球，通过实际球瓶与瓶间碰撞清空三种阵型；有限球数，滚动结束后再瞄准。 | <img src="resource/apps/lane-bowling/thumb.png" width="180" alt="球道击柱 界面"> |
 | [灯塔节拍](resource/apps/lantern-rhythm/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 观察方向与短长灯号，再按节拍真实按住并松开按钮，依次点亮三座灯塔；两次主动重听、有限失误与90秒有效时间，支持手机扫码单人操作 | <img src="resource/apps/lantern-rhythm/thumb.png" width="180" alt="灯塔节拍 界面"> |
 | [焦距实验室](resource/apps/lens-distance/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 原创单人光学益智游戏：移动透镜和屏幕，调节光阑，让实像的清晰度与亮度同时达标。三个光台各有两张底片，分别管理曝光电量与调整额度；手机方向区和上下双操作区控制。 | <img src="resource/apps/lens-distance/thumb.png" width="180" alt="焦距实验室 界面"> |
 | [围子夺星](resource/apps/liberty-stones/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 观察棋块的气，落子围住对手并率先提满四子；遵守自杀禁入与简单劫，控制手数和停手。 | <img src="resource/apps/liberty-stones/thumb.png" width="180" alt="围子夺星 界面"> |

@@ -1,0 +1,29 @@
+// Independent test-only physical integration from the public numeric contract.
+// No production model, transition helper, preselected aim or target route import.
+export const physics={width:320,height:420,launchX:160,launchY:385,angleMin:-24,angleMax:24,angleStep:3,speeds:[230,275,320,365],tick:1/120,ballRadius:12,ballMass:3,pinRadius:10,pinMass:1,ballFriction:38,pinFriction:90,restSpeed:5,speedCap:480,restitution:.65,wallRestitution:.2,fallSpeed:48,fallDistance:6.5,gutterLeft:18,gutterRight:302,quietLimit:12,shotTickLimit:720};
+const speed=b=>Math.hypot(b.vx,b.vy),distance=p=>Math.hypot(p.x-p.originX,p.y-p.originY);
+export function startShot(state,angle,power){const c=physics,radians=angle*Math.PI/180;return {pins:structuredClone(state.pins),ball:{id:0,x:c.launchX,y:c.launchY,vx:Math.sin(radians)*c.speeds[power],vy:-Math.cos(radians)*c.speeds[power],radius:c.ballRadius,mass:c.ballMass,active:true},angle,power,shotsUsed:state.shotsUsed+1,shotLimit:state.shotLimit,shotTicks:0,quietTicks:0,shotExit:'',shotGutter:false,shotBallHits:0,shotPinHits:0,totalBallHits:state.totalBallHits||0,totalPinHits:state.totalPinHits||0,fallReceipts:structuredClone(state.fallReceipts||[]),previousFallen:state.pins.filter(p=>p.fallen).map(p=>p.id),ended:false};}
+export function tick(s){if(s.ended)return s;const c=physics,t=s.shotTicks+1;
+ function frictionMove(b,friction){if(!b.active)return;const old=speed(b),remaining=Math.max(0,old-friction*c.tick);if(remaining<c.restSpeed){b.vx=0;b.vy=0;}else{b.vx*=remaining/old;b.vy*=remaining/old;}b.x+=b.vx*c.tick;b.y+=b.vy*c.tick;}
+ function bounds(){const b=s.ball;if(b.active){const reason=b.x<c.gutterLeft||b.x>c.gutterRight?'gutter':b.y<-b.radius||b.y>c.height+b.radius?'out':'';if(reason){b.active=false;b.vx=b.vy=0;s.shotExit||=reason;s.shotGutter=reason==='gutter';}}
+  for(const p of s.pins)if(p.active){for(const [position,velocity,max]of [['x','vx',c.width],['y','vy',c.height]]){if(p[position]<p.radius){p[position]=p.radius;if(p[velocity]<0)p[velocity]*=-c.wallRestitution;}if(p[position]>max-p.radius){p[position]=max-p.radius;if(p[velocity]>0)p[velocity]*=-c.wallRestitution;}}}}
+ function fall(p,source,sourceId){if(p.id===0||p.fallen)return;const receipt={pin:p.id,shot:s.shotsUsed,tick:t,source,sourceId,x:p.x,y:p.y,speed:speed(p),displacement:distance(p)};p.fallen=true;p.fall=receipt;s.fallReceipts.push(structuredClone(receipt));}
+ function contact(a,b){if(!a.active||!b.active)return;const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy),reach=a.radius+b.radius;if(d>=reach)return;const nx=d?dx/d:1,ny=d?dy/d:0,ia=1/a.mass,ib=1/b.mass,weight=ia+ib,overlap=reach-d;
+  a.x-=nx*overlap*ia/weight;a.y-=ny*overlap*ia/weight;b.x+=nx*overlap*ib/weight;b.y+=ny*overlap*ib/weight;
+  const relative=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;if(relative>=-1e-8)return;const impulse=-(1+c.restitution)*relative/weight;a.vx-=impulse*nx*ia;a.vy-=impulse*ny*ia;b.vx+=impulse*nx*ib;b.vy+=impulse*ny*ib;
+  for(const body of [a,b]){const v=speed(body);if(v>c.speedCap){body.vx*=c.speedCap/v;body.vy*=c.speedCap/v;}}
+  if(impulse>1e-6){if(a.id===0){s.shotBallHits++;s.totalBallHits++;}else{s.shotPinHits++;s.totalPinHits++;}if(a.id&&speed(a)>=c.fallSpeed)fall(a,'pin',b.id);if(speed(b)>=c.fallSpeed)fall(b,a.id===0?'ball':'pin',a.id);}
+ }
+ frictionMove(s.ball,c.ballFriction);for(const p of s.pins)frictionMove(p,c.pinFriction);bounds();
+ for(let pass=0;pass<2;pass++){for(const p of s.pins)contact(s.ball,p);for(let i=0;i<s.pins.length;i++)for(let j=i+1;j<s.pins.length;j++)contact(s.pins[i],s.pins[j]);}
+ bounds();for(const p of s.pins)if(p.active&&!p.fallen&&distance(p)>=c.fallDistance)fall(p,'displacement',null);
+ s.shotTicks=t;const quiet=(!s.ball.active||speed(s.ball)===0)&&s.pins.every(p=>!p.active||speed(p)===0);s.quietTicks=quiet?s.quietTicks+1:0;
+ if(s.quietTicks>=c.quietLimit||t>=c.shotTickLimit){const fallenIds=s.pins.filter(p=>p.fallen).map(p=>p.id),standingCount=s.pins.length-fallenIds.length;for(const p of s.pins){p.vx=p.vy=0;if(p.fallen)p.active=false;}s.ball=null;s.ended=true;s.stage='aiming';s.standingCount=standingCount;s.fallenCount=fallenIds.length;s.shotsRemaining=s.shotLimit-s.shotsUsed;s.phase=standingCount===0?'won':s.shotsRemaining===0?'lost':'playing';s.reason=standingCount===0?'cleared':s.shotsRemaining===0?'throws':'';s.score=Math.round(100*fallenIds.length/s.pins.length);
+  s.lastShot={shot:s.shotsUsed,angle:s.angle,power:s.power,ticks:t,elapsed:t*c.tick,end:s.quietTicks>=c.quietLimit?'settled':'sweep',gutter:s.shotGutter,exit:s.shotExit,ballHits:s.shotBallHits,pinHits:s.shotPinHits,newlyFallen:fallenIds.filter(id=>!s.previousFallen.includes(id)),fallenIds,standingCount,cleared:standingCount===0};
+ }return s;
+}
+export function simulateShot(state,angle,power){const shot=startShot(state,angle,power);while(!shot.ended)tick(shot);return shot;}
+export function findRoute(state,{beamWidth=8}={}){let beam=[{state,route:[]}],shotsSimulated=0;
+ for(let depth=0;depth<state.shotLimit-state.shotsUsed;depth++){const next=[];for(const node of beam)for(let angle=physics.angleMin;angle<=physics.angleMax;angle+=physics.angleStep)for(let power=0;power<physics.speeds.length;power++){const expected=simulateShot(node.state,angle,power);shotsSimulated++;const route=[...node.route,{angle,power,expected}];if(expected.phase==='won')return {route,shotsSimulated};if(expected.phase==='playing')next.push({state:expected,route});}
+  next.sort((a,b)=>b.state.fallenCount-a.state.fallenCount||a.state.lastShot.ticks-b.state.lastShot.ticks);const seen=new Set();beam=[];for(const node of next){const key=node.state.pins.filter(p=>!p.fallen).map(p=>[p.id,p.x.toFixed(6),p.y.toFixed(6)]).join(';');if(seen.has(key))continue;seen.add(key);beam.push(node);if(beam.length===beamWidth)break;}
+ }throw Error('Independent bounded physical search did not find a clearing route');}

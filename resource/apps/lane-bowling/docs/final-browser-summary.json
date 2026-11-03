@@ -1,0 +1,93 @@
+{
+  "passed": true,
+  "sourceCommit": "a5d07028ea8f2e102749b06b03587698be1f8001",
+  "testedAssets": "/workspace/scratch/lane-bowling/assets",
+  "dedicatedDirectory": "/workspace/scratch/lane-bowling/browser",
+  "sharedDirectory": "/workspace/scratch/lane-bowling/qa",
+  "dedicatedChecksPassed": 7,
+  "sharedChecksPassed": 10,
+  "ordinaryRecordedWins": [
+    {
+      "level": 0,
+      "seconds": 6.024626679999999,
+      "shotsUsed": 1,
+      "fallenCount": 6,
+      "standingCount": 0,
+      "totalBallHits": 3,
+      "totalPinHits": 4
+    },
+    {
+      "level": 1,
+      "seconds": 16.015119304000002,
+      "shotsUsed": 2,
+      "fallenCount": 8,
+      "standingCount": 0,
+      "totalBallHits": 9,
+      "totalPinHits": 4
+    },
+    {
+      "level": 2,
+      "seconds": 26.026494099000004,
+      "shotsUsed": 2,
+      "fallenCount": 10,
+      "standingCount": 0,
+      "totalBallHits": 4,
+      "totalPinHits": 9
+    }
+  ],
+  "video": {
+    "path": "/workspace/scratch/lane-bowling/qa/recording/gameplay.mp4",
+    "bytes": 2386361,
+    "sha256": "bab99c6dd08e7a5f3f85c0cdb74c14db688d567c3dd269ee38baaa647ce49938",
+    "capturedSeconds": 50.53242063522339,
+    "fullDecodePassed": true
+  },
+  "frameAdmission": {
+    "policy": "Acknowledge every observed CDP frame; retain strictly increasing finite timestamps. Omit and log invalid, duplicate, backward, or post-stop events. Never sort or rewrite retained timestamps.",
+    "rawCdpFrames": 681,
+    "acceptedCdpFrames": 681,
+    "droppedCdpFrames": 0,
+    "droppedFrames": []
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 94,
+    "rafIntervalMs": {
+      "count": 94,
+      "min": 16.599999999998545,
+      "median": 33.400000000000546,
+      "p95": 83.39999999999964,
+      "max": 100,
+      "mean": 41.66489361702128
+    },
+    "webglDrawCalls": {
+      "count": 94,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 94,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "visualReview": {
+    "playing960": true,
+    "playing1280": true,
+    "encodedSample": "screenshots/encoded-gameplay-22.png",
+    "note": "Viewed actual ten-pin rolling play at 960/1280 and encoded 22-second re-aiming after nine pins fell. Moving ball, fallen markers, surviving pin, status rack, aim and power are clear; ordinary throws matched the independent circle simulator."
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}
