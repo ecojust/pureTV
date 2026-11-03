@@ -1,0 +1,1743 @@
+{
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "34db2d213e28f176adf39c7fa0e17ba963ae011b4e2bfd19ebc2f183101638bb",
+    "game-model.js": "0dc9cb621505bf6a82046f67fda13bb76d737bb1df6ff7269646d0b08911630a",
+    "game.js": "f5eb29f88c51f1da5ffafca1872dc0676cef42f5531f3c980c8e03cea7fefd69",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "startedAt": "2026-11-03T18:08:15.004Z",
+  "environment": {
+    "browser": "154.0.8037.57",
+    "renderer": "ANGLE SwiftShader",
+    "viewport": [
+      1280,
+      720
+    ],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "tests": [
+    {
+      "name": "loads title and read-only snapshot",
+      "passed": true,
+      "milliseconds": 8.373605999999882,
+      "details": {
+        "id": "river-hopper",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 796,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "width": 420,
+          "height": 420,
+          "cell": 60,
+          "rows": 7,
+          "playerRadius": 10,
+          "player": {
+            "x": 210,
+            "row": 6,
+            "facing": "up"
+          },
+          "homes": [
+            {
+              "id": 1,
+              "x": 30
+            },
+            {
+              "id": 2,
+              "x": 150
+            },
+            {
+              "id": 3,
+              "x": 270
+            },
+            {
+              "id": 4,
+              "x": 390
+            }
+          ],
+          "lanes": [
+            {
+              "id": "road-low",
+              "type": "road",
+              "row": 5,
+              "speed": 52,
+              "width": 58,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 80
+                },
+                {
+                  "id": 2,
+                  "x": 290
+                }
+              ]
+            },
+            {
+              "id": "road-high",
+              "type": "road",
+              "row": 4,
+              "speed": -42,
+              "width": 48,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 30
+                },
+                {
+                  "id": 2,
+                  "x": 170
+                },
+                {
+                  "id": 3,
+                  "x": 310
+                }
+              ]
+            },
+            {
+              "id": "river-low",
+              "type": "river",
+              "row": 2,
+              "speed": -30,
+              "width": 130,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 70
+                },
+                {
+                  "id": 2,
+                  "x": 210
+                },
+                {
+                  "id": 3,
+                  "x": 350
+                }
+              ]
+            },
+            {
+              "id": "river-high",
+              "type": "river",
+              "row": 1,
+              "speed": 36,
+              "width": 150,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 60
+                },
+                {
+                  "id": 2,
+                  "x": 270
+                }
+              ]
+            }
+          ],
+          "visited": [],
+          "goalCount": 0,
+          "target": 2,
+          "lives": 3,
+          "maxLives": 3,
+          "timeLimit": 45,
+          "timeLeft": 45,
+          "activeTicks": 0,
+          "physicsTicks": 0,
+          "physicsRemainder": 0,
+          "respawnTicks": 0,
+          "supportId": null,
+          "supportLane": null,
+          "rideTicks": 0,
+          "carriedDistance": 0,
+          "jumps": 0,
+          "deaths": 0,
+          "lastDeath": null,
+          "deathHistory": [],
+          "arrivals": [],
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "方向键跳一步；车道避车，河道踩稳原木。木头带你漂移但不会带你环绕；抵达不同家位，重复家位会损失生命。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 210,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          383.29999999999995,
+          16.700000000000045,
+          66.60000000000002
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "title is rendered",
+      "passed": true,
+      "milliseconds": 2765.721076,
+      "details": {
+        "bounds": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463
+        },
+        "coarseColors": 104,
+        "luminanceDeviation": 34.50883497310382,
+        "note": "Automatic blank-frame heuristic; requires separate human visual review."
+      }
+    },
+    {
+      "name": "Enter starts the normal game",
+      "passed": true,
+      "milliseconds": 119.38820699999997,
+      "details": {
+        "id": "river-hopper",
+        "phase": "playing",
+        "paused": false,
+        "tick": 6,
+        "elapsed": 0.09999999999999999,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 796,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "width": 420,
+          "height": 420,
+          "cell": 60,
+          "rows": 7,
+          "playerRadius": 10,
+          "player": {
+            "x": 210,
+            "row": 6,
+            "facing": "up"
+          },
+          "homes": [
+            {
+              "id": 1,
+              "x": 30
+            },
+            {
+              "id": 2,
+              "x": 150
+            },
+            {
+              "id": 3,
+              "x": 270
+            },
+            {
+              "id": 4,
+              "x": 390
+            }
+          ],
+          "lanes": [
+            {
+              "id": "road-low",
+              "type": "road",
+              "row": 5,
+              "speed": 52,
+              "width": 58,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 85.20000000000005
+                },
+                {
+                  "id": 2,
+                  "x": 295.2000000000007
+                }
+              ]
+            },
+            {
+              "id": "road-high",
+              "type": "road",
+              "row": 4,
+              "speed": -42,
+              "width": 48,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 25.799999999999727
+                },
+                {
+                  "id": 2,
+                  "x": 165.79999999999973
+                },
+                {
+                  "id": 3,
+                  "x": 305.7999999999997
+                }
+              ]
+            },
+            {
+              "id": "river-low",
+              "type": "river",
+              "row": 2,
+              "speed": -30,
+              "width": 130,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 67
+                },
+                {
+                  "id": 2,
+                  "x": 207
+                },
+                {
+                  "id": 3,
+                  "x": 347
+                }
+              ]
+            },
+            {
+              "id": "river-high",
+              "type": "river",
+              "row": 1,
+              "speed": 36,
+              "width": 150,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 63.600000000000136
+                },
+                {
+                  "id": 2,
+                  "x": 273.59999999999945
+                }
+              ]
+            }
+          ],
+          "visited": [],
+          "goalCount": 0,
+          "target": 2,
+          "lives": 3,
+          "maxLives": 3,
+          "timeLimit": 45,
+          "timeLeft": 44.9,
+          "activeTicks": 12,
+          "physicsTicks": 12,
+          "physicsRemainder": 0,
+          "respawnTicks": 0,
+          "supportId": null,
+          "supportLane": null,
+          "rideTicks": 0,
+          "carriedDistance": 0,
+          "jumps": 0,
+          "deaths": 0,
+          "lastDeath": null,
+          "deathHistory": [],
+          "arrivals": [],
+          "elapsed": 0.09999999999999999,
+          "elapsedCapped": false,
+          "calls": 6,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": 1,
+          "cancelledLast": true,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "方向键跳一步；车道避车，河道踩稳原木。木头带你漂移但不会带你环绕；抵达不同家位，重复家位会损失生命。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 210,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          383.29999999999995,
+          16.700000000000045,
+          66.60000000000002,
+          883.3000000000001,
+          266.5999999999999,
+          116.70000000000005,
+          66.70000000000005,
+          183.29999999999973,
+          183.30000000000018,
+          150.0999999999999,
+          100,
+          83.20000000000027,
+          16.699999999999818,
+          150.0999999999999,
+          16.59999999999991,
+          183.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          33.30000000000018,
+          116.69999999999982
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "P freezes gameplay state and tick, P resumes",
+      "passed": true,
+      "milliseconds": 606.9333409999999,
+      "details": {
+        "pausedTick": 6
+      }
+    },
+    {
+      "name": "ordinary movement and action input",
+      "passed": true,
+      "milliseconds": 3426.9748520000003,
+      "details": {
+        "before": {
+          "id": "river-hopper",
+          "phase": "playing",
+          "paused": false,
+          "tick": 12,
+          "elapsed": 0.19999999999999998,
+          "level": 0,
+          "best": 0,
+          "model": {
+            "schema": 1,
+            "seed": 796,
+            "level": 0,
+            "phase": "playing",
+            "reason": "",
+            "score": 0,
+            "width": 420,
+            "height": 420,
+            "cell": 60,
+            "rows": 7,
+            "playerRadius": 10,
+            "player": {
+              "x": 210,
+              "row": 6,
+              "facing": "up"
+            },
+            "homes": [
+              {
+                "id": 1,
+                "x": 30
+              },
+              {
+                "id": 2,
+                "x": 150
+              },
+              {
+                "id": 3,
+                "x": 270
+              },
+              {
+                "id": 4,
+                "x": 390
+              }
+            ],
+            "lanes": [
+              {
+                "id": "road-low",
+                "type": "road",
+                "row": 5,
+                "speed": 52,
+                "width": 58,
+                "objects": [
+                  {
+                    "id": 1,
+                    "x": 90.40000000000009
+                  },
+                  {
+                    "id": 2,
+                    "x": 300.40000000000146
+                  }
+                ]
+              },
+              {
+                "id": "road-high",
+                "type": "road",
+                "row": 4,
+                "speed": -42,
+                "width": 48,
+                "objects": [
+                  {
+                    "id": 1,
+                    "x": 21.599999999999454
+                  },
+                  {
+                    "id": 2,
+                    "x": 161.59999999999945
+                  },
+                  {
+                    "id": 3,
+                    "x": 301.59999999999945
+                  }
+                ]
+              },
+              {
+                "id": "river-low",
+                "type": "river",
+                "row": 2,
+                "speed": -30,
+                "width": 130,
+                "objects": [
+                  {
+                    "id": 1,
+                    "x": 64
+                  },
+                  {
+                    "id": 2,
+                    "x": 204
+                  },
+                  {
+                    "id": 3,
+                    "x": 344
+                  }
+                ]
+              },
+              {
+                "id": "river-high",
+                "type": "river",
+                "row": 1,
+                "speed": 36,
+                "width": 150,
+                "objects": [
+                  {
+                    "id": 1,
+                    "x": 67.20000000000027
+                  },
+                  {
+                    "id": 2,
+                    "x": 277.1999999999989
+                  }
+                ]
+              }
+            ],
+            "visited": [],
+            "goalCount": 0,
+            "target": 2,
+            "lives": 3,
+            "maxLives": 3,
+            "timeLimit": 45,
+            "timeLeft": 44.8,
+            "activeTicks": 24,
+            "physicsTicks": 24,
+            "physicsRemainder": 0,
+            "respawnTicks": 0,
+            "supportId": null,
+            "supportLane": null,
+            "rideTicks": 0,
+            "carriedDistance": 0,
+            "jumps": 0,
+            "deaths": 0,
+            "lastDeath": null,
+            "deathHistory": [],
+            "arrivals": [],
+            "elapsed": 0.19999999999999998,
+            "elapsedCapped": false,
+            "calls": 12,
+            "blockedActions": 0,
+            "inputArmed": false,
+            "cancelEpoch": 3,
+            "cancelledLast": true,
+            "lastHeld": {
+              "a": false,
+              "b": false,
+              "direction": "none"
+            },
+            "lastCommand": "none",
+            "events": [],
+            "terminalReceipt": null,
+            "message": "方向键跳一步；车道避车，河道踩稳原木。木头带你漂移但不会带你环绕；抵达不同家位，重复家位会损失生命。"
+          },
+          "renderer": {
+            "kind": "webgl",
+            "drawCalls": 1,
+            "quads": 212,
+            "textureCount": 1,
+            "atlasSize": 1024,
+            "contextLost": false
+          },
+          "frameTimesMs": [
+            383.29999999999995,
+            16.700000000000045,
+            66.60000000000002,
+            883.3000000000001,
+            266.5999999999999,
+            116.70000000000005,
+            66.70000000000005,
+            183.29999999999973,
+            183.30000000000018,
+            150.0999999999999,
+            100,
+            83.20000000000027,
+            16.699999999999818,
+            150.0999999999999,
+            16.59999999999991,
+            183.30000000000018,
+            116.69999999999982,
+            133.30000000000018,
+            33.30000000000018,
+            116.69999999999982,
+            233.30000000000018,
+            66.69999999999982,
+            83.20000000000027,
+            133.4000000000001,
+            150
+          ],
+          "connection": {
+            "phoneSeen": false,
+            "disconnected": false
+          }
+        },
+        "after": {
+          "id": "river-hopper",
+          "phase": "won",
+          "paused": false,
+          "tick": 204,
+          "elapsed": 3.399999999999993,
+          "level": 0,
+          "best": 100,
+          "model": {
+            "schema": 1,
+            "seed": 796,
+            "level": 0,
+            "phase": "won",
+            "reason": "homes",
+            "score": 100,
+            "width": 420,
+            "height": 420,
+            "cell": 60,
+            "rows": 7,
+            "playerRadius": 10,
+            "player": {
+              "x": 210,
+              "row": 6,
+              "facing": "up"
+            },
+            "homes": [
+              {
+                "id": 1,
+                "x": 30
+              },
+              {
+                "id": 2,
+                "x": 150
+              },
+              {
+                "id": 3,
+                "x": 270
+              },
+              {
+                "id": 4,
+                "x": 390
+              }
+            ],
+            "lanes": [
+              {
+                "id": "road-low",
+                "type": "road",
+                "row": 5,
+                "speed": 52,
+                "width": 58,
+                "objects": [
+                  {
+                    "id": 1,
+                    "x": 255.93333333335636
+                  },
+                  {
+                    "id": 2,
+                    "x": 45.93333333335187
+                  }
+                ]
+              },
+              {
+                "id": "road-high",
+                "type": "road",
+                "row": 4,
+                "speed": -42,
+                "width": 48,
+                "objects": [
+                  {
+                    "id": 1,
+                    "x": 307.89999999999077
+                  },
+                  {
+                    "id": 2,
+                    "x": 27.89999999999077
+                  },
+                  {
+                    "id": 3,
+                    "x": 167.89999999999077
+                  }
+                ]
+              },
+              {
+                "id": "river-low",
+                "type": "river",
+                "row": 2,
+                "speed": -30,
+                "width": 130,
+                "objects": [
+                  {
+                    "id": 1,
+                    "x": 388.5
+                  },
+                  {
+                    "id": 2,
+                    "x": 108.5
+                  },
+                  {
+                    "id": 3,
+                    "x": 248.5
+                  }
+                ]
+              },
+              {
+                "id": "river-high",
+                "type": "river",
+                "row": 1,
+                "speed": 36,
+                "width": 150,
+                "objects": [
+                  {
+                    "id": 1,
+                    "x": 181.79999999998768
+                  },
+                  {
+                    "id": 2,
+                    "x": 391.79999999998154
+                  }
+                ]
+              }
+            ],
+            "visited": [
+              2,
+              4
+            ],
+            "goalCount": 2,
+            "target": 2,
+            "lives": 3,
+            "maxLives": 3,
+            "timeLimit": 45,
+            "timeLeft": 41.61666666666667,
+            "activeTicks": 406,
+            "physicsTicks": 406,
+            "physicsRemainder": 0,
+            "respawnTicks": 36,
+            "supportId": null,
+            "supportLane": null,
+            "rideTicks": 118,
+            "carriedDistance": 32.000000000000036,
+            "jumps": 16,
+            "deaths": 0,
+            "lastDeath": null,
+            "deathHistory": [],
+            "arrivals": [
+              {
+                "home": 2,
+                "x": 144.60000000000025,
+                "activeTicks": 172,
+                "time": 1.4333333333333333,
+                "count": 1
+              },
+              {
+                "home": 4,
+                "x": 393.4000000000003,
+                "activeTicks": 406,
+                "time": 3.3833333333333333,
+                "count": 2
+              }
+            ],
+            "elapsed": 3.399999999999993,
+            "elapsedCapped": false,
+            "calls": 204,
+            "blockedActions": 0,
+            "inputArmed": true,
+            "cancelEpoch": 3,
+            "cancelledLast": false,
+            "lastHeld": {
+              "a": false,
+              "b": false,
+              "direction": "up"
+            },
+            "lastCommand": "up",
+            "events": [
+              {
+                "type": "jump",
+                "call": 204,
+                "from": {
+                  "x": 393.4000000000003,
+                  "row": 1
+                },
+                "to": {
+                  "x": 393.4000000000003,
+                  "row": 0
+                }
+              },
+              {
+                "type": "home",
+                "call": 204,
+                "receipt": {
+                  "home": 4,
+                  "x": 393.4000000000003,
+                  "activeTicks": 406,
+                  "time": 3.3833333333333333,
+                  "count": 2
+                }
+              },
+              {
+                "type": "win",
+                "call": 204,
+                "reason": "homes"
+              }
+            ],
+            "terminalReceipt": {
+              "cause": "homes",
+              "level": 0,
+              "call": 204,
+              "elapsed": 3.399999999999993,
+              "activeTicks": 406,
+              "timeLeft": 41.61666666666667,
+              "lives": 3,
+              "visited": [
+                2,
+                4
+              ],
+              "goalCount": 2,
+              "jumps": 16,
+              "deaths": 0,
+              "lastDeath": null,
+              "player": {
+                "x": 210,
+                "row": 6,
+                "facing": "up"
+              },
+              "lanes": [
+                {
+                  "id": "road-low",
+                  "type": "road",
+                  "row": 5,
+                  "speed": 52,
+                  "width": 58,
+                  "objects": [
+                    {
+                      "id": 1,
+                      "x": 255.93333333335636
+                    },
+                    {
+                      "id": 2,
+                      "x": 45.93333333335187
+                    }
+                  ]
+                },
+                {
+                  "id": "road-high",
+                  "type": "road",
+                  "row": 4,
+                  "speed": -42,
+                  "width": 48,
+                  "objects": [
+                    {
+                      "id": 1,
+                      "x": 307.89999999999077
+                    },
+                    {
+                      "id": 2,
+                      "x": 27.89999999999077
+                    },
+                    {
+                      "id": 3,
+                      "x": 167.89999999999077
+                    }
+                  ]
+                },
+                {
+                  "id": "river-low",
+                  "type": "river",
+                  "row": 2,
+                  "speed": -30,
+                  "width": 130,
+                  "objects": [
+                    {
+                      "id": 1,
+                      "x": 388.5
+                    },
+                    {
+                      "id": 2,
+                      "x": 108.5
+                    },
+                    {
+                      "id": 3,
+                      "x": 248.5
+                    }
+                  ]
+                },
+                {
+                  "id": "river-high",
+                  "type": "river",
+                  "row": 1,
+                  "speed": 36,
+                  "width": 150,
+                  "objects": [
+                    {
+                      "id": 1,
+                      "x": 181.79999999998768
+                    },
+                    {
+                      "id": 2,
+                      "x": 391.79999999998154
+                    }
+                  ]
+                }
+              ],
+              "score": 100,
+              "phase": "won",
+              "reason": "homes"
+            },
+            "message": "不同家位均已抵达，渡河完成。"
+          },
+          "renderer": {
+            "kind": "webgl",
+            "drawCalls": 1,
+            "quads": 213,
+            "textureCount": 1,
+            "atlasSize": 1024,
+            "contextLost": false
+          },
+          "frameTimesMs": [
+            383.29999999999995,
+            16.700000000000045,
+            66.60000000000002,
+            883.3000000000001,
+            266.5999999999999,
+            116.70000000000005,
+            66.70000000000005,
+            183.29999999999973,
+            183.30000000000018,
+            150.0999999999999,
+            100,
+            83.20000000000027,
+            16.699999999999818,
+            150.0999999999999,
+            16.59999999999991,
+            183.30000000000018,
+            116.69999999999982,
+            133.30000000000018,
+            33.30000000000018,
+            116.69999999999982,
+            233.30000000000018,
+            66.69999999999982,
+            83.20000000000027,
+            133.4000000000001,
+            150,
+            200,
+            66.69999999999982,
+            49.899999999999636,
+            33.400000000000546,
+            66.69999999999982,
+            33.30000000000018,
+            16.599999999999454,
+            66.70000000000073,
+            16.699999999999818,
+            16.699999999999818,
+            50,
+            33.30000000000018,
+            66.59999999999945,
+            33.400000000000546,
+            16.599999999999454,
+            66.70000000000073,
+            16.699999999999818,
+            49.899999999999636,
+            50,
+            66.80000000000018,
+            16.600000000000364,
+            16.699999999999818,
+            50,
+            33.30000000000018,
+            16.699999999999818,
+            66.59999999999945,
+            33.30000000000018,
+            16.699999999999818,
+            50,
+            33.30000000000018,
+            50,
+            50,
+            50.100000000000364,
+            16.599999999999454,
+            83.40000000000055,
+            33.19999999999982,
+            16.699999999999818,
+            66.69999999999982,
+            33.30000000000018,
+            50.100000000000364,
+            49.899999999999636,
+            16.699999999999818,
+            50,
+            16.700000000000728,
+            83.19999999999982,
+            16.800000000000182,
+            33.29999999999927,
+            33.400000000000546,
+            33.19999999999982,
+            16.699999999999818,
+            66.69999999999982,
+            16.700000000000728,
+            16.599999999999454,
+            83.40000000000055,
+            16.599999999999454,
+            83.40000000000055,
+            16.599999999999454,
+            50,
+            33.400000000000546,
+            33.19999999999982,
+            50.099999999999454,
+            33.30000000000018,
+            50,
+            16.699999999999818,
+            33.30000000000018,
+            50,
+            66.69999999999982,
+            33.30000000000018,
+            33.30000000000018,
+            16.600000000000364,
+            66.79999999999927,
+            33.30000000000018,
+            16.600000000000364,
+            50.099999999999454,
+            49.900000000000546,
+            50,
+            33.399999999999636,
+            49.900000000000546,
+            50,
+            16.699999999999818,
+            33.399999999999636
+          ],
+          "connection": {
+            "phoneSeen": false,
+            "disconnected": false
+          }
+        }
+      }
+    },
+    {
+      "name": "game-specific normal-play assertions",
+      "passed": true,
+      "milliseconds": 0.30229700000018056
+    },
+    {
+      "name": "gameplay frame is visible",
+      "passed": true,
+      "milliseconds": 1743.6523140000008,
+      "details": {
+        "bounds": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463
+        },
+        "coarseColors": 103,
+        "luminanceDeviation": 34.880702610380574,
+        "note": "Automatic blank-frame heuristic; requires separate human visual review."
+      }
+    },
+    {
+      "name": "R restarts with clean simulation state",
+      "passed": true,
+      "milliseconds": 119.62952000000041,
+      "details": {
+        "id": "river-hopper",
+        "phase": "playing",
+        "paused": false,
+        "tick": 6,
+        "elapsed": 0.09999999999999999,
+        "level": 0,
+        "best": 100,
+        "model": {
+          "schema": 1,
+          "seed": 796,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "width": 420,
+          "height": 420,
+          "cell": 60,
+          "rows": 7,
+          "playerRadius": 10,
+          "player": {
+            "x": 210,
+            "row": 6,
+            "facing": "up"
+          },
+          "homes": [
+            {
+              "id": 1,
+              "x": 30
+            },
+            {
+              "id": 2,
+              "x": 150
+            },
+            {
+              "id": 3,
+              "x": 270
+            },
+            {
+              "id": 4,
+              "x": 390
+            }
+          ],
+          "lanes": [
+            {
+              "id": "road-low",
+              "type": "road",
+              "row": 5,
+              "speed": 52,
+              "width": 58,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 85.20000000000005
+                },
+                {
+                  "id": 2,
+                  "x": 295.2000000000007
+                }
+              ]
+            },
+            {
+              "id": "road-high",
+              "type": "road",
+              "row": 4,
+              "speed": -42,
+              "width": 48,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 25.799999999999727
+                },
+                {
+                  "id": 2,
+                  "x": 165.79999999999973
+                },
+                {
+                  "id": 3,
+                  "x": 305.7999999999997
+                }
+              ]
+            },
+            {
+              "id": "river-low",
+              "type": "river",
+              "row": 2,
+              "speed": -30,
+              "width": 130,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 67
+                },
+                {
+                  "id": 2,
+                  "x": 207
+                },
+                {
+                  "id": 3,
+                  "x": 347
+                }
+              ]
+            },
+            {
+              "id": "river-high",
+              "type": "river",
+              "row": 1,
+              "speed": 36,
+              "width": 150,
+              "objects": [
+                {
+                  "id": 1,
+                  "x": 63.600000000000136
+                },
+                {
+                  "id": 2,
+                  "x": 273.59999999999945
+                }
+              ]
+            }
+          ],
+          "visited": [],
+          "goalCount": 0,
+          "target": 2,
+          "lives": 3,
+          "maxLives": 3,
+          "timeLimit": 45,
+          "timeLeft": 44.9,
+          "activeTicks": 12,
+          "physicsTicks": 12,
+          "physicsRemainder": 0,
+          "respawnTicks": 0,
+          "supportId": null,
+          "supportLane": null,
+          "rideTicks": 0,
+          "carriedDistance": 0,
+          "jumps": 0,
+          "deaths": 0,
+          "lastDeath": null,
+          "deathHistory": [],
+          "arrivals": [],
+          "elapsed": 0.09999999999999999,
+          "elapsedCapped": false,
+          "calls": 6,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": 4,
+          "cancelledLast": true,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "方向键跳一步；车道避车，河道踩稳原木。木头带你漂移但不会带你环绕；抵达不同家位，重复家位会损失生命。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 210,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          383.29999999999995,
+          16.700000000000045,
+          66.60000000000002,
+          883.3000000000001,
+          266.5999999999999,
+          116.70000000000005,
+          66.70000000000005,
+          183.29999999999973,
+          183.30000000000018,
+          150.0999999999999,
+          100,
+          83.20000000000027,
+          16.699999999999818,
+          150.0999999999999,
+          16.59999999999991,
+          183.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          33.30000000000018,
+          116.69999999999982,
+          233.30000000000018,
+          66.69999999999982,
+          83.20000000000027,
+          133.4000000000001,
+          150,
+          200,
+          66.69999999999982,
+          49.899999999999636,
+          33.400000000000546,
+          66.69999999999982,
+          33.30000000000018,
+          16.599999999999454,
+          66.70000000000073,
+          16.699999999999818,
+          16.699999999999818,
+          50,
+          33.30000000000018,
+          66.59999999999945,
+          33.400000000000546,
+          16.599999999999454,
+          66.70000000000073,
+          16.699999999999818,
+          49.899999999999636,
+          50,
+          66.80000000000018,
+          16.600000000000364,
+          16.699999999999818,
+          50,
+          33.30000000000018,
+          16.699999999999818,
+          66.59999999999945,
+          33.30000000000018,
+          16.699999999999818,
+          50,
+          33.30000000000018,
+          50,
+          50,
+          50.100000000000364,
+          16.599999999999454,
+          83.40000000000055,
+          33.19999999999982,
+          16.699999999999818,
+          66.69999999999982,
+          33.30000000000018,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          50,
+          16.700000000000728,
+          83.19999999999982,
+          16.800000000000182,
+          33.29999999999927,
+          33.400000000000546,
+          33.19999999999982,
+          16.699999999999818,
+          66.69999999999982,
+          16.700000000000728,
+          16.599999999999454,
+          83.40000000000055,
+          16.599999999999454,
+          83.40000000000055,
+          16.599999999999454,
+          50,
+          33.400000000000546,
+          33.19999999999982,
+          50.099999999999454,
+          33.30000000000018,
+          50,
+          16.699999999999818,
+          33.30000000000018,
+          50,
+          66.69999999999982,
+          33.30000000000018,
+          33.30000000000018,
+          16.600000000000364,
+          66.79999999999927,
+          33.30000000000018,
+          16.600000000000364,
+          50.099999999999454,
+          49.900000000000546,
+          50,
+          33.399999999999636,
+          49.900000000000546,
+          50,
+          16.699999999999818,
+          33.399999999999636,
+          33.30000000000018,
+          200,
+          116.69999999999982,
+          99.90000000000055,
+          83.39999999999964,
+          133.29999999999927,
+          233.40000000000146,
+          116.59999999999854,
+          83.30000000000109,
+          16.69999999999891,
+          33.30000000000109,
+          16.69999999999891,
+          166.70000000000073,
+          299.89999999999964,
+          83.39999999999964,
+          100,
+          133.3000000000011
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "resizing keeps canvas and complete sidebar text visible",
+      "passed": true,
+      "milliseconds": 2191.6473509999996,
+      "details": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "sidebar": {
+            "visible": true,
+            "bounds": {
+              "left": 749,
+              "top": 65,
+              "right": 944,
+              "bottom": 509
+            },
+            "scrollTop": 0,
+            "clientHeight": 442,
+            "scrollHeight": 442,
+            "clientWidth": 193,
+            "scrollWidth": 193,
+            "tipText": "三条生命。车撞、落水、随木漂出边界、重复家位或落在家位之间都扣一命；手动越界跳跃免费拒绝。原木绕边时角色不瞬移。绿色河岸可等待；回起点短暂停步期间车、木与时钟仍继续，松开方向再跳。",
+            "expectedTip": "三条生命。车撞、落水、随木漂出边界、重复家位或落在家位之间都扣一命；手动越界跳跃免费拒绝。原木绕边时角色不瞬移。绿色河岸可等待；回起点短暂停步期间车、木与时钟仍继续，松开方向再跳。",
+            "texts": [
+              {
+                "text": "手机与电视连接同一 Wi-Fi",
+                "rects": [
+                  {
+                    "left": 870,
+                    "top": 134.5,
+                    "right": 930,
+                    "bottom": 148.5
+                  },
+                  {
+                    "left": 870,
+                    "top": 148.5,
+                    "right": 925.484375,
+                    "bottom": 162.5
+                  }
+                ]
+              },
+              {
+                "text": "四向跳一步；左右按当前横坐标加减一格，上下保留横坐标",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 205,
+                    "right": 932,
+                    "bottom": 220
+                  },
+                  {
+                    "left": 789,
+                    "top": 220.390625,
+                    "right": 932,
+                    "bottom": 235.390625
+                  }
+                ]
+              },
+              {
+                "text": "A 不使用；所有移动均用方向键或手机左摇杆",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 239.78125,
+                    "right": 930.890625,
+                    "bottom": 254.78125
+                  },
+                  {
+                    "left": 789,
+                    "top": 255.171875,
+                    "right": 866,
+                    "bottom": 270.171875
+                  }
+                ]
+              },
+              {
+                "text": "B 不使用",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 278.859375,
+                    "right": 832.015625,
+                    "bottom": 293.859375
+                  }
+                ]
+              },
+              {
+                "text": "P 暂停　R 重试遥控器确认开始 / A，播放键暂停",
+                "rects": [
+                  {
+                    "left": 758,
+                    "top": 304.5625,
+                    "right": 825.484375,
+                    "bottom": 318.5625
+                  },
+                  {
+                    "left": 758,
+                    "top": 318.5625,
+                    "right": 903.3125,
+                    "bottom": 332.5625
+                  }
+                ]
+              },
+              {
+                "text": "三条生命。车撞、落水、随木漂出边界、重复家位或落在家位之间都扣一命；手动越界跳跃免费拒绝。原木绕边时角色不瞬移。绿色河岸可等待；回起点短暂停步期间车、木与时钟仍继续，松开方向再跳。",
+                "rects": [
+                  {
+                    "left": 801.5,
+                    "top": 345.5625,
+                    "right": 922.5,
+                    "bottom": 360.5625
+                  },
+                  {
+                    "left": 765,
+                    "top": 360.953125,
+                    "right": 919,
+                    "bottom": 375.953125
+                  },
+                  {
+                    "left": 765,
+                    "top": 376.34375,
+                    "right": 919,
+                    "bottom": 391.34375
+                  },
+                  {
+                    "left": 765,
+                    "top": 391.734375,
+                    "right": 919,
+                    "bottom": 406.734375
+                  },
+                  {
+                    "left": 765,
+                    "top": 407.125,
+                    "right": 919,
+                    "bottom": 422.125
+                  },
+                  {
+                    "left": 765,
+                    "top": 422.515625,
+                    "right": 919,
+                    "bottom": 437.515625
+                  },
+                  {
+                    "left": 765,
+                    "top": 437.90625,
+                    "right": 864,
+                    "bottom": 452.90625
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "sidebar": {
+            "visible": true,
+            "bounds": {
+              "left": 1024,
+              "top": 94,
+              "right": 1252,
+              "bottom": 672
+            },
+            "scrollTop": 0,
+            "clientHeight": 576,
+            "scrollHeight": 576,
+            "clientWidth": 226,
+            "scrollWidth": 226,
+            "tipText": "三条生命。车撞、落水、随木漂出边界、重复家位或落在家位之间都扣一命；手动越界跳跃免费拒绝。原木绕边时角色不瞬移。绿色河岸可等待；回起点短暂停步期间车、木与时钟仍继续，松开方向再跳。",
+            "expectedTip": "三条生命。车撞、落水、随木漂出边界、重复家位或落在家位之间都扣一命；手动越界跳跃免费拒绝。原木绕边时角色不瞬移。绿色河岸可等待；回起点短暂停步期间车、木与时钟仍继续，松开方向再跳。",
+            "texts": [
+              {
+                "text": "手机与电视连接同一 Wi-Fi",
+                "rects": [
+                  {
+                    "left": 1163,
+                    "top": 173.5,
+                    "right": 1233,
+                    "bottom": 187.5
+                  },
+                  {
+                    "left": 1163,
+                    "top": 187.5,
+                    "right": 1208.484375,
+                    "bottom": 201.5
+                  }
+                ]
+              },
+              {
+                "text": "四向跳一步；左右按当前横坐标加减一格，上下保留横坐标",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 252,
+                    "right": 1231,
+                    "bottom": 267
+                  },
+                  {
+                    "left": 1066,
+                    "top": 267.390625,
+                    "right": 1187,
+                    "bottom": 282.390625
+                  }
+                ]
+              },
+              {
+                "text": "A 不使用；所有移动均用方向键或手机左摇杆",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 286.78125,
+                    "right": 1240.890625,
+                    "bottom": 301.78125
+                  },
+                  {
+                    "left": 1066,
+                    "top": 302.171875,
+                    "right": 1110,
+                    "bottom": 317.171875
+                  }
+                ]
+              },
+              {
+                "text": "B 不使用",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 325.859375,
+                    "right": 1109.015625,
+                    "bottom": 340.859375
+                  }
+                ]
+              },
+              {
+                "text": "P 暂停　R 重试遥控器确认开始 / A，播放键暂停",
+                "rects": [
+                  {
+                    "left": 1035,
+                    "top": 351.5625,
+                    "right": 1102.484375,
+                    "bottom": 365.5625
+                  },
+                  {
+                    "left": 1035,
+                    "top": 365.5625,
+                    "right": 1180.3125,
+                    "bottom": 379.5625
+                  }
+                ]
+              },
+              {
+                "text": "三条生命。车撞、落水、随木漂出边界、重复家位或落在家位之间都扣一命；手动越界跳跃免费拒绝。原木绕边时角色不瞬移。绿色河岸可等待；回起点短暂停步期间车、木与时钟仍继续，松开方向再跳。",
+                "rects": [
+                  {
+                    "left": 1078.5,
+                    "top": 392.5625,
+                    "right": 1232.5,
+                    "bottom": 407.5625
+                  },
+                  {
+                    "left": 1042,
+                    "top": 407.953125,
+                    "right": 1229,
+                    "bottom": 422.953125
+                  },
+                  {
+                    "left": 1042,
+                    "top": 423.34375,
+                    "right": 1229,
+                    "bottom": 438.34375
+                  },
+                  {
+                    "left": 1042,
+                    "top": 438.734375,
+                    "right": 1229,
+                    "bottom": 453.734375
+                  },
+                  {
+                    "left": 1042,
+                    "top": 454.125,
+                    "right": 1218,
+                    "bottom": 469.125
+                  },
+                  {
+                    "left": 1042,
+                    "top": 469.515625,
+                    "right": 1141,
+                    "bottom": 484.515625
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "no page, console or resource errors",
+      "passed": true,
+      "milliseconds": 0.19273099999918486
+    }
+  ],
+  "screenshots": [
+    "/workspace/scratch/river-hopper/qa/01-title.png",
+    "/workspace/scratch/river-hopper/qa/02-gameplay.png",
+    "/workspace/scratch/river-hopper/qa/resize-960.png",
+    "/workspace/scratch/river-hopper/qa/resize-1280.png"
+  ],
+  "uniqueRulesVerified": true,
+  "modelTestsExecuted": false,
+  "visualReviewCompleted": false,
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 73,
+    "rafIntervalMs": {
+      "count": 73,
+      "min": 16.599999999999454,
+      "median": 33.399999999999636,
+      "p95": 83.19999999999982,
+      "max": 83.40000000000055,
+      "mean": 39.268493150684925
+    },
+    "webglDrawCalls": {
+      "count": 73,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 73,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "recording": {
+    "video": "/workspace/scratch/river-hopper/qa/recording/gameplay.mp4",
+    "bytes": 3454205,
+    "capturedSeconds": 50.38067626953125,
+    "frames": 658,
+    "manifest": "/workspace/scratch/river-hopper/qa/recording/recording.json"
+  },
+  "sharedRegressionPassed": true,
+  "finishedAt": "2026-11-03T18:09:39.062Z"
+}
