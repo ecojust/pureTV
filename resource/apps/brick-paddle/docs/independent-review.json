@@ -1,0 +1,113 @@
+{
+  "passed": true,
+  "method": "Independent visible-trajectory side-wall folding and bounded paddle-offset steering. Every win, miss and durable-brick contact uses create/step normal inputs; no synthetic state fixtures or production controller imports. Speed, life and HP accounting are checked throughout.",
+  "checks": [
+    "independent wall-fold geometry handles both sides and multiple reflections",
+    "three ordinary feedback wins hold under fixed80ms and irregular50–160ms observations",
+    "ordinary maximum-dt flight hits a durable brick once and outgoing contact cannot repeat damage",
+    "time partition agrees for real attached travel and uninterrupted launched flight",
+    "ordinary misses require a released serve and exhaust exactly three lives"
+  ],
+  "runs": [
+    {
+      "level": 0,
+      "observationIntervals": [
+        0.08
+      ],
+      "phase": "won",
+      "seconds": 21.856666666666552,
+      "hits": 6,
+      "lives": 3,
+      "paddleHits": 9,
+      "wallHits": 7,
+      "launches": 1,
+      "sawHalfStrength": false
+    },
+    {
+      "level": 1,
+      "observationIntervals": [
+        0.08
+      ],
+      "phase": "won",
+      "seconds": 19.456666666666603,
+      "hits": 10,
+      "lives": 3,
+      "paddleHits": 9,
+      "wallHits": 2,
+      "launches": 1,
+      "sawHalfStrength": true
+    },
+    {
+      "level": 2,
+      "observationIntervals": [
+        0.08
+      ],
+      "phase": "won",
+      "seconds": 23.936666666666508,
+      "hits": 13,
+      "lives": 3,
+      "paddleHits": 10,
+      "wallHits": 7,
+      "launches": 1,
+      "sawHalfStrength": true
+    },
+    {
+      "level": 0,
+      "observationIntervals": [
+        0.05,
+        0.12,
+        0.07,
+        0.16
+      ],
+      "phase": "won",
+      "seconds": 10.416666666666671,
+      "hits": 6,
+      "lives": 3,
+      "paddleHits": 5,
+      "wallHits": 0,
+      "launches": 1,
+      "sawHalfStrength": false
+    },
+    {
+      "level": 1,
+      "observationIntervals": [
+        0.05,
+        0.12,
+        0.07,
+        0.16
+      ],
+      "phase": "won",
+      "seconds": 22.18666666666671,
+      "hits": 10,
+      "lives": 3,
+      "paddleHits": 10,
+      "wallHits": 6,
+      "launches": 1,
+      "sawHalfStrength": true
+    },
+    {
+      "level": 2,
+      "observationIntervals": [
+        0.05,
+        0.12,
+        0.07,
+        0.16
+      ],
+      "phase": "won",
+      "seconds": 24.25666666666672,
+      "hits": 13,
+      "lives": 3,
+      "paddleHits": 8,
+      "wallHits": 14,
+      "launches": 1,
+      "sawHalfStrength": true
+    }
+  ],
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "0bf81c69b12155f316fc6bd1dc478adf81c70ffbcff8a8e53595fc1766e35434",
+    "tests/reference.cjs": "304adb10018c93fc49f5b9cb0440724ff7036fe0e752c6cc21436512b73a0145",
+    "tests/independent-check.cjs": "38bf109880f4d41b95e6ac5c67af0c90f2ed5b871508f15192712aa7276ef60c"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}
