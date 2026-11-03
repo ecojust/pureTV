@@ -73,4 +73,4 @@ python3 tools/update-resource-index.py
 
 不记录 token、密码、密钥、敏感环境变量、完整凭据输出或私有推理过程。用户 prompt 含秘密时，以 `[已脱敏：类型]` 替换秘密并说明脱敏。记录可复查结论和简短理由，不记录内部思维链。
 
-模板及状态规则见 `history/README.md`。发布相关证据应留在对应应用的 `docs/`，history 只链接；scratch 路径应标为本次环境临时证据。最终回复准确区分已实现、已验证、已签名、已推送与仍待办，保留可继续执行的下一步。
+模板及状态规则见 `history/README.md`；百款游戏环境重建及单款交付入口见 `history/CONTINUE-GAMES.md`。发布相关证据应留在对应应用的 `docs/`，history 只链接；scratch 路径应标为本次环境临时证据。最终回复准确区分已实现、已验证、已签名、已推送与仍待办，保留可继续执行的下一步。
