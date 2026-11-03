@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "method": "Independent unweighted graph search over pick/place transitions; zero-cost correct dispatch normalized immediately; ordinary input replay with cargo conservation.",
+  "layouts": [
+    {
+      "level": 0,
+      "minimumMoves": 12,
+      "allowance": 24,
+      "independentlySearchedStates": 180,
+      "ordinaryCommands": 18,
+      "phase": "won",
+      "cargoConservation": true,
+      "terminalFrozen": true
+    },
+    {
+      "level": 1,
+      "minimumMoves": 17,
+      "allowance": 28,
+      "independentlySearchedStates": 2211,
+      "ordinaryCommands": 24,
+      "phase": "won",
+      "cargoConservation": true,
+      "terminalFrozen": true
+    },
+    {
+      "level": 2,
+      "minimumMoves": 24,
+      "allowance": 32,
+      "independentlySearchedStates": 29169,
+      "ordinaryCommands": 32,
+      "phase": "won",
+      "cargoConservation": true,
+      "terminalFrozen": true
+    }
+  ],
+  "reviewer": "independent_review agent",
+  "scope": "Pure model and declared game rules; not a browser or device validation.",
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "66381b37cd25f8d6f792db36b1c8d1468adf9dc40e8a37db3554a1e752f46601",
+    "docs/model-contract.md": "990e79c3d7da2e644635a6479c65cc18ff90f5210a277869f4ecc3c9d38e60c8",
+    "tests/independent-check.cjs": "c88e537ec86ab477f06928d231c847a8ad2f404d9d78f1cb89f621958a1e0078"
+  },
+  "readReview": [
+    "Command priority and held-edge consumption match the public contract.",
+    "Changed cancellation epochs require a subsequent admitted neutral before a new action.",
+    "Judging capacity/order/limits come from frozen layout configuration.",
+    "Move overrun applies the last transfer then loses; exact allowance permits free dispatch.",
+    "Existing games include geometry packing and magnetic movement; this game instead uses LIFO storage and single-cargo handling with ordered dispatch."
+  ],
+  "findings": [],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}
