@@ -1,0 +1,345 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T14:46:21.022Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "2783bdbaeca44322e4ec9553586b001b6591dc35a0de96516346a6b6b131fe1a",
+    "game-model.js": "380422930cb7af580ec2288a92a7b7fec6319263a975e1f47184bca362601366",
+    "game.js": "62e74d3faad7c723665c852ffc17b415632acac27365d8f56274555e08c00734",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "incomplete submit and clear are free; complete feedback is aggregate and copied",
+      "passed": true,
+      "milliseconds": 6762.148303999999,
+      "screenshots": [
+        "/workspace/scratch/codebreaker/browser-checks/feedback-and-clear-1280.png",
+        "/workspace/scratch/codebreaker/browser-checks/feedback-and-clear-960.png"
+      ],
+      "state": {
+        "id": "codebreaker",
+        "phase": "playing",
+        "paused": false,
+        "tick": 104,
+        "elapsed": 1.733333333333332,
+        "level": 2,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 761,
+          "level": 2,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "cursor": 3,
+          "guess": [
+            0,
+            0,
+            1,
+            null
+          ],
+          "history": [
+            {
+              "guess": [
+                0,
+                0,
+                1,
+                1
+              ],
+              "exact": 2,
+              "misplaced": 0,
+              "attempt": 1
+            }
+          ],
+          "attemptsUsed": 1,
+          "attemptsRemaining": 8,
+          "reveal": null,
+          "edits": 8,
+          "clears": 2,
+          "elapsed": 1.733333333333332,
+          "elapsedCapped": false,
+          "calls": 104,
+          "blockedActions": 1,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "已清空第 4 格；猜测记录保持不变。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 247,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          449.90000000000003,
+          600.0999999999999,
+          766.6000000000001,
+          250,
+          166.5999999999999,
+          50.100000000000364,
+          83.19999999999982,
+          33.40000000000009,
+          50,
+          33.29999999999973,
+          66.70000000000027,
+          33.29999999999973,
+          66.60000000000036,
+          33.399999999999636,
+          66.70000000000027,
+          49.90000000000009,
+          66.69999999999982,
+          16.699999999999818,
+          66.60000000000036,
+          16.699999999999818,
+          83.30000000000018,
+          16.699999999999818,
+          83.40000000000009,
+          16.59999999999991,
+          33.30000000000018,
+          50,
+          33.29999999999973,
+          66.80000000000018,
+          33.29999999999973,
+          50,
+          33.30000000000018,
+          100,
+          33.30000000000018,
+          83.29999999999973,
+          50.09999999999991,
+          33.30000000000018,
+          33.30000000000018,
+          50,
+          33.30000000000018
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "level 1: public feedback alone yields an ordinary win",
+      "passed": true,
+      "milliseconds": 9302.089490000002,
+      "level": 0,
+      "attempts": 3,
+      "screenshot": "/workspace/scratch/codebreaker/browser-checks/level-1-won.png",
+      "plans": [
+        {
+          "historyLength": 0,
+          "guess": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "candidateCount": 256
+        },
+        {
+          "historyLength": 1,
+          "guess": [
+            0,
+            2,
+            0,
+            3
+          ],
+          "candidateCount": 56
+        },
+        {
+          "historyLength": 2,
+          "guess": [
+            3,
+            0,
+            0,
+            3
+          ],
+          "candidateCount": 5
+        }
+      ]
+    },
+    {
+      "name": "level 2: public feedback alone yields an ordinary win",
+      "passed": true,
+      "milliseconds": 9046.777504999998,
+      "level": 1,
+      "attempts": 3,
+      "screenshot": "/workspace/scratch/codebreaker/browser-checks/level-2-won.png",
+      "plans": [
+        {
+          "historyLength": 0,
+          "guess": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "candidateCount": 625
+        },
+        {
+          "historyLength": 1,
+          "guess": [
+            2,
+            2,
+            2,
+            3
+          ],
+          "candidateCount": 81
+        },
+        {
+          "historyLength": 2,
+          "guess": [
+            2,
+            2,
+            3,
+            3
+          ],
+          "candidateCount": 8
+        }
+      ]
+    },
+    {
+      "name": "level 3: public feedback alone yields an ordinary win",
+      "passed": true,
+      "milliseconds": 10870.461406000002,
+      "level": 2,
+      "attempts": 4,
+      "screenshot": "/workspace/scratch/codebreaker/browser-checks/level-3-won.png",
+      "plans": [
+        {
+          "historyLength": 0,
+          "guess": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "candidateCount": 1296
+        },
+        {
+          "historyLength": 1,
+          "guess": [
+            0,
+            0,
+            2,
+            3
+          ],
+          "candidateCount": 114
+        },
+        {
+          "historyLength": 2,
+          "guess": [
+            0,
+            2,
+            3,
+            1
+          ],
+          "candidateCount": 4
+        },
+        {
+          "historyLength": 3,
+          "guess": [
+            0,
+            3,
+            1,
+            2
+          ],
+          "candidateCount": 1
+        }
+      ]
+    },
+    {
+      "name": "a code earned in previous normal play wins on the exact final attempt",
+      "passed": true,
+      "milliseconds": 4171.317323000003,
+      "attempts": 7,
+      "terminalReceipt": {
+        "cause": "success",
+        "call": 139,
+        "elapsed": 2.3166666666666633,
+        "level": 0,
+        "cursor": 3,
+        "guess": [
+          3,
+          0,
+          0,
+          3
+        ],
+        "attemptsUsed": 7,
+        "attemptsRemaining": 0,
+        "reveal": [
+          3,
+          0,
+          0,
+          3
+        ],
+        "score": 100,
+        "phase": "won",
+        "reason": ""
+      }
+    },
+    {
+      "name": "repeated known-wrong guesses naturally exhaust attempts and freeze",
+      "passed": true,
+      "milliseconds": 4355.736703000002,
+      "attempts": 7,
+      "terminalReceipt": {
+        "cause": "attempts",
+        "call": 162,
+        "elapsed": 2.6999999999999953,
+        "level": 0,
+        "cursor": 3,
+        "guess": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "attemptsUsed": 7,
+        "attemptsRemaining": 0,
+        "reveal": [
+          3,
+          0,
+          0,
+          3
+        ],
+        "score": 0,
+        "phase": "lost",
+        "reason": "attempts"
+      }
+    },
+    {
+      "name": "held direction edits once; pause requires real release before next edit",
+      "passed": true,
+      "milliseconds": 3649.5182300000015,
+      "guess": [
+        1,
+        null,
+        null,
+        null
+      ],
+      "edits": 2
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T14:47:09.380Z"
+}
