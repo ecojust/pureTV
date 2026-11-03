@@ -85,9 +85,9 @@ export function assertRetry({ before, after }, assert) {
 
 Node 24、Playwright 1.64.1、`/usr/bin/chromium`、系统 ffmpeg 7.1.5、Python 3。默认 Playwright headless-shell/ffmpeg 缓存缺失，所以指定系统 Chromium 并使用系统 ffmpeg；无需下载浏览器附件。`CHROMIUM_PATH` 可覆盖浏览器，`PURETV_PACKAGE` 可覆盖依赖解析用的 desktop/package.json。
 
-输入生命周期的独立协议检查：
-
 录制帧接收规则的无浏览器回归：`node --test resource/game-kit/qa/frame-stream.test.mjs`，覆盖乱序／重复／无效时间戳、停止后回调和文件名隔离。该测试不能代替实际录像及完整解码。
+
+输入生命周期的独立协议检查：
 
 ```sh
 node resource/game-kit/qa/input-lifecycle-test.mjs --output /tmp/puretv-input-lifecycle
