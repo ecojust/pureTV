@@ -52,6 +52,7 @@
 | [Jackal TV](apps/jackal/) | ecojust / 桔子桑 | 0.5.2 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
 | [Magic Jewelry TV](apps/jewel/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
 | [万花钥匙](apps/kaleido-keys/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 把有限图符摆进源扇区，旋转并选择万花阶数，让整圈镜像钥匙与目标完全一致；核对左右交换、朝向与空格后验收，四次错误即失败，无倒计时。 | <img src="apps/kaleido-keys/thumb.png" width="180" alt="万花钥匙 界面"> |
+| [马步巡游](apps/knight-circuit/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 按国际象棋马的跳法巡游棋盘，每个可走格只能访问一次；规划三种不同棋盘的完整路线，管理三张回退券，避免走入死路，支持手机扫码单人操作。 | <img src="apps/knight-circuit/thumb.png" width="180" alt="马步巡游 界面"> |
 | [灯塔节拍](apps/lantern-rhythm/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 观察方向与短长灯号，再按节拍真实按住并松开按钮，依次点亮三座灯塔；两次主动重听、有限失误与90秒有效时间，支持手机扫码单人操作 | <img src="apps/lantern-rhythm/thumb.png" width="180" alt="灯塔节拍 界面"> |
 | [焦距实验室](apps/lens-distance/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 原创单人光学益智游戏：移动透镜和屏幕，调节光阑，让实像的清晰度与亮度同时达标。三个光台各有两张底片，分别管理曝光电量与调整额度；手机方向区和上下双操作区控制。 | <img src="apps/lens-distance/thumb.png" width="180" alt="焦距实验室 界面"> |
 | [环线果园](apps/loop-orchard/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在格点之间铺设一条连通闭环，经过必经果树、避开禁水花坛并满足数字区域的边数提示；带编号管件可铺拆和精确撤销，剩余库存允许，须主动启动水泵，三次错误或90秒结束，手机扫码单人操作 | <img src="apps/loop-orchard/thumb.png" width="180" alt="环线果园 界面"> |

@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "method": "Independent adjacency scans board coordinate differences rather than production offsets; bounded test-only DFS finds each tour and ordinary create/step inputs replay it. No model state injection.",
+  "checks": [
+    "independent geometry has all eight jumps at a middle square and no wrapped edge",
+    "independent searches replay three complete open tours through ordinary input",
+    "ordinary dead end remains recoverable, then loses only after all three undo tokens are spent",
+    "ordinary invalid start undo, revisit, non-knight and blocked-square attempts are free"
+  ],
+  "layouts": [
+    {
+      "level": 0,
+      "visitedSquares": 25,
+      "jumps": 24,
+      "searchNodes": 25,
+      "phase": "won"
+    },
+    {
+      "level": 1,
+      "visitedSquares": 24,
+      "jumps": 23,
+      "searchNodes": 24,
+      "phase": "won"
+    },
+    {
+      "level": 2,
+      "visitedSquares": 30,
+      "jumps": 29,
+      "searchNodes": 30,
+      "phase": "won"
+    }
+  ],
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "ecd1b038bfad47368830125de451b08adfdbbcb75aa04d8d223ad5cb373c58f5",
+    "tests/reference.cjs": "cd27663c74e8eb2604e8b5c200864af7b1054b6244890caaf2b1e3526025c9cc",
+    "tests/independent-check.cjs": "adc42025eae2097d16bdb3bb37514528748a79b1c4d2e560a008a4355e9a4444"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

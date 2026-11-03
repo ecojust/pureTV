@@ -1,0 +1,84 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T14:24:26.681Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "fdf94fe7444f3508ed5c169dd644cbc0e3c80591249b8369dfb2ba39f55074db",
+    "game-model.js": "ecd1b038bfad47368830125de451b08adfdbbcb75aa04d8d223ad5cb373c58f5",
+    "game.js": "51ab931982c50b536510b52c64ca7bf4967d0175bde223c9293a377f01b0b38c",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "rectangular board, blocked court and visit cues fit both viewports",
+      "passed": true,
+      "milliseconds": 12261.75185,
+      "screenshots": [
+        "/workspace/scratch/knight-circuit/browser-checks/initial-level-2-1280.png",
+        "/workspace/scratch/knight-circuit/browser-checks/initial-level-2-960.png",
+        "/workspace/scratch/knight-circuit/browser-checks/initial-level-3-1280.png",
+        "/workspace/scratch/knight-circuit/browser-checks/initial-level-3-960.png"
+      ]
+    },
+    {
+      "name": "level 1: visit every playable square with ordinary knight jumps",
+      "passed": true,
+      "milliseconds": 26247.196808999997,
+      "level": 0,
+      "visited": 25,
+      "jumps": 24,
+      "screenshot": "/workspace/scratch/knight-circuit/browser-checks/level-1-won.png"
+    },
+    {
+      "name": "level 2: visit every playable square with ordinary knight jumps",
+      "passed": true,
+      "milliseconds": 23524.646941,
+      "level": 1,
+      "visited": 24,
+      "jumps": 23,
+      "screenshot": "/workspace/scratch/knight-circuit/browser-checks/level-2-won.png"
+    },
+    {
+      "name": "level 3: visit every playable square with ordinary knight jumps",
+      "passed": true,
+      "milliseconds": 28908.294127,
+      "level": 2,
+      "visited": 30,
+      "jumps": 29,
+      "screenshot": "/workspace/scratch/knight-circuit/browser-checks/level-3-won.png"
+    },
+    {
+      "name": "dead end remains recoverable until all three undo tokens are spent",
+      "passed": true,
+      "milliseconds": 17696.004831,
+      "remaining": 11,
+      "jumps": 16,
+      "undos": 3
+    },
+    {
+      "name": "cursor crosses forbidden cells but invalid jumps and start undo are free",
+      "passed": true,
+      "milliseconds": 2491.0345459999953,
+      "blockedActions": 4,
+      "cursor": 12
+    },
+    {
+      "name": "held undo is not repeated and pause requires actual release before another undo",
+      "passed": true,
+      "milliseconds": 4396.139743000007,
+      "undos": 2,
+      "undoTokens": 1,
+      "jumps": 2
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T14:26:22.302Z"
+}
