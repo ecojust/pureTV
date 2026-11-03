@@ -1,0 +1,499 @@
+{
+  "passed": true,
+  "method": "Independent full vehicle footprints build a unit-slide BFS graph from public starting positions. Normal selection/cursor/slide inputs replay each shortest route, exact-budget detours, token-limited no-refund undo, and natural loss; no model fixture writes.",
+  "checks": [
+    "independent full-footprint unit-slide BFS proves all three shortest exits",
+    "ordinary selection and unit slides achieve every minimum with clipped final occupancy",
+    "every layout can exit on its exact final allowed slide after normal reversible detours",
+    "three real undos restore positions and release selection without refund; fourth is blocked",
+    "normal slide exhaustion loses before any later undo can rescue it",
+    "wrong axes, blocking cars, boundaries, empty selection and empty undo do not spend slides"
+  ],
+  "layouts": [
+    {
+      "level": 0,
+      "cars": 6,
+      "minimumSlides": 8,
+      "moveLimit": 30,
+      "expanded": 728,
+      "visited": 1156,
+      "route": [
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 0,
+            "y": 2
+          },
+          "to": {
+            "x": 1,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 1,
+            "y": 2
+          },
+          "to": {
+            "x": 2,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 4,
+          "direction": "left",
+          "key": "ArrowLeft",
+          "from": {
+            "x": 3,
+            "y": 4
+          },
+          "to": {
+            "x": 2,
+            "y": 4
+          },
+          "exit": false
+        },
+        {
+          "car": 4,
+          "direction": "left",
+          "key": "ArrowLeft",
+          "from": {
+            "x": 2,
+            "y": 4
+          },
+          "to": {
+            "x": 1,
+            "y": 4
+          },
+          "exit": false
+        },
+        {
+          "car": 1,
+          "direction": "down",
+          "key": "ArrowDown",
+          "from": {
+            "x": 4,
+            "y": 2
+          },
+          "to": {
+            "x": 4,
+            "y": 3
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 2,
+            "y": 2
+          },
+          "to": {
+            "x": 3,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 3,
+            "y": 2
+          },
+          "to": {
+            "x": 4,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 4,
+            "y": 2
+          },
+          "to": {
+            "x": 5,
+            "y": 2
+          },
+          "exit": true
+        }
+      ]
+    },
+    {
+      "level": 1,
+      "cars": 8,
+      "minimumSlides": 11,
+      "moveLimit": 45,
+      "expanded": 701,
+      "visited": 837,
+      "route": [
+        {
+          "car": 1,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 2,
+            "y": 4
+          },
+          "to": {
+            "x": 3,
+            "y": 4
+          },
+          "exit": false
+        },
+        {
+          "car": 3,
+          "direction": "up",
+          "key": "ArrowUp",
+          "from": {
+            "x": 4,
+            "y": 1
+          },
+          "to": {
+            "x": 4,
+            "y": 0
+          },
+          "exit": false
+        },
+        {
+          "car": 7,
+          "direction": "left",
+          "key": "ArrowLeft",
+          "from": {
+            "x": 1,
+            "y": 3
+          },
+          "to": {
+            "x": 0,
+            "y": 3
+          },
+          "exit": false
+        },
+        {
+          "car": 4,
+          "direction": "down",
+          "key": "ArrowDown",
+          "from": {
+            "x": 2,
+            "y": 0
+          },
+          "to": {
+            "x": 2,
+            "y": 1
+          },
+          "exit": false
+        },
+        {
+          "car": 4,
+          "direction": "down",
+          "key": "ArrowDown",
+          "from": {
+            "x": 2,
+            "y": 1
+          },
+          "to": {
+            "x": 2,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 4,
+          "direction": "down",
+          "key": "ArrowDown",
+          "from": {
+            "x": 2,
+            "y": 2
+          },
+          "to": {
+            "x": 2,
+            "y": 3
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 0,
+            "y": 2
+          },
+          "to": {
+            "x": 1,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 1,
+            "y": 2
+          },
+          "to": {
+            "x": 2,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 2,
+            "y": 2
+          },
+          "to": {
+            "x": 3,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 3,
+            "y": 2
+          },
+          "to": {
+            "x": 4,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 4,
+            "y": 2
+          },
+          "to": {
+            "x": 5,
+            "y": 2
+          },
+          "exit": true
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "cars": 10,
+      "minimumSlides": 13,
+      "moveLimit": 60,
+      "expanded": 937,
+      "visited": 1112,
+      "route": [
+        {
+          "car": 1,
+          "direction": "left",
+          "key": "ArrowLeft",
+          "from": {
+            "x": 4,
+            "y": 0
+          },
+          "to": {
+            "x": 3,
+            "y": 0
+          },
+          "exit": false
+        },
+        {
+          "car": 1,
+          "direction": "left",
+          "key": "ArrowLeft",
+          "from": {
+            "x": 3,
+            "y": 0
+          },
+          "to": {
+            "x": 2,
+            "y": 0
+          },
+          "exit": false
+        },
+        {
+          "car": 1,
+          "direction": "left",
+          "key": "ArrowLeft",
+          "from": {
+            "x": 2,
+            "y": 0
+          },
+          "to": {
+            "x": 1,
+            "y": 0
+          },
+          "exit": false
+        },
+        {
+          "car": 1,
+          "direction": "left",
+          "key": "ArrowLeft",
+          "from": {
+            "x": 1,
+            "y": 0
+          },
+          "to": {
+            "x": 0,
+            "y": 0
+          },
+          "exit": false
+        },
+        {
+          "car": 2,
+          "direction": "up",
+          "key": "ArrowUp",
+          "from": {
+            "x": 2,
+            "y": 2
+          },
+          "to": {
+            "x": 2,
+            "y": 1
+          },
+          "exit": false
+        },
+        {
+          "car": 2,
+          "direction": "up",
+          "key": "ArrowUp",
+          "from": {
+            "x": 2,
+            "y": 1
+          },
+          "to": {
+            "x": 2,
+            "y": 0
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 0,
+            "y": 2
+          },
+          "to": {
+            "x": 1,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 1,
+            "y": 2
+          },
+          "to": {
+            "x": 2,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 6,
+          "direction": "up",
+          "key": "ArrowUp",
+          "from": {
+            "x": 4,
+            "y": 2
+          },
+          "to": {
+            "x": 4,
+            "y": 1
+          },
+          "exit": false
+        },
+        {
+          "car": 6,
+          "direction": "up",
+          "key": "ArrowUp",
+          "from": {
+            "x": 4,
+            "y": 1
+          },
+          "to": {
+            "x": 4,
+            "y": 0
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 2,
+            "y": 2
+          },
+          "to": {
+            "x": 3,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 3,
+            "y": 2
+          },
+          "to": {
+            "x": 4,
+            "y": 2
+          },
+          "exit": false
+        },
+        {
+          "car": 0,
+          "direction": "right",
+          "key": "ArrowRight",
+          "from": {
+            "x": 4,
+            "y": 2
+          },
+          "to": {
+            "x": 5,
+            "y": 2
+          },
+          "exit": true
+        }
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "f0a20e6d4292e1bd24cbe11f97fd7c9db036ab3b90faba6518926fce16da2559",
+    "tests/reference.cjs": "445383f3040ce0fa298e51a56e55b0e9efe52f4cb0f2130a432985f2aa7985b7",
+    "tests/independent-check.cjs": "c71bdd36f8ade5d6ea50fc90dd7b781cea2a1bbf89b18f2ab3ba80ea0d387bc3"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "game": "traffic-escape",
+  "version": "0.1.0",
+  "sourceCommit": "c204676a6dda7e0f40d70f3daf90cc6fa7fc381f",
+  "signingRun": 41660249429,
+  "passed": true,
+  "modelAndIndependentRules": "See model tests and independent review records in this directory.",
+  "browser": {
+    "sharedChecksPassed": 10,
+    "gameSpecificChecksPassed": 8,
+    "sharedReport": "browser-qa-report.json",
+    "gameSpecificReport": "browser-report.json",
+    "uniqueRulesVerified": true
+  },
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "5cceb41c0cc8d8ab82195b2416a204072e60d03ad9aea03de8f9352bbda75cad",
+    "game-model.js": "f0a20e6d4292e1bd24cbe11f97fd7c9db036ab3b90faba6518926fce16da2559",
+    "game.js": "17bd664851b9cd37d9a92ee357f7fa35b5ca23e897959ab07a48dfe30862fe5a",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 95,
+    "rafIntervalMs": {
+      "count": 95,
+      "min": 16.5,
+      "median": 50,
+      "p95": 83.40000000000055,
+      "max": 116.79999999999927,
+      "mean": 48.59473684210527
+    },
+    "webglDrawCalls": {
+      "count": 95,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 95,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "visualReview": {
+    "report": "art-review.json",
+    "visualReviewCompleted": true
+  },
+  "artifacts": {
+    "limitBytes": 10000000,
+    "checks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true,
+      "recordingAssetsMatchApkTestedAssets": true
+    },
+    "apk": {
+      "file": "/workspace/scratch/traffic-escape/signed/traffic-escape-0.1.0.apk",
+      "bytes": 292131,
+      "sha256": "ba958ef14633e00e7802904e6d9402301e627bdb4888265476531bd72f8e6069",
+      "package": "com.ecojust.trafficescapetv",
+      "versionCode": "1",
+      "versionName": "0.1.0",
+      "signerSha256": [
+        "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23"
+      ],
+      "matchedAssetCount": 11
+    },
+    "limitations": [
+      "No physical Android installation or TV/phone execution is certified by this artifact check.",
+      "Visual review and unique gameplay assertions are separate required checks."
+    ],
+    "video": {
+      "file": "/workspace/scratch/traffic-escape/qa/recording/gameplay.mp4",
+      "bytes": 2820462,
+      "sha256": "b0a7179384c3390d68691e3c2f33cce003d0d7e6be693f454b5dd4bec530d450",
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1280,
+          "height": 720,
+          "pix_fmt": "yuv420p",
+          "avg_frame_rate": "30/1"
+        }
+      ],
+      "format": {
+        "duration": "60.666667",
+        "size": "2820462"
+      }
+    }
+  },
+  "catalog": {
+    "report": "catalog-verification.json",
+    "signedEntriesVerified": 97
+  },
+  "gameplay": {
+    "metadata": "gameplay-0.1.0.json",
+    "video": "gameplay-0.1.0.mp4",
+    "capturedSeconds": 60.61114430427551,
+    "allThreeLevelsWon": true,
+    "input": "Automatically operated ordinary browser keyboard events; no state writes or clock overrides."
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "limitations": [
+    "No physical TV/phone validation. Software-browser frame times are not TV FPS.",
+    "Silent video export FPS is not a device performance measurement."
+  ]
+}

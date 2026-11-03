@@ -1,0 +1,88 @@
+{
+  "kind": "ordinary-browser-vehicle-regression",
+  "startedAt": "2026-11-03T16:08:19.496Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "5cceb41c0cc8d8ab82195b2416a204072e60d03ad9aea03de8f9352bbda75cad",
+    "game-model.js": "f0a20e6d4292e1bd24cbe11f97fd7c9db036ab3b90faba6518926fce16da2559",
+    "game.js": "17bd664851b9cd37d9a92ee357f7fa35b5ca23e897959ab07a48dfe30862fe5a",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "ten-car layout, long vehicles, exit and input modes fit both viewports",
+      "passed": true,
+      "milliseconds": 5102.1100480000005,
+      "screenshots": [
+        "/workspace/scratch/traffic-escape/browser-checks/initial-1280.png",
+        "/workspace/scratch/traffic-escape/browser-checks/initial-960.png"
+      ]
+    },
+    {
+      "name": "level 1: ordinary vehicle selections reach the shortest right-side exit",
+      "passed": true,
+      "milliseconds": 9732.556237,
+      "level": 0,
+      "moves": 8,
+      "cursor": 17,
+      "screenshot": "/workspace/scratch/traffic-escape/browser-checks/level-1-won.png"
+    },
+    {
+      "name": "level 2: ordinary vehicle selections reach the shortest right-side exit",
+      "passed": true,
+      "milliseconds": 12252.904483,
+      "level": 1,
+      "moves": 11,
+      "cursor": 17,
+      "screenshot": "/workspace/scratch/traffic-escape/browser-checks/level-2-won.png"
+    },
+    {
+      "name": "level 3: ordinary vehicle selections reach the shortest right-side exit",
+      "passed": true,
+      "milliseconds": 11915.443024999997,
+      "level": 2,
+      "moves": 13,
+      "cursor": 17,
+      "screenshot": "/workspace/scratch/traffic-escape/browser-checks/level-3-won.png"
+    },
+    {
+      "name": "ordinary undo restores the car, clears selection and keeps the spent slide",
+      "passed": true,
+      "milliseconds": 8419.777708000001,
+      "moves": 9,
+      "undos": 1,
+      "undoTokens": 2
+    },
+    {
+      "name": "ordinary back-and-forth slides exhaust the allowance and terminal undo cannot rescue it",
+      "passed": true,
+      "milliseconds": 9520.033812000001,
+      "moves": 30,
+      "undoTokens": 3
+    },
+    {
+      "name": "axis, occupancy, boundary, empty selection and empty undo are blocked without slide cost",
+      "passed": true,
+      "milliseconds": 3650.6735649999973,
+      "blockedActions": 5,
+      "moves": 0
+    },
+    {
+      "name": "selected-car directional hold does not repeat across pause and release",
+      "passed": true,
+      "milliseconds": 3312.7203350000054,
+      "moves": 2,
+      "undos": 1
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T16:09:23.585Z"
+}
