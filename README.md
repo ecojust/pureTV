@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-96-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-97-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -149,6 +149,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [比较器工坊](resource/apps/sorting-wires/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在有限层数与比较器库存内连接排序线网，检查全部二值输入，利用失败见证逐步修正网络。 | <img src="resource/apps/sorting-wires/thumb.png" width="180" alt="比较器工坊 界面"> |
 | [序栈货运](resource/apps/stack-dispatch/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用单件吊机和三个后进先出的货栈，按公开货单顺序出港；管理有限容量与搬动额度，三次错序出货失败。三个调度关卡，支持手机扫码单人操作。 | <img src="resource/apps/stack-dispatch/thumb.png" width="180" alt="序栈货运 界面"> |
 | [石箱归位](resource/apps/stone-bay/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在三座庭院里推动石箱，让每个石座都被占据；只能推、不能拉，步行不扣推力，撤回恢复位置但不返还推力。管理有限推动额度，支持手机扫码单人操作。 | <img src="resource/apps/stone-bay/thumb.png" width="180" alt="石箱归位 界面"> |
+| [交叉数和](resource/apps/sum-crossings/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 填写1至9，使每个横纵连续白格段的数字不重复且总和符合线索；固定数字不可改，完整提交限三次错误。 | <img src="resource/apps/sum-crossings/thumb.png" width="180" alt="交叉数和 界面"> |
 | [Super Mario TV](resource/apps/super-mario/) | ecojust / 桔子桑 | 0.5.2 | 93.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
 | [分岔调度](resource/apps/switchyard-minute/) | ecojust / 桔子桑 | 0.1.1 | 289.3 KB | 切换道岔、错开放行，把双向货车送到同色站台，管理追尾风险与累计延误，支持手机扫码单人操作 | <img src="resource/apps/switchyard-minute/thumb.png" width="180" alt="分岔调度 界面"> |
 | [Tank TV](resource/apps/tank/) | ecojust / 桔子桑 | 0.5.2 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
