@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "cause": "Static inspection before the first final browser run found that the old restart assertion compared moving lane positions and active clocks directly to the menu snapshot. Real neutral frames may already have advanced after R.",
+  "browserFailureOccurred": false,
+  "productionAssetsChanged": false,
+  "originalSignedSourceCommit": "af1870a403d12d2b05d47e81d3cc637c9e9e699b",
+  "changeScope": "Only assertRetry in automation.mjs, plus focused assertion probes and provenance. createPilot, keys and normal gameplay assertions are unchanged.",
+  "command": "node resource/apps/river-hopper/tests/retry-assertion-test.mjs",
+  "probe": {
+    "passed": true,
+    "ordinaryFreshSnapshots": 15,
+    "syntheticInvalidSnapshotRejections": 63,
+    "note": "Positive snapshots use ordinary create/step with real neutral dt. Negative cases are labeled assertion fixtures, never used to claim gameplay wins."
+  },
+  "sourceFiles": {
+    "docs/qa-harness-source/automation-before-retry-fix.mjs": "ce9b48248062791701729e6df4bc325d52ab5869d1914bc14606e4905c170e24",
+    "docs/qa-harness-source/automation-tested.mjs": "2a1a30a93e94e68b6912ede60b5a2d7e42fd02f47967ae9c298b3ff93a430f2e",
+    "docs/qa-harness-source/retry-assertion-test.mjs": "330f5a7e2d2b6b864c3382ee1253d3eb1aa77616743d7f490c293c7a9f626487"
+  },
+  "originalAutomationSha256": "ce9b48248062791701729e6df4bc325d52ab5869d1914bc14606e4905c170e24",
+  "actualAutomationSha256": "2a1a30a93e94e68b6912ede60b5a2d7e42fd02f47967ae9c298b3ff93a430f2e",
+  "productionModelSha256": "0dc9cb621505bf6a82046f67fda13bb76d737bb1df6ff7269646d0b08911630a",
+  "productionRendererSha256": "f5eb29f88c51f1da5ffafca1872dc0676cef42f5531f3c980c8e03cea7fefd69",
+  "scopeNote": "Earlier independent-review pilot proof remains bound to its original automation hash. This report records the later QA-only restart assertion; no failed browser report was created and no production or model proof was rerun.",
+  "independentReviewCorrection": "A read-only arithmetic review found equivalent near-420 and zero positions at a 100-tick wrap boundary. The fixture now requires canonical finite coordinates and compares circular distance. Ordinary 100-tick cases and synthetic out-of-range/single-circumference errors are covered. This was not a browser failure."
+}

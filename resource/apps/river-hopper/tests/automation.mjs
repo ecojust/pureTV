@@ -23,4 +23,17 @@ export function keys(snapshot,meta={}){
  terminalAt=null;release=false;return pilot(snapshot);
 }
 export function assertProgress({before,after,trace},assert){const s=after.model;assert.equal(after.phase,'won');assert.equal(s.reason,'homes');assert.equal(s.score,100);assert.equal(s.goalCount,s.target);assert.equal(new Set(s.visited).size,s.target);assert.equal(s.arrivals.length,s.target);assert.ok(s.lives>0&&s.timeLeft>0);assert.ok(s.rideTicks>0&&s.carriedDistance>0);assert.ok(s.jumps>=s.target*6);for(const a of s.arrivals){const home=s.homes.find(h=>h.id===a.home);assert.ok(Math.abs(a.x-home.x)+s.playerRadius<=24+1e-9);assert.ok(Math.abs(a.time-a.activeTicks/120)<1e-9);}assert.ok(trace.some(t=>t.state.model.player.row===1||t.state.model.player.row===2));assert.ok(trace.some(t=>t.state.model.activeTicks>before.model.activeTicks));}
-export function assertRetry({after,initial},assert){for(const k of ['level','phase','player','lanes','visited','goalCount','lives','timeLeft','activeTicks','physicsTicks','physicsRemainder','respawnTicks','rideTicks','carriedDistance','jumps','deaths','deathHistory','arrivals','score'])assert.deepEqual(after.model[k],initial.model[k],'Fresh retry restores '+k);}
+export function assertRetry({before,after,initial},assert){
+ const s=after.model,start=initial.model;
+ for(const k of ['seed','level','phase','reason','player','homes','target','timeLimit','visited','goalCount','lives','maxLives','respawnTicks','supportId','supportLane','rideTicks','carriedDistance','jumps','deaths','lastDeath','deathHistory','arrivals','terminalReceipt','score'])assert.deepEqual(s[k],start[k],'Fresh retry restores '+k);
+ // The restart snapshot is taken after real frames have already moved the lanes.
+ assert.ok(Number.isInteger(s.activeTicks)&&s.activeTicks>=0&&s.activeTicks<=240,'Restart has at most two seconds of real neutral advancement');
+ if(before?.model)assert.ok(s.activeTicks<before.model.activeTicks,'Active clock restarts before the completed game');
+ assert.equal(s.physicsTicks,s.activeTicks);assert.ok(Number.isFinite(s.physicsRemainder)&&s.physicsRemainder>=0&&s.physicsRemainder<1/120+1e-9);
+ assert.ok(Math.abs(s.timeLeft-(s.timeLimit-s.activeTicks/120))<1e-8,'Time left follows the new active ticks');
+ assert.ok(Math.abs(s.elapsed-(s.activeTicks/120+s.physicsRemainder))<1e-8,'Elapsed time and fractional tick agree');
+ assert.equal(s.lanes.length,start.lanes.length);const elapsedTicks=(s.activeTicks-start.activeTicks)/120;
+ for(let i=0;i<s.lanes.length;i++){const lane=s.lanes[i],origin=start.lanes[i];for(const k of ['id','type','row','speed','width'])assert.deepEqual(lane[k],origin[k],'Fresh lane restores '+k);assert.equal(lane.objects.length,origin.objects.length);
+  for(let j=0;j<lane.objects.length;j++){const body=lane.objects[j],first=origin.objects[j];assert.equal(body.id,first.id);assert.ok(Number.isFinite(body.x)&&body.x>=0&&body.x<420,'Lane position stays in the canonical wrap range');const expected=((first.x+lane.speed*elapsedTicks)%420+420)%420,distance=Math.abs(body.x-expected);assert.ok(Math.min(distance,420-distance)<1e-7,'Lane position follows real neutral tick advancement');}
+ }
+}
