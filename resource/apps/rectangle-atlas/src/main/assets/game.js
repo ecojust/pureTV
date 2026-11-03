@@ -32,11 +32,11 @@
     if(s.candidate){var c=s.candidate;r.rect(ox+c.left*u+2,oy+c.top*u+2,(c.right-c.left+1)*u-4,(c.bottom-c.top+1)*u-4,c.overlap?'#ba6a4944':'#d2a24b44');}
     var bad=new Set(s.lastCheck?s.lastCheck.errors.filter(e=>e.rect!==undefined).map(e=>e.rect):[]);
     for(var rect of s.rectangles){var x=ox+rect.left*u,y=oy+rect.top*u,w=(rect.right-rect.left+1)*u,h=(rect.bottom-rect.top+1)*u;frame(r,x+1,y+1,w-2,h-2,bad.has(rect.id)?'#b65f40':'#365265',3);r.rect(x+5,y+5,31,17,bad.has(rect.id)?'#a95c40':'#365265');text(r,'R'+rect.id,x+8,y+5,12,'#fff6e3');}
-    for(var seed of s.seeds){var x=ox+seed.cell%s.width*u,y=oy+Math.floor(seed.cell/s.width)*u;r.sprite('atlasnumber',x+u/2,y+u*.64,u*.56,u*.56,0,'#ffffff');center(r,seed.area,x+u/2,y+u*.445,u*.39,ink);}
+    for(var seed of s.seeds){var x=ox+seed.cell%s.width*u,y=oy+Math.floor(seed.cell/s.width)*u,two=seed.area>=10;r.sprite('atlasnumber',x+u/2,y+u*.64,u*.56,u*.56,0,'#ffffff');center(r,seed.area,x+u/2,y+u*(two?.50:.445),u*(two?.30:.39),ink);}
     frame(r,ox-1,oy-1,374,374,'#233d52',2);
-    if(s.candidate){var c=s.candidate;frame(r,ox+c.left*u+3,oy+c.top*u+3,(c.right-c.left+1)*u-6,(c.bottom-c.top+1)*u-6,c.overlap?'#b45131':'#a87520',3);}
+    if(s.candidate){var c=s.candidate;frame(r,ox+c.left*u+1,oy+c.top*u+1,(c.right-c.left+1)*u-2,(c.bottom-c.top+1)*u-2,c.overlap?'#b45131':'#a87520',2);}
     if(s.anchor!==null){var x=ox+s.anchor%s.width*u,y=oy+Math.floor(s.anchor/s.width)*u;r.rect(x+u-17,y+6,11,13,'#a87520');text(r,'1',x+u-14,y+6,10,'#fff6e3');}
-    var cx=ox+s.cursor%s.width*u,cy=oy+Math.floor(s.cursor/s.width)*u;r.sprite('atlascorner',cx+u/2,cy+u/2,u-3,u-3,0,'#ce9235');
+    var cx=ox+s.cursor%s.width*u,cy=oy+Math.floor(s.cursor/s.width)*u;frame(r,cx,cy,u,u,'#f8dda0',4);frame(r,cx+1,cy+1,u-2,u-2,'#a87520',2);
     text(r,s.anchor===null?'A: FIRST CORNER':'A: SECOND CORNER',505,111,25,ink);text(r,s.anchor===null?'OR REMOVE A DRAWN REGION':'B CANCELS THIS CORNER',505,147,18,'#58717a');
     var c=s.candidate,at=s.owners[s.cursor],active=at?s.rectangles.find(q=>q.id===at):null;
     text(r,'AREA',510,192,17,'#64756e');text(r,'NUMBERS',663,192,17,'#64756e');text(r,'CURSOR',813,192,17,'#64756e');
