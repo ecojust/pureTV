@@ -1,0 +1,139 @@
+{
+  "scope": "Independent edge geometry, captures and documented AI, derived only from public layouts. Ordinary create/step replay; no state writes. Search establishes a winning route, not optimality.",
+  "modelSha256": "50ec8dd2f428a08279e20a0af84e870ddaa16abe9d07ecdbc65d4e8c4068b809",
+  "tests": [
+    {
+      "name": "public layouts and interface are bounded",
+      "passed": true
+    },
+    {
+      "name": "level 1: legal initial prefix respects capture extra turns and returns to human",
+      "passed": true
+    },
+    {
+      "name": "level 1: independently searched ordinary victory and natural loss",
+      "passed": true
+    },
+    {
+      "name": "level 1: bounded reachable-turn samples match captures and complete AI chains",
+      "passed": true
+    },
+    {
+      "name": "level 1: claimed and out-of-board edges do not spend a turn",
+      "passed": true
+    },
+    {
+      "name": "level 2: legal initial prefix respects capture extra turns and returns to human",
+      "passed": true
+    },
+    {
+      "name": "level 2: independently searched ordinary victory and natural loss",
+      "passed": true
+    },
+    {
+      "name": "level 2: bounded reachable-turn samples match captures and complete AI chains",
+      "passed": true
+    },
+    {
+      "name": "level 2: claimed and out-of-board edges do not spend a turn",
+      "passed": true
+    },
+    {
+      "name": "level 3: legal initial prefix respects capture extra turns and returns to human",
+      "passed": true
+    },
+    {
+      "name": "level 3: independently searched ordinary victory and natural loss",
+      "passed": true
+    },
+    {
+      "name": "level 3: bounded reachable-turn samples match captures and complete AI chains",
+      "passed": true
+    },
+    {
+      "name": "level 3: claimed and out-of-board edges do not spend a turn",
+      "passed": true
+    },
+    {
+      "name": "held B and cancellation cannot spend another edge; B outranks A",
+      "passed": true
+    },
+    {
+      "name": "observed gameplay covers human extra turns, double capture and multi-edge AI chains",
+      "passed": true
+    }
+  ],
+  "proofs": [
+    {
+      "level": 0,
+      "visited": 11,
+      "win": [
+        4,
+        16,
+        14,
+        5,
+        8,
+        23
+      ],
+      "loss": [
+        0,
+        4
+      ],
+      "sampledTransitions": 49
+    },
+    {
+      "level": 1,
+      "visited": 453,
+      "win": [
+        19,
+        23,
+        16,
+        3,
+        6,
+        24,
+        10,
+        13,
+        14
+      ],
+      "loss": [
+        0,
+        1,
+        13,
+        14
+      ],
+      "sampledTransitions": 200
+    },
+    {
+      "level": 2,
+      "visited": 639,
+      "win": [
+        26,
+        25,
+        32,
+        13,
+        15,
+        16,
+        19,
+        37,
+        18
+      ],
+      "loss": [
+        12,
+        15,
+        18
+      ],
+      "sampledTransitions": 200
+    }
+  ],
+  "turnsChecked": 482,
+  "humanExtraTurns": 163,
+  "humanDoubleCaptures": 0,
+  "aiDoubleCaptures": 37,
+  "longestAiChain": 7,
+  "policyCounts": {
+    "capture": 951,
+    "forced-third": 60,
+    "safe": 10
+  },
+  "passed": true
+}
