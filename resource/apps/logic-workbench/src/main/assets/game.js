@@ -29,8 +29,8 @@ function render(r,s){
 }
 root.GameDef={id:'logic-workbench',title:'逻辑工坊',seed:config.defaultSeed,tagline:'组合布尔门，让完整八行真值表吻合',accent:'#b5cba1',background:C.bg,atlas,holdConfirmAsA:true,levelLabel:'电路',levelNames:config.layouts.map(l=>l.nameZh),actionLabels:['循环门类型','检查电路'],
  description:'A、B、C 是三个公开输入，右侧给出全部八行目标。固定门槽的来源只能是输入或更早的门，最后一门为输出。选择 AND、OR、XOR、NOT 组合成电路，按真实逻辑运算检查全部八行，不比较隐藏门答案。',
- controls:{move:'左/右选择门槽；上/下选择真值表行并查看逐门信号',a:'空格、Z、确认 / 手机右上：空→AND→OR→XOR→NOT→空',b:'X、B / 手机右下：完整电路扣一次检查，空槽只给免费提示'},
- tip:'AND 两口均1才为1，OR 任一口1即为1，XOR 两口不同为1。NOT 只反转第一口，第二口标 OFF 并禁用。端口上的 A/B/C/G 编号是完整固定接线，问号表示所需信号未定。填完不会自动赢，须按 B 检查八行；正确第三次检查仍获胜。',
+ controls:{move:'左右选门槽；上下选真值表行，查看信号',a:'空格、Z、确认 / 手机右上：循环切换门类型',b:'X、B / 手机右下：检查八行；完整扣一次，空槽免费'},
+ tip:'AND 两口都1才输出1；OR 任一口1；XOR 两口不同为1。NOT 只反转第一口，第二口 OFF 禁用。A/B/C/G 标注固定接线，? 为未定信号。填完须按 B 检查八行；第三次正确仍获胜。',
  winTitle:'电路吻合，八行通过',loseTitle:'完整检查机会已用完',
  hud:s=>[{label:'所选门槽',value:'G'+(s.selectedSlot+1)+' · '+config.gateNames[s.gates[s.selectedSlot]]},{label:'输入行 A/B/C',value:s.truthRows[s.selectedRow].inputs.join(' / ')},{label:'匹配真值行',value:s.matchCount+' / 8'},{label:'检查机会',value:s.attemptsLeft+' / 3'}],
  result:s=>s.phase==='won'?'全部八行由实际布尔运算得到正确输出，用了 '+s.checks+' 次完整检查。':'三次完整检查已用完。切换输入行，沿编号端口核对每个门的信号，NOT 的第二口始终禁用。',render};
