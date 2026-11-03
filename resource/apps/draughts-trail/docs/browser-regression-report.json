@@ -1,0 +1,68 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T15:45:05.749Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "39a7d87bb361c3a24cda7013ad806efb1fb0a8b1634e18a7037d39c3eb8ebf9b",
+    "game-model.js": "74af417867561b837830c4bd69530cd48a04aa8e3a8b048d9228ef715195f5ef",
+    "game.js": "e01852166c5e00dd020f86fa55ecc274c9ef0a54c45870a14f211c2e0dd24dca",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "level 1: ordinary victory against independently predicted opponent",
+      "passed": true,
+      "level": 0,
+      "playerTurns": 6,
+      "playerCaptures": 3,
+      "aiCaptures": 0
+    },
+    {
+      "name": "level 2: ordinary victory against independently predicted opponent",
+      "passed": true,
+      "level": 1,
+      "playerTurns": 6,
+      "playerCaptures": 4,
+      "aiCaptures": 0
+    },
+    {
+      "name": "level 3: ordinary victory against independently predicted opponent",
+      "passed": true,
+      "level": 2,
+      "playerTurns": 6,
+      "playerCaptures": 5,
+      "aiCaptures": 1
+    },
+    {
+      "name": "selection can cancel before moving; held A and pause do not move a piece",
+      "passed": true,
+      "heldSelectOnly": true,
+      "pauseFreeze": true,
+      "cancelBeforeMoveFree": true
+    },
+    {
+      "name": "mandatory multi-jump locks the capturing piece and rejects cancellation",
+      "passed": true,
+      "cancelRejected": true,
+      "pieceSwitchRejected": true,
+      "continuedNormallyToWin": true
+    },
+    {
+      "name": "ordinary inferior play naturally loses and terminal input is frozen",
+      "passed": true,
+      "playerTurns": 5,
+      "reason": "player-empty",
+      "terminalFrozen": true
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T15:46:16.759Z"
+}
