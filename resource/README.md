@@ -94,6 +94,7 @@
 | [旋环锁匠](apps/rotor-locksmith/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 左右拨转三层锁环，按住 A 推进、B 退回；进入核心取得钥匙，再将完整钥匙带出，避开碰壁造成的耐久损失和阻力。 | <img src="apps/rotor-locksmith/thumb.png" width="180" alt="旋环锁匠 界面"> |
 | [分流沙漏](apps/sandglass-split/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 开关共享料斗并旋转两块挡片，把连续落沙分给三只计量杯；在途沙束保留已确定的路线，耗尽沙量后让三杯都处于目标容差内且没有溢出。 | <img src="apps/sandglass-split/thumb.png" width="180" alt="分流沙漏 界面"> |
 | [播子棋盘](apps/seed-mancala/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 沿棋穴逐粒播种，利用入仓续手与对穴吃子争取过半种子，并应对规则公开的对手。 | <img src="apps/seed-mancala/thumb.png" width="180" alt="播子棋盘 界面"> |
+| [去重留白](apps/shade-duplicates/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 涂黑部分数字，让白格行列不重复、黑格不相邻，且所有白格保持连通；用有限检查次数完成留白谜题。 | <img src="apps/shade-duplicates/thumb.png" width="180" alt="去重留白 界面"> |
 | [影形铸坊](apps/shadow-foundry/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 旋转金属工件与侧向光源，覆盖全部青色目标格并避开禁区；两种控制独立调整，最后一次机会也能完成铸影。 | <img src="apps/shadow-foundry/thumb.png" width="180" alt="影形铸坊 界面"> |
 | [影窗快门](apps/shadow-shutter/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 移动取景框并切换横竖画幅，避开遮光纸带，让三片剪影完整入窗并依序拍成目标；用有限胶片完成三组影窗作品。 | <img src="apps/shadow-shutter/thumb.png" width="180" alt="影窗快门 界面"> |
 | [ShortVideo TV](apps/shortvideo/) | ecojust / 桔子桑 | 0.5.0 | 32.7 KB | 遥控器短视频播放器 | <img src="apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
