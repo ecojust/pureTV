@@ -1,5 +1,7 @@
 # 工作记录索引
 
+环境重建见 [CONTINUE-GAMES](CONTINUE-GAMES.md)。
+
 接手顺序：本索引 → 最新记录及相关未完成记录 → Git实际状态；百款游戏任务同时核对 `resource/game-kit/progress.json`。
 
 | 记录 | 状态 | 用户目标 | 当前结果与下一步 |
