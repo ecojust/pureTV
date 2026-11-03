@@ -1,0 +1,112 @@
+{
+  "kind": "ordinary-browser-hex-regression",
+  "startedAt": "2026-11-03T15:48:56.218Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "ccd3f24a30f807a2e7315b6a81dda4aa2da340356d590e53b1e295de60dfd309",
+    "game-model.js": "0f23839063a6415abf56e61fafc3959ddfcec2c3d4fb4dd92f755a9202f08c40",
+    "game.js": "145bb10a943eecc48455c9375d3dafbe91edcb364bd066e270fcccbc32cb54f3",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "largest hex court and opposing connection directions fit both viewports",
+      "passed": true,
+      "milliseconds": 4765.0498880000005,
+      "screenshots": [
+        "/workspace/scratch/hex-connection/visual-fix/browser-checks/initial-1280.png",
+        "/workspace/scratch/hex-connection/visual-fix/browser-checks/initial-960.png"
+      ]
+    },
+    {
+      "name": "level 1: ordinary placements connect left to right against verified AI replies",
+      "passed": true,
+      "milliseconds": 10555.924662,
+      "level": 0,
+      "playerMoves": 4,
+      "winningPath": [
+        0,
+        1,
+        2,
+        7,
+        12,
+        17,
+        18,
+        19
+      ],
+      "screenshot": "/workspace/scratch/hex-connection/visual-fix/browser-checks/level-1-won.png"
+    },
+    {
+      "name": "level 2: ordinary placements connect left to right against verified AI replies",
+      "passed": true,
+      "milliseconds": 7953.9695999999985,
+      "level": 1,
+      "playerMoves": 3,
+      "winningPath": [
+        10,
+        6,
+        7,
+        8,
+        9
+      ],
+      "screenshot": "/workspace/scratch/hex-connection/visual-fix/browser-checks/level-2-won.png"
+    },
+    {
+      "name": "level 3: ordinary placements connect left to right against verified AI replies",
+      "passed": true,
+      "milliseconds": 6432.770322,
+      "level": 2,
+      "playerMoves": 3,
+      "winningPath": [
+        0,
+        1,
+        7,
+        13,
+        14,
+        15,
+        16,
+        11
+      ],
+      "screenshot": "/workspace/scratch/hex-connection/visual-fix/browser-checks/level-3-won.png"
+    },
+    {
+      "name": "ordinary losing choices let AI connect top to bottom and freeze the terminal board",
+      "passed": true,
+      "milliseconds": 5379.362611999997,
+      "playerMoves": 3,
+      "winningPath": [
+        4,
+        9,
+        8,
+        13,
+        19,
+        20,
+        26,
+        32
+      ]
+    },
+    {
+      "name": "occupied-cell actions, unused B and edge movement cannot spend turns",
+      "passed": true,
+      "milliseconds": 3233.427227,
+      "blockedActions": 5
+    },
+    {
+      "name": "held placement produces one reply across pause and needs release for the next turn",
+      "passed": true,
+      "milliseconds": 4417.937576999997,
+      "playerMoves": 2,
+      "aiMoves": 2
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T15:49:39.160Z"
+}
