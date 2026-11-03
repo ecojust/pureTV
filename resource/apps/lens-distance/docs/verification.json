@@ -1,0 +1,773 @@
+{
+  "schema": 1,
+  "game": "lens-distance",
+  "version": "0.1.0",
+  "sourceCommit": "cac7deed8fc492c5112eac5a7581f3adc1e6927d",
+  "automationSha256": "1e35462c6062de723c34839d0341bc5051d6d1a608f35d9b580dc3cdcece9e99",
+  "gameRules": {
+    "seed": 747,
+    "actions": 2,
+    "layouts": 3,
+    "cardsPerLayout": 2,
+    "geometry": "Ideal thin-lens real/virtual/focal geometry; focal distance quantities are null. Brightness and blur are separately labelled teaching metrics using exact integer acceptance.",
+    "resources": "Four exposures per card and separate mechanical allowances24/22/16. Last-charge success precedes exhaustion; exact allowance still permits exposure. No elapsed deadline.",
+    "transition": "Both cards must be captured. Next-card controls/resources reset while held-input history remains; no held-A cascade.",
+    "publicDocuments": {
+      "docs/model-contract.md": "16a758da1a57369a16a642021268fb448d8e543ecffd68292f030ac1dd8036a9",
+      "docs/public-design.md": "8ed2f4a6c8ee443ece41b5ff17ac4fe6c1b4f9139e5f5e4282cfac4c22f23050",
+      "docs/public-interface.md": "852506c49aecd1a8ef4776a944fab4775b48a17aaeec6907eb827a499cc59fc2"
+    }
+  },
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "77981b0fc1d64ace421845645951246029b35084c394ba1234557d2bc20dab50",
+      "game.js": "65a711015385149b6b43fe1288c83454bf9174d54b3b8d121b55c7edc83f3d33",
+      "game-config.json": "105faf7f251c64ca0421494464c3457d1679695127db70f3856ecc895b635d10",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "LICENSE": "93a8777f8776e6aa280f486fb84a5a12b64fcb00d9b58086ee1cc203e7311a15",
+      "README.md": "b63dde8888353a1eb28574b54a528f6fe63f06da6ce8de7527997bce8797eb43",
+      "docs/model-contract.md": "16a758da1a57369a16a642021268fb448d8e543ecffd68292f030ac1dd8036a9",
+      "docs/public-design.md": "8ed2f4a6c8ee443ece41b5ff17ac4fe6c1b4f9139e5f5e4282cfac4c22f23050",
+      "docs/public-interface.md": "852506c49aecd1a8ef4776a944fab4775b48a17aaeec6907eb827a499cc59fc2",
+      "game.json": "b94de0258810f916f65a587c010603a20975d33950a9aa334d0838c1a0c8d4f4",
+      "icon.xml": "5b028b2d577561f79c95ac003dce229b614b49fe59efb4a2197b1fd59f02ec13",
+      "logo.svg": "9b76d86e57fc2bc668846e57f6cd09c1f67ce4f7eb1c6d0b91b7a85bfe786538",
+      "src/main/assets/game-model.js": "77981b0fc1d64ace421845645951246029b35084c394ba1234557d2bc20dab50",
+      "src/main/assets/game.js": "65a711015385149b6b43fe1288c83454bf9174d54b3b8d121b55c7edc83f3d33",
+      "tests/automation.mjs": "1e35462c6062de723c34839d0341bc5051d6d1a608f35d9b580dc3cdcece9e99",
+      "tests/independent-audit-cli.mjs": "26582013e745c4a43678ea49d6b3c7bab7a7d140a1ca6a47ba23c219e91dfe08",
+      "tests/independent-audit.mjs": "c23de07de55a13f62ba697893706d6d599c5d98ff3ff456cb4b202e1bba57bc2",
+      "tests/model.test.cjs": "a5363119d810bc2afa4d8d587a692fffe9c94f3b1928c205bca3c353bda1fe7f"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-final/01-menu-1280.png",
+        "sha256": "6b9b9c19be4309c1bc0d75b1dc8c3b772e27244f8a70cd75a664cc21ffa408c3",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/02-menu-960.png",
+        "sha256": "f24758131afc22b4763bf71332958c44effe5cf41418f905b5f1510ef343f3e8",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/03-virtual-960.png",
+        "sha256": "937a27f776a1c0c3a50ff06157abce471919175438bb0d5ff6aa6a7f5fda0bdf",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/04-focal-1280.png",
+        "sha256": "16bb9906e60f568bf780f1edee327f6621d4c3807edb24f3a81556936f2d9493",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/05-real-soft-1280.png",
+        "sha256": "ebb4b2bb4bb989d190256f774a8d0e380049e178b90e7db95a7dd70c335c75a2",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/06-screen-control-1280.png",
+        "sha256": "53626f4b6a9ef4187e90c8ec0f133ff6ba14974fbba54ab30de499d64930b7ab",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/07-real-dim-1280.png",
+        "sha256": "ec6da3ec708ecaa4a248da1114ae17e7f05ff8cff1315919bd0f660f00f3ab32",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/08-wide-over-soft-1280.png",
+        "sha256": "20bd4344f76f67557ae22c1fd76370b648792e9c7e8afc1e82adbd83c6effd07",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/09-brightness-pass-clarity-fail.png",
+        "sha256": "5cbb8f575c1a92e99878d14f3e77402ac57ba71975cd35a24a0942a11e09eb24",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/10-retry-fresh-1280.png",
+        "sha256": "a3de723c659928395d244bad598c1fbc005636d6450c4e27113083d551c2f49d",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/11-energy-loss-1280.png",
+        "sha256": "962c07ad1e5f5dd183fa569955f6ba78bcde05b75680752fb530e105c0887468",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/12-pause-1280.png",
+        "sha256": "d71117c42115dc1dadc0672ac411d8a2236563e33804831063169e86bce2ae36",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/13-ready-both-meters-1280.png",
+        "sha256": "dbbc8bef701b35dffe685f298247bcfc427b895d7b313301516ae7886710fab9",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/layout-0-card2-reset.png",
+        "sha256": "5bb80014dc4252692988fd0ef7fa8b03a54c18147a6e846397d6288a3a4c1f2b",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/layout-0-won.png",
+        "sha256": "46aef79e92e7d6dde53999f58170dcbc5cd41ab6825d5571596dfd13c0e3d5f9",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/layout-1-selected-menu.png",
+        "sha256": "bc3ffe3c958aa052fb04049d4a50c25d49e10200689a709d02912cc78b5811a1",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/layout-1-initial-gameplay.png",
+        "sha256": "6c10d86d566e6b3172ddfbcaaa335cd865a01a85e095e564e6568ac674c8e992",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/layout-1-card2-reset.png",
+        "sha256": "0af88a9d3a1f57bb3822cc3503caddc457101fa8e177565d01c9d9fa66fa443b",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/layout-1-won.png",
+        "sha256": "91d24575f15ff4010b509955b1b3cb9c28aeb4411c4cfc6c13ead05a85fc9305",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/layout-2-selected-menu.png",
+        "sha256": "d375f13c3538643c85524db025741f2164204943a9c7d6520345f3bc332381e6",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/layout-2-initial-gameplay.png",
+        "sha256": "2ecc5c7d1a7642ea5412596a06ad820d1fe94e2fa3a09bc2fe6e3bfd3ef96b42",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/layout-2-card2-reset.png",
+        "sha256": "8fc754cb3a064b1254f74875dd1eaedebf4d68ca29391852ab0a26f198806408",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/layout-2-won.png",
+        "sha256": "11d2072e1360bd48a8d31d608c5c173ec23a18600ca6e9d34ceb4365de2232a7",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/adjustment-exact-allowance-exposure.png",
+        "sha256": "31f8cf962d573f20343b20e058132238fe98977ab45d08e2efab36c26768a1f6",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-final/adjustment-overrun-loss-960.png",
+        "sha256": "d6feb92511c19c8f96845b2523c3905a50ce4e9e1d7df66632e798b01d7dd9fc",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "controller-first/controller-844x390.png",
+        "sha256": "0e682bf53dd87701a94a38345958910dfd2c2313b236fe1081fe8ca2385f67bb",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "66d6953673ee5eac0b1bfe0a2ec432ebfe6036d78a042c6c17431aa3bc9cd550",
+    "unresolvedFindings": []
+  },
+  "modelTests": {
+    "passed": 31,
+    "reporter": "node-test TAP",
+    "testNames": [
+      "exact public API, CommonJS/browser equivalence and deeply immutable configuration",
+      "all six public cards have exact bounds, starts, powers, bands and independent ranges",
+      "fresh state normalizes seed/level without coercion and every layout begins uncaptured",
+      "synthetic near-focus poses distinguish signed virtual, focal null and real images",
+      "synthetic full authored domain keeps geometry finite and satisfies lens/ray identities",
+      "synthetic optical cases keep DIM, OVER, SOFT and no-real-image failures independent",
+      "synthetic band equality and either adjacent side use inclusive cross-products",
+      "synthetic sequential clarity-only and brightness-only exposures never accumulate a capture",
+      "moving either carriage and aperture alters its own current optical measurement",
+      "synthetic all end stops block freely, preserve cache and cannot exceed adjustment allowance",
+      "three ordinary two-card rounds accept actual observed optics and retain bounded receipts",
+      "ordinary first-card success resets every per-card value but retains counters, time and held history",
+      "ordinary four rejected exposures lose energy on every initial layout without mechanical cost",
+      "ordinary successful final-energy captures advance then win and retain all eight exposures",
+      "ordinary exactly-allowed changes still permit exposure; actual extra change applies then loses",
+      "synthetic exact adjustment budget can successfully expose, while aperture overrun consumes no energy",
+      "synthetic corrupted optics and copied card cannot authorize an invalid capture or change bounds",
+      "B>A>direction consumes simultaneous edges and held A permits fresh directions without new exposure",
+      "axis threshold/clamp, vertical ties, changed nonneutral directions and no held repeat",
+      "fresh held inputs stay quarantined and initial valid epoch is only a baseline",
+      "changed epoch neutral cannot rearm that same call; a later genuine neutral is mandatory",
+      "cancelled samples always suppress commands and synthetic neutral never releases quarantine",
+      "only nonnegative safe integer epochs persist and invalid epochs are ignored",
+      "invalid dt and literal paused true preserve all values/references without inappropriate reads",
+      "normalization ignores getters, inherited values, pulses and coercible fields; input stays untouched",
+      "arrays/functions/primitives and atomic descriptor failure normalize to wholly neutral",
+      "prototype pollution cannot supply normalized controls or intercept detached optical receipt writes",
+      "synthetic informational elapsed cap and counter saturation never settle the round",
+      "receipts, terminal optics, config and independent rounds share no mutable objects",
+      "terminal win, energy loss and adjustment loss freeze before reading duration or input",
+      "retry and level change allocate a complete original release-gated round after any outcome"
+    ],
+    "testLogSha256": "53f01071dce88590eacfedc125b3a6de851d65644b25ebdf719585e80716ff45",
+    "rawReport": {
+      "scope": "scratch",
+      "path": "formal-first/execution.json",
+      "sha256": "02e47b85a096e24a956c5fe31eba207f4d7e04d12dcfcbcdb90fe1f0a825284d"
+    },
+    "sourceHashes": {
+      "src/main/assets/game-model.js": "77981b0fc1d64ace421845645951246029b35084c394ba1234557d2bc20dab50",
+      "tests/model.test.cjs": "a5363119d810bc2afa4d8d587a692fffe9c94f3b1928c205bca3c353bda1fe7f",
+      "docs/public-design.md": "8ed2f4a6c8ee443ece41b5ff17ac4fe6c1b4f9139e5f5e4282cfac4c22f23050",
+      "docs/model-contract.md": "16a758da1a57369a16a642021268fb448d8e543ecffd68292f030ac1dd8036a9",
+      "docs/public-interface.md": "852506c49aecd1a8ef4776a944fab4775b48a17aaeec6907eb827a499cc59fc2"
+    },
+    "scope": "Original Node TAP run, including labelled synthetic model fixtures; not ordinary browser or hardware play."
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "fresh menu, held Enter start and actual virtual/focal/real controls",
+        "passed": true
+      },
+      {
+        "name": "ordinary two-card optical win at visible layout 0",
+        "passed": true
+      },
+      {
+        "name": "ordinary two-card optical win at visible layout 1",
+        "passed": true
+      },
+      {
+        "name": "ordinary two-card optical win at visible layout 2",
+        "passed": true
+      },
+      {
+        "name": "exact adjustment allowance permits exposure, free bounds/B, then actual overrun loses",
+        "passed": true
+      }
+    ]
+  },
+  "supplementaryControls": {
+    "report": {
+      "scope": "scratch",
+      "path": "controller-first/report.json",
+      "sha256": "6c2778749e7eab811f642d9ccb4e5f14dfb5e59d5311c5eef42c62b694cda62a"
+    },
+    "passed": true,
+    "scope": "Actual Game47 controller label/action-half/selection integration. Prior unchanged shared native lifecycle evidence is referenced, not rerun and not claimed as optical gameplay.",
+    "testedAssetHashes": {
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "game-config.json": "105faf7f251c64ca0421494464c3457d1679695127db70f3856ecc895b635d10"
+    },
+    "sourceWindowSha256": "fcb9b5686b16e2aeacfe36dc53db9fb283b04bf5f923d50deab6bac3173f9e71",
+    "sharedRegressionBinding": {
+      "scope": "scratch",
+      "path": "qa-tools/shared-regression-binding.json",
+      "sha256": "59f7f7a797f10f76071ed83f02bb9fed15fa6975638c8e015c1d6a9bba6aec1c"
+    },
+    "physicalPhoneTested": false,
+    "productionAndroidServerTested": false,
+    "selectionSuppressed": true
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "buildSourceSha": "cac7deed8fc492c5112eac5a7581f3adc1e6927d",
+    "startHashes": {
+      "harness": "01e7ff6419ef3f10491cf20b36130065144d4265827afaf28d59001389edf3a9",
+      "cases": "e8e2672d6d682bb2e4e429347a4c943b0d947cc361304f3f05400777cc9d2bcd",
+      "evidence": "d3cc818f13cdacc541e9a5d862dadea72cac0a84090433ec8ee8036fe4aeec4b",
+      "protocol": "12b4d19b4fc2676f49781f7d855f978aa39a5f8f1bd388ae9829013dda89e0f7",
+      "common": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+      "metrics": "6f3feda7dd79d649ea4f27ced8f7dd5461b7d0cf0010005b12805abace565476",
+      "gameConfig": "b94de0258810f916f65a587c010603a20975d33950a9aa334d0838c1a0c8d4f4",
+      "automation": "1e35462c6062de723c34839d0341bc5051d6d1a608f35d9b580dc3cdcece9e99",
+      "model": "77981b0fc1d64ace421845645951246029b35084c394ba1234557d2bc20dab50",
+      "game": "65a711015385149b6b43fe1288c83454bf9174d54b3b8d121b55c7edc83f3d33",
+      "shared/runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "shared/renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "shared/controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "shared/controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "shared/controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "shared/tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "shared/tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "docs/public-design.md": "8ed2f4a6c8ee443ece41b5ff17ac4fe6c1b4f9139e5f5e4282cfac4c22f23050",
+      "docs/model-contract.md": "16a758da1a57369a16a642021268fb448d8e543ecffd68292f030ac1dd8036a9",
+      "docs/public-interface.md": "852506c49aecd1a8ef4776a944fab4775b48a17aaeec6907eb827a499cc59fc2"
+    },
+    "endHashes": {
+      "harness": "01e7ff6419ef3f10491cf20b36130065144d4265827afaf28d59001389edf3a9",
+      "cases": "e8e2672d6d682bb2e4e429347a4c943b0d947cc361304f3f05400777cc9d2bcd",
+      "evidence": "d3cc818f13cdacc541e9a5d862dadea72cac0a84090433ec8ee8036fe4aeec4b",
+      "protocol": "12b4d19b4fc2676f49781f7d855f978aa39a5f8f1bd388ae9829013dda89e0f7",
+      "common": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+      "metrics": "6f3feda7dd79d649ea4f27ced8f7dd5461b7d0cf0010005b12805abace565476",
+      "gameConfig": "b94de0258810f916f65a587c010603a20975d33950a9aa334d0838c1a0c8d4f4",
+      "automation": "1e35462c6062de723c34839d0341bc5051d6d1a608f35d9b580dc3cdcece9e99",
+      "model": "77981b0fc1d64ace421845645951246029b35084c394ba1234557d2bc20dab50",
+      "game": "65a711015385149b6b43fe1288c83454bf9174d54b3b8d121b55c7edc83f3d33",
+      "shared/runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "shared/renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "shared/controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "shared/controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "shared/controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "shared/tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "shared/tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "docs/public-design.md": "8ed2f4a6c8ee443ece41b5ff17ac4fe6c1b4f9139e5f5e4282cfac4c22f23050",
+      "docs/model-contract.md": "16a758da1a57369a16a642021268fb448d8e543ecffd68292f030ac1dd8036a9",
+      "docs/public-interface.md": "852506c49aecd1a8ef4776a944fab4775b48a17aaeec6907eb827a499cc59fc2"
+    },
+    "sourceWindowSha256": "aa2e496b796b28b9e1a5c24867d41f4e679d5cc2d92a10ca5f088c23f0ef56c2"
+  },
+  "sourceArtReview": {
+    "file": "art-review.json",
+    "sha256": "c13189abf8ecab319e3211b993c2c20d541c96aa16cb1bcae1b14a3ea18eccbf"
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "reviewedOriginals": 54,
+    "sourceOriginals": 26,
+    "encodedOriginals": 28,
+    "cover": "encoded-first/near-observation-second-card-ready.png",
+    "coverSha256": "b8a8298b126ee65c6814106e3c1fa01d46304620a20f03773bcf3d45767cfa28",
+    "review": {
+      "scope": "scratch",
+      "path": "final-review.json",
+      "sha256": "8510497c54fbd098614fafe205828696d75c04e504e04bd6c95ec2b46a625944"
+    },
+    "limits": [
+      "No physical television installation or phone-to-TV play verified.",
+      "Browser software-renderer API submission measurements are not device FPS.",
+      "Model-channel complete166pairs separate from actual browser1395 and recording266 sparse endpoints;1648intervals and7boundaries unobserved.",
+      "Three initial media selection labels were early; actual pixel classifications retained and two supplement pairs close required coverage.",
+      "Sampled originals reviewed; not every encoded frame visually watched."
+    ]
+  },
+  "performance": {
+    "environment": {
+      "webgl": {
+        "available": true,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+      },
+      "requestedRenderer": "ANGLE SwiftShader",
+      "instrumentationOverheadIncluded": true
+    },
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "observedWindow": {
+      "clock": "browser performance.now milliseconds",
+      "startTime": 1274.300000011921,
+      "endTime": 8191.800000011921,
+      "excludedInitialMilliseconds": 500
+    },
+    "samples": 148,
+    "rafIntervalMs": {
+      "count": 148,
+      "min": 16.599999999999454,
+      "median": 33.40000000000009,
+      "p95": 83.39999999999964,
+      "max": 116.70000000000005,
+      "mean": 43.24121621621622
+    },
+    "webglDrawCalls": {
+      "count": 148,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 148,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    },
+    "scope": "Actual API submissions per observer RAF interval, including screenshot/pause/instrumentation overhead. RAF intervals are descriptive software-browser observations, never television FPS."
+  },
+  "actualGameplay": {
+    "independentOrdinary": {
+      "report": {
+        "scope": "scratch",
+        "path": "independent-ordinary-first/report.json",
+        "sha256": "f4ef0fcf6b65cbed8e61f7880beb30f77d792351e44dc2d811d15965dd8f3c7b"
+      },
+      "counts": {
+        "endpoints": 344,
+        "fullPairs": 166,
+        "sparseIntervals": 0,
+        "declaredBoundaryGaps": 0
+      },
+      "originalInputs": [
+        {
+          "scope": "scratch",
+          "path": "ordinary-first/level0-align.json",
+          "bytes": 193378,
+          "sha256": "9d634ef1f224a658c18f9493c587b9399ad1706ef4ba184feccdcf8d2575b6c4",
+          "level": 0,
+          "outcome": "won",
+          "actualCalls": 53,
+          "coverage": {
+            "genuineNeutralArming": 1,
+            "lensMove": 2,
+            "screenMove": 14,
+            "apertureChange": 26,
+            "selection": 12,
+            "exposure": 30,
+            "cardAdvance": 30,
+            "terminalNoop": 53,
+            "actualExposures": 2,
+            "actualAdjustments": 22,
+            "completed": 2
+          }
+        },
+        {
+          "scope": "scratch",
+          "path": "ordinary-first/level0-reject.json",
+          "bytes": 61543,
+          "sha256": "d28cd56ffe2e3b4b4213b32ffe4e8814d8ef7dbfd447c199f75fd2ef0c44852a",
+          "level": 0,
+          "outcome": "lost",
+          "actualCalls": 9,
+          "coverage": {
+            "genuineNeutralArming": 1,
+            "lensMove": null,
+            "screenMove": null,
+            "apertureChange": null,
+            "selection": null,
+            "exposure": 2,
+            "cardAdvance": null,
+            "terminalNoop": 9,
+            "actualExposures": 4,
+            "actualAdjustments": 0,
+            "completed": 0
+          }
+        },
+        {
+          "scope": "scratch",
+          "path": "ordinary-first/level1-align.json",
+          "bytes": 208068,
+          "sha256": "c79aa4d621ebac2f7c6be26c749d9f90e8c93870a2932816552544c7dc919cf5",
+          "level": 1,
+          "outcome": "won",
+          "actualCalls": 55,
+          "coverage": {
+            "genuineNeutralArming": 1,
+            "lensMove": 2,
+            "screenMove": 10,
+            "apertureChange": 24,
+            "selection": 8,
+            "exposure": 30,
+            "cardAdvance": 30,
+            "terminalNoop": 55,
+            "actualExposures": 2,
+            "actualAdjustments": 23,
+            "completed": 2
+          }
+        },
+        {
+          "scope": "scratch",
+          "path": "ordinary-first/level1-reject.json",
+          "bytes": 64278,
+          "sha256": "e0778a13fb7c1bb8291030a15e22c1bc1291d1cb2a01230dee558ce80b1e78ad",
+          "level": 1,
+          "outcome": "lost",
+          "actualCalls": 9,
+          "coverage": {
+            "genuineNeutralArming": 1,
+            "lensMove": null,
+            "screenMove": null,
+            "apertureChange": null,
+            "selection": null,
+            "exposure": 2,
+            "cardAdvance": null,
+            "terminalNoop": 9,
+            "actualExposures": 4,
+            "actualAdjustments": 0,
+            "completed": 0
+          }
+        },
+        {
+          "scope": "scratch",
+          "path": "ordinary-first/level2-align.json",
+          "bytes": 124211,
+          "sha256": "4bcd5222db6615a328293745314f6fc2f8b19a302aa296af5990c5f7d5409e8b",
+          "level": 2,
+          "outcome": "won",
+          "actualCalls": 31,
+          "coverage": {
+            "genuineNeutralArming": 1,
+            "lensMove": 2,
+            "screenMove": 10,
+            "apertureChange": 12,
+            "selection": 8,
+            "exposure": 16,
+            "cardAdvance": 16,
+            "terminalNoop": 31,
+            "actualExposures": 2,
+            "actualAdjustments": 11,
+            "completed": 2
+          }
+        },
+        {
+          "scope": "scratch",
+          "path": "ordinary-first/level2-reject.json",
+          "bytes": 61099,
+          "sha256": "d16f737f435078d4bfb648b96de8d45ee6fb4d3de3103cd27d017ff6759f90de",
+          "level": 2,
+          "outcome": "lost",
+          "actualCalls": 9,
+          "coverage": {
+            "genuineNeutralArming": 1,
+            "lensMove": null,
+            "screenMove": null,
+            "apertureChange": null,
+            "selection": null,
+            "exposure": 2,
+            "cardAdvance": null,
+            "terminalNoop": 9,
+            "actualExposures": 4,
+            "actualAdjustments": 0,
+            "completed": 0
+          }
+        }
+      ],
+      "inputRetention": "Original JSON remains at each referenced input path/SHA-256 and must be preserved; findings use JSON paths without duplicate snapshots",
+      "scope": "All supplied actual before/after pairs; provenance is not authenticated by hashes",
+      "identityLimit": "Serialized JSON does not prove in-memory detachment or accessor/Proxy effects",
+      "mathematicsReplayedByReleaseHelper": false
+    },
+    "independentBrowser": {
+      "report": {
+        "scope": "scratch",
+        "path": "independent-browser-final/report.json",
+        "sha256": "8f0dc3c860032b2dafcd91c024e9e46d26efc985707b0b2e1c2034e0604165c9"
+      },
+      "counts": {
+        "endpoints": 1395,
+        "fullPairs": 0,
+        "sparseIntervals": 1387,
+        "declaredBoundaryGaps": 3
+      },
+      "originalInputReferences": [
+        {
+          "scope": "scratch",
+          "path": "independent-browser-final/projections/optics-controls-and-energy.json",
+          "bytes": 1242278,
+          "sha256": "ad850a413612f6e8621899c265a1dcfa1a69affe03e531a579d2b903845e7c65"
+        },
+        {
+          "scope": "scratch",
+          "path": "candidate-final/ordinary-layout-0.json",
+          "bytes": 1868211,
+          "sha256": "789d35bf4555b7e4a88df44f77794577241128eb08c5f9d91ae14fb4d80fa117"
+        },
+        {
+          "scope": "scratch",
+          "path": "independent-browser-final/projections/ordinary-layout-1.json",
+          "bytes": 1161024,
+          "sha256": "0ee007f5fa5236eed65fcab7458ba8236ec0fc54965b9de71d544b49dd90ebe3"
+        },
+        {
+          "scope": "scratch",
+          "path": "independent-browser-final/projections/ordinary-layout-2.json",
+          "bytes": 555252,
+          "sha256": "45a467c86be2ae6f20897e34db8f69ffc72053d7b3e7344479243d5947f8f863"
+        },
+        {
+          "scope": "scratch",
+          "path": "candidate-final/adjustment-budget-loss.json",
+          "bytes": 1709594,
+          "sha256": "9f32c646d9b97e3a87593a2dbb4e69b4bd785d1b8434b486690dba38857050fd"
+        }
+      ],
+      "projectionManifest": {
+        "scope": "scratch",
+        "path": "independent-browser-final/projection-manifest.json",
+        "sha256": "1f0fe7f09854165a2ae911e5565c92f82beaaceabd23f76093b6be853427fb0c"
+      },
+      "scope": "Actual endpoints only; intervals/lifecycle remain unobserved",
+      "independentMathReplayedByReleaseHelper": false
+    },
+    "independentRecording": {
+      "report": {
+        "scope": "scratch",
+        "path": "independent-recording-first/report.json",
+        "sha256": "55faa2a244157cd5c6bc1b4f68ac512ac252feda61b6ec8767ad2eab5ae2bbcd"
+      },
+      "counts": {
+        "endpoints": 266,
+        "fullPairs": 0,
+        "sparseIntervals": 261,
+        "declaredBoundaryGaps": 4
+      },
+      "originalInput": {
+        "scope": "scratch",
+        "path": "independent-recording-first/segments.json",
+        "bytes": 3463727,
+        "sha256": "c434541f57f2ef3e89f33ec4ece7dc610960fd6656548b956c6ce299726d600f"
+      },
+      "scope": "266 actual setup/capture endpoints in five observed segments; four declared gaps include three actual menu-level changes and one separate-clock-stream boundary, which does not assert a reset. No complete model invocation capture.",
+      "mathematicsReplayedByReleaseHelper": false
+    },
+    "recordingValidation": {
+      "sourceAssetsMatched": true,
+      "ordinaryInputOnly": true,
+      "cleanCapture": true,
+      "rawRecord": {
+        "scope": "scratch",
+        "path": "recording-first/recording.json",
+        "sha256": "210e9cab30dbfeb62c0e092ee215f03790eb192ee63430578dd6ddd6ede18cf0"
+      },
+      "frameMap": {
+        "scope": "scratch",
+        "path": "recording-first/encoding-frame-map.json",
+        "sha256": "63ac6de7bb16c45ffaab2764cc4dfd4d843706c599d765b9011a19d0cb0aa8b6"
+      },
+      "actualCapturedSeconds": 50.58351969718933,
+      "encodedSeconds": 50.63333333333333,
+      "actualModelElapsedSeconds": 41.01666666666562,
+      "terminalHoldSeconds": 5.041982462,
+      "actualRawFrames": 968,
+      "encodedFrames": 1519,
+      "fullDecodeInvocations": 1,
+      "outerExecutionScope": "Direct retained tool invocation; internal source, encode and decode records are original. No invented local outer receipt.",
+      "observationScope": "All state readStartedAt/readCompletedAt fields bound real awaited reads; browser observations remain sparse.",
+      "opticalCoverageScope": "Current controls, public card/ranges, finite optical caches, separate quality flags, resources and actual receipts only. Sparse observations are not every-call or exact-pixel evidence; independent arithmetic and original-pixel reviews remain separate.",
+      "performanceScope": "30fps CFR is an export format, not physical TV or phone rendering speed."
+    },
+    "acceptedLimits": [
+      "No physical television installation or phone-to-TV play verified.",
+      "Browser software-renderer API submission measurements are not device FPS.",
+      "Model-channel complete166pairs separate from actual browser1395 and recording266 sparse endpoints;1648intervals and7boundaries unobserved.",
+      "Three initial media selection labels were early; actual pixel classifications retained and two supplement pairs close required coverage.",
+      "Sampled originals reviewed; not every encoded frame visually watched."
+    ],
+    "originalSelectionHistory": [
+      "near-observation-menu-1",
+      "near-observation-menu-2",
+      "near-observation-second-card-reset"
+    ]
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "77981b0fc1d64ace421845645951246029b35084c394ba1234557d2bc20dab50",
+    "game.js": "65a711015385149b6b43fe1288c83454bf9174d54b3b8d121b55c7edc83f3d33",
+    "game-config.json": "105faf7f251c64ca0421494464c3457d1679695127db70f3856ecc895b635d10",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "publicReview": "323382f5d22337a1056f6edbe44ffd62f6d47821dedad5a52716226ed95d2e01",
+    "checkerFreeze": "f70ab0a0c35bdcbae6c19fb67c89387b585dd2428ec2ebe4a9699e2a6027f6ac",
+    "checkerReview": "50060b32957d94b57c37e81cb4d8ea6cc50c40d6d40accd3f2022ac90888209a",
+    "formal": "02e47b85a096e24a956c5fe31eba207f4d7e04d12dcfcbcdb90fe1f0a825284d",
+    "formalReview": "1584a2c8d71e84550b8cd3412eb595a3abd5df9c13153f225d5ea1f665032096",
+    "ordinary": "a50b20886520b0b021f58970977a620653aa8dda48ea3baa27e7fe6533087bec",
+    "ordinaryExecution": "c80afef8f7182b1a7392368b33f5fa53e5c88edde150a3fda6bc46f2b6d3f9de",
+    "ordinaryReview": "6cfcb4973fae64ac4d83d51b536229836694d80eb2799114685a7d8cc23ea198",
+    "ordinaryPins": "e57d9887a1e12ba32770b341e937f3fd8ff88430d45a508c1b1472de73e1694e",
+    "ordinaryAudit": "f4ef0fcf6b65cbed8e61f7880beb30f77d792351e44dc2d811d15965dd8f3c7b",
+    "auditCommand": "d0088b6fa41682a43148380cdcba0ccf8d7bc8f138bb7c7f83e83c4b396ab423",
+    "auditCompletion": "83317b6273e22422ceb04eecd23cec7bb7d6a3a9e6d7e906fc02021321102a4b",
+    "buildFirst": "3fc79d848ac98cd0cad2c1a3ed78a805ad75510def85527fd041fa9797faa458",
+    "rendererReview": "4fa4cef5c275b10af9abc631e882e00f4caee8b9b7bc833b6ca058d132b5909c",
+    "browserRaw": "a5539aef424b77595eff5da973005c424c8c4b712cbf384caa4afb2a4dfa0fcc",
+    "browserStart": "2a267b73cb6d08ed0fe619ca45e89954300729dc88240667e8b978977d5812bd",
+    "browserEnd": "03f64e3f741ad37004eb542e61b9f12130972a8855c785bca11581b4075df329",
+    "browserAssets": "349afc461866544b7d42b3650482a2855905dbf171ae047cb4094ad4934f23a6",
+    "browserPins": "d45e5671bff244ed3a8f3269298f623cddddc81852a3989629a26eb9610158cf",
+    "browserExecution": "3e6639197c6ee4f097e0e79799fed885557e139152010d5aa1458e422c3f1432",
+    "performanceSamples": "f80b49d6fddddea8dbdb9c92903288b187b38da289925d625f035274979fa13e",
+    "performanceRaw": "503ee93521f9c4d6df7e0d2af1174f4a6c965caa16c70e6e2a9ea2ad75dd17b3",
+    "candidate": "66d6953673ee5eac0b1bfe0a2ec432ebfe6036d78a042c6c17431aa3bc9cd550",
+    "controllerRaw": "6c2778749e7eab811f642d9ccb4e5f14dfb5e59d5311c5eef42c62b694cda62a",
+    "controllerStart": "6f193fecc53cfc0ce718de30e9fead57f400625c2f3611099a1aaa228ff593f6",
+    "controllerEnd": "f760cf616a4328abcea6c3b3a4c14338a8ed97e6296f894f6e4a4f65382a82cc",
+    "controllerPins": "9a52a78416423955d2f281c008c07433b67dcee48ca48b22fb6d625ea64994b7",
+    "controllerExecution": "462a4b4564e519cb985944e40a91e0bd50e62fc3a79b30196821eeab1dcef0ec",
+    "sharedBinding": "59f7f7a797f10f76071ed83f02bb9fed15fa6975638c8e015c1d6a9bba6aec1c",
+    "browserAudit": "8f0dc3c860032b2dafcd91c024e9e46d26efc985707b0b2e1c2034e0604165c9",
+    "browserAuditCommand": "83ac89c371600e495f0e07f0bbf5c63e01dfd83bdc347accb4e283e83fd874d0",
+    "browserAuditCompletion": "7f1691333574e8ff2c5df5a137885d3687fdad8661a989ad69c9a7770fc2f498",
+    "browserProjection": "1f0fe7f09854165a2ae911e5565c92f82beaaceabd23f76093b6be853427fb0c",
+    "finalBrowserReview": "7433a9090acb50ff496f53c8c69f44d343019c4a6d3ae019268da4510b5f700c",
+    "build": "90a7f6eff3dfbdcf6d561779bece3cdc0335f18bf2ea7f571818987b207a80f7",
+    "record": "210e9cab30dbfeb62c0e092ee215f03790eb192ee63430578dd6ddd6ede18cf0",
+    "recordStart": "8edbf473baeca1dda6a3ca0bfc61aa002338673d2fe8f4f56eafa37533c1f325",
+    "recordEnd": "f0474ec0a36fac07cb8e2bf91ab5ef2542cfd267ed68f189a5462d9dc8dcf612",
+    "recordCleanup": "71498386629c4d3274191e5b4fcd1b43b6f94e949a6b482184f2b9126820491c",
+    "recordStartup": "34570258a3606784456b64480c1cab287cfaf621683d5c50ac541ede6cc2043a",
+    "recordFrameMap": "63ac6de7bb16c45ffaab2764cc4dfd4d843706c599d765b9011a19d0cb0aa8b6",
+    "videoValidation": "320404be18ebf1a06017f60ce961a34be16627716df6c808316cb6c69eb6a1ac",
+    "decodeCommand": "94ab56883b810548b05f299dd53fa64560a7040f343f85375260b25a9999de60",
+    "decodeExit": "331bb8e242144052e415b2a4c6776fcdf71e139d02d0c2033697c4d3059d2d70",
+    "sign": "97cd42685dfbb0f1bb5b4f088adf39da6d2ca77025be99ada43ac7fca1bfd370",
+    "fetch": "1572cb0e9f57eff17996ab51871d88d9dd260f393329b55be585f40b39734dd2",
+    "rootEncoded": "64c828fac4bf98d53de73923147b5fcbdb24697d4812f8e85821ca50ffebb5bf",
+    "finalReview": "8510497c54fbd098614fafe205828696d75c04e504e04bd6c95ec2b46a625944",
+    "freeze": "942c800e2a135962174e230328b7d968feb32334f9da16d7a548dc08accca7d6",
+    "recordingAudit": "55faa2a244157cd5c6bc1b4f68ac512ac252feda61b6ec8767ad2eab5ae2bbcd",
+    "recordingAuditCommand": "d199d9584519dfecea2702758d00060deb5b320e4601976358ce565f2f0719c1",
+    "recordingAuditCompletion": "0214d1d6bbaa632a2fdf91378803d5f8da401a9cec25022e53017a890b3f35bc",
+    "qa": "a5539aef424b77595eff5da973005c424c8c4b712cbf384caa4afb2a4dfa0fcc",
+    "candidateRaw": "a5539aef424b77595eff5da973005c424c8c4b712cbf384caa4afb2a4dfa0fcc"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium with ordinary input. Synthetic fixtures are labelled separately; export FPS is not device FPS."
+  },
+  "release": {
+    "sourceSha": "cac7deed8fc492c5112eac5a7581f3adc1e6927d",
+    "requestCommit": "df11c63204029ad9fec88a9fa49beb82b18945d1",
+    "signerCommit": "cac7deed8fc492c5112eac5a7581f3adc1e6927d",
+    "signingRun": 41577002339,
+    "bytes": 296227,
+    "sha256": "c444b51f0b8c567d0e1f44ddbf4c4cc642c731fc9f76cc493ac190d96dccc4cf",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "signatureVerified": true,
+      "zipalignVerified": true,
+      "crcVerified": true,
+      "sourceIdentityVerified": true,
+      "assetsMatchSigningReceipt": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "4735149963c37caac7d06d3fe7a555d85c649060"
+  }
+}
