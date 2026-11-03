@@ -36,6 +36,7 @@
 - 模型实现 `PureModel.create(seed, difficulty)` / `step(state, dt, input)`；终局冻结。界面通过 `GameDef` 和公共运行时接入。
 - 每款目录维护 `game.json`、`src/main/assets/game-model.js`、`game.js`、说明、许可证、测试、`logo.svg`、实际画面 `thumb.png`、验证记录和发布资源。图标和资源约定见 `resource/README-development.md`、`docs/resource-maintenance.md`。
 - 模型测试覆盖该款核心规则、资源边界、成功与失败、输入取消和终局。测试求解器不随游戏资产打包。
+- 美术预览、源码冻结与最终 QA 前核对实际加载资产的 SHA256；最终测试资产必须与冻结源码及正式签名 APK 一致。渲染代码变更后旧录像不能冒充新版本证据。
 - 浏览器 QA 与录像使用正常输入推进，不写入模型或强制获胜。录像、性能观测和合成协议测试分别说明，具体要求见 `resource/game-kit/qa/README.md`。
 - 有意义地检查 960×540、1280×720 的文字、控件、侧栏与实际游戏画面。自动截图通过不能代替目视检查。
 - 未做实体电视／手机测试时明确记录 `physicalTvTested:false` / `physicalPhoneTested:false`。软件浏览器结果和视频导出帧率不能当作设备帧率。
