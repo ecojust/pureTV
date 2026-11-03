@@ -1,0 +1,160 @@
+{
+  "kind": "ordinary-browser-light-constraint-regression",
+  "startedAt": "2026-11-03T17:12:48.391Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "2d2491815d73e8daf56bcd08b946d26e0431d77d245de141436c7f19038eae07",
+    "game-model.js": "51dd382d19867127a7d2465f9f1afc36e3d425074287a07571c1f2fd41805227",
+    "game.js": "7a324eb8bb9d311033d497b6eebfad5431619f4302a8515c4da0510a9086bbce",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "largest numbered-wall grid and lamp guidance fit both viewports",
+      "passed": true,
+      "milliseconds": 5342.8194730000005,
+      "screenshots": [
+        "/workspace/scratch/light-chambers/browser-checks/initial-1280.png",
+        "/workspace/scratch/light-chambers/browser-checks/initial-960.png"
+      ]
+    },
+    {
+      "name": "level 1: ordinary public-clue bulb arrangement wins only after manual B",
+      "passed": true,
+      "milliseconds": 8166.024911,
+      "level": 0,
+      "bulbs": 7,
+      "checks": 1
+    },
+    {
+      "name": "level 2: ordinary public-clue bulb arrangement wins only after manual B",
+      "passed": true,
+      "milliseconds": 10213.424259,
+      "level": 1,
+      "bulbs": 11,
+      "checks": 1
+    },
+    {
+      "name": "level 3: ordinary public-clue bulb arrangement wins only after manual B",
+      "passed": true,
+      "milliseconds": 13011.716871,
+      "level": 2,
+      "bulbs": 12,
+      "checks": 2
+    },
+    {
+      "name": "two empty rejections followed by the exact third valid check wins",
+      "passed": true,
+      "milliseconds": 10376.281000000003,
+      "checks": 3,
+      "phase": "won"
+    },
+    {
+      "name": "three empty checks lose and retain the current incomplete witness",
+      "passed": true,
+      "milliseconds": 3715.484053,
+      "checks": 3,
+      "lastCheck": {
+        "allLit": false,
+        "noConflicts": true,
+        "wallsExact": false,
+        "matched": false,
+        "litWhite": 0,
+        "totalWhite": 32,
+        "bulbs": 0,
+        "conflicts": [],
+        "wrongWalls": [
+          8,
+          28,
+          45
+        ],
+        "editVersion": 0
+      }
+    },
+    {
+      "name": "normal edits independently isolate dark cells, mutually visible bulbs and wrong numbered-wall counts",
+      "passed": true,
+      "milliseconds": 28766.260652999998,
+      "evidence": [
+        {
+          "kind": "lighting",
+          "report": {
+            "allLit": false,
+            "noConflicts": true,
+            "wallsExact": true,
+            "matched": false,
+            "litWhite": 16,
+            "totalWhite": 18,
+            "bulbs": 6,
+            "conflicts": [],
+            "wrongWalls": [],
+            "editVersion": 6
+          }
+        },
+        {
+          "kind": "conflict",
+          "report": {
+            "allLit": true,
+            "noConflicts": false,
+            "wallsExact": true,
+            "matched": false,
+            "litWhite": 18,
+            "totalWhite": 18,
+            "bulbs": 8,
+            "conflicts": [
+              0,
+              1,
+              6
+            ],
+            "wrongWalls": [],
+            "editVersion": 8
+          }
+        },
+        {
+          "kind": "wall",
+          "report": {
+            "allLit": true,
+            "noConflicts": true,
+            "wallsExact": false,
+            "matched": false,
+            "litWhite": 18,
+            "totalWhite": 18,
+            "bulbs": 7,
+            "conflicts": [],
+            "wrongWalls": [
+              5,
+              15,
+              23
+            ],
+            "editVersion": 7
+          }
+        }
+      ]
+    },
+    {
+      "name": "white-cell cursor skips walls and a full A cycle restores the empty mark",
+      "passed": true,
+      "milliseconds": 4024.9203160000034,
+      "from": 1,
+      "to": 29,
+      "edits": 3
+    },
+    {
+      "name": "held A edits once and pause requires release before changing bulb into exclude",
+      "passed": true,
+      "milliseconds": 5363.176657000004,
+      "edits": 2,
+      "mark": 2
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T17:14:17.625Z"
+}
