@@ -1,4 +1,8 @@
 {
+  "status": "accepted",
+  "accepted": true,
+  "reviewed": true,
+  "reviewer": "independent QA agent",
   "sourceAssetHashes": {
     "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
     "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
@@ -6,38 +10,46 @@
     "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
     "game-config.json": "a148be742112583109bf63b502353d61f72e2fed55294260131c746b3088f1ae",
     "game-model.js": "c3b8313a160a7eff8cc818e57679720e67de7a1a3db04d4f87d444673272c444",
-    "game.js": "eaf1bd3d90c1bf6997e9723f3a30cf8eb9dba79aa65bee916639464951563a14",
+    "game.js": "fb85ee1670f002a9fe87f65ad3eb993c4d7a6d79298658672d7cce869772c77e",
     "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
     "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
     "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
     "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
   },
+  "testedAssets": "/workspace/scratch/liberty-stones/visual-fix/assets",
   "screenshots": [
     {
-      "path": "screenshots/black-group-1280.png",
-      "sha256": "547bfbcfda79f3328a67e205d7cd7d1d8fbb72b462bedad9802ae03b152f12e9"
+      "path": "screenshots/gutter-5x5-960.png",
+      "sha256": "90acfd5276505ff595c25ebfc59fb3ed481c0cf204130639f7fece4f94a591ec"
     },
     {
-      "path": "screenshots/white-group-960.png",
-      "sha256": "3df190dfaca95ce8713fcc3e9732124a9159576e5df2f7857dd3817a673019e2"
+      "path": "screenshots/gutter-5x5-1280.png",
+      "sha256": "97f5e325bd334a92039f24e231b6851aa2b513b4566dcd81518e6a55f75a4e4b"
     },
     {
-      "path": "screenshots/white-group-1280.png",
-      "sha256": "593a31e4a161a7aba575e0da1a440e38eaeaf6160f844d7f5332980ecb7f47f2"
+      "path": "screenshots/gutter-7x7-960.png",
+      "sha256": "5e1a1f9df19a5db293731f809300e803487cd81d6b9e62ce17d0ce87e96c3549"
+    },
+    {
+      "path": "screenshots/gutter-7x7-1280.png",
+      "sha256": "3ebebc97b0f18b29a7b4406fdc1d121f258c062485fb6d640c4d19a08e3a7981"
+    },
+    {
+      "path": "screenshots/corrected-white-group-960.png",
+      "sha256": "1b4bd2ba2f89b8db22d4a36c1d126f55c30e987989d574d5cd6b6dca96e1f72b"
     }
   ],
-  "reviewer": "independent QA agent",
-  "reviewed": false,
   "observations": [
-    "Original1280 black-group and both1280/960 white-group screenshots inspected on the actual7\u00d77 board.",
-    "Initial focused black group3 has exactly5 visible liberty rings. After normal corner capture, focused white group[11,18,25,32] has exactly7 rings at[4,10,12,19,26,33,39].",
-    "Player1/4, AI0/4 and turns1/14 are truthful; cursorR3C5 gold frame is distinct from lastAI R2C5 red dot.",
-    "All board coordinates, stones, full Chinese sidebar and lower controls/status fit without clipping or overlapping labels."
+    "Corrected renderer originals inspected at 960×540 and1280×720 for both5×5 and7×7, focusing top-left occupied corner. All column labels1..5/7 and row labels1..5/7 now remain fully readable outside stone and cursor bounds.",
+    "Separate top/left coordinate bands resolve the prior defect; black/white stones, cursor frame and mint liberty rings remain distinct.",
+    "Corrected seven-board ordinary capture shows player1/4, AI0/4, turns1/14, cursorR3C5 and lastAI R2C5. White group has four stones and exactly seven liberty rings. Full Chinese sidebar and lower status remain visible.",
+    "This review supersedes the original incorrect approval; old final/assets screenshots are retained only as historical superseded evidence."
   ],
   "physicalTvTested": false,
   "physicalPhoneTested": false,
-  "status": "superseded",
-  "accepted": false,
-  "supersededReason": "Root review identified top corner column labels1/7 overlapped by stones, with tighter5x5 gutters. Earlier visual approval was incorrect. Renderer-only gutter fix and new5x5/7x7 screenshots at both sizes are required; old final/assets is not accepted final evidence.",
-  "correctedAssetsRequired": "/workspace/scratch/liberty-stones/visual-fix/assets"
+  "authorReview": {
+    "reviewed": true,
+    "assetChangesRequested": false,
+    "observations": "Author inspected the same originals and confirmed all displayed numbers, coordinates, focus/ownership markers and sidebar remain readable."
+  }
 }
