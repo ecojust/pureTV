@@ -104,6 +104,7 @@
 | [Tetris TV](apps/tetris/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
 | [热流滑翔](apps/thermal-glider/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 驾驶无引擎滑翔翼利用热流穿过有序观测圈，使用空气刹车与襟翼管理能量，满足位置、速度与姿态后实际降落；三条航线，支持手机扫码单人操作 | <img src="apps/thermal-glider/thumb.png" width="180" alt="热流滑翔 界面"> |
 | [潮汐闸门](apps/tide-lock/) | ecojust / 桔子桑 | 0.1.1 | 289.3 KB | 调节两级船闸水位，安全开启闸门，把货船送往高水位出口；管理水量守恒、溢流和搁浅，支持手机扫码单人操作 | <img src="apps/tide-lock/thumb.png" width="180" alt="潮汐闸门 界面"> |
+| [夜桥接力](apps/torch-bridge/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 安排持灯旅人每次一至两人过桥，按较慢者计算用时，在公开预算内把全员送到对岸。 | <img src="apps/torch-bridge/thumb.png" width="180" alt="夜桥接力 界面"> |
 | [叠塔工匠](apps/tower-overlap/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 抓准移动石板与下层重叠的时机落板，只留下重叠部分，逐层完成六层、八层和十层塔楼。 | <img src="apps/tower-overlap/thumb.png" width="180" alt="叠塔工匠 界面"> |
 | [车阵出口](apps/traffic-escape/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在拥挤车阵中沿车身方向逐格挪车，利用有限撤销腾出通路，将目标车辆驶出右侧出口。 | <img src="apps/traffic-escape/thumb.png" width="180" alt="车阵出口 界面"> |
 | [三角跳珠](apps/triangle-pegs/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在十五孔三角棋盘上，沿六个方向跳过相邻棋珠并移除它，最终只留一珠；管理三次撤回机会，三个不同起始空孔，支持手机扫码单人操作。 | <img src="apps/triangle-pegs/thumb.png" width="180" alt="三角跳珠 界面"> |

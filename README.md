@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-88-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-89-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -150,6 +150,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [Tetris TV](resource/apps/tetris/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
 | [热流滑翔](resource/apps/thermal-glider/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 驾驶无引擎滑翔翼利用热流穿过有序观测圈，使用空气刹车与襟翼管理能量，满足位置、速度与姿态后实际降落；三条航线，支持手机扫码单人操作 | <img src="resource/apps/thermal-glider/thumb.png" width="180" alt="热流滑翔 界面"> |
 | [潮汐闸门](resource/apps/tide-lock/) | ecojust / 桔子桑 | 0.1.1 | 289.3 KB | 调节两级船闸水位，安全开启闸门，把货船送往高水位出口；管理水量守恒、溢流和搁浅，支持手机扫码单人操作 | <img src="resource/apps/tide-lock/thumb.png" width="180" alt="潮汐闸门 界面"> |
+| [夜桥接力](resource/apps/torch-bridge/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 安排持灯旅人每次一至两人过桥，按较慢者计算用时，在公开预算内把全员送到对岸。 | <img src="resource/apps/torch-bridge/thumb.png" width="180" alt="夜桥接力 界面"> |
 | [叠塔工匠](resource/apps/tower-overlap/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 抓准移动石板与下层重叠的时机落板，只留下重叠部分，逐层完成六层、八层和十层塔楼。 | <img src="resource/apps/tower-overlap/thumb.png" width="180" alt="叠塔工匠 界面"> |
 | [车阵出口](resource/apps/traffic-escape/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在拥挤车阵中沿车身方向逐格挪车，利用有限撤销腾出通路，将目标车辆驶出右侧出口。 | <img src="resource/apps/traffic-escape/thumb.png" width="180" alt="车阵出口 界面"> |
 | [三角跳珠](resource/apps/triangle-pegs/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在十五孔三角棋盘上，沿六个方向跳过相邻棋珠并移除它，最终只留一珠；管理三次撤回机会，三个不同起始空孔，支持手机扫码单人操作。 | <img src="resource/apps/triangle-pegs/thumb.png" width="180" alt="三角跳珠 界面"> |
