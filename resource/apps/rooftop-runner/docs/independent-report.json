@@ -1,0 +1,105 @@
+{
+  "scope": "Independent exact quadratic interval geometry and obstacle-local jump windows. Ordinary create/step pilot uses digital A/B with66–91ms jitter; synthetic geometry/boundary cases are labelled separately.",
+  "modelSha256": "cd463790b2b553c2cf2fc285779f37819a15dc0fb1cd57a2d84cefdca5bcc6c7",
+  "tests": [
+    {
+      "name": "public layout describes only geometry; exact jump windows fit every box/gap",
+      "passed": true
+    },
+    {
+      "name": "positive tiny dt and unused direction inputs preserve exact auto-run speed",
+      "passed": true
+    },
+    {
+      "name": "ordinary free jump follows analytic parabola and lands at its exact root",
+      "passed": true
+    },
+    {
+      "name": "uneven partitions give the same free jump position and velocity",
+      "passed": true
+    },
+    {
+      "name": "level 1: ordinary obstacle-local jitter pilot clears all geometry",
+      "passed": true
+    },
+    {
+      "name": "level 1: omitting crouch naturally collides with beam despite normal jumps",
+      "passed": true
+    },
+    {
+      "name": "level 2: ordinary obstacle-local jitter pilot clears all geometry",
+      "passed": true
+    },
+    {
+      "name": "level 2: omitting crouch naturally collides with beam despite normal jumps",
+      "passed": true
+    },
+    {
+      "name": "level 3: ordinary obstacle-local jitter pilot clears all geometry",
+      "passed": true
+    },
+    {
+      "name": "level 3: omitting crouch naturally collides with beam despite normal jumps",
+      "passed": true
+    },
+    {
+      "name": "ordinary idle collides with first boxes or falls through the first open gap",
+      "passed": true
+    },
+    {
+      "name": "ordinary near-edge A may jump, but no jump begins falling immediately after the boundary",
+      "passed": true
+    },
+    {
+      "name": "ordinary beam release and cancellation expand pose and collide at the same instant; pause preserves it",
+      "passed": true
+    },
+    {
+      "name": "B+A priority and airborne A consume edges; held A cannot autojump on landing",
+      "passed": true
+    }
+  ],
+  "syntheticTests": [
+    {
+      "name": "synthetic: independent interval sweep predicts actual fatal crate entry and unused-dt truncation",
+      "passed": true
+    },
+    {
+      "name": "synthetic: isolated crouched-apex tangency is safe while genuine positive beam overlap is fatal",
+      "passed": true
+    },
+    {
+      "name": "synthetic: exact far-edge downward landing is accepted; negative crossing never snaps to roof",
+      "passed": true
+    },
+    {
+      "name": "synthetic: airborne finish wins, below-roof finish loses, both truncate later dt",
+      "passed": true
+    }
+  ],
+  "runs": [
+    {
+      "level": 0,
+      "time": 17.517241379309816,
+      "passed": 8,
+      "jumps": 5,
+      "crouchEntries": 3
+    },
+    {
+      "level": 1,
+      "time": 19.515151515150787,
+      "passed": 11,
+      "jumps": 7,
+      "crouchEntries": 4
+    },
+    {
+      "level": 2,
+      "time": 21.18918918918726,
+      "passed": 14,
+      "jumps": 10,
+      "crouchEntries": 4
+    }
+  ],
+  "ordinaryStepsChecked": 1107,
+  "passed": true
+}
