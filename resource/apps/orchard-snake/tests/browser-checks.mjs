@@ -15,8 +15,8 @@ try{
  for(let level=0;level<3;level++)await test(`level ${level+1}: ordinary timed steering collects the fruit quota`,async()=>{
   const session=await fresh(level),page=session.page,pilot=createPilot(),held=new Set(),trace=[];
   try{const before=await snapshot(page),started=performance.now();
-   // Initial straight lane safely permits the two short captures. No clock changes.
-   for(const width of [960,1280]){await page.setViewportSize({width,height:width*9/16});await inspectFrame(page,path.join(output,`level-${level+1}-playing-${width}.png`));}
+   // Spend real finite brake tokens before each screenshot; active time still flows.
+   for(const width of [960,1280]){await action(page,'Space','brakesUsed');await page.setViewportSize({width,height:width*9/16});await inspectFrame(page,path.join(output,`level-${level+1}-playing-${width}.png`));}
    while(performance.now()-started<90000){const s=await snapshot(page);trace.push({elapsed:(performance.now()-started)/1000,state:s});if(s.phase!=='playing')break;await applyKeys(page,pilot(s),held);await delay(60);}
    await releaseAll(page,[...held]);const after=await snapshot(page);trace.push({elapsed:(performance.now()-started)/1000,state:after});assertProgress({before,after,trace},assert);verifyErrors(session);
    await inspectFrame(page,path.join(output,`level-${level+1}-won.png`));await writeFile(path.join(output,`level-${level+1}-trace.json`),JSON.stringify({trace},null,2)+'\n');return {level,eaten:after.model.eaten,moves:after.model.moves,brakesUsed:after.model.brakesUsed};

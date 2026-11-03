@@ -36,9 +36,41 @@
     "src/main/assets/game-model.js": "f764b91eedada79662088fa4924102721669a673349a3829029ddafefef932d1",
     "docs/model-contract.md": "00c18cbcf67c393aa8423466a21c0985ffc221559029a3d2d16b37a73ccbc596",
     "tests/route.mjs": "96ce46537b414b0059ea79938718f8c5fd0a877b70dc842cbaa04e3da47f7f54",
-    "tests/independent-check.mjs": "34bd649305b0e740db3a0ad2a4e57b6cd6551ba88a011bf34655985a1f56baa4"
+    "tests/independent-check.mjs": "d6c359d50efd30a95488fc07db9817e79f951dd191078d0bf535023c27fe2d2a",
+    "tests/browser-checks.mjs": "26910a7d99f0664499b4b87c414a0e4c1222c95fe144819e019e6320ed740156"
   },
   "findings": [],
   "physicalTvTested": false,
-  "physicalPhoneTested": false
+  "physicalPhoneTested": false,
+  "captureWarmups": [
+    {
+      "level": 0,
+      "normalBrakePresses": 2,
+      "idleSecondsPerCapture": 1.1,
+      "pilotPollingSeconds": 0.06666666666666667,
+      "moves": 36,
+      "brakesUsed": 2,
+      "phase": "won"
+    },
+    {
+      "level": 1,
+      "normalBrakePresses": 2,
+      "idleSecondsPerCapture": 1.1,
+      "pilotPollingSeconds": 0.06666666666666667,
+      "moves": 52,
+      "brakesUsed": 2,
+      "phase": "won"
+    },
+    {
+      "level": 2,
+      "normalBrakePresses": 2,
+      "idleSecondsPerCapture": 1.1,
+      "pilotPollingSeconds": 0.06666666666666667,
+      "moves": 78,
+      "brakesUsed": 2,
+      "phase": "won"
+    }
+  ],
+  "note": "Capture warmups are pure-model timing regression simulations with ordinary A presses and neutral elapsed time, not browser screenshot measurements.",
+  "captureHarnessCorrection": "Two sequential unbraked captures can exceed level-two initial-lane time. Dedicated browser checks now spend a real finite A brake before each capture. Pure ordinary timing regression verifies all three wins after 1.1 seconds per capture with two brakes; production assets unchanged."
 }
