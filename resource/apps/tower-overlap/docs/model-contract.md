@@ -4,7 +4,7 @@ Public design written before implementation/execution. No passed-check or public
 
 ## Timing and geometric goal
 
-One slab moves horizontally over the tower. A commits its current horizontal position and starts a0.3active-second drop. It does not slide horizontally while dropping. At landing, only its horizontal intersection with the previous slab remains. Removed material becomes falling offcuts. A zero-width intersection loses as a miss; a positive intersection narrower than16 units loses as too-narrow. Exactly16 units is safe.
+One slab moves horizontally over the tower. A commits its current horizontal position and starts a0.3active-second drop. It does not slide horizontally while dropping. At landing, only its horizontal intersection with the previous slab remains. Removed material becomes falling offcuts. A zero-width intersection loses as a miss; a positive intersection narrower than16 units loses as too-narrow. Exactly16 units is safe. Computed overlap below1e−10 is canonicalized to0; overlap within1e−10 of16 is canonicalized to16 to absorb floating-point integration error. The retained left edge remains max(sourceX,previousX); its right edge and trim/offcut geometry use the canonical width, so endpoint discrepancies are bounded by that same tolerance. Other widths are not rounded.
 
 Every safe landing adds one floor. Reach6/8/10 new floors above the starting base to win. A failed landing does not count toward the goal. Goal judgment occurs before spawning another slab. Starting widths are220/200/180 on a600unit-wide field. The initial base is centered and not counted as a built floor. The moving slab starts at the left edge and alternates spawn sides after each safe floor; its width is the retained width of the new top.
 

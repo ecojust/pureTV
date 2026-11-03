@@ -48,7 +48,12 @@
   slab.cycle=result.cycle;slab.velocity=slab.direction*l.speed*factor(l,slab.cycle);
  }
  function land(s){
-  const slab=s.slab,previous=s.floors[s.floors.length-1],x=Math.max(slab.x,previous.x),right=Math.min(slab.x+slab.width,previous.x+previous.width),width=Math.max(0,right-x);
+  const slab=s.slab,previous=s.floors[s.floors.length-1],x=Math.max(slab.x,previous.x),rawRight=Math.min(slab.x+slab.width,previous.x+previous.width);
+  let width=Math.max(0,rawRight-x);
+  // Analytically exact contacts can accumulate a few floating-point ulps.
+  // Canonicalize only the two rule boundaries within the declared tolerance.
+  if(width<EPS)width=0;else if(Math.abs(width-config.minWidth)<=EPS)width=config.minWidth;
+  const right=x+width;
   const leftTrim=width>0?Math.max(0,x-slab.x):slab.x<previous.x?slab.width:0,rightTrim=width>0?Math.max(0,slab.x+slab.width-right):slab.x>=previous.x?slab.width:0;
   const accepted=width>=config.minWidth,index=s.floorsBuilt+1,cause=width===0?'miss':!accepted?'too-narrow':index===s.goal?'success':'safe';
   s.lastLanding={drop:s.drops,index,sourceX:slab.x,sourceWidth:slab.width,previousX:previous.x,previousWidth:previous.width,x,width,leftTrim,rightTrim,accepted,cause};

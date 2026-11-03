@@ -34,7 +34,7 @@ test('ordinarypartialoverlaptrimsleftandrightcorrectlyandretainedwidthdrivesnext
   assert.equal(s.offcuts.length,1);assert.equal(s.offcuts[0].side,side);assert.equal(s.slab.width,s.floors[1].width);invariant(s);}
 });
 test('syntheticexactwidth16succeedswhilebelow16orzerooverlapfailsbeforefloorcount',()=>{
- for(const [offset,phase,reason]of [[84,'playing',''],[84.001,'lost','too-narrow'],[100,'lost','miss']]){
+ for(const [offset,phase,reason]of [[84,'playing',''],[84+5e-11,'playing',''],[84.001,'lost','too-narrow'],[100,'lost','miss']]){
   const s=fresh();s.floors[0]={index:0,x:250,width:100};s.slab={x:250+offset,width:100,direction:1,velocity:145,cycle:0};
   drop(s);assert.equal(s.phase,phase);assert.equal(s.reason,reason);
   if(phase==='playing'){assert.equal(s.floorsBuilt,1);assert.equal(s.floors[1].width,16);assert.equal(s.slab.width,16);}
