@@ -1,0 +1,86 @@
+{
+  "kind": "ordinary-browser-visible-clue-regression",
+  "startedAt": "2026-11-03T14:37:35.152Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "03f1cfdb8e17b53c6966832ec8c47410b927f65c5802f2b5756d5b9a384bd2d3",
+    "game-model.js": "cbe81179a0d9829f575515122c0435440f5678a7a6b9bd3bcb48016021b5c484",
+    "game.js": "04d2f436b9f7f7aa204498b3bfebdaef3da3b6d1e9160a79283be6df371d72a8",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "safe opening, hidden cells and legend remain readable at both viewports",
+      "passed": true,
+      "milliseconds": 5762.267876,
+      "screenshots": [
+        "/workspace/scratch/mine-survey/browser-checks/initial-1280.png",
+        "/workspace/scratch/mine-survey/browser-checks/initial-960.png"
+      ]
+    },
+    {
+      "name": "level 1: only logically forced safe openings win without flags",
+      "passed": true,
+      "milliseconds": 11524.611705999998,
+      "level": 0,
+      "reveals": 10,
+      "flags": 0,
+      "screenshot": "/workspace/scratch/mine-survey/browser-checks/level-1-won.png"
+    },
+    {
+      "name": "level 2: only logically forced safe openings win without flags",
+      "passed": true,
+      "milliseconds": 14565.888212000002,
+      "level": 1,
+      "reveals": 17,
+      "flags": 0,
+      "screenshot": "/workspace/scratch/mine-survey/browser-checks/level-2-won.png"
+    },
+    {
+      "name": "level 3: only logically forced safe openings win without flags",
+      "passed": true,
+      "milliseconds": 13493.364741999998,
+      "level": 2,
+      "reveals": 15,
+      "flags": 0,
+      "screenshot": "/workspace/scratch/mine-survey/browser-checks/level-3-won.png"
+    },
+    {
+      "name": "a mine deduced from public clues loses and terminal controls freeze",
+      "passed": true,
+      "milliseconds": 4690.853296000001,
+      "reveals": 3,
+      "exploded": 8
+    },
+    {
+      "name": "flag cap, direct reveal protection and visible-cell rejection consume no safe cells",
+      "passed": true,
+      "milliseconds": 4736.296813000001,
+      "flagCap": 5
+    },
+    {
+      "name": "zero expansion respects an incorrectly flagged yet logically safe boundary",
+      "passed": true,
+      "milliseconds": 2897.9152960000065,
+      "protectedCell": 32,
+      "zeroOpened": 33
+    },
+    {
+      "name": "held flag action toggles once through pause, then requires release before toggling again",
+      "passed": true,
+      "milliseconds": 3209.858322,
+      "flagChanges": 2,
+      "reveals": 0
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T14:38:36.258Z"
+}
