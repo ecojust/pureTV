@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-60-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-61-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -103,6 +103,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [节拍闸道](resource/apps/metronome-gates/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 先排方向和等待，按固定节拍穿过周期闸门；在拍数预算内收齐标记并抵达出口，B 可撤回未执行的队尾命令。 | <img src="resource/apps/metronome-gates/thumb.png" width="180" alt="节拍闸道 界面"> |
 | [纹幕校准](resource/apps/moire-atelier/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 滑动并旋转两层周期纹幕，让五个测点的当前明暗同时符合目标；参考可见定位标记，在限时与验收次数内完成三种光学校准。 | <img src="resource/apps/moire-atelier/thumb.png" width="180" alt="纹幕校准 界面"> |
 | [沙丘数列](resource/apps/number-dunes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 选择一行或一列，保持段内顺序压实数字石，不合并、不跨岩柱；蛇形读数严格递增且全部空洞吻合目标才能获胜，撤销恢复原石原格但不退已用步数或时间，手机扫码单人操作 | <img src="resource/apps/number-dunes/thumb.png" width="180" alt="沙丘数列 界面"> |
+| [异形装箱](resource/apps/packing-sculptor/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 原创单人异形装箱益智游戏：移动、旋转有限零件，装入异形箱体，并为指定零件保留可完整直线抽出的出口。三种箱体、四次检查机会；手机方向区与上下双操作区控制。 | <img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱 界面"> |
 | [视差天际](resource/apps/parallax-skyline/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 移动近远两层建筑，在两个观察点同时对齐天际线与屋顶标记；小心只匹配主视角的错觉，撤销移动不会返还容错次数。 | <img src="resource/apps/parallax-skyline/thumb.png" width="180" alt="视差天际 界面"> |
 | [奇偶花圃](resource/apps/parity-garden/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用十字与斜角喷头翻转4×4花圃，让目标花形和标记花的直接浇水偶数条件同时成立；重复浇水不退水，三道有限水量谜题，支持手机扫码单人操作 | <img src="resource/apps/parity-garden/thumb.png" width="180" alt="奇偶花圃 界面"> |
 | [路径刻印](resource/apps/path-glyphs/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在5×5石板上规划不重复的路径，按入边条件收集方向符号，在出口提交与目标完全一致的刻印；三道公开谜题，支持手机扫码单人操作 | <img src="resource/apps/path-glyphs/thumb.png" width="180" alt="路径刻印 界面"> |
