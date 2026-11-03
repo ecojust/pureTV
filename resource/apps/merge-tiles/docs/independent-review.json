@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "method": "Independent line merges/public deterministic spawn and bounded beam planning; ordinary inputs compared move-by-move, including natural losses. No production transition helpers.",
+  "layouts": [
+    {
+      "level": 0,
+      "ordinaryWinMoves": 14,
+      "winSearchExpansions": 15060,
+      "ordinaryLossMoves": 16,
+      "lossReason": "stuck",
+      "independentSpawnAndMergeEquality": true,
+      "massConservation": true
+    },
+    {
+      "level": 1,
+      "ordinaryWinMoves": 15,
+      "winSearchExpansions": 17207,
+      "ordinaryLossMoves": 9,
+      "lossReason": "stuck",
+      "independentSpawnAndMergeEquality": true,
+      "massConservation": true
+    },
+    {
+      "level": 2,
+      "ordinaryWinMoves": 16,
+      "winSearchExpansions": 18481,
+      "ordinaryLossMoves": 10,
+      "lossReason": "stuck",
+      "independentSpawnAndMergeEquality": true,
+      "massConservation": true
+    }
+  ],
+  "budgetLoss": {
+    "moves": 30,
+    "reason": "moves",
+    "searchExpansions": 44466
+  },
+  "undo": {
+    "ordinaryReplayExact": true,
+    "moveBudgetNotRefunded": true
+  },
+  "reviewer": "independent_review agent",
+  "scope": "Independent transition implementation and ordinary model replay; browser results recorded separately.",
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "879a5dc9acc3de6e51c5c1240d5a1416fd043b937760f28d6b2b10ce40419478",
+    "tests/reference.mjs": "f93d553783dedb07aa910b98e4a485b6ab3cfb74a395bdeb083f84bb63f9f33a",
+    "tests/independent-check.mjs": "d92ea6c3becfc4024d3369745df1db8a99c09c6562ca7a2f037624f1a5d98850",
+    "tests/automation.mjs": "cd91a92b00fc5a3dc7359cdb8826414e20d41306367736c7e8a7880682b9de67"
+  },
+  "findings": [],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "difficultyBound": {
+    "minimumValidMovesLowerBound": 11,
+    "proof": "Every authored board starts with total tile mass target minus 24. The first nine public spawns add 22. A winning slide does not spawn, so any win through slide ten has total mass at most target minus 2 and is impossible. The 14/15/16 routes are witnesses, not claims of optimality."
+  }
+}
