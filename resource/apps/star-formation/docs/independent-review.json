@@ -1,0 +1,99 @@
+{
+  "passed": true,
+  "method": "Independent public formation projection and hostile avoidance; ordinary80ms/irregular pilots. A separate one-tick audit reconstructs vertical swept intersections from prior public bullets and validated shot origins, processes shield/target contacts in travel order, and compares all retained bullets, damage and terminal precedence. No production helpers or author pilot imports; no state fixtures.",
+  "checks": [
+    "independent public formation intercept and threat avoidance win all layouts at80ms and irregular polling",
+    "every tick of three ordinary wins matches independently reconstructed swept first-contact and piercing order",
+    "visible-projectile following naturally loses lives and no-fire edge movement naturally reaches invasion",
+    "fresh B commits exactly once before a sub-tick and committed bullets survive later cancellation",
+    "fixed-step collision results agree under small and large real-dt partitions with simultaneous A and B",
+    "cancellation quarantines held movement/fire while physics continues and pause freezes the complete state"
+  ],
+  "layouts": [
+    {
+      "level": 0,
+      "fixed80ms": {
+        "seconds": 3.8483333333333354,
+        "lives": 3,
+        "kills": 6,
+        "shieldDestroyed": 7,
+        "piercingShots": 2
+      },
+      "irregular": {
+        "seconds": 3.1283333333333334,
+        "lives": 3,
+        "kills": 6
+      },
+      "auditedWin": {
+        "seconds": 5.458333333333394,
+        "lives": 3,
+        "kills": 6
+      },
+      "naturalLosses": {
+        "livesSeconds": 9.44833333333334,
+        "invasionSeconds": 66.64833333333227,
+        "formationDrops": 12
+      }
+    },
+    {
+      "level": 1,
+      "fixed80ms": {
+        "seconds": 5.608333333333337,
+        "lives": 3,
+        "kills": 9,
+        "shieldDestroyed": 11,
+        "piercingShots": 2
+      },
+      "irregular": {
+        "seconds": 4.7383333333333315,
+        "lives": 3,
+        "kills": 9
+      },
+      "auditedWin": {
+        "seconds": 5.091666666666709,
+        "lives": 3,
+        "kills": 9
+      },
+      "naturalLosses": {
+        "livesSeconds": 8.088333333333338,
+        "invasionSeconds": 50.24833333333262,
+        "formationDrops": 10
+      }
+    },
+    {
+      "level": 2,
+      "fixed80ms": {
+        "seconds": 8.568333333333339,
+        "lives": 3,
+        "kills": 12,
+        "shieldDestroyed": 14,
+        "piercingShots": 2
+      },
+      "irregular": {
+        "seconds": 9.308333333333326,
+        "lives": 3,
+        "kills": 12
+      },
+      "auditedWin": {
+        "seconds": 7.066666666666808,
+        "lives": 3,
+        "kills": 12
+      },
+      "naturalLosses": {
+        "livesSeconds": 6.888333333333338,
+        "invasionSeconds": 34.72833333333295,
+        "formationDrops": 10
+      }
+    }
+  ],
+  "auditedTicks": 2111,
+  "auditedHits": 63,
+  "auditedShots": 118,
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "a917cbdb30cba1cebc01f31a6e7c16182d380b6152fe3afe0f741aa3f3aeda8b",
+    "tests/reference.cjs": "0714dd91b95ad73b406becfa964be1404659b7a43cc5cba4949b45b2c2b2832b",
+    "tests/independent-check.cjs": "b37f7303ac7516e2394a4caab7beb05c2ee2f4c9f4441f0772a378e2c535bc5c"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}
