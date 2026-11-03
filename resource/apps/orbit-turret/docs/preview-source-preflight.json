@@ -1,24 +1,24 @@
 {
-  "passed": false,
-  "stage": "actual preview source preflight before freezing/signing",
-  "testedAssets": "/workspace/scratch/orbit-turret/final/assets",
-  "unsignedApk": "/workspace/scratch/orbit-turret/build-final/unsigned.apk",
-  "unsignedApkBytes": 283071,
-  "unsignedApkSha256": "7e4be06059f38403777755e8abe6f86cd4f43e246f3074711a927efb4046c76c",
-  "sourceAssetHashes": {
-    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
-    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
-    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
-    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
-    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
-    "game.js": "ca2fa2b3e7599913b8ad52fc2dd7563854b8e599445ff3fe5245e12f031b7f1c",
-    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
-    "game-model.js": "b78b0512cc859356e0b50f407bc175e9d46d5dfecc3eddeeaa5db1d05f935a05",
-    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
-    "game-config.json": "1f42f1cd7da857b916a84110fb4a43aa192e1cd82a9dabfbf77f21ebb8d27a2c",
-    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08"
-  },
+  "kind": "preview-source-preflight",
+  "passed": true,
+  "assetsDirectory": "/workspace/scratch/orbit-turret/visual-fix/assets",
+  "unsignedApk": "/workspace/scratch/orbit-turret/visual-fix/build/unsigned.apk",
+  "unsignedApkBytes": 283280,
+  "unsignedApkSha256": "d997706d09eedd9ba2fb790d26c5f95ceec2cd45fbd7eaeb1730ee8f0e5d2928",
   "assetFilesMatched": 11,
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "1f42f1cd7da857b916a84110fb4a43aa192e1cd82a9dabfbf77f21ebb8d27a2c",
+    "game-model.js": "b78b0512cc859356e0b50f407bc175e9d46d5dfecc3eddeeaa5db1d05f935a05",
+    "game.js": "d6523ca652e1c7cc88fd4ea5297b9f90256798bef903647dae5ab1ca842fc120",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
   "matchedAgainst": [
     "unsigned APK",
     "current model/renderer",
@@ -26,9 +26,5 @@
   ],
   "physicalTvTested": false,
   "physicalPhoneTested": false,
-  "status": "superseded",
-  "accepted": false,
-  "reviewed": false,
-  "supersededReason": "Root code review found missed bullets could reach radius362 and HUD x572+. Original images were readable only at sampled instants; coverage did not stress continuous right fire. Renderer-only radial culling fix and new >1.1s right-fire previews are required.",
-  "correctedAssetsRequired": "/workspace/scratch/orbit-turret/visual-fix/assets"
+  "supersedes": "preview-source-preflight-superseded.json"
 }

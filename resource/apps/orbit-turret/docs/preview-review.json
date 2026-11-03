@@ -1,45 +1,66 @@
 {
-  "status": "superseded",
-  "accepted": false,
-  "reviewed": false,
+  "status": "accepted-independent-preview",
+  "accepted": true,
+  "reviewed": true,
   "reviewer": "independent QA agent",
   "sourceAssetHashes": {
-    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
-    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
-    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
-    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
     "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
-    "game.js": "ca2fa2b3e7599913b8ad52fc2dd7563854b8e599445ff3fe5245e12f031b7f1c",
     "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
-    "game-model.js": "b78b0512cc859356e0b50f407bc175e9d46d5dfecc3eddeeaa5db1d05f935a05",
-    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
     "game-config.json": "1f42f1cd7da857b916a84110fb4a43aa192e1cd82a9dabfbf77f21ebb8d27a2c",
-    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08"
+    "game-model.js": "b78b0512cc859356e0b50f407bc175e9d46d5dfecc3eddeeaa5db1d05f935a05",
+    "game.js": "d6523ca652e1c7cc88fd4ea5297b9f90256798bef903647dae5ab1ca842fc120",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
   },
-  "testedAssets": "/workspace/scratch/orbit-turret/final/assets",
   "screenshots": [
     {
-      "path": "screenshots/actual-flight-960.png",
-      "sha256": "2f25594aee4bdfbb6588764f4a5f05486cbaed1b527a68d00b839bf932db8c03"
+      "path": "screenshots/right-fire-1280.png",
+      "sha256": "078fbd11105ff46b8da7ff87b329c76f710fbac2c8fe4125e2c082afe173f6ca"
     },
     {
-      "path": "screenshots/actual-flight-1280.png",
-      "sha256": "208ad01bf82c9edf272d58440b61b2915ec7ae7c73aec6ff148ecbb35a9b71a2"
+      "path": "screenshots/right-fire-960.png",
+      "sha256": "5b8ec7644d3f67c721ee9a14caa21d02f0e96b9372e4fe6ace75f43d43d9ccac"
     }
   ],
   "observations": [
-    "Both actual originals inspected; cannon orientation, bright projectiles, straight amber and curved pink targets, range circles and complete Chinese controls are readable.",
-    "The1280 frame visibly shows an active cyan shield,0/16 resolved and flying bullets; the later960 frame shows1/16 resolved with GUN1/SHIELD0 and an expired shield. Both visibly retain3/3 health and1/2 shield charges.",
-    "The frames are different realtime instants. Read-only snapshots taken after each screenshot continue to advance, so they are not asserted to be exact synchronized pixel-state pairs. Their sequence brackets the natural first projectile hit and shield expiry.",
-    "Header, footer and sidebar remain clear of gameplay objects; bearing15 and wave/budget labels fit."
+    "Both corrected original960×540 and1280×720 images were inspected after ordinary right rotation and held A fire. Projectiles remain visibly inside the orbital field and leave the entire HUD unobstructed.",
+    "At the read-only pre-capture snapshots held fire had lasted1.3833/1.4000 active seconds, with physical projectile canvas x603.70/607.27 beyond HUD start572. Renderer culling therefore demonstrably applies while physical missed bullets remain alive.",
+    "Culling uses both head and trail endpoint radius224 plus at most6px glow: visible maximum radius230, rightmost logical x520, before HUD x572. Physical possible hit-center radius221 remains drawable; model hash is unchanged.",
+    "Full HUD integrity, wave, resolved targets, shield count and bearing labels and complete Chinese sidebar remain readable. The world continues during acquisition; before/after snapshots bound activity but are not asserted pixel-synchronous."
   ],
-  "authorReview": {
-    "reviewed": false,
-    "assetChangesRequested": null
-  },
   "physicalTvTested": false,
   "physicalPhoneTested": false,
-  "passed": false,
-  "supersededReason": "Root code review found missed bullets could reach radius362 and HUD x572+. Original images were readable only at sampled instants; coverage did not stress continuous right fire. Renderer-only radial culling fix and new >1.1s right-fire previews are required.",
-  "correctedAssetsRequired": "/workspace/scratch/orbit-turret/visual-fix/assets"
+  "supersedes": "preview-review-superseded.json",
+  "coverageCorrection": "Prior actual-flight images did not cover missed shots entering the HUD; only this corrected renderer pressure preview is accepted.",
+  "initialHarnessFailure": {
+    "path": "preview-harness-coordinate-failure.json",
+    "cause": "Test mistakenly compared relative bullet.x to absolute HUD x; corrected condition adds turret origin290. Production assets unchanged.",
+    "retry": "Only the corrected short pressure preview reran; both sizes passed."
+  },
+  "rootReview": {
+    "reviewed": true,
+    "observations": "Root inspected corrected right-fire960/1280; accepted readable gameplay and unobstructed HUD."
+  },
+  "testSourceHashesAtPreview": {
+    "tests/browser-checks.mjs": "a3bc105f0aa34dd05f2d9154956c747ec9fd0dce5df8813bcb41c01f61c874e9",
+    "tests/model-test.cjs": "508e4d03180f6380b427059e8dc53d907ddb80864b55aa42aa5e7e3170481b37",
+    "tests/automation.mjs": "6a9f474980364634a6647137cc80d77c48a56a8b0bb0451c4933abef0664d351",
+    "tests/reference.mjs": "503773b331ba792429b638569530c26f9ca2b476baa96271454383f31a6295ab",
+    "tests/preview-right-fire.mjs": "fb75fff1b169711c65b0ee84630cacc18263ce55b3a1acdb358ed5ec9d9e5605",
+    "tests/recipe.json": "d4bcc00a45b186f80ab0e7942cee3140b7831275c1d46f106bd259eb4953e4f1",
+    "tests/independent-check.mjs": "f1eb5b5b559efb365fc0eb7fd416b6cc2c32e1506449f80902f85e7c291cd8c0"
+  },
+  "executedEntrypoint": "tests/preview-right-fire.mjs",
+  "rendererAuthorReview": {
+    "reviewed": true,
+    "sizes": [
+      960,
+      1280
+    ],
+    "observations": "Author inspected both corrected original960/1280 right-fire images. Near-horizontal projectiles,glow andtrails remain onfieldside; GUN/SHIELD andallHUD labels unobstructed. VisibleHP3,resolved0/16,shields2/2,bearing353/355. Combined ordinary>1.35s fire and physicalcanvasbulletx>580 evidence covers prior missed-shot issue. Oldactual-flight remains superseded. Assets unchanged."
+  }
 }
