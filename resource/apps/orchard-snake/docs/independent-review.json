@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "method": "Public-current-food BFS with simulated growth and tail-reachability checks; ordinary fixed-step controls, independent body transition comparison. No future spawn prediction.",
+  "layouts": [
+    {
+      "level": 0,
+      "eaten": 5,
+      "moves": 36,
+      "elapsed": 12.600000000000206,
+      "bodyLength": 8,
+      "phase": "won",
+      "independentMovementAndGrowth": true
+    },
+    {
+      "level": 1,
+      "eaten": 7,
+      "moves": 50,
+      "elapsed": 15.000000000000325,
+      "bodyLength": 10,
+      "phase": "won",
+      "independentMovementAndGrowth": true
+    },
+    {
+      "level": 2,
+      "eaten": 9,
+      "moves": 78,
+      "elapsed": 20.283333333333463,
+      "bodyLength": 12,
+      "phase": "won",
+      "independentMovementAndGrowth": true
+    }
+  ],
+  "reviewer": "independent_review agent",
+  "scope": "Independent current-food path geometry and ordinary pure-model controls; browser and hardware evidence separate.",
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "f764b91eedada79662088fa4924102721669a673349a3829029ddafefef932d1",
+    "docs/model-contract.md": "00c18cbcf67c393aa8423466a21c0985ffc221559029a3d2d16b37a73ccbc596",
+    "tests/route.mjs": "96ce46537b414b0059ea79938718f8c5fd0a877b70dc842cbaa04e3da47f7f54",
+    "tests/independent-check.mjs": "d6c359d50efd30a95488fc07db9817e79f951dd191078d0bf535023c27fe2d2a",
+    "tests/browser-checks.mjs": "26910a7d99f0664499b4b87c414a0e4c1222c95fe144819e019e6320ed740156"
+  },
+  "findings": [],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "captureWarmups": [
+    {
+      "level": 0,
+      "normalBrakePresses": 2,
+      "idleSecondsPerCapture": 1.1,
+      "pilotPollingSeconds": 0.06666666666666667,
+      "moves": 36,
+      "brakesUsed": 2,
+      "phase": "won"
+    },
+    {
+      "level": 1,
+      "normalBrakePresses": 2,
+      "idleSecondsPerCapture": 1.1,
+      "pilotPollingSeconds": 0.06666666666666667,
+      "moves": 52,
+      "brakesUsed": 2,
+      "phase": "won"
+    },
+    {
+      "level": 2,
+      "normalBrakePresses": 2,
+      "idleSecondsPerCapture": 1.1,
+      "pilotPollingSeconds": 0.06666666666666667,
+      "moves": 78,
+      "brakesUsed": 2,
+      "phase": "won"
+    }
+  ],
+  "note": "Capture warmups are pure-model timing regression simulations with ordinary A presses and neutral elapsed time, not browser screenshot measurements.",
+  "captureHarnessCorrection": "Two sequential unbraked captures can exceed level-two initial-lane time. Dedicated browser checks now spend a real finite A brake before each capture. Pure ordinary timing regression verifies all three wins after 1.1 seconds per capture with two brakes; production assets unchanged."
+}

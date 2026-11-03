@@ -1,0 +1,93 @@
+{
+  "passed": true,
+  "finalSourceCommit": "2be75655102eb3651957f0d07505386022b2aae6",
+  "testedAssetDirectory": "/workspace/scratch/orchard-snake/assets",
+  "dedicatedReport": "/workspace/scratch/orchard-snake/browser/report.json",
+  "dedicatedPassed": 6,
+  "sharedReport": "/workspace/scratch/orchard-snake/qa/report.json",
+  "sharedPassed": 10,
+  "recordingOnlyRetry": {
+    "sharedChecksRerun": false,
+    "originalReport": "shared-checks-original.json",
+    "originalReportSha256": "7eda6829a124ea04e67162b6678a8bc71c933b42f5353906f0754c41c82bf910",
+    "originalStartedAt": "2026-11-03T15:08:27.343Z",
+    "originalFinishedAt": "2026-11-03T15:10:15.616Z",
+    "originalRecordingFailure": "AssertionError [ERR_ASSERTION]: Non-monotonic frame timestamps\n    at recordGameplay (file:///workspace/pureTV/resource/game-kit/qa/record.mjs:77:14)\n    at async file:///workspace/pureTV/resource/game-kit/qa/qa.mjs:125:22",
+    "failedCaptureScratchOnly": "/workspace/scratch/orchard-snake/qa-first-capture-failed/recording",
+    "recorderFixCommit": "19bccbe308688f8f730d26b49d61d2373e273cc8",
+    "recorderSourceSha256": "90304e4f6218efced3263b828b17755d3583bf2b671d6220e892bc21c621a593",
+    "recorderHelperSourceSha256": {
+      "frame-stream.mjs": "6f3d910169cad3898d00d423f765b8b055221ce1b453722b9e25b5cd87e81815"
+    },
+    "productionSourceUnchanged": "2be75655102eb3651957f0d07505386022b2aae6"
+  },
+  "recording": {
+    "file": "/workspace/scratch/orchard-snake/qa/recording/gameplay.mp4",
+    "bytes": 3315190,
+    "sha256": "e0226e14ca833e411d686c110954a1853e8c3017f19fbf7e56867a0ae4b00fe8",
+    "capturedSeconds": 85.36375021934509,
+    "actualOrdinaryWins": {
+      "0": {
+        "seconds": 14.005776103000002,
+        "eaten": 5,
+        "moves": 32,
+        "brakesUsed": 0
+      },
+      "1": {
+        "seconds": 30.004151409,
+        "eaten": 7,
+        "moves": 50,
+        "brakesUsed": 0
+      },
+      "2": {
+        "seconds": 52.003469521999996,
+        "eaten": 9,
+        "moves": 78,
+        "brakesUsed": 0
+      }
+    },
+    "fullDecodePassed": true,
+    "frameAdmission": {
+      "policy": "Acknowledge every observed CDP frame; retain strictly increasing finite timestamps. Omit and log invalid, duplicate, backward, or post-stop events. Never sort or rewrite retained timestamps.",
+      "rawCdpFrames": 1111,
+      "acceptedCdpFrames": 1111,
+      "droppedCdpFrames": 0,
+      "droppedFrames": []
+    }
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 272,
+    "rafIntervalMs": {
+      "count": 272,
+      "min": 16.5,
+      "median": 33.399999999999636,
+      "p95": 83.30000000000109,
+      "max": 100.10000000000036,
+      "mean": 41.542647058823526
+    },
+    "webglDrawCalls": {
+      "count": 272,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 272,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}
