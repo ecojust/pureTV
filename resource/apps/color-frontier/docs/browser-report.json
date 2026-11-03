@@ -1,0 +1,57 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T13:55:06.891Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "27e6cb2ea3c30ab9b1ad0c053b278cd01803f1f64c7eb68e663b33261e585287",
+    "game-model.js": "85d7d12738403b17ee86102e0a7b04d7faa76d753aac04abc1197aa219747fb4",
+    "game.js": "d988c82cb9da98866630903bdb1f74558f94409e8b507537d0254e98d09a86d4",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "level 1: independent flood solver wins with ordinary keys",
+      "passed": true,
+      "level": 0,
+      "moves": 4,
+      "owned": 25
+    },
+    {
+      "name": "level 2: independent flood solver wins with ordinary keys",
+      "passed": true,
+      "level": 1,
+      "moves": 6,
+      "owned": 36
+    },
+    {
+      "name": "level 3: independent flood solver wins with ordinary keys",
+      "passed": true,
+      "level": 2,
+      "moves": 7,
+      "owned": 36
+    },
+    {
+      "name": "undo restores board without refund; held A and pause require release",
+      "passed": true,
+      "undoDoesNotRefund": true,
+      "heldDoesNotRepeat": true,
+      "pauseRelease": true
+    },
+    {
+      "name": "non-winning final paint loses naturally and terminal undo is frozen",
+      "passed": true,
+      "moves": 6,
+      "terminalFrozen": true
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T13:55:42.217Z"
+}
