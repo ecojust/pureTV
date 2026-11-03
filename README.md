@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-98-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-99-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -102,6 +102,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [隐墙测绘](resource/apps/hidden-corridors/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 依据每行通路格数与最短边数，用有限探针推断4×4隐藏墙体，再提交安全且长度正确的路线；三关固定布局，支持手机扫码单人操作 | <img src="resource/apps/hidden-corridors/thumb.png" width="180" alt="隐墙测绘 界面"> |
 | [HIFINi TV](resource/apps/hifini/) | ecojust / 桔子桑 | 0.5.0 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="resource/apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
 | [双岛联结](resource/apps/island-dominoes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 按桥牌的直线长度与目标颜色连结岛屿，避开交叉并用尽所有独立桥牌组成连通网络；支持原片撤销，三关固定布局与90秒时限，手机扫码单人操作 | <img src="resource/apps/island-dominoes/thumb.png" width="180" alt="双岛联结 界面"> |
+| [岛海墨图](resource/apps/island-ink/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 划分数字岛屿和连通海域，每岛恰有一个面积线索，海域不能出现2×2方块；完整填图后手动检查。 | <img src="resource/apps/island-ink/thumb.png" width="180" alt="岛海墨图 界面"> |
 | [Jackal TV](resource/apps/jackal/) | ecojust / 桔子桑 | 0.5.2 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
 | [Magic Jewelry TV](resource/apps/jewel/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
 | [万花钥匙](resource/apps/kaleido-keys/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 把有限图符摆进源扇区，旋转并选择万花阶数，让整圈镜像钥匙与目标完全一致；核对左右交换、朝向与空格后验收，四次错误即失败，无倒计时。 | <img src="resource/apps/kaleido-keys/thumb.png" width="180" alt="万花钥匙 界面"> |

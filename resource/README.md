@@ -56,6 +56,7 @@
 | [隐墙测绘](apps/hidden-corridors/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 依据每行通路格数与最短边数，用有限探针推断4×4隐藏墙体，再提交安全且长度正确的路线；三关固定布局，支持手机扫码单人操作 | <img src="apps/hidden-corridors/thumb.png" width="180" alt="隐墙测绘 界面"> |
 | [HIFINi TV](apps/hifini/) | ecojust / 桔子桑 | 0.5.0 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
 | [双岛联结](apps/island-dominoes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 按桥牌的直线长度与目标颜色连结岛屿，避开交叉并用尽所有独立桥牌组成连通网络；支持原片撤销，三关固定布局与90秒时限，手机扫码单人操作 | <img src="apps/island-dominoes/thumb.png" width="180" alt="双岛联结 界面"> |
+| [岛海墨图](apps/island-ink/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 划分数字岛屿和连通海域，每岛恰有一个面积线索，海域不能出现2×2方块；完整填图后手动检查。 | <img src="apps/island-ink/thumb.png" width="180" alt="岛海墨图 界面"> |
 | [Jackal TV](apps/jackal/) | ecojust / 桔子桑 | 0.5.2 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
 | [Magic Jewelry TV](apps/jewel/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
 | [万花钥匙](apps/kaleido-keys/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 把有限图符摆进源扇区，旋转并选择万花阶数，让整圈镜像钥匙与目标完全一致；核对左右交换、朝向与空格后验收，四次错误即失败，无倒计时。 | <img src="apps/kaleido-keys/thumb.png" width="180" alt="万花钥匙 界面"> |
