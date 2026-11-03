@@ -1,0 +1,13 @@
+// Independent test-only Hitori constraints and exhaustive row-mask search.
+export function adjacent(point,n){const r=Math.floor(point/n),c=point%n,out=[];if(r)out.push(point-n);if(c)out.push(point-1);if(c<n-1)out.push(point+1);if(r<n-1)out.push(point+n);return out;}
+export function derive(layout,black){const n=layout.size,duplicates=[],pairs=[],regions=[],seen=new Set();
+ for(const axis of ['row','col'])for(let line=0;line<n;line++){const byValue=new Map();for(let offset=0;offset<n;offset++){const id=axis==='row'?line*n+offset:offset*n+line;if(!black[id]){const value=layout.numbers[id];if(!byValue.has(value))byValue.set(value,[]);byValue.get(value).push(id);}}for(const value of [...byValue.keys()].sort((a,b)=>a-b)){const cells=byValue.get(value);if(cells.length>1)duplicates.push({axis,line,value,cells});}}
+ for(let p=0;p<n*n;p++)if(black[p])for(const q of adjacent(p,n))if(q>p&&black[q])pairs.push({a:p,b:q});pairs.sort((a,b)=>a.a-b.a||a.b-b.b);
+ for(let p=0;p<n*n;p++)if(!black[p]&&!seen.has(p)){const todo=[p],region=[];seen.add(p);while(todo.length){const q=todo.pop();region.push(q);for(const v of adjacent(q,n))if(!black[v]&&!seen.has(v)){seen.add(v);todo.push(v);}}regions.push(region.sort((a,b)=>a-b));}
+ const whiteCount=n*n-black.filter(Boolean).length;return {violations:{duplicates,adjacent:pairs,regions,whiteCount},valid:duplicates.length===0&&pairs.length===0&&regions.length===1&&whiteCount>0};
+}
+export function solve(layout){const n=layout.size,rowOptions=[];for(let row=0;row<n;row++){const valid=[];for(let mask=0;mask<(1<<n);mask++){if(mask&(mask<<1))continue;let values=0,ok=true;for(let col=0;col<n;col++)if(!(mask&(1<<col))){const bit=1<<(layout.numbers[row*n+col]-1);if(values&bit){ok=false;break;}values|=bit;}if(ok)valid.push(mask);}rowOptions.push(valid);}let nodes=0,completeAssignments=0;const solutions=[];
+ function visit(row,previous,columnValues,masks){nodes++;if(row===n){completeAssignments++;const black=Array.from({length:n*n},(_,p)=>Boolean(masks[Math.floor(p/n)]&(1<<(p%n))));if(derive(layout,black).valid)solutions.push(black);return;}for(const mask of rowOptions[row]){if(mask&previous)continue;const next=columnValues.slice();let ok=true;for(let col=0;col<n;col++)if(!(mask&(1<<col))){const bit=1<<(layout.numbers[row*n+col]-1);if(next[col]&bit){ok=false;break;}next[col]|=bit;}if(ok)visit(row+1,mask,next,[...masks,mask]);}}
+ visit(0,0,Array(n).fill(0),[]);return {solutions,nodes,completeAssignments,rowOptions:rowOptions.map(a=>a.length)};
+}
+export function nextKey(s,to){const r=Math.floor(s.cursor/s.size),c=s.cursor%s.size,tr=Math.floor(to/s.size),tc=to%s.size;if(r!==tr)return r<tr?'ArrowDown':'ArrowUp';if(c!==tc)return c<tc?'ArrowRight':'ArrowLeft';return 'Space';}

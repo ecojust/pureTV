@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import path from 'node:path';
+import {derive,solve,nextKey} from './reference.mjs';
+const M=createRequire(import.meta.url)('../src/main/assets/game-model.js'),output=path.resolve(process.argv[2]||'/tmp/shade-duplicates-independent');mkdirSync(output,{recursive:true});
+const report={scope:'Independent exhaustive row-mask/column-value/white-connectivity search, followed by ordinary create/step toggles and manual checks. No shipped answers or model state writes.',modelSha256:createHash('sha256').update(readFileSync(new URL('../src/main/assets/game-model.js',import.meta.url))).digest('hex'),tests:[],proofs:[],ordinaryToggles:0,ordinarySubmissions:0};
+const input={ArrowLeft:{x:-1},ArrowRight:{x:1},ArrowUp:{y:-1},ArrowDown:{y:1},Space:{a:true},b:{b:true}};
+function inspect(s){const e=derive(M.config.layouts[s.level],s.black);assert.deepEqual(s.violations,e.violations);assert.equal(s.valid,e.valid);assert.equal(s.checkHistory.length,s.submissions);assert.ok(s.checks>=0&&s.checks<=3);}
+function tick(s,i={}){const before={toggles:s.toggles,submissions:s.submissions};M.step(s,1/60,i);report.ordinaryToggles+=s.toggles-before.toggles;report.ordinarySubmissions+=s.submissions-before.submissions;inspect(s);return s;}
+function press(s,key){tick(s,input[key]);tick(s);}
+function select(s,to){for(let i=0;i<30;i++){const key=nextKey(s,to);if(key==='Space')return;press(s,key);}throw Error('Cursor navigation failed');}
+function toggle(s,to){select(s,to);press(s,'Space');}
+function fresh(level){const s=M.create(783,level);tick(s);return s;}
+function fill(s,solution){for(let p=0;p<solution.length;p++)if(s.black[p]!==solution[p])toggle(s,p);}
+function freeze(s){const old=structuredClone(s);for(const i of [{a:true},{b:true},{x:1},{cancelled:true,cancelEpoch:8}])tick(s,i);assert.deepEqual(s,old);}
+function test(name,fn){fn();report.tests.push({name,passed:true});}
+try{
+ test('public layouts carry only clues, never an expected mask or black count',()=>{assert.deepEqual(Object.keys(M).sort(),['config','create','step']);assert.equal(M.config.checkLimit,3);M.config.layouts.forEach((l,i)=>{assert.equal(l.size,4+i);assert.equal(l.numbers.length,l.size*l.size);assert.ok(l.numbers.every(v=>Number.isInteger(v)&&v>=1&&v<=l.size));assert.deepEqual(Object.keys(l).sort(),['id','name','nameZh','numbers','size']);});});
+ for(let level=0;level<3;level++){
+  const l=M.config.layouts[level],proof=solve(l);
+  test(`level ${level+1}: exhaustive standard-rule search proves exactly one assignment`,()=>{assert.equal(proof.solutions.length,1);assert.equal(proof.solutions[0].filter(Boolean).length,[5,7,10][level]);assert.ok(derive(l,proof.solutions[0]).valid);report.proofs.push({level,size:l.size,solutionCount:1,blackCount:proof.solutions[0].filter(Boolean).length,solution:proof.solutions[0].map((v,p)=>v?p:null).filter(v=>v!==null),nodes:proof.nodes,completeAssignments:proof.completeAssignments,rowOptions:proof.rowOptions});});
+  test(`level ${level+1}: ordinary toggles become valid but only manual B wins`,()=>{const s=fresh(level);fill(s,proof.solutions[0]);assert.equal(s.valid,true);assert.equal(s.phase,'playing');assert.equal(s.submissions,0);assert.equal(s.checks,3);assert.equal(s.toggles,[5,7,10][level]);press(s,'b');assert.equal(s.phase,'won');assert.equal(s.checks,3);assert.equal(s.submissions,1);assert.equal(s.score,100);assert.equal(s.terminalReceipt.cause,'success');freeze(s);});
+  test(`level ${level+1}: exact last failed-check opportunity still accepts a valid board`,()=>{const s=fresh(level),board=s.black.slice(),cursor=s.cursor;press(s,'b');press(s,'b');assert.equal(s.checks,1);assert.deepEqual(s.black,board);assert.equal(s.cursor,cursor);fill(s,proof.solutions[0]);assert.equal(s.phase,'playing');press(s,'b');assert.equal(s.phase,'won');assert.equal(s.checks,1);assert.equal(s.submissions,3);assert.equal(s.checkHistory.at(-1).valid,true);freeze(s);});
+  test(`level ${level+1}: unchanged invalid board naturally spends three checks and freezes`,()=>{const s=fresh(level);assert.ok(s.violations.duplicates.length>0);for(let i=0;i<3;i++)press(s,'b');assert.equal(s.phase,'lost');assert.equal(s.reason,'checks');assert.equal(s.checks,0);assert.equal(s.submissions,3);assert.equal(s.toggles,0);assert.ok(s.black.every(v=>!v));freeze(s);});
+ }
+ test('ordinary toggles expose adjacent black pairs and a disconnected white island independently',()=>{const s=fresh(2);toggle(s,0);toggle(s,1);assert.deepEqual(s.violations.adjacent,[{a:0,b:1}]);const board=s.black.slice();press(s,'b');assert.equal(s.checks,2);assert.deepEqual(s.black,board);toggle(s,1);toggle(s,0);for(const p of [8,13,15,20])toggle(s,p);assert.deepEqual(s.violations.adjacent,[]);assert.equal(s.violations.regions.length,2);assert.ok(s.violations.regions.some(r=>r.length===1&&r[0]===14));assert.equal(s.violations.whiteCount,32);press(s,'b');assert.equal(s.checks,1);assert.equal(s.phase,'playing');toggle(s,8);assert.equal(s.violations.regions.length,1);});
+ test('an ordinarily all-black board reports no white region and remains invalid until checked',()=>{const s=fresh(0);for(let p=0;p<16;p++)toggle(s,p);assert.equal(s.violations.whiteCount,0);assert.deepEqual(s.violations.regions,[]);assert.deepEqual(s.violations.duplicates,[]);assert.equal(s.violations.adjacent.length,24);assert.equal(s.valid,false);assert.equal(s.phase,'playing');press(s,'b');assert.equal(s.checks,2);assert.equal(s.phase,'playing');});
+ test('B outranks A; held toggles and cancellation require an actual release',()=>{const s=fresh(0);tick(s,{a:true,b:true,x:1});assert.equal(s.submissions,1);assert.equal(s.checks,2);assert.equal(s.toggles,0);assert.equal(s.cursor,0);tick(s);tick(s,{a:true});assert.equal(s.toggles,1);for(let i=0;i<10;i++)tick(s,{a:true});assert.equal(s.toggles,1);assert.equal(s.black[0],true);tick(s,{cancelEpoch:1});tick(s,{a:true,cancelEpoch:2});assert.equal(s.inputArmed,false);assert.equal(s.toggles,1);tick(s,{cancelEpoch:2});press(s,'Space');assert.equal(s.toggles,2);assert.equal(s.black[0],false);const frozen=structuredClone(s);M.step(s,.25,{paused:true});assert.deepEqual(s,frozen);});
+ report.passed=true;
+}catch(error){report.passed=false;report.failure=error.stack;process.exitCode=1;}
+writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({passed:report.passed,tests:report.tests.length,ordinaryToggles:report.ordinaryToggles,ordinarySubmissions:report.ordinarySubmissions,proofs:report.proofs,failure:report.failure}));
