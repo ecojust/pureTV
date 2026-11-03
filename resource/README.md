@@ -74,6 +74,7 @@
 | [影窗快门](apps/shadow-shutter/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 移动取景框并切换横竖画幅，避开遮光纸带，让三片剪影完整入窗并依序拍成目标；用有限胶片完成三组影窗作品。 | <img src="apps/shadow-shutter/thumb.png" width="180" alt="影窗快门 界面"> |
 | [ShortVideo TV](apps/shortvideo/) | ecojust / 桔子桑 | 0.5.0 | 32.7 KB | 遥控器短视频播放器 | <img src="apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
 | [逐日供电](apps/solar-shift/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 随日照与阴影调整太阳板朝向，为不同优先级的设备供电；管理有限电池与温度，完成昼夜周期及各设备的独立供电配额。 | <img src="apps/solar-shift/thumb.png" width="180" alt="逐日供电 界面"> |
+| [序栈货运](apps/stack-dispatch/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用单件吊机和三个后进先出的货栈，按公开货单顺序出港；管理有限容量与搬动额度，三次错序出货失败。三个调度关卡，支持手机扫码单人操作。 | <img src="apps/stack-dispatch/thumb.png" width="180" alt="序栈货运 界面"> |
 | [Super Mario TV](apps/super-mario/) | ecojust / 桔子桑 | 0.5.2 | 93.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
 | [分岔调度](apps/switchyard-minute/) | ecojust / 桔子桑 | 0.1.1 | 289.3 KB | 切换道岔、错开放行，把双向货车送到同色站台，管理追尾风险与累计延误，支持手机扫码单人操作 | <img src="apps/switchyard-minute/thumb.png" width="180" alt="分岔调度 界面"> |
 | [Tank TV](apps/tank/) | ecojust / 桔子桑 | 0.5.2 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
