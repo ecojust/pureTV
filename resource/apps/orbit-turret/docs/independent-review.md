@@ -1,0 +1,9 @@
+# Independent mechanics review
+
+`tests/reference.mjs` uses analytic polar positions, a closest-approach segment contact derivation and digital lead aiming from current public enemy parameters. It imports no production helper. The initial review caught positive sub-EPS dt being discarded; production completion now preserves representable positive time, and the independent1e-12 regression passes.
+
+`tests/independent-check.mjs` passed14 ordinary groups across1,574 checked steps, plus four separately labelled synthetic contact groups. Ordinary checks cover exact free paths, simultaneous rotation/fire cadence, one analytically predicted straight interception, uneven partitions, three no-leak shooting wins, three wins with actual shield absorption, natural three-impact losses, cancellation and pause. Digital left/right/A/B decisions use66/73/80/87/91ms jitter. The independently written pilot clears three rounds in14.0/18.2/20.2 active seconds; shield demonstrations clear in15.5/18.0/20.5, with2/1/2 shield absorptions and no base impacts.
+
+Synthetic fixtures separately cover exact tangency, an earlier base contact preceding a later projectile candidate, half-open shield expiry and immediate overlapping-disk absorption, and simultaneous final shot/base events losing at zero HP. They are not ordinary public-schedule victories. Enemy motion is analytic; collision receipts use bounded linear chords over substeps, so their positions are compared within1e-4 rather than claiming exact curved collision roots. Free endpoint state remains analytic to numerical precision.
+
+Run `node resource/apps/orbit-turret/tests/independent-check.mjs /absolute/scratch/orbit-turret/independent`. Source hash and actual collision receipts are retained in `independent-report.json`. Browser input, recording and physical-device evidence remain distinct stages; no physical TV/phone test is claimed.
