@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-91-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-92-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -87,6 +87,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [染色连疆](resource/apps/color-frontier/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 选择染料扩展左上角连通区域，在有限次数内统一全图；只沿四边连通，撤回会恢复地图但不返还染料次数，三张公开地图，支持手机扫码单人操作。 | <img src="resource/apps/color-frontier/thumb.png" width="180" alt="染色连疆 界面"> |
 | [窗口装配](resource/apps/conveyor-window/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 左右移动夹具抓取零件，旋转到正确朝向，在快门开放时投送到匹配槽位；避免损坏、保持连续装配，完成三条传送线关卡。 | <img src="resource/apps/conveyor-window/thumb.png" width="180" alt="窗口装配 界面"> |
 | [Cozy Island TV](resource/apps/cozy-island/) | ecojust / 桔子桑 | 0.5.2 | 269.6 KB | 原创岛屿生活，支持采集、钓鱼、布置和手机扫码双人游玩 | <img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"> |
+| [骨牌接龙](resource/apps/domino-chain/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 明牌双六骨牌接龙，选择端点匹配牌面；无牌可接时摸牌或跳过，堵局比较剩余点数。 | <img src="resource/apps/domino-chain/thumb.png" width="180" alt="骨牌接龙 界面"> |
 | [点线围格](resource/apps/dots-boxes/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 选择边线围成方格，利用得格续手掌握回合节奏，与公开规则的对手争夺最后一格。 | <img src="resource/apps/dots-boxes/thumb.png" width="180" alt="点线围格 界面"> |
 | [跳吃棋径](resource/apps/draughts-trail/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在六路跳棋残局中强制连跳吃子，保护兵并升为王棋，遵循合法移动击败公开规则的对手。 | <img src="resource/apps/draughts-trail/thumb.png" width="180" alt="跳吃棋径 界面"> |
 | [回声探图](resource/apps/echo-cartographer/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在有限照明下发射声呐测绘暗室，控制脚步噪声避开巡逻机，收集信标后返回入口，支持手机扫码单人操作 | <img src="resource/apps/echo-cartographer/thumb.png" width="180" alt="回声探图 界面"> |
