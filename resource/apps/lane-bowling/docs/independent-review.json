@@ -82,7 +82,54 @@
     "docs/model-contract.md": "f0ecdad7cf5dd236796935b0ac72cfa59931a4b7e32a847dc9de5ecfa9f8b467",
     "tests/reference.mjs": "a92b5d303193044c990628f69d0b6f783d2af88945e1145047f750b2665f9731",
     "tests/independent-check.mjs": "6ef9e3033b4cef765152ac39c7071cfed7bd81e01a9cd9fc2e8e968e7182b863",
-    "tests/automation.mjs": "86294f343d738db07e0a6d86461c1921de31e01f9f5767d3273a173dbdd13f85"
+    "tests/automation.mjs": "cdd88cb1dbae05e65ee30e6910175d55fc8783da7e3ad58a393e179a8b198954",
+    "tests/pilot-cancel-test.mjs": "0c856a7b8a0ef8a2c6b26c7c5a2d4024698c35453f76dbfa90bc830a80f833e7"
   },
-  "findings": []
+  "findings": [],
+  "pilotLifecycleRegression": {
+    "passed": true,
+    "scope": "Ordinary epoch/cancel/release signals before and after a pending command; six resumed normal-input wins, no gameplay state writes.",
+    "runs": [
+      {
+        "level": 0,
+        "appliedBeforeCancel": false,
+        "won": true,
+        "calls": 47
+      },
+      {
+        "level": 0,
+        "appliedBeforeCancel": true,
+        "won": true,
+        "calls": 45
+      },
+      {
+        "level": 1,
+        "appliedBeforeCancel": false,
+        "won": true,
+        "calls": 87
+      },
+      {
+        "level": 1,
+        "appliedBeforeCancel": true,
+        "won": true,
+        "calls": 85
+      },
+      {
+        "level": 2,
+        "appliedBeforeCancel": false,
+        "won": true,
+        "calls": 83
+      },
+      {
+        "level": 2,
+        "appliedBeforeCancel": true,
+        "won": true,
+        "calls": 81
+      }
+    ],
+    "command": "node resource/apps/lane-bowling/tests/pilot-cancel-test.mjs"
+  },
+  "qaHarnessCorrections": [
+    "Applied pending actions are acknowledged first; otherwise cancellation/epoch changes discard held pending controls and permit neutral rearm before public-state replanning."
+  ]
 }

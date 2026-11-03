@@ -8,12 +8,12 @@ export function createPilot({lose=false}={}){
  const pilot=snapshot=>{
   const s=snapshot.model;if(!s||snapshot.paused)return[];
   if(level!==s.level||s.calls<lastCalls){level=s.level;route=[];pending=null;rolling=null;log=[];}lastCalls=s.calls;
-  if(pending){if(s[pending.field]===pending.before){need(s.calls-pending.call<120,'Ordinary bowling input was not acknowledged');return[pending.key];}if(pending.field==='shotsUsed'){need(s.shotsUsed===pending.before+1,'A spends exactly one throw');rolling=pending.expected;}log.push({key:pending.key,call:s.calls,shotsUsed:s.shotsUsed,angle:s.angle,power:s.power});pending=null;return[];}
+  if(pending){if(s[pending.field]===pending.before){if(!s.inputArmed||s.cancelledLast||s.cancelEpoch!==pending.cancelEpoch){pending=null;return[];}need(s.calls-pending.call<120,'Ordinary bowling input was not acknowledged');return[pending.key];}if(pending.field==='shotsUsed'){need(s.shotsUsed===pending.before+1,'A spends exactly one throw');rolling=pending.expected;}log.push({key:pending.key,call:s.calls,shotsUsed:s.shotsUsed,angle:s.angle,power:s.power});pending=null;return[];}
   if(rolling){if(s.stage==='rolling')return[];for(const k of ['pins','lastShot','fallReceipts','phase','reason','standingCount','fallenCount'])near(s[k],rolling[k],k);log.push({shotEnded:s.shotsUsed,receipt:s.lastShot});rolling=null;route.shift();return[];}
   if(snapshot.phase!=='playing'||s.phase!=='playing'||s.stage!=='aiming'||!s.inputArmed||s.cancelledLast||s.lastHeld.a||s.lastHeld.b||s.lastHeld.direction!=='none')return[];
   if(!route.length)route=lose?[{angle:24,power:3,expected:simulateShot(s,24,3)}]:findRoute(s).route;
   const target=route[0];let key,field;if(s.angle!==target.angle){key=s.angle<target.angle?'ArrowRight':'ArrowLeft';field='angle';}else if(s.power!==target.power){key=s.power<target.power?'ArrowUp':'ArrowDown';field='power';}else{key='Space';field='shotsUsed';}
-  pending={key,field,before:s[field],call:s.calls,expected:target.expected};return[key];
+  pending={key,field,before:s[field],call:s.calls,expected:target.expected,cancelEpoch:s.cancelEpoch};return[key];
  };pilot.log=()=>structuredClone(log);return pilot;
 }
 let pilot=createPilot(),mode=null,terminalAt=null,release=false;
