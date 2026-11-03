@@ -1,0 +1,295 @@
+{
+  "scope": "Independent fully visible tile geometry and exact public AI; weighted search minimizes human plays. Ordinary create/step inputs only, no hidden information or state writes.",
+  "modelSha256": "d4622852328eea249380eaf3d954d8deef6e428d7f158438b6bdc71d875a77a2",
+  "tests": [
+    {
+      "name": "the public double-six IDs and all three unique open deals match geometry",
+      "passed": true
+    },
+    {
+      "name": "level 1: weighted public search proves minimum human plays and ordinary win/loss",
+      "passed": true
+    },
+    {
+      "name": "level 1: bounded reachable transitions match orientation, draw order, passes and AI ranking",
+      "passed": true
+    },
+    {
+      "name": "level 1: illegal end and B while a play exists are free and preserve AI receipt",
+      "passed": true
+    },
+    {
+      "name": "level 2: weighted public search proves minimum human plays and ordinary win/loss",
+      "passed": true
+    },
+    {
+      "name": "level 2: bounded reachable transitions match orientation, draw order, passes and AI ranking",
+      "passed": true
+    },
+    {
+      "name": "level 2: illegal end and B while a play exists are free and preserve AI receipt",
+      "passed": true
+    },
+    {
+      "name": "level 3: weighted public search proves minimum human plays and ordinary win/loss",
+      "passed": true
+    },
+    {
+      "name": "level 3: bounded reachable transitions match orientation, draw order, passes and AI ranking",
+      "passed": true
+    },
+    {
+      "name": "level 3: illegal end and B while a play exists are free and preserve AI receipt",
+      "passed": true
+    },
+    {
+      "name": "B outranks simultaneous legal A; held A and cancellation require release",
+      "passed": true
+    },
+    {
+      "name": "ordinary coverage includes ordered draws, proper passes, empty-hand and pip-comparison settlements",
+      "passed": true
+    }
+  ],
+  "proofs": [
+    {
+      "level": 0,
+      "visited": 50,
+      "minimumHumanPlays": 5,
+      "win": [
+        {
+          "type": "play",
+          "tile": 14,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 22,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 20,
+          "end": "right"
+        },
+        {
+          "type": "play",
+          "tile": 26,
+          "end": "right"
+        },
+        {
+          "type": "play",
+          "tile": 12,
+          "end": "right"
+        }
+      ],
+      "loss": [
+        {
+          "type": "play",
+          "tile": 14,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 22,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 12,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 20,
+          "end": "right"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "play",
+          "tile": 4,
+          "end": "right"
+        },
+        {
+          "type": "b"
+        }
+      ],
+      "sampledTransitions": 59
+    },
+    {
+      "level": 1,
+      "visited": 67,
+      "minimumHumanPlays": 5,
+      "win": [
+        {
+          "type": "play",
+          "tile": 1,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 22,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 14,
+          "end": "right"
+        },
+        {
+          "type": "play",
+          "tile": 17,
+          "end": "right"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "play",
+          "tile": 13,
+          "end": "left"
+        },
+        {
+          "type": "b"
+        }
+      ],
+      "loss": [
+        {
+          "type": "play",
+          "tile": 26,
+          "end": "right"
+        },
+        {
+          "type": "play",
+          "tile": 17,
+          "end": "right"
+        },
+        {
+          "type": "play",
+          "tile": 14,
+          "end": "left"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "play",
+          "tile": 15,
+          "end": "right"
+        },
+        {
+          "type": "play",
+          "tile": 12,
+          "end": "right"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "b"
+        }
+      ],
+      "sampledTransitions": 82
+    },
+    {
+      "level": 2,
+      "visited": 536,
+      "minimumHumanPlays": 4,
+      "win": [
+        {
+          "type": "play",
+          "tile": 3,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 25,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 21,
+          "end": "left"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "play",
+          "tile": 19,
+          "end": "left"
+        },
+        {
+          "type": "b"
+        }
+      ],
+      "loss": [
+        {
+          "type": "play",
+          "tile": 4,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 19,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 3,
+          "end": "right"
+        },
+        {
+          "type": "play",
+          "tile": 24,
+          "end": "left"
+        },
+        {
+          "type": "play",
+          "tile": 0,
+          "end": "right"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "play",
+          "tile": 2,
+          "end": "right"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "b"
+        },
+        {
+          "type": "b"
+        }
+      ],
+      "sampledTransitions": 180
+    }
+  ],
+  "actionsChecked": 367,
+  "playerDrawsObserved": 51,
+  "aiDrawsObserved": 106,
+  "passesObserved": 41,
+  "terminalCauses": {
+    "player-empty": 7,
+    "blocked-tie": 3,
+    "blocked-win": 8,
+    "blocked-loss": 4
+  },
+  "passed": true
+}
