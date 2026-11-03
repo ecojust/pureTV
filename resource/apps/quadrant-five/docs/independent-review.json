@@ -1,0 +1,315 @@
+{
+  "passed": true,
+  "method": "Independent coordinate rotation and 32 five-cell windows; exhaustive deterministic ranked-AI trees without symmetry quotient or author winning routes. Opening histories use ordinary alternating legal choices, not the endgame AI policy. All routes replay actual create/step through normal inputs; no synthetic state writes.",
+  "checks": [
+    "independent rotation geometry and legal 28-turn opening histories reproduce balanced public candidates",
+    "exact public-rule trees exclude all one-, two- and three-turn wins and find ordinary special outcomes",
+    "normal inputs replay every discovered terminal type and compare full AI choices, tie ordering and moving stone markers",
+    "every initial cell/quadrant/direction action agrees with the independent ranked AI enumeration",
+    "placement requires a fresh rotation confirmation and cancellation preserves the pending stone and rotation choice",
+    "occupied placement, place-phase B and quadrant boundaries are free blocked actions"
+  ],
+  "layouts": [
+    {
+      "level": 0,
+      "openingTurns": 28,
+      "initialEmpty": 8,
+      "targets": {
+        "player": {
+          "route": [
+            [
+              22,
+              1,
+              -1
+            ],
+            [
+              32,
+              0,
+              1
+            ],
+            [
+              24,
+              0,
+              -1
+            ],
+            [
+              33,
+              2,
+              -1
+            ]
+          ],
+          "minimum": 4,
+          "states": 10,
+          "edges": 365,
+          "aiBoards": 111
+        },
+        "opponent": {
+          "route": [
+            [
+              21,
+              0,
+              1
+            ]
+          ],
+          "minimum": 1,
+          "states": 1,
+          "edges": 1,
+          "aiBoards": 111
+        },
+        "simultaneous": {
+          "route": null,
+          "minimum": null,
+          "states": 13,
+          "edges": 528,
+          "aiBoards": 137
+        },
+        "draw": {
+          "route": [
+            [
+              22,
+              1,
+              -1
+            ],
+            [
+              32,
+              0,
+              1
+            ],
+            [
+              24,
+              0,
+              -1
+            ],
+            [
+              33,
+              0,
+              -1
+            ]
+          ],
+          "minimum": 4,
+          "states": 10,
+          "edges": 361,
+          "aiBoards": 137
+        }
+      }
+    },
+    {
+      "level": 1,
+      "openingTurns": 28,
+      "initialEmpty": 8,
+      "targets": {
+        "player": {
+          "route": [
+            [
+              19,
+              2,
+              -1
+            ],
+            [
+              20,
+              1,
+              1
+            ],
+            [
+              13,
+              0,
+              1
+            ],
+            [
+              17,
+              2,
+              1
+            ]
+          ],
+          "minimum": 4,
+          "states": 32,
+          "edges": 816,
+          "aiBoards": 479
+        },
+        "opponent": {
+          "route": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "minimum": 1,
+          "states": 1,
+          "edges": 1,
+          "aiBoards": 479
+        },
+        "simultaneous": {
+          "route": [
+            [
+              19,
+              2,
+              -1
+            ],
+            [
+              20,
+              1,
+              1
+            ],
+            [
+              13,
+              2,
+              1
+            ]
+          ],
+          "minimum": 3,
+          "states": 7,
+          "edges": 296,
+          "aiBoards": 479
+        },
+        "draw": {
+          "route": [
+            [
+              19,
+              2,
+              -1
+            ],
+            [
+              20,
+              0,
+              -1
+            ],
+            [
+              0,
+              2,
+              -1
+            ],
+            [
+              12,
+              0,
+              1
+            ]
+          ],
+          "minimum": 4,
+          "states": 14,
+          "edges": 523,
+          "aiBoards": 479
+        }
+      }
+    },
+    {
+      "level": 2,
+      "openingTurns": 28,
+      "initialEmpty": 8,
+      "targets": {
+        "player": {
+          "route": [
+            [
+              25,
+              0,
+              -1
+            ],
+            [
+              12,
+              0,
+              -1
+            ],
+            [
+              19,
+              0,
+              1
+            ],
+            [
+              28,
+              2,
+              1
+            ]
+          ],
+          "minimum": 4,
+          "states": 16,
+          "edges": 528,
+          "aiBoards": 715
+        },
+        "opponent": {
+          "route": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "minimum": 1,
+          "states": 1,
+          "edges": 1,
+          "aiBoards": 715
+        },
+        "simultaneous": {
+          "route": [
+            [
+              25,
+              0,
+              -1
+            ],
+            [
+              12,
+              0,
+              -1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              19,
+              1,
+              1
+            ]
+          ],
+          "minimum": 4,
+          "states": 14,
+          "edges": 477,
+          "aiBoards": 715
+        },
+        "draw": {
+          "route": [
+            [
+              25,
+              0,
+              -1
+            ],
+            [
+              12,
+              0,
+              -1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              19,
+              0,
+              -1
+            ]
+          ],
+          "minimum": 4,
+          "states": 14,
+          "edges": 476,
+          "aiBoards": 715
+        }
+      }
+    }
+  ],
+  "comparedReplies": 205,
+  "pendingFiveBeforeMandatoryRotation": 0,
+  "aiPriorities": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "7cdc6833ee178691b65fe9b1cdb05ac3bb767ef95fb0601e166cfe6da0e744bf",
+    "tests/reference.cjs": "c92619db153ad3677d020401c8bb390af7d99f5ef27e517c777dbc43887f81a5",
+    "tests/independent-check.cjs": "d6a0dfbbc0dc76f354eb0799d9f14dec57c2c9818012f0de2c1b8b80193f3a19"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

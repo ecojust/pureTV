@@ -1,0 +1,72 @@
+{
+  "allThreeNormalWinsVerified": true,
+  "wins": [
+    {
+      "level": 0,
+      "at": 9,
+      "playerTurnsDisplayed": 4,
+      "aiTurnsDisplayed": 3,
+      "emptyCellsDisplayed": 1,
+      "completionText": "旋转之后，白棋连五",
+      "evidence": "actual encoded MP4 frame; first course selected",
+      "screenshot": "docs/screenshots/encoded-9s.png",
+      "screenshotSha256": "24c391e54762f7729d2875674ebf651eb4553ffa2712a225bc09a7f60de7745c"
+    },
+    {
+      "level": 1,
+      "at": 18.013110047,
+      "score": 100,
+      "playerTurns": 4,
+      "aiTurns": 3,
+      "reason": "",
+      "counts": {
+        "player": 18,
+        "opponent": 17,
+        "empty": 1
+      },
+      "evidence": "recording model snapshot"
+    },
+    {
+      "level": 2,
+      "at": 26.014078397,
+      "score": 100,
+      "playerTurns": 4,
+      "aiTurns": 3,
+      "reason": "",
+      "counts": {
+        "player": 18,
+        "opponent": 17,
+        "empty": 1
+      },
+      "evidence": "recording model snapshot"
+    }
+  ],
+  "capturedSeconds": 45.56420636177063,
+  "videoBytes": 2861052,
+  "videoSha256": "239348cd07bed9c74e19620dbe0687b00917465a89ce064afc2e6e1910ecc486",
+  "dedicatedChecks": 9,
+  "sharedChecks": 10,
+  "assetHashesMatch": true,
+  "postQaSignedSourceMatch": true,
+  "fullDecodePassed": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "testSources": {
+    "tests/authored-proof.json": "0407a6ce756a968d6ef6a5d5ba1dc35b6987f24cd8633e5eaa6bc25dcb28bf0c",
+    "tests/automation.mjs": "9cd5fe76b5caefe652b32b99aded1a9b301f9b77df716464c24ad56151ebb91f",
+    "tests/browser-checks.mjs": "b5578237b80fefae02b7aa0eba85359ff4cbd940b37b7ecb3e88dc5ac5e0c977",
+    "tests/independent-check.cjs": "d6a0dfbbc0dc76f354eb0799d9f14dec57c2c9818012f0de2c1b8b80193f3a19",
+    "tests/model-test.cjs": "646c22ca712df09d825c6727201eea66dbf3cf2ab2c343d21631b615ff24fedb",
+    "tests/preview.mjs": "362fda0df0fb8b0a936225c29a5df021f20634e1be9d04c3f59a10561b27d6c8",
+    "tests/public-search.cjs": "53ccbfe4d8067275bd658cfa650734e4fbc1c3423b706992ca62aef4f2cb44bb",
+    "tests/recipe.json": "0ff67d497ee0ba47894d7c21e256d3fbcd7c342d3538d77f7285fa1bda7dbeba",
+    "tests/reference.cjs": "c92619db153ad3677d020401c8bb390af7d99f5ef27e517c777dbc43887f81a5"
+  },
+  "sparseSnapshotNote": "Two-second recording snapshots miss the first1.2-second terminal display between8.01s playing and10.32s next-course playing. The actual encoded9-second completion frame is archived and SHA-bound instead of fabricating a missing model snapshot.",
+  "encodedVisualReview": {
+    "at": 24,
+    "screenshot": "docs/screenshots/encoded-24s.png",
+    "sha256": "6bc3affb671c770b36d3deaa7547afb80ddc67bdae93c2ebe20819e86335a8cb",
+    "finding": "Third board after three complete turns. Four quadrant plates, separate player/opponent shapes, actual empty cells, last-AI marker, selected cell and stage-specific instructions remain legible. Terminal9s frame proves first-course completion text only; its blurred board is not geometry evidence."
+  }
+}
