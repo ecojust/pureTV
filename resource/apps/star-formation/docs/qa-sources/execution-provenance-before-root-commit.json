@@ -1,0 +1,134 @@
+{
+  "kind": "Actual retry-assertion fixture correction; production unchanged",
+  "productionSourceCommit": "35d5c7e6f177992cfec5b6687dd21767c52378bb",
+  "signedApkSha256": "125b9f001f4b886b67a975e774cbb7ae22a38e31ea0d4b15b400c5b1bbbcafec",
+  "testExecutionDiffersFromSignedSourceCommit": true,
+  "reason": "The original assertRetry compared running physics clocks with the zero-clock menu initializer. The actual fresh retry had formation.stepClock0.1; no production failure occurred. The corrected assertion independently predicts neutral formation motion from completed fixed ticks, validates all time relationships inside the explicit pre-first-enemy-shot observation window, and still checks fresh player/enemies/cover/lives/ammo/counters/receipts/no-held-input state.",
+  "changedProductionFiles": [],
+  "changedExecutionFiles": [
+    "tests/automation.mjs"
+  ],
+  "addedTargetedProbe": "tests/retry-check.mjs",
+  "frozenAdapter": {
+    "file": "docs/qa-sources/automation-frozen.mjs",
+    "sha256": "e9e20edcf9fd0a3043ce4efa673b3fb6df924f52ad485ec61b936f91e0af572c"
+  },
+  "executedAdapter": {
+    "file": "docs/qa-sources/automation-executed.mjs",
+    "sha256": "7dd6e501c994dc900f31e53ea084a49ec79e8575990b431211e1cd018a83036f"
+  },
+  "targetedProbe": {
+    "file": "docs/qa-sources/retry-check-executed.mjs",
+    "sha256": "c513749d1b17d85bc303e1a36ce17cf489f1e881777a87e5246ad74624524aa0",
+    "report": "docs/retry-validation.json",
+    "reportSha256": "a9d660a4d36f76d3dc4bdfbe4efc8ed3be54f33ab1184c20e2ebfd3afc91270f",
+    "normalNeutralCases": 18,
+    "explicitlySyntheticCopiedSnapshotNegatives": 51
+  },
+  "initialSharedFailure": {
+    "file": "docs/qa-sources/shared-initial-report.json",
+    "sha256": "d0a4386c69408f5e89c6078a19dfe31c114ce034f3eb8f6250fa7f1f4a22d05e",
+    "passedChecks": 7,
+    "failedCheck": "R restarts with clean simulation state",
+    "recordingStarted": false,
+    "completeArchive": {
+      "directory": "docs/qa-initial-failure",
+      "files": [
+        {
+          "originalTemporaryFile": "/workspace/scratch/star-formation/qa/01-title.png",
+          "archivedFile": "docs/qa-initial-failure/01-title.png",
+          "sha256": "77f5ff8db8d76a7941c440d79a52d69b0c1f34d1942dde286c20b882d72b4bba",
+          "bytes": 287306
+        },
+        {
+          "originalTemporaryFile": "/workspace/scratch/star-formation/qa/02-gameplay.png",
+          "archivedFile": "docs/qa-initial-failure/02-gameplay.png",
+          "sha256": "26d26f5d1188864b18584627234ed4ff85abf3871d4b030b24bc3621e25a82fa",
+          "bytes": 261345
+        },
+        {
+          "originalTemporaryFile": "/workspace/scratch/star-formation/qa/performance-samples.json",
+          "archivedFile": "docs/qa-initial-failure/performance-samples.json",
+          "sha256": "c1e07f5581b77239b659f6c66c7257c0f122dcff96e08ad6bff5bb6a9890ee2b",
+          "bytes": 5830
+        },
+        {
+          "originalTemporaryFile": "/workspace/scratch/star-formation/qa/report.json",
+          "archivedFile": "docs/qa-initial-failure/report.json",
+          "sha256": "d0a4386c69408f5e89c6078a19dfe31c114ce034f3eb8f6250fa7f1f4a22d05e",
+          "bytes": 62220
+        }
+      ],
+      "recordingCreated": false,
+      "note": "Failure occurred at shared restart check before recording began; all existing initial report, performance samples and screenshots are retained unchanged. No recording or input recording manifest existed."
+    }
+  },
+  "reusedDedicatedEvidence": {
+    "temporaryReport": "/workspace/scratch/star-formation/browser-checks/report.json",
+    "sha256": "83de24a0e5e64ae13920ef75e3ac67957c58c5a5ce64d7f85047877831ec58c6",
+    "passedChecks": 8,
+    "reason": "Only assertRetry changed; the dedicated suite does not call it. Driver, observe, assertProgress, model and renderer remain identical."
+  },
+  "rerun": {
+    "workingDirectory": "/workspace/pureTV",
+    "environment": {
+      "PURETV_PACKAGE": "/workspace/scratch/puretv-qa/package.json"
+    },
+    "argv": [
+      "node",
+      "resource/game-kit/qa/qa.mjs",
+      "--assets",
+      "/workspace/scratch/star-formation/assets",
+      "--output",
+      "/workspace/scratch/star-formation/qa-retry",
+      "--automation",
+      "resource/apps/star-formation/tests/automation.mjs",
+      "--seconds",
+      "25",
+      "--record",
+      "--recipe",
+      "resource/apps/star-formation/tests/recipe.json"
+    ],
+    "status": "passed",
+    "repeatedChecks": "Shared10 rerun because its restart assertion changed after a real failure; dedicated8 retained.",
+    "sharedReportSha256": "2b4e7c5706b58164243bd9fce1355982b286df2501f7b41c4c0cf95e89dbd6a7",
+    "sharedChecks": 10,
+    "recordingManifestSha256": "951d282f57fee493c9e4641fc11cc8f8f6acf938cadcf56e0b72aedc4cfbc372",
+    "canonicalVideoValidationSha256": "90d4f22c7ffd8ea798c8c819bad638efccb5fbda659d104b33c79a502e02c0ea",
+    "videoSha256": "ffc699f8de42a1e7e28845822ced7806a15b92929644ff2dcdeff629c60cf5c0",
+    "executionAdapterUnchangedDuringRun": true,
+    "observedRetry": {
+      "elapsed": 0.09999999999999999,
+      "physicsTicks": 12,
+      "physicsAccumulator": 0,
+      "enemyFireClock": 0.09999999999999999,
+      "formation": {
+        "x": 268,
+        "y": 60,
+        "direction": 1,
+        "stepClock": 0.09999999999999999,
+        "stepInterval": 0.34,
+        "steps": 0,
+        "drops": 0
+      },
+      "lives": 3,
+      "piercingLeft": 2,
+      "normalShots": 0,
+      "piercingShots": 0,
+      "enemyShots": 0,
+      "shotReceipts": [],
+      "hitReceipts": [],
+      "lastHeld": {
+        "a": false,
+        "b": false,
+        "direction": "none"
+      }
+    }
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "independentReadOnlyReview": {
+    "reviewer": "/root/model",
+    "finding": "Neutral formation/time prediction is correct; original HP/ammunition/cover/bullets/shot-hit-terminal receipt checks remain strict. Suggested extra fields were absent from the original assertion too, so they are outside this narrow correction and were not changed during recording. No repeated browser suite was required by that review."
+  }
+}
