@@ -20,7 +20,10 @@
   s.enemies.forEach(function(e){var color=e.spin===0?C.gold:C.pink;for(var i=6;i>0;i--){var age=Math.max(0,e.age-i*.07),prior=Math.max(0,e.age-(i-1)*.07),rr=206-e.speed*age,a=e.angle0+e.spin*age,rr2=206-e.speed*prior,a2=e.angle0+e.spin*prior;r.line(OX+Math.cos(a)*rr,OY+Math.sin(a)*rr,OX+Math.cos(a2)*rr2,OY+Math.sin(a2)*rr2,2,i>3?'#abb9d343':color);}
    r.sprite('orbitalRock',OX+e.x,OY+e.y,27,27,e.angle, e.r<94?'#ffb7a6':e.spin===0?'#fff0c0':'#e8c6f1');ring(r,OX+e.x,OY+e.y,11,1.3,e.r<94?C.red:color);if(e.r<94){var a=Math.atan2(e.y,e.x);r.line(OX+e.x+Math.cos(a)*16,OY+e.y+Math.sin(a)*16,OX+e.x+Math.cos(a)*23,OY+e.y+Math.sin(a)*23,3,C.red);}
   });
-  s.bullets.forEach(function(b){r.line(OX+b.x-b.vx*.027,OY+b.y-b.vy*.027,OX+b.x,OY+b.y,3,'#e9d9a46b');r.circle(OX+b.x,OY+b.y,6,'#fff4c137');r.circle(OX+b.x,OY+b.y,4,C.gold);r.circle(OX+b.x,OY+b.y,1.5,'#ffffff');});
+  // A hit is possible only through radius206+11+4=221. Cull complete
+  // projectile art beyond224: the6px glow stays within230 (rightmostx520),
+  // clear of the HUD beginning at572; physics and bullet lifetime are untouched.
+  s.bullets.forEach(function(b){var tx=b.x-b.vx*.027,ty=b.y-b.vy*.027;if(Math.hypot(b.x,b.y)>224||Math.hypot(tx,ty)>224)return;r.line(OX+tx,OY+ty,OX+b.x,OY+b.y,3,'#e9d9a46b');r.circle(OX+b.x,OY+b.y,6,'#fff4c137');r.circle(OX+b.x,OY+b.y,4,C.gold);r.circle(OX+b.x,OY+b.y,1.5,'#ffffff');});
   if(s.shieldRemaining>0){r.circle(OX,OY,64,'#69dacf18');ring(r,OX,OY,64,3,C.cyan);ring(r,OX,OY,60,1,'#92ecec82');for(var i=0;i<6;i++){var a=i*Math.PI/3+s.time*.4;r.circle(OX+Math.cos(a)*64,OY+Math.sin(a)*64,3,C.ink);}}
   r.sprite('stationBase',OX,OY,64,64,0,'#ffffff');ring(r,OX,OY,24,1,s.health===1?C.red:C.cyan);r.sprite('turretGun',OX,OY,80,80,s.angle,'#ffffff');var ax=Math.cos(s.angle),ay=Math.sin(s.angle);r.line(OX+ax*42,OY+ay*42,OX+ax*52,OY+ay*52,2,C.gold);
   s.effects.forEach(function(e){var f=e.age/config.effectLifetime,color=e.cause==='shot'?C.gold:e.cause==='shield'?C.cyan:C.red;ring(r,OX+e.x,OY+e.y,9+f*22,Math.max(1,3-f*2),color);for(var i=0;i<4;i++){var a=i*Math.PI/2+f;r.line(OX+e.x+Math.cos(a)*(10+f*16),OY+e.y+Math.sin(a)*(10+f*16),OX+e.x+Math.cos(a)*(14+f*24),OY+e.y+Math.sin(a)*(14+f*24),2,color);}});
