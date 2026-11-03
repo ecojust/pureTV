@@ -71,6 +71,7 @@
 | [四季蓄水](apps/reservoir-seasons/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 根据四季天气预报向居民、农田和生态河流配水；撤销尚未提交的计划，守住居民每季用水底线，并分别完成三方年度目标。 | <img src="apps/reservoir-seasons/thumb.png" width="180" alt="四季蓄水 界面"> |
 | [共振浮桥](apps/resonance-bridge/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 调节三块浮桥的频率和相位，派遣行人在持续安全接触时过桥；控制共振增幅，完成三个渡口关卡。 | <img src="apps/resonance-bridge/thumb.png" width="180" alt="共振浮桥 界面"> |
 | [翻面棋局](apps/reversi-relay/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 挑战三道6×6翻面棋残局，用八方向夹击翻转棋子，与确定性电脑对手轮流落子；无合法落点时让行，终局以棋子多数获胜，支持手机扫码单人操作。 | <img src="apps/reversi-relay/thumb.png" width="180" alt="翻面棋局 界面"> |
+| [环塔迁移](apps/ring-towers/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在三根塔柱之间搬运圆环，每次只能移动顶环，小环必须放在大环上；用有限搬动次数将整塔迁到目标柱，挑战三环、四环与五环布局，支持手机扫码单人操作。 | <img src="apps/ring-towers/thumb.png" width="180" alt="环塔迁移 界面"> |
 | [旋环锁匠](apps/rotor-locksmith/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 左右拨转三层锁环，按住 A 推进、B 退回；进入核心取得钥匙，再将完整钥匙带出，避开碰壁造成的耐久损失和阻力。 | <img src="apps/rotor-locksmith/thumb.png" width="180" alt="旋环锁匠 界面"> |
 | [分流沙漏](apps/sandglass-split/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 开关共享料斗并旋转两块挡片，把连续落沙分给三只计量杯；在途沙束保留已确定的路线，耗尽沙量后让三杯都处于目标容差内且没有溢出。 | <img src="apps/sandglass-split/thumb.png" width="180" alt="分流沙漏 界面"> |
 | [影形铸坊](apps/shadow-foundry/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 旋转金属工件与侧向光源，覆盖全部青色目标格并避开禁区；两种控制独立调整，最后一次机会也能完成铸影。 | <img src="apps/shadow-foundry/thumb.png" width="180" alt="影形铸坊 界面"> |
