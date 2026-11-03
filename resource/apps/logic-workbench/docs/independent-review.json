@@ -1,0 +1,633 @@
+{
+  "passed": true,
+  "method": "Independent bit-parallel truth masks (A=240,B=204,C=170), exhaustive public-DAG gate assignment enumeration, every gate bypass/constant/type-alternative necessity proof, and ordinary A/cursor/B replay. Production computes scalar per-row booleans; no answer or search data is shipped.",
+  "checks": [
+    {
+      "name": "all public DAGs have one solution, require three gate types and every input/gate is functionally necessary",
+      "passed": true
+    },
+    {
+      "name": "all 5376 complete assignments and their ordinary partial edits match the independent eight-bit truth masks",
+      "passed": true
+    },
+    {
+      "name": "all three public solutions require fresh manual checking and preserve detached truthful terminal receipts",
+      "passed": true
+    },
+    {
+      "name": "incomplete checks remain free, binary null propagation is conservative, and NOT disables the second input",
+      "passed": true
+    },
+    {
+      "name": "wrong complete circuits retain exact first counterexamples; correct third check wins and three failures lose",
+      "passed": true
+    },
+    {
+      "name": "row and slot cursor bounds are free and selected-row changes cannot substitute for all-eight-row checking",
+      "passed": true
+    },
+    {
+      "name": "held and cancelled A cannot cycle twice; pause freezes exact state and terminal state remains frozen",
+      "passed": true
+    }
+  ],
+  "layouts": [
+    {
+      "level": 0,
+      "count": 256,
+      "solutions": [
+        [
+          2,
+          3,
+          2,
+          1
+        ]
+      ],
+      "dependentInputs": [
+        true,
+        true,
+        true
+      ],
+      "minDistinctTypes": 3,
+      "necessity": [
+        {
+          "slot": 0,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 3,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 1,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 3,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 3,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 1,
+      "count": 1024,
+      "solutions": [
+        [
+          2,
+          3,
+          2,
+          1,
+          3
+        ]
+      ],
+      "dependentInputs": [
+        true,
+        true,
+        true
+      ],
+      "minDistinctTypes": 3,
+      "necessity": [
+        {
+          "slot": 0,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 3,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 1,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 3,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 3,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "count": 4096,
+      "solutions": [
+        [
+          4,
+          3,
+          3,
+          3,
+          1,
+          3
+        ]
+      ],
+      "dependentInputs": [
+        true,
+        true,
+        true
+      ],
+      "minDistinctTypes": 3,
+      "necessity": [
+        {
+          "slot": 0,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 3,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 1,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 3,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "bypass": [
+            {
+              "kind": "zero",
+              "changed": true
+            },
+            {
+              "kind": "one",
+              "changed": true
+            },
+            {
+              "kind": "a",
+              "changed": true
+            },
+            {
+              "kind": "b",
+              "changed": true
+            }
+          ],
+          "alternative": [
+            {
+              "gate": 1,
+              "changed": true
+            },
+            {
+              "gate": 2,
+              "changed": true
+            },
+            {
+              "gate": 4,
+              "changed": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "comparedAssignments": 5376,
+  "observations": 65241,
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "de203d7457868cae407bbcaf067c363f341b9d49302d00edb2466ef98f4bf2d5",
+    "tests/reference.cjs": "00b188f5b2539d760dc506f1e678c59d99efffad77a393e2e33f032dac216dfc",
+    "tests/independent-check.cjs": "55b8ecfa3a731f7f9c442b8547942e038b193642ffffa851ee93a402d8000516"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

@@ -1,0 +1,132 @@
+{
+  "allThreeNormalWinsVerified": true,
+  "wins": [
+    {
+      "level": 0,
+      "at": 6.026171695000001,
+      "score": 100,
+      "reason": "",
+      "checks": 2,
+      "incompleteChecks": 1,
+      "attemptsLeft": 1,
+      "target": [
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "matchCount": 8,
+      "gates": [
+        2,
+        3,
+        2,
+        1
+      ],
+      "evidence": "recording model snapshot",
+      "lastCheckMatched": true
+    },
+    {
+      "level": 1,
+      "at": 14.043558496000001,
+      "score": 100,
+      "reason": "",
+      "checks": 2,
+      "incompleteChecks": 1,
+      "attemptsLeft": 1,
+      "target": [
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "matchCount": 8,
+      "gates": [
+        2,
+        3,
+        2,
+        1,
+        3
+      ],
+      "evidence": "recording model snapshot",
+      "lastCheckMatched": true
+    },
+    {
+      "level": 2,
+      "at": 24.023874466,
+      "score": 100,
+      "reason": "",
+      "checks": 2,
+      "incompleteChecks": 1,
+      "attemptsLeft": 1,
+      "target": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "matchCount": 8,
+      "gates": [
+        4,
+        3,
+        3,
+        3,
+        1,
+        3
+      ],
+      "evidence": "recording model snapshot",
+      "lastCheckMatched": true
+    }
+  ],
+  "capturedSeconds": 60.49295973777771,
+  "videoBytes": 2597301,
+  "videoSha256": "cb41004590c339b699bafc01ced133c09646300ae29b4996f79e885ab64fae80",
+  "dedicatedChecks": 9,
+  "sharedChecks": 10,
+  "assetHashesMatch": true,
+  "postQaSignedSourceMatch": true,
+  "fullDecodePassed": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "testSources": {
+    "tests/automation.mjs": "fd564c4f7fdbb86036ea297eccdb2d9ebfc739986818c1cb60d9f5659b580949",
+    "tests/browser-checks.mjs": "55c54734a269de72497eace2bfa05b24494f142c613f406e329ce1393c85127e",
+    "tests/independent-check.cjs": "55b8ecfa3a731f7f9c442b8547942e038b193642ffffa851ee93a402d8000516",
+    "tests/model-test.cjs": "48ede40297934828985cc6a9632d187747563f86e4664df349c81a00d90a3a9d",
+    "tests/pilot-check.mjs": "c676ce9d63d4c23e2a407ad2380db1b18c6db8dad9879be6e420c5c4e37ea9ee",
+    "tests/preview.mjs": "b02b2100037ffad989ebdcb8406c93ade9ae906adbd478c57876a7ff9bd54ce9",
+    "tests/public-enumerate.cjs": "2441ab5884b2b3ecf1c6644cec7dbb0f1c8fea30002588f983128796230e5c29",
+    "tests/recipe.json": "0d870514dea81d1805019df86ceead9b900268d2bcc0fac1a97b18fff5033dc8",
+    "tests/reference.cjs": "00b188f5b2539d760dc506f1e678c59d99efffad77a393e2e33f032dac216dfc"
+  },
+  "sharedOutputDirectory": "visual-fix/qa",
+  "preflightReport": "visual-fix/final-preflight.json",
+  "encodedVisualReview": {
+    "at": 22,
+    "screenshot": "docs/screenshots/encoded-fixed-22s.png",
+    "sha256": "c25068a338faf75b0a9e53d9cb85410dcccc27ca1ac3abd93caa4314a2650f1b",
+    "finding": "Largest six-gate circuit after a genuine failed complete check: ordinary editing changes G1 to NOT and G2 to XOR, second NOT input is OFF, live truth table shows 4/8 with old-check warning, and the complete shortened sidebar is legible."
+  },
+  "layoutFixRevalidation": {
+    "productionSourceCommit": "e4731ca6c81a54c98b0195d8a82edd414c9e88d5",
+    "signingRun": 41694150752,
+    "signedApkSha256": "1c38bb8d06d1b6404633c73c0373e6bdd4c12372571cf637726b0c5f4d6038ec",
+    "initialFailureArchive": "docs/layout-failure-provenance.json",
+    "initialFailureArchiveSha256": "edb8213234fc2597784387752bdcdd9aa2b8da762ca158883bec8f4bed51a0de",
+    "change": "Controls/tip wording only; rules, model, fonts, shared CSS and test assertions unchanged.",
+    "coverage": "All 9 dedicated and all 10 shared checks rerun on newly signed assets, followed by a new 60-second recording; original passed checks were not reused as final evidence.",
+    "preflightArchive": "docs/visual-fix/final-preflight.json",
+    "preflightSha256": "c865cc44f57a2ca0d52adf3fde5826bb618ec329aa5c4682976cfecb60712d73"
+  }
+}

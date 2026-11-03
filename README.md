@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-114-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-115-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -115,6 +115,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [焦距实验室](resource/apps/lens-distance/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 原创单人光学益智游戏：移动透镜和屏幕，调节光阑，让实像的清晰度与亮度同时达标。三个光台各有两张底片，分别管理曝光电量与调整额度；手机方向区和上下双操作区控制。 | <img src="resource/apps/lens-distance/thumb.png" width="180" alt="焦距实验室 界面"> |
 | [围子夺星](resource/apps/liberty-stones/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 观察棋块的气，落子围住对手并率先提满四子；遵守自杀禁入与简单劫，控制手数和停手。 | <img src="resource/apps/liberty-stones/thumb.png" width="180" alt="围子夺星 界面"> |
 | [光室布灯](resource/apps/light-chambers/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 布灯照亮全部白格，灯光不能互相照见，并满足每个编号墙的相邻灯数；编辑后手动检查。 | <img src="resource/apps/light-chambers/thumb.png" width="180" alt="光室布灯 界面"> |
+| [逻辑工坊](resource/apps/logic-workbench/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在固定接线的电路中选择逻辑门，让三个输入的全部八行真值表同时匹配目标，有限次数手动检查。 | <img src="resource/apps/logic-workbench/thumb.png" width="180" alt="逻辑工坊 界面"> |
 | [环线果园](resource/apps/loop-orchard/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在格点之间铺设一条连通闭环，经过必经果树、避开禁水花坛并满足数字区域的边数提示；带编号管件可铺拆和精确撤销，剩余库存允许，须主动启动水泵，三次错误或90秒结束，手机扫码单人操作 | <img src="resource/apps/loop-orchard/thumb.png" width="180" alt="环线果园 界面"> |
 | [磁极仓库](resource/apps/magnetic-warehouse/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 切换磁极，隔空吸引或排斥编号货箱；处理墙体遮挡与同步移动，在有限行动内把每箱送到对应货位，支持手机扫码单人操作 | <img src="resource/apps/magnetic-warehouse/thumb.png" width="180" alt="磁极仓库 界面"> |
 | [量杯转运](resource/apps/measure-pour/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在三只不同容量的量杯间倾倒，每次必须倒满接收杯或倒空来源杯；保持总水量守恒，在有限倾倒次数内让三杯同时达到公开目标。三个配额关卡，支持手机扫码操作。 | <img src="resource/apps/measure-pour/thumb.png" width="180" alt="量杯转运 界面"> |

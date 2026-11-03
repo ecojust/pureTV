@@ -1,0 +1,79 @@
+{
+  "kind": "initial-shared-sidebar-overflow-failure",
+  "productionSourceCommit": "ecaea46f718fd7cb497c075819d260d73f40a452",
+  "signedApkSha256": "108406ce937e40f9e7bc0423e30c3fe496ba7dfb9aff5340d90989980af44fa2",
+  "dedicatedChecksPassed": 9,
+  "sharedChecksPassed": 8,
+  "failedCheck": "resizing keeps canvas and complete sidebar text visible",
+  "failure": "Sidebar content must fit without scrolling",
+  "recordingStarted": false,
+  "inputStateTraceFilePresent": false,
+  "inputStateTraceNote": "The standard tool writes the input trace only after all shared checks. This first run failed before that point; model observations remain in report.json and performance samples are retained.",
+  "reproduction": "Unchanged signed assets reproduce at 960x540: aside clientHeight442, scrollHeight455; tip bottom513.25 exceeds aside bottom509. 1280x720 fits. No DOM/model/clock writes.",
+  "diagnosticCommand": "PURETV_PACKAGE=/workspace/scratch/puretv-qa/package.json node /workspace/scratch/logic-workbench/layout-diagnostic.mjs",
+  "files": [
+    {
+      "source": "/workspace/scratch/logic-workbench/qa/01-title.png",
+      "archive": "docs/qa-initial-failure/01-title.png",
+      "bytes": 307176,
+      "sha256": "35a9b2ffa19b32a5d69aee80d43e8a7a4090dcc6505c58b9c7dbcc4179b6f0ad"
+    },
+    {
+      "source": "/workspace/scratch/logic-workbench/qa/02-gameplay.png",
+      "archive": "docs/qa-initial-failure/02-gameplay.png",
+      "bytes": 287300,
+      "sha256": "ab2dcb89cc84b7f73a571b853a81e6f47857d5b9c2627cf199746132ee75ce4d"
+    },
+    {
+      "source": "/workspace/scratch/logic-workbench/qa/performance-samples.json",
+      "archive": "docs/qa-initial-failure/performance-samples.json",
+      "bytes": 3497,
+      "sha256": "f9347cbea09f858752d7c08a44f82c61921de0b866ff0f9741ad66b8b227fc8d"
+    },
+    {
+      "source": "/workspace/scratch/logic-workbench/qa/report.json",
+      "archive": "docs/qa-initial-failure/report.json",
+      "bytes": 54665,
+      "sha256": "2734c39be1b22f32afed3cb043b3f5d3cc0919567d752a6c08a81322f8d7269e"
+    },
+    {
+      "source": "/workspace/scratch/logic-workbench/layout-diagnostic/layout-1280-2.png",
+      "archive": "docs/layout-diagnostic-initial/layout-1280-2.png",
+      "bytes": 248202,
+      "sha256": "a9da1c1d46d3c2d5a60bd09204c2d7de866df2ac3613acad06e81f4e2f944971"
+    },
+    {
+      "source": "/workspace/scratch/logic-workbench/layout-diagnostic/layout-960-1.png",
+      "archive": "docs/layout-diagnostic-initial/layout-960-1.png",
+      "bytes": 193037,
+      "sha256": "572dbd8df466d9366851c485d8418bb12289a8b63c7e3ecc1b17a5f65ed5f884"
+    },
+    {
+      "source": "/workspace/scratch/logic-workbench/layout-diagnostic/layout-960-3.png",
+      "archive": "docs/layout-diagnostic-initial/layout-960-3.png",
+      "bytes": 193029,
+      "sha256": "8f1fcc2d222d1a6c5fa596cbf6f76d96e1f479553e991a065d617f2cf3efed72"
+    },
+    {
+      "source": "/workspace/scratch/logic-workbench/layout-diagnostic/report.json",
+      "archive": "docs/layout-diagnostic-initial/report.json",
+      "bytes": 43181,
+      "sha256": "3c9657d3d26d62678240023923953588b7919cfbee5c10cdcc7ba5f175099311"
+    },
+    {
+      "source": "/workspace/scratch/logic-workbench/layout-diagnostic.mjs",
+      "archive": "docs/layout-diagnostic-initial/layout-diagnostic.mjs",
+      "bytes": 2198,
+      "sha256": "e33d8e12bc287229167fd8444c0d8eb74c93a60945425032909769ccccb75ac9"
+    },
+    {
+      "source": "/workspace/scratch/logic-workbench/final-preflight.json",
+      "archive": "docs/final-preflight-initial.json",
+      "bytes": 2840,
+      "sha256": "a9990513ccb0bd43501b73c48c14faf6d657ee5a571cf5783b7442aa86b024ab"
+    }
+  ],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "supersedesPriorPreviewAcceptance": "Earlier 960px preview was accepted by visual inspection but did not establish complete no-scroll sidebar fit. The unchanged signed-build diagnostic shows a 13px vertical scroll-height excess, so the prior 960px acceptance is superseded for the original renderer. The original preview images/review reports remain unchanged."
+}
