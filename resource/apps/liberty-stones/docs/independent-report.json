@@ -1,0 +1,153 @@
+{
+  "scope": "Independent flood-fill/ko/AI; ordinary initial-history and goal proofs use create/step without state writes. Three explicitly labelled synthetic tactical boards separately exercise local legality.",
+  "modelSha256": "c3b8313a160a7eff8cc818e57679720e67de7a1a3db04d4f87d444673272c444",
+  "tests": [
+    {
+      "name": "public interface and targets have no solution export",
+      "passed": true
+    },
+    {
+      "name": "level 1: legal alternating history reconstructs board and immediate ko position",
+      "passed": true
+    },
+    {
+      "name": "level 1: exhaustive lower-bound graph and all required earlier AI replies agree",
+      "passed": true
+    },
+    {
+      "name": "level 1: four ordinary placements achieve capture target before AI",
+      "passed": true
+    },
+    {
+      "name": "level 1: repeated ordinary passes naturally lose under public policy or turn limit",
+      "passed": true
+    },
+    {
+      "name": "level 2: legal alternating history reconstructs board and immediate ko position",
+      "passed": true
+    },
+    {
+      "name": "level 2: exhaustive lower-bound graph and all required earlier AI replies agree",
+      "passed": true
+    },
+    {
+      "name": "level 2: four ordinary placements achieve capture target before AI",
+      "passed": true
+    },
+    {
+      "name": "level 2: repeated ordinary passes naturally lose under public policy or turn limit",
+      "passed": true
+    },
+    {
+      "name": "level 3: legal alternating history reconstructs board and immediate ko position",
+      "passed": true
+    },
+    {
+      "name": "level 3: exhaustive lower-bound graph and all required earlier AI replies agree",
+      "passed": true
+    },
+    {
+      "name": "level 3: four ordinary placements achieve capture target before AI",
+      "passed": true
+    },
+    {
+      "name": "level 3: repeated ordinary passes naturally lose under public policy or turn limit",
+      "passed": true
+    },
+    {
+      "name": "occupied A and cursor boundary are free; held action/cancellation require release",
+      "passed": true
+    }
+  ],
+  "syntheticTests": [
+    {
+      "name": "synthetic: a capture with no initial empty neighbor is legal before suicide, and counts four distinct victims",
+      "passed": true
+    },
+    {
+      "name": "synthetic: one adjacent ring group is removed once; a noncapturing surrounded placement is suicide",
+      "passed": true
+    },
+    {
+      "name": "synthetic: immediate simple-ko recapture is free-rejected, then a real pass and AI reply lift that history",
+      "passed": true
+    }
+  ],
+  "proofs": [
+    {
+      "level": 0,
+      "limit": 3,
+      "positions": 141,
+      "legalPlacements": 1673,
+      "passBranches": 141,
+      "unexpectedWin": null,
+      "note": "At final shallow ply, only human capture can award human victory; its following AI reply cannot, so that reply is omitted after verifying the human placement.",
+      "earlierRepliesReplayed": 245,
+      "winningPath": [
+        1,
+        3,
+        21,
+        23
+      ],
+      "naturalPassLoss": {
+        "reason": "opponent",
+        "captures": {
+          "player": 0,
+          "ai": 4
+        },
+        "turns": 9
+      }
+    },
+    {
+      "level": 1,
+      "limit": 3,
+      "positions": 390,
+      "legalPlacements": 8000,
+      "passBranches": 390,
+      "unexpectedWin": null,
+      "note": "At final shallow ply, only human capture can award human victory; its following AI reply cannot, so that reply is omitted after verifying the human placement.",
+      "earlierRepliesReplayed": 605,
+      "winningPath": [
+        1,
+        4,
+        31,
+        34
+      ],
+      "naturalPassLoss": {
+        "reason": "opponent",
+        "captures": {
+          "player": 0,
+          "ai": 4
+        },
+        "turns": 12
+      }
+    },
+    {
+      "level": 2,
+      "limit": 3,
+      "positions": 764,
+      "legalPlacements": 23961,
+      "passBranches": 764,
+      "unexpectedWin": null,
+      "note": "At final shallow ply, only human capture can award human victory; its following AI reply cannot, so that reply is omitted after verifying the human placement.",
+      "earlierRepliesReplayed": 1265,
+      "winningPath": [
+        1,
+        5,
+        43,
+        47
+      ],
+      "naturalPassLoss": {
+        "reason": "limit",
+        "captures": {
+          "player": 0,
+          "ai": 3
+        },
+        "turns": 14
+      }
+    }
+  ],
+  "ordinaryTurnsChecked": 2163,
+  "syntheticTurnsChecked": 4,
+  "passed": true
+}
