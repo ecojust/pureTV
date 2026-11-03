@@ -115,6 +115,7 @@
 | [Tank TV](apps/tank/) | ecojust / 桔子桑 | 0.5.2 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
 | [拉索桥梁](apps/tension-span/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在材料预算内搭建拉索桥，观察索线张力和桥面变形；失败后恢复方案、改索重试，让货车完整驶过桥面，支持手机扫码单人操作 | <img src="apps/tension-span/thumb.png" width="180" alt="拉索桥梁 界面"> |
 | [Tetris TV](apps/tetris/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
+| [四格岛群](apps/tetro-islands/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 每区选出四格I、L、T或S形，所有黑格连通且不能形成2×2黑块，相接区域的四格形状必须不同。 | <img src="apps/tetro-islands/thumb.png" width="180" alt="四格岛群 界面"> |
 | [热流滑翔](apps/thermal-glider/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 驾驶无引擎滑翔翼利用热流穿过有序观测圈，使用空气刹车与襟翼管理能量，满足位置、速度与姿态后实际降落；三条航线，支持手机扫码单人操作 | <img src="apps/thermal-glider/thumb.png" width="180" alt="热流滑翔 界面"> |
 | [潮汐闸门](apps/tide-lock/) | ecojust / 桔子桑 | 0.1.1 | 289.3 KB | 调节两级船闸水位，安全开启闸门，把货船送往高水位出口；管理水量守恒、溢流和搁浅，支持手机扫码单人操作 | <img src="apps/tide-lock/thumb.png" width="180" alt="潮汐闸门 界面"> |
 | [叠牌花园](apps/tile-garden/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 观察双层明牌，配对上方无遮挡且至少一侧开放的同类数字花牌；安排消除顺序，避免死局。 | <img src="apps/tile-garden/thumb.png" width="180" alt="叠牌花园 界面"> |
