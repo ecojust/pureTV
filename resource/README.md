@@ -50,6 +50,7 @@
 | [双岛联结](apps/island-dominoes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 按桥牌的直线长度与目标颜色连结岛屿，避开交叉并用尽所有独立桥牌组成连通网络；支持原片撤销，三关固定布局与90秒时限，手机扫码单人操作 | <img src="apps/island-dominoes/thumb.png" width="180" alt="双岛联结 界面"> |
 | [Jackal TV](apps/jackal/) | ecojust / 桔子桑 | 0.5.2 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
 | [Magic Jewelry TV](apps/jewel/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
+| [万花钥匙](apps/kaleido-keys/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 把有限图符摆进源扇区，旋转并选择万花阶数，让整圈镜像钥匙与目标完全一致；核对左右交换、朝向与空格后验收，四次错误即失败，无倒计时。 | <img src="apps/kaleido-keys/thumb.png" width="180" alt="万花钥匙 界面"> |
 | [灯塔节拍](apps/lantern-rhythm/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 观察方向与短长灯号，再按节拍真实按住并松开按钮，依次点亮三座灯塔；两次主动重听、有限失误与90秒有效时间，支持手机扫码单人操作 | <img src="apps/lantern-rhythm/thumb.png" width="180" alt="灯塔节拍 界面"> |
 | [环线果园](apps/loop-orchard/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在格点之间铺设一条连通闭环，经过必经果树、避开禁水花坛并满足数字区域的边数提示；带编号管件可铺拆和精确撤销，剩余库存允许，须主动启动水泵，三次错误或90秒结束，手机扫码单人操作 | <img src="apps/loop-orchard/thumb.png" width="180" alt="环线果园 界面"> |
 | [磁极仓库](apps/magnetic-warehouse/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 切换磁极，隔空吸引或排斥编号货箱；处理墙体遮挡与同步移动，在有限行动内把每箱送到对应货位，支持手机扫码单人操作 | <img src="apps/magnetic-warehouse/thumb.png" width="180" alt="磁极仓库 界面"> |
