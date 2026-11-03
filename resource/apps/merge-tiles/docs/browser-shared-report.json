@@ -1,0 +1,1457 @@
+{
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "5e37381a00132c7ef649900c3322775f50548fd85f8f1f723849e66e4f09ed47",
+    "game-model.js": "879a5dc9acc3de6e51c5c1240d5a1416fd043b937760f28d6b2b10ce40419478",
+    "game.js": "86b6d5f6f30acbe54cbc9c018df7c35e31382a9c02b001e0dbf6946b0fd51def",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "startedAt": "2026-11-03T15:35:17.217Z",
+  "environment": {
+    "browser": "154.0.8037.57",
+    "renderer": "ANGLE SwiftShader",
+    "viewport": [
+      1280,
+      720
+    ],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "tests": [
+    {
+      "name": "loads title and read-only snapshot",
+      "passed": true,
+      "milliseconds": 25.180187999999816,
+      "details": {
+        "id": "merge-tiles",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 766,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "cells": [
+            2,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            2
+          ],
+          "target": 32,
+          "moveLimit": 30,
+          "movesUsed": 0,
+          "points": 0,
+          "spawnIndex": 0,
+          "nextSpawnValue": 2,
+          "undoTickets": 2,
+          "undos": 0,
+          "history": [],
+          "lastSpawn": null,
+          "lastMerges": [],
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "四向滑动整盘数字，相同数字合并一次；A 撤回但不退步数，每局两张撤回券。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 121,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          300.1,
+          33.299999999999955,
+          599.9000000000001
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "title is rendered",
+      "passed": true,
+      "milliseconds": 2431.921296,
+      "details": {
+        "bounds": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463
+        },
+        "coarseColors": 100,
+        "luminanceDeviation": 36.130428465733225,
+        "note": "Automatic blank-frame heuristic; requires separate human visual review."
+      }
+    },
+    {
+      "name": "Enter starts the normal game",
+      "passed": true,
+      "milliseconds": 213.79302499999994,
+      "details": {
+        "id": "merge-tiles",
+        "phase": "playing",
+        "paused": false,
+        "tick": 6,
+        "elapsed": 0.09999999999999999,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 766,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "cells": [
+            2,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            2
+          ],
+          "target": 32,
+          "moveLimit": 30,
+          "movesUsed": 0,
+          "points": 0,
+          "spawnIndex": 0,
+          "nextSpawnValue": 2,
+          "undoTickets": 2,
+          "undos": 0,
+          "history": [],
+          "lastSpawn": null,
+          "lastMerges": [],
+          "elapsed": 0.09999999999999999,
+          "elapsedCapped": false,
+          "calls": 6,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": 1,
+          "cancelledLast": true,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "四向滑动整盘数字，相同数字合并一次；A 撤回但不退步数，每局两张撤回券。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 121,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          300.1,
+          33.299999999999955,
+          599.9000000000001,
+          950,
+          16.699999999999818,
+          283.3000000000002,
+          383.2999999999997,
+          200,
+          133.4000000000001,
+          199.9000000000001,
+          116.69999999999982,
+          266.7000000000003,
+          16.59999999999991,
+          216.60000000000036,
+          183.39999999999964,
+          166.69999999999982,
+          16.600000000000364,
+          233.39999999999964
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "P freezes gameplay state and tick, P resumes",
+      "passed": true,
+      "milliseconds": 924.0931150000006,
+      "details": {
+        "pausedTick": 6
+      }
+    },
+    {
+      "name": "ordinary movement and action input",
+      "passed": true,
+      "milliseconds": 3511.4232999999995,
+      "details": {
+        "before": {
+          "id": "merge-tiles",
+          "phase": "playing",
+          "paused": false,
+          "tick": 12,
+          "elapsed": 0.19999999999999998,
+          "level": 0,
+          "best": 0,
+          "model": {
+            "schema": 1,
+            "seed": 766,
+            "level": 0,
+            "phase": "playing",
+            "reason": "",
+            "score": 0,
+            "cells": [
+              2,
+              0,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              2,
+              0,
+              0,
+              2
+            ],
+            "target": 32,
+            "moveLimit": 30,
+            "movesUsed": 0,
+            "points": 0,
+            "spawnIndex": 0,
+            "nextSpawnValue": 2,
+            "undoTickets": 2,
+            "undos": 0,
+            "history": [],
+            "lastSpawn": null,
+            "lastMerges": [],
+            "elapsed": 0.19999999999999998,
+            "elapsedCapped": false,
+            "calls": 12,
+            "blockedActions": 0,
+            "inputArmed": false,
+            "cancelEpoch": 3,
+            "cancelledLast": true,
+            "lastHeld": {
+              "a": false,
+              "b": false,
+              "direction": "none"
+            },
+            "lastCommand": "none",
+            "events": [],
+            "terminalReceipt": null,
+            "message": "四向滑动整盘数字，相同数字合并一次；A 撤回但不退步数，每局两张撤回券。"
+          },
+          "renderer": {
+            "kind": "webgl",
+            "drawCalls": 1,
+            "quads": 121,
+            "textureCount": 1,
+            "atlasSize": 1024,
+            "contextLost": false
+          },
+          "frameTimesMs": [
+            300.1,
+            33.299999999999955,
+            599.9000000000001,
+            950,
+            16.699999999999818,
+            283.3000000000002,
+            383.2999999999997,
+            200,
+            133.4000000000001,
+            199.9000000000001,
+            116.69999999999982,
+            266.7000000000003,
+            16.59999999999991,
+            216.60000000000036,
+            183.39999999999964,
+            166.69999999999982,
+            16.600000000000364,
+            233.39999999999964,
+            216.59999999999945,
+            33.400000000000546,
+            250
+          ],
+          "connection": {
+            "phoneSeen": false,
+            "disconnected": false
+          }
+        },
+        "after": {
+          "id": "merge-tiles",
+          "phase": "won",
+          "paused": false,
+          "tick": 189,
+          "elapsed": 3.1499999999999937,
+          "level": 0,
+          "best": 100,
+          "model": {
+            "schema": 1,
+            "seed": 766,
+            "level": 0,
+            "phase": "won",
+            "reason": "",
+            "score": 100,
+            "cells": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              2,
+              0,
+              0,
+              32,
+              2
+            ],
+            "target": 32,
+            "moveLimit": 30,
+            "movesUsed": 14,
+            "points": 120,
+            "spawnIndex": 13,
+            "nextSpawnValue": 2,
+            "undoTickets": 2,
+            "undos": 0,
+            "history": [
+              {
+                "cells": [
+                  2,
+                  0,
+                  0,
+                  2,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  2,
+                  0,
+                  0,
+                  2
+                ],
+                "spawnIndex": 0,
+                "points": 0,
+                "lastSpawn": null,
+                "lastMerges": []
+              },
+              {
+                "cells": [
+                  4,
+                  0,
+                  0,
+                  4,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  2,
+                  0,
+                  0,
+                  0
+                ],
+                "spawnIndex": 1,
+                "points": 8,
+                "lastSpawn": {
+                  "index": 12,
+                  "value": 2
+                },
+                "lastMerges": [
+                  {
+                    "index": 0,
+                    "value": 4
+                  },
+                  {
+                    "index": 3,
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  8,
+                  0,
+                  0,
+                  0,
+                  2,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  2,
+                  0,
+                  0,
+                  0
+                ],
+                "spawnIndex": 2,
+                "points": 16,
+                "lastSpawn": {
+                  "index": 4,
+                  "value": 2
+                },
+                "lastMerges": [
+                  {
+                    "index": 0,
+                    "value": 8
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  8,
+                  0,
+                  0,
+                  0,
+                  4,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  4,
+                  0,
+                  0,
+                  0
+                ],
+                "spawnIndex": 3,
+                "points": 20,
+                "lastSpawn": {
+                  "index": 12,
+                  "value": 4
+                },
+                "lastMerges": [
+                  {
+                    "index": 4,
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  8,
+                  0,
+                  0,
+                  0,
+                  8,
+                  2,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "spawnIndex": 4,
+                "points": 28,
+                "lastSpawn": {
+                  "index": 5,
+                  "value": 2
+                },
+                "lastMerges": [
+                  {
+                    "index": 4,
+                    "value": 8
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  2,
+                  0,
+                  16,
+                  2,
+                  0,
+                  0
+                ],
+                "spawnIndex": 5,
+                "points": 44,
+                "lastSpawn": {
+                  "index": 10,
+                  "value": 2
+                },
+                "lastMerges": [
+                  {
+                    "index": 12,
+                    "value": 16
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  16,
+                  2,
+                  2,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  2,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "spawnIndex": 6,
+                "points": 44,
+                "lastSpawn": {
+                  "index": 11,
+                  "value": 2
+                },
+                "lastMerges": []
+              },
+              {
+                "cells": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  4,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  16,
+                  2,
+                  2,
+                  2
+                ],
+                "spawnIndex": 7,
+                "points": 44,
+                "lastSpawn": {
+                  "index": 4,
+                  "value": 4
+                },
+                "lastMerges": []
+              },
+              {
+                "cells": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  4,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  16,
+                  4,
+                  2,
+                  2
+                ],
+                "spawnIndex": 8,
+                "points": 48,
+                "lastSpawn": {
+                  "index": 15,
+                  "value": 2
+                },
+                "lastMerges": [
+                  {
+                    "index": 13,
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  2,
+                  4,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  16,
+                  4,
+                  4
+                ],
+                "spawnIndex": 9,
+                "points": 52,
+                "lastSpawn": {
+                  "index": 6,
+                  "value": 2
+                },
+                "lastMerges": [
+                  {
+                    "index": 15,
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  0,
+                  2,
+                  0,
+                  0,
+                  2,
+                  4,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  16,
+                  8,
+                  0,
+                  0
+                ],
+                "spawnIndex": 10,
+                "points": 60,
+                "lastSpawn": {
+                  "index": 1,
+                  "value": 2
+                },
+                "lastMerges": [
+                  {
+                    "index": 13,
+                    "value": 8
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  2,
+                  4,
+                  0,
+                  0,
+                  2,
+                  4,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  16,
+                  8,
+                  0,
+                  0
+                ],
+                "spawnIndex": 11,
+                "points": 60,
+                "lastSpawn": {
+                  "index": 1,
+                  "value": 4
+                },
+                "lastMerges": []
+              },
+              {
+                "cells": [
+                  0,
+                  0,
+                  0,
+                  2,
+                  0,
+                  0,
+                  0,
+                  0,
+                  4,
+                  8,
+                  0,
+                  0,
+                  16,
+                  8,
+                  0,
+                  0
+                ],
+                "spawnIndex": 12,
+                "points": 72,
+                "lastSpawn": {
+                  "index": 3,
+                  "value": 2
+                },
+                "lastMerges": [
+                  {
+                    "index": 8,
+                    "value": 4
+                  },
+                  {
+                    "index": 9,
+                    "value": 8
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  4,
+                  0,
+                  0,
+                  2,
+                  16,
+                  16,
+                  0,
+                  2
+                ],
+                "spawnIndex": 13,
+                "points": 88,
+                "lastSpawn": {
+                  "index": 11,
+                  "value": 2
+                },
+                "lastMerges": [
+                  {
+                    "index": 13,
+                    "value": 16
+                  }
+                ]
+              }
+            ],
+            "lastSpawn": null,
+            "lastMerges": [
+              {
+                "index": 14,
+                "value": 32
+              }
+            ],
+            "elapsed": 3.1499999999999937,
+            "elapsedCapped": false,
+            "calls": 189,
+            "blockedActions": 0,
+            "inputArmed": true,
+            "cancelEpoch": 3,
+            "cancelledLast": false,
+            "lastHeld": {
+              "a": false,
+              "b": false,
+              "direction": "right"
+            },
+            "lastCommand": "right",
+            "events": [
+              {
+                "type": "win",
+                "call": 189,
+                "direction": "right",
+                "mergePoints": 32,
+                "movesUsed": 14
+              }
+            ],
+            "terminalReceipt": {
+              "cause": "success",
+              "level": 0,
+              "call": 189,
+              "elapsed": 3.1499999999999937,
+              "cells": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                4,
+                2,
+                0,
+                0,
+                32,
+                2
+              ],
+              "movesUsed": 14,
+              "points": 120,
+              "spawnIndex": 13,
+              "lastSpawn": null,
+              "undoTickets": 2,
+              "score": 100,
+              "phase": "won",
+              "reason": ""
+            },
+            "message": "目标数字已汇聚完成。"
+          },
+          "renderer": {
+            "kind": "webgl",
+            "drawCalls": 1,
+            "quads": 129,
+            "textureCount": 1,
+            "atlasSize": 1024,
+            "contextLost": false
+          },
+          "frameTimesMs": [
+            300.1,
+            33.299999999999955,
+            599.9000000000001,
+            950,
+            16.699999999999818,
+            283.3000000000002,
+            383.2999999999997,
+            200,
+            133.4000000000001,
+            199.9000000000001,
+            116.69999999999982,
+            266.7000000000003,
+            16.59999999999991,
+            216.60000000000036,
+            183.39999999999964,
+            166.69999999999982,
+            16.600000000000364,
+            233.39999999999964,
+            216.59999999999945,
+            33.400000000000546,
+            250,
+            283.3000000000002,
+            266.6999999999998,
+            66.69999999999982,
+            83.30000000000018,
+            133.30000000000018,
+            100,
+            16.599999999999454,
+            83.30000000000018,
+            100.10000000000036,
+            16.599999999999454,
+            66.69999999999982,
+            66.60000000000036,
+            33.399999999999636,
+            66.70000000000073,
+            50,
+            66.59999999999945,
+            33.400000000000546,
+            99.89999999999964,
+            83.39999999999964,
+            66.70000000000073,
+            49.899999999999636,
+            16.699999999999818,
+            83.40000000000055,
+            83.19999999999982,
+            66.69999999999982,
+            16.699999999999818,
+            99.90000000000055,
+            33.399999999999636,
+            83.39999999999964,
+            16.700000000000728,
+            99.89999999999964,
+            50,
+            116.70000000000073,
+            16.599999999998545,
+            100.10000000000036,
+            83.30000000000109,
+            83.29999999999927,
+            33.29999999999927,
+            116.70000000000073,
+            83.29999999999927,
+            66.70000000000073,
+            33.29999999999927,
+            83.40000000000146,
+            66.59999999999854,
+            50,
+            33.400000000001455
+          ],
+          "connection": {
+            "phoneSeen": false,
+            "disconnected": false
+          }
+        }
+      }
+    },
+    {
+      "name": "game-specific normal-play assertions",
+      "passed": true,
+      "milliseconds": 0.2562980000002426
+    },
+    {
+      "name": "gameplay frame is visible",
+      "passed": true,
+      "milliseconds": 2005.2751150000004,
+      "details": {
+        "bounds": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463
+        },
+        "coarseColors": 102,
+        "luminanceDeviation": 36.7636061550656,
+        "note": "Automatic blank-frame heuristic; requires separate human visual review."
+      }
+    },
+    {
+      "name": "R restarts with clean simulation state",
+      "passed": true,
+      "milliseconds": 107.17806500000006,
+      "details": {
+        "id": "merge-tiles",
+        "phase": "playing",
+        "paused": false,
+        "tick": 6,
+        "elapsed": 0.09999999999999999,
+        "level": 0,
+        "best": 100,
+        "model": {
+          "schema": 1,
+          "seed": 766,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "cells": [
+            2,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            2
+          ],
+          "target": 32,
+          "moveLimit": 30,
+          "movesUsed": 0,
+          "points": 0,
+          "spawnIndex": 0,
+          "nextSpawnValue": 2,
+          "undoTickets": 2,
+          "undos": 0,
+          "history": [],
+          "lastSpawn": null,
+          "lastMerges": [],
+          "elapsed": 0.09999999999999999,
+          "elapsedCapped": false,
+          "calls": 6,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": 4,
+          "cancelledLast": true,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "四向滑动整盘数字，相同数字合并一次；A 撤回但不退步数，每局两张撤回券。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 121,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          300.1,
+          33.299999999999955,
+          599.9000000000001,
+          950,
+          16.699999999999818,
+          283.3000000000002,
+          383.2999999999997,
+          200,
+          133.4000000000001,
+          199.9000000000001,
+          116.69999999999982,
+          266.7000000000003,
+          16.59999999999991,
+          216.60000000000036,
+          183.39999999999964,
+          166.69999999999982,
+          16.600000000000364,
+          233.39999999999964,
+          216.59999999999945,
+          33.400000000000546,
+          250,
+          283.3000000000002,
+          266.6999999999998,
+          66.69999999999982,
+          83.30000000000018,
+          133.30000000000018,
+          100,
+          16.599999999999454,
+          83.30000000000018,
+          100.10000000000036,
+          16.599999999999454,
+          66.69999999999982,
+          66.60000000000036,
+          33.399999999999636,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          33.400000000000546,
+          99.89999999999964,
+          83.39999999999964,
+          66.70000000000073,
+          49.899999999999636,
+          16.699999999999818,
+          83.40000000000055,
+          83.19999999999982,
+          66.69999999999982,
+          16.699999999999818,
+          99.90000000000055,
+          33.399999999999636,
+          83.39999999999964,
+          16.700000000000728,
+          99.89999999999964,
+          50,
+          116.70000000000073,
+          16.599999999998545,
+          100.10000000000036,
+          83.30000000000109,
+          83.29999999999927,
+          33.29999999999927,
+          116.70000000000073,
+          83.29999999999927,
+          66.70000000000073,
+          33.29999999999927,
+          83.40000000000146,
+          66.59999999999854,
+          50,
+          33.400000000001455,
+          66.59999999999854,
+          216.70000000000073,
+          166.70000000000073,
+          133.29999999999927,
+          183.29999999999927,
+          299.90000000000146,
+          200.09999999999854,
+          16.600000000000364,
+          100,
+          366.60000000000036,
+          33.399999999999636,
+          116.70000000000073,
+          283.2999999999993
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "resizing keeps canvas and complete sidebar text visible",
+      "passed": true,
+      "milliseconds": 2901.7346419999994,
+      "details": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "sidebar": {
+            "visible": true,
+            "bounds": {
+              "left": 749,
+              "top": 65,
+              "right": 944,
+              "bottom": 509
+            },
+            "scrollTop": 0,
+            "clientHeight": 442,
+            "scrollHeight": 442,
+            "clientWidth": 193,
+            "scrollWidth": 193,
+            "tipText": "2 2 2 2 一步变成4 4，不会变8。无变化不扣步数。两张撤回券会恢复出块进度；最后一步形成目标仍能胜利。新块落点由滑动后的空位决定。",
+            "expectedTip": "2 2 2 2 一步变成4 4，不会变8。无变化不扣步数。两张撤回券会恢复出块进度；最后一步形成目标仍能胜利。新块落点由滑动后的空位决定。",
+            "texts": [
+              {
+                "text": "手机与电视连接同一 Wi-Fi",
+                "rects": [
+                  {
+                    "left": 870,
+                    "top": 134.5,
+                    "right": 930,
+                    "bottom": 148.5
+                  },
+                  {
+                    "left": 870,
+                    "top": 148.5,
+                    "right": 925.484375,
+                    "bottom": 162.5
+                  }
+                ]
+              },
+              {
+                "text": "四向压实与合并",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 209.296875,
+                    "right": 866,
+                    "bottom": 224.296875
+                  }
+                ]
+              },
+              {
+                "text": "空格、Z、确认 / 手机右侧：撤回",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 233,
+                    "right": 926.109375,
+                    "bottom": 248
+                  },
+                  {
+                    "left": 789,
+                    "top": 248.390625,
+                    "right": 811,
+                    "bottom": 263.390625
+                  }
+                ]
+              },
+              {
+                "text": "B 无操作",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 272.078125,
+                    "right": 832.015625,
+                    "bottom": 287.078125
+                  }
+                ]
+              },
+              {
+                "text": "P 暂停　R 重试遥控器确认开始 / A，播放键暂停",
+                "rects": [
+                  {
+                    "left": 758,
+                    "top": 297.78125,
+                    "right": 825.484375,
+                    "bottom": 311.78125
+                  },
+                  {
+                    "left": 758,
+                    "top": 311.78125,
+                    "right": 903.3125,
+                    "bottom": 325.78125
+                  }
+                ]
+              },
+              {
+                "text": "2 2 2 2 一步变成4 4，不会变8。无变化不扣步数。两张撤回券会恢复出块进度；最后一步形成目标仍能胜利。新块落点由滑动后的空位决定。",
+                "rects": [
+                  {
+                    "left": 801.5,
+                    "top": 338.78125,
+                    "right": 919.5625,
+                    "bottom": 353.78125
+                  },
+                  {
+                    "left": 765,
+                    "top": 354.171875,
+                    "right": 925.296875,
+                    "bottom": 369.171875
+                  },
+                  {
+                    "left": 765,
+                    "top": 369.5625,
+                    "right": 919,
+                    "bottom": 384.5625
+                  },
+                  {
+                    "left": 765,
+                    "top": 384.953125,
+                    "right": 919,
+                    "bottom": 399.953125
+                  },
+                  {
+                    "left": 765,
+                    "top": 400.34375,
+                    "right": 864,
+                    "bottom": 415.34375
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "sidebar": {
+            "visible": true,
+            "bounds": {
+              "left": 1024,
+              "top": 94,
+              "right": 1252,
+              "bottom": 672
+            },
+            "scrollTop": 0,
+            "clientHeight": 576,
+            "scrollHeight": 576,
+            "clientWidth": 226,
+            "scrollWidth": 226,
+            "tipText": "2 2 2 2 一步变成4 4，不会变8。无变化不扣步数。两张撤回券会恢复出块进度；最后一步形成目标仍能胜利。新块落点由滑动后的空位决定。",
+            "expectedTip": "2 2 2 2 一步变成4 4，不会变8。无变化不扣步数。两张撤回券会恢复出块进度；最后一步形成目标仍能胜利。新块落点由滑动后的空位决定。",
+            "texts": [
+              {
+                "text": "手机与电视连接同一 Wi-Fi",
+                "rects": [
+                  {
+                    "left": 1163,
+                    "top": 173.5,
+                    "right": 1233,
+                    "bottom": 187.5
+                  },
+                  {
+                    "left": 1163,
+                    "top": 187.5,
+                    "right": 1208.484375,
+                    "bottom": 201.5
+                  }
+                ]
+              },
+              {
+                "text": "四向压实与合并",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 256.296875,
+                    "right": 1143,
+                    "bottom": 271.296875
+                  }
+                ]
+              },
+              {
+                "text": "空格、Z、确认 / 手机右侧：撤回",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 284.296875,
+                    "right": 1225.109375,
+                    "bottom": 299.296875
+                  }
+                ]
+              },
+              {
+                "text": "B 无操作",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 312.296875,
+                    "right": 1109.015625,
+                    "bottom": 327.296875
+                  }
+                ]
+              },
+              {
+                "text": "P 暂停　R 重试遥控器确认开始 / A，播放键暂停",
+                "rects": [
+                  {
+                    "left": 1035,
+                    "top": 338,
+                    "right": 1102.484375,
+                    "bottom": 352
+                  },
+                  {
+                    "left": 1035,
+                    "top": 352,
+                    "right": 1180.3125,
+                    "bottom": 366
+                  }
+                ]
+              },
+              {
+                "text": "2 2 2 2 一步变成4 4，不会变8。无变化不扣步数。两张撤回券会恢复出块进度；最后一步形成目标仍能胜利。新块落点由滑动后的空位决定。",
+                "rects": [
+                  {
+                    "left": 1078.5,
+                    "top": 379,
+                    "right": 1218.5625,
+                    "bottom": 394
+                  },
+                  {
+                    "left": 1042,
+                    "top": 394.390625,
+                    "right": 1224.296875,
+                    "bottom": 409.390625
+                  },
+                  {
+                    "left": 1042,
+                    "top": 409.78125,
+                    "right": 1229,
+                    "bottom": 424.78125
+                  },
+                  {
+                    "left": 1042,
+                    "top": 425.171875,
+                    "right": 1218,
+                    "bottom": 440.171875
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "no page, console or resource errors",
+      "passed": true,
+      "milliseconds": 0.2564280000005965
+    }
+  ],
+  "screenshots": [
+    "/workspace/scratch/merge-tiles/qa/01-title.png",
+    "/workspace/scratch/merge-tiles/qa/02-gameplay.png",
+    "/workspace/scratch/merge-tiles/qa/resize-960.png",
+    "/workspace/scratch/merge-tiles/qa/resize-1280.png"
+  ],
+  "uniqueRulesVerified": true,
+  "modelTestsExecuted": false,
+  "visualReviewCompleted": false,
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 45,
+    "rafIntervalMs": {
+      "count": 45,
+      "min": 16.599999999998545,
+      "median": 66.70000000000073,
+      "p95": 116.70000000000073,
+      "max": 266.6999999999998,
+      "mean": 70.3688888888889
+    },
+    "webglDrawCalls": {
+      "count": 45,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 45,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "recording": {
+    "video": "/workspace/scratch/merge-tiles/qa/recording/gameplay.mp4",
+    "bytes": 2177801,
+    "capturedSeconds": 55.73449516296387,
+    "frames": 292,
+    "manifest": "/workspace/scratch/merge-tiles/qa/recording/recording.json"
+  },
+  "sharedRegressionPassed": true,
+  "finishedAt": "2026-11-03T15:36:57.049Z"
+}

@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-80-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-81-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -107,6 +107,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [磁极仓库](resource/apps/magnetic-warehouse/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 切换磁极，隔空吸引或排斥编号货箱；处理墙体遮挡与同步移动，在有限行动内把每箱送到对应货位，支持手机扫码单人操作 | <img src="resource/apps/magnetic-warehouse/thumb.png" width="180" alt="磁极仓库 界面"> |
 | [量杯转运](resource/apps/measure-pour/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在三只不同容量的量杯间倾倒，每次必须倒满接收杯或倒空来源杯；保持总水量守恒，在有限倾倒次数内让三杯同时达到公开目标。三个配额关卡，支持手机扫码操作。 | <img src="resource/apps/measure-pour/thumb.png" width="180" alt="量杯转运 界面"> |
 | [记忆陈列](resource/apps/memory-gallery/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 记住短暂亮出的图形与编号，在有限错配次数内翻开全部相同展品。支持电视遥控器与局域网手机手柄。 | <img src="resource/apps/memory-gallery/thumb.png" width="180" alt="记忆陈列 界面"> |
+| [数字汇聚](resource/apps/merge-tiles/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 滑动棋盘合并相同数字，每次滑动只合并一次；管理确定生成的新砖和有限撤销，在步数内达成32、64、128目标。 | <img src="resource/apps/merge-tiles/thumb.png" width="180" alt="数字汇聚 界面"> |
 | [节拍闸道](resource/apps/metronome-gates/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 先排方向和等待，按固定节拍穿过周期闸门；在拍数预算内收齐标记并抵达出口，B 可撤回未执行的队尾命令。 | <img src="resource/apps/metronome-gates/thumb.png" width="180" alt="节拍闸道 界面"> |
 | [雷纹勘探](resource/apps/mine-survey/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 依据周围八格的雷数线索，逐步勘明所有安全格；旗标只作推理笔记，探到雷即失败。三张可凭公开线索推理的地图，支持手机扫码单人操作。 | <img src="resource/apps/mine-survey/thumb.png" width="180" alt="雷纹勘探 界面"> |
 | [纹幕校准](resource/apps/moire-atelier/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 滑动并旋转两层周期纹幕，让五个测点的当前明暗同时符合目标；参考可见定位标记，在限时与验收次数内完成三种光学校准。 | <img src="resource/apps/moire-atelier/thumb.png" width="180" alt="纹幕校准 界面"> |
