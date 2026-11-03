@@ -1,0 +1,262 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T14:00:55.600Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "046ed607e11e9a51add1556ef42a5006a7c0325d0418cd6de3aaccdd55ee9805",
+    "game-model.js": "f82d3030d3055d4c01a11e3c8d8241937e6ab6d67f7d73d8dc400648d8d77a87",
+    "game.js": "774bb5ed0f6f7a3177c45b68f5a6751a3ec9d1b09ae7fd2e1944012877b900c4",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "actual initial board, legal hints and both viewport layouts",
+      "passed": true,
+      "milliseconds": 6285.047158,
+      "screenshots": [
+        "/workspace/scratch/reversi-relay/browser-checks/initial-1280.png",
+        "/workspace/scratch/reversi-relay/browser-checks/initial-960.png"
+      ],
+      "state": {
+        "id": "reversi-relay",
+        "phase": "playing",
+        "paused": false,
+        "tick": 146,
+        "elapsed": 2.4333333333333296,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 751,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "board": [
+            2,
+            1,
+            1,
+            1,
+            1,
+            0,
+            2,
+            1,
+            1,
+            1,
+            1,
+            0,
+            2,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            2,
+            1,
+            2,
+            1,
+            2,
+            2,
+            0,
+            2,
+            2,
+            1,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "cursor": 0,
+          "legalMoves": [
+            11,
+            26,
+            31,
+            33,
+            34,
+            35
+          ],
+          "counts": {
+            "player": 13,
+            "opponent": 15,
+            "empty": 8
+          },
+          "playerMoves": 0,
+          "aiMoves": 0,
+          "movesPlayed": 0,
+          "playerPasses": 0,
+          "aiPasses": 0,
+          "lastPlayerMove": null,
+          "lastAiMove": null,
+          "receipts": [],
+          "terminalReceipt": null,
+          "elapsed": 2.4333333333333296,
+          "elapsedCapped": false,
+          "calls": 146,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "白棋是你；方向选格，A 夹住绿棋翻面，无棋可下时 B 让行。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 267,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          766.7,
+          33.39999999999998,
+          616.5999999999999,
+          800,
+          149.9000000000001,
+          150.0999999999999,
+          200,
+          183.30000000000018,
+          83.39999999999964,
+          16.600000000000364,
+          83.39999999999964,
+          133.30000000000018,
+          66.59999999999991,
+          16.800000000000182,
+          183.29999999999973,
+          49.90000000000009,
+          83.40000000000009,
+          16.59999999999991,
+          50.09999999999991,
+          16.600000000000364,
+          16.699999999999818,
+          16.699999999999818,
+          283.3000000000002,
+          100,
+          16.699999999999818,
+          83.30000000000018,
+          16.600000000000364,
+          33.399999999999636,
+          399.89999999999964,
+          16.700000000000728,
+          150,
+          66.69999999999982,
+          100,
+          16.699999999999818,
+          99.89999999999964,
+          83.40000000000055,
+          33.30000000000018,
+          50,
+          50,
+          33.399999999999636,
+          99.89999999999964,
+          33.30000000000018,
+          100,
+          83.30000000000018
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "level 1: win by actual bracketed flips against deterministic replies",
+      "passed": true,
+      "milliseconds": 11210.446742,
+      "level": 0,
+      "counts": {
+        "player": 21,
+        "opponent": 15,
+        "empty": 0
+      },
+      "playerMoves": 5,
+      "aiMoves": 3,
+      "aiPasses": 1,
+      "screenshot": "/workspace/scratch/reversi-relay/browser-checks/level-1-won.png"
+    },
+    {
+      "name": "level 2: win by actual bracketed flips against deterministic replies",
+      "passed": true,
+      "milliseconds": 10729.198294000002,
+      "level": 1,
+      "counts": {
+        "player": 20,
+        "opponent": 16,
+        "empty": 0
+      },
+      "playerMoves": 6,
+      "aiMoves": 3,
+      "aiPasses": 2,
+      "screenshot": "/workspace/scratch/reversi-relay/browser-checks/level-2-won.png"
+    },
+    {
+      "name": "level 3: win by actual bracketed flips against deterministic replies",
+      "passed": true,
+      "milliseconds": 12299.282716000002,
+      "level": 2,
+      "counts": {
+        "player": 31,
+        "opponent": 5,
+        "empty": 0
+      },
+      "playerMoves": 7,
+      "aiMoves": 3,
+      "aiPasses": 3,
+      "screenshot": "/workspace/scratch/reversi-relay/browser-checks/level-3-won.png"
+    },
+    {
+      "name": "poor but legal ordinary choices lose and terminal board freezes",
+      "passed": true,
+      "milliseconds": 8102.6971790000025,
+      "counts": {
+        "player": 5,
+        "opponent": 31,
+        "empty": 0
+      }
+    },
+    {
+      "name": "natural player pass consumes no disc and allows the real opponent reply",
+      "passed": true,
+      "milliseconds": 7278.941028000001,
+      "playerPasses": 1,
+      "counts": {
+        "player": 7,
+        "opponent": 27,
+        "empty": 2
+      },
+      "screenshot": "/workspace/scratch/reversi-relay/browser-checks/after-natural-pass.png"
+    },
+    {
+      "name": "illegal placement and premature pass leave board and turn counts unchanged",
+      "passed": true,
+      "milliseconds": 2382.057059999999,
+      "blockedActions": 2
+    },
+    {
+      "name": "held A, pause and resume never synthesize an extra player turn",
+      "passed": true,
+      "milliseconds": 6021.850433,
+      "playerMoves": 2
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T14:02:00.149Z"
+}
