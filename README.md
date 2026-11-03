@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-71-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-72-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -115,6 +115,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [压力封装](resource/apps/pressure-seal/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 控制加热与泄压，让三种包装依次在目标压力内完成密封；松手后的余热仍会改变压力。 | <img src="resource/apps/pressure-seal/thumb.png" width="180" alt="压力封装 界面"> |
 | [镜光接力](resource/apps/prism-relay/) | ecojust / 桔子桑 | 0.1.1 | 285.3 KB | 旋转镜片与分色棱镜，让彩色光束准确抵达接收器，包含反射、分色与合光三关，支持手机扫码单人操作 | <img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"> |
 | [脉冲储库](resource/apps/pulse-vault/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 按住收集有限脉冲，选择档位向顺序门锁放电；控制储能溢出和热峰，开启四门并保留终储备，完成三种供能关卡。 | <img src="resource/apps/pulse-vault/thumb.png" width="180" alt="脉冲储库 界面"> |
+| [星盘皇后](resource/apps/queen-constellation/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在六、七、八阶星盘上摆放互不攻击的皇后，遵守固定皇后和禁放格限制；允许调整并观察行、列、对角线冲突，用三次手动检查完成布局，支持手机扫码单人操作。 | <img src="resource/apps/queen-constellation/thumb.png" width="180" alt="星盘皇后 界面"> |
 | [四季蓄水](resource/apps/reservoir-seasons/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 根据四季天气预报向居民、农田和生态河流配水；撤销尚未提交的计划，守住居民每季用水底线，并分别完成三方年度目标。 | <img src="resource/apps/reservoir-seasons/thumb.png" width="180" alt="四季蓄水 界面"> |
 | [共振浮桥](resource/apps/resonance-bridge/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 调节三块浮桥的频率和相位，派遣行人在持续安全接触时过桥；控制共振增幅，完成三个渡口关卡。 | <img src="resource/apps/resonance-bridge/thumb.png" width="180" alt="共振浮桥 界面"> |
 | [翻面棋局](resource/apps/reversi-relay/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 挑战三道6×6翻面棋残局，用八方向夹击翻转棋子，与确定性电脑对手轮流落子；无合法落点时让行，终局以棋子多数获胜，支持手机扫码单人操作。 | <img src="resource/apps/reversi-relay/thumb.png" width="180" alt="翻面棋局 界面"> |
