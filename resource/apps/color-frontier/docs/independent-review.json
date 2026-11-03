@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "method": "Independent four-neighbor flood closure and BFS over visible cells; ordinary create/step input replay; terminal undo freeze.",
+  "layouts": [
+    {
+      "level": 0,
+      "shortestPaints": 4,
+      "searchStates": 37,
+      "phase": "won",
+      "owned": 25,
+      "ordinaryUndoRestores": true,
+      "lastAllowedWinMoves": 6
+    },
+    {
+      "level": 1,
+      "shortestPaints": 6,
+      "searchStates": 138,
+      "phase": "won",
+      "owned": 36,
+      "ordinaryUndoRestores": true,
+      "lastAllowedWinMoves": 8
+    },
+    {
+      "level": 2,
+      "shortestPaints": 7,
+      "searchStates": 90,
+      "phase": "won",
+      "owned": 36,
+      "ordinaryUndoRestores": true,
+      "lastAllowedWinMoves": 9
+    }
+  ],
+  "reviewer": "independent_review agent",
+  "scope": "Independent rule solver and ordinary pure-model input replay; browser reports are separate.",
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "85d7d12738403b17ee86102e0a7b04d7faa76d753aac04abc1197aa219747fb4",
+    "docs/model-contract.md": "647961242f4c619b1c4163e5389cc5b6391700cb5e881401c7f88fd2ddffb745",
+    "tests/independent-check.mjs": "b9f6e3cc2209a1faa9823a29088ae3020cd0928e45e1e565374c92e6ea917b3f",
+    "tests/automation.mjs": "8c1fa73170a10edc0b79dcc9e8aa6d4045cb8c8ebc9a30e73316f039392e55a3"
+  },
+  "findings": [],
+  "reviewNotes": [
+    "Initial owned mask is independently recomputed from the corner component.",
+    "Every recolor closure is independently compared with four-neighbor flood fill.",
+    "Undo restores the complete board without refund; each layout also wins exactly on its final allowed paint.",
+    "Terminal undo preserves the entire state.",
+    "No model helpers are used by the visible-state planner."
+  ],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}
