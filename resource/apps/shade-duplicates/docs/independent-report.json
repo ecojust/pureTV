@@ -1,0 +1,148 @@
+{
+  "scope": "Independent exhaustive row-mask/column-value/white-connectivity search, followed by ordinary create/step toggles and manual checks. No shipped answers or model state writes.",
+  "modelSha256": "1a1b9bff1673c1328229ddf509ae3daea590c6dcad60d56d09203ca04fecbf3a",
+  "tests": [
+    {
+      "name": "public layouts carry only clues, never an expected mask or black count",
+      "passed": true
+    },
+    {
+      "name": "level 1: exhaustive standard-rule search proves exactly one assignment",
+      "passed": true
+    },
+    {
+      "name": "level 1: ordinary toggles become valid but only manual B wins",
+      "passed": true
+    },
+    {
+      "name": "level 1: exact last failed-check opportunity still accepts a valid board",
+      "passed": true
+    },
+    {
+      "name": "level 1: unchanged invalid board naturally spends three checks and freezes",
+      "passed": true
+    },
+    {
+      "name": "level 2: exhaustive standard-rule search proves exactly one assignment",
+      "passed": true
+    },
+    {
+      "name": "level 2: ordinary toggles become valid but only manual B wins",
+      "passed": true
+    },
+    {
+      "name": "level 2: exact last failed-check opportunity still accepts a valid board",
+      "passed": true
+    },
+    {
+      "name": "level 2: unchanged invalid board naturally spends three checks and freezes",
+      "passed": true
+    },
+    {
+      "name": "level 3: exhaustive standard-rule search proves exactly one assignment",
+      "passed": true
+    },
+    {
+      "name": "level 3: ordinary toggles become valid but only manual B wins",
+      "passed": true
+    },
+    {
+      "name": "level 3: exact last failed-check opportunity still accepts a valid board",
+      "passed": true
+    },
+    {
+      "name": "level 3: unchanged invalid board naturally spends three checks and freezes",
+      "passed": true
+    },
+    {
+      "name": "ordinary toggles expose adjacent black pairs and a disconnected white island independently",
+      "passed": true
+    },
+    {
+      "name": "an ordinarily all-black board reports no white region and remains invalid until checked",
+      "passed": true
+    },
+    {
+      "name": "B outranks A; held toggles and cancellation require an actual release",
+      "passed": true
+    }
+  ],
+  "proofs": [
+    {
+      "level": 0,
+      "size": 4,
+      "solutionCount": 1,
+      "blackCount": 5,
+      "solution": [
+        0,
+        3,
+        6,
+        13,
+        15
+      ],
+      "nodes": 11,
+      "completeAssignments": 2,
+      "rowOptions": [
+        1,
+        5,
+        8,
+        5
+      ]
+    },
+    {
+      "level": 1,
+      "size": 5,
+      "solutionCount": 1,
+      "blackCount": 7,
+      "solution": [
+        0,
+        6,
+        9,
+        13,
+        15,
+        17,
+        24
+      ],
+      "nodes": 70,
+      "completeAssignments": 12,
+      "rowOptions": [
+        7,
+        2,
+        7,
+        2,
+        7
+      ]
+    },
+    {
+      "level": 2,
+      "size": 6,
+      "solutionCount": 1,
+      "blackCount": 10,
+      "solution": [
+        3,
+        7,
+        11,
+        12,
+        16,
+        19,
+        21,
+        29,
+        30,
+        32
+      ],
+      "nodes": 181,
+      "completeAssignments": 24,
+      "rowOptions": [
+        9,
+        7,
+        7,
+        5,
+        12,
+        13
+      ]
+    }
+  ],
+  "ordinaryToggles": 71,
+  "ordinarySubmissions": 25,
+  "passed": true
+}

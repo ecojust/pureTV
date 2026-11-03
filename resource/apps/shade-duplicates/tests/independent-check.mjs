@@ -3,7 +3,7 @@ import {createRequire} from 'node:module';
 import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
-import {derive,solve,nextKey} from './reference.mjs';
+import {derive,solve,nextKey,publicLayouts} from './reference.mjs';
 const M=createRequire(import.meta.url)('../src/main/assets/game-model.js'),output=path.resolve(process.argv[2]||'/tmp/shade-duplicates-independent');mkdirSync(output,{recursive:true});
 const report={scope:'Independent exhaustive row-mask/column-value/white-connectivity search, followed by ordinary create/step toggles and manual checks. No shipped answers or model state writes.',modelSha256:createHash('sha256').update(readFileSync(new URL('../src/main/assets/game-model.js',import.meta.url))).digest('hex'),tests:[],proofs:[],ordinaryToggles:0,ordinarySubmissions:0};
 const input={ArrowLeft:{x:-1},ArrowRight:{x:1},ArrowUp:{y:-1},ArrowDown:{y:1},Space:{a:true},b:{b:true}};
@@ -17,7 +17,7 @@ function fill(s,solution){for(let p=0;p<solution.length;p++)if(s.black[p]!==solu
 function freeze(s){const old=structuredClone(s);for(const i of [{a:true},{b:true},{x:1},{cancelled:true,cancelEpoch:8}])tick(s,i);assert.deepEqual(s,old);}
 function test(name,fn){fn();report.tests.push({name,passed:true});}
 try{
- test('public layouts carry only clues, never an expected mask or black count',()=>{assert.deepEqual(Object.keys(M).sort(),['config','create','step']);assert.equal(M.config.checkLimit,3);M.config.layouts.forEach((l,i)=>{assert.equal(l.size,4+i);assert.equal(l.numbers.length,l.size*l.size);assert.ok(l.numbers.every(v=>Number.isInteger(v)&&v>=1&&v<=l.size));assert.deepEqual(Object.keys(l).sort(),['id','name','nameZh','numbers','size']);});});
+ test('public layouts carry only clues, never an expected mask or black count',()=>{assert.deepEqual(Object.keys(M).sort(),['config','create','step']);assert.equal(M.config.checkLimit,3);M.config.layouts.forEach((l,i)=>{assert.equal(l.size,4+i);assert.deepEqual(l.numbers,publicLayouts[i].numbers);assert.equal(l.numbers.length,l.size*l.size);assert.ok(l.numbers.every(v=>Number.isInteger(v)&&v>=1&&v<=l.size));assert.deepEqual(Object.keys(l).sort(),['id','name','nameZh','numbers','size']);});});
  for(let level=0;level<3;level++){
   const l=M.config.layouts[level],proof=solve(l);
   test(`level ${level+1}: exhaustive standard-rule search proves exactly one assignment`,()=>{assert.equal(proof.solutions.length,1);assert.equal(proof.solutions[0].filter(Boolean).length,[5,7,10][level]);assert.ok(derive(l,proof.solutions[0]).valid);report.proofs.push({level,size:l.size,solutionCount:1,blackCount:proof.solutions[0].filter(Boolean).length,solution:proof.solutions[0].map((v,p)=>v?p:null).filter(v=>v!==null),nodes:proof.nodes,completeAssignments:proof.completeAssignments,rowOptions:proof.rowOptions});});

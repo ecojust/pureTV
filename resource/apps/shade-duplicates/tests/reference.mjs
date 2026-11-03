@@ -1,4 +1,5 @@
 // Independent test-only Hitori constraints and exhaustive row-mask search.
+export const publicLayouts=[{size:4,numbers:[[2,1,2,1],[3,4,2,2],[1,2,3,4],[2,1,4,4]].flat()},{size:5,numbers:[[5,4,5,3,2],[2,5,4,5,5],[5,3,2,2,4],[2,2,2,4,5],[4,5,3,2,5]].flat()},{size:6,numbers:[[6,2,3,2,1,4],[4,5,5,2,6,6],[2,5,2,3,6,6],[5,2,6,2,3,2],[2,6,4,1,5,4],[4,4,3,6,2,5]].flat()}];
 export function adjacent(point,n){const r=Math.floor(point/n),c=point%n,out=[];if(r)out.push(point-n);if(c)out.push(point-1);if(c<n-1)out.push(point+1);if(r<n-1)out.push(point+n);return out;}
 export function derive(layout,black){const n=layout.size,duplicates=[],pairs=[],regions=[],seen=new Set();
  for(const axis of ['row','col'])for(let line=0;line<n;line++){const byValue=new Map();for(let offset=0;offset<n;offset++){const id=axis==='row'?line*n+offset:offset*n+line;if(!black[id]){const value=layout.numbers[id];if(!byValue.has(value))byValue.set(value,[]);byValue.get(value).push(id);}}for(const value of [...byValue.keys()].sort((a,b)=>a-b)){const cells=byValue.get(value);if(cells.length>1)duplicates.push({axis,line,value,cells});}}
