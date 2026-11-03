@@ -1,0 +1,740 @@
+{
+  "schema": 1,
+  "kind": "published-canonical-raw-frame-cleanup-plan",
+  "createdAt": "2026-11-03T16:55:55.033005+00:00",
+  "planOnly": false,
+  "deletionExecuted": true,
+  "scope": {
+    "numbers": [
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78
+    ],
+    "currentPublishedVersionsOnly": true,
+    "publicationRepository": "/workspace/pureTV-publish",
+    "progressPath": "/workspace/pureTV-publish/resource/game-kit/progress.json",
+    "capturedCompleted": 78,
+    "endingCompleted": 78,
+    "capturedHead": "53cd5444eea577d8d48cb86033abee0c86858919",
+    "progressSha256": "e9a1c31bf6df00747dec3246f5994846724ec3b8bcb71d4a2f0b4fa6b04f7a60",
+    "progressUnchangedDuringPlanning": true,
+    "selectedRecordsUnchangedDuringPlanning": true
+  },
+  "referenceProcess": {
+    "path": "/workspace/pureTV-publish/history/published-frame-cleanup-2026-11-03.json",
+    "sha256": "76f332276c46a0fde73dfae40dce6217b8c38ab903a6fe65ce163b37433f95dd",
+    "scope": "Same prior48–68 procedure: only canonical raw input frames after video identity checks."
+  },
+  "selectionRule": "Only the ten exact qa*/recording/frames directories listed below; #69 uses accepted visual-fix/qa. No wildcard deletion scope is proposed.",
+  "preservationRule": "Retain every file/directory outside the exact listed frames directories, including MP4, recording.json and its frameManifest, frames.ffconcat, all other JSON, sampled PNG/JPEG images, all published files, and any failed/superseded/old-version recording. Directory names in retainedSampleImageScopes identify preservation context, not additional deletion scope.",
+  "method": {
+    "readOnlyUntilThisPlanWrite": true,
+    "recomputedScratchAndPublishedVideoSha256": true,
+    "bothComparedToProgress": true,
+    "countedActualRegularJpegFilesAndLogicalBytes": true,
+    "frameNamesAndCountComparedToRetainedManifest": true,
+    "rawFrameContentHashesRecomputed": false,
+    "videoDecodeRerun": false,
+    "browserOrGameTestsRun": false,
+    "signedApkOrSignatureVerificationRun": false
+  },
+  "summary": {
+    "directories": 10,
+    "eligibleDirectories": 10,
+    "frameCount": 7201,
+    "frameBytes": 751354702,
+    "allocatedFileBytes": 767664128,
+    "allVideoHashesMatchProgress": true,
+    "allEntriesEligibleForRootReview": true
+  },
+  "entries": [
+    {
+      "number": 69,
+      "id": "hex-connection",
+      "version": "0.1.0",
+      "publicationSourceCommit": "df91c340626783a2f341e261c0241683c9e69524",
+      "framesDirectory": "/workspace/scratch/hex-connection/visual-fix/qa/recording/frames",
+      "frameCount": 479,
+      "frameBytes": 47521374,
+      "allocatedFileBytes": 48422912,
+      "directoryIdentity": {
+        "device": 27,
+        "inode": 165412,
+        "mtimeNs": 1793721085499113496
+      },
+      "progressVideoSha256": "a7223e1c9770a09ef12351012b11a467f320092fdffa282f9639f60f830d2ef3",
+      "scratchVideo": {
+        "path": "/workspace/scratch/hex-connection/visual-fix/qa/recording/gameplay.mp4",
+        "bytes": 1949432,
+        "sha256": "a7223e1c9770a09ef12351012b11a467f320092fdffa282f9639f60f830d2ef3"
+      },
+      "publishedVideo": {
+        "path": "/workspace/pureTV-publish/resource/apps/hex-connection/docs/gameplay-0.1.0.mp4",
+        "bytes": 1949432,
+        "sha256": "a7223e1c9770a09ef12351012b11a467f320092fdffa282f9639f60f830d2ef3"
+      },
+      "retainedScratchMetadata": {
+        "path": "/workspace/scratch/hex-connection/visual-fix/qa/recording/recording.json",
+        "sha256": "077bd8dd88684a28b3e1679097ba121a669468e7e9f464c7f28824486d39d054",
+        "manifestEntries": 479
+      },
+      "retainedPublishedMetadata": {
+        "path": "/workspace/pureTV-publish/resource/apps/hex-connection/docs/gameplay-0.1.0.json",
+        "sha256": "077bd8dd88684a28b3e1679097ba121a669468e7e9f464c7f28824486d39d054",
+        "manifestEntries": 479
+      },
+      "retainedRecordingSiblings": [
+        "/workspace/scratch/hex-connection/visual-fix/qa/recording/encoded-12s.png",
+        "/workspace/scratch/hex-connection/visual-fix/qa/recording/frame-admission.json",
+        "/workspace/scratch/hex-connection/visual-fix/qa/recording/frames.ffconcat",
+        "/workspace/scratch/hex-connection/visual-fix/qa/recording/gameplay-summary.json",
+        "/workspace/scratch/hex-connection/visual-fix/qa/recording/gameplay.mp4",
+        "/workspace/scratch/hex-connection/visual-fix/qa/recording/recording.json",
+        "/workspace/scratch/hex-connection/visual-fix/qa/recording/video-validation.json"
+      ],
+      "retainedSampleImageScopes": [
+        "/workspace/pureTV-publish/resource/apps/hex-connection/docs/screenshots",
+        "/workspace/scratch/hex-connection"
+      ],
+      "excludedOtherFrameDirectories": [],
+      "unexpectedEntries": [],
+      "checks": {
+        "publishedCurrentVersionVerified": true,
+        "canonicalQaRecordingFramesPath": true,
+        "noSymlinkPathComponents": true,
+        "onlyRegularFrameJpegs": true,
+        "nonempty": true,
+        "scratchVideoMatchesProgress": true,
+        "publishedVideoMatchesProgress": true,
+        "scratchVideoBytesMatchProgress": true,
+        "publishedVideoBytesMatchProgress": true,
+        "scratchMetadataVideoHashMatchesProgress": true,
+        "publishedMetadataVideoHashMatchesProgress": true,
+        "frameCountMatchesMetadata": true,
+        "frameNamesExactlyMatchManifest": true,
+        "publishedManifestCountMatches": true
+      },
+      "eligibleForRootReview": true,
+      "deletionExecuted": true
+    },
+    {
+      "number": 70,
+      "id": "seed-mancala",
+      "version": "0.1.0",
+      "publicationSourceCommit": "f782fc780fba28ef39801bf773cfbc321b24c840",
+      "framesDirectory": "/workspace/scratch/seed-mancala/qa/recording/frames",
+      "frameCount": 588,
+      "frameBytes": 65512871,
+      "allocatedFileBytes": 66981888,
+      "directoryIdentity": {
+        "device": 27,
+        "inode": 166020,
+        "mtimeNs": 1793721552697160882
+      },
+      "progressVideoSha256": "ac2b71ac02879790bb52681c6c334882975a27bf60ba876074906040c928b2b5",
+      "scratchVideo": {
+        "path": "/workspace/scratch/seed-mancala/qa/recording/gameplay.mp4",
+        "bytes": 2213399,
+        "sha256": "ac2b71ac02879790bb52681c6c334882975a27bf60ba876074906040c928b2b5"
+      },
+      "publishedVideo": {
+        "path": "/workspace/pureTV-publish/resource/apps/seed-mancala/docs/gameplay-0.1.0.mp4",
+        "bytes": 2213399,
+        "sha256": "ac2b71ac02879790bb52681c6c334882975a27bf60ba876074906040c928b2b5"
+      },
+      "retainedScratchMetadata": {
+        "path": "/workspace/scratch/seed-mancala/qa/recording/recording.json",
+        "sha256": "3f1494c3d22985e630ddbdcba512b583510a9f750fbec3bd3b0d69c0b7c54053",
+        "manifestEntries": 588
+      },
+      "retainedPublishedMetadata": {
+        "path": "/workspace/pureTV-publish/resource/apps/seed-mancala/docs/gameplay-0.1.0.json",
+        "sha256": "3f1494c3d22985e630ddbdcba512b583510a9f750fbec3bd3b0d69c0b7c54053",
+        "manifestEntries": 588
+      },
+      "retainedRecordingSiblings": [
+        "/workspace/scratch/seed-mancala/qa/recording/frame-admission.json",
+        "/workspace/scratch/seed-mancala/qa/recording/frames.ffconcat",
+        "/workspace/scratch/seed-mancala/qa/recording/gameplay.mp4",
+        "/workspace/scratch/seed-mancala/qa/recording/recording.json",
+        "/workspace/scratch/seed-mancala/qa/recording/video-validation.json"
+      ],
+      "retainedSampleImageScopes": [
+        "/workspace/pureTV-publish/resource/apps/seed-mancala/docs/screenshots",
+        "/workspace/scratch/seed-mancala"
+      ],
+      "excludedOtherFrameDirectories": [],
+      "unexpectedEntries": [],
+      "checks": {
+        "publishedCurrentVersionVerified": true,
+        "canonicalQaRecordingFramesPath": true,
+        "noSymlinkPathComponents": true,
+        "onlyRegularFrameJpegs": true,
+        "nonempty": true,
+        "scratchVideoMatchesProgress": true,
+        "publishedVideoMatchesProgress": true,
+        "scratchVideoBytesMatchProgress": true,
+        "publishedVideoBytesMatchProgress": true,
+        "scratchMetadataVideoHashMatchesProgress": true,
+        "publishedMetadataVideoHashMatchesProgress": true,
+        "frameCountMatchesMetadata": true,
+        "frameNamesExactlyMatchManifest": true,
+        "publishedManifestCountMatches": true
+      },
+      "eligibleForRootReview": true,
+      "deletionExecuted": true
+    },
+    {
+      "number": 71,
+      "id": "dots-boxes",
+      "version": "0.1.0",
+      "publicationSourceCommit": "4687ffc19dff37a202d217aee444c4811c4e3a2a",
+      "framesDirectory": "/workspace/scratch/dots-boxes/qa-final/recording/frames",
+      "frameCount": 952,
+      "frameBytes": 91031494,
+      "allocatedFileBytes": 93679616,
+      "directoryIdentity": {
+        "device": 27,
+        "inode": 152709,
+        "mtimeNs": 1793721960221234090
+      },
+      "progressVideoSha256": "72cb7595cc42407618e0dca811c45d24b1ae42d6c44e1c820daffa135b3f5671",
+      "scratchVideo": {
+        "path": "/workspace/scratch/dots-boxes/qa-final/recording/gameplay.mp4",
+        "bytes": 2595166,
+        "sha256": "72cb7595cc42407618e0dca811c45d24b1ae42d6c44e1c820daffa135b3f5671"
+      },
+      "publishedVideo": {
+        "path": "/workspace/pureTV-publish/resource/apps/dots-boxes/docs/gameplay-0.1.0.mp4",
+        "bytes": 2595166,
+        "sha256": "72cb7595cc42407618e0dca811c45d24b1ae42d6c44e1c820daffa135b3f5671"
+      },
+      "retainedScratchMetadata": {
+        "path": "/workspace/scratch/dots-boxes/qa-final/recording/recording.json",
+        "sha256": "a942108c9367f407860cfee9fa7a321ae72edcd33ccb1538febc6a42fd7ab68f",
+        "manifestEntries": 952
+      },
+      "retainedPublishedMetadata": {
+        "path": "/workspace/pureTV-publish/resource/apps/dots-boxes/docs/gameplay-0.1.0.json",
+        "sha256": "a942108c9367f407860cfee9fa7a321ae72edcd33ccb1538febc6a42fd7ab68f",
+        "manifestEntries": 952
+      },
+      "retainedRecordingSiblings": [
+        "/workspace/scratch/dots-boxes/qa-final/recording/frame-admission.json",
+        "/workspace/scratch/dots-boxes/qa-final/recording/frames.ffconcat",
+        "/workspace/scratch/dots-boxes/qa-final/recording/gameplay.mp4",
+        "/workspace/scratch/dots-boxes/qa-final/recording/recording.json",
+        "/workspace/scratch/dots-boxes/qa-final/recording/video-validation.json"
+      ],
+      "retainedSampleImageScopes": [
+        "/workspace/pureTV-publish/resource/apps/dots-boxes/docs/screenshots",
+        "/workspace/scratch/dots-boxes"
+      ],
+      "excludedOtherFrameDirectories": [],
+      "unexpectedEntries": [],
+      "checks": {
+        "publishedCurrentVersionVerified": true,
+        "canonicalQaRecordingFramesPath": true,
+        "noSymlinkPathComponents": true,
+        "onlyRegularFrameJpegs": true,
+        "nonempty": true,
+        "scratchVideoMatchesProgress": true,
+        "publishedVideoMatchesProgress": true,
+        "scratchVideoBytesMatchProgress": true,
+        "publishedVideoBytesMatchProgress": true,
+        "scratchMetadataVideoHashMatchesProgress": true,
+        "publishedMetadataVideoHashMatchesProgress": true,
+        "frameCountMatchesMetadata": true,
+        "frameNamesExactlyMatchManifest": true,
+        "publishedManifestCountMatches": true
+      },
+      "eligibleForRootReview": true,
+      "deletionExecuted": true
+    },
+    {
+      "number": 72,
+      "id": "traffic-escape",
+      "version": "0.1.0",
+      "publicationSourceCommit": "c204676a6dda7e0f40d70f3daf90cc6fa7fc381f",
+      "framesDirectory": "/workspace/scratch/traffic-escape/qa/recording/frames",
+      "frameCount": 649,
+      "frameBytes": 69892032,
+      "allocatedFileBytes": 70631424,
+      "directoryIdentity": {
+        "device": 27,
+        "inode": 262717,
+        "mtimeNs": 1793722273730647296
+      },
+      "progressVideoSha256": "b0a7179384c3390d68691e3c2f33cce003d0d7e6be693f454b5dd4bec530d450",
+      "scratchVideo": {
+        "path": "/workspace/scratch/traffic-escape/qa/recording/gameplay.mp4",
+        "bytes": 2820462,
+        "sha256": "b0a7179384c3390d68691e3c2f33cce003d0d7e6be693f454b5dd4bec530d450"
+      },
+      "publishedVideo": {
+        "path": "/workspace/pureTV-publish/resource/apps/traffic-escape/docs/gameplay-0.1.0.mp4",
+        "bytes": 2820462,
+        "sha256": "b0a7179384c3390d68691e3c2f33cce003d0d7e6be693f454b5dd4bec530d450"
+      },
+      "retainedScratchMetadata": {
+        "path": "/workspace/scratch/traffic-escape/qa/recording/recording.json",
+        "sha256": "62ef2a11b02956d823fff6cc6dc422c0cef71eff3f7e99e4e47de25130f69fd0",
+        "manifestEntries": 649
+      },
+      "retainedPublishedMetadata": {
+        "path": "/workspace/pureTV-publish/resource/apps/traffic-escape/docs/gameplay-0.1.0.json",
+        "sha256": "62ef2a11b02956d823fff6cc6dc422c0cef71eff3f7e99e4e47de25130f69fd0",
+        "manifestEntries": 649
+      },
+      "retainedRecordingSiblings": [
+        "/workspace/scratch/traffic-escape/qa/recording/encoded-16-5s.png",
+        "/workspace/scratch/traffic-escape/qa/recording/frame-admission.json",
+        "/workspace/scratch/traffic-escape/qa/recording/frames.ffconcat",
+        "/workspace/scratch/traffic-escape/qa/recording/gameplay-summary.json",
+        "/workspace/scratch/traffic-escape/qa/recording/gameplay.mp4",
+        "/workspace/scratch/traffic-escape/qa/recording/recording.json",
+        "/workspace/scratch/traffic-escape/qa/recording/video-validation.json"
+      ],
+      "retainedSampleImageScopes": [
+        "/workspace/pureTV-publish/resource/apps/traffic-escape/docs/screenshots",
+        "/workspace/scratch/traffic-escape"
+      ],
+      "excludedOtherFrameDirectories": [],
+      "unexpectedEntries": [],
+      "checks": {
+        "publishedCurrentVersionVerified": true,
+        "canonicalQaRecordingFramesPath": true,
+        "noSymlinkPathComponents": true,
+        "onlyRegularFrameJpegs": true,
+        "nonempty": true,
+        "scratchVideoMatchesProgress": true,
+        "publishedVideoMatchesProgress": true,
+        "scratchVideoBytesMatchProgress": true,
+        "publishedVideoBytesMatchProgress": true,
+        "scratchMetadataVideoHashMatchesProgress": true,
+        "publishedMetadataVideoHashMatchesProgress": true,
+        "frameCountMatchesMetadata": true,
+        "frameNamesExactlyMatchManifest": true,
+        "publishedManifestCountMatches": true
+      },
+      "eligibleForRootReview": true,
+      "deletionExecuted": true
+    },
+    {
+      "number": 73,
+      "id": "river-guard",
+      "version": "0.1.0",
+      "publicationSourceCommit": "76daab36202fc5e1fef6c86dd27888ff7daa5a3f",
+      "framesDirectory": "/workspace/scratch/river-guard/qa/recording/frames",
+      "frameCount": 743,
+      "frameBytes": 77983102,
+      "allocatedFileBytes": 79831040,
+      "directoryIdentity": {
+        "device": 27,
+        "inode": 264364,
+        "mtimeNs": 1793722929710475567
+      },
+      "progressVideoSha256": "de8669716c554af5d054fc8736eea57aed7e489474d19b5d0dd7639993b17eeb",
+      "scratchVideo": {
+        "path": "/workspace/scratch/river-guard/qa/recording/gameplay.mp4",
+        "bytes": 2323246,
+        "sha256": "de8669716c554af5d054fc8736eea57aed7e489474d19b5d0dd7639993b17eeb"
+      },
+      "publishedVideo": {
+        "path": "/workspace/pureTV-publish/resource/apps/river-guard/docs/gameplay-0.1.0.mp4",
+        "bytes": 2323246,
+        "sha256": "de8669716c554af5d054fc8736eea57aed7e489474d19b5d0dd7639993b17eeb"
+      },
+      "retainedScratchMetadata": {
+        "path": "/workspace/scratch/river-guard/qa/recording/recording.json",
+        "sha256": "5b6c498696102850ac32e0e0703635c8822bdfae0ea196f28789abebd7b9f192",
+        "manifestEntries": 743
+      },
+      "retainedPublishedMetadata": {
+        "path": "/workspace/pureTV-publish/resource/apps/river-guard/docs/gameplay-0.1.0.json",
+        "sha256": "5b6c498696102850ac32e0e0703635c8822bdfae0ea196f28789abebd7b9f192",
+        "manifestEntries": 743
+      },
+      "retainedRecordingSiblings": [
+        "/workspace/scratch/river-guard/qa/recording/frame-admission.json",
+        "/workspace/scratch/river-guard/qa/recording/frames.ffconcat",
+        "/workspace/scratch/river-guard/qa/recording/gameplay.mp4",
+        "/workspace/scratch/river-guard/qa/recording/recording.json",
+        "/workspace/scratch/river-guard/qa/recording/video-validation.json"
+      ],
+      "retainedSampleImageScopes": [
+        "/workspace/pureTV-publish/resource/apps/river-guard/docs/screenshots",
+        "/workspace/scratch/river-guard"
+      ],
+      "excludedOtherFrameDirectories": [],
+      "unexpectedEntries": [],
+      "checks": {
+        "publishedCurrentVersionVerified": true,
+        "canonicalQaRecordingFramesPath": true,
+        "noSymlinkPathComponents": true,
+        "onlyRegularFrameJpegs": true,
+        "nonempty": true,
+        "scratchVideoMatchesProgress": true,
+        "publishedVideoMatchesProgress": true,
+        "scratchVideoBytesMatchProgress": true,
+        "publishedVideoBytesMatchProgress": true,
+        "scratchMetadataVideoHashMatchesProgress": true,
+        "publishedMetadataVideoHashMatchesProgress": true,
+        "frameCountMatchesMetadata": true,
+        "frameNamesExactlyMatchManifest": true,
+        "publishedManifestCountMatches": true
+      },
+      "eligibleForRootReview": true,
+      "deletionExecuted": true
+    },
+    {
+      "number": 74,
+      "id": "torch-bridge",
+      "version": "0.1.0",
+      "publicationSourceCommit": "152e340195f902d887b97218827aeb190fc88598",
+      "framesDirectory": "/workspace/scratch/torch-bridge/qa-final/recording/frames",
+      "frameCount": 928,
+      "frameBytes": 97390553,
+      "allocatedFileBytes": 99909632,
+      "directoryIdentity": {
+        "device": 27,
+        "inode": 160482,
+        "mtimeNs": 1793723305077584786
+      },
+      "progressVideoSha256": "c377c4fe452984b186865a63021dd49432e59b145b8fafeb99345ee053a650bf",
+      "scratchVideo": {
+        "path": "/workspace/scratch/torch-bridge/qa-final/recording/gameplay.mp4",
+        "bytes": 3425461,
+        "sha256": "c377c4fe452984b186865a63021dd49432e59b145b8fafeb99345ee053a650bf"
+      },
+      "publishedVideo": {
+        "path": "/workspace/pureTV-publish/resource/apps/torch-bridge/docs/gameplay-0.1.0.mp4",
+        "bytes": 3425461,
+        "sha256": "c377c4fe452984b186865a63021dd49432e59b145b8fafeb99345ee053a650bf"
+      },
+      "retainedScratchMetadata": {
+        "path": "/workspace/scratch/torch-bridge/qa-final/recording/recording.json",
+        "sha256": "5efd1da580477786de08485d9d034d66c32267436dd40386b230506fda93c1ff",
+        "manifestEntries": 928
+      },
+      "retainedPublishedMetadata": {
+        "path": "/workspace/pureTV-publish/resource/apps/torch-bridge/docs/gameplay-0.1.0.json",
+        "sha256": "5efd1da580477786de08485d9d034d66c32267436dd40386b230506fda93c1ff",
+        "manifestEntries": 928
+      },
+      "retainedRecordingSiblings": [
+        "/workspace/scratch/torch-bridge/qa-final/recording/frame-admission.json",
+        "/workspace/scratch/torch-bridge/qa-final/recording/frames.ffconcat",
+        "/workspace/scratch/torch-bridge/qa-final/recording/gameplay.mp4",
+        "/workspace/scratch/torch-bridge/qa-final/recording/recording.json",
+        "/workspace/scratch/torch-bridge/qa-final/recording/video-validation.json"
+      ],
+      "retainedSampleImageScopes": [
+        "/workspace/pureTV-publish/resource/apps/torch-bridge/docs/screenshots",
+        "/workspace/scratch/torch-bridge"
+      ],
+      "excludedOtherFrameDirectories": [],
+      "unexpectedEntries": [],
+      "checks": {
+        "publishedCurrentVersionVerified": true,
+        "canonicalQaRecordingFramesPath": true,
+        "noSymlinkPathComponents": true,
+        "onlyRegularFrameJpegs": true,
+        "nonempty": true,
+        "scratchVideoMatchesProgress": true,
+        "publishedVideoMatchesProgress": true,
+        "scratchVideoBytesMatchProgress": true,
+        "publishedVideoBytesMatchProgress": true,
+        "scratchMetadataVideoHashMatchesProgress": true,
+        "publishedMetadataVideoHashMatchesProgress": true,
+        "frameCountMatchesMetadata": true,
+        "frameNamesExactlyMatchManifest": true,
+        "publishedManifestCountMatches": true
+      },
+      "eligibleForRootReview": true,
+      "deletionExecuted": true
+    },
+    {
+      "number": 75,
+      "id": "sorting-wires",
+      "version": "0.1.0",
+      "publicationSourceCommit": "2ce01d493b3e45d6bc98aa6706206a98f1acb76d",
+      "framesDirectory": "/workspace/scratch/sorting-wires/qa/recording/frames",
+      "frameCount": 613,
+      "frameBytes": 61946800,
+      "allocatedFileBytes": 63025152,
+      "directoryIdentity": {
+        "device": 27,
+        "inode": 161767,
+        "mtimeNs": 1793723594674248445
+      },
+      "progressVideoSha256": "8f083a151e7844a7f75e7eeb7564d2d1571b744146a8ce4a1abb2c2d224b39ae",
+      "scratchVideo": {
+        "path": "/workspace/scratch/sorting-wires/qa/recording/gameplay.mp4",
+        "bytes": 2436046,
+        "sha256": "8f083a151e7844a7f75e7eeb7564d2d1571b744146a8ce4a1abb2c2d224b39ae"
+      },
+      "publishedVideo": {
+        "path": "/workspace/pureTV-publish/resource/apps/sorting-wires/docs/gameplay-0.1.0.mp4",
+        "bytes": 2436046,
+        "sha256": "8f083a151e7844a7f75e7eeb7564d2d1571b744146a8ce4a1abb2c2d224b39ae"
+      },
+      "retainedScratchMetadata": {
+        "path": "/workspace/scratch/sorting-wires/qa/recording/recording.json",
+        "sha256": "490e4fdc93aae86a206b009c856dfeae4901c5b2917fc9e2489e9cc1be9b53f2",
+        "manifestEntries": 613
+      },
+      "retainedPublishedMetadata": {
+        "path": "/workspace/pureTV-publish/resource/apps/sorting-wires/docs/gameplay-0.1.0.json",
+        "sha256": "490e4fdc93aae86a206b009c856dfeae4901c5b2917fc9e2489e9cc1be9b53f2",
+        "manifestEntries": 613
+      },
+      "retainedRecordingSiblings": [
+        "/workspace/scratch/sorting-wires/qa/recording/encoded-24s.png",
+        "/workspace/scratch/sorting-wires/qa/recording/frame-admission.json",
+        "/workspace/scratch/sorting-wires/qa/recording/frames.ffconcat",
+        "/workspace/scratch/sorting-wires/qa/recording/gameplay-summary.json",
+        "/workspace/scratch/sorting-wires/qa/recording/gameplay.mp4",
+        "/workspace/scratch/sorting-wires/qa/recording/recording.json",
+        "/workspace/scratch/sorting-wires/qa/recording/video-validation.json"
+      ],
+      "retainedSampleImageScopes": [
+        "/workspace/pureTV-publish/resource/apps/sorting-wires/docs/screenshots",
+        "/workspace/scratch/sorting-wires"
+      ],
+      "excludedOtherFrameDirectories": [],
+      "unexpectedEntries": [],
+      "checks": {
+        "publishedCurrentVersionVerified": true,
+        "canonicalQaRecordingFramesPath": true,
+        "noSymlinkPathComponents": true,
+        "onlyRegularFrameJpegs": true,
+        "nonempty": true,
+        "scratchVideoMatchesProgress": true,
+        "publishedVideoMatchesProgress": true,
+        "scratchVideoBytesMatchProgress": true,
+        "publishedVideoBytesMatchProgress": true,
+        "scratchMetadataVideoHashMatchesProgress": true,
+        "publishedMetadataVideoHashMatchesProgress": true,
+        "frameCountMatchesMetadata": true,
+        "frameNamesExactlyMatchManifest": true,
+        "publishedManifestCountMatches": true
+      },
+      "eligibleForRootReview": true,
+      "deletionExecuted": true
+    },
+    {
+      "number": 76,
+      "id": "nim-orbit",
+      "version": "0.1.0",
+      "publicationSourceCommit": "0ca7e947e61c6bb4657ae30f8be19f597a870046",
+      "framesDirectory": "/workspace/scratch/nim-orbit/qa/recording/frames",
+      "frameCount": 476,
+      "frameBytes": 49475942,
+      "allocatedFileBytes": 50778112,
+      "directoryIdentity": {
+        "device": 27,
+        "inode": 162622,
+        "mtimeNs": 1793723771683435626
+      },
+      "progressVideoSha256": "decc5a0808abc0576e42afcdaa6041492178c716036b80030f8557c4f90232d9",
+      "scratchVideo": {
+        "path": "/workspace/scratch/nim-orbit/qa/recording/gameplay.mp4",
+        "bytes": 1912831,
+        "sha256": "decc5a0808abc0576e42afcdaa6041492178c716036b80030f8557c4f90232d9"
+      },
+      "publishedVideo": {
+        "path": "/workspace/pureTV-publish/resource/apps/nim-orbit/docs/gameplay-0.1.0.mp4",
+        "bytes": 1912831,
+        "sha256": "decc5a0808abc0576e42afcdaa6041492178c716036b80030f8557c4f90232d9"
+      },
+      "retainedScratchMetadata": {
+        "path": "/workspace/scratch/nim-orbit/qa/recording/recording.json",
+        "sha256": "3e512091a90708fd6818e536e80dd2fb233b38cc7045eb1d3ee29809eb3a20fa",
+        "manifestEntries": 476
+      },
+      "retainedPublishedMetadata": {
+        "path": "/workspace/pureTV-publish/resource/apps/nim-orbit/docs/gameplay-0.1.0.json",
+        "sha256": "3e512091a90708fd6818e536e80dd2fb233b38cc7045eb1d3ee29809eb3a20fa",
+        "manifestEntries": 476
+      },
+      "retainedRecordingSiblings": [
+        "/workspace/scratch/nim-orbit/qa/recording/frame-admission.json",
+        "/workspace/scratch/nim-orbit/qa/recording/frames.ffconcat",
+        "/workspace/scratch/nim-orbit/qa/recording/gameplay.mp4",
+        "/workspace/scratch/nim-orbit/qa/recording/recording.json",
+        "/workspace/scratch/nim-orbit/qa/recording/video-validation.json"
+      ],
+      "retainedSampleImageScopes": [
+        "/workspace/pureTV-publish/resource/apps/nim-orbit/docs/screenshots",
+        "/workspace/scratch/nim-orbit"
+      ],
+      "excludedOtherFrameDirectories": [],
+      "unexpectedEntries": [],
+      "checks": {
+        "publishedCurrentVersionVerified": true,
+        "canonicalQaRecordingFramesPath": true,
+        "noSymlinkPathComponents": true,
+        "onlyRegularFrameJpegs": true,
+        "nonempty": true,
+        "scratchVideoMatchesProgress": true,
+        "publishedVideoMatchesProgress": true,
+        "scratchVideoBytesMatchProgress": true,
+        "publishedVideoBytesMatchProgress": true,
+        "scratchMetadataVideoHashMatchesProgress": true,
+        "publishedMetadataVideoHashMatchesProgress": true,
+        "frameCountMatchesMetadata": true,
+        "frameNamesExactlyMatchManifest": true,
+        "publishedManifestCountMatches": true
+      },
+      "eligibleForRootReview": true,
+      "deletionExecuted": true
+    },
+    {
+      "number": 77,
+      "id": "domino-chain",
+      "version": "0.1.0",
+      "publicationSourceCommit": "4bd7f847a2650e3c72a127a91caa5bc63846bbb2",
+      "framesDirectory": "/workspace/scratch/domino-chain/qa-final/recording/frames",
+      "frameCount": 754,
+      "frameBytes": 75945774,
+      "allocatedFileBytes": 77234176,
+      "directoryIdentity": {
+        "device": 27,
+        "inode": 163728,
+        "mtimeNs": 1793723992230204313
+      },
+      "progressVideoSha256": "0acdb929695576809cd89dbda681443a6ec27c429c838a304065d8c63260a4da",
+      "scratchVideo": {
+        "path": "/workspace/scratch/domino-chain/qa-final/recording/gameplay.mp4",
+        "bytes": 2512720,
+        "sha256": "0acdb929695576809cd89dbda681443a6ec27c429c838a304065d8c63260a4da"
+      },
+      "publishedVideo": {
+        "path": "/workspace/pureTV-publish/resource/apps/domino-chain/docs/gameplay-0.1.0.mp4",
+        "bytes": 2512720,
+        "sha256": "0acdb929695576809cd89dbda681443a6ec27c429c838a304065d8c63260a4da"
+      },
+      "retainedScratchMetadata": {
+        "path": "/workspace/scratch/domino-chain/qa-final/recording/recording.json",
+        "sha256": "195bfebc036c8b3692d38f76740888910c4e8454ba8e3c1e3eefd19b7d1dc19a",
+        "manifestEntries": 754
+      },
+      "retainedPublishedMetadata": {
+        "path": "/workspace/pureTV-publish/resource/apps/domino-chain/docs/gameplay-0.1.0.json",
+        "sha256": "195bfebc036c8b3692d38f76740888910c4e8454ba8e3c1e3eefd19b7d1dc19a",
+        "manifestEntries": 754
+      },
+      "retainedRecordingSiblings": [
+        "/workspace/scratch/domino-chain/qa-final/recording/frame-admission.json",
+        "/workspace/scratch/domino-chain/qa-final/recording/frames.ffconcat",
+        "/workspace/scratch/domino-chain/qa-final/recording/gameplay.mp4",
+        "/workspace/scratch/domino-chain/qa-final/recording/recording.json",
+        "/workspace/scratch/domino-chain/qa-final/recording/video-validation.json"
+      ],
+      "retainedSampleImageScopes": [
+        "/workspace/pureTV-publish/resource/apps/domino-chain/docs/screenshots",
+        "/workspace/scratch/domino-chain"
+      ],
+      "excludedOtherFrameDirectories": [],
+      "unexpectedEntries": [],
+      "checks": {
+        "publishedCurrentVersionVerified": true,
+        "canonicalQaRecordingFramesPath": true,
+        "noSymlinkPathComponents": true,
+        "onlyRegularFrameJpegs": true,
+        "nonempty": true,
+        "scratchVideoMatchesProgress": true,
+        "publishedVideoMatchesProgress": true,
+        "scratchVideoBytesMatchProgress": true,
+        "publishedVideoBytesMatchProgress": true,
+        "scratchMetadataVideoHashMatchesProgress": true,
+        "publishedMetadataVideoHashMatchesProgress": true,
+        "frameCountMatchesMetadata": true,
+        "frameNamesExactlyMatchManifest": true,
+        "publishedManifestCountMatches": true
+      },
+      "eligibleForRootReview": true,
+      "deletionExecuted": true
+    },
+    {
+      "number": 78,
+      "id": "tile-garden",
+      "version": "0.1.0",
+      "publicationSourceCommit": "767c34973a202e3e5523ba062320a73ac462ae26",
+      "framesDirectory": "/workspace/scratch/tile-garden/qa/recording/frames",
+      "frameCount": 1019,
+      "frameBytes": 114654760,
+      "allocatedFileBytes": 117170176,
+      "directoryIdentity": {
+        "device": 27,
+        "inode": 266837,
+        "mtimeNs": 1793724533630336503
+      },
+      "progressVideoSha256": "774b85ac4516367546d4635db07a171ace4a2bb78429ed36f856aeb477d60c86",
+      "scratchVideo": {
+        "path": "/workspace/scratch/tile-garden/qa/recording/gameplay.mp4",
+        "bytes": 3555517,
+        "sha256": "774b85ac4516367546d4635db07a171ace4a2bb78429ed36f856aeb477d60c86"
+      },
+      "publishedVideo": {
+        "path": "/workspace/pureTV-publish/resource/apps/tile-garden/docs/gameplay-0.1.0.mp4",
+        "bytes": 3555517,
+        "sha256": "774b85ac4516367546d4635db07a171ace4a2bb78429ed36f856aeb477d60c86"
+      },
+      "retainedScratchMetadata": {
+        "path": "/workspace/scratch/tile-garden/qa/recording/recording.json",
+        "sha256": "9675cdd6ab370fc1f367acff2325c1279d0aaebb39367359e7f588ef7b8204f1",
+        "manifestEntries": 1019
+      },
+      "retainedPublishedMetadata": {
+        "path": "/workspace/pureTV-publish/resource/apps/tile-garden/docs/gameplay-0.1.0.json",
+        "sha256": "9675cdd6ab370fc1f367acff2325c1279d0aaebb39367359e7f588ef7b8204f1",
+        "manifestEntries": 1019
+      },
+      "retainedRecordingSiblings": [
+        "/workspace/scratch/tile-garden/qa/recording/encoded-36s.png",
+        "/workspace/scratch/tile-garden/qa/recording/frame-admission.json",
+        "/workspace/scratch/tile-garden/qa/recording/frames.ffconcat",
+        "/workspace/scratch/tile-garden/qa/recording/gameplay-summary.json",
+        "/workspace/scratch/tile-garden/qa/recording/gameplay.mp4",
+        "/workspace/scratch/tile-garden/qa/recording/recording.json",
+        "/workspace/scratch/tile-garden/qa/recording/video-validation.json"
+      ],
+      "retainedSampleImageScopes": [
+        "/workspace/pureTV-publish/resource/apps/tile-garden/docs/screenshots",
+        "/workspace/scratch/tile-garden"
+      ],
+      "excludedOtherFrameDirectories": [],
+      "unexpectedEntries": [],
+      "checks": {
+        "publishedCurrentVersionVerified": true,
+        "canonicalQaRecordingFramesPath": true,
+        "noSymlinkPathComponents": true,
+        "onlyRegularFrameJpegs": true,
+        "nonempty": true,
+        "scratchVideoMatchesProgress": true,
+        "publishedVideoMatchesProgress": true,
+        "scratchVideoBytesMatchProgress": true,
+        "publishedVideoBytesMatchProgress": true,
+        "scratchMetadataVideoHashMatchesProgress": true,
+        "publishedMetadataVideoHashMatchesProgress": true,
+        "frameCountMatchesMetadata": true,
+        "frameNamesExactlyMatchManifest": true,
+        "publishedManifestCountMatches": true
+      },
+      "eligibleForRootReview": true,
+      "deletionExecuted": true
+    }
+  ],
+  "executionNote": "Root checked all exact directory identities and video hashes against progress, then deleted only regular JPEG frames and their empty directories. All recorded sibling files remain.",
+  "executedAt": "2026-11-03T16:56:23.607540+00:00",
+  "planSha256": "9e45c490def77ded49f91aebae589bf9b42e39946d5b5d8dc4ea86d411d5208d"
+}
