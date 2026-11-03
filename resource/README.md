@@ -101,6 +101,7 @@
 | [环塔迁移](apps/ring-towers/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在三根塔柱之间搬运圆环，每次只能移动顶环，小环必须放在大环上；用有限搬动次数将整塔迁到目标柱，挑战三环、四环与五环布局，支持手机扫码单人操作。 | <img src="apps/ring-towers/thumb.png" width="180" alt="环塔迁移 界面"> |
 | [渡河守则](apps/river-guard/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 安排有限船位往返两岸，避免无人看守的冲突组合，用公开规则把所有物品安全运到对岸。 | <img src="apps/river-guard/thumb.png" width="180" alt="渡河守则 界面"> |
 | [渡河跃步](apps/river-hopper/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 穿越车道并借木筏渡河，在有限生命和时间内抵达不同家位。 | <img src="apps/river-hopper/thumb.png" width="180" alt="渡河跃步 界面"> |
+| [天台疾跑](apps/rooftop-runner/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 自动奔跑穿越天台，抓准时机跳过箱子和缺口，按住下蹲通过悬梁。 | <img src="apps/rooftop-runner/thumb.png" width="180" alt="天台疾跑 界面"> |
 | [王车合围](apps/rook-rescue/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用白王和白车限制黑王的合法落点，在手数上限内将杀；避免两王相邻、丢车和逼和。 | <img src="apps/rook-rescue/thumb.png" width="180" alt="王车合围 界面"> |
 | [旋环锁匠](apps/rotor-locksmith/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 左右拨转三层锁环，按住 A 推进、B 退回；进入核心取得钥匙，再将完整钥匙带出，避开碰壁造成的耐久损失和阻力。 | <img src="apps/rotor-locksmith/thumb.png" width="180" alt="旋环锁匠 界面"> |
 | [分流沙漏](apps/sandglass-split/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 开关共享料斗并旋转两块挡片，把连续落沙分给三只计量杯；在途沙束保留已确定的路线，耗尽沙量后让三杯都处于目标容差内且没有溢出。 | <img src="apps/sandglass-split/thumb.png" width="180" alt="分流沙漏 界面"> |

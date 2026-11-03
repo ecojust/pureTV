@@ -9,7 +9,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-111-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-112-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -147,6 +147,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 | [环塔迁移](resource/apps/ring-towers/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在三根塔柱之间搬运圆环，每次只能移动顶环，小环必须放在大环上；用有限搬动次数将整塔迁到目标柱，挑战三环、四环与五环布局，支持手机扫码单人操作。 | <img src="resource/apps/ring-towers/thumb.png" width="180" alt="环塔迁移 界面"> |
 | [渡河守则](resource/apps/river-guard/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 安排有限船位往返两岸，避免无人看守的冲突组合，用公开规则把所有物品安全运到对岸。 | <img src="resource/apps/river-guard/thumb.png" width="180" alt="渡河守则 界面"> |
 | [渡河跃步](resource/apps/river-hopper/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 穿越车道并借木筏渡河，在有限生命和时间内抵达不同家位。 | <img src="resource/apps/river-hopper/thumb.png" width="180" alt="渡河跃步 界面"> |
+| [天台疾跑](resource/apps/rooftop-runner/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 自动奔跑穿越天台，抓准时机跳过箱子和缺口，按住下蹲通过悬梁。 | <img src="resource/apps/rooftop-runner/thumb.png" width="180" alt="天台疾跑 界面"> |
 | [王车合围](resource/apps/rook-rescue/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用白王和白车限制黑王的合法落点，在手数上限内将杀；避免两王相邻、丢车和逼和。 | <img src="resource/apps/rook-rescue/thumb.png" width="180" alt="王车合围 界面"> |
 | [旋环锁匠](resource/apps/rotor-locksmith/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 左右拨转三层锁环，按住 A 推进、B 退回；进入核心取得钥匙，再将完整钥匙带出，避开碰壁造成的耐久损失和阻力。 | <img src="resource/apps/rotor-locksmith/thumb.png" width="180" alt="旋环锁匠 界面"> |
 | [分流沙漏](resource/apps/sandglass-split/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 开关共享料斗并旋转两块挡片，把连续落沙分给三只计量杯；在途沙束保留已确定的路线，耗尽沙量后让三杯都处于目标容差内且没有溢出。 | <img src="resource/apps/sandglass-split/thumb.png" width="180" alt="分流沙漏 界面"> |
