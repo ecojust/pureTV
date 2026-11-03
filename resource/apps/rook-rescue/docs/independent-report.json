@@ -1,0 +1,455 @@
+{
+  "scope": "Independent coordinate geometry, public king policy and breadth-first shortest-mate proof. Ordinary checks use fresh create/step inputs; separately labelled budget fixture changes only moveLimit.",
+  "modelSha256": "fa6428732da45bb41a94accf878051927729fafbb8046fec8d0d2a739713051f",
+  "tests": [
+    {
+      "name": "public layout and API disclose positions/policy only, no routes",
+      "passed": true
+    },
+    {
+      "name": "level 1: BFS proves shortest mate and ordinary public-policy samples match",
+      "passed": true
+    },
+    {
+      "name": "level 1: natural safe rook capture and stalemate both lose before budget",
+      "passed": true
+    },
+    {
+      "name": "level 1: ordinary surviving moves exhaust the exact public budget",
+      "passed": true
+    },
+    {
+      "name": "level 1: every initial destination matches independent legality; own-piece switches and illegal attempts are free",
+      "passed": true
+    },
+    {
+      "name": "level 2: BFS proves shortest mate and ordinary public-policy samples match",
+      "passed": true
+    },
+    {
+      "name": "level 2: natural safe rook capture and stalemate both lose before budget",
+      "passed": true
+    },
+    {
+      "name": "level 2: ordinary surviving moves exhaust the exact public budget",
+      "passed": true
+    },
+    {
+      "name": "level 2: every initial destination matches independent legality; own-piece switches and illegal attempts are free",
+      "passed": true
+    },
+    {
+      "name": "level 3: BFS proves shortest mate and ordinary public-policy samples match",
+      "passed": true
+    },
+    {
+      "name": "level 3: natural safe rook capture and stalemate both lose before budget",
+      "passed": true
+    },
+    {
+      "name": "level 3: ordinary surviving moves exhaust the exact public budget",
+      "passed": true
+    },
+    {
+      "name": "level 3: every initial destination matches independent legality; own-piece switches and illegal attempts are free",
+      "passed": true
+    },
+    {
+      "name": "cancel selection is free; no-piece, king-capture and held selection obey the normal gate",
+      "passed": true
+    }
+  ],
+  "syntheticTests": [
+    {
+      "name": "synthetic budget boundary: public winning routes mate on adjusted final move before exhaustion",
+      "passed": true
+    }
+  ],
+  "proofs": [
+    {
+      "level": 0,
+      "minimumWhiteMoves": 4,
+      "statesExpanded": 191,
+      "statesDiscovered": 765,
+      "edgesExamined": 2400,
+      "routes": {
+        "rook-captured": [
+          {
+            "piece": "R",
+            "to": 5
+          }
+        ],
+        "mate": [
+          {
+            "piece": "K",
+            "to": 13
+          },
+          {
+            "piece": "R",
+            "to": 15
+          },
+          {
+            "piece": "R",
+            "to": 16
+          },
+          {
+            "piece": "R",
+            "to": 1
+          }
+        ],
+        "stalemate": [
+          {
+            "piece": "K",
+            "to": 14
+          },
+          {
+            "piece": "R",
+            "to": 21
+          },
+          {
+            "piece": "R",
+            "to": 22
+          },
+          {
+            "piece": "R",
+            "to": 23
+          }
+        ]
+      },
+      "limitRoute": [
+        {
+          "piece": "K",
+          "to": 13
+        },
+        {
+          "piece": "K",
+          "to": 8
+        },
+        {
+          "piece": "K",
+          "to": 2
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        }
+      ],
+      "earlierGraphEdgesReplayed": 60
+    },
+    {
+      "level": 1,
+      "minimumWhiteMoves": 5,
+      "statesExpanded": 896,
+      "statesDiscovered": 2213,
+      "edgesExamined": 13174,
+      "routes": {
+        "rook-captured": [
+          {
+            "piece": "R",
+            "to": 6
+          },
+          {
+            "piece": "R",
+            "to": 18
+          }
+        ],
+        "mate": [
+          {
+            "piece": "K",
+            "to": 6
+          },
+          {
+            "piece": "K",
+            "to": 13
+          },
+          {
+            "piece": "R",
+            "to": 9
+          },
+          {
+            "piece": "K",
+            "to": 19
+          },
+          {
+            "piece": "R",
+            "to": 33
+          }
+        ],
+        "stalemate": [
+          {
+            "piece": "K",
+            "to": 6
+          },
+          {
+            "piece": "R",
+            "to": 8
+          },
+          {
+            "piece": "K",
+            "to": 12
+          },
+          {
+            "piece": "K",
+            "to": 18
+          },
+          {
+            "piece": "R",
+            "to": 7
+          }
+        ]
+      },
+      "limitRoute": [
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        },
+        {
+          "piece": "K",
+          "to": 1
+        },
+        {
+          "piece": "K",
+          "to": 0
+        }
+      ],
+      "earlierGraphEdgesReplayed": 60
+    },
+    {
+      "level": 2,
+      "minimumWhiteMoves": 6,
+      "statesExpanded": 4056,
+      "statesDiscovered": 8148,
+      "edgesExamined": 72439,
+      "routes": {
+        "rook-captured": [
+          {
+            "piece": "K",
+            "to": 31
+          }
+        ],
+        "mate": [
+          {
+            "piece": "R",
+            "to": 7
+          },
+          {
+            "piece": "K",
+            "to": 31
+          },
+          {
+            "piece": "R",
+            "to": 11
+          },
+          {
+            "piece": "K",
+            "to": 23
+          },
+          {
+            "piece": "K",
+            "to": 16
+          },
+          {
+            "piece": "R",
+            "to": 4
+          }
+        ],
+        "stalemate": [
+          {
+            "piece": "R",
+            "to": 12
+          },
+          {
+            "piece": "K",
+            "to": 31
+          },
+          {
+            "piece": "K",
+            "to": 23
+          },
+          {
+            "piece": "K",
+            "to": 16
+          },
+          {
+            "piece": "R",
+            "to": 9
+          },
+          {
+            "piece": "R",
+            "to": 8
+          }
+        ]
+      },
+      "limitRoute": [
+        {
+          "piece": "R",
+          "to": 7
+        },
+        {
+          "piece": "K",
+          "to": 31
+        },
+        {
+          "piece": "R",
+          "to": 10
+        },
+        {
+          "piece": "R",
+          "to": 7
+        },
+        {
+          "piece": "R",
+          "to": 10
+        },
+        {
+          "piece": "R",
+          "to": 7
+        },
+        {
+          "piece": "R",
+          "to": 10
+        },
+        {
+          "piece": "R",
+          "to": 7
+        },
+        {
+          "piece": "R",
+          "to": 10
+        },
+        {
+          "piece": "R",
+          "to": 7
+        },
+        {
+          "piece": "R",
+          "to": 10
+        },
+        {
+          "piece": "R",
+          "to": 7
+        },
+        {
+          "piece": "R",
+          "to": 10
+        },
+        {
+          "piece": "R",
+          "to": 7
+        },
+        {
+          "piece": "R",
+          "to": 10
+        },
+        {
+          "piece": "R",
+          "to": 7
+        },
+        {
+          "piece": "R",
+          "to": 10
+        },
+        {
+          "piece": "R",
+          "to": 7
+        },
+        {
+          "piece": "R",
+          "to": 10
+        },
+        {
+          "piece": "R",
+          "to": 7
+        }
+      ],
+      "earlierGraphEdgesReplayed": 60
+    }
+  ],
+  "ordinaryTurnsChecked": 442,
+  "syntheticTurnsChecked": 15,
+  "passed": true
+}
