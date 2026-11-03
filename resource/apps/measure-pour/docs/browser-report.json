@@ -1,0 +1,310 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T13:57:29.201Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "47aff50c4839014fcc27f894690de4ee9d7a4fb687a277ed5f229a7b0a2f21a7",
+    "game-model.js": "fd29649d19115e408aa043f38f9969b2dd87a240ca2f468e88ba2dea0543d627",
+    "game.js": "feb054455cabe56483d35af41d0e3f6399802522d2f9700c523e49ba8453a6d0",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "source, blocked choices, maximal pour and free cancellation",
+      "passed": true,
+      "milliseconds": 8133.894909999999,
+      "screenshots": [
+        "/workspace/scratch/measure-pour/browser-checks/jugs-source-full-1280.png",
+        "/workspace/scratch/measure-pour/browser-checks/jugs-source-full-960.png"
+      ],
+      "state": {
+        "id": "measure-pour",
+        "phase": "playing",
+        "paused": false,
+        "tick": 282,
+        "elapsed": 4.699999999999989,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 750,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "selected": 2,
+          "source": null,
+          "volumes": [
+            3,
+            2,
+            3
+          ],
+          "capacities": [
+            8,
+            5,
+            3
+          ],
+          "target": [
+            4,
+            4,
+            0
+          ],
+          "pourLimit": 9,
+          "poursUsed": 2,
+          "elapsed": 4.699999999999989,
+          "elapsedCapped": false,
+          "calls": 282,
+          "blockedActions": 3,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "pourReceipts": [
+            {
+              "index": 0,
+              "call": 82,
+              "from": 0,
+              "to": 1,
+              "amount": 5,
+              "before": [
+                8,
+                0,
+                0
+              ],
+              "after": [
+                3,
+                5,
+                0
+              ],
+              "poursUsed": 1,
+              "matched": false,
+              "outcome": "playing"
+            },
+            {
+              "index": 1,
+              "call": 110,
+              "from": 1,
+              "to": 2,
+              "amount": 3,
+              "before": [
+                3,
+                5,
+                0
+              ],
+              "after": [
+                3,
+                2,
+                3
+              ],
+              "poursUsed": 2,
+              "matched": false,
+              "outcome": "playing"
+            }
+          ],
+          "terminalReceipt": null,
+          "message": "已取消来源，不消耗倒水次数。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 186,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          66.64800000000014,
+          616.5999999999999,
+          333.39999999999986,
+          83.40000000000009,
+          99.90000000000009,
+          216.69999999999982,
+          116.59999999999991,
+          100.09999999999991,
+          149.9000000000001,
+          50.09999999999991,
+          66.60000000000036,
+          33.399999999999636,
+          83.30000000000018,
+          16.699999999999818,
+          50,
+          100,
+          33.30000000000018,
+          83.30000000000018,
+          16.59999999999991,
+          16.699999999999818,
+          150,
+          16.700000000000273,
+          83.29999999999973,
+          50.000000000000455,
+          66.69999999999982,
+          33.30000000000018,
+          50,
+          50,
+          66.69999999999982,
+          16.599999999999454,
+          66.70000000000073,
+          50,
+          50,
+          50,
+          150,
+          33.29999999999927,
+          16.700000000000728,
+          50,
+          49.899999999999636,
+          50.100000000000364,
+          33.29999999999927,
+          66.60000000000036,
+          33.399999999999636,
+          66.60000000000036,
+          50,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          50,
+          100.10000000000036,
+          16.599999999999454,
+          16.700000000000728,
+          100,
+          66.59999999999945,
+          16.699999999999818,
+          66.70000000000073,
+          33.19999999999982,
+          83.39999999999964,
+          33.400000000000546,
+          100,
+          66.59999999999945,
+          83.30000000000018,
+          16.699999999999818,
+          16.699999999999818,
+          66.60000000000036,
+          16.699999999999818,
+          133.30000000000018,
+          16.699999999999818,
+          133.30000000000018,
+          16.699999999999818,
+          16.699999999999818,
+          99.90000000000055,
+          16.699999999999818,
+          166.60000000000036,
+          16.699999999999818,
+          83.39999999999964,
+          16.600000000000364,
+          116.59999999999945,
+          83.40000000000055,
+          66.69999999999982,
+          33.30000000000018,
+          33.30000000000018,
+          33.399999999999636,
+          16.600000000000364,
+          16.699999999999818,
+          100,
+          16.599999999999454,
+          83.40000000000055,
+          66.69999999999982,
+          16.600000000000364,
+          33.399999999999636,
+          100
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "level 1: ordinary complete maximal-pour solution",
+      "passed": true,
+      "milliseconds": 8562.952288999999,
+      "level": 0,
+      "pours": 7,
+      "volumes": [
+        4,
+        4,
+        0
+      ],
+      "screenshot": "/workspace/scratch/measure-pour/browser-checks/level-1-won.png",
+      "searches": [
+        {
+          "call": 12,
+          "minimumPours": 7,
+          "visited": 16
+        }
+      ]
+    },
+    {
+      "name": "level 2: ordinary complete maximal-pour solution",
+      "passed": true,
+      "milliseconds": 9676.025631,
+      "level": 1,
+      "pours": 9,
+      "volumes": [
+        5,
+        5,
+        0
+      ],
+      "screenshot": "/workspace/scratch/measure-pour/browser-checks/level-2-won.png",
+      "searches": [
+        {
+          "call": 12,
+          "minimumPours": 9,
+          "visited": 20
+        }
+      ]
+    },
+    {
+      "name": "level 3: ordinary complete maximal-pour solution",
+      "passed": true,
+      "milliseconds": 11338.764080999998,
+      "level": 2,
+      "pours": 11,
+      "volumes": [
+        6,
+        1,
+        5
+      ],
+      "screenshot": "/workspace/scratch/measure-pour/browser-checks/level-3-won.png",
+      "searches": [
+        {
+          "call": 10,
+          "minimumPours": 11,
+          "visited": 24
+        }
+      ]
+    },
+    {
+      "name": "natural pour-budget exhaustion and terminal model freeze",
+      "passed": true,
+      "milliseconds": 7499.987173000001,
+      "reason": "pours",
+      "pours": 9
+    },
+    {
+      "name": "held selection does not repeat and pause requires a physical release",
+      "passed": true,
+      "milliseconds": 2893.3188440000013,
+      "volumes": [
+        3,
+        5,
+        0
+      ],
+      "pours": 1
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T13:58:17.454Z"
+}
