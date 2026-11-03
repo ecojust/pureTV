@@ -223,9 +223,57 @@
     "docs/model-contract.md": "d7d4ba5f969e5268c4bec5659febda5334bf07a58b676f58312e06b0cca67b16",
     "tests/reference.mjs": "b2f074dd683e8d1f7cc457c4fb6903c1d99f1388ca656aec8ff20a3206f3c676",
     "tests/independent-check.mjs": "a1d895a7ce671a37a807f63755350bfb815bffc2f608a418fb56c7964a0459f7",
-    "tests/automation.mjs": "0e35808e8d92e4cfba282424472e9d95f0fc2de7bcd72b2176ec90d9f56c93bb"
+    "tests/automation.mjs": "ce9b48248062791701729e6df4bc325d52ab5869d1914bc14606e4905c170e24",
+    "tests/pilot-cancel-test.mjs": "0c856a7b8a0ef8a2c6b26c7c5a2d4024698c35453f76dbfa90bc830a80f833e7"
   },
   "findings": [],
   "physicalTvTested": false,
-  "physicalPhoneTested": false
+  "physicalPhoneTested": false,
+  "pilotLifecycleRegression": {
+    "passed": true,
+    "scope": "Ordinary epoch/cancel/release signals before and after a pending command; six resumed normal-input wins, no gameplay state writes.",
+    "runs": [
+      {
+        "level": 0,
+        "appliedBeforeCancel": false,
+        "won": true,
+        "calls": 33
+      },
+      {
+        "level": 0,
+        "appliedBeforeCancel": true,
+        "won": true,
+        "calls": 31
+      },
+      {
+        "level": 1,
+        "appliedBeforeCancel": false,
+        "won": true,
+        "calls": 56
+      },
+      {
+        "level": 1,
+        "appliedBeforeCancel": true,
+        "won": true,
+        "calls": 50
+      },
+      {
+        "level": 2,
+        "appliedBeforeCancel": false,
+        "won": true,
+        "calls": 83
+      },
+      {
+        "level": 2,
+        "appliedBeforeCancel": true,
+        "won": true,
+        "calls": 91
+      }
+    ],
+    "command": "node resource/apps/river-hopper/tests/pilot-cancel-test.mjs"
+  },
+  "qaHarnessCorrections": [
+    "Pending actions already applied are acknowledged before cancellation; unapplied pending controls are released and replanned after quarantine.",
+    "Dedicated gameplay loop takes a fresh public snapshot after both safe-bank screenshots, explicitly avoiding any dependence on an outstanding prior-hop acknowledgment."
+  ]
 }

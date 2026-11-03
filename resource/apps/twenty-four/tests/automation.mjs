@@ -7,7 +7,7 @@ export function createPilot({wrong=false,operationReviewSeconds=0}={}){
  const pilot=snapshot=>{
   const s=snapshot.model;if(!s||snapshot.paused)return[];
   if(level!==s.level||s.calls<lastCalls){level=s.level;route=[];pending=null;log=[];reviewTag=null;}lastCalls=s.calls;
-  if(pending){if(s[pending.field]===pending.before){need(s.calls-pending.call<120,'Ordinary arithmetic input was not acknowledged');return[pending.key];}if(pending.field==='mergesUsed'){need(s.mergesUsed===pending.before+1,'One merge per confirm edge');need(JSON.stringify(s.terms)===JSON.stringify(pending.terms),'Exact independent terms differ after merge');conservation(s.terms);route.shift();}if(pending.kind==='reset'){need(s.history.length===0,'Fresh retry clears undo history');route=[];}log.push({key:pending.key,call:s.calls,stage:s.stage,merges:s.mergesUsed,failures:s.failures,terms:s.terms});pending=null;return[];}
+  if(pending){if(s[pending.field]===pending.before){if(!s.inputArmed||s.cancelledLast||s.cancelEpoch!==pending.cancelEpoch){pending=null;return[];}need(s.calls-pending.call<120,'Ordinary arithmetic input was not acknowledged');return[pending.key];}if(pending.field==='mergesUsed'){need(s.mergesUsed===pending.before+1,'One merge per confirm edge');need(JSON.stringify(s.terms)===JSON.stringify(pending.terms),'Exact independent terms differ after merge');conservation(s.terms);route.shift();}if(pending.kind==='reset'){need(s.history.length===0,'Fresh retry clears undo history');route=[];}log.push({key:pending.key,call:s.calls,stage:s.stage,merges:s.mergesUsed,failures:s.failures,terms:s.terms});pending=null;return[];}
   if(snapshot.phase!=='playing'||s.phase!=='playing'||!s.inputArmed||s.cancelledLast||s.lastHeld.a||s.lastHeld.b||s.lastHeld.direction!=='none')return[];
   let key,field,kind,terms;
   if(s.stage==='retry'){key='Space';field='stage';kind='reset';}
@@ -15,7 +15,7 @@ export function createPilot({wrong=false,operationReviewSeconds=0}={}){
    if(s.stage==='first'||s.stage==='second'){const mask=s.stage==='first'?target.firstMask:target.secondMask;if(s.terms[s.cursor].mask!==mask){key='ArrowRight';field='cursor';}else{key='Space';field='stage';}}
    else if(s.opIndex!==target.opIndex){key='ArrowRight';field='opIndex';}else{const tag=[s.mergesUsed,s.firstMask,s.secondMask,s.opIndex].join(':');if(reviewTag!==tag){reviewTag=tag;reviewAt=s.elapsed;}if(s.elapsed-reviewAt<operationReviewSeconds)return[];key='Space';field='mergesUsed';const first=s.terms.find(t=>t.mask===s.firstMask),second=s.terms.find(t=>t.mask===s.secondMask),result=combine(first,second,s.opIndex);need(result,'Chosen operation must be defined');terms=s.terms.filter(t=>t.mask!==first.mask&&t.mask!==second.mask).concat(result);}
   }
-  pending={key,field,before:s[field],call:s.calls,kind,terms};return[key];
+  pending={key,field,before:s[field],call:s.calls,kind,terms,cancelEpoch:s.cancelEpoch};return[key];
  };pilot.log=()=>structuredClone(log);return pilot;
 }
 let pilot=createPilot(),mode=null,terminalAt=null,release=false;

@@ -7,10 +7,10 @@ export function createPilot({lose=false,allowedHomes=null}={}){
  const pilot=snapshot=>{
   const s=snapshot.model;if(!s||snapshot.paused)return[];
   if(level!==s.level||s.calls<lastCalls){level=s.level;pending=null;log=[];}lastCalls=s.calls;
-  if(pending){if(s.jumps===pending.jumps){need(s.calls-pending.call<120,'Ordinary hop was not acknowledged');return[pending.key];}need(s.jumps===pending.jumps+1,'Direction edge must hop once');log.push({key:pending.key,call:s.calls,jumps:s.jumps,player:s.player,goals:s.goalCount,deaths:s.deaths});pending=null;return[];}
+  if(pending){if(s.jumps===pending.jumps){if(!s.inputArmed||s.cancelledLast||s.cancelEpoch!==pending.cancelEpoch){pending=null;return[];}need(s.calls-pending.call<120,'Ordinary hop was not acknowledged');return[pending.key];}need(s.jumps===pending.jumps+1,'Direction edge must hop once');log.push({key:pending.key,call:s.calls,jumps:s.jumps,player:s.player,goals:s.goalCount,deaths:s.deaths});pending=null;return[];}
   if(snapshot.phase!=='playing'||s.phase!=='playing'||s.respawnTicks>0||!s.inputArmed||s.cancelledLast||s.lastHeld.a||s.lastHeld.b||s.lastHeld.direction!=='none')return[];
   let action;if(lose){need(s.player.row===6,'Natural car-loss pilot waits only on safe start');action=geometry(s,{x:s.player.x,row:5},0,{margin:-12}).reason==='car'?'up':'none';}else action=planVisible(s,{allowedHomes}).action;
-  if(!action||action==='none')return[];const key={up:'ArrowUp',down:'ArrowDown',left:'ArrowLeft',right:'ArrowRight'}[action];pending={key,call:s.calls,jumps:s.jumps};return[key];
+  if(!action||action==='none')return[];const key={up:'ArrowUp',down:'ArrowDown',left:'ArrowLeft',right:'ArrowRight'}[action];pending={key,call:s.calls,jumps:s.jumps,cancelEpoch:s.cancelEpoch};return[key];
  };pilot.log=()=>structuredClone(log);return pilot;
 }
 let pilot=createPilot(),mode=null,terminalAt=null,release=false;

@@ -13,8 +13,8 @@ async function action(page,key,field){await ready(page);const before=(await snap
 async function test(name,fn){try{const details=await fn();report.tests.push({name,passed:true,...details});console.log('PASS '+name);}catch(error){report.tests.push({name,passed:false,error:error.stack});throw error;}}
 async function play(session,pilot,{capture=false,until=null}={}){
  const page=session.page,held=new Set(),trace=[],before=await snapshot(page),started=performance.now();let captured=false;
- try{while(performance.now()-started<60000){const s=await snapshot(page);trace.push({elapsed:(performance.now()-started)/1000,state:s});if(s.phase!=='playing'||until?.(s))break;
-  if(capture&&!captured&&s.model.player.row===3){await releaseAll(page,[...held]);held.clear();for(const width of [960,1280]){await page.setViewportSize({width,height:width*9/16});await delay(80);await inspectFrame(page,path.join(output,`level-${s.model.level+1}-playing-${width}.png`));}captured=true;}
+ try{while(performance.now()-started<60000){let s=await snapshot(page);trace.push({elapsed:(performance.now()-started)/1000,state:s});if(s.phase!=='playing'||until?.(s))break;
+  if(capture&&!captured&&s.model.player.row===3){await releaseAll(page,[...held]);held.clear();for(const width of [960,1280]){await page.setViewportSize({width,height:width*9/16});await delay(80);await inspectFrame(page,path.join(output,`level-${s.model.level+1}-playing-${width}.png`));}captured=true;s=await snapshot(page);trace.push({elapsed:(performance.now()-started)/1000,state:s,afterSafeBankScreenshots:true});}
   await applyKeys(page,pilot(s),held);await delay(80);
  }await releaseAll(page,[...held]);const after=await snapshot(page);trace.push({elapsed:(performance.now()-started)/1000,state:after});verifyErrors(session);return {before,after,trace,commands:pilot.log()};}finally{await releaseAll(page,[...held]);}
 }

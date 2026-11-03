@@ -52,10 +52,57 @@
     "docs/model-contract.md": "4d481fb6eeec98dd69c5e68275adc64edd251d0a62f45f2cdf47ac5ab738490c",
     "tests/reference.mjs": "a17197dd22fe9b5f31c0257fbcb32650abc91618f5ffa2b63d4668e1f190548b",
     "tests/independent-check.mjs": "17434ccbc9bbbfc2851b22d58ab89e1113e79550b98693aa05bee88a68ed1c1b",
-    "tests/automation.mjs": "89b66886f6b5276a99d3a8ccd78fb80a89a6000e669fa13e9c0cdb47fa69a6c6"
+    "tests/automation.mjs": "5bdabfd60d03c9d0f9d7d34c4401371e0d9dc0125945d0aaa46e2c6f8a37961e",
+    "tests/pilot-cancel-test.mjs": "0c856a7b8a0ef8a2c6b26c7c5a2d4024698c35453f76dbfa90bc830a80f833e7"
   },
   "findings": [],
   "physicalTvTested": false,
   "physicalPhoneTested": false,
-  "recordingPlan": "Ordinary neutral frames show each chosen operation for3 active seconds before confirmation; no clock or state overrides."
+  "recordingPlan": "Ordinary neutral frames show each chosen operation for3 active seconds before confirmation; no clock or state overrides.",
+  "pilotLifecycleRegression": {
+    "passed": true,
+    "scope": "Ordinary epoch/cancel/release signals before and after a pending command; six resumed normal-input wins, no gameplay state writes.",
+    "runs": [
+      {
+        "level": 0,
+        "appliedBeforeCancel": false,
+        "won": true,
+        "calls": 29
+      },
+      {
+        "level": 0,
+        "appliedBeforeCancel": true,
+        "won": true,
+        "calls": 27
+      },
+      {
+        "level": 1,
+        "appliedBeforeCancel": false,
+        "won": true,
+        "calls": 41
+      },
+      {
+        "level": 1,
+        "appliedBeforeCancel": true,
+        "won": true,
+        "calls": 39
+      },
+      {
+        "level": 2,
+        "appliedBeforeCancel": false,
+        "won": true,
+        "calls": 45
+      },
+      {
+        "level": 2,
+        "appliedBeforeCancel": true,
+        "won": true,
+        "calls": 43
+      }
+    ],
+    "command": "node resource/apps/twenty-four/tests/pilot-cancel-test.mjs"
+  },
+  "qaHarnessCorrections": [
+    "Pending actions already applied are acknowledged before cancellation; unapplied pending controls are released and replanned after quarantine."
+  ]
 }
