@@ -79,6 +79,7 @@
 | [纹幕校准](apps/moire-atelier/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 滑动并旋转两层周期纹幕，让五个测点的当前明暗同时符合目标；参考可见定位标记，在限时与验收次数内完成三种光学校准。 | <img src="apps/moire-atelier/thumb.png" width="180" alt="纹幕校准 界面"> |
 | [取石回合](apps/nim-orbit/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 每回合从一堆中取走石子，判断普通与取末石负两种规则，和使用公开最优策略的对手较量。 | <img src="apps/nim-orbit/thumb.png" width="180" alt="取石回合 界面"> |
 | [沙丘数列](apps/number-dunes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 选择一行或一列，保持段内顺序压实数字石，不合并、不跨岩柱；蛇形读数严格递增且全部空洞吻合目标才能获胜，撤销恢复原石原格但不退已用步数或时间，手机扫码单人操作 | <img src="apps/number-dunes/thumb.png" width="180" alt="沙丘数列 界面"> |
+| [环轨炮台](apps/orbit-turret/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 旋转中央炮台持续瞄准射击，拦截沿轨逼近的目标；两次短时护盾只能吸收接触范围内的来袭者。 | <img src="apps/orbit-turret/thumb.png" width="180" alt="环轨炮台 界面"> |
 | [果园游蛇](apps/orchard-snake/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 预排下一拍的转向，绕开石墙与蛇身收集果实；使用有限刹车规划路线，完成三座果园。 | <img src="apps/orchard-snake/thumb.png" width="180" alt="果园游蛇 界面"> |
 | [异形装箱](apps/packing-sculptor/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 原创单人异形装箱益智游戏：移动、旋转有限零件，装入异形箱体，并为指定零件保留可完整直线抽出的出口。三种箱体、四次检查机会；手机方向区与上下双操作区控制。 | <img src="apps/packing-sculptor/thumb.png" width="180" alt="异形装箱 界面"> |
 | [视差天际](apps/parallax-skyline/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 移动近远两层建筑，在两个观察点同时对齐天际线与屋顶标记；小心只匹配主视角的错觉，撤销移动不会返还容错次数。 | <img src="apps/parallax-skyline/thumb.png" width="180" alt="视差天际 界面"> |
