@@ -90,6 +90,7 @@
 | [脉冲储库](apps/pulse-vault/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 按住收集有限脉冲，选择档位向顺序门锁放电；控制储能溢出和热峰，开启四门并保留终储备，完成三种供能关卡。 | <img src="apps/pulse-vault/thumb.png" width="180" alt="脉冲储库 界面"> |
 | [旋盘五子](apps/quadrant-five/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 每回合先落一子再旋转一个棋盘象限，旋转后连成五子获胜；同时五连与满盘平局需要重试。 | <img src="apps/quadrant-five/thumb.png" width="180" alt="旋盘五子 界面"> |
 | [星盘皇后](apps/queen-constellation/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在六、七、八阶星盘上摆放互不攻击的皇后，遵守固定皇后和禁放格限制；允许调整并观察行、列、对角线冲突，用三次手动检查完成布局，支持手机扫码单人操作。 | <img src="apps/queen-constellation/thumb.png" width="180" alt="星盘皇后 界面"> |
+| [矩形图册](apps/rectangle-atlas/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用两角划出矩形覆盖整个网格，每个矩形恰含一个数字且面积相符；可删除重画，重叠区域不能放置。 | <img src="apps/rectangle-atlas/thumb.png" width="180" alt="矩形图册 界面"> |
 | [四季蓄水](apps/reservoir-seasons/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 根据四季天气预报向居民、农田和生态河流配水；撤销尚未提交的计划，守住居民每季用水底线，并分别完成三方年度目标。 | <img src="apps/reservoir-seasons/thumb.png" width="180" alt="四季蓄水 界面"> |
 | [共振浮桥](apps/resonance-bridge/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 调节三块浮桥的频率和相位，派遣行人在持续安全接触时过桥；控制共振增幅，完成三个渡口关卡。 | <img src="apps/resonance-bridge/thumb.png" width="180" alt="共振浮桥 界面"> |
 | [翻面棋局](apps/reversi-relay/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 挑战三道6×6翻面棋残局，用八方向夹击翻转棋子，与确定性电脑对手轮流落子；无合法落点时让行，终局以棋子多数获胜，支持手机扫码单人操作。 | <img src="apps/reversi-relay/thumb.png" width="180" alt="翻面棋局 界面"> |
