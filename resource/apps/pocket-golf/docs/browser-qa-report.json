@@ -1,0 +1,1374 @@
+{
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "a784c1015025704661f53673af33d5d1cc7929e381999bb9f0d3f3b8758f49bb",
+    "game-model.js": "171efec687bd63a67b375e9af978b9632465c8f7edc3be5bf19d14898ea09cf9",
+    "game.js": "d978b846a441930bcb17a8072affb4139171527e94dd41e1a9dc0e9ab4b4ea77",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "startedAt": "2026-11-03T17:47:08.084Z",
+  "environment": {
+    "browser": "154.0.8037.57",
+    "renderer": "ANGLE SwiftShader",
+    "viewport": [
+      1280,
+      720
+    ],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "tests": [
+    {
+      "name": "loads title and read-only snapshot",
+      "passed": true,
+      "milliseconds": 11.952841999999691,
+      "details": {
+        "id": "pocket-golf",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 793,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "ball": {
+            "x": 100,
+            "y": 225,
+            "vx": 0,
+            "vy": 0,
+            "radius": 8,
+            "moving": false
+          },
+          "cup": {
+            "x": 580,
+            "y": 225,
+            "radius": 18,
+            "captureRadius": 12,
+            "maxSpeed": 65
+          },
+          "obstacles": [],
+          "angleIndex": 0,
+          "power": 3,
+          "strokeLimit": 4,
+          "strokes": 0,
+          "wallHits": 0,
+          "obstacleHits": 0,
+          "blockedActions": 0,
+          "capture": null,
+          "physicsAccumulator": 0,
+          "physicsTicks": 0,
+          "shotTicks": 0,
+          "shotTime": 0,
+          "currentShot": null,
+          "lastShot": null,
+          "shotReceipts": [],
+          "trail": [],
+          "terminalReceipt": null,
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "静止时左右调角、上下调力度，A 击球；低速进入球杯才算进洞。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 186,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          250,
+          16.699999999999932,
+          600,
+          249.9000000000001
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "title is rendered",
+      "passed": true,
+      "milliseconds": 1714.5857300000002,
+      "details": {
+        "bounds": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463
+        },
+        "coarseColors": 104,
+        "luminanceDeviation": 38.247036336999265,
+        "note": "Automatic blank-frame heuristic; requires separate human visual review."
+      }
+    },
+    {
+      "name": "Enter starts the normal game",
+      "passed": true,
+      "milliseconds": 108.49977500000023,
+      "details": {
+        "id": "pocket-golf",
+        "phase": "playing",
+        "paused": false,
+        "tick": 5,
+        "elapsed": 0.08333333333333333,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 793,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "ball": {
+            "x": 100,
+            "y": 225,
+            "vx": 0,
+            "vy": 0,
+            "radius": 8,
+            "moving": false
+          },
+          "cup": {
+            "x": 580,
+            "y": 225,
+            "radius": 18,
+            "captureRadius": 12,
+            "maxSpeed": 65
+          },
+          "obstacles": [],
+          "angleIndex": 0,
+          "power": 3,
+          "strokeLimit": 4,
+          "strokes": 0,
+          "wallHits": 0,
+          "obstacleHits": 0,
+          "blockedActions": 0,
+          "capture": null,
+          "physicsAccumulator": 0,
+          "physicsTicks": 0,
+          "shotTicks": 0,
+          "shotTime": 0,
+          "currentShot": null,
+          "lastShot": null,
+          "shotReceipts": [],
+          "trail": [],
+          "terminalReceipt": null,
+          "elapsed": 0.08333333333333333,
+          "elapsedCapped": false,
+          "calls": 5,
+          "inputArmed": false,
+          "cancelEpoch": 1,
+          "cancelledLast": true,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "静止时左右调角、上下调力度，A 击球；低速进入球杯才算进洞。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 186,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          250,
+          16.699999999999932,
+          600,
+          249.9000000000001,
+          166.70000000000005,
+          16.59999999999991,
+          133.4000000000001,
+          16.59999999999991,
+          266.6999999999998,
+          133.30000000000018,
+          183.4000000000001,
+          83.29999999999973,
+          149.9000000000001,
+          16.800000000000182,
+          283.1999999999998,
+          16.800000000000182,
+          66.59999999999991,
+          183.30000000000018,
+          16.59999999999991,
+          83.40000000000009
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "P freezes gameplay state and tick, P resumes",
+      "passed": true,
+      "milliseconds": 560.3262119999999,
+      "details": {
+        "pausedTick": 5
+      }
+    },
+    {
+      "name": "ordinary movement and action input",
+      "passed": true,
+      "milliseconds": 3217.415019,
+      "details": {
+        "before": {
+          "id": "pocket-golf",
+          "phase": "playing",
+          "paused": false,
+          "tick": 11,
+          "elapsed": 0.18333333333333332,
+          "level": 0,
+          "best": 0,
+          "model": {
+            "schema": 1,
+            "seed": 793,
+            "level": 0,
+            "phase": "playing",
+            "reason": "",
+            "score": 0,
+            "ball": {
+              "x": 100,
+              "y": 225,
+              "vx": 0,
+              "vy": 0,
+              "radius": 8,
+              "moving": false
+            },
+            "cup": {
+              "x": 580,
+              "y": 225,
+              "radius": 18,
+              "captureRadius": 12,
+              "maxSpeed": 65
+            },
+            "obstacles": [],
+            "angleIndex": 0,
+            "power": 3,
+            "strokeLimit": 4,
+            "strokes": 0,
+            "wallHits": 0,
+            "obstacleHits": 0,
+            "blockedActions": 0,
+            "capture": null,
+            "physicsAccumulator": 0,
+            "physicsTicks": 0,
+            "shotTicks": 0,
+            "shotTime": 0,
+            "currentShot": null,
+            "lastShot": null,
+            "shotReceipts": [],
+            "trail": [],
+            "terminalReceipt": null,
+            "elapsed": 0.18333333333333332,
+            "elapsedCapped": false,
+            "calls": 11,
+            "inputArmed": false,
+            "cancelEpoch": 3,
+            "cancelledLast": true,
+            "lastHeld": {
+              "a": false,
+              "b": false,
+              "direction": "none"
+            },
+            "lastCommand": "none",
+            "events": [],
+            "message": "静止时左右调角、上下调力度，A 击球；低速进入球杯才算进洞。"
+          },
+          "renderer": {
+            "kind": "webgl",
+            "drawCalls": 1,
+            "quads": 186,
+            "textureCount": 1,
+            "atlasSize": 1024,
+            "contextLost": false
+          },
+          "frameTimesMs": [
+            250,
+            16.699999999999932,
+            600,
+            249.9000000000001,
+            166.70000000000005,
+            16.59999999999991,
+            133.4000000000001,
+            16.59999999999991,
+            266.6999999999998,
+            133.30000000000018,
+            183.4000000000001,
+            83.29999999999973,
+            149.9000000000001,
+            16.800000000000182,
+            283.1999999999998,
+            16.800000000000182,
+            66.59999999999991,
+            183.30000000000018,
+            16.59999999999991,
+            83.40000000000009,
+            116.69999999999982,
+            83.30000000000018,
+            150
+          ],
+          "connection": {
+            "phoneSeen": false,
+            "disconnected": false
+          }
+        },
+        "after": {
+          "id": "pocket-golf",
+          "phase": "won",
+          "paused": false,
+          "tick": 183,
+          "elapsed": 3.049999999999994,
+          "level": 0,
+          "best": 100,
+          "model": {
+            "schema": 1,
+            "seed": 793,
+            "level": 0,
+            "phase": "won",
+            "reason": "",
+            "score": 100,
+            "ball": {
+              "x": 580,
+              "y": 225,
+              "vx": 0,
+              "vy": 0,
+              "radius": 8,
+              "moving": false
+            },
+            "cup": {
+              "x": 580,
+              "y": 225,
+              "radius": 18,
+              "captureRadius": 12,
+              "maxSpeed": 65
+            },
+            "obstacles": [],
+            "angleIndex": 0,
+            "power": 4,
+            "strokeLimit": 4,
+            "strokes": 1,
+            "wallHits": 0,
+            "obstacleHits": 0,
+            "blockedActions": 0,
+            "capture": {
+              "x": 568,
+              "y": 225,
+              "speed": 64.07027391856757,
+              "stroke": 1
+            },
+            "physicsAccumulator": 0,
+            "physicsTicks": 609,
+            "shotTicks": 609,
+            "shotTime": 2.5361023798045728,
+            "currentShot": null,
+            "lastShot": {
+              "stroke": 1,
+              "from": {
+                "x": 100,
+                "y": 225
+              },
+              "angleIndex": 0,
+              "angle": 0,
+              "power": 4,
+              "speed": 305,
+              "wallHits": 0,
+              "obstacleHits": 0,
+              "end": {
+                "x": 580,
+                "y": 225
+              },
+              "duration": 2.5361023798045728,
+              "result": "cup",
+              "capture": {
+                "x": 568,
+                "y": 225,
+                "speed": 64.07027391856757,
+                "stroke": 1
+              }
+            },
+            "shotReceipts": [
+              {
+                "stroke": 1,
+                "from": {
+                  "x": 100,
+                  "y": 225
+                },
+                "angleIndex": 0,
+                "angle": 0,
+                "power": 4,
+                "speed": 305,
+                "wallHits": 0,
+                "obstacleHits": 0,
+                "end": {
+                  "x": 580,
+                  "y": 225
+                },
+                "duration": 2.5361023798045728,
+                "result": "cup",
+                "capture": {
+                  "x": 568,
+                  "y": 225,
+                  "speed": 64.07027391856757,
+                  "stroke": 1
+                }
+              }
+            ],
+            "trail": [
+              {
+                "x": 100,
+                "y": 225
+              },
+              {
+                "x": 115.13125,
+                "y": 225
+              },
+              {
+                "x": 130.02500000000003,
+                "y": 225
+              },
+              {
+                "x": 144.68125000000006,
+                "y": 225
+              },
+              {
+                "x": 159.1000000000001,
+                "y": 225
+              },
+              {
+                "x": 173.28125000000014,
+                "y": 225
+              },
+              {
+                "x": 187.2250000000002,
+                "y": 225
+              },
+              {
+                "x": 200.93125000000026,
+                "y": 225
+              },
+              {
+                "x": 214.40000000000035,
+                "y": 225
+              },
+              {
+                "x": 227.63125000000045,
+                "y": 225
+              },
+              {
+                "x": 240.62500000000054,
+                "y": 225
+              },
+              {
+                "x": 253.38125000000065,
+                "y": 225
+              },
+              {
+                "x": 265.9000000000008,
+                "y": 225
+              },
+              {
+                "x": 278.1812500000009,
+                "y": 225
+              },
+              {
+                "x": 290.225000000001,
+                "y": 225
+              },
+              {
+                "x": 302.0312500000011,
+                "y": 225
+              },
+              {
+                "x": 313.60000000000116,
+                "y": 225
+              },
+              {
+                "x": 324.9312500000012,
+                "y": 225
+              },
+              {
+                "x": 336.0250000000013,
+                "y": 225
+              },
+              {
+                "x": 346.8812500000014,
+                "y": 225
+              },
+              {
+                "x": 357.5000000000014,
+                "y": 225
+              },
+              {
+                "x": 367.8812500000015,
+                "y": 225
+              },
+              {
+                "x": 378.0250000000015,
+                "y": 225
+              },
+              {
+                "x": 387.93125000000157,
+                "y": 225
+              },
+              {
+                "x": 397.6000000000016,
+                "y": 225
+              },
+              {
+                "x": 407.03125000000165,
+                "y": 225
+              },
+              {
+                "x": 416.22500000000167,
+                "y": 225
+              },
+              {
+                "x": 425.18125000000174,
+                "y": 225
+              },
+              {
+                "x": 433.90000000000174,
+                "y": 225
+              },
+              {
+                "x": 442.3812500000018,
+                "y": 225
+              },
+              {
+                "x": 450.62500000000176,
+                "y": 225
+              },
+              {
+                "x": 458.6312500000018,
+                "y": 225
+              },
+              {
+                "x": 466.4000000000018,
+                "y": 225
+              },
+              {
+                "x": 473.9312500000018,
+                "y": 225
+              },
+              {
+                "x": 481.2250000000018,
+                "y": 225
+              },
+              {
+                "x": 488.28125000000176,
+                "y": 225
+              },
+              {
+                "x": 495.1000000000017,
+                "y": 225
+              },
+              {
+                "x": 501.6812500000017,
+                "y": 225
+              },
+              {
+                "x": 508.0250000000016,
+                "y": 225
+              },
+              {
+                "x": 514.1312500000016,
+                "y": 225
+              },
+              {
+                "x": 520.0000000000016,
+                "y": 225
+              },
+              {
+                "x": 525.6312500000016,
+                "y": 225
+              },
+              {
+                "x": 531.0250000000016,
+                "y": 225
+              },
+              {
+                "x": 536.1812500000015,
+                "y": 225
+              },
+              {
+                "x": 541.1000000000015,
+                "y": 225
+              },
+              {
+                "x": 545.7812500000015,
+                "y": 225
+              },
+              {
+                "x": 550.2250000000014,
+                "y": 225
+              },
+              {
+                "x": 554.4312500000015,
+                "y": 225
+              },
+              {
+                "x": 558.4000000000015,
+                "y": 225
+              },
+              {
+                "x": 562.1312500000015,
+                "y": 225
+              },
+              {
+                "x": 565.6250000000014,
+                "y": 225
+              }
+            ],
+            "terminalReceipt": {
+              "phase": "won",
+              "reason": "",
+              "score": 100,
+              "ball": {
+                "x": 580,
+                "y": 225,
+                "vx": 0,
+                "vy": 0,
+                "radius": 8,
+                "moving": false
+              },
+              "strokes": 1,
+              "strokeLimit": 4,
+              "wallHits": 0,
+              "obstacleHits": 0,
+              "capture": {
+                "x": 568,
+                "y": 225,
+                "speed": 64.07027391856757,
+                "stroke": 1
+              },
+              "shotReceipts": [
+                {
+                  "stroke": 1,
+                  "from": {
+                    "x": 100,
+                    "y": 225
+                  },
+                  "angleIndex": 0,
+                  "angle": 0,
+                  "power": 4,
+                  "speed": 305,
+                  "wallHits": 0,
+                  "obstacleHits": 0,
+                  "end": {
+                    "x": 580,
+                    "y": 225
+                  },
+                  "duration": 2.5361023798045728,
+                  "result": "cup",
+                  "capture": {
+                    "x": 568,
+                    "y": 225,
+                    "speed": 64.07027391856757,
+                    "stroke": 1
+                  }
+                }
+              ]
+            },
+            "elapsed": 3.049999999999994,
+            "elapsedCapped": false,
+            "calls": 183,
+            "inputArmed": true,
+            "cancelEpoch": 3,
+            "cancelledLast": false,
+            "lastHeld": {
+              "a": false,
+              "b": false,
+              "direction": "none"
+            },
+            "lastCommand": "none",
+            "events": [
+              {
+                "type": "win",
+                "call": 183,
+                "reason": ""
+              }
+            ],
+            "message": "球已低速入杯，完成这一洞。"
+          },
+          "renderer": {
+            "kind": "webgl",
+            "drawCalls": 1,
+            "quads": 204,
+            "textureCount": 1,
+            "atlasSize": 1024,
+            "contextLost": false
+          },
+          "frameTimesMs": [
+            250,
+            16.699999999999932,
+            600,
+            249.9000000000001,
+            166.70000000000005,
+            16.59999999999991,
+            133.4000000000001,
+            16.59999999999991,
+            266.6999999999998,
+            133.30000000000018,
+            183.4000000000001,
+            83.29999999999973,
+            149.9000000000001,
+            16.800000000000182,
+            283.1999999999998,
+            16.800000000000182,
+            66.59999999999991,
+            183.30000000000018,
+            16.59999999999991,
+            83.40000000000009,
+            116.69999999999982,
+            83.30000000000018,
+            150,
+            250,
+            133.30000000000018,
+            50,
+            66.69999999999982,
+            83.39999999999964,
+            99.90000000000055,
+            83.29999999999927,
+            33.400000000000546,
+            83.30000000000018,
+            66.69999999999982,
+            16.599999999999454,
+            83.40000000000055,
+            33.30000000000018,
+            66.69999999999982,
+            33.30000000000018,
+            83.29999999999927,
+            16.700000000000728,
+            66.69999999999982,
+            83.30000000000018,
+            33.29999999999927,
+            66.70000000000073,
+            49.899999999999636,
+            66.80000000000018,
+            99.89999999999964,
+            16.699999999999818,
+            33.30000000000018,
+            66.69999999999982,
+            100,
+            66.60000000000036,
+            16.800000000000182,
+            33.19999999999982,
+            66.69999999999982,
+            100,
+            33.30000000000018,
+            50.100000000000364,
+            33.29999999999927,
+            83.30000000000018,
+            83.30000000000018,
+            33.399999999999636,
+            16.600000000000364,
+            66.69999999999982,
+            33.30000000000018,
+            83.39999999999964,
+            83.30000000000018,
+            16.600000000000364,
+            66.69999999999982,
+            50,
+            66.69999999999982,
+            100,
+            16.699999999999818
+          ],
+          "connection": {
+            "phoneSeen": false,
+            "disconnected": false
+          }
+        }
+      }
+    },
+    {
+      "name": "game-specific normal-play assertions",
+      "passed": true,
+      "milliseconds": 0.16605100000015227
+    },
+    {
+      "name": "gameplay frame is visible",
+      "passed": true,
+      "milliseconds": 1988.826332999999,
+      "details": {
+        "bounds": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463
+        },
+        "coarseColors": 104,
+        "luminanceDeviation": 37.89151014062006,
+        "note": "Automatic blank-frame heuristic; requires separate human visual review."
+      }
+    },
+    {
+      "name": "R restarts with clean simulation state",
+      "passed": true,
+      "milliseconds": 123.42457400000058,
+      "details": {
+        "id": "pocket-golf",
+        "phase": "playing",
+        "paused": false,
+        "tick": 5,
+        "elapsed": 0.08333333333333333,
+        "level": 0,
+        "best": 100,
+        "model": {
+          "schema": 1,
+          "seed": 793,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "ball": {
+            "x": 100,
+            "y": 225,
+            "vx": 0,
+            "vy": 0,
+            "radius": 8,
+            "moving": false
+          },
+          "cup": {
+            "x": 580,
+            "y": 225,
+            "radius": 18,
+            "captureRadius": 12,
+            "maxSpeed": 65
+          },
+          "obstacles": [],
+          "angleIndex": 0,
+          "power": 3,
+          "strokeLimit": 4,
+          "strokes": 0,
+          "wallHits": 0,
+          "obstacleHits": 0,
+          "blockedActions": 0,
+          "capture": null,
+          "physicsAccumulator": 0,
+          "physicsTicks": 0,
+          "shotTicks": 0,
+          "shotTime": 0,
+          "currentShot": null,
+          "lastShot": null,
+          "shotReceipts": [],
+          "trail": [],
+          "terminalReceipt": null,
+          "elapsed": 0.08333333333333333,
+          "elapsedCapped": false,
+          "calls": 5,
+          "inputArmed": false,
+          "cancelEpoch": 4,
+          "cancelledLast": true,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "静止时左右调角、上下调力度，A 击球；低速进入球杯才算进洞。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 186,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          250,
+          16.699999999999932,
+          600,
+          249.9000000000001,
+          166.70000000000005,
+          16.59999999999991,
+          133.4000000000001,
+          16.59999999999991,
+          266.6999999999998,
+          133.30000000000018,
+          183.4000000000001,
+          83.29999999999973,
+          149.9000000000001,
+          16.800000000000182,
+          283.1999999999998,
+          16.800000000000182,
+          66.59999999999991,
+          183.30000000000018,
+          16.59999999999991,
+          83.40000000000009,
+          116.69999999999982,
+          83.30000000000018,
+          150,
+          250,
+          133.30000000000018,
+          50,
+          66.69999999999982,
+          83.39999999999964,
+          99.90000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          83.30000000000018,
+          66.69999999999982,
+          16.599999999999454,
+          83.40000000000055,
+          33.30000000000018,
+          66.69999999999982,
+          33.30000000000018,
+          83.29999999999927,
+          16.700000000000728,
+          66.69999999999982,
+          83.30000000000018,
+          33.29999999999927,
+          66.70000000000073,
+          49.899999999999636,
+          66.80000000000018,
+          99.89999999999964,
+          16.699999999999818,
+          33.30000000000018,
+          66.69999999999982,
+          100,
+          66.60000000000036,
+          16.800000000000182,
+          33.19999999999982,
+          66.69999999999982,
+          100,
+          33.30000000000018,
+          50.100000000000364,
+          33.29999999999927,
+          83.30000000000018,
+          83.30000000000018,
+          33.399999999999636,
+          16.600000000000364,
+          66.69999999999982,
+          33.30000000000018,
+          83.39999999999964,
+          83.30000000000018,
+          16.600000000000364,
+          66.69999999999982,
+          50,
+          66.69999999999982,
+          100,
+          16.699999999999818,
+          83.30000000000018,
+          116.69999999999982,
+          16.600000000000364,
+          166.69999999999982,
+          200,
+          133.19999999999982,
+          183.40000000000055,
+          183.30000000000018,
+          116.69999999999891,
+          116.60000000000036,
+          16.700000000000728,
+          183.29999999999927,
+          50.100000000000364,
+          200,
+          133.20000000000073,
+          100.09999999999854,
+          16.700000000000728,
+          99.89999999999964
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "resizing keeps canvas and complete sidebar text visible",
+      "passed": true,
+      "milliseconds": 2516.4704899999997,
+      "details": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "sidebar": {
+            "visible": true,
+            "bounds": {
+              "left": 749,
+              "top": 65,
+              "right": 944,
+              "bottom": 509
+            },
+            "scrollTop": 0,
+            "clientHeight": 442,
+            "scrollHeight": 442,
+            "clientWidth": 193,
+            "scrollWidth": 193,
+            "tipText": "瞄准点只表示方向和力度，不是自动路线。运动中按键不会排队到下一杆。球停稳后可以在新位置继续击球；杆数用完要等球停稳才判失败。回弹湾角和曲径花园的直线被石障阻挡，需要绕行或借墙。",
+            "expectedTip": "瞄准点只表示方向和力度，不是自动路线。运动中按键不会排队到下一杆。球停稳后可以在新位置继续击球；杆数用完要等球停稳才判失败。回弹湾角和曲径花园的直线被石障阻挡，需要绕行或借墙。",
+            "texts": [
+              {
+                "text": "手机与电视连接同一 Wi-Fi",
+                "rects": [
+                  {
+                    "left": 870,
+                    "top": 134.5,
+                    "right": 930,
+                    "bottom": 148.5
+                  },
+                  {
+                    "left": 870,
+                    "top": 148.5,
+                    "right": 925.484375,
+                    "bottom": 162.5
+                  }
+                ]
+              },
+              {
+                "text": "静止时左/右调5度，上/下调力度；0度向右，90度向下",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 205,
+                    "right": 924.484375,
+                    "bottom": 220
+                  },
+                  {
+                    "left": 789,
+                    "top": 220.390625,
+                    "right": 917.890625,
+                    "bottom": 235.390625
+                  }
+                ]
+              },
+              {
+                "text": "空格、Z、确认 / 手机右上：静止时击球；松开后才能再次按",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 239.78125,
+                    "right": 926.109375,
+                    "bottom": 254.78125
+                  },
+                  {
+                    "left": 789,
+                    "top": 255.171875,
+                    "right": 932,
+                    "bottom": 270.171875
+                  },
+                  {
+                    "left": 789,
+                    "top": 270.5625,
+                    "right": 800,
+                    "bottom": 285.5625
+                  }
+                ]
+              },
+              {
+                "text": "本游戏不使用 B",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 294.25,
+                    "right": 865.015625,
+                    "bottom": 309.25
+                  }
+                ]
+              },
+              {
+                "text": "P 暂停　R 重试遥控器确认开始 / A，播放键暂停",
+                "rects": [
+                  {
+                    "left": 758,
+                    "top": 319.953125,
+                    "right": 825.484375,
+                    "bottom": 333.953125
+                  },
+                  {
+                    "left": 758,
+                    "top": 333.953125,
+                    "right": 903.3125,
+                    "bottom": 347.953125
+                  }
+                ]
+              },
+              {
+                "text": "瞄准点只表示方向和力度，不是自动路线。运动中按键不会排队到下一杆。球停稳后可以在新位置继续击球；杆数用完要等球停稳才判失败。回弹湾角和曲径花园的直线被石障阻挡，需要绕行或借墙。",
+                "rects": [
+                  {
+                    "left": 801.5,
+                    "top": 360.953125,
+                    "right": 911.5,
+                    "bottom": 375.953125
+                  },
+                  {
+                    "left": 765,
+                    "top": 376.34375,
+                    "right": 919,
+                    "bottom": 391.34375
+                  },
+                  {
+                    "left": 765,
+                    "top": 391.734375,
+                    "right": 919,
+                    "bottom": 406.734375
+                  },
+                  {
+                    "left": 765,
+                    "top": 407.125,
+                    "right": 919,
+                    "bottom": 422.125
+                  },
+                  {
+                    "left": 765,
+                    "top": 422.515625,
+                    "right": 919,
+                    "bottom": 437.515625
+                  },
+                  {
+                    "left": 765,
+                    "top": 437.90625,
+                    "right": 919,
+                    "bottom": 452.90625
+                  },
+                  {
+                    "left": 765,
+                    "top": 453.296875,
+                    "right": 853,
+                    "bottom": 468.296875
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "sidebar": {
+            "visible": true,
+            "bounds": {
+              "left": 1024,
+              "top": 94,
+              "right": 1252,
+              "bottom": 672
+            },
+            "scrollTop": 0,
+            "clientHeight": 576,
+            "scrollHeight": 576,
+            "clientWidth": 226,
+            "scrollWidth": 226,
+            "tipText": "瞄准点只表示方向和力度，不是自动路线。运动中按键不会排队到下一杆。球停稳后可以在新位置继续击球；杆数用完要等球停稳才判失败。回弹湾角和曲径花园的直线被石障阻挡，需要绕行或借墙。",
+            "expectedTip": "瞄准点只表示方向和力度，不是自动路线。运动中按键不会排队到下一杆。球停稳后可以在新位置继续击球；杆数用完要等球停稳才判失败。回弹湾角和曲径花园的直线被石障阻挡，需要绕行或借墙。",
+            "texts": [
+              {
+                "text": "手机与电视连接同一 Wi-Fi",
+                "rects": [
+                  {
+                    "left": 1163,
+                    "top": 173.5,
+                    "right": 1233,
+                    "bottom": 187.5
+                  },
+                  {
+                    "left": 1163,
+                    "top": 187.5,
+                    "right": 1208.484375,
+                    "bottom": 201.5
+                  }
+                ]
+              },
+              {
+                "text": "静止时左/右调5度，上/下调力度；0度向右，90度向下",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 252,
+                    "right": 1240.78125,
+                    "bottom": 267
+                  },
+                  {
+                    "left": 1066,
+                    "top": 267.390625,
+                    "right": 1155.59375,
+                    "bottom": 282.390625
+                  }
+                ]
+              },
+              {
+                "text": "空格、Z、确认 / 手机右上：静止时击球；松开后才能再次按",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 286.78125,
+                    "right": 1236.109375,
+                    "bottom": 301.78125
+                  },
+                  {
+                    "left": 1066,
+                    "top": 302.171875,
+                    "right": 1187,
+                    "bottom": 317.171875
+                  }
+                ]
+              },
+              {
+                "text": "本游戏不使用 B",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 325.859375,
+                    "right": 1142.015625,
+                    "bottom": 340.859375
+                  }
+                ]
+              },
+              {
+                "text": "P 暂停　R 重试遥控器确认开始 / A，播放键暂停",
+                "rects": [
+                  {
+                    "left": 1035,
+                    "top": 351.5625,
+                    "right": 1102.484375,
+                    "bottom": 365.5625
+                  },
+                  {
+                    "left": 1035,
+                    "top": 365.5625,
+                    "right": 1180.3125,
+                    "bottom": 379.5625
+                  }
+                ]
+              },
+              {
+                "text": "瞄准点只表示方向和力度，不是自动路线。运动中按键不会排队到下一杆。球停稳后可以在新位置继续击球；杆数用完要等球停稳才判失败。回弹湾角和曲径花园的直线被石障阻挡，需要绕行或借墙。",
+                "rects": [
+                  {
+                    "left": 1078.5,
+                    "top": 392.5625,
+                    "right": 1232.5,
+                    "bottom": 407.5625
+                  },
+                  {
+                    "left": 1042,
+                    "top": 407.953125,
+                    "right": 1229,
+                    "bottom": 422.953125
+                  },
+                  {
+                    "left": 1042,
+                    "top": 423.34375,
+                    "right": 1229,
+                    "bottom": 438.34375
+                  },
+                  {
+                    "left": 1042,
+                    "top": 438.734375,
+                    "right": 1229,
+                    "bottom": 453.734375
+                  },
+                  {
+                    "left": 1042,
+                    "top": 454.125,
+                    "right": 1229,
+                    "bottom": 469.125
+                  },
+                  {
+                    "left": 1042,
+                    "top": 469.515625,
+                    "right": 1108,
+                    "bottom": 484.515625
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "no page, console or resource errors",
+      "passed": true,
+      "milliseconds": 0.12780300000122224
+    }
+  ],
+  "screenshots": [
+    "/workspace/scratch/pocket-golf/qa/01-title.png",
+    "/workspace/scratch/pocket-golf/qa/02-gameplay.png",
+    "/workspace/scratch/pocket-golf/qa/resize-960.png",
+    "/workspace/scratch/pocket-golf/qa/resize-1280.png"
+  ],
+  "uniqueRulesVerified": true,
+  "modelTestsExecuted": false,
+  "visualReviewCompleted": false,
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 46,
+    "rafIntervalMs": {
+      "count": 46,
+      "min": 16.599999999999454,
+      "median": 66.69999999999982,
+      "p95": 100,
+      "max": 100,
+      "mean": 57.96956521739129
+    },
+    "webglDrawCalls": {
+      "count": 46,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 46,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "recording": {
+    "video": "/workspace/scratch/pocket-golf/qa/recording/gameplay.mp4",
+    "bytes": 2374151,
+    "capturedSeconds": 60.57080793380737,
+    "frames": 636,
+    "manifest": "/workspace/scratch/pocket-golf/qa/recording/recording.json"
+  },
+  "sharedRegressionPassed": true,
+  "finishedAt": "2026-11-03T17:48:45.445Z"
+}
