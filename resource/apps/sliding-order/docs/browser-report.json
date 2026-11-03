@@ -1,0 +1,82 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T14:13:09.764Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "489ebdde363d0ce4d21bcb6a65d9b214c9baec805444e7ae1776f584f00577d1",
+    "game-model.js": "e29b2e55949eca09b0184b2bbbb2261c53d9144e3a957ca99a0f9e3985636170",
+    "game.js": "e3b7740bb784df4f254d5d24613a66ecf70983cc2150b3baa673782b422efdc4",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "initial board and goal remain readable at both viewport sizes",
+      "passed": true,
+      "milliseconds": 4956.937086999999,
+      "screenshots": [
+        "/workspace/scratch/sliding-order/browser-checks/initial-1280.png",
+        "/workspace/scratch/sliding-order/browser-checks/initial-960.png"
+      ]
+    },
+    {
+      "name": "level 1: ordinary shortest slide route reaches the complete goal",
+      "passed": true,
+      "milliseconds": 8817.138195,
+      "level": 0,
+      "moves": 8,
+      "screenshot": "/workspace/scratch/sliding-order/browser-checks/level-1-won.png"
+    },
+    {
+      "name": "level 2: ordinary shortest slide route reaches the complete goal",
+      "passed": true,
+      "milliseconds": 6864.208473000001,
+      "level": 1,
+      "moves": 12,
+      "screenshot": "/workspace/scratch/sliding-order/browser-checks/level-2-won.png"
+    },
+    {
+      "name": "level 3: ordinary shortest slide route reaches the complete goal",
+      "passed": true,
+      "milliseconds": 7694.596232,
+      "level": 2,
+      "moves": 18,
+      "screenshot": "/workspace/scratch/sliding-order/browser-checks/level-3-won.png"
+    },
+    {
+      "name": "ordinary undo restores arrangement without returning the spent slide",
+      "passed": true,
+      "milliseconds": 4704.622685999999,
+      "moves": 9,
+      "undos": 1
+    },
+    {
+      "name": "unsolved allowance exhaustion loses and terminal undo remains frozen",
+      "passed": true,
+      "milliseconds": 5794.286908000002,
+      "moves": 14
+    },
+    {
+      "name": "board edges and empty undo history are blocked without spending moves",
+      "passed": true,
+      "milliseconds": 2943.1777379999985,
+      "blockedActions": 3
+    },
+    {
+      "name": "held undo and directional controls do not repeat across pause and release",
+      "passed": true,
+      "milliseconds": 4036.6451490000036,
+      "moves": 3,
+      "undos": 2
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T14:13:55.761Z"
+}
