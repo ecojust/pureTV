@@ -2,8 +2,8 @@
 // Answers live only in test tooling; the shipped model contains initial layouts.
 export const budgets = Object.freeze({ maxWebGLDrawCalls: 3 });
 export const budget = budgets;
-const targets = [[0], [0, 1, 1], [0, 0, 1, 1, 0, 0]];
-const initial = [[1], [2, 0, 0], [3, 1, 0, 0, 1, 1]];
+const targets = [[0], [0, 1, 1], [0, 0, 1, 1, 0, 0], [1, 1, 0], [0, 1, 2, 0], [0, 0, 1, 1, 0, 0, 0, 1, 0]];
+const initial = [[1], [2, 0, 0], [3, 1, 0, 0, 1, 1], [0, 0, 1], [3, 0, 1, 1], [2, 1, 0, 0, 1, 1, 1, 0, 1]];
 const arrows = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
 const vectors = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 let modeSeen, levelSeen, previousTime = -1, releaseNext = false, nextAction = 0, wonSince = null;
@@ -35,14 +35,14 @@ export function keys(snapshot, { elapsed = 0, mode = 'qa' } = {}) {
   if (!state?.devices || snapshot.paused) return [];
   if (mode !== modeSeen || levelSeen !== state.level || state.elapsed + 0.001 < previousTime) {
     modeSeen = mode; levelSeen = state.level; releaseNext = false; wonSince = null;
-    nextAction = elapsed + (mode === 'record' ? 1.2 : 0);
+    nextAction = elapsed + (mode === 'record' ? 2.4 : 0);
   }
   previousTime = state.elapsed;
   if (releaseNext) { releaseNext = false; return []; }
   if (state.phase === 'won') {
-    if (mode !== 'record' || state.level === 3) return [];
+    if (mode !== 'record' || state.level === targets.length) return [];
     if (wonSince === null) wonSince = elapsed;
-    if (elapsed - wonSince < 2.7) return [];
+    if (elapsed - wonSince < 4) return [];
     releaseNext = true;
     // Runtime menu level is zero based; model.level is one based.
     return snapshot.level === state.level ? ['Enter'] : ['ArrowRight'];
@@ -59,7 +59,7 @@ export function keys(snapshot, { elapsed = 0, mode = 'qa' } = {}) {
     key = target.type === 'mirror' ? (index % 2 ? 'b' : 'Space') : turns === 3 ? 'b' : 'Space';
   }
   releaseNext = true;
-  nextAction = elapsed + (mode === 'record' ? 0.65 : 0.14);
+  nextAction = elapsed + (mode === 'record' ? 1.3 : 0.14);
   return [key];
 }
 

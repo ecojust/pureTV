@@ -62,10 +62,10 @@ function reference(state){
 }
 
 try{
- await test('30000 independent randomized force/load/integration comparisons across all three layouts',()=>{
+ await test('30000 independent randomized force/load/integration comparisons across all six layouts',()=>{
   let forceError=0,loadError=0,velocityError=0,positionError=0,tensionError=0,slack=0,taut=0,missingSupports=0;
   for(let i=0;i<30000;i++){
-   const s=M.create(10,i%3);s.mode='testing';s.car.x=s.nodes[0].x-45+random()*(s.nodes.at(-1).x-s.nodes[0].x+90);s.car.mass=25+random()*175;
+   const s=M.create(10,i%6);s.mode='testing';s.car.x=s.nodes[0].x-45+random()*(s.nodes.at(-1).x-s.nodes[0].x+90);s.car.mass=25+random()*175;
    for(const n of s.nodes){if(!n.fixed)n.y+=random()*45-10;n.vy=random()*.8-.4;}
    for(const p of s.panels)p.broken=random()<.15;
    for(const c of s.cables){c.installed=random()<.65;c.broken=random()<.08;c.maxTension=1e9;}
@@ -79,7 +79,7 @@ try{
    close(s.nodes.reduce((sum,n)=>sum+n.load,0),Object.values(expected.loads).reduce((a,b)=>a+b,0),'wheel load sum');
   }
   for(const [name,error] of Object.entries({forceError,loadError,velocityError,positionError,tensionError}))assert.ok(error<1e-8,name+' '+error);
-  assert.ok(slack>0&&taut>0&&missingSupports>0);return{cases:30000,seed:20261101,layouts:3,forceError,loadError,velocityError,positionError,tensionError,slackCableObservations:slack,tautCableObservations:taut,missingSupports};
+  assert.ok(slack>0&&taut>0&&missingSupports>0);return{cases:30000,seed:20261101,layouts:6,forceError,loadError,velocityError,positionError,tensionError,slackCableObservations:slack,tautCableObservations:taut,missingSupports};
  });
  await test('No implicit support: disconnected unloaded free nodes accelerate at g; broken panels transfer no force',()=>{
   const s=M.create(1,0);s.mode='testing';s.panels.forEach(p=>p.broken=true);s.car.falling=true;M.step(s,DT,{});
@@ -105,7 +105,7 @@ try{
  });
  await test('Geometry-priced integer material ledger resists add/remove, overspend and held input',()=>{
   const details=[];
-  for(let level=0;level<3;level++){
+  for(let level=0;level<6;level++){
    const s=M.create(1,level);for(const c of s.cables){const a=s.anchors.find(a=>a.id===c.anchorId),n=s.nodes.find(n=>n.id===c.nodeId);assert.equal(c.cost,Math.ceil(Math.hypot(n.x-a.x,n.restY-a.y)/SCALE*10));assert.ok(Number.isInteger(c.cost));}
    for(const c of s.cables){moveTo(s,c.id);const before=s.spent,had=c.installed,available=s.remainingBudget;tap(s,'a');if(!had&&c.cost>available){assert.equal(c.installed,false);assert.equal(s.spent,before);}else assert.equal(s.spent,before+(had?-c.cost:c.cost));assert.equal(s.remainingBudget,s.budget-s.spent);assert.ok(s.remainingBudget>=0);}
    for(const id of installed(s)){moveTo(s,id);tap(s,'a');}assert.equal(s.spent,0);assert.equal(s.remainingBudget,s.budget);
@@ -129,8 +129,8 @@ try{
   for(let i=0;i<30;i++){const time=s.elapsed;M.step(s,DT,{b:true});assert.equal(s.mode,'testing');assert.deepEqual(s._blueprint.installed.slice().sort(),ids.slice().sort());for(let n=0;n<10;n++)M.step(s,DT,{b:true});assert.equal(s.mode,'testing');M.step(s,DT,{});const materials=installed(s);tap(s,'a');assert.deepEqual(installed(s),materials);tap(s,'b');assert.equal(s.mode,'editing');assert.ok(s.elapsed>time);assert.equal(JSON.stringify({nodes:s.nodes,panels:s.panels,cables:s.cables,car:s.car,spent:s.spent}),blueprint);}
   return{cycles:30,spent:s.spent,elapsed:s.elapsed,attempts:s.attempts};
  });
- await test('Six ordinary input designs cross: two distinct cable sets in each of the three layouts',()=>{
-  for(let level=0;level<3;level++)for(const ids of [['cable-1-1','cable-2-1','cable-3-2'],['cable-1-1','cable-2-1','cable-2-2','cable-3-2']]){
+ await test('Twelve ordinary input designs cross: two distinct cable sets in each of the six layouts',()=>{
+  for(let level=0;level<6;level++)for(const ids of [['cable-1-1','cable-2-1','cable-3-2'],['cable-1-1','cable-2-1','cable-2-2','cable-3-2']]){
    const {s,detail}=ordinaryRun(level,ids);assert.equal(s.phase,'won');assert.equal(s.car.falling,false);assert.equal(s.car.finished,true);assert.ok(s.car.x-s.car.wheelbase/2>s.nodes.at(-1).x);assert.ok(s.remainingBudget>=0);assert.ok(s.panels.every(p=>!p.broken));const frozen=clone(s);M.step(s,.25,{a:true,b:true,x:1});assert.deepEqual(s,frozen);report.normalSequences.push(detail);
   }
   return{normalWins:report.normalSequences.length,liveStateWrites:false,successIsNotSingleCombination:true};

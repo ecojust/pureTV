@@ -1,5 +1,5 @@
 // Independent test-only weighted state graph, using only public traveler times.
-export const layouts=[{times:[1,2,5,10],deadline:19},{times:[1,3,6,8,12],deadline:31},{times:[1,2,4,7,11,16],deadline:37}];
+export const layouts=[{times:[1,2,5,10],deadline:19},{times:[1,3,6,8,12],deadline:31},{times:[1,2,4,7,11,16],deadline:37},{times:[1,5,7,13],deadline:27},{times:[1,2,8,9,17],deadline:33},{times:[1,4,6,13,18,23],deadline:57}];
 export function parties(mask,torch,n){const available=Array.from({length:n},(_,i)=>i).filter(i=>((mask>>i)&1)===torch),out=[];for(let i=0;i<available.length;i++){out.push([available[i]]);for(let j=i+1;j<available.length;j++)out.push([available[i],available[j]]);}return out;}
 export function cross(mask,torch,party,times){let next=mask;for(const id of party)next^=1<<id;return {mask:next,torch:1-torch,cost:Math.max(...party.map(i=>times[i]))};}
 export function solve(layout){const {times}=layout,goal=(1<<times.length)-1,queue=[{mask:0,torch:0,cost:0,path:[]}],best=new Map([['0:0',0]]);let visited=0;

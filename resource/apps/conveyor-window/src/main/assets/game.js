@@ -149,8 +149,8 @@ function cvSyncBlueprint(s){
   }
   document.getElementById('cv-blueprint-gate').textContent='窗口 x'+sc.windowXRange.join('–')+' · 每'+sc.gate.periodTicks/hz+'秒开'+(sc.gate.openUntilPhaseTick-sc.gate.openFromPhaseTick)/hz+'秒';document.getElementById('cv-blueprint-goal').textContent='连续装配 '+s.requiredStreak+' 件 · 损坏 '+s.faultLimit+' 次结束 · B 旋转90°';
 }
-window.GameDef={id:'conveyor-window',title:'窗口装配',subtitle:'CONVEYOR WINDOW',seed:734,holdConfirmAsA:false,atlas:CV_ATLAS,background:'#d9e4de',
-  description:'两带速度不同。A抓取零件，B旋转90°；闸窗打开时，再按A投进形状与朝向匹配的空槽。',controls:{move:'左右 / 摇杆 · 移夹具',a:'抓取·投送 / 空格',b:'旋转90° / B'},actionLabels:['抓取 / 投送','旋转90°'],levelLabel:'工序',levelNames:['铜件初装','逆送三件','对流精装'],tagline:'对准形状，抓住开窗的时刻',tip:'抓起后B旋转，开窗再A投送。最近槽即使已占用也会被选中；失误清零连装。',winTitle:'连续装配完成',loseTitle:'装配未完成',
+window.GameDef={id:'conveyor-window',stylesheet:'game-theme.css',accent:'#f2b35c',title:'窗口装配',subtitle:'CONVEYOR WINDOW',seed:734,holdConfirmAsA:false,atlas:CV_ATLAS,background:'#d9e4de',
+  description:'两带速度不同。A抓取零件，B旋转90°；闸窗打开时，再按A投进形状与朝向匹配的空槽。',controls:{move:'左右 / 摇杆 · 移夹具',a:'抓取·投送 / 空格',b:'旋转90° / B'},actionLabels:['抓取 / 投送','旋转90°'],levelLabel:'工序',levelNames:['铜件初装','逆送三件','对流精装','双向换线','窄窗快装','夜班协同'],tagline:'六张工单 · 双带分流 · 精确装配',tip:'抓起后B旋转，开窗再A投送。最近槽即使已占用也会被选中；失误清零连装。',winTitle:'连续装配完成',loseTitle:'装配未完成',
   result(s){return s.phase==='won'?'连续装配目标已完成。':s.lostReason==='fault_limit'?'损坏次数已达上限。先核对形状与朝向。':'时间已到，连续装配尚未达标。';},
   hud(s){cvSyncBlueprint(s);return[{label:'连续正确',value:s.streak+'/'+s.requiredStreak,tone:s.phase==='won'?'good':''},{label:'累计正确',value:s.totalCorrect,tone:''},{label:'损坏次数',value:s.faults+'/'+s.faultLimit,tone:s.faults?'warn':''},{label:'剩余时间',value:(Math.max(0,s.deadlineTick-s.tick)/s.physics.geometry.ticksPerSecond).toFixed(1)+' s',tone:''}];},
   render(r,s){r.sprite('cv_background',480,270,960,540,0,'#fff');cvMachine(r,s);cvInspection(r,s);cvHeaderFooter(r,s);}

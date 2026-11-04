@@ -23,7 +23,10 @@
       ["source", 0, 4, 0, 7], ["prism", 3, 4, 3], ["mirror", 3, 1, 1], ["mirror", 8, 1, 0],
       ["mirror", 3, 7, 0], ["mirror", 8, 7, 1], ["mirror", 5, 4, 1],
       ["receiver", 8, 4, 5], ["receiver", 5, 0, 2], ["hazard", 0, 1], ["hazard", 0, 7], ["hazard", 5, 8]
-    ] }
+    ] },
+    {"name": "两座灯塔的青光", "width": 9, "height": 7, "duration": 750, "heat": 360, "cells": [["source", 0, 1, 0, 2], ["mirror", 3, 1, 0], ["mirror", 3, 5, 0], ["source", 8, 1, 2, 4], ["mirror", 7, 1, 1], ["receiver", 7, 5, 6], ["hazard", 3, 0], ["hazard", 7, 0], ["wall", 5, 3]] },
+    {"name": "双棱镜四色港", "width": 11, "height": 9, "duration": 900, "heat": 400, "cells": [["source", 0, 2, 0, 3], ["prism", 3, 2, 3], ["mirror", 5, 2, 0], ["source", 10, 5, 2, 6], ["prism", 7, 5, 1], ["mirror", 3, 5, 1], ["receiver", 3, 0, 1], ["receiver", 5, 8, 2], ["receiver", 7, 0, 4], ["receiver", 3, 8, 2], ["hazard", 5, 0], ["hazard", 7, 8], ["hazard", 10, 2]] },
+    {"name": "绕行之后再成白", "width": 13, "height": 9, "duration": 1200, "heat": 500, "cells": [["source", 0, 4, 0, 7], ["prism", 3, 4, 2], ["mirror", 3, 1, 1], ["mirror", 9, 1, 0], ["mirror", 3, 7, 0], ["mirror", 9, 7, 1], ["mirror", 6, 4, 1], ["mirror", 6, 2, 1], ["mirror", 11, 2, 0], ["mirror", 11, 4, 1], ["receiver", 9, 4, 7], ["hazard", 0, 1], ["hazard", 0, 7], ["hazard", 6, 0], ["hazard", 12, 2], ["hazard", 12, 4], ["hazard", 6, 8]] }
   ];
   function finite(value, fallback) { return typeof value === "number" && Number.isFinite(value) ? value : fallback; }
   function mod(value, modulus) { return ((value % modulus) + modulus) % modulus; }
@@ -85,7 +88,7 @@
     state.tracedStates = optics.visitedStates;
   }
   function create(seed, difficulty) {
-    var index = Math.max(0, Math.min(2, Math.floor(finite(difficulty, 0)))), level = LEVELS[index];
+    var index = Math.max(0, Math.min(LEVELS.length - 1, Math.floor(finite(difficulty, 0)))), level = LEVELS[index];
     var state = {
       seed: finite(seed, 1) >>> 0, difficulty: index, level: index + 1, levelName: level.name,
       width: level.width, height: level.height, phase: "playing", elapsed: 0, tick: 0,

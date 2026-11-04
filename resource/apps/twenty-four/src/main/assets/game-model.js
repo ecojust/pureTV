@@ -7,7 +7,10 @@
   const config=freeze({defaultSeed:799,target:24,fullMask:15,attemptLimit:3,undoLimit:2,maxElapsed:86400,maxCounter:2147483647,operators:[
     {id:'add',label:'L + R',symbol:'+',reverse:false},{id:'subtract',label:'L - R',symbol:'-',reverse:false},{id:'reverse-subtract',label:'R - L',symbol:'-',reverse:true},
     {id:'multiply',label:'L x R',symbol:'*',reverse:false},{id:'divide',label:'L / R',symbol:'/',reverse:false},{id:'reverse-divide',label:'R / L',symbol:'/',reverse:true}
-  ],layouts:[{id:'first-equation',name:'FIRST EQUATION',nameZh:'初算四牌',cards:[1,2,3,4]},{id:'split-calculation',name:'SPLIT CALCULATION',nameZh:'分支合算',cards:[2,4,7,8]},{id:'fraction-bridge',name:'FRACTION BRIDGE',nameZh:'分数之桥',cards:[3,3,8,8]}]});
+  ],layouts:[{id:'first-equation',name:'FIRST EQUATION',nameZh:'初算四牌',cards:[1,2,3,4]},{id:'split-calculation',name:'SPLIT CALCULATION',nameZh:'分支合算',cards:[2,4,7,8]},{id:'fraction-bridge',name:'FRACTION BRIDGE',nameZh:'分数之桥',cards:[3,3,8,8]},
+    {id:'paired-products',name:'PAIRED PRODUCTS',nameZh:'双轨乘积',cards:[3,4,6,8]},
+    {id:'hundred-detour',name:'HUNDRED DETOUR',nameZh:'百数迂回',cards:[4,4,10,10]},
+    {id:'one-fifth',name:'ONE FIFTH',nameZh:'五分之一',cards:[1,5,5,5]}]});
   function originals(cards){return cards.map((n,i)=>({id:1<<i,mask:1<<i,n,d:1,expr:String.fromCharCode(65+i)}));}
   function create(seed,level){seed=Number.isInteger(seed)&&seed>=0&&seed<=4294967295?seed:config.defaultSeed;level=Number.isInteger(level)&&level>=0&&level<config.layouts.length?level:0;const l=config.layouts[level];return {schema:1,seed,level,phase:'playing',reason:'',score:0,stage:'first',cards:l.cards.slice(),terms:originals(l.cards),cursor:0,firstMask:null,secondMask:null,opIndex:0,target:24,fullMask:15,currentAttempt:1,failures:0,attemptLimit:3,attemptsRemaining:3,attemptMerges:0,mergesUsed:0,undoTickets:2,undoUsed:0,history:[],lastOperation:null,lastAttempt:null,attemptHistory:[],
     elapsed:0,elapsedCapped:false,calls:0,blockedActions:0,inputArmed:false,cancelEpoch:null,cancelledLast:false,lastHeld:{a:false,b:false,direction:'none'},lastCommand:'none',events:[],terminalReceipt:null,

@@ -13,7 +13,10 @@
   var SETTINGS = [
     { name: '峡谷初桥', ends: [220, 740], towers: [[220, 120], [740, 120]], mass: 90, strength: 1100, budget: 255 },
     { name: '重载高塔', ends: [200, 760], towers: [[185, 95], [775, 95]], mass: 110, strength: 1350, budget: 285 },
-    { name: '偏塔货运', ends: [200, 760], towers: [[200, 100], [760, 170]], mass: 120, strength: 1500, budget: 260 }
+    { name: '偏塔货运', ends: [200, 760], towers: [[200, 100], [760, 170]], mass: 120, strength: 1500, budget: 260 },
+    { name: '低塔检修', ends: [200, 760], towers: [[220, 190], [740, 190]], mass: 100, strength: 1700, budget: 220 },
+    { name: '长跨快运', ends: [140, 820], towers: [[140, 90], [820, 90]], mass: 140, strength: 1850, budget: 330, speed: 26 },
+    { name: '双岸高差', ends: [180, 780], towers: [[250, 90], [720, 210]], mass: 130, strength: 1800, budget: 270 }
   ];
   function finite(value, fallback) { return typeof value === 'number' && Number.isFinite(value) ? value : fallback; }
   function emit(state, type, details) { state.events.push(Object.assign({ type: type, tick: state.tick }, details || {})); }
@@ -69,12 +72,12 @@
         stiffness: 6000, damping: 90, cost: Math.ceil(length * 10), x: (anchor.x + node.x) / 2, y: (anchor.y + node.y) / 2,
         brokenAt: null });
     });
-    state.car = { x: left - 80, y: 282, angle: 0, speed: 20, mass: settings.mass, wheelbase: 56, wheelRadius: 10,
+    state.car = { x: left - 80, y: 282, angle: 0, speed: settings.speed || 20, mass: settings.mass, wheelbase: 56, wheelRadius: 10,
       wheels: [], falling: false, vy: 0, finished: false, finishX: right + 80 };
     state.brokenCount = 0; state.peakTensionRatio = 0; poseCar(state);
   }
   function create(seed, difficulty) {
-    var index = Math.max(0, Math.min(2, Math.floor(finite(difficulty, 0)))), settings = SETTINGS[index];
+    var index = Math.max(0, Math.min(SETTINGS.length - 1, Math.floor(finite(difficulty, 0)))), settings = SETTINGS[index];
     var state = { seed: finite(seed, 1) >>> 0, difficulty: index, level: index + 1, levelName: settings.name,
       width: 960, height: 540, pixelScale: SCALE, gravity: G, phase: 'playing', mode: 'editing', elapsed: 0, tick: 0,
       timeLimit: 90, remaining: 90, score: 0, budget: settings.budget, spent: 0, remainingBudget: settings.budget,

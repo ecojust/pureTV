@@ -74,12 +74,22 @@ export function createPilot(){
   expected=predictVisibleFold(m,target);if(!expected.valid)throw new Error('Public planner selected an invalid fold');before={signature:visibleGeometrySignature(m),foldsUsed:m.foldsUsed,undoCount:m.undoCount,selectedId:m.selectedId};actionAt=m.elapsed;stage='await-fold';releaseNext=true;return['Space'];
  },{diagnostics:()=>clone(diagnostics)});
 }
-const defaultPilot=createPilot();export const keys=(snapshot,options)=>defaultPilot(snapshot,options);
+const defaultPilot=createPilot();let recordWonAt=null,transitionRelease=false;
+export const keys=(snapshot,options={})=>{
+ if(options.mode==='record'&&snapshot?.phase==='won'&&snapshot.model.level<6){
+  if(recordWonAt===null)recordWonAt=options.elapsed;
+  if(transitionRelease){transitionRelease=false;return[];}
+  if(options.elapsed-recordWonAt<2)return[];
+  transitionRelease=true;return[snapshot.level===snapshot.model.level?'Enter':'ArrowRight'];
+ }
+ if(snapshot?.phase==='playing'){recordWonAt=null;transitionRelease=false;}
+ return defaultPilot(snapshot,options);
+};
 const samples=(before,after,trace)=>[before,...(trace||[]).map(x=>x.state||x.snapshot||x),after].filter(x=>x?.model);
 export function assertProgress({before,after,trace},assert){
- const list=samples(before,after,trace),m=after.model;assert.equal(after.phase,'won');assert.equal(m.phase,'won');assert.equal(m.level,before.model.level);assert.equal(m.foldsUsed,m.foldLimit);assert.equal(m.foldsRemaining,0);assert.equal(m.targetMatched,true);assert.equal(m.outlineMatches,true);assert.equal(m.matchedCells,m.target.occupiedCount);assert.equal(m.lostReason,null);assert.ok(m.elapsed>=30&&m.elapsed<90);assert.equal(m.lastReview.matched,true);
+ const list=samples(before,after,trace),m=after.model,materialCount=before.model.pieces.length;assert.equal(after.phase,'won');assert.equal(m.phase,'won');assert.equal(m.level,before.model.level);assert.equal(m.foldsUsed,m.foldLimit);assert.equal(m.foldsRemaining,0);assert.equal(m.targetMatched,true);assert.equal(m.outlineMatches,true);assert.equal(m.matchedCells,m.target.occupiedCount);assert.equal(m.lostReason,null);assert.ok(m.elapsed>=30&&m.elapsed<90);assert.equal(m.lastReview.matched,true);
  assert.ok(list.some(s=>s.model.mode==='folding'&&s.model.foldAnimation),'a real public fold animation must be observed');assert.ok(list.some(s=>s.model.pieces.some(p=>p.face===-1)),'a physical reflection must flip piece faces');
- for(const{model:x}of list){const ctx=context(x);assert.equal(x.pieces.length,16);assert.equal(x.materialArea,16);const ids=x.cells.flatMap(c=>c.layers);assert.equal(ids.length,16);assert.equal(new Set(ids).size,16);assert.equal(x.foldsRemaining,x.foldLimit-x.foldsUsed);assert.equal(x.historyDepth,x.foldsUsed);assert.equal(x.canUndo,x.phase==='playing'&&x.mode!=='folding'&&x.historyDepth>0);assert.equal(x.foldCount-x.undoCount,x.foldsUsed);assert.ok(x.mismatches>=0&&x.mismatches<=x.maxMismatches);assert.ok(Math.abs(x.elapsed-x.tick/60)<1e-7);assert.ok(Math.abs(x.remaining-(90-x.elapsed))<1e-7);
+ for(const{model:x}of list){const ctx=context(x);assert.equal(x.pieces.length,materialCount);assert.equal(x.materialArea,materialCount);const ids=x.cells.flatMap(c=>c.layers);assert.equal(ids.length,materialCount);assert.equal(new Set(ids).size,materialCount);assert.equal(x.foldsRemaining,x.foldLimit-x.foldsUsed);assert.equal(x.historyDepth,x.foldsUsed);assert.equal(x.canUndo,x.phase==='playing'&&x.mode!=='folding'&&x.historyDepth>0);assert.equal(x.foldCount-x.undoCount,x.foldsUsed);assert.ok(x.mismatches>=0&&x.mismatches<=x.maxMismatches);assert.ok(Math.abs(x.elapsed-x.tick/60)<1e-7);assert.ok(Math.abs(x.remaining-(90-x.elapsed))<1e-7);
   for(const cell of x.cells){assert.equal(cell.depth,cell.layers.length);assert.deepEqual(cell.color,color(ctx,cell.layers));assert.deepEqual(cell.reverseColor,color(ctx,cell.layers.slice().reverse()));for(const id of cell.layers){const piece=x.pieces.find(p=>p.id===id);assert.ok(piece);assert.equal(Math.min(...piece.vertices.map(v=>v.x)),cell.col);assert.equal(Math.max(...piece.vertices.map(v=>v.x)),cell.col+1);assert.equal(Math.min(...piece.vertices.map(v=>v.y)),cell.row);assert.equal(Math.max(...piece.vertices.map(v=>v.y)),cell.row+1);assert.ok(piece.vertices.every(v=>Number.isInteger(v.x)&&Number.isInteger(v.y)));assert.equal(Math.abs(piece.face),1)}}
   assert.equal(x.targetMatched,matches(ctx,publicBoard(x)));const bonus=x.phase==='won'?1000+Math.floor(x.remaining)*5+(x.maxMismatches-x.mismatches)*100:0;assert.equal(x.score,x.matchedCells*100+bonus);
  }

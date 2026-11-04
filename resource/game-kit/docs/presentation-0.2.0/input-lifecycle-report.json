@@ -1,0 +1,70 @@
+{
+  "scope": "Deterministic Chromium protocol fixtures with manually advanced RAF, instrumented model and controlled native phone snapshots. Not gameplay, performance or physical hardware evidence.",
+  "runtimeSha256": "17bd5ba5c9cd22ee236dbc4c8e78e25e8133a2052d85d8a5cf23fa72eb563391",
+  "testScriptSha256": "523c90704cd00ab483142eb19ba6b18437b3968d32f93f700c9dc4ab8f985caf",
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "Default games retain one-frame Enter A behavior",
+      "passed": true
+    },
+    {
+      "name": "Opt-in DOM Enter stays held and releases as A",
+      "passed": true
+    },
+    {
+      "name": "Opt-in native Enter down/up preserves held A",
+      "passed": true
+    },
+    {
+      "name": "Coalesced opt-in Enter tap survives zero-physics frames exactly once",
+      "passed": true
+    },
+    {
+      "name": "Holding the menu confirm and DOM repeat cannot create a game A",
+      "passed": true
+    },
+    {
+      "name": "Pause cancels held keyboard A; repeat cannot rearm before keyup",
+      "passed": true
+    },
+    {
+      "name": "Remote A/B held across pause stay quarantined until raw release",
+      "passed": true
+    },
+    {
+      "name": "Connected phone cancelSeq distinguishes cancellation from ordinary release",
+      "passed": true
+    },
+    {
+      "name": "CancelSeq change with a still-held remote button cannot restore that hold",
+      "passed": true
+    },
+    {
+      "name": "First phone connection establishes a cancelSeq baseline without cancelling local input",
+      "passed": true
+    },
+    {
+      "name": "CancelSeq wrap/reset is detected rather than ignored as a lower value",
+      "passed": true
+    },
+    {
+      "name": "Phone disconnect freezes the model and permits independent keyboard takeover",
+      "passed": true
+    },
+    {
+      "name": "Fresh phone hold sampled in the resume frame cannot bypass clearInput",
+      "passed": true
+    },
+    {
+      "name": "Cancellation survives zero-step RAF frames and reaches all substeps of its owned sample",
+      "passed": true
+    },
+    {
+      "name": "Retry clears held keyboard input and ignores its later DOM repeats",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

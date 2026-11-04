@@ -18,6 +18,8 @@ node resource/game-kit/qa/qa.mjs \
 
 产物：`report.json`、实际截图、性能样本、输入状态轨迹；`recording/gameplay.mp4`、`recording/recording.json` 与完整解码结果。`gameplay.mp4` 严格小于 10,000,000 字节。
 
+多关卡的录制 recipe 可使用 3～600 秒，导出仍受严格小于 10,000,000 字节的限制；按实际关卡流程选择时长，不把请求时长当作通关证据。普通操作回归的 `--seconds` 仍限制为 1～120 秒。
+
 独立录制：
 
 ```sh

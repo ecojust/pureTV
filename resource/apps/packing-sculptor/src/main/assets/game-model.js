@@ -52,7 +52,22 @@
         pieceIds: ['rail', 'elbow', 'crate', 'bar', 'tee', 'zig'],
         doors: [{ id: 'east', direction: 'right', start: 1, end: 3 },
           { id: 'west', direction: 'left', start: 3, end: 4 }],
-        requirements: [{ pieceId: 'zig', doorIds: ['east'] }, { pieceId: 'rail', doorIds: ['west'] }] }
+        requirements: [{ pieceId: 'zig', doorIds: ['east'] }, { pieceId: 'rail', doorIds: ['west'] }] },
+      { id: 'pillar-ring', name: 'PILLAR RING', nameZh: '环柱货仓', width: 6, height: 6,
+        rows: ['111111', '111111', '110011', '110011', '111111', '111111'],
+        pieceIds: ['rail', 'elbow', 'crate', 'bar', 'tee', 'zig'],
+        doors: [{ id: 'north', direction: 'up', start: 0, end: 2 }, { id: 'east', direction: 'right', start: 4, end: 6 }],
+        requirements: [{ pieceId: 'bar', doorIds: ['north'] }, { pieceId: 'rail', doorIds: ['east'] }] },
+      { id: 'three-port', name: 'THREE PORT', nameZh: '三口分流', width: 7, height: 5,
+        rows: ['1110111', '1111111', '1111111', '1111111', '1110111'],
+        pieceIds: ['rail', 'elbow', 'crate', 'bar', 'tee', 'zig'],
+        doors: [{ id: 'north', direction: 'up', start: 1, end: 3 }, { id: 'south', direction: 'down', start: 4, end: 7 }, { id: 'east', direction: 'right', start: 1, end: 3 }],
+        requirements: [{ pieceId: 'tee', doorIds: ['north'] }, { pieceId: 'zig', doorIds: ['south'] }, { pieceId: 'crate', doorIds: ['east'] }] },
+      { id: 'forked-depot', name: 'FORKED DEPOT', nameZh: '岔路转运', width: 7, height: 6,
+        rows: ['0111110', '1111111', '1110111', '1110111', '1111111', '0111110'],
+        pieceIds: ['rail', 'elbow', 'crate', 'bar', 'tee', 'zig'],
+        doors: [{ id: 'west', direction: 'left', start: 1, end: 5 }, { id: 'north', direction: 'up', start: 1, end: 6 }, { id: 'east', direction: 'right', start: 1, end: 5 }],
+        requirements: [{ pieceId: 'elbow', doorIds: ['west'] }, { pieceId: 'tee', doorIds: ['north', 'east'] }, { pieceId: 'zig', doorIds: ['east'] }] }
     ]
   });
 

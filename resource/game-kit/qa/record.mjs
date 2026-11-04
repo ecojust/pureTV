@@ -9,7 +9,7 @@ import { parseArgs, sourceHashes, serveAssets, launch, preparePage, snapshot, ap
 export async function recordGameplay({ browser, url, output, recipe = {}, assetHashes, automation, afterCapture }) {
   await mkdir(path.join(output, 'frames'), { recursive:true });
   const seconds = Number(recipe.durationSeconds || 30);
-  assert.ok(seconds >= 3 && seconds <= 120, 'Recording duration must be 3..120 seconds');
+  assert.ok(seconds >= 3 && seconds <= 600, 'Recording duration must be 3..600 seconds');
   const steps = recipe.steps || (automation ? [{ at:1, type:'tap', key:'Enter' }] : [
     { at:1, type:'tap', key:'Enter' }, { at:2, type:'down', key:'ArrowRight' },
     { at:4, type:'up', key:'ArrowRight' }, { at:4.2, type:'tap', key:'Space' },

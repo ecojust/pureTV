@@ -41,7 +41,7 @@ function isolatedCableFixture() {
   return state;
 }
 
-test('UMD exposes the normal API and creates independent geometry for three distinct load cases', () => {
+test('UMD exposes the normal API and creates independent geometry for six distinct load cases', () => {
   const context = {}; vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../src/main/assets/game-model.js'), 'utf8'), context);
   assert.deepEqual(Object.keys(context.PureModel).sort(), ['TICK_HZ', 'create', 'step']);
@@ -50,15 +50,15 @@ test('UMD exposes the normal API and creates independent geometry for three dist
   const first = model.create(7, 2), edited = model.create(7, 2);
   edited.nodes[1].y += 90; edited.cables[0].installed = true; edited.anchors[0].x = -1;
   assert.deepEqual(model.create(7, 2), first);
-  const cases = [0, 1, 2].map(level => model.create(1, level));
-  assert.equal(new Set(cases.map(state => state.car.mass)).size, 3);
-  assert.equal(new Set(cases.map(state => state.budget)).size, 3);
-  assert.equal(new Set(cases.map(state => JSON.stringify(state.anchors))).size, 3);
-  assert.equal(model.create().level, 1); assert.equal(model.create(1, -4).level, 1); assert.equal(model.create(1, 100).level, 3);
+  const cases = [0, 1, 2, 3, 4, 5].map(level => model.create(1, level));
+  assert.equal(new Set(cases.map(state => state.car.mass)).size, 6);
+  assert.equal(new Set(cases.map(state => state.budget)).size, 6);
+  assert.equal(new Set(cases.map(state => JSON.stringify(state.anchors))).size, 6);
+  assert.equal(model.create().level, 1); assert.equal(model.create(1, -4).level, 1); assert.equal(model.create(1, 100).level, 6);
 });
 
 test('reference cable lengths and integer costs derive from geometry, not from installed answers', () => {
-  for (let level = 0; level < 3; level += 1) {
+  for (let level = 0; level < 6; level += 1) {
     const state = model.create(1, level);
     for (const cable of state.cables) {
       const anchor = state.anchors.find(item => item.id === cable.anchorId), node = state.nodes.find(item => item.id === cable.nodeId);
@@ -71,7 +71,7 @@ test('reference cable lengths and integer costs derive from geometry, not from i
 });
 
 test('all cable candidates are reachable and direction selection has a dead zone and delayed repeat', () => {
-  for (let level = 0; level < 3; level += 1) {
+  for (let level = 0; level < 6; level += 1) {
     const state = model.create(1, level);
     for (const from of state.cables) { select(state, from.id); for (const to of state.cables) assert.ok(Array.isArray(selectedRoute(state, to.id))); }
   }
@@ -255,7 +255,7 @@ test('crossing the far bank is insufficient when a bridge panel has already coll
 });
 
 test('retry recreates independent undeformed geometry, empty budget and cleared button/snapshot state', () => {
-  for (let level = 0; level < 3; level += 1) {
+  for (let level = 0; level < 6; level += 1) {
     const initial = model.create(7, level), changed = build(model.create(7, level), ['cable-1-2']); runTest(changed);
     const retry = model.create(7, level); assert.deepEqual(retry, initial); assert.notEqual(retry.nodes[1], initial.nodes[1]);
     assert.equal(retry._blueprint, null); assert.equal(retry.attempts, 0); assert.equal(retry.spent, 0); assert.equal(retry.remainingBudget, retry.budget);
@@ -264,8 +264,8 @@ test('retry recreates independent undeformed geometry, empty budget and cleared 
   }
 });
 
-test('all three bridges support actual normal-key constructions, including two different safe material plans', () => {
-  for (let level = 0; level < 3; level += 1) for (const plan of [strong, economical]) {
+test('all six bridges support actual normal-key constructions, including two different safe material plans', () => {
+  for (let level = 0; level < 6; level += 1) for (const plan of [strong, economical]) {
     const state = build(model.create(1, level), plan); assert.deepEqual(installed(state), plan); assert.ok(state.spent <= state.budget);
     const started = state.elapsed; runTest(state);
     assert.equal(state.phase, 'won'); assert.equal(state.car.finished, true); assert.equal(state.car.falling, false);
@@ -278,7 +278,7 @@ test('all three bridges support actual normal-key constructions, including two d
 
 test('observational keyboard pilots win every level; recording restores a real failed trial using B', async () => {
   const pilot = await import(pathToFileURL(path.join(__dirname, 'automation.mjs')).href);
-  for (const mode of ['qa', 'record']) for (let level = 0; level < 3; level += 1) {
+  for (const mode of ['qa', 'record']) for (let level = 0; level < 6; level += 1) {
     const state = model.create(1, level), before = { phase: 'playing', model: clone(state) }, trace = [];
     let held = new Set(), sawFailure = false, sawRestore = false;
     for (let elapsed = 0; elapsed < 90 && state.phase === 'playing'; elapsed += 0.08) {

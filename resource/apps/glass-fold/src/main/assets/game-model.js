@@ -14,7 +14,10 @@
       target: [[2, 0, 84, 166, 170], [3, 0, 187, 146, 141], [2, 1, 158, 119, 132], [3, 1, 194, 191, 139]] },
     { name: '暮色拼窗', folds: 3, rows: ['GYRB', 'BRGY', 'RYBG', 'YBGR'],
       target: [[2, 2, 137, 151, 115], [3, 2, 153, 172, 120], [2, 3, 98, 186, 201], [3, 3, 239, 172, 109]] },
-    { name: '琉璃凝心', folds: 4, rows: ['RBGR', 'YGYB', 'BRGY', 'GYRB'], target: [[3, 1, 191, 99, 109]] }
+    { name: '琉璃凝心', folds: 4, rows: ['RBGR', 'YGYB', 'BRGY', 'GYRB'], target: [[3, 1, 191, 99, 109]] },
+    { name: '留白拱窗', folds: 2, rows: ['R..B', 'YGGY', 'BGGR', 'R..Y'], target: [[3, 0, 224, 145, 90], [2, 1, 60, 188, 145], [3, 1, 186, 128, 126]] },
+    { name: '交错层光', folds: 3, rows: ['RBY.', 'YG.B', '.GRY', 'GYBR'], target: [[0, 2, 133, 144, 120], [1, 2, 176, 171, 109]], checks: 2 },
+    { name: '万花凝珠', folds: 4, rows: ['RGBY', 'GBYR', 'BYRG', 'YRGB'], target: [[1, 3, 216, 153, 79]], checks: 2 }
   ];
   var PALETTE = [{ id: 'R', rgb: [226, 78, 95] }, { id: 'B', rgb: [49, 157, 216] },
     { id: 'Y', rgb: [241, 182, 53] }, { id: 'G', rgb: [48, 184, 139] }];
@@ -70,7 +73,7 @@
   function finish(s, phase, reason) {
     refresh(s); s.phase = phase; s.lostReason = reason || null; s._remainder = 0; s.canUndo = false; s.reviewPending = false;
     if (phase === 'won') { s.score += 1000 + Math.floor(s.remaining) * 5 + (s.maxMismatches - s.mismatches) * 100; s.message = '轮廓与可见色彩全部匹配！'; }
-    else s.message = reason === 'timeout' ? '90 秒工坊时间结束 · 按 R 重新开始' : '三次验收未通过 · 按 R 重新规划';
+    else s.message = reason === 'timeout' ? '90 秒工坊时间结束 · 按 R 重新开始' : s.maxMismatches + ' 次验收未通过 · 按 R 重新规划';
     emit(s, phase, { reason: reason || null });
   }
   function review(s) {
@@ -153,20 +156,21 @@
     refresh(s);
   }
   function create(seed, difficulty) {
-    var index = clamp(Math.floor(finite(difficulty, 0)), 0, 2), level = LEVELS[index];
+    var index = clamp(Math.floor(finite(difficulty, 0)), 0, LEVELS.length - 1), level = LEVELS[index];
     var s = { seed: finite(seed, 1) >>> 0, difficulty: index, level: index + 1, levelName: level.name, width: 960, height: 540,
-      grid: { cols: 4, rows: 4 }, view: { current: { x: 130, y: 114, cellSize: 64 }, target: { x: 566, y: 114, cellSize: 64 } },
+      grid: { cols: 4, rows: 4 }, view: { current: { x: 42, y: 78, cellSize: 100 }, target: { x: 522, y: 78, cellSize: 100 } },
       palette: copy(PALETTE), layerAlpha: 0.5, substrateColor: [246, 244, 234], pieces: [], cells: [], candidates: [],
       target: { cells: level.target.map(function (c) { return { col: c[0], row: c[1], color: c.slice(2) }; }), occupiedCount: level.target.length },
       phase: 'playing', mode: 'editing', lostReason: null, tick: 0, elapsed: 0, timeLimit: 90, remaining: 90, score: 0,
       foldLimit: level.folds, foldsUsed: 0, foldsRemaining: level.folds, foldCount: 0, undoCount: 0, invalidFolds: 0, selectionCount: 0,
       selectedIndex: 1, selectedId: '', historyDepth: 0, canUndo: false, foldAnimation: null, reviewPending: false,
-      mismatches: 0, maxMismatches: 3, reviewCount: 0, lastReview: null, lastAction: null,
+      mismatches: 0, maxMismatches: level.checks || 3, reviewCount: 0, lastReview: null, lastAction: null,
       materialArea: 16, occupiedArea: 16, matchedCells: 0, outlineMatches: false, targetMatched: false, message: '选择折线与翻折方向 · A 折叠，B 撤销', events: [],
       _history: [], _remainder: 0, _aDown: false, _bDown: false, _pendingA: false, _pendingB: false,
       _moveDirection: '', _repeatTicks: 0, _cancelEpoch: null, _pendingCancel: false };
     for (var row = 0; row < 4; row += 1) for (var col = 0; col < 4; col += 1) {
       var id = row * 4 + col + 1;
+      if (level.rows[row][col] === '.') { s.cells.push({ col: col, row: row, layers: [], depth: 0, color: null, reverseColor: null }); continue; }
       s.pieces.push({ id: id, pigment: level.rows[row][col], vertices: [{ x: col, y: row }, { x: col + 1, y: row }, { x: col + 1, y: row + 1 }, { x: col, y: row + 1 }], face: 1, movedFolds: 0 });
       s.cells.push({ col: col, row: row, layers: [id], depth: 1, color: null, reverseColor: null });
     }

@@ -23,7 +23,32 @@ async function select(page,mask){while((await snapshot(page)).model.terms[(await
 async function prepare(page,a,b,op){await select(page,a);await action(page,'Space','stage');await select(page,b);await action(page,'Space','stage');while((await snapshot(page)).model.opIndex!==op)await action(page,'ArrowRight','opIndex');}
 async function merge(page,a,b,op){await prepare(page,a,b,op);await action(page,'Space','mergesUsed');}
 try{
- for(let level=0;level<3;level++)await test(`level ${level+1}: ordinary exact arithmetic uses every source card and reaches24`,async()=>{
+ await test('six distinct courses remain selectable with complete instructions at both TV sizes',async()=>{
+  const session=await preparePage(browser,server.url),p=session.page,layouts=[];
+  try{
+   await p.waitForFunction(()=>document.querySelector('link[href="game-theme.css"]')?.sheet);
+   assert.equal(await p.locator('[data-level]').count(),6);
+   for(const width of [960,1280]){
+    await p.setViewportSize({width,height:width*9/16});await delay(100);
+    const ui=await p.evaluate(()=>{
+     const aside=document.querySelector('aside'),bounds=aside.getBoundingClientRect(),rect=r=>({left:r.left,top:r.top,right:r.right,bottom:r.bottom});
+     const texts=[...aside.querySelectorAll('#tip,#room-address,.control p,.small-help')].map(el=>{const range=document.createRange();range.selectNodeContents(el);return {text:el.textContent,rects:[...range.getClientRects()].filter(r=>r.width&&r.height).map(rect)};});
+     return {bounds:rect(bounds),clientHeight:aside.clientHeight,scrollHeight:aside.scrollHeight,clientWidth:aside.clientWidth,scrollWidth:aside.scrollWidth,texts,buttons:[...document.querySelectorAll('[data-level]')].map(el=>({label:el.textContent,bounds:rect(el.getBoundingClientRect())})),scene:rect(document.querySelector('#scene').getBoundingClientRect())};
+    });
+    assert.ok(ui.scrollHeight<=ui.clientHeight+1&&ui.scrollWidth<=ui.clientWidth+1,'Instructions fit without scrolling');
+    for(const text of ui.texts){assert.ok(text.text.trim()&&text.rects.length);for(const box of text.rects)assert.ok(box.left>=ui.bounds.left-1&&box.top>=ui.bounds.top-1&&box.right<=ui.bounds.right+1&&box.bottom<=ui.bounds.bottom+1,'Clipped instruction: '+text.text);}
+    for(const button of ui.buttons)assert.ok(button.bounds.left>=ui.scene.left&&button.bounds.top>=ui.scene.top&&button.bounds.right<=ui.scene.right&&button.bounds.bottom<=ui.scene.bottom,'Clipped course button: '+button.label);
+    const screenshot=path.join(output,`six-courses-${width}.png`);await inspectFrame(p,screenshot);layouts.push({width,...ui,screenshot});
+   }
+   for(let level=0;level<6;level++){await p.locator(`[data-level="${level}"]`).click();await p.waitForFunction(level=>PureTVQA.snapshot().level===level&&PureTVQA.snapshot().model.level===level,level);}
+   await p.keyboard.down('Enter');await delay(80);await p.keyboard.up('Enter');await p.waitForFunction(()=>PureTVQA.snapshot().phase==='playing');await delay(100);
+   await p.keyboard.down('Space');await delay(80);await p.keyboard.up('Space');
+   const playing=[];for(const width of [960,1280]){await p.setViewportSize({width,height:width*9/16});await delay(100);const screenshot=path.join(output,`new-layout-playing-${width}.png`);await inspectFrame(p,screenshot);playing.push(screenshot);}
+   verifyErrors(session);return {layouts,playing};
+  }finally{await session.context.close();}
+ });
+ if(!args.preview){
+ for(let level=0;level<6;level++)await test(`level ${level+1}: ordinary exact arithmetic uses every source card and reaches24`,async()=>{
   const session=await fresh(level);try{const result=await play(session,createPilot(),{capture:true});assertProgress(result,assert);await inspectFrame(session.page,path.join(output,`level-${level+1}-won.png`));await writeFile(path.join(output,`level-${level+1}-trace.json`),JSON.stringify(result,null,2)+'\n');return {level,merges:result.after.model.mergesUsed,expression:result.after.model.terms[0].expr,fractionsObserved:result.trace.some(t=>t.state.model.terms.some(term=>term.d!==1))};}finally{await session.context.close();}
  });
  await test('held confirmation selects only once, pause freezes it, and B cancels without spending a ticket',async()=>{
@@ -41,6 +66,7 @@ try{
  await test('correct arithmetic wins on the third attempt after two genuine failed completions',async()=>{
   const session=await fresh(2);try{const partial=await play(session,createPilot({wrong:true}),{until:s=>s.model.failures===2}),result=await play(session,createPilot());assertProgress({...result,before:partial.before,trace:[...partial.trace,...result.trace]},assert);assert.equal(result.after.model.currentAttempt,3);assert.equal(result.after.model.failures,2);assert.equal(result.after.model.mergesUsed,9);return {thirdAttemptWon:true,failuresNotRefunded:true};}finally{await session.context.close();}
  });
+ }
  assert.deepEqual(await sourceHashes(assets),hashes);report.passed=true;
 }catch(error){report.passed=false;report.failure=error.stack;console.error(error.stack);process.exitCode=1;}
 finally{await browser.close();await server.close();report.finishedAt=new Date().toISOString();await writeFile(path.join(output,'report.json'),JSON.stringify(report,null,2)+'\n');}

@@ -7,7 +7,7 @@
   var marks = { rail: 'R', elbow: 'E', crate: 'C', bar: 'B', tee: 'T', zig: 'Z' };
   var compass = { right: 'E', left: 'W', up: 'N', down: 'S' };
   var UNIT = 48, TILE_W = 192, TILE_H = 144;
-  var board = { x: 125, y: 98, cell: 51 };
+  var board = { x: 275, y: 118, cell: 40 };
 
   function path(c, points) {
     c.beginPath(); c.moveTo(points[0][0], points[0][1]);
@@ -181,27 +181,22 @@
     centered(r, marks[preview.id] + pose.turn, label[0], label[1] - 13, 24, '#f8f1d9', 45);
   }
   function rack(r, state) {
-    var task = config.tasks[state.level], x = 646, width = 294, start = 91, row = 53;
-    text(r, 'PIECE RACK', x + 8, 62, 25, C.ink, width - 16);
+    var task = config.tasks[state.level], count = task.pieceIds.length + 1, gap = 8, width = (916 - gap * (count - 1)) / count;
     task.pieceIds.forEach(function (id, index) {
-      var y = start + index * row, selected = index === state.rackIndex, placed = state.placements[index] !== null;
-      r.rect(x, y, width, 47, selected ? '#3a4a4c' : '#142735');
-      frame(r, x, y, width, 47, selected ? C.focus : '#4b5d60', selected ? 2 : 1);
-      var piece = pieceById(id), unit = Math.min(15, 49 / piece.width, 33 / piece.height);
-      pieceSprite(r, id, { turn: 0 }, x + 34 - piece.width * unit / 2, y + 23.5 - piece.height * unit / 2, unit, '#ffffff');
-      text(r, piece.name, x + 71, y + 10, 24, selected ? C.focus : C.ink, 91);
-      var req = task.requirements.filter(function (requirement) { return requirement.pieceId === id; })[0];
-      if (req) {
-        var door = task.doors.filter(function (value) { return value.id === req.doorIds[0]; })[0];
-        text(r, compass[door.direction], x + 169, y + 10, 24, C.metal, 24);
-      }
-      text(r, placed ? 'SET' : 'RACK', x + 214, y + 10, 24, placed ? C.good : C.muted, 74);
+      var x = 22 + index * (width + gap), y = 440, selected = index === state.rackIndex, placed = state.placements[index] !== null;
+      r.rect(x, y, width, 88, selected ? '#3d5350' : '#142d35');
+      frame(r, x, y, width, 88, selected ? C.focus : '#4a6668', selected ? 3 : 1);
+      var piece = pieceById(id), unit = 18;
+      pieceSprite(r, id, { turn: 0 }, x + width / 2 - piece.width * unit / 2, y + 28 - piece.height * unit / 2, unit, placed ? [1, 1, 1, .4] : '#ffffff');
+      centered(r, marks[id] + '  ' + piece.name, x + width / 2, y + 49, 17, selected ? C.focus : C.ink, width - 8);
+      centered(r, placed ? 'LOADED' : 'PICK / ROTATE', x + width / 2, y + 69, 12, placed ? C.good : C.muted, width - 8);
     });
-    var y = start + task.pieceIds.length * row, active = state.rackIndex === task.pieceIds.length;
-    r.rect(x, y, width, 47, active ? '#3a4a4c' : '#142735');
-    frame(r, x, y, width, 47, active ? C.focus : state.geometry.canShip ? C.good : '#4b5d60', active ? 2 : 1);
-    text(r, 'CHECK', x + 12, y + 10, 24, state.geometry.canShip ? C.good : C.ink, 95);
-    text(r, state.geometry.canShip ? 'READY' : 'NOT READY', x + 113, y + 10, 24, C.muted, 174);
+    var x = 22 + task.pieceIds.length * (width + gap), active = state.rackIndex === task.pieceIds.length;
+    r.rect(x, 440, width, 88, state.geometry.canShip ? '#245848' : '#273b3b');
+    frame(r, x, 440, width, 88, active ? C.focus : C.metal, active ? 3 : 1);
+    centered(r, 'DISPATCH', x + width / 2, 456, 19, C.ink, width - 8);
+    centered(r, state.geometry.canShip ? 'READY' : 'CHECK', x + width / 2, 484, 23, state.geometry.canShip ? C.good : C.metal, width - 8);
+    centered(r, 'A SEND / B CLEAR', x + width / 2, 512, 11, C.muted, width - 8);
   }
   function actions(state) {
     if (state.mode === 'place') return [state.preview.x === state.container.width ? 'A BACK' : 'A PLACE', 'B TURN'];
@@ -214,32 +209,50 @@
   }
   function render(r, state) {
     var task = config.tasks[state.level], current = actions(state), remaining = config.attemptLimit - state.failures;
+    board.x = 275 + (7 - task.width) * 20; board.y = 118 + (6 - task.height) * 20;
     r.sprite('bench', 480, 270, 960, 540, 0, '#ffffff');
-    r.rect(16, 12, 928, 43, '#101f2d'); r.rect(16, 62, 610, 428, [0, .04, .08, .20]);
-    text(r, task.name, 28, 19, 28, C.ink, 458);
-    text(r, 'PACKED ' + state.geometry.placedCount + '/' + state.pieceIds.length, 501, 20, 26, C.good, 208);
-    text(r, 'ERRORS LEFT ' + remaining, 716, 20, 26, remaining <= 1 ? C.bad : C.ink, 218);
-    floor(r, state); placedPieces(r, state); rack(r, state);
-    var status = state.geometry.extractions.map(function (exit) {
-      var requirement = task.requirements.filter(function (req) { return req.pieceId === exit.pieceId; })[0];
-      var door = task.doors.filter(function (value) { return value.id === requirement.doorIds[0]; })[0];
-      return pieceById(exit.pieceId).name + ' ' + compass[door.direction] + ':' + (!exit.placed ? 'UNPLACED' : exit.canExit ? 'CLEAR' : 'BLOCKED');
-    }).join('  ');
-    text(r, status, 28, 463, 24, state.geometry.extractions.every(function (exit) { return exit.canExit; }) ? C.good : C.metal, 590);
-    r.rect(16, 500, 928, 40, '#101f2d');
-    text(r, state.mode === 'place' ? 'PLACE q' + state.preview.turn : 'RACK', 28, 507, 24, C.focus, 142);
-    text(r, current[0], 184, 507, 24, C.ink, 140); text(r, current[1], 337, 507, 24, C.ink, 140);
-    text(r, previewStatus(state), 490, 507, 24, state.mode === 'place' && !state.previewCheck.valid ? C.bad : C.good, 263);
-    text(r, state.mode === 'place' ? '(' + state.preview.x + ',' + state.preview.y + ')' : 'HOLD = 1', 770, 507, 24, C.muted, 166);
+    r.rect(0, 0, 960, 57, '#dac9a6');
+    text(r, 'CARGO / ' + String(state.level + 1).padStart(2, '0'), 23, 13, 25, '#213c42', 245);
+    text(r, task.name, 297, 13, 27, '#213c42', 372);
+    text(r, 'PACK + EXIT', 737, 17, 20, '#465e5b', 198);
+    // The center is the loading floor; the two narrow receipts describe the
+    // job and its exit checks. The physical silhouettes live in a bottom tray.
+    r.rect(18, 75, 187, 326, '#d9c8a8');
+    text(r, 'LOAD SHEET', 33, 89, 21, '#263e43', 160);
+    r.line(33, 122, 189, 122, 1, '#98896c');
+    text(r, 'PIECES', 33, 138, 16, '#506361', 150);
+    text(r, state.geometry.placedCount + ' / ' + state.pieceIds.length, 33, 163, 43, '#243e42', 152);
+    var area = task.rows.join('').split('').filter(function (v) { return v === '1'; }).length;
+    var used = state.geometry.pieces.reduce(function (total, item) { return total + item.cells.length; }, 0);
+    text(r, 'FLOOR ' + used + '/' + area, 33, 222, 17, '#506361', 152);
+    r.rect(33, 249, 155, 9, '#aa9d82');r.rect(33, 249, 155 * used / area, 9, '#3d786b');
+    text(r, 'CHECKS LEFT', 33, 279, 16, '#506361', 152);
+    for (var token = 0; token < 4; token++) r.rect(34 + token * 39, 305, 25, 22, token < remaining ? '#397a69' : '#ac7d64');
+    text(r, current[0], 33, 348, 18, '#263e43', 160);text(r, current[1], 33, 376, 18, '#263e43', 160);
+    floor(r, state); placedPieces(r, state);
+    text(r, 'EXIT MANIFEST', 738, 88, 19, C.metal, 200);
+    state.geometry.extractions.forEach(function (exit, index) {
+      var y = 126 + index * 85, requirement = task.requirements.find(function (req) { return req.pieceId === exit.pieceId; });
+      var doors = requirement.doorIds.map(function (id) { return compass[task.doors.find(function (d) { return d.id === id; }).direction]; }).join('/');
+      r.rect(730, y, 210, 72, exit.canExit ? '#234d45' : '#1b343e');
+      r.rect(730, y, 4, 72, exit.canExit ? C.good : C.metal);
+      text(r, pieceById(exit.pieceId).name + ' > ' + doors, 742, y + 10, 18, C.ink, 186);
+      text(r, !exit.placed ? 'AWAIT LOADING' : exit.canExit ? 'PATH CLEAR' : 'PATH BLOCKED', 742, y + 41, 15, exit.canExit ? C.good : C.muted, 186);
+    });
+    r.line(22, 421, 938, 421, 1, '#d5b47a66');
+    text(r, 'PARTS TRAY', 22, 406, 13, C.muted, 140);
+    text(r, previewStatus(state), 275, 406, 16, state.mode === 'place' && !state.previewCheck.valid ? C.bad : C.good, 340);
+    text(r, state.mode === 'place' ? 'ANCHOR ' + state.preview.x + ',' + state.preview.y + ' / q' + state.preview.turn : 'ARROWS SELECT / A PICK', 650, 406, 14, C.muted, 288);
+    rack(r, state);
   }
 
   root.GameDef = {
-    id: 'packing-sculptor', title: '异形装箱', seed: config.defaultSeed, accent: C.metal, background: C.background, atlas: atlas,
+    id: 'packing-sculptor', stylesheet: 'game-theme.css', title: '异形装箱', seed: config.defaultSeed, accent: C.metal, background: C.background, atlas: atlas,
     holdConfirmAsA: true, levelLabel: '装箱任务', levelNames: config.tasks.map(function (task) { return task.nameZh; }),
     actionLabels: ['选取 / 落定 / 验收', '取回 / 旋转 / 清空'], tagline: '装得下，也要取得出',
-    description: '把全部零件装入缺角箱体，为标记零件留出指定直线出口。零件架方向选择，A 选取、B 取回；摆放时方向移动，A 落定、B 旋转。到右侧 BACK 栏按 A 取消。CHECK 的 A 验收、B 清空；四次错误结束。长按不连动。',
-    controls: { move: '方向选择零件；摆放时按格移动锚点', a: '空格、Z、确认 / 手机右上：选取、落定或验收', b: 'X、B / 手机右下：取回、旋转；CHECK 格清空' },
-    tip: 'R/E/C/B/T/Z 对应长轨、弯角、方块、短条、丁板、折板，q0–3 为朝向。金色 N/E/S/W 标出指定出口；其他零件始终固定，出口不能靠先取走其他零件来打开。贴边允许、穿墙和重叠不行。BACK 只取消预览；清空不退错误次数。',
+    description: '六座货仓，从侧门小箱到环柱仓与三口分流。装入全部零件，并为标记货物留出完整直线出口。底部托盘选件，摆放时移动和旋转；DISPATCH 验收，四次错误结束。',
+    controls: { move: '方向选件 / 移动锚点', a: 'A：选取、落定、验收', b: 'B：取回、旋转、清空' },
+    tip: '金色 N/E/S/W 是出口。抽出时其他零件不动；留出完整通道。BACK 取消预览，清空不退错误次数。',
     winTitle: '装箱完成，出库畅通', loseTitle: '本次装箱未通过',
     hud: function (state) {
       var selected = state.rackIndex < state.pieceIds.length ? pieceById(state.pieceIds[state.rackIndex]).nameZh : '验收';

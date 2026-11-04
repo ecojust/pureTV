@@ -1,95 +1,94 @@
 (function(root){
  'use strict';
- var C={bg:'#263d46',ink:'#f8eedb',muted:'#b1c3bd',gold:'#f2c184',mint:'#8bd5be',red:'#f09f89',dark:'#243f43'};
- var floorColors=['#acbab0','#8bc9bd','#a7c0d1','#c4b99e','#acb9d2','#d2b4a4'];
- function round(c,x,y,w,h,r,fill,stroke,weight){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=weight||1;c.stroke();}}
+ var C={bg:'#142b39',ink:'#fff2d7',muted:'#a8c2cb',gold:'#ffc164',mint:'#90dfc5',red:'#ff927c'};
+ var floorColors=['#b2cbd0','#72b7b9','#afc5db','#d4b890','#95aecb','#d6a895'];
  var atlas={builtins:[],tiles:[
-  {name:'construction',x:0,y:0,w:640,h:384,paint:function(c,w,h,art){
+  {name:'towerCity',x:0,y:0,w:640,h:384,paint:function(c,w,h,a){
    c.save();c.scale(w/960,h/540);
-   c.fillStyle=art.linear(c,0,0,960,540,[[0,'#49636c'],[.52,'#2c4b55'],[1,'#1c3744']]);c.fillRect(0,0,960,540);
-   round(c,16,12,928,42,9,'#1b3543e8','#8b9f9a');
-   round(c,16,72,624,415,13,art.linear(c,0,72,0,487,[[0,'#d8d9c3'],[.47,'#bdc7b3'],[1,'#9cb5a6']]),'#839b91',2);
-   c.save();round(c,18,74,620,411,11,null);c.clip();
-   // Quiet city silhouettes and scaffold braces provide a stable scale behind the tower.
-   c.fillStyle='#6c8c8c25';
-   [[25,344,57,144],[86,315,51,173],[149,368,67,120],[453,346,48,142],[512,303,55,185],[576,359,60,129]].forEach(function(b){c.fillRect(b[0],b[1],b[2],b[3]);});
-   c.strokeStyle='#577f7c2a';c.lineWidth=2;
-   [42,614].forEach(function(x){c.beginPath();c.moveTo(x,146);c.lineTo(x,479);c.stroke();});
-   for(var yy=174;yy<478;yy+=52){c.beginPath();c.moveTo(38,yy);c.lineTo(46,yy);c.moveTo(610,yy);c.lineTo(618,yy);c.stroke();}
-   c.strokeStyle='#eaf1dc66';c.lineWidth=1;
-   for(var gx=74;gx<614;gx+=52){c.beginPath();c.moveTo(gx,150);c.lineTo(gx,480);c.stroke();}
-   c.fillStyle='#2f5d5b';c.fillRect(24,78,608,7);c.fillStyle='#d2b77e';c.fillRect(24,85,608,3);
-   c.strokeStyle='#4f77715e';c.lineWidth=1;c.setLineDash([7,8]);c.beginPath();c.moveTo(24,138);c.lineTo(632,138);c.stroke();c.setLineDash([]);
-   c.fillStyle='#5d7463';c.fillRect(32,480,592,7);
-   c.restore();
-   round(c,654,72,282,415,13,art.linear(c,654,72,936,487,[[0,'#34555b'],[1,'#193c47']]),'#8aac9f',2);
-   round(c,669,88,252,96,9,'#163846','#688e86');
-   round(c,669,197,252,103,9,'#183b47','#688e86');
-   round(c,669,313,252,157,9,'#244854','#688e86');
-   round(c,24,498,912,30,8,'#183843','#789b8c');c.restore();
+   c.fillStyle=a.linear(c,0,0,0,540,[[0,'#142e43'],[.48,'#3e5966'],[1,'#cc9270']]);c.fillRect(0,0,960,540);
+   a.ellipse(c,697,168,67,67,'#f3c99529');a.ellipse(c,697,168,48,48,'#ffdaa13b');
+   for(var layer=0;layer<3;layer++)for(var i=0;i<15;i++){
+    var x=i*72-30+layer*19,y=356+(i*37+layer*41)%105;
+    c.fillStyle=['#233f4f88','#243f4ed9','#172e3bf0'][layer];c.fillRect(x,y,52,540-y);
+    if(layer===2){c.fillStyle='#efc98f55';for(var yy=y+13;yy<515;yy+=22)for(var xx=x+10;xx<x+43;xx+=16)c.fillRect(xx,yy,6,8);}
+   }
+   c.fillStyle='#102531eb';c.fillRect(0,0,154,540);c.fillRect(806,0,154,540);
+   c.strokeStyle='#6d98a245';c.lineWidth=1;
+   for(var y=92;y<480;y+=24){c.beginPath();c.moveTo(180,y);c.lineTo(780,y);c.stroke();}
+   [174,786].forEach(function(x){c.strokeStyle='#d9bd8f66';c.lineWidth=3;c.beginPath();c.moveTo(x,62);c.lineTo(x,485);c.stroke();
+    for(var yy=76;yy<470;yy+=36){c.strokeStyle='#d9bd8f44';c.lineWidth=1;c.beginPath();c.moveTo(x-8,yy);c.lineTo(x+8,yy+25);c.moveTo(x+8,yy);c.lineTo(x-8,yy+25);c.stroke();}});
+   c.fillStyle='#0c202bd9';c.fillRect(160,478,640,13);c.fillStyle='#d8ac6f';c.fillRect(160,478,640,3);
+   c.strokeStyle='#bca67d';c.lineWidth=4;c.beginPath();c.moveTo(174,64);c.lineTo(786,64);c.stroke();
+   c.fillStyle='#132a36';c.fillRect(0,500,960,40);c.restore();
   }},
-  {name:'stoneSlab',x:640,y:0,w:256,h:64,paint:function(c,w,h,art){
-   art.ellipse(c,128,59,122,4,'#132d3233');
-   art.path(c,[[3,20],[15,7],[243,7],[253,20]],art.linear(c,0,7,0,20,[[0,'#ffffe9'],[1,'#c0d2c5']]),'#4a6d69',1.5);
-   round(c,3,20,250,38,3,art.linear(c,0,20,0,58,[[0,'#c4dad0'],[.2,'#e4e9d5'],[.26,'#9bb9ad'],[1,'#6e9388']]),'#3a6664',1.5);
-   c.fillStyle='#faffee88';c.fillRect(8,21,240,2);
-   c.strokeStyle='#38696235';c.lineWidth=1;
-   [39,83,127,171,215].forEach(function(x){c.beginPath();c.moveTo(x,25);c.lineTo(x+2,53);c.stroke();});
-   c.fillStyle='#e6f5df44';c.fillRect(10,49,236,2);
-  }},
-  {name:'plumb',x:896,y:0,w:128,h:128,paint:function(c,w,h,art){
-   c.strokeStyle='#e3c38c';c.lineWidth=3;c.beginPath();c.moveTo(64,8);c.lineTo(64,57);c.stroke();
-   art.path(c,[[45,55],[83,55],[90,75],[64,118],[38,75]],art.linear(c,38,55,90,114,[[0,'#f5dc9d'],[.45,'#c1a16a'],[1,'#806a50']]),'#545b49',2);
-   art.path(c,[[64,58],[64,111],[42,75]],'#fff0b24d');c.strokeStyle='#f5e3b8';c.lineWidth=2;c.beginPath();c.moveTo(48,60);c.lineTo(80,60);c.stroke();
+  {name:'stoneSlab',x:640,y:0,w:256,h:64,paint:function(c,w,h,a){
+   a.path(c,[[3,18],[14,5],[242,5],[253,18]],a.linear(c,0,5,0,18,[[0,'#fff3d5'],[1,'#b7c8c2']]),'#3b6272',1.5);
+   a.path(c,[[3,18],[253,18],[253,57],[3,57]],a.linear(c,0,18,0,57,[[0,'#d0e1db'],[.2,'#e6e9d9'],[.26,'#a2c0bb'],[1,'#678c94']]),'#345969',1.5);
+   c.fillStyle='#ffffff77';c.fillRect(8,20,240,2);c.fillStyle='#355a6944';
+   [40,84,128,172,216].forEach(function(x){c.fillRect(x,26,2,25);});
   }}
  ]};
  var model=root.PureModel,config=model.config;
  function text(r,v,x,y,size,color){r.text(String(v),x,y,size,color);}
  function center(r,v,x,y,size,color){text(r,v,x-r.measureText(String(v),size)/2,y,size,color);}
- function floorY(index){return 466-index*26;}
- function slab(r,x,width,y,color,angle){r.sprite('stoneSlab',24+x+width/2,y,width,32,angle||0,color);}
+ function floorY(s,index){return 466-index*Math.min(28,336/(s.goal+1));}
+ function slab(r,x,width,y,color,angle){r.sprite('stoneSlab',180+x+width/2,y,width,Math.min(30,25),angle||0,color);}
  function frame(r,x,y,w,h,color,t){r.rect(x,y,w,t,color);r.rect(x,y+h-t,w,t,color);r.rect(x,y,t,h,color);r.rect(x+w-t,y,t,h,color);}
+ function rhythm(l,t){
+  if(l.profile==='steady')return 1;if(l.profile==='pulse')return t<.8?1.2:.8;
+  if(l.profile==='swell')return t<1.2?.7+.5*t:1.3-.5*(t-1.2);
+  if(l.profile==='signal')return t<.35?0:1.2;
+  if(l.profile==='gust')return t<.45?.55:t<.9?1.6:.9;return .55+.45*t;
+ }
  function render(r,s){
-  var l=config.layouts[s.level],top=s.floors[s.floors.length-1],targetY=floorY(s.floorsBuilt+1),moving=s.mode==='moving',overlap=0;
-  r.sprite('construction',480,270,960,540,0,'#ffffff');
-  text(r,l.name,30,19,28,C.ink);text(r,'FLOORS '+s.floorsBuilt+'/'+s.goal,516,21,24,C.ink);text(r,'MIN WIDTH 16',741,21,24,C.gold);
-  // Public top edges provide alignment marks; they do not move or snap the slab.
-  [top.x,top.x+top.width].forEach(function(edge){for(var y=143;y<targetY-15;y+=16)r.line(24+edge,y,24+edge,Math.min(y+7,targetY-15),1.5,'#366c6770');});
-  s.floors.forEach(function(f){slab(r,f.x,f.width,floorY(f.index),floorColors[f.index%floorColors.length]);});
+  var l=config.layouts[s.level],top=s.floors[s.floors.length-1],targetY=floorY(s,s.floorsBuilt+1),moving=s.mode==='moving',overlap=0;
+  r.sprite('towerCity',480,270,960,540,0,'#ffffff');
+  center(r,'TOWER WORKS',480,13,22,C.gold);center(r,l.name,480,37,14,C.ink);
+  text(r,'FLOOR',22,22,17,C.muted);text(r,String(s.floorsBuilt).padStart(2,'0'),20,51,56,C.ink);text(r,'/ '+s.goal,89,82,22,C.gold);
+  // The full construction scale stays visible even on the 14-floor skyline.
+  for(var i=0;i<=s.goal;i++){
+   var y=floorY(s,i),built=i<=s.floorsBuilt;
+   r.rect(104,y-6,30,2,built?C.gold:'#54717d');text(r,String(i).padStart(2,'0'),65,y-13,17,built?C.ink:'#76929e');
+   if(i===s.floorsBuilt)r.rect(140,y-9,7,8,C.gold);
+  }
+  [top.x,top.x+top.width].forEach(function(edge){for(var y=112;y<targetY-15;y+=16)r.line(180+edge,y,180+edge,Math.min(y+7,targetY-15),1.2,'#d9f5d860');});
+  s.floors.forEach(function(f){slab(r,f.x,f.width,floorY(s,f.index),floorColors[f.index%floorColors.length]);});
   if(s.slab){
    var active=s.slab,drop=s.mode==='dropping'?Math.min(1,s.dropElapsed/config.dropDuration):0;
    overlap=Math.max(0,Math.min(active.x+active.width,top.x+top.width)-Math.max(active.x,top.x));
-   if(moving){frame(r,24+active.x,targetY-11,active.width,23,'#386d6866',1);var ox=Math.max(active.x,top.x);if(overlap>0)r.rect(24+ox,targetY-15,overlap,3,overlap>=16?'#397f6b':C.red);}
-   var yy=112+(targetY-112)*drop*drop;slab(r,active.x,active.width,yy,'#f2d29f');
-   if(moving){var tip=24+active.x+active.width/2,sign=active.direction;r.line(tip-sign*17,yy-24,tip+sign*17,yy-24,2,C.dark);
-    r.line(tip+sign*17,yy-24,tip+sign*9,yy-29,2,C.dark);r.line(tip+sign*17,yy-24,tip+sign*9,yy-19,2,C.dark);}
+   if(moving){frame(r,180+active.x,targetY-12,active.width,25,'#e5ddbd66',1);var ox=Math.max(active.x,top.x);if(overlap>0)r.rect(180+ox,targetY-16,overlap,3,overlap>=16?C.mint:C.red);}
+   var yy=98+(targetY-98)*drop*drop,cx=180+active.x+active.width/2;
+   if(moving){r.line(cx,66,cx,yy-15,2,'#ffdb8a');r.rect(cx-14,60,28,10,C.gold);}
+   slab(r,active.x,active.width,yy,'#ffd49b');
+   if(moving){var sign=active.direction;r.line(cx-sign*17,yy-25,cx+sign*17,yy-25,2,C.gold);r.line(cx+sign*17,yy-25,cx+sign*9,yy-30,2,C.gold);r.line(cx+sign*17,yy-25,cx+sign*9,yy-20,2,C.gold);}
   }
-  if(s.phase==='lost'&&s.lastLanding&&s.lastLanding.width>0)slab(r,s.lastLanding.x,s.lastLanding.width,floorY(s.lastLanding.index),C.red);
-  s.offcuts.forEach(function(c){
-   var yy=floorY(s.lastLanding.index)+8+c.age*90+c.age*c.age*180;
-   if(yy<484)slab(r,c.x+c.side*c.age*38,c.width,yy,'#c4937d',c.side*(.12+c.age*.8));
-  });
-  text(r,'TARGET FLOORS',684,99,24,C.muted);text(r,s.floorsBuilt+' / '+s.goal,684,132,34,C.ink);r.sprite('plumb',882,134,42,42,0,'#ffffff');
-  text(r,'TOP WIDTH '+top.width.toFixed(1),684,209,24,top.width<40?C.gold:C.ink);
-  text(r,s.slab?'OVERLAP '+overlap.toFixed(1):s.phase==='won'?'TOWER COMPLETE':'LANDING FAILED',684,243,24,s.slab&&overlap<16?C.red:C.mint);
-  text(r,'SPEED '+(s.slab?Math.abs(s.slab.velocity).toFixed(0):'0'),684,275,24,C.muted);
-  center(r,'A  DROP',795,325,36,C.gold);
-  center(r,moving?'TIME THE OVERLAP':s.mode==='dropping'?'POSITION LOCKED':s.phase==='won'?'WELL STACKED':'TRY AGAIN',795,370,24,C.ink);
-  center(r,'ONLY OVERLAP STAYS',795,402,24,C.muted);
-  var profile=l.profile==='steady'?'STEADY':l.profile==='pulse'?'FAST / SLOW':'RISE / FALL';
-  center(r,profile,795,438,24,C.mint);
-  text(r,'A / SPACE DROP',38,499,24,C.gold);text(r,s.mode==='dropping'?'DROPPING':moving?'MOVING':'SETTLED',408,499,24,C.ink);
-  text(r,'GOAL '+s.goal+' FLOORS',714,499,24,C.mint);
+  if(s.phase==='lost'&&s.lastLanding&&s.lastLanding.width>0)slab(r,s.lastLanding.x,s.lastLanding.width,floorY(s,s.lastLanding.index),C.red);
+  s.offcuts.forEach(function(c){var yy=floorY(s,s.lastLanding.index)+8+c.age*90+c.age*c.age*180;if(yy<484)slab(r,c.x+c.side*c.age*38,c.width,yy,'#c48774',c.side*(.12+c.age*.8));});
+  text(r,'TOP WIDTH',822,24,16,C.muted);text(r,top.width.toFixed(0),822,53,40,top.width<40?C.gold:C.ink);
+  r.rect(823,111,116,6,'#365463');r.rect(823,111,116*top.width/l.width,6,C.mint);
+  text(r,'OVERLAP',822,146,16,C.muted);text(r,s.slab?overlap.toFixed(0):s.phase==='won'?'OK':'MISS',822,174,36,s.slab&&overlap<16?C.red:C.mint);
+  text(r,'MIN 16',823,219,16,C.gold);
+  text(r,'RHYTHM',822,264,16,C.muted);
+  var chartX=822,chartY=295,chartW=117,chartH=58;
+  r.rect(chartX,chartY,chartW,chartH,'#1f3d4c');
+  for(var j=1;j<=36;j++){var t1=l.period*(j-1)/36,t2=l.period*j/36;
+   r.line(chartX+(j-1)*chartW/36,chartY+chartH-rhythm(l,t1)/1.7*chartH,chartX+j*chartW/36,chartY+chartH-rhythm(l,Math.min(l.period-.00001,t2))/1.7*chartH,1.7,C.gold);}
+  if(s.slab){var marker=chartX+s.slab.cycle/l.period*chartW;r.line(marker,chartY,marker,chartY+chartH,2,C.ink);}
+  text(r,'SPEED',822,375,16,C.muted);text(r,s.slab?Math.abs(s.slab.velocity).toFixed(0):'0',822,402,32,C.ink);
+  text(r,'A  DROP',822,460,19,C.gold);
+  text(r,'SITE '+(s.level+1)+' / '+config.layouts.length,22,511,16,C.muted);
+  center(r,moving?'ALIGN THE EDGES  /  PRESS A':s.mode==='dropping'?'POSITION LOCKED  /  LANDING':s.phase==='won'?'SKYLINE COMPLETE':'REBUILD YOUR TOWER',480,511,17,C.ink);
+  text(r,'NO SNAP',824,511,16,C.gold);
  }
- root.GameDef={id:'tower-overlap',title:'叠塔工匠',seed:config.defaultSeed,accent:C.gold,background:C.bg,atlas:atlas,
-  holdConfirmAsA:true,tagline:'看准重合，一层层向上',levelLabel:'工地',levelNames:config.layouts.map(function(l){return l.nameZh;}),actionLabels:['落下石板'],
-  description:'石板会自动水平往返，看准与下层重合时按 A。落地只保留重合部分，多余边缘切落；完全错开或台面宽度不足16就失败。三处工地分别要求叠6、8、10层，移动节律各不相同。',
-  controls:{move:'石板自动往返；观察与下层的重合',a:'空格、Z、确认 / 手机右侧整区：落下',b:'只需 A；每次落下后松开再按'},
-  tip:'按 A 后水平位置锁定，0.3秒后落地。多余部分切落，只留重合宽度；完全错开或少于16单位失败。石板轮流从左右驶入，松开后才能再次落下。',
+ root.GameDef={id:'tower-overlap',title:'叠塔工匠',seed:config.defaultSeed,accent:C.gold,background:C.bg,atlas:atlas,stylesheet:'game-theme.css',
+  holdConfirmAsA:true,tagline:'六座工地 · 六种节律 · 向天际搭建',levelLabel:'工地',levelNames:config.layouts.map(function(l){return l.nameZh;}),actionLabels:['落下石板'],
+  description:'看准石板与下层的重合，按 A 锁定并落下，只留下重合部分。六座工地从匀速入门到停走信号、三段阵风与十四层加速高塔；左侧看层数，右侧看节律与有效宽度。',
+  controls:{move:'石板自动往返，看准重合',a:'空格 / 确认 / 手机右区：落下',b:'B 不使用；松开 A 再按'},
+  tip:'按 A 锁定位置；只保留重合部分。宽度不足16失败，右侧曲线显示本关速度节律。',
   winTitle:'塔楼落成，叠塔成功',loseTitle:'台面失守，重新开工',
-  hud:function(s){return[{label:'已建楼层',value:s.floorsBuilt+' / '+s.goal,tone:'good'},
-   {label:'台面宽度',value:s.floors[s.floors.length-1].width.toFixed(1),tone:s.floors[s.floors.length-1].width<40?'warn':''},
-   {label:'当前阶段',value:s.mode==='moving'?'横向移动':s.mode==='dropping'?'落下中':'已结算'},
-   {label:'石板速度',value:s.slab?Math.abs(s.slab.velocity).toFixed(0):'0'}];},
+  hud:function(s){return[{label:'施工目标',value:s.floorsBuilt+' / '+s.goal+' 层',tone:'good'},
+   {label:'剩余台面',value:s.floors[s.floors.length-1].width.toFixed(1),tone:s.floors[s.floors.length-1].width<40?'warn':''},
+   {label:'当前阶段',value:s.mode==='moving'?'等待落板':s.mode==='dropping'?'位置锁定':'工程结算'},
+   {label:'移动速度',value:s.slab?Math.abs(s.slab.velocity).toFixed(0):'0'}];},
   result:function(s){return(s.phase==='won'?'目标楼层全部完成。':s.reason==='miss'?'石板完全错开了下层。':'剩余重合宽度不足16单位。')+'完成 '+s.floorsBuilt+'/'+s.goal+' 层，最后台面宽 '+s.floors[s.floors.length-1].width.toFixed(1)+'，用时 '+s.elapsed.toFixed(1)+' 秒。';},render:render};
 })(window);

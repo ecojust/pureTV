@@ -10,13 +10,13 @@ function merge(s,first,second,op){assert.equal(s.stage,'first');choose(s,first);
 function conserve(s){let union=0;for(const t of s.terms){assert.equal(t.id,t.mask);assert.equal(t.mask&union,0);union|=t.mask;assert.ok(Number.isSafeInteger(t.n)&&Number.isSafeInteger(t.d)&&t.d>0);const letters=t.expr.match(/[ABCD]/g)||[];assert.equal(new Set(letters).size,letters.length);let exprMask=0;for(const l of letters)exprMask|=1<<(l.charCodeAt(0)-65);assert.equal(exprMask,t.mask);}assert.equal(union,15);assert.ok(s.history.length<=3);assert.ok(s.attemptHistory.length<=3);}
 function run(s,proof){for(const p of proof.route){merge(s,p.first,p.second,p.op);conserve(s);const t=s.lastOperation.result;assert.equal(t.n,p.result.n);assert.equal(t.d,p.result.d);}}
 function sumWrong(s){while(s.terms.length>1)merge(s,s.terms[0].mask,s.terms[1].mask,0);assert.notEqual(s.terms[0].n,24*s.terms[0].d);}
-test('three public card sets solve via exact BigInt search and the final one requires fractional intermediates',()=>{
- assert.deepEqual(Object.keys(M).sort(),['config','create','step']);assert.ok(proofs.every(p=>p.route&&p.route.length===3));assert.equal(integerProof.route,null);assert.ok(proofs[2].route.some(p=>p.result.d!==1));assert.ok(integerProof.visited>100);assert.ok(BigInt(integerProof.maxAbsNumerator)<BigInt(Number.MAX_SAFE_INTEGER));assert.ok(M.config.layouts.every(l=>!('route'in l)&&!('solution'in l)));
+test('six public card sets solve via exact BigInt search and two of them require fractional intermediates',()=>{
+ assert.deepEqual(Object.keys(M).sort(),['config','create','step']);assert.ok(proofs.every(p=>p.route&&p.route.length===3));assert.equal(integerProof.route,null);const finalInteger=solve(M.config.layouts[5].cards,true);assert.equal(finalInteger.route,null);assert.ok(proofs[5].route.some(p=>p.result.d!==1));assert.equal(M.config.layouts.length,6);assert.ok(proofs[2].route.some(p=>p.result.d!==1));assert.ok(integerProof.visited>100);assert.ok(BigInt(integerProof.maxAbsNumerator)<BigInt(Number.MAX_SAFE_INTEGER));assert.ok(M.config.layouts.every(l=>!('route'in l)&&!('solution'in l)));
 });
 test('deep frozen configuration, normalized identities and distinct sources for equal-valued original cards',()=>{
  const a=M.create(-1,-1),b=M.create(799,0);assert.equal(a.seed,799);assert.equal(a.level,0);assert.equal(a.inputArmed,false);a.cards[0]=99;a.terms[0].n=99;assert.equal(b.cards[0],1);assert.equal(b.terms[0].n,1);assert.throws(()=>M.config.layouts[0].cards[0]=99,TypeError);const c=fresh(2);assert.equal(c.terms[0].n,c.terms[1].n);assert.notEqual(c.terms[0].mask,c.terms[1].mask);assert.equal(M.create(4294967295,2).seed,4294967295);conserve(c);
 });
-test('all three fresh games win by ordinary selection/operator inputs, conserving every source bit',()=>{
+test('all six fresh games win by ordinary selection/operator inputs, conserving every source bit',()=>{
  proofs.forEach((proof,level)=>{const s=fresh(level);run(s,proof);assert.equal(s.phase,'won');assert.equal(s.reason,'twenty-four');assert.equal(s.score,100);assert.equal(s.terms.length,1);assert.equal(s.terms[0].mask,15);assert.equal(s.terms[0].n,24);assert.equal(s.terms[0].d,1);assert.equal(s.mergesUsed,3);assert.equal(s.lastAttempt.correct,true);assert.notEqual(s.terminalReceipt.terms,s.terms);assert.notEqual(s.lastAttempt,s.attemptHistory[0]);const before=copy(s);step(s,{a:true,b:true,x:1,cancelEpoch:9});assert.deepEqual(s,before);});
 });
 test('all six visible operators implement exact L/R direction and stable surviving term order',()=>{
@@ -44,8 +44,8 @@ test('fresh retry clears old undo history without replenishing tickets or refund
 test('a partial24 cannot win until the unused original card is also consumed',()=>{
  const s=fresh();merge(s,2,4,3);merge(s,6,8,3);assert.equal(s.terms.at(-1).n,24);assert.equal(s.terms.at(-1).mask,14);assert.equal(s.terms.length,2);assert.equal(s.phase,'playing');assert.equal(s.attemptHistory.length,0);merge(s,14,1,3);assert.equal(s.phase,'won');assert.equal(s.terms[0].mask,15);
 });
-test('all three levels naturally lose after three complete wrong additions and freeze retry/undo',()=>{
- for(let level=0;level<3;level++){const s=fresh(level);for(let n=1;n<=3;n++){sumWrong(s);assert.equal(s.failures,n);assert.equal(s.attemptsRemaining,3-n);if(n<3){assert.equal(s.stage,'retry');press(s,{a:true});}}assert.equal(s.phase,'lost');assert.equal(s.reason,'attempts');assert.equal(s.mergesUsed,9);assert.equal(s.attemptHistory.length,3);const before=copy(s);press(s,{b:true});assert.deepEqual(s,before);}
+test('all six levels naturally lose after three complete wrong additions and freeze retry/undo',()=>{
+ for(let level=0;level<6;level++){const s=fresh(level);for(let n=1;n<=3;n++){sumWrong(s);assert.equal(s.failures,n);assert.equal(s.attemptsRemaining,3-n);if(n<3){assert.equal(s.stage,'retry');press(s,{a:true});}}assert.equal(s.phase,'lost');assert.equal(s.reason,'attempts');assert.equal(s.mergesUsed,9);assert.equal(s.attemptHistory.length,3);const before=copy(s);press(s,{b:true});assert.deepEqual(s,before);}
 });
 test('a correct third fresh attempt wins on every puzzle with two prior failures retained',()=>{
  proofs.forEach((proof,level)=>{const s=fresh(level);for(let n=0;n<2;n++){sumWrong(s);press(s,{a:true});}run(s,proof);assert.equal(s.phase,'won');assert.equal(s.currentAttempt,3);assert.equal(s.failures,2);assert.equal(s.attemptsRemaining,1);assert.equal(s.mergesUsed,9);assert.equal(s.attemptHistory.length,3);});

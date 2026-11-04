@@ -15,8 +15,8 @@ function freshEdge(){const s=M.create(764,0);tick(s,1e-12);const source=structur
 function dropAndLand(s){const source=structuredClone(s.slab),previous=structuredClone(s.floors.at(-1));tick(s,.25,{a:true});near(s.slab.x,source.x,'dropping x fixed');assert.equal(s.slab.velocity,0);tick(s,.05);checkLanding(s,source,previous);return s;}
 function test(name,fn){fn();report.tests.push({name,passed:true});}
 try{
- test('three public widths, speeds, goals and profiles match contract',()=>{assert.equal(M.config.fieldWidth,600);assert.equal(M.config.minWidth,16);assert.equal(M.config.dropDuration,.3);layouts.forEach((l,i)=>{for(const k of Object.keys(l))assert.deepEqual(M.config.layouts[i][k],l[k]);});});
- for(let level=0;level<3;level++){
+ test('six public widths, speeds, goals and profiles match contract',()=>{assert.equal(M.config.fieldWidth,600);assert.equal(M.config.minWidth,16);assert.equal(M.config.dropDuration,.3);layouts.forEach((l,i)=>{for(const k of Object.keys(l))assert.deepEqual(M.config.layouts[i][k],l[k]);});});
+ for(let level=0;level<layouts.length;level++){
   test(`level ${level+1}: independent motion integration across phases and reflections`,()=>{const s=M.create(764,level);for(let i=0;i<240;i++){const dt=[.25,.13,.07,.2][i%4],expected=motion(s.slab,layouts[level],dt);tick(s,dt);compareMotion(s.slab,expected);report.motionStepsChecked++;}report.runs.push({level,kind:'motion',elapsed:s.elapsed,slab:s.slab});});
   test(`level ${level+1}: equal elapsed partitions preserve moving geometry`,()=>{const a=M.create(764,level),b=M.create(764,level);for(let i=0;i<80;i++)tick(a,.25);for(let i=0;i<400;i++)tick(b,.05);compareMotion(a.slab,b.slab);near(a.elapsed,b.elapsed,'elapsed');});
   test(`level ${level+1}: ordinary timed A builds every required floor`,()=>{

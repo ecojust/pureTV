@@ -18,11 +18,19 @@
     if(typeof config.version==='string'&&/^\d+\.\d+\.\d+$/.test(config.version))$('version').textContent=config.version;
   }).catch(()=>{});
   const levelLabel=def.levelLabel||'航线',levelNames=def.levelNames||['练习','标准','挑战'];
-  $('level-label').textContent=levelLabel;document.querySelectorAll('[data-level]').forEach(b=>b.textContent=levelNames[Number(b.dataset.level)]);
+  $('level-label').textContent=levelLabel;
+  document.querySelectorAll('[data-level]').forEach(button=>button.remove());
+  levelNames.forEach((name,index)=>{const button=document.createElement('button');button.type='button';button.dataset.level=String(index);button.textContent=name;button.classList.toggle('selected',index===0);$('difficulty-controls').append(button);});
   $('move-help').textContent=def.controls.move; $('a-help').textContent=def.controls.a; $('b-help').textContent=def.controls.b;
   $('tip').textContent=def.tip; document.documentElement.style.setProperty('--accent',def.accent||'#6fe4d6');
   function resize(){const a=$('arena'),w=Math.max(1,Math.min(a.clientWidth-2,(a.clientHeight-2)*16/9));$('scene').style.width=w+'px';$('scene').style.height=w*9/16+'px';}
   root.addEventListener('resize',resize); resize();
+  // A game can provide its own layout without duplicating the host or inputs.
+  if(typeof def.stylesheet==='string'&&/^[a-zA-Z0-9][a-zA-Z0-9_.-]*\.css$/.test(def.stylesheet)){
+    const style=document.createElement('link');style.rel='stylesheet';style.href=def.stylesheet;style.onload=resize;document.head.append(style);
+  }
+  const arenaObserver=typeof ResizeObserver==='function'?new ResizeObserver(resize):null;
+  if(arenaObserver)arenaObserver.observe($('arena'));
   function syncInfo(value){
     if(value)info=value;
     const ready=!!(info.url&&info.qr);$('qr').hidden=!ready;$('qr-empty').hidden=ready;
@@ -56,7 +64,7 @@
   $('pause-button').onclick=togglePause;
   function toggleSound(){soundEnabled=!soundEnabled;$('sound-button').textContent='声音：'+(soundEnabled?'开':'关');$('sound-button').setAttribute('aria-pressed',String(soundEnabled));unlock();}
   $('sound-button').onclick=toggleSound;
-  function chooseLevel(value){level=(value+3)%3;document.querySelectorAll('[data-level]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.level)===level));if(phase==='menu')state=model.create(def.seed||1,level);updateUi();}
+  function chooseLevel(value){level=((value%levelNames.length)+levelNames.length)%levelNames.length;document.querySelectorAll('[data-level]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.level)===level));if(phase==='menu')state=model.create(def.seed||1,level);updateUi();}
   document.querySelectorAll('[data-level]').forEach(button=>button.onclick=()=>chooseLevel(Number(button.dataset.level)));
   function inputs(){
     let player=null;
@@ -132,6 +140,6 @@
   root.PureGame=Object.freeze({key,suspend(value){if(value){nativePauseBefore=paused;setPaused(true);}else{clearInput();if(!nativePauseBefore)setPaused(false);}},roomInfo(value){syncInfo(value);},networkChanged(value){syncInfo(value);if(phase==='playing')setPaused(true);}});
   root.PureTVQA=Object.freeze({snapshot(){return JSON.parse(JSON.stringify({id:def.id,phase,paused,tick,elapsed,level,best,model:state,renderer:renderer.metrics||{},frameTimesMs:frameTimes.slice(),connection:{phoneSeen,disconnected}}));}});
   $('game').addEventListener('webglcontextlost',()=>setPaused(true));
-  root.addEventListener('pagehide',()=>{disposed=true;clearInput();if(renderer.dispose)renderer.dispose();if(audio)audio.close().catch(()=>{});});
+  root.addEventListener('pagehide',()=>{disposed=true;clearInput();if(arenaObserver)arenaObserver.disconnect();if(renderer.dispose)renderer.dispose();if(audio)audio.close().catch(()=>{});});
   updateUi();root.requestAnimationFrame(frame);
 })(window);

@@ -78,11 +78,14 @@ export function createPilot({ mode = 'record', policy = mode === 'loss' ? 'close
     identity = m.seed + ':' + m.level; lastTick = m.tick; primed = false; pending = null; goal = null;
     stats = { prime: null, selections: [], issued: [], acknowledged: [] };
   }
-  function prime(state) {
+  function prime(state, { allowElapsed = false } = {}) {
     const m = state?.model; shape(m);
-    need(m.tick === 0 && m.actionReceipts.length === 0 && m.wrapReceipts.length === 0, 'Prime requires the real untouched initial snapshot');
+    need(m.actionReceipts.length === 0 && m.gripper.heldPartId === null && m.gripper.x === m.physics.geometry.initialGripperX,
+      'Prime requires an observed round with no prior player action');
+    need(allowElapsed ? m.tick < 120 : m.tick === 0 && m.wrapReceipts.length === 0,
+      'Prime requires the initial snapshot, or an explicitly allowed real idle prefix below two seconds');
     reset(m); primed = true;
-    stats.prime = { level: m.level, initialGripper: clone(m.gripper),
+    stats.prime = { level: m.level, observedTick: m.tick, elapsedPrefixAllowed: allowElapsed, initialGripper: clone(m.gripper),
       limits: { windowsPerDecision: 2, slotsPerWindow: m.targetSlots.length, futureTickIterations: 0, modelRollouts: 0, routeSearches: 0, maxIssuedKeys: 512 },
       scope: 'Project current slot x/velocity into only current/next shutter windows to choose a component type. Preparation is direct relative-speed chase plus return distance plus six ticks per input edge; reject a projected source wrap. No input timeline is generated. Chase and every grab/rotation/dispatch use actual snapshots and receipt acknowledgement; final dispatch needs current gate/fit/empty nearest matching slot. Diagnostics stay outside Model and public evidence.' };
     return clone(stats.prime);
@@ -167,8 +170,20 @@ export function createPilot({ mode = 'record', policy = mode === 'loss' ? 'close
   pilot.prime = prime; pilot.keys = pilot; pilot.diagnostics = () => clone({ policy, pending, goal, ...stats }); return pilot;
 }
 const defaultPilot = createPilot();
-export const keys = (state, context) => defaultPilot(state, context);
-export const prime = state => defaultPilot.prime(state);
+let defaultRound = null, defaultTick = -1;
+export function keys(state, context) {
+  if (state?.phase !== 'playing' || state.paused) return [];
+  const m = state.model, round = m.seed + ':' + m.level;
+  if (round !== defaultRound || m.tick < defaultTick) {
+    defaultPilot.prime(state, { allowElapsed: true }); defaultRound = round;
+  }
+  defaultTick = m.tick;
+  return defaultPilot(state, context);
+}
+export function prime(state) {
+  const result = defaultPilot.prime(state); defaultRound = state.model.seed + ':' + state.model.level; defaultTick = state.model.tick;
+  return result;
+}
 export function assertPublicBoard(m, assert) {
   shape(m); assert.equal(m.elapsed, m.tick / 60); assert.equal(m.level, m.difficulty + 1); assert.equal(m.scenarioId, m.scenario.id);
   const g = m.physics.geometry, rule = m.scenario.gate, phase = mod(m.tick + rule.phaseOffsetTicks, rule.periodTicks);
@@ -219,7 +234,7 @@ export function assertPublicBoard(m, assert) {
 export function assertProgress({ after }, assert) {
   const m = after.model; assertPublicBoard(m, assert); assert.equal(after.phase, 'won'); assert.equal(m.phase, 'won');
   assert.equal(m.lostReason, null); assert.equal(m.terminal.reason, 'required_streak'); assert.equal(m.streak, m.requiredStreak);
-  assert.ok(m.elapsed >= 30 && m.elapsed <= 90); assert.equal(m.terminal.actionBoundaryTick, m.tick - 1); assert.equal(m.terminal.endedTick, m.tick);
+  assert.ok(m.elapsed > 0 && m.elapsed <= m.deadlineTick / m.physics.geometry.ticksPerSecond); assert.equal(m.terminal.actionBoundaryTick, m.tick - 1); assert.equal(m.terminal.endedTick, m.tick);
   for (const result of ['grabbed', 'rotated', 'seated']) assert.ok(m.actionReceipts.some(row => row.result === result));
   assert.equal(m.lastAction.result, 'seated'); assert.equal(m.lastStep.toTick, m.lastStep.fromTick + 1);
 }

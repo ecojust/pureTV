@@ -63,7 +63,9 @@
   function landscape(r,s,t){
     const fixed=s.nodes.filter(n=>n.fixed).slice().sort((a,b)=>a.x-b.x),left=fixed[0],right=fixed[fixed.length-1];
     r.sprite('glow',500,210,1080,650,0,'#244a58');r.sprite('glow',470,420,940,330,0,'#2b6268');
-    for(let y=118;y<440;y+=52)r.line(26,y,934,y,.5,'#294953');
+    for(let y=96;y<440;y+=26)r.line(26,y,934,y,.5,'#31566355');
+    for(let x=26;x<935;x+=26)r.line(x,90,x,440,.5,'#31566355');
+    const measureY=380;r.line(left.x,measureY,right.x,measureY,1,'#89b7c0');[left.x,right.x].forEach(x=>r.line(x,measureY-7,x,measureY+7,1,'#89b7c0'));centerText(r,((right.x-left.x)/s.pixelScale).toFixed(1)+' m CLEAR SPAN',(left.x+right.x)/2,measureY+8,18,'#c4e0e8');
     r.rect(0,427,960,60,'#254e5c');r.rect(0,445,960,43,'#2e5b66');
     for(let i=0;i<21;i++){const x=(i*113+t*3)%980-20,y=438+(i*19)%39;r.line(x,y,x+26+(i%4)*11,y,1,i%2?'#56848455':'#7ba99a33');}
     r.sprite('bridge_rock',left.x/2,(left.y+488)/2,left.x,488-left.y,0,'#d0d9c4');
@@ -72,7 +74,7 @@
     r.rect(right.x,right.y,960-right.x,12,'#9baea5');r.line(right.x,right.y,960,right.y,2,'#d8dec8');
     for(let x=30;x<left.x-16;x+=33)r.rect(x,left.y+5,17,2,'#d9c58c');
     for(let x=right.x+17;x<950;x+=33)r.rect(x,right.y+5,17,2,'#d9c58c');
-    r.text('START',34,left.y-24,11,'#c4d6c4');r.text('EXIT',882,right.y-24,11,'#c4d6c4');
+    r.text('START',34,left.y+26,18,'#e3edda');r.text('EXIT',882,right.y+26,18,'#e3edda');
     s.anchors.forEach((anchor,i)=>{
       const foot=s.nodes.filter(n=>n.fixed).reduce((near,node)=>Math.abs(node.x-anchor.x)<Math.abs(near.x-anchor.x)?node:near,fixed[0]);
       const baseY=foot.y+33,height=baseY-anchor.y;
@@ -80,7 +82,7 @@
       r.rect(anchor.x-9,anchor.y,18,height,'#68868a');r.rect(anchor.x-8,anchor.y,5,height,'#b5c5bc');r.rect(anchor.x+5,anchor.y,4,height,'#385c6c');
       for(let y=anchor.y+28;y<baseY-4;y+=33)r.line(anchor.x-8,y,anchor.x+8,y,2,'#d0d6c0');
       r.rect(anchor.x-18,anchor.y-8,36,10,'#c0cbb8');r.sprite('bridge_anchor',anchor.x,anchor.y,31,31,0,'#fff');
-      centerText(r,'ANCHOR '+(i+1),anchor.x+(i?46:-46),anchor.y+11,9,'#a9c9c5');
+      centerText(r,'T'+(i+1),anchor.x+(i?31:-31),anchor.y+11,18,'#c3ded8');
     });
   }
   function cables(r,s,t){
@@ -111,7 +113,7 @@
       const a=s.nodes.find(n=>n.id===panel.aId),b=s.nodes.find(n=>n.id===panel.bId),dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy),angle=Math.atan2(dy,dx);
       if(panel.broken){
         r.line(a.x,a.y,a.x+dx*.13,a.y+dy*.13,8,'#7b8f91');r.line(b.x-dx*.13,b.y-dy*.13,b.x,b.y,8,'#7b8f91');
-        centerText(r,'GAP',(a.x+b.x)/2,(a.y+b.y)/2+17,10,'#ebaa8b');
+        centerText(r,'GAP',(a.x+b.x)/2,(a.y+b.y)/2+17,18,'#ebaa8b');
       }else{
         // Texture row y8 is the top contact surface; the girder extends below it.
         const h=16,offset=(32-8)*h/64;
@@ -134,41 +136,41 @@
       r.sprite('bridge_wheel',wheel.x,wheel.y,size,size,car.x/Math.max(1,car.wheelRadius),'#fff');
       if(wheel.contact)r.line(wheel.x-3,wheel.y+car.wheelRadius,wheel.x+3,wheel.y+car.wheelRadius,.8,'#c5d8bb');
     });
-    centerText(r,Math.round(car.mass)+' kg',mx,my-car.wheelRadius-30,10,'#eed7a1');
+    centerText(r,Math.round(car.mass)+' kg',mx,my-car.wheelRadius-35,18,'#f8df9d');
   }
   function information(r,s){
     const selected=s.cables.find(c=>c.id===s.selectedId),won=s.phase==='won',lost=s.phase==='lost',ended=won||lost;
     const edit=!ended&&s.mode==='editing',failed=!ended&&s.mode==='test-failed';
     r.rect(28,55,904,30,'#173b48');r.line(28,55,932,55,1,'#527779');
-    r.text(won?'LOAD TEST PASSED / SAFE CROSSING':lost?'TIME LIMIT REACHED / SESSION ENDED':edit?'EDIT / ADD SUPPORT':failed?'TEST FAILED / B TO REBUILD':'LOAD TEST / OBSERVE THE CABLES',40,65,11,failed||lost?'#f1ad8a':'#c8e1d0');
-    r.text('LOW',677,66,9,'#98d9c0');r.line(708,71,729,71,3,'#98d9c0');r.text('HIGH',745,66,9,'#eacb83');r.line(779,71,800,71,3,'#eacb83');r.text('LIMIT',815,66,9,'#f09476');r.line(852,71,875,71,3,'#f09476');
+    r.text(won?'PASSED / SAFE CROSSING':lost?'TIME LIMIT / SESSION ENDED':edit?'EDIT / ADD SUPPORT':failed?'FAILED / B TO REBUILD':'LOAD TEST / WATCH CABLES',40,62,18,failed||lost?'#f1ad8a':'#d7edda');
+    r.text('LOW',651,64,16,'#98d9c0');r.line(690,73,710,73,3,'#98d9c0');r.text('HIGH',733,64,16,'#eacb83');r.line(782,73,802,73,3,'#eacb83');r.text('LIMIT',825,64,16,'#f09476');r.line(885,73,905,73,3,'#f09476');
     const deflection=Math.max(0,...s.nodes.map(n=>n.y-n.restY))/50;
-    r.text('DEFLECTION  '+deflection.toFixed(2)+' m',32,448,10,'#8db7b7');
-    r.text('TESTS  '+s.attempts,811,448,10,'#8db7b7');
+    r.text('DEFLECTION  '+deflection.toFixed(2)+' m',32,446,18,'#c2dcd9');
+    r.text('TESTS  '+s.attempts,811,446,18,'#c2dcd9');
     if(ended){
       r.rect(28,477,904,49,won?'#163f43':'#49383c');r.line(28,477,932,477,1,won?'#719b88':'#b47f69');
-      r.text(won?'LOAD TEST PASSED':'TIME LIMIT REACHED',42,487,13,won?'#d5e7ba':'#efbc9b');
-      r.text('ENTER  RETRY / ARROWS  SELECT SECTION',42,508,10,'#b8cec2');
-      r.text('MATERIAL  '+s.spent+' / '+s.budget+' PT',704,495,11,'#d5ddb5');
+      r.text(won?'LOAD TEST PASSED':'TIME LIMIT REACHED',42,483,20,won?'#d5e7ba':'#efbc9b');
+      r.text('ENTER RETRY / ARROWS SELECT',42,507,16,'#cddfd2');
+      r.text('MATERIAL '+s.spent+'/'+s.budget,666,493,18,'#e4e6c6');
     }else if(failed){
       // Leave the lower gorge visible when the physical truck falls to y500.
       r.rect(281,94,398,54,'#49383ce8');r.line(281,94,679,94,1,'#b47f69');
       const reason=String(s.lastFailure||'');
-      centerText(r,reason==='vehicle-fall'?'TEST FAILED / TRUCK FELL':reason==='bridge-slope'?'TEST FAILED / EXCESSIVE SLOPE':reason==='bridge-collapse'?'TEST FAILED / BRIDGE DAMAGED':'TEST FAILED / STRUCTURE',480,105,13,'#efbc9b');
-      centerText(r,'B  RETURN TO EDIT - CHANGE YOUR CABLES',480,128,10,'#dcc1a7');
+      centerText(r,reason==='vehicle-fall'?'TRUCK FELL':reason==='bridge-slope'?'EXCESSIVE SLOPE':reason==='bridge-collapse'?'BRIDGE DAMAGED':'STRUCTURE FAILED',480,101,20,'#efbc9b');
+      centerText(r,'B RETURN / REBUILD CABLES',480,127,16,'#efdbc3');
     }else if(selected){
       r.rect(28,477,904,49,'#143644');r.line(28,477,932,477,1,'#5e7f7b');
       const i=s.cables.indexOf(selected)+1,ratio=selected.maxTension>0?selected.tension/selected.maxTension:0;
-      r.text('CABLE '+i+'  /  '+(selected.installed?'INSTALLED':'CANDIDATE'),42,487,12,'#e1e8c8');
-      r.text('COST '+selected.cost+' PT  /  '+selected.restLength.toFixed(1)+' m',42,508,10,'#9cbdba');
-      r.text(edit?'A  ADD / REMOVE':'TENSION  '+Math.round(ratio*100)+'%',384,495,12,edit?'#c4d9bd':stressColor(selected));
-      r.text(edit?'B  START LOAD TEST':'B  RETURN TO EDIT',746,495,11,'#d5ddb5');
+      r.text('CABLE '+i+' / '+(selected.installed?'INSTALLED':'CANDIDATE'),42,483,20,'#e1e8c8');
+      r.text('COST '+selected.cost+' PT / '+selected.restLength.toFixed(1)+' m',42,507,16,'#c0dbd6');
+      r.text(edit?'A ADD / REMOVE':'TENSION '+Math.round(ratio*100)+'%',394,493,20,edit?'#d7e6cc':stressColor(selected));
+      r.text(edit?'B TEST LOAD':'B RETURN',754,493,20,'#e5e7c6');
     }
   }
   root.GameDef={
-    id:'tension-span',title:'拉索桥梁',tagline:'用有限的材料，托住真正驶过的重量',seed:79,
-    accent:'#d8dfa7',background:'#142e3d',levelLabel:'桥段',levelNames:['初桥','高塔','偏塔'],atlas,
-    description:'用方向键选择虚线拉索，A 安装或拆除，材料不能超预算。B 开始试载：载重车会真正压过桥板，观察挠度与拉索受力颜色。支撑不足会下沉，过载可能断索、断板。试载失败后按 B 回到编辑修改；整局计时会继续，车辆安全驶离终点才算完成。',
+    id:'tension-span',stylesheet:'game-theme.css',title:'拉索桥梁',tagline:'用有限的材料，托住真正驶过的重量',seed:79,
+    accent:'#8bd2eb',background:'#142e3d',levelLabel:'桥段',levelNames:['峡谷初桥','重载高塔','偏塔货运','低塔检修','长跨快运','双岸高差'],atlas,
+    description:'六座桥，六种跨度、塔高和载重。方向选索，A搭建，B试载；观察挠度与索力，失败后B返回改建。预算和90秒工期同时约束方案，车辆完全过岸才算成功。',
     controls:{move:'摇杆 / 方向键：选择候选拉索',a:'安装 / 拆除 · 空格 / 右上半屏',b:'试载 / 回编辑 · B / 右下半屏'},
     actionLabels:['安装 / 拆除','试载 / 回编辑'],
     tip:'虚线不承重。索线由青转红表示负荷增大。失败按 B 返工，时间不重置。',
@@ -181,8 +183,8 @@
       {label:'剩余时间',value:Math.max(0,Math.ceil(s.remaining))+' s',tone:s.remaining<15?'warn':''}
     ];},
     render(r,s,t){
-      r.text('TENSION SPAN',28,16,18,'#e2ebd8');r.text('CABLE ENGINEERING / SECTION '+String(s.level).padStart(2,'0'),29,39,9,'#91b4b5');
-      r.text('BUILD  /  LOAD  /  LEARN',744,24,11,'#bfd0af');
+      r.text('TENSION SPAN',28,10,23,'#e2ebd8');r.text('ENGINEERING / SECTION '+String(s.level).padStart(2,'0'),29,35,16,'#c0d7d9');
+      r.text('SPAN '+((s.nodes.at(-1).x-s.nodes[0].x)/s.pixelScale).toFixed(1)+'m / '+s.car.mass+'kg',650,23,18,'#cfe4ed');
       landscape(r,s,t);cables(r,s,t);panels(r,s);vehicle(r,s);information(r,s);
     }
   };

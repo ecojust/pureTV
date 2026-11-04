@@ -86,10 +86,10 @@ function deepFrozen(value) {
   if (value && typeof value === 'object') { assert.ok(Object.isFrozen(value)); Object.values(value).forEach(deepFrozen); }
 }
 
-test('create validates its domain, exposes independent initial inventories and the authored three scenarios', () => {
+test('create validates its domain, exposes independent initial inventories and the authored six scenarios', () => {
   const defaults = Model.create(); assert.deepEqual(defaults, Model.create(SEED, 0));
   assert.equal(defaults.width, 960); assert.equal(defaults.height, 540); assert.equal(defaults.gripper.x, 360);
-  for (const [difficulty, count, required, deadline] of [[0, 2, 6, 5040], [1, 3, 6, 5400], [2, 4, 5, 5400]]) {
+  for (const [difficulty, count, required, deadline] of [[0, 2, 6, 5040], [1, 3, 6, 5400], [2, 4, 5, 5400], [3, 4, 7, 6600], [4, 3, 6, 6600], [5, 4, 8, 7200]]) {
     const s = Model.create(SEED, difficulty);
     assert.equal(s.level, difficulty + 1); assert.equal(s.requiredStreak, required); assert.equal(s.deadlineTick, deadline);
     assert.equal(s.sourceCarriers.length, count); assert.equal(s.targetSlots.length, count); assert.equal(s.parts.length, count);
@@ -100,7 +100,7 @@ test('create validates its domain, exposes independent initial inventories and t
     for (const value of [s.identity, s.scenario, s.physics, s.partTypes]) deepFrozen(value);
   }
   for (const seed of [-1, 0.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1, '734', null]) assert.throws(() => Model.create(seed, 0), RangeError);
-  for (const level of [-1, 3, 0.5, NaN, '0', null]) assert.throws(() => Model.create(SEED, level), RangeError);
+  for (const level of [-1, 6, 0.5, NaN, '0', null]) assert.throws(() => Model.create(SEED, level), RangeError);
   assert.equal(Model.create(0, 2).seed, 0); assert.equal(Model.create(Number.MAX_SAFE_INTEGER, 1).seed, Number.MAX_SAFE_INTEGER);
   const other = Model.create(); advance(defaults, {}); assert.equal(other.tick, 0); assert.equal(other.sourceCarriers[0].x, 180);
 });
@@ -316,4 +316,55 @@ test('receipts and lastStep are deeply immutable and detached from later current
   const w = fixture(); sourceAt(w, 0, 719); sync(w); advance(w, {}); const wrap = w.wrapReceipts[0], savedWrap = clone(wrap);
   deepFrozen(wrap); advance(w, {}); assert.deepEqual(wrap, savedWrap);
   const retry = Model.create(SEED, 0); assert.deepEqual(retry, Model.create(SEED, 0)); assert.equal(retry.parts.length, 2); assert.equal(retry.actionReceipts.length, 0);
+});
+
+test('all six authored production orders are solvable through observed ordinary input, including narrow and reverse windows', async () => {
+  const {createPilot,assertPublicBoard}=await import('./automation.mjs');
+  const signatures=new Set();
+  for(let level=0;level<6;level++){
+    const state=Model.create(SEED,level),initial=clone(state),pilot=createPilot();
+    const snapshot=()=>({phase:state.phase,paused:false,model:clone(state)});
+    pilot.prime(snapshot());let keys=[];
+    for(let tick=0;tick<state.deadlineTick && state.phase==='playing';tick++){
+      if(tick%4===0){const observed=snapshot(),before=clone(observed);keys=pilot(observed);assert.deepEqual(observed,before,'pilot reads but does not mutate observations');}
+      advance(state,{x:Number(keys.includes('ArrowRight'))-Number(keys.includes('ArrowLeft')),a:keys.includes('Space'),b:keys.includes('b')});
+    }
+    assert.equal(state.phase,'won',state.levelName);assert.equal(state.faults,0);assert.equal(state.streak,state.requiredStreak);
+    assertPublicBoard(state,assert);assert.ok(state.actionReceipts.some(row=>row.result==='rotated'));
+    assert.deepEqual(Model.create(SEED,level),initial,'retry preserves exact authored starting conditions');
+    signatures.add(JSON.stringify([state.scenario.sourceVelocity,state.scenario.targetVelocity,state.scenario.windowXRange,state.scenario.gate]));
+    const won=clone(state);advance(state,{a:true,b:true,x:1});assert.deepEqual(state,won);
+  }
+  assert.equal(signatures.size,6,'the six orders differ in motion, opening or gate schedule');
+});
+
+test('new production orders retain natural fault loss, cancellation quarantine and terminal freeze', async () => {
+  const {createPilot}=await import('./automation.mjs');
+  for(let level=3;level<6;level++){
+    const cancelled=Model.create(SEED,level);advance(cancelled,{});const x=cancelled.gripper.x;
+    advance(cancelled,{x:1,a:true,b:true,cancelled:true,cancelEpoch:1});
+    assert.equal(cancelled.gripper.x,x);assert.equal(cancelled.actionReceipts.length,0);
+    advance(cancelled,{a:true,cancelEpoch:1});assert.equal(cancelled.actionReceipts.length,0);
+    advance(cancelled,{cancelEpoch:1});assert.equal(cancelled.inputState.quarantined,false);
+    const state=Model.create(SEED,level),pilot=createPilot({mode:'loss',policy:'closed-shutter'});
+    const snap=()=>({phase:state.phase,paused:false,model:clone(state)});pilot.prime(snap());let keys=[];
+    while(state.phase==='playing'&&state.tick<state.deadlineTick){if(state.tick%4===0)keys=pilot(snap());advance(state,{x:Number(keys.includes('ArrowRight'))-Number(keys.includes('ArrowLeft')),a:keys.includes('Space'),b:keys.includes('b')});}
+    assert.equal(state.phase,'lost');assert.equal(state.lostReason,'fault_limit');assert.equal(state.faults,3);
+    assert.equal(state.actionReceipts.filter(row=>row.result==='shutter_closed').length,3);
+    const lost=clone(state);advance(state,{a:true,b:true,x:-1});assert.deepEqual(state,lost);
+  }
+});
+
+test('shared browser automation may begin after a real idle prefix and solves every order without a tick-zero injection', async () => {
+  const {keys:runtimeKeys}=await import('./automation.mjs');
+  for(let level=0;level<6;level++){
+    const state=Model.create(SEED,level);
+    for(let tick=0;tick<18;tick++)advance(state,{});
+    let keys=[];
+    while(state.phase==='playing'&&state.tick<state.deadlineTick){
+      if(state.tick%5===3)keys=runtimeKeys({phase:state.phase,paused:false,model:clone(state)});
+      advance(state,{x:Number(keys.includes('ArrowRight'))-Number(keys.includes('ArrowLeft')),a:keys.includes('Space'),b:keys.includes('b')});
+    }
+    assert.equal(state.phase,'won',state.levelName);assert.equal(state.faults,0);inventory(state);
+  }
 });

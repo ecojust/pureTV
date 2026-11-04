@@ -11,16 +11,16 @@ function invariant(s){assert.equal(s.floorsBuilt,s.floors.length-1);assert.ok(s.
  for(let i=1;i<s.floors.length;i++){const p=s.floors[i-1],f=s.floors[i];assert.ok(f.width>=16);assert.ok(f.x>=p.x-1e-8);assert.ok(f.x+f.width<=p.x+p.width+1e-8);}
  assert.ok(s.offcuts.length<=2);if(s.slab){assert.ok(s.slab.x>=-1e-8);assert.ok(s.slab.x+s.slab.width<=600+1e-8);assert.equal(s.slab.width,s.floors.at(-1).width);}
 }
-test('fixedthreeprofilesidentitynormalizationanddetachedfrozenconfiguration',()=>{
- assert.deepEqual(Object.keys(M).sort(),['config','create','step']);assert.deepEqual(M.config.layouts.map(l=>[l.width,l.speed,l.goal,l.profile]),[[220,145,6,'steady'],[200,170,8,'pulse'],[180,195,10,'swell']]);
+test('sixprofilesidentitynormalizationanddetachedfrozenconfiguration',()=>{
+ assert.deepEqual(Object.keys(M).sort(),['config','create','step']);assert.deepEqual(M.config.layouts.map(l=>[l.width,l.speed,l.goal,l.profile]),[[220,145,6,'steady'],[200,170,8,'pulse'],[180,195,10,'swell'],[205,175,8,'signal'],[190,180,12,'gust'],[170,185,14,'ramp']]);
  assert.equal(M.config.fieldWidth,600);assert.equal(M.config.minWidth,16);assert.equal(M.config.dropDuration,.3);
  for(const seed of [undefined,null,-1,NaN,Infinity,4294967296,'1',.5])assert.equal(M.create(seed,0).seed,764);
- for(const level of [undefined,null,-1,NaN,Infinity,3,'1',.5])assert.equal(M.create(0,level).level,0);
+ for(const level of [undefined,null,-1,NaN,Infinity,6,'1',.5])assert.equal(M.create(0,level).level,0);
  const a=M.create(0,0),b=M.create(0,0);a.floors[0].x=99;assert.equal(b.floors[0].x,190);assert.equal(b.inputArmed,false);
  assert.throws(()=>M.config.layouts[0].speed=999,TypeError);
 });
-test('threeordinarywinsusetimedAfrompublicpositionswithalternatingspawnsandboundedfloors',()=>{
- for(let level=0;level<3;level++){
+test('sixordinarywinsusetimedAfrompublicpositionswithalternatingspawnsandboundedfloors',()=>{
+ for(let level=0;level<M.config.layouts.length;level++){
   const s=fresh(level);while(s.phase==='playing'){waitAt(s,s.floors.at(-1).x);const expected=s.floorsBuilt+1;drop(s);invariant(s);assert.equal(s.floorsBuilt,expected);
    if(s.phase==='playing')assert.equal(s.slab.direction,s.floorsBuilt%2?-1:1);}
   assert.equal(s.phase,'won');assert.equal(s.score,100);assert.equal(s.floorsBuilt,M.config.layouts[level].goal);assert.equal(s.drops,s.goal);
@@ -61,11 +61,19 @@ test('holdingAthroughlandingneverstartssecondslabandpressesduringdropareconsumed
  while(s.mode==='dropping'&&s.phase==='playing')step(s,.05,{a:true});assert.equal(s.drops,2);
 });
 test('profilemotionandreflectionsarepartitionindependentacrossmanycycles',()=>{
- for(let level=0;level<3;level++){
+ for(let level=0;level<M.config.layouts.length;level++){
   const a=M.create(764,level),b=M.create(764,level);for(let i=0;i<80;i++)step(a,.25);for(let i=0;i<2000;i++)step(b,.01);
   near(a.slab.x,b.slab.x,2e-7);near(a.slab.cycle,b.slab.cycle,2e-8);near(a.slab.velocity,b.slab.velocity,1e-7);assert.equal(a.slab.direction,b.slab.direction);
-  const l=M.config.layouts[level];assert.ok(Math.abs(a.slab.velocity)>=l.speed*.7-1e-8);assert.ok(Math.abs(a.slab.velocity)<=l.speed*1.3+1e-8);invariant(a);
+  const l=M.config.layouts[level];assert.ok(Math.abs(a.slab.velocity)>=0);assert.ok(Math.abs(a.slab.velocity)<=l.speed*1.6+1e-8);invariant(a);
  }
+});
+test('signalprofilewaitsthenmoveswithoutconsumingAorchangingthelandingrule',()=>{
+ const s=M.create(764,3);step(s,.1);near(s.slab.x,0);near(s.slab.velocity,0);step(s,.25);near(s.slab.x,0);near(s.slab.velocity,210);
+ step(s,.1);near(s.slab.x,21);assert.equal(s.drops,0);assert.equal(s.goal,8);assert.equal(s.phase,'playing');
+});
+test('gustandrampprofilespublishtheirdistinctspeedtransitions',()=>{
+ const gust=M.create(764,4);step(gust,.25);near(gust.slab.velocity,99);step(gust,.2);near(gust.slab.velocity,288);step(gust,.25);step(gust,.2);near(gust.slab.velocity,162);
+ const ramp=M.create(764,5);near(ramp.slab.velocity,101.75);for(let i=0;i<7;i++)step(ramp,.25);near(Math.abs(ramp.slab.velocity),185*(.55+.45*1.75));step(ramp,.25);near(Math.abs(ramp.slab.velocity),101.75);assert.equal(ramp.goal,14);
 });
 test('syntheticexactreflectionboundarieshavedeterministicdirectionsandtimestepremainspositive',()=>{
  const s=fresh();const limit=600-s.slab.width;s.slab.x=limit-14.5;s.slab.direction=1;step(s,.1);near(s.slab.x,limit);assert.equal(s.slab.direction,-1);

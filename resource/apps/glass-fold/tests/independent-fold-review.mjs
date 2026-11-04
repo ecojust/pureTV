@@ -1,5 +1,5 @@
 // Independent integer-center reflection/rational-color oracle. Explicit model
-// fixtures are separate from three fresh ordinary-input public-target solutions.
+// fixtures are separate from six fresh ordinary-input public-target solutions.
 // node resource/apps/glass-fold/tests/independent-fold-review.mjs [--out file.json]
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
@@ -66,7 +66,7 @@ function oracleFold(input,c){
   return refresh(out);
 }
 function invariant(b){
-  const ids=b.cells.flatMap(c=>c.layers);assert.equal(ids.length,16);assert.equal(new Set(ids).size,16);
+  const ids=b.cells.flatMap(c=>c.layers);assert.equal(ids.length,b.pieces.length);assert.equal(new Set(ids).size,b.pieces.length);
   assert.deepEqual([...ids].sort(),b.pieces.map(p=>p.id).sort());
   let area=0;
   for(const p of b.pieces){
@@ -76,7 +76,7 @@ function invariant(b){
     const location=b.cells.find(c=>c.layers.includes(p.id));
     assert.equal(p.vertices.reduce((sum,v)=>sum+v.x,0),4*location.col+2);assert.equal(p.vertices.reduce((sum,v)=>sum+v.y,0),4*location.row+2);
   }
-  assert.equal(area,16);assert.ok(occupied(b).length<=16);
+  assert.equal(area,b.pieces.length);assert.ok(occupied(b).length<=16);
   for(const c of b.cells){assert.equal(c.depth,c.layers.length);assert.deepEqual(c.color,rgb(b,c.layers));assert.deepEqual(c.reverseColor,rgb(b,[...c.layers].reverse()));}
 }
 function search(initial,limit,target){
@@ -90,24 +90,24 @@ function search(initial,limit,target){
 }
 const searches=[];
 check('public board and exact rational composition match integer material geometry',()=>{
-  for(let level=0;level<3;level++){
-    const s=Model.create(91,level);assert.equal(s.phase,'playing');assert.equal(s.mode,'editing');assert.equal(s.level,level+1);assert.equal(s.foldLimit,[3,3,4][level]);
-    assert.equal(s.cells.length,16);assert.equal(s.pieces.length,16);assert.equal(s.materialArea,16);assert.equal(s.layerAlpha,.5);assert.deepEqual(s.substrateColor,[246,244,234]);invariant(board(s));
+  for(let level=0;level<6;level++){
+    const s=Model.create(91,level);assert.equal(s.phase,'playing');assert.equal(s.mode,'editing');assert.equal(s.level,level+1);assert.equal(s.foldLimit,[3,3,4,2,3,4][level]);
+    assert.equal(s.cells.length,16);assert.equal(s.pieces.length,[16,16,16,12,13,16][level]);assert.equal(s.materialArea,s.pieces.length);assert.equal(s.layerAlpha,.5);assert.deepEqual(s.substrateColor,[246,244,234]);invariant(board(s));
     assert.equal(s.candidates.length,12);for(const c of creases){const actual=s.candidates.find(v=>v.selectorRow===c.selectorRow&&v.selectorCol===c.selectorCol);assert.ok(actual);for(const key of ['axis','at','movingSide'])assert.equal(actual[key],c[key]);assert.equal(actual.valid,!!oracleFold(board(s),c));}
     const graph=search(s,s.foldLimit,s.target);assert.ok(graph.solutions.length,'Authored public target has no independent bounded solution');assert.ok(graph.leaves.some(n=>!matches(n.board,s.target)),'Missing meaningful wrong construction');searches.push(graph);totals.searchNodes+=graph.nodes.length;totals.searchEdges+=graph.edges;
   }
-  return {levels:3,searchNodes:totals.searchNodes,searchEdges:totals.searchEdges,solutionCounts:searches.map(g=>g.solutions.length),boundPerLevel:1500,privateHistoryReadBySearch:false};
+  return {levels:6,searchNodes:totals.searchNodes,searchEdges:totals.searchEdges,solutionCounts:searches.map(g=>g.solutions.length),boundPerLevel:1500,privateHistoryReadBySearch:false};
 });
 check('every reachable crease transition preserves area and matches center-reflection stack oracle',()=>{
-  for(let level=0;level<3;level++){
+  for(let level=0;level<6;level++){
     const graph=searches[level];
-    for(const node of graph.nodes.filter(n=>n.depth<[3,3,4][level])){
+    for(const node of graph.nodes.filter(n=>n.depth<[3,3,4,2,3,4][level])){
       const original=Model.create(91,level);for(const c of node.path)fold(original,c);assert.equal(original.mode,'editing');assert.deepEqual(board(original),node.board);
       for(const c of creases){
         const s=clone(original),expected=oracleFold(node.board,c);choose(s,c);const prior=board(s),used=s.foldsUsed,foldCount=s.foldCount,history=s.historyDepth;tick(s,{a:true,aPressed:true});totals.comparedTransitions++;
         if(!expected){assert.deepEqual(board(s),prior);assert.equal(s.foldsUsed,used);assert.equal(s.foldCount,foldCount);assert.equal(s.historyDepth,history);assert.equal(s.mismatches,0);continue;}
         assert.equal(s.mode,'folding');assert.deepEqual(s.foldAnimation.beforeCells,prior.cells);assert.deepEqual(s.foldAnimation.beforePieces,prior.pieces);assert.deepEqual(board(s),expected);invariant(board(s));
-        assert.equal(s.foldsUsed,used+1);assert.equal(s.foldCount,foldCount+1);assert.equal(s.historyDepth,history+1);assert.equal(s.materialArea,16);assert.equal(s.occupiedArea,occupied(expected).length);
+        assert.equal(s.foldsUsed,used+1);assert.equal(s.foldCount,foldCount+1);assert.equal(s.historyDepth,history+1);assert.equal(s.materialArea,s.pieces.length);assert.equal(s.occupiedArea,occupied(expected).length);
         settle(s);assert.deepEqual(board(s),expected);
         if(s.foldsUsed===s.foldLimit)assert.equal(s.phase==='won',matches(expected,s.target));else assert.equal(s.mode,'editing');
       }
@@ -177,12 +177,12 @@ check('90-second deadline precedes a same-tick final inspection; terminal and fr
   const first=Model.create(91,0),fresh=Model.create(91,0),baseline=clone(fresh);fold(first,path[0]);assert.deepEqual(fresh,baseline);first.cells[0].layers.push('fixture');first.pieces[0].vertices[0].x=-999;first.candidates[0].reason='fixture';assert.deepEqual(Model.create(91,0),baseline);
   return {deadlineCases:results,freshRoundNoAliasing:true};
 });
-check('three fresh authored targets are solved from public geometry using only ordinary inputs',()=>{
+check('six fresh authored targets are solved from public geometry using only ordinary inputs',()=>{
   const solutions=[];
-  for(let level=0;level<3;level++){
+  for(let level=0;level<6;level++){
     const s=Model.create(91,level),route=searches[level].solutions[0].path;
     for(const c of route){fold(s,c);for(let i=0;i<120&&s.phase==='playing';i++)tick(s);}
-    assert.equal(s.phase,'won');assert.equal(s.targetMatched,true);assert.equal(s.outlineMatches,true);assert.equal(s.mismatches,0);assert.equal(s.reviewCount,1);assert.equal(s.foldsUsed,s.foldLimit);assert.equal(s.foldCount,s.foldLimit);assert.equal(s.undoCount,0);assert.equal(s.matchedCells,s.target.occupiedCount);assert.ok(s.remaining>0);assert.equal(s.score,s.matchedCells*100+1000+Math.floor(s.remaining)*5+300);invariant(board(s));
+    assert.equal(s.phase,'won');assert.equal(s.targetMatched,true);assert.equal(s.outlineMatches,true);assert.equal(s.mismatches,0);assert.equal(s.reviewCount,1);assert.equal(s.foldsUsed,s.foldLimit);assert.equal(s.foldCount,s.foldLimit);assert.equal(s.undoCount,0);assert.equal(s.matchedCells,s.target.occupiedCount);assert.ok(s.remaining>0);assert.equal(s.score,s.matchedCells*100+1000+Math.floor(s.remaining)*5+s.maxMismatches*100);invariant(board(s));
     solutions.push({level:s.level,phase:s.phase,elapsed:s.elapsed,score:s.score,foldsUsed:s.foldsUsed,foldLimit:s.foldLimit,occupiedArea:s.occupiedArea,materialArea:s.materialArea,matchedCells:s.matchedCells,targetMatched:s.targetMatched,mismatches:s.mismatches,route:route.map(c=>({axis:c.axis,at:c.at,movingSide:c.movingSide}))});totals.ordinarySolutionWins++;
   }
   return {solutions,scope:'Fresh production Model.create states; independent public-target graph search supplies only normal directional/A key inputs and idle steps. No fixture modifications or authored solution access.'};
@@ -190,6 +190,6 @@ check('three fresh authored targets are solved from public geometry using only o
 assert.equal(sha(await readFile(modelUrl)),modelHash,'Model changed during independent review');assert.equal(sha(await readFile(contractUrl)),contractHash,'Contract changed during review');
 const report={kind:'independent-integer-fold-review',passed:true,modelSha256:modelHash,contractSha256:contractHash,reviewScriptSha256:sha(await readFile(new URL(import.meta.url))),sourceUnchanged:true,checks,totals,
   methodology:'Independent doubled-cell-center reflection, polygon shoelace area, exact rational final-round color, public-target bounded graph search. No authored fold solution, model private history or production fold/color helper is used by the oracle.',
-  scope:{syntheticModelFixtures:true,ordinaryAuthoredModelSolutions:3,normalGameplayVideoEvidence:false,browserExecuted:false,physicalTvTested:false,physicalPhoneTested:false},
+  scope:{syntheticModelFixtures:true,ordinaryAuthoredModelSolutions:6,normalGameplayVideoEvidence:false,browserExecuted:false,physicalTvTested:false,physicalPhoneTested:false},
   limitations:['Discrete colored-square model; no continuous origami or real glass stress simulation.','Timing and input fixtures execute the model directly; packaged browser/native/video checks are separate.']};
 const index=process.argv.indexOf('--out');if(index>=0){assert.ok(process.argv[index+1]);await writeFile(process.argv[index+1],JSON.stringify(report,null,2)+'\n');}console.log(JSON.stringify(report,null,2));

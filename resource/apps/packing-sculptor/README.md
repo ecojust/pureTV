@@ -21,16 +21,30 @@
 - 暂停：P / Escape / START；重试：R / SELECT，均由宿主独立提供。
 - 手机：右侧整个三分之一区域分为上方 A、下方 B。开始、恢复或取消输入后，先松开控制。
 
-## 三个任务
+## 六个任务（0.2.0）
 
 | 任务 | 箱体网格 | 零件数 | 必须保留的出口 |
 | --- | --- | --- | --- |
 | 侧门小箱 / SIDE HATCH | 5×4，两个缺角 | 4 | 长轨向右 |
 | 双向货箱 / TWO WAY CRATE | 5×5，左下和右下缺角 | 5 | 弯角向上；长轨向下 |
 | 对向出库 / OPPOSITE DISPATCH | 6×5，四角缺格 | 6 | 折板向右；长轨向左 |
+| 环柱货仓 / PILLAR RING | 6×6，中央 2×2 固定柱 | 6 | 短条向上；长轨向右 |
+| 三口分流 / THREE PORT | 7×5，上下缺口分隔门洞 | 6 | 丁板向窄北门；折板向下；方块向右 |
+| 岔路转运 / FORKED DEPOT | 7×6，中央隔柱与四角缺格 | 6 | 弯角向左；丁板可向上或向右；折板向右 |
 
 箱体、零件轮廓、朝向、门洞和必抽箭头始终公开。不同零件独立验收通道，不能暗中先拿走另一件腾路。没有隐藏目标摆放图或预设操作路线；满足规则的任何摆放都可以通过。
 
 完整坐标与连续扫掠规则见 [公开设计](docs/public-design.md)，精确状态与输入行为见 [模型契约](docs/model-contract.md)，宿主和验证约定见 [公共接口](docs/public-interface.md)。这些文件描述静态规则；不宣称已经完成实现、测试或发布。
+
+## 0.2.0 的装箱工作台
+
+中央俯视箱体显示真实墙体和门洞，底部横向托盘显示全部零件轮廓，左侧装货单给出装入量、占用面积与验收额度，右侧逐条检查出库路线。桌面外的手机二维码和简明操作改为左侧窄工作条，不再使用与其他游戏相同的右侧栏。
+
+```bash
+node --test resource/apps/packing-sculptor/tests/model.test.cjs resource/apps/packing-sculptor/tests/campaign-test.mjs
+node resource/apps/packing-sculptor/tests/browser-checks.mjs --assets /absolute/built-assets --output /absolute/qa-output
+```
+
+旧 `docs/` 报告对应 0.1.0，保留用于历史核查；本次构建、实际普通输入录像和签名应使用 0.2.0 资产重新验证。
 
 采用仓库的 [MIT 许可证](LICENSE)。

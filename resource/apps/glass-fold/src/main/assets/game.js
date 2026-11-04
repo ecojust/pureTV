@@ -137,51 +137,43 @@ function crease(r,s){
   arrow(r,v.x-17,cy+(c.movingSide==='low'?-37:37),v.x-17,cy+(c.movingSide==='low'?19:-19),3,light);
  }
 }
-function selector(r,s){
- const x=s.view.current.x-24,y=405,w=s.grid.cols*s.view.current.cellSize+48;
- r.rect(x,y,w,129,'#2d302ee8');r.line(x,y,x+w,y,1,'#d4b386');
- r.text('DIRECTION',x+12,y+10,10,'#e6c99e');r.text('CREASE  1 / 2 / 3',x+110,y+10,10,'#c0cbc2');
- const vectors=[[1,0],[-1,0],[0,1],[0,-1]];
- vectors.forEach((v,row)=>{const cy=y+41+row*24;arrow(r,x+35-v[0]*9,cy-v[1]*9,x+35+v[0]*9,cy+v[1]*9,2.4,'#e5cd9e');});
- s.candidates.forEach(c=>{
-  const bx=x+71+c.selectorCol*66,by=y+30+c.selectorRow*24,selected=c.id===s.selectedId,valid=c.valid||(selected&&s.mode==='folding');
-  const fill=selected?(valid?'#e5c38c':'#cc9b85'):valid?'#57645e':'#3d4642';
-  r.rect(bx,by,58,22,fill);if(selected)outline(r,bx,by,58,22,'#fff0cf',1.3);
-  center(r,String(c.at),bx+29,by+2,16,selected?'#273b3c':valid?'#e2e6d5':'#8c9890');
-  if(!valid){r.line(bx+47,by+5,bx+51,by+9,1,'#9c8274');r.line(bx+51,by+5,bx+47,by+9,1,'#9c8274');}
- });
-}
-function information(r,s){
- const x=s.view.target.x-24,y=405,w=s.grid.cols*s.view.target.cellSize+48,c=s.candidates[s.selectedIndex];
- r.rect(x,y,w,123,'#2d302ee8');r.line(x,y,x+w,y,1,'#d4b386');
- let heading='READY TO FOLD',line1='A / FLIP THE ARROW SIDE',line2='FLIPPING REVERSES LAYER ORDER',tone=C.cream;
- if(s.phase==='won'){heading='WINDOW COMPLETE';line1='COLOR + OUTLINE MATCH';line2='ENTER / MAKE ANOTHER WINDOW';tone=C.teal;}
- else if(s.phase==='lost'){heading=s.lostReason==='timeout'?'TIME HAS RUN OUT':'CHECK LIMIT REACHED';line1='ENTER / START A NEW WORK';line2='COMPARE BOTH SHAPE AND COLOR';tone=C.coral;}
- else if(s.mode==='folding'){heading='FOLD IN MOTION';line1='WAIT FOR THE GLASS TO SETTLE';line2='NEXT / COMPARE THE SETTLED COLORS';}
- else if(s.mode==='review'){heading='CHECK DID NOT MATCH';line1='B / UNDO AND CORRECT';line2='TIME AND FAILED CHECKS STAY USED';tone=C.coral;}
- else if(c&&!c.valid){heading='THIS FOLD IS BLOCKED';line1='START WITH GLASS ON BOTH SIDES';line2='MIRROR MUST STAY IN THE FRAME';tone=C.coral;}
- r.text(heading,x+14,y+12,16,tone);r.text(line1,x+14,y+42,11,'#e0dfc9');r.text(line2,x+14,y+62,9,'#b4c2b8');
- r.line(x+14,y+82,x+w-14,y+82,1,'#687369');
- const tail=s.phase==='playing'?'B / UNDO '+(s.canUndo?'AVAILABLE':'NOT YET AVAILABLE'):'MATERIAL / '+s.materialArea+' PIECES';
- r.text(tail,x+14,y+94,10,'#d5bc96');
+let workshop=null,workshopSignature='';
+function syncWorkshop(s){
+ if(!workshop){
+  const arena=document.getElementById('arena');if(!arena)return;
+  document.querySelector('.small-help').textContent='P 暂停　R 重试　·　遥控器确认开始 / A，播放键暂停';
+  const choices=document.createElement('section'),notes=document.createElement('section');
+  choices.className='workshop-choices';choices.setAttribute('aria-label','折线与方向');
+  choices.innerHTML='<p class="workshop-eyebrow">折线与方向</p><div class="crease-head"><span>翻向</span><span>1</span><span>2</span><span>3</span></div><div class="crease-rows"></div><p class="crease-caption"></p>';
+  const rows=choices.querySelector('.crease-rows');
+  ['→','←','↓','↑'].forEach((arrow,row)=>{const line=document.createElement('div');line.className='crease-row';const direction=document.createElement('span');direction.textContent=arrow;line.append(direction);for(let col=0;col<3;col++){const cell=document.createElement('span');cell.dataset.crease=String(row*3+col);cell.textContent=String(col+1);line.append(cell);}rows.append(line);});
+  notes.className='workshop-notes';notes.setAttribute('aria-label','作品验收');
+  notes.innerHTML='<p class="workshop-eyebrow">本轮作品</p><h2></h2><p class="workshop-material"></p><div class="workshop-rule"></div><p class="workshop-check"></p><p class="workshop-undo"></p>';
+  arena.append(choices,notes);workshop={choices,notes};
+ }
+ const signature=[s.level,s.selectedId,s.mode,s.phase,s.canUndo,s.foldsRemaining,s.mismatches].join(':');if(signature===workshopSignature)return;workshopSignature=signature;
+ for(const c of s.candidates){const cell=workshop.choices.querySelector('[data-crease="'+(c.selectorRow*3+c.selectorCol)+'"]');cell.className=(c.id===s.selectedId?'is-selected ':'')+(c.valid?'':'is-blocked');cell.setAttribute('aria-label',(c.selectorRow+1)+'方向、第'+c.at+'折线'+(c.valid?'可折':'不可折'));}
+ const chosen=s.candidates[s.selectedIndex],direction=['向右翻','向左翻','向下翻','向上翻'][chosen.selectorRow];
+ workshop.choices.querySelector('.crease-caption').textContent=s.mode==='folding'?'玻璃翻面中…':direction+' · 第 '+chosen.at+' 条折线';
+ workshop.notes.querySelector('h2').textContent=s.levelName;
+ workshop.notes.querySelector('.workshop-material').textContent=s.materialArea+' 片玻璃 · '+s.foldLimit+' 次折叠';
+ workshop.notes.querySelector('.workshop-check').textContent=s.phase==='won'?'轮廓与颜色已吻合':s.phase==='lost'?'重新开始，再试一种折法':'目标 '+s.target.occupiedCount+' 格，颜色与轮廓都要一致';
+ workshop.notes.querySelector('.workshop-undo').textContent=s.canUndo?'B 可撤销上一折':s.mode==='review'?'B 撤销后继续调整':'翻面会颠倒叠放顺序';
 }
 function scene(r,s){
  r.sprite('fold_wood',480,270,960,540,0,'#fff');r.sprite('glow',480,200,1080,810,0,'#edc99a23');
- r.rect(0,0,960,47,'#292b2ceb');r.line(0,47,960,47,1,'#b99560');
- r.text('GLASS FOLD',27,15,20,C.cream);r.text('STAINED GLASS ATELIER / '+String(s.level).padStart(2,'0'),679,21,10,'#bfc9bd');
- board(r,s,s.view.current,'CURRENT');board(r,s,s.view.target,'TARGET');
+ board(r,s,s.view.current,'WORKPIECE');board(r,s,s.view.target,'REFERENCE');
  currentGlass(r,s);s.target.cells.forEach(c=>glass(r,s.view.target,c.col,c.row,c.color));silhouette(r,s.view.target,s.target.cells);crease(r,s);
- center(r,'MATCH',476,217,11,'#f4deb8');arrow(r,455,244,498,244,2.5,'#ebcb98');
- center(r,'COLOR',476,266,9,'#cfbca1');center(r,'+ OUTLINE',476,283,9,'#cfbca1');
- r.sprite('fold_tools',477,456,94,94,0,'#fff');
- selector(r,s);information(r,s);
+ r.text('GLASS FOLD / '+String(s.level).padStart(2,'0'),32,517,16,C.cream);
+ r.text('MATCH COLOUR + OUTLINE',647,517,16,C.cream);
+ syncWorkshop(s);
 }
 root.GameDef={
- id:'glass-fold',title:'折光工坊',tagline:'一折一层，让颜色与轮廓恰好相逢',seed:173,
- accent:'#dfbc87',background:'#5e493a',levelLabel:'作品',levelNames:['晨光','暮色','琉璃'],atlas,
+ id:'glass-fold',stylesheet:'game-theme.css',title:'折光工坊',tagline:'一折一层，让颜色与轮廓恰好相逢',seed:173,
+ accent:'#dfbc87',background:'#5e493a',levelLabel:'作品',levelNames:['晨光','暮色','琉璃','留白','交错','万花'],atlas,
  description:'对照右侧目标，折叠左侧彩片。上下选翻折方向，左右选折线，A 折叠，B 撤销。翻面会颠倒叠放顺序。用完本轮折数后自动检查轮廓和颜色；撤销不退时间或错误次数。',
  controls:{move:'上下换翻折方向，左右选折线',a:'折叠 · 空格 / 确认 / 右上半屏',b:'撤销上一折 · B / 右下半屏'},actionLabels:['折叠','撤销'],
- tip:'箭头侧会翻向另一边，层序也会倒转。用完折数自动检查；不符按 B 撤销，时间和错误不回退。',
+ tip:'空白格是留白。只折有彩片的两侧；最后一折自动验收，B 可撤销。',
  winTitle:'花窗完成了',loseTitle:'再琢磨这道折痕',
  result(s){if(s.phase==='won')return '轮廓与颜色全部吻合！完成 '+s.foldsUsed+' 折，撤销 '+s.undoCount+' 次，剩余 '+Math.ceil(s.remaining)+' 秒。';if(s.lostReason==='timeout')return '90 秒已到。先看箭头侧，再按目标轮廓安排折线；最后一折也要留出翻折时间。';return '已用尽 '+s.maxMismatches+' 次检查机会。再次开始后，可用 B 撤销修正；错误次数不会退回。';},
  hud(s){const modes={editing:'选择折线',folding:'正在翻折',review:'需撤销修正'};return[

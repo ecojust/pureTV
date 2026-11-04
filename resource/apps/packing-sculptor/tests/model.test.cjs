@@ -3,7 +3,7 @@
 // Formal regression only: this file is not an ordinary-play corpus. Direct
 // state edits are confined to explicitly SYNTHETIC partial-board/cache/cap
 // fixtures. No complete winning configuration or stored input solution exists
-// here; actual three-level wins and final-allowance success are separate QA.
+// here; actual campaign wins and final-allowance success are separate QA.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const Model = require('../src/main/assets/game-model.js');
@@ -177,7 +177,7 @@ test('public API, exact original shape/box/door data, deeply immutable config', 
     [[0, 0], [3, 0], [3, 1], [2, 1], [2, 2], [1, 2], [1, 1], [0, 1]],
     [[0, 0], [2, 0], [2, 1], [3, 1], [3, 2], [1, 2], [1, 1], [0, 1]]
   ]);
-  assert.deepEqual(C.tasks, [
+  assert.deepEqual(C.tasks.slice(0, 3), [
     { id: 'side-hatch', name: 'SIDE HATCH', nameZh: '侧门小箱', width: 5, height: 4,
       rows: ['11110', '11111', '11111', '01111'], pieceIds: ['rail', 'elbow', 'crate', 'bar'],
       doors: [{ id: 'east', direction: 'right', start: 1, end: 2 }],
@@ -192,8 +192,8 @@ test('public API, exact original shape/box/door data, deeply immutable config', 
       doors: [{ id: 'east', direction: 'right', start: 1, end: 3 }, { id: 'west', direction: 'left', start: 3, end: 4 }],
       requirements: [{ pieceId: 'zig', doorIds: ['east'] }, { pieceId: 'rail', doorIds: ['west'] }] }
   ]);
-  assert.deepEqual(C.tasks.map(t => t.rows.join('').split('').filter(x => x === '1').length), [18, 21, 26]);
-  assert.deepEqual(C.tasks.map(t => t.pieceIds.reduce((sum, id) => sum + C.pieces.find(p => p.id === id).cells.length, 0)), [12, 16, 20]);
+  assert.deepEqual(C.tasks.map(t => t.rows.join('').split('').filter(x => x === '1').length), [18, 21, 26, 32, 33, 36]);
+  assert.deepEqual(C.tasks.map(t => t.pieceIds.reduce((sum, id) => sum + C.pieces.find(p => p.id === id).cells.length, 0)), [12, 16, 20, 20, 20, 20]);
   for (const piece of C.pieces) {
     assert.equal(polygonArea(piece.vertices), piece.cells.length);
     assert.equal(new Set(piece.cells.map(String)).size, piece.cells.length);
@@ -211,8 +211,8 @@ test('fresh seed/level normalization, isolated states/config and complete retry 
   for (const seed of [undefined, null, '746', true, -1, 1.5, 4294967296, NaN, Infinity, {}, 1n]) {
     assert.equal(Model.create(seed, 0).seed, 746);
   }
-  for (const level of [-1, 3, 0.5, '1', NaN, undefined, null]) assert.equal(Model.create(1, level).level, 0);
-  for (let level = 0; level < 3; level += 1) {
+  for (const level of [-1, C.tasks.length, 0.5, '1', NaN, undefined, null]) assert.equal(Model.create(1, level).level, 0);
+  for (let level = 0; level < C.tasks.length; level += 1) {
     const state = Model.create(10, level), fresh = Model.create(10, level), task = C.tasks[level];
     assert.deepEqual(state, fresh); detached(state, fresh); detached(state, C);
     assert.deepEqual(state.placements, task.pieceIds.map(() => null));
@@ -464,8 +464,8 @@ test('clear preserves actual rejection history; receipt snapshots stay detached 
   assert.equal(state.inventory.rail, 0); invariants(state);
 });
 
-test('three natural empty-rack four-CHECK losses and exact terminal no-ops', () => {
-  for (let level = 0; level < 3; level += 1) {
+test('all campaign natural empty-rack four-CHECK losses and exact terminal no-ops', () => {
+  for (let level = 0; level < C.tasks.length; level += 1) {
     const state = Model.create(746, level);
     for (let attempt = 1; attempt <= 4; attempt += 1) {
       const event = check(state), receipt = state.submissions[attempt - 1];

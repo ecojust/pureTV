@@ -204,10 +204,19 @@ export function createPilot({ policy = 'align' } = {}) {
   pilot.diagnostics = engine.diagnostics;
   return pilot;
 }
-let activePilot = null, identity = '', lastCalls = -1, lastElapsed = -1, lastPlacementsMade = -1;
-export function keys(snapshot, { mode = 'qa' } = {}) {
+let activePilot = null, identity = '', lastCalls = -1, lastElapsed = -1, lastPlacementsMade = -1, finishedAt = null, finishedLevel = -1, menuRelease = false;
+export function keys(snapshot, { mode = 'qa', elapsed = 0 } = {}) {
   const s = snapshot?.model;
-  if (!s || snapshot.phase !== 'playing' || snapshot.paused) return [];
+  if (!s || snapshot.paused) return [];
+  if (mode === 'record' && snapshot.phase === 'won' && s.level < 5) {
+    if (finishedLevel !== s.level) { finishedLevel = s.level; finishedAt = elapsed; }
+    if (elapsed - finishedAt < 2.5) return [];
+    if (menuRelease) { menuRelease = false; return []; }
+    menuRelease = true;
+    return [snapshot.level === s.level + 1 ? 'Enter' : 'ArrowRight'];
+  }
+  if (snapshot.phase !== 'playing') return [];
+  menuRelease = false;
   const next = `${mode}:${s.seed}:${s.level}`;
   if (!activePilot || identity !== next || s.calls < lastCalls || s.elapsed < lastElapsed || s.placementsMade < lastPlacementsMade) {
     activePilot = createPilot(); identity = next;
@@ -225,7 +234,7 @@ export function assertProgress({ before, after, trace = [] }, assert) {
   assert.ok(Object.values(end.inventory).every(value => value === 0));
   assert.equal(end.submissions.at(-1).matched, true); assert.equal(end.terminalReceipt.cause, 'success');
   assert.deepEqual(end.submissions.at(-1).placements, end.placements); assert.deepEqual(end.terminalReceipt.geometry, end.geometry);
-  const observed = [before, ...trace.map(row => row.snapshot ?? row), after].map(row => row.model).filter(Boolean);
+  const observed = [before, ...trace.map(row => row.state ?? row.snapshot ?? row), after].map(row => row.model).filter(Boolean);
   assert.ok(observed.some(s => s.phase === 'playing' && s.geometry.canShip), 'Actual valid packing remained playing before CHECK');
   assert.ok(observed.some(s => s.geometry.placedCount > 0 && !s.geometry.allPlaced), 'Actual partial packing was observed');
 }

@@ -26,7 +26,7 @@ let pilot=createPilot(),mode=null,terminalAt=null,menuRelease=false;
 export function keys(q,meta={}){
  if(mode!==meta.mode){mode=meta.mode;pilot=createPilot();terminalAt=null;menuRelease=false;}
  if(meta.mode==='record'&&q.phase==='won'){
-  if(q.model.level===2)return [];if(terminalAt===null)terminalAt=meta.elapsed;if(meta.elapsed-terminalAt<1.1)return [];
+  if(q.model.level===5)return [];if(terminalAt===null)terminalAt=meta.elapsed;if(meta.elapsed-terminalAt<2.5)return [];
   if(menuRelease){menuRelease=false;return [];}menuRelease=true;return [q.level===q.model.level+1?'Enter':'ArrowRight'];
  }terminalAt=null;menuRelease=false;return pilot(q);
 }

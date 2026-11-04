@@ -6,11 +6,22 @@
  const config=freeze({defaultSeed:764,fieldWidth:600,minWidth:16,dropDuration:.3,offcutLifetime:1.2,maxElapsed:86400,maxCounter:2147483647,
   layouts:[{id:'steady-yard',name:'STEADY YARD',nameZh:'匀速工地',width:220,speed:145,goal:6,profile:'steady',period:1},
    {id:'pulse-yard',name:'PULSE YARD',nameZh:'节拍工地',width:200,speed:170,goal:8,profile:'pulse',period:1.6},
-   {id:'swell-yard',name:'SWELL YARD',nameZh:'渐速工地',width:180,speed:195,goal:10,profile:'swell',period:2.4}]});
- function factor(l,cycle){if(l.profile==='steady')return 1;if(l.profile==='pulse')return cycle<.8?1.2:.8;return cycle<1.2?.7+.5*cycle:1.3-.5*(cycle-1.2);}
+   {id:'swell-yard',name:'SWELL YARD',nameZh:'渐速工地',width:180,speed:195,goal:10,profile:'swell',period:2.4},
+   {id:'signal-yard',name:'SIGNAL YARD',nameZh:'信号停走',width:205,speed:175,goal:8,profile:'signal',period:1.8},
+   {id:'gust-yard',name:'GUST YARD',nameZh:'阵风高塔',width:190,speed:180,goal:12,profile:'gust',period:1.5},
+   {id:'skyline-yard',name:'SKYLINE YARD',nameZh:'天际冲刺',width:170,speed:185,goal:14,profile:'ramp',period:2}]});
+ function segment(l,cycle){
+  if(l.profile==='steady')return{end:l.period,value:1,slope:0};
+  if(l.profile==='pulse')return{end:cycle<.8?.8:l.period,value:cycle<.8?1.2:.8,slope:0};
+  if(l.profile==='swell')return{end:cycle<1.2?1.2:l.period,value:cycle<1.2?.7+.5*cycle:1.3-.5*(cycle-1.2),slope:cycle<1.2?.5:-.5};
+  if(l.profile==='signal')return{end:cycle<.35?.35:l.period,value:cycle<.35?0:1.2,slope:0};
+  if(l.profile==='gust')return{end:cycle<.45?.45:cycle<.9?.9:l.period,value:cycle<.45?.55:cycle<.9?1.6:.9,slope:0};
+  return{end:l.period,value:.55+.45*cycle,slope:.45};
+ }
+ function factor(l,cycle){return segment(l,cycle).value;}
  function freshSlab(l,width,index){const direction=index%2?-1:1;return{x:direction===1?0:config.fieldWidth-width,width,direction,velocity:direction*l.speed*factor(l,0),cycle:0};}
  function create(seed,level){
-  seed=Number.isInteger(seed)&&seed>=0&&seed<=4294967295?seed:config.defaultSeed;level=Number.isInteger(level)&&level>=0&&level<3?level:0;const l=config.layouts[level];
+  seed=Number.isInteger(seed)&&seed>=0&&seed<=4294967295?seed:config.defaultSeed;level=Number.isInteger(level)&&level>=0&&level<config.layouts.length?level:0;const l=config.layouts[level];
   return{schema:1,seed,level,phase:'playing',reason:'',score:0,mode:'moving',floors:[{index:0,x:(600-l.width)/2,width:l.width}],floorsBuilt:0,goal:l.goal,
    slab:freshSlab(l,l.width,0),dropElapsed:0,drops:0,offcuts:[],lastLanding:null,elapsed:0,elapsedCapped:false,calls:0,inputArmed:false,
    cancelEpoch:null,cancelledLast:false,lastHeld:{a:false,b:false,x:0,y:0},lastCommand:'none',events:[],terminalReceipt:null,
@@ -29,12 +40,11 @@
  function travel(l,cycle,dt){
   let left=dt,distance=0,clock=cycle;
   while(left>0){
-   const half=l.period/2,second=clock>=half,boundary=l.profile==='steady'?l.period:second?l.period:half;
+   const part=segment(l,clock),boundary=part.end;
    let span=Math.min(left,boundary-clock);
    if(span<=0){clock=boundary>=l.period-EPS?0:boundary;continue;}
-   const start=factor(l,clock),slope=l.profile==='swell'?(second?-.5:.5):0;
-   distance+=l.speed*(start*span+slope*span*span/2);clock+=span;left-=span;
-   if(clock>=l.period-EPS)clock=0;else if(Math.abs(clock-half)<EPS&&l.profile!=='steady')clock=half;
+   distance+=l.speed*(part.value*span+part.slope*span*span/2);clock+=span;left-=span;
+   if(clock>=l.period-EPS)clock=0;else if(Math.abs(clock-boundary)<EPS)clock=boundary;
   }
   return{distance,cycle:clock};
  }

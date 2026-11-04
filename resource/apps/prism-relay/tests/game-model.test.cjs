@@ -8,7 +8,7 @@ const { pathToFileURL } = require('node:url');
 const model = require('../src/main/assets/game-model.js');
 const vectors = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 const inputs = [{ x: 1 }, { y: 1 }, { x: -1 }, { y: -1 }];
-const answers = [[0], [0, 1, 1], [0, 0, 1, 1, 0, 0]];
+const answers = [[0], [0, 1, 1], [0, 0, 1, 1, 0, 0], [1, 1, 0], [0, 1, 2, 0], [0, 0, 1, 1, 0, 0, 0, 1, 0]];
 const clone = value => structuredClone(value);
 function ticks(state, n) { for (let i = 0; i < n; i += 1) model.step(state, 0.1, {}); return state; }
 function press(state, input) { model.step(state, 0.01, input); model.step(state, 0.01, {}); }
@@ -130,7 +130,7 @@ test('outgoing beams end at the boundary, and cached paths survive selection and
   press(state, { a: true }); assert.notEqual(state.beams, beams); assert.equal(state.traceVersion, revision + 1);
   const next = state.beams;
   press(state, { a: true, b: true }); assert.equal(state.beams, next, 'opposite simultaneous turns leave the cached light path intact');
-  for (let level = 0; level < 3; level += 1) {
+  for (let level = 0; level < 6; level += 1) {
     const board = solveByInput(level);
     for (const beam of board.beams) for (const [key, limit] of [['x1', board.width], ['x2', board.width], ['y1', board.height], ['y2', board.height]]) {
       assert.ok(Number.isFinite(beam[key]) && beam[key] >= -0.5 && beam[key] <= limit - 0.5);
@@ -221,7 +221,7 @@ test('selection precedes rotation, has a dead zone and delayed repeat, and reach
   assert.equal(state.devices[5].orientation, 0); assert.equal(state.devices[0].orientation, 3);
   model.step(state, 0.2, { x: 1 }); model.step(state, 0.2, { x: 1 }); assert.equal(state.selectedId, 'device-6');
   model.step(state, 0.02, { x: 1 }); assert.equal(state.selectedId, 'device-3');
-  for (let level = 0; level < 3; level += 1) {
+  for (let level = 0; level < 6; level += 1) {
     const board = model.create(1, level);
     for (const from of board.devices) {
       for (const input of nextRoute(board, from.id)) press(board, input);
@@ -231,7 +231,7 @@ test('selection precedes rotation, has a dead zone and delayed repeat, and reach
 });
 
 test('create/retry are independent, restore layouts and cannot inherit held actions', () => {
-  for (let level = 0; level < 3; level += 1) {
+  for (let level = 0; level < 6; level += 1) {
     const initial = model.create(41, level), played = model.create(41, level);
     press(played, { a: true }); ticks(played, 30); played.hazards.forEach(hazard => { hazard.heat = 20; });
     const retry = model.create(41, level); assert.deepEqual(retry, initial);
@@ -239,12 +239,12 @@ test('create/retry are independent, restore layouts and cannot inherit held acti
     const orientation = retry.devices[0].orientation; model.step(retry, 0.01, { a: true }); assert.notEqual(retry.devices[0].orientation, orientation);
     assert.deepEqual(model.create(41, level), initial, 'play cannot pollute the internal level templates');
   }
-  assert.equal(model.create().level, 1); assert.equal(model.create(1, -3).level, 1); assert.equal(model.create(1, 99).level, 3);
+  assert.equal(model.create().level, 1); assert.equal(model.create(1, -3).level, 1); assert.equal(model.create(1, 99).level, 6);
 });
 
-test('all 146 orientation combinations have exactly one safe solution per level', () => {
+test('all 1242 orientation combinations have exactly one safe solution per level', () => {
   let combinations = 0;
-  for (let level = 0; level < 3; level += 1) {
+  for (let level = 0; level < 6; level += 1) {
     const board = model.create(1, level), correct = [];
     assert.ok(board.receivers.some(receiver => receiver.incident !== receiver.required), 'the initial state is not solved');
     function enumerate(index) {
@@ -258,7 +258,7 @@ test('all 146 orientation combinations have exactly one safe solution per level'
     }
     enumerate(0); assert.deepEqual(correct, [answers[level]]);
   }
-  assert.equal(combinations, 146);
+  assert.equal(combinations, 1242);
 });
 
 test('level three needs both red and blue at purple; crossing green stays independent', () => {
@@ -270,20 +270,20 @@ test('level three needs both red and blue at purple; crossing green stays indepe
   assert.equal(board.receivers[1].incident, 2); assert.notEqual(board.phase, 'won');
 });
 
-test('all three levels are won through actual direction and rotation input', () => {
-  for (let level = 0; level < 3; level += 1) {
+test('all six levels are won through actual direction and rotation input', () => {
+  for (let level = 0; level < 6; level += 1) {
     const state = solveByInput(level); ticks(state, 20);
     assert.equal(state.phase, 'won'); assert.ok(state.receivers.every(receiver => receiver.charge === 20));
     assert.ok(state.hazards.every(hazard => hazard.heat < hazard.limit));
   }
 });
 
-test('read-only automation solves each QA level and records three ordinary menu transitions', async () => {
+test('read-only automation solves each QA level and records six ordinary levels', async () => {
   const pilot = await import(pathToFileURL(path.join(__dirname, 'automation.mjs')).href);
   function run(startLevel, mode) {
     let state = model.create(1, startLevel), menuLevel = startLevel, held = new Set(), wins = new Set();
     const before = { phase: 'playing', level: menuLevel, model: clone(state) }, trace = [];
-    for (let elapsed = 0; elapsed < 80; elapsed += 0.08) {
+    for (let elapsed = 0; elapsed < 160; elapsed += 0.08) {
       const snapshot = { phase: state.phase, paused: false, level: menuLevel, model: clone(state) }, unchanged = clone(snapshot);
       const keys = pilot.keys(snapshot, { elapsed, mode }); assert.deepEqual(snapshot, unchanged, 'pilot must never write a snapshot');
       assert.ok(keys.every(key => ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Space', 'b', 'Enter'].includes(key)));
@@ -293,16 +293,16 @@ test('read-only automation solves each QA level and records three ordinary menu 
           a: down.has('Space'), b: down.has('b'), aPressed: down.has('Space') && !held.has('Space'), bPressed: down.has('b') && !held.has('b') });
       } else {
         wins.add(state.level);
-        if (down.has('ArrowRight') && !held.has('ArrowRight')) menuLevel = (menuLevel + 1) % 3;
+        if (down.has('ArrowRight') && !held.has('ArrowRight')) menuLevel = (menuLevel + 1) % 6;
         if (down.has('Enter') && !held.has('Enter')) state = model.create(1, menuLevel);
       }
       held = down;
       trace.push({ state: { phase: state.phase, model: clone(state) } });
-      if (state.phase === 'won' && (mode === 'qa' || state.level === 3)) {
+      if (state.phase === 'won' && (mode === 'qa' || state.level === 6)) {
         wins.add(state.level);
         const after = { phase: state.phase, model: clone(state) };
         if (mode === 'qa') pilot.assertProgress({ before, after, trace }, assert);
-        else assert.deepEqual([...wins], [1, 2, 3]);
+        else assert.deepEqual([...wins], [1, 2, 3, 4, 5, 6]);
         const retry = { phase: 'playing', model: model.create(1, state.level - 1) };
         pilot.assertRetry({ before: after, after: retry }, assert);
         return;
@@ -310,7 +310,7 @@ test('read-only automation solves each QA level and records three ordinary menu 
     }
     assert.fail(`pilot did not complete ${mode} level ${startLevel + 1}`);
   }
-  for (let level = 0; level < 3; level += 1) run(level, 'qa');
+  for (let level = 0; level < 6; level += 1) run(level, 'qa');
   run(0, 'record');
   assert.equal(pilot.budgets.maxWebGLDrawCalls, 3);
 });

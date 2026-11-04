@@ -435,7 +435,7 @@ test('score derives from visible matched cells, undo cannot farm it, and winning
 
 test('numeric inputs are bounded, fixed-step partitioning agrees, and retry/JSON states share no mutable geometry', () => {
   assert.equal(Model.create(NaN, NaN).seed, 1); assert.equal(Model.create(2, -100).level, 1);
-  assert.equal(Model.create(2, 100).level, 3); assert.equal(Model.create(2, 1.9).level, 2);
+  assert.equal(Model.create(2, 100).level, 6); assert.equal(Model.create(2, 1.9).level, 2);
   const s = Model.create(); const original = clone(s);
   for (const dt of [0, -1, NaN, Infinity, -Infinity, '1', undefined]) Model.step(s, dt, { aPressed: true });
   assert.deepEqual(s, original);
@@ -458,7 +458,7 @@ test('numeric inputs are bounded, fixed-step partitioning agrees, and retry/JSON
   const again = clone(a); tick(again, { b: true }); assert.equal(again.historyDepth, 1); assert.equal(a.historyDepth, 2);
 });
 
-for (let difficulty = 0; difficulty < 3; difficulty++) {
+for (let difficulty = 0; difficulty < 6; difficulty++) {
   test(`public geometry search solves authored level ${difficulty + 1} after a real trial fold and ordinary undo`, async t => {
     const { createPilot, assertProgress } = await import(pathToFileURL(path.join(__dirname, 'automation.mjs')).href);
     const pilot = createPilot(), s = Model.create(29, difficulty);
@@ -497,3 +497,55 @@ for (let difficulty = 0; difficulty < 3; difficulty++) {
       folds: s.foldCount, finalBudgetUsed: s.foldsUsed, undos: s.undoCount, mismatches: s.mismatches, score: s.score }));
   });
 }
+
+
+test('exported recording pilot starts from play and advances all six menus with ordinary keys', async t => {
+  const { keys } = await import(pathToFileURL(path.join(__dirname, 'automation.mjs')).href);
+  let state = Model.create(1, 0), menuLevel = 0, held = new Set();
+  const wins = new Map();
+  for (let elapsed = 0; elapsed < 220; elapsed += 0.08) {
+    const snapshot = { phase: state.phase, paused: false, level: menuLevel,
+      model: clone(Object.fromEntries(Object.entries(state).filter(([key]) => !key.startsWith('_')))) };
+    const unchanged = clone(snapshot), down = new Set(keys(snapshot, { elapsed, mode: 'record' }));
+    assert.deepEqual(snapshot, unchanged, 'recording reads only the visible state');
+    assert.ok([...down].every(key => ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Space', 'b', 'Enter'].includes(key)));
+    if (state.phase === 'playing') {
+      Model.step(state, 0.08, { x: Number(down.has('ArrowRight')) - Number(down.has('ArrowLeft')),
+        y: Number(down.has('ArrowDown')) - Number(down.has('ArrowUp')), a: down.has('Space'), b: down.has('b'),
+        aPressed: down.has('Space') && !held.has('Space'), bPressed: down.has('b') && !held.has('b') });
+    } else {
+      assert.equal(state.phase, 'won');
+      wins.set(state.level, state.elapsed);
+      if (down.has('ArrowRight') && !held.has('ArrowRight')) menuLevel = (menuLevel + 1) % 6;
+      if (down.has('Enter') && !held.has('Enter')) state = Model.create(1, menuLevel);
+    }
+    held = down;
+    if (state.phase === 'won' && state.level === 6) {
+      wins.set(state.level, state.elapsed);
+      assert.deepEqual([...wins.keys()], [1, 2, 3, 4, 5, 6]);
+      t.diagnostic(JSON.stringify({ kind: 'ordinary-six-level-record-pilot', elapsed, levelDurations: [...wins.values()] }));
+      return;
+    }
+  }
+  assert.fail('recording pilot must finish all six ordinary levels within its recipe');
+});
+
+test('expanded collection has distinct sparse designs, solvable targets and preserved material through undo', async () => {
+  const pilot = await import(pathToFileURL(path.join(__dirname, 'automation.mjs')).href);
+  const signatures = new Set();
+  for (let level = 0; level < 6; level++) {
+    const s = Model.create(91, level), ids = s.pieces.map(p => p.id), initial = geometry(s);
+    signatures.add(JSON.stringify([s.cells.map(c => c.layers.length),s.target.cells]));
+    const plan = pilot.planVisibleState(s).folds;
+    assert.equal(plan.length,s.foldLimit);
+    doFold(s,plan[0]);auditMaterial(s,ids);
+    tick(s,{b:true});tick(s);assert.equal(s.foldsUsed,0);assert.deepEqual(s.pieces,initial.pieces);assert.deepEqual(s.cells,initial.cells);
+    for (const id of plan) { doFold(s,id); auditMaterial(s,ids); }
+    assert.equal(s.phase,'won');assert.equal(s.mismatches,0);assert.equal(s.materialArea,ids.length);
+    const frozen=clone(s);ticks(s,20,{aPressed:true,bPressed:true,x:1});assert.deepEqual(s,frozen);
+    if(level===3)assert.equal(ids.length,12);
+    if(level===4)assert.equal(ids.length,13);
+    if(level>=4)assert.equal(s.maxMismatches,2);
+  }
+  assert.equal(signatures.size,6);
+});

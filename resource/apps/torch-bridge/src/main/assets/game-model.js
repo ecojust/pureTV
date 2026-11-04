@@ -6,8 +6,11 @@
  const config=freeze({defaultSeed:774,crossingDuration:.4,capacity:2,maxElapsed:86400,maxCounter:2147483647,layouts:[
   {id:'first-lantern',name:'FIRST LANTERN',nameZh:'初灯渡口',times:[1,2,5,10],deadline:19},
   {id:'misty-span',name:'MISTY SPAN',nameZh:'雾桥同行',times:[1,3,6,8,12],deadline:31},
-  {id:'midnight-relay',name:'MIDNIGHT RELAY',nameZh:'午夜接力',times:[1,2,4,7,11,16],deadline:37}]});
- function create(seed,level){seed=Number.isInteger(seed)&&seed>=0&&seed<=4294967295?seed:config.defaultSeed;level=Number.isInteger(level)&&level>=0&&level<3?level:0;const l=config.layouts[level];
+  {id:'midnight-relay',name:'MIDNIGHT RELAY',nameZh:'午夜接力',times:[1,2,4,7,11,16],deadline:37},
+  {id:'solo-guide',name:'SOLO GUIDE',nameZh:'独行引路',times:[1,5,7,13],deadline:27},
+  {id:'far-bank-convoy',name:'FAR BANK CONVOY',nameZh:'远岸护送',times:[1,2,8,9,17],deadline:33},
+  {id:'last-caravan',name:'LAST CARAVAN',nameZh:'长夜商队',times:[1,4,6,13,18,23],deadline:57}]});
+ function create(seed,level){seed=Number.isInteger(seed)&&seed>=0&&seed<=4294967295?seed:config.defaultSeed;level=Number.isInteger(level)&&level>=0&&level<config.layouts.length?level:0;const l=config.layouts[level];
   return{schema:1,seed,level,phase:'playing',reason:'',score:0,positions:l.times.map(()=>0),torch:0,cursor:0,selected:[],spent:0,deadline:l.deadline,trips:0,mode:'selecting',crossing:null,lastCrossing:null,receipts:[],
    elapsed:0,elapsedCapped:false,calls:0,blockedActions:0,inputArmed:false,cancelEpoch:null,cancelledLast:false,lastHeld:{a:false,b:false,x:0,y:0,direction:'none'},lastCommand:'none',events:[],terminalReceipt:null,
    message:'方向选择旅人，A 选择同岸的一或两人，B 携灯过桥；思考不扣分钟。'};

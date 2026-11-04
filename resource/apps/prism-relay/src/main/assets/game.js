@@ -120,16 +120,16 @@
       r.text('A  CLOCKWISE',x+17,380,11,'#b8d8e7');r.text('B  COUNTERCLOCKWISE',x+17,400,10,'#b8d8e7');
     }
     r.line(x+16,425,x+w-16,425,1,'#284255');
-    if(s.level===3){r.text('R + B = MAGENTA',x+16,442,12,COLORS[5]);r.text('CROSSING DOES NOT MIX',x+16,464,9,'#7396ab');}
+    if(s.level===3||s.level===4||s.level===6){r.text(s.level===3?'R + B = MAGENTA':s.level===4?'G + B = CYAN':'R + G + B = WHITE',x+16,442,11,COLORS[s.level===3?5:s.level===4?6:7]);r.text('CROSSING DOES NOT MIX',x+16,464,9,'#7396ab');}
     else {r.text('HOLD ALL TARGETS',x+16,442,12,'#b3dfdf');r.text('2 SECONDS TO COMPLETE',x+16,464,9,'#7396ab');}
   }
   root.GameDef={
-    id:'prism-relay',title:'镜光接力',tagline:'让一束白光，抵达每一种色彩',seed:29,
-    accent:'#8ce9dd',background:'#071522',levelLabel:'关卡',levelNames:['折转','分色','合光'],
-    description:'用方向键选择镜片或棱镜，A 顺时针转，B 逆时针转。棱镜只接收箭头方向的光：R 红光向左转、G 绿光直行、B 蓝光向右转。让所有接收器持续获得准确颜色 2 秒。第三关把红、蓝两束光一起送到紫色目标；光束交叉不会混色。',
+    id:'prism-relay',stylesheet:'game-theme.css',title:'镜光接力',tagline:'让一束白光，抵达每一种色彩',seed:29,
+    accent:'#8ce9dd',background:'#071522',levelLabel:'关卡',levelNames:['折转','分色','合光','双源','双谱','回白'],
+    description:'用方向键选择镜片或棱镜，A 顺时针转，B 逆时针转。棱镜只接收箭头方向的光：R 红光向左转、G 绿光直行、B 蓝光向右转。让所有接收器持续获得准确颜色 2 秒。六关从单镜反射到双光源、双棱镜及三色绕行。光束交叉不会混色。',
     controls:{move:'摇杆 / 方向键：选择器件',a:'顺时针旋转 · 空格 / 右上半屏',b:'逆时针旋转 · B / 右下半屏'},
     actionLabels:['顺时针转','逆时针转'],
-    tip:'棱镜分光：R 左转、G 直行、B 右转（相对于入射方向）。目标缺色、多色都会中断充能；避开橙色吸收器，热量过高会失败。',
+    tip:'R 左、G 直、B 右。只在接收器合色；绕开橙色吸收器。',
     winTitle:'每一束光，都已抵达',loseTitle:'再调整一次光路',
     result(s){return s.phase==='won'?'第 '+s.level+' 关「'+s.levelName+'」全部接收器充能完成，用时 '+s.elapsed.toFixed(1)+' 秒。用左右键选择其他关卡，再按 Enter 开始。':(s.message||'光源能量已耗尽。')+' 可以保留这次思路，重新调整镜片。';},
     hud(s){
@@ -142,7 +142,7 @@
     },
     render(r,s,t){
       r.text('PRISM RELAY',27,19,17,'#d6f1fa');r.text('OPTICAL BENCH / 0'+s.level,27,40,9,'#66899f');
-      r.text(['01  /  REFLECTION','02  /  DISPERSION','03  /  COMBINATION'][s.level-1],747,24,11,'#8fc9cf');
+      r.text(['01 / REFLECTION','02 / DISPERSION','03 / COMBINATION','04 / TWO SOURCES','05 / DUAL SPECTRUM','06 / WHITE RETURN'][s.level-1],747,24,11,'#8fc9cf');
       board(r,s,t);sidebar(r,s,t);
       r.line(26,514,935,514,1,'#274151');r.text('SELECT  >  ROTATE  >  CONNECT',27,523,9,'#7093a8');
       r.text('R LEFT   /   G STRAIGHT   /   B RIGHT',663,523,9,'#6b94aa');

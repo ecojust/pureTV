@@ -4,11 +4,11 @@
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.tensionspantv`
-- 版本：`0.1.0`
+- 源码版本：`0.2.0`（versionCode 2）
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-[下载安装包](tension-span-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
+已发布的 0.1.0 资源：[下载安装包](tension-span-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)。这些历史资源保留原样，不作为 0.2.0 的画面或验证证据。
 
 ![实际游戏画面](thumb.png)
 
@@ -20,6 +20,19 @@
 
 试载过程中不能增删拉索。试载失败后按 B 恢复试载前的搭建方案，再调整连接；材料预算和整局剩余时间不会因此重置。车辆完全驶出终点才算完成。
 
+## 六座桥
+
+| 桥段 | 变化 | 载重 | 材料预算 |
+| --- | --- | --- | --- |
+| 峡谷初桥 | 对称塔锚，建立基本支撑 | 90 kg | 255 |
+| 重载高塔 | 高塔和更重的车辆 | 110 kg | 285 |
+| 偏塔货运 | 两侧塔高不对称 | 120 kg | 260 |
+| 低塔检修 | 低塔改变拉索角度，预算更紧 | 100 kg | 220 |
+| 长跨快运 | 最大跨度，车辆更快 | 140 kg | 330 |
+| 双岸高差 | 塔锚向内偏移，高低差更大 | 130 kg | 270 |
+
+0.2.0 保留前三座桥，新增三种可独立搭建的工程条件。界面改为蓝图测绘桌：顶部显示材料、载重和工期，中间桥梁标出净跨与挠度，底部横向排列连接与操作说明。
+
 ## 实现与验证
 
 采用固定小步积分的简化竖向桥梁模型：桥面节点的水平位置固定，桥板传递竖向弹力和阻尼；车轮载荷按实际接触位置分摊到相邻节点。拉索根据当前长度计算张力及其竖向分力，松弛时不提供压缩支撑。它用于游戏中的试载与搭建，不是完整土木有限元模型。
@@ -28,9 +41,12 @@
 
 ```bash
 node --test resource/apps/tension-span/tests/game-model.test.cjs
-node resource/apps/tension-span/tests/independent-physics-review.mjs
+node resource/apps/tension-span/tests/independent-physics-review.mjs --output /absolute/scratch/physics.json
+node resource/apps/tension-span/tests/browser-checks.mjs --assets /absolute/build/assets --output /absolute/scratch/browser
 ```
 
-21 组规则测试覆盖各关正常输入通关、预算、单边拉索、载荷、断裂和编辑快照恢复。独立审查包含 30,000 组受力与积分对照，并验证两套不同方案各自通过三关，以及同一局失败、返回修改、再次试载通关的流程。最终测试、签名包和录像结果保存在 `docs/verification.json`。录像使用打包资源在 Chromium 中实际运行；此次未连接实体电视或手机，不将浏览器结果当作实体设备帧率。
+21 组规则测试覆盖六关正常输入通关、预算、单边拉索、载荷、断裂和编辑快照恢复。独立审查包含六种几何下 30,000 组受力与积分对照，并验证两套不同方案各自通过六关，以及同一局失败、返回修改、再次试载通关的流程。浏览器专项检查六关菜单、普通输入以及 960×540 / 1280×720 的文字边界和滚动。
+
+共享 QA 使用 `tests/automation.mjs`；六关连续录像使用 `tests/recording-automation.mjs` 和 `tests/recipe.json`，通过实际方向键和 Enter 切换关卡，首关还演示失败后返工。自动器只读取公开快照，通过普通输入推进。浏览器验证不代表实体电视或手机测试，也不将视频导出帧率当作实体设备帧率。
 
 构建与手机手柄组件见 [game-kit](../../game-kit/README.md)。源码与原创素材遵循仓库 [MIT 许可证](../../../LICENSE)。

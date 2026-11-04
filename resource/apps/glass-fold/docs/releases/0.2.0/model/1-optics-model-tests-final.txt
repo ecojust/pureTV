@@ -1,0 +1,71 @@
+✔ UMD exposes only create/step/tick rate and starts three independent bounded work frames (9.046431ms)
+✔ initial candidate validity distinguishes in-frame folds from reflected out-of-frame folds (1.705247ms)
+✔ both sides must contain actual material: empty moving and empty stationary folds are free (1.357243ms)
+✔ bounds check only occupied moving cells and candidate validity refreshes after each fold (2.998205ms)
+✔ vertical low/high folds reflect real vertices, reverse faces, and preserve the other coordinate (2.903455ms)
+✔ horizontal low/high folds use the same exact reflection for cell rows and all four corners (4.856106ms)
+✔ a moving multilayer stack reverses as one object above the unmodified stationary stack (1.674692ms)
+✔ three pigments composite in order with one final rounding, not rounded intermediate layers (0.54249ms)
+✔ material IDs, pigment, total layers, area and winding survive multiple folds and undo (26.270281ms)
+✔ piece/palette iteration order does not change geometry, layers, colors, metrics or candidates (10.343705ms)
+✔ exact visible RGB and footprint accept different material IDs without hidden layer requirements (4.115734ms)
+✔ matching outline with wrong visible color and matching colors with wrong footprint both fail review (2.892289ms)
+✔ native fold budgets are 3/3/4 and review runs only after the last permitted animation (12.890485ms)
+✔ fold geometry updates atomically and .6 second animation has independent snapshots and bounded progress (4.328919ms)
+✔ held A through animation completion and new selections cannot auto-fold; a real new edge can (1.894657ms)
+✔ A, B and navigation inside animation are ignored, including its final settling tick, without queuing (1.257927ms)
+✔ B restores all geometry, stack order, per-piece state, fold budget and pre-fold selection (9.271623ms)
+✔ undo clears review lock but never refunds elapsed time, mismatch/review ledger or lifetime folds (0.847691ms)
+✔ wrong review happens once, locked A cannot resubmit, and passive time never charges extra failures (2.673937ms)
+✔ undo and redo cause another genuine review; the third mismatch loses and freezes every field (4.385903ms)
+✔ B has priority over A, and navigation happens before the chosen action (1.309343ms)
+✔ selection deadzone, diagonal tie, 20/10 held repeat, clamp and direction release are deterministic (4.523075ms)
+✔ sub-tick A/B edges survive until a fixed tick exactly once, including a complete short tap (30.935527ms)
+✔ cancellation epochs initialize without cancelling, then suppress actions and never queue cancelled edges (1.538461ms)
+✔ cancelled samples advance clock and animation but discard pending sub-tick presses and animation inputs (4.538528ms)
+✔ deadline wins priority over a final settling fold, while settling one tick earlier really wins (3.457523ms)
+✔ score derives from visible matched cells, undo cannot farm it, and winning bonus freezes exactly once (3.214604ms)
+✔ numeric inputs are bounded, fixed-step partitioning agrees, and retry/JSON states share no mutable geometry (8.17154ms)
+✔ public geometry search solves authored level 1 after a real trial fold and ordinary undo (294.807335ms)
+ℹ {"kind":"ordinary-public-fold-round","level":1,"elapsed":32.61666666666667,"folds":4,"finalBudgetUsed":3,"undos":1,"mismatches":0,"score":1985}
+✔ public geometry search solves authored level 2 after a real trial fold and ordinary undo (217.244242ms)
+ℹ {"kind":"ordinary-public-fold-round","level":2,"elapsed":32.61666666666667,"folds":4,"finalBudgetUsed":3,"undos":1,"mismatches":0,"score":1985}
+✔ public geometry search solves authored level 3 after a real trial fold and ordinary undo (319.808023ms)
+ℹ {"kind":"ordinary-public-fold-round","level":3,"elapsed":32.61666666666667,"folds":5,"finalBudgetUsed":4,"undos":1,"mismatches":0,"score":1685}
+✔ public geometry search solves authored level 4 after a real trial fold and ordinary undo (228.584684ms)
+ℹ {"kind":"ordinary-public-fold-round","level":4,"elapsed":32.61666666666667,"folds":3,"finalBudgetUsed":2,"undos":1,"mismatches":0,"score":1885}
+✔ public geometry search solves authored level 5 after a real trial fold and ordinary undo (150.010389ms)
+ℹ {"kind":"ordinary-public-fold-round","level":5,"elapsed":32.61666666666667,"folds":4,"finalBudgetUsed":3,"undos":1,"mismatches":0,"score":1685}
+✔ public geometry search solves authored level 6 after a real trial fold and ordinary undo (211.507457ms)
+ℹ {"kind":"ordinary-public-fold-round","level":6,"elapsed":32.61666666666667,"folds":5,"finalBudgetUsed":4,"undos":1,"mismatches":0,"score":1585}
+✔ exported recording pilot starts from play and advances all six menus with ordinary keys (1124.054415ms)
+ℹ {"kind":"ordinary-six-level-record-pilot","elapsed":207.20000000001,"levelDurations":[32.61666666666667,32.61666666666667,32.61666666666667,32.61666666666667,32.61666666666667,32.61666666666667]}
+✔ expanded collection has distinct sparse designs, solvable targets and preserved material through undo (72.137953ms)
+✔ CommonJS and browser UMD expose the same small, answer-free API (6.491705ms)
+✔ mirrors reflect all four incoming directions in both orientations (0.634316ms)
+✔ prisms accept one entry direction and separate every RGB subset in all orientations (2.564605ms)
+✔ crossing rays stay separate, while receivers combine rays from different sides (0.406399ms)
+✔ walls, receivers, hazards and returning beams at a source absorb light (0.283568ms)
+✔ the visited ray-state bound terminates a closed optical cycle (0.341484ms)
+✔ outgoing beams end at the boundary, and cached paths survive selection and time (21.097776ms)
+✔ nineteen correct ticks are insufficient; the twentieth wins and freezes every field (0.712672ms)
+✔ an interrupted or wrong-colored receiver loses all charge at the next rule tick (0.462983ms)
+✔ fractional time accumulates at 10 Hz regardless of rendering frequency (0.674215ms)
+✔ heat increases once per illuminated tick and cools twice as fast without going negative (0.693603ms)
+✔ terminal precedence is overheating, then success, then exhausted energy (0.373771ms)
+✔ untouched levels expire at exactly their designed 45/60/75 second limits (6.925821ms)
+✔ A/B rotate once per held edge, while explicit runtime pulses preserve fast re-presses (0.366921ms)
+✔ selection precedes rotation, has a dead zone and delayed repeat, and reaches every device (89.359203ms)
+✔ create/retry are independent, restore layouts and cannot inherit held actions (1.428909ms)
+✔ all 1242 orientation combinations have exactly one safe solution per level (12.058946ms)
+✔ level three needs both red and blue at purple; crossing green stays independent (2.248959ms)
+✔ all six levels are won through actual direction and rotation input (11.62704ms)
+✔ read-only automation solves each QA level and records six ordinary levels (275.150248ms)
+ℹ tests 56
+ℹ suites 0
+ℹ pass 56
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3527.837612
