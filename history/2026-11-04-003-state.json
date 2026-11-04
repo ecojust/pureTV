@@ -1,9 +1,9 @@
 {
-  "status": "physics_followup_in_progress",
+  "status": "validated_awaiting_physics_master_sync",
   "task": "Eight selected games 0.2.0 visual and level expansion",
   "readmeCommit": "2b140c3c",
   "branch": "feat/featured-games-polish",
-  "sourceCommit": "40a9c83627463151ef4685a5286e20e9fadd145d",
+  "sourceCommit": "71677da57aa00c3dbcb140a2812c0f801338365d",
   "browserQueue": [],
   "toolchainTemporary": "/workspace/scratch/game-polish-toolchain",
   "batchHelperTemporary": "/workspace/scratch/game-polish-tools/batch.py",
@@ -27,15 +27,16 @@
       "recordedSixModelWins": true
     },
     "prism-relay": {
-      "version": "0.2.0",
+      "version": "0.2.1",
       "levels": 6,
       "sourceStatus": "implemented",
       "visualAccepted": true,
-      "signedRun": 41867324831,
-      "publicationCommit": "9b086ac5",
+      "signedRun": 41883549101,
+      "publicationCommit": "6b410a08",
       "finalQa": "passed",
       "recordedSixModelWins": true,
-      "recording": "passed"
+      "recording": "passed",
+      "sourceCommit": "71677da57aa00c3dbcb140a2812c0f801338365d"
     },
     "tension-span": {
       "version": "0.2.1",
@@ -187,18 +188,28 @@
     "reason": "Preserve inertial motion on bridge detachment; accurately represent RGB separation and steering hardware.",
     "sourceCommit": "71677da57aa00c3dbcb140a2812c0f801338365d",
     "scratchTemporary": "/workspace/scratch/physics-021",
-    "stage": "bridge_published_prism_recording",
+    "stage": "validated_awaiting_master_sync",
     "oldEightGameReleasePreserved": true,
     "signedRuns": {
       "tension-span": 41883524097,
       "prism-relay": 41883549101
     },
     "commonEvidence": "resource/game-kit/docs/physics-0.2.1/README.md",
-    "browserQueue": [
-      "prism-relay"
-    ],
+    "browserQueue": [],
     "publicationCommits": {
-      "tension-span": "7ab69f50"
-    }
+      "tension-span": "7ab69f50",
+      "prism-relay": "6b410a08"
+    },
+    "finalAuditPassed": true,
+    "batchConsistencyPassed": true,
+    "signedCatalogResources": 125,
+    "indexIdempotent": true,
+    "integrationEvidence": "resource/game-kit/docs/physics-0.2.1/integration/release-summary.json"
+  },
+  "originalSourceCommit": "40a9c83627463151ef4685a5286e20e9fadd145d",
+  "automaticGoalStop": {
+    "toolAvailable": false,
+    "status": "automatic-goal-stop-unavailable",
+    "scope": "Stopping control only; no outstanding implementation or verification task after master synchronization."
   }
 }
