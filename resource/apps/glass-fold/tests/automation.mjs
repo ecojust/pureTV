@@ -79,7 +79,7 @@ export const keys=(snapshot,options={})=>{
  if(options.mode==='record'&&snapshot?.phase==='won'&&snapshot.model.level<6){
   if(recordWonAt===null)recordWonAt=options.elapsed;
   if(transitionRelease){transitionRelease=false;return[];}
-  if(options.elapsed-recordWonAt<2)return[];
+  if(options.elapsed-recordWonAt<2.5)return[];
   transitionRelease=true;return[snapshot.level===snapshot.model.level?'Enter':'ArrowRight'];
  }
  if(snapshot?.phase==='playing'){recordWonAt=null;transitionRelease=false;}
