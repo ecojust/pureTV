@@ -8,10 +8,19 @@ root=Path(__file__).resolve().parents[1]
 entries=[(folder.relative_to(root/'resource').as_posix(),json.loads((folder/'resource.json').read_text())) for folder in catalog_directories(root)]
 counts={kind:sum(info['kind']==kind for _,info in entries) for kind in ('launcher','app')}
 LOCALES={
-    'zh':{'launcher':'启动器','app':'电视应用','alt':'{name} 界面'},
-    'en':{'launcher':'Launchers','app':'TV apps','alt':'{name} preview'},
+    'zh':{'launcher':'启动器','media':'应用-影音','game':'应用-游戏','alt':'{name} 界面'},
+    'en':{'launcher':'Launchers','media':'Apps - Media','game':'Apps - Games','alt':'{name} preview'},
 }
 ENGLISH=json.loads((root/'tools/resource-index.en.json').read_text())
+# Media apps have no game manifest or bundled game entry point.
+MEDIA_APPS={'apps/cctv','apps/hifini','apps/shortvideo','apps/webtv'}
+
+def section(key,info):
+    if info['kind']=='launcher':return 'launcher'
+    if key in MEDIA_APPS:return 'media'
+    directory=root/'resource'/key
+    if (directory/'game.json').is_file() or (directory/'src/main/assets/game.js').is_file():return 'game'
+    raise ValueError(f'{key}: classify the new app before generating the README index')
 
 def validate_english():
     """Require complete English entries and captures before writing any index."""
@@ -29,12 +38,12 @@ def validate_english():
 def tables(prefix,locale='zh'):
     labels=LOCALES[locale]
     output=[]
-    for kind in ('launcher','app'):
-        output+=['### '+labels[kind],'']
+    for group in ('launcher','media','game'):
+        output+=['### '+labels[group],'']
         output+=['<table>']
         cells=[]
         for key,info in entries:
-            if info['kind']!=kind:continue
+            if section(key,info)!=group:continue
             directory=prefix+key+'/'
             translated=ENGLISH[key] if locale=='en' else info
             name=translated['name']
