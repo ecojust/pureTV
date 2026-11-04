@@ -46,144 +46,234 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 九款游戏的 0.5.1 规则与交互改进见[还原度复核](docs/game-fidelity-0.5.1.md)。沿用 0.5.0 统一证书，可覆盖更新 0.5.0；文档同时列出仍未精确还原的地图与内容。
 
-启动器表格的“支持自定义”指支持本管理器的 **layout.json 版本 5 users/system 接口**。支持布局协议的启动器卡片自动显示 Home 背景颜色和图片，包括未激活的启动器；修改并应用布局后同步更新。列表不提供选择或移除封面的操作，桌面背景统一在「调整布局」中修改。待安装 APK 优先预览内置布局的 Home 背景，仅在无法读取布局背景时使用同目录的 `thumb.png`／`APK名.thumb.png`。
+启动器布局自定义使用本管理器的 **layout.json 版本 5 users/system 接口**。支持布局协议的启动器卡片自动显示 Home 背景颜色和图片，包括未激活的启动器；修改并应用布局后同步更新。列表不提供选择或移除封面的操作，桌面背景统一在「调整布局」中修改。待安装 APK 优先预览内置布局的 Home 背景，仅在无法读取布局背景时使用同目录的 `thumb.png`／`APK名.thumb.png`。
 
 <!-- resource-index:start -->
 
 ### 启动器
 
-| 名称 | 作者 | 版本 | APK 大小 | 支持自定义 | 封面截图 |
-| --- | --- | --- | --- | --- | --- |
-| [Aster TV · 星轨](resource/launcher/aster/) | ecojust / 桔子桑 | 0.5.0 | 443.7 KB | 是 | <img src="resource/launcher/aster/thumb.png" width="180" alt="Aster TV · 星轨 界面"> |
-| [Circuit TV · 回路](resource/launcher/circuit/) | ecojust / 桔子桑 | 0.5.0 | 435.7 KB | 是 | <img src="resource/launcher/circuit/thumb.png" width="180" alt="Circuit TV · 回路 界面"> |
-| [Drift TV](resource/launcher/drift/) | ecojust / 桔子桑 | 0.5.0 | 475.7 KB | 是 | <img src="resource/launcher/drift/thumb.png" width="180" alt="Drift TV 界面"> |
-| [Forma TV](resource/launcher/forma/) | ecojust / 桔子桑 | 0.5.0 | 443.7 KB | 是 | <img src="resource/launcher/forma/thumb.png" width="180" alt="Forma TV 界面"> |
-| [Mono TV 墨白](resource/launcher/mono/) | ecojust / 桔子桑 | 0.5.0 | 443.7 KB | 是 | <img src="resource/launcher/mono/thumb.png" width="180" alt="Mono TV 墨白 界面"> |
-| [Moss TV](resource/launcher/moss/) | ecojust / 桔子桑 | 0.5.0 | 487.7 KB | 是 | <img src="resource/launcher/moss/thumb.png" width="180" alt="Moss TV 界面"> |
-| [Nova TV](resource/launcher/nova/) | ecojust / 桔子桑 | 0.5.0 | 495.7 KB | 是 | <img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV 界面"> |
-| [Pixel TV 像素](resource/launcher/pixel/) | ecojust / 桔子桑 | 0.5.0 | 443.7 KB | 是 | <img src="resource/launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"> |
-| [pureTV Launcher](resource/launcher/puretv/) | ecojust / 桔子桑 | 0.5.1 | 826.5 KB | 是 | <img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"> |
-| [Sol TV](resource/launcher/sol/) | ecojust / 桔子桑 | 0.5.0 | 439.7 KB | 是 | <img src="resource/launcher/sol/thumb.png" width="180" alt="Sol TV 界面"> |
+<table>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/aster/"><img src="resource/launcher/aster/thumb.png" width="180" alt="Aster TV · 星轨 界面"><br>Aster TV · 星轨</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/circuit/"><img src="resource/launcher/circuit/thumb.png" width="180" alt="Circuit TV · 回路 界面"><br>Circuit TV · 回路</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/drift/"><img src="resource/launcher/drift/thumb.png" width="180" alt="Drift TV 界面"><br>Drift TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/forma/"><img src="resource/launcher/forma/thumb.png" width="180" alt="Forma TV 界面"><br>Forma TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/mono/"><img src="resource/launcher/mono/thumb.png" width="180" alt="Mono TV 墨白 界面"><br>Mono TV 墨白</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/moss/"><img src="resource/launcher/moss/thumb.png" width="180" alt="Moss TV 界面"><br>Moss TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/nova/"><img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV 界面"><br>Nova TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/pixel/"><img src="resource/launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"><br>Pixel TV 像素</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/puretv/"><img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"><br>pureTV Launcher</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/sol/"><img src="resource/launcher/sol/thumb.png" width="180" alt="Sol TV 界面"><br>Sol TV</a></td>
+    <td width="33%"></td>
+    <td width="33%"></td>
+  </tr>
+</table>
 
 ### 电视应用
 
-| 名称 | 作者 | 版本 | APK 大小 | 用途 | 封面截图 |
-| --- | --- | --- | --- | --- | --- |
-| [邻接铸造](resource/apps/adjacency-forge/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 交换七格金属块，满足各自精确邻接配方并按固定方向优先级将热流导向铸模，再主动提交；三张固定布局、精确编号撤销与90秒有效时间，手机扫码单人操作 | <img src="resource/apps/adjacency-forge/thumb.png" width="180" alt="邻接铸造 界面"> |
-| [Adventure Island TV](resource/apps/adventure-island/) | ecojust / 桔子桑 | 0.5.2 | 89.4 KB | 8 区域 32 关横版冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"> |
-| [气闸值守](resource/apps/airlock-budget/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在待援舱、气闸与安全舱之间安排三组人员，权衡慢回收保氧和快排赶期限；管理有限储罐与共享泵，及时封堵漏点并满足最终储氧底线。 | <img src="resource/apps/airlock-budget/thumb.png" width="180" alt="气闸值守 界面"> |
-| [孤胆枪手 TV](resource/apps/alien-shooter/) | ecojust / 桔子桑 | 0.1.2 | 1.68 MB | 工业基地异形群潮单人射击，三关战役、五种武器与手机扫码操作 | <img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"> |
-| [箭田收获](resource/apps/arrow-harvest/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 设置单向箭头并播种，让种子覆盖所有目标田块且不重复、不进入禁地；传播期间箭头不可修改。 | <img src="resource/apps/arrow-harvest/thumb.png" width="180" alt="箭田收获 界面"> |
-| [装配厨房](resource/apps/assembly-kitchen/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 安排煮、冷却与装盒三个共享工位并行工作，切换风速掌握温度，在保温时限与关门前按指定顺序交付三份订单；错温、错序或过期的食物会退回重做并累计失误。 | <img src="resource/apps/assembly-kitchen/thumb.png" width="180" alt="装配厨房 界面"> |
-| [电芯交换](resource/apps/battery-exchange/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 在断电窗口中交换六枚不同电量与内阻的电芯，为两组负载切换串联或并联；按阶段完成供电任务，同时保留电量余裕并避免电芯或负载过热。 | <img src="resource/apps/battery-exchange/thumb.png" width="180" alt="电芯交换 界面"> |
-| [双线节律](resource/apps/beat-braid/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 一线持续按住，另一线按节拍点按，交替编织并保持连续；完成三个节奏关卡。 | <img src="resource/apps/beat-braid/thumb.png" width="180" alt="双线节律 界面"> |
-| [二元织格](resource/apps/binary-weave/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 填入0和1，使每行每列数量各半、没有连续三个相同数字，且同行与同列各不重复；保留锁定线索。 | <img src="resource/apps/binary-weave/thumb.png" width="180" alt="二元织格 界面"> |
-| [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust / 桔子桑 | 0.5.2 | 85.4 KB | 16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"> |
-| [弹板清砖](resource/apps/brick-paddle/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 左右移动挡板接球，用落点控制反弹方向，守住三条生命并清除三组不同耐久的砖块。 | <img src="resource/apps/brick-paddle/thumb.png" width="180" alt="弹板清砖 界面"> |
-| [解线工](resource/apps/cable-unweaver/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 沿轨道移动接线端子，保持金属线夹整组联动，消除直线电缆的非法交叉与端子重合；三种工作台，最后一次调整也能完成接线。 | <img src="resource/apps/cable-unweaver/thumb.png" width="180" alt="解线工 界面"> |
-| [CCTV Live](resource/apps/cctv/) | ecojust / 桔子桑 | 0.5.0 | 40.9 KB | 央视官网播放器与电视频道导航 | <img src="resource/apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"> |
-| [齿轮同刻](resource/apps/clockwork-align/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 调节齿轮列的离合与制动，在有限调节次数内让所有指针于预约时间窗中持续对齐目标；挑战三种齿比结构。 | <img src="resource/apps/clockwork-align/thumb.png" width="180" alt="齿轮同刻 界面"> |
-| [Coast Kart TV](resource/apps/coast-kart/) | ecojust / 桔子桑 | 0.5.2 | 257.6 KB | 原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏 | <img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"> |
-| [纹码破译](resource/apps/codebreaker/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 利用位置正确和颜色正确的数量反馈，在有限尝试内破解允许重复图形的四位密码。 | <img src="resource/apps/codebreaker/thumb.png" width="180" alt="纹码破译 界面"> |
-| [染色连疆](resource/apps/color-frontier/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 选择染料扩展左上角连通区域，在有限次数内统一全图；只沿四边连通，撤回会恢复地图但不返还染料次数，三张公开地图，支持手机扫码单人操作。 | <img src="resource/apps/color-frontier/thumb.png" width="180" alt="染色连疆 界面"> |
-| [彩径连点](resource/apps/color-paths/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 给网格设色，用互不交叉的单一路径连接每对同号端点并覆盖全盘，不能分叉或形成独立环。 | <img src="resource/apps/color-paths/thumb.png" width="180" alt="彩径连点 界面"> |
-| [窗口装配](resource/apps/conveyor-window/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 左右移动夹具抓取零件，旋转到正确朝向，在快门开放时投送到匹配槽位；避免损坏、保持连续装配，完成三条传送线关卡。 | <img src="resource/apps/conveyor-window/thumb.png" width="180" alt="窗口装配 界面"> |
-| [Cozy Island TV](resource/apps/cozy-island/) | ecojust / 桔子桑 | 0.5.2 | 269.6 KB | 原创岛屿生活，支持采集、钓鱼、布置和手机扫码双人游玩 | <img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"> |
-| [骨牌接龙](resource/apps/domino-chain/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 明牌双六骨牌接龙，选择端点匹配牌面；无牌可接时摸牌或跳过，堵局比较剩余点数。 | <img src="resource/apps/domino-chain/thumb.png" width="180" alt="骨牌接龙 界面"> |
-| [点线围格](resource/apps/dots-boxes/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 选择边线围成方格，利用得格续手掌握回合节奏，与公开规则的对手争夺最后一格。 | <img src="resource/apps/dots-boxes/thumb.png" width="180" alt="点线围格 界面"> |
-| [跳吃棋径](resource/apps/draughts-trail/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在六路跳棋残局中强制连跳吃子，保护兵并升为王棋，遵循合法移动击败公开规则的对手。 | <img src="resource/apps/draughts-trail/thumb.png" width="180" alt="跳吃棋径 界面"> |
-| [回声探图](resource/apps/echo-cartographer/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在有限照明下发射声呐测绘暗室，控制脚步噪声避开巡逻机，收集信标后返回入口，支持手机扫码单人操作 | <img src="resource/apps/echo-cartographer/thumb.png" width="180" alt="回声探图 界面"> |
-| [防火带](resource/apps/firebreak-planner/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 用有限行动点提前清理防火带，依据固定变风与累积热量阻断同时蔓延的山火；保护全部村落与至少七成存活森林，清理本身也会减少林木。 | <img src="resource/apps/firebreak-planner/thumb.png" width="180" alt="防火带 界面"> |
-| [舰队账册](resource/apps/fleet-ledger/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 依据行列数量与舰船长度清单标注船海，舰船必须笔直且互不接触；保留固定线索并完成全部格子。 | <img src="resource/apps/fleet-ledger/thumb.png" width="180" alt="舰队账册 界面"> |
-| [四子列阵](resource/apps/four-in-row/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在七列棋盘中让棋子按重力落下，与会预判落点的对手较量，率先横、竖或斜连四子。 | <img src="resource/apps/four-in-row/thumb.png" width="180" alt="四子列阵 界面"> |
-| [冰面刹停](resource/apps/frost-brake/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 左右推动惯性货橇，按住 A 放下冰爪，只有结霜带提供额外制动；完整停入逐渐收窄的交付区并驻留，避开冰面边界和急刹造成的货损。 | <img src="resource/apps/frost-brake/thumb.png" width="180" alt="冰面刹停 界面"> |
-| [折光工坊](resource/apps/glass-fold/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 沿折线翻叠半透明彩片，用轮廓与叠色匹配目标花窗；三张谜题、有限折叠与90秒有效时间，支持撤销修正和手机扫码单人操作 | <img src="resource/apps/glass-fold/thumb.png" width="180" alt="折光工坊 界面"> |
-| [引力快递](resource/apps/gravity-courier/) | ecojust / 桔子桑 | 0.1.1 | 285.3 KB | 驾驶惯性小艇绕行引力星体，管理燃料并完成三次星际配送，支持手机扫码单人操作 | <img src="resource/apps/gravity-courier/thumb.png" width="180" alt="引力快递 界面"> |
-| [温室旋钮](resource/apps/greenhouse-dials/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 通过延迟生效的通风、遮阳和滴灌控制调节共享温湿度与土壤水分，管理有限水量，使三种作物分别达到成熟度并避免枯死。 | <img src="resource/apps/greenhouse-dials/thumb.png" width="180" alt="温室旋钮 界面"> |
-| [港口配重](resource/apps/harbor-counterweight/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 按指定顺序装卸六件货物，在吊机作业时移动配重控制船体横摇；保持货物可取，完成四件交付后让两件出口货物稳定离港。 | <img src="resource/apps/harbor-counterweight/thumb.png" width="180" alt="港口配重 界面"> |
-| [六角连线](resource/apps/hex-connection/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在六角棋盘上落子连接左右两岸，识别六邻接通路并阻挡试图连通上下边的公开规则对手。 | <img src="resource/apps/hex-connection/thumb.png" width="180" alt="六角连线 界面"> |
-| [隐墙测绘](resource/apps/hidden-corridors/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 依据每行通路格数与最短边数，用有限探针推断4×4隐藏墙体，再提交安全且长度正确的路线；三关固定布局，支持手机扫码单人操作 | <img src="resource/apps/hidden-corridors/thumb.png" width="180" alt="隐墙测绘 界面"> |
-| [HIFINi TV](resource/apps/hifini/) | ecojust / 桔子桑 | 0.5.0 | 201.1 KB | 基于 HiFiNi 的电视音乐播放器 | <img src="resource/apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"> |
-| [双岛联结](resource/apps/island-dominoes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 按桥牌的直线长度与目标颜色连结岛屿，避开交叉并用尽所有独立桥牌组成连通网络；支持原片撤销，三关固定布局与90秒时限，手机扫码单人操作 | <img src="resource/apps/island-dominoes/thumb.png" width="180" alt="双岛联结 界面"> |
-| [岛海墨图](resource/apps/island-ink/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 划分数字岛屿和连通海域，每岛恰有一个面积线索，海域不能出现2×2方块；完整填图后手动检查。 | <img src="resource/apps/island-ink/thumb.png" width="180" alt="岛海墨图 界面"> |
-| [Jackal TV](resource/apps/jackal/) | ecojust / 桔子桑 | 0.5.2 | 11.95 MB | 独立重写的六关吉普车营救游戏，支持手机扫码双人合作 | <img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"> |
-| [Magic Jewelry TV](resource/apps/jewel/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典三宝石连锁消除，支持手机扫码单人或双人比拼 | <img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"> |
-| [万花钥匙](resource/apps/kaleido-keys/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 把有限图符摆进源扇区，旋转并选择万花阶数，让整圈镜像钥匙与目标完全一致；核对左右交换、朝向与空格后验收，四次错误即失败，无倒计时。 | <img src="resource/apps/kaleido-keys/thumb.png" width="180" alt="万花钥匙 界面"> |
-| [马步巡游](resource/apps/knight-circuit/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 按国际象棋马的跳法巡游棋盘，每个可走格只能访问一次；规划三种不同棋盘的完整路线，管理三张回退券，避免走入死路，支持手机扫码单人操作。 | <img src="resource/apps/knight-circuit/thumb.png" width="180" alt="马步巡游 界面"> |
-| [球道击柱](resource/apps/lane-bowling/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 调整角度和力度投球，通过实际球瓶与瓶间碰撞清空三种阵型；有限球数，滚动结束后再瞄准。 | <img src="resource/apps/lane-bowling/thumb.png" width="180" alt="球道击柱 界面"> |
-| [灯塔节拍](resource/apps/lantern-rhythm/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 观察方向与短长灯号，再按节拍真实按住并松开按钮，依次点亮三座灯塔；两次主动重听、有限失误与90秒有效时间，支持手机扫码单人操作 | <img src="resource/apps/lantern-rhythm/thumb.png" width="180" alt="灯塔节拍 界面"> |
-| [焦距实验室](resource/apps/lens-distance/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 原创单人光学益智游戏：移动透镜和屏幕，调节光阑，让实像的清晰度与亮度同时达标。三个光台各有两张底片，分别管理曝光电量与调整额度；手机方向区和上下双操作区控制。 | <img src="resource/apps/lens-distance/thumb.png" width="180" alt="焦距实验室 界面"> |
-| [围子夺星](resource/apps/liberty-stones/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 观察棋块的气，落子围住对手并率先提满四子；遵守自杀禁入与简单劫，控制手数和停手。 | <img src="resource/apps/liberty-stones/thumb.png" width="180" alt="围子夺星 界面"> |
-| [光室布灯](resource/apps/light-chambers/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 布灯照亮全部白格，灯光不能互相照见，并满足每个编号墙的相邻灯数；编辑后手动检查。 | <img src="resource/apps/light-chambers/thumb.png" width="180" alt="光室布灯 界面"> |
-| [逻辑工坊](resource/apps/logic-workbench/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在固定接线的电路中选择逻辑门，让三个输入的全部八行真值表同时匹配目标，有限次数手动检查。 | <img src="resource/apps/logic-workbench/thumb.png" width="180" alt="逻辑工坊 界面"> |
-| [环线果园](resource/apps/loop-orchard/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在格点之间铺设一条连通闭环，经过必经果树、避开禁水花坛并满足数字区域的边数提示；带编号管件可铺拆和精确撤销，剩余库存允许，须主动启动水泵，三次错误或90秒结束，手机扫码单人操作 | <img src="resource/apps/loop-orchard/thumb.png" width="180" alt="环线果园 界面"> |
-| [磁极仓库](resource/apps/magnetic-warehouse/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 切换磁极，隔空吸引或排斥编号货箱；处理墙体遮挡与同步移动，在有限行动内把每箱送到对应货位，支持手机扫码单人操作 | <img src="resource/apps/magnetic-warehouse/thumb.png" width="180" alt="磁极仓库 界面"> |
-| [量杯转运](resource/apps/measure-pour/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在三只不同容量的量杯间倾倒，每次必须倒满接收杯或倒空来源杯；保持总水量守恒，在有限倾倒次数内让三杯同时达到公开目标。三个配额关卡，支持手机扫码操作。 | <img src="resource/apps/measure-pour/thumb.png" width="180" alt="量杯转运 界面"> |
-| [记忆陈列](resource/apps/memory-gallery/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 记住短暂亮出的图形与编号，在有限错配次数内翻开全部相同展品。支持电视遥控器与局域网手机手柄。 | <img src="resource/apps/memory-gallery/thumb.png" width="180" alt="记忆陈列 界面"> |
-| [数字汇聚](resource/apps/merge-tiles/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 滑动棋盘合并相同数字，每次滑动只合并一次；管理确定生成的新砖和有限撤销，在步数内达成32、64、128目标。 | <img src="resource/apps/merge-tiles/thumb.png" width="180" alt="数字汇聚 界面"> |
-| [节拍闸道](resource/apps/metronome-gates/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 先排方向和等待，按固定节拍穿过周期闸门；在拍数预算内收齐标记并抵达出口，B 可撤回未执行的队尾命令。 | <img src="resource/apps/metronome-gates/thumb.png" width="180" alt="节拍闸道 界面"> |
-| [雷纹勘探](resource/apps/mine-survey/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 依据周围八格的雷数线索，逐步勘明所有安全格；旗标只作推理笔记，探到雷即失败。三张可凭公开线索推理的地图，支持手机扫码单人操作。 | <img src="resource/apps/mine-survey/thumb.png" width="180" alt="雷纹勘探 界面"> |
-| [纹幕校准](resource/apps/moire-atelier/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 滑动并旋转两层周期纹幕，让五个测点的当前明暗同时符合目标；参考可见定位标记，在限时与验收次数内完成三种光学校准。 | <img src="resource/apps/moire-atelier/thumb.png" width="180" alt="纹幕校准 界面"> |
-| [取石回合](resource/apps/nim-orbit/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 每回合从一堆中取走石子，判断普通与取末石负两种规则，和使用公开最优策略的对手较量。 | <img src="resource/apps/nim-orbit/thumb.png" width="180" alt="取石回合 界面"> |
-| [沙丘数列](resource/apps/number-dunes/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 选择一行或一列，保持段内顺序压实数字石，不合并、不跨岩柱；蛇形读数严格递增且全部空洞吻合目标才能获胜，撤销恢复原石原格但不退已用步数或时间，手机扫码单人操作 | <img src="resource/apps/number-dunes/thumb.png" width="180" alt="沙丘数列 界面"> |
-| [环轨炮台](resource/apps/orbit-turret/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 旋转中央炮台持续瞄准射击，拦截沿轨逼近的目标；两次短时护盾只能吸收接触范围内的来袭者。 | <img src="resource/apps/orbit-turret/thumb.png" width="180" alt="环轨炮台 界面"> |
-| [果园游蛇](resource/apps/orchard-snake/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 预排下一拍的转向，绕开石墙与蛇身收集果实；使用有限刹车规划路线，完成三座果园。 | <img src="resource/apps/orchard-snake/thumb.png" width="180" alt="果园游蛇 界面"> |
-| [异形装箱](resource/apps/packing-sculptor/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 原创单人异形装箱益智游戏：移动、旋转有限零件，装入异形箱体，并为指定零件保留可完整直线抽出的出口。三种箱体、四次检查机会；手机方向区与上下双操作区控制。 | <img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱 界面"> |
-| [视差天际](resource/apps/parallax-skyline/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 移动近远两层建筑，在两个观察点同时对齐天际线与屋顶标记；小心只匹配主视角的错觉，撤销移动不会返还容错次数。 | <img src="resource/apps/parallax-skyline/thumb.png" width="180" alt="视差天际 界面"> |
-| [奇偶花圃](resource/apps/parity-garden/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用十字与斜角喷头翻转4×4花圃，让目标花形和标记花的直接浇水偶数条件同时成立；重复浇水不退水，三道有限水量谜题，支持手机扫码单人操作 | <img src="resource/apps/parity-garden/thumb.png" width="180" alt="奇偶花圃 界面"> |
-| [路径刻印](resource/apps/path-glyphs/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在5×5石板上规划不重复的路径，按入边条件收集方向符号，在出口提交与目标完全一致的刻印；三道公开谜题，支持手机扫码单人操作 | <img src="resource/apps/path-glyphs/thumb.png" width="180" alt="路径刻印 界面"> |
-| [像素线索](resource/apps/pixel-clues/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 根据公开的行列连续段数字涂出像素图，叉号仅作留白笔记；在三张逐渐增大的画纸上匹配全部线索，分别管理60、90、120秒有效时间，支持手机扫码单人操作。 | <img src="resource/apps/pixel-clues/thumb.png" width="180" alt="像素线索 界面"> |
-| [口袋果岭](resource/apps/pocket-golf/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 调整击球角度和力度，让球绕过障碍或借墙反弹，以低速入杯；杆数有限，球停稳后再击。 | <img src="resource/apps/pocket-golf/thumb.png" width="180" alt="口袋果岭 界面"> |
-| [口袋接龙](resource/apps/pocket-solitaire/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在四列牌与两个暂存位之间逐张搬牌，按异色递减叠放，再按花色递增归位；撤销不退步数。 | <img src="resource/apps/pocket-solitaire/thumb.png" width="180" alt="口袋接龙 界面"> |
-| [传粉契约](resource/apps/pollinator-contract/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 调度两支蜂群，在有限花期和前置任务间完成授粉；途中改派并及时返巢恢复耐力，完成三关花园契约。 | <img src="resource/apps/pollinator-contract/thumb.png" width="180" alt="传粉契约 界面"> |
-| [压力封装](resource/apps/pressure-seal/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 控制加热与泄压，让三种包装依次在目标压力内完成密封；松手后的余热仍会改变压力。 | <img src="resource/apps/pressure-seal/thumb.png" width="180" alt="压力封装 界面"> |
-| [镜光接力](resource/apps/prism-relay/) | ecojust / 桔子桑 | 0.1.1 | 285.3 KB | 旋转镜片与分色棱镜，让彩色光束准确抵达接收器，包含反射、分色与合光三关，支持手机扫码单人操作 | <img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"> |
-| [脉冲储库](resource/apps/pulse-vault/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 按住收集有限脉冲，选择档位向顺序门锁放电；控制储能溢出和热峰，开启四门并保留终储备，完成三种供能关卡。 | <img src="resource/apps/pulse-vault/thumb.png" width="180" alt="脉冲储库 界面"> |
-| [旋盘五子](resource/apps/quadrant-five/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 每回合先落一子再旋转一个棋盘象限，旋转后连成五子获胜；同时五连与满盘平局需要重试。 | <img src="resource/apps/quadrant-five/thumb.png" width="180" alt="旋盘五子 界面"> |
-| [星盘皇后](resource/apps/queen-constellation/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在六、七、八阶星盘上摆放互不攻击的皇后，遵守固定皇后和禁放格限制；允许调整并观察行、列、对角线冲突，用三次手动检查完成布局，支持手机扫码单人操作。 | <img src="resource/apps/queen-constellation/thumb.png" width="180" alt="星盘皇后 界面"> |
-| [矩形图册](resource/apps/rectangle-atlas/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用两角划出矩形覆盖整个网格，每个矩形恰含一个数字且面积相符；可删除重画，重叠区域不能放置。 | <img src="resource/apps/rectangle-atlas/thumb.png" width="180" alt="矩形图册 界面"> |
-| [四季蓄水](resource/apps/reservoir-seasons/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 根据四季天气预报向居民、农田和生态河流配水；撤销尚未提交的计划，守住居民每季用水底线，并分别完成三方年度目标。 | <img src="resource/apps/reservoir-seasons/thumb.png" width="180" alt="四季蓄水 界面"> |
-| [共振浮桥](resource/apps/resonance-bridge/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 调节三块浮桥的频率和相位，派遣行人在持续安全接触时过桥；控制共振增幅，完成三个渡口关卡。 | <img src="resource/apps/resonance-bridge/thumb.png" width="180" alt="共振浮桥 界面"> |
-| [翻面棋局](resource/apps/reversi-relay/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 挑战三道6×6翻面棋残局，用八方向夹击翻转棋子，与确定性电脑对手轮流落子；无合法落点时让行，终局以棋子多数获胜，支持手机扫码单人操作。 | <img src="resource/apps/reversi-relay/thumb.png" width="180" alt="翻面棋局 界面"> |
-| [环塔迁移](resource/apps/ring-towers/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在三根塔柱之间搬运圆环，每次只能移动顶环，小环必须放在大环上；用有限搬动次数将整塔迁到目标柱，挑战三环、四环与五环布局，支持手机扫码单人操作。 | <img src="resource/apps/ring-towers/thumb.png" width="180" alt="环塔迁移 界面"> |
-| [渡河守则](resource/apps/river-guard/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 安排有限船位往返两岸，避免无人看守的冲突组合，用公开规则把所有物品安全运到对岸。 | <img src="resource/apps/river-guard/thumb.png" width="180" alt="渡河守则 界面"> |
-| [渡河跃步](resource/apps/river-hopper/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 穿越车道并借木筏渡河，在有限生命和时间内抵达不同家位。 | <img src="resource/apps/river-hopper/thumb.png" width="180" alt="渡河跃步 界面"> |
-| [天台疾跑](resource/apps/rooftop-runner/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 自动奔跑穿越天台，抓准时机跳过箱子和缺口，按住下蹲通过悬梁。 | <img src="resource/apps/rooftop-runner/thumb.png" width="180" alt="天台疾跑 界面"> |
-| [王车合围](resource/apps/rook-rescue/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用白王和白车限制黑王的合法落点，在手数上限内将杀；避免两王相邻、丢车和逼和。 | <img src="resource/apps/rook-rescue/thumb.png" width="180" alt="王车合围 界面"> |
-| [旋环锁匠](resource/apps/rotor-locksmith/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 左右拨转三层锁环，按住 A 推进、B 退回；进入核心取得钥匙，再将完整钥匙带出，避开碰壁造成的耐久损失和阻力。 | <img src="resource/apps/rotor-locksmith/thumb.png" width="180" alt="旋环锁匠 界面"> |
-| [分流沙漏](resource/apps/sandglass-split/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 开关共享料斗并旋转两块挡片，把连续落沙分给三只计量杯；在途沙束保留已确定的路线，耗尽沙量后让三杯都处于目标容差内且没有溢出。 | <img src="resource/apps/sandglass-split/thumb.png" width="180" alt="分流沙漏 界面"> |
-| [播子棋盘](resource/apps/seed-mancala/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 沿棋穴逐粒播种，利用入仓续手与对穴吃子争取过半种子，并应对规则公开的对手。 | <img src="resource/apps/seed-mancala/thumb.png" width="180" alt="播子棋盘 界面"> |
-| [去重留白](resource/apps/shade-duplicates/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 涂黑部分数字，让白格行列不重复、黑格不相邻，且所有白格保持连通；用有限检查次数完成留白谜题。 | <img src="resource/apps/shade-duplicates/thumb.png" width="180" alt="去重留白 界面"> |
-| [影形铸坊](resource/apps/shadow-foundry/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 旋转金属工件与侧向光源，覆盖全部青色目标格并避开禁区；两种控制独立调整，最后一次机会也能完成铸影。 | <img src="resource/apps/shadow-foundry/thumb.png" width="180" alt="影形铸坊 界面"> |
-| [影窗快门](resource/apps/shadow-shutter/) | ecojust / 桔子桑 | 0.1.0 | 297.3 KB | 移动取景框并切换横竖画幅，避开遮光纸带，让三片剪影完整入窗并依序拍成目标；用有限胶片完成三组影窗作品。 | <img src="resource/apps/shadow-shutter/thumb.png" width="180" alt="影窗快门 界面"> |
-| [ShortVideo TV](resource/apps/shortvideo/) | ecojust / 桔子桑 | 0.5.0 | 32.7 KB | 遥控器短视频播放器 | <img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"> |
-| [数塔天际](resource/apps/skyline-numbers/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 按照行列数字不重复和边缘可见塔数线索，完成逐渐扩大的数字天际棋盘。 | <img src="resource/apps/skyline-numbers/thumb.png" width="180" alt="数塔天际 界面"> |
-| [滑格归序](resource/apps/sliding-order/) | ecojust / 桔子桑 | 0.1.0 | 281.3 KB | 移动九宫格中的空格，让八块数字瓷砖按顺序归位；管理有限滑动次数，撤销恢复棋盘但不退步数。三种独立初始布局，支持手机扫码单人操作。 | <img src="resource/apps/sliding-order/thumb.png" width="180" alt="滑格归序 界面"> |
-| [逐日供电](resource/apps/solar-shift/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 随日照与阴影调整太阳板朝向，为不同优先级的设备供电；管理有限电池与温度，完成昼夜周期及各设备的独立供电配额。 | <img src="resource/apps/solar-shift/thumb.png" width="180" alt="逐日供电 界面"> |
-| [比较器工坊](resource/apps/sorting-wires/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在有限层数与比较器库存内连接排序线网，检查全部二值输入，利用失败见证逐步修正网络。 | <img src="resource/apps/sorting-wires/thumb.png" width="180" alt="比较器工坊 界面"> |
-| [序栈货运](resource/apps/stack-dispatch/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用单件吊机和三个后进先出的货栈，按公开货单顺序出港；管理有限容量与搬动额度，三次错序出货失败。三个调度关卡，支持手机扫码单人操作。 | <img src="resource/apps/stack-dispatch/thumb.png" width="180" alt="序栈货运 界面"> |
-| [星阵防线](resource/apps/star-formation/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 横移躲避敌弹，持续射击下降编队并使用两枚穿透弹；掩体会损毁，在敌阵越线前清空全部目标。 | <img src="resource/apps/star-formation/thumb.png" width="180" alt="星阵防线 界面"> |
-| [石箱归位](resource/apps/stone-bay/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在三座庭院里推动石箱，让每个石座都被占据；只能推、不能拉，步行不扣推力，撤回恢复位置但不返还推力。管理有限推动额度，支持手机扫码单人操作。 | <img src="resource/apps/stone-bay/thumb.png" width="180" alt="石箱归位 界面"> |
-| [交叉数和](resource/apps/sum-crossings/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 填写1至9，使每个横纵连续白格段的数字不重复且总和符合线索；固定数字不可改，完整提交限三次错误。 | <img src="resource/apps/sum-crossings/thumb.png" width="180" alt="交叉数和 界面"> |
-| [Super Mario TV](resource/apps/super-mario/) | ecojust / 桔子桑 | 0.5.2 | 93.4 KB | 8 世界 32 关平台冒险，支持手机扫码单人或双人轮流 | <img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"> |
-| [分岔调度](resource/apps/switchyard-minute/) | ecojust / 桔子桑 | 0.1.1 | 289.3 KB | 切换道岔、错开放行，把双向货车送到同色站台，管理追尾风险与累计延误，支持手机扫码单人操作 | <img src="resource/apps/switchyard-minute/thumb.png" width="180" alt="分岔调度 界面"> |
-| [Tank TV](resource/apps/tank/) | ecojust / 桔子桑 | 0.5.2 | 258.3 KB | 独立重写的 35 关坦克大战，支持手机扫码双人合作 | <img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"> |
-| [拉索桥梁](resource/apps/tension-span/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 在材料预算内搭建拉索桥，观察索线张力和桥面变形；失败后恢复方案、改索重试，让货车完整驶过桥面，支持手机扫码单人操作 | <img src="resource/apps/tension-span/thumb.png" width="180" alt="拉索桥梁 界面"> |
-| [Tetris TV](resource/apps/tetris/) | ecojust / 桔子桑 | 0.5.2 | 81.4 KB | 经典俄罗斯方块，支持手机扫码单人或双人比拼 | <img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"> |
-| [四格岛群](resource/apps/tetro-islands/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 每区选出四格I、L、T或S形，所有黑格连通且不能形成2×2黑块，相接区域的四格形状必须不同。 | <img src="resource/apps/tetro-islands/thumb.png" width="180" alt="四格岛群 界面"> |
-| [热流滑翔](resource/apps/thermal-glider/) | ecojust / 桔子桑 | 0.1.0 | 293.3 KB | 驾驶无引擎滑翔翼利用热流穿过有序观测圈，使用空气刹车与襟翼管理能量，满足位置、速度与姿态后实际降落；三条航线，支持手机扫码单人操作 | <img src="resource/apps/thermal-glider/thumb.png" width="180" alt="热流滑翔 界面"> |
-| [潮汐闸门](resource/apps/tide-lock/) | ecojust / 桔子桑 | 0.1.1 | 289.3 KB | 调节两级船闸水位，安全开启闸门，把货船送往高水位出口；管理水量守恒、溢流和搁浅，支持手机扫码单人操作 | <img src="resource/apps/tide-lock/thumb.png" width="180" alt="潮汐闸门 界面"> |
-| [叠牌花园](resource/apps/tile-garden/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 观察双层明牌，配对上方无遮挡且至少一侧开放的同类数字花牌；安排消除顺序，避免死局。 | <img src="resource/apps/tile-garden/thumb.png" width="180" alt="叠牌花园 界面"> |
-| [夜桥接力](resource/apps/torch-bridge/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 安排持灯旅人每次一至两人过桥，按较慢者计算用时，在公开预算内把全员送到对岸。 | <img src="resource/apps/torch-bridge/thumb.png" width="180" alt="夜桥接力 界面"> |
-| [叠塔工匠](resource/apps/tower-overlap/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 抓准移动石板与下层重叠的时机落板，只留下重叠部分，逐层完成六层、八层和十层塔楼。 | <img src="resource/apps/tower-overlap/thumb.png" width="180" alt="叠塔工匠 界面"> |
-| [车阵出口](resource/apps/traffic-escape/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在拥挤车阵中沿车身方向逐格挪车，利用有限撤销腾出通路，将目标车辆驶出右侧出口。 | <img src="resource/apps/traffic-escape/thumb.png" width="180" alt="车阵出口 界面"> |
-| [三角跳珠](resource/apps/triangle-pegs/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在十五孔三角棋盘上，沿六个方向跳过相邻棋珠并移除它，最终只留一珠；管理三次撤回机会，三个不同起始空孔，支持手机扫码单人操作。 | <img src="resource/apps/triangle-pegs/thumb.png" width="180" alt="三角跳珠 界面"> |
-| [三角拼域](resource/apps/triangular-tessera/) | ecojust / 桔子桑 | 0.1.0 | 289.3 KB | 旋转与镜像三角彩砖，让共享边同色并形成指定数量的红绿蓝色域；三关各有有限步数和90秒时限，每次操作都消耗一步，支持手机扫码单人操作。 | <img src="resource/apps/triangular-tessera/thumb.png" width="180" alt="三角拼域 界面"> |
-| [四则二十四](resource/apps/twenty-four/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 用四张数字牌各一次，通过有方向的四则运算与精确分数凑成二十四，管理有限失败和撤销机会。 | <img src="resource/apps/twenty-four/thumb.png" width="180" alt="四则二十四 界面"> |
-| [极品二手车](resource/apps/used-car-racing/) | ecojust / 桔子桑 | 0.1.3 | 1.66 MB | 随机车况与机械故障的三维赛车，支持手机扫码一至两人竞速和 AI 对手 | <img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"> |
-| [WebTV](resource/apps/webtv/) | ecojust / 桔子桑 | 0.5.0 | 44.8 KB | 电视直播与 M3U 播放器 | <img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"> |
-| [砝码账本](resource/apps/weight-ledger/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 将六枚独立编号的砝码分配到三个共享盘，同时配平三条整数衡式；预选拿取、有限搬动与真实撤销，三道公开谜题，支持手机扫码单人操作 | <img src="resource/apps/weight-ledger/thumb.png" width="180" alt="砝码账本 界面"> |
-| [词阶接龙](resource/apps/word-ladder/) | ecojust / 桔子桑 | 0.1.0 | 285.3 KB | 在公开四字母词库中每步只换一个字母，以有限步数连到目标词，撤销不退还步数。 | <img src="resource/apps/word-ladder/thumb.png" width="180" alt="词阶接龙 界面"> |
+<table>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/adjacency-forge/"><img src="resource/apps/adjacency-forge/thumb.png" width="180" alt="邻接铸造 界面"><br>邻接铸造</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/adventure-island/"><img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"><br>Adventure Island TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/airlock-budget/"><img src="resource/apps/airlock-budget/thumb.png" width="180" alt="气闸值守 界面"><br>气闸值守</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/alien-shooter/"><img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"><br>孤胆枪手 TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/arrow-harvest/"><img src="resource/apps/arrow-harvest/thumb.png" width="180" alt="箭田收获 界面"><br>箭田收获</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/assembly-kitchen/"><img src="resource/apps/assembly-kitchen/thumb.png" width="180" alt="装配厨房 界面"><br>装配厨房</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/battery-exchange/"><img src="resource/apps/battery-exchange/thumb.png" width="180" alt="电芯交换 界面"><br>电芯交换</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/beat-braid/"><img src="resource/apps/beat-braid/thumb.png" width="180" alt="双线节律 界面"><br>双线节律</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/binary-weave/"><img src="resource/apps/binary-weave/thumb.png" width="180" alt="二元织格 界面"><br>二元织格</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/bomb-jack/"><img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"><br>Mighty Bomb Jack TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/brick-paddle/"><img src="resource/apps/brick-paddle/thumb.png" width="180" alt="弹板清砖 界面"><br>弹板清砖</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/cable-unweaver/"><img src="resource/apps/cable-unweaver/thumb.png" width="180" alt="解线工 界面"><br>解线工</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/cctv/"><img src="resource/apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"><br>CCTV Live</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/clockwork-align/"><img src="resource/apps/clockwork-align/thumb.png" width="180" alt="齿轮同刻 界面"><br>齿轮同刻</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"><br>Coast Kart TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/codebreaker/"><img src="resource/apps/codebreaker/thumb.png" width="180" alt="纹码破译 界面"><br>纹码破译</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/color-frontier/"><img src="resource/apps/color-frontier/thumb.png" width="180" alt="染色连疆 界面"><br>染色连疆</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/color-paths/"><img src="resource/apps/color-paths/thumb.png" width="180" alt="彩径连点 界面"><br>彩径连点</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/conveyor-window/"><img src="resource/apps/conveyor-window/thumb.png" width="180" alt="窗口装配 界面"><br>窗口装配</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/cozy-island/"><img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"><br>Cozy Island TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/domino-chain/"><img src="resource/apps/domino-chain/thumb.png" width="180" alt="骨牌接龙 界面"><br>骨牌接龙</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/dots-boxes/"><img src="resource/apps/dots-boxes/thumb.png" width="180" alt="点线围格 界面"><br>点线围格</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/draughts-trail/"><img src="resource/apps/draughts-trail/thumb.png" width="180" alt="跳吃棋径 界面"><br>跳吃棋径</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/echo-cartographer/"><img src="resource/apps/echo-cartographer/thumb.png" width="180" alt="回声探图 界面"><br>回声探图</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/firebreak-planner/"><img src="resource/apps/firebreak-planner/thumb.png" width="180" alt="防火带 界面"><br>防火带</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/fleet-ledger/"><img src="resource/apps/fleet-ledger/thumb.png" width="180" alt="舰队账册 界面"><br>舰队账册</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/four-in-row/"><img src="resource/apps/four-in-row/thumb.png" width="180" alt="四子列阵 界面"><br>四子列阵</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/frost-brake/"><img src="resource/apps/frost-brake/thumb.png" width="180" alt="冰面刹停 界面"><br>冰面刹停</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/glass-fold/"><img src="resource/apps/glass-fold/thumb.png" width="180" alt="折光工坊 界面"><br>折光工坊</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/gravity-courier/"><img src="resource/apps/gravity-courier/thumb.png" width="180" alt="引力快递 界面"><br>引力快递</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/greenhouse-dials/"><img src="resource/apps/greenhouse-dials/thumb.png" width="180" alt="温室旋钮 界面"><br>温室旋钮</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/harbor-counterweight/"><img src="resource/apps/harbor-counterweight/thumb.png" width="180" alt="港口配重 界面"><br>港口配重</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/hex-connection/"><img src="resource/apps/hex-connection/thumb.png" width="180" alt="六角连线 界面"><br>六角连线</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/hidden-corridors/"><img src="resource/apps/hidden-corridors/thumb.png" width="180" alt="隐墙测绘 界面"><br>隐墙测绘</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/hifini/"><img src="resource/apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"><br>HIFINi TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/island-dominoes/"><img src="resource/apps/island-dominoes/thumb.png" width="180" alt="双岛联结 界面"><br>双岛联结</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/island-ink/"><img src="resource/apps/island-ink/thumb.png" width="180" alt="岛海墨图 界面"><br>岛海墨图</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/jackal/"><img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"><br>Jackal TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/jewel/"><img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"><br>Magic Jewelry TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/kaleido-keys/"><img src="resource/apps/kaleido-keys/thumb.png" width="180" alt="万花钥匙 界面"><br>万花钥匙</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/knight-circuit/"><img src="resource/apps/knight-circuit/thumb.png" width="180" alt="马步巡游 界面"><br>马步巡游</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/lane-bowling/"><img src="resource/apps/lane-bowling/thumb.png" width="180" alt="球道击柱 界面"><br>球道击柱</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/lantern-rhythm/"><img src="resource/apps/lantern-rhythm/thumb.png" width="180" alt="灯塔节拍 界面"><br>灯塔节拍</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/lens-distance/"><img src="resource/apps/lens-distance/thumb.png" width="180" alt="焦距实验室 界面"><br>焦距实验室</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/liberty-stones/"><img src="resource/apps/liberty-stones/thumb.png" width="180" alt="围子夺星 界面"><br>围子夺星</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/light-chambers/"><img src="resource/apps/light-chambers/thumb.png" width="180" alt="光室布灯 界面"><br>光室布灯</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/logic-workbench/"><img src="resource/apps/logic-workbench/thumb.png" width="180" alt="逻辑工坊 界面"><br>逻辑工坊</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/loop-orchard/"><img src="resource/apps/loop-orchard/thumb.png" width="180" alt="环线果园 界面"><br>环线果园</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/magnetic-warehouse/"><img src="resource/apps/magnetic-warehouse/thumb.png" width="180" alt="磁极仓库 界面"><br>磁极仓库</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/measure-pour/"><img src="resource/apps/measure-pour/thumb.png" width="180" alt="量杯转运 界面"><br>量杯转运</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/memory-gallery/"><img src="resource/apps/memory-gallery/thumb.png" width="180" alt="记忆陈列 界面"><br>记忆陈列</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/merge-tiles/"><img src="resource/apps/merge-tiles/thumb.png" width="180" alt="数字汇聚 界面"><br>数字汇聚</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/metronome-gates/"><img src="resource/apps/metronome-gates/thumb.png" width="180" alt="节拍闸道 界面"><br>节拍闸道</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/mine-survey/"><img src="resource/apps/mine-survey/thumb.png" width="180" alt="雷纹勘探 界面"><br>雷纹勘探</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/moire-atelier/"><img src="resource/apps/moire-atelier/thumb.png" width="180" alt="纹幕校准 界面"><br>纹幕校准</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/nim-orbit/"><img src="resource/apps/nim-orbit/thumb.png" width="180" alt="取石回合 界面"><br>取石回合</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/number-dunes/"><img src="resource/apps/number-dunes/thumb.png" width="180" alt="沙丘数列 界面"><br>沙丘数列</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/orbit-turret/"><img src="resource/apps/orbit-turret/thumb.png" width="180" alt="环轨炮台 界面"><br>环轨炮台</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/orchard-snake/"><img src="resource/apps/orchard-snake/thumb.png" width="180" alt="果园游蛇 界面"><br>果园游蛇</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/packing-sculptor/"><img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱 界面"><br>异形装箱</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/parallax-skyline/"><img src="resource/apps/parallax-skyline/thumb.png" width="180" alt="视差天际 界面"><br>视差天际</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/parity-garden/"><img src="resource/apps/parity-garden/thumb.png" width="180" alt="奇偶花圃 界面"><br>奇偶花圃</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/path-glyphs/"><img src="resource/apps/path-glyphs/thumb.png" width="180" alt="路径刻印 界面"><br>路径刻印</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pixel-clues/"><img src="resource/apps/pixel-clues/thumb.png" width="180" alt="像素线索 界面"><br>像素线索</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pocket-golf/"><img src="resource/apps/pocket-golf/thumb.png" width="180" alt="口袋果岭 界面"><br>口袋果岭</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pocket-solitaire/"><img src="resource/apps/pocket-solitaire/thumb.png" width="180" alt="口袋接龙 界面"><br>口袋接龙</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pollinator-contract/"><img src="resource/apps/pollinator-contract/thumb.png" width="180" alt="传粉契约 界面"><br>传粉契约</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pressure-seal/"><img src="resource/apps/pressure-seal/thumb.png" width="180" alt="压力封装 界面"><br>压力封装</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"><br>镜光接力</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pulse-vault/"><img src="resource/apps/pulse-vault/thumb.png" width="180" alt="脉冲储库 界面"><br>脉冲储库</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/quadrant-five/"><img src="resource/apps/quadrant-five/thumb.png" width="180" alt="旋盘五子 界面"><br>旋盘五子</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/queen-constellation/"><img src="resource/apps/queen-constellation/thumb.png" width="180" alt="星盘皇后 界面"><br>星盘皇后</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/rectangle-atlas/"><img src="resource/apps/rectangle-atlas/thumb.png" width="180" alt="矩形图册 界面"><br>矩形图册</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/reservoir-seasons/"><img src="resource/apps/reservoir-seasons/thumb.png" width="180" alt="四季蓄水 界面"><br>四季蓄水</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/resonance-bridge/"><img src="resource/apps/resonance-bridge/thumb.png" width="180" alt="共振浮桥 界面"><br>共振浮桥</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/reversi-relay/"><img src="resource/apps/reversi-relay/thumb.png" width="180" alt="翻面棋局 界面"><br>翻面棋局</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/ring-towers/"><img src="resource/apps/ring-towers/thumb.png" width="180" alt="环塔迁移 界面"><br>环塔迁移</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/river-guard/"><img src="resource/apps/river-guard/thumb.png" width="180" alt="渡河守则 界面"><br>渡河守则</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/river-hopper/"><img src="resource/apps/river-hopper/thumb.png" width="180" alt="渡河跃步 界面"><br>渡河跃步</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/rooftop-runner/"><img src="resource/apps/rooftop-runner/thumb.png" width="180" alt="天台疾跑 界面"><br>天台疾跑</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/rook-rescue/"><img src="resource/apps/rook-rescue/thumb.png" width="180" alt="王车合围 界面"><br>王车合围</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/rotor-locksmith/"><img src="resource/apps/rotor-locksmith/thumb.png" width="180" alt="旋环锁匠 界面"><br>旋环锁匠</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/sandglass-split/"><img src="resource/apps/sandglass-split/thumb.png" width="180" alt="分流沙漏 界面"><br>分流沙漏</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/seed-mancala/"><img src="resource/apps/seed-mancala/thumb.png" width="180" alt="播子棋盘 界面"><br>播子棋盘</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/shade-duplicates/"><img src="resource/apps/shade-duplicates/thumb.png" width="180" alt="去重留白 界面"><br>去重留白</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/shadow-foundry/"><img src="resource/apps/shadow-foundry/thumb.png" width="180" alt="影形铸坊 界面"><br>影形铸坊</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/shadow-shutter/"><img src="resource/apps/shadow-shutter/thumb.png" width="180" alt="影窗快门 界面"><br>影窗快门</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/shortvideo/"><img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"><br>ShortVideo TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/skyline-numbers/"><img src="resource/apps/skyline-numbers/thumb.png" width="180" alt="数塔天际 界面"><br>数塔天际</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/sliding-order/"><img src="resource/apps/sliding-order/thumb.png" width="180" alt="滑格归序 界面"><br>滑格归序</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/solar-shift/"><img src="resource/apps/solar-shift/thumb.png" width="180" alt="逐日供电 界面"><br>逐日供电</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/sorting-wires/"><img src="resource/apps/sorting-wires/thumb.png" width="180" alt="比较器工坊 界面"><br>比较器工坊</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/stack-dispatch/"><img src="resource/apps/stack-dispatch/thumb.png" width="180" alt="序栈货运 界面"><br>序栈货运</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/star-formation/"><img src="resource/apps/star-formation/thumb.png" width="180" alt="星阵防线 界面"><br>星阵防线</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/stone-bay/"><img src="resource/apps/stone-bay/thumb.png" width="180" alt="石箱归位 界面"><br>石箱归位</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/sum-crossings/"><img src="resource/apps/sum-crossings/thumb.png" width="180" alt="交叉数和 界面"><br>交叉数和</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/super-mario/"><img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"><br>Super Mario TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/switchyard-minute/"><img src="resource/apps/switchyard-minute/thumb.png" width="180" alt="分岔调度 界面"><br>分岔调度</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tank/"><img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"><br>Tank TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tension-span/"><img src="resource/apps/tension-span/thumb.png" width="180" alt="拉索桥梁 界面"><br>拉索桥梁</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"><br>Tetris TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tetro-islands/"><img src="resource/apps/tetro-islands/thumb.png" width="180" alt="四格岛群 界面"><br>四格岛群</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/thermal-glider/"><img src="resource/apps/thermal-glider/thumb.png" width="180" alt="热流滑翔 界面"><br>热流滑翔</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tide-lock/"><img src="resource/apps/tide-lock/thumb.png" width="180" alt="潮汐闸门 界面"><br>潮汐闸门</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tile-garden/"><img src="resource/apps/tile-garden/thumb.png" width="180" alt="叠牌花园 界面"><br>叠牌花园</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/torch-bridge/"><img src="resource/apps/torch-bridge/thumb.png" width="180" alt="夜桥接力 界面"><br>夜桥接力</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tower-overlap/"><img src="resource/apps/tower-overlap/thumb.png" width="180" alt="叠塔工匠 界面"><br>叠塔工匠</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/traffic-escape/"><img src="resource/apps/traffic-escape/thumb.png" width="180" alt="车阵出口 界面"><br>车阵出口</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/triangle-pegs/"><img src="resource/apps/triangle-pegs/thumb.png" width="180" alt="三角跳珠 界面"><br>三角跳珠</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/triangular-tessera/"><img src="resource/apps/triangular-tessera/thumb.png" width="180" alt="三角拼域 界面"><br>三角拼域</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/twenty-four/"><img src="resource/apps/twenty-four/thumb.png" width="180" alt="四则二十四 界面"><br>四则二十四</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/used-car-racing/"><img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"><br>极品二手车</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/webtv/"><img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"><br>WebTV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/weight-ledger/"><img src="resource/apps/weight-ledger/thumb.png" width="180" alt="砝码账本 界面"><br>砝码账本</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/word-ladder/"><img src="resource/apps/word-ladder/thumb.png" width="180" alt="词阶接龙 界面"><br>词阶接龙</a></td>
+    <td width="33%"></td>
+    <td width="33%"></td>
+  </tr>
+</table>
 
 <!-- resource-index:end -->
 

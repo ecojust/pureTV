@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render README tables from APK metadata and explicit English presentation data."""
+"""Render three-column README galleries from resource metadata and English data."""
 import json,re
 from html import escape
 from pathlib import Path
@@ -8,8 +8,8 @@ root=Path(__file__).resolve().parents[1]
 entries=[(folder.relative_to(root/'resource').as_posix(),json.loads((folder/'resource.json').read_text())) for folder in catalog_directories(root)]
 counts={kind:sum(info['kind']==kind for _,info in entries) for kind in ('launcher','app')}
 LOCALES={
-    'zh':{'launcher':'启动器','app':'电视应用','name':'名称','author':'作者','version':'版本','size':'APK 大小','custom':'支持自定义','purpose':'用途','preview':'封面截图','yes':'是','no':'否','alt':'{name} 界面','fallback':'电视应用'},
-    'en':{'launcher':'Launchers','app':'TV apps','name':'Name','author':'Author','version':'Version','size':'APK size','custom':'Customizable','purpose':'Purpose','preview':'Preview','yes':'Yes','no':'No','alt':'{name} preview','fallback':'TV application'},
+    'zh':{'launcher':'启动器','app':'电视应用','alt':'{name} 界面'},
+    'en':{'launcher':'Launchers','app':'TV apps','alt':'{name} preview'},
 }
 ENGLISH=json.loads((root/'tools/resource-index.en.json').read_text())
 
@@ -31,27 +31,25 @@ def tables(prefix,locale='zh'):
     output=[]
     for kind in ('launcher','app'):
         output+=['### '+labels[kind],'']
-        columns=('name','author','version','size','custom' if kind=='launcher' else 'purpose','preview')
-        output+=['| '+' | '.join(labels[key] for key in columns)+' |','| --- | --- | --- | --- | --- | --- |']
+        output+=['<table>']
+        cells=[]
         for key,info in entries:
             if info['kind']!=kind:continue
             directory=prefix+key+'/'
             translated=ENGLISH[key] if locale=='en' else info
-            name,author=translated['name'],translated['author']
+            name=translated['name']
             cover=translated['cover'] if locale=='en' else directory+info['cover'] if info.get('cover') else None
             alt=labels['alt'].format(name=name)
             image=f'<img src="{escape(cover,quote=True)}" width="180" alt="{escape(alt,quote=True)}">' if cover else '—'
-            if kind=='launcher':
-                extra=labels['yes'] if info.get('supportsLayoutJson') and info.get('layoutJsonVersion') in (2,3,4,5) else labels['no']
-            elif locale=='en':
-                extra=translated['description']
-            else:
-                extra=info.get('description',labels['fallback'])
             size=(root/'resource'/key/info['apk']).stat().st_size
             assert size==info['apkBytes']
-            display=f'{size/1024/1024:.2f} MB' if size>=1024*1024 else f'{size/1024:.1f} KB'
-            output.append(f'| [{name}]({directory}) | {author} | {info["version"]} | {display} | {extra} | {image} |')
-        output+=['']
+            link=escape(directory,quote=True)
+            cells.append(f'    <td align="center" valign="top" width="33%"><a href="{link}">{image}<br>{escape(name)}</a></td>')
+        for start in range(0,len(cells),3):
+            row=cells[start:start+3]
+            row+=['    <td width="33%"></td>']*(3-len(row))
+            output+=['  <tr>',*row,'  </tr>']
+        output+=['</table>','']
     return '\n'.join(output).rstrip()
 def main():
     validate_english()
@@ -61,7 +59,7 @@ def main():
             text,replaced=re.subn(r'(https://img\.shields\.io/badge/'+label+r'-)\d+(?=-)',lambda match:match[1]+str(counts[kind]),text)
             assert replaced==1,f'{filename}: expected one {label} count badge'
         start='<!-- resource-index:start -->';end='<!-- resource-index:end -->';left=text.index(start)+len(start);right=text.index(end);p.write_text(text[:left]+'\n\n'+tables('resource/',locale)+'\n\n'+text[right:])
-    (root/'resource/README.md').write_text('# 电视 APK 资源目录\n\n目录分为 `launcher/`（启动器）和 `apps/`（应用）。源码与 APK 放在同一软件目录。每个软件文件夹至少包含一个真实 APK，以及 resource.json、许可证和校验文件；可附对应源码及封面。点击软件名称进入文件夹下载。当前收录桔子桑（ecojust）开发的启动器和电视应用。\n\n“支持自定义”指管理器可识别的 layout.json 接口，当前配套启动器使用 v5 users/system 协议。界面预览与相关许可见各文件夹说明。\n\n'+tables('')+'\n\n开发者请参阅 [开发与协议 README](README-development.md)，包含 layout.json 字段说明、画面对照、构建与测试。'+'\n\n维护校验：`python tools/resource_catalog.py --build-tools <Android Build Tools 34.0.0 目录>`。索引由 `python tools/update-resource-index.py` 根据资源元数据生成。\n')
+    (root/'resource/README.md').write_text('# 电视 APK 资源目录\n\n目录分为 `launcher/`（启动器）和 `apps/`（应用）。源码与 APK 放在同一软件目录。每个软件文件夹至少包含一个真实 APK，以及 resource.json、许可证和校验文件；可附对应源码及封面。点击软件名称进入文件夹下载。当前收录桔子桑（ecojust）开发的启动器和电视应用。\n\n启动器布局自定义使用管理器可识别的 layout.json 接口，当前配套启动器使用 v5 users/system 协议。界面预览与相关许可见各文件夹说明。\n\n'+tables('')+'\n\n开发者请参阅 [开发与协议 README](README-development.md)，包含 layout.json 字段说明、画面对照、构建与测试。'+'\n\n维护校验：`python tools/resource_catalog.py --build-tools <Android Build Tools 34.0.0 目录>`。索引由 `python tools/update-resource-index.py` 根据资源元数据生成。\n')
 
 if __name__=='__main__':
     main()

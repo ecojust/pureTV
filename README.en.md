@@ -48,144 +48,234 @@ The [0.5.1 game fidelity review](docs/game-fidelity-0.5.1.md) records rule and i
 
 The launchers and first-party TV apps support English. Select English in the TV system settings to use it. User-provided app names, playlists, and media titles keep their original text. Native previews below use English test content; they are not physical TV captures.
 
-“Customizable” in the launcher table means support for this manager's **layout.json version 5 users/system interface**. Cards for launchers that support the layout protocol automatically display the Home background color and image, including inactive launchers, and update after layout changes are applied. The list has no choose-cover or remove-cover actions; edit the home-screen background in “Adjust layout.” Pending APKs use their embedded Home background when available, falling back to a sibling `thumb.png` or `APK-name.thumb.png` only when no layout background can be read.
+Launcher layout customization uses this manager's **layout.json version 5 users/system interface**. Cards for launchers that support the layout protocol automatically display the Home background color and image, including inactive launchers, and update after layout changes are applied. The list has no choose-cover or remove-cover actions; edit the home-screen background in “Adjust layout.” Pending APKs use their embedded Home background when available, falling back to a sibling `thumb.png` or `APK-name.thumb.png` only when no layout background can be read.
 
 <!-- resource-index:start -->
 
 ### Launchers
 
-| Name | Author | Version | APK size | Customizable | Preview |
-| --- | --- | --- | --- | --- | --- |
-| [Aster TV](resource/launcher/aster/) | ecojust | 0.5.0 | 443.7 KB | Yes | <img src="docs/previews/en/launcher-aster.png" width="180" alt="Aster TV preview"> |
-| [Circuit TV](resource/launcher/circuit/) | ecojust | 0.5.0 | 435.7 KB | Yes | <img src="docs/previews/en/launcher-circuit.png" width="180" alt="Circuit TV preview"> |
-| [Drift TV](resource/launcher/drift/) | ecojust | 0.5.0 | 475.7 KB | Yes | <img src="docs/previews/en/launcher-drift.png" width="180" alt="Drift TV preview"> |
-| [Forma TV](resource/launcher/forma/) | ecojust | 0.5.0 | 443.7 KB | Yes | <img src="docs/previews/en/launcher-forma.png" width="180" alt="Forma TV preview"> |
-| [Mono TV](resource/launcher/mono/) | ecojust | 0.5.0 | 443.7 KB | Yes | <img src="docs/previews/en/launcher-mono.png" width="180" alt="Mono TV preview"> |
-| [Moss TV](resource/launcher/moss/) | ecojust | 0.5.0 | 487.7 KB | Yes | <img src="docs/previews/en/launcher-moss.png" width="180" alt="Moss TV preview"> |
-| [Nova TV](resource/launcher/nova/) | ecojust | 0.5.0 | 495.7 KB | Yes | <img src="docs/previews/en/launcher-nova.png" width="180" alt="Nova TV preview"> |
-| [Pixel TV](resource/launcher/pixel/) | ecojust | 0.5.0 | 443.7 KB | Yes | <img src="docs/previews/en/launcher-pixel.png" width="180" alt="Pixel TV preview"> |
-| [pureTV Launcher](resource/launcher/puretv/) | ecojust | 0.5.1 | 826.5 KB | Yes | <img src="docs/previews/en/launcher-puretv.png" width="180" alt="pureTV Launcher preview"> |
-| [Sol TV](resource/launcher/sol/) | ecojust | 0.5.0 | 439.7 KB | Yes | <img src="docs/previews/en/launcher-sol.png" width="180" alt="Sol TV preview"> |
+<table>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/aster/"><img src="docs/previews/en/launcher-aster.png" width="180" alt="Aster TV preview"><br>Aster TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/circuit/"><img src="docs/previews/en/launcher-circuit.png" width="180" alt="Circuit TV preview"><br>Circuit TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/drift/"><img src="docs/previews/en/launcher-drift.png" width="180" alt="Drift TV preview"><br>Drift TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/forma/"><img src="docs/previews/en/launcher-forma.png" width="180" alt="Forma TV preview"><br>Forma TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/mono/"><img src="docs/previews/en/launcher-mono.png" width="180" alt="Mono TV preview"><br>Mono TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/moss/"><img src="docs/previews/en/launcher-moss.png" width="180" alt="Moss TV preview"><br>Moss TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/nova/"><img src="docs/previews/en/launcher-nova.png" width="180" alt="Nova TV preview"><br>Nova TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/pixel/"><img src="docs/previews/en/launcher-pixel.png" width="180" alt="Pixel TV preview"><br>Pixel TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/puretv/"><img src="docs/previews/en/launcher-puretv.png" width="180" alt="pureTV Launcher preview"><br>pureTV Launcher</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/launcher/sol/"><img src="docs/previews/en/launcher-sol.png" width="180" alt="Sol TV preview"><br>Sol TV</a></td>
+    <td width="33%"></td>
+    <td width="33%"></td>
+  </tr>
+</table>
 
 ### TV apps
 
-| Name | Author | Version | APK size | Purpose | Preview |
-| --- | --- | --- | --- | --- | --- |
-| [Adjacency Forge (Chinese UI)](resource/apps/adjacency-forge/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Swap unique metal tiles on seven hexagonal cells. Satisfy every exact local neighbor recipe and route heat from furnace to mold using fixed world-direction outlet priorities, then submit explicitly. Exact-ID undo, three wrong submissions and a 90-second active timer. Chinese TV interface. | <img src="docs/previews/en/app-adjacency-forge.png" width="180" alt="Adjacency Forge (Chinese UI) preview"> |
-| [Adventure Island TV](resource/apps/adventure-island/) | ecojust | 0.5.2 | 89.4 KB | 32-stage island adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"> |
-| [Airlock Budget (Chinese UI)](resource/apps/airlock-budget/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Schedule three groups through an airlock. Balance slow oxygen recovery against fast venting and individual deadlines, manage a finite reservoir and shared pump, and seal the leak while preserving the required final reserve. Chinese TV interface. | <img src="docs/previews/en/app-airlock-budget.png" width="180" alt="Airlock Budget (Chinese UI) preview"> |
-| [Alien Shooter TV](resource/apps/alien-shooter/) | ecojust | 0.1.2 | 1.68 MB | Single-player industrial-base alien combat with three campaign stages, five weapons and a LAN phone controller | <img src="docs/previews/en/app-alien-shooter.png" width="180" alt="Alien Shooter TV preview"> |
-| [Arrow Harvest (Chinese UI)](resource/apps/arrow-harvest/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Route seeds along one-way arrows to cover every target field exactly once without entering forbidden ground. Arrows are locked during propagation. Chinese TV interface. | <img src="docs/previews/en/app-arrow-harvest.png" width="180" alt="Arrow Harvest (Chinese UI) preview"> |
-| [Assembly Kitchen (Chinese UI)](resource/apps/assembly-kitchen/) | ecojust / Juzisang | 0.1.0 | 293.3 KB | Coordinate shared cooking, cooling and packing stations. Adjust fan speed, manage food temperature and holding limits, and deliver three orders in the required sequence before closing. Incorrect or expired food is discarded and the order returns for rework. Chinese TV interface. | <img src="docs/previews/en/app-assembly-kitchen.png" width="180" alt="Assembly Kitchen (Chinese UI) preview"> |
-| [Battery Exchange (Chinese UI)](resource/apps/battery-exchange/) | ecojust / Juzisang | 0.1.0 | 293.3 KB | Exchange six cells with different charge and internal resistance during safe off windows. Select series or parallel wiring for two loads, complete their staged power requests, and manage charge and temperature. Simplified circuit game with a Chinese TV interface. | <img src="docs/previews/en/app-battery-exchange.png" width="180" alt="Battery Exchange (Chinese UI) preview"> |
-| [Beat Braid](resource/apps/beat-braid/) | ecojust / Juzisang | 0.1.0 | 293.3 KB | Hold one thread while tapping the other on the beat, alternate roles and maintain continuity across three rhythm charts. Chinese TV interface. | <img src="docs/previews/en/app-beat-braid.png" width="180" alt="Beat Braid preview"> |
-| [Binary Weave](resource/apps/binary-weave/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Fill zeros and ones with balanced rows and columns, no three identical digits in a row, and no duplicate rows or columns; preserve locked clues. | <img src="docs/previews/en/app-binary-weave.png" width="180" alt="Binary Weave preview"> |
-| [Mighty Bomb Jack TV](resource/apps/bomb-jack/) | ecojust | 0.5.2 | 85.4 KB | 16-stage pyramid adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"> |
-| [Brick Paddle](resource/apps/brick-paddle/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Move the paddle to return the ball and aim rebounds with its contact point. Clear three brick layouts while preserving your three lives. | <img src="docs/previews/en/app-brick-paddle.png" width="180" alt="Brick Paddle preview"> |
-| [Cable Unweaver](resource/apps/cable-unweaver/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Slide terminals along their rails and move linked clamps together to untangle straight cables. Remove illegal crossings and coincident ports across three workbenches; even the last adjustment can complete the wiring. | <img src="docs/previews/en/app-cable-unweaver.png" width="180" alt="Cable Unweaver preview"> |
-| [CCTV Live](resource/apps/cctv/) | ecojust | 0.5.0 | 40.9 KB | Official CCTV website player with TV channel navigation | <img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"> |
-| [Clockwork Alignment (Chinese UI)](resource/apps/clockwork-align/) | ecojust / Juzisang | 0.1.0 | 297.3 KB | Engage or brake gear trains within a limited adjustment budget. Keep every pointer aligned throughout the appointment hold across three gear layouts. Chinese TV interface. | <img src="docs/previews/en/app-clockwork-align.png" width="180" alt="Clockwork Alignment (Chinese UI) preview"> |
-| [Coast Kart TV](resource/apps/coast-kart/) | ecojust | 0.5.2 | 257.6 KB | Original kart racing with drifting, items and split-screen LAN phone play | <img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"> |
-| [Codebreaker](resource/apps/codebreaker/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Solve a four-symbol code that may contain repeats using exact-position and misplaced-symbol feedback within a limited number of guesses. | <img src="docs/previews/en/app-codebreaker.png" width="180" alt="Codebreaker preview"> |
-| [Color Frontier](resource/apps/color-frontier/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Flood a connected territory from the top-left corner using a finite dye budget. Four-neighbor expansion, three public maps, and undo that restores the board without refunding moves; phone directional and two action zones. | <img src="docs/previews/en/app-color-frontier.png" width="180" alt="Color Frontier preview"> |
-| [Color Paths](resource/apps/color-paths/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Color the grid to connect matching numbered endpoints with disjoint simple paths covering every cell, without branches or detached cycles. | <img src="docs/previews/en/app-color-paths.png" width="180" alt="Color Paths preview"> |
-| [Conveyor Window (Chinese UI)](resource/apps/conveyor-window/) | ecojust / Juzisang | 0.1.0 | 297.3 KB | Move the gripper to collect and rotate keyed parts, then dispatch through the open shutter into matching sockets. Avoid damage and maintain a correct assembly streak across three conveyor scenarios. Chinese TV interface. | <img src="docs/previews/en/app-conveyor-window.png" width="180" alt="Conveyor Window (Chinese UI) preview"> |
-| [Cozy Island TV](resource/apps/cozy-island/) | ecojust | 0.5.2 | 269.6 KB | Original island life with gathering, fishing, decorating and LAN phone play | <img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"> |
-| [Domino Chain](resource/apps/domino-chain/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Open-hand double-six dominoes: match either chain end, draw or pass when blocked, and compare remaining pips in a blocked game. | <img src="docs/previews/en/app-domino-chain.png" width="180" alt="Domino Chain preview"> |
-| [Dots and Boxes](resource/apps/dots-boxes/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Draw edges to complete boxes, keep your turn after each capture, and outscore a public-policy opponent through careful timing. | <img src="docs/previews/en/app-dots-boxes.png" width="180" alt="Dots and Boxes preview"> |
-| [Draughts Trail](resource/apps/draughts-trail/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Solve six-by-six draughts endgames with mandatory captures and continuous jumps. Promote men to kings and defeat an opponent with a public deterministic policy. | <img src="docs/previews/en/app-draughts-trail.png" width="180" alt="Draughts Trail preview"> |
-| [Echo Cartographer (Chinese UI)](resource/apps/echo-cartographer/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Map dark corridors with timed sonar, manage battery and patrol noise, collect every beacon and return to the entrance. Chinese TV interface. | <img src="docs/previews/en/app-echo-cartographer.png" width="180" alt="Echo Cartographer (Chinese UI) preview"> |
-| [Firebreak Planner (Chinese UI)](resource/apps/firebreak-planner/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Plan firebreaks with limited action points. Anticipate changing wind and accumulated heat as fire spreads simultaneously, protect every village and retain at least seventy percent of the original forest. Clearing also counts as forest loss. Chinese TV interface. | <img src="docs/previews/en/app-firebreak-planner.png" width="180" alt="Firebreak Planner (Chinese UI) preview"> |
-| [Fleet Ledger](resource/apps/fleet-ledger/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Mark ships and sea from row and column totals and the fleet-length list; keep ships straight and separated, preserve clues, and complete every cell. | <img src="docs/previews/en/app-fleet-ledger.png" width="180" alt="Fleet Ledger preview"> |
-| [Four in Row](resource/apps/four-in-row/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Drop pieces into seven gravity-fed columns and outplay a look-ahead opponent. Connect four horizontally, vertically or diagonally. | <img src="docs/previews/en/app-four-in-row.png" width="180" alt="Four in Row preview"> |
-| [Frost Brake](resource/apps/frost-brake/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Push an inertial cargo sled and hold A to lower the ice claw. Extra braking works only on frost bands. Settle the complete sled inside three narrowing delivery zones while avoiding the edges and cargo damage. Three scenarios; Chinese TV interface. | <img src="docs/previews/en/app-frost-brake.png" width="180" alt="Frost Brake preview"> |
-| [Glass Fold (Chinese UI)](resource/apps/glass-fold/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Fold translucent colored tiles to match a visible stained-glass outline and its layered colors. Three puzzles with undo, limited folds and a 90-second active timer. Chinese TV interface. | <img src="docs/previews/en/app-glass-fold.png" width="180" alt="Glass Fold (Chinese UI) preview"> |
-| [Gravity Courier (Chinese UI)](resource/apps/gravity-courier/) | ecojust / Juzisang | 0.1.1 | 285.3 KB | Pilot an inertial courier ship, manage fuel and deliver three parcels around gravity sources. Chinese TV interface. | <img src="docs/previews/en/app-gravity-courier.png" width="180" alt="Gravity Courier (Chinese UI) preview"> |
-| [Greenhouse Dials (Chinese UI)](resource/apps/greenhouse-dials/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Adjust ventilation, shade and drip irrigation with delayed controls. Manage shared climate and limited water so all three crops reach their own maturity requirements without dying. Chinese TV interface. | <img src="docs/previews/en/app-greenhouse-dials.png" width="180" alt="Greenhouse Dials (Chinese UI) preview"> |
-| [Harbor Counterweight (Chinese UI)](resource/apps/harbor-counterweight/) | ecojust / Juzisang | 0.1.0 | 293.3 KB | Load and unload six cargo units in a specified order while moving ballast to control vessel roll. Keep required cargo accessible, deliver four units and stabilize the ship with its two export units aboard. Simplified crane and roll game with a Chinese TV interface. | <img src="docs/previews/en/app-harbor-counterweight.png" width="180" alt="Harbor Counterweight (Chinese UI) preview"> |
-| [Hex Connection](resource/apps/hex-connection/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Connect the left and right edges of a hexagonal board using its six-neighbor paths while blocking a public-policy opponent aiming from top to bottom. | <img src="docs/previews/en/app-hex-connection.png" width="180" alt="Hex Connection preview"> |
-| [Hidden Corridors (Chinese UI)](resource/apps/hidden-corridors/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Infer a hidden 4x4 wall map from public row counts, exact shortest edge distance and limited one-cell probes. Mark and submit a safe route of the required length. Three fixed puzzles with a 90-second active timer; three wrong submissions after probe exhaustion end a round. Chinese TV interface. | <img src="docs/previews/en/app-hidden-corridors.png" width="180" alt="Hidden Corridors (Chinese UI) preview"> |
-| [HIFINi TV](resource/apps/hifini/) | ecojust | 0.5.0 | 201.1 KB | HiFiNi music search, shuffle playback and rhythm animation | <img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"> |
-| [Island Dominoes (Chinese UI)](resource/apps/island-dominoes/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Place unique bridge pieces between islands using exact straight-line lengths and matching destination colors. Use every piece to form one connected, noncrossing network; undo restores the same physical piece without refunding time or errors. Three fixed puzzles with a 90-second active timer. Chinese TV interface. | <img src="docs/previews/en/app-island-dominoes.png" width="180" alt="Island Dominoes (Chinese UI) preview"> |
-| [Island Ink](resource/apps/island-ink/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Build numbered islands of the exact area and one connected sea, with one clue per island and no 2×2 sea blocks; check the completed grid manually. | <img src="docs/previews/en/app-island-ink.png" width="180" alt="Island Ink preview"> |
-| [Jackal TV](resource/apps/jackal/) | ecojust | 0.5.2 | 11.95 MB | Independently rewritten six-stage jeep rescue with two LAN phone controllers | <img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"> |
-| [Magic Jewelry TV](resource/apps/jewel/) | ecojust | 0.5.2 | 81.4 KB | Classic three-gem chain matching with one or two LAN phone controllers | <img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"> |
-| [Kaleido Keys](resource/apps/kaleido-keys/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Place and rotate limited glyphs in one source wedge, choose a symmetry order, and match the complete mirrored key. Check swapped columns, quarter turns and empty sockets before submitting. Four rejected submissions end the round; there is no deadline. | <img src="docs/previews/en/app-kaleido-keys.png" width="180" alt="Kaleido Keys preview"> |
-| [Knight Circuit](resource/apps/knight-circuit/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Tour three different boards with chess-knight jumps, visiting every available square exactly once. Plan a complete route and use three limited undo tokens to recover from dead ends. | <img src="docs/previews/en/app-knight-circuit.png" width="180" alt="Knight Circuit preview"> |
-| [Lane Bowling](resource/apps/lane-bowling/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Aim and choose power to clear three pin formations through ball–pin and pin–pin collisions, with limited throws and aiming between rolls. | <img src="docs/previews/en/app-lane-bowling.png" width="180" alt="Lane Bowling preview"> |
-| [Lantern Rhythm (Chinese UI)](resource/apps/lantern-rhythm/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Observe directional short and long lighthouse signals, then reproduce their timing with real button holds to light all three beacons. Limited replay credits and a 90-second active timer. Chinese TV interface. | <img src="docs/previews/en/app-lantern-rhythm.png" width="180" alt="Lantern Rhythm (Chinese UI) preview"> |
-| [Lens Distance](resource/apps/lens-distance/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Original single-player optics puzzle. Move a lens and screen, adjust the iris, and satisfy separate real-image clarity and brightness requirements. Three benches each contain two plates with independent exposure and adjustment budgets. | <img src="docs/previews/en/app-lens-distance.png" width="180" alt="Lens Distance preview"> |
-| [Liberty Stones](resource/apps/liberty-stones/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Read liberties and surround opposing groups to capture four stones first, with suicide prevention, simple ko, and a limited number of turns. | <img src="docs/previews/en/app-liberty-stones.png" width="180" alt="Liberty Stones preview"> |
-| [Light Chambers](resource/apps/light-chambers/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Place lamps to illuminate every white cell without lamps seeing one another, and match each numbered wall’s adjacent lamp count. | <img src="docs/previews/en/app-light-chambers.png" width="180" alt="Light Chambers preview"> |
-| [Logic Workbench](resource/apps/logic-workbench/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Choose logic gates in a fixed circuit so all eight truth-table rows for three inputs match the target, with a limited number of manual checks. | <img src="docs/previews/en/app-logic-workbench.png" width="180" alt="Logic Workbench preview"> |
-| [Loop Orchard (Chinese UI)](resource/apps/loop-orchard/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Build one connected irrigation loop through required trees, avoid forbidden flower vertices, and satisfy exact region-edge clues; unhinted regions remain unconstrained. Place or remove unique physical pipes, undo the exact edit, then start PUMP explicitly. Three wrong starts or 90 active seconds end a round. Chinese TV interface. | <img src="docs/previews/en/app-loop-orchard.png" width="180" alt="Loop Orchard (Chinese UI) preview"> |
-| [Magnetic Warehouse (Chinese UI)](resource/apps/magnetic-warehouse/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Switch magnetic polarity to attract and repel numbered crates into their matching docks, with simultaneous movement, walls and a limited action budget. Chinese TV interface. | <img src="docs/previews/en/app-magnetic-warehouse.png" width="180" alt="Magnetic Warehouse (Chinese UI) preview"> |
-| [Measure Pour](resource/apps/measure-pour/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Pour conserved water between three jugs of different capacities. Every transfer fills the destination or empties the source; meet all three visible target amounts within a finite pour budget across three puzzles. | <img src="docs/previews/en/app-measure-pour.png" width="180" alt="Measure Pour preview"> |
-| [Memory Gallery](resource/apps/memory-gallery/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Remember briefly revealed symbols and numbers, then uncover every matching pair within the mistake limit. Supports TV remotes and a local-network phone controller. | <img src="docs/previews/en/app-memory-gallery.png" width="180" alt="Memory Gallery preview"> |
-| [Merge Tiles](resource/apps/merge-tiles/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Slide equal numbers together, with each tile merging at most once per move. Manage deterministic spawns and limited undo tickets to reach 32, 64 and 128 within the move limits. | <img src="docs/previews/en/app-merge-tiles.png" width="180" alt="Merge Tiles preview"> |
-| [Metronome Gates](resource/apps/metronome-gates/) | ecojust / Juzisang | 0.1.0 | 293.3 KB | Queue directions and waits, pass periodic gates on each beat, collect all markers and reach the exit within the beat budget. Undo removes only the unexecuted tail command. Three maps; Chinese TV interface. | <img src="docs/previews/en/app-metronome-gates.png" width="180" alt="Metronome Gates preview"> |
-| [Mine Survey](resource/apps/mine-survey/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Use visible neighboring mine counts to uncover every safe cell on three logically solvable boards. Flags are notes; reveal a mine and the round ends. | <img src="docs/previews/en/app-mine-survey.png" width="180" alt="Mine Survey preview"> |
-| [Moiré Atelier](resource/apps/moire-atelier/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Slide and rotate two periodic masks until all five current brightness checks match their targets together. Use visible fiducial guides to complete three optical calibrations within the time and submission limits. | <img src="docs/previews/en/app-moire-atelier.png" width="180" alt="Moiré Atelier preview"> |
-| [Nim Orbit](resource/apps/nim-orbit/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Remove stones from one pile per turn, master both normal and last-stone-loses rules, and challenge an opponent using a public optimal strategy. | <img src="docs/previews/en/app-nim-orbit.png" width="180" alt="Nim Orbit preview"> |
-| [Number Dunes (Chinese UI)](resource/apps/number-dunes/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Compact one selected row or column without merging or crossing fixed pillars. Keep physical stone order within each segment and achieve both a strictly increasing snake readout and the exact target holes. Undo restores stone positions without refunding successful moves or active time. Chinese TV interface. | <img src="docs/previews/en/app-number-dunes.png" width="180" alt="Number Dunes (Chinese UI) preview"> |
-| [Orbit Turret](resource/apps/orbit-turret/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Rotate a central turret and fire at approaching orbital targets, using two brief shields that absorb only enemies touching their range. | <img src="docs/previews/en/app-orbit-turret.png" width="180" alt="Orbit Turret preview"> |
-| [Orchard Snake](resource/apps/orchard-snake/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Queue the next turn, collect fruit and avoid rocks and your growing tail. Spend limited brake tokens to plan a safe route through three orchards. | <img src="docs/previews/en/app-orchard-snake.png" width="180" alt="Orchard Snake preview"> |
-| [Packing Sculptor](resource/apps/packing-sculptor/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Original single-player polygon packing puzzle. Place and rotate finite pieces inside three irregular boxes while leaving complete straight extraction paths through marked doors. Four CHECK attempts; phone directional and two action zones. | <img src="docs/previews/en/app-packing-sculptor.png" width="180" alt="Packing Sculptor preview"> |
-| [Parallax Skyline](resource/apps/parallax-skyline/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Slide near and far building plates to match both skylines and visible roof landmarks. A convincing front view can hide a wrong far plate; undo preserves failed submissions. | <img src="docs/previews/en/app-parallax-skyline.png" width="180" alt="Parallax Skyline preview"> |
-| [Parity Garden (Chinese UI)](resource/apps/parity-garden/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Match a public 4x4 flower pattern using cross and diagonal watering nozzles. Marked flowers must be open with an even direct watering count; repeated sprays never refund water. Three puzzles with finite water and a 90-second active timer. Chinese TV interface. | <img src="docs/previews/en/app-parity-garden.png" width="180" alt="Parity Garden (Chinese UI) preview"> |
-| [Path Glyphs (Chinese UI)](resource/apps/path-glyphs/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Trace a non-repeating route across a public 5x5 board. Entry-side conditions emit direction glyphs; submit the exact ordered target at the exit. Three puzzles with whole-route clear, persistent failure history and a 90-second active timer. Chinese TV interface. | <img src="docs/previews/en/app-path-glyphs.png" width="180" alt="Path Glyphs (Chinese UI) preview"> |
-| [Pixel Clues](resource/apps/pixel-clues/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Fill pixel pictures using public row and column run clues. Crosses are optional notes; solve three increasingly large boards within 60, 90 and 120 seconds of active play. | <img src="docs/previews/en/app-pixel-clues.png" width="180" alt="Pixel Clues preview"> |
-| [Pocket Golf](resource/apps/pocket-golf/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Choose angle and power to navigate obstacles and bank off walls, reaching the cup at low speed within the stroke limit. | <img src="docs/previews/en/app-pocket-golf.png" width="180" alt="Pocket Golf preview"> |
-| [Pocket Solitaire](resource/apps/pocket-solitaire/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Move single cards through four tableau columns and two free cells, stack descending alternating colors, and build suit foundations within the move budget. | <img src="docs/previews/en/app-pocket-solitaire.png" width="180" alt="Pocket Solitaire preview"> |
-| [Pollinator Contract (Chinese UI)](resource/apps/pollinator-contract/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Guide two bee groups through timed blooms and prerequisite fields, redirect flights and return to the hive to recover stamina across three garden contracts. Chinese TV interface. | <img src="docs/previews/en/app-pollinator-contract.png" width="180" alt="Pollinator Contract (Chinese UI) preview"> |
-| [Pressure Seal](resource/apps/pressure-seal/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Hold heat and vent controls to seal three packages within their pressure bands. Residual heat keeps changing pressure after release. | <img src="docs/previews/en/app-pressure-seal.png" width="180" alt="Pressure Seal preview"> |
-| [Prism Relay (Chinese UI)](resource/apps/prism-relay/) | ecojust / Juzisang | 0.1.1 | 285.3 KB | Rotate mirrors and prisms to guide coloured light through three optical puzzles. Chinese TV interface. | <img src="docs/previews/en/app-prism-relay.png" width="180" alt="Prism Relay (Chinese UI) preview"> |
-| [Pulse Vault (Chinese UI)](resource/apps/pulse-vault/) | ecojust / Juzisang | 0.1.0 | 293.3 KB | Hold to collect a finite pulse supply, select a dose and discharge into sequential locks. Control overflow and heat peaks, open four locks and retain the final energy reserve across three supply scenarios. Chinese TV interface. | <img src="docs/previews/en/app-pulse-vault.png" width="180" alt="Pulse Vault (Chinese UI) preview"> |
-| [Quadrant Five](resource/apps/quadrant-five/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Place a stone, then rotate a board quadrant each turn; make five after rotation, while simultaneous lines or a full-board draw require a retry. | <img src="docs/previews/en/app-quadrant-five.png" width="180" alt="Quadrant Five preview"> |
-| [Queen Constellation](resource/apps/queen-constellation/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Arrange non-attacking queens on six-, seven- and eight-order boards while respecting fixed queens and blocked cells. Inspect row, column and diagonal conflicts, then submit within three check attempts. | <img src="docs/previews/en/app-queen-constellation.png" width="180" alt="Queen Constellation preview"> |
-| [Rectangle Atlas](resource/apps/rectangle-atlas/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Draw rectangles from two corners to cover the grid, each containing exactly one clue equal to its area; remove and redraw regions without overlap. | <img src="docs/previews/en/app-rectangle-atlas.png" width="180" alt="Rectangle Atlas preview"> |
-| [Reservoir Seasons (Chinese UI)](resource/apps/reservoir-seasons/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Allocate reservoir water to residents, farms and the ecological river using four-season forecasts. Undo uncommitted plans, protect seasonal minimums and meet each group's annual target. Chinese TV interface. | <img src="docs/previews/en/app-reservoir-seasons.png" width="180" alt="Reservoir Seasons (Chinese UI) preview"> |
-| [Resonance Bridge (Chinese UI)](resource/apps/resonance-bridge/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Tune the frequency and phase of three floating bridge slabs. Dispatch pedestrians who cross only after sustained safe contact, while keeping resonance under control. Three crossing scenarios. Chinese TV interface. | <img src="docs/previews/en/app-resonance-bridge.png" width="180" alt="Resonance Bridge (Chinese UI) preview"> |
-| [Reversi Relay](resource/apps/reversi-relay/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Play three 6x6 Reversi endgames against a deterministic opponent. Bracket and flip discs in eight directions, pass only with no legal move, and finish with the majority of discs. | <img src="docs/previews/en/app-reversi-relay.png" width="180" alt="Reversi Relay preview"> |
-| [Ring Towers](resource/apps/ring-towers/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Transfer a tower of rings between three pegs, moving only the top ring and never placing a larger ring on a smaller one. Solve three-, four- and five-ring towers within their move budgets. | <img src="docs/previews/en/app-ring-towers.png" width="180" alt="Ring Towers preview"> |
-| [River Guard](resource/apps/river-guard/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Plan crossings with limited boat capacity, prevent conflicts on unattended banks, and ferry every item safely across using fully public rules. | <img src="docs/previews/en/app-river-guard.png" width="180" alt="River Guard preview"> |
-| [River Hopper](resource/apps/river-hopper/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Cross traffic and ride moving logs to reach distinct home docks within limited lives and time. | <img src="docs/previews/en/app-river-hopper.png" width="180" alt="River Hopper preview"> |
-| [Rooftop Runner](resource/apps/rooftop-runner/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Run across rooftops, time jumps over crates and gaps, and hold crouch to pass under beams. | <img src="docs/previews/en/app-rooftop-runner.png" width="180" alt="Rooftop Runner preview"> |
-| [Rook Rescue](resource/apps/rook-rescue/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Use a king and rook to restrict the opposing king and deliver checkmate within the move limit, avoiding adjacent kings, rook loss, and stalemate. | <img src="docs/previews/en/app-rook-rescue.png" width="180" alt="Rook Rescue preview"> |
-| [Rotor Locksmith](resource/apps/rotor-locksmith/) | ecojust / Juzisang | 0.1.0 | 293.3 KB | Turn three geared rings, hold A to move inward and B to retreat. Retrieve the core key and guide its wider head back through the gaps while preserving durability. Three locks; Chinese TV interface. | <img src="docs/previews/en/app-rotor-locksmith.png" width="180" alt="Rotor Locksmith preview"> |
-| [Sandglass Split (Chinese UI)](resource/apps/sandglass-split/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Toggle the shared hopper and rotate two deflectors to distribute sand between three cups. Packets keep the route chosen on contact; drain the available sand with every cup inside its target tolerance and no spill. Chinese TV interface. | <img src="docs/previews/en/app-sandglass-split.png" width="180" alt="Sandglass Split (Chinese UI) preview"> |
-| [Seed Mancala](resource/apps/seed-mancala/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Sow seeds around the pits, earn extra turns in your store, and capture opposite seeds to secure a majority against a public-policy opponent. | <img src="docs/previews/en/app-seed-mancala.png" width="180" alt="Seed Mancala preview"> |
-| [Shade Duplicates](resource/apps/shade-duplicates/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Shade digits so white cells have no row or column repeats, shaded cells never touch orthogonally, and all white cells remain connected. | <img src="docs/previews/en/app-shade-duplicates.png" width="180" alt="Shade Duplicates preview"> |
-| [Shadow Foundry](resource/apps/shadow-foundry/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Rotate a compact metal assembly and its side light to cover cyan target samples without touching amber forbidden samples. Direction, height and overlap matter; twelve rotations per blueprint. | <img src="docs/previews/en/app-shadow-foundry.png" width="180" alt="Shadow Foundry preview"> |
-| [Shadow Shutter (Chinese UI)](resource/apps/shadow-shutter/) | ecojust / Juzisang | 0.1.0 | 297.3 KB | Move and rotate the aperture to photograph three complete, correctly aligned silhouettes while avoiding an opaque paper strip. Match ordered targets with limited film across three scenes. Chinese TV interface. | <img src="docs/previews/en/app-shadow-shutter.png" width="180" alt="Shadow Shutter (Chinese UI) preview"> |
-| [ShortVideo TV](resource/apps/shortvideo/) | ecojust | 0.5.0 | 32.7 KB | Short video player with remote control support | <img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"> |
-| [Skyline Numbers](resource/apps/skyline-numbers/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Complete growing number grids using nonrepeating rows and columns and the visible tower counts along their edges. | <img src="docs/previews/en/app-skyline-numbers.png" width="180" alt="Skyline Numbers preview"> |
-| [Sliding Order](resource/apps/sliding-order/) | ecojust / Juzisang | 0.1.0 | 281.3 KB | Move the blank space in a 3x3 board to arrange eight numbered tiles in order. Solve three starting layouts within their slide budgets; undo restores the board without refunding moves. | <img src="docs/previews/en/app-sliding-order.png" width="180" alt="Sliding Order preview"> |
-| [Solar Shift (Chinese UI)](resource/apps/solar-shift/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Orient a solar panel through changing daylight and shadows, supply devices in priority order, and manage battery energy and temperature to meet each device's quota through the night. Chinese TV interface. | <img src="docs/previews/en/app-solar-shift.png" width="180" alt="Solar Shift (Chinese UI) preview"> |
-| [Sorting Wires](resource/apps/sorting-wires/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Build a sorting network within its layer and comparator limits, test every binary input, and use failing examples to refine the design. | <img src="docs/previews/en/app-sorting-wires.png" width="180" alt="Sorting Wires preview"> |
-| [Stack Dispatch](resource/apps/stack-dispatch/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Operate a single-cargo crane and three LIFO storage bays to ship visible manifests in order. Three puzzles with finite capacity, limited handling moves and three wrong-order attempts; phone directional and two action zones. | <img src="docs/previews/en/app-stack-dispatch.png" width="180" alt="Stack Dispatch preview"> |
-| [Star Formation](resource/apps/star-formation/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Move sideways to dodge hostile fire, shoot descending formations, and use two piercing rounds while destructible cover protects the defense line. | <img src="docs/previews/en/app-star-formation.png" width="180" alt="Star Formation preview"> |
-| [Stone Bay](resource/apps/stone-bay/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Push stone crates onto every socket in three courtyards. You can push but cannot pull; walking is free, while undo restores positions without refunding the limited push budget. | <img src="docs/previews/en/app-stone-bay.png" width="180" alt="Stone Bay preview"> |
-| [Sum Crossings](resource/apps/sum-crossings/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Fill digits 1–9 so each horizontal and vertical run has distinct digits and matches its clue sum; preserve fixed digits and avoid three incorrect checks. | <img src="docs/previews/en/app-sum-crossings.png" width="180" alt="Sum Crossings preview"> |
-| [Super Mario TV](resource/apps/super-mario/) | ecojust | 0.5.2 | 93.4 KB | 32-course platform adventure with LAN phone controllers and alternating turns | <img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"> |
-| [Switchyard Minute (Chinese UI)](resource/apps/switchyard-minute/) | ecojust / Juzisang | 0.1.1 | 289.3 KB | Route freight trains to matching platforms, operate occupied-track locks and schedule departures from two waiting gates. Chinese TV interface. | <img src="docs/previews/en/app-switchyard-minute.png" width="180" alt="Switchyard Minute (Chinese UI) preview"> |
-| [Tank TV](resource/apps/tank/) | ecojust | 0.5.2 | 258.3 KB | Independently rewritten 35-stage tank defense with two LAN phone controllers | <img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"> |
-| [Tension Span (Chinese UI)](resource/apps/tension-span/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Build a cable-supported bridge within a material budget, then carry a loaded truck across while managing deck deflection and cable failure. Chinese TV interface. | <img src="docs/previews/en/app-tension-span.png" width="180" alt="Tension Span (Chinese UI) preview"> |
-| [Tetris TV](resource/apps/tetris/) | ecojust | 0.5.2 | 81.4 KB | Classic falling-block puzzle with one or two LAN phone controllers | <img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"> |
-| [Tetro Islands](resource/apps/tetro-islands/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Choose an I, L, T, or S tetromino in every region; connect all black cells, avoid 2×2 blocks, and give touching regions different shapes. | <img src="docs/previews/en/app-tetro-islands.png" width="180" alt="Tetro Islands preview"> |
-| [Thermal Glider (Chinese UI)](resource/apps/thermal-glider/) | ecojust / Juzisang | 0.1.0 | 293.3 KB | Fly an unpowered glider through ordered observation rings using visible thermals, wind, airbrakes and flaps, then satisfy every runway landing limit. Three public courses and a 90-second active timer. Chinese TV interface. | <img src="docs/previews/en/app-thermal-glider.png" width="180" alt="Thermal Glider (Chinese UI) preview"> |
-| [Tide Lock (Chinese UI)](resource/apps/tide-lock/) | ecojust / Juzisang | 0.1.1 | 289.3 KB | Adjust finite chamber water levels, operate interlocked gates and guide cargo boats uphill through two canal locks. Chinese TV interface. | <img src="docs/previews/en/app-tide-lock.png" width="180" alt="Tide Lock (Chinese UI) preview"> |
-| [Tile Garden](resource/apps/tile-garden/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Match equal visible tiles with no tile above and at least one open side; plan the order across two layers to avoid a deadlock. | <img src="docs/previews/en/app-tile-garden.png" width="180" alt="Tile Garden preview"> |
-| [Torch Bridge](resource/apps/torch-bridge/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Send one or two travelers across with the torch, pay the slower traveler’s crossing time, and bring everyone across within the public time budget. | <img src="docs/previews/en/app-torch-bridge.png" width="180" alt="Torch Bridge preview"> |
-| [Tower Overlap](resource/apps/tower-overlap/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Drop moving slabs at the right moment. Only their overlap remains as you build towers of six, eight and ten floors. | <img src="docs/previews/en/app-tower-overlap.png" width="180" alt="Tower Overlap preview"> |
-| [Traffic Escape](resource/apps/traffic-escape/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Slide vehicles along their axes to clear a crowded lot, manage limited undo tickets, and guide the target car through the right-side exit. | <img src="docs/previews/en/app-traffic-escape.png" width="180" alt="Traffic Escape preview"> |
-| [Triangle Pegs](resource/apps/triangle-pegs/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Jump over adjacent pegs in six directions on a fifteen-hole triangular board until only one remains. Solve three different starting vacancies with three limited undo tokens. | <img src="docs/previews/en/app-triangle-pegs.png" width="180" alt="Triangle Pegs preview"> |
-| [Triangular Tessera (Chinese UI)](resource/apps/triangular-tessera/) | ecojust / Juzisang | 0.1.0 | 289.3 KB | Rotate and mirror triangular color tiles to match shared edges and exact red, green and blue region counts. Three original puzzles use charged moves and a 90-second limit; scan the TV code for single-player phone control. Chinese TV interface. | <img src="docs/previews/en/app-triangular-tessera.png" width="180" alt="Triangular Tessera (Chinese UI) preview"> |
-| [Twenty Four](resource/apps/twenty-four/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Use all four number cards exactly once with directional arithmetic and exact fractions to make twenty-four, with limited failed attempts and undo tickets. | <img src="docs/previews/en/app-twenty-four.png" width="180" alt="Twenty Four preview"> |
-| [Used Car Racing TV](resource/apps/used-car-racing/) | ecojust | 0.1.3 | 1.66 MB | 3D racing with randomized used cars, mechanical failures and one or two LAN phone players alongside AI opponents | <img src="docs/previews/en/app-used-car-racing.png" width="180" alt="Used Car Racing TV preview"> |
-| [WebTV](resource/apps/webtv/) | ecojust | 0.5.0 | 44.8 KB | Live TV and M3U player | <img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"> |
-| [Weight Ledger (Chinese UI)](resource/apps/weight-ledger/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Allocate six uniquely identified weights across three shared pans to balance all integer equations and empty storage. Three public puzzles use limited relocations, explicit lever coefficients, pickup previews and undo that preserves elapsed time. Chinese TV interface. | <img src="docs/previews/en/app-weight-ledger.png" width="180" alt="Weight Ledger (Chinese UI) preview"> |
-| [Word Ladder](resource/apps/word-ladder/) | ecojust / Juzisang | 0.1.0 | 285.3 KB | Change one letter at a time through a public word list to reach the target within a limited move budget; undo does not refund moves. | <img src="docs/previews/en/app-word-ladder.png" width="180" alt="Word Ladder preview"> |
+<table>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/adjacency-forge/"><img src="docs/previews/en/app-adjacency-forge.png" width="180" alt="Adjacency Forge (Chinese UI) preview"><br>Adjacency Forge (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/adventure-island/"><img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"><br>Adventure Island TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/airlock-budget/"><img src="docs/previews/en/app-airlock-budget.png" width="180" alt="Airlock Budget (Chinese UI) preview"><br>Airlock Budget (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/alien-shooter/"><img src="docs/previews/en/app-alien-shooter.png" width="180" alt="Alien Shooter TV preview"><br>Alien Shooter TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/arrow-harvest/"><img src="docs/previews/en/app-arrow-harvest.png" width="180" alt="Arrow Harvest (Chinese UI) preview"><br>Arrow Harvest (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/assembly-kitchen/"><img src="docs/previews/en/app-assembly-kitchen.png" width="180" alt="Assembly Kitchen (Chinese UI) preview"><br>Assembly Kitchen (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/battery-exchange/"><img src="docs/previews/en/app-battery-exchange.png" width="180" alt="Battery Exchange (Chinese UI) preview"><br>Battery Exchange (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/beat-braid/"><img src="docs/previews/en/app-beat-braid.png" width="180" alt="Beat Braid preview"><br>Beat Braid</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/binary-weave/"><img src="docs/previews/en/app-binary-weave.png" width="180" alt="Binary Weave preview"><br>Binary Weave</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/bomb-jack/"><img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"><br>Mighty Bomb Jack TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/brick-paddle/"><img src="docs/previews/en/app-brick-paddle.png" width="180" alt="Brick Paddle preview"><br>Brick Paddle</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/cable-unweaver/"><img src="docs/previews/en/app-cable-unweaver.png" width="180" alt="Cable Unweaver preview"><br>Cable Unweaver</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/cctv/"><img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"><br>CCTV Live</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/clockwork-align/"><img src="docs/previews/en/app-clockwork-align.png" width="180" alt="Clockwork Alignment (Chinese UI) preview"><br>Clockwork Alignment (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/coast-kart/"><img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"><br>Coast Kart TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/codebreaker/"><img src="docs/previews/en/app-codebreaker.png" width="180" alt="Codebreaker preview"><br>Codebreaker</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/color-frontier/"><img src="docs/previews/en/app-color-frontier.png" width="180" alt="Color Frontier preview"><br>Color Frontier</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/color-paths/"><img src="docs/previews/en/app-color-paths.png" width="180" alt="Color Paths preview"><br>Color Paths</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/conveyor-window/"><img src="docs/previews/en/app-conveyor-window.png" width="180" alt="Conveyor Window (Chinese UI) preview"><br>Conveyor Window (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/cozy-island/"><img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"><br>Cozy Island TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/domino-chain/"><img src="docs/previews/en/app-domino-chain.png" width="180" alt="Domino Chain preview"><br>Domino Chain</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/dots-boxes/"><img src="docs/previews/en/app-dots-boxes.png" width="180" alt="Dots and Boxes preview"><br>Dots and Boxes</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/draughts-trail/"><img src="docs/previews/en/app-draughts-trail.png" width="180" alt="Draughts Trail preview"><br>Draughts Trail</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/echo-cartographer/"><img src="docs/previews/en/app-echo-cartographer.png" width="180" alt="Echo Cartographer (Chinese UI) preview"><br>Echo Cartographer (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/firebreak-planner/"><img src="docs/previews/en/app-firebreak-planner.png" width="180" alt="Firebreak Planner (Chinese UI) preview"><br>Firebreak Planner (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/fleet-ledger/"><img src="docs/previews/en/app-fleet-ledger.png" width="180" alt="Fleet Ledger preview"><br>Fleet Ledger</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/four-in-row/"><img src="docs/previews/en/app-four-in-row.png" width="180" alt="Four in Row preview"><br>Four in Row</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/frost-brake/"><img src="docs/previews/en/app-frost-brake.png" width="180" alt="Frost Brake preview"><br>Frost Brake</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/glass-fold/"><img src="docs/previews/en/app-glass-fold.png" width="180" alt="Glass Fold (Chinese UI) preview"><br>Glass Fold (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/gravity-courier/"><img src="docs/previews/en/app-gravity-courier.png" width="180" alt="Gravity Courier (Chinese UI) preview"><br>Gravity Courier (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/greenhouse-dials/"><img src="docs/previews/en/app-greenhouse-dials.png" width="180" alt="Greenhouse Dials (Chinese UI) preview"><br>Greenhouse Dials (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/harbor-counterweight/"><img src="docs/previews/en/app-harbor-counterweight.png" width="180" alt="Harbor Counterweight (Chinese UI) preview"><br>Harbor Counterweight (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/hex-connection/"><img src="docs/previews/en/app-hex-connection.png" width="180" alt="Hex Connection preview"><br>Hex Connection</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/hidden-corridors/"><img src="docs/previews/en/app-hidden-corridors.png" width="180" alt="Hidden Corridors (Chinese UI) preview"><br>Hidden Corridors (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/hifini/"><img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"><br>HIFINi TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/island-dominoes/"><img src="docs/previews/en/app-island-dominoes.png" width="180" alt="Island Dominoes (Chinese UI) preview"><br>Island Dominoes (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/island-ink/"><img src="docs/previews/en/app-island-ink.png" width="180" alt="Island Ink preview"><br>Island Ink</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/jackal/"><img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"><br>Jackal TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/jewel/"><img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"><br>Magic Jewelry TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/kaleido-keys/"><img src="docs/previews/en/app-kaleido-keys.png" width="180" alt="Kaleido Keys preview"><br>Kaleido Keys</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/knight-circuit/"><img src="docs/previews/en/app-knight-circuit.png" width="180" alt="Knight Circuit preview"><br>Knight Circuit</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/lane-bowling/"><img src="docs/previews/en/app-lane-bowling.png" width="180" alt="Lane Bowling preview"><br>Lane Bowling</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/lantern-rhythm/"><img src="docs/previews/en/app-lantern-rhythm.png" width="180" alt="Lantern Rhythm (Chinese UI) preview"><br>Lantern Rhythm (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/lens-distance/"><img src="docs/previews/en/app-lens-distance.png" width="180" alt="Lens Distance preview"><br>Lens Distance</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/liberty-stones/"><img src="docs/previews/en/app-liberty-stones.png" width="180" alt="Liberty Stones preview"><br>Liberty Stones</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/light-chambers/"><img src="docs/previews/en/app-light-chambers.png" width="180" alt="Light Chambers preview"><br>Light Chambers</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/logic-workbench/"><img src="docs/previews/en/app-logic-workbench.png" width="180" alt="Logic Workbench preview"><br>Logic Workbench</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/loop-orchard/"><img src="docs/previews/en/app-loop-orchard.png" width="180" alt="Loop Orchard (Chinese UI) preview"><br>Loop Orchard (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/magnetic-warehouse/"><img src="docs/previews/en/app-magnetic-warehouse.png" width="180" alt="Magnetic Warehouse (Chinese UI) preview"><br>Magnetic Warehouse (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/measure-pour/"><img src="docs/previews/en/app-measure-pour.png" width="180" alt="Measure Pour preview"><br>Measure Pour</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/memory-gallery/"><img src="docs/previews/en/app-memory-gallery.png" width="180" alt="Memory Gallery preview"><br>Memory Gallery</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/merge-tiles/"><img src="docs/previews/en/app-merge-tiles.png" width="180" alt="Merge Tiles preview"><br>Merge Tiles</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/metronome-gates/"><img src="docs/previews/en/app-metronome-gates.png" width="180" alt="Metronome Gates preview"><br>Metronome Gates</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/mine-survey/"><img src="docs/previews/en/app-mine-survey.png" width="180" alt="Mine Survey preview"><br>Mine Survey</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/moire-atelier/"><img src="docs/previews/en/app-moire-atelier.png" width="180" alt="Moiré Atelier preview"><br>Moiré Atelier</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/nim-orbit/"><img src="docs/previews/en/app-nim-orbit.png" width="180" alt="Nim Orbit preview"><br>Nim Orbit</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/number-dunes/"><img src="docs/previews/en/app-number-dunes.png" width="180" alt="Number Dunes (Chinese UI) preview"><br>Number Dunes (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/orbit-turret/"><img src="docs/previews/en/app-orbit-turret.png" width="180" alt="Orbit Turret preview"><br>Orbit Turret</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/orchard-snake/"><img src="docs/previews/en/app-orchard-snake.png" width="180" alt="Orchard Snake preview"><br>Orchard Snake</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/packing-sculptor/"><img src="docs/previews/en/app-packing-sculptor.png" width="180" alt="Packing Sculptor preview"><br>Packing Sculptor</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/parallax-skyline/"><img src="docs/previews/en/app-parallax-skyline.png" width="180" alt="Parallax Skyline preview"><br>Parallax Skyline</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/parity-garden/"><img src="docs/previews/en/app-parity-garden.png" width="180" alt="Parity Garden (Chinese UI) preview"><br>Parity Garden (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/path-glyphs/"><img src="docs/previews/en/app-path-glyphs.png" width="180" alt="Path Glyphs (Chinese UI) preview"><br>Path Glyphs (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pixel-clues/"><img src="docs/previews/en/app-pixel-clues.png" width="180" alt="Pixel Clues preview"><br>Pixel Clues</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pocket-golf/"><img src="docs/previews/en/app-pocket-golf.png" width="180" alt="Pocket Golf preview"><br>Pocket Golf</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pocket-solitaire/"><img src="docs/previews/en/app-pocket-solitaire.png" width="180" alt="Pocket Solitaire preview"><br>Pocket Solitaire</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pollinator-contract/"><img src="docs/previews/en/app-pollinator-contract.png" width="180" alt="Pollinator Contract (Chinese UI) preview"><br>Pollinator Contract (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pressure-seal/"><img src="docs/previews/en/app-pressure-seal.png" width="180" alt="Pressure Seal preview"><br>Pressure Seal</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/prism-relay/"><img src="docs/previews/en/app-prism-relay.png" width="180" alt="Prism Relay (Chinese UI) preview"><br>Prism Relay (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/pulse-vault/"><img src="docs/previews/en/app-pulse-vault.png" width="180" alt="Pulse Vault (Chinese UI) preview"><br>Pulse Vault (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/quadrant-five/"><img src="docs/previews/en/app-quadrant-five.png" width="180" alt="Quadrant Five preview"><br>Quadrant Five</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/queen-constellation/"><img src="docs/previews/en/app-queen-constellation.png" width="180" alt="Queen Constellation preview"><br>Queen Constellation</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/rectangle-atlas/"><img src="docs/previews/en/app-rectangle-atlas.png" width="180" alt="Rectangle Atlas preview"><br>Rectangle Atlas</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/reservoir-seasons/"><img src="docs/previews/en/app-reservoir-seasons.png" width="180" alt="Reservoir Seasons (Chinese UI) preview"><br>Reservoir Seasons (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/resonance-bridge/"><img src="docs/previews/en/app-resonance-bridge.png" width="180" alt="Resonance Bridge (Chinese UI) preview"><br>Resonance Bridge (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/reversi-relay/"><img src="docs/previews/en/app-reversi-relay.png" width="180" alt="Reversi Relay preview"><br>Reversi Relay</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/ring-towers/"><img src="docs/previews/en/app-ring-towers.png" width="180" alt="Ring Towers preview"><br>Ring Towers</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/river-guard/"><img src="docs/previews/en/app-river-guard.png" width="180" alt="River Guard preview"><br>River Guard</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/river-hopper/"><img src="docs/previews/en/app-river-hopper.png" width="180" alt="River Hopper preview"><br>River Hopper</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/rooftop-runner/"><img src="docs/previews/en/app-rooftop-runner.png" width="180" alt="Rooftop Runner preview"><br>Rooftop Runner</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/rook-rescue/"><img src="docs/previews/en/app-rook-rescue.png" width="180" alt="Rook Rescue preview"><br>Rook Rescue</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/rotor-locksmith/"><img src="docs/previews/en/app-rotor-locksmith.png" width="180" alt="Rotor Locksmith preview"><br>Rotor Locksmith</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/sandglass-split/"><img src="docs/previews/en/app-sandglass-split.png" width="180" alt="Sandglass Split (Chinese UI) preview"><br>Sandglass Split (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/seed-mancala/"><img src="docs/previews/en/app-seed-mancala.png" width="180" alt="Seed Mancala preview"><br>Seed Mancala</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/shade-duplicates/"><img src="docs/previews/en/app-shade-duplicates.png" width="180" alt="Shade Duplicates preview"><br>Shade Duplicates</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/shadow-foundry/"><img src="docs/previews/en/app-shadow-foundry.png" width="180" alt="Shadow Foundry preview"><br>Shadow Foundry</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/shadow-shutter/"><img src="docs/previews/en/app-shadow-shutter.png" width="180" alt="Shadow Shutter (Chinese UI) preview"><br>Shadow Shutter (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/shortvideo/"><img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"><br>ShortVideo TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/skyline-numbers/"><img src="docs/previews/en/app-skyline-numbers.png" width="180" alt="Skyline Numbers preview"><br>Skyline Numbers</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/sliding-order/"><img src="docs/previews/en/app-sliding-order.png" width="180" alt="Sliding Order preview"><br>Sliding Order</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/solar-shift/"><img src="docs/previews/en/app-solar-shift.png" width="180" alt="Solar Shift (Chinese UI) preview"><br>Solar Shift (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/sorting-wires/"><img src="docs/previews/en/app-sorting-wires.png" width="180" alt="Sorting Wires preview"><br>Sorting Wires</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/stack-dispatch/"><img src="docs/previews/en/app-stack-dispatch.png" width="180" alt="Stack Dispatch preview"><br>Stack Dispatch</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/star-formation/"><img src="docs/previews/en/app-star-formation.png" width="180" alt="Star Formation preview"><br>Star Formation</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/stone-bay/"><img src="docs/previews/en/app-stone-bay.png" width="180" alt="Stone Bay preview"><br>Stone Bay</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/sum-crossings/"><img src="docs/previews/en/app-sum-crossings.png" width="180" alt="Sum Crossings preview"><br>Sum Crossings</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/super-mario/"><img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"><br>Super Mario TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/switchyard-minute/"><img src="docs/previews/en/app-switchyard-minute.png" width="180" alt="Switchyard Minute (Chinese UI) preview"><br>Switchyard Minute (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tank/"><img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"><br>Tank TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tension-span/"><img src="docs/previews/en/app-tension-span.png" width="180" alt="Tension Span (Chinese UI) preview"><br>Tension Span (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tetris/"><img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"><br>Tetris TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tetro-islands/"><img src="docs/previews/en/app-tetro-islands.png" width="180" alt="Tetro Islands preview"><br>Tetro Islands</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/thermal-glider/"><img src="docs/previews/en/app-thermal-glider.png" width="180" alt="Thermal Glider (Chinese UI) preview"><br>Thermal Glider (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tide-lock/"><img src="docs/previews/en/app-tide-lock.png" width="180" alt="Tide Lock (Chinese UI) preview"><br>Tide Lock (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tile-garden/"><img src="docs/previews/en/app-tile-garden.png" width="180" alt="Tile Garden preview"><br>Tile Garden</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/torch-bridge/"><img src="docs/previews/en/app-torch-bridge.png" width="180" alt="Torch Bridge preview"><br>Torch Bridge</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/tower-overlap/"><img src="docs/previews/en/app-tower-overlap.png" width="180" alt="Tower Overlap preview"><br>Tower Overlap</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/traffic-escape/"><img src="docs/previews/en/app-traffic-escape.png" width="180" alt="Traffic Escape preview"><br>Traffic Escape</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/triangle-pegs/"><img src="docs/previews/en/app-triangle-pegs.png" width="180" alt="Triangle Pegs preview"><br>Triangle Pegs</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/triangular-tessera/"><img src="docs/previews/en/app-triangular-tessera.png" width="180" alt="Triangular Tessera (Chinese UI) preview"><br>Triangular Tessera (Chinese UI)</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/twenty-four/"><img src="docs/previews/en/app-twenty-four.png" width="180" alt="Twenty Four preview"><br>Twenty Four</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/used-car-racing/"><img src="docs/previews/en/app-used-car-racing.png" width="180" alt="Used Car Racing TV preview"><br>Used Car Racing TV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/webtv/"><img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"><br>WebTV</a></td>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/weight-ledger/"><img src="docs/previews/en/app-weight-ledger.png" width="180" alt="Weight Ledger (Chinese UI) preview"><br>Weight Ledger (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><a href="resource/apps/word-ladder/"><img src="docs/previews/en/app-word-ladder.png" width="180" alt="Word Ladder preview"><br>Word Ladder</a></td>
+    <td width="33%"></td>
+    <td width="33%"></td>
+  </tr>
+</table>
 
 <!-- resource-index:end -->
 
