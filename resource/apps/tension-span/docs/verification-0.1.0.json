@@ -1,0 +1,594 @@
+{
+  "schema": 1,
+  "game": "tension-span",
+  "version": "0.1.0",
+  "modelTests": {
+    "passed": 21,
+    "command": "node --test resource/apps/tension-span/tests/game-model.test.cjs",
+    "modelSha256": "1243c06fed4a2e908206eaaa3982bc1218feb904519892d36a86e8427a1424cf",
+    "testSourceSha256": "dcdde0b81c108ac98ca4c4e17de74a1e2ac0c4ed63f020140a4e2c1ff02af960",
+    "testLogSha256": "33c89ed6da7cb0743a2f8a730e35da8bab0be63b0889b8dc3161957963de18a7"
+  },
+  "independentPhysicsReview": {
+    "passed": true,
+    "file": "independent-physics-review.json",
+    "sha256": "02fc21cdb266ad791ec97459b1754f03c53aaa19d37b54d291245f7d40b354a4",
+    "checksPassed": 11,
+    "randomizedForceCases": 30000,
+    "normalInputDesignWins": 6,
+    "source": {
+      "modelPath": "resource/apps/tension-span/src/main/assets/game-model.js",
+      "modelSha256": "1243c06fed4a2e908206eaaa3982bc1218feb904519892d36a86e8427a1424cf",
+      "reviewPath": "resource/apps/tension-span/tests/independent-physics-review.mjs",
+      "reviewSha256": "9a82115674f7aaae69dec07094ce82e6a6500241f96cf3d90da28211d98880e8"
+    },
+    "assumptions": {
+      "pixelsPerMetre": 50,
+      "tickHz": 120,
+      "gravity": 9.81,
+      "model": "Vertical small-deflection deck; fixed x, fixed bank end reactions, prescribed vehicle speed and equal two-wheel static loads. Not a full vehicle/structural FEM.",
+      "conservedQuantity": "Internal panel forces sum to zero. Fixed supports, anchors, gravity, vehicle drive and damping are external constraints/work, so total closed-system energy conservation is not claimed."
+    }
+  },
+  "finalArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "586eb2b6b8aa1bb0b58bcc9889fe0d5f54c9b73a685d600b000cbb8a729c19e2",
+    "cases": 12,
+    "sourceHashes": {
+      "game": {
+        "path": "resource/apps/tension-span/src/main/assets/game.js",
+        "sha256": "1ec889c1e05d8c7902bed11951c2f17b35d4eadd9c06006f25c07d8bd9eefd81"
+      },
+      "model": {
+        "path": "resource/apps/tension-span/src/main/assets/game-model.js",
+        "sha256": "1243c06fed4a2e908206eaaa3982bc1218feb904519892d36a86e8427a1424cf"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "automation": {
+        "path": "resource/apps/tension-span/tests/automation.mjs",
+        "sha256": "a8a7da3a43dbca06d2eb243c058be184c0c05dc362b2830ecc0cc274c08bc692"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "cf47918ee6ab5c4a78b5150c3781fdb2008667900bea6c64a07746df4d691ab3",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223",
+      "game-model.js": "1243c06fed4a2e908206eaaa3982bc1218feb904519892d36a86e8427a1424cf",
+      "game.js": "1ec889c1e05d8c7902bed11951c2f17b35d4eadd9c06006f25c07d8bd9eefd81",
+      "game-config.json": "531c0b618d2e8641d1991c282102602b81896b9a45b17160185d53543e6c031b",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    }
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three bridge menus create distinct geometry, load and material budgets",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick cycle the bridge menu once per press",
+        "passed": true
+      },
+      {
+        "name": "menu backdrop and sound controls expose the real setting",
+        "passed": true
+      },
+      {
+        "name": "held phone START begins once and held A installs one cable once",
+        "passed": true
+      },
+      {
+        "name": "phone B toggles physical testing and edit restoration while A cannot modify a running test",
+        "passed": true
+      },
+      {
+        "name": "P and header pause are independent of B mode; disconnect freezes bridge physics and vehicle",
+        "passed": true
+      },
+      {
+        "name": "normal additions enforce the finite budget and blocked additions consume nothing",
+        "passed": true
+      },
+      {
+        "name": "an unsupported bridge physically fails and B restores its empty reference design",
+        "passed": true
+      },
+      {
+        "name": "a normally installed weak long cable really breaks; B repairs the same paid design",
+        "passed": true
+      },
+      {
+        "name": "repeated B test/edit cycles cannot create material or reset the 90-second clock",
+        "passed": true
+      },
+      {
+        "name": "R from an actual failed load test resets the entire round and all damage",
+        "passed": true
+      }
+    ]
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "cf47918ee6ab5c4a78b5150c3781fdb2008667900bea6c64a07746df4d691ab3",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223",
+      "game-model.js": "1243c06fed4a2e908206eaaa3982bc1218feb904519892d36a86e8427a1424cf",
+      "game.js": "1ec889c1e05d8c7902bed11951c2f17b35d4eadd9c06006f25c07d8bd9eefd81",
+      "game-config.json": "531c0b618d2e8641d1991c282102602b81896b9a45b17160185d53543e6c031b",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 226.609375,
+          "width": 420,
+          "height": 331.78125,
+          "right": 726.984375,
+          "bottom": 558.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "虚线不承重。索线由青转红表示负荷增大。失败按 B 返工，时间不重置。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        }
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "虚线不承重。索线由青转红表示负荷增大。失败按 B 返工，时间不重置。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        }
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 129.90625,
+          "width": 420,
+          "height": 334.1875,
+          "right": 586.5,
+          "bottom": 464.09375
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "虚线不承重。索线由青转红表示负荷增大。失败按 B 返工，时间不重置。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        }
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 192.015625,
+          "width": 420,
+          "height": 400.953125,
+          "right": 726.984375,
+          "bottom": 592.96875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "虚线不承重。索线由青转红表示负荷增大。失败按 B 返工，时间不重置。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        }
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "虚线不承重。索线由青转红表示负荷增大。失败按 B 返工，时间不重置。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        }
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "虚线不承重。索线由青转红表示负荷增大。失败按 B 返工，时间不重置。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        }
+      }
+    ],
+    "rawReportSha256": "027feb35c158525bbef054d01ef7c24ca2a6b45281f35b7e41837b20f8bed446"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 931,
+    "rafIntervalMs": {
+      "count": 931,
+      "min": 16.5,
+      "median": 33.30000000000109,
+      "p95": 66.79999999999927,
+      "max": 150,
+      "mean": 38.02201933404941
+    },
+    "webglDrawCalls": {
+      "count": 931,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 931,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "firstFailure": {
+      "observedAt": 14.003054519,
+      "lastObservedAt": 18.007711876000002,
+      "reason": "vehicle-fall",
+      "attempts": 1,
+      "brokenCableIds": [
+        "cable-1-2"
+      ],
+      "spent": 87,
+      "remainingBudget": 168
+    },
+    "failureDisplayedSecondsAtLeast": 4.004657357000001,
+    "editRestored": {
+      "observedAt": 20.006177706000003,
+      "mode": "editing",
+      "attempts": 1,
+      "panelsIntact": true,
+      "cablesRepaired": true,
+      "carAtStart": true,
+      "spent": 0,
+      "remainingBudget": 255
+    },
+    "normalWin": {
+      "observedAt": 58.004801476,
+      "level": 1,
+      "attempts": 2,
+      "elapsed": 55.24166666666667,
+      "score": 1503,
+      "carFinished": true,
+      "carFalling": false,
+      "carX": 820.1666666666191,
+      "finishX": 820,
+      "rearWheelX": 792.1666666666191,
+      "rightBankX": 740,
+      "allPanelsIntact": true,
+      "spent": 224,
+      "remainingBudget": 31,
+      "budget": 255
+    },
+    "finalWinHeldSecondsAtLeast": 12.007152591000008,
+    "reviewedFrames": [
+      {
+        "name": "title-initial-0.15s.png",
+        "sha256": "0e29a41440601b82b1b0987c09b0ca99292fef085ac6933e094b14d11d349bf4"
+      },
+      {
+        "name": "menu-high-towers-0.85s.png",
+        "sha256": "e74bbae45d0c57e13be809c45f84070f696887a6c9d9dc673e4c94a16fcec55c"
+      },
+      {
+        "name": "menu-offset-towers-1.35s.png",
+        "sha256": "a2fe764495d2e468cf2d112f60444ebea066173d97b6d0272d5a351364393ead"
+      },
+      {
+        "name": "wrong-cable-load-test-8.00s.png",
+        "sha256": "6e4811e2a3cf5d09b4b45d6168b873f406153aa6e841d3f0fc2e7a4244c5f2ff"
+      },
+      {
+        "name": "real-cable-failure-14.25s.png",
+        "sha256": "50ecb9e2341c4261c49bfb2ca9823252b573847d982ab5cb30b89e0babcb0579"
+      },
+      {
+        "name": "failure-held-17.86s.png",
+        "sha256": "27bccf740f42b7589fb55ba7aee19bb0effa64ce8f5396c66c7951b521d228ce"
+      },
+      {
+        "name": "restored-editor-20.01s.png",
+        "sha256": "94657ad506e41d0f82b758329be31260de27623147cc12d49dfca8ebd5216668"
+      },
+      {
+        "name": "rebuilt-support-test-24.31s.png",
+        "sha256": "bea471a0e4939f7e123f616e10c4f608a4df247993e8e68e9f1f93dd1bc88f58"
+      },
+      {
+        "name": "gameplay-thumb-40.01s.png",
+        "sha256": "cebfda8302907493ead9687b902173cf8341ad640d8e2f0e9f469c4cb19ce101"
+      },
+      {
+        "name": "safe-crossing-56.00s.png",
+        "sha256": "69175eb35a9786982fb401093d02a98e4e242bf4c7ec311264e111b9eba7290f"
+      },
+      {
+        "name": "settlement-68.36s.png",
+        "sha256": "11111e59cc7dfcd008e74cf5d72dc1079cf1cb6f818e2c916811c4f676fe5176"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "2d98315d31b799a2749f599e4b47806ed0b3a875f533c499ddd63f15efd54ec9"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "cf47918ee6ab5c4a78b5150c3781fdb2008667900bea6c64a07746df4d691ab3",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223",
+    "game-model.js": "1243c06fed4a2e908206eaaa3982bc1218feb904519892d36a86e8427a1424cf",
+    "game.js": "1ec889c1e05d8c7902bed11951c2f17b35d4eadd9c06006f25c07d8bd9eefd81",
+    "game-config.json": "531c0b618d2e8641d1991c282102602b81896b9a45b17160185d53543e6c031b",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "a2ab738e23be2ef0e95517a4823cd4f7537dbd5b4c65207e016cbc9400028748",
+    "sign": "5c60d08c78b7f7d23969c9bb247541594d992e0656eac33221f26cfa9eecee8e",
+    "fetch": "a11d9e05f31be6521448c7106a3f566d1c9a120ee5224aedd1661109cf80cf0e",
+    "qa": "61994204bd4aa0bbf5401e5422c064e897c6421fe3bf7815b75b65ccaf92454d",
+    "ui": "5613b1fbc8a14537038d84c64f8b4545281c424592ed19ea7f8c8b2fcebe2754",
+    "layout": "027feb35c158525bbef054d01ef7c24ca2a6b45281f35b7e41837b20f8bed446",
+    "viewport": "cbdf48af4b8ad420198c4c4701023b1d62c77f13bea57155d843566e30210d4b",
+    "summary": "d8cae7a226d5fe7802691336c3b6de3f66c3cab72fa3b3d56676a5144accdd15",
+    "record": "e71c13bbcd55948a72895646f02eb222a96a8e31692edefdb39cfd61e53fb5fc",
+    "review": "974e986180a01e00ee3ce257056a0a8ca0efc52f49371b1d4ed0acc835f57546",
+    "videoValidation": "81d4a64e278ad7c2552043cbfa57bba0812f7664d368f3b3d25bef051715f89f",
+    "artifacts": "b72582ef0408d52fea8dfca2cb976bf5adb7e970b108ed25f703254972c3d772",
+    "physics": "02fc21cdb266ad791ec97459b1754f03c53aaa19d37b54d291245f7d40b354a4",
+    "artReview": "586eb2b6b8aa1bb0b58bcc9889fe0d5f54c9b73a685d600b000cbb8a729c19e2"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Chromium keyboard gameplay and controlled native phone-bridge fixtures. Independent constructed physics fixtures are separate from normal gameplay. No physical Android installation is claimed."
+  },
+  "release": {
+    "sourceSha": "611a6b6a4f5559dcb0c08aacbe2e101823088eaa",
+    "signerCommit": "611a6b6a4f5559dcb0c08aacbe2e101823088eaa",
+    "signingRun": 41329413620,
+    "bytes": 296227,
+    "sha256": "4c7818d508e6146bd0ca5a3db9dac7948114e98db5bcaf6b9fb2cb18d505442d",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "afbaf145f447da7ea36c59c115961452779621ec"
+  }
+}

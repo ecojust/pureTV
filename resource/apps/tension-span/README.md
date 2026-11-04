@@ -1,16 +1,20 @@
 # 拉索桥梁 / Tension Span
 
+0.2.0：[签名安装包](tension-span-0.2.0.apk) · [六关实际游玩录像](docs/gameplay-0.2.0.mp4) · [验证记录](docs/verification.json)
+
+本版共六关，新增三关。浏览器普通输入验证已完成；尚未进行实体电视或手机测试。
+
+![0.2.0 实际游戏画面](thumb.png)
+
 在有限的材料预算内，为悬空桥面选择拉索，再让载重工程车通过峡谷。桥面会随车辆位置下沉，拉索只能承受拉力；超载断索、桥板损坏和车辆坠落都会影响试载结果。失败后可以返回搭建，调整原有方案。
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.tensionspantv`
-- 源码版本：`0.2.0`（versionCode 2）
+- 版本：`0.2.0`（versionCode 2）
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-已发布的 0.1.0 资源：[下载安装包](tension-span-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)。这些历史资源保留原样，不作为 0.2.0 的画面或验证证据。
-
-![实际游戏画面](thumb.png)
+已发布的 0.1.0 资源：[下载安装包](tension-span-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification-0.1.0.json)。这些历史资源保留原样，不作为 0.2.0 的画面或验证证据。
 
 ## 操作
 
