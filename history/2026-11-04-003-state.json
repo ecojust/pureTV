@@ -1,5 +1,5 @@
 {
-  "status": "validated_awaiting_physics_master_sync",
+  "status": "completed",
   "task": "Eight selected games 0.2.0 visual and level expansion",
   "readmeCommit": "2b140c3c",
   "branch": "feat/featured-games-polish",
@@ -156,23 +156,26 @@
   },
   "finalIntegration": {
     "passed": true,
-    "checks": 10,
-    "report": "resource/game-kit/docs/featured-0.2.0/integration/final-integration-audit.json",
+    "physicsPatchAudit": "resource/game-kit/docs/physics-0.2.1/integration/final-audit.json",
+    "unchangedSixAndOriginals": "resource/game-kit/docs/physics-0.2.1/integration/batch-consistency.json",
     "signedCatalogResources": 125,
     "readmeIdempotent": true,
+    "totalFeaturedGames": 8,
     "totalLevels": 48,
-    "newLevels": 24,
+    "newLevelsInInitialUpgrade": 24,
+    "newLevelsInPhysicsPatch": 0,
     "physicalTvTested": false,
     "physicalPhoneTested": false
   },
   "delivery": {
     "masterSynchronized": true,
-    "masterDeliveryCommit": "0a26ac3d",
+    "masterDeliveryCommit": "3dcdd1c4",
     "featureBranch": "feat/featured-games-polish",
     "method": "fast-forward push without force",
-    "completedAtUtc": "2026-11-04T17:48:03.786165+00:00",
-    "verification": "resource/game-kit/docs/featured-0.2.0/README.md",
-    "pendingTaskItems": []
+    "completedAtUtc": "2026-11-04T18:28:49.663601+00:00",
+    "verification": "resource/game-kit/docs/physics-0.2.1/README.md",
+    "pendingTaskItems": [],
+    "previousMasterDeliveryCommit": "0a26ac3d"
   },
   "physicsFollowup": {
     "versions": {
@@ -188,7 +191,7 @@
     "reason": "Preserve inertial motion on bridge detachment; accurately represent RGB separation and steering hardware.",
     "sourceCommit": "71677da57aa00c3dbcb140a2812c0f801338365d",
     "scratchTemporary": "/workspace/scratch/physics-021",
-    "stage": "validated_awaiting_master_sync",
+    "stage": "completed",
     "oldEightGameReleasePreserved": true,
     "signedRuns": {
       "tension-span": 41883524097,
@@ -204,12 +207,27 @@
     "batchConsistencyPassed": true,
     "signedCatalogResources": 125,
     "indexIdempotent": true,
-    "integrationEvidence": "resource/game-kit/docs/physics-0.2.1/integration/release-summary.json"
+    "integrationEvidence": "resource/game-kit/docs/physics-0.2.1/integration/release-summary.json",
+    "masterSynchronized": true,
+    "masterDeliveryCommit": "3dcdd1c4",
+    "pendingTaskItems": []
   },
   "originalSourceCommit": "40a9c83627463151ef4685a5286e20e9fadd145d",
   "automaticGoalStop": {
     "toolAvailable": false,
     "status": "automatic-goal-stop-unavailable",
-    "scope": "Stopping control only; no outstanding implementation or verification task after master synchronization."
+    "scope": "Only automatic stopping control is unavailable. All repository implementation, validation, signing and master delivery are complete."
+  },
+  "goalObjectiveSatisfied": true,
+  "initialEightGameIntegration": {
+    "passed": true,
+    "checks": 10,
+    "report": "resource/game-kit/docs/featured-0.2.0/integration/final-integration-audit.json",
+    "signedCatalogResources": 125,
+    "readmeIdempotent": true,
+    "totalLevels": 48,
+    "newLevels": 24,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
   }
 }
