@@ -17,6 +17,8 @@ README 的启动器、影音应用和游戏各组按制作顺序倒序展示。`
 
 现有顺序依据首次新增资源的 Git 历史（目录搬迁前的条目继续追溯原路径），百款 Game Kit 游戏依据 `resource/game-kit/progress.json` 的 `number` 从 1 到 100 登记。旧游戏先于这百款游戏；影音从早到晚为 ShortVideo TV、WebTV、HIFINi TV、CCTV Live。同一提交批量新增、无法证明独立制作先后的条目按目录名固定登记，不把这些条目之间的位置视为精确的时间先后。新资源尚未提交时也须先登记，因此浅克隆或源码归档中重新生成索引会得到相同顺序。
 
+根目录中英文 README 对新增百款游戏暂时只展示 `tools/readme-featured-games.json` 中的精选项，原有游戏仍显示；`resource/README.md` 保持完整目录。分类标题统计当前显示数量，徽章统计整个资源目录。调整精选名单后运行同一索引生成器，无需删除游戏或修改百款完成记录。
+
 ## 更新 Android APK
 
 1. 提交源码后手动运行 Android build，设置 `stage_resources=true`。CI 构建、测试后把 APK、元数据和 TV 渲染图暂存到 `build-assets/resources-运行编号`。这不会创建 Release。
