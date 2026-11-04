@@ -499,6 +499,24 @@ for (let difficulty = 0; difficulty < 6; difficulty++) {
 }
 
 
+test('recording menu requests wait for observed acknowledgement across stale won snapshots', async () => {
+  const { keys } = await import(pathToFileURL(path.join(__dirname, 'automation.mjs')).href + '?stale-menu-regression');
+  // Synthetic observations isolate asynchronous menu acknowledgement; no gameplay win is claimed here.
+  const oldMenu = { phase: 'won', paused: false, level: 2, model: { level: 3 } };
+  const call = (snapshot, elapsed) => keys(snapshot, { elapsed, mode: 'record' });
+  assert.deepEqual(call(oldMenu, 0), []);
+  assert.deepEqual(call(oldMenu, 2.5), ['ArrowRight']);
+  for (const elapsed of [2.6, 2.7, 3, 3.5]) assert.deepEqual(call(oldMenu, elapsed), [], 'do not navigate twice before the first menu change is observed');
+  const nextMenu = { ...oldMenu, level: 3 };
+  assert.deepEqual(call(nextMenu, 3.6), ['Enter']);
+  for (const elapsed of [3.7, 3.8, 4, 4.5]) assert.deepEqual(call(nextMenu, elapsed), [], 'a late second Enter would become A in the new game');
+  const playing = { phase: 'playing', paused: false, level: 3, model: Model.create(1, 3) };
+  assert.deepEqual(call(playing, 4.6), ['ArrowLeft'], 'the acknowledged new game resumes ordinary planning');
+  const laterWon = { phase: 'won', paused: false, level: 3, model: { level: 4 } };
+  assert.deepEqual(call(laterWon, 40), []);
+  assert.deepEqual(call(laterWon, 42.5), ['ArrowRight'], 'a subsequent genuine playing phase rearms the next transition');
+});
+
 test('exported recording pilot starts from play and advances all six menus with ordinary keys', async t => {
   const { keys } = await import(pathToFileURL(path.join(__dirname, 'automation.mjs')).href);
   let state = Model.create(1, 0), menuLevel = 0, held = new Set();

@@ -74,15 +74,19 @@ export function createPilot(){
   expected=predictVisibleFold(m,target);if(!expected.valid)throw new Error('Public planner selected an invalid fold');before={signature:visibleGeometrySignature(m),foldsUsed:m.foldsUsed,undoCount:m.undoCount,selectedId:m.selectedId};actionAt=m.elapsed;stage='await-fold';releaseNext=true;return['Space'];
  },{diagnostics:()=>clone(diagnostics)});
 }
-const defaultPilot=createPilot();let recordWonAt=null,transitionRelease=false;
+const defaultPilot=createPilot();let recordWonAt=null,transitionRelease=false,pendingMenuLevel=null,recordStartPending=false;
 export const keys=(snapshot,options={})=>{
  if(options.mode==='record'&&snapshot?.phase==='won'&&snapshot.model.level<6){
   if(recordWonAt===null)recordWonAt=options.elapsed;
   if(transitionRelease){transitionRelease=false;return[];}
+  if(recordStartPending)return[];
+  if(pendingMenuLevel!==null){if(snapshot.level!==pendingMenuLevel)return[];pendingMenuLevel=null;}
   if(options.elapsed-recordWonAt<2.5)return[];
-  transitionRelease=true;return[snapshot.level===snapshot.model.level?'Enter':'ArrowRight'];
+  transitionRelease=true;
+  if(snapshot.level===snapshot.model.level){recordStartPending=true;return['Enter'];}
+  pendingMenuLevel=(snapshot.level+1)%6;return['ArrowRight'];
  }
- if(snapshot?.phase==='playing'){recordWonAt=null;transitionRelease=false;}
+ if(snapshot?.phase==='playing'){recordWonAt=null;transitionRelease=false;pendingMenuLevel=null;recordStartPending=false;}
  return defaultPilot(snapshot,options);
 };
 const samples=(before,after,trace)=>[before,...(trace||[]).map(x=>x.state||x.snapshot||x),after].filter(x=>x?.model);
