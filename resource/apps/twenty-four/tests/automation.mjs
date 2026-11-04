@@ -22,7 +22,7 @@ let pilot=createPilot(),mode=null,terminalAt=null,release=false;
 export function keys(snapshot,meta={}){
  if(mode!==meta.mode){pilot=createPilot({operationReviewSeconds:meta.mode==='record'?3:0});mode=meta.mode;terminalAt=null;release=false;}
  if(meta.mode==='record'&&snapshot.phase==='won'){
-  if(snapshot.model.level===5)return[];if(terminalAt===null)terminalAt=meta.elapsed;if(meta.elapsed-terminalAt<1.2)return[];
+  if(snapshot.model.level===5)return[];if(terminalAt===null)terminalAt=meta.elapsed;if(meta.elapsed-terminalAt<2.5)return[];
   if(release){release=false;return[];}release=true;return[snapshot.level===snapshot.model.level+1?'Enter':'ArrowRight'];
  }
  terminalAt=null;release=false;return pilot(snapshot);
