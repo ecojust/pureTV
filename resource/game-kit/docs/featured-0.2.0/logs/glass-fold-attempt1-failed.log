@@ -1,0 +1,28 @@
+export	Verify and create the isolated signed result branch	﻿2026-11-04T16:27:53.4603352Z ##[group]Run python3 exporter/resource/game-kit/export-signed.py \
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4603674Z [36;1mpython3 exporter/resource/game-kit/export-signed.py \[0m
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4603935Z [36;1m  --source "$GITHUB_WORKSPACE/source" --source-sha "$SOURCE_SHA" \[0m
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4604217Z [36;1m  --workflow-sha "$GITHUB_SHA" --slug "$GAME_SLUG" --run-id "$GITHUB_RUN_ID" \[0m
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4604460Z [36;1m  --artifact "$RUNNER_TEMP/signed-input" \[0m
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4604652Z [36;1m  --build-tools "$ANDROID_HOME/build-tools/34.0.0"[0m
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4623998Z shell: /usr/bin/bash -e {0}
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4624150Z env:
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4624317Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4624580Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.21-9/x64
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4624794Z   ANDROID_HOME: /usr/local/lib/android/sdk
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4624958Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4625162Z   SOURCE_SHA: 40a9c83627463151ef4685a5286e20e9fadd145d
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4625330Z   GAME_SLUG: glass-fold
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4626814Z   GH_TOKEN: ***
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:53.4626941Z ##[endgroup]
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7237317Z Traceback (most recent call last):
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7237874Z   File "/home/runner/work/pureTV/pureTV/exporter/resource/game-kit/export-signed.py", line 209, in <module>
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7238278Z     main()
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7238775Z   File "/home/runner/work/pureTV/pureTV/exporter/resource/game-kit/export-signed.py", line 204, in main
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7239179Z     result = create_export_branch(GitHubApi(os.environ.get('GH_TOKEN')), verified)
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7239455Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7239821Z   File "/home/runner/work/pureTV/pureTV/exporter/resource/game-kit/export-signed.py", line 167, in create_export_branch
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7240294Z     require(jobs.get('total_count', 0) <= 100 and any(job.get('name') == 'sign' and job.get('status') == 'completed'
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7240733Z   File "/home/runner/work/pureTV/pureTV/exporter/resource/game-kit/export-signed.py", line 27, in require
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7241016Z     raise ValueError(message)
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7241215Z ValueError: This run has no successful signing job
+export	Verify and create the isolated signed result branch	2026-11-04T16:27:55.7364137Z ##[error]Process completed with exit code 1.
