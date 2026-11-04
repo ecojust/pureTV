@@ -1,0 +1,542 @@
+{
+  "schema": 1,
+  "startedAt": "2026-11-04T17:58:31.228Z",
+  "source": {
+    "modelPath": "/workspace/pureTV/resource/apps/tension-span/src/main/assets/game-model.js",
+    "modelSha256": "5f10810a7c657ef65b480a3aff2a4240644dc07cbb7467fec6efaebe59fb7ef8",
+    "reviewPath": "/workspace/pureTV/resource/apps/tension-span/tests/independent-physics-review.mjs",
+    "reviewSha256": "66661cfa32b3d1158a28d6140cbdddf8c1bf1d06778dbf1f70d5d3a4d5dd0fe0"
+  },
+  "execution": {
+    "runtime": "v24.22.1",
+    "modelApi": [
+      "create",
+      "step"
+    ],
+    "sourceFilesModified": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "fixtureScope": "Isolated force, damping, failure and load boundary tests intentionally construct model states. They are not ordinary gameplay or capture evidence.",
+    "normalSequenceScope": "Separate sequences modify their live state only through create/step inputs; planning clones may explore selectable candidates. Model-time tests are not real-time video."
+  },
+  "assumptions": {
+    "pixelsPerMetre": 50,
+    "tickHz": 120,
+    "gravity": 9.81,
+    "model": "Vertical small-deflection deck; fixed x, fixed ground anchors/bank end reactions, prescribed supported vehicle speed and equal two-wheel static loads. Projected supported wheelbase; departure freezes actual axle length and inherits measured pose velocities. No one-wheel pivot/contact solver or full vehicle/structural FEM.",
+    "conservedQuantity": "Internal panel forces sum to zero. Fixed supports, anchors, gravity, vehicle drive and damping are external constraints/work, so total closed-system energy conservation is not claimed. Unsupported flight preserves horizontal velocity and angular velocity; vertical position follows constant gravity."
+  },
+  "checks": [
+    {
+      "name": "30000 independent randomized force/load/integration comparisons across all six layouts",
+      "passed": true,
+      "elapsedMs": 1944.0759910000002,
+      "cases": 30000,
+      "seed": 20261101,
+      "layouts": 6,
+      "forceError": 1.4097167877480388e-11,
+      "loadError": 0,
+      "velocityError": 2.3092638912203256e-14,
+      "positionError": 5.684341886080802e-14,
+      "tensionError": 2.1373125491663814e-11,
+      "slackCableObservations": 96730,
+      "tautCableObservations": 83270,
+      "missingSupports": 5092
+    },
+    {
+      "name": "No implicit support: disconnected unloaded free nodes accelerate at g; broken panels transfer no force",
+      "passed": true,
+      "elapsedMs": 0.3215749999999389,
+      "gravity": 9.81,
+      "freeNodeCount": 3,
+      "pixelsPerMetre": 50,
+      "internalPanelForceSum": 0
+    },
+    {
+      "name": "Wheel loads sum to actual mg; doubling vehicle mass doubles deck load and increases same-step deflection",
+      "passed": true,
+      "elapsedMs": 0.7053309999998874,
+      "lightN": 882.9000000000001,
+      "heavyN": 1765.8000000000002,
+      "lightLoads": [
+        0,
+        95.08153846153847,
+        692.7369230769232,
+        95.08153846153847,
+        0
+      ],
+      "heavyLoads": [
+        0,
+        190.16307692307694,
+        1385.4738461538464,
+        190.16307692307694,
+        0
+      ]
+    },
+    {
+      "name": "Departure after ordinary supported motion preserves momentum, axle length and analytic free-flight trajectory",
+      "passed": true,
+      "elapsedMs": 11.964813999999933,
+      "fixtureOnlyAtRupture": true,
+      "ordinarySupportedPrefix": true,
+      "flightSeconds": 0.1,
+      "departure": {
+        "vx": 0.39999999999997726,
+        "vy": 0.011218635783234275,
+        "angularVelocity": 0.005644095408286476,
+        "axleLength": 56.011358066711004
+      },
+      "analyticGravity": 9.81
+    },
+    {
+      "name": "Slack and contracting cables never push; overload breaks once and contributes zero after removal",
+      "passed": true,
+      "elapsedMs": 0.99670100000003,
+      "breakEvents": 1,
+      "brokenCount": 1,
+      "recordedBreakTime": 0.008333333333333333
+    },
+    {
+      "name": "Geometry-priced integer material ledger resists add/remove, overspend and held input",
+      "passed": true,
+      "elapsedMs": 481.84371599999986,
+      "levels": [
+        {
+          "level": 1,
+          "budget": 255,
+          "costs": [
+            47,
+            87,
+            65,
+            65,
+            87,
+            47
+          ],
+          "roundTrips": 120,
+          "elapsed": 10.983333333333333
+        },
+        {
+          "level": 2,
+          "budget": 285,
+          "costs": [
+            54,
+            98,
+            74,
+            74,
+            98,
+            54
+          ],
+          "roundTrips": 120,
+          "elapsed": 10.983333333333333
+        },
+        {
+          "level": 3,
+          "budget": 260,
+          "costs": [
+            51,
+            89,
+            70,
+            63,
+            94,
+            40
+          ],
+          "roundTrips": 120,
+          "elapsed": 8.8
+        },
+        {
+          "level": 4,
+          "budget": 220,
+          "costs": [
+            34,
+            84,
+            58,
+            58,
+            84,
+            34
+          ],
+          "roundTrips": 120,
+          "elapsed": 10.983333333333333
+        },
+        {
+          "level": 5,
+          "budget": 330,
+          "costs": [
+            56,
+            112,
+            81,
+            81,
+            112,
+            56
+          ],
+          "roundTrips": 120,
+          "elapsed": 10.95
+        },
+        {
+          "level": 6,
+          "budget": 270,
+          "costs": [
+            47,
+            81,
+            64,
+            52,
+            88,
+            27
+          ],
+          "roundTrips": 120,
+          "elapsed": 8.783333333333333
+        }
+      ],
+      "unit": "one budget unit = one purchased decimetre, each cable rounded up once"
+    },
+    {
+      "name": "Ordinary empty/weak bridges genuinely fall; B restores exact editable design without clock/material reset",
+      "passed": true,
+      "elapsedMs": 18.237274999999954,
+      "normalInputSequences": [
+        {
+          "level": 1,
+          "installed": [],
+          "editingSeconds": 0,
+          "elapsed": 7.7749999999999995,
+          "phase": "playing",
+          "mode": "test-failed",
+          "carX": 295.4999999999979,
+          "finishX": 820,
+          "fallen": true,
+          "brokenCount": 0,
+          "breakEvents": 0,
+          "spent": 0,
+          "budget": 255,
+          "stateWrites": false,
+          "afterBMode": "editing",
+          "elapsedAfterB": 7.791666666666667,
+          "spentAfterB": 0
+        },
+        {
+          "level": 1,
+          "installed": [
+            "cable-1-2"
+          ],
+          "editingSeconds": 0.06666666666666667,
+          "elapsed": 8.933333333333334,
+          "phase": "playing",
+          "mode": "test-failed",
+          "carX": 317.3333333333337,
+          "finishX": 820,
+          "fallen": true,
+          "brokenCount": 1,
+          "breakEvents": 1,
+          "spent": 87,
+          "budget": 255,
+          "stateWrites": false,
+          "afterBMode": "editing",
+          "elapsedAfterB": 8.95,
+          "spentAfterB": 87
+        }
+      ]
+    },
+    {
+      "name": "Repeated test/edit snapshots preserve installation and geometry; test A cannot modify design",
+      "passed": true,
+      "elapsedMs": 6.394730999999865,
+      "cycles": 30,
+      "spent": 224,
+      "elapsed": 4.15,
+      "attempts": 30
+    },
+    {
+      "name": "Twelve ordinary input designs cross: two distinct cable sets in each of the six layouts",
+      "passed": true,
+      "elapsedMs": 237.57513900000004,
+      "normalWins": 12,
+      "liveStateWrites": false,
+      "successIsNotSingleCombination": true
+    },
+    {
+      "name": "One ordinary session can fail, wait, restore, remove the wrong cable, rebuild and win",
+      "passed": true,
+      "elapsedMs": 17.979522999999972,
+      "firstFailureAt": 8.933333333333334,
+      "failureDisplayedModelSeconds": 2.6,
+      "wonAt": 45.775,
+      "attempts": 2,
+      "spent": 224,
+      "budget": 255,
+      "liveStateWrites": false
+    },
+    {
+      "name": "Constructed finish boundary rejects a broken rear panel even after all vehicle wheels reach the bank",
+      "passed": true,
+      "elapsedMs": 16.294256000000132,
+      "fixtureOnly": true,
+      "goodPhase": "won",
+      "badPhase": "playing",
+      "badMode": "test-failed",
+      "badReason": "bridge-collapse",
+      "rearWheelBeyondBank": true
+    },
+    {
+      "name": "Fixed integration agrees at 120/60/30Hz; invalid time cannot edit and timeout freezes",
+      "passed": true,
+      "elapsedMs": 40.57945900000004,
+      "frequencies": [
+        120,
+        60,
+        30
+      ],
+      "physicsSeconds": 16,
+      "globalTimeout": 90
+    }
+  ],
+  "normalSequences": [
+    {
+      "level": 1,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.13333333333333333,
+      "elapsed": 34.141666666666666,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 820.1666666666191,
+      "finishX": 820,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 159,
+      "budget": 255,
+      "stateWrites": false
+    },
+    {
+      "level": 1,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-2-2",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.15,
+      "elapsed": 34.15833333333333,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 820.1666666666191,
+      "finishX": 820,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 224,
+      "budget": 255,
+      "stateWrites": false
+    },
+    {
+      "level": 2,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.13333333333333333,
+      "elapsed": 36.141666666666666,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 840.1666666666141,
+      "finishX": 840,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 182,
+      "budget": 285,
+      "stateWrites": false
+    },
+    {
+      "level": 2,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-2-2",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.15,
+      "elapsed": 36.15833333333333,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 840.1666666666141,
+      "finishX": 840,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 256,
+      "budget": 285,
+      "stateWrites": false
+    },
+    {
+      "level": 3,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.11666666666666667,
+      "elapsed": 36.125,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 840.1666666666141,
+      "finishX": 840,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 161,
+      "budget": 260,
+      "stateWrites": false
+    },
+    {
+      "level": 3,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-2-2",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.13333333333333333,
+      "elapsed": 36.141666666666666,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 840.1666666666141,
+      "finishX": 840,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 224,
+      "budget": 260,
+      "stateWrites": false
+    },
+    {
+      "level": 4,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.13333333333333333,
+      "elapsed": 36.141666666666666,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 840.1666666666141,
+      "finishX": 840,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 126,
+      "budget": 220,
+      "stateWrites": false
+    },
+    {
+      "level": 4,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-2-2",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.15,
+      "elapsed": 36.15833333333333,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 840.1666666666141,
+      "finishX": 840,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 184,
+      "budget": 220,
+      "stateWrites": false
+    },
+    {
+      "level": 5,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.13333333333333333,
+      "elapsed": 32.44166666666666,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 900.0166666666913,
+      "finishX": 900,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 193,
+      "budget": 330,
+      "stateWrites": false
+    },
+    {
+      "level": 5,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-2-2",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.15,
+      "elapsed": 32.458333333333336,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 900.0166666666913,
+      "finishX": 900,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 274,
+      "budget": 330,
+      "stateWrites": false
+    },
+    {
+      "level": 6,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.11666666666666667,
+      "elapsed": 38.125,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 860.1666666666101,
+      "finishX": 860,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 138,
+      "budget": 270,
+      "stateWrites": false
+    },
+    {
+      "level": 6,
+      "installed": [
+        "cable-1-1",
+        "cable-2-1",
+        "cable-2-2",
+        "cable-3-2"
+      ],
+      "editingSeconds": 0.13333333333333333,
+      "elapsed": 38.141666666666666,
+      "phase": "won",
+      "mode": "testing",
+      "carX": 860.1666666666101,
+      "finishX": 860,
+      "fallen": false,
+      "brokenCount": 0,
+      "breakEvents": 0,
+      "spent": 190,
+      "budget": 270,
+      "stateWrites": false
+    }
+  ],
+  "failures": [],
+  "passed": true,
+  "finishedAt": "2026-11-04T17:58:34.013Z"
+}
