@@ -1,71 +1,195 @@
 {
-  "schema": 1,
-  "game": "torch-bridge",
-  "version": "0.1.0",
-  "sourceCommit": "152e340195f902d887b97218827aeb190fc88598",
-  "signingRun": 41662010037,
+  "version": "0.2.0",
+  "sourceCommit": "40a9c83627463151ef4685a5286e20e9fadd145d",
+  "levelCount": 6,
+  "newLevels": 3,
   "passed": true,
-  "modelAndIndependentRules": "See model tests and independent review records in this directory.",
-  "browser": {
-    "sharedChecksPassed": 10,
-    "gameSpecificChecksPassed": 7,
-    "sharedReport": "browser-qa-report.json",
-    "gameSpecificReport": "browser-report.json",
-    "uniqueRulesVerified": true
+  "evidence": {
+    "browser": {
+      "file": "docs/releases/0.2.0/final-qa/browser-01/report.json",
+      "sha256": "b8c73b416d0c60337db7bfaedc21483c6f6f337fbdb875e4663a4d2b735c2075"
+    },
+    "shared": {
+      "file": "docs/releases/0.2.0/final-qa/shared-01/report.json",
+      "sha256": "ced7ac844b0f19c418fbcb266cb9a880503e5eb5a111d844213500eef2be82d1"
+    },
+    "recording": {
+      "file": "docs/releases/0.2.0/final-qa/recording-01/recording.json",
+      "sha256": "060f7f54a65570236f1c14454e9be78983c0ee0111d82aa8cf1e5051bb7897a1"
+    },
+    "visual": {
+      "file": "docs/releases/0.2.0/final-qa/root-visual-review.json",
+      "sha256": "874dba92960a408e12464ab90d15b7eca6a4ac1465a003c19c09e14d490f3b3f"
+    },
+    "publicationAudit": {
+      "file": "docs/releases/0.2.0/final-qa/publication-audit.json",
+      "sha256": "2f65e88489e25c3c60977f5ff58eb9165a685931b01325e36d8c7f4693cf66ff"
+    },
+    "build": {
+      "file": "docs/releases/0.2.0/build-receipt.json",
+      "sha256": "bf9e5c68511dc6e58803ad72e0c09a490648e0e4c6901f780fcc8e96c2197f58"
+    },
+    "signing": {
+      "file": "docs/releases/0.2.0/signing-receipt.json",
+      "sha256": "f3990269ec06210e4e7b5504a85b0922d7731a718f74dfb4b2718d4eabb356f2"
+    },
+    "fetch": {
+      "file": "docs/releases/0.2.0/fetch-verification.json",
+      "sha256": "e65a6680acf76ac185003202c0297fa9527c7cbd36e8d365ea948020074d5156"
+    },
+    "artifacts": {
+      "file": "docs/releases/0.2.0/artifacts.json",
+      "sha256": "fe0a4756c91bfc779b4c4aebb6df7a28eef7467552e0f282f7fc4ccdb4c4f65c"
+    }
   },
   "sourceAssetHashes": {
-    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
     "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
     "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
     "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
-    "game-config.json": "fc3624e2109a1f77210410854539e40502f2325f43f300d932baa59004f12ea5",
-    "game-model.js": "b546144f6612c03de9f89643e934edca2c89ce23f4df89089b4e134b5952d333",
-    "game.js": "3c0a8c9ec0d74fce10c513288e66e194a9b04effe6a66f2fb33c7a1aa3afc8ad",
     "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
-    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
-    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
-    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+    "runtime.js": "17bd5ba5c9cd22ee236dbc4c8e78e25e8133a2052d85d8a5cf23fa72eb563391",
+    "tv.css": "2572030056a405079866f27211f425c858c8c853cac2e699c58b85af69e03a6b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "fb5f96e60330e5561bf011e68787538fd919726588317ee7278b796c61001a22",
+    "game-theme.css": "1fc66ce5c6781a2532ba793f5e3b807932389b1faa63990acd20d0437ba08dc9",
+    "game.js": "cd95f34f8b6c87fdc16773f37e9fb5ac96b19ade1e84c0895f1dcbbdaf2a8409",
+    "game-config.json": "8c3e3ed5872dfda12e3002254f85bc52c7787d677de33e1266e5897f6f3f63cb",
+    "assets-index.json": "38b84d5905bfb5976f1373cfe8e02add5ff750ee1b955fe0cdf61ad1cc84322a"
   },
-  "performance": {
-    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
-    "instrumentationOverheadIncluded": true,
-    "samples": 85,
-    "rafIntervalMs": {
-      "count": 85,
-      "min": 16.599999999998545,
-      "median": 66.70000000000073,
-      "p95": 100.10000000000036,
-      "max": 183.3000000000011,
-      "mean": 71.56705882352941
+  "modelEvidence": [
+    {
+      "file": "docs/releases/0.2.0/model/1-torch-model.json",
+      "sha256": "84a725eadb1a13fe6b4b2edbc03c5fdacc61659be3eab8957a5541c5fb8ab11e"
     },
-    "webglDrawCalls": {
-      "count": 85,
-      "min": 1,
-      "median": 1,
-      "p95": 1,
-      "max": 1,
-      "mean": 1
-    },
-    "canvasPaintCommands": {
-      "count": 85,
-      "min": 0,
-      "median": 0,
-      "p95": 0,
-      "max": 0,
-      "mean": 0
-    },
-    "budgets": {
-      "maxWebGLDrawCalls": 1,
-      "maxCanvasPaintCommands": 0
+    {
+      "file": "docs/releases/0.2.0/model/2-torch-independent.stdout",
+      "sha256": "13c3315d13f279f0f1890ca56366cc5e59e018daca074a9f25a4745e11a356d4"
     }
+  ],
+  "sharedBrowserChecksPassed": 10,
+  "supplementaryBrowserChecksPassed": 11,
+  "actualGameplay": {
+    "passed": true,
+    "slug": "torch-bridge",
+    "sourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+    "apkSha256": "9f709173dfc88da30fe64b9dc16b5c0b9be004440a7295c0fef2c1207ef1bd26",
+    "videoSha256": "2c441cdd9c6b6b22d1ff5a529d7bdff790f4d6a4dc5939fe048ae4288ba17513",
+    "recordedWonLevelsZeroBased": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "recordedGoalAudit": {
+      "passed": true,
+      "game": "torch-bridge",
+      "levelIdentity": "model.level (zero-based)",
+      "recordedWonLevelsZeroBased": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "wins": {
+        "0": {
+          "seconds": 8.017680288,
+          "modelLevelZeroBased": 0,
+          "selectedMenuLevel": 0,
+          "modelPhase": "won",
+          "goal": {
+            "peopleAcross": 4,
+            "spent": 17,
+            "deadline": 19
+          }
+        },
+        "1": {
+          "seconds": 20.019945622999998,
+          "modelLevelZeroBased": 1,
+          "selectedMenuLevel": 1,
+          "modelPhase": "won",
+          "goal": {
+            "peopleAcross": 5,
+            "spent": 29,
+            "deadline": 31
+          }
+        },
+        "2": {
+          "seconds": 34.010311007999995,
+          "modelLevelZeroBased": 2,
+          "selectedMenuLevel": 2,
+          "modelPhase": "won",
+          "goal": {
+            "peopleAcross": 6,
+            "spent": 35,
+            "deadline": 37
+          }
+        },
+        "3": {
+          "seconds": 44.015951417,
+          "modelLevelZeroBased": 3,
+          "selectedMenuLevel": 3,
+          "modelPhase": "won",
+          "goal": {
+            "peopleAcross": 4,
+            "spent": 27,
+            "deadline": 27
+          }
+        },
+        "4": {
+          "seconds": 56.007289598999996,
+          "modelLevelZeroBased": 4,
+          "selectedMenuLevel": 4,
+          "modelPhase": "won",
+          "goal": {
+            "peopleAcross": 5,
+            "spent": 33,
+            "deadline": 33
+          }
+        },
+        "5": {
+          "seconds": 70.026698927,
+          "modelLevelZeroBased": 5,
+          "selectedMenuLevel": 5,
+          "modelPhase": "won",
+          "goal": {
+            "peopleAcross": 6,
+            "spent": 57,
+            "deadline": 57
+          }
+        }
+      },
+      "menuSelectionMismatches": [],
+      "note": "Selection changes on a won menu do not change the model that actually completed the goal."
+    },
+    "assetsChecked": 12,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Read-only consistency audit; preserves raw QA report flags and does not replace model, game-specific or encoded-frame visual review."
   },
-  "visualReview": {
-    "report": "art-review.json",
-    "visualReviewCompleted": true
+  "visualReviewCompleted": true,
+  "recordingStorage": {
+    "video": "docs/gameplay-0.2.0.mp4",
+    "metadata": "docs/gameplay-0.2.0.json",
+    "note": "Raw recording manifest retained unchanged. Full transient JPEG frame sequence is not copied; reviewed decoded frames and complete H.264 video are retained."
   },
-  "artifacts": {
-    "limitBytes": 10000000,
-    "checks": {
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Ordinary keyboard input in Chromium with software rendering; not physical Android/TV/phone execution or device FPS."
+  },
+  "release": {
+    "sourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+    "signerCommit": "2b140c3c9a08c542c086fb77fdf808eef3c1bb44",
+    "signingRun": 41867416681,
+    "bytes": 292198,
+    "sha256": "9f709173dfc88da30fe64b9dc16b5c0b9be004440a7295c0fef2c1207ef1bd26",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
       "apkSize": true,
       "apkManifest": true,
       "apkSignature": true,
@@ -73,62 +197,46 @@
       "apkAssetsMatch": true,
       "videoSize": true,
       "videoFormat": true,
-      "videoFullDecode": true,
-      "recordingAssetsMatchApkTestedAssets": true
-    },
-    "apk": {
-      "file": "/workspace/scratch/torch-bridge/signed/torch-bridge-0.1.0.apk",
-      "bytes": 292131,
-      "sha256": "13ed2881984eef72d3563256c5a4edc4bebbabd5b077f4950d4c6b1f81ac5884",
-      "package": "com.ecojust.torchbridgetv",
-      "versionCode": "1",
-      "versionName": "0.1.0",
-      "signerSha256": [
-        "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23"
-      ],
-      "matchedAssetCount": 11
-    },
-    "limitations": [
-      "No physical Android installation or TV/phone execution is certified by this artifact check.",
-      "Visual review and unique gameplay assertions are separate required checks."
-    ],
-    "video": {
-      "file": "/workspace/scratch/torch-bridge/qa-final/recording/gameplay.mp4",
-      "bytes": 3425461,
-      "sha256": "c377c4fe452984b186865a63021dd49432e59b145b8fafeb99345ee053a650bf",
-      "programs": [],
-      "stream_groups": [],
-      "streams": [
-        {
-          "codec_name": "h264",
-          "codec_type": "video",
-          "width": 1280,
-          "height": 720,
-          "pix_fmt": "yuv420p",
-          "avg_frame_rate": "30/1"
-        }
-      ],
-      "format": {
-        "duration": "80.533333",
-        "size": "3425461"
-      }
+      "videoFullDecode": true
     }
   },
-  "catalog": {
-    "report": "catalog-verification.json",
-    "signedEntriesVerified": 99
-  },
-  "gameplay": {
-    "metadata": "gameplay-0.1.0.json",
-    "video": "gameplay-0.1.0.mp4",
-    "capturedSeconds": 80.45781302452087,
-    "allThreeLevelsWon": true,
-    "input": "Automatically operated ordinary browser keyboard events; no state writes or clock overrides."
-  },
-  "physicalTvTested": false,
-  "physicalPhoneTested": false,
-  "limitations": [
-    "No physical TV/phone validation. Software-browser frame times are not TV FPS.",
-    "Silent video export FPS is not a device performance measurement."
-  ]
+  "testExecution": {
+    "frozenProductionCommit": "40a9c83627463151ef4685a5286e20e9fadd145d",
+    "revisions": [
+      {
+        "file": "docs/releases/0.2.0/final-qa/test-source-revision-01/revision.json",
+        "sha256": "95c9374d911dc8aa87fef154bfa3341e2af3fab4bdc01f1c31e4e06d5c7919a0",
+        "details": {
+          "createdAt": "2026-11-04T16:40:30.188485+00:00",
+          "frozenProductionCommit": "40a9c83627463151ef4685a5286e20e9fadd145d",
+          "reason": "Record CLI samples state every two seconds; hold real won UI for 2.5 seconds so each actual completed model.level is sampled. Normal keyboard and wall clock only.",
+          "productionAssetsChanged": false,
+          "change": {
+            "file": "resource/apps/torch-bridge/tests/automation.mjs",
+            "oldWonHoldSeconds": 1.1,
+            "newWonHoldSeconds": 2.5
+          },
+          "archivedFileHashes": {
+            "automation.mjs": "9448ebda74d8d56fbc9f8bd02e894f345b1b7b7717031a6b0b1f871c0920739d",
+            "recipe.json": "3d130c9b7468a02ca8a20b5ddd7b41fb475aa9e0f769ae4dc755d44cb0ca17f6",
+            "reference.mjs": "39d69dc82b7d81b34640a22c63984b44d5f43c4abf092fb3a334bc37b7e9fcc3"
+          },
+          "earlierRunsWithOriginalAutomation": [
+            "browser-01",
+            "shared-01"
+          ],
+          "plannedRunsWithRevisedAutomation": [
+            "recording-01"
+          ],
+          "testSourceCommit": "457b2069172f8b0cda3fa428ce008e61b8fcdb5f",
+          "actualRunTestSourceCommits": {
+            "browser-01": "40a9c83627463151ef4685a5286e20e9fadd145d",
+            "shared-01": "40a9c83627463151ef4685a5286e20e9fadd145d",
+            "recording-01": "457b2069172f8b0cda3fa428ce008e61b8fcdb5f"
+          }
+        }
+      }
+    ],
+    "note": "Raw execution provenance is retained under final-qa; a test-only revision does not change the packaged production assets."
+  }
 }
