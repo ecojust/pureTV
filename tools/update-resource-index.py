@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render three-column README galleries from resource metadata and English data."""
+"""Render four-column README galleries from resource metadata and English data."""
 import json,re
 from html import escape
 from pathlib import Path
@@ -44,10 +44,10 @@ def tables(prefix,locale='zh'):
             size=(root/'resource'/key/info['apk']).stat().st_size
             assert size==info['apkBytes']
             link=escape(directory,quote=True)
-            cells.append(f'    <td align="center" valign="top" width="33%"><a href="{link}">{image}<br>{escape(name)}</a></td>')
-        for start in range(0,len(cells),3):
-            row=cells[start:start+3]
-            row+=['    <td width="33%"></td>']*(3-len(row))
+            cells.append(f'    <td align="center" valign="top" width="25%"><a href="{link}">{image}<br>{escape(name)}</a></td>')
+        for start in range(0,len(cells),4):
+            row=cells[start:start+4]
+            row+=['    <td width="25%"></td>']*(4-len(row))
             output+=['  <tr>',*row,'  </tr>']
         output+=['</table>','']
     return '\n'.join(output).rstrip()
