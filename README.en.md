@@ -50,209 +50,209 @@ Launcher layout customization uses this manager's **layout.json version 5 users/
 
 <!-- resource-index:start -->
 
-### Launchers
+### Launchers (10)
 
 <table>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/launcher/aster/"><img src="docs/previews/en/launcher-aster.png" width="180" alt="Aster TV preview"><br>Aster TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/launcher/circuit/"><img src="docs/previews/en/launcher-circuit.png" width="180" alt="Circuit TV preview"><br>Circuit TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/launcher/drift/"><img src="docs/previews/en/launcher-drift.png" width="180" alt="Drift TV preview"><br>Drift TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/launcher/forma/"><img src="docs/previews/en/launcher-forma.png" width="180" alt="Forma TV preview"><br>Forma TV</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/launcher/mono/"><img src="docs/previews/en/launcher-mono.png" width="180" alt="Mono TV preview"><br>Mono TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/launcher/moss/"><img src="docs/previews/en/launcher-moss.png" width="180" alt="Moss TV preview"><br>Moss TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/launcher/nova/"><img src="docs/previews/en/launcher-nova.png" width="180" alt="Nova TV preview"><br>Nova TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/launcher/pixel/"><img src="docs/previews/en/launcher-pixel.png" width="180" alt="Pixel TV preview"><br>Pixel TV</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/launcher/puretv/"><img src="docs/previews/en/launcher-puretv.png" width="180" alt="pureTV Launcher preview"><br>pureTV Launcher</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/launcher/sol/"><img src="docs/previews/en/launcher-sol.png" width="180" alt="Sol TV preview"><br>Sol TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/launcher/pixel/"><img src="docs/previews/en/launcher-pixel.png" width="180" alt="Pixel TV preview"><br>Pixel TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/launcher/moss/"><img src="docs/previews/en/launcher-moss.png" width="180" alt="Moss TV preview"><br>Moss TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/launcher/mono/"><img src="docs/previews/en/launcher-mono.png" width="180" alt="Mono TV preview"><br>Mono TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/launcher/forma/"><img src="docs/previews/en/launcher-forma.png" width="180" alt="Forma TV preview"><br>Forma TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/launcher/drift/"><img src="docs/previews/en/launcher-drift.png" width="180" alt="Drift TV preview"><br>Drift TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/launcher/circuit/"><img src="docs/previews/en/launcher-circuit.png" width="180" alt="Circuit TV preview"><br>Circuit TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/launcher/aster/"><img src="docs/previews/en/launcher-aster.png" width="180" alt="Aster TV preview"><br>Aster TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/launcher/nova/"><img src="docs/previews/en/launcher-nova.png" width="180" alt="Nova TV preview"><br>Nova TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/launcher/puretv/"><img src="docs/previews/en/launcher-puretv.png" width="180" alt="pureTV Launcher preview"><br>pureTV Launcher</a></td>
     <td width="25%"></td>
     <td width="25%"></td>
   </tr>
 </table>
 
-### Apps - Media
+### Apps - Media (4)
 
 <table>
   <tr>
     <td align="center" valign="top" width="25%"><a href="resource/apps/cctv/"><img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"><br>CCTV Live</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/hifini/"><img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"><br>HIFINi TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/shortvideo/"><img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"><br>ShortVideo TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/webtv/"><img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"><br>WebTV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/shortvideo/"><img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"><br>ShortVideo TV</a></td>
   </tr>
 </table>
 
-### Apps - Games
+### Apps - Games (111)
 
 <table>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/adjacency-forge/"><img src="docs/previews/en/app-adjacency-forge.png" width="180" alt="Adjacency Forge (Chinese UI) preview"><br>Adjacency Forge (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/adventure-island/"><img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"><br>Adventure Island TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/airlock-budget/"><img src="docs/previews/en/app-airlock-budget.png" width="180" alt="Airlock Budget (Chinese UI) preview"><br>Airlock Budget (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/alien-shooter/"><img src="docs/previews/en/app-alien-shooter.png" width="180" alt="Alien Shooter TV preview"><br>Alien Shooter TV</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/arrow-harvest/"><img src="docs/previews/en/app-arrow-harvest.png" width="180" alt="Arrow Harvest (Chinese UI) preview"><br>Arrow Harvest (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/assembly-kitchen/"><img src="docs/previews/en/app-assembly-kitchen.png" width="180" alt="Assembly Kitchen (Chinese UI) preview"><br>Assembly Kitchen (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/battery-exchange/"><img src="docs/previews/en/app-battery-exchange.png" width="180" alt="Battery Exchange (Chinese UI) preview"><br>Battery Exchange (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/beat-braid/"><img src="docs/previews/en/app-beat-braid.png" width="180" alt="Beat Braid preview"><br>Beat Braid</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/binary-weave/"><img src="docs/previews/en/app-binary-weave.png" width="180" alt="Binary Weave preview"><br>Binary Weave</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/bomb-jack/"><img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"><br>Mighty Bomb Jack TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/brick-paddle/"><img src="docs/previews/en/app-brick-paddle.png" width="180" alt="Brick Paddle preview"><br>Brick Paddle</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/cable-unweaver/"><img src="docs/previews/en/app-cable-unweaver.png" width="180" alt="Cable Unweaver preview"><br>Cable Unweaver</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/clockwork-align/"><img src="docs/previews/en/app-clockwork-align.png" width="180" alt="Clockwork Alignment (Chinese UI) preview"><br>Clockwork Alignment (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"><br>Coast Kart TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/codebreaker/"><img src="docs/previews/en/app-codebreaker.png" width="180" alt="Codebreaker preview"><br>Codebreaker</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/color-frontier/"><img src="docs/previews/en/app-color-frontier.png" width="180" alt="Color Frontier preview"><br>Color Frontier</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/color-paths/"><img src="docs/previews/en/app-color-paths.png" width="180" alt="Color Paths preview"><br>Color Paths</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/conveyor-window/"><img src="docs/previews/en/app-conveyor-window.png" width="180" alt="Conveyor Window (Chinese UI) preview"><br>Conveyor Window (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/cozy-island/"><img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"><br>Cozy Island TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/domino-chain/"><img src="docs/previews/en/app-domino-chain.png" width="180" alt="Domino Chain preview"><br>Domino Chain</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/dots-boxes/"><img src="docs/previews/en/app-dots-boxes.png" width="180" alt="Dots and Boxes preview"><br>Dots and Boxes</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/draughts-trail/"><img src="docs/previews/en/app-draughts-trail.png" width="180" alt="Draughts Trail preview"><br>Draughts Trail</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/echo-cartographer/"><img src="docs/previews/en/app-echo-cartographer.png" width="180" alt="Echo Cartographer (Chinese UI) preview"><br>Echo Cartographer (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/firebreak-planner/"><img src="docs/previews/en/app-firebreak-planner.png" width="180" alt="Firebreak Planner (Chinese UI) preview"><br>Firebreak Planner (Chinese UI)</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/fleet-ledger/"><img src="docs/previews/en/app-fleet-ledger.png" width="180" alt="Fleet Ledger preview"><br>Fleet Ledger</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/four-in-row/"><img src="docs/previews/en/app-four-in-row.png" width="180" alt="Four in Row preview"><br>Four in Row</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/frost-brake/"><img src="docs/previews/en/app-frost-brake.png" width="180" alt="Frost Brake preview"><br>Frost Brake</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/glass-fold/"><img src="docs/previews/en/app-glass-fold.png" width="180" alt="Glass Fold (Chinese UI) preview"><br>Glass Fold (Chinese UI)</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/gravity-courier/"><img src="docs/previews/en/app-gravity-courier.png" width="180" alt="Gravity Courier (Chinese UI) preview"><br>Gravity Courier (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/greenhouse-dials/"><img src="docs/previews/en/app-greenhouse-dials.png" width="180" alt="Greenhouse Dials (Chinese UI) preview"><br>Greenhouse Dials (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/harbor-counterweight/"><img src="docs/previews/en/app-harbor-counterweight.png" width="180" alt="Harbor Counterweight (Chinese UI) preview"><br>Harbor Counterweight (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/hex-connection/"><img src="docs/previews/en/app-hex-connection.png" width="180" alt="Hex Connection preview"><br>Hex Connection</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/hidden-corridors/"><img src="docs/previews/en/app-hidden-corridors.png" width="180" alt="Hidden Corridors (Chinese UI) preview"><br>Hidden Corridors (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/island-dominoes/"><img src="docs/previews/en/app-island-dominoes.png" width="180" alt="Island Dominoes (Chinese UI) preview"><br>Island Dominoes (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/island-ink/"><img src="docs/previews/en/app-island-ink.png" width="180" alt="Island Ink preview"><br>Island Ink</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/jackal/"><img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"><br>Jackal TV</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/jewel/"><img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"><br>Magic Jewelry TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/kaleido-keys/"><img src="docs/previews/en/app-kaleido-keys.png" width="180" alt="Kaleido Keys preview"><br>Kaleido Keys</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/knight-circuit/"><img src="docs/previews/en/app-knight-circuit.png" width="180" alt="Knight Circuit preview"><br>Knight Circuit</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/lane-bowling/"><img src="docs/previews/en/app-lane-bowling.png" width="180" alt="Lane Bowling preview"><br>Lane Bowling</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/lantern-rhythm/"><img src="docs/previews/en/app-lantern-rhythm.png" width="180" alt="Lantern Rhythm (Chinese UI) preview"><br>Lantern Rhythm (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/lens-distance/"><img src="docs/previews/en/app-lens-distance.png" width="180" alt="Lens Distance preview"><br>Lens Distance</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/liberty-stones/"><img src="docs/previews/en/app-liberty-stones.png" width="180" alt="Liberty Stones preview"><br>Liberty Stones</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/light-chambers/"><img src="docs/previews/en/app-light-chambers.png" width="180" alt="Light Chambers preview"><br>Light Chambers</a></td>
-  </tr>
-  <tr>
     <td align="center" valign="top" width="25%"><a href="resource/apps/logic-workbench/"><img src="docs/previews/en/app-logic-workbench.png" width="180" alt="Logic Workbench preview"><br>Logic Workbench</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/loop-orchard/"><img src="docs/previews/en/app-loop-orchard.png" width="180" alt="Loop Orchard (Chinese UI) preview"><br>Loop Orchard (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/magnetic-warehouse/"><img src="docs/previews/en/app-magnetic-warehouse.png" width="180" alt="Magnetic Warehouse (Chinese UI) preview"><br>Magnetic Warehouse (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/measure-pour/"><img src="docs/previews/en/app-measure-pour.png" width="180" alt="Measure Pour preview"><br>Measure Pour</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/memory-gallery/"><img src="docs/previews/en/app-memory-gallery.png" width="180" alt="Memory Gallery preview"><br>Memory Gallery</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/merge-tiles/"><img src="docs/previews/en/app-merge-tiles.png" width="180" alt="Merge Tiles preview"><br>Merge Tiles</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/metronome-gates/"><img src="docs/previews/en/app-metronome-gates.png" width="180" alt="Metronome Gates preview"><br>Metronome Gates</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/mine-survey/"><img src="docs/previews/en/app-mine-survey.png" width="180" alt="Mine Survey preview"><br>Mine Survey</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/moire-atelier/"><img src="docs/previews/en/app-moire-atelier.png" width="180" alt="Moiré Atelier preview"><br>Moiré Atelier</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/nim-orbit/"><img src="docs/previews/en/app-nim-orbit.png" width="180" alt="Nim Orbit preview"><br>Nim Orbit</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/number-dunes/"><img src="docs/previews/en/app-number-dunes.png" width="180" alt="Number Dunes (Chinese UI) preview"><br>Number Dunes (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/orbit-turret/"><img src="docs/previews/en/app-orbit-turret.png" width="180" alt="Orbit Turret preview"><br>Orbit Turret</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/orchard-snake/"><img src="docs/previews/en/app-orchard-snake.png" width="180" alt="Orchard Snake preview"><br>Orchard Snake</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="docs/previews/en/app-packing-sculptor.png" width="180" alt="Packing Sculptor preview"><br>Packing Sculptor</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/parallax-skyline/"><img src="docs/previews/en/app-parallax-skyline.png" width="180" alt="Parallax Skyline preview"><br>Parallax Skyline</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/parity-garden/"><img src="docs/previews/en/app-parity-garden.png" width="180" alt="Parity Garden (Chinese UI) preview"><br>Parity Garden (Chinese UI)</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/path-glyphs/"><img src="docs/previews/en/app-path-glyphs.png" width="180" alt="Path Glyphs (Chinese UI) preview"><br>Path Glyphs (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/pixel-clues/"><img src="docs/previews/en/app-pixel-clues.png" width="180" alt="Pixel Clues preview"><br>Pixel Clues</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/pocket-golf/"><img src="docs/previews/en/app-pocket-golf.png" width="180" alt="Pocket Golf preview"><br>Pocket Golf</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/pocket-solitaire/"><img src="docs/previews/en/app-pocket-solitaire.png" width="180" alt="Pocket Solitaire preview"><br>Pocket Solitaire</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/pollinator-contract/"><img src="docs/previews/en/app-pollinator-contract.png" width="180" alt="Pollinator Contract (Chinese UI) preview"><br>Pollinator Contract (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/pressure-seal/"><img src="docs/previews/en/app-pressure-seal.png" width="180" alt="Pressure Seal preview"><br>Pressure Seal</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="docs/previews/en/app-prism-relay.png" width="180" alt="Prism Relay (Chinese UI) preview"><br>Prism Relay (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/pulse-vault/"><img src="docs/previews/en/app-pulse-vault.png" width="180" alt="Pulse Vault (Chinese UI) preview"><br>Pulse Vault (Chinese UI)</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/quadrant-five/"><img src="docs/previews/en/app-quadrant-five.png" width="180" alt="Quadrant Five preview"><br>Quadrant Five</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/queen-constellation/"><img src="docs/previews/en/app-queen-constellation.png" width="180" alt="Queen Constellation preview"><br>Queen Constellation</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/rectangle-atlas/"><img src="docs/previews/en/app-rectangle-atlas.png" width="180" alt="Rectangle Atlas preview"><br>Rectangle Atlas</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/reservoir-seasons/"><img src="docs/previews/en/app-reservoir-seasons.png" width="180" alt="Reservoir Seasons (Chinese UI) preview"><br>Reservoir Seasons (Chinese UI)</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/resonance-bridge/"><img src="docs/previews/en/app-resonance-bridge.png" width="180" alt="Resonance Bridge (Chinese UI) preview"><br>Resonance Bridge (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/reversi-relay/"><img src="docs/previews/en/app-reversi-relay.png" width="180" alt="Reversi Relay preview"><br>Reversi Relay</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/ring-towers/"><img src="docs/previews/en/app-ring-towers.png" width="180" alt="Ring Towers preview"><br>Ring Towers</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/river-guard/"><img src="docs/previews/en/app-river-guard.png" width="180" alt="River Guard preview"><br>River Guard</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/twenty-four/"><img src="docs/previews/en/app-twenty-four.png" width="180" alt="Twenty Four preview"><br>Twenty Four</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/word-ladder/"><img src="docs/previews/en/app-word-ladder.png" width="180" alt="Word Ladder preview"><br>Word Ladder</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/rooftop-runner/"><img src="docs/previews/en/app-rooftop-runner.png" width="180" alt="Rooftop Runner preview"><br>Rooftop Runner</a></td>
   </tr>
   <tr>
     <td align="center" valign="top" width="25%"><a href="resource/apps/river-hopper/"><img src="docs/previews/en/app-river-hopper.png" width="180" alt="River Hopper preview"><br>River Hopper</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/rooftop-runner/"><img src="docs/previews/en/app-rooftop-runner.png" width="180" alt="Rooftop Runner preview"><br>Rooftop Runner</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/rook-rescue/"><img src="docs/previews/en/app-rook-rescue.png" width="180" alt="Rook Rescue preview"><br>Rook Rescue</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/rotor-locksmith/"><img src="docs/previews/en/app-rotor-locksmith.png" width="180" alt="Rotor Locksmith preview"><br>Rotor Locksmith</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/sandglass-split/"><img src="docs/previews/en/app-sandglass-split.png" width="180" alt="Sandglass Split (Chinese UI) preview"><br>Sandglass Split (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/seed-mancala/"><img src="docs/previews/en/app-seed-mancala.png" width="180" alt="Seed Mancala preview"><br>Seed Mancala</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/shade-duplicates/"><img src="docs/previews/en/app-shade-duplicates.png" width="180" alt="Shade Duplicates preview"><br>Shade Duplicates</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/shadow-foundry/"><img src="docs/previews/en/app-shadow-foundry.png" width="180" alt="Shadow Foundry preview"><br>Shadow Foundry</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/shadow-shutter/"><img src="docs/previews/en/app-shadow-shutter.png" width="180" alt="Shadow Shutter (Chinese UI) preview"><br>Shadow Shutter (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/skyline-numbers/"><img src="docs/previews/en/app-skyline-numbers.png" width="180" alt="Skyline Numbers preview"><br>Skyline Numbers</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/sliding-order/"><img src="docs/previews/en/app-sliding-order.png" width="180" alt="Sliding Order preview"><br>Sliding Order</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/solar-shift/"><img src="docs/previews/en/app-solar-shift.png" width="180" alt="Solar Shift (Chinese UI) preview"><br>Solar Shift (Chinese UI)</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/sorting-wires/"><img src="docs/previews/en/app-sorting-wires.png" width="180" alt="Sorting Wires preview"><br>Sorting Wires</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/stack-dispatch/"><img src="docs/previews/en/app-stack-dispatch.png" width="180" alt="Stack Dispatch preview"><br>Stack Dispatch</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/star-formation/"><img src="docs/previews/en/app-star-formation.png" width="180" alt="Star Formation preview"><br>Star Formation</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/stone-bay/"><img src="docs/previews/en/app-stone-bay.png" width="180" alt="Stone Bay preview"><br>Stone Bay</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/orbit-turret/"><img src="docs/previews/en/app-orbit-turret.png" width="180" alt="Orbit Turret preview"><br>Orbit Turret</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/pocket-golf/"><img src="docs/previews/en/app-pocket-golf.png" width="180" alt="Pocket Golf preview"><br>Pocket Golf</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/sum-crossings/"><img src="docs/previews/en/app-sum-crossings.png" width="180" alt="Sum Crossings preview"><br>Sum Crossings</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/super-mario/"><img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"><br>Super Mario TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/switchyard-minute/"><img src="docs/previews/en/app-switchyard-minute.png" width="180" alt="Switchyard Minute (Chinese UI) preview"><br>Switchyard Minute (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tank/"><img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"><br>Tank TV</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tension-span/"><img src="docs/previews/en/app-tension-span.png" width="180" alt="Tension Span (Chinese UI) preview"><br>Tension Span (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"><br>Tetris TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/lane-bowling/"><img src="docs/previews/en/app-lane-bowling.png" width="180" alt="Lane Bowling preview"><br>Lane Bowling</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/rook-rescue/"><img src="docs/previews/en/app-rook-rescue.png" width="180" alt="Rook Rescue preview"><br>Rook Rescue</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/binary-weave/"><img src="docs/previews/en/app-binary-weave.png" width="180" alt="Binary Weave preview"><br>Binary Weave</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tetro-islands/"><img src="docs/previews/en/app-tetro-islands.png" width="180" alt="Tetro Islands preview"><br>Tetro Islands</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/thermal-glider/"><img src="docs/previews/en/app-thermal-glider.png" width="180" alt="Thermal Glider (Chinese UI) preview"><br>Thermal Glider (Chinese UI)</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tide-lock/"><img src="docs/previews/en/app-tide-lock.png" width="180" alt="Tide Lock (Chinese UI) preview"><br>Tide Lock (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/rectangle-atlas/"><img src="docs/previews/en/app-rectangle-atlas.png" width="180" alt="Rectangle Atlas preview"><br>Rectangle Atlas</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/color-paths/"><img src="docs/previews/en/app-color-paths.png" width="180" alt="Color Paths preview"><br>Color Paths</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/fleet-ledger/"><img src="docs/previews/en/app-fleet-ledger.png" width="180" alt="Fleet Ledger preview"><br>Fleet Ledger</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/light-chambers/"><img src="docs/previews/en/app-light-chambers.png" width="180" alt="Light Chambers preview"><br>Light Chambers</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/island-ink/"><img src="docs/previews/en/app-island-ink.png" width="180" alt="Island Ink preview"><br>Island Ink</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/shade-duplicates/"><img src="docs/previews/en/app-shade-duplicates.png" width="180" alt="Shade Duplicates preview"><br>Shade Duplicates</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/sum-crossings/"><img src="docs/previews/en/app-sum-crossings.png" width="180" alt="Sum Crossings preview"><br>Sum Crossings</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/quadrant-five/"><img src="docs/previews/en/app-quadrant-five.png" width="180" alt="Quadrant Five preview"><br>Quadrant Five</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/liberty-stones/"><img src="docs/previews/en/app-liberty-stones.png" width="180" alt="Liberty Stones preview"><br>Liberty Stones</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/pocket-solitaire/"><img src="docs/previews/en/app-pocket-solitaire.png" width="180" alt="Pocket Solitaire preview"><br>Pocket Solitaire</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tile-garden/"><img src="docs/previews/en/app-tile-garden.png" width="180" alt="Tile Garden preview"><br>Tile Garden</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/domino-chain/"><img src="docs/previews/en/app-domino-chain.png" width="180" alt="Domino Chain preview"><br>Domino Chain</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/nim-orbit/"><img src="docs/previews/en/app-nim-orbit.png" width="180" alt="Nim Orbit preview"><br>Nim Orbit</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/sorting-wires/"><img src="docs/previews/en/app-sorting-wires.png" width="180" alt="Sorting Wires preview"><br>Sorting Wires</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/torch-bridge/"><img src="docs/previews/en/app-torch-bridge.png" width="180" alt="Torch Bridge preview"><br>Torch Bridge</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tower-overlap/"><img src="docs/previews/en/app-tower-overlap.png" width="180" alt="Tower Overlap preview"><br>Tower Overlap</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/river-guard/"><img src="docs/previews/en/app-river-guard.png" width="180" alt="River Guard preview"><br>River Guard</a></td>
   </tr>
   <tr>
     <td align="center" valign="top" width="25%"><a href="resource/apps/traffic-escape/"><img src="docs/previews/en/app-traffic-escape.png" width="180" alt="Traffic Escape preview"><br>Traffic Escape</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/triangle-pegs/"><img src="docs/previews/en/app-triangle-pegs.png" width="180" alt="Triangle Pegs preview"><br>Triangle Pegs</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/triangular-tessera/"><img src="docs/previews/en/app-triangular-tessera.png" width="180" alt="Triangular Tessera (Chinese UI) preview"><br>Triangular Tessera (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/twenty-four/"><img src="docs/previews/en/app-twenty-four.png" width="180" alt="Twenty Four preview"><br>Twenty Four</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/dots-boxes/"><img src="docs/previews/en/app-dots-boxes.png" width="180" alt="Dots and Boxes preview"><br>Dots and Boxes</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/seed-mancala/"><img src="docs/previews/en/app-seed-mancala.png" width="180" alt="Seed Mancala preview"><br>Seed Mancala</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/hex-connection/"><img src="docs/previews/en/app-hex-connection.png" width="180" alt="Hex Connection preview"><br>Hex Connection</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/used-car-racing/"><img src="docs/previews/en/app-used-car-racing.png" width="180" alt="Used Car Racing TV preview"><br>Used Car Racing TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/draughts-trail/"><img src="docs/previews/en/app-draughts-trail.png" width="180" alt="Draughts Trail preview"><br>Draughts Trail</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/four-in-row/"><img src="docs/previews/en/app-four-in-row.png" width="180" alt="Four in Row preview"><br>Four in Row</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/merge-tiles/"><img src="docs/previews/en/app-merge-tiles.png" width="180" alt="Merge Tiles preview"><br>Merge Tiles</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/brick-paddle/"><img src="docs/previews/en/app-brick-paddle.png" width="180" alt="Brick Paddle preview"><br>Brick Paddle</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tower-overlap/"><img src="docs/previews/en/app-tower-overlap.png" width="180" alt="Tower Overlap preview"><br>Tower Overlap</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/orchard-snake/"><img src="docs/previews/en/app-orchard-snake.png" width="180" alt="Orchard Snake preview"><br>Orchard Snake</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/skyline-numbers/"><img src="docs/previews/en/app-skyline-numbers.png" width="180" alt="Skyline Numbers preview"><br>Skyline Numbers</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/codebreaker/"><img src="docs/previews/en/app-codebreaker.png" width="180" alt="Codebreaker preview"><br>Codebreaker</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/memory-gallery/"><img src="docs/previews/en/app-memory-gallery.png" width="180" alt="Memory Gallery preview"><br>Memory Gallery</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/mine-survey/"><img src="docs/previews/en/app-mine-survey.png" width="180" alt="Mine Survey preview"><br>Mine Survey</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/pixel-clues/"><img src="docs/previews/en/app-pixel-clues.png" width="180" alt="Pixel Clues preview"><br>Pixel Clues</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/queen-constellation/"><img src="docs/previews/en/app-queen-constellation.png" width="180" alt="Queen Constellation preview"><br>Queen Constellation</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/knight-circuit/"><img src="docs/previews/en/app-knight-circuit.png" width="180" alt="Knight Circuit preview"><br>Knight Circuit</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/ring-towers/"><img src="docs/previews/en/app-ring-towers.png" width="180" alt="Ring Towers preview"><br>Ring Towers</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/sliding-order/"><img src="docs/previews/en/app-sliding-order.png" width="180" alt="Sliding Order preview"><br>Sliding Order</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/triangle-pegs/"><img src="docs/previews/en/app-triangle-pegs.png" width="180" alt="Triangle Pegs preview"><br>Triangle Pegs</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/stone-bay/"><img src="docs/previews/en/app-stone-bay.png" width="180" alt="Stone Bay preview"><br>Stone Bay</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/reversi-relay/"><img src="docs/previews/en/app-reversi-relay.png" width="180" alt="Reversi Relay preview"><br>Reversi Relay</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/measure-pour/"><img src="docs/previews/en/app-measure-pour.png" width="180" alt="Measure Pour preview"><br>Measure Pour</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/color-frontier/"><img src="docs/previews/en/app-color-frontier.png" width="180" alt="Color Frontier preview"><br>Color Frontier</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/stack-dispatch/"><img src="docs/previews/en/app-stack-dispatch.png" width="180" alt="Stack Dispatch preview"><br>Stack Dispatch</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/lens-distance/"><img src="docs/previews/en/app-lens-distance.png" width="180" alt="Lens Distance preview"><br>Lens Distance</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="docs/previews/en/app-packing-sculptor.png" width="180" alt="Packing Sculptor preview"><br>Packing Sculptor</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/kaleido-keys/"><img src="docs/previews/en/app-kaleido-keys.png" width="180" alt="Kaleido Keys preview"><br>Kaleido Keys</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/moire-atelier/"><img src="docs/previews/en/app-moire-atelier.png" width="180" alt="Moiré Atelier preview"><br>Moiré Atelier</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/cable-unweaver/"><img src="docs/previews/en/app-cable-unweaver.png" width="180" alt="Cable Unweaver preview"><br>Cable Unweaver</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/shadow-foundry/"><img src="docs/previews/en/app-shadow-foundry.png" width="180" alt="Shadow Foundry preview"><br>Shadow Foundry</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/parallax-skyline/"><img src="docs/previews/en/app-parallax-skyline.png" width="180" alt="Parallax Skyline preview"><br>Parallax Skyline</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/pressure-seal/"><img src="docs/previews/en/app-pressure-seal.png" width="180" alt="Pressure Seal preview"><br>Pressure Seal</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/frost-brake/"><img src="docs/previews/en/app-frost-brake.png" width="180" alt="Frost Brake preview"><br>Frost Brake</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/rotor-locksmith/"><img src="docs/previews/en/app-rotor-locksmith.png" width="180" alt="Rotor Locksmith preview"><br>Rotor Locksmith</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/metronome-gates/"><img src="docs/previews/en/app-metronome-gates.png" width="180" alt="Metronome Gates preview"><br>Metronome Gates</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/beat-braid/"><img src="docs/previews/en/app-beat-braid.png" width="180" alt="Beat Braid preview"><br>Beat Braid</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/pulse-vault/"><img src="docs/previews/en/app-pulse-vault.png" width="180" alt="Pulse Vault (Chinese UI) preview"><br>Pulse Vault (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/conveyor-window/"><img src="docs/previews/en/app-conveyor-window.png" width="180" alt="Conveyor Window (Chinese UI) preview"><br>Conveyor Window (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/shadow-shutter/"><img src="docs/previews/en/app-shadow-shutter.png" width="180" alt="Shadow Shutter (Chinese UI) preview"><br>Shadow Shutter (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/clockwork-align/"><img src="docs/previews/en/app-clockwork-align.png" width="180" alt="Clockwork Alignment (Chinese UI) preview"><br>Clockwork Alignment (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/resonance-bridge/"><img src="docs/previews/en/app-resonance-bridge.png" width="180" alt="Resonance Bridge (Chinese UI) preview"><br>Resonance Bridge (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/reservoir-seasons/"><img src="docs/previews/en/app-reservoir-seasons.png" width="180" alt="Reservoir Seasons (Chinese UI) preview"><br>Reservoir Seasons (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/pollinator-contract/"><img src="docs/previews/en/app-pollinator-contract.png" width="180" alt="Pollinator Contract (Chinese UI) preview"><br>Pollinator Contract (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/sandglass-split/"><img src="docs/previews/en/app-sandglass-split.png" width="180" alt="Sandglass Split (Chinese UI) preview"><br>Sandglass Split (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/harbor-counterweight/"><img src="docs/previews/en/app-harbor-counterweight.png" width="180" alt="Harbor Counterweight (Chinese UI) preview"><br>Harbor Counterweight (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/battery-exchange/"><img src="docs/previews/en/app-battery-exchange.png" width="180" alt="Battery Exchange (Chinese UI) preview"><br>Battery Exchange (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/assembly-kitchen/"><img src="docs/previews/en/app-assembly-kitchen.png" width="180" alt="Assembly Kitchen (Chinese UI) preview"><br>Assembly Kitchen (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/firebreak-planner/"><img src="docs/previews/en/app-firebreak-planner.png" width="180" alt="Firebreak Planner (Chinese UI) preview"><br>Firebreak Planner (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/airlock-budget/"><img src="docs/previews/en/app-airlock-budget.png" width="180" alt="Airlock Budget (Chinese UI) preview"><br>Airlock Budget (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/greenhouse-dials/"><img src="docs/previews/en/app-greenhouse-dials.png" width="180" alt="Greenhouse Dials (Chinese UI) preview"><br>Greenhouse Dials (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/solar-shift/"><img src="docs/previews/en/app-solar-shift.png" width="180" alt="Solar Shift (Chinese UI) preview"><br>Solar Shift (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/arrow-harvest/"><img src="docs/previews/en/app-arrow-harvest.png" width="180" alt="Arrow Harvest (Chinese UI) preview"><br>Arrow Harvest (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/triangular-tessera/"><img src="docs/previews/en/app-triangular-tessera.png" width="180" alt="Triangular Tessera (Chinese UI) preview"><br>Triangular Tessera (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/number-dunes/"><img src="docs/previews/en/app-number-dunes.png" width="180" alt="Number Dunes (Chinese UI) preview"><br>Number Dunes (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/loop-orchard/"><img src="docs/previews/en/app-loop-orchard.png" width="180" alt="Loop Orchard (Chinese UI) preview"><br>Loop Orchard (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/adjacency-forge/"><img src="docs/previews/en/app-adjacency-forge.png" width="180" alt="Adjacency Forge (Chinese UI) preview"><br>Adjacency Forge (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/island-dominoes/"><img src="docs/previews/en/app-island-dominoes.png" width="180" alt="Island Dominoes (Chinese UI) preview"><br>Island Dominoes (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/hidden-corridors/"><img src="docs/previews/en/app-hidden-corridors.png" width="180" alt="Hidden Corridors (Chinese UI) preview"><br>Hidden Corridors (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/parity-garden/"><img src="docs/previews/en/app-parity-garden.png" width="180" alt="Parity Garden (Chinese UI) preview"><br>Parity Garden (Chinese UI)</a></td>
+  </tr>
+  <tr>
     <td align="center" valign="top" width="25%"><a href="resource/apps/weight-ledger/"><img src="docs/previews/en/app-weight-ledger.png" width="180" alt="Weight Ledger (Chinese UI) preview"><br>Weight Ledger (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/word-ladder/"><img src="docs/previews/en/app-word-ladder.png" width="180" alt="Word Ladder preview"><br>Word Ladder</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/path-glyphs/"><img src="docs/previews/en/app-path-glyphs.png" width="180" alt="Path Glyphs (Chinese UI) preview"><br>Path Glyphs (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/thermal-glider/"><img src="docs/previews/en/app-thermal-glider.png" width="180" alt="Thermal Glider (Chinese UI) preview"><br>Thermal Glider (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/glass-fold/"><img src="docs/previews/en/app-glass-fold.png" width="180" alt="Glass Fold (Chinese UI) preview"><br>Glass Fold (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/lantern-rhythm/"><img src="docs/previews/en/app-lantern-rhythm.png" width="180" alt="Lantern Rhythm (Chinese UI) preview"><br>Lantern Rhythm (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/magnetic-warehouse/"><img src="docs/previews/en/app-magnetic-warehouse.png" width="180" alt="Magnetic Warehouse (Chinese UI) preview"><br>Magnetic Warehouse (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/echo-cartographer/"><img src="docs/previews/en/app-echo-cartographer.png" width="180" alt="Echo Cartographer (Chinese UI) preview"><br>Echo Cartographer (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tension-span/"><img src="docs/previews/en/app-tension-span.png" width="180" alt="Tension Span (Chinese UI) preview"><br>Tension Span (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tide-lock/"><img src="docs/previews/en/app-tide-lock.png" width="180" alt="Tide Lock (Chinese UI) preview"><br>Tide Lock (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/switchyard-minute/"><img src="docs/previews/en/app-switchyard-minute.png" width="180" alt="Switchyard Minute (Chinese UI) preview"><br>Switchyard Minute (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="docs/previews/en/app-prism-relay.png" width="180" alt="Prism Relay (Chinese UI) preview"><br>Prism Relay (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/gravity-courier/"><img src="docs/previews/en/app-gravity-courier.png" width="180" alt="Gravity Courier (Chinese UI) preview"><br>Gravity Courier (Chinese UI)</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/alien-shooter/"><img src="docs/previews/en/app-alien-shooter.png" width="180" alt="Alien Shooter TV preview"><br>Alien Shooter TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/used-car-racing/"><img src="docs/previews/en/app-used-car-racing.png" width="180" alt="Used Car Racing TV preview"><br>Used Car Racing TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/cozy-island/"><img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"><br>Cozy Island TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"><br>Coast Kart TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/super-mario/"><img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"><br>Super Mario TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/bomb-jack/"><img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"><br>Mighty Bomb Jack TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/adventure-island/"><img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"><br>Adventure Island TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"><br>Tetris TV</a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/jewel/"><img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"><br>Magic Jewelry TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/jackal/"><img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"><br>Jackal TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tank/"><img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"><br>Tank TV</a></td>
     <td width="25%"></td>
   </tr>
 </table>

@@ -870,7 +870,9 @@ try {
   },unifiedState,{layoutSupported:true,layout:unifiedLayout,layoutApps:unifiedApps});
   const addState=structuredClone(unifiedState);addState.packages.push({packageName:'com.example.extra',label:'Extra TV',installed:true,enabled:true,system:false,protectedReason:null});
   await check('top toolbar adds a v4 app block without modern UUID APIs and preserves its package action',async p=>{
-    await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();await p.evaluate(()=>crypto.randomUUID=undefined);await p.locator('[data-u-act="add"]').click();await p.locator('[data-u-act="json"]').click();let draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.equal(draft.home.users.length,4);const added=draft.home.users.at(-1);assert.match(added.id,/^app-[0-9a-f]{32}$/);assert.equal(added.action,'com.example.extra');assert.equal(added.name,'Extra TV');assert.ok(added.icon.startsWith('<svg'));await p.locator('[data-close-json]').click();await p.locator('[data-u-act="remove"]').click();await p.locator('[data-u-act="json"]').click();draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.equal(draft.home.users.length,3);
+    await nav(p,'launchers');await settled(p);await act(p,'open-layout').click();await p.evaluate(()=>crypto.randomUUID=undefined);await p.locator('[data-u-act="add"]').click();await p.locator('[data-u-act="json"]').click();let draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.equal(draft.home.users.length,4);const added=draft.home.users.at(-1);assert.match(added.id,/^app-[0-9a-f]{32}$/);assert.equal(added.action,'com.example.extra');assert.equal(added.name,'Extra TV');assert.equal(added.text,'Extra TV');assert.equal(added.color,'#FFFFFF');assert.ok(added.icon.startsWith('<svg'));await p.locator('[data-close-json]').click();await p.locator('[data-u-act="remove"]').click();await p.locator('[data-u-act="json"]').click();draft=JSON.parse(await p.locator('.layout-json-viewer pre').innerText());assert.equal(draft.home.users.length,3);
+    await p.locator('[data-close-json]').click();await p.locator('[data-u-node="user-0"]').click();await p.locator('[data-u-field="action"]').selectOption('com.example.extra');
+    assert.equal(await p.locator('[data-u-field="name"]').inputValue(),'Extra TV');assert.equal(await p.locator('[data-u-field="text"]').inputValue(),'Extra TV');assert.equal(await p.locator('[data-u-field="color"]').inputValue(),'#ffffff');
   },addState,{layoutSupported:true,layout:unifiedLayout,layoutApps:[...unifiedApps,{packageName:'com.example.extra',label:'Extra TV'}]});
   const modernLayout=JSON.parse(await readFile(new URL('../../resource/launcher/puretv/layout.example.json',import.meta.url),'utf8'));
   const mossTemplate=JSON.parse(await readFile(new URL('../../resource/launcher/moss/app/src/main/assets/layout.json',import.meta.url),'utf8'));
@@ -1025,41 +1027,73 @@ try {
     assert.equal((await readEditorJson(p)).home.users[0].icon,cctvNode.icon,'Reading a layout must not replace its existing artwork');
     await p.locator('[data-u-act="add"]').click();
     const draft=await readEditorJson(p),added=draft.home.users.at(-1);
-    assert.equal(added.action,logoApp.packageName);assert.equal(added.name,logoApp.label);
+    assert.equal(added.action,logoApp.packageName);assert.equal(added.name,logoApp.label);assert.equal(added.text,logoApp.label);assert.equal(added.textColor,'#FFFFFF');
     assert.match(added.icon,/width="64"/);assert.match(added.icon,/M8 12H56V52H8Z/);assert.doesNotMatch(added.icon,/<title|role=/);
     assert.equal(await svgInput(p).inputValue(),added.icon,'Inspector shows the saved SVG source');
     assert.equal(await p.locator(`[data-u-node="${added.id}"] svg path[fill="#ffbb44"]`).count(),1,'Canvas renders the real logo');
+    assert.equal(await p.locator(`[data-u-node="${added.id}"] .unified-text`).evaluate(el=>getComputedStyle(el).color),'rgb(255, 255, 255)');
     await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await result(p,'success');
     assert.equal((await layoutWrites(p))[0].layout.home.users.at(-1).icon,added.icon);
     assert.deepEqual((await layoutWrites(p))[0].layout.home.system,mossLayout.home.system);
   },logoState,{layoutSupported:true,layout:mossLayout,layoutApps:logoApps});
-  await check('saved app logo: selection and refresh preserve custom artwork; changing action selects the new default',async p=>{
+  await check('saved app logo: selection and refresh preserve edits; changing action resets the name logo and white text',async p=>{
     await openMossEditor(p);
     const custom='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="21" fill="#123abc"/></svg>';
     await editSvg(p,custom);
+    const editFields=async values=>{for(const [field,value] of Object.entries(values)){const input=p.locator(`[data-u-field="${field}"]`);await input.fill(value);await input.dispatchEvent('change');}};
+    await editFields({name:'我的入口',text:'自定义文案',textColor:'#123456'});
+    const customized=await readEditorJson(p);
     await p.locator(`[data-u-node="${mossLayout.home.system[0].id}"]`).click();await p.locator('[data-u-node="cctv-live"]').click();
-    assert.equal(await svgInput(p).inputValue(),custom,'Selecting a component retains its user-edited icon');
+    assert.deepEqual(await readEditorJson(p),customized,'Selecting a component retains its user-edited name, text, color and icon');
     await p.evaluate(apps=>window.__setMockLayoutApps(apps),logoApps.map(app=>({...app,logoSvg:app.packageName===cctvApp.packageName?savedLogo.replace('#ffbb44','#3399cc'):app.logoSvg})));
     await p.locator('[data-u-act="refresh"]').click();await settled(p);
-    assert.equal((await readEditorJson(p)).home.users[0].icon,custom,'Refreshing available apps must not overwrite the current draft');
+    assert.deepEqual(await readEditorJson(p),customized,'Refreshing available apps must not overwrite the current draft');
     await p.locator('[data-u-field="action"]').selectOption(logoApp.packageName);
     const changed=(await readEditorJson(p)).home.users[0];assert.equal(changed.action,logoApp.packageName);assert.match(changed.icon,/M8 12H56V52H8Z/);assert.notEqual(changed.icon,custom);
-    await editSvg(p,custom);await p.locator('[data-u-field="action"]').dispatchEvent('change');
-    assert.equal((await readEditorJson(p)).home.users[0].icon,custom,'A same-value action event does not reset custom artwork');
+    assert.equal(changed.name,logoApp.label);assert.equal(changed.text,logoApp.label);assert.equal(changed.textColor,'#FFFFFF');
+    assert.equal(await p.locator('[data-u-field="name"]').inputValue(),logoApp.label);assert.equal(await p.locator('[data-u-field="text"]').inputValue(),logoApp.label);
+    assert.equal(await p.locator('[data-u-node="cctv-live"] .unified-text').innerText(),logoApp.label);
+    assert.equal(await p.locator('[data-u-node="cctv-live"] .unified-text').evaluate(el=>getComputedStyle(el).color),'rgb(255, 255, 255)');
+    assert.equal(changed.iconColor,customized.home.users[0].iconColor);assert.equal(changed.backgroundColor,customized.home.users[0].backgroundColor);assert.deepEqual(changed.frame,customized.home.users[0].frame);
+    await shot(p,'app-binding-autofill');
+    await editSvg(p,custom);await editFields({name:'另一个入口',text:'新的自定义文案',textColor:'#654321'});
+    const edited=await readEditorJson(p);await p.locator('[data-u-field="action"]').dispatchEvent('change');
+    assert.deepEqual(await readEditorJson(p),edited,'A same-value action event does not reset custom name, text, color or artwork');
     await p.locator('[data-u-field="action"]').selectOption(noLogoApp.packageName);
-    const generic=(await readEditorJson(p)).home.users[0].icon;
-    assert.match(generic,/M8 8h8v8H8z/);assert.doesNotMatch(generic,/M8 12H56V52H8Z|circle/,'An app without a logo never inherits another application logo');
+    const generic=(await readEditorJson(p)).home.users[0];
+    assert.equal(generic.name,noLogoApp.label);assert.equal(generic.text,noLogoApp.label);assert.equal(generic.textColor,'#FFFFFF');
+    assert.match(generic.icon,/M8 8h8v8H8z/);assert.doesNotMatch(generic.icon,/M8 12H56V52H8Z|circle/,'An app without a logo never inherits another application logo');
   },logoState,{layoutSupported:true,layout:mossLayout,layoutApps:logoApps});
   await check('saved app logo: unsafe artwork falls back and changing action clears an abandoned invalid icon draft',async p=>{
     await openMossEditor(p);await p.evaluate(()=>window.__logoXss=false);
     await editSvg(p,'<svg><path');assert.equal(await p.locator('[data-svg-error]').count(),1);
     await p.locator('[data-u-field="action"]').selectOption(badLogoApp.packageName);
     const changed=(await readEditorJson(p)).home.users[0];assert.equal(changed.action,badLogoApp.packageName);assert.match(changed.icon,/M8 8h8v8H8z/);
+    assert.equal(changed.name,badLogoApp.label);assert.equal(changed.text,badLogoApp.label);assert.equal(changed.textColor,'#FFFFFF');
     assert.equal(await p.locator('[data-svg-error]').count(),0);assert.equal(await p.locator('[data-u-act="discard-svg"]').count(),0);
     assert.equal(await p.locator('.unified-canvas script,.unified-canvas image,.unified-canvas [onload]').count(),0);assert.equal(await p.evaluate(()=>window.__logoXss),false);
     await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await result(p,'success');
     assert.equal((await layoutWrites(p))[0].layout.home.users[0].icon,changed.icon);
   },logoState,{layoutSupported:true,layout:mossLayout,layoutApps:logoApps});
+  const boundaryApps=[
+    {...logoApp,packageName:'com.example.longname',label:'界'.repeat(99)+'🎮 extra'},
+    {...logoApp,packageName:'com.example.emojiname',label:'界'.repeat(98)+'🎮 extra'},
+    {...logoApp,packageName:'com.example.emptyname',label:'   '},
+  ];
+  const boundaryState=structuredClone(logoState);
+  for(const app of boundaryApps)boundaryState.packages.push({packageName:app.packageName,label:app.label,installed:true,enabled:true,system:false,protectedReason:null});
+  await check('saved app logo: long and empty names remain valid when adding and changing an application',async p=>{
+    await openMossEditor(p);await p.locator('[data-u-act="add"]').click();
+    const expected=['界'.repeat(99),'界'.repeat(98)+'🎮',boundaryApps[2].packageName];
+    for(const [index,app] of boundaryApps.entries()){
+      if(index)await p.locator('[data-u-field="action"]').selectOption(app.packageName);
+      const node=(await readEditorJson(p)).home.users.at(-1);
+      assert.equal(node.action,app.packageName);assert.equal(node.name,expected[index]);assert.equal(node.text,expected[index]);assert.ok(node.name.length<=100);
+      assert.equal(node.textColor,'#FFFFFF');assert.match(node.icon,/M8 12H56V52H8Z/);
+    }
+    await p.locator('[data-u-act="apply"]').click();await p.locator('#confirm-operation').click();await result(p,'success');
+    assert.equal((await layoutWrites(p))[0].layout.home.users.at(-1).text,boundaryApps[2].packageName);
+  },boundaryState,{layoutSupported:true,layout:mossLayout,layoutApps:[...boundaryApps,...logoApps]});
   await check('SVG icon: the supplied CCTV artwork strips accessibility metadata and preserves every drawing command',async p=>{
     await openMossEditor(p);await editSvg(p,cctvSvg);assert.equal(await p.locator('[data-svg-error]').count(),0);
     const normalized=(await readEditorJson(p)).home.users[0].icon;

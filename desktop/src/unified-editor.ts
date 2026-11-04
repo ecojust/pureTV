@@ -24,6 +24,10 @@ export class UnifiedEditor {
  discardSvgEdits():void {this.svgEdits.clear();this.error='';}
  hasSvgEdits():boolean {return this.svgEdits.size>0;}
  private node(d:UnifiedLayout){return this.selected?d[this.page][this.selected.kind].find(n=>n.id===this.selected!.id):undefined;}
+ private appLabel(app:LauncherLayoutApp):string {
+  // layout.json allows 100 UTF-16 code units; never split a surrogate pair.
+  return (app.label.trim()||app.packageName).slice(0,100).replace(/[\uD800-\uDBFF]$/,'');
+ }
  private appIcon(app:LauncherLayoutApp):string {
   // Saved market artwork is still validated at the rendering boundary. Missing
   // or invalid logos use the generic app icon rather than another app's logo.
@@ -62,7 +66,7 @@ export class UnifiedEditor {
   if(action==='discard-svg'&&this.selected){this.svgEdits.delete(`${this.page}:${this.selected.id}`);this.error='';this.options.render();}
   if(action==='background')this.showBackground();
   if(action==='json'){this.preview.innerHTML=`<header><h3>layout.json</h3><button data-close-json>${esc(t('关闭'))}</button></header><pre tabindex="0"></pre>`;this.preview.querySelector('pre')!.textContent=this.options.json();this.preview.showModal();}
-  if(action==='add')this.update(d=>{const app=this.options.apps().find(a=>!d[this.page].users.some(n=>n.action===a.packageName));if(!app||d[this.page].users.some(n=>n.action===app.packageName))return;const id='app-'+[...crypto.getRandomValues(new Uint8Array(16))].map(n=>n.toString(16).padStart(2,'0')).join('');const width=160,height=142,offset=d[this.page].users.length%4*20;const top=Math.max(d.screen.height*.08,...d[this.page].system.filter(n=>n.visible&&n.frame.y<d.screen.height*.4).map(n=>n.frame.y+n.frame.height))+d.screen.height*.03;d[this.page].users.push({id,name:app.label,text:app.label,action:app.packageName,frame:{x:Math.min(d.screen.width-width,Math.round(d.screen.width*.05)+offset),y:Math.min(d.screen.height-height,Math.round(top)+offset),width,height},visible:true,icon:this.appIcon(app),...(d.version===5?{textColor:'#253E39',iconColor:'#376F60',backgroundColor:'#DCE9E2'}:{color:'#F5F5F5',backgroundColor:'#374959'})} as UnifiedComponent);Object.assign(d[this.page].users.at(-1)!.frame,{width,height});this.selected={kind:'users',id};this.selection=new Set([id]);});
+  if(action==='add')this.update(d=>{const app=this.options.apps().find(a=>!d[this.page].users.some(n=>n.action===a.packageName));if(!app||d[this.page].users.some(n=>n.action===app.packageName))return;const id='app-'+[...crypto.getRandomValues(new Uint8Array(16))].map(n=>n.toString(16).padStart(2,'0')).join('');const width=160,height=142,offset=d[this.page].users.length%4*20;const top=Math.max(d.screen.height*.08,...d[this.page].system.filter(n=>n.visible&&n.frame.y<d.screen.height*.4).map(n=>n.frame.y+n.frame.height))+d.screen.height*.03;d[this.page].users.push({id,name:this.appLabel(app),text:this.appLabel(app),action:app.packageName,frame:{x:Math.min(d.screen.width-width,Math.round(d.screen.width*.05)+offset),y:Math.min(d.screen.height-height,Math.round(top)+offset),width,height},visible:true,icon:this.appIcon(app),...(d.version===5?{textColor:'#FFFFFF',iconColor:'#376F60',backgroundColor:'#DCE9E2'}:{color:'#FFFFFF',backgroundColor:'#374959'})} as UnifiedComponent);Object.assign(d[this.page].users.at(-1)!.frame,{width,height});this.selected={kind:'users',id};this.selection=new Set([id]);});
   if(action==='remove'&&this.selected?.kind==='users')this.update(d=>{d[this.page].users=d[this.page].users.filter(n=>n.id!==this.selected!.id);this.selected=null;});
  }
  private change(e:Event){if(!this.active())return;const input=e.target as HTMLInputElement;if(!input.matches('[data-u-selection],[data-u-field],[data-u-frame]'))return;e.stopPropagation();
@@ -96,7 +100,7 @@ export class UnifiedEditor {
    if(!app||!current||this.node(current)?.action===app.packageName)return;
    const key=`${this.page}:${this.selected.id}`;
    let changed=false;
-   const applied=this.update(d=>{const n=this.node(d);if(!n||n.action===app.packageName)return;n.action=app.packageName;n.icon=this.appIcon(app);changed=true;},false);
+   const applied=this.update(d=>{const n=this.node(d);if(!n||n.action===app.packageName)return;n.action=app.packageName;n.name=this.appLabel(app);n.text=n.name;n.icon=this.appIcon(app);if(d.version===5)n.textColor='#FFFFFF';else n.color='#FFFFFF';changed=true;},false);
    if(applied&&changed){this.svgEdits.delete(key);this.options.render();}
    return;
   }
