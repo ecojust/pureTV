@@ -1,0 +1,43 @@
+{
+  "workingDirectory": "/workspace/pureTV",
+  "status": "All three planned commands executed successfully against frozen assets; browser and FFmpeg closed.",
+  "commands": [
+    [
+      "node",
+      "resource/apps/prism-relay/tests/browser-checks.mjs",
+      "--assets",
+      "/workspace/scratch/physics-021/frozen/prism-relay/assets",
+      "--output",
+      "/workspace/scratch/physics-021/final-qa/prism-relay/browser-01"
+    ],
+    [
+      "node",
+      "resource/game-kit/qa/qa.mjs",
+      "--assets",
+      "/workspace/scratch/physics-021/frozen/prism-relay/assets",
+      "--output",
+      "/workspace/scratch/physics-021/final-qa/prism-relay/shared-01",
+      "--automation",
+      "/workspace/pureTV/resource/apps/prism-relay/tests/automation.mjs",
+      "--seconds",
+      "25"
+    ],
+    [
+      "node",
+      "resource/game-kit/qa/record.mjs",
+      "--assets",
+      "/workspace/scratch/physics-021/frozen/prism-relay/assets",
+      "--output",
+      "/workspace/scratch/physics-021/final-qa/prism-relay/recording-01",
+      "--automation",
+      "/workspace/pureTV/resource/apps/prism-relay/tests/automation.mjs",
+      "--recipe",
+      "/workspace/pureTV/resource/apps/prism-relay/tests/recipe.json"
+    ]
+  ],
+  "reports": [
+    "browser-01/report.json",
+    "shared-01/report.json",
+    "recording-01/recording.json"
+  ]
+}

@@ -1,0 +1,11 @@
+--- model-01/reconstructed-presentation.test.cjs
++++ executed-source-01/resource/apps/prism-relay/tests/presentation.test.cjs
+@@ -14,7 +14,7 @@
+   for (let orientation=0;orientation<2;orientation++) for (let incoming=0;incoming<4;incoming++) {
+     const [dx,dy]=vectors[incoming],normal=[Math.SQRT1_2,orientation ? -Math.SQRT1_2 : Math.SQRT1_2];
+     const projection=dx*normal[0]+dy*normal[1];
+-    const expected=[Math.round(dx-2*projection*normal[0]),Math.round(dy-2*projection*normal[1])];
++    const expected=[Math.round(dx-2*projection*normal[0]),Math.round(dy-2*projection*normal[1])].map(v=>v||0);
+     const traced=model.traceBeams({width:7,height:7,cells:[
+       {type:'source',x:3-dx*2,y:3-dy*2,direction:incoming,color:7},
+       {type:'mirror',x:3,y:3,orientation}

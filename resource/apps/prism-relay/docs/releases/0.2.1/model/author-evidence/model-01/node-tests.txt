@@ -1,0 +1,56 @@
+✔ CommonJS and browser UMD expose the same small, answer-free API (5.906304ms)
+✔ mirrors reflect all four incoming directions in both orientations (1.022448ms)
+✔ prisms accept one entry direction and separate every RGB subset in all orientations (2.514189ms)
+✔ crossing rays stay separate, while receivers combine rays from different sides (0.206715ms)
+✔ walls, receivers, hazards and returning beams at a source absorb light (0.556842ms)
+✔ the visited ray-state bound terminates a closed optical cycle (0.347934ms)
+✔ outgoing beams end at the boundary, and cached paths survive selection and time (11.582829ms)
+✔ nineteen correct ticks are insufficient; the twentieth wins and freezes every field (0.468081ms)
+✔ an interrupted or wrong-colored receiver loses all charge at the next rule tick (0.42025ms)
+✔ fractional time accumulates at 10 Hz regardless of rendering frequency (0.661746ms)
+✔ heat increases once per illuminated tick and cools twice as fast without going negative (0.408322ms)
+✔ terminal precedence is overheating, then success, then exhausted energy (0.376836ms)
+✔ untouched levels expire at exactly their designed 45/60/75 second limits (2.410226ms)
+✔ A/B rotate once per held edge, while explicit runtime pulses preserve fast re-presses (0.229559ms)
+✔ selection precedes rotation, has a dead zone and delayed repeat, and reaches every device (60.457254ms)
+✔ create/retry are independent, restore layouts and cannot inherit held actions (1.68053ms)
+✔ all 1242 orientation combinations have exactly one safe solution per level (10.549253ms)
+✔ level three needs both red and blue at purple; crossing green stays independent (2.025138ms)
+✔ all six levels are won through actual direction and rotation input (7.802331ms)
+✔ read-only automation solves each QA level and records six ordinary levels (188.999198ms)
+✖ mirror routes obey the vector reflection law for both visible mirror normals (2.599835ms)
+✔ custom module artwork has bounded geometry and four isolated ports matching the routed channels (2.455473ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 21
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 437.590415
+
+✖ failing tests:
+
+test at resource/apps/prism-relay/tests/presentation.test.cjs:13:1
+✖ mirror routes obey the vector reflection law for both visible mirror normals (2.599835ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   0,
+  -   -0,
+      -1
+    ]
+  
+      at TestContext.<anonymous> (/workspace/pureTV/resource/apps/prism-relay/tests/presentation.test.cjs:23:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 0, -1 ],
+    expected: [ -0, -1 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

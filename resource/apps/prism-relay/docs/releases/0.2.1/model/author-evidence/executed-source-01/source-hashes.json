@@ -1,0 +1,30 @@
+{
+  "kind": "actual-executed-local-test-source-provenance",
+  "baseSourceCommit": "01a6b6bb445aebab5007093e7b7dbae49aade64e",
+  "workingTreeAtExecution": true,
+  "capturedAfterExecution": true,
+  "sourceHashes": {
+    "resource/apps/prism-relay/src/main/assets/game-model.js": "e98f8673cde6f2a4458ad70f5de16f0d6041b5106b396d2517c3efadfb3f5096",
+    "resource/apps/prism-relay/src/main/assets/game.js": "8d0fc359f5d686092537e6ab8d4ed3de87bcb7e6acfa42edc2325b3ba37048c9",
+    "resource/apps/prism-relay/tests/game-model.test.cjs": "7f20ece41cb5f370dc934eeca3db0d208e682c5969e6451fdcb86234f3b1a148",
+    "resource/apps/prism-relay/tests/presentation.test.cjs": "dc71d7fac6f8406b3d49cff3552054a42448c77a5dfc4aa960b140cdea5ef4a9",
+    "resource/apps/prism-relay/tests/automation.mjs": "9269c92053c034fd4cf377ec1fcedaa743ef24372a7cd1a4395e2329734910e9"
+  },
+  "successExecution": {
+    "modelTestsReport": "../model-01/node-tests.txt",
+    "modelTestsPassed": 20,
+    "presentationTestsReport": "../model-02/presentation-tests.txt",
+    "presentationTestsPassed": 2,
+    "notes": "The successful presentation run used these exact unchanged test/model/render files; game-model.test.cjs and automation/model were unchanged between first and successful targeted runs."
+  },
+  "firstFailure": {
+    "rawReport": "../model-01/node-tests.txt",
+    "originalTestFileCapturedAtFailure": false,
+    "reconstructedSource": "../model-01/reconstructed-presentation.test.cjs",
+    "reconstructedSourceSha256": "24d3120134a2da35527d24bce3085aaa2e6cecdf7df365972017bf16c5bde54d",
+    "knownPatch": "../model-01/known-revision.patch",
+    "knownPatchSha256": "08b86d4f7f77fee958c049cc55d0374a5ddfc6371324f66d39d0783e5c2e3b14",
+    "reconstructionMethod": "Reverse the single exact known expected-zero-normalization line from the unchanged successful presentation source. This is explicitly reconstructed after execution, not an original captured test file.",
+    "failure": "strict deep equality distinguishes theoretical rounded -0 from model +0; production behavior unchanged."
+  }
+}
