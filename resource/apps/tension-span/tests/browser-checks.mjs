@@ -2,7 +2,8 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import {mkdir,writeFile} from 'node:fs/promises';
-import {parseArgs,serveAssets,launch,preparePage,tap,snapshot,verifyErrors,sourceHashes} from '../../../game-kit/qa/common.mjs';
+import {parseArgs,serveAssets,launch,preparePage,tap,snapshot,verifyErrors,sourceHashes,applyKeys,releaseAll,delay} from '../../../game-kit/qa/common.mjs';
+import {keys as bridgeKeys} from './automation.mjs';
 const args=parseArgs(),assets=path.resolve(args.assets),output=path.resolve(args.output);
 await mkdir(output,{recursive:true});
 const server=await serveAssets(assets),browser=await launch();
@@ -34,7 +35,30 @@ try{
    verifyErrors(session);report.checks.push({viewport,bounds,menu,sixLevelsSelectable:true,ordinaryInputs:true,passed:true});
   }catch(error){report.browserErrors={errors:session.errors,consoleErrors:session.consoleErrors,network:session.network};await page.screenshot({path:path.join(output,`failed-${viewport.width}.png`)});throw error;}
   finally{await session.context.close();}
+  const pierSession=await preparePage(browser,server.url,{viewport});
+  try{
+   await pierSession.page.locator('[data-level="3"]').click();await tap(pierSession.page,'Enter');
+   await pierSession.page.waitForFunction(()=>window.PureTVQA.snapshot().phase==='playing'&&window.PureTVQA.snapshot().model.level===4);
+   await pierSession.page.screenshot({path:path.join(output,`foundation-level4-${viewport.width}.png`)});verifyErrors(pierSession);
+  }finally{await pierSession.context.close();}
+  const fallSession=await preparePage(browser,server.url,{viewport}),held=new Set(),trace=[];
+  try{
+   await tap(fallSession.page,'Enter');const started=performance.now();let departure=null;
+   while(performance.now()-started<25000){
+    const observed=await snapshot(fallSession.page);trace.push({seconds:(performance.now()-started)/1000,state:observed});
+    if(observed.model.car.falling){departure=observed;await fallSession.page.screenshot({path:path.join(output,`ordinary-fall-${viewport.width}.png`)});break;}
+    const requested=bridgeKeys(observed,{elapsed:(performance.now()-started)/1000,mode:'record'});
+    await applyKeys(fallSession.page,requested,held);await delay(40);
+   }
+   assert.ok(departure,'Normal weak-cable construction must lose support');assert.equal(departure.model.attempts,1);
+   assert.ok(Math.abs(departure.model.car.vx-departure.model.car.speed/departure.model.pixelScale)<1e-8,'Departure must retain its horizontal velocity');
+   assert.ok(Number.isFinite(departure.model.car.vy)&&Number.isFinite(departure.model.car.angularVelocity));
+   assert.equal(departure.model.car.wheels.every(w=>!w.contact),true);
+   await writeFile(path.join(output,`ordinary-fall-${viewport.width}.json`),JSON.stringify({kind:'ordinary-browser-inputs',viewport,departure,trace},null,2)+'\n');
+   verifyErrors(fallSession);report.checks.at(-1).fixedTowerFoundationLevel4=true;report.checks.at(-1).ordinaryWeakBridgeDeparture=true;
+  }finally{await releaseAll(fallSession.page,[...held]);await fallSession.context.close();}
  }
+ assert.deepEqual(await sourceHashes(assets),report.assets,'Preview assets changed during the checks');
  report.passed=true;console.log(JSON.stringify({passed:true,viewports:report.checks.length}));
 }catch(error){report.error=String(error.stack);throw error;}
 finally{await writeFile(path.join(output,'report.json'),JSON.stringify(report,null,2)+'\n');await browser.close();await server.close();}

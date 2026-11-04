@@ -5,6 +5,26 @@
   const LABELS = {1:'R',2:'G',3:'R+G',4:'B',5:'R+B',6:'G+B',7:'RGB'};
   const DIRECTIONS = ['RIGHT','DOWN','LEFT','UP'];
   const color = mask => COLORS[mask] || '#748ca1';
+  // A packaged RGB demultiplexer, not a refracting triangular glass prism.
+  // Two dichroic mirrors separate the channels; four ordinary mirrors align
+  // the output ports. Port chevrons denote optical isolation against return light.
+  function routerArt(c,w,h,a) {
+    a.ellipse(c,96,164,78,17,a.radial(c,96,164,80,[[0,'#0008'],[1,'#0000']]));
+    a.path(c,[[26,23],[166,23],[173,30],[173,162],[166,169],[26,169],[19,162],[19,30]],a.linear(c,20,20,174,170,[[0,'#9fb9c7'],[.3,'#476575'],[1,'#203c50']]),'#bdd5df',2);
+    c.fillStyle='#0a1e2c';c.fillRect(29,33,134,126);c.strokeStyle='#668d9c';c.lineWidth=2;c.strokeRect(29,33,134,126);
+    function line(points,tint,width=4){c.strokeStyle=tint;c.lineWidth=width;c.lineJoin='round';c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();}
+    line([[6,96],[70,96]],'#effaff');
+    line([[70,96],[120,96]],'#8beaf3');line([[120,96],[186,96]],COLORS[2]);
+    line([[70,96],[70,53],[96,53],[96,6]],COLORS[1]);
+    line([[120,96],[120,139],[96,139],[96,186]],COLORS[4]);
+    // / at the first splitter reflects R upward; \\ at the second reflects B down.
+    line([[61,105],[79,87]],COLORS[1],6);line([[111,87],[129,105]],COLORS[4],6);
+    [[70,53],[96,53],[120,139],[96,139]].forEach(([x,y])=>{line([[x-8,y+8],[x+8,y-8]],'#bed6df',5);line([[x-8,y+7],[x+7,y-8]],'#f2fbff',1.5);});
+    function port(x,y,angle,tint){c.save();c.translate(x,y);c.rotate(angle);c.fillStyle='#172d3e';c.strokeStyle='#abc6d1';c.lineWidth=1.5;c.fillRect(-13,-10,26,20);c.strokeRect(-13,-10,26,20);line([[-9,0],[9,0]],tint,3);line([[-3,-5],[3,0],[-3,5]],tint,2);c.restore();}
+    port(15,96,0,'#effaff');port(96,15,-Math.PI/2,COLORS[1]);port(177,96,0,COLORS[2]);port(96,177,Math.PI/2,COLORS[4]);
+    [[37,41],[155,41],[37,151],[155,151]].forEach(([x,y])=>{a.ellipse(c,x,y,3,3,'#b1c5c9');line([[x-2,y],[x+2,y]],'#304b5b',1);});
+  }
+  const atlas={builtins:['glow','shadow','ring','mirror'],tiles:[{name:'rgb_router',x:192,y:800,w:192,h:192,paint:routerArt}]};
   function centered(r, text, x, y, size, tint) { r.text(text,x-r.measureText(text,size)/2,y,size,tint); }
   function arrow(r,x1,y1,x2,y2,tint,width) {
     r.line(x1,y1,x2,y2,width||2,tint);
@@ -64,7 +84,7 @@
         r.sprite('glow',x+dx,y+dy,z*.75,z*.75,0,c+'a0');r.circle(x+dx,y+dy,z*.095,c);
         centered(r,LABELS[item.color]||'IN',x,y+z*.32,Math.max(9,z*.13),'#b3d0df');
       } else if(item.type==='mirror'||item.type==='prism'){
-        r.sprite(item.type,x,y,z*.92,z*.92,item.orientation*Math.PI/2,'#fff');
+        r.sprite(item.type==='prism'?'rgb_router':'mirror',x,y,z*.92,z*.92,item.orientation*Math.PI/2,'#fff');
         if(item.type==='prism'){
           // The small input arrow always points in the accepted travel direction.
           const a=item.orientation*Math.PI/2,ux=Math.cos(a),uy=Math.sin(a);
@@ -98,38 +118,38 @@
   function sidebar(r,s,t) {
     const x=746,w=190;
     r.rect(x,55,w,443,'#0b1c2c');r.line(x,55,x+w,55,1,'#315269');
-    r.text('LIGHT ROUTING',x+16,72,13,'#d9effb');r.text('PRISM / COLOUR GUIDE',x+16,94,9,'#718ea5');
-    const cx=x+88,cy=188;
+    r.text('LIGHT ROUTING',x+16,72,13,'#d9effb');r.text('RGB MODULE / PORTS',x+16,94,9,'#8ba8bc');
+    const cx=x+96,cy=188;
     r.sprite('glow',cx,cy,145,145,0,'#1c4052');
-    arrow(r,x+19,cy,cx-23,cy,'#d9f2ff',2.5);
-    r.sprite('prism',cx,cy,61,61,0,'#fff');
-    r.line(cx,cy-17,cx,cy-48,3,COLORS[1]);arrow(r,cx,cy-35,cx,cy-48,COLORS[1],2);
-    arrow(r,cx+24,cy,x+159,cy,COLORS[2],2.5);
-    r.line(cx,cy+17,cx,cy+48,3,COLORS[4]);arrow(r,cx,cy+35,cx,cy+48,COLORS[4],2);
-    centered(r,'R LEFT',cx,122,12,COLORS[1]);
-    r.text('G STRAIGHT',x+108,cy+15,8.5,COLORS[2]);
-    centered(r,'B RIGHT',cx,239,12,COLORS[4]);
+    arrow(r,x+10,cy,cx-54,cy,'#d9f2ff',2.5);r.text('IN',x+12,cy-18,10,'#d9f2ff');
+    r.sprite('rgb_router',cx,cy,112,112,0,'#fff');
+    arrow(r,cx,cy-49,cx,cy-61,COLORS[1],2);
+    arrow(r,cx+49,cy,x+174,cy,COLORS[2],2.5);
+    arrow(r,cx,cy+49,cx,cy+61,COLORS[4],2);
+    centered(r,'R LEFT',cx,112,12,COLORS[1]);
+    r.text('G',x+177,cy-6,11,COLORS[2]);
+    centered(r,'B RIGHT',cx,257,12,COLORS[4]);
     r.line(x+16,282,x+w-16,282,1,'#284255');
     const selected=s.devices.find(d=>d.id===s.selectedId);
     r.text('SELECTED DEVICE',x+16,300,10,'#7c99b0');
     if(selected){
       const prism=selected.type==='prism';
-      r.sprite(selected.type,x+40,345,48,48,selected.orientation*Math.PI/2,'#fff');
-      r.text(prism?'PRISM':'MIRROR',x+72,327,16,'#c4f6f0');
+      r.sprite(prism?'rgb_router':'mirror',x+40,345,48,48,selected.orientation*Math.PI/2,'#fff');
+      r.text(prism?'RGB ROUTER':'MIRROR',x+72,327,prism?13:16,'#c4f6f0');
       r.text(prism?'IN: '+DIRECTIONS[selected.orientation]:(selected.orientation===0?'FACE: /':'FACE: \\'),x+72,350,10,'#8bb2c7');
       r.text('A  CLOCKWISE',x+17,380,11,'#b8d8e7');r.text('B  COUNTERCLOCKWISE',x+17,400,10,'#b8d8e7');
     }
     r.line(x+16,425,x+w-16,425,1,'#284255');
-    if(s.level===3||s.level===4||s.level===6){r.text(s.level===3?'R + B = MAGENTA':s.level===4?'G + B = CYAN':'R + G + B = WHITE',x+16,442,11,COLORS[s.level===3?5:s.level===4?6:7]);r.text('CROSSING DOES NOT MIX',x+16,464,9,'#7396ab');}
-    else {r.text('HOLD ALL TARGETS',x+16,442,12,'#b3dfdf');r.text('2 SECONDS TO COMPLETE',x+16,464,9,'#7396ab');}
+    if(s.level===3||s.level===4||s.level===6){r.text(s.level===3?'R + B = MAGENTA':s.level===4?'G + B = CYAN':'R + G + B = WHITE',x+16,442,11,COLORS[s.level===3?5:s.level===4?6:7]);r.text('CROSSING KEEPS CHANNELS',x+16,464,8.5,'#8ba8bc');}
+    else {r.text('DICHROIC + MIRRORS',x+16,442,10,'#b3dfdf');r.text('PORTS: OPTICAL ISOLATORS',x+16,464,8.5,'#8ba8bc');}
   }
   root.GameDef={
     id:'prism-relay',stylesheet:'game-theme.css',title:'镜光接力',tagline:'让一束白光，抵达每一种色彩',seed:29,
-    accent:'#8ce9dd',background:'#071522',levelLabel:'关卡',levelNames:['折转','分色','合光','双源','双谱','回白'],
-    description:'用方向键选择镜片或棱镜，A 顺时针转，B 逆时针转。棱镜只接收箭头方向的光：R 红光向左转、G 绿光直行、B 蓝光向右转。让所有接收器持续获得准确颜色 2 秒。六关从单镜反射到双光源、双棱镜及三色绕行。光束交叉不会混色。',
+    accent:'#8ce9dd',background:'#071522',levelLabel:'关卡',levelNames:['折转','分色','合光','双源','双路','回白'],atlas,
+    description:'方向键选器件，A 顺转，B 逆转。分光模块用分色镜、转向镜和单向隔离端口，将入口中的 R/G/B 分别送往左/前/右。只跟踪 RGB 通道，不模拟完整光谱或光强。接收器连续收到目标通道 2 秒过关；相交光束仍沿原路传播。',
     controls:{move:'摇杆 / 方向键：选择器件',a:'顺时针旋转 · 空格 / 右上半屏',b:'逆时针旋转 · B / 右下半屏'},
     actionLabels:['顺时针转','逆时针转'],
-    tip:'R 左、G 直、B 右。只在接收器合色；绕开橙色吸收器。',
+    tip:'模块 R 左、G 直、B 右；回光被隔离吸收。接收器汇总通道，避开橙色吸收器。',
     winTitle:'每一束光，都已抵达',loseTitle:'再调整一次光路',
     result(s){return s.phase==='won'?'第 '+s.level+' 关「'+s.levelName+'」全部接收器充能完成，用时 '+s.elapsed.toFixed(1)+' 秒。用左右键选择其他关卡，再按 Enter 开始。':(s.message||'光源能量已耗尽。')+' 可以保留这次思路，重新调整镜片。';},
     hud(s){
@@ -137,12 +157,12 @@
       const heat=s.hazards.reduce((m,h)=>Math.max(m,h.heat/h.limit),0);
       return[{label:'接收器充能',value:done+' / '+s.receivers.length,tone:'good'},
         {label:'光源剩余',value:Math.max(0,Math.ceil(s.remaining))+' s',tone:s.remaining<12?'warn':''},
-        {label:'选中器件',value:selected?(selected.type==='prism'?'棱镜':'镜片')+' '+(s.devices.indexOf(selected)+1):'—'},
+        {label:'选中器件',value:selected?(selected.type==='prism'?'分光模块':'镜片')+' '+(s.devices.indexOf(selected)+1):'—'},
         {label:s.hazards.length?'最高热量':'当前关卡',value:s.hazards.length?Math.ceil(heat*100)+'%':'折转',tone:heat>.65?'warn':''}];
     },
     render(r,s,t){
-      r.text('PRISM RELAY',27,19,17,'#d6f1fa');r.text('OPTICAL BENCH / 0'+s.level,27,40,9,'#66899f');
-      r.text(['01 / REFLECTION','02 / DISPERSION','03 / COMBINATION','04 / TWO SOURCES','05 / DUAL SPECTRUM','06 / WHITE RETURN'][s.level-1],747,24,11,'#8fc9cf');
+      r.text('LIGHT RELAY',27,19,17,'#d6f1fa');r.text('OPTICAL BENCH / 0'+s.level,27,40,9,'#66899f');
+      r.text(['01 / REFLECTION','02 / RGB SEPARATION','03 / COMBINATION','04 / TWO SOURCES','05 / DUAL ROUTERS','06 / WHITE RETURN'][s.level-1],747,24,11,'#8fc9cf');
       board(r,s,t);sidebar(r,s,t);
       r.line(26,514,935,514,1,'#274151');r.text('SELECT  >  ROTATE  >  CONNECT',27,523,9,'#7093a8');
       r.text('R LEFT   /   G STRAIGHT   /   B RIGHT',663,523,9,'#6b94aa');

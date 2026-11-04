@@ -1,4 +1,4 @@
-/* Mirror / prism optics and 10 Hz rules; independent of rendering and clocks. */
+/* Mirror reflection / isolated RGB routing and 10 Hz rules; no spectral or power simulation. */
 (function (root, factory) {
   "use strict";
   var model = factory();
@@ -25,7 +25,7 @@
       ["receiver", 8, 4, 5], ["receiver", 5, 0, 2], ["hazard", 0, 1], ["hazard", 0, 7], ["hazard", 5, 8]
     ] },
     {"name": "两座灯塔的青光", "width": 9, "height": 7, "duration": 750, "heat": 360, "cells": [["source", 0, 1, 0, 2], ["mirror", 3, 1, 0], ["mirror", 3, 5, 0], ["source", 8, 1, 2, 4], ["mirror", 7, 1, 1], ["receiver", 7, 5, 6], ["hazard", 3, 0], ["hazard", 7, 0], ["wall", 5, 3]] },
-    {"name": "双棱镜四色港", "width": 11, "height": 9, "duration": 900, "heat": 400, "cells": [["source", 0, 2, 0, 3], ["prism", 3, 2, 3], ["mirror", 5, 2, 0], ["source", 10, 5, 2, 6], ["prism", 7, 5, 1], ["mirror", 3, 5, 1], ["receiver", 3, 0, 1], ["receiver", 5, 8, 2], ["receiver", 7, 0, 4], ["receiver", 3, 8, 2], ["hazard", 5, 0], ["hazard", 7, 8], ["hazard", 10, 2]] },
+    {"name": "双模块四色港", "width": 11, "height": 9, "duration": 900, "heat": 400, "cells": [["source", 0, 2, 0, 3], ["prism", 3, 2, 3], ["mirror", 5, 2, 0], ["source", 10, 5, 2, 6], ["prism", 7, 5, 1], ["mirror", 3, 5, 1], ["receiver", 3, 0, 1], ["receiver", 5, 8, 2], ["receiver", 7, 0, 4], ["receiver", 3, 8, 2], ["hazard", 5, 0], ["hazard", 7, 8], ["hazard", 10, 2]] },
     {"name": "绕行之后再成白", "width": 13, "height": 9, "duration": 1200, "heat": 500, "cells": [["source", 0, 4, 0, 7], ["prism", 3, 4, 2], ["mirror", 3, 1, 1], ["mirror", 9, 1, 0], ["mirror", 3, 7, 0], ["mirror", 9, 7, 1], ["mirror", 6, 4, 1], ["mirror", 6, 2, 1], ["mirror", 11, 2, 0], ["mirror", 11, 4, 1], ["receiver", 9, 4, 7], ["hazard", 0, 1], ["hazard", 0, 7], ["hazard", 6, 0], ["hazard", 12, 2], ["hazard", 12, 4], ["hazard", 6, 8]] }
   ];
   function finite(value, fallback) { return typeof value === "number" && Number.isFinite(value) ? value : fallback; }
@@ -65,6 +65,7 @@
         segment(ray.x, ray.y, x, y, color);
         if (cell.type === "mirror") {
           queue.push({ x: x, y: y, direction: MIRRORS[mod(cell.orientation, 2)][direction], colorBits: color });
+        // Legacy type "prism" denotes an isolated RGB routing module, not glass dispersion.
         } else if (cell.type === "prism" && direction === mod(cell.orientation, 4)) {
           [1, 2, 4].forEach(function (bit, index) {
             if (color & bit) queue.push({ x: x, y: y, direction: mod(direction + index - 1, 4), colorBits: bit });
@@ -96,7 +97,7 @@
       timeLimitTicks: level.duration, remainingTicks: level.duration, score: 0,
       cells: [], devices: [], receivers: [], hazards: [], sources: [], beams: [], selectedId: null,
       chargeTicks: CHARGE, hazardLimit: level.heat, traceVersion: 0, tracedStates: 0,
-      message: index === 0 ? "选中镜片 · A 顺时针 / B 逆时针 · 连续照亮目标 2 秒" : "方向键选择器件 · A 顺时针 / B 逆时针 · 棱镜红左绿直蓝右",
+      message: index === 0 ? "选中镜片 · A 顺时针 / B 逆时针 · 连续照亮目标 2 秒" : "方向键选择器件 · A 顺时针 / B 逆时针 · 模块红左绿直蓝右",
       events: [], lostReason: null, _tickRemainder: 0, _aDown: false, _bDown: false,
       _direction: -1, _repeatIn: 0
     };
@@ -104,7 +105,7 @@
       var cell = { type: data[0], x: data[1], y: data[2] };
       if (cell.type === "mirror" || cell.type === "prism") {
         cell.id = "device-" + (state.devices.length + 1); cell.orientation = data[3];
-        cell.name = (cell.type === "prism" ? "分色棱镜 " : "反射镜 ") + (state.devices.length + 1);
+        cell.name = (cell.type === "prism" ? "分光模块 " : "反射镜 ") + (state.devices.length + 1);
         state.devices.push(cell);
       } else if (cell.type === "source") {
         cell.id = "source-" + (state.sources.length + 1); cell.direction = data[3]; cell.color = data[4]; state.sources.push(cell);

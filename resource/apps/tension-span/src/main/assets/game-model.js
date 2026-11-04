@@ -39,9 +39,10 @@
     }
     return null;
   }
-  function contacts(state) {
+  function contacts(state, x) {
     var car = state.car;
-    return [-1, 1].map(function (sign) { return surface(state, car.x + sign * car.wheelbase / 2); });
+    var centerX = x === undefined ? car.x : x;
+    return [-1, 1].map(function (sign) { return surface(state, centerX + sign * car.wheelbase / 2); });
   }
   function poseCar(state) {
     var car = state.car, support = contacts(state);
@@ -50,10 +51,27 @@
         y: hit.y - car.wheelRadius, contact: true, panelId: hit.panelId }; });
       car.y = (car.wheels[0].y + car.wheels[1].y) / 2 - 18;
       car.angle = Math.atan2(car.wheels[1].y - car.wheels[0].y, car.wheelbase);
+      // Supported travel uses the documented projected-wheelbase approximation.
+      // Preserve its actual last wheel separation when support is lost.
+      car.axleLength = Math.hypot(car.wheels[1].x - car.wheels[0].x, car.wheels[1].y - car.wheels[0].y);
     } else {
-      car.wheels = [-1, 1].map(function (sign) { return { x: car.x + Math.cos(car.angle) * sign * car.wheelbase / 2,
-        y: car.y + 18 + Math.sin(car.angle) * sign * car.wheelbase / 2, contact: false, panelId: null }; });
+      car.wheels = [-1, 1].map(function (sign) { return { x: car.x + Math.cos(car.angle) * sign * car.axleLength / 2,
+        y: car.y + 18 + Math.sin(car.angle) * sign * car.axleLength / 2, contact: false, panelId: null }; });
     }
+  }
+  function leaveDeck(state) {
+    if (state.car.falling) return;
+    // Losing support supplies no impulse: retain measured supported vx/vy/omega
+    // and the current wheel/body pose. One-wheel pivoting is outside this model.
+    state.car.falling = true; emit(state, 'fall');
+  }
+  function freeFlight(car) {
+    // Velocities are m/s and rad/s; drawing coordinates are pixels. With no
+    // horizontal force or torque, only gravity changes velocity in free flight.
+    car.x += car.vx * SCALE * DT;
+    car.y += (car.vy * DT + 0.5 * G * DT * DT) * SCALE;
+    car.vy += G * DT;
+    car.angle += car.angularVelocity * DT;
   }
   function buildGeometry(state) {
     var settings = SETTINGS[state.difficulty], left = settings.ends[0], right = settings.ends[1];
@@ -72,8 +90,8 @@
         stiffness: 6000, damping: 90, cost: Math.ceil(length * 10), x: (anchor.x + node.x) / 2, y: (anchor.y + node.y) / 2,
         brokenAt: null });
     });
-    state.car = { x: left - 80, y: 282, angle: 0, speed: settings.speed || 20, mass: settings.mass, wheelbase: 56, wheelRadius: 10,
-      wheels: [], falling: false, vy: 0, finished: false, finishX: right + 80 };
+    state.car = { x: left - 80, y: 282, angle: 0, speed: settings.speed || 20, mass: settings.mass, wheelbase: 56, axleLength: 56, wheelRadius: 10,
+      wheels: [], falling: false, vx: (settings.speed || 20) / SCALE, vy: 0, angularVelocity: 0, finished: false, finishX: right + 80 };
     state.brokenCount = 0; state.peakTensionRatio = 0; poseCar(state);
   }
   function create(seed, difficulty) {
@@ -140,7 +158,7 @@
     state.nodes.forEach(function (node) { forces[node.id] = node.mass * G - node.vy * 12; loads[node.id] = 0; });
     if (!car.falling) {
       var support = contacts(state);
-      if (!support.every(Boolean)) { car.falling = true; car.vy = 0; emit(state, 'fall'); }
+      if (!support.every(Boolean)) leaveDeck(state);
       else support.forEach(function (hit) {
         if (!hit.aId) return;
         var weight = car.mass * G / 2;
@@ -184,10 +202,16 @@
         panel.broken = true; emit(state, 'panel-break', { id: panel.id });
       }
     });
-    if (!car.falling && !contacts(state).every(Boolean)) { car.falling = true; car.vy = 0; emit(state, 'fall'); }
-    car.x += car.speed * DT * (car.falling ? 0.35 : 1);
-    if (car.falling) { car.vy += G * DT; car.y += car.vy * SCALE * DT; car.angle += 0.45 * DT; }
-    poseCar(state);
+    var nextX = car.x + car.speed * DT;
+    if (!car.falling && (!contacts(state).every(Boolean) || !contacts(state, nextX).every(Boolean))) leaveDeck(state);
+    if (car.falling) { freeFlight(car); poseCar(state); }
+    else {
+      var previousX = car.x, previousY = car.y, previousAngle = car.angle;
+      car.x = nextX; poseCar(state);
+      car.vx = (car.x - previousX) / (SCALE * DT);
+      car.vy = (car.y - previousY) / (SCALE * DT);
+      car.angularVelocity = (car.angle - previousAngle) / DT;
+    }
     if (car.falling && car.y > 500) failure(state, 'vehicle-fall');
     else if (!car.falling && Math.abs(car.angle) > 0.7) failure(state, 'bridge-slope');
     else if (!car.falling && car.x >= car.finishX) {

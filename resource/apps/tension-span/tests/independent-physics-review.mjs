@@ -20,8 +20,8 @@ const report={schema:1,startedAt:new Date().toISOString(),source:{modelPath,mode
  execution:{runtime:process.version,modelApi:['create','step'],sourceFilesModified:false,physicalTvTested:false,physicalPhoneTested:false,
   fixtureScope:'Isolated force, damping, failure and load boundary tests intentionally construct model states. They are not ordinary gameplay or capture evidence.',
   normalSequenceScope:'Separate sequences modify their live state only through create/step inputs; planning clones may explore selectable candidates. Model-time tests are not real-time video.'},
- assumptions:{pixelsPerMetre:50,tickHz:120,gravity:G,model:'Vertical small-deflection deck; fixed x, fixed bank end reactions, prescribed vehicle speed and equal two-wheel static loads. Not a full vehicle/structural FEM.',
-  conservedQuantity:'Internal panel forces sum to zero. Fixed supports, anchors, gravity, vehicle drive and damping are external constraints/work, so total closed-system energy conservation is not claimed.'},
+ assumptions:{pixelsPerMetre:50,tickHz:120,gravity:G,model:'Vertical small-deflection deck; fixed x, fixed ground anchors/bank end reactions, prescribed supported vehicle speed and equal two-wheel static loads. Projected supported wheelbase; departure freezes actual axle length and inherits measured pose velocities. No one-wheel pivot/contact solver or full vehicle/structural FEM.',
+  conservedQuantity:'Internal panel forces sum to zero. Fixed supports, anchors, gravity, vehicle drive and damping are external constraints/work, so total closed-system energy conservation is not claimed. Unsupported flight preserves horizontal velocity and angular velocity; vertical position follows constant gravity.'},
  checks:[],normalSequences:[],failures:[]};
 async function test(name,fn){const start=performance.now();try{const detail=await fn();report.checks.push({name,passed:true,elapsedMs:performance.now()-start,...detail});console.log('PASS '+name);}catch(error){report.checks.push({name,passed:false,error:error.stack});report.failures.push(name);throw error;}}
 const close=(actual,expected,label,tolerance=1e-8)=>assert.ok(Math.abs(actual-expected)<=tolerance,`${label}: ${actual} vs ${expected}`);
@@ -94,6 +94,23 @@ try{
   close(light.nodes.reduce((sum,n)=>sum+n.load,0),90*G,'light vehicle weight');close(heavy.nodes.reduce((sum,n)=>sum+n.load,0),180*G,'heavy vehicle weight');
   for(let i=0;i<5;i++){close(heavy.nodes[i].load,light.nodes[i].load*2,'doubled per-node load');if(light.nodes[i].load>0&&!light.nodes[i].fixed)assert.ok(heavy.nodes[i].y>light.nodes[i].y);}
   return{lightN:90*G,heavyN:180*G,lightLoads:light.nodes.map(n=>n.load),heavyLoads:heavy.nodes.map(n=>n.load)};
+ });
+ await test('Departure after ordinary supported motion preserves momentum, axle length and analytic free-flight trajectory',()=>{
+  const s=build(M.create(83,0),['cable-1-1','cable-2-1','cable-2-2','cable-3-2']);tap(s,'b');
+  let found=false;
+  for(let i=0;i<3600&&s.mode==='testing';i++){M.step(s,DT,{});if(s.car.wheels.every(w=>String(w.panelId).startsWith('panel-'))&&Math.abs(s.car.angle)>.015&&Math.abs(s.car.vy)>.003&&Math.abs(s.car.angularVelocity)>.001){found=true;break;}}
+  assert.ok(found,'Actual supported prefix must have a nonzero inclination, vertical speed and turn rate');
+  const before=clone(s.car),length=Math.hypot(before.wheels[1].x-before.wheels[0].x,before.wheels[1].y-before.wheels[0].y);
+  // Deliberately constructed rupture boundary, after the ordinary prefix.
+  s.panels.forEach(p=>{p.broken=true;});
+  for(let i=1;i<=12;i++){
+   M.step(s,DT,{});const t=i*DT,c=s.car;assert.equal(c.falling,true);
+   close(c.vx,before.vx,'horizontal momentum');close(c.angularVelocity,before.angularVelocity,'angular velocity without torque');
+   close(c.vy,before.vy+G*t,'gravity velocity');close(c.x,before.x+before.vx*SCALE*t,'horizontal trajectory');
+   close(c.y,before.y+(before.vy*t+.5*G*t*t)*SCALE,'vertical trajectory');close(c.angle,before.angle+before.angularVelocity*t,'angle');
+   close(Math.hypot(c.wheels[1].x-c.wheels[0].x,c.wheels[1].y-c.wheels[0].y),length,'actual axle length');
+  }
+  return{fixtureOnlyAtRupture:true,ordinarySupportedPrefix:true,flightSeconds:12*DT,departure:{vx:before.vx,vy:before.vy,angularVelocity:before.angularVelocity,axleLength:length},analyticGravity:G};
  });
  await test('Slack and contracting cables never push; overload breaks once and contributes zero after removal',()=>{
   const s=M.create(1,0);s.mode='testing';s.car.falling=true;const c=s.cables[0];c.installed=true;c.restLength=c.length+2;c.maxTension=1e6;s.nodes[1].vy=2;M.step(s,DT,{});assert.equal(c.tension,0);assert.equal(c.broken,false);

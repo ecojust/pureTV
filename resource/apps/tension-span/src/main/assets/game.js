@@ -78,6 +78,16 @@
     s.anchors.forEach((anchor,i)=>{
       const foot=s.nodes.filter(n=>n.fixed).reduce((near,node)=>Math.abs(node.x-anchor.x)<Math.abs(near.x-anchor.x)?node:near,fixed[0]);
       const baseY=foot.y+33,height=baseY-anchor.y;
+      if(anchor.x>left.x&&anchor.x<right.x){
+        // This pier grounds the fixed tower anchor. It has no deck bearing or
+        // added model node; the deck still receives support only from its cables.
+        r.sprite('bridge_rock',anchor.x,468,70,40,0,'#b9c8b7');
+        r.rect(anchor.x-8,baseY+8,16,440-baseY-8,'#68868a');
+        r.rect(anchor.x-8,baseY+8,5,440-baseY-8,'#b5c5bc');
+        r.rect(anchor.x+5,baseY+8,3,440-baseY-8,'#385c6c');
+        r.rect(anchor.x-24,440,48,11,'#b4c3b3');r.line(anchor.x-24,440,anchor.x+24,440,2,'#e1e6d3');
+        centerText(r,'FIXED',anchor.x+(i?-40:40),409,14,'#edf0d6');
+      }
       r.rect(anchor.x-22,baseY-4,44,15,'#456472');r.rect(anchor.x-19,baseY-8,38,12,'#b5c0af');
       r.rect(anchor.x-9,anchor.y,18,height,'#68868a');r.rect(anchor.x-8,anchor.y,5,height,'#b5c5bc');r.rect(anchor.x+5,anchor.y,4,height,'#385c6c');
       for(let y=anchor.y+28;y<baseY-4;y+=33)r.line(anchor.x-8,y,anchor.x+8,y,2,'#d0d6c0');

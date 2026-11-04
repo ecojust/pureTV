@@ -40,6 +40,54 @@ function isolatedCableFixture() {
   state.cables[0].installed = true;
   return state;
 }
+function movingSupportedCar() {
+  const state=build(model.create(1,0),strong);press(state,{b:true});
+  for(let i=0;i<3600&&state.mode==='testing';i++){
+    ticks(state,1);
+    if(state.car.wheels.every(w=>String(w.panelId).startsWith('panel-'))&&Math.abs(state.car.angle)>.015&&Math.abs(state.car.vy)>.003&&Math.abs(state.car.angularVelocity)>.001)return state;
+  }
+  assert.fail('Ordinary supported crossing must provide an inclined, moving departure pose');
+}
+
+test('supported vehicle velocities come from actual translating and turning poses',()=>{
+  const state=movingSupportedCar();let movingVertically=false,turning=false;
+  for(let i=0;i<120;i++){
+    const before=clone(state.car);ticks(state,1);const car=state.car;
+    assert.equal(car.falling,false);assert.equal(state.mode,'testing');
+    near(car.vx,(car.x-before.x)/(state.pixelScale*DT));
+    near(car.vy,(car.y-before.y)/(state.pixelScale*DT));
+    near(car.angularVelocity,(car.angle-before.angle)/DT);
+    movingVertically ||= Math.abs(car.vy)>.003;turning ||= Math.abs(car.angularVelocity)>.001;
+  }
+  assert.ok(movingVertically&&turning);
+});
+
+test('rupture after ordinary supported travel preserves departure momentum and wheel/body geometry',()=>{
+  const state=movingSupportedCar(),before=clone(state.car),length=Math.hypot(before.wheels[1].x-before.wheels[0].x,before.wheels[1].y-before.wheels[0].y);
+  // Explicit failure-boundary fixture: rupture all panels after a genuine
+  // supported input sequence. This is not an ordinary gameplay/video result.
+  state.panels.forEach(panel=>{panel.broken=true;});
+  for(let i=1;i<=12;i++){
+    ticks(state,1);const car=state.car,t=i*DT;
+    assert.equal(car.falling,true);near(car.vx,before.vx);near(car.angularVelocity,before.angularVelocity);
+    near(car.vy,before.vy+state.gravity*t);near(car.x,before.x+before.vx*state.pixelScale*t);
+    near(car.y,before.y+(before.vy*t+.5*state.gravity*t*t)*state.pixelScale);
+    near(car.angle,before.angle+before.angularVelocity*t);near(car.axleLength,length);
+    near(Math.hypot(car.wheels[1].x-car.wheels[0].x,car.wheels[1].y-car.wheels[0].y)/143,length/143,1e-8,'rendered body scale cannot shrink on departure');
+    car.wheels.forEach((wheel,index)=>{const sign=index?1:-1;near(wheel.x,car.x+Math.cos(car.angle)*sign*length/2);near(wheel.y,car.y+18+Math.sin(car.angle)*sign*length/2);assert.equal(wheel.contact,false);});
+  }
+});
+
+test('free-flight gravity preserves zero or negative spin and horizontal momentum',()=>{
+  for(const omega of [0,-.5]){
+    // Synthetic airborne initial conditions isolate Newtonian free flight.
+    const state=model.create(1,0);state.mode='testing';Object.assign(state.car,{falling:true,vx:-.3,vy:-1,angularVelocity:omega,angle:.2,axleLength:60});
+    const before=clone(state.car);ticks(state,60);const car=state.car,t=60*DT;
+    near(car.vx,-.3);near(car.angularVelocity,omega);near(car.vy,-1+state.gravity*t);
+    near(car.x,before.x-.3*state.pixelScale*t);near(car.y,before.y+(-t+.5*state.gravity*t*t)*state.pixelScale);
+    near(car.angle,before.angle+omega*t);near(car.axleLength,60);assert.equal(state.mode,'testing');
+  }
+});
 
 test('UMD exposes the normal API and creates independent geometry for six distinct load cases', () => {
   const context = {}; vm.createContext(context);
