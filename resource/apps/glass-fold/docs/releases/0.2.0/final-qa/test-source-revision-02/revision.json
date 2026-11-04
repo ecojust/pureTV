@@ -1,0 +1,53 @@
+{
+  "kind": "test-only-recording-transition-acknowledgement-revision",
+  "testSourceCommit": "eb982768156c17fcdedba3967dbd370ece9a2054",
+  "productionSourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+  "priorTestSourceCommit": "e5bd770e739b643dda8946825949281791aa50dc",
+  "priorRevision": "../test-source-revision-01/revision.json",
+  "actualAutomationSource": "automation.mjs",
+  "actualRecipe": "recipe.json",
+  "archiveHashes": {
+    "automation.mjs": "e341faebe34a687031939d3dae14e8fe4b82f6b36c6c8b5f9d2155d134f37128",
+    "browser-checks.mjs": "35e022e3957c9a96dc97a67a76f33b6eb27950078101739d36b87f860b34076e",
+    "recipe.json": "9f293338f646ab21d6d845d88288df6957ce1fd2475f318065415ba743163b80",
+    "game-model.test.cjs": "4e698abe8f082ae24c8db3175c5bd64eaea8b7f0c206f011ea6930ccc089ece7",
+    "deps/verify-artifacts.py": "3818578d1ebec724718f34c7ccd079850dd0f18e896abafcaeeeb7fffebd2105",
+    "deps/qa.mjs": "aa9e781afa6f0115658cab5e7cfa77f5f7f5dbe21c58abe6d4a1d4bea498e21b",
+    "deps/frame-stream.mjs": "6f3d910169cad3898d00d423f765b8b055221ce1b453722b9e25b5cd87e81815",
+    "deps/record.mjs": "dcddf0f27da00eec307e43f6934eb2c3e91f6c805fbc4ba11a3d1ae005857ef2",
+    "deps/common.mjs": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+    "independent-review/actual-latched-campaign-report.json": "572620b1cc3879447b1a70ac4a5a56a534d91f16ec6885337b5a4abc53c594ae",
+    "independent-review/latched-campaign-report.json": "2d5cf3e078462d4a3e5ad833fc63ce3c6ac8f2cb004973645410d21f1043c99d",
+    "independent-review/tracked-local-regression.txt": "4d565e5159f4181060f83138523263b9779d7cb0f3dc5736b7f1f981c9505f28",
+    "independent-review/check-actual-latched-campaign.mjs": "1bed3d8b8f59255d48b7f77ab02757644d352e782590dad8970f8db8d2c5e8b8",
+    "independent-review/check-latched-campaign.mjs": "c964fd17e43930bfce88af67abd47a728cd65100802c4c2ebe877ea6c6fa2f99",
+    "independent-review/delayed-confirm-repro.json": "cda15576842c3dc32fb8aaeb257f2569ebda678ffe1518723b997fab9b756c4a",
+    "independent-review/automation-latched.mjs": "0df20da779cc03b60313f57c034701fa99dd2710cbba81de5334dd2e76bfcf04",
+    "independent-review/delayed-confirm-repro.mjs": "6cc5b95a38258c8dcefb5ab42aa7fc40a9709367c468e4c92688825d8a28ba46"
+  },
+  "changes": [
+    "Send each ArrowRight menu request once, release it and wait until the intended menu selection is observed.",
+    "Send Enter once, release it and wait for an actual playing snapshot; never repeat it based on a stale won observation.",
+    "Reset both pending acknowledgements only on the actual playing phase.",
+    "Increase the recording recipe from225 to240 seconds for browser scheduling margin."
+  ],
+  "failureEvidence": "../recording-01/failure-review.json",
+  "productionChanged": false,
+  "reusedEvidence": [
+    "../browser-01/report.json",
+    "../shared-01/report.json"
+  ],
+  "localValidation": {
+    "command": "node --test --test-name-pattern='recording menu requests|exported recording pilot' resource/apps/glass-fold/tests/game-model.test.cjs",
+    "passed": 2,
+    "failed": 0,
+    "stdout": "independent-review/tracked-local-regression.txt",
+    "normalCampaignSeconds": 209.7600000000104,
+    "independentDelayedMenuSeconds": 214.6,
+    "independentActualSourceReport": "independent-review/actual-latched-campaign-report.json",
+    "delayPerMenuEventSeconds": 0.55
+  },
+  "recordingAttempt": "recording-02",
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

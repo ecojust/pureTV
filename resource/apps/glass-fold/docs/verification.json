@@ -1,770 +1,196 @@
 {
-  "schema": 1,
-  "game": "glass-fold",
-  "version": "0.1.0",
-  "sourceCommit": "52485ae293ac45c39df9572b0d860f85c8d6e970",
-  "automationSha256": "ad0f9c89589b714baa984043dd13e95e62324488114e45b248274449809808ca",
-  "modelTests": {
-    "passed": 31,
-    "command": "node --test resource/apps/glass-fold/tests/game-model.test.cjs",
-    "sourceHashes": {
-      "src/main/assets/game-model.js": "02f9be74ac88704c0286766fac90d9ab6e0deee0f92ceda6aa9d306db9538fad",
-      "tests/game-model.test.cjs": "15bffee875dc71bebe8614748de7126bf8baf28074e6725083550065c380bc09",
-      "tests/automation.mjs": "ad0f9c89589b714baa984043dd13e95e62324488114e45b248274449809808ca",
-      "docs/model-contract.md": "6bb46792e0993dfd6711c3024db8b6a7387c7df5156e09b23df2f09b5b7fecab"
+  "version": "0.2.0",
+  "sourceCommit": "40a9c83627463151ef4685a5286e20e9fadd145d",
+  "levelCount": 6,
+  "newLevels": 3,
+  "passed": true,
+  "evidence": {
+    "browser": {
+      "file": "docs/releases/0.2.0/final-qa/browser-01/report.json",
+      "sha256": "7724f691e84fc05314952f6a8f39a87081e6903bae7f36cfa22aceaacb79cf0e"
     },
-    "testLogSha256": "ee3440b38416b2502aa8a9d77dfa7230cb36a4e85594f5f7b3a6e84bdd4aa666",
-    "rawReportSha256": "c77a4ceab85bc7695dc7a7a47ec82cbab8fab37ef6b05696ef33ea8fc2fd5a00",
-    "scope": "28 geometric/input/resource boundary groups plus three actual authored rounds driven by independent public-state search. Private model fields removed from pilot snapshots. Each complete round executes alternate fold, ordinary undo, then visible-target repair; no live state writes or browser/physical hardware claim."
-  },
-  "independentFoldReview": {
-    "passed": true,
-    "file": "independent-fold-review.json",
-    "sha256": "8f5f117b45a059aa449face9f4330783aeacf6cb26db587dbf937fc580e6c2b4",
-    "checksPassed": 8,
-    "totals": {
-      "searchNodes": 1787,
-      "searchEdges": 5052,
-      "comparedTransitions": 5052,
-      "ordinarySolutionWins": 3
+    "shared": {
+      "file": "docs/releases/0.2.0/final-qa/shared-01/report.json",
+      "sha256": "aa36804edbe0f11d3d3760d2d0a4603ed6e85a1f38b444af5318f794d3a5fd23"
     },
-    "ordinaryAuthoredModelSolutions": [
-      {
-        "level": 1,
-        "phase": "won",
-        "elapsed": 6.05,
-        "score": 2115,
-        "foldsUsed": 3,
-        "foldLimit": 3,
-        "occupiedArea": 4,
-        "materialArea": 16,
-        "matchedCells": 4,
-        "targetMatched": true,
-        "mismatches": 0,
-        "route": [
-          {
-            "axis": "x",
-            "at": 1,
-            "movingSide": "low"
-          },
-          {
-            "axis": "x",
-            "at": 2,
-            "movingSide": "low"
-          },
-          {
-            "axis": "y",
-            "at": 2,
-            "movingSide": "high"
-          }
-        ]
-      },
-      {
-        "level": 2,
-        "phase": "won",
-        "elapsed": 6.016666666666667,
-        "score": 2115,
-        "foldsUsed": 3,
-        "foldLimit": 3,
-        "occupiedArea": 4,
-        "materialArea": 16,
-        "matchedCells": 4,
-        "targetMatched": true,
-        "mismatches": 0,
-        "route": [
-          {
-            "axis": "x",
-            "at": 2,
-            "movingSide": "low"
-          },
-          {
-            "axis": "y",
-            "at": 1,
-            "movingSide": "low"
-          },
-          {
-            "axis": "y",
-            "at": 2,
-            "movingSide": "low"
-          }
-        ]
-      },
-      {
-        "level": 3,
-        "phase": "won",
-        "elapsed": 8.883333333333333,
-        "score": 1805,
-        "foldsUsed": 4,
-        "foldLimit": 4,
-        "occupiedArea": 1,
-        "materialArea": 16,
-        "matchedCells": 1,
-        "targetMatched": true,
-        "mismatches": 0,
-        "route": [
-          {
-            "axis": "x",
-            "at": 2,
-            "movingSide": "low"
-          },
-          {
-            "axis": "y",
-            "at": 2,
-            "movingSide": "high"
-          },
-          {
-            "axis": "x",
-            "at": 3,
-            "movingSide": "low"
-          },
-          {
-            "axis": "y",
-            "at": 1,
-            "movingSide": "low"
-          }
-        ]
-      }
-    ],
-    "scope": {
-      "syntheticModelFixtures": true,
-      "ordinaryAuthoredModelSolutions": 3,
-      "normalGameplayVideoEvidence": false,
-      "browserExecuted": false,
-      "physicalTvTested": false,
-      "physicalPhoneTested": false
+    "recording": {
+      "file": "docs/releases/0.2.0/final-qa/recording-03/recording.json",
+      "sha256": "fe91cc1df7c79e9702ffc1db4ee7a8a33d3c212e22714d1b88c5cd30df3706f1"
+    },
+    "visual": {
+      "file": "docs/releases/0.2.0/final-qa/root-visual-review.json",
+      "sha256": "8c5761713bb538c8b8178bc505a1943c5f29d4c0c65613be8f07c8e30d81d5e0"
+    },
+    "publicationAudit": {
+      "file": "docs/releases/0.2.0/final-qa/publication-audit.json",
+      "sha256": "cfb7835c9a43d8307d8d5eb667e5f5c17e0cb2c793b27c2a76f3a0d700620acd"
+    },
+    "build": {
+      "file": "docs/releases/0.2.0/build-receipt.json",
+      "sha256": "203c1b1a3a1f6de32f700029585d2d1763a889238b29687451ca9416a33ce4cf"
+    },
+    "signing": {
+      "file": "docs/releases/0.2.0/signing-receipt.json",
+      "sha256": "5e8ca3974aa8b295a8a48b206ae08ce0e56cfcde4710bb6a227c8fef060831c7"
+    },
+    "fetch": {
+      "file": "docs/releases/0.2.0/fetch-verification.json",
+      "sha256": "c9faa2d071d4cc6c54b1df9b711a55a9fd00fa26f2cade77209e1bb9b1676449"
+    },
+    "artifacts": {
+      "file": "docs/releases/0.2.0/artifacts.json",
+      "sha256": "815a33d55fd9d3b4c0555209c21c6540ffb1b20931046ed5087221bf393e8a26"
     }
   },
-  "independentPlannerReview": {
-    "passed": true,
-    "file": "independent-pilot-review.json",
-    "sha256": "ef015aaca972a992716f59ed6d92cfe39bd1efa85da1c4f736c31463f0100a36",
-    "checksPassed": 11,
-    "pilotAndPredictorCalls": 47,
-    "sourceHashes": {
-      "tests/automation.mjs": "ad0f9c89589b714baa984043dd13e95e62324488114e45b248274449809808ca",
-      "docs/model-contract.md": "6bb46792e0993dfd6711c3024db8b6a7387c7df5156e09b23df2f09b5b7fecab",
-      "src/main/assets/game-model.js": "02f9be74ac88704c0286766fac90d9ab6e0deee0f92ceda6aa9d306db9538fad"
-    },
-    "scope": "Static inspection and bounded synthetic public-board observations; no production model import or step, browser or normal-game win claim."
-  },
-  "sourceArtReview": {
-    "passed": true,
-    "file": "art-review.json",
-    "sha256": "8c894d7da9c5a63b1d739e62ebd72092dc1415bc11f497b774a2eefa5ae94945",
-    "scope": "Fresh final-model source art review on one unchanged model02f9/gamec6258/pilotad0f asset set. All34 actual-model render cases and14 DOM layouts were executed with this source; two actual ordinary-browser footer/navigation regressions cover nonfinal settlement. Terminal/review DOM is explicitly layout-only fixture evidence. No packaged APK, browser-earned full victory, video, native-phone or physical-device claim is made here.",
-    "finalSourceHashes": {
-      "game": {
-        "path": "resource/apps/glass-fold/src/main/assets/game.js",
-        "sha256": "c6258af46b5a14faec9b453790ed62ce467d901e7cbd8522f6a76fc1ea244b30"
-      },
-      "model": {
-        "path": "resource/apps/glass-fold/src/main/assets/game-model.js",
-        "sha256": "02f9be74ac88704c0286766fac90d9ab6e0deee0f92ceda6aa9d306db9538fad"
-      },
-      "renderer": {
-        "path": "resource/game-kit/web/renderer.js",
-        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
-      },
-      "runtime": {
-        "path": "resource/game-kit/web/runtime.js",
-        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
-      },
-      "css": {
-        "path": "resource/game-kit/web/tv.css",
-        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
-      },
-      "html": {
-        "path": "resource/game-kit/web/tv.html",
-        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
-      },
-      "automation": {
-        "path": "resource/apps/glass-fold/tests/automation.mjs",
-        "sha256": "ad0f9c89589b714baa984043dd13e95e62324488114e45b248274449809808ca"
-      },
-      "config": {
-        "path": "resource/apps/glass-fold/game.json",
-        "sha256": "9df629153f3b33952357310139800f1c63bcc2d0e30d56293158cc21ea0ea08e"
-      },
-      "icon": {
-        "path": "resource/apps/glass-fold/icon.xml",
-        "sha256": "1a746496ba74a4a9a76d54c998e871f0d0419f8803f974ff0b2cfca58005535c"
-      },
-      "logo": {
-        "path": "resource/apps/glass-fold/logo.svg",
-        "sha256": "46dba41b59391799b8c85de3ff0296603385858fe08cd2ed105598e07f3356e2"
-      }
-    }
-  },
-  "sharedBrowserRegression": {
-    "passed": true,
-    "checks": [
-      {
-        "name": "loads title and read-only snapshot",
-        "passed": true
-      },
-      {
-        "name": "title is rendered",
-        "passed": true
-      },
-      {
-        "name": "Enter starts the normal game",
-        "passed": true
-      },
-      {
-        "name": "P freezes gameplay state and tick, P resumes",
-        "passed": true
-      },
-      {
-        "name": "ordinary movement and action input",
-        "passed": true
-      },
-      {
-        "name": "game-specific normal-play assertions",
-        "passed": true
-      },
-      {
-        "name": "gameplay frame is visible",
-        "passed": true
-      },
-      {
-        "name": "R restarts with clean simulation state",
-        "passed": true
-      },
-      {
-        "name": "resizing keeps canvas and complete sidebar text visible",
-        "passed": true
-      },
-      {
-        "name": "no page, console or resource errors",
-        "passed": true
-      }
-    ],
-    "sourceAssetHashes": {
-      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
-      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
-      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
-      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
-      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
-      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
-      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
-      "game-model.js": "02f9be74ac88704c0286766fac90d9ab6e0deee0f92ceda6aa9d306db9538fad",
-      "game.js": "c6258af46b5a14faec9b453790ed62ce467d901e7cbd8522f6a76fc1ea244b30",
-      "game-config.json": "86e81431821aa9551f5dd9f34b3094849a56b87bd49e54b19e0c8539f915c057",
-      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
-    },
-    "automationSha256": "ad0f9c89589b714baa984043dd13e95e62324488114e45b248274449809808ca"
-  },
-  "supplementaryUiAndFailure": {
-    "passed": true,
-    "mockNativeRoomForPhoneTests": true,
-    "checks": [
-      {
-        "name": "three works expose public geometry targets and fold limits",
-        "passed": true
-      },
-      {
-        "name": "keyboard and phone joystick choose menu works once per press",
-        "passed": true
-      },
-      {
-        "name": "menu blur and sound button expose their actual state",
-        "passed": true
-      },
-      {
-        "name": "held phone START starts only once without folding or pausing",
-        "passed": true
-      },
-      {
-        "name": "public crease grid clamps at its edges and selection spends no folds",
-        "passed": true
-      },
-      {
-        "name": "ordinary confirm on an invalid public crease is free and changes no glass",
-        "passed": true
-      },
-      {
-        "name": "held phone A makes one exact mirrored fold and animation does not queue controls",
-        "passed": true
-      },
-      {
-        "name": "held B undoes one fold and restores exact geometry selection and budget",
-        "passed": true
-      },
-      {
-        "name": "disconnect freezes a real half-turn and clears stale selection and action input",
-        "passed": true
-      },
-      {
-        "name": "pause primary and header buttons preserve the exact glass arrangement",
-        "passed": true
-      },
-      {
-        "name": "ordinary public-geometry folds naturally submit a nonmatching result",
-        "passed": true
-      },
-      {
-        "name": "held A in review cannot repeatedly submit or charge more mismatches",
-        "passed": true
-      },
-      {
-        "name": "B leaves the failed review and restores one fold without refunding time or failures",
-        "passed": true
-      },
-      {
-        "name": "a second ordinary bad fold produces exactly the second failed review",
-        "passed": true
-      },
-      {
-        "name": "a third ordinary failed submission reaches real terminal mismatch loss",
-        "passed": true
-      },
-      {
-        "name": "R restores the original full sheet palette faces budgets and history",
-        "passed": true
-      },
-      {
-        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
-        "passed": true
-      }
-    ],
-    "normalFailure": {
-      "reason": "mismatches",
-      "elapsed": 5.733333333333333,
-      "remaining": 84.26666666666667,
-      "foldsUsed": 3,
-      "foldLimit": 3,
-      "foldsRemaining": 0,
-      "foldCount": 5,
-      "undoCount": 2,
-      "reviewCount": 3,
-      "mismatches": 3,
-      "maxMismatches": 3,
-      "matchedCells": 0,
-      "targetMatched": false,
-      "outlineMatches": false,
-      "score": 0
-    }
-  },
-  "finalLayoutReview": {
-    "passed": true,
-    "sourceAssetHashes": {
-      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
-      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
-      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
-      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
-      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
-      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
-      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
-      "game-model.js": "02f9be74ac88704c0286766fac90d9ab6e0deee0f92ceda6aa9d306db9538fad",
-      "game.js": "c6258af46b5a14faec9b453790ed62ce467d901e7cbd8522f6a76fc1ea244b30",
-      "game-config.json": "86e81431821aa9551f5dd9f34b3094849a56b87bd49e54b19e0c8539f915c057",
-      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
-    },
-    "viewports": [
-      {
-        "name": "final-1280-won",
-        "scene": {
-          "x": 105.4375,
-          "y": 161,
-          "width": 823.109375,
-          "height": 463,
-          "right": 928.546875,
-          "bottom": 624
-        },
-        "dialog": {
-          "x": 306.984375,
-          "y": 238.296875,
-          "width": 420,
-          "height": 308.390625,
-          "right": 726.984375,
-          "bottom": 546.6875
-        },
-        "visible": true,
-        "filter": "blur(14px)",
-        "dialogFits": true,
-        "placeholderFits": true,
-        "sidebar": {
-          "scrollHeight": 576,
-          "clientHeight": 576,
-          "scrollTop": 0,
-          "asideTop": 94,
-          "asideBottom": 672,
-          "asideLeft": 1024,
-          "asideRight": 1252,
-          "tipText": "箭头侧会翻向另一边，层序也会倒转。用完折数自动检查；不符按 B 撤销，时间和错误不回退。",
-          "tipTextTop": 379,
-          "tipTextBottom": 424.78125,
-          "tipTextLeft": 1042,
-          "tipTextRight": 1232.5,
-          "tipTextFullyVisible": true,
-          "asideContentFits": true
-        },
-        "footerText": "0.1.0",
-        "bundledVersion": "0.1.0",
-        "footerVersionMatches": true
-      },
-      {
-        "name": "final-960-won",
-        "scene": {
-          "x": 58.28125,
-          "y": 118,
-          "width": 636.4375,
-          "height": 358,
-          "right": 694.71875,
-          "bottom": 476
-        },
-        "dialog": {
-          "x": 166.5,
-          "y": 159.09375,
-          "width": 420,
-          "height": 275.796875,
-          "right": 586.5,
-          "bottom": 434.890625
-        },
-        "visible": true,
-        "filter": "blur(14px)",
-        "dialogFits": true,
-        "placeholderFits": true,
-        "sidebar": {
-          "scrollHeight": 442,
-          "clientHeight": 442,
-          "scrollTop": 0,
-          "asideTop": 65,
-          "asideBottom": 509,
-          "asideLeft": 749,
-          "asideRight": 944,
-          "tipText": "箭头侧会翻向另一边，层序也会倒转。用完折数自动检查；不符按 B 撤销，时间和错误不回退。",
-          "tipTextTop": 332,
-          "tipTextBottom": 393.171875,
-          "tipTextLeft": 765,
-          "tipTextRight": 922.5,
-          "tipTextFullyVisible": true,
-          "asideContentFits": true
-        },
-        "footerText": "0.1.0",
-        "bundledVersion": "0.1.0",
-        "footerVersionMatches": true
-      },
-      {
-        "name": "final-960-menu",
-        "scene": {
-          "x": 58.28125,
-          "y": 118,
-          "width": 636.4375,
-          "height": 358,
-          "right": 694.71875,
-          "bottom": 476
-        },
-        "dialog": {
-          "x": 166.5,
-          "y": 139.796875,
-          "width": 420,
-          "height": 314.390625,
-          "right": 586.5,
-          "bottom": 454.1875
-        },
-        "visible": true,
-        "filter": "blur(14px)",
-        "dialogFits": true,
-        "placeholderFits": true,
-        "sidebar": {
-          "scrollHeight": 442,
-          "clientHeight": 442,
-          "scrollTop": 0,
-          "asideTop": 65,
-          "asideBottom": 509,
-          "asideLeft": 749,
-          "asideRight": 944,
-          "tipText": "箭头侧会翻向另一边，层序也会倒转。用完折数自动检查；不符按 B 撤销，时间和错误不回退。",
-          "tipTextTop": 332,
-          "tipTextBottom": 393.171875,
-          "tipTextLeft": 765,
-          "tipTextRight": 922.5,
-          "tipTextFullyVisible": true,
-          "asideContentFits": true
-        },
-        "footerText": "0.1.0",
-        "bundledVersion": "0.1.0",
-        "footerVersionMatches": true
-      },
-      {
-        "name": "final-1280-menu",
-        "scene": {
-          "x": 105.4375,
-          "y": 161,
-          "width": 823.109375,
-          "height": 463,
-          "right": 928.546875,
-          "bottom": 624
-        },
-        "dialog": {
-          "x": 306.984375,
-          "y": 215.40625,
-          "width": 420,
-          "height": 354.171875,
-          "right": 726.984375,
-          "bottom": 569.578125
-        },
-        "visible": true,
-        "filter": "blur(14px)",
-        "dialogFits": true,
-        "placeholderFits": true,
-        "sidebar": {
-          "scrollHeight": 576,
-          "clientHeight": 576,
-          "scrollTop": 0,
-          "asideTop": 94,
-          "asideBottom": 672,
-          "asideLeft": 1024,
-          "asideRight": 1252,
-          "tipText": "箭头侧会翻向另一边，层序也会倒转。用完折数自动检查；不符按 B 撤销，时间和错误不回退。",
-          "tipTextTop": 379,
-          "tipTextBottom": 424.78125,
-          "tipTextLeft": 1042,
-          "tipTextRight": 1232.5,
-          "tipTextFullyVisible": true,
-          "asideContentFits": true
-        },
-        "footerText": "0.1.0",
-        "bundledVersion": "0.1.0",
-        "footerVersionMatches": true
-      },
-      {
-        "name": "final-1280-pause",
-        "scene": {
-          "x": 105.4375,
-          "y": 161,
-          "width": 823.109375,
-          "height": 463,
-          "right": 928.546875,
-          "bottom": 624
-        },
-        "dialog": {
-          "x": 306.984375,
-          "y": 260.796875,
-          "width": 420,
-          "height": 263.390625,
-          "right": 726.984375,
-          "bottom": 524.1875
-        },
-        "visible": true,
-        "filter": "blur(14px)",
-        "dialogFits": true,
-        "placeholderFits": true,
-        "sidebar": {
-          "scrollHeight": 576,
-          "clientHeight": 576,
-          "scrollTop": 0,
-          "asideTop": 94,
-          "asideBottom": 672,
-          "asideLeft": 1024,
-          "asideRight": 1252,
-          "tipText": "箭头侧会翻向另一边，层序也会倒转。用完折数自动检查；不符按 B 撤销，时间和错误不回退。",
-          "tipTextTop": 379,
-          "tipTextBottom": 424.78125,
-          "tipTextLeft": 1042,
-          "tipTextRight": 1232.5,
-          "tipTextFullyVisible": true,
-          "asideContentFits": true
-        },
-        "footerText": "0.1.0",
-        "bundledVersion": "0.1.0",
-        "footerVersionMatches": true
-      },
-      {
-        "name": "final-960-pause",
-        "scene": {
-          "x": 58.28125,
-          "y": 118,
-          "width": 636.4375,
-          "height": 358,
-          "right": 694.71875,
-          "bottom": 476
-        },
-        "dialog": {
-          "x": 166.5,
-          "y": 182.59375,
-          "width": 420,
-          "height": 228.796875,
-          "right": 586.5,
-          "bottom": 411.390625
-        },
-        "visible": true,
-        "filter": "blur(14px)",
-        "dialogFits": true,
-        "placeholderFits": true,
-        "sidebar": {
-          "scrollHeight": 442,
-          "clientHeight": 442,
-          "scrollTop": 0,
-          "asideTop": 65,
-          "asideBottom": 509,
-          "asideLeft": 749,
-          "asideRight": 944,
-          "tipText": "箭头侧会翻向另一边，层序也会倒转。用完折数自动检查；不符按 B 撤销，时间和错误不回退。",
-          "tipTextTop": 332,
-          "tipTextBottom": 393.171875,
-          "tipTextLeft": 765,
-          "tipTextRight": 922.5,
-          "tipTextFullyVisible": true,
-          "asideContentFits": true
-        },
-        "footerText": "0.1.0",
-        "bundledVersion": "0.1.0",
-        "footerVersionMatches": true
-      }
-    ],
-    "rawReportSha256": "2dea17c5392aa9445b4eaa9e7ff351bafe526744169adf13648527297f64c471"
-  },
-  "performance": {
-    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
-    "instrumentationOverheadIncluded": true,
-    "samples": 574,
-    "rafIntervalMs": {
-      "count": 574,
-      "min": 16.50000000000182,
-      "median": 50,
-      "p95": 100,
-      "max": 150.0000000000009,
-      "mean": 53.424041811846685
-    },
-    "webglDrawCalls": {
-      "count": 574,
-      "min": 1,
-      "median": 1,
-      "p95": 1,
-      "max": 1,
-      "mean": 1
-    },
-    "canvasPaintCommands": {
-      "count": 574,
-      "min": 0,
-      "median": 0,
-      "p95": 0,
-      "max": 0,
-      "mean": 0
-    },
-    "budgets": {
-      "maxWebGLDrawCalls": 3
-    }
-  },
-  "actualGameplay": {
-    "normalWin": {
-      "observedAt": 36.002835385,
-      "level": 1,
-      "difficulty": 0,
-      "score": 1985,
-      "elapsed": 32.733333333333334,
-      "remaining": 57.266666666666666,
-      "foldsUsed": 3,
-      "foldLimit": 3,
-      "foldsRemaining": 0,
-      "foldCount": 4,
-      "undoCount": 1,
-      "reviewCount": 1,
-      "mismatches": 0,
-      "maxMismatches": 3,
-      "materialArea": 16,
-      "occupiedArea": 4,
-      "matchedCells": 4,
-      "targetMatched": true,
-      "outlineMatches": true
-    },
-    "normalUndo": {
-      "trialObservedAt": 6.005951566,
-      "restoredObservedAt": 10.019814726,
-      "restoredPiecesAndCellsMatchInitial": true,
-      "finalFoldCount": 4,
-      "finalUndoCount": 1
-    },
-    "finalWinHeldSecondsAtLeast": 24.008394791999997,
-    "reviewedFrames": [
-      {
-        "name": "title-0.15s.png",
-        "sha256": "c6ad52da82f2e4f6cdd30d64eed13414e91ea79ec42c55c2c69a980bdd7c70c2"
-      },
-      {
-        "name": "menu-dusk-0.85s.png",
-        "sha256": "698fa481655e6f2bf2a2dac356f85fe9d04556d84ad4f625701d15682b425a9d"
-      },
-      {
-        "name": "menu-glazed-1.35s.png",
-        "sha256": "cc2792e9593c158f3cc4affc9b5e5bd1f9573690e6d48c1addc1113cf86170d5"
-      },
-      {
-        "name": "trial-fold-6.01s.png",
-        "sha256": "55f40b31e986401ae93050188675846a336fb7f6b10a9c5c5316ae279587150d"
-      },
-      {
-        "name": "trial-settled-7.50s.png",
-        "sha256": "642f2baafc93b8e3138292197ac7dc50c21562fab795adb3b5cffa3dca1b18fd"
-      },
-      {
-        "name": "undo-restored-10.02s.png",
-        "sha256": "928ef128a67852a6709a1ab1b3ff36787b577d8e23b376e045caa8e9f51b8cf5"
-      },
-      {
-        "name": "fold-animation-16.33s.png",
-        "sha256": "38e1952f16317b708b29ea70991d969bc8322e8c21c964756c4fce606f44cfb6"
-      },
-      {
-        "name": "repair-first-fold-18.01s.png",
-        "sha256": "35965bd0a4f58dc74ea8b7043935408e891b6f10ada12b7405133034ed300c4a"
-      },
-      {
-        "name": "gameplay-thumb-22.01s.png",
-        "sha256": "0a1d342508997e518313d15fdd155e756fe53370d9e6a88cc1e915119a92c823"
-      },
-      {
-        "name": "settlement-58.47s.png",
-        "sha256": "7d1e4b61a2a8e011fd1541a4f8f961293d0277ae5d3a9e1a2d91ed4a45cec726"
-      }
-    ],
-    "visualReviewCompleted": true,
-    "videoSha256": "27920ff6c37e4f24ea9c24040951399e642080d25583932fe0821cee2f9134f2"
-  },
-  "finalAssetHashes": {
+  "sourceAssetHashes": {
     "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
     "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
     "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
     "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
-    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
-    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "runtime.js": "17bd5ba5c9cd22ee236dbc4c8e78e25e8133a2052d85d8a5cf23fa72eb563391",
+    "tv.css": "2572030056a405079866f27211f425c858c8c853cac2e699c58b85af69e03a6b",
     "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
-    "game-model.js": "02f9be74ac88704c0286766fac90d9ab6e0deee0f92ceda6aa9d306db9538fad",
-    "game.js": "c6258af46b5a14faec9b453790ed62ce467d901e7cbd8522f6a76fc1ea244b30",
-    "game-config.json": "86e81431821aa9551f5dd9f34b3094849a56b87bd49e54b19e0c8539f915c057",
-    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    "game-model.js": "6e15f9391d645f68d307a960ac299e679f9b0209e690a941d151c9c9d898b91e",
+    "game-theme.css": "6227efdf86fa62fa132decef1c507b9ec4679446757ce172c397cea11b84e9e2",
+    "game.js": "fba15a0d17dfbdac9b249f9f2094639d9083baa91c65607caf71199f1cdb895f",
+    "game-config.json": "f2d7f5bfd4f192463260c71132458f6f0b31ea3ed8df82494189e7987aa76bf6",
+    "assets-index.json": "38b84d5905bfb5976f1373cfe8e02add5ff750ee1b955fe0cdf61ad1cc84322a"
   },
-  "rawEvidenceSha256": {
-    "build": "f94877e1ea812447cb35f897ca15788ad4b8d92a97dcf51a365d758d8f70aa15",
-    "sign": "3dc635eed73635347e7914aea1b13843954e0f21b1073762a0838e60ae230071",
-    "fetch": "ffdc239a677da0102a54fb86f418dba837902a6c91e4e29fa57e652d6b7e9e70",
-    "qa": "2ebd6ac9151634cb240148ca480b6e08da554fbc7f5aacbec30097ae6ea4079a",
-    "ui": "14a1fce44f0965126ad5c99420b287cb0e9547085dca9c1741d10339f3c70f1b",
-    "layout": "2dea17c5392aa9445b4eaa9e7ff351bafe526744169adf13648527297f64c471",
-    "viewport": "975b4e11e4878007aa7f2b79be9b63e39ba3e195452d99557bfc41a738b8afe3",
-    "summary": "bd221e9ba7de56f30015793d356f51e693ee601a0238cf0dfdd33fb3423d7683",
-    "record": "256f3860637d8c3a7d05380d806d1cc0decb1fd3ac50df0037b4ce75f925d7e7",
-    "review": "eccb0f7e2a5258ea25e6e2dcfffae615e7965bfc1b0639f14d85dc99292306be",
-    "videoValidation": "2b4d314d0dc29c6f0b8675676d1b5b31260f2bd38d3790cb6b7c2f9c6d5c5bf1",
-    "artifacts": "270ae04f4ffe4c68c6eaa90fe1dbf6eecc672a7a3d1750776ad518921cb88dce",
-    "independentModel": "8f5f117b45a059aa449face9f4330783aeacf6cb26db587dbf937fc580e6c2b4",
-    "independentPilot": "ef015aaca972a992716f59ed6d92cfe39bd1efa85da1c4f736c31463f0100a36",
-    "artReview": "3fa55bc924d70ce176e39ad34821ac154f8f3198454cea5f8e172aa5b23f1ea6",
-    "modelTests": "c77a4ceab85bc7695dc7a7a47ec82cbab8fab37ef6b05696ef33ea8fc2fd5a00"
+  "modelEvidence": [
+    {
+      "file": "docs/releases/0.2.0/model/1-optics-model-tests-final.txt",
+      "sha256": "645df6747a83efd3ff8ca78922f136e95bd8f8ed489a1be4499a550c80fc445e"
+    },
+    {
+      "file": "docs/releases/0.2.0/model/2-glass-fold-020-independent.json",
+      "sha256": "ee3d5aa87ffed3d27930fe9825b345e5f8c46009490b26b8fbca7dd83dc32eba"
+    },
+    {
+      "file": "docs/releases/0.2.0/model/3-report.json",
+      "sha256": "33c6be6966a6d93a854cd15ea05a2dfa2dcdba17f0315b5b74aa152dcba926bd"
+    }
+  ],
+  "sharedBrowserChecksPassed": 10,
+  "supplementaryBrowserChecksPassed": 8,
+  "actualGameplay": {
+    "passed": true,
+    "slug": "glass-fold",
+    "sourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+    "apkSha256": "fcc2047a042d8756bf66f38d2e311b32b200cd8f669d5888cff51e18c1a5c331",
+    "videoSha256": "86a097f24930b85940a33efab980c09ee393e780506c8cc52a9cac21e53e1c2a",
+    "recordedWonLevelsZeroBased": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "recordedGoalAudit": {
+      "passed": true,
+      "game": "glass-fold",
+      "levelIdentity": "model.difficulty (model.level-1 cross-checked)",
+      "recordedWonLevelsZeroBased": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "wins": {
+        "0": {
+          "seconds": 42.043768266,
+          "modelLevelZeroBased": 0,
+          "selectedMenuLevel": 0,
+          "modelPhase": "won",
+          "goal": {
+            "targetMatched": true,
+            "matchedCells": 4,
+            "targetCells": 4
+          }
+        },
+        "1": {
+          "seconds": 82.0013616,
+          "modelLevelZeroBased": 1,
+          "selectedMenuLevel": 1,
+          "modelPhase": "won",
+          "goal": {
+            "targetMatched": true,
+            "matchedCells": 4,
+            "targetCells": 4
+          }
+        },
+        "2": {
+          "seconds": 124.079952355,
+          "modelLevelZeroBased": 2,
+          "selectedMenuLevel": 2,
+          "modelPhase": "won",
+          "goal": {
+            "targetMatched": true,
+            "matchedCells": 1,
+            "targetCells": 1
+          }
+        },
+        "3": {
+          "seconds": 166.02679271500003,
+          "modelLevelZeroBased": 3,
+          "selectedMenuLevel": 3,
+          "modelPhase": "won",
+          "goal": {
+            "targetMatched": true,
+            "matchedCells": 3,
+            "targetCells": 3
+          }
+        },
+        "4": {
+          "seconds": 208.03202008099998,
+          "modelLevelZeroBased": 4,
+          "selectedMenuLevel": 4,
+          "modelPhase": "won",
+          "goal": {
+            "targetMatched": true,
+            "matchedCells": 2,
+            "targetCells": 2
+          }
+        },
+        "5": {
+          "seconds": 248.04602807900002,
+          "modelLevelZeroBased": 5,
+          "selectedMenuLevel": 5,
+          "modelPhase": "won",
+          "goal": {
+            "targetMatched": true,
+            "matchedCells": 1,
+            "targetCells": 1
+          }
+        }
+      },
+      "menuSelectionMismatches": [],
+      "note": "Selection changes on a won menu do not change the model that actually completed the goal."
+    },
+    "assetsChecked": 12,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Read-only consistency audit; preserves raw QA report flags and does not replace model, game-specific or encoded-frame visual review."
+  },
+  "visualReviewCompleted": true,
+  "recordingStorage": {
+    "video": "docs/gameplay-0.2.0.mp4",
+    "metadata": "docs/gameplay-0.2.0.json",
+    "note": "Raw recording manifest retained unchanged. Full transient JPEG frame sequence is not copied; reviewed decoded frames and complete H.264 video are retained."
   },
   "hardware": {
     "physicalTvTested": false,
     "physicalPhoneTested": false,
-    "note": "Actual Chromium keyboard gameplay; controlled phone/QR and source layout fixtures are separately labelled. No physical Android installation or real-device performance is claimed."
+    "note": "Ordinary keyboard input in Chromium with software rendering; not physical Android/TV/phone execution or device FPS."
   },
   "release": {
-    "sourceSha": "52485ae293ac45c39df9572b0d860f85c8d6e970",
-    "signerCommit": "52485ae293ac45c39df9572b0d860f85c8d6e970",
-    "signingRun": 41341303175,
-    "bytes": 296227,
-    "sha256": "80e2a8a6dded3e37bce3fc1f93b615eb22cb601b3aabe8d0fb369b3951290a26",
+    "sourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+    "signerCommit": "2b140c3c9a08c542c086fb77fdf808eef3c1bb44",
+    "signingRun": 41867302252,
+    "bytes": 300390,
+    "sha256": "fcc2047a042d8756bf66f38d2e311b32b200cd8f669d5888cff51e18c1a5c331",
     "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
     "localBuildMatchesCi": true,
     "artifactChecks": {
@@ -776,7 +202,173 @@
       "videoSize": true,
       "videoFormat": true,
       "videoFullDecode": true
-    },
-    "exportCommit": "09933ace503d1b29a51ce5d63dac184782e826e3"
+    }
+  },
+  "testExecution": {
+    "frozenProductionCommit": "40a9c83627463151ef4685a5286e20e9fadd145d",
+    "revisions": [
+      {
+        "file": "docs/releases/0.2.0/final-qa/test-source-revision-01/revision.json",
+        "sha256": "51c37f40b314b36e3556043135e9e7e21b96a9ad6d82450e2021f91e759e4c12",
+        "details": {
+          "kind": "test-only-recording-pilot-revision",
+          "productionSourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+          "originalSourceCheck": "before/optics-final-test-source-check.json",
+          "change": {
+            "path": "resource/apps/glass-fold/tests/automation.mjs",
+            "before": "if(options.elapsed-recordWonAt<2)return[];",
+            "after": "if(options.elapsed-recordWonAt<2.5)return[];",
+            "reason": "Recording samples model states every two seconds. Hold a genuine won state at least 2.5 seconds before ordinary menu input so each victory remains observable across sample boundaries."
+          },
+          "unchanged": {
+            "productionAssets": true,
+            "prismRecordWonHoldSeconds": 4,
+            "glassRecipeSeconds": 225,
+            "prismRecipeSeconds": 150
+          },
+          "automationImports": {
+            "glass-fold": [],
+            "prism-relay": []
+          },
+          "archiveHashes": {
+            "automation.mjs": "77b9d00117258d4aaac163ee714d3ddec6292208b03615028ae81b3c2de42249",
+            "browser-checks.mjs": "35e022e3957c9a96dc97a67a76f33b6eb27950078101739d36b87f860b34076e",
+            "recipe.json": "1b02bc3e0564386a273ef5e0615b172a76512c6d12df5aed30c62d30f1096a5b",
+            "model-tests.txt": "18d50449f8169a8ab71449250e76e4ee9097089237eac47d20075aaa37249eeb",
+            "before/optics-final-test-source-check.json": "b7d8572ce332eb3da2921589ec2443dfbdf331dd5d4e09913a7af447b74ed1c1",
+            "before/glass-fold-automation.mjs": "387a4359b1b7c346d00fd101c824e3bbfbdf051d2cec6f7ff20eb2e4a4391cba",
+            "deps/verify-artifacts.py": "3818578d1ebec724718f34c7ccd079850dd0f18e896abafcaeeeb7fffebd2105",
+            "deps/qa.mjs": "aa9e781afa6f0115658cab5e7cfa77f5f7f5dbe21c58abe6d4a1d4bea498e21b",
+            "deps/frame-stream.mjs": "6f3d910169cad3898d00d423f765b8b055221ce1b453722b9e25b5cd87e81815",
+            "deps/record.mjs": "dcddf0f27da00eec307e43f6934eb2c3e91f6c805fbc4ba11a3d1ae005857ef2",
+            "deps/common.mjs": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+          },
+          "validation": {
+            "nodeModelTestsPassed": 56,
+            "nodeModelTestsFailed": 0,
+            "testOutput": "model-tests.txt",
+            "ordinarySixLevelGlassRecordCampaign": {
+              "kind": "ordinary-six-level-record-pilot",
+              "elapsed": 209.7600000000104,
+              "levelDurations": [
+                32.61666666666667,
+                32.61666666666667,
+                32.61666666666667,
+                32.61666666666667,
+                32.61666666666667,
+                32.61666666666667
+              ]
+            },
+            "browserExecuted": false,
+            "actualRecordingExecuted": false,
+            "nodeTestsExecutedBeforeNoRerunFollowup": true
+          },
+          "physicalTvTested": false,
+          "physicalPhoneTested": false,
+          "testSourceCommit": "e5bd770e739b643dda8946825949281791aa50dc",
+          "actualAutomationSource": "automation.mjs",
+          "actualRecipe": "recipe.json",
+          "dependencies": "deps",
+          "originalRevisionSource": "/workspace/scratch/game-polish/optics-recording-pilot-revision-01/revision.json"
+        }
+      },
+      {
+        "file": "docs/releases/0.2.0/final-qa/test-source-revision-02/revision.json",
+        "sha256": "a7e7a61048d81165e6e9af2735ad005605c68173f9e1877d4b4374a9cd3c4a81",
+        "details": {
+          "kind": "test-only-recording-transition-acknowledgement-revision",
+          "testSourceCommit": "eb982768156c17fcdedba3967dbd370ece9a2054",
+          "productionSourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+          "priorTestSourceCommit": "e5bd770e739b643dda8946825949281791aa50dc",
+          "priorRevision": "../test-source-revision-01/revision.json",
+          "actualAutomationSource": "automation.mjs",
+          "actualRecipe": "recipe.json",
+          "archiveHashes": {
+            "automation.mjs": "e341faebe34a687031939d3dae14e8fe4b82f6b36c6c8b5f9d2155d134f37128",
+            "browser-checks.mjs": "35e022e3957c9a96dc97a67a76f33b6eb27950078101739d36b87f860b34076e",
+            "recipe.json": "9f293338f646ab21d6d845d88288df6957ce1fd2475f318065415ba743163b80",
+            "game-model.test.cjs": "4e698abe8f082ae24c8db3175c5bd64eaea8b7f0c206f011ea6930ccc089ece7",
+            "deps/verify-artifacts.py": "3818578d1ebec724718f34c7ccd079850dd0f18e896abafcaeeeb7fffebd2105",
+            "deps/qa.mjs": "aa9e781afa6f0115658cab5e7cfa77f5f7f5dbe21c58abe6d4a1d4bea498e21b",
+            "deps/frame-stream.mjs": "6f3d910169cad3898d00d423f765b8b055221ce1b453722b9e25b5cd87e81815",
+            "deps/record.mjs": "dcddf0f27da00eec307e43f6934eb2c3e91f6c805fbc4ba11a3d1ae005857ef2",
+            "deps/common.mjs": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+            "independent-review/actual-latched-campaign-report.json": "572620b1cc3879447b1a70ac4a5a56a534d91f16ec6885337b5a4abc53c594ae",
+            "independent-review/latched-campaign-report.json": "2d5cf3e078462d4a3e5ad833fc63ce3c6ac8f2cb004973645410d21f1043c99d",
+            "independent-review/tracked-local-regression.txt": "4d565e5159f4181060f83138523263b9779d7cb0f3dc5736b7f1f981c9505f28",
+            "independent-review/check-actual-latched-campaign.mjs": "1bed3d8b8f59255d48b7f77ab02757644d352e782590dad8970f8db8d2c5e8b8",
+            "independent-review/check-latched-campaign.mjs": "c964fd17e43930bfce88af67abd47a728cd65100802c4c2ebe877ea6c6fa2f99",
+            "independent-review/delayed-confirm-repro.json": "cda15576842c3dc32fb8aaeb257f2569ebda678ffe1518723b997fab9b756c4a",
+            "independent-review/automation-latched.mjs": "0df20da779cc03b60313f57c034701fa99dd2710cbba81de5334dd2e76bfcf04",
+            "independent-review/delayed-confirm-repro.mjs": "6cc5b95a38258c8dcefb5ab42aa7fc40a9709367c468e4c92688825d8a28ba46"
+          },
+          "changes": [
+            "Send each ArrowRight menu request once, release it and wait until the intended menu selection is observed.",
+            "Send Enter once, release it and wait for an actual playing snapshot; never repeat it based on a stale won observation.",
+            "Reset both pending acknowledgements only on the actual playing phase.",
+            "Increase the recording recipe from225 to240 seconds for browser scheduling margin."
+          ],
+          "failureEvidence": "../recording-01/failure-review.json",
+          "productionChanged": false,
+          "reusedEvidence": [
+            "../browser-01/report.json",
+            "../shared-01/report.json"
+          ],
+          "localValidation": {
+            "command": "node --test --test-name-pattern='recording menu requests|exported recording pilot' resource/apps/glass-fold/tests/game-model.test.cjs",
+            "passed": 2,
+            "failed": 0,
+            "stdout": "independent-review/tracked-local-regression.txt",
+            "normalCampaignSeconds": 209.7600000000104,
+            "independentDelayedMenuSeconds": 214.6,
+            "independentActualSourceReport": "independent-review/actual-latched-campaign-report.json",
+            "delayPerMenuEventSeconds": 0.55
+          },
+          "recordingAttempt": "recording-02",
+          "physicalTvTested": false,
+          "physicalPhoneTested": false
+        }
+      },
+      {
+        "file": "docs/releases/0.2.0/final-qa/test-source-revision-03/revision.json",
+        "sha256": "ca18c10765dc2ec1758d8cbd327be8625216cc1d6a32577b2943355674334341",
+        "details": {
+          "kind": "test-only-capture-duration-extension",
+          "testSourceCommit": "45615e103cdf4baea9cdb134bdeb0705c841319c",
+          "productionSourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+          "priorTestSourceCommit": "eb982768156c17fcdedba3967dbd370ece9a2054",
+          "priorRevision": "../test-source-revision-02/revision.json",
+          "actualAutomationSource": "automation.mjs",
+          "actualRecipe": "recipe.json",
+          "productionChanged": false,
+          "automationChanged": false,
+          "automationSha256": "e341faebe34a687031939d3dae14e8fe4b82f6b36c6c8b5f9d2155d134f37128",
+          "durationSeconds": 300,
+          "onlyChange": "recipe.durationSeconds 240 to300",
+          "reasonEvidence": "../recording-02/coverage-failure.json",
+          "reusedEvidence": [
+            "../browser-01/report.json",
+            "../shared-01/report.json",
+            "../test-source-revision-02/independent-review/tracked-local-regression.txt",
+            "../test-source-revision-02/independent-review/actual-latched-campaign-report.json"
+          ],
+          "recordingAttempt": "recording-03",
+          "archiveHashes": {
+            "automation.mjs": "e341faebe34a687031939d3dae14e8fe4b82f6b36c6c8b5f9d2155d134f37128",
+            "browser-checks.mjs": "35e022e3957c9a96dc97a67a76f33b6eb27950078101739d36b87f860b34076e",
+            "recipe.json": "a4dc5bd0f83eb92654e5ffd9d6dae5838492e025779a58318d733b1462b1de1a",
+            "game-model.test.cjs": "4e698abe8f082ae24c8db3175c5bd64eaea8b7f0c206f011ea6930ccc089ece7",
+            "deps/verify-artifacts.py": "3818578d1ebec724718f34c7ccd079850dd0f18e896abafcaeeeb7fffebd2105",
+            "deps/qa.mjs": "aa9e781afa6f0115658cab5e7cfa77f5f7f5dbe21c58abe6d4a1d4bea498e21b",
+            "deps/frame-stream.mjs": "6f3d910169cad3898d00d423f765b8b055221ce1b453722b9e25b5cd87e81815",
+            "deps/record.mjs": "dcddf0f27da00eec307e43f6934eb2c3e91f6c805fbc4ba11a3d1ae005857ef2",
+            "deps/common.mjs": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+          },
+          "physicalTvTested": false,
+          "physicalPhoneTested": false
+        }
+      }
+    ],
+    "note": "Raw execution provenance is retained under final-qa; a test-only revision does not change the packaged production assets."
   }
 }
