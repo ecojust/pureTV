@@ -1,0 +1,3 @@
+Supplementary local receipt inspection failed before output creation:
+KeyError: 'gameIconSha256'
+The signed receipt stores the icon under nativeSourceSha256, unlike the local builder's gameIconSha256 field. Corrected follow-up uses those documented structures. Official fetch verification had already passed.
