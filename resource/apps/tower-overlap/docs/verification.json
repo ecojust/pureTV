@@ -1,71 +1,199 @@
 {
-  "schema": 1,
-  "game": "tower-overlap",
-  "version": "0.1.0",
-  "sourceCommit": "05df7748d45519758212d00ae6abd55dc608e5d0",
-  "signingRun": 41656604945,
+  "version": "0.2.0",
+  "sourceCommit": "40a9c83627463151ef4685a5286e20e9fadd145d",
+  "levelCount": 6,
+  "newLevels": 3,
   "passed": true,
-  "modelAndIndependentRules": "See model tests and independent review records in this directory.",
-  "browser": {
-    "sharedChecksPassed": 10,
-    "gameSpecificChecksPassed": 6,
-    "sharedReport": "browser-qa-report.json",
-    "gameSpecificReport": "browser-report.json",
-    "uniqueRulesVerified": true
+  "evidence": {
+    "browser": {
+      "file": "docs/releases/0.2.0/final-qa/browser-01/report.json",
+      "sha256": "debdb59a2849cf6fb224a51260fdaefd23508933773a1bd60e3a7f2165e5c8ad"
+    },
+    "shared": {
+      "file": "docs/releases/0.2.0/final-qa/shared-01/report.json",
+      "sha256": "da0c5008b46623826002a0f182ff3de0ccde290d3eb19c65fcc0c761d746243d"
+    },
+    "recording": {
+      "file": "docs/releases/0.2.0/final-qa/recording-01/recording.json",
+      "sha256": "7c078891c34e1b0d1e526c194fe2ba9509fda322759b67bed0c008746e419d6e"
+    },
+    "visual": {
+      "file": "docs/releases/0.2.0/final-qa/root-visual-review.json",
+      "sha256": "88300150ba125c4fbd036b4b1d0808aae203bbc2b95f90ee03e78287366d9a77"
+    },
+    "publicationAudit": {
+      "file": "docs/releases/0.2.0/final-qa/publication-audit.json",
+      "sha256": "aa24dc8529d394b676d6b9830887809c13ef16c4a9416c33e5b5cb34b4fd3bfe"
+    },
+    "build": {
+      "file": "docs/releases/0.2.0/build-receipt.json",
+      "sha256": "07b99398cafb75934a92aff4857eea04797c0e442a982f1e0c9cccc271b10631"
+    },
+    "signing": {
+      "file": "docs/releases/0.2.0/signing-receipt.json",
+      "sha256": "3846ad73016133d599e8bf8b7c937af060205b66f565b4262dca4f7dcea90705"
+    },
+    "fetch": {
+      "file": "docs/releases/0.2.0/fetch-verification.json",
+      "sha256": "7af1f8d0db56673aada5f519821818695798d64c0e8d6460123dcb04d03c0b3a"
+    },
+    "artifacts": {
+      "file": "docs/releases/0.2.0/artifacts.json",
+      "sha256": "88ffaf35b6f9795f658df3097768d6c7fa87ac350f16e774a714a5c2bd0e1734"
+    }
   },
   "sourceAssetHashes": {
-    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
     "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
     "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
     "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
-    "game-config.json": "e78babba9046cb92b8877e95c1a4af3e663d719353cdaf9b0193d1b3b9b7dc3a",
-    "game-model.js": "9af11210c701a9e5ed5f0c025bfed6ba053b1a2f943a73221e253017166ba75e",
-    "game.js": "b2f4448004d76f103e681b9bea5e6c7adacf70e7d7ffb7c2ff12c676dfa7df3f",
     "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
-    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
-    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
-    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+    "runtime.js": "17bd5ba5c9cd22ee236dbc4c8e78e25e8133a2052d85d8a5cf23fa72eb563391",
+    "tv.css": "2572030056a405079866f27211f425c858c8c853cac2e699c58b85af69e03a6b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "e86eb80745c571070ccb7cc1ababbb94e884a0d6a35ec1682fdce021758c4dc5",
+    "game-theme.css": "786a0c047f810549880eb115b30914fd21b2fdcf13a1a978e4cd473e75f1c458",
+    "game.js": "996ae3a957aca9e37c12a88b8df8e41acfa57efdd070285fc0adf31e299e3ec0",
+    "game-config.json": "6f06986f5908692799add47f94d1ddfb7bcf8603edf94f26370dd9452f1b7942",
+    "assets-index.json": "38b84d5905bfb5976f1373cfe8e02add5ff750ee1b955fe0cdf61ad1cc84322a"
   },
-  "performance": {
-    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
-    "instrumentationOverheadIncluded": true,
-    "samples": 159,
-    "rafIntervalMs": {
-      "count": 159,
-      "min": 16.599999999998545,
-      "median": 66.59999999999854,
-      "p95": 100,
-      "max": 116.79999999999927,
-      "mean": 58.90754716981133
+  "modelEvidence": [
+    {
+      "file": "docs/releases/0.2.0/model/1-tower-overlap-model.txt",
+      "sha256": "e02f473c0bf5feabc4fc0cb5c5db6c478c063b1f66cf921f17345f1649b6a870"
     },
-    "webglDrawCalls": {
-      "count": 159,
-      "min": 1,
-      "median": 1,
-      "p95": 1,
-      "max": 1,
-      "mean": 1
+    {
+      "file": "docs/releases/0.2.0/model/2-tower-overlap-independent.txt",
+      "sha256": "349fa7fe5c754a5f443d3a28905617e4117e88d83c54fa88736a1ee0ba347744"
     },
-    "canvasPaintCommands": {
-      "count": 159,
-      "min": 0,
-      "median": 0,
-      "p95": 0,
-      "max": 0,
-      "mean": 0
-    },
-    "budgets": {
-      "maxWebGLDrawCalls": 1,
-      "maxCanvasPaintCommands": 0
+    {
+      "file": "docs/releases/0.2.0/model/3-tower-overlap-independent.json",
+      "sha256": "e51133eb0f2fb630461109a61a942ec08a7c1da35feb92ce34906862eb59edf6"
     }
+  ],
+  "sharedBrowserChecksPassed": 10,
+  "supplementaryBrowserChecksPassed": 10,
+  "actualGameplay": {
+    "passed": true,
+    "slug": "tower-overlap",
+    "sourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+    "apkSha256": "b4e89fc9cd016f818a041df8886ac450ef615641f8f486fd7f8555da2061fb35",
+    "videoSha256": "e962d3471acfea3b699e547d839b65f8c4c467450eeb33186e23d904b65e7a00",
+    "recordedWonLevelsZeroBased": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "recordedGoalAudit": {
+      "passed": true,
+      "game": "tower-overlap",
+      "levelIdentity": "model.level (zero-based)",
+      "recordedWonLevelsZeroBased": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "wins": {
+        "0": {
+          "seconds": 12.045907126,
+          "modelLevelZeroBased": 0,
+          "selectedMenuLevel": 0,
+          "modelPhase": "won",
+          "goal": {
+            "floorsBuilt": 6,
+            "goal": 6,
+            "lastLandingWidth": 159.91666666659876
+          }
+        },
+        "1": {
+          "seconds": 28.006128217,
+          "modelLevelZeroBased": 1,
+          "selectedMenuLevel": 1,
+          "modelPhase": "won",
+          "goal": {
+            "floorsBuilt": 8,
+            "goal": 8,
+            "lastLandingWidth": 123.73333333334926
+          }
+        },
+        "2": {
+          "seconds": 46.015135497,
+          "modelLevelZeroBased": 2,
+          "selectedMenuLevel": 2,
+          "modelPhase": "won",
+          "goal": {
+            "floorsBuilt": 10,
+            "goal": 10,
+            "lastLandingWidth": 94.5302083333329
+          }
+        },
+        "3": {
+          "seconds": 62.004622504,
+          "modelLevelZeroBased": 3,
+          "selectedMenuLevel": 3,
+          "modelPhase": "won",
+          "goal": {
+            "floorsBuilt": 8,
+            "goal": 8,
+            "lastLandingWidth": 161
+          }
+        },
+        "4": {
+          "seconds": 82.046098332,
+          "modelLevelZeroBased": 4,
+          "selectedMenuLevel": 4,
+          "modelPhase": "won",
+          "goal": {
+            "floorsBuilt": 12,
+            "goal": 12,
+            "lastLandingWidth": 92.89999999998759
+          }
+        },
+        "5": {
+          "seconds": 120.019686473,
+          "modelLevelZeroBased": 5,
+          "selectedMenuLevel": 5,
+          "modelPhase": "won",
+          "goal": {
+            "floorsBuilt": 14,
+            "goal": 14,
+            "lastLandingWidth": 55.37541666667062
+          }
+        }
+      },
+      "menuSelectionMismatches": [],
+      "note": "Selection changes on a won menu do not change the model that actually completed the goal."
+    },
+    "assetsChecked": 12,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Read-only consistency audit; preserves raw QA report flags and does not replace model, game-specific or encoded-frame visual review."
   },
-  "visualReview": {
-    "report": "art-review.json",
-    "visualReviewCompleted": true
+  "visualReviewCompleted": true,
+  "recordingStorage": {
+    "video": "docs/gameplay-0.2.0.mp4",
+    "metadata": "docs/gameplay-0.2.0.json",
+    "note": "Raw recording manifest retained unchanged. Full transient JPEG frame sequence is not copied; reviewed decoded frames and complete H.264 video are retained."
   },
-  "artifacts": {
-    "limitBytes": 10000000,
-    "checks": {
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Ordinary keyboard input in Chromium with software rendering; not physical Android/TV/phone execution or device FPS."
+  },
+  "release": {
+    "sourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+    "signerCommit": "2b140c3c9a08c542c086fb77fdf808eef3c1bb44",
+    "signingRun": 41867395167,
+    "bytes": 292198,
+    "sha256": "b4e89fc9cd016f818a041df8886ac450ef615641f8f486fd7f8555da2061fb35",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
       "apkSize": true,
       "apkManifest": true,
       "apkSignature": true,
@@ -73,62 +201,7 @@
       "apkAssetsMatch": true,
       "videoSize": true,
       "videoFormat": true,
-      "videoFullDecode": true,
-      "recordingAssetsMatchApkTestedAssets": true
-    },
-    "apk": {
-      "file": "/workspace/scratch/tower-overlap/signed/tower-overlap-0.1.0.apk",
-      "bytes": 292131,
-      "sha256": "887c173d0ce8bb8c48b71de34f9005d8eda3408ee8aa8a0681035abd1f6f85de",
-      "package": "com.ecojust.toweroverlaptv",
-      "versionCode": "1",
-      "versionName": "0.1.0",
-      "signerSha256": [
-        "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23"
-      ],
-      "matchedAssetCount": 11
-    },
-    "limitations": [
-      "No physical Android installation or TV/phone execution is certified by this artifact check.",
-      "Visual review and unique gameplay assertions are separate required checks."
-    ],
-    "video": {
-      "file": "/workspace/scratch/tower-overlap/qa-final/recording/gameplay.mp4",
-      "bytes": 3823205,
-      "sha256": "e926fb9115bea062f1dca9e8b571085b5afb91d2cf30f96b1328016a30914c79",
-      "programs": [],
-      "stream_groups": [],
-      "streams": [
-        {
-          "codec_name": "h264",
-          "codec_type": "video",
-          "width": 1280,
-          "height": 720,
-          "pix_fmt": "yuv420p",
-          "avg_frame_rate": "30/1"
-        }
-      ],
-      "format": {
-        "duration": "80.466667",
-        "size": "3823205"
-      }
+      "videoFullDecode": true
     }
-  },
-  "catalog": {
-    "report": "catalog-verification.json",
-    "signedEntriesVerified": 89
-  },
-  "gameplay": {
-    "metadata": "gameplay-0.1.0.json",
-    "video": "gameplay-0.1.0.mp4",
-    "capturedSeconds": 80.42143321037292,
-    "allThreeLevelsWon": true,
-    "input": "Automatically operated ordinary browser keyboard events; no state writes or clock overrides."
-  },
-  "physicalTvTested": false,
-  "physicalPhoneTested": false,
-  "limitations": [
-    "No physical TV/phone validation. Software-browser frame times are not TV FPS.",
-    "Silent video export FPS is not a device performance measurement."
-  ]
+  }
 }
