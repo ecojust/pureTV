@@ -1,6 +1,12 @@
 # 窗口装配 · Conveyor Window
 
-原创双键传送线装配游戏，源码版本 `0.2.0`（versionCode 2），包名 `com.ecojust.conveyorwindowtv`。作者：ecojust / 桔子桑。
+0.2.0：[签名安装包](conveyor-window-0.2.0.apk) · [六关实际游玩录像](docs/gameplay-0.2.0.mp4) · [验证记录](docs/verification.json)
+
+本版共六关，新增三关。浏览器普通输入验证已完成；尚未进行实体电视或手机测试。
+
+![0.2.0 实际游戏画面](thumb.png)
+
+原创双键传送线装配游戏，版本 `0.2.0`（versionCode 2），包名 `com.ecojust.conveyorwindowtv`。作者：ecojust / 桔子桑。
 
 左右移动磁性夹具，从上层传送带抓取零件，调整朝向，在快门开放时投送到下层匹配槽位。零件的完整宽度必须处于窗口内，目标槽位还必须满足距离、空闲、形状和朝向要求。游戏始终选择最近槽位，不会跳过已占用或不匹配的近处槽位。
 
@@ -34,7 +40,7 @@ A、B 每次按住只触发一次，松开后可再次操作。两键同时触�
 
 0.2.0 保留原三关，新增不同带速、方向、窗口宽度和快门节奏的三张工单。界面采用工厂操作台：左侧控制柜放连接和操作说明，右侧双层传送线占据主舞台，底部仪表显示当前生产状态。菜单展开完整工单蓝图和六关选择。
 
-## 当前源码验证
+## 0.2.0 规则与操作验证
 
 ```bash
 node --test resource/apps/conveyor-window/tests/game-model.test.cjs
@@ -53,7 +59,7 @@ node resource/apps/conveyor-window/tests/browser-checks.mjs --assets /absolute/b
 
 最终浏览器检查包含 10 项共享检查、8 项界面检查和 1 项 QR 信息布局检查。两次候选菜单布局问题及其修正保留在发布证据中；最终候选界面通过审阅。一次实际录制自然取得 6 连装、零失误、1900 分；成片长 50.6 秒。最终 9 张成片抽帧和 12 张界面原图均经 root 与 QA 代理分别逐张审阅。封面取自实际成片中已审阅的游戏画面。
 
-详细来源、签名、检查范围和历史记录见 [发布验证](docs/verification.json)、[独立审计](docs/independent-conveyor-review.json)、[美术审阅](docs/art-review.json) 和 [录像说明](docs/gameplay-0.1.0.json)。
+详细来源、签名、检查范围和历史记录见 [发布验证](docs/verification-0.1.0.json)、[独立审计](docs/independent-conveyor-review.json)、[美术审阅](docs/art-review.json) 和 [录像说明](docs/gameplay-0.1.0.json)。
 
 验证环境为软件 Chromium。尚未进行实体电视、实体手机或真实扫码连接测试；QR 图仅验证布局。视频导出帧率不代表设备实测帧率，抽帧审阅也不等于逐帧检查整段录像。
 
