@@ -1,5 +1,11 @@
 # 异形装箱 / Packing Sculptor
 
+0.2.0：[签名安装包](packing-sculptor-0.2.0.apk) · [六关实际游玩录像](docs/gameplay-0.2.0.mp4) · [验证记录](docs/verification.json)
+
+本版共六关，新增三关。浏览器普通输入验证已完成；尚未进行实体电视或手机测试。
+
+![0.2.0 实际游戏画面](thumb.png)
+
 把不同轮廓的零件装进缺角箱体。零件可以顺时针旋转，每次移动一格；贴边允许，重叠和穿墙不允许。标有出口的零件还必须能保持当前朝向，沿箭头直线滑出指定门洞。检查某一零件时，其他零件都保持原位。
 
 全部零件各装入一次，并为所有必抽零件留下畅通通道后，在 CHECK 验收。放得下并不等于拿得出；不能只靠总面积或出口附近的一小段空隙通过检查。第四次错误验收结束本局，前三次错误后仍可正确提交获胜。没有倒计时。
@@ -45,6 +51,6 @@ node --test resource/apps/packing-sculptor/tests/model.test.cjs resource/apps/pa
 node resource/apps/packing-sculptor/tests/browser-checks.mjs --assets /absolute/built-assets --output /absolute/qa-output
 ```
 
-旧 `docs/` 报告对应 0.1.0，保留用于历史核查；本次构建、实际普通输入录像和签名应使用 0.2.0 资产重新验证。
+0.2.0 的构建、六关普通输入录像和签名验收见上方下载区及 `docs/releases/0.2.0/`；历史 0.1.0 报告与产物继续保留。
 
 采用仓库的 [MIT 许可证](LICENSE)。

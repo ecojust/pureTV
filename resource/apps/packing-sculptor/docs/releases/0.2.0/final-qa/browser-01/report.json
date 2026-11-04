@@ -1,0 +1,2972 @@
+{
+  "kind": "six-task-normal-keyboard-regression",
+  "sourceAssetHashes": {
+    "assets-index.json": "38b84d5905bfb5976f1373cfe8e02add5ff750ee1b955fe0cdf61ad1cc84322a",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "a3a2a7af2294c6812587611d4289e2b47cd3e0fafb0c7b25f57da6a298261cc2",
+    "game-model.js": "35e309cf398974f7d834f4e517170c7a10d6ccbc1cde9a9fada3cc06155812a5",
+    "game-theme.css": "1a292a2add5ac30b4b9c46093e2bcee8ff5eccd67b0a1635b24f39d59844bbbc",
+    "game.js": "d6f6a948e83bbd21fb453174968d415a381359d3705f63eec56f7215a744c1a3",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "17bd5ba5c9cd22ee236dbc4c8e78e25e8133a2052d85d8a5cf23fa72eb563391",
+    "tv.css": "2572030056a405079866f27211f425c858c8c853cac2e699c58b85af69e03a6b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "startedAt": "2026-11-04T16:25:32.982Z",
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "six task buttons and the loading desk remain visible at both TV sizes",
+      "passed": true,
+      "details": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "layout": {
+            "aside": {
+              "x": 12,
+              "y": 57,
+              "right": 180,
+              "bottom": 515,
+              "width": 168,
+              "height": 458
+            },
+            "stage": {
+              "x": 188,
+              "y": 57,
+              "right": 948,
+              "bottom": 515,
+              "width": 760,
+              "height": 458
+            },
+            "workspace": {
+              "x": 12,
+              "y": 57,
+              "right": 948,
+              "bottom": 515,
+              "width": 936,
+              "height": 458
+            },
+            "scrollHeight": 456,
+            "clientHeight": 456,
+            "outside": [],
+            "overlaps": [],
+            "bodyOverflow": false
+          }
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "layout": {
+            "aside": {
+              "x": 18,
+              "y": 74,
+              "right": 192,
+              "bottom": 686,
+              "width": 174,
+              "height": 612
+            },
+            "stage": {
+              "x": 204,
+              "y": 74,
+              "right": 1262,
+              "bottom": 686,
+              "width": 1058,
+              "height": 612
+            },
+            "workspace": {
+              "x": 18,
+              "y": 74,
+              "right": 1262,
+              "bottom": 686,
+              "width": 1244,
+              "height": 612
+            },
+            "scrollHeight": 610,
+            "clientHeight": 610,
+            "outside": [],
+            "overlaps": [],
+            "bodyOverflow": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "task 1: all cargo loaded and every required extraction clears",
+      "passed": true,
+      "details": {
+        "level": 0,
+        "placements": [
+          {
+            "x": 2,
+            "y": 1,
+            "turn": 0
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "turn": 1
+          },
+          {
+            "x": 3,
+            "y": 2,
+            "turn": 0
+          },
+          {
+            "x": 2,
+            "y": 0,
+            "turn": 0
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 258,
+          "elapsed": 4.29999999999999,
+          "placements": [
+            {
+              "x": 2,
+              "y": 1,
+              "turn": 0
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "turn": 1
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "turn": 0
+            },
+            {
+              "x": 2,
+              "y": 0,
+              "turn": 0
+            }
+          ],
+          "inventory": {
+            "rail": 0,
+            "elbow": 0,
+            "crate": 0,
+            "bar": 0
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": {
+                  "x": 2,
+                  "y": 1,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    3,
+                    1
+                  ],
+                  [
+                    4,
+                    1
+                  ]
+                ],
+                "vertices": [
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    5,
+                    1
+                  ],
+                  [
+                    5,
+                    2
+                  ],
+                  [
+                    2,
+                    2
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": {
+                  "x": 0,
+                  "y": 0,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ]
+                ],
+                "vertices": [
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    0,
+                    2
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": {
+                  "x": 3,
+                  "y": 2,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    3,
+                    2
+                  ],
+                  [
+                    4,
+                    2
+                  ],
+                  [
+                    3,
+                    3
+                  ],
+                  [
+                    4,
+                    3
+                  ]
+                ],
+                "vertices": [
+                  [
+                    3,
+                    2
+                  ],
+                  [
+                    5,
+                    2
+                  ],
+                  [
+                    5,
+                    4
+                  ],
+                  [
+                    3,
+                    4
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": {
+                  "x": 2,
+                  "y": 0,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    3,
+                    0
+                  ]
+                ],
+                "vertices": [
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    4,
+                    0
+                  ],
+                  [
+                    4,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 4,
+            "missingIds": [],
+            "allPlaced": true,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": true,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "east",
+                    "direction": "right",
+                    "distance": 3,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 2,
+                        "minY": 1,
+                        "maxX": 6,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 3,
+                        "minY": 1,
+                        "maxX": 7,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 4,
+                        "minY": 1,
+                        "maxX": 8,
+                        "maxY": 2
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              }
+            ],
+            "canShip": true
+          },
+          "matched": true,
+          "failures": 0,
+          "remaining": 4,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        }
+      }
+    },
+    {
+      "name": "task 2: all cargo loaded and every required extraction clears",
+      "passed": true,
+      "details": {
+        "level": 1,
+        "placements": [
+          {
+            "x": 1,
+            "y": 4,
+            "turn": 0
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "turn": 1
+          },
+          {
+            "x": 3,
+            "y": 0,
+            "turn": 0
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "turn": 1
+          },
+          {
+            "x": 1,
+            "y": 1,
+            "turn": 1
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 288,
+          "elapsed": 4.799999999999988,
+          "placements": [
+            {
+              "x": 1,
+              "y": 4,
+              "turn": 0
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "turn": 1
+            },
+            {
+              "x": 3,
+              "y": 0,
+              "turn": 0
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "turn": 1
+            },
+            {
+              "x": 1,
+              "y": 1,
+              "turn": 1
+            }
+          ],
+          "inventory": {
+            "rail": 0,
+            "elbow": 0,
+            "crate": 0,
+            "bar": 0,
+            "tee": 0
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": {
+                  "x": 1,
+                  "y": 4,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    1,
+                    4
+                  ],
+                  [
+                    2,
+                    4
+                  ],
+                  [
+                    3,
+                    4
+                  ]
+                ],
+                "vertices": [
+                  [
+                    1,
+                    4
+                  ],
+                  [
+                    4,
+                    4
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    1,
+                    5
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": {
+                  "x": 1,
+                  "y": 0,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ],
+                "vertices": [
+                  [
+                    3,
+                    0
+                  ],
+                  [
+                    3,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    2,
+                    2
+                  ],
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": {
+                  "x": 3,
+                  "y": 0,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    3,
+                    0
+                  ],
+                  [
+                    4,
+                    0
+                  ],
+                  [
+                    3,
+                    1
+                  ],
+                  [
+                    4,
+                    1
+                  ]
+                ],
+                "vertices": [
+                  [
+                    3,
+                    0
+                  ],
+                  [
+                    5,
+                    0
+                  ],
+                  [
+                    5,
+                    2
+                  ],
+                  [
+                    3,
+                    2
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": {
+                  "x": 0,
+                  "y": 0,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ]
+                ],
+                "vertices": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    0,
+                    2
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "tee",
+                "pose": {
+                  "x": 1,
+                  "y": 1,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    2,
+                    2
+                  ],
+                  [
+                    2,
+                    3
+                  ]
+                ],
+                "vertices": [
+                  [
+                    3,
+                    1
+                  ],
+                  [
+                    3,
+                    4
+                  ],
+                  [
+                    2,
+                    4
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [
+                    1,
+                    3
+                  ],
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    2,
+                    2
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 5,
+            "missingIds": [],
+            "allPlaced": true,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": true,
+            "extractions": [
+              {
+                "pieceId": "elbow",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "north",
+                    "direction": "up",
+                    "distance": 2,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 1,
+                        "minY": -2,
+                        "maxX": 2,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 2,
+                        "minY": -2,
+                        "maxX": 3,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 1,
+                        "minY": -1,
+                        "maxX": 2,
+                        "maxY": 2
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              },
+              {
+                "pieceId": "rail",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "south",
+                    "direction": "down",
+                    "distance": 1,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 1,
+                        "minY": 4,
+                        "maxX": 2,
+                        "maxY": 6
+                      },
+                      {
+                        "minX": 2,
+                        "minY": 4,
+                        "maxX": 3,
+                        "maxY": 6
+                      },
+                      {
+                        "minX": 3,
+                        "minY": 4,
+                        "maxX": 4,
+                        "maxY": 6
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              }
+            ],
+            "canShip": true
+          },
+          "matched": true,
+          "failures": 0,
+          "remaining": 4,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        }
+      }
+    },
+    {
+      "name": "task 3: all cargo loaded and every required extraction clears",
+      "passed": true,
+      "details": {
+        "level": 2,
+        "placements": [
+          {
+            "x": 0,
+            "y": 3,
+            "turn": 0
+          },
+          {
+            "x": 4,
+            "y": 3,
+            "turn": 1
+          },
+          {
+            "x": 0,
+            "y": 1,
+            "turn": 0
+          },
+          {
+            "x": 1,
+            "y": 4,
+            "turn": 0
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "turn": 0
+          },
+          {
+            "x": 3,
+            "y": 1,
+            "turn": 0
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 510,
+          "elapsed": 8.500000000000002,
+          "placements": [
+            {
+              "x": 0,
+              "y": 3,
+              "turn": 0
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "turn": 1
+            },
+            {
+              "x": 0,
+              "y": 1,
+              "turn": 0
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "turn": 0
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "turn": 0
+            },
+            {
+              "x": 3,
+              "y": 1,
+              "turn": 0
+            }
+          ],
+          "inventory": {
+            "rail": 0,
+            "elbow": 0,
+            "crate": 0,
+            "bar": 0,
+            "tee": 0,
+            "zig": 0
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": {
+                  "x": 0,
+                  "y": 3,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    0,
+                    3
+                  ],
+                  [
+                    1,
+                    3
+                  ],
+                  [
+                    2,
+                    3
+                  ]
+                ],
+                "vertices": [
+                  [
+                    0,
+                    3
+                  ],
+                  [
+                    3,
+                    3
+                  ],
+                  [
+                    3,
+                    4
+                  ],
+                  [
+                    0,
+                    4
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": {
+                  "x": 4,
+                  "y": 3,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    4,
+                    3
+                  ],
+                  [
+                    5,
+                    3
+                  ],
+                  [
+                    4,
+                    4
+                  ]
+                ],
+                "vertices": [
+                  [
+                    6,
+                    3
+                  ],
+                  [
+                    6,
+                    4
+                  ],
+                  [
+                    5,
+                    4
+                  ],
+                  [
+                    5,
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    4,
+                    3
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": {
+                  "x": 0,
+                  "y": 1,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    0,
+                    2
+                  ],
+                  [
+                    1,
+                    2
+                  ]
+                ],
+                "vertices": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [
+                    0,
+                    3
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": {
+                  "x": 1,
+                  "y": 4,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    1,
+                    4
+                  ],
+                  [
+                    2,
+                    4
+                  ]
+                ],
+                "vertices": [
+                  [
+                    1,
+                    4
+                  ],
+                  [
+                    3,
+                    4
+                  ],
+                  [
+                    3,
+                    5
+                  ],
+                  [
+                    1,
+                    5
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "tee",
+                "pose": {
+                  "x": 1,
+                  "y": 0,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    3,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "vertices": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    4,
+                    0
+                  ],
+                  [
+                    4,
+                    1
+                  ],
+                  [
+                    3,
+                    1
+                  ],
+                  [
+                    3,
+                    2
+                  ],
+                  [
+                    2,
+                    2
+                  ],
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "zig",
+                "pose": {
+                  "x": 3,
+                  "y": 1,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    3,
+                    1
+                  ],
+                  [
+                    4,
+                    1
+                  ],
+                  [
+                    4,
+                    2
+                  ],
+                  [
+                    5,
+                    2
+                  ]
+                ],
+                "vertices": [
+                  [
+                    3,
+                    1
+                  ],
+                  [
+                    5,
+                    1
+                  ],
+                  [
+                    5,
+                    2
+                  ],
+                  [
+                    6,
+                    2
+                  ],
+                  [
+                    6,
+                    3
+                  ],
+                  [
+                    4,
+                    3
+                  ],
+                  [
+                    4,
+                    2
+                  ],
+                  [
+                    3,
+                    2
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 6,
+            "missingIds": [],
+            "allPlaced": true,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": true,
+            "extractions": [
+              {
+                "pieceId": "zig",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "east",
+                    "direction": "right",
+                    "distance": 3,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 3,
+                        "minY": 1,
+                        "maxX": 7,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 4,
+                        "minY": 1,
+                        "maxX": 8,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 4,
+                        "minY": 2,
+                        "maxX": 8,
+                        "maxY": 3
+                      },
+                      {
+                        "minX": 5,
+                        "minY": 2,
+                        "maxX": 9,
+                        "maxY": 3
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              },
+              {
+                "pieceId": "rail",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "west",
+                    "direction": "left",
+                    "distance": 3,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": -3,
+                        "minY": 3,
+                        "maxX": 1,
+                        "maxY": 4
+                      },
+                      {
+                        "minX": -2,
+                        "minY": 3,
+                        "maxX": 2,
+                        "maxY": 4
+                      },
+                      {
+                        "minX": -1,
+                        "minY": 3,
+                        "maxX": 3,
+                        "maxY": 4
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              }
+            ],
+            "canShip": true
+          },
+          "matched": true,
+          "failures": 0,
+          "remaining": 4,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        }
+      }
+    },
+    {
+      "name": "task 4: all cargo loaded and every required extraction clears",
+      "passed": true,
+      "details": {
+        "level": 3,
+        "placements": [
+          {
+            "x": 3,
+            "y": 5,
+            "turn": 0
+          },
+          {
+            "x": 0,
+            "y": 4,
+            "turn": 0
+          },
+          {
+            "x": 2,
+            "y": 0,
+            "turn": 0
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "turn": 0
+          },
+          {
+            "x": 4,
+            "y": 2,
+            "turn": 1
+          },
+          {
+            "x": 4,
+            "y": 0,
+            "turn": 1
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 528,
+          "elapsed": 8.800000000000017,
+          "placements": [
+            {
+              "x": 3,
+              "y": 5,
+              "turn": 0
+            },
+            {
+              "x": 0,
+              "y": 4,
+              "turn": 0
+            },
+            {
+              "x": 2,
+              "y": 0,
+              "turn": 0
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "turn": 0
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "turn": 1
+            },
+            {
+              "x": 4,
+              "y": 0,
+              "turn": 1
+            }
+          ],
+          "inventory": {
+            "rail": 0,
+            "elbow": 0,
+            "crate": 0,
+            "bar": 0,
+            "tee": 0,
+            "zig": 0
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": {
+                  "x": 3,
+                  "y": 5,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    3,
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    5,
+                    5
+                  ]
+                ],
+                "vertices": [
+                  [
+                    3,
+                    5
+                  ],
+                  [
+                    6,
+                    5
+                  ],
+                  [
+                    6,
+                    6
+                  ],
+                  [
+                    3,
+                    6
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": {
+                  "x": 0,
+                  "y": 4,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    0,
+                    4
+                  ],
+                  [
+                    0,
+                    5
+                  ],
+                  [
+                    1,
+                    5
+                  ]
+                ],
+                "vertices": [
+                  [
+                    0,
+                    4
+                  ],
+                  [
+                    1,
+                    4
+                  ],
+                  [
+                    1,
+                    5
+                  ],
+                  [
+                    2,
+                    5
+                  ],
+                  [
+                    2,
+                    6
+                  ],
+                  [
+                    0,
+                    6
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": {
+                  "x": 2,
+                  "y": 0,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    3,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    3,
+                    1
+                  ]
+                ],
+                "vertices": [
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    4,
+                    0
+                  ],
+                  [
+                    4,
+                    2
+                  ],
+                  [
+                    2,
+                    2
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": {
+                  "x": 0,
+                  "y": 0,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "vertices": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    0,
+                    1
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "tee",
+                "pose": {
+                  "x": 4,
+                  "y": 2,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    5,
+                    2
+                  ],
+                  [
+                    4,
+                    3
+                  ],
+                  [
+                    5,
+                    3
+                  ],
+                  [
+                    5,
+                    4
+                  ]
+                ],
+                "vertices": [
+                  [
+                    6,
+                    2
+                  ],
+                  [
+                    6,
+                    5
+                  ],
+                  [
+                    5,
+                    5
+                  ],
+                  [
+                    5,
+                    4
+                  ],
+                  [
+                    4,
+                    4
+                  ],
+                  [
+                    4,
+                    3
+                  ],
+                  [
+                    5,
+                    3
+                  ],
+                  [
+                    5,
+                    2
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "zig",
+                "pose": {
+                  "x": 4,
+                  "y": 0,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    5,
+                    0
+                  ],
+                  [
+                    4,
+                    1
+                  ],
+                  [
+                    5,
+                    1
+                  ],
+                  [
+                    4,
+                    2
+                  ]
+                ],
+                "vertices": [
+                  [
+                    6,
+                    0
+                  ],
+                  [
+                    6,
+                    2
+                  ],
+                  [
+                    5,
+                    2
+                  ],
+                  [
+                    5,
+                    3
+                  ],
+                  [
+                    4,
+                    3
+                  ],
+                  [
+                    4,
+                    1
+                  ],
+                  [
+                    5,
+                    1
+                  ],
+                  [
+                    5,
+                    0
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 6,
+            "missingIds": [],
+            "allPlaced": true,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": true,
+            "extractions": [
+              {
+                "pieceId": "bar",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "north",
+                    "direction": "up",
+                    "distance": 1,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 0,
+                        "minY": -1,
+                        "maxX": 1,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 1,
+                        "minY": -1,
+                        "maxX": 2,
+                        "maxY": 1
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              },
+              {
+                "pieceId": "rail",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "east",
+                    "direction": "right",
+                    "distance": 3,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 3,
+                        "minY": 5,
+                        "maxX": 7,
+                        "maxY": 6
+                      },
+                      {
+                        "minX": 4,
+                        "minY": 5,
+                        "maxX": 8,
+                        "maxY": 6
+                      },
+                      {
+                        "minX": 5,
+                        "minY": 5,
+                        "maxX": 9,
+                        "maxY": 6
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              }
+            ],
+            "canShip": true
+          },
+          "matched": true,
+          "failures": 0,
+          "remaining": 4,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        }
+      }
+    },
+    {
+      "name": "task 5: all cargo loaded and every required extraction clears",
+      "passed": true,
+      "details": {
+        "level": 4,
+        "placements": [
+          {
+            "x": 4,
+            "y": 0,
+            "turn": 0
+          },
+          {
+            "x": 0,
+            "y": 3,
+            "turn": 0
+          },
+          {
+            "x": 5,
+            "y": 1,
+            "turn": 0
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "turn": 1
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "turn": 1
+          },
+          {
+            "x": 4,
+            "y": 3,
+            "turn": 0
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 502,
+          "elapsed": 8.366666666666662,
+          "placements": [
+            {
+              "x": 4,
+              "y": 0,
+              "turn": 0
+            },
+            {
+              "x": 0,
+              "y": 3,
+              "turn": 0
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "turn": 0
+            },
+            {
+              "x": 0,
+              "y": 0,
+              "turn": 1
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "turn": 1
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "turn": 0
+            }
+          ],
+          "inventory": {
+            "rail": 0,
+            "elbow": 0,
+            "crate": 0,
+            "bar": 0,
+            "tee": 0,
+            "zig": 0
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": {
+                  "x": 4,
+                  "y": 0,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    4,
+                    0
+                  ],
+                  [
+                    5,
+                    0
+                  ],
+                  [
+                    6,
+                    0
+                  ]
+                ],
+                "vertices": [
+                  [
+                    4,
+                    0
+                  ],
+                  [
+                    7,
+                    0
+                  ],
+                  [
+                    7,
+                    1
+                  ],
+                  [
+                    4,
+                    1
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": {
+                  "x": 0,
+                  "y": 3,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    0,
+                    3
+                  ],
+                  [
+                    0,
+                    4
+                  ],
+                  [
+                    1,
+                    4
+                  ]
+                ],
+                "vertices": [
+                  [
+                    0,
+                    3
+                  ],
+                  [
+                    1,
+                    3
+                  ],
+                  [
+                    1,
+                    4
+                  ],
+                  [
+                    2,
+                    4
+                  ],
+                  [
+                    2,
+                    5
+                  ],
+                  [
+                    0,
+                    5
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": {
+                  "x": 5,
+                  "y": 1,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    5,
+                    1
+                  ],
+                  [
+                    6,
+                    1
+                  ],
+                  [
+                    5,
+                    2
+                  ],
+                  [
+                    6,
+                    2
+                  ]
+                ],
+                "vertices": [
+                  [
+                    5,
+                    1
+                  ],
+                  [
+                    7,
+                    1
+                  ],
+                  [
+                    7,
+                    3
+                  ],
+                  [
+                    5,
+                    3
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": {
+                  "x": 0,
+                  "y": 0,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ]
+                ],
+                "vertices": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    0,
+                    2
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "tee",
+                "pose": {
+                  "x": 1,
+                  "y": 0,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    2,
+                    2
+                  ]
+                ],
+                "vertices": [
+                  [
+                    3,
+                    0
+                  ],
+                  [
+                    3,
+                    3
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [
+                    2,
+                    2
+                  ],
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "zig",
+                "pose": {
+                  "x": 4,
+                  "y": 3,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    4,
+                    3
+                  ],
+                  [
+                    5,
+                    3
+                  ],
+                  [
+                    5,
+                    4
+                  ],
+                  [
+                    6,
+                    4
+                  ]
+                ],
+                "vertices": [
+                  [
+                    4,
+                    3
+                  ],
+                  [
+                    6,
+                    3
+                  ],
+                  [
+                    6,
+                    4
+                  ],
+                  [
+                    7,
+                    4
+                  ],
+                  [
+                    7,
+                    5
+                  ],
+                  [
+                    5,
+                    5
+                  ],
+                  [
+                    5,
+                    4
+                  ],
+                  [
+                    4,
+                    4
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 6,
+            "missingIds": [],
+            "allPlaced": true,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": true,
+            "extractions": [
+              {
+                "pieceId": "tee",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "north",
+                    "direction": "up",
+                    "distance": 3,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 2,
+                        "minY": -3,
+                        "maxX": 3,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 1,
+                        "minY": -2,
+                        "maxX": 2,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 2,
+                        "minY": -2,
+                        "maxX": 3,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 2,
+                        "minY": -1,
+                        "maxX": 3,
+                        "maxY": 3
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              },
+              {
+                "pieceId": "zig",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "south",
+                    "direction": "down",
+                    "distance": 2,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 4,
+                        "minY": 3,
+                        "maxX": 5,
+                        "maxY": 6
+                      },
+                      {
+                        "minX": 5,
+                        "minY": 3,
+                        "maxX": 6,
+                        "maxY": 6
+                      },
+                      {
+                        "minX": 5,
+                        "minY": 4,
+                        "maxX": 6,
+                        "maxY": 7
+                      },
+                      {
+                        "minX": 6,
+                        "minY": 4,
+                        "maxX": 7,
+                        "maxY": 7
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              },
+              {
+                "pieceId": "crate",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "east",
+                    "direction": "right",
+                    "distance": 2,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 5,
+                        "minY": 1,
+                        "maxX": 8,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 6,
+                        "minY": 1,
+                        "maxX": 9,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 5,
+                        "minY": 2,
+                        "maxX": 8,
+                        "maxY": 3
+                      },
+                      {
+                        "minX": 6,
+                        "minY": 2,
+                        "maxX": 9,
+                        "maxY": 3
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              }
+            ],
+            "canShip": true
+          },
+          "matched": true,
+          "failures": 0,
+          "remaining": 4,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        }
+      }
+    },
+    {
+      "name": "task 6: all cargo loaded and every required extraction clears",
+      "passed": true,
+      "details": {
+        "level": 5,
+        "placements": [
+          {
+            "x": 1,
+            "y": 5,
+            "turn": 0
+          },
+          {
+            "x": 0,
+            "y": 1,
+            "turn": 1
+          },
+          {
+            "x": 4,
+            "y": 0,
+            "turn": 0
+          },
+          {
+            "x": 4,
+            "y": 2,
+            "turn": 1
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "turn": 0
+          },
+          {
+            "x": 5,
+            "y": 1,
+            "turn": 1
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 542,
+          "elapsed": 9.033333333333362,
+          "placements": [
+            {
+              "x": 1,
+              "y": 5,
+              "turn": 0
+            },
+            {
+              "x": 0,
+              "y": 1,
+              "turn": 1
+            },
+            {
+              "x": 4,
+              "y": 0,
+              "turn": 0
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "turn": 1
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "turn": 0
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "turn": 1
+            }
+          ],
+          "inventory": {
+            "rail": 0,
+            "elbow": 0,
+            "crate": 0,
+            "bar": 0,
+            "tee": 0,
+            "zig": 0
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": {
+                  "x": 1,
+                  "y": 5,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    1,
+                    5
+                  ],
+                  [
+                    2,
+                    5
+                  ],
+                  [
+                    3,
+                    5
+                  ]
+                ],
+                "vertices": [
+                  [
+                    1,
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    4,
+                    6
+                  ],
+                  [
+                    1,
+                    6
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": {
+                  "x": 0,
+                  "y": 1,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ],
+                  [
+                    0,
+                    2
+                  ]
+                ],
+                "vertices": [
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    2,
+                    2
+                  ],
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    1,
+                    3
+                  ],
+                  [
+                    0,
+                    3
+                  ],
+                  [
+                    0,
+                    1
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": {
+                  "x": 4,
+                  "y": 0,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    4,
+                    0
+                  ],
+                  [
+                    5,
+                    0
+                  ],
+                  [
+                    4,
+                    1
+                  ],
+                  [
+                    5,
+                    1
+                  ]
+                ],
+                "vertices": [
+                  [
+                    4,
+                    0
+                  ],
+                  [
+                    6,
+                    0
+                  ],
+                  [
+                    6,
+                    2
+                  ],
+                  [
+                    4,
+                    2
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": {
+                  "x": 4,
+                  "y": 2,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    4,
+                    2
+                  ],
+                  [
+                    4,
+                    3
+                  ]
+                ],
+                "vertices": [
+                  [
+                    5,
+                    2
+                  ],
+                  [
+                    5,
+                    4
+                  ],
+                  [
+                    4,
+                    4
+                  ],
+                  [
+                    4,
+                    2
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "tee",
+                "pose": {
+                  "x": 1,
+                  "y": 0,
+                  "turn": 0
+                },
+                "cells": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ],
+                  [
+                    3,
+                    0
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ],
+                "vertices": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    4,
+                    0
+                  ],
+                  [
+                    4,
+                    1
+                  ],
+                  [
+                    3,
+                    1
+                  ],
+                  [
+                    3,
+                    2
+                  ],
+                  [
+                    2,
+                    2
+                  ],
+                  [
+                    2,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "zig",
+                "pose": {
+                  "x": 5,
+                  "y": 1,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    6,
+                    1
+                  ],
+                  [
+                    5,
+                    2
+                  ],
+                  [
+                    6,
+                    2
+                  ],
+                  [
+                    5,
+                    3
+                  ]
+                ],
+                "vertices": [
+                  [
+                    7,
+                    1
+                  ],
+                  [
+                    7,
+                    3
+                  ],
+                  [
+                    6,
+                    3
+                  ],
+                  [
+                    6,
+                    4
+                  ],
+                  [
+                    5,
+                    4
+                  ],
+                  [
+                    5,
+                    2
+                  ],
+                  [
+                    6,
+                    2
+                  ],
+                  [
+                    6,
+                    1
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 6,
+            "missingIds": [],
+            "allPlaced": true,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": true,
+            "extractions": [
+              {
+                "pieceId": "elbow",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "west",
+                    "direction": "left",
+                    "distance": 2,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": -2,
+                        "minY": 1,
+                        "maxX": 1,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": -1,
+                        "minY": 1,
+                        "maxX": 2,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": -2,
+                        "minY": 2,
+                        "maxX": 1,
+                        "maxY": 3
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              },
+              {
+                "pieceId": "tee",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "north",
+                    "direction": "up",
+                    "distance": 2,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 1,
+                        "minY": -2,
+                        "maxX": 2,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 2,
+                        "minY": -2,
+                        "maxX": 3,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 3,
+                        "minY": -2,
+                        "maxX": 4,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 2,
+                        "minY": -1,
+                        "maxX": 3,
+                        "maxY": 2
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  },
+                  {
+                    "doorId": "east",
+                    "direction": "right",
+                    "distance": 6,
+                    "doorFits": false,
+                    "sweptRects": [
+                      {
+                        "minX": 1,
+                        "minY": 0,
+                        "maxX": 8,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 2,
+                        "minY": 0,
+                        "maxX": 9,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 3,
+                        "minY": 0,
+                        "maxX": 10,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 2,
+                        "minY": 1,
+                        "maxX": 9,
+                        "maxY": 2
+                      }
+                    ],
+                    "wallHits": [
+                      [
+                        6,
+                        0
+                      ]
+                    ],
+                    "blockerIds": [
+                      "crate",
+                      "zig"
+                    ],
+                    "clear": false
+                  }
+                ],
+                "canExit": true
+              },
+              {
+                "pieceId": "zig",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "east",
+                    "direction": "right",
+                    "distance": 2,
+                    "doorFits": true,
+                    "sweptRects": [
+                      {
+                        "minX": 6,
+                        "minY": 1,
+                        "maxX": 9,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 5,
+                        "minY": 2,
+                        "maxX": 8,
+                        "maxY": 3
+                      },
+                      {
+                        "minX": 6,
+                        "minY": 2,
+                        "maxX": 9,
+                        "maxY": 3
+                      },
+                      {
+                        "minX": 5,
+                        "minY": 3,
+                        "maxX": 8,
+                        "maxY": 4
+                      }
+                    ],
+                    "wallHits": [],
+                    "blockerIds": [],
+                    "clear": true
+                  }
+                ],
+                "canExit": true
+              }
+            ],
+            "canShip": true
+          },
+          "matched": true,
+          "failures": 0,
+          "remaining": 4,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        }
+      }
+    },
+    {
+      "name": "holding A cannot place the selected piece; pause keeps the current preview",
+      "passed": true,
+      "details": {
+        "pickups": 1,
+        "placementsMade": 0,
+        "pauseRetainsPreview": true
+      }
+    },
+    {
+      "name": "four natural empty-box inspections lose without inventing a packing",
+      "passed": true,
+      "details": {
+        "terminalReceipt": {
+          "cause": "attempts",
+          "call": 82,
+          "elapsed": 1.3666666666666667,
+          "placements": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 1,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1,
+            "tee": 1,
+            "zig": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "tee",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "zig",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 0,
+            "missingIds": [
+              "rail",
+              "elbow",
+              "crate",
+              "bar",
+              "tee",
+              "zig"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "elbow",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              },
+              {
+                "pieceId": "tee",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              },
+              {
+                "pieceId": "zig",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "matched": false,
+          "failures": 4,
+          "remaining": 0,
+          "score": 0,
+          "phase": "lost",
+          "reason": "attempts"
+        }
+      }
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-04T16:26:42.712Z"
+}
