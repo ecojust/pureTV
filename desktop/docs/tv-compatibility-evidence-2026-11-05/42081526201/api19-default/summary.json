@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "stage": "completed",
+  "image": {
+    "sdk": 19,
+    "tag": "default",
+    "abi": "x86",
+    "package": "system-images;android-19;default;x86",
+    "revision": "6",
+    "repository": "https://dl.google.com/android/repository/sys-img/android/sys-img2-3.xml",
+    "url": "https://dl.google.com/android/repository/sys-img/android/x86-19_r06.zip",
+    "bytes": 185886274,
+    "checksumType": "sha1",
+    "checksum": "2ac82153aae97f7eae4c5a0761224fe04321d03d"
+  },
+  "sourceCommit": "ae60c0af9af1177c6a65cc0348e32a22348a2eeb",
+  "startedAt": "2026-11-05T18:09:46.136678+00:00",
+  "attemptedEvidenceLevel": "E3",
+  "evidenceLevel": "E3",
+  "emulatorTested": true,
+  "physicalTvTested": false,
+  "fullPhysicalCompatibilityVerified": false,
+  "scope": "Official SDK image; does not certify Xiaomi/vendor firmware or a physical television.",
+  "archiveChecksumSource": "Official SDK repository metadata; sdkmanager performs the archive installation.",
+  "archiveChecksumIndependentlyRecomputed": false,
+  "host": {
+    "os": "Linux",
+    "release": "7.0.0-1017-azure",
+    "architecture": "x86_64",
+    "freeBytesBeforeSetup": 92089298944
+  },
+  "installedImageProperties": {
+    "Pkg.Desc": "Android SDK Platform 4.4.2",
+    "Pkg.UserSrc": "false",
+    "Pkg.Revision": "6",
+    "AndroidVersion.ApiLevel": "19",
+    "SystemImage.Abi": "x86",
+    "SystemImage.GpuSupport": "true",
+    "SystemImage.TagId": "default"
+  },
+  "installedEmulatorProperties": {
+    "Pkg.UserSrc": "false",
+    "Pkg.Revision": "37.2.13",
+    "Pkg.Path": "emulator",
+    "Pkg.Desc": "Android Emulator",
+    "Pkg.BuildId": "16740729"
+  },
+  "bootVerified": {
+    "ro.kernel.qemu": "1",
+    "ro.build.version.sdk": "19",
+    "sys.boot_completed": "1"
+  },
+  "privilege": {
+    "before": {
+      "shellUid": 0,
+      "adbShellRoot": true,
+      "buildType": "eng",
+      "shellIdentityStatus": "verified",
+      "buildTypeStatus": "verified"
+    },
+    "after": {
+      "shellUid": 0,
+      "adbShellRoot": true,
+      "buildType": "eng",
+      "shellIdentityStatus": "verified",
+      "buildTypeStatus": "verified"
+    },
+    "rootRequested": false,
+    "unrootRequested": true,
+    "unrootCommandStatus": "nonzero_exit",
+    "identityReverifiedAfterUnroot": true,
+    "ordinaryAdbShellVerified": false,
+    "unrootCommand": {
+      "exitCode": 1,
+      "output": "adb: unable to connect for unroot: closed\n",
+      "outputTruncated": false
+    },
+    "firstRecheck": {
+      "identityVerified": true,
+      "remainingSeconds": 30.0,
+      "unroot-qemu": {
+        "exitCode": 0,
+        "output": "1\n",
+        "outputTruncated": false
+      },
+      "unroot-sdk": {
+        "exitCode": 0,
+        "output": "19\n",
+        "outputTruncated": false
+      },
+      "unroot-shell-identity": {
+        "exitCode": 0,
+        "output": "uid=0(root) gid=0(root)\n",
+        "outputTruncated": false
+      },
+      "unroot-build-type": {
+        "exitCode": 0,
+        "output": "eng\n",
+        "outputTruncated": false
+      }
+    },
+    "lastRecheck": {
+      "identityVerified": false,
+      "remainingSeconds": 0.159,
+      "unroot-qemu": {
+        "exitCode": 0,
+        "output": "1\n",
+        "outputTruncated": false
+      },
+      "unroot-sdk": {
+        "exitCode": 0,
+        "output": "19\n",
+        "outputTruncated": false
+      },
+      "failure": "budget_exhausted_before_unroot-shell-identity"
+    },
+    "finalRecheck": {
+      "identityVerified": true,
+      "unroot-final-qemu": {
+        "exitCode": 0,
+        "output": "1\n",
+        "outputTruncated": false
+      },
+      "unroot-final-sdk": {
+        "exitCode": 0,
+        "output": "19\n",
+        "outputTruncated": false
+      },
+      "unroot-final-shell-identity": {
+        "exitCode": 0,
+        "output": "uid=0(root) gid=0(root)\n",
+        "outputTruncated": false
+      },
+      "unroot-final-build-type": {
+        "exitCode": 0,
+        "output": "eng\n",
+        "outputTruncated": false
+      }
+    },
+    "shellUid": 0,
+    "adbShellRoot": true,
+    "buildType": "eng",
+    "shellIdentityStatus": "verified",
+    "buildTypeStatus": "verified",
+    "limitation": "An ordinary Android ADB shell (UID 2000) was not verified; root or unknown privilege does not establish that condition."
+  },
+  "testedScopeCompatibility": "LIMITED",
+  "emulatorProcessExited": true,
+  "finishedAt": "2026-11-05T18:12:44.638558+00:00"
+}
