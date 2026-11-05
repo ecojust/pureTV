@@ -354,21 +354,8 @@ def main(argv=None):
         adb = sdk / "platform-tools/adb"
         emulator_binary = sdk / "emulator/emulator"
         run.command("adb-version", [adb, "version"])
-        try:
-            run.command("emulator-version", [emulator_binary, "-version"])
-        except Interrupted:
-            raise
-        except Failure:
-            print_diagnostic_excerpt(run.last_log)
-            try:
-                run.command("emulator-headless-version-diagnostic", [emulator_binary, "-no-window", "-version"],
-                            timeout=10, required=False, diagnostic=True)
-            except Interrupted:
-                raise
-            except Failure as diagnostic_error:
-                print(f"Headless version diagnostic: {diagnostic_error}")
-            # Diagnostic success cannot turn the original setup failure into a pass.
-            raise
+        # Match the headless runtime: the GUI version probe loads PulseAudio.
+        run.command("emulator-version", [emulator_binary, "-no-window", "-version"])
         _, acceleration = run.command("emulator-acceleration", [emulator_binary, "-accel-check"])
         if not re.search(r"KVM.*(?:installed and usable|is usable)", acceleration, re.I):
             raise Failure("Hardware KVM acceleration was not verified; software fallback is forbidden")
