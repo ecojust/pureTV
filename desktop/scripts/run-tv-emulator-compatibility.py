@@ -104,6 +104,21 @@ def properties(path):
     return values
 
 
+def privilege_facts(id_code, id_output, build_code, build_output):
+    number = r"(?:0|[1-9][0-9]{0,9})(?:\([A-Za-z0-9_.-]{1,64}\))?"
+    match = re.fullmatch(r"uid=(0|[1-9][0-9]{0,9})(?:\([A-Za-z0-9_.-]{1,64}\))?"
+                        + rf" +gid={number}(?: +groups={number}(?:,{number})*)?"
+                        + r"(?: +context=[A-Za-z0-9_:.,-]+)?", id_output.strip()) if id_code == 0 else None
+    uid = int(match.group(1)) if match else None
+    build_type = build_output.strip() if build_code == 0 else None
+    if build_type not in ("user", "userdebug", "eng"):
+        build_type = None
+    return {"shellUid": uid, "adbShellRoot": None if uid is None else uid == 0,
+            "buildType": build_type, "rootRequested": False, "unrootRequested": False,
+            "shellIdentityStatus": "verified" if uid is not None else "unknown",
+            "buildTypeStatus": "verified" if build_type is not None else "unknown"}
+
+
 def stop_owned(process, grace=2):
     """Signal only the process group created by our own Popen handle."""
     try:
@@ -228,7 +243,6 @@ class Run:
 
 def fixture_apks(run, config, sdk, work):
     tools = sdk / "build-tools" / config["buildTools"]
-    manifest = FIXTURES / "AndroidManifest.xml"
     key = work / "ephemeral-test-key.jks"
     # This fixed password protects a disposable CI test key, never a release key.
     run.command("fixture-key", ["keytool", "-genkeypair", "-noprompt", "-keystore", key,
@@ -239,11 +253,15 @@ def fixture_apks(run, config, sdk, work):
     metadata = {"package": config["fixturePackage"], "signing": "ephemeral-test-key-not-release",
                 "apksUploaded": False, "keyUploaded": False, "versions": []}
     for version in (1, 2):
+        manifest = work / f"fixture-v{version}-AndroidManifest.xml"
+        document = ET.parse(FIXTURES / "AndroidManifest.xml")
+        document.getroot().set(ANDROID_NS + "versionCode", str(version))
+        document.getroot().set(ANDROID_NS + "versionName", str(version))
+        document.write(manifest, encoding="utf-8", xml_declaration=True)
         unsigned, aligned, signed = [work / f"fixture-v{version}-{suffix}.apk" for suffix in ("unsigned", "aligned", "signed")]
         run.command(f"fixture-v{version}-link", [tools / "aapt2", "link", "-I",
             sdk / "platforms" / config["buildPlatform"] / "android.jar", "--manifest", manifest,
-            "--min-sdk-version", "19", "--target-sdk-version", "28", "--version-code", str(version),
-            "--version-name", str(version), "-o", unsigned])
+            "--min-sdk-version", "19", "--target-sdk-version", "28", "-o", unsigned], timeout=120)
         run.command(f"fixture-v{version}-align", [tools / "zipalign", "-f", "4", unsigned, aligned])
         run.command(f"fixture-v{version}-sign", [tools / "apksigner", "sign", "--ks", key,
             "--ks-key-alias", "fixture", "--ks-pass", "pass:android", "--key-pass", "pass:android",
@@ -256,6 +274,7 @@ def fixture_apks(run, config, sdk, work):
         _, badging = run.command(f"fixture-v{version}-identity", [tools / "aapt2", "dump", "badging", signed])
         package = next((line for line in badging.splitlines() if line.startswith("package: ")), "")
         if (f"name='{config['fixturePackage']}'" not in package or f"versionCode='{version}'" not in package
+                or f"versionName='{version}'" not in package
                 or re.findall(r"^minSdkVersion:(.*)$", badging, re.M) != ["'19'"]
                 or re.findall(r"^targetSdkVersion:(.*)$", badging, re.M) != ["'28'"]
                 or "launchable-activity:" in badging or not 0 < signed.stat().st_size < 1048576):
@@ -363,6 +382,10 @@ def main(argv=None):
         _, existing = run.command("adb-before-boot", [adb, "devices", "-l"])
         if any(re.match(r"^\S+\s+(?:device|offline|unauthorized)\b", line) for line in existing.splitlines()):
             raise Failure("Runner already has an ADB target; refusing to touch it")
+        # Build host-only fixtures before the VM consumes CPU during first boot.
+        summary["stage"] = "fixture-build"
+        v1, v2 = fixture_apks(run, config, sdk, work)
+        summary["stage"] = "setup"
         for port in (5554, 5555):
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as check:
                 check.bind(("127.0.0.1", port))
@@ -406,6 +429,10 @@ def main(argv=None):
         if boot != {"ro.kernel.qemu": "1", "ro.build.version.sdk": str(image["sdk"]), "sys.boot_completed": "1"}:
             raise Failure("Booted target is not the expected emulator SDK")
         summary["bootVerified"] = boot
+        id_code, id_output = run.command("shell-identity", [adb, "-s", SERIAL, "shell", "id"], required=False)
+        build_code, build_output = run.command("build-type", [adb, "-s", SERIAL, "shell", "getprop", "ro.build.type"],
+                                               required=False)
+        summary["privilege"] = privilege_facts(id_code, id_output, build_code, build_output)
         run.command("adb-after-boot", [adb, "devices", "-l"])
         summary["stage"] = "read-only-probe"
         run.command("read-only-probe", [sys.executable, ROOT / "desktop/scripts/probe-tv-compatibility.py",
@@ -413,8 +440,6 @@ def main(argv=None):
         probe_report = json.loads((artifacts / "probe/compatibility-report.json").read_text())
         if not probe_report.get("deviceAccessVerified") or probe_report.get("identity", {}).get("sdk") != str(image["sdk"]):
             raise Failure("Read-only probe did not verify the expected SDK")
-        summary["stage"] = "fixture-build"
-        v1, v2 = fixture_apks(run, config, sdk, work)
         summary["stage"] = "core-tests"
         core_report_path = artifacts / "core-report.json"
         code, _ = run.command("manager-core", ["cargo", "run", "--locked", "--manifest-path",

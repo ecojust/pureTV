@@ -12,6 +12,7 @@ import tempfile
 import time
 import unittest
 from unittest import mock
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location(
@@ -131,14 +132,18 @@ class FakeBuildTools:
         self.artifacts, self.badging = artifacts, badging
 
     def command(self, name, args, **kwargs):
+        if name.endswith("-link"):
+            # Model aapt2's actual manifest precedence, not the command's name.
+            manifest = ET.parse(args[args.index("--manifest") + 1]).getroot()
+            self.version_code = manifest.attrib[runner.ANDROID_NS + "versionCode"]
+            self.version_name = manifest.attrib[runner.ANDROID_NS + "versionName"]
         if name.endswith("-sign"):
             Path(args[args.index("--out") + 1]).write_bytes(b"FAKE APK: validation test only")
         if name.endswith("-verify"):
             return 0, "Verified using v1 scheme (JAR signing): true\n"
         if name.endswith("-identity"):
-            version = "2" if "-v2-" in name else "1"
-            return 0, self.badging.replace("versionCode='1'", f"versionCode='{version}'").replace(
-                "versionName='1'", f"versionName='{version}'")
+            return 0, self.badging.replace("versionCode='1'", f"versionCode='{self.version_code}'").replace(
+                "versionName='1'", f"versionName='{self.version_name}'")
         return 0, ""
 
 
@@ -175,6 +180,37 @@ class FixtureBadging(unittest.TestCase):
 
     def test_unexpected_legacy_aapt_field_rejected(self):
         self.check_output(BADGING.replace("minSdkVersion:", "sdkVersion:"))
+
+
+class PrivilegeFacts(unittest.TestCase):
+    def test_android_shell_uid_and_build_type_are_actual_facts(self):
+        result = runner.privilege_facts(0, "uid=2000(shell) gid=2000(shell) groups=1004(input),1007(log) context=u:r:shell:s0\n",
+                                        0, "user\n")
+        self.assertEqual(result["shellUid"], 2000)
+        self.assertFalse(result["adbShellRoot"])
+        self.assertEqual(result["buildType"], "user")
+        self.assertFalse(result["rootRequested"])
+
+    def test_root_and_system_uid_are_not_confused(self):
+        for uid, name, rooted in ((0, "root", True), (1000, "system", False)):
+            with self.subTest(uid=uid):
+                result = runner.privilege_facts(0, f"uid={uid}({name}) gid={uid}({name})", 0, "userdebug")
+                self.assertEqual(result["shellUid"], uid)
+                self.assertEqual(result["adbShellRoot"], rooted)
+
+    def test_failed_or_malformed_identity_stays_unknown(self):
+        for code, output in ((1, "uid=0(root) gid=0(root)"), (0, "usage: id"),
+                             (0, "uid=02000(shell) gid=2000(shell)"),
+                             (0, "uid=2000(shell) gid=2000(shell) uid=0(root)"),
+                             (0, "error\nuid=0(root) gid=0(root)")):
+            with self.subTest(code=code, output=output):
+                result = runner.privilege_facts(code, output, 0, "not-a-build-type")
+                self.assertIsNone(result["shellUid"])
+                self.assertIsNone(result["adbShellRoot"])
+                self.assertIsNone(result["buildType"])
+
+    def test_build_type_nonzero_is_not_verified(self):
+        self.assertIsNone(runner.privilege_facts(0, "uid=2000 gid=2000", 1, "eng")["buildType"])
 
 
 if __name__ == "__main__":
