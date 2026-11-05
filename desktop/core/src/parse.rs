@@ -67,8 +67,15 @@ pub(crate) fn endpoint(host: &str, port: u16) -> Result<String, String> {
     Ok(format!("{host}:{port}"))
 }
 pub(crate) fn packages(output: &str) -> Result<BTreeSet<String>, String> {
+    // AOSP android-4.4_r1 bionic linker.cpp/linker.h emits this non-fatal
+    // libdvm diagnostic on stderr. Legacy ADB shell merges it into pm output.
+    // Match the observed complete line, never arbitrary linker warnings/errors.
+    const KITKAT_DALVIK_WARNING: &str = "WARNING: linker: libdvm.so has text relocations. This is wasting memory and is a security risk. Please fix.";
     let mut values = BTreeSet::new();
     for line in output.lines().map(str::trim).filter(|s| !s.is_empty()) {
+        if line == KITKAT_DALVIK_WARNING {
+            continue;
+        }
         let Some(name) = line.strip_prefix("package:") else {
             return Err(format!("无法识别应用列表：{}", short(line, 160)));
         };
@@ -80,7 +87,46 @@ pub(crate) fn packages(output: &str) -> Result<BTreeSet<String>, String> {
             return Err("设备应用数量超过 10,000 项上限".into());
         }
     }
+    // Empty filtered lists (for example pm list packages -d) are valid.
+    // Manager::read_catalogue separately rejects an empty installed catalogue.
     Ok(values)
+}
+
+#[cfg(test)]
+mod package_list_tests {
+    use super::*;
+
+    const WARNING: &str = "WARNING: linker: libdvm.so has text relocations. This is wasting memory and is a security risk. Please fix.";
+
+    #[test]
+    fn kitkat_linker_diagnostic_does_not_hide_real_package_records() {
+        let output = format!("{WARNING}\r\npackage:android\r\n{WARNING}\r\npackage:com.example.app\r\npackage:android\r\n");
+        assert_eq!(packages(&output).unwrap(), BTreeSet::from([
+            "android".into(), "com.example.app".into(),
+        ]));
+    }
+
+    #[test]
+    fn package_filters_preserve_empty_results_with_known_diagnostic() {
+        for output in ["".to_string(), " \r\n".into(), format!("{WARNING}\n{WARNING}\n")] {
+            assert!(packages(&output).unwrap().is_empty());
+        }
+    }
+
+    #[test]
+    fn package_diagnostics_do_not_mask_errors_or_unrecognized_warnings() {
+        for invalid in [
+            "usage: pm list packages",
+            "Error: permission denied",
+            "java.lang.SecurityException: Permission Denial",
+            "WARNING: linker: could not load library libdvm.so",
+            "WARNING: linker: libother.so has text relocations. This is wasting memory and is a security risk. Please fix.",
+            "package:com.invalid;name",
+            &format!("{WARNING} Permission Denial"),
+        ] {
+            assert!(packages(&format!("{WARNING}\npackage:android\n{invalid}\n")).is_err(), "{invalid}");
+        }
+    }
 }
 pub(crate) fn components(output: &str) -> Vec<String> {
     let mut values = BTreeSet::new();

@@ -189,7 +189,6 @@ class PrivilegeFacts(unittest.TestCase):
         self.assertEqual(result["shellUid"], 2000)
         self.assertFalse(result["adbShellRoot"])
         self.assertEqual(result["buildType"], "user")
-        self.assertFalse(result["rootRequested"])
 
     def test_root_and_system_uid_are_not_confused(self):
         for uid, name, rooted in ((0, "root", True), (1000, "system", False)):
@@ -211,6 +210,122 @@ class PrivilegeFacts(unittest.TestCase):
 
     def test_build_type_nonzero_is_not_verified(self):
         self.assertIsNone(runner.privilege_facts(0, "uid=2000 gid=2000", 1, "eng")["buildType"])
+
+
+class FakePrivilegeCommands:
+    def __init__(self, before=0, after=2000, qemu="1", unroot_exit=0):
+        self.before, self.after, self.qemu, self.unroot_exit = before, after, qemu, unroot_exit
+        self.commands = []
+        self.now = 0
+        self.deadline = 100
+
+    def sleep(self, seconds):
+        self.now += seconds
+
+    def command(self, name, args, **kwargs):
+        self.now += 0.05
+        self.commands.append(args)
+        if args[-1] == "unroot":
+            return self.unroot_exit, "restarting adbd as non root\n"
+        if args[-1] == "id":
+            uid = self.after if name.startswith("unroot-") else self.before
+            return 0, "usage: id" if uid is None else f"uid={uid} gid={uid}\n"
+        if args[-1] == "ro.build.type":
+            return 0, "userdebug\n"
+        if args[-1] == "ro.kernel.qemu":
+            return 0, self.qemu
+        if args[-1] == "ro.build.version.sdk":
+            return 0, "23\n"
+        raise AssertionError("Unexpected command")
+
+
+class EmulatorPrivilegeReduction(unittest.TestCase):
+    BOOT = {"ro.kernel.qemu": "1", "ro.build.version.sdk": "23", "sys.boot_completed": "1"}
+
+    def prepare(self, fake, boot=None):
+        report = {}
+        with mock.patch.object(runner.time, "monotonic", side_effect=lambda: fake.now), \
+                mock.patch.object(runner.time, "sleep", side_effect=fake.sleep):
+            runner.prepare_emulator_privilege(fake, Path("fake-adb"), 23, self.BOOT if boot is None else boot, report)
+        self.assertTrue(all(command[1:3] == ["-s", "emulator-5554"] for command in fake.commands))
+        self.assertFalse(any(command[-1] == "root" for command in fake.commands))
+        return report
+
+    def test_verified_root_emulator_reduces_to_actual_shell_uid(self):
+        fake = FakePrivilegeCommands()
+        report = self.prepare(fake)
+        self.assertEqual(report["before"]["shellUid"], 0)
+        self.assertEqual(report["after"]["shellUid"], 2000)
+        self.assertTrue(report["unrootRequested"])
+        self.assertFalse(report["rootRequested"])
+        self.assertTrue(report["ordinaryAdbShellVerified"])
+        self.assertTrue(report["identityReverifiedAfterUnroot"])
+        self.assertIsNone(report["limitation"])
+
+    def test_existing_shell_uid_does_not_change_daemon_privilege(self):
+        fake = FakePrivilegeCommands(before=2000)
+        report = self.prepare(fake)
+        self.assertFalse(report["unrootRequested"])
+        self.assertFalse(any(command[-1] == "unroot" for command in fake.commands))
+        self.assertTrue(report["ordinaryAdbShellVerified"])
+
+    def test_success_message_cannot_hide_persistent_root(self):
+        fake = FakePrivilegeCommands(after=0)
+        report = self.prepare(fake)
+        self.assertEqual(report["unrootCommandStatus"], "exit_zero")
+        self.assertTrue(report["adbShellRoot"])
+        self.assertFalse(report["ordinaryAdbShellVerified"])
+        self.assertIsNotNone(report["limitation"])
+        self.assertLessEqual(fake.now, 31)
+
+    def test_unroot_failure_keeps_actual_privilege_condition(self):
+        report = self.prepare(FakePrivilegeCommands(after=0, unroot_exit=1))
+        self.assertEqual(report["unrootCommandStatus"], "nonzero_exit")
+        self.assertTrue(report["adbShellRoot"])
+        self.assertFalse(report["ordinaryAdbShellVerified"])
+
+    def test_unknown_initial_uid_does_not_request_unroot(self):
+        fake = FakePrivilegeCommands(before=None)
+        report = self.prepare(fake)
+        self.assertFalse(report["unrootRequested"])
+        self.assertIsNone(report["shellUid"])
+        self.assertFalse(report["ordinaryAdbShellVerified"])
+
+    def test_missing_boot_identity_prevents_all_commands(self):
+        fake = FakePrivilegeCommands()
+        with self.assertRaisesRegex(runner.Failure, "exact booted emulator"):
+            self.prepare(fake, {})
+        self.assertEqual(fake.commands, [])
+
+    def test_changed_device_identity_blocks_manager_operations(self):
+        fake = FakePrivilegeCommands(qemu="0")
+        with self.assertRaisesRegex(runner.EmulatorFailure, "identity changed"):
+            self.prepare(fake)
+        self.assertFalse(any(command[-1] == "root" for command in fake.commands))
+
+    def test_unavailable_identity_has_a_bounded_recheck(self):
+        fake = FakePrivilegeCommands(qemu="")
+        with self.assertRaisesRegex(runner.Failure, "could not be reverified"):
+            self.prepare(fake)
+        self.assertLessEqual(fake.now, 31)
+
+    def test_pre_restart_identity_cannot_survive_later_offline_state(self):
+        class GoesOffline(FakePrivilegeCommands):
+            checks = 0
+
+            def command(self, name, args, **kwargs):
+                result = super().command(name, args, **kwargs)
+                if name == "unroot-qemu":
+                    self.checks += 1
+                    if self.checks > 1:
+                        return 1, "device offline"
+                return result
+
+        fake = GoesOffline(after=0)
+        with self.assertRaisesRegex(runner.Failure, "could not be reverified"):
+            self.prepare(fake)
+        self.assertGreater(fake.checks, 1)
+        self.assertLessEqual(fake.now, 31)
 
 
 if __name__ == "__main__":

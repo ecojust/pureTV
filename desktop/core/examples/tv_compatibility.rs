@@ -16,6 +16,7 @@ use std::time::{Duration, Instant};
 const EMULATOR: &str = "emulator-5554";
 const TARGET: &str = "127.0.0.1:5555";
 const FIXTURE: &str = "org.puretv.compatfixture";
+const KITKAT_DALVIK_WARNING: &str = "WARNING: linker: libdvm.so has text relocations. This is wasting memory and is a security risk. Please fix.";
 const OUTPUT_LIMIT: usize = 2 * 1024 * 1024;
 type Check<T> = Result<T, String>;
 
@@ -168,13 +169,42 @@ fn guard_mutation(options: &Options) -> Check<()> {
 
 fn fixture_installed(options: &Options) -> Check<bool> {
     let output = shell(options, TARGET, &["pm", "list", "packages", "--user", "0", FIXTURE])?;
+    fixture_listing(&output, options.sdk)
+}
+
+fn fixture_listing(output: &str, sdk: u32) -> Check<bool> {
     let mut installed = false;
     for line in output.lines().map(str::trim).filter(|line| !line.is_empty()) {
+        // Android 4.4's verified Dalvik diagnostic is emitted even when this
+        // filtered package query succeeds. No other warning or SDK is exempt.
+        if sdk == 19 && line == KITKAT_DALVIK_WARNING { continue; }
         let package = line.strip_prefix("package:").ok_or("Unrecognized package listing")?;
-        require(package.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'.' || b == b'_'), "Invalid package listing")?;
+        require(package.split('.').all(|part| !part.is_empty() && part.as_bytes()[0].is_ascii_alphabetic()
+            && part.bytes().all(|byte| byte.is_ascii_alphanumeric() || byte == b'_')), "Invalid package listing")?;
         installed |= package == FIXTURE;
     }
     Ok(installed)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn kitkat_fixture_oracle_accepts_only_the_verified_dalvik_diagnostic() {
+        assert_eq!(fixture_listing(KITKAT_DALVIK_WARNING, 19).unwrap(), false);
+        assert_eq!(fixture_listing(&format!("{KITKAT_DALVIK_WARNING}\npackage:{FIXTURE}\n"), 19).unwrap(), true);
+        assert_eq!(fixture_listing(&format!("{KITKAT_DALVIK_WARNING}\npackage:{FIXTURE}.other\n"), 19).unwrap(), false);
+        assert!(fixture_listing(KITKAT_DALVIK_WARNING, 23).is_err());
+        for warning in [
+            "WARNING: something unexpected",
+            "Error: package manager unavailable",
+            "package:",
+            "WARNING: linker: libother.so has text relocations. This is wasting memory and is a security risk. Please fix.",
+        ] {
+            assert!(fixture_listing(&format!("{KITKAT_DALVIK_WARNING}\n{warning}\npackage:{FIXTURE}"), 19).is_err());
+        }
+    }
 }
 
 fn fixture_dump(options: &Options, version: u32, enabled: bool) -> Check<Value> {
@@ -209,6 +239,13 @@ fn fixture_dump(options: &Options, version: u32, enabled: bool) -> Check<Value> 
     Ok(json!({"package": FIXTURE, "versionCode": version, "userId": 0, "installed": true, "enabledState": states[0]}))
 }
 
+fn snapshot_facts(snapshot: &Snapshot) -> Value {
+    json!({"device": snapshot.device, "systemInfo": snapshot.system_info,
+        "installedPackageCount": snapshot.packages.iter().filter(|package| package.installed).count(),
+        "catalogueCount": snapshot.packages.len(), "launcherCount": snapshot.launchers.len(),
+        "defaultHome": snapshot.default_home})
+}
+
 fn verify_snapshot(snapshot: &Snapshot, options: &Options) -> Check<Value> {
     let device = snapshot.device.as_ref().ok_or("Manager has no device")?;
     require(device.serial == TARGET && device.status == "device" && device.user_id == 0, "Manager did not verify the expected transport and user")?;
@@ -222,9 +259,42 @@ fn verify_snapshot(snapshot: &Snapshot, options: &Options) -> Check<Value> {
     }
     let installed = snapshot.packages.iter().filter(|package| package.installed).count();
     require(installed > 0, "Manager returned an empty installed catalogue")?;
-    Ok(json!({"device": device, "systemInfo": info, "installedPackageCount": installed,
-        "catalogueCount": snapshot.packages.len(), "launcherCount": snapshot.launchers.len(),
-        "defaultHome": snapshot.default_home}))
+    Ok(snapshot_facts(snapshot))
+}
+
+fn failure_diagnostics(options: &Options) -> Value {
+    // A failed Manager command must not send diagnostics to an unverified or
+    // changed device. These extra reads are fixed, bounded and never mutate it.
+    if let Err(error) = guard_mutation(options) {
+        return json!({"status": "NOT_RUN", "reason": error.chars().take(600).collect::<String>()});
+    }
+    let mut diagnostics = json!({"status": "COLLECTED", "targetVerified": true});
+    for (name, command) in [
+        ("dfK", vec!["df", "-k", "/data"]),
+        ("df", vec!["df", "/data"]),
+        ("statFs", vec!["stat", "-f", "-c", "%S:%b:%a", "/data"]),
+        ("memory", vec!["cat", "/proc/meminfo"]),
+        ("packages", vec!["pm", "list", "packages", "--user", "0"]),
+    ] {
+        diagnostics[name] = match shell(options, TARGET, &command) {
+            Err(error) => json!({"error": error.chars().take(600).collect::<String>()}),
+            Ok(text) if name == "packages" => {
+                let lines = text.lines().map(str::trim).filter(|line| !line.is_empty()).collect::<Vec<_>>();
+                let warnings = lines.iter().filter(|line| line.starts_with("WARNING: linker:"))
+                    .take(4).map(|line| line.chars().take(300).collect::<String>()).collect::<Vec<_>>();
+                json!({"lineCount": lines.len(), "packageLineCount": lines.iter().filter(|line| line.starts_with("package:")).count(),
+                    "nonPackageLineCount": lines.iter().filter(|line| !line.starts_with("package:")).count(), "linkerWarnings": warnings})
+            }
+            Ok(text) if name == "memory" => {
+                let fields = text.lines().filter(|line| ["MemTotal:", "MemAvailable:", "MemFree:", "Buffers:", "Cached:"]
+                    .iter().any(|prefix| line.starts_with(prefix)))
+                    .take(8).map(|line| line.chars().take(100).collect::<String>()).collect::<Vec<_>>();
+                json!({"selectedFields": fields})
+            }
+            Ok(text) => json!({"output": text.chars().take(2000).collect::<String>(), "truncated": text.chars().count() > 2000}),
+        };
+    }
+    diagnostics
 }
 
 fn fixture_state(snapshot: &Snapshot, installed: bool, enabled: bool) -> Check<()> {
@@ -279,16 +349,22 @@ fn run(options: &Options, report: &mut Value) -> Check<()> {
     let mut manager = Manager::new(data_dir, Arc::new(AtomicBool::new(false)));
     report["activeStep"] = json!("manager-connect");
     manager.execute(Request::SetAdbPath { path: options.adb.to_str().ok_or("Non-UTF-8 ADB path")?.into() })?;
-    let snapshot = manager.execute(Request::Connect { host: "127.0.0.1".into(), port: 5555 })?;
-    guard_mutation(options)?;
+    // Preflight already established an actual QEMU target and SDK. Record E3
+    // when the real production operation starts, even if its parser later fails.
     report["emulatorTested"] = json!(true);
     report["evidenceLevel"] = json!("E3");
+    let connected = manager.execute(Request::Connect { host: "127.0.0.1".into(), port: 5555 });
+    report["latestManagerSnapshot"] = snapshot_facts(&manager.snapshot());
+    let snapshot = connected?;
+    guard_mutation(options)?;
     report["device"] = verify_snapshot(&snapshot, options)?;
     record(report, "manager-connect", "PASS", json!({"currentUserSource": verify_user_zero(options)?, "currentUser": 0}));
 
     for (name, request) in [("manager-scan", Request::Scan), ("manager-refresh-system-info", Request::RefreshSystemInfo)] {
         report["activeStep"] = json!(name);
-        let snapshot = manager.execute(request)?;
+        let refreshed = manager.execute(request);
+        report["latestManagerSnapshot"] = snapshot_facts(&manager.snapshot());
+        let snapshot = refreshed?;
         record(report, name, "PASS", verify_snapshot(&snapshot, options)?);
     }
     require(!fixture_installed(options)?, "Fixture already exists; emulator is not a fresh test sample")?;
@@ -367,6 +443,9 @@ fn main() {
         "fixturePackage": FIXTURE, "scope": "Production Manager API on an isolated Android emulator; not a Xiaomi or physical TV test",
         "sourceCommit": env::var("GITHUB_SHA").ok(), "steps": [], "limitations": [], "status": "RUNNING"});
     let result = run(&options, &mut report);
+    if result.is_err() && report["emulatorTested"] == true {
+        report["failureDiagnostics"] = failure_diagnostics(&options);
+    }
     report["elapsedSeconds"] = json!(started.elapsed().as_secs_f64());
     report["status"] = json!(if result.is_ok() { "PASS" } else { "FAIL" });
     report["assertionsPassed"] = json!(result.is_ok());

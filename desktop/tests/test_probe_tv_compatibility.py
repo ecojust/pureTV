@@ -178,6 +178,33 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(report["commands"]["packages"]["status"], "invalid_output")
         self.assertNotIn("SECRET", json.dumps(report))
 
+    def test_kitkat_dalvik_warning_keeps_only_real_package_counts(self):
+        warning = ("WARNING: linker: libdvm.so has text relocations. This is wasting memory "
+                   "and is a security risk. Please fix.")
+        output = f"{warning}\r\npackage:android\r\n{warning}\r\npackage:{PRIVATE_PACKAGE}\r\npackage:android\r\n"
+        self.assertEqual(probe.packages_summary(output), {"packageCount": 2})
+        overrides = unavailable_user()
+        overrides[("pm", "list", "packages", "--user", "10")] = probe.Result("ok", output, 0)
+        report = probe.collect(FakeAdb(sdk="19", overrides=overrides), SERIAL)
+        self.assertEqual(report["commands"]["packages"], {
+            "status": "ok", "exitCode": 0, "summary": {"packageCount": 2}})
+        self.assertNotIn(PRIVATE_PACKAGE, json.dumps(report))
+        self.assertNotIn(warning, json.dumps(report))
+
+    def test_package_warning_cannot_prove_empty_catalogue_or_hide_errors(self):
+        warning = ("WARNING: linker: libdvm.so has text relocations. This is wasting memory "
+                   "and is a security risk. Please fix.")
+        for output in ("", warning, warning + "\n" + warning):
+            with self.subTest(output=output):
+                self.assertIsNone(probe.packages_summary(output))
+        for invalid in ("usage: pm list packages", "Error: permission denied",
+                        "java.lang.SecurityException: Permission Denial",
+                        "WARNING: linker: could not load library libdvm.so",
+                        warning.replace("libdvm.so", "libother.so"),
+                        warning + " Permission Denial", "package:com.invalid;name"):
+            with self.subTest(invalid=invalid):
+                self.assertIsNone(probe.packages_summary(f"{warning}\npackage:android\n{invalid}\n"))
+
     def test_report_redacts_addresses_and_discards_app_user_and_error_details(self):
         overrides = unavailable_user()
         overrides[("getprop", "ro.product.model")] = probe.Result("ok", "Mi TV " + SERIAL + " 10.0.0.9 2001:db8::1234 aa:bb:cc:dd:ee:ff", 0)

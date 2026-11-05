@@ -114,9 +114,67 @@ def privilege_facts(id_code, id_output, build_code, build_output):
     if build_type not in ("user", "userdebug", "eng"):
         build_type = None
     return {"shellUid": uid, "adbShellRoot": None if uid is None else uid == 0,
-            "buildType": build_type, "rootRequested": False, "unrootRequested": False,
+            "buildType": build_type,
             "shellIdentityStatus": "verified" if uid is not None else "unknown",
             "buildTypeStatus": "verified" if build_type is not None else "unknown"}
+
+
+def prepare_emulator_privilege(run, adb, expected_sdk, boot, report):
+    """Only reduce privilege on our already verified, fixed emulator target."""
+    if boot != {"ro.kernel.qemu": "1", "ro.build.version.sdk": str(expected_sdk), "sys.boot_completed": "1"}:
+        raise Failure("Refusing privilege changes without the exact booted emulator identity")
+    id_code, id_output = run.command("shell-identity", [adb, "-s", SERIAL, "shell", "id"], required=False)
+    build_code, build_output = run.command("build-type", [adb, "-s", SERIAL, "shell", "getprop", "ro.build.type"],
+                                           required=False)
+    before = privilege_facts(id_code, id_output, build_code, build_output)
+    report.update(before=before, after=before, rootRequested=False, unrootRequested=False,
+                  unrootCommandStatus="not_requested", identityReverifiedAfterUnroot=False,
+                  ordinaryAdbShellVerified=False)
+    if before["shellUid"] == 0:
+        report["unrootRequested"] = True
+        report["after"] = privilege_facts(1, "", 1, "")
+        try:
+            code, _ = run.command("emulator-unroot", [adb, "-s", SERIAL, "unroot"], timeout=10, required=False)
+            report["unrootCommandStatus"] = "exit_zero" if code == 0 else "nonzero_exit"
+        except (Interrupted, EmulatorFailure):
+            raise
+        except Failure:
+            report["unrootCommandStatus"] = "command_failed"
+        end = min(run.deadline, time.monotonic() + 30)
+        while time.monotonic() < end:
+            # Do not retain a pre-restart observation if adbd later goes offline.
+            report["identityReverifiedAfterUnroot"] = False
+            report["after"] = privilege_facts(1, "", 1, "")
+            def read(name, command):
+                remaining = end - time.monotonic()
+                if remaining <= 0:
+                    raise Failure("Emulator privilege recheck budget exhausted")
+                return run.command(name, [adb, "-s", SERIAL, "shell", *command],
+                                   timeout=min(3, remaining), required=False)
+            try:
+                qemu_code, qemu = read("unroot-qemu", ["getprop", "ro.kernel.qemu"])
+                sdk_code, sdk = read("unroot-sdk", ["getprop", "ro.build.version.sdk"])
+                if qemu_code == sdk_code == 0 and qemu.strip() == "1" and sdk.strip() == str(expected_sdk):
+                    id_code, id_output = read("unroot-shell-identity", ["id"])
+                    build_code, build_output = read("unroot-build-type", ["getprop", "ro.build.type"])
+                    report["after"] = privilege_facts(id_code, id_output, build_code, build_output)
+                    report["identityReverifiedAfterUnroot"] = report["after"]["shellUid"] is not None
+                    if report["after"]["shellUid"] == 2000:
+                        break
+                elif (qemu_code == 0 and qemu.strip() == "0") or (sdk_code == 0 and re.fullmatch(r"[0-9]+", sdk.strip())
+                                                                              and sdk.strip() != str(expected_sdk)):
+                    raise EmulatorFailure("Emulator identity changed after unroot; refusing Manager operations")
+            except (Interrupted, EmulatorFailure):
+                raise
+            except Failure:
+                pass
+            time.sleep(min(0.5, max(0, end - time.monotonic())))
+        if not report["identityReverifiedAfterUnroot"]:
+            raise Failure("Emulator identity could not be reverified after unroot; refusing Manager operations")
+    report.update(report["after"])
+    report["ordinaryAdbShellVerified"] = report["shellUid"] == 2000
+    report["limitation"] = (None if report["ordinaryAdbShellVerified"] else
+                            "An ordinary Android ADB shell (UID 2000) was not verified; root or unknown privilege does not establish that condition.")
 
 
 def stop_owned(process, grace=2):
@@ -429,10 +487,8 @@ def main(argv=None):
         if boot != {"ro.kernel.qemu": "1", "ro.build.version.sdk": str(image["sdk"]), "sys.boot_completed": "1"}:
             raise Failure("Booted target is not the expected emulator SDK")
         summary["bootVerified"] = boot
-        id_code, id_output = run.command("shell-identity", [adb, "-s", SERIAL, "shell", "id"], required=False)
-        build_code, build_output = run.command("build-type", [adb, "-s", SERIAL, "shell", "getprop", "ro.build.type"],
-                                               required=False)
-        summary["privilege"] = privilege_facts(id_code, id_output, build_code, build_output)
+        summary["privilege"] = {}
+        prepare_emulator_privilege(run, adb, image["sdk"], boot, summary["privilege"])
         run.command("adb-after-boot", [adb, "devices", "-l"])
         summary["stage"] = "read-only-probe"
         run.command("read-only-probe", [sys.executable, ROOT / "desktop/scripts/probe-tv-compatibility.py",
@@ -454,7 +510,8 @@ def main(argv=None):
             if summary["evidenceLevel"] != "E3":
                 summary["stage"] = "core-guard"
             raise Failure("Manager checks did not pass; see the separate core report")
-        summary["testedScopeCompatibility"] = core_report.get("testedScopeCompatibility")
+        summary["testedScopeCompatibility"] = (core_report.get("testedScopeCompatibility")
+            if summary["privilege"]["ordinaryAdbShellVerified"] else "LIMITED")
         summary["status"] = "PASS"
         summary["stage"] = "completed"
         print(f"PASS E3 SDK {image['sdk']}: official emulator image, no physical-TV claim")

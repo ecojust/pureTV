@@ -44,6 +44,10 @@ RESOLVE_METADATA = re.compile(
     r"priority=-?[0-9]{1,10} preferredOrder=-?[0-9]{1,10} match=0x[0-9a-fA-F]{1,8} "
     r"specificIndex=-?[0-9]{1,10} isDefault=(?:true|false)")
 REPORT_NAME = "compatibility-report.json"
+# AOSP android-4.4_r1 bionic linker.cpp/linker.h and the API19 E3 image:
+# legacy ADB shell merges this non-fatal Dalvik stderr diagnostic into pm output.
+KITKAT_DALVIK_WARNING = ("WARNING: linker: libdvm.so has text relocations. This is wasting memory "
+                         "and is a security risk. Please fix.")
 
 
 @dataclass
@@ -291,7 +295,9 @@ def display_summary(text):
 
 
 def packages_summary(text):
-    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    lines = [line.strip() for line in text.splitlines()
+             if line.strip() and line.strip() != KITKAT_DALVIK_WARNING]
+    # This probe reads the primary installed catalogue, not an empty filter.
     if not lines or any(not re.fullmatch("package:" + PACKAGE, line) for line in lines):
         return None
     return {"packageCount": len(set(lines))}
