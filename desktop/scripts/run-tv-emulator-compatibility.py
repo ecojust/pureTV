@@ -256,7 +256,8 @@ def fixture_apks(run, config, sdk, work):
         _, badging = run.command(f"fixture-v{version}-identity", [tools / "aapt2", "dump", "badging", signed])
         package = next((line for line in badging.splitlines() if line.startswith("package: ")), "")
         if (f"name='{config['fixturePackage']}'" not in package or f"versionCode='{version}'" not in package
-                or "sdkVersion:'19'" not in badging or "targetSdkVersion:'28'" not in badging
+                or re.findall(r"^minSdkVersion:(.*)$", badging, re.M) != ["'19'"]
+                or re.findall(r"^targetSdkVersion:(.*)$", badging, re.M) != ["'28'"]
                 or "launchable-activity:" in badging or not 0 < signed.stat().st_size < 1048576):
             raise Failure("Built fixture identity, SDK bounds, or size is incorrect")
         metadata["versions"].append({"versionCode": version, "bytes": signed.stat().st_size,

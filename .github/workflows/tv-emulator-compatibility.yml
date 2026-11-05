@@ -10,6 +10,7 @@ on:
       - 'desktop/scripts/probe-tv-compatibility.py'
       - 'desktop/scripts/run-tv-emulator-compatibility.py'
       - 'desktop/tests/test_probe_tv_compatibility.py'
+      - 'desktop/tests/test_tv_emulator_runner.py'
       - 'desktop/tests/fixtures/tv-compatibility/**'
   workflow_dispatch:
 
@@ -43,10 +44,12 @@ jobs:
             desktop/core
             desktop/public
             desktop/scripts
-            desktop/tests/fixtures/tv-compatibility
+            desktop/tests
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Check emulator runner controls and fixture validation
+        run: python -m unittest discover -s desktop/tests -p test_tv_emulator_runner.py -v
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
