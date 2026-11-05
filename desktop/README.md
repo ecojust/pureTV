@@ -70,7 +70,7 @@
 
 当前用户查询依次尝试 `am get-current-user` 和 `cmd activity get-current-user`；当前源码仅在已确认 SDK 为 19、21、22、23 时，才回退读取 `dumpsys activity processes` 的 `mUserLru` 末项。无法确认用户身份时仍拒绝修改，不猜测用户为 0。系统信息读取不依赖当前用户查询，存储容量兼容旧版 `df` 输出；两种 `df` 均无法解析时，当前源码再用 `stat -f` 直接查询 `/data`，避免挂载别名影响。读取不到的字段保持未知。旧系统无法查询默认 HOME 时，停用和卸载仍受原有保护限制。
 
-0.5.2 发布版的用户回退仅支持 SDK19；SDK21/22/23 与歧义 HOME 保护是后续源码改进，尚未发布新安装包。品牌／系统验收入口见 [兼容性 checklist](docs/tv-compatibility-checklist.md) 和 [AOSP 命令版本矩阵](docs/android-command-compatibility.md)。 本轮结果见[兼容性验证记录](docs/tv-compatibility-validation-2026-11-05.md)。小米电视4／Android6为首要实机目标；[只读采集步骤](docs/tv-compatibility-checklist.md#7-先采集小米电视-4-的只读能力报告)可生成不含设备地址和应用名单的能力摘要。
+0.5.2 发布版的用户回退仅支持 SDK19；SDK21/22/23 与歧义 HOME 保护是后续源码改进，尚未发布新安装包。品牌／系统验收入口见 [兼容性 checklist](docs/tv-compatibility-checklist.md) 和 [AOSP 命令版本矩阵](docs/android-command-compatibility.md)。 本轮结果见[兼容性验证记录](docs/tv-compatibility-validation-2026-11-05.md)。小米电视2／系统待确认与小米电视4／用户报告Android6均为重点实机目标；[只读采集步骤](docs/tv-compatibility-checklist.md#7-采集小米电视-2-与-4-的只读能力报告)可分别生成不含设备地址和应用名单的能力摘要。
 
 Info 页面无需连接电视或访问网络，可查看各操作实际使用的 ADB 命令、参数含义及兼容性说明。Android 4.4 支持连接和信息读取的兼容处理，不代表支持所有应用管理、启动器或布局修改命令；操作能力仍取决于电视系统。
 

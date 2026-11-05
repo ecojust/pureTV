@@ -47,14 +47,15 @@ adb -s SERIAL shell getprop ro.product.cpu.abi
 
 ### 本轮首要实机样本
 
-用户新增反馈：“电视有有一个小米4，安卓6的需要兼容”。这条反馈定义首要目标，但尚不足以确定完整型号、实际 SDK 或固件能力；此前 Android 4.4 目标继续保留。
+用户反馈：“电视有有一个小米4，安卓6的需要兼容”，随后补充“还有小米电视2”。两款小米电视均列为 P0；小米电视 2 尚未报告 Android 版本，不能按产品代际推定 SDK。此前 Android 4.4 目标继续保留，是否就是这台小米电视 2 待用户或设备信息确认，暂不合并记录，也不据此认定有三台不同电视。
 
 | 样本 ID | 优先级与用户报告 | 待设备确认 | 实机验收状态 |
 | --- | --- | --- | --- |
 | `mi-tv-4-android-6` | **P0 首要：小米电视 4／用户报告 Android 6** | 完整型号后缀、销售地区、厂商系统版本、fingerprint、ABI 均 `unknown`；Android 6 通常对应 API 23，但须由该电视 `getprop ro.build.version.sdk` 确认 | C／I／S／L／A／H／R 的全部适用实机项初始为 `NOT_RUN/E0`；`physicalTvTested: false`，目前无 E4 证据 |
+| `mi-tv-2` | **P0 新增：小米电视 2／Android 版本待确认** | 完整型号后缀、Android 版本、SDK、地区、厂商系统版本、fingerprint、ABI 均 `unknown`；与此前 Android 4.4 反馈是否为同一设备待确认 | 同样登记全部 30 项为 `NOT_RUN/E0`；只根据这台设备的采集和实际操作形成结论 |
 | `legacy-tv-android-4-4` | **P0 保留：此前用户报告 Android 4.4** | 品牌、完整型号、地区、fingerprint、ABI 均 `unknown`；API 19 同样需设备查询确认 | 全部适用实机项仍为 `NOT_RUN/E0`；源码和模拟回归不能替代该台电视验收 |
 
-取得小米电视 4 后先完成平台字段及 C01、I01–I03、S01–S03、L01–L02，核对 Android 6 命令路径和默认 HOME 能力，再执行有条件的写入项。无设备或输出时保留 `NOT_RUN`／`BLOCKED`，不能把本轮扩展的 SDK 23 回退写成“小米电视 4 已兼容”。
+对小米电视 2、4 分别先完成平台字段及 C01、I01–I03、S01–S03、L01–L02，按实测 SDK 核对命令路径和默认 HOME 能力，再执行有条件的写入项。小米电视 2 若确认为 API 19，重点检查旧 `am`、包列表诊断、旧 `df`，以及不支持 `--user` 安装时明确拒绝且未误安装；若为其他 SDK，则使用对应版本桶，不继承 API 19 的结果。无设备或输出时保留 `NOT_RUN`／`BLOCKED`，不能把模拟器或源码回退写成任一小米型号已兼容。
 
 ## 2. Android／API、ABI 与电脑交叉抽样
 
@@ -80,7 +81,7 @@ ABI 至少覆盖 `armeabi-v7a` 与 `arm64-v8a`；另外保留 **64 位 SoC + 32 
 
 1. 每个已选择的电视固件先在一台主力电脑执行完整 P0，Android 平台分支和 ARM ABI 在整个样本集中都要出现。
 2. 同一参考电视再跨 Windows、两种 macOS 和 Linux 执行连接、读取、取消、目标隔离、安装及退出重连，分离电脑问题与电视问题。
-3. 先安排小米电视 4／待确认 API 23 与保留的 API 19 目标，再将普通 AOSP、Android TV／Google TV、Android 派生 Fire OS 分配到不同主机；需要声称支持的分支必须有对应证据，不能用另一分支代替。
+3. 先安排小米电视 2／SDK 待确认、小米电视 4／待确认 API 23 与保留的 API 19 反馈目标；先确认设备是否重复，再安排样本。随后将普通 AOSP、Android TV／Google TV、Android 派生 Fire OS 分配到不同主机；需要声称支持的分支必须有对应证据，不能用另一分支代替。
 4. 以太网／Wi-Fi、同子网／路由可达的跨子网、用户 0／可切换的非 0 用户、32／64 位及受限 HOME 至少各覆盖一个样本。电视没有相应能力时记“不适用”，不要构造不存在的设置。
 5. 电脑安装／更新可以在 CI 或 VM 独立覆盖；电视的 OEM 限制、遥控、待机和显示体验必须保留实体设备验证项。
 
@@ -228,9 +229,13 @@ reviewer: unknown
 
 对照命令、UI／MCP 显示和电视实际状态三者后再判定结果。新增固件或修复影响命令路径时新增记录并链接旧结果，保留版本边界，不直接把旧“通过”覆盖成当前状态。
 
-## 7. 先采集小米电视 4 的只读能力报告
+<a id="7-先采集小米电视-4-的只读能力报告"></a>
+
+## 7. 采集小米电视 2 与 4 的只读能力报告
 
 [只读采集工具](../scripts/probe-tv-compatibility.py) 需要 Python 3.10 以上（CI 使用 3.12）及电脑上已有的 ADB。先连接并在电视授权，运行 `adb devices -l` 确认实际 SERIAL 为 `device`。以下地址仅为文档示例，必须替换成列表中的真实目标；ADB 路径及输出目录也要替换。
+
+两款电视分别采集，输出到不同的新目录：下面以小米电视 2 的 `mi-tv2-report` 为例，小米电视 4 可使用 `mi-tv4-android6-report`。记录实际完整型号、固件和 SDK，不在采集前把小米电视 2 填成 Android 4.4，也不复用另一台电视的结果。
 
 Linux／macOS 示例（在仓库根目录）：
 
@@ -238,13 +243,13 @@ Linux／macOS 示例（在仓库根目录）：
 python3 desktop/scripts/probe-tv-compatibility.py \
   --adb /absolute/path/to/adb \
   --serial 192.0.2.10:5555 \
-  --output /absolute/path/to/mi-tv4-android6-report
+  --output /absolute/path/to/mi-tv2-report
 ```
 
 Windows PowerShell 示例：
 
 ```powershell
-py -3 desktop/scripts/probe-tv-compatibility.py --adb "C:\Android\platform-tools\adb.exe" --serial "192.0.2.10:5555" --output ".\compatibility-results\mi-tv4-android6-report"
+py -3 desktop/scripts/probe-tv-compatibility.py --adb "C:\Android\platform-tools\adb.exe" --serial "192.0.2.10:5555" --output ".\compatibility-results\mi-tv2-report"
 ```
 
 工具只使用明确选择的已授权设备，读取有限属性、内存／容量／分辨率、当前用户及应用／HOME 查询能力；每条命令和总时间都有上限。不自动连接或扫描网络，不安装、卸载、停用、切换桌面或写入布局。测试期间保持目标设备及用户不变；这是逐项采样，不是设备状态的原子快照。
@@ -256,11 +261,12 @@ py -3 desktop/scripts/probe-tv-compatibility.py --adb "C:\Android\platform-tools
 - HOME 候选计数不代表默认桌面；默认值只有唯一规范组件且非 Resolver／Chooser 才能确认。
 - `physicalTvTested` 和 `fullPhysicalCompatibilityVerified` 保持 false，写操作为 `not_verified_on_device`。工具不知道被测目标是不是实体电视，也不执行完整实机验收；人工 E4 记录须另行绑定到真实型号和功能证据。
 
-首轮小米样本的待办：
+小米电视 2 与 4 各自的待办：
 
-- [ ] 确认完整型号、地区、实际 SDK23、固件及 ABI，保存只读报告。
-- [ ] 用当前源码构建的管理器验证连接、信息及同用户应用列表；0.5.2 发布版没有 API23 回退。
-- [ ] 用明确支持 API23 的专用 APK 验证安装与覆盖、失败结果和数据保留。
+- [ ] 确认完整型号、地区、Android 版本、实际 SDK、固件及 ABI，分别保存只读报告；小米电视 4 的用户报告为 Android 6，小米电视 2 的版本仍未知。
+- [ ] 确认小米电视 2 是否对应此前 Android 4.4 反馈，再合并或保留独立设备记录。
+- [ ] 用当前源码构建的管理器验证连接、信息及同用户应用列表；旧用户回退仅限实际 SDK19/21/22/23，0.5.2 发布版仅有 SDK19 回退。
+- [ ] 用明确支持实测 SDK／ABI 的专用 APK 验证安装与覆盖、失败结果和数据保留；API19 标准安装不支持 `--user` 时验收明确拒绝及未误安装，不去掉用户参数。
 - [ ] 根据实际 HOME 查询结果记录可用或受限；不以取消保护或安装 minSdk26 的 APK 作为兼容手段。
 - [ ] 对其余适用 P0、遥控、待机／重连项目逐项保存 E4 证据，再形成型号兼容声明。
 
