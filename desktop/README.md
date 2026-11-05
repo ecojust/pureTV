@@ -1,10 +1,10 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.5.0** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.5.1** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.5.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.0)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.5.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.1)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
 
-0.5.0 提供完整论坛浏览：读取 Gitee 商店仓库的公开 Issues，点击帖子在管理器内查看正文和跟帖，支持刷新与翻页。顶部「发布帖子」和每帖「去回复」通过系统默认浏览器打开 Gitee。APK市场、论坛、操作记录页面隐藏常驻 ADB 提示与右上角电视连接入口，独立浏览无需连接电视。
+0.5.1 将 APK 市场分为「启动器、影音、游戏」，显示各类数量，并明确软件上架请直接提交 PR。启动器布局选择应用时自动填入名称和已缓存的 SVG 图标，默认使用白色文字；窗口顶部与底部移除重复的软件名称。
 
 ## 功能
 
@@ -39,14 +39,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.5.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.0) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.5.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.1) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.5.0-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.5.1-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.5.0-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.5.1-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
