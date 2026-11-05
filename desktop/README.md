@@ -1,14 +1,14 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.5.2** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.5.3** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.5.2 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.2)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
+下载：[0.5.3 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.3)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
-0.5.2 修复 Android 4.4（SDK 19）连接时返回 `am usage` 的兼容问题，将系统信息读取与当前用户查询分开，并支持旧版 `df` 容量格式。新增离线可读的三语 Info 页面，说明各操作的 ADB 命令、用法和兼容性。Android 4.4 的修改操作仍受系统能力及用户身份、默认 HOME 检查限制；本次尚未进行实体电视验证。
+0.5.3 将旧系统当前用户识别回退扩展到 Android 5.0／5.1／6.0（SDK 21／22／23），兼容 Android 4.4 包列表中已核实的非致命 `libdvm.so` 警告，并在 `df` 无法解析容量时直接查询 `/data` 文件系统。默认 HOME 有歧义时仍阻止停用和卸载；离线三语 Info、兼容性清单和只读采集说明同步更新。修改操作仍受系统能力、用户身份和默认 HOME 检查限制，不代表全部电视功能可用。
 
 ## 功能
 
-左下角版本旁的「检查更新」会读取 Gitee 商店的 `client/` 目录；启动后也会后台检查一次。发现匹配当前平台的新版本后，点击「下载并安装」，管理器会校验安装包、结束 ADB 连接并交给更新助手安装和重启。本次发布未同步 Gitee 商店安装包，请从上方 GitHub 发布页获取 0.5.2；应用内更新以该目录实际版本为准。详见[客户端更新说明与仓库文件约定](docs/client-updates.md)。
+左下角版本旁的「检查更新」会读取 Gitee 商店的 `client/` 目录；启动后也会后台检查一次。发现匹配当前平台的新版本后，点击「下载并安装」，管理器会校验安装包、结束 ADB 连接并交给更新助手安装和重启。本次发布未同步 Gitee 商店安装包，请从上方 GitHub 发布页获取 0.5.3；应用内更新以该目录实际版本为准。详见[客户端更新说明与仓库文件约定](docs/client-updates.md)。
 
 所有应用内弹窗统一使用半透明毛玻璃背景，包括布局中的嵌套弹窗；背景虚化，弹窗内容保持清晰。
 
@@ -40,14 +40,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.5.2 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.2) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.5.3 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.3) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.5.2-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.5.3-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.5.2-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.5.3-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -68,9 +68,9 @@
 3. 每次连接前会自动清理当前用户的本机 ADB 服务与残留进程，等待退出后再连接；这也会断开其他工具使用的 ADB 连接。清理失败或取消时不会继续连接。
 4. 首页自动显示系统信息，点击「刷新信息」重新查询。内存来自 `/proc/meminfo`，存储容量来自 `/data` 分区；权限或固件限制时显示未知。
 
-当前用户查询依次尝试 `am get-current-user` 和 `cmd activity get-current-user`；当前源码仅在已确认 SDK 为 19、21、22、23 时，才回退读取 `dumpsys activity processes` 的 `mUserLru` 末项。无法确认用户身份时仍拒绝修改，不猜测用户为 0。系统信息读取不依赖当前用户查询，存储容量兼容旧版 `df` 输出；两种 `df` 均无法解析时，当前源码再用 `stat -f` 直接查询 `/data`，避免挂载别名影响。读取不到的字段保持未知。旧系统无法查询默认 HOME 时，停用和卸载仍受原有保护限制。
+当前用户查询依次尝试 `am get-current-user` 和 `cmd activity get-current-user`；0.5.3 仅在已确认 SDK 为 19、21、22、23 时，才回退读取 `dumpsys activity processes` 的 `mUserLru` 末项。无法确认用户身份时仍拒绝修改，不猜测用户为 0。系统信息读取不依赖当前用户查询，存储容量兼容旧版 `df` 输出；两种 `df` 均无法解析时，再用固定 `stat -f -c %S:%b:%a /data` 直接查询 `/data`，避免挂载别名影响。读取不到的字段保持未知。旧系统无法查询默认 HOME 时，停用和卸载仍受原有保护限制。
 
-0.5.2 发布版的用户回退仅支持 SDK19；SDK21/22/23 与歧义 HOME 保护是后续源码改进，尚未发布新安装包。品牌／系统验收入口见 [兼容性 checklist](docs/tv-compatibility-checklist.md) 和 [AOSP 命令版本矩阵](docs/android-command-compatibility.md)。 本轮结果见[兼容性验证记录](docs/tv-compatibility-validation-2026-11-05.md)。小米电视2／系统待确认与小米电视4／用户报告Android6均为重点实机目标；[只读采集步骤](docs/tv-compatibility-checklist.md#7-采集小米电视-2-与-4-的只读能力报告)可分别生成不含设备地址和应用名单的能力摘要。
+0.5.3 包含在 0.5.2 之后完成的 SDK21／22／23 用户识别、精确 KitKat 诊断过滤、固定 `/data` 容量回退和歧义 HOME 保护修复。品牌／系统验收入口见[兼容性 checklist](docs/tv-compatibility-checklist.md)和[AOSP 命令版本矩阵](docs/android-command-compatibility.md)，已有源码与模拟器结果见[兼容性验证记录](docs/tv-compatibility-validation-2026-11-05.md)。小米电视2的系统尚待确认，小米电视4的Android6为用户报告，两者均尚无实体电视验证（E4）；[只读采集步骤](docs/tv-compatibility-checklist.md#7-采集小米电视-2-与-4-的只读能力报告)可分别生成不含设备地址和应用名单的能力摘要。
 
 Info 页面无需连接电视或访问网络，可查看各操作实际使用的 ADB 命令、参数含义及兼容性说明。Android 4.4 支持连接和信息读取的兼容处理，不代表支持所有应用管理、启动器或布局修改命令；操作能力仍取决于电视系统。
 

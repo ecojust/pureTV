@@ -1,25 +1,31 @@
-# pureTV Manager 0.5.2
+# pureTV Manager 0.5.3
 
 ## 简体中文
 
-- 修复 Android 4.4（SDK 19）设备连接时因不支持当前用户查询命令而返回 `am usage` 的问题；逐步尝试兼容查询方式，仅在 SDK 19 使用旧版系统进程信息回退。
-- 系统信息读取独立于当前用户查询，兼容旧版 `df` 容量输出，减少旧系统信息读取失败。
-- 新增可离线阅读的独立 Info 页面，以简体中文、繁体中文和英文说明各项操作的 ADB 命令、用法与兼容性，包括 Android 4.4 的限制。
-- 本次修复不代表 Android 4.4 支持所有修改操作。无法确认当前用户时仍拒绝修改；无法查询默认 HOME 时，停用与卸载保护仍保留。尚未进行实体电视验证。
+- 在 SDK 19 兼容处理的基础上，将旧版系统进程信息中的当前用户识别回退扩展到 Android 5.0／5.1／6.0（SDK 21／22／23）；无法确认身份时不猜测用户为 0，仍拒绝修改。
+- 修复 Android 4.4 包列表因已知 `libdvm.so` 非致命 linker 警告而读取失败的问题；仅忽略已核实的完整诊断，权限错误、未知警告和无效列表仍拒绝。
+- 两种 `df` 查询均无法解析 `/data` 容量时，使用固定 `stat -f -c %S:%b:%a /data` 直接读取文件系统，兼容挂载别名，不把其他分区容量当作 `/data`。
+- 默认 HOME 只接受唯一、明确且非 Resolver／Chooser 的组件；结果缺失或有歧义时，继续阻止停用与卸载，保留默认桌面保护。
+- 更新离线 Info 页的三语命令与兼容性说明，补充品牌／系统版本验收清单、只读设备能力采集工具及可复查的 Android 系统模拟器证据。
+- Android 4.4／6／11 系统镜像已验证对应读取、安装结果与保护行为，旧镜像仍受 root 测试条件限制，不代表全部电视功能可用。小米电视 2 的系统尚待确认，小米电视 4 的 Android 6 为用户报告；两者均尚无实体电视验证（E4）。
 
 ## 繁體中文
 
-- 修正 Android 4.4（SDK 19）裝置連線時，因不支援目前使用者查詢命令而回傳 `am usage` 的問題；逐步嘗試相容查詢方式，僅在 SDK 19 使用舊版系統程序資訊回退。
-- 系統資訊讀取獨立於目前使用者查詢，相容舊版 `df` 容量輸出，減少舊系統資訊讀取失敗。
-- 新增可離線閱讀的獨立 Info 頁面，以簡體中文、繁體中文和英文說明各項操作的 ADB 命令、用法與相容性，包括 Android 4.4 的限制。
-- 本次修正不代表 Android 4.4 支援所有修改操作。無法確認目前使用者時仍拒絕修改；無法查詢預設 HOME 時，停用與解除安裝保護仍保留。尚未進行實體電視驗證。
+- 在 SDK 19 相容處理的基礎上，將舊版系統程序資訊中的目前使用者識別回退擴展至 Android 5.0／5.1／6.0（SDK 21／22／23）；無法確認身分時不猜測使用者為 0，仍拒絕修改。
+- 修正 Android 4.4 套件清單因已知 `libdvm.so` 非致命 linker 警告而讀取失敗的問題；僅忽略已核實的完整診斷，權限錯誤、未知警告與無效清單仍拒絕。
+- 兩種 `df` 查詢均無法解析 `/data` 容量時，使用固定 `stat -f -c %S:%b:%a /data` 直接讀取檔案系統，相容掛載別名，不將其他分割區容量當成 `/data`。
+- 預設 HOME 僅接受唯一、明確且非 Resolver／Chooser 的元件；結果缺失或有歧義時，繼續阻止停用與解除安裝，保留預設桌面保護。
+- 更新離線 Info 頁面的三語命令與相容性說明，補充品牌／系統版本驗收清單、唯讀裝置能力採集工具及可複查的 Android 系統模擬器證據。
+- Android 4.4／6／11 系統映像已驗證對應的讀取、安裝結果與保護行為，舊映像仍受 root 測試條件限制，不代表全部電視功能可用。小米電視 2 的系統尚待確認，小米電視 4 的 Android 6 為使用者回報；兩者均尚無實體電視驗證（E4）。
 
 ## English
 
-- Fixes connections to Android 4.4 (SDK 19) devices returning `am usage` when the current-user command is unsupported. Compatible queries are tried in sequence, with a legacy activity-process fallback limited to SDK 19.
-- Reads system information independently of current-user queries and supports legacy `df` capacity output, reducing information retrieval failures on older systems.
-- Adds a standalone Info page available offline in Simplified Chinese, Traditional Chinese and English, explaining each operation's ADB commands, usage and compatibility, including Android 4.4 limitations.
-- This fix does not make every modification operation available on Android 4.4. Changes remain blocked when the current user cannot be confirmed, and disable/uninstall protections remain when the default HOME cannot be queried. No physical television validation has been performed.
+- Extends the legacy activity-process fallback for current-user identification from SDK 19 to Android 5.0, 5.1 and 6.0 (SDK 21, 22 and 23). An unverified identity still blocks changes; user 0 is never assumed.
+- Fixes Android 4.4 package-list reads interrupted by the known non-fatal `libdvm.so` linker warning. Only the exact verified diagnostic is ignored; permission errors, unknown warnings and invalid lists remain rejected.
+- When neither `df` query yields a valid `/data` capacity, uses the fixed command `stat -f -c %S:%b:%a /data` to query that filesystem directly. This supports mount aliases without treating another partition's capacity as `/data`.
+- Accepts a default HOME only when it resolves to one unambiguous component other than a Resolver or Chooser. Missing or ambiguous results continue to block disabling and uninstalling apps, preserving launcher protection.
+- Updates the offline Info page's command and compatibility explanations in all three languages, and adds a brand/system acceptance checklist, a read-only capability collector and reviewable Android emulator evidence.
+- Android 4.4, 6 and 11 system images verified the corresponding reads, installation outcomes and protections. Older images retain root-related test limitations; this is not full TV compatibility certification. Xiaomi TV 2's system is unconfirmed, and Android 6 on Xiaomi TV 4 is user-reported; neither has physical-TV validation (E4).
 
 ---
 
