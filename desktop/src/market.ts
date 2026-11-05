@@ -1,9 +1,18 @@
 import type {MarketItem, MarketKind, MarketSeenEntry} from './types';
 
+export type MarketCategory = 'media' | 'game' | 'launcher';
+
 export interface MarketGroup {
   id: string;
   kind: MarketKind;
+  category: MarketCategory;
   versions: MarketItem[];
+}
+
+function category(item: MarketItem): MarketCategory {
+  if (item.kind === 'launcher') return 'launcher';
+  // Store paths declare the category. Legacy flat app folders remain in Media.
+  return item.id.startsWith('apps/game/') ? 'game' : 'media';
 }
 
 function groupId(item: MarketItem): string {
@@ -34,7 +43,7 @@ export function groupMarketItems(items: MarketItem[]): MarketGroup[] {
   const groups = new Map<string, MarketGroup>();
   for (const item of items) {
     const id = groupId(item);
-    const group = groups.get(id) || {id, kind: item.kind, versions: []};
+    const group = groups.get(id) || {id, kind: item.kind, category: category(item), versions: []};
     group.versions.push(item);
     groups.set(id, group);
   }

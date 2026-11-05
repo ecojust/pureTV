@@ -7,11 +7,11 @@ import {Forum} from './forum';
 import {unavailableLayoutApps} from './layout-apps';
 import {validUnified,systemUnchanged} from './unified-layout';
 import {sameSubnet} from './subnet';
-import {groupMarketItems, marketSeenEntries, newMarketGroups, type MarketGroup} from './market';
+import {groupMarketItems, marketSeenEntries, newMarketGroups, type MarketGroup, type MarketCategory} from './market';
 import {validGeometry,validScene,sceneLabels,autoFrame,sceneNode,frameStyle} from './scene';
 import {version as appVersion} from '../package.json';
 import * as api from './bridge';
-import { emptySnapshot, type Request, type PackageInfo, type PlatformToolsInfo, type DownloadProgress, type Snapshot, type LauncherLayout, type LauncherLayoutInfo, type LauncherRequest, type MarketKind, type MarketCatalog, type MarketSeenEntry, type MarketProgress, type MarketResult } from './types';
+import { emptySnapshot, type Request, type PackageInfo, type PlatformToolsInfo, type DownloadProgress, type Snapshot, type LauncherLayout, type LauncherLayoutInfo, type LauncherRequest, type MarketCatalog, type MarketSeenEntry, type MarketProgress, type MarketResult } from './types';
 
 type Page = 'connect' | 'apps' | 'launchers' | 'market' | 'forum' | 'install' | 'history';
 type Filter = 'all' | 'system' | 'enabled' | 'disabled' | 'recoverable';
@@ -48,7 +48,10 @@ let toolsInfo: PlatformToolsInfo | null = null, toolsInfoError = '', toolsPrepar
 let toolsProgress: DownloadProgress | null = null;
 let launcherLayout: LauncherLayoutInfo | null = null;
 let covers:Record<string,string> = {}, launcherApks:{path:string;cover?:string|null;homeBackground?:string|null;homeBackgroundColor?:string|null}[]=[];
-let marketCatalog: MarketCatalog | null = null, marketKind: MarketKind = 'app', marketQuery = '', marketError = '';
+let marketCatalog: MarketCatalog | null = null, marketCategory: MarketCategory = 'media', marketQuery = '', marketError = '';
+const marketCategories = ['media', 'game', 'launcher'] as const;
+const marketCategoryLabels: Record<MarketCategory, string> = {media: '影音', game: '游戏', launcher: '启动器'};
+const marketCategoryIcons: Record<MarketCategory, string> = {media: 'video', game: 'gamepad', launcher: 'home'};
 let marketLoading = false, marketWorking = false, marketProgress: MarketProgress | null = null, agentMarketProgress: MarketProgress | null = null;
 let marketGroups: MarketGroup[] = [];
 type MarketVisit = {pending: boolean; baseline: MarketSeenEntry[] | null | undefined; newIds: Set<string>; readWarning: string; saveWarning: string};
@@ -234,6 +237,7 @@ function icon(name: string): string {
     monitor: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
     music: '<path d="M9 18V5l12-2v13M9 8l12-2"/><ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/>',
     video: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="m10 8 6 4-6 4Z"/>',
+    gamepad: '<path d="M7 7h10a4 4 0 0 1 4 3l1 7a2 2 0 0 1-3 2l-4-3H9l-4 3a2 2 0 0 1-3-2l1-7a4 4 0 0 1 4-3Z"/><path d="M5 11h4M7 9v4M16 10h.01M19 13h.01"/>',
     files: '<path d="M3 7h7l2-3h9v16H3Z"/>',
     picture: '<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1"/><path d="m4 18 5-5 4 4 3-7 5 8"/>',
     input: '<path d="M12 3v12m-4-4 4 4 4-4M5 17v4h14v-4"/>',
@@ -362,8 +366,7 @@ function syncMarketVisit(): void {
   if (!marketVisit) {
     marketVisit = {pending: true, baseline: undefined, newIds: new Set(), readWarning: '', saveWarning: ''};
     // A new visit should reveal the newly promoted cards at the top.
-    scrollPositions.delete('market-app');
-    scrollPositions.delete('market-launcher');
+    for (const category of marketCategories) scrollPositions.delete(`market-${category}`);
   }
   const visit = marketVisit;
   // Navigation remains available during other work. Defer this visit's check
@@ -396,7 +399,7 @@ function marketSeenWarning(): string {
 }
 function visibleMarketGroups(): MarketGroup[] {
   const needle = marketQuery.trim().toLocaleLowerCase();
-  const groups = marketGroups.filter(group => group.kind === marketKind && (!needle || group.versions.some(item => `${item.name} ${item.fileName} ${item.version || ''}`.toLocaleLowerCase().includes(needle))));
+  const groups = marketGroups.filter(group => group.category === marketCategory && (!needle || group.versions.some(item => `${item.name} ${item.fileName} ${item.version || ''}`.toLocaleLowerCase().includes(needle))));
   return groups.filter(group => marketVisit?.newIds.has(group.id)).concat(groups.filter(group => !marketVisit?.newIds.has(group.id)));
 }
 function marketCard(group: MarketGroup): string {
@@ -404,7 +407,7 @@ function marketCard(group: MarketGroup): string {
   const downloaded = marketDownloads.get(item.id)?.blobSha === item.blobSha;
   const cover = item.coverUrl?.startsWith('https://gitee.com/juzisang331/pure-tv-store/raw/') ? item.coverUrl : null;
   const options = group.versions.map(version => `<option value="${esc(version.id)}"${version.id === item.id ? ' selected' : ''}>${esc(version.version ? `v${version.version}` : version.fileName)}</option>`).join('');
-  return ui`<article class="market-card" data-market-id="${esc(item.id)}"><div class="market-cover"><span class="market-cover-placeholder" aria-hidden="true">${icon(item.kind === 'launcher' ? 'home' : 'grid')}</span>${cover ? `<img src="${esc(cover)}" alt="${esc(item.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : ''}<span class="market-category">${item.kind === 'launcher' ? t('启动器') : t('应用')}</span>${marketVisit?.newIds.has(group.id) ? `<span class="market-new" title="${esc(t('本次新增或更新'))}" aria-label="${esc(t('本次新增或更新'))}">${esc(t('新'))}</span>` : ''}</div><div class="market-card-body"><div class="market-card-heading"><h2 title="${esc(item.name)}">${esc(item.name)}</h2>${downloaded ? `<span class="market-downloaded">${icon('check')}${t('已下载')}</span>` : ''}</div><div class="market-meta"><label class="market-version"><span>版本</span><select data-market-version="${esc(group.id)}" aria-label="${esc(item.name)} · ${t('版本')}" title="最近 5 个版本"${disabled(busy)}>${options}</select></label><span class="market-size">${marketSize(item.bytes)}</span></div><p class="market-file" title="${esc(item.fileName)}">${esc(item.fileName)}</p><div class="market-card-actions">${actionButton('download-market', icon('download') + t('下载到电脑'), ` data-id="${esc(item.id)}"${disabled(busy || (!api.desktop && !api.demo))}`, 'small')}${actionButton('install-market', t('下载并安装'), ` data-id="${esc(item.id)}"${disabled(busy || !online())}`, 'small primary')}</div></div></article>`;
+  return ui`<article class="market-card" data-market-id="${esc(item.id)}"><div class="market-cover"><span class="market-cover-placeholder" aria-hidden="true">${icon(marketCategoryIcons[group.category])}</span>${cover ? `<img src="${esc(cover)}" alt="${esc(item.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : ''}<span class="market-category">${t(marketCategoryLabels[group.category])}</span>${marketVisit?.newIds.has(group.id) ? `<span class="market-new" title="${esc(t('本次新增或更新'))}" aria-label="${esc(t('本次新增或更新'))}">${esc(t('新'))}</span>` : ''}</div><div class="market-card-body"><div class="market-card-heading"><h2 title="${esc(item.name)}">${esc(item.name)}</h2>${downloaded ? `<span class="market-downloaded">${icon('check')}${t('已下载')}</span>` : ''}</div><div class="market-meta"><label class="market-version"><span>版本</span><select data-market-version="${esc(group.id)}" aria-label="${esc(item.name)} · ${t('版本')}" title="最近 5 个版本"${disabled(busy)}>${options}</select></label><span class="market-size">${marketSize(item.bytes)}</span></div><p class="market-file" title="${esc(item.fileName)}">${esc(item.fileName)}</p><div class="market-card-actions">${actionButton('download-market', icon('download') + t('下载到电脑'), ` data-id="${esc(item.id)}"${disabled(busy || (!api.desktop && !api.demo))}`, 'small')}${actionButton('install-market', t('下载并安装'), ` data-id="${esc(item.id)}"${disabled(busy || !online())}`, 'small primary')}</div></div></article>`;
 }
 function marketCards(): string {
   const groups = visibleMarketGroups();
@@ -416,13 +419,14 @@ function marketCards(): string {
   return groups.map(marketCard).join('');
 }
 function marketCount(): string {
-  const total = marketGroups.filter(group => group.kind === marketKind).length;
-  return ui`显示 ${visibleMarketGroups().length} / ${total} ${marketKind === 'app' ? t('个应用') : t('个启动器')}`;
+  const total = marketGroups.filter(group => group.category === marketCategory).length;
+  return ui`显示 ${visibleMarketGroups().length} / ${total} ${marketCategory === 'launcher' ? t('个启动器') : t('个应用')}`;
 }
 function marketPage(): string {
-  const pending = marketKind === 'launcher' ? launcherApks.length : apkPaths.length;
-  const count = (kind: MarketKind) => marketGroups.filter(group => group.kind === kind).length;
-  return ui`<div class="market-heading"><div class="application-tabs market-tabs" role="tablist" aria-label="市场分类">${(['app','launcher'] as const).map(kind => `<button type="button" role="tab" data-market-kind="${kind}" aria-selected="${marketKind === kind}" class="${marketKind === kind ? 'primary' : ''}">${icon(kind === 'app' ? 'grid' : 'home')}${kind === 'app' ? t('应用') : t('启动器')}<span>${count(kind)}</span></button>`).join('')}</div>${actionButton('market-submission', t('软件上架请联系'), '', 'text-button small')}</div><section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (marketKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${marketKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}${marketSeenWarning() ? `<p class="market-warning market-seen-warning" role="status">${esc(message(marketSeenWarning()))}</p>` : ''}<div class="market-grid" data-scroll="market-${marketKind}" tabindex="0" role="tabpanel" aria-label="市场安装包列表">${marketCards()}</div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 Gitee · pure-tv-store')}</span></div></section><p class="hint market-note">${t('下载的安装包会保存到电脑。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
+  const pendingKind = marketCategory === 'launcher' ? 'launcher' : 'app';
+  const pending = pendingKind === 'launcher' ? launcherApks.length : apkPaths.length;
+  const count = (category: MarketCategory) => marketGroups.filter(group => group.category === category).length;
+  return ui`<div class="market-heading"><div class="application-tabs market-tabs" role="tablist" aria-label="市场分类">${marketCategories.map(category => `<button type="button" role="tab" id="market-tab-${category}" aria-controls="market-panel" data-market-category="${category}" aria-selected="${marketCategory === category}" class="${marketCategory === category ? 'primary' : ''}">${icon(marketCategoryIcons[category])}${t(marketCategoryLabels[category])}<span>${count(category)}</span></button>`).join('')}</div>${actionButton('market-submission', t('软件上架请联系'), '', 'text-button small')}</div><section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (pendingKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${pendingKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}${marketSeenWarning() ? `<p class="market-warning market-seen-warning" role="status">${esc(message(marketSeenWarning()))}</p>` : ''}<div id="market-panel" class="market-grid" data-scroll="market-${marketCategory}" tabindex="0" role="tabpanel" aria-labelledby="market-tab-${marketCategory}">${marketCards()}</div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 Gitee · pure-tv-store')}</span></div></section><p class="hint market-note">${t('下载的安装包会保存到电脑。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
 }
 function updateMarketList(): void {
   const list = root.querySelector<HTMLElement>('.market-grid');
@@ -1042,8 +1046,8 @@ document.addEventListener('click', event => {
   if (nav) { page = nav.dataset.page as Page; render(); if(page==='launchers' && online() && !busy)void launcherOperation({action:'getLayout'},true); return; }
   const forumButton = target.closest<HTMLButtonElement>('[data-forum-action]');
   if (forumButton) { void forum.action(forumButton); return; }
-  const marketTab = target.closest<HTMLButtonElement>('[data-market-kind]');
-  if (marketTab) { marketKind = marketTab.dataset.marketKind as MarketKind; marketQuery = ''; render(); return; }
+  const marketTab = target.closest<HTMLButtonElement>('[data-market-category]');
+  if (marketTab) { marketCategory = marketTab.dataset.marketCategory as MarketCategory; marketQuery = ''; render(); return; }
   const node=target.closest<HTMLElement>('[data-scene-node]');if(node){layoutNode=node.dataset.sceneNode || null;layoutSelected=-1;render();return;}
   const tile=target.closest<HTMLElement>('[data-layout-tile]');if(tile){layoutNode=null;layoutSelected=Number(tile.dataset.layoutTile);render();return;}
   const tab = target.closest<HTMLButtonElement>('[data-filter]');

@@ -1558,6 +1558,60 @@ try {
   const topVersions=['0.10.0','0.9.0','0.8.0','0.7.0','0.6.0'].map(versionedItem);
   const versionSelect=(p,item)=>marketCard(p,item).locator('select[data-market-version]');
   const mockVersionCovers=p=>p.route('https://gitee.com/**',route=>route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=','base64')}));
+  const categorizedMedia={...store.items[0],id:'apps/media/hifini/hifini-0.1.3.apk',name:'游戏影评 TV',folderUrl:store.items[0].folderUrl.replace('/apps/','/apps/media/')};
+  const categorizedGame=version=>({...store.items[1],id:`apps/game/prism-relay/prism-relay-${version}.apk`,name:'镜光接力',version,fileName:`prism-relay-${version}.apk`,folderUrl:store.items[1].folderUrl.replace('/apps/webtv','/apps/game/prism-relay')});
+  const latestGame=categorizedGame('0.2.1'),olderGame=categorizedGame('0.2.0');
+  const categorizedStore={...store,items:[categorizedMedia,store.items[1],olderGame,latestGame,store.items[2]]};
+  await check('market media and game tabs isolate search and grouped counts while preserving versions and the app download queue',async p=>{
+    await openMarket(p);
+    assert.deepEqual(await p.locator('[data-market-category]').evaluateAll(tabs=>tabs.map(tab=>tab.dataset.marketCategory)),['media','game','launcher']);
+    assert.deepEqual(await p.locator('[data-market-category] span').allTextContents(),['2','1','1'],'Counts represent applications, not the number of APK versions');
+    assert.equal(await p.locator('[data-market-category="media"]').getAttribute('aria-selected'),'true');
+    assert.equal(await marketCard(p,categorizedMedia).count(),1,'A media path stays in Media even when its display name contains 游戏');
+    assert.equal(await marketCard(p,store.items[1]).count(),1,'Old unclassified app paths remain available in Media');
+    assert.equal(await marketCard(p,latestGame).count(),0);
+    assert.equal(await marketCard(p,categorizedMedia).locator('.market-category').innerText(),'影音');
+    await shot(p,'market-media-tab-zh');
+    await p.locator('[name="marketSearch"]').fill('镜光接力');
+    assert.equal(await p.locator('.market-card').count(),0,'Media search cannot expose game cards');
+    assert.match(await p.locator('#market-count').innerText(),/0\s*\/\s*2/);
+    await p.locator('[data-market-category="game"]').click();
+    assert.equal(await p.locator('[name="marketSearch"]').inputValue(),'');
+    assert.equal(await p.locator('[data-market-category="game"]').getAttribute('aria-selected'),'true');
+    assert.equal(await p.locator('.market-card').count(),1);
+    assert.equal(await marketCard(p,latestGame).locator('.market-category').innerText(),'游戏');
+    assert.equal(await marketCard(p,categorizedMedia).count(),0);
+    assert.match(await p.locator('#market-count').innerText(),/1\s*\/\s*1/);
+    assert.deepEqual(await versionSelect(p,latestGame).locator('option').evaluateAll(options=>options.map(option=>option.value)),[latestGame.id,olderGame.id]);
+    await versionSelect(p,latestGame).selectOption(olderGame.id);
+    await p.locator('[data-market-category="media"]').click();
+    await p.locator('[data-market-category="game"]').click();
+    assert.equal(await versionSelect(p,olderGame).inputValue(),olderGame.id,'Switching tabs preserves the selected game version');
+    await p.locator('[name="marketSearch"]').fill('0.2.0');
+    assert.equal(await marketCard(p,olderGame).count(),1);
+    await p.locator('[name="marketSearch"]').fill('WebTV');
+    assert.equal(await p.locator('.market-card').count(),0,'Game search cannot expose media cards');
+    assert.equal(await p.locator('[data-market-category="game"] span').innerText(),'1','Search does not change the tab total');
+    await p.locator('[name="marketSearch"]').fill('');
+    for(const [language,labels,badge] of [['en',['Media','Games','Launchers'],'Games'],['zh-TW',['影音','遊戲','啟動器'],'遊戲'],['zh-CN',['影音','游戏','启动器'],'游戏']]) {
+      await p.locator('[name="locale"]').selectOption(language);
+      const tabs=await p.locator('[data-market-category]').allTextContents();
+      assert.deepEqual(tabs.map(text=>text.replace(/\d+\s*$/,'').trim()),labels);
+      assert.equal(await marketCard(p,olderGame).locator('.market-category').innerText(),badge);
+      assert.equal(await versionSelect(p,olderGame).inputValue(),olderGame.id);
+    }
+    assert.equal((await marketRequests(p)).filter(request=>request.command==='get_market_catalog').length,1,'Switching tabs, search and locale reuse the same catalog visit');
+    await shot(p,'market-games-tab-zh');
+    await marketCard(p,olderGame).locator('[data-act="download-market"]').click();await result(p,'success');await acknowledge(p);
+    assert.deepEqual((await marketRequests(p)).filter(request=>request.command==='download_market_item'),[{command:'download_market_item',id:olderGame.id,revision:categorizedStore.revision}]);
+    assert.equal(await marketCard(p,olderGame).locator('.market-downloaded').count(),1);
+    await p.locator('[data-act="market-pending"][data-kind="app"]').click();
+    assert.equal(await p.locator('.apk-item').count(),1);
+    assert.match(await p.locator('.apk-item').innerText(),/prism-relay-0\.2\.0\.apk/,'Games still use the application install queue');
+    await nav(p,'launchers');await settled(p);
+    assert.equal(await p.locator('[data-launcher-apk]').count(),0,'Downloading a game cannot add a launcher');
+    assert.deepEqual(await requests(p),[],'Browsing and downloading games do not invoke ADB');
+  },withoutAdb(),{marketCatalog:categorizedStore});
   const sameNameOtherFolder={...versionedItem('0.10.0'),id:'apps/another/hifini-0.10.0.apk',folderUrl:store.items[0].folderUrl.replace('/hifini','/another')};
   const sameFolderOtherApp={...versionedItem('0.10.0'),id:'apps/hifini/hifini-lite-0.10.0.apk',fileName:'hifini-lite-0.10.0.apk'};
   const sameNameLauncher={...versionedItem('0.99.0'),kind:'launcher',id:'launcher/hifini/hifini-0.99.0.apk',folderUrl:store.items[0].folderUrl.replace('/apps/','/launcher/')};
@@ -1577,7 +1631,7 @@ try {
     const first=await seenState(p);assert.equal(first.length,3);assert.deepEqual(first.map(entry=>Object.keys(entry).sort()),first.map(()=>['id','name','version']));
     assert.deepEqual(new Set(first.map(entry=>entry.id)),new Set(originalSeen.map(entry=>entry.id)));
     assert.equal((await marketRequests(p)).length,1);assert.equal((await marketRequests(p))[0].refresh,true);
-    await nav(p,'market');await p.locator('[data-market-kind="launcher"]').click();await p.locator('[data-market-kind="app"]').click();
+    await nav(p,'market');await p.locator('[data-market-category="launcher"]').click();await p.locator('[data-market-category="media"]').click();
     assert.equal((await marketRequests(p)).length,1,'Same-page navigation and categories share the current visit');
     await nav(p,'apps');await openMarket(p);assert.equal((await marketRequests(p)).length,2);assert.equal((await marketRequests(p))[1].refresh,true);
     assert.deepEqual(await newMarketIds(p),[]);assert.deepEqual(await seenState(p),first);
@@ -1596,7 +1650,7 @@ try {
     await versionSelect(p,versionedItem('0.10.0')).selectOption(versionedItem('0.9.0').id);
     assert.equal(await marketCard(p,versionedItem('0.9.0')).locator('.market-new').count(),1,'The update belongs to the app even when an older APK is selected');
     await p.locator('[name="marketSearch"]').fill('Zebra');assert.deepEqual(await newMarketIds(p),[newMarketApp.id]);await p.locator('[name="marketSearch"]').fill('');
-    await p.locator('[data-market-kind="launcher"]').click();await p.locator('[data-market-kind="app"]').click();
+    await p.locator('[data-market-category="launcher"]').click();await p.locator('[data-market-category="media"]').click();
     await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
     assert.deepEqual(await newMarketIds(p),[versionedItem('0.9.0').id,newMarketApp.id],'Refreshing the same visit does not consume its new markers');
     await shot(p,'apk-market-updates-zh');
@@ -1615,7 +1669,7 @@ try {
     assert.equal(await marketCard(p,sameNameOtherFolder).locator('.market-new').count(),1);
     assert.equal(await marketCard(p,sameFolderOtherApp).locator('.market-new').count(),1);
     assert.equal(await p.locator('.market-new').count(),2);
-    await p.locator('[data-market-kind="launcher"]').click();assert.equal(await marketCard(p,sameNameLauncher).locator('.market-new').count(),1);assert.equal(await marketCard(p,store.items[2]).locator('.market-new').count(),0);
+    await p.locator('[data-market-category="launcher"]').click();assert.equal(await marketCard(p,sameNameLauncher).locator('.market-new').count(),1);assert.equal(await marketCard(p,store.items[2]).locator('.market-new').count(),0);
     await p.waitForFunction(()=>window.__marketSeenApps?.length===6);assert.equal(new Set((await seenState(p)).map(entry=>entry.id)).size,6);
   },withoutAdb(),{marketCatalog:{...store,items:[...store.items,sameNameOtherFolder,sameFolderOtherApp,sameNameLauncher]},marketSeenApps:originalSeen});
   await check('market updates ignore old-version backfills and same-version blob or cover changes',async p=>{
@@ -1673,14 +1727,14 @@ try {
     await mockVersionCovers(p);await openMarket(p);
     assert.equal(await p.locator('.market-card').count(),4,'Multiple APK versions share one application card');
     assert.match(await p.locator('#market-count').innerText(),/4\s*\/\s*4/);
-    assert.equal(await p.locator('[data-market-kind="app"] span').innerText(),'4','Category counts represent applications rather than APK files');
+    assert.equal(await p.locator('[data-market-category="media"] span').innerText(),'4','Category counts represent applications rather than APK files');
     const select=versionSelect(p,topVersions[0]);
     assert.deepEqual(await select.locator('option').evaluateAll(options=>options.map(option=>option.value)),topVersions.map(item=>item.id));
     assert.equal(await select.inputValue(),topVersions[0].id,'0.10.0 is newer than 0.9.0');
     assert.equal(await marketCard(p,sameNameOtherFolder).count(),1,'Equal display names in different application folders remain separate');
     assert.equal(await marketCard(p,sameFolderOtherApp).count(),1,'Different filename bases in one folder remain separate applications');
     assert.equal(await versionSelect(p,store.items[1]).locator('option').count(),1,'A single-version app keeps a usable version selector');
-    await p.locator('[data-market-kind="launcher"]').click();
+    await p.locator('[data-market-category="launcher"]').click();
     assert.equal(await p.locator('.market-card').count(),2);assert.equal(await marketCard(p,sameNameLauncher).count(),1,'Apps and launchers never share a version group');
     assert.deepEqual(await requests(p),[],'Version grouping never invokes ADB');
     await shot(p,'market-versions-grouped');
@@ -1753,7 +1807,7 @@ try {
     assert.match(await p.locator('.market-card').innerText(),/WebTV/);
     assert.equal(await p.locator('[name="marketSearch"]').evaluate(element=>element===document.activeElement),true,'Filtering preserves typing focus');
     await p.locator('[name="marketSearch"]').fill('');
-    await p.locator('[data-market-kind="launcher"]').click();
+    await p.locator('[data-market-category="launcher"]').click();
     assert.equal(await p.locator('.market-card').count(),1);assert.match(await p.locator('.market-card').innerText(),/Nova TV/);
     assert.deepEqual(await requests(p),[],'Browsing does not invoke ADB');
     assert.equal((await marketRequests(p)).filter(value=>value.command==='get_market_catalog').length,1,'Changing tabs reuses the catalog');
@@ -1772,14 +1826,14 @@ try {
     assert.deepEqual(await requests(p),[],'Offline download never starts ADB');
   },withoutAdb(),{holdActions:['downloadMarketItem']});
   await check('market launcher download carries APK Home background into the launcher queue',async p=>{
-    await openMarket(p);await p.locator('[data-market-kind="launcher"]').click();await act(p,'download-market').click();await result(p,'success');await acknowledge(p);
+    await openMarket(p);await p.locator('[data-market-category="launcher"]').click();await act(p,'download-market').click();await result(p,'success');await acknowledge(p);
     await p.locator('[data-act="market-pending"][data-kind="launcher"]').click();
     const pending=p.locator('[data-launcher-apk="/tmp/puretv-market/nova-0.1.1.apk"]');await pending.waitFor();
     assert.equal(await pending.locator('.launcher-card-background').evaluate(element=>getComputedStyle(element).backgroundColor),'rgb(34, 51, 68)');
     assert.deepEqual(await requests(p),[],'Downloading a launcher never changes the default Home');
   },withoutAdb());
   await check('market installation reports completion and does not activate a downloaded launcher',async p=>{
-    await openMarket(p);await p.locator('[data-market-kind="launcher"]').click();await act(p,'install-market').click();
+    await openMarket(p);await p.locator('[data-market-category="launcher"]').click();await act(p,'install-market').click();
     await p.locator('#confirm-operation').click();await held(p,'installMarketItem');
     await release(p,'installMarketItem');await result(p,'success');await acknowledge(p);
     const install=(await marketRequests(p)).find(value=>value.command==='install_market_item');assert.equal(install.id,store.items[2].id);assert.equal(install.revision,store.revision);
@@ -1817,7 +1871,7 @@ try {
   await check('market refresh replaces a stale catalog and preserves localized controls',async p=>{
     await openMarket(p);assert.match(await p.locator('main').innerText(),/缓存目录/);
     await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'APK Market');
-    assert.match(await p.locator('[data-market-kind="launcher"]').innerText(),/Launchers/);
+    assert.match(await p.locator('[data-market-category="launcher"]').innerText(),/Launchers/);
     assert.match(await marketCard(p,store.items[0]).innerText(),/HIFINi TV/);
     const updated=marketCatalog();updated.revision='f'.repeat(40);updated.items=[updated.items[1]];
     await p.evaluate(value=>{window.__marketCatalog=value;},updated);
@@ -1825,8 +1879,8 @@ try {
     assert.equal(await p.locator('.market-card').count(),1);assert.match(await p.locator('.market-card').innerText(),/WebTV/);
     assert.equal((await marketRequests(p)).at(-1).refresh,true,'Manual refresh bypasses catalog cache');
     await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'APK市場');
-    assert.match(await p.locator('[data-market-kind="launcher"]').innerText(),/啟動器/);
-    await p.locator('[data-market-kind="launcher"]').click();assert.equal(await p.locator('.market-card').count(),0);
+    assert.match(await p.locator('[data-market-category="launcher"]').innerText(),/啟動器/);
+    await p.locator('[data-market-category="launcher"]').click();assert.equal(await p.locator('.market-card').count(),0);
     await shot(p,'market-traditional-empty');
   },withoutAdb(),{marketCatalog:{...marketCatalog(),stale:true,warning:'网络暂不可用，正在显示缓存目录'}});
   await check('market initial network failure shows an empty error state and can be retried',async p=>{
@@ -1841,7 +1895,7 @@ try {
   const largeMarket=marketCatalog();largeMarket.items=Array.from({length:45},(_,index)=>({...store.items[0],id:`apps/example${index}/example-${index}.apk`,name:`Example ${index}`,fileName:`example-${index}.apk`}));
   await check('market long catalogs scroll internally in compact windows and all themes',async p=>{
     await p.setViewportSize({width:960,height:640});await openMarket(p);
-    const area=p.locator('[data-scroll="market-app"]');
+    const area=p.locator('[data-scroll="market-media"]');
     const metrics=await area.evaluate(element=>({height:element.clientHeight,total:element.scrollHeight}));
     assert.ok(metrics.height>60 && metrics.total>metrics.height,JSON.stringify(metrics));
     const cardBounds=await p.locator('.market-card').first().evaluate(element=>({card:element.getBoundingClientRect().toJSON(),cover:element.querySelector('.market-cover').getBoundingClientRect().toJSON(),buttons:[...element.querySelectorAll('.market-card-actions button')].map(button=>button.getBoundingClientRect().toJSON())}));
@@ -1856,22 +1910,25 @@ try {
     await p.locator('[name="theme"]').selectOption('graphite');assert.equal(await p.locator('html').getAttribute('data-theme'),'graphite');
     await p.locator('[name="locale"]').selectOption('en');await shot(p,'market-en-graphite');
   },withoutAdb(),{marketCatalog:largeMarket});
-  const scrollMarket={...largeMarket,items:[...largeMarket.items,...largeMarket.items.map(item=>({...item,kind:'launcher',id:item.id.replace(/^apps\//,'launcher/')}))]};
+  const scrollMarket={...largeMarket,items:[...largeMarket.items,...largeMarket.items.map(item=>({...item,id:item.id.replace(/^apps\//,'apps/game/')})),...largeMarket.items.map(item=>({...item,kind:'launcher',id:item.id.replace(/^apps\//,'launcher/')}))]};
   await check('market updates preserve scroll within a visit and show new cards at the top after reentry',async p=>{
     await p.setViewportSize({width:960,height:640});await openMarket(p);
-    const apps=p.locator('[data-scroll="market-app"]'),launchers=p.locator('[data-scroll="market-launcher"]');
+    const apps=p.locator('[data-scroll="market-media"]'),games=p.locator('[data-scroll="market-game"]'),launchers=p.locator('[data-scroll="market-launcher"]');
     await apps.evaluate(element=>{element.scrollTop=1000;});const appScroll=await apps.evaluate(element=>element.scrollTop);assert.ok(appScroll>0);
     await nav(p,'market');assert.equal(await apps.evaluate(element=>element.scrollTop),appScroll,'Clicking the current navigation item keeps the current position');
-    await p.locator('[data-market-kind="launcher"]').click();await launchers.evaluate(element=>{element.scrollTop=900;});const launcherScroll=await launchers.evaluate(element=>element.scrollTop);assert.ok(launcherScroll>0);
-    await p.locator('[data-market-kind="app"]').click();assert.equal(await apps.evaluate(element=>element.scrollTop),appScroll);
-    await p.locator('[data-market-kind="launcher"]').click();assert.equal(await launchers.evaluate(element=>element.scrollTop),launcherScroll,'Categories retain their independent positions during one visit');
-    await p.locator('[data-market-kind="app"]').click();
+    await p.locator('[data-market-category="game"]').click();await games.evaluate(element=>{element.scrollTop=650;});const gameScroll=await games.evaluate(element=>element.scrollTop);assert.ok(gameScroll>0);
+    await p.locator('[data-market-category="launcher"]').click();await launchers.evaluate(element=>{element.scrollTop=900;});const launcherScroll=await launchers.evaluate(element=>element.scrollTop);assert.ok(launcherScroll>0);
+    await p.locator('[data-market-category="media"]').click();assert.equal(await apps.evaluate(element=>element.scrollTop),appScroll);
+    await p.locator('[data-market-category="game"]').click();assert.equal(await games.evaluate(element=>element.scrollTop),gameScroll,'Games retain their own scroll position independently of Media');
+    await p.locator('[data-market-category="launcher"]').click();assert.equal(await launchers.evaluate(element=>element.scrollTop),launcherScroll,'Categories retain their independent positions during one visit');
+    await p.locator('[data-market-category="media"]').click();
     await nav(p,'apps');await p.evaluate(value=>window.__marketCatalog=value,{...scrollMarket,revision:'f'.repeat(40),items:[...scrollMarket.items,newMarketApp]});
     await openMarket(p);assert.equal(await apps.evaluate(element=>element.scrollTop),0,'A new visit must reveal the new-first ordering instead of restoring an old scroll offset');
     const first=p.locator('.market-card').first();assert.equal(await first.getAttribute('data-market-id'),newMarketApp.id);assert.equal(await first.locator('.market-new').count(),1);
     const bounds=await first.evaluate(card=>({card:card.getBoundingClientRect().toJSON(),list:card.closest('.market-grid').getBoundingClientRect().toJSON()}));
     assert.ok(bounds.card.top>=bounds.list.top&&bounds.card.top<bounds.list.bottom,'The newly published app is immediately visible');
-    await p.locator('[data-market-kind="launcher"]').click();assert.equal(await launchers.evaluate(element=>element.scrollTop),0,'The inactive category’s old position is also reset for a new visit');
+    await p.locator('[data-market-category="game"]').click();assert.equal(await games.evaluate(element=>element.scrollTop),0,'The game category also resets when reentering the market');
+    await p.locator('[data-market-category="launcher"]').click();assert.equal(await launchers.evaluate(element=>element.scrollTop),0,'The inactive category’s old position is also reset for a new visit');
   },withoutAdb(),{marketCatalog:scrollMarket});
   await check('market MCP results synchronize catalog and download/install queues with the window',async p=>{
     await openMarket(p);
@@ -1903,7 +1960,7 @@ try {
   });
   await check('market pending queues follow verified generic MCP installs and ignore failed or older results',async p=>{
     await openMarket(p);await act(p,'download-market').click();await result(p,'success');await acknowledge(p);
-    await p.locator('[data-market-kind="launcher"]').click();await act(p,'download-market').click();await result(p,'success');await acknowledge(p);
+    await p.locator('[data-market-category="launcher"]').click();await act(p,'download-market').click();await result(p,'success');await acknowledge(p);
     await nav(p,'install');assert.equal(await p.locator('.apk-item').count(),1);
     const appPath='/tmp/puretv-market/'+store.items[0].fileName,launcherPath='/tmp/puretv-market/'+store.items[2].fileName;
     const previous={...snapshot(),revision:2,installResults:[{path:appPath,success:true,message:'Previous install'},{path:launcherPath,success:true,message:'Previous install'}]};

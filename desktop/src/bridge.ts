@@ -236,7 +236,8 @@ export async function watchMcp(operation: (value: McpOperation) => void, progres
 const demoMarket: MarketCatalog = {
   sourceUrl: 'https://gitee.com/juzisang331/pure-tv-store', revision: 'demo', fetchedAt: Date.now(), stale: false,
   items: [
-    {id: 'apps/demo/Demo-Music-1.0.apk', kind: 'app', name: 'Demo Music', version: '1.0', fileName: 'Demo-Music-1.0.apk', bytes: 4194304, blobSha: 'demo-music', folderUrl: ''},
+    {id: 'apps/media/demo/Demo-Music-1.0.apk', kind: 'app', name: 'Demo Music', version: '1.0', fileName: 'Demo-Music-1.0.apk', bytes: 4194304, blobSha: 'demo-music', folderUrl: ''},
+    {id: 'apps/game/demo/Demo-Game-1.0.apk', kind: 'app', name: 'Demo Game', version: '1.0', fileName: 'Demo-Game-1.0.apk', bytes: 786432, blobSha: 'demo-game', folderUrl: ''},
     {id: 'launcher/demo/Demo-Home-1.0.apk', kind: 'launcher', name: 'Demo Home', version: '1.0', fileName: 'Demo-Home-1.0.apk', bytes: 786432, blobSha: 'demo-home', folderUrl: ''},
   ],
 };
