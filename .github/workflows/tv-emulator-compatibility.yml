@@ -57,6 +57,26 @@ jobs:
           python desktop/scripts/run-tv-emulator-compatibility.py
           --image '${{ matrix.image }}'
           --artifacts "$RUNNER_TEMP/puretv-emulator-results"
+      - name: Print bounded JSON evidence
+        if: always()
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP']) / 'puretv-emulator-results'
+          for name in ('summary.json', 'core-report.json', 'probe/compatibility-report.json', 'fixture.json'):
+              path = root / name
+              print(f'--- Evidence: {name} ---', flush=True)
+              if not path.is_file():
+                  print('Not generated for this run stage.')
+                  continue
+              with path.open('rb') as stream:
+                  data = stream.read(65537)
+              if len(data) > 65536:
+                  print('Exceeds the 64 KiB console limit; retained only in the artifact.')
+                  continue
+              print(data.decode('utf-8', errors='replace'), flush=True)
+          PY
       - name: Preserve setup, boot, ADB and compatibility evidence
         if: always()
         uses: actions/upload-artifact@v4

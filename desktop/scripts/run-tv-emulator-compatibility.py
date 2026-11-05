@@ -44,6 +44,16 @@ class EmulatorFailure(Failure):
     pass
 
 
+def print_diagnostic_excerpt(path):
+    """Keep CI failures actionable when artifact download is unavailable."""
+    if path is None or not path.is_file():
+        return
+    with path.open("rb") as log:
+        log.seek(max(0, path.stat().st_size - 4096))
+        excerpt = log.read(4096).decode("utf-8", errors="replace")
+    print(f"Diagnostic excerpt ({path.name}; at most the last 4 KiB):\n{excerpt}", flush=True)
+
+
 def revision(value):
     if not re.fullmatch(r"[0-9]+(?:\.[0-9]+){0,2}", value):
         raise Failure("Invalid SDK revision")
@@ -124,12 +134,14 @@ class Run:
         self.deadline = time.monotonic() + 1800
         self.command_number = 0
         self.monitor = None
+        self.last_log = None
 
     def command(self, name, args, timeout=30, input_text=None, required=True, diagnostic=False):
         if self.monitor is not None and not diagnostic:
             self.monitor()
         self.command_number += 1
         path = self.artifacts / f"{self.command_number:02d}-{name}.log"
+        self.last_log = path
         remaining = 20 if diagnostic else self.deadline - time.monotonic()
         if remaining <= 0:
             raise Failure("Overall 30-minute test budget exhausted")
@@ -342,7 +354,21 @@ def main(argv=None):
         adb = sdk / "platform-tools/adb"
         emulator_binary = sdk / "emulator/emulator"
         run.command("adb-version", [adb, "version"])
-        run.command("emulator-version", [emulator_binary, "-version"])
+        try:
+            run.command("emulator-version", [emulator_binary, "-version"])
+        except Interrupted:
+            raise
+        except Failure:
+            print_diagnostic_excerpt(run.last_log)
+            try:
+                run.command("emulator-headless-version-diagnostic", [emulator_binary, "-no-window", "-version"],
+                            timeout=10, required=False, diagnostic=True)
+            except Interrupted:
+                raise
+            except Failure as diagnostic_error:
+                print(f"Headless version diagnostic: {diagnostic_error}")
+            # Diagnostic success cannot turn the original setup failure into a pass.
+            raise
         _, acceleration = run.command("emulator-acceleration", [emulator_binary, "-accel-check"])
         if not re.search(r"KVM.*(?:installed and usable|is usable)", acceleration, re.I):
             raise Failure("Hardware KVM acceleration was not verified; software fallback is forbidden")
@@ -426,6 +452,9 @@ def main(argv=None):
         summary["status"] = "INTERRUPTED" if isinstance(error, Interrupted) else "FAIL"
         summary["failure"] = str(error) if isinstance(error, Failure) else type(error).__name__
         print(f"{summary['status']} {summary['stage']}: {summary['failure']}")
+        print_diagnostic_excerpt(run.last_log)
+        if emulator_log is not None:
+            print_diagnostic_excerpt(artifacts / "emulator-boot.log")
         return 1
     finally:
         if adb is not None and adb.is_file():
