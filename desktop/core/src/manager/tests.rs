@@ -12,6 +12,8 @@ struct FakeTv {
     user: u32,
     status: String,
     failure: Option<String>,
+    shell_responses: BTreeMap<Vec<String>, Result<(i32, String), String>>,
+    cancel_during_shell: Option<Vec<String>>,
     install_response: Option<Result<(i32, String), String>>,
     shutdown_response: Option<Result<(i32, String), String>>,
     cleanup_error: Option<String>,
@@ -116,6 +118,13 @@ impl Runner for FakeRunner {
                     "Success".into()
                 } else {
                     let a = &args[3..];
+                    if tv.cancel_during_shell.as_deref() == Some(a) {
+                        cancel.store(true, Ordering::Relaxed);
+                        return Err("操作已取消".into());
+                    }
+                    if let Some(response) = tv.shell_responses.get(a).cloned() {
+                        return response.map(|(code, text)| Output { code, text });
+                    }
                     match a[0].as_str() {
                         "am" => if a[1]=="start" {"Starting HOME".into()} else {tv.user.to_string()},
                         "screencap" | "rm" => "".into(),
@@ -1048,6 +1057,246 @@ fn connected_device_system_info_is_available_and_cleared_on_disconnect() {
     assert_eq!(info.manufacturer.as_deref(), Some("Test Maker"));
     manager.execute(Request::Disconnect).unwrap();
     assert!(manager.snapshot().system_info.is_none());
+}
+
+fn shell_output(tv: &mut FakeTv, args: &[&str], code: i32, text: &str) {
+    tv.shell_responses.insert(
+        args.iter().map(|arg| arg.to_string()).collect(),
+        Ok((code, text.into())),
+    );
+}
+
+const KITKAT_AM_USAGE: &str = "usage: am [subcommand] [options]\nusage: am start [-D] [-W] [-P <FILE>] [--start-profiler <FILE>]\n               [--sampling INTERVAL] [-R COUNT] [-S] [--opengl-trace]\n               [--user <USER_ID> | current] <INTENT>\nError: unknown command 'get-current-user'\n";
+
+fn kitkat(tv: &mut FakeTv, user: u32) {
+    tv.user = user;
+    tv.home_failure = true;
+    shell_output(tv, &["am", "get-current-user"], 1, KITKAT_AM_USAGE);
+    shell_output(
+        tv,
+        &["cmd", "activity", "get-current-user"],
+        127,
+        "/system/bin/sh: cmd: not found\n",
+    );
+    shell_output(tv, &["getprop", "ro.build.version.sdk"], 0, "19\n");
+    shell_output(tv, &["getprop", "ro.product.model"], 0, "KitKat TV\n");
+    shell_output(tv, &["getprop", "ro.build.version.release"], 0, "4.4.2\n");
+    shell_output(tv, &["getprop"], 0, "[ro.product.manufacturer]: [Legacy Maker]\n[ro.product.brand]: [Legacy]\n[ro.build.version.sdk]: [19]\n[ro.board.platform]: [legacy-cpu]\n[ro.product.cpu.abi]: [armeabi-v7a]\n");
+    shell_output(
+        tv,
+        &["cat", "/proc/meminfo"],
+        0,
+        "MemTotal: 4096 kB\nMemFree: 512 kB\nBuffers: 256 kB\nCached: 256 kB\n",
+    );
+    shell_output(
+        tv,
+        &["df", "-k", "/data"],
+        1,
+        "-k: No such file or directory\nFilesystem               Size     Used     Free   Blksize\n/data                 1.0G   256.0M   768.0M   4096\n",
+    );
+    shell_output(
+        tv,
+        &["df", "/data"],
+        0,
+        "Filesystem               Size     Used     Free   Blksize\n/data                 1.0G   256.0M   768.0M   4096\n",
+    );
+    let users = if user == 0 { "0".into() } else { format!("0, {user}") };
+    shell_output(
+        tv,
+        &["dumpsys", "activity", "processes"],
+        0,
+        &format!("ACTIVITY MANAGER RUNNING PROCESSES (dumpsys activity processes)\n  mStartedUsers:\n    User #0: mState=RUNNING\n  mStartedUserArray: [{users}]\n  mUserLru: [{users}]\n"),
+    );
+}
+
+fn is_shell_call(call: &[String], args: &[&str]) -> bool {
+    call.len() == args.len() + 3
+        && call[0] == "-s"
+        && call[2] == "shell"
+        && call[3..].iter().map(String::as_str).eq(args.iter().copied())
+}
+
+#[test]
+fn kitkat_connection_reads_real_identity_catalogue_and_system_info_without_modern_am() {
+    for user in [0, 10] {
+        let (mut manager, tv) = fixture();
+        kitkat(&mut tv.lock().unwrap(), user);
+        let state = connect(&mut manager);
+        let device = state.device.unwrap();
+        assert_eq!(device.user_id, user);
+        assert_eq!(device.model, "KitKat TV");
+        assert_eq!(device.android_version, "4.4.2");
+        let info = state.system_info.unwrap();
+        assert_eq!(info.sdk_version.as_deref(), Some("19"));
+        assert_eq!(info.manufacturer.as_deref(), Some("Legacy Maker"));
+        assert_eq!(info.cpu_abi.as_deref(), Some("armeabi-v7a"));
+        assert_eq!(info.memory_available_bytes, Some(1024 * 1024));
+        assert_eq!(info.storage_total_bytes, Some(1024 * 1024 * 1024));
+        assert_eq!(info.storage_available_bytes, Some(768 * 1024 * 1024));
+        assert_eq!(state.packages.iter().filter(|p| p.installed).count(), 6);
+        assert!(state.default_home.is_none());
+        assert!(state.launchers.is_empty());
+        let calls = &tv.lock().unwrap().calls;
+        let lists: Vec<_> = calls.iter().filter(|call| {
+            call.len() >= 6 && call[3..6] == ["pm", "list", "packages"]
+        }).collect();
+        assert_eq!(lists.len(), 4);
+        for call in lists {
+            assert_eq!(call[call.len() - 2], "--user");
+            assert_eq!(call.last().unwrap(), &user.to_string());
+        }
+    }
+}
+
+#[test]
+fn kitkat_missing_home_capability_keeps_cleanup_closed() {
+    let (mut manager, tv) = fixture();
+    kitkat(&mut tv.lock().unwrap(), 10);
+    connect(&mut manager);
+    for request in [
+        Request::SetEnabled { packages: vec!["com.vendor.ads".into()], enabled: false },
+        Request::Uninstall { packages: vec!["com.vendor.ads".into()] },
+    ] {
+        let state = manager.execute(request).unwrap();
+        assert!(!state.history[0].success);
+        assert!(state.history[0].message.contains("默认桌面"));
+    }
+    assert!(!tv.lock().unwrap().calls.iter().any(|call| {
+        call.iter().any(|arg| arg == "disable-user" || arg == "uninstall")
+    }));
+}
+
+#[test]
+fn unresolved_current_user_keeps_global_info_refreshable_but_rejects_mutations() {
+    let (mut manager, tv) = fixture();
+    {
+        let mut tv = tv.lock().unwrap();
+        kitkat(&mut tv, 10);
+        shell_output(&mut tv, &["dumpsys", "activity", "processes"], 0, "Permission Denial: can't dump ActivityManager\n");
+    }
+    let error = manager.execute(Request::Connect { host: "192.168.1.50".into(), port: 5555 }).unwrap_err();
+    assert!(error.contains("无法确认电视的当前用户"), "{error}");
+    assert!(!error.contains("usage: am"));
+    let state = manager.snapshot();
+    assert_eq!(state.device.as_ref().unwrap().model, "KitKat TV");
+    assert_eq!(state.device.as_ref().unwrap().android_version, "4.4.2");
+    assert!(state.system_info.is_some());
+    assert!(state.packages.is_empty());
+    tv.lock().unwrap().calls.clear();
+    let refreshed = manager.execute(Request::RefreshSystemInfo).unwrap();
+    assert_eq!(refreshed.system_info.unwrap().sdk_version.as_deref(), Some("19"));
+    assert!(!tv.lock().unwrap().calls.iter().any(|call| {
+        call.iter().any(|arg| arg == "get-current-user" || arg == "dumpsys")
+    }));
+    let error = manager.execute(Request::SetEnabled { packages: vec!["com.user.app".into()], enabled: true }).unwrap_err();
+    assert!(error.contains("无法确认电视的当前用户"), "{error}");
+    assert!(!tv.lock().unwrap().calls.iter().any(|call| call.iter().any(|arg| arg == "enable")));
+}
+
+#[test]
+fn modern_activity_command_can_identify_user_when_am_only_prints_usage() {
+    let (mut manager, tv) = fixture();
+    {
+        let mut tv = tv.lock().unwrap();
+        tv.user = 10;
+        shell_output(&mut tv, &["am", "get-current-user"], 0, "usage: am [subcommand] [options]\n");
+        shell_output(&mut tv, &["cmd", "activity", "get-current-user"], 0, "10\n");
+    }
+    assert_eq!(connect(&mut manager).device.unwrap().user_id, 10);
+    assert!(!tv.lock().unwrap().calls.iter().any(|call| is_shell_call(call, &["dumpsys", "activity", "processes"])));
+}
+
+#[test]
+fn lru_user_fallback_requires_verified_kitkat_sdk() {
+    for sdk in ["18", "20", "23", "33", "", "19 trailing", "-1"] {
+        let (mut manager, tv) = fixture();
+        {
+            let mut tv = tv.lock().unwrap();
+            kitkat(&mut tv, 10);
+            shell_output(&mut tv, &["getprop", "ro.build.version.sdk"], 0, sdk);
+        }
+        assert!(manager.execute(Request::Connect { host: "192.168.1.50".into(), port: 5555 }).is_err(), "SDK {sdk:?}");
+        assert!(manager.snapshot().packages.is_empty());
+        assert!(!tv.lock().unwrap().calls.iter().any(|call| is_shell_call(call, &["dumpsys", "activity", "processes"])), "SDK {sdk:?}");
+    }
+}
+
+#[test]
+fn malformed_or_ambiguous_legacy_user_dump_never_infers_owner() {
+    for dump in [
+        "UserInfo{0:Owner:13} running\n",
+        "mStartedUserArray: [0, 10]\n",
+        "mUserLru: []\n",
+        "mUserLru: [0, -1]\n",
+        "mUserLru: [0, 2147483648]\n",
+        "mUserLru: [0, ten]\n",
+        "mUserLru: [0, 10] trailing\n",
+        "mUserLru: [0]\nmUserLru: [10]\n",
+    ] {
+        let (mut manager, tv) = fixture();
+        {
+            let mut tv = tv.lock().unwrap();
+            kitkat(&mut tv, 10);
+            shell_output(&mut tv, &["dumpsys", "activity", "processes"], 0, dump);
+        }
+        assert!(manager.execute(Request::Connect { host: "192.168.1.50".into(), port: 5555 }).is_err(), "{dump:?}");
+        assert!(manager.snapshot().packages.is_empty());
+        assert!(!tv.lock().unwrap().calls.iter().any(|call| call.iter().any(|arg| arg == "packages")), "{dump:?}");
+    }
+}
+
+#[test]
+fn kitkat_user_switch_requires_rescan_before_any_write() {
+    let (mut manager, tv) = fixture();
+    kitkat(&mut tv.lock().unwrap(), 0);
+    connect(&mut manager);
+    kitkat(&mut tv.lock().unwrap(), 10);
+    assert!(manager.execute(Request::SetEnabled { packages: vec!["com.user.app".into()], enabled: true }).unwrap_err().contains("用户已改变"));
+    assert!(!tv.lock().unwrap().calls.iter().any(|call| call.iter().any(|arg| arg == "enable")));
+    let state = manager.execute(Request::Scan).unwrap();
+    assert_eq!(state.device.unwrap().user_id, 10);
+    assert!(state.system_info.is_some());
+}
+
+#[test]
+fn cancellation_at_each_user_probe_stops_fallback_and_catalogue_reads() {
+    for args in [
+        vec!["am", "get-current-user"],
+        vec!["cmd", "activity", "get-current-user"],
+        vec!["getprop", "ro.build.version.sdk"],
+        vec!["dumpsys", "activity", "processes"],
+    ] {
+        let (mut manager, tv) = fixture();
+        {
+            let mut tv = tv.lock().unwrap();
+            kitkat(&mut tv, 10);
+            tv.cancel_during_shell = Some(args.iter().map(|arg| arg.to_string()).collect());
+        }
+        assert!(manager.execute(Request::Connect { host: "192.168.1.50".into(), port: 5555 }).unwrap_err().contains("取消"), "{args:?}");
+        assert!(manager.cancel.load(Ordering::Relaxed));
+        assert!(is_shell_call(tv.lock().unwrap().calls.last().unwrap(), &args));
+        assert!(manager.snapshot().packages.is_empty());
+    }
+}
+
+#[test]
+fn kitkat_user_probe_still_verifies_finished_mutation_after_cancellation() {
+    let (mut manager, tv) = fixture();
+    kitkat(&mut tv.lock().unwrap(), 10);
+    connect(&mut manager);
+    manager.runner = Box::new(FakeRunner { tv: tv.clone(), cancel_after_change: Some(manager.cancel.clone()) });
+    let state = manager.execute(Request::SetEnabled {
+        packages: vec!["com.user.app".into(), "com.vendor.ads".into()],
+        enabled: true,
+    }).unwrap();
+    assert!(state.packages.iter().find(|package| package.package_name == "com.user.app").unwrap().enabled);
+    assert_eq!(state.history.len(), 1);
+    assert!(state.history[0].success, "{}", state.history[0].message);
+    assert!(state.message.contains("未执行 1"));
+    let calls = &tv.lock().unwrap().calls;
+    let writes: Vec<_> = calls.iter().enumerate().filter(|(_, call)| call.iter().any(|arg| arg == "enable")).collect();
+    assert_eq!(writes.len(), 1);
+    assert!(calls[writes[0].0 + 1..].iter().any(|call| is_shell_call(call, &["dumpsys", "activity", "processes"])));
 }
 
 #[test]

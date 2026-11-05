@@ -56,6 +56,8 @@ impl Action {
 
 #[path = "launcher.rs"]
 mod launcher;
+#[path = "current_user.rs"]
+mod current_user;
 
 pub struct Manager {
     data_dir: PathBuf,
@@ -142,7 +144,8 @@ impl Manager {
                 }
             }
             Request::RefreshSystemInfo => {
-                let device = self.ensure_device(true)?;
+                let device = self.ensure_transport()?;
+                self.refresh_device_identity(&device);
                 self.refresh_system_info(&device);
                 if self.cancel.load(Ordering::Relaxed) {
                     Err("操作已取消".into())
@@ -377,7 +380,8 @@ impl Manager {
             .find(|(id, _)| id == serial)
             .map(|(_, status)| status))
     }
-    fn ensure_device(&mut self, same_user: bool) -> Result<Device, String> {
+    // Device-wide read-only information does not depend on Android user APIs.
+    fn ensure_transport(&mut self) -> Result<Device, String> {
         let old = self.state.device.clone().ok_or("请先连接电视")?;
         let status = self
             .device_status(&old.serial)?
@@ -393,14 +397,11 @@ impl Manager {
             }
             .into());
         }
-        let user = self
-            .shell(&old.serial, &["am", "get-current-user"])?
-            .trim()
-            .parse::<u32>()
-            .map_err(|_| "无法确认电视的当前用户，已停止操作")?;
-        if user > i32::MAX as u32 {
-            return Err("电视返回了无效用户 ID".into());
-        }
+        self.state.device.clone().ok_or_else(|| "电视连接已失效".into())
+    }
+    fn ensure_device(&mut self, same_user: bool) -> Result<Device, String> {
+        let old = self.ensure_transport()?;
+        let user = self.current_user(&old.serial)?;
         if same_user && old.user_id != user {
             return Err("电视当前用户已改变，请重新扫描并确认操作目标".into());
         }
@@ -408,7 +409,6 @@ impl Manager {
             // Never associate a previous user's catalogue with the new identity,
             // even if a later read fails or scanning is cancelled.
             self.state.packages.clear();
-            self.state.system_info = None;
             self.state.launchers.clear();
             self.state.default_home = None;
             self.state.original_home = None;
@@ -542,6 +542,28 @@ impl Manager {
             .map(|h| h.component.clone());
         Ok(())
     }
+    fn refresh_device_identity(&mut self, device: &Device) {
+        for (property, limit, model) in [
+            ("ro.product.model", 120, true),
+            ("ro.build.version.release", 40, false),
+        ] {
+            if let Ok(value) = self.shell(&device.serial, &["getprop", property]) {
+                let value = parse::short(value.trim(), limit);
+                if !value.is_empty() {
+                    if let Some(current) = self.state.device.as_mut() {
+                        if model {
+                            current.model = value;
+                        } else {
+                            current.android_version = value;
+                        }
+                    }
+                }
+            }
+            if !self.defer_cancel && self.cancel.load(Ordering::Relaxed) {
+                break;
+            }
+        }
+    }
     fn refresh_system_info(&mut self, device: &Device) {
         let query = |manager: &mut Self, args: &[&str]| -> Option<String> {
             let mut values = vec!["-s".into(), device.serial.clone(), "shell".into()];
@@ -561,8 +583,17 @@ impl Manager {
         };
         let memory =
             query(self, &["cat", "/proc/meminfo"]).and_then(|output| parse::memory_info(&output));
-        let storage =
-            query(self, &["df", "-k", "/data"]).and_then(|output| parse::disk_info(&output));
+        let storage = query(self, &["df", "-k", "/data"])
+            .and_then(|output| parse::disk_info(&output))
+            .or_else(|| {
+                // KitKat toolbox df treats -k as a path; its native output has
+                // explicit K/M/G units instead of a percentage column.
+                if !self.defer_cancel && self.cancel.load(Ordering::Relaxed) {
+                    None
+                } else {
+                    query(self, &["df", "/data"]).and_then(|output| parse::disk_info(&output))
+                }
+            });
         let display_resolution = query(self, &["wm", "size"]).and_then(|output| {
             output.lines().rev().find_map(|line| {
                 line.split_once(':')
@@ -740,20 +771,13 @@ impl Manager {
         }
     }
     fn scan(&mut self) -> Result<(), String> {
-        let mut device = self.ensure_device(false)?;
-        device.model = parse::short(
-            self.shell(&device.serial, &["getprop", "ro.product.model"])?
-                .trim(),
-            120,
-        );
-        device.android_version = parse::short(
-            self.shell(&device.serial, &["getprop", "ro.build.version.release"])?
-                .trim(),
-            40,
-        );
-        self.state.device = Some(device.clone());
-        self.read_catalogue(&device)?;
+        let device = self.ensure_transport()?;
+        // Keep global information available even when a firmware cannot expose
+        // its current user or package catalogue. Mutations still verify both.
+        self.refresh_device_identity(&device);
         self.refresh_system_info(&device);
+        let device = self.ensure_device(false)?;
+        self.read_catalogue(&device)?;
         self.refresh_package_sizes(&device);
         if self.cancel.load(Ordering::Relaxed) {
             return Err("操作已取消".into());

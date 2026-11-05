@@ -1,14 +1,14 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.5.1** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.5.2** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.5.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.1)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 即可管理应用。
+下载：[0.5.2 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.2)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
-0.5.1 将 APK 市场分为「启动器、影音、游戏」，显示各类数量，并明确软件上架请直接提交 PR。启动器布局选择应用时自动填入名称和已缓存的 SVG 图标，默认使用白色文字；窗口顶部与底部移除重复的软件名称。
+0.5.2 修复 Android 4.4（SDK 19）连接时返回 `am usage` 的兼容问题，将系统信息读取与当前用户查询分开，并支持旧版 `df` 容量格式。新增离线可读的三语 Info 页面，说明各操作的 ADB 命令、用法和兼容性。Android 4.4 的修改操作仍受系统能力及用户身份、默认 HOME 检查限制；本次尚未进行实体电视验证。
 
 ## 功能
 
-左下角版本旁的「检查更新」会读取 Gitee 商店的 `client/` 目录；启动后也会后台检查一次。发现匹配当前平台的新版本后，点击「下载并安装」，管理器会校验安装包、结束 ADB 连接并交给更新助手安装和重启。详见[客户端更新说明与仓库文件约定](docs/client-updates.md)。
+左下角版本旁的「检查更新」会读取 Gitee 商店的 `client/` 目录；启动后也会后台检查一次。发现匹配当前平台的新版本后，点击「下载并安装」，管理器会校验安装包、结束 ADB 连接并交给更新助手安装和重启。本次发布未同步 Gitee 商店安装包，请从上方 GitHub 发布页获取 0.5.2；应用内更新以该目录实际版本为准。详见[客户端更新说明与仓库文件约定](docs/client-updates.md)。
 
 所有应用内弹窗统一使用半透明毛玻璃背景，包括布局中的嵌套弹窗；背景虚化，弹窗内容保持清晰。
 
@@ -23,6 +23,7 @@
 | APK市场 | 每次进入检查 Gitee 商店中的新增应用和版本更新，将本次更新置顶并标「新」；同一资源合并展示最近 5 个版本，支持搜索、预览、下载及安装 |
 | 论坛 | 浏览 Gitee Issues 列表、原帖正文和跟帖；刷新、翻页、外部发帖及前往原帖回复 |
 | 操作记录 | 最近 200 项修改记录，包含目标设备／用户、逐项结果与错误 |
+| Info | 离线说明各操作的 ADB 命令、用法与系统兼容性，支持简体中文、繁体中文和英文 |
 
 应用列表的圆圈 **i** 按钮按完整包名查询用途与卸载风险，并显示资料来源、原始分类与获取时间。社区资料来自 [UAD-ng](https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation)，保留原文；未收录或无法查询时明确提示，不把未知包当作可安全卸载。核心组件与当前默认桌面的保护状态优先于社区分类。可刷新资料，或点击网页搜索继续查找该包；查询本身不会操作电视。
 
@@ -39,14 +40,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.5.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.1) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.5.2 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.2) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.5.1-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.5.2-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.5.1-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.5.2-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -66,6 +67,10 @@
 2. 首页填写 IP／主机名和调试端口，在电视上接受授权。点击连接后会记住有效地址和端口，连接失败也会保存；下次启动自动填入，不自动发起连接。
 3. 每次连接前会自动清理当前用户的本机 ADB 服务与残留进程，等待退出后再连接；这也会断开其他工具使用的 ADB 连接。清理失败或取消时不会继续连接。
 4. 首页自动显示系统信息，点击「刷新信息」重新查询。内存来自 `/proc/meminfo`，存储容量来自 `/data` 分区；权限或固件限制时显示未知。
+
+当前用户查询依次尝试 `am get-current-user` 和 `cmd activity get-current-user`；仅在已确认 SDK 为 19 时，才回退读取 `dumpsys activity processes` 的 `mUserLru` 末项。无法确认用户身份时仍拒绝修改，不猜测用户为 0。系统信息读取不依赖当前用户查询，存储容量兼容旧版 `df` 输出；读取不到的字段保持未知。旧系统无法查询默认 HOME 时，停用和卸载仍受原有保护限制。
+
+Info 页面无需连接电视或访问网络，可查看各操作实际使用的 ADB 命令、参数含义及兼容性说明。Android 4.4 支持连接和信息读取的兼容处理，不代表支持所有应用管理、启动器或布局修改命令；操作能力仍取决于电视系统。
 
 ### 连接失败排查
 

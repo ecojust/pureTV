@@ -1,18 +1,18 @@
 # ADB 能力调研
 
-以下为官方文档、AOSP 源码及本机 ADB 37.0.1 帮助的只读核对，尚未连接电视验证。SERIAL 为已确认设备，U 为 `am get-current-user` 返回的当前用户，PACKAGE／COMPONENT 为从设备查询并校验后的标识。
+以下为官方文档、AOSP 源码及本机 ADB 37.0.1 帮助的只读核对，尚未连接电视验证。SERIAL 为已确认设备，U 为客户端通过下列兼容查询核实的当前用户，PACKAGE／COMPONENT 为从设备查询并校验后的标识。
 
 | 操作 | 命令 |
 | --- | --- |
 | 网络连接 | `adb connect IP:PORT` |
 | 配对式无线调试 | `adb pair IP:PAIR_PORT`（交互传入配对码），随后 `adb connect IP:DEBUG_PORT` |
 | 检查授权／在线状态 | `adb devices -l` |
-| 当前用户 | `adb -s SERIAL shell am get-current-user` |
+| 当前用户 | 优先 `adb -s SERIAL shell am get-current-user`，再尝试 `cmd activity get-current-user`；仅 SDK 19 可回退到 `dumpsys activity processes` 的 `mUserLru`，见下文 |
 | 已安装应用 | `adb -s SERIAL shell pm list packages --user U` |
 | 系统应用／已停用应用 | 在以上查询中分别加 `-s`、`-d` |
 | 停用／启用 | `adb -s SERIAL shell pm disable-user --user U PACKAGE` / `pm enable --user U PACKAGE` |
 | 当前用户卸载并保留数据 | `adb -s SERIAL shell pm uninstall -k --user U PACKAGE` |
-| 恢复仍保有安装包的应用 | `adb -s SERIAL shell cmd package install-existing --user U PACKAGE`，再恢复原启用状态 |
+| 恢复仍保有安装包的应用 | `adb -s SERIAL shell cmd package install-existing --user U PACKAGE`，随后复查安装状态；此操作不自动还原历史启用状态 |
 | 查询 HOME 启动器 | `adb -s SERIAL shell cmd package query-activities --components --user U -a android.intent.action.MAIN -c android.intent.category.HOME` |
 | 当前默认 HOME | `adb -s SERIAL shell cmd package resolve-activity --brief --user U -a android.intent.action.MAIN -c android.intent.category.HOME` |
 | 设置 HOME | `adb -s SERIAL shell cmd package set-home-activity --user U COMPONENT` |
@@ -28,9 +28,22 @@
 
 任何修改都同时检查退出码、命令返回的 Success／Failure 文本与设备状态复查，不能仅凭退出码 0 宣称成功。停用撤销须区分原本 DEFAULT 与显式 ENABLED 状态，可用 `pm default-state`／`pm enable` 还原。分包安装须另用 `install-multiple`，首版文件选择只接受单 APK。
 
+## Android 4.4（SDK 19）
+
+0.5.2 修复连接后 `am get-current-user` 输出 usage 并中断全部读取的问题。只读型号、系统版本、内存、CPU、分辨率和容量查询不再依赖当前用户识别；应用扫描和修改仍核实用户身份。
+
+KitKat 没有 `am get-current-user` 或现代 `cmd activity`。AOSP 的 `dumpsys activity processes` 输出 `mUserLru: [0, 10]`；源码明确最后一项是当前用户，并在切换用户的同一锁内更新。客户端仅在实时读取的 SDK 严格为 19 时使用该路径，拒绝空、重复、非法及越界字段，不从正在运行的用户或前台应用推测身份，也不默认用户 0。每次修改仍重新核实用户；取消与同用户保护继续生效。
+
+KitKat 的 `df` 将 `-k` 当作路径，因此容量查询在现代格式不可用时回退 `df /data`，解析明确的 `Size Used Free Blksize` 表头及 K/M/G 二进制单位。数值来自工具已舍入到一位小数的显示值，精度受系统输出限制。
+
+4.4 的 `pm list packages --user U` 支持应用扫描，但没有现代 HOME 查询、`cmd package install-existing` 或 `pm default-state`。无法确认默认桌面时保留列表，并停止停用／卸载。4.4 原生安装及卸载命令不支持本客户端所需的 `--user`，不会通过去掉该参数改为影响全部用户的操作。连接可用不表示所有修改功能或市场 APK 都兼容；APK 自身最低 Android 版本、架构和签名仍须符合设备要求。缺少 `stat` 时安装包大小可显示未知。
+
 来源：
 
 - [Android 官方 ADB 文档](https://developer.android.com/tools/adb)
 - [ADB 命令手册](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/docs/user/adb.1.md)
 - [当前 PackageManagerShellCommand](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/main/services/core/java/com/android/server/pm/PackageManagerShellCommand.java)
 - [Android 8.0 PackageManagerShellCommand](https://android.googlesource.com/platform/frameworks/base/+/android-8.0.0_r1/services/core/java/com/android/server/pm/PackageManagerShellCommand.java)
+- [Android 4.4 ActivityManagerService：当前用户历史定义及切换逻辑](https://github.com/aosp-mirror/platform_frameworks_base/blob/android-4.4_r1/services/java/com/android/server/am/ActivityManagerService.java#L557)
+- [Android 4.4 Package Manager 命令实现](https://github.com/aosp-mirror/platform_frameworks_base/blob/android-4.4_r1/cmds/pm/src/com/android/commands/pm/Pm.java)
+- [Android 4.4 toolbox df 输出与参数](https://github.com/aosp-mirror/platform_system_core/blob/android-4.4_r1/toolbox/df.c)

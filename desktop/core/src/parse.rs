@@ -263,19 +263,81 @@ pub(crate) fn memory_info(output: &str) -> Option<(u64, u64)> {
     }
 }
 pub(crate) fn disk_info(output: &str) -> Option<(u64, u64)> {
-    output.lines().rev().find_map(|line| {
-        let fields: Vec<_> = line.split_whitespace().collect();
-        let used = fields.iter().position(|field| {
-            field
-                .strip_suffix('%')
-                .is_some_and(|number| number.parse::<u32>().is_ok())
-        })?;
-        if used < 3 {
+    fn unsigned(value: &str) -> Option<u64> {
+        if value.is_empty() || !value.bytes().all(|byte| byte.is_ascii_digit()) {
             return None;
         }
-        let total = fields[used - 3].parse::<u64>().ok()?.checked_mul(1024)?;
-        let available = fields[used - 1].parse::<u64>().ok()?.checked_mul(1024)?;
-        if total == 0 || available > total {
+        value.parse().ok()
+    }
+    // Android 4.4 toolbox df prints one decimal place and an explicit binary
+    // K/M/G unit, even without -h. It has no percentage column or -k option:
+    // platform/system/core, android-4.4_r1, toolbox/df.c.
+    fn toolbox_size(value: &str) -> Option<u64> {
+        let (number, unit) = [
+            ('K', 1024u64),
+            ('M', 1024u64.pow(2)),
+            ('G', 1024u64.pow(3)),
+        ]
+        .into_iter()
+        .find_map(|(suffix, unit)| value.strip_suffix(suffix).map(|number| (number, unit)))?;
+        let (whole, fraction) = number.split_once('.')?;
+        if fraction.len() != 1 {
+            return None;
+        }
+        unsigned(whole)?
+            .checked_mul(unit)?
+            .checked_add(unsigned(fraction)?.checked_mul(unit)? / 10)
+    }
+    let lines: Vec<_> = output
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .collect();
+    if lines
+        .first()?
+        .split_whitespace()
+        .eq(["Filesystem", "Size", "Used", "Free", "Blksize"])
+    {
+        // `df /data` emits exactly a header and a row. Extra diagnostics must
+        // not turn a failed query (for example `df -k`) into a plausible value.
+        if lines.len() != 2 {
+            return None;
+        }
+        let fields: Vec<_> = lines[1].split_whitespace().collect();
+        if fields.len() != 5 || fields[0] != "/data" {
+            return None;
+        }
+        let total = toolbox_size(fields[1])?;
+        let used = toolbox_size(fields[2])?;
+        let available = toolbox_size(fields[3])?;
+        let block_size = unsigned(fields[4])?;
+        // Printed capacities are rounded independently, so their sum need not
+        // equal the printed total. Each individual value must still be sane.
+        return (total > 0
+            && used <= total
+            && available <= total
+            && block_size > 0
+            && block_size <= i32::MAX as u64)
+            .then_some((total, available));
+    }
+    output.lines().rev().find_map(|line| {
+        let fields: Vec<_> = line.split_whitespace().collect();
+        let percent = fields.iter().position(|field| {
+            field
+                .strip_suffix('%')
+                .and_then(unsigned)
+                .is_some_and(|number| number <= 100)
+        })?;
+        if !(3..=4).contains(&percent)
+            || fields.len() != percent + 2
+            || fields.last() != Some(&"/data")
+        {
+            return None;
+        }
+        let total = unsigned(fields[percent - 3])?.checked_mul(1024)?;
+        let used = unsigned(fields[percent - 2])?.checked_mul(1024)?;
+        let available = unsigned(fields[percent - 1])?.checked_mul(1024)?;
+        if total == 0 || used.checked_add(available)? > total {
             None
         } else {
             Some((total, available))
@@ -302,6 +364,61 @@ mod system_tests {
             Some((4194304, 3145728))
         );
         assert_eq!(disk_info("permission denied"), None);
+    }
+
+    #[test]
+    fn kitkat_toolbox_disk_values_have_explicit_binary_units_and_data_mount() {
+        // Formats and units from Android 4.4_r1 toolbox/df.c. These fixtures
+        // represent command output, not measurements from a physical device.
+        let header = "Filesystem               Size     Used     Free   Blksize\n";
+        assert_eq!(
+            disk_info(&format!("{header}/data 4.0G 1.0G 3.0G 4096\n")),
+            Some((4 * 1024u64.pow(3), 3 * 1024u64.pow(3)))
+        );
+        assert_eq!(
+            disk_info(&format!("{header}/data 512.0M 256.0M 256.0M 4096\n")),
+            Some((512 * 1024u64.pow(2), 256 * 1024u64.pow(2)))
+        );
+        assert_eq!(
+            disk_info(&format!("{header}/data 4.0K 1.0K 3.0K 1024\n")),
+            Some((4096, 3072))
+        );
+        // The toolbox rounds each column to a tenth of its unit independently.
+        assert_eq!(
+            disk_info(&format!("{header}/data 1.0G 512.1M 512.1M 4096\n")),
+            Some((1024u64.pow(3), 536975769))
+        );
+        for row in [
+            "/cache 4.0G 1.0G 3.0G 4096",
+            "/data 4096 1024 3072 4096",
+            "/data -4.0G 1.0G 3.0G 4096",
+            "/data +4.0G 1.0G 3.0G 4096",
+            "/data 4.0G -1.0G 3.0G 4096",
+            "/data 4.0G 1.0G -3.0G 4096",
+            "/data 18446744073709551615.0G 1.0G 3.0G 4096",
+            "/data 0.0G 0.0G 0.0G 4096",
+            "/data 4.0G 5.0G 3.0G 4096",
+            "/data 4.0G 1.0G 5.0G 4096",
+            "/data 4.00G 1.0G 3.0G 4096",
+            "/data 4.0G 1.0G 3.0G 0",
+            "/data 4.0G 1.0G 3.0G -4096",
+            "/data 4.0G 1.0G 3.0G 4096\n-k: No such file or directory",
+            "/data: Permission denied",
+        ] {
+            assert_eq!(disk_info(&format!("{header}{row}\n")), None, "{row}");
+        }
+        assert_eq!(disk_info("/data 4.0G 1.0G 3.0G 4096"), None);
+        for row in [
+            "/dev/data 4096 1024 3072 25% /cache",
+            "/dev/data -4096 1024 3072 25% /data",
+            "/dev/data 4096 -1024 3072 25% /data",
+            "/dev/data 4096 1024 -3072 25% /data",
+            "/dev/data 4096 1024 3072 101% /data",
+            "/dev/data 4096 1024 4096 25% /data",
+            "/dev/data 18446744073709551615 1024 3072 25% /data",
+        ] {
+            assert_eq!(disk_info(row), None, "{row}");
+        }
     }
 }
 

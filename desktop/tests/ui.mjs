@@ -2235,14 +2235,62 @@ try {
     await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await forumReply(p,'R1001').locator('.forum-reply-body').innerText(),dangerousReply);
     assert.equal(await p.evaluate(()=>window.__xss),false);assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[]);
   },withoutAdb(),{forumDetails:{IABC123:forumDetail('IABC123',{post:{...forumDetail().post,body:dangerousBody,author:'<b data-forum-untrusted="author">作者</b>'}})},forumReplyPages:{IABC123:{1:forumReplies('IABC123',{replies:[{...forumReplies().replies[0],body:dangerousReply,author:'<img data-forum-untrusted="reply-author" src=x onerror="window.__xss=true">'}]})}}});
-  await check('independent pages: market, forum and activity hide device status and ADB hints while preserving their own errors',async p=>{
+  await check('info: offline command reference preserves commands across languages and stays readable in compact themes',async p=>{
+    await nav(p,'info');
+    const panel=p.locator('.adb-info'),scroll=p.locator('[data-scroll="info"]');
+    await panel.waitFor();
+    assert.equal(await p.locator('[data-page="info"]').getAttribute('aria-current'),'page');
+    assert.equal(await p.locator('.device-badge,.connection-strip,.adb-panel,.warning-banner,.demo-banner').count(),0);
+    assert.doesNotMatch(await p.locator('.app-footer').innerText(),/Gitee|当前 Android 用户|选择设备/);
+    assert.equal(await panel.locator('button,[data-act],input,select').count(),0,'Reading documentation exposes no execution control');
+    for(const id of ['connect','current-user','storage','packages','disable','enable','uninstall','restore','install-apk','home-query','set-home','layout-read','layout-write','local-actions','local-layout']) {
+      assert.equal(await panel.locator(`[data-info-operation="${id}"]`).count(),1,`${id} is documented`);
+    }
+    const commands=await panel.locator('pre code').allTextContents();
+    for(const command of ['am get-current-user','dumpsys activity processes','df -k /data','df /data','pm list packages --user U','pm uninstall -k --user U','install --user U -r','set-home-activity --user U','content call --uri URI --user U --method apply']) {
+      assert.ok(commands.some(text=>text.includes(command)),`${command} remains visible as literal command text`);
+    }
+    assert.match(await panel.locator('[data-info-operation="current-user"]').innerText(),/SDK 19/);
+    assert.match(await panel.locator('[data-info-operation="install-apk"]').innerText(),/Android 4\.4/);
+    await p.setViewportSize({width:960,height:640});
+    for(const language of ['zh-CN','zh-TW','en']) {
+      await p.locator('[name="locale"]').selectOption(language);
+      for(const theme of ['emerald','ocean','graphite']) {
+        await p.locator('[name="theme"]').selectOption(theme);
+        assert.deepEqual(await panel.locator('pre code').allTextContents(),commands,'Language changes must never translate command arguments');
+        assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight+1),true,'Info remains inside the minimum window');
+        const navBounds=await p.locator('[data-page="info"]').boundingBox();
+        assert.ok(navBounds&&navBounds.y>=0&&navBounds.y+navBounds.height<=640,'Info navigation stays visible');
+        assert.equal(await scroll.evaluate(el=>el.scrollHeight>el.clientHeight&&el.clientHeight>120),true,'Long reference scrolls internally');
+        await scroll.evaluate(el=>el.scrollTop=0);
+        if((language==='zh-CN'&&theme==='emerald')||(language==='zh-TW'&&theme==='ocean')||(language==='en'&&theme==='graphite'))await shot(p,`info-${language}-${theme}`);
+      }
+    }
+    await panel.locator('a[href="#info-local"]').click();
+    await p.waitForTimeout(80);
+    assert.ok(await scroll.evaluate(el=>el.scrollTop>0),'Section links scroll the documentation');
+    assert.equal(await p.evaluate(()=>document.documentElement.scrollTop),0);
+    await shot(p,'info-local-en-graphite');
+    const position=await scroll.evaluate(el=>el.scrollTop);
+    await nav(p,'history');await nav(p,'info');
+    assert.ok(Math.abs(await scroll.evaluate(el=>el.scrollTop)-position)<2,'Navigation preserves the reading position');
+    assert.deepEqual(await requests(p),[]);
+    assert.deepEqual(await p.evaluate(()=>window.__marketRequests),[]);
+    assert.deepEqual(await p.evaluate(()=>window.__forumRequests),[]);
+  },withoutAdb());
+  await check('info: browser preview reads the complete reference without requiring the desktop or a television',async p=>{
+    await nav(p,'info');await p.locator('.adb-info').waitFor();
+    assert.equal(await p.locator('.warning-banner,.demo-banner,.device-badge,.connection-strip').count(),0);
+    assert.equal(await p.locator('[data-info-operation="layout-write"] code').count(),1);
+  },null);
+  await check('independent pages: market, forum, activity and info hide device status and ADB hints while preserving their own errors',async p=>{
     const states=[{...withoutAdb(),message:'选择 ADB 后连接电视；首次连接请在电视上授权'},{...snapshot(),device:null,packages:[],launchers:[],defaultHome:null,message:'已断开电视'},{...snapshot(),message:'ADB 操作失败：测试设备读取提示'}];
     for(const [index,state] of states.entries()) {
       const update={...state,revision:index+1};
       await p.evaluate(value=>{window.__setMockState(value);window.__emitMcp('mcp-operation',{running:false,tool:'scan',snapshot:value});},update);
       await nav(p,'connect');assert.equal(await p.locator('.device-badge').count(),1);assert.equal(await p.locator('.connection-strip').count(),1);
       assert.ok((await p.locator('.notice').innerText()).includes(state.message));
-      for(const target of ['market','forum','history']) {
+      for(const target of ['market','forum','history','info']) {
         await nav(p,target);await p.waitForFunction(()=>!document.querySelector('.busy-bar,.forum-loading'));
         assert.equal(await p.locator('.device-badge,.connection-strip,.adb-panel,.adb-reset-hint').count(),0,`${target} has no device status or setup controls`);
         assert.equal(await p.locator('.notice').filter({hasText:state.message}).count(),0,`${target} hides device notices`);
