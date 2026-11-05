@@ -49,7 +49,7 @@ let toolsProgress: DownloadProgress | null = null;
 let launcherLayout: LauncherLayoutInfo | null = null;
 let covers:Record<string,string> = {}, launcherApks:{path:string;cover?:string|null;homeBackground?:string|null;homeBackgroundColor?:string|null}[]=[];
 let marketCatalog: MarketCatalog | null = null, marketCategory: MarketCategory = 'media', marketQuery = '', marketError = '';
-const marketCategories = ['media', 'game', 'launcher'] as const;
+const marketCategories = ['launcher', 'media', 'game'] as const;
 const marketCategoryLabels: Record<MarketCategory, string> = {media: '影音', game: '游戏', launcher: '启动器'};
 const marketCategoryIcons: Record<MarketCategory, string> = {media: 'video', game: 'gamepad', launcher: 'home'};
 let marketLoading = false, marketWorking = false, marketProgress: MarketProgress | null = null, agentMarketProgress: MarketProgress | null = null;

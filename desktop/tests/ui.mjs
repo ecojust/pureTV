@@ -1564,8 +1564,8 @@ try {
   const categorizedStore={...store,items:[categorizedMedia,store.items[1],olderGame,latestGame,store.items[2]]};
   await check('market media and game tabs isolate search and grouped counts while preserving versions and the app download queue',async p=>{
     await openMarket(p);
-    assert.deepEqual(await p.locator('[data-market-category]').evaluateAll(tabs=>tabs.map(tab=>tab.dataset.marketCategory)),['media','game','launcher']);
-    assert.deepEqual(await p.locator('[data-market-category] span').allTextContents(),['2','1','1'],'Counts represent applications, not the number of APK versions');
+    assert.deepEqual(await p.locator('[data-market-category]').evaluateAll(tabs=>tabs.map(tab=>tab.dataset.marketCategory)),['launcher','media','game']);
+    assert.deepEqual(await p.locator('[data-market-category] span').allTextContents(),['1','2','1'],'Counts represent applications, not the number of APK versions');
     assert.equal(await p.locator('[data-market-category="media"]').getAttribute('aria-selected'),'true');
     assert.equal(await marketCard(p,categorizedMedia).count(),1,'A media path stays in Media even when its display name contains 游戏');
     assert.equal(await marketCard(p,store.items[1]).count(),1,'Old unclassified app paths remain available in Media');
@@ -1593,7 +1593,7 @@ try {
     assert.equal(await p.locator('.market-card').count(),0,'Game search cannot expose media cards');
     assert.equal(await p.locator('[data-market-category="game"] span').innerText(),'1','Search does not change the tab total');
     await p.locator('[name="marketSearch"]').fill('');
-    for(const [language,labels,badge] of [['en',['Media','Games','Launchers'],'Games'],['zh-TW',['影音','遊戲','啟動器'],'遊戲'],['zh-CN',['影音','游戏','启动器'],'游戏']]) {
+    for(const [language,labels,badge] of [['en',['Launchers','Media','Games'],'Games'],['zh-TW',['啟動器','影音','遊戲'],'遊戲'],['zh-CN',['启动器','影音','游戏'],'游戏']]) {
       await p.locator('[name="locale"]').selectOption(language);
       const tabs=await p.locator('[data-market-category]').allTextContents();
       assert.deepEqual(tabs.map(text=>text.replace(/\d+\s*$/,'').trim()),labels);
