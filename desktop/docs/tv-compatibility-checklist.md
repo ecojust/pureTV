@@ -271,3 +271,18 @@ python3 -m unittest discover -s desktop/tests -p test_probe_tv_compatibility.py 
 ```
 
 这些测试使用 fake ADB 与受控 Python 子进程，属于 E2；四平台 CI 运行相同测试不等于四个平台都连接过小米电视。
+
+
+## 8. 独立 Android 系统模拟器验证
+
+[模拟器工作流](../../.github/workflows/tv-emulator-compatibility.yml)在 GitHub 托管 Ubuntu/KVM 上分别运行下列固定镜像；[镜像版本及官方元数据](../tests/fixtures/tv-compatibility/system-images.json)随源码保存。
+
+| 样本 | 验证目的 | 证据限制 |
+| --- | --- | --- |
+| API19 / Android 4.4 / default x86 r6 | 旧用户读取、信息／列表、受限安装的明确拒绝 | 通用 Android 系统，不是电视或厂商固件 |
+| API23 / Android 6 / Android TV x86 r21 | 旧用户读取、信息／列表、支持 API23 的测试 APK 安装与覆盖 | Android TV 系统，不代表小米定制固件 |
+| API30 / Android 11 / Android TV x86 r4 | 现代命令和固定测试 APK 管理回归 | 一个版本／ABI 样本，不覆盖全部现代电视 |
+
+运行器先核对镜像及设备身份，再执行只读采集和调用生产 Manager 公共 API 的 [Rust 示例](../core/examples/tv_compatibility.rs)。隔离目标固定为自行启动的模拟器；唯一写入对象是 `org.puretv.compatfixture`。测试 APK 使用临时测试密钥，最低 API19，没有 HOME 或其他组件；密钥和 APK 不上传，也不使用发布签名。若无法可靠识别默认 HOME，停用／卸载保持保护并记录 LIMITED。不会为通过测试删除 `--user` 参数或写入默认桌面。
+
+此流程结果最多为 E3。启动失败、测试失败、明确功能受限与通过分别保留，不能换算为任意品牌的 E4。每个矩阵任务上传采集、诊断和功能报告；镜像元数据核对不等于额外独立重算已下载 ZIP 的摘要。具体执行结果应绑定运行 ID 和提交；工作流存在本身不代表已通过。

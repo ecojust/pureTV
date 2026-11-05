@@ -1,0 +1,67 @@
+name: TV emulator compatibility
+
+on:
+  push:
+    branches: [test/tv-compatibility-matrix, master]
+    paths:
+      - '.github/workflows/tv-emulator-compatibility.yml'
+      - 'desktop/core/**'
+      - 'desktop/public/**'
+      - 'desktop/scripts/probe-tv-compatibility.py'
+      - 'desktop/scripts/run-tv-emulator-compatibility.py'
+      - 'desktop/tests/test_probe_tv_compatibility.py'
+      - 'desktop/tests/fixtures/tv-compatibility/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tv-emulator-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  emulator:
+    name: ${{ matrix.image }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [api19-default, api23-tv, api30-tv]
+    env:
+      PURETV_EMULATOR_TEST: '1'
+      PYTHONUNBUFFERED: '1'
+      CARGO_TERM_COLOR: never
+      CARGO_INCREMENTAL: '0'
+      CARGO_PROFILE_DEV_DEBUG: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The APK catalog is unnecessary here and consumes the disk budget.
+          sparse-checkout: |
+            desktop/core
+            desktop/public
+            desktop/scripts
+            desktop/tests/fixtures/tv-compatibility
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: desktop/core -> target
+          key: emulator-${{ matrix.image }}
+      - name: Run isolated Android system image checks
+        run: >-
+          python desktop/scripts/run-tv-emulator-compatibility.py
+          --image '${{ matrix.image }}'
+          --artifacts "$RUNNER_TEMP/puretv-emulator-results"
+      - name: Preserve setup, boot, ADB and compatibility evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tv-emulator-${{ matrix.image }}
+          path: ${{ runner.temp }}/puretv-emulator-results/
+          retention-days: 14
+          if-no-files-found: warn
