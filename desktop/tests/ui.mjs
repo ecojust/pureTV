@@ -2247,7 +2247,7 @@ try {
       assert.equal(await panel.locator(`[data-info-operation="${id}"]`).count(),1,`${id} is documented`);
     }
     const commands=await panel.locator('pre code').allTextContents();
-    for(const command of ['am get-current-user','dumpsys activity processes','df -k /data','df /data','pm list packages --user U','pm uninstall -k --user U','install --user U -r','set-home-activity --user U','content call --uri URI --user U --method apply']) {
+    for(const command of ['am get-current-user','dumpsys activity processes','df -k /data','df /data','stat -f -c %S:%b:%a /data','pm list packages --user U','pm uninstall -k --user U','install --user U -r','set-home-activity --user U','content call --uri URI --user U --method apply']) {
       assert.ok(commands.some(text=>text.includes(command)),`${command} remains visible as literal command text`);
     }
     assert.match(await panel.locator('[data-info-operation="current-user"]').innerText(),/SDK 19[\s\S]*21[\s\S]*22[\s\S]*23/);

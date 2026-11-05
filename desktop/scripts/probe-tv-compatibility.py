@@ -36,7 +36,7 @@ INTENT = ("-a", "android.intent.action.MAIN", "-c", "android.intent.category.HOM
 FIXED_READS = {
     ("cat", "/proc/meminfo"), ("df", "-k", "/data"), ("df", "/data"), ("wm", "size"),
     ("am", "get-current-user"), ("cmd", "activity", "get-current-user"),
-    ("dumpsys", "activity", "processes"),
+    ("dumpsys", "activity", "processes"), ("stat", "-f", "-c", "%S:%b:%a", "/data"),
 }
 PACKAGE = r"[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*"
 COMPONENT = re.compile(PACKAGE + r"/[A-Za-z0-9_.$]+")
@@ -284,6 +284,23 @@ def disk_summary(text):
     return None
 
 
+def stat_fs_summary(text):
+    """Parse only the fixed stat -f format for the explicitly queried /data."""
+    match = re.fullmatch(r"([0-9]{1,20}):([0-9]{1,20}):([0-9]{1,20})", text.strip())
+    if not match:
+        return None
+    block_size, total_blocks, available_blocks = map(int, match.groups())
+    maximum = 2**64 - 1
+    if (not 0 < block_size <= maximum or not 0 < total_blocks <= maximum
+            or not 0 <= available_blocks <= total_blocks):
+        return None
+    total = block_size * total_blocks
+    available = block_size * available_blocks
+    if total > maximum or available > maximum:
+        return None
+    return {"format": "stat-f", "totalBytes": total, "availableBytes": available}
+
+
 def display_summary(text):
     matches = []
     for line in text.splitlines():
@@ -387,9 +404,15 @@ def collect(reader, serial):
         record(name, reader.shell(command), parser)
     storage = record("dataStorage", reader.shell(("df", "-k", "/data")), disk_summary)
     if storage is None:
-        record("dataStorage.legacy", reader.shell(("df", "/data")), disk_summary)
+        storage = record("dataStorage.legacy", reader.shell(("df", "/data")), disk_summary)
     else:
         report["commands"]["dataStorage.legacy"] = {"status": "not_run", "reason": "primary_query_succeeded"}
+    if storage is None:
+        # Android can report a bind-mount alias for df /data. Preserve strict
+        # df parsing and ask statfs about the exact fixed path instead.
+        record("dataStorage.statFs", reader.shell(("stat", "-f", "-c", "%S:%b:%a", "/data")), stat_fs_summary)
+    else:
+        report["commands"]["dataStorage.statFs"] = {"status": "not_run", "reason": "df_query_succeeded"}
 
     user = None
     for label, command in (("currentUser.am", ("am", "get-current-user")),

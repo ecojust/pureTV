@@ -410,9 +410,63 @@ pub(crate) fn disk_info(output: &str) -> Option<(u64, u64)> {
         }
     })
 }
+
+pub(crate) fn disk_statfs_info(output: &str) -> Option<(u64, u64)> {
+    // Fixed `stat -f -c %S:%b:%a /data`: Android toybox prints f_bsize in
+    // bytes, f_blocks, and f_bavail. Do not infer a target from a mount alias.
+    fn unsigned(value: &str) -> Option<u64> {
+        if value.is_empty() || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+            return None;
+        }
+        value.parse().ok()
+    }
+    let mut fields = output.trim().split(':');
+    let block_size = unsigned(fields.next()?)?;
+    let total_blocks = unsigned(fields.next()?)?;
+    let available_blocks = unsigned(fields.next()?)?;
+    if fields.next().is_some()
+        || block_size == 0
+        || total_blocks == 0
+        || available_blocks > total_blocks
+    {
+        return None;
+    }
+    Some((
+        block_size.checked_mul(total_blocks)?,
+        block_size.checked_mul(available_blocks)?,
+    ))
+}
+
 #[cfg(test)]
 mod system_tests {
     use super::*;
+
+    #[test]
+    fn statfs_uses_fixed_data_target_block_units_without_accepting_df_aliases() {
+        // Actual API30 Android TV x86 output from E3 run 42079101858.
+        let df_alias = "Filesystem     1K-blocks   Used Available Use% Mounted on\n/dev/block/vdc   6094400 179800   5772388   4% /storage/emulated/0/Android/obb\n";
+        assert_eq!(disk_info(df_alias), None);
+        assert_eq!(disk_info("/dev/block/vdc 6094400 179800 5772388 4% /cache\n"), None);
+        assert_eq!(disk_statfs_info("4096:1523600:1443191\n"), Some((6_240_665_600, 5_911_310_336)));
+        assert_eq!(disk_statfs_info("4096:1:0\r\n"), Some((4096, 0)));
+        assert_eq!(disk_statfs_info("1024:8:8"), Some((8192, 8192)));
+    }
+
+    #[test]
+    fn statfs_rejects_diagnostics_extra_fields_and_overflow() {
+        for output in [
+            "", "usage: stat [-f] [-c FORMAT] FILE", "Permission denied",
+            "4096:8", "4096:8:4:1", "4096:8:4\n4096:8:4", "4096:8:4\nerror",
+            "warning\n4096:8:4", "4096 8 4", "4096: 8:4", ":8:4", "4096::4",
+            "+4096:8:4", "-4096:8:4", "4096:-8:4", "4096:8:-4", "4096:8:4.0",
+            "0:8:4", "4096:0:0", "4096:8:9", "18446744073709551616:1:0",
+            "4096:18446744073709551616:0", "18446744073709551615:2:1",
+            "4096:4503599627370496:0", "4096:4503599627370496:4503599627370496",
+        ] {
+            assert_eq!(disk_statfs_info(output), None, "{output}");
+        }
+    }
+
     #[test]
     fn memory_and_disk_values_require_real_units_and_sane_capacity() {
         assert_eq!(

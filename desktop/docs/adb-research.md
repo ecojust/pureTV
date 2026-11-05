@@ -36,6 +36,10 @@ KitKat 没有 `am get-current-user` 或现代 `cmd activity`。AOSP 的 `dumpsys
 
 KitKat 的 `df` 将 `-k` 当作路径，因此容量查询在现代格式不可用时回退 `df /data`，解析明确的 `Size Used Free Blksize` 表头及 K/M/G 二进制单位。数值来自工具已舍入到一位小数的显示值，精度受系统输出限制。
 
+本轮 API19 镜像实际发现非致命的完整 `libdvm.so` text-relocations 警告混入旧 ADB shell 的包列表。当前源码仅忽略已核实的这一完整诊断行；usage、权限错误、未知警告与无效包名仍拒绝，主安装目录仍须非空。该修复尚不在已发布0.5.2安装包内。
+
+Android 11 的 toybox `df` 按设备号匹配挂载表，可能为固定 `/data` 查询打印同一文件系统的其他挂载路径。本轮镜像实际末列为 `/storage/emulated/0/Android/obb`；没有因此把任意分区行当作 data 容量。当前源码在两种 df 均无法解析时，回退固定命令 `stat -f -c %S:%b:%a /data`：按 toybox 源码，三个字段分别为 `f_bsize`、`f_blocks`、`f_bavail`，以检查溢出的乘法换算总量及非特权可用量。只接受唯一完整的三个无符号数，未知／异常输出继续显示未知，不依赖用户0或root。Android6和11的AOSP源码已核实此接口；厂商仍可能缺少它。
+
 4.4 的 `pm list packages --user U` 支持应用扫描，但没有现代 HOME 查询、`cmd package install-existing` 或 `pm default-state`。无法确认默认桌面时保留列表，并停止停用／卸载。4.4 原生安装及卸载命令不支持本客户端所需的 `--user`，不会通过去掉该参数改为影响全部用户的操作。连接可用不表示所有修改功能或市场 APK 都兼容；APK 自身最低 Android 版本、架构和签名仍须符合设备要求。缺少 `stat` 时安装包大小可显示未知。
 
 来源：
@@ -47,3 +51,8 @@ KitKat 的 `df` 将 `-k` 当作路径，因此容量查询在现代格式不可�
 - [Android 4.4 ActivityManagerService：当前用户历史定义及切换逻辑](https://github.com/aosp-mirror/platform_frameworks_base/blob/android-4.4_r1/services/java/com/android/server/am/ActivityManagerService.java#L557)
 - [Android 4.4 Package Manager 命令实现](https://github.com/aosp-mirror/platform_frameworks_base/blob/android-4.4_r1/cmds/pm/src/com/android/commands/pm/Pm.java)
 - [Android 4.4 toolbox df 输出与参数](https://github.com/aosp-mirror/platform_system_core/blob/android-4.4_r1/toolbox/df.c)
+
+- [Android 4.4 bionic linker 的非致命 text-relocations 诊断](https://android.googlesource.com/platform/bionic/+/android-4.4_r1/linker/linker.cpp#1534)
+- [Android 11 toybox df 挂载匹配](https://android.googlesource.com/platform/external/toybox/+/android-11.0.0_r1/toys/posix/df.c#195)
+- [Android 11 toybox stat 文件系统字段](https://android.googlesource.com/platform/external/toybox/+/android-11.0.0_r1/toys/other/stat.c#135)
+- [Android 6 toybox stat 实现](https://android.googlesource.com/platform/external/toybox/+/android-6.0.0_r1/toys/other/stat.c)

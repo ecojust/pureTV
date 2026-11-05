@@ -593,6 +593,16 @@ impl Manager {
                 } else {
                     query(self, &["df", "/data"]).and_then(|output| parse::disk_info(&output))
                 }
+            })
+            .or_else(|| {
+                // Toybox df may print another bind mount on /data's filesystem.
+                // Query /data directly rather than trusting that mount label.
+                if !self.defer_cancel && self.cancel.load(Ordering::Relaxed) {
+                    None
+                } else {
+                    query(self, &["stat", "-f", "-c", "%S:%b:%a", "/data"])
+                        .and_then(|output| parse::disk_statfs_info(&output))
+                }
             });
         let display_resolution = query(self, &["wm", "size"]).and_then(|output| {
             output.lines().rev().find_map(|line| {

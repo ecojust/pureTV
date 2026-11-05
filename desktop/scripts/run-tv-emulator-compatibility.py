@@ -119,6 +119,10 @@ def privilege_facts(id_code, id_output, build_code, build_output):
             "buildTypeStatus": "verified" if build_type is not None else "unknown"}
 
 
+def bounded_command_fact(code, output):
+    return {"exitCode": code, "output": output[:1024], "outputTruncated": len(output) > 1024}
+
+
 def prepare_emulator_privilege(run, adb, expected_sdk, boot, report):
     """Only reduce privilege on our already verified, fixed emulator target."""
     if boot != {"ro.kernel.qemu": "1", "ro.build.version.sdk": str(expected_sdk), "sys.boot_completed": "1"}:
@@ -134,7 +138,8 @@ def prepare_emulator_privilege(run, adb, expected_sdk, boot, report):
         report["unrootRequested"] = True
         report["after"] = privilege_facts(1, "", 1, "")
         try:
-            code, _ = run.command("emulator-unroot", [adb, "-s", SERIAL, "unroot"], timeout=10, required=False)
+            code, output = run.command("emulator-unroot", [adb, "-s", SERIAL, "unroot"], timeout=10, required=False)
+            report["unrootCommand"] = bounded_command_fact(code, output)
             report["unrootCommandStatus"] = "exit_zero" if code == 0 else "nonzero_exit"
         except (Interrupted, EmulatorFailure):
             raise
@@ -145,12 +150,18 @@ def prepare_emulator_privilege(run, adb, expected_sdk, boot, report):
             # Do not retain a pre-restart observation if adbd later goes offline.
             report["identityReverifiedAfterUnroot"] = False
             report["after"] = privilege_facts(1, "", 1, "")
+            observation = {"identityVerified": False, "remainingSeconds": round(end - time.monotonic(), 3)}
+            report.setdefault("firstRecheck", observation)
+            report["lastRecheck"] = observation
             def read(name, command):
                 remaining = end - time.monotonic()
                 if remaining <= 0:
+                    observation["failure"] = "budget_exhausted_before_" + name
                     raise Failure("Emulator privilege recheck budget exhausted")
-                return run.command(name, [adb, "-s", SERIAL, "shell", *command],
-                                   timeout=min(3, remaining), required=False)
+                code, output = run.command(name, [adb, "-s", SERIAL, "shell", *command],
+                                           timeout=min(3, remaining), required=False)
+                observation[name] = bounded_command_fact(code, output)
+                return code, output
             try:
                 qemu_code, qemu = read("unroot-qemu", ["getprop", "ro.kernel.qemu"])
                 sdk_code, sdk = read("unroot-sdk", ["getprop", "ro.build.version.sdk"])
@@ -159,6 +170,7 @@ def prepare_emulator_privilege(run, adb, expected_sdk, boot, report):
                     build_code, build_output = read("unroot-build-type", ["getprop", "ro.build.type"])
                     report["after"] = privilege_facts(id_code, id_output, build_code, build_output)
                     report["identityReverifiedAfterUnroot"] = report["after"]["shellUid"] is not None
+                    observation["identityVerified"] = report["identityReverifiedAfterUnroot"]
                     if report["after"]["shellUid"] == 2000:
                         break
                 elif (qemu_code == 0 and qemu.strip() == "0") or (sdk_code == 0 and re.fullmatch(r"[0-9]+", sdk.strip())
@@ -166,9 +178,45 @@ def prepare_emulator_privilege(run, adb, expected_sdk, boot, report):
                     raise EmulatorFailure("Emulator identity changed after unroot; refusing Manager operations")
             except (Interrupted, EmulatorFailure):
                 raise
-            except Failure:
-                pass
+            except Failure as error:
+                observation.setdefault("failure", str(error)[:256])
             time.sleep(min(0.5, max(0, end - time.monotonic())))
+        if report["after"]["shellUid"] != 2000:
+            # A partial last polling round is not a final identity observation.
+            # Take a fresh, separately bounded snapshot; never reuse old facts.
+            report["identityReverifiedAfterUnroot"] = False
+            report["after"] = privilege_facts(1, "", 1, "")
+            final = {"identityVerified": False}
+            report["finalRecheck"] = final
+            final_end = min(run.deadline, time.monotonic() + 15)
+            def read_final(name, command):
+                remaining = final_end - time.monotonic()
+                if remaining <= 0:
+                    raise Failure("Final emulator identity budget exhausted")
+                code, output = run.command(name, [adb, "-s", SERIAL, "shell", *command],
+                                           timeout=min(3, remaining), required=False)
+                final[name] = bounded_command_fact(code, output)
+                return code, output
+            try:
+                qemu_code, qemu = read_final("unroot-final-qemu", ["getprop", "ro.kernel.qemu"])
+                sdk_code, sdk = read_final("unroot-final-sdk", ["getprop", "ro.build.version.sdk"])
+                if (qemu_code == 0 and qemu.strip() == "0") or (sdk_code == 0 and re.fullmatch(r"[0-9]+", sdk.strip())
+                                                                             and sdk.strip() != str(expected_sdk)):
+                    raise EmulatorFailure("Emulator identity changed during final unroot verification; refusing Manager operations")
+                if qemu_code != 0 or sdk_code != 0 or qemu.strip() != "1" or sdk.strip() != str(expected_sdk):
+                    raise Failure("Final emulator qemu/SDK identity is unavailable")
+                id_code, id_output = read_final("unroot-final-shell-identity", ["id"])
+                build_code, build_output = read_final("unroot-final-build-type", ["getprop", "ro.build.type"])
+                after = privilege_facts(id_code, id_output, build_code, build_output)
+                if after["shellUid"] is None:
+                    raise Failure("Final emulator shell identity is unavailable")
+                report["after"] = after
+                report["identityReverifiedAfterUnroot"] = True
+                final["identityVerified"] = True
+            except (Interrupted, EmulatorFailure):
+                raise
+            except Failure as error:
+                final["failure"] = str(error)[:256]
         if not report["identityReverifiedAfterUnroot"]:
             raise Failure("Emulator identity could not be reverified after unroot; refusing Manager operations")
     report.update(report["after"])

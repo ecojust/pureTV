@@ -330,3 +330,112 @@ fn ambiguous_home_keeps_catalogue_but_blocks_disable_and_uninstall() {
         assert!(write_calls(&tv.lock().unwrap()).is_empty());
     }
 }
+
+const DATA_STATFS: &[&str] = &["stat", "-f", "-c", "%S:%b:%a", "/data"];
+
+fn data_mount_alias(tv: &mut FakeTv) {
+    // Actual SDK30 E3 outputs, run 42079101858; not a physical TV capture.
+    shell_output(tv, &["df", "-k", "/data"], 0,
+        "Filesystem     1K-blocks   Used Available Use% Mounted on\n/dev/block/vdc   6094400 179800   5772388   4% /storage/emulated/0/Android/obb\n");
+    shell_output(tv, &["df", "/data"], 0,
+        "Filesystem     1K-blocks   Used Available Use% Mounted on\n/dev/block/vdc   6094400 179932   5772256   4% /storage/emulated/0/Android/obb\n");
+    shell_output(tv, DATA_STATFS, 0, "4096:1523600:1443191\n");
+}
+
+#[test]
+fn statfs_fallback_reads_real_api30_capacity_only_after_both_df_attempts() {
+    let (mut manager, tv) = fixture();
+    data_mount_alias(&mut tv.lock().unwrap());
+    let state = connect(&mut manager);
+    let info = state.system_info.unwrap();
+    assert_eq!(info.storage_total_bytes, Some(6_240_665_600));
+    assert_eq!(info.storage_available_bytes, Some(5_911_310_336));
+    assert_eq!(info.memory_total_bytes, Some(4194304));
+    assert!(!state.packages.is_empty());
+    let tv = tv.lock().unwrap();
+    let storage_calls: Vec<_> = tv.calls.iter().filter(|call| {
+        call.get(3).is_some_and(|arg| arg == "df") || is_shell_call(call, DATA_STATFS)
+    }).map(|call| call[3..].iter().map(String::as_str).collect::<Vec<_>>()).collect();
+    assert_eq!(storage_calls, [vec!["df", "-k", "/data"], vec!["df", "/data"], DATA_STATFS.to_vec()]);
+    assert!(write_calls(&tv).is_empty());
+}
+
+#[test]
+fn statfs_is_not_queried_when_either_existing_df_format_succeeds() {
+    for legacy in [false, true] {
+        let (mut manager, tv) = fixture();
+        if legacy {
+            kitkat(&mut tv.lock().unwrap(), 0);
+        }
+        let info = connect(&mut manager).system_info.unwrap();
+        assert!(info.storage_total_bytes.is_some());
+        let tv = tv.lock().unwrap();
+        assert!(!tv.calls.iter().any(|call| is_shell_call(call, DATA_STATFS)));
+        assert_eq!(tv.calls.iter().filter(|call| is_shell_call(call, &["df", "/data"])).count(), usize::from(legacy));
+    }
+}
+
+#[test]
+fn statfs_failure_leaves_capacity_unknown_without_stale_values_or_lost_memory() {
+    for (code, output) in [
+        (127, "/system/bin/sh: stat: not found\n"),
+        (0, "usage: stat [-f] [-c FORMAT] FILE\n"),
+        (0, "Permission denied\n"),
+        (0, "4096:1523600:1443191\nError: denied\n"),
+        (0, "18446744073709551615:2:1\n"),
+        (1, "4096:1523600:1443191\n"),
+    ] {
+        let (mut manager, tv) = fixture();
+        assert!(connect(&mut manager).system_info.unwrap().storage_total_bytes.is_some());
+        {
+            let mut tv = tv.lock().unwrap();
+            data_mount_alias(&mut tv);
+            shell_output(&mut tv, DATA_STATFS, code, output);
+            tv.calls.clear();
+        }
+        let info = manager.execute(Request::RefreshSystemInfo).unwrap().system_info.unwrap();
+        assert_eq!(info.storage_total_bytes, None, "{code}: {output}");
+        assert_eq!(info.storage_available_bytes, None);
+        assert_eq!(info.memory_total_bytes, Some(4194304));
+        assert_eq!(info.display_resolution.as_deref(), Some("1920x1080"));
+        let tv = tv.lock().unwrap();
+        assert_eq!(tv.calls.iter().filter(|call| is_shell_call(call, DATA_STATFS)).count(), 1);
+        assert!(write_calls(&tv).is_empty());
+    }
+}
+
+#[test]
+fn statfs_fallback_stops_after_cancellation_at_each_storage_query() {
+    for command in [&["df", "-k", "/data"][..], &["df", "/data"][..], DATA_STATFS] {
+        let (mut manager, tv) = fixture();
+        connect(&mut manager);
+        {
+            let mut tv = tv.lock().unwrap();
+            data_mount_alias(&mut tv);
+            tv.cancel_during_shell = Some(command.iter().map(|arg| arg.to_string()).collect());
+            tv.calls.clear();
+        }
+        assert!(manager.execute(Request::RefreshSystemInfo).unwrap_err().contains("取消"), "{command:?}");
+        assert_eq!(manager.snapshot().system_info.unwrap().storage_total_bytes, None);
+        let tv = tv.lock().unwrap();
+        assert!(is_shell_call(tv.calls.last().unwrap(), command));
+        if command != DATA_STATFS {
+            assert!(!tv.calls.iter().any(|call| is_shell_call(call, DATA_STATFS)));
+        }
+    }
+}
+
+#[test]
+fn statfs_fallback_honors_explicitly_deferred_cancellation() {
+    let (mut manager, tv) = fixture();
+    let device = connect(&mut manager).device.unwrap();
+    data_mount_alias(&mut tv.lock().unwrap());
+    manager.cancel.store(true, Ordering::Relaxed);
+    manager.defer_cancel = true;
+    manager.refresh_system_info(&device);
+    let info = manager.snapshot().system_info.unwrap();
+    assert_eq!(info.storage_total_bytes, Some(6_240_665_600));
+    assert_eq!(info.storage_available_bytes, Some(5_911_310_336));
+    assert!(manager.cancel.load(Ordering::Relaxed));
+    assert!(tv.lock().unwrap().calls.iter().any(|call| is_shell_call(call, DATA_STATFS)));
+}

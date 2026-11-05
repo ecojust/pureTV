@@ -94,12 +94,13 @@ const sections:CommandSection[] = [
       {
         "id": "storage",
         "title": "数据分区容量",
-        "purpose": "先按 KiB 查询 data 分区；失败或无法解析时改用不带参数的旧格式查询，识别带 K、M、G 单位的容量。",
+        "purpose": "依次尝试两种 df 格式；仍无法解析时直接查询 /data 的块大小、总块数和可用块数，并换算成字节。",
         "commands": [
           "adb -s SERIAL shell df -k /data",
-          "adb -s SERIAL shell df /data"
+          "adb -s SERIAL shell df /data",
+          "adb -s SERIAL shell stat -f -c %S:%b:%a /data"
         ],
-        "compatibility": "原生 Android 4.4 的 df 不支持 -k，使用第二条命令。旧格式容量已被系统舍入；无效单位、容量或非 data 分区结果不作为有效信息。",
+        "compatibility": "旧版 df 可能不支持 -k 或只显示已舍入的 K/M/G 容量。挂载别名导致 df 结果无法确认时，改用 stat -f；AOSP Android 6 及 11 已核实该接口，厂商固件仍可能缺失。无效或不可读结果保持未知。",
         "kind": "read"
       },
       {

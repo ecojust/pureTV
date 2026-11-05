@@ -283,6 +283,14 @@ python3 -m unittest discover -s desktop/tests -p test_probe_tv_compatibility.py 
 | API23 / Android 6 / Android TV x86 r21 | 旧用户读取、信息／列表、支持 API23 的测试 APK 安装与覆盖 | Android TV 系统，不代表小米定制固件 |
 | API30 / Android 11 / Android TV x86 r4 | 现代命令和固定测试 APK 管理回归 | 一个版本／ABI 样本，不覆盖全部现代电视 |
 
-运行器先核对镜像及设备身份，再执行只读采集和调用生产 Manager 公共 API 的 [Rust 示例](../core/examples/tv_compatibility.rs)。隔离目标固定为自行启动的模拟器；唯一写入对象是 `org.puretv.compatfixture`。测试 APK 使用临时测试密钥，最低 API19，没有 HOME 或其他组件；密钥和 APK 不上传，也不使用发布签名。若无法可靠识别默认 HOME，停用／卸载保持保护并记录 LIMITED。不会为通过测试删除 `--user` 参数或写入默认桌面。
+运行器先核对镜像及设备身份，再执行只读采集和调用生产 Manager 公共 API 的 [Rust 示例](../core/examples/tv_compatibility.rs)。隔离目标固定为自行启动的模拟器；APK 修改只允许针对 `org.puretv.compatfixture`。核实隔离模拟器身份后，初始ADB若为root，会尝试 `unroot` 并重新核验；报告分别记录前后UID，只有实际UID2000才算普通ADB条件，从不请求root，也不操作实体电视。测试 APK 使用临时测试密钥，最低 API19，没有 HOME 或其他组件；密钥和 APK 不上传，也不使用发布签名。若无法可靠识别默认 HOME，停用／卸载保持保护并记录 LIMITED。不会为通过测试删除 `--user` 参数或写入默认桌面。
+
+固定老镜像的权限需要特别说明：[AOSP Android 6 的 adbd](https://github.com/aosp-mirror/platform_system_core/blob/android-6.0.0_r1/adb/adb_main.cpp#L111) 在 eng／userdebug 的 QEMU 条件下优先保留root，`unroot`返回成功并不能单独证明UID变成2000；Android4.4也缺少unroot服务。必须按实际before／after身份记录root或普通shell，不能用调试镜像的root结果替代小米量产固件的权限验收。
 
 此流程结果最多为 E3。启动失败、测试失败、明确功能受限与通过分别保留，不能换算为任意品牌的 E4。每个矩阵任务上传采集、诊断和功能报告；镜像元数据核对不等于额外独立重算已下载 ZIP 的摘要。具体执行结果应绑定运行 ID 和提交；工作流存在本身不代表已通过。
+
+模拟器运行器的本地回归不需要SDK或设备：
+
+```bash
+python3 -m unittest discover -s desktop/tests -p test_tv_emulator_runner.py -v
+```

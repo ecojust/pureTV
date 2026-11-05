@@ -88,6 +88,8 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(report["identity"]["firmwareBuild"], "TV-firmware-2026.1")
         self.assertEqual(report["currentUser"]["id"], 10)
         self.assertEqual(report["commands"]["packages"]["summary"], {"packageCount": 2})
+        self.assertEqual(report["commands"]["dataStorage.statFs"], {"status": "not_run", "reason": "df_query_succeeded"})
+        self.assertFalse(any(call[3:4] == ("stat",) for call in adb.calls))
         self.assertEqual(set(report["writeOperations"].values()), {"not_verified_on_device"})
         self.assertEqual(adb.calls[0], ("devices", "-l"))
         for call in adb.calls[1:]:
@@ -228,6 +230,9 @@ class ProbeTests(unittest.TestCase):
         for command in (("getprop",), ("getprop", "ro.serialno"), ("am", "start", "x"),
                         ("pm", "install", "x"), ("pm", "uninstall", "x"), ("pm", "list", "packages"),
                         ("cmd", "package", "set-home-activity", "x"), ("content", "call"),
+                        ("stat", "-f", "-c", "%S:%b:%a", "/cache"),
+                        ("stat", "-f", "-c", "%S %b %a", "/data"),
+                        ("stat", "-c", "%S:%b:%a", "/data"),
                         ("sh", "-c", "echo hello"), ("pm", "list", "packages", "--user", "-1")):
             with self.subTest(command=command), self.assertRaises(ValueError):
                 adb.shell(command)
@@ -245,6 +250,66 @@ class ProbeTests(unittest.TestCase):
                 report = probe.collect(adb, SERIAL)
                 self.assertEqual(report["commands"]["dataStorage.legacy"]["status"], "ok")
                 self.assertIn(("-s", SERIAL, "shell", "df", "/data"), adb.calls)
+                self.assertEqual(report["commands"]["dataStorage.statFs"], {"status": "not_run", "reason": "df_query_succeeded"})
+                self.assertFalse(any(call[3:4] == ("stat",) for call in adb.calls))
+
+    def test_stat_fs_parser_matches_real_api30_bytes_and_rejects_ambiguous_or_overflowing_values(self):
+        # Actual API30 E3 stat output from run 42079101858, separately from df's
+        # /storage/emulated/0/Android/obb alias. These are bytes, not KiB.
+        self.assertEqual(probe.stat_fs_summary("4096:1523600:1443191\n"),
+                         {"format": "stat-f", "totalBytes": 6240665600, "availableBytes": 5911310336})
+        self.assertEqual(probe.stat_fs_summary("4096:1:0"),
+                         {"format": "stat-f", "totalBytes": 4096, "availableBytes": 0})
+        self.assertEqual(probe.stat_fs_summary("1:18446744073709551615:0")["totalBytes"], 2**64 - 1)
+        for output in ("", "usage: stat", "stat: /data: Permission denied", "4096:1:0\n4096:1:0",
+                       "4096:1:0\nError: denied", "4096: 1:0", "4096:1:", "4096:1:0:0",
+                       "0:1:0", "4096:0:0", "4096:1:2", "-4096:1:0", "+4096:1:0",
+                       "4096:1.0:0", "４０９６:1:0", "0x1000:1:0", "18446744073709551616:1:0",
+                       "4096:18446744073709551615:0", "1:18446744073709551616:0"):
+            with self.subTest(output=output):
+                self.assertIsNone(probe.stat_fs_summary(output))
+
+    def test_df_alias_stays_invalid_and_uses_only_the_exact_data_stat_fallback(self):
+        for mount in ("/storage/emulated/0/Android/obb", "/cache"):
+            with self.subTest(mount=mount):
+                output = ("Filesystem     1K-blocks   Used Available Use% Mounted on\n"
+                          "/dev/block/vdc   6094400 179800   5772388   4% " + mount + "\n")
+                self.assertIsNone(probe.disk_summary(output))
+                adb = FakeAdb(sdk="30", overrides={
+                    ("df", "-k", "/data"): probe.Result("ok", output, 0),
+                    ("df", "/data"): probe.Result("ok", output, 0),
+                    ("stat", "-f", "-c", "%S:%b:%a", "/data"): probe.Result("ok", "4096:1523600:1443191\n", 0),
+                })
+                report = probe.collect(adb, SERIAL)
+                for label in ("dataStorage", "dataStorage.legacy"):
+                    self.assertEqual(report["commands"][label]["status"], "invalid_output")
+                self.assertEqual(report["commands"]["dataStorage.statFs"], {
+                    "status": "ok", "exitCode": 0,
+                    "summary": {"format": "stat-f", "totalBytes": 6240665600, "availableBytes": 5911310336},
+                })
+                self.assertEqual([call for call in adb.calls if call[3:4] == ("stat",)],
+                                 [("-s", SERIAL, "shell", "stat", "-f", "-c", "%S:%b:%a", "/data")])
+                self.assertNotIn(mount, json.dumps(report))
+                self.assertTrue(report["probeCompleted"])
+
+    def test_failed_stat_fallback_never_invents_capacity_or_persists_raw_errors(self):
+        for result, expected in ((probe.Result("unsupported", "stat: not found SECRET", 127), "unsupported"),
+                                 (probe.Result("command_failed", "Permission denied SECRET", 1), "command_failed"),
+                                 (probe.Result("timeout"), "timeout"),
+                                 (probe.Result("ok", "4096:1:2 SECRET", 0), "invalid_output")):
+            with self.subTest(status=result.status):
+                adb = FakeAdb(overrides={
+                    ("df", "-k", "/data"): probe.Result("unsupported", "df unavailable", 1),
+                    ("df", "/data"): probe.Result("ok", "unrecognized df output", 0),
+                    ("stat", "-f", "-c", "%S:%b:%a", "/data"): result,
+                })
+                report = probe.collect(adb, SERIAL)
+                entry = report["commands"]["dataStorage.statFs"]
+                self.assertEqual(entry["status"], expected)
+                self.assertNotIn("summary", entry)
+                self.assertNotIn("SECRET", json.dumps(report))
+                if expected == "timeout":
+                    self.assertFalse(report["probeCompleted"])
 
     def test_home_candidates_are_not_default_home_and_resolver_is_not_resolved(self):
         component = "com.vendor.home/.Home"

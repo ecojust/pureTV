@@ -216,6 +216,7 @@ class FakePrivilegeCommands:
     def __init__(self, before=0, after=2000, qemu="1", unroot_exit=0):
         self.before, self.after, self.qemu, self.unroot_exit = before, after, qemu, unroot_exit
         self.commands = []
+        self.command_names = []
         self.now = 0
         self.deadline = 100
 
@@ -225,6 +226,7 @@ class FakePrivilegeCommands:
     def command(self, name, args, **kwargs):
         self.now += 0.05
         self.commands.append(args)
+        self.command_names.append(name)
         if args[-1] == "unroot":
             return self.unroot_exit, "restarting adbd as non root\n"
         if args[-1] == "id":
@@ -242,8 +244,9 @@ class FakePrivilegeCommands:
 class EmulatorPrivilegeReduction(unittest.TestCase):
     BOOT = {"ro.kernel.qemu": "1", "ro.build.version.sdk": "23", "sys.boot_completed": "1"}
 
-    def prepare(self, fake, boot=None):
-        report = {}
+    def prepare(self, fake, boot=None, report=None):
+        if report is None:
+            report = {}
         with mock.patch.object(runner.time, "monotonic", side_effect=lambda: fake.now), \
                 mock.patch.object(runner.time, "sleep", side_effect=fake.sleep):
             runner.prepare_emulator_privilege(fake, Path("fake-adb"), 23, self.BOOT if boot is None else boot, report)
@@ -261,6 +264,10 @@ class EmulatorPrivilegeReduction(unittest.TestCase):
         self.assertTrue(report["ordinaryAdbShellVerified"])
         self.assertTrue(report["identityReverifiedAfterUnroot"])
         self.assertIsNone(report["limitation"])
+        self.assertEqual(report["unrootCommand"]["exitCode"], 0)
+        self.assertEqual(report["firstRecheck"]["unroot-sdk"]["output"], "23\n")
+        self.assertEqual(report["lastRecheck"]["unroot-shell-identity"]["output"], "uid=2000 gid=2000\n")
+        self.assertNotIn("finalRecheck", report)
 
     def test_existing_shell_uid_does_not_change_daemon_privilege(self):
         fake = FakePrivilegeCommands(before=2000)
@@ -315,7 +322,7 @@ class EmulatorPrivilegeReduction(unittest.TestCase):
 
             def command(self, name, args, **kwargs):
                 result = super().command(name, args, **kwargs)
-                if name == "unroot-qemu":
+                if name in ("unroot-qemu", "unroot-final-qemu"):
                     self.checks += 1
                     if self.checks > 1:
                         return 1, "device offline"
@@ -326,6 +333,78 @@ class EmulatorPrivilegeReduction(unittest.TestCase):
             self.prepare(fake)
         self.assertGreater(fake.checks, 1)
         self.assertLessEqual(fake.now, 31)
+
+    def test_privilege_diagnostics_are_bounded_without_changing_assertions(self):
+        class VerboseUnroot(FakePrivilegeCommands):
+            def command(self, name, args, **kwargs):
+                result = super().command(name, args, **kwargs)
+                return (0, "x" * 5000) if name == "emulator-unroot" else result
+
+        report = self.prepare(VerboseUnroot())
+        self.assertEqual(len(report["unrootCommand"]["output"]), 1024)
+        self.assertTrue(report["unrootCommand"]["outputTruncated"])
+        self.assertTrue(report["ordinaryAdbShellVerified"])
+
+    def test_partial_poll_budget_gets_a_fresh_complete_root_snapshot(self):
+        class SlowQueries(FakePrivilegeCommands):
+            def command(self, name, args, **kwargs):
+                self.now += 0.05
+                return super().command(name, args, **kwargs)
+
+        report = self.prepare(SlowQueries(after=0))
+        self.assertIn("budget_exhausted", report["lastRecheck"]["failure"])
+        self.assertTrue(report["firstRecheck"]["identityVerified"])
+        self.assertTrue(report["finalRecheck"]["identityVerified"])
+        self.assertEqual(report["after"]["shellUid"], 0)
+        self.assertFalse(report["ordinaryAdbShellVerified"])
+        self.assertIsNotNone(report["limitation"])
+
+    def test_final_changed_sdk_rejects_prior_verified_root(self):
+        class ChangedSdk(FakePrivilegeCommands):
+            def command(self, name, args, **kwargs):
+                result = super().command(name, args, **kwargs)
+                return (0, "30\n") if name == "unroot-final-sdk" else result
+
+        report = {}
+        with self.assertRaisesRegex(runner.EmulatorFailure, "identity changed"):
+            self.prepare(ChangedSdk(after=0), report=report)
+        self.assertFalse(report["identityReverifiedAfterUnroot"])
+        self.assertIsNone(report["after"]["shellUid"])
+
+    def test_final_id_nonzero_cannot_reuse_prior_root(self):
+        class FailedId(FakePrivilegeCommands):
+            def command(self, name, args, **kwargs):
+                result = super().command(name, args, **kwargs)
+                return (1, "uid=2000 gid=2000") if name == "unroot-final-shell-identity" else result
+
+        report = {}
+        with self.assertRaisesRegex(runner.Failure, "could not be reverified"):
+            self.prepare(FailedId(after=0), report=report)
+        self.assertFalse(report["finalRecheck"]["identityVerified"])
+        self.assertIsNone(report["after"]["shellUid"])
+
+    def test_final_timeout_cannot_reuse_prior_root(self):
+        class Timeout(FakePrivilegeCommands):
+            def command(self, name, args, **kwargs):
+                if name == "unroot-final-qemu":
+                    self.now += kwargs["timeout"]
+                    raise runner.Failure("simulated timeout")
+                return super().command(name, args, **kwargs)
+
+        fake, report = Timeout(after=0), {}
+        with self.assertRaisesRegex(runner.Failure, "could not be reverified"):
+            self.prepare(fake, report=report)
+        self.assertEqual(report["finalRecheck"]["failure"], "simulated timeout")
+        self.assertIsNone(report["after"]["shellUid"])
+        self.assertLessEqual(fake.now, 46)
+
+    def test_final_verification_cannot_extend_overall_budget(self):
+        fake, report = FakePrivilegeCommands(after=0), {}
+        fake.deadline = 0.2
+        with self.assertRaisesRegex(runner.Failure, "could not be reverified"):
+            self.prepare(fake, report=report)
+        self.assertIn("budget exhausted", report["finalRecheck"]["failure"])
+        self.assertFalse(any(name.startswith("unroot-final-") for name in fake.command_names))
 
 
 if __name__ == "__main__":
