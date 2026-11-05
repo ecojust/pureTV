@@ -1276,8 +1276,6 @@
   "这些是电脑端操作，不依赖电视 Android 版本。连接前清理不是一条电视 shell 命令，也会中断其他 ADB 连接；未能确认并清理进程时不会继续连接。": "These run on the computer and do not depend on the TV Android version. Preconnection cleanup is not a TV shell command and also interrupts other ADB connections. Connection stops if process identification or cleanup fails.",
   "确认 Android 用户": "Verify the Android user",
   "读取当前用户": "Read the current user",
-  "依次尝试当前用户命令。若均不可用，读取 SDK；仅 SDK 19 使用 Android 4.4 的活动管理器输出，严格解析 mUserLru 列表的最后一项。U 必须来自实际查询。": "Try the current-user commands in order. If neither is available, read the SDK. Only SDK 19 uses the Android 4.4 activity-manager output, strictly parsing the last item of mUserLru. U must come from a real query.",
-  "原生 Android 4.4 不支持前两条用户命令，使用 SDK 19 专用回退。其他系统不套用此列表规则；输出为空、非法或无法确认时停止应用操作，不默认使用用户 0。": "Stock Android 4.4 does not support the first two user commands and uses the SDK 19 fallback. Other systems do not reuse that list rule. Empty, invalid or unverified output stops app operations; user 0 is never assumed.",
   "型号、系统版本与 CPU": "Model, system version and CPU",
   "读取型号、Android 版本，以及制造商、品牌、SDK、安全补丁和 CPU 属性。缺少新属性时尝试旧 CPU 属性；全局只读信息不依赖用户查询成功。": "Read model, Android version, manufacturer, brand, SDK, security patch and CPU properties. Older CPU properties are used when newer ones are absent. Global read-only information does not require successful user discovery.",
   "原生 Android 4.4 支持 getprop，但不一定提供安全补丁或新 CPU 属性。缺失字段显示未知，不由版本号推测。": "Stock Android 4.4 supports getprop, but may not expose security-patch or newer CPU properties. Missing fields remain unknown; they are not inferred from the version.",
@@ -1344,8 +1342,6 @@
   "不执行电视 ADB 命令": "No TV ADB command",
   "结果确认与取消": "Result verification and cancellation",
   "界面与 MCP 共用核心执行逻辑。写入前重新确认设备和用户，写入后复查实际状态；退出码为 0 或收到返回值都不单独等于成功。批量取消会完成当前写入的结果核验，再跳过后续项目。": "The interface and MCP share core execution logic. Reconfirm the device and user before writing and verify actual state afterward. Exit code 0 or a returned response alone does not prove success. Batch cancellation finishes verification of the current write, then skips remaining items.",
-  "安卓 4.4 的支持范围": "Android 4.4 support scope",
-  "本版补上 SDK 19 当前用户与旧 df 查询，恢复设备信息和应用列表读取。原生 4.4 缺少当前管理器需要的 HOME 与部分用户限定修改命令；能连接不代表能安装、卸载或切换桌面。以下逐项列出限制，尚未在这台实体电视上验收。": "This version adds SDK 19 user discovery and legacy df queries to restore device information and app listing. Stock 4.4 lacks the HOME interfaces and some user-scoped mutation commands Manager requires. Connectivity does not imply installation, uninstallation or launcher switching support. Limits are listed below; this has not been validated on this physical TV.",
   "电视的调试地址及已确认设备序列号。SERIAL 来自 adb devices -l，网络设备通常为 IP:PORT。": "The TV debugging address and verified device serial. SERIAL comes from adb devices -l; network devices usually use IP:PORT.",
   "实际读取的当前 Android 用户 ID，不是电脑用户名，也不固定为 0。": "The queried current Android user ID, not the computer account and not always 0.",
   "应用包名，以及已查询到的 HOME 组件。COMPONENT 使用包名与 Activity 类名，中间用斜线分隔。": "The app package and a discovered HOME component. COMPONENT is the package and Activity class separated by a slash.",
@@ -1353,5 +1349,9 @@
   "兼容启动器的 content://PACKAGE.layout 地址，以及合法布局 JSON 的 UTF-8 Base64 编码。": "A compatible launcher’s content://PACKAGE.layout address and the UTF-8 Base64 encoding of valid layout JSON.",
   "查看每项操作的 ADB 命令、参数与 Android 兼容性": "Review each operation’s ADB commands, parameters and Android compatibility",
   "本地命令说明": "Local command reference",
-  "命令与兼容性说明": "commands and compatibility reference"
+  "命令与兼容性说明": "commands and compatibility reference",
+  "依次尝试当前用户命令。若均不可用，读取 SDK；仅 SDK 19、21、22、23 使用已核实的旧版活动管理器输出，严格解析 mUserLru 列表的最后一项。U 必须来自实际查询。": "Try the current-user commands in order. If neither is available, read the SDK. Only SDK 19, 21, 22 and 23 use verified legacy activity-manager output, strictly parsing the last item of mUserLru. U must come from a real query.",
+  "原生 Android 4.4、5.0、5.1、6.0 不支持前两条用户命令，使用对应 SDK 的专用回退。其他系统不套用此列表规则；输出为空、非法或无法确认时停止应用操作，不默认使用用户 0。": "Stock Android 4.4, 5.0, 5.1 and 6.0 do not support the first two user commands and use the fallback for their SDK. Other systems do not reuse that list rule. Empty, invalid or unverified output stops app operations; user 0 is never assumed.",
+  "旧版 Android 的支持范围": "Legacy Android support scope",
+  "旧版 Android 4.4、5.0、5.1、6.0 使用专用当前用户查询回退，旧版 df 也有兼容读取。旧系统仍可能缺少 HOME 与部分用户限定修改命令；能连接不代表能安装、卸载或切换桌面。仓库启动器要求 Android 8 以上，其他 APK 需分别核对最低系统版本。品牌和固件的实机兼容性仍需逐项验证。": "Android 4.4, 5.0, 5.1 and 6.0 use a dedicated current-user fallback, with legacy df reading also supported. Older systems may lack HOME interfaces and some user-scoped mutation commands; connectivity does not imply installation, uninstallation or launcher switching support. Repository launchers require Android 8 or later; check the minimum version of other APKs separately. Compatibility still needs validation on each brand and firmware."
 }

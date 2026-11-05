@@ -7,7 +7,7 @@
 | 网络连接 | `adb connect IP:PORT` |
 | 配对式无线调试 | `adb pair IP:PAIR_PORT`（交互传入配对码），随后 `adb connect IP:DEBUG_PORT` |
 | 检查授权／在线状态 | `adb devices -l` |
-| 当前用户 | 优先 `adb -s SERIAL shell am get-current-user`，再尝试 `cmd activity get-current-user`；仅 SDK 19 可回退到 `dumpsys activity processes` 的 `mUserLru`，见下文 |
+| 当前用户 | 优先 `adb -s SERIAL shell am get-current-user`，再尝试 `cmd activity get-current-user`；仅 SDK 19/21/22/23 可回退到 `dumpsys activity processes` 的 `mUserLru`，见下文 |
 | 已安装应用 | `adb -s SERIAL shell pm list packages --user U` |
 | 系统应用／已停用应用 | 在以上查询中分别加 `-s`、`-d` |
 | 停用／启用 | `adb -s SERIAL shell pm disable-user --user U PACKAGE` / `pm enable --user U PACKAGE` |
@@ -32,7 +32,7 @@
 
 0.5.2 修复连接后 `am get-current-user` 输出 usage 并中断全部读取的问题。只读型号、系统版本、内存、CPU、分辨率和容量查询不再依赖当前用户识别；应用扫描和修改仍核实用户身份。
 
-KitKat 没有 `am get-current-user` 或现代 `cmd activity`。AOSP 的 `dumpsys activity processes` 输出 `mUserLru: [0, 10]`；源码明确最后一项是当前用户，并在切换用户的同一锁内更新。客户端仅在实时读取的 SDK 严格为 19 时使用该路径，拒绝空、重复、非法及越界字段，不从正在运行的用户或前台应用推测身份，也不默认用户 0。每次修改仍重新核实用户；取消与同用户保护继续生效。
+KitKat 没有 `am get-current-user` 或现代 `cmd activity`。AOSP 的 `dumpsys activity processes` 输出 `mUserLru: [0, 10]`；源码明确最后一项是当前用户，并在切换用户的同一锁内更新。当前源码仅在实时读取的 SDK 严格为 19、21、22、23 时使用该路径（0.5.2 发布版仅支持 19；5.x/6.0 的源码证据见 [版本能力矩阵](android-command-compatibility.md)），拒绝空、重复、非法及越界字段，不从正在运行的用户或前台应用推测身份，也不默认用户 0。每次修改仍重新核实用户；取消与同用户保护继续生效。
 
 KitKat 的 `df` 将 `-k` 当作路径，因此容量查询在现代格式不可用时回退 `df /data`，解析明确的 `Size Used Free Blksize` 表头及 K/M/G 二进制单位。数值来自工具已舍入到一位小数的显示值，精度受系统输出限制。
 

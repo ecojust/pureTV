@@ -92,9 +92,15 @@ pub(crate) fn components(output: &str) -> Vec<String> {
     values.into_iter().collect()
 }
 pub(crate) fn default_home(output: &str) -> Option<String> {
-    components(output)
-        .into_iter()
-        .find(|value| !value.contains("ResolverActivity") && !value.contains("ChooserActivity"))
+    // A resolve result must identify one HOME. Picking the first candidate
+    // could mark another active launcher as safe to disable or uninstall.
+    let values = components(output);
+    if values.len() != 1 {
+        return None;
+    }
+    values.into_iter().next().filter(|value| {
+        !value.contains("ResolverActivity") && !value.contains("ChooserActivity")
+    })
 }
 pub(crate) fn devices(output: &str) -> Vec<(String, String)> {
     output
@@ -215,6 +221,20 @@ pub(crate) fn apk_size(output: &str, expected: usize) -> Option<u64> {
 #[cfg(test)]
 mod size_tests {
     use super::*;
+    #[test]
+    fn default_home_requires_one_unambiguous_non_resolver_component() {
+        assert_eq!(default_home("com.vendor.home/.Home\n"), Some("com.vendor.home/com.vendor.home.Home".into()));
+        assert_eq!(default_home("com.vendor.home/.Home\ncom.vendor.home/com.vendor.home.Home\n"), Some("com.vendor.home/com.vendor.home.Home".into()));
+        for output in [
+            "", "No activity found", "android/com.android.internal.app.ResolverActivity",
+            "com.vendor.home/.Home\ncom.other.home/.Home\n",
+            "android/com.android.internal.app.ResolverActivity\ncom.vendor.home/.Home\n",
+            "android/com.android.internal.app.ChooserActivity\ncom.vendor.home/.Home\n",
+        ] {
+            assert_eq!(default_home(output), None, "{output}");
+        }
+    }
+
     #[test]
     fn apk_sizes_include_splits_and_reject_untrusted_or_incomplete_output() {
         assert_eq!(apk_paths("package:/data/app/~~a+b==/example/base.apk\npackage:/data/app/~~a+b==/example/split.apk").unwrap().len(),2);

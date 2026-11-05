@@ -103,6 +103,8 @@ jobs:
         run: npm run build
       - name: Test subnet comparison
         run: npm run test:network
+      - name: Test read-only TV compatibility probe
+        run: python -m unittest discover -s tests -p 'test_probe_tv_compatibility.py' -v
       - name: Test ADB core
         run: cargo test --locked --manifest-path core/Cargo.toml 2>&1 | tee "$RUNNER_TEMP/puretv-core-tests.log"
       - name: Test Platform Tools installer

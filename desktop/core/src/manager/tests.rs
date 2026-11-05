@@ -2,6 +2,9 @@ use super::*;
 use std::collections::BTreeMap;
 use std::sync::Mutex;
 
+#[path = "compatibility_tests.rs"]
+mod compatibility;
+
 #[derive(Default)]
 struct FakeTv {
     installed: BTreeSet<String>,
@@ -1207,8 +1210,8 @@ fn modern_activity_command_can_identify_user_when_am_only_prints_usage() {
 }
 
 #[test]
-fn lru_user_fallback_requires_verified_kitkat_sdk() {
-    for sdk in ["18", "20", "23", "33", "", "19 trailing", "-1"] {
+fn lru_user_fallback_requires_verified_supported_legacy_sdk() {
+    for sdk in ["18", "20", "24", "25", "26", "36", "37", "", "unknown", "19 trailing", "23 trailing", "-1"] {
         let (mut manager, tv) = fixture();
         {
             let mut tv = tv.lock().unwrap();
@@ -1381,6 +1384,8 @@ fn other_package_manager_install_rejections_keep_their_specific_reason() {
     for reason in [
         "INSTALL_FAILED_VERSION_DOWNGRADE: Downgrade detected",
         "INSTALL_PARSE_FAILED_NO_CERTIFICATES: Failed to collect certificates",
+        "INSTALL_FAILED_OLDER_SDK: Requires newer sdk version #26 (current version is #19)",
+        "INSTALL_FAILED_NO_MATCHING_ABIS: Failed to extract native libraries, res=-113",
     ] {
         let (mut manager, tv) = fixture();
         connect(&mut manager);
@@ -1397,6 +1402,15 @@ fn other_package_manager_install_rejections_keep_their_specific_reason() {
             state.install_results[0].message,
             format!("安装失败：{reason}")
         );
+        assert_eq!(state.install_results[0].path, path.to_string_lossy());
+        assert!(path.is_file(), "A rejected APK must remain available for the caller's queue");
+        assert!(!state.history[0].success);
+        let tv = tv.lock().unwrap();
+        assert!(!tv.installed.contains("com.imported.app"));
+        assert_eq!(tv.calls.iter().filter(|call| call.get(2).is_some_and(|arg| arg == "install")).count(), 1);
+        assert!(!tv.calls.iter().any(|call| call.iter().any(|arg| arg == "uninstall")));
+        assert!(!tv.calls.iter().filter(|call| call.get(2).is_some_and(|arg| arg == "install"))
+            .any(|call| call.iter().any(|arg| arg == "-d")));
     }
 }
 

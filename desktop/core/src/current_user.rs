@@ -10,10 +10,12 @@ fn user_id(value: &str) -> Option<u32> {
     value.parse::<u32>().ok().filter(|id| *id <= i32::MAX as u32)
 }
 
-/// Android 4.4 AMS documents mUserLru as current-user history with the current
-/// user at the end. Use only for SDK 19, never as a generic Android heuristic.
+/// AOSP 4.4, 5.0, 5.1 and 6.0 AMS keep the current user at the end of
+/// mUserLru, including after a background user starts. Use only for verified
+/// SDKs 19/21/22/23, never as a generic Android heuristic.
+/// Version evidence: desktop/docs/android-command-compatibility.md.
 /// https://github.com/aosp-mirror/platform_frameworks_base/blob/android-4.4_r1/services/java/com/android/server/am/ActivityManagerService.java#L557
-fn kitkat_current_user(output: &str) -> Option<u32> {
+fn legacy_current_user(output: &str) -> Option<u32> {
     let mut fields = output.lines().map(str::trim).filter_map(|line| {
         line.strip_prefix("mUserLru:").map(str::trim)
     });
@@ -59,11 +61,11 @@ impl Manager {
             }
         }
         let sdk = self.user_probe(serial, &["getprop", "ro.build.version.sdk"])?;
-        if sdk.as_deref().map(str::trim) == Some("19") {
+        if matches!(sdk.as_deref().map(str::trim), Some("19" | "21" | "22" | "23")) {
             if let Some(id) = self
                 .user_probe(serial, &["dumpsys", "activity", "processes"])?
                 .as_deref()
-                .and_then(kitkat_current_user)
+                .and_then(legacy_current_user)
             {
                 return Ok(id);
             }
@@ -86,16 +88,16 @@ mod tests {
     }
 
     #[test]
-    fn kitkat_user_history_identifies_the_current_user_without_guessing() {
-        assert_eq!(kitkat_current_user("ACTIVITY MANAGER RUNNING PROCESSES\n  mUserLru: [0, 10]\n"), Some(10));
-        assert_eq!(kitkat_current_user("  mUserLru: [10, 0]\n"), Some(0));
+    fn legacy_user_history_identifies_the_current_user_without_guessing() {
+        assert_eq!(legacy_current_user("ACTIVITY MANAGER RUNNING PROCESSES\n  mUserLru: [0, 10]\n"), Some(10));
+        assert_eq!(legacy_current_user("  mUserLru: [10, 0]\n"), Some(0));
         for invalid in [
             "", "Users: UserInfo{0:Owner:13} running", "mResumedActivity: ActivityRecord{a u0 pkg/.Home}",
             "mUserLru: []", "mUserLru: [0,]", "mUserLru: [-1]", "mUserLru: [+0]",
             "mUserLru: [0, 0]", "mUserLru: [2147483648]", "mUserLru: [0] trailing",
             "mUserLru: [0]\nmUserLru: [0]", "mUserLru: [0]\nmUserLru: [10]",
         ] {
-            assert_eq!(kitkat_current_user(invalid), None, "{invalid}");
+            assert_eq!(legacy_current_user(invalid), None, "{invalid}");
         }
     }
 }

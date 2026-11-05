@@ -52,14 +52,14 @@ const sections:CommandSection[] = [
       {
         "id": "current-user",
         "title": "读取当前用户",
-        "purpose": "依次尝试当前用户命令。若均不可用，读取 SDK；仅 SDK 19 使用 Android 4.4 的活动管理器输出，严格解析 mUserLru 列表的最后一项。U 必须来自实际查询。",
+        "purpose": "依次尝试当前用户命令。若均不可用，读取 SDK；仅 SDK 19、21、22、23 使用已核实的旧版活动管理器输出，严格解析 mUserLru 列表的最后一项。U 必须来自实际查询。",
         "commands": [
           "adb -s SERIAL shell am get-current-user",
           "adb -s SERIAL shell cmd activity get-current-user",
           "adb -s SERIAL shell getprop ro.build.version.sdk",
           "adb -s SERIAL shell dumpsys activity processes"
         ],
-        "compatibility": "原生 Android 4.4 不支持前两条用户命令，使用 SDK 19 专用回退。其他系统不套用此列表规则；输出为空、非法或无法确认时停止应用操作，不默认使用用户 0。",
+        "compatibility": "原生 Android 4.4、5.0、5.1、6.0 不支持前两条用户命令，使用对应 SDK 的专用回退。其他系统不套用此列表规则；输出为空、非法或无法确认时停止应用操作，不默认使用用户 0。",
         "kind": "read"
       }
     ]
@@ -293,8 +293,8 @@ const labels = {
   "noCommand": "不执行电视 ADB 命令",
   "boundaries": "结果确认与取消",
   "verification": "界面与 MCP 共用核心执行逻辑。写入前重新确认设备和用户，写入后复查实际状态；退出码为 0 或收到返回值都不单独等于成功。批量取消会完成当前写入的结果核验，再跳过后续项目。",
-  "kitkatTitle": "安卓 4.4 的支持范围",
-  "kitkat": "本版补上 SDK 19 当前用户与旧 df 查询，恢复设备信息和应用列表读取。原生 4.4 缺少当前管理器需要的 HOME 与部分用户限定修改命令；能连接不代表能安装、卸载或切换桌面。以下逐项列出限制，尚未在这台实体电视上验收。"
+  "kitkatTitle": "旧版 Android 的支持范围",
+  "kitkat": "旧版 Android 4.4、5.0、5.1、6.0 使用专用当前用户查询回退，旧版 df 也有兼容读取。旧系统仍可能缺少 HOME 与部分用户限定修改命令；能连接不代表能安装、卸载或切换桌面。仓库启动器要求 Android 8 以上，其他 APK 需分别核对最低系统版本。品牌和固件的实机兼容性仍需逐项验证。"
 };
 const variables = [
   [
