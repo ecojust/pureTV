@@ -3,8 +3,8 @@
   "status": "blocked",
   "baselineRelease": "desktop-v0.5.2",
   "baselineReleaseSource": "12fb632ac101e877ae7db8c89a8037ec2248a049",
-  "newReleasePublished": false,
-  "publishedBinariesContainTheseChanges": false,
+  "newReleasePublished": true,
+  "publishedBinariesContainTheseChanges": true,
   "initialSourceCommit": "8150034840dfaa378c6b4bb9d76b99bdb0122840",
   "sourceCommit": "ae60c0af9af1177c6a65cc0348e32a22348a2eeb",
   "harnessCommit": "ae60c0af9af1177c6a65cc0348e32a22348a2eeb",
@@ -3067,7 +3067,7 @@
     }
   ],
   "knownLimits": [
-    "Published 0.5.2 only has the SDK19 fallback. New source adds 21/22/23, not a new release.",
+    "Release 0.5.2 only has the SDK19 fallback. Release 0.5.3 includes the added 21/22/23 fallback; physical-device validation is still outstanding.",
     "Stock API19/21/22/23 lacks the modern HOME interfaces required for safe disable/uninstall/launcher selection.",
     "Repository launcher APKs have minSdk26 and are not valid install-success samples for API23.",
     "A successful read-only probe cannot certify writes, remote-control operation or full OEM compatibility.",
@@ -3213,5 +3213,20 @@
   "codeAndAutomatedValidationCompleted": true,
   "blockingReasons": [
     "No accessible physical televisions. All reported targets still need exact device/firmware identification and E4 functional checks; separate reported targets do not establish the number of distinct physical devices."
-  ]
+  ],
+  "releaseStateAtValidation": {
+    "newReleasePublished": false,
+    "publishedBinariesContainTheseChanges": false,
+    "note": "Original compatibility testing preceded the 0.5.3 release. Original test sources, runs, counts and E3/E4 boundaries are unchanged."
+  },
+  "releaseFollowup": {
+    "version": "0.5.3",
+    "tag": "desktop-v0.5.3",
+    "sourceCommit": "4d74296a50bc864ec777f8632da47dba3322486d",
+    "workflowId": 42133344048,
+    "publishedAt": "2026-11-06T00:11:01Z",
+    "url": "https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.3",
+    "validationReport": "release-0.5.3-validation.json",
+    "physicalTvTested": false
+  }
 }

@@ -4,6 +4,8 @@
 
 下载：[0.5.3 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.3)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
+四平台正式检查与公开下载校验见[0.5.3验证记录](docs/release-0.5.3-validation.md)。
+
 0.5.3 将旧系统当前用户识别回退扩展到 Android 5.0／5.1／6.0（SDK 21／22／23），兼容 Android 4.4 包列表中已核实的非致命 `libdvm.so` 警告，并在 `df` 无法解析容量时直接查询 `/data` 文件系统。默认 HOME 有歧义时仍阻止停用和卸载；离线三语 Info、兼容性清单和只读采集说明同步更新。修改操作仍受系统能力、用户身份和默认 HOME 检查限制，不代表全部电视功能可用。
 
 ## 功能
