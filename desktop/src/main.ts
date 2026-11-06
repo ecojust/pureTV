@@ -24,7 +24,7 @@ const pages: Record<Page, [string, string, string]> = {
   forum: ['论坛', '浏览社区帖子，交流使用体验与反馈', 'forum'],
   install: ['应用管理', '导入本地安装包，安装后可用于启动器排布', 'download'],
   history: ['操作记录', '逐项查看操作结果，确认电视上的实际变化', 'list'],
-  info: ['Info', '查看每项操作的 ADB 命令、参数与 Android 兼容性', 'info'],
+  info: ['兼容性方案', '查看每项操作的 ADB 命令、参数与 Android 兼容性', 'info'],
 };
 let snapshot = emptySnapshot();
 let mcpInfo: api.McpInfo | null = null, mcpError = "";

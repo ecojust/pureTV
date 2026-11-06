@@ -1,0 +1,176 @@
+
+> puretv-desktop@0.5.3 test:ui
+> node tests/ui.mjs
+
+PASS 1: browser preview never pretends to connect
+PASS 2: local computer IPs are labeled independently from TV, refresh before ADB, and stay on home
+PASS 3: missing local network addresses are explicit and never replaced with sample data
+PASS 4: language and skins switch at runtime without translating app data
+PASS 5: English diagnostics translate formatted counts and retain package data
+PASS 6: MCP configuration and agent operations synchronize with the window
+PASS 7: finishing a GUI request does not clear the next agent busy state
+PASS 8: user APK sizes are explicit and missing sizes are not invented
+PASS 9: package info: keyboard icon queries the exact package, shows purpose and risk without changing selection or TV
+PASS 10: package info: protected system apps and current HOME override community low risk
+PASS 11: package info: a user app absent from the source remains unknown rather than safe
+PASS 12: package info: pending lookup is visible and network failure can be retried explicitly
+PASS 13: package info: cached guidance remains available with an explicit stale notice
+PASS 14: package info: an old response cannot replace another package or reopen a closed dialog
+PASS 15: package info: switching the selected TV invalidates pending package guidance
+PASS 16: package info: remote descriptions are rendered as text and long guidance scrolls in a small window
+PASS 17: package info: Chinese, English and Traditional Chinese retain package data and accessible controls
+PASS 18: client update: startup checks once in the background without downloading or opening a modal
+PASS 19: client update: completing a background check preserves the current input and caret
+PASS 20: client update: ordinary browser preview is disabled and demo never downloads or exits
+PASS 21: client update: manual lookup shows the exact platform package and Gitee source before installation
+PASS 22: client update: explicit install pins version and revision and handoff never claims completed installation
+PASS 23: client update: a current device operation blocks install without cancelling or replacing it
+PASS 24: client update: cancelling a held download waits for cleanup and leaves the current client usable
+PASS 25: client update: changed catalog rejection preserves the client and retry requires a fresh selection
+PASS 26: client update: a background network failure stays non-modal and never reports up to date
+PASS 27: client update: missing platform never offers an incorrect package or downgrade
+PASS 28: client update: unsupported platform never offers an incorrect package or downgrade
+PASS 29: client update: older repository version never offers an incorrect package or downgrade
+PASS 30: client update: closing and reopening a pending check reuses it and late results never reopen a closed dialog
+PASS 31: client update: previous installer failure is visible and untrusted diagnostic text remains plain text
+PASS 32: client update: localized update details stay usable in a compact window and all themes
+PASS 33: all long lists scroll internally while top actions and surrounding content stay fixed
+PASS 34: unsupported launcher has no layout button or screenshot controls
+PASS 35: current launcher opens a global canvas with independent home and apps layouts
+PASS 36: canvas drag reorders cards and cancel never writes to TV
+PASS 37: system information is visible at home and connection controls stay only there
+PASS 38: removed live view and pairing are absent
+PASS 39: launcher APK installs on the same page and sidecar previews remain read-only
+PASS 40: one pending APK installs independently and leaves the other rows
+PASS 41: pending APKs install inside app management and new apps become layout choices
+PASS 42: partial installation removes only successful paths and retains failures
+PASS 43: connecting stays at home and immediately presents system information
+PASS 44: official ADB setup requires explicit license consent and configures automatically
+PASS 45: ADB download failure stays unconfigured and can be retried
+PASS 46: ADB download cancellation retains setup controls and does not show success
+PASS 47: ADB ready status prevents redundant setup and connected TVs prevent switching
+PASS 48: missing ADB offers download while a verified cache is reused offline
+PASS 49: ready ADB can be forcibly re-downloaded with consent and fresh download progress
+PASS 50: failed forced download retains current ADB and allows a retry
+PASS 51: cancelled forced download keeps ready ADB and the original path
+PASS 52: unsupported online setup keeps manual ADB selection available
+PASS 53: installed/enabled/recoverable filters, search and protected components
+PASS 54: cancel confirmation sends no mutation; confirmed disable sends exact target
+PASS 55: external APK picker appends/deduplicates; installs only selected paths after confirmation
+PASS 56: launcher selection and original HOME recovery
+PASS 57: failed mutation shows error and retains actual package state
+PASS 58: partial batch failure is not reported as success
+PASS 59: host validation and no browser persistence
+PASS 60: native remembered address prefills without connecting and failures retain edits with localized guidance
+PASS 61: different subnets warn before connecting and cancellation sends no ADB request
+PASS 62: a matching second adapter or a wider subnet connects without a warning
+PASS 63: unavailable subnet information does not prevent an otherwise valid connection
+PASS 64: selecting a layout tile reveals its real app independently of its custom name and icon
+PASS 65: scene JSON positions every control and tile, supports geometry, visibility, background and drag
+PASS 66: v4 uses editable users and immutable system nodes with a top toolbar and raw JSON viewer
+PASS 67: v4 marquee selects only user blocks and batch alignment/distribution changes only their frames
+PASS 68: v4 backgrounds are independent and never tile on hover; navigation comes from JSON
+PASS 69: top toolbar adds a v4 app block without modern UUID APIs and preserves its package action
+PASS 70: layout validation: MossTV reopens with the current generated layout instead of a stale closed draft
+PASS 71: layout validation: preflight discovers externally installed CCTV Live and preserves the edited MossTV draft
+PASS 72: layout validation: an unrelated hidden Apps entry identifies its package and can be removed before applying CCTV Live
+PASS 73: layout validation: refreshed provider choices never admit system disabled uninstalled or non-launchable entries
+PASS 74: layout validation: a failed refresh cannot confirm or apply a cached CCTV Live draft
+PASS 75: layout validation: explicit refresh updates application choices without replacing an edited MossTV draft
+PASS 76: layout validation: changing the television user or launcher during confirmation prevents every layout write
+PASS 77: layout preflight: checking is modal before the first read and continues through snapshot reconciliation
+PASS 78: layout preflight: cancelling a slow check keeps edits and never opens confirmation or writes
+PASS 79: layout preflight: failed layout or snapshot reads show an error and preserve the draft for retry
+PASS 80: saved app logo: adding a block uses sanitized downloaded SVG and applies it to the TV
+PASS 81: saved app logo: selection and refresh preserve edits; changing action resets the name logo and white text
+PASS 82: saved app logo: unsafe artwork falls back and changing action clears an abandoned invalid icon draft
+PASS 83: saved app logo: long and empty names remain valid when adding and changing an application
+PASS 84: SVG icon: the supplied CCTV artwork strips accessibility metadata and preserves every drawing command
+PASS 85: SVG icon: pasting and immediately applying does not consume the first click
+PASS 86: SVG icon: invalid input survives page changes and blocks apply until explicitly discarded
+PASS 87: SVG icon: an invalid icon alone preserves its application identity during a catalogue refresh
+PASS 88: SVG icon: unsupported drawing features and active content are rejected without changing the last valid artwork
+PASS 89: SVG icon: a valid small icon cannot silently bypass the total layout size limit
+PASS 90: layout switch: visibility keeps a circular thumb in every theme without changing ordinary checkboxes
+PASS 91: feedback: applying v5 layout blocks the whole window and returns to the saved editor
+PASS 92: feedback: a failed layout write preserves the draft and a retry can succeed
+PASS 93: feedback: an unverified layout response never reports success or discards the edited draft
+PASS 94: feedback: installing one app shows English loading and success without removing other APKs
+PASS 95: feedback: mixed installation reports failures and skipped files in English without claiming success
+PASS 96: feedback: cancellation keeps skipped APKs and never reports all files installed
+PASS 97: feedback: missing installation results are incomplete even without a local cancel request
+PASS 98: feedback: an install exception cannot consume stale success results from an earlier operation
+PASS 99: feedback: launcher install and activation each show progress and a persistent success result
+PASS 100: feedback: a rejected launcher switch reports failure and retains the active launcher
+PASS 101: feedback: ADB download progress preserves keyboard focus on its cancel control
+PASS 102: feedback: a user-cancelled scan reports cancellation instead of failure
+PASS 103: feedback: a concurrent agent event cannot replace a failed local operation result
+PASS 104: feedback: dismissing a result stays closed across immediate renders and cannot clear the next operation
+PASS 105: feedback: explicit scans show results while navigation and automatic reads stay silent
+PASS 106: v5 has independent SVG and text colors, transparent systems and compact read-only baseline
+PASS 107: Nova v5 keeps its background and geometry and applies user edits to the current Nova desktop
+PASS 108: aster v5 collection layout renders both pages and preserves system components on apply
+PASS 109: sol v5 collection layout renders both pages and preserves system components on apply
+PASS 110: moss v5 collection layout renders both pages and preserves system components on apply
+PASS 111: forma v5 collection layout renders both pages and preserves system components on apply
+PASS 112: mono v5 collection layout renders both pages and preserves system components on apply
+PASS 113: drift v5 collection layout renders both pages and preserves system components on apply
+PASS 114: circuit v5 collection layout renders both pages and preserves system components on apply
+PASS 115: pixel v5 collection layout renders both pages and preserves system components on apply
+PASS 116: launcher cards read every Home and ignore old local covers without any cover controls or writes
+PASS 117: Home image removal and reset update cards; only editor apply and reset write layouts
+PASS 118: list entry and scan refresh inactive Home backgrounds without activating the desktop
+PASS 119: a HOME switched on the television reconciles the snapshot before rendering its layout
+PASS 120: MCP layout changes refresh cards once and background results never create a read loop
+PASS 121: temporary provider failure preserves confirmed Home but invalid or unsupported layouts clear cached previews
+PASS 122: background responses are scoped to the device and Android user during in-flight reads
+PASS 123: pending APK cards use embedded Home image or color before sidecar fallback
+PASS 124: documented v5 file and Home/Apps previews use identical configuration
+PASS 125: scan disables competing actions and exposes cancellation
+PASS 126: device and application metadata render as text
+PASS 127: market media and game tabs isolate search and grouped counts while preserving versions and the app download queue
+PASS 128: market updates first visit builds a small persistent baseline and only real reentry checks the network
+PASS 129: market updates prioritize new apps and numeric upgrades throughout one visit without changing selected APKs
+PASS 130: market updates distinguish equal names in different folders filename stems and categories
+PASS 131: market updates ignore old-version backfills and same-version blob or cover changes
+PASS 132: market updates keep the baseline on stale catalogs failures and failed refreshes
+PASS 133: market updates do not consume results that arrive after leaving the market
+PASS 134: market updates check the current visit after leaving and reentering during an earlier request
+PASS 135: market updates cancellation leaves the stored baseline available for a later retry
+PASS 136: market updates do not consume background MCP catalog results before a visible visit
+PASS 137: market updates preserve unread changes when saving the local baseline fails
+PASS 138: market versions group each app separately and offer the latest five in numeric order
+PASS 139: market versions switch metadata and download the selected APK while preserving the choice
+PASS 140: market versions install the chosen older version after confirming its exact filename
+PASS 141: market versions refresh preserves an available selection and falls back when it leaves the latest five
+PASS 142: market discovers categorized APKs without ADB and escapes repository metadata
+PASS 143: market offline download uses displayed revision and joins the pending app list once
+PASS 144: market launcher download carries APK Home background into the launcher queue
+PASS 145: market installation reports completion and does not activate a downloaded launcher
+PASS 146: market installation failure explains signature migration and keeps the APK zh-CN
+PASS 147: market installation failure explains signature migration and keeps the APK zh-TW
+PASS 148: market installation failure explains signature migration and keeps the APK en
+PASS 149: market cancellation and failed verification never add a partial APK
+PASS 150: market refresh replaces a stale catalog and preserves localized controls
+PASS 151: market initial network failure shows an empty error state and can be retried
+PASS 152: market long catalogs scroll internally in compact windows and all themes
+PASS 153: market updates preserve scroll within a visit and show new cards at the top after reentry
+PASS 154: market MCP results synchronize catalog and download/install queues with the window
+PASS 155: market install confirmation rejects a changed television or Android user
+PASS 156: market pending queues follow verified generic MCP installs and ignore failed or older results
+PASS 157: forum: navigation follows APK Market and browsing never requires ADB or reserves device operations
+PASS 158: forum: network failure remains distinct from an empty repository and can be retried
+PASS 159: forum: stale posts remain readable and composer/reply opener failures are reported without claiming success
+PASS 160: forum: demo posts cannot be replied to, while the real Gitee composer remains accessible
+PASS 161: forum: late responses cannot replace a new visit or navigate away from the selected page
+PASS 162: forum: pending or failed pagination preserves the last successful page and allows a retry
+PASS 163: forum: untrusted post data stays text and English/Traditional Chinese work in compact themes
+PASS 164: forum detail: titles open inside Manager, replies paginate, refresh reads fresh data and back keeps the list page
+PASS 165: forum detail: post and reply failures stay separate from empty content and cached data remains explicit
+PASS 166: forum detail: a failed next reply page keeps the successful page and can be retried
+PASS 167: forum detail: responses from a previous post cannot replace another post or reopen a page after leaving
+PASS 168: forum detail: untrusted post and reply text never creates HTML or executable links
+PASS 169: info: offline command reference preserves commands across languages and stays readable in compact themes
+PASS 170: info: browser preview reads the complete reference without requiring the desktop or a television
+PASS 171: independent pages: market, forum, activity and info hide device status and ADB hints while preserving their own errors
+171 UI scenarios passed

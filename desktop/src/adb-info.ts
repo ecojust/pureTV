@@ -261,9 +261,6 @@ const sections:CommandSection[] = [
 const labels = {
   "intro": "本页说明管理器实际使用的命令与回退方式，可离线阅读，不会执行命令。兼容性依据客户端实现与 Android 源码，厂商固件仍可能限制能力。",
   "heading": "命令用法与兼容性",
-  "devices": "兼容性列表",
-  "deviceHint": "根据用户反馈整理，具体功能以电视型号和固件为准。",
-  "reportedCompatible": "用户反馈兼容",
   "nav": "命令说明分组",
   "scroll": "ADB 命令与兼容性说明",
   "variables": "先替换命令中的参数",
@@ -300,12 +297,7 @@ const variables = [
   ]
 ];
 
-const compatibleDevices = [
-  {id: 'hisense-android-9', brand: '海信', androidVersion: 'Android 9'}
-];
-
 export function adbInfoPage():string {
   const card=(entry:CommandEntry):string=>`<article class="info-command" data-info-operation="${entry.id}" aria-labelledby="info-operation-${entry.id}"><div class="info-command-heading"><h3 id="info-operation-${entry.id}">${text(entry.title)}</h3><span class="info-command-kind info-command-kind-${entry.kind}">${text(labels[entry.kind])}</span></div><p>${text(entry.purpose)}</p><pre tabindex="0"><code>${esc(entry.commands.join('\n'))}</code></pre><div class="info-compatibility"><h4>${text(labels.compat)}</h4><p>${text(entry.compatibility)}</p></div></article>`;
-  const compatibilityList=`<section class="info-section info-device-compatibility" id="info-compatibility" tabindex="-1" aria-labelledby="info-heading-compatibility"><h2 id="info-heading-compatibility">${text(labels.devices)}</h2><p>${text(labels.deviceHint)}</p><ul class="info-device-list">${compatibleDevices.map(device=>`<li data-compatibility-device="${device.id}"><div class="info-device-name"><strong>${text(device.brand)}</strong><span>${esc(device.androidVersion)}</span></div><span class="info-device-status">${text(labels.reportedCompatible)}</span></li>`).join('')}</ul></section>`;
-  return `<section class="panel adb-info info-panel" aria-label="${text(labels.scroll)}"><div class="info-toolbar"><h2>${text(labels.heading)}</h2><nav class="info-section-links" aria-label="${text(labels.nav)}"><a href="#info-compatibility">${text(labels.devices)}</a>${sections.map(section=>`<a href="#info-${section.id}">${text(section.title)}</a>`).join('')}</nav></div><div class="info-scroll" data-scroll="info" tabindex="0" aria-label="${text(labels.scroll)}"><p class="info-intro">${text(labels.intro)}</p>${compatibilityList}<aside class="info-kitkat"><h3>${text(labels.kitkatTitle)}</h3><p>${text(labels.kitkat)}</p></aside><section class="info-parameters" aria-labelledby="info-parameters-title"><h3 id="info-parameters-title">${text(labels.variables)}</h3><p>${text(labels.variableHint)}</p><dl>${variables.map(([name,description])=>`<div><dt><code>${esc(name)}</code></dt><dd>${text(description)}</dd></div>`).join('')}</dl></section>${sections.map(section=>`<section class="info-section" id="info-${section.id}" tabindex="-1" aria-labelledby="info-heading-${section.id}"><h2 id="info-heading-${section.id}">${text(section.title)}</h2><div class="info-command-grid">${section.items.map(card).join('')}</div></section>`).join('')}<section class="info-result-note"><h3>${text(labels.boundaries)}</h3><p>${text(labels.verification)}</p></section></div></section>`;
+  return `<section class="panel adb-info info-panel" aria-label="${text(labels.scroll)}"><div class="info-toolbar"><h2>${text(labels.heading)}</h2><nav class="info-section-links" aria-label="${text(labels.nav)}">${sections.map(section=>`<a href="#info-${section.id}">${text(section.title)}</a>`).join('')}</nav></div><div class="info-scroll" data-scroll="info" tabindex="0" aria-label="${text(labels.scroll)}"><p class="info-intro">${text(labels.intro)}</p><aside class="info-kitkat"><h3>${text(labels.kitkatTitle)}</h3><p>${text(labels.kitkat)}</p></aside><section class="info-parameters" aria-labelledby="info-parameters-title"><h3 id="info-parameters-title">${text(labels.variables)}</h3><p>${text(labels.variableHint)}</p><dl>${variables.map(([name,description])=>`<div><dt><code>${esc(name)}</code></dt><dd>${text(description)}</dd></div>`).join('')}</dl></section>${sections.map(section=>`<section class="info-section" id="info-${section.id}" tabindex="-1" aria-labelledby="info-heading-${section.id}"><h2 id="info-heading-${section.id}">${text(section.title)}</h2><div class="info-command-grid">${section.items.map(card).join('')}</div></section>`).join('')}<section class="info-result-note"><h3>${text(labels.boundaries)}</h3><p>${text(labels.verification)}</p></section></div></section>`;
 }

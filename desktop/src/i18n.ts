@@ -6,7 +6,7 @@ export type Theme = 'emerald' | 'ocean' | 'graphite';
 const hasOwn=(object:object,key:PropertyKey)=>Object.prototype.hasOwnProperty.call(object,key);
 const preferenceKey='puretv.preferences';
 const localeNames:Record<Locale,string>={'zh-CN':'简体中文','zh-TW':'繁體中文',en:'English'};
-const themeNames:Record<Theme,string>={emerald:'青绿',ocean:'深蓝',graphite:'石墨'};
+const themeNames:Record<Theme,string>={emerald:'晴空',ocean:'海盐',graphite:'石墨'};
 const catalogs:Record<Exclude<Locale,'zh-CN'>,Record<string,string>>={en:english,'zh-TW':traditional};
 const phrase=/[\u3400-\u9fff][\u3400-\u9fffA-Za-z0-9_ ·／/…（）「」“”、。！？：；，,.%()↗↑↓—–:;+-]*/g;
 let saved:Record<string,unknown>={};
