@@ -71,7 +71,7 @@ public class PlaybackTest {
         @Override protected PlaybackEngine createEngine(SurfaceView surface,PlaybackEngine.Events events){return new FakeEngine(events);}
     }
     @Before public void reset(){repository=new FakeRepository();engines=new ArrayList<>();autoPlay=true;RuntimeEnvironment.getApplication().getSharedPreferences("bilitv-playback",0).edit().clear().commit();}
-    private void open(){Intent intent=new Intent(RuntimeEnvironment.getApplication(),TestActivity.class).putExtra("bvid",BV).putExtra("cid",123L).putExtra("title","演示视频");controller=Robolectric.buildActivity(TestActivity.class,intent).create().start().resume().visible();}
+    private void open(){Intent intent=new Intent(RuntimeEnvironment.getApplication(),TestActivity.class).putExtra("bvid",BV).putExtra("cid",123L).putExtra("title","演示视频");controller=Robolectric.buildActivity(TestActivity.class,intent).create().start().resume().visible().windowFocusChanged(true);}
     private void waitEngines(int count)throws Exception{for(int i=0;i<100&&engines.size()<count;i++){Thread.sleep(10);shadowOf(Looper.getMainLooper()).idle();}assertEquals(count,engines.size());}
     private void close(){if(controller!=null)controller.pause().stop().destroy();}
     @Test public void remoteSeekingAndLifecycleReleaseDecoderAndResumeOnlyLocalPosition()throws Exception{
@@ -103,17 +103,36 @@ public class PlaybackTest {
         Map<String,String> safe=ExoPlaybackEngine.mediaHeaders(source);assertEquals(2,safe.size());assertFalse(safe.containsKey("Cookie"));assertFalse(safe.containsKey("Authorization"));
     }
     private void checkButtons(View view,View root){
-        if(view instanceof Button&&view.getVisibility()==View.VISIBLE){Rect box=new Rect();view.getDrawingRect(box);((ViewGroup)root).offsetDescendantRectToMyCoords(view,box);assertTrue("Control fits compact player: "+((Button)view).getText(),box.left>=0&&box.right<=root.getWidth()&&box.top>=0&&box.bottom<=root.getHeight());}
+        if(view instanceof Button&&view.isShown()){Rect box=new Rect();view.getDrawingRect(box);((ViewGroup)root).offsetDescendantRectToMyCoords(view,box);assertTrue("Control fits compact player: "+((Button)view).getText(),box.left>=0&&box.right<=root.getWidth()&&box.top>=0&&box.bottom<=root.getHeight());}
         if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)checkButtons(((ViewGroup)view).getChildAt(i),root);
+    }
+    private String focusState(View root){
+        View focused=controller.get().getCurrentFocus();
+        return "windowFocus="+root.hasWindowFocus()+", rootShown="+root.isShown()+", root="+root.getWidth()+"x"+root.getHeight()+", focus="+(focused==null?"null":focused.getClass().getSimpleName()+"/shown="+focused.isShown());
+    }
+    private void captureControls(ViewGroup root,String name)throws Exception{
+        String destination=System.getenv("BILIBILI_UI_CAPTURE_DIR");if(destination!=null&&!destination.isEmpty()){File file=new File(destination,name);file.getParentFile().mkdirs();Bitmap bitmap=Bitmap.createBitmap(root.getWidth(),root.getHeight(),Bitmap.Config.ARGB_8888);root.draw(new Canvas(bitmap));try(FileOutputStream out=new FileOutputStream(file)){bitmap.compress(Bitmap.CompressFormat.PNG,100,out);}bitmap.recycle();}
     }
     @Test @Config(sdk=28,qualifiers="en-rUS-w640dp-h360dp-land-mdpi") @GraphicsMode(GraphicsMode.Mode.NATIVE)
     public void englishControlsFitCompactTvAndRetainKeyboardFocus()throws Exception{
         try{open();waitEngines(1);ViewGroup root=(ViewGroup)((ViewGroup)controller.get().findViewById(android.R.id.content)).getChildAt(0);
             root.measure(View.MeasureSpec.makeMeasureSpec(640,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(360,View.MeasureSpec.EXACTLY));root.layout(0,0,640,360);
+            shadowOf(Looper.getMainLooper()).idle();
+            System.out.println("Initial player controls: "+focusState(root));
+            captureControls(root,"bilibili-player-controls.en.png");
+            assertTrue("The fixture delivered the real window-focus lifecycle",root.hasWindowFocus());
             checkButtons(root,root);
-            assertNotNull("A visible playback control receives initial keyboard focus, including touch-mode entry",controller.get().getCurrentFocus());
+            assertNotNull("Initial visible controls receive keyboard focus after layout: "+focusState(root),controller.get().getCurrentFocus());
             assertTrue(controller.get().getCurrentFocus().isShown());
-            String destination=System.getenv("BILIBILI_UI_CAPTURE_DIR");if(destination!=null&&!destination.isEmpty()){File file=new File(destination,"bilibili-player-controls.en.png");file.getParentFile().mkdirs();Bitmap bitmap=Bitmap.createBitmap(640,360,Bitmap.Config.ARGB_8888);root.draw(new Canvas(bitmap));try(FileOutputStream out=new FileOutputStream(file)){bitmap.compress(Bitmap.CompressFormat.PNG,100,out);}bitmap.recycle();}
+            // Normal playback hides the controls; the remote must restore a usable, visible focus.
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(6));
+            controller.get().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_DPAD_UP));
+            controller.get().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,KeyEvent.KEYCODE_DPAD_UP));
+            shadowOf(Looper.getMainLooper()).idle();
+            System.out.println("Remote-woken player controls: "+focusState(root));
+            assertNotNull("Remote wake restores a control focus: "+focusState(root),controller.get().getCurrentFocus());
+            assertTrue(controller.get().getCurrentFocus().isShown());
+            checkButtons(root,root);
         }finally{close();}
     }
     @Test @Config(sdk=19) public void legacyAndroidCanCreateAndReleaseThePlayerShell()throws Exception{try{open();waitEngines(1);assertFalse(controller.get().isFinishing());}finally{close();}assertTrue(engines.get(0).released);}

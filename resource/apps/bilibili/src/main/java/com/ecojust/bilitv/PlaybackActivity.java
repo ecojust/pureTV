@@ -76,7 +76,7 @@ public class PlaybackActivity extends Activity {
     private GradientDrawable background(boolean focused){GradientDrawable bg=new GradientDrawable();bg.setColor(focused?Color.rgb(249,188,203):0xCC26303D);bg.setCornerRadius(dp(10));bg.setStroke(dp(2),focused?Color.WHITE:0xFF506075);return bg;}
     private void buildUi(){
         root=new FrameLayout(this);root.setBackgroundColor(Color.BLACK);setContentView(root);
-        surface=new SurfaceView(this);root.addView(surface,new FrameLayout.LayoutParams(-1,-1,Gravity.CENTER));root.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->fitVideo());
+        surface=new SurfaceView(this);root.addView(surface,new FrameLayout.LayoutParams(-1,-1,Gravity.CENTER));root.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->{fitVideo();restoreControlsFocus();});
         top=new LinearLayout(this);top.setGravity(Gravity.CENTER_VERTICAL);top.setPadding(dp(24),dp(16),dp(24),dp(18));top.setBackgroundColor(0xBA10151F);
         top.addView(button(text("返回","Back"),this::finish),new LinearLayout.LayoutParams(-2,dp(44)));title=label(displayTitle,19);title.setMaxLines(2);title.setTypeface(Typeface.DEFAULT,Typeface.BOLD);LinearLayout.LayoutParams titleSize=new LinearLayout.LayoutParams(0,-2,1);titleSize.leftMargin=dp(18);top.addView(title,titleSize);root.addView(top,new FrameLayout.LayoutParams(-1,-2,Gravity.TOP));
         center=new LinearLayout(this);center.setOrientation(LinearLayout.VERTICAL);center.setGravity(Gravity.CENTER);center.setPadding(dp(26),dp(20),dp(26),dp(20));center.setBackgroundColor(0xD91B2230);
@@ -145,8 +145,14 @@ public class PlaybackActivity extends Activity {
     private void updateProgress(){if(engine==null)return;long pos=engine.position(),duration=engine.duration();time.setText(timestamp(pos)+" / "+timestamp(duration));if(!seeking)seek.setProgress(duration>0?(int)Math.min(1000,pos*1000/duration):0);seek.setEnabled(duration>0);}
     private void showControls(boolean show){
         showing=show;top.setVisibility(show?View.VISIBLE:View.GONE);controls.setVisibility(show?View.VISIBLE:View.GONE);
-        if(show){main.removeCallbacks(hideControls);View focused=getCurrentFocus();if(focused==null||!focused.isShown()){if(retry.isShown())retry.requestFocus();else toggle.requestFocus();}}
+        if(show){main.removeCallbacks(hideControls);restoreControlsFocus();}
     }
+    private void restoreControlsFocus(){
+        if(!showing||toggle==null||!root.hasWindowFocus())return;
+        View focused=getCurrentFocus();
+        if(focused==null||!focused.isShown()){if(retry.isShown())retry.requestFocus();else if(toggle.isShown())toggle.requestFocus();}
+    }
+    @Override public void onWindowFocusChanged(boolean hasFocus){super.onWindowFocusChanged(hasFocus);if(hasFocus&&root!=null)restoreControlsFocus();}
     private void armHide(){main.removeCallbacks(hideControls);if(active)main.postDelayed(hideControls,5000);}
     private void remember(boolean complete){if(engine!=null&&played){resumeMs=complete?0:engine.position();positions.save(bvid,cid,resumeMs,complete);}}
     private void report(boolean complete){
