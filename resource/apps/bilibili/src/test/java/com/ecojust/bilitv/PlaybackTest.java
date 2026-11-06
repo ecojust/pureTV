@@ -106,8 +106,10 @@ public class PlaybackTest {
         if(view instanceof Button&&view.isShown()){Rect box=new Rect();view.getDrawingRect(box);((ViewGroup)root).offsetDescendantRectToMyCoords(view,box);assertTrue("Control fits compact player: "+((Button)view).getText(),box.left>=0&&box.right<=root.getWidth()&&box.top>=0&&box.bottom<=root.getHeight());}
         if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)checkButtons(((ViewGroup)view).getChildAt(i),root);
     }
+    // Robolectric 4.11.1 ShadowActivity.getCurrentFocus() is a manually assigned shadow field.
+    // Read the actual view tree rather than setting that field and manufacturing a passing assertion.
     private String focusState(View root){
-        View focused=controller.get().getCurrentFocus();
+        View focused=root.findFocus();
         return "windowFocus="+root.hasWindowFocus()+", rootShown="+root.isShown()+", root="+root.getWidth()+"x"+root.getHeight()+", focus="+(focused==null?"null":focused.getClass().getSimpleName()+"/shown="+focused.isShown());
     }
     private void captureControls(ViewGroup root,String name)throws Exception{
@@ -122,16 +124,24 @@ public class PlaybackTest {
             captureControls(root,"bilibili-player-controls.en.png");
             assertTrue("The fixture delivered the real window-focus lifecycle",root.hasWindowFocus());
             checkButtons(root,root);
-            assertNotNull("Initial visible controls receive keyboard focus after layout: "+focusState(root),controller.get().getCurrentFocus());
-            assertTrue(controller.get().getCurrentFocus().isShown());
+            assertNotNull("Initial visible controls receive keyboard focus after layout: "+focusState(root),root.findFocus());
+            assertTrue(root.findFocus().isShown());
+            assertTrue(root.findFocus().isFocused());
+            // Use the framework's directional focus search, then ensure window restoration does not steal it.
+            View next=root.findFocus().focusSearch(View.FOCUS_RIGHT);
+            assertNotNull("The remote can move to the next playback control",next);
+            assertTrue(next.requestFocus());
+            controller.windowFocusChanged(false).windowFocusChanged(true);
+            assertSame("A valid control focus survives window restoration",next,root.findFocus());
             // Normal playback hides the controls; the remote must restore a usable, visible focus.
             shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(6));
             controller.get().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_DPAD_UP));
             controller.get().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,KeyEvent.KEYCODE_DPAD_UP));
             shadowOf(Looper.getMainLooper()).idle();
             System.out.println("Remote-woken player controls: "+focusState(root));
-            assertNotNull("Remote wake restores a control focus: "+focusState(root),controller.get().getCurrentFocus());
-            assertTrue(controller.get().getCurrentFocus().isShown());
+            assertNotNull("Remote wake restores a control focus: "+focusState(root),root.findFocus());
+            assertTrue(root.findFocus().isShown());
+            assertTrue(root.findFocus().isFocused());
             checkButtons(root,root);
         }finally{close();}
     }

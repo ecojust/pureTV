@@ -149,7 +149,7 @@ public class PlaybackActivity extends Activity {
     }
     private void restoreControlsFocus(){
         if(!showing||toggle==null||!root.hasWindowFocus())return;
-        View focused=getCurrentFocus();
+        View focused=root.findFocus();
         if(focused==null||!focused.isShown()){if(retry.isShown())retry.requestFocus();else if(toggle.isShown())toggle.requestFocus();}
     }
     @Override public void onWindowFocusChanged(boolean hasFocus){super.onWindowFocusChanged(hasFocus);if(hasFocus&&root!=null)restoreControlsFocus();}
