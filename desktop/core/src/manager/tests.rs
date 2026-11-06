@@ -1,6 +1,6 @@
 use super::*;
 use std::collections::BTreeMap;
-use std::sync::Mutex;
+use std::sync::{atomic::AtomicUsize, Mutex};
 
 #[path = "compatibility_tests.rs"]
 mod compatibility;
@@ -265,14 +265,18 @@ impl Runner for FakeRunner {
     }
 }
 fn fixture() -> (Manager, Arc<Mutex<FakeTv>>) {
+    static NEXT_FIXTURE: AtomicUsize = AtomicUsize::new(0);
+    // Parallel tests can observe the same timestamp on a coarse system clock.
     let dir = std::env::temp_dir().join(format!(
-        "puretv-test-{}",
+        "puretv-test-{}-{}-{}",
+        std::process::id(),
+        NEXT_FIXTURE.fetch_add(1, Ordering::Relaxed),
         SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos()
     ));
-    fs::create_dir_all(&dir).unwrap();
+    fs::create_dir(&dir).expect("test fixture directory must be unique");
     let adb = dir.join(if cfg!(windows) { "adb.exe" } else { "adb" });
     fs::write(&adb, "fake").unwrap();
     let mut manager = Manager::new(dir, Arc::new(AtomicBool::new(false)));
