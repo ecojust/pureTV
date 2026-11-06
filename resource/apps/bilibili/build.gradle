@@ -1,0 +1,48 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.ecojust.bilitv'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.ecojust.bilitv'
+        minSdk 19
+        targetSdk 29
+        versionCode 1
+        versionName '0.1.0'
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            // Release signing is isolated in CI after build, lint and tests pass.
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    testOptions { unitTests.includeAndroidResources = true }
+    lint { disable 'ExpiredTargetSdkVersion' }
+}
+
+dependencies {
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.19.1'
+    implementation 'com.google.zxing:core:3.5.3'
+    testImplementation 'junit:junit:4.13.2'
+    // 4.11.1 retains API 19; newer Robolectric versions start at API 21.
+    testImplementation 'org.robolectric:robolectric:4.11.1'
+}
+
+tasks.register('verifyReleaseSize') {
+    dependsOn 'assembleRelease'
+    doLast {
+        def apks = fileTree("$buildDir/outputs/apk/release") { include '*.apk' }
+        if (apks.empty) throw new GradleException('No Bili TV release APK found')
+        apks.each { apk ->
+            if (apk.length() >= 10000000) throw new GradleException("Bili TV APK must remain below 10 MB: ${apk.length()} bytes")
+            println "Bili TV APK: ${apk.length()} bytes"
+        }
+    }
+}
