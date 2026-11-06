@@ -256,33 +256,14 @@ const sections:CommandSection[] = [
         "kind": "write"
       }
     ]
-  },
-  {
-    "id": "local",
-    "title": "无需电视 ADB 的操作",
-    "items": [
-      {
-        "id": "local-actions",
-        "title": "本机操作与资料浏览",
-        "purpose": "本机 IP、文件选择和待安装列表、语言主题、读取或清空操作记录都在电脑处理。市场浏览和仅下载、论坛、包名用途资料及客户端更新检查通过网络访问资料源，不执行电视 shell。",
-        "commands": [],
-        "compatibility": "这些操作不要求电视在线。市场下载并安装在下载后仍调用上述 APK 安装命令；客户端更新安装的是电脑管理器，更新前会结束电脑 ADB 服务。",
-        "kind": "local"
-      },
-      {
-        "id": "local-layout",
-        "title": "编辑、导入与导出布局草稿",
-        "purpose": "已读取的布局可在电脑中调整名称、SVG、颜色、位置和背景，导入或导出 JSON。每次编辑草稿不会向电视写入；应用到电视或恢复默认布局才调用 provider 写接口。",
-        "commands": [],
-        "compatibility": "打开当前布局和显式刷新应用入口需要读取电视状态；本地草稿操作与最终应用分开。设备、用户或启动器改变时，需要重新读取并确认目标。",
-        "kind": "local"
-      }
-    ]
   }
 ];
 const labels = {
   "intro": "本页说明管理器实际使用的命令与回退方式，可离线阅读，不会执行命令。兼容性依据客户端实现与 Android 源码，厂商固件仍可能限制能力。",
   "heading": "命令用法与兼容性",
+  "devices": "兼容性列表",
+  "deviceHint": "根据用户反馈整理，具体功能以电视型号和固件为准。",
+  "reportedCompatible": "用户反馈兼容",
   "nav": "命令说明分组",
   "scroll": "ADB 命令与兼容性说明",
   "variables": "先替换命令中的参数",
@@ -291,7 +272,6 @@ const labels = {
   "read": "只读查询",
   "write": "修改电视",
   "local": "电脑端操作",
-  "noCommand": "不执行电视 ADB 命令",
   "boundaries": "结果确认与取消",
   "verification": "界面与 MCP 共用核心执行逻辑。写入前重新确认设备和用户，写入后复查实际状态；退出码为 0 或收到返回值都不单独等于成功。批量取消会完成当前写入的结果核验，再跳过后续项目。",
   "kitkatTitle": "旧版 Android 的支持范围",
@@ -320,7 +300,12 @@ const variables = [
   ]
 ];
 
+const compatibleDevices = [
+  {id: 'hisense-android-9', brand: '海信', androidVersion: 'Android 9'}
+];
+
 export function adbInfoPage():string {
-  const card=(entry:CommandEntry):string=>`<article class="info-command" data-info-operation="${entry.id}" aria-labelledby="info-operation-${entry.id}"><div class="info-command-heading"><h3 id="info-operation-${entry.id}">${text(entry.title)}</h3><span class="info-command-kind info-command-kind-${entry.kind}">${text(labels[entry.kind])}</span></div><p>${text(entry.purpose)}</p>${entry.commands.length?`<pre tabindex="0"><code>${esc(entry.commands.join('\n'))}</code></pre>`:`<p class="info-no-command">${text(labels.noCommand)}</p>`}<div class="info-compatibility"><h4>${text(labels.compat)}</h4><p>${text(entry.compatibility)}</p></div></article>`;
-  return `<section class="panel adb-info info-panel" aria-label="${text(labels.scroll)}"><div class="info-toolbar"><h2>${text(labels.heading)}</h2><nav class="info-section-links" aria-label="${text(labels.nav)}">${sections.map(section=>`<a href="#info-${section.id}">${text(section.title)}</a>`).join('')}</nav></div><div class="info-scroll" data-scroll="info" tabindex="0" aria-label="${text(labels.scroll)}"><p class="info-intro">${text(labels.intro)}</p><aside class="info-kitkat"><h3>${text(labels.kitkatTitle)}</h3><p>${text(labels.kitkat)}</p></aside><section class="info-parameters" aria-labelledby="info-parameters-title"><h3 id="info-parameters-title">${text(labels.variables)}</h3><p>${text(labels.variableHint)}</p><dl>${variables.map(([name,description])=>`<div><dt><code>${esc(name)}</code></dt><dd>${text(description)}</dd></div>`).join('')}</dl></section>${sections.map(section=>`<section class="info-section" id="info-${section.id}" tabindex="-1" aria-labelledby="info-heading-${section.id}"><h2 id="info-heading-${section.id}">${text(section.title)}</h2><div class="info-command-grid">${section.items.map(card).join('')}</div></section>`).join('')}<section class="info-result-note"><h3>${text(labels.boundaries)}</h3><p>${text(labels.verification)}</p></section></div></section>`;
+  const card=(entry:CommandEntry):string=>`<article class="info-command" data-info-operation="${entry.id}" aria-labelledby="info-operation-${entry.id}"><div class="info-command-heading"><h3 id="info-operation-${entry.id}">${text(entry.title)}</h3><span class="info-command-kind info-command-kind-${entry.kind}">${text(labels[entry.kind])}</span></div><p>${text(entry.purpose)}</p><pre tabindex="0"><code>${esc(entry.commands.join('\n'))}</code></pre><div class="info-compatibility"><h4>${text(labels.compat)}</h4><p>${text(entry.compatibility)}</p></div></article>`;
+  const compatibilityList=`<section class="info-section info-device-compatibility" id="info-compatibility" tabindex="-1" aria-labelledby="info-heading-compatibility"><h2 id="info-heading-compatibility">${text(labels.devices)}</h2><p>${text(labels.deviceHint)}</p><ul class="info-device-list">${compatibleDevices.map(device=>`<li data-compatibility-device="${device.id}"><div class="info-device-name"><strong>${text(device.brand)}</strong><span>${esc(device.androidVersion)}</span></div><span class="info-device-status">${text(labels.reportedCompatible)}</span></li>`).join('')}</ul></section>`;
+  return `<section class="panel adb-info info-panel" aria-label="${text(labels.scroll)}"><div class="info-toolbar"><h2>${text(labels.heading)}</h2><nav class="info-section-links" aria-label="${text(labels.nav)}"><a href="#info-compatibility">${text(labels.devices)}</a>${sections.map(section=>`<a href="#info-${section.id}">${text(section.title)}</a>`).join('')}</nav></div><div class="info-scroll" data-scroll="info" tabindex="0" aria-label="${text(labels.scroll)}"><p class="info-intro">${text(labels.intro)}</p>${compatibilityList}<aside class="info-kitkat"><h3>${text(labels.kitkatTitle)}</h3><p>${text(labels.kitkat)}</p></aside><section class="info-parameters" aria-labelledby="info-parameters-title"><h3 id="info-parameters-title">${text(labels.variables)}</h3><p>${text(labels.variableHint)}</p><dl>${variables.map(([name,description])=>`<div><dt><code>${esc(name)}</code></dt><dd>${text(description)}</dd></div>`).join('')}</dl></section>${sections.map(section=>`<section class="info-section" id="info-${section.id}" tabindex="-1" aria-labelledby="info-heading-${section.id}"><h2 id="info-heading-${section.id}">${text(section.title)}</h2><div class="info-command-grid">${section.items.map(card).join('')}</div></section>`).join('')}<section class="info-result-note"><h3>${text(labels.boundaries)}</h3><p>${text(labels.verification)}</p></section></div></section>`;
 }

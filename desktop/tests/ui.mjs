@@ -2236,6 +2236,7 @@ try {
     assert.equal(await p.evaluate(()=>window.__xss),false);assert.deepEqual(await p.evaluate(()=>window.__forumOpenRequests),[]);
   },withoutAdb(),{forumDetails:{IABC123:forumDetail('IABC123',{post:{...forumDetail().post,body:dangerousBody,author:'<b data-forum-untrusted="author">作者</b>'}})},forumReplyPages:{IABC123:{1:forumReplies('IABC123',{replies:[{...forumReplies().replies[0],body:dangerousReply,author:'<img data-forum-untrusted="reply-author" src=x onerror="window.__xss=true">'}]})}}});
   await check('info: offline command reference preserves commands across languages and stays readable in compact themes',async p=>{
+    const networkRequests=[];p.on('request',request=>networkRequests.push(request.url()));
     await nav(p,'info');
     const panel=p.locator('.adb-info'),scroll=p.locator('[data-scroll="info"]');
     await panel.waitFor();
@@ -2243,9 +2244,16 @@ try {
     assert.equal(await p.locator('.device-badge,.connection-strip,.adb-panel,.warning-banner,.demo-banner').count(),0);
     assert.doesNotMatch(await p.locator('.app-footer').innerText(),/Gitee|当前 Android 用户|选择设备/);
     assert.equal(await panel.locator('button,[data-act],input,select').count(),0,'Reading documentation exposes no execution control');
-    for(const id of ['connect','current-user','storage','packages','disable','enable','uninstall','restore','install-apk','home-query','set-home','layout-read','layout-write','local-actions','local-layout']) {
+    assert.equal(await panel.locator('[data-info-operation]').count(),19);
+    assert.equal(await panel.locator('.info-command-grid').count(),7);
+    assert.deepEqual(await panel.locator('.info-section-links a').evaluateAll(links=>links.map(link=>link.getAttribute('href'))),['#info-compatibility','#info-connection','#info-identity','#info-system','#info-catalogue','#info-changes','#info-install','#info-launcher']);
+    assert.equal(await panel.locator('#info-local,[data-info-operation="local-actions"],[data-info-operation="local-layout"]').count(),0,'The local-only section and both cards are removed');
+    for(const id of ['connect','disconnect','adb-tools','current-user','properties','memory','storage','resolution','packages','apk-size','disable','enable','uninstall','restore','install-apk','home-query','set-home','layout-read','layout-write']) {
       assert.equal(await panel.locator(`[data-info-operation="${id}"]`).count(),1,`${id} is documented`);
     }
+    const compatibility=panel.locator('#info-compatibility'),device=compatibility.locator('[data-compatibility-device="hisense-android-9"]');
+    assert.equal(await device.count(),1);
+    const reportedLabels={'zh-CN':'用户反馈兼容','zh-TW':'使用者回報相容',en:'Compatible · user reported'};
     const commands=await panel.locator('pre code').allTextContents();
     for(const command of ['am get-current-user','dumpsys activity processes','df -k /data','df /data','stat -f -c %S:%b:%a /data','pm list packages --user U','pm uninstall -k --user U','install --user U -r','set-home-activity --user U','content call --uri URI --user U --method apply']) {
       assert.ok(commands.some(text=>text.includes(command)),`${command} remains visible as literal command text`);
@@ -2255,6 +2263,10 @@ try {
     await p.setViewportSize({width:960,height:640});
     for(const language of ['zh-CN','zh-TW','en']) {
       await p.locator('[name="locale"]').selectOption(language);
+      assert.equal(await device.locator('strong').innerText(),language==='en'?'Hisense':'海信');
+      assert.equal(await device.locator('.info-device-name span').innerText(),'Android 9');
+      assert.equal(await device.locator('.info-device-status').innerText(),reportedLabels[language]);
+      assert.doesNotMatch(await compatibility.innerText(),/\bE4\b|实测认证|實測認證|certif(?:ied|ication)|physically tested/i,'User feedback is not described as physical certification');
       for(const theme of ['emerald','ocean','graphite']) {
         await p.locator('[name="theme"]').selectOption(theme);
         assert.deepEqual(await panel.locator('pre code').allTextContents(),commands,'Language changes must never translate command arguments');
@@ -2263,25 +2275,47 @@ try {
         assert.ok(navBounds&&navBounds.y>=0&&navBounds.y+navBounds.height<=640,'Info navigation stays visible');
         assert.equal(await scroll.evaluate(el=>el.scrollHeight>el.clientHeight&&el.clientHeight>120),true,'Long reference scrolls internally');
         await scroll.evaluate(el=>el.scrollTop=0);
+        assert.equal(await device.evaluate(el=>el.scrollWidth<=el.clientWidth+1),true,'Compatibility entry fits the compact window');
         if((language==='zh-CN'&&theme==='emerald')||(language==='zh-TW'&&theme==='ocean')||(language==='en'&&theme==='graphite'))await shot(p,`info-${language}-${theme}`);
       }
     }
-    await panel.locator('a[href="#info-local"]').click();
+    await panel.locator('a[href="#info-launcher"]').click();
     await p.waitForTimeout(80);
     assert.ok(await scroll.evaluate(el=>el.scrollTop>0),'Section links scroll the documentation');
     assert.equal(await p.evaluate(()=>document.documentElement.scrollTop),0);
-    await shot(p,'info-local-en-graphite');
+    await shot(p,'info-launcher-en-graphite');
     const position=await scroll.evaluate(el=>el.scrollTop);
     await nav(p,'history');await nav(p,'info');
     assert.ok(Math.abs(await scroll.evaluate(el=>el.scrollTop)-position)<2,'Navigation preserves the reading position');
+    await panel.locator('a[href="#info-compatibility"]').click();
+    await p.waitForTimeout(80);
+    assert.ok(await scroll.evaluate(el=>el.scrollTop)<position,'Compatibility navigation returns to the list near the start');
+    assert.equal(await p.evaluate(()=>document.documentElement.scrollTop),0);
     assert.deepEqual(await requests(p),[]);
+    assert.deepEqual(await p.evaluate(()=>window.__launcherRequests),[]);
     assert.deepEqual(await p.evaluate(()=>window.__marketRequests),[]);
     assert.deepEqual(await p.evaluate(()=>window.__forumRequests),[]);
+    assert.deepEqual(networkRequests,[],'Reading Info and switching languages or themes does not request network resources');
   },withoutAdb());
   await check('info: browser preview reads the complete reference without requiring the desktop or a television',async p=>{
-    await nav(p,'info');await p.locator('.adb-info').waitFor();
+    const networkRequests=[];p.on('request',request=>networkRequests.push(request.url()));
+    await nav(p,'info');const panel=p.locator('.adb-info');await panel.waitFor();
     assert.equal(await p.locator('.warning-banner,.demo-banner,.device-badge,.connection-strip').count(),0);
     assert.equal(await p.locator('[data-info-operation="layout-write"] code').count(),1);
+    assert.equal(await panel.locator('[data-info-operation]').count(),19);
+    assert.equal(await panel.locator('.info-command-grid').count(),7);
+    assert.equal(await panel.locator('.info-section-links a').count(),8);
+    assert.equal(await panel.locator('#info-local,[data-info-operation="local-actions"],[data-info-operation="local-layout"]').count(),0);
+    assert.equal(await panel.locator('button,[data-act],input,select').count(),0);
+    for(const [language,brand,status] of [['zh-CN','海信','用户反馈兼容'],['zh-TW','海信','使用者回報相容'],['en','Hisense','Compatible · user reported']]) {
+      await p.locator('[name="locale"]').selectOption(language);
+      const device=panel.locator('#info-compatibility [data-compatibility-device="hisense-android-9"]');
+      assert.equal(await device.locator('strong').innerText(),brand);
+      assert.equal(await device.locator('.info-device-name span').innerText(),'Android 9');
+      assert.equal(await device.locator('.info-device-status').innerText(),status);
+    }
+    assert.equal(await p.evaluate(()=>'__TAURI_INTERNALS__' in window),false,'The complete reference needs no desktop or ADB bridge');
+    assert.deepEqual(networkRequests,[],'The compatibility list and command reference are readable offline');
   },null);
   await check('independent pages: market, forum, activity and info hide device status and ADB hints while preserving their own errors',async p=>{
     const states=[{...withoutAdb(),message:'选择 ADB 后连接电视；首次连接请在电视上授权'},{...snapshot(),device:null,packages:[],launchers:[],defaultHome:null,message:'已断开电视'},{...snapshot(),message:'ADB 操作失败：测试设备读取提示'}];
