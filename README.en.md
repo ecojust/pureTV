@@ -9,7 +9,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-115-f97316?style=flat-square)](resource/apps/)
+[![App count](https://img.shields.io/badge/apps-116-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
@@ -75,14 +75,20 @@ This page currently features eight games from the new hundred-game collection al
   </tr>
 </table>
 
-### Apps - Media (4)
+### Apps - Media (5)
 
 <table>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/bilibili/"><img src="docs/previews/en/app-bilibili.png" width="180" alt="BiliTV preview"><br>BiliTV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/cctv/"><img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"><br>CCTV Live</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/hifini/"><img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"><br>HIFINi TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/webtv/"><img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"><br>WebTV</a></td>
+  </tr>
+  <tr>
     <td align="center" valign="top" width="25%"><a href="resource/apps/shortvideo/"><img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"><br>ShortVideo TV</a></td>
+    <td width="25%"></td>
+    <td width="25%"></td>
+    <td width="25%"></td>
   </tr>
 </table>
 
