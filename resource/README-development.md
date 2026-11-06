@@ -186,9 +186,9 @@ adb -s 192.168.1.50:5555 shell content call --uri content://org.example.launcher
 
 | 配置与画面 | 管理器示例 |
 | --- | --- |
-| 完整示例的 Home：上方固定系统组件，下方可框选的用户应用块 | ![Home 用户与系统组件](../docs/previews/layout-v5-home-036.png) |
-| 完整示例的 Apps：独立背景与用户应用布局 | ![Apps 页面](../docs/previews/layout-v5-apps-036.png) |
-| 框选用户块后，上对齐、左右分散、水平／垂直／网格平铺 | ![多选排布](../docs/previews/layout-v4-multiselect-035.png) |
+| 完整示例的 Home：上方固定系统组件，下方可框选的用户应用块 | ![Home 用户与系统组件](../docs/previews/layout-v5-home.png) |
+| 完整示例的 Apps：独立背景与用户应用布局 | ![Apps 页面](../docs/previews/layout-v5-apps.png) |
+| 框选用户块后，上对齐、左右分散、水平／垂直／网格平铺 | ![多选排布](../docs/previews/layout-multiselect.png) |
 
 顶部紧凑工具栏只保留一个「添加应用块」按钮，新增后自动选中，可在右侧改 action；屏幕基准仅显示，不能编辑。JSON 查看器只显示文本，不写入电视。右侧显示组件名称/id、类型，接着为「显示组件」switch 开关，再是文案、坐标尺寸、SVG、action 与独立颜色。Ctrl/Command 点击可切换多选，Shift 点击追加；空白处拖动框选，只选择用户块。系统组件固定，批量操作不会改写它们。所有修改都是本地草稿，确认「应用到电视」后才保存并读回核对。
 

@@ -147,7 +147,7 @@ APK市场、论坛和操作记录不显示常驻 ADB 提示、设备操作忙碌
 
 ## 语言、主题与资源
 
-左下角支持简体中文、繁體中文、English，以及青绿、深蓝、石墨三套主题；窗口和 Agent 的偏好修改实时同步并保存。
+左下角支持简体中文、繁體中文、English，以及晴空、海盐、石墨三套主题；窗口和 Agent 的偏好修改实时同步并保存。
 
 根目录 [resource](../resource/README.md) 提供带实际 APK、作者、许可、源码和校验记录的资源。完整 layout.json 规范与文件／画面对照见[资源开发文档](../resource/README-development.md#layoutjson-协议规范与画面对照)。
 

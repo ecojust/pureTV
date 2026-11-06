@@ -15,7 +15,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
 [![License](https://img.shields.io/badge/license-MIT-f4c430?style=flat-square)](LICENSE)
 
-![Manager preview using simulated device data](docs/previews/manager-en.png)
+![Current source preview in the Sky theme using simulated device data](docs/previews/manager-en.png)
 
 ## Connection and app management
 
