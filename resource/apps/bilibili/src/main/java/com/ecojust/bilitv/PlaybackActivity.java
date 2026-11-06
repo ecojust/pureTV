@@ -70,7 +70,7 @@ public class PlaybackActivity extends Activity {
     }
     private TextView label(String value,int size){TextView v=new TextView(this);v.setText(value);v.setTextSize(size);v.setTextColor(Color.WHITE);return v;}
     private Button button(String value,Runnable action){
-        Button b=new Button(this);b.setText(value);b.setTextSize(14);b.setTextColor(Color.WHITE);b.setAllCaps(false);b.setMinWidth(dp(70));b.setMinimumWidth(dp(70));b.setMinHeight(dp(42));b.setPadding(dp(14),dp(4),dp(14),dp(4));
+        Button b=new Button(this);b.setFocusable(true);b.setFocusableInTouchMode(true);b.setText(value);b.setTextSize(14);b.setTextColor(Color.WHITE);b.setAllCaps(false);b.setMinWidth(dp(70));b.setMinimumWidth(dp(70));b.setMinHeight(dp(42));b.setPadding(dp(14),dp(4),dp(14),dp(4));
         b.setBackground(background(false));b.setOnFocusChangeListener((v,focused)->{b.setBackground(background(focused));b.setTextColor(focused?Color.rgb(25,29,38):Color.WHITE);});b.setOnClickListener(v->{action.run();armHide();});return b;
     }
     private GradientDrawable background(boolean focused){GradientDrawable bg=new GradientDrawable();bg.setColor(focused?Color.rgb(249,188,203):0xCC26303D);bg.setCornerRadius(dp(10));bg.setStroke(dp(2),focused?Color.WHITE:0xFF506075);return bg;}
@@ -143,7 +143,10 @@ public class PlaybackActivity extends Activity {
     private static String qualityName(int q){switch(q){case 80:return "1080p";case 64:return "720p";case 32:return "480p";case 16:return "360p";default:return "Q"+q;}}
     private static String timestamp(long ms){long s=Math.max(0,ms/1000);return s>=3600?String.format(Locale.US,"%d:%02d:%02d",s/3600,(s/60)%60,s%60):String.format(Locale.US,"%02d:%02d",s/60,s%60);}
     private void updateProgress(){if(engine==null)return;long pos=engine.position(),duration=engine.duration();time.setText(timestamp(pos)+" / "+timestamp(duration));if(!seeking)seek.setProgress(duration>0?(int)Math.min(1000,pos*1000/duration):0);seek.setEnabled(duration>0);}
-    private void showControls(boolean show){showing=show;top.setVisibility(show?View.VISIBLE:View.GONE);controls.setVisibility(show?View.VISIBLE:View.GONE);if(show)main.removeCallbacks(hideControls);}
+    private void showControls(boolean show){
+        showing=show;top.setVisibility(show?View.VISIBLE:View.GONE);controls.setVisibility(show?View.VISIBLE:View.GONE);
+        if(show){main.removeCallbacks(hideControls);View focused=getCurrentFocus();if(focused==null||!focused.isShown()){if(retry.isShown())retry.requestFocus();else toggle.requestFocus();}}
+    }
     private void armHide(){main.removeCallbacks(hideControls);if(active)main.postDelayed(hideControls,5000);}
     private void remember(boolean complete){if(engine!=null&&played){resumeMs=complete?0:engine.position();positions.save(bvid,cid,resumeMs,complete);}}
     private void report(boolean complete){

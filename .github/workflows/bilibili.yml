@@ -55,7 +55,27 @@ jobs:
           BILIBILI_UI_CAPTURE_DIR: ${{ runner.temp }}/bilibili-previews
         run: |
           set -o pipefail
-          ./gradlew --no-daemon :bilibili:assembleDebug :bilibili:verifyReleaseSize :bilibili:testDebugUnitTest :bilibili:lintDebug 2>&1 | tee "$RUNNER_TEMP/bilibili-build.log"
+          ./gradlew --no-daemon --continue :bilibili:assembleDebug :bilibili:verifyReleaseSize :bilibili:testDebugUnitTest :bilibili:lintDebug 2>&1 | tee "$RUNNER_TEMP/bilibili-build.log"
+      - name: Report test and lint failures
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          def report(title, message):
+              escaped = message.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+              print('::error title='+title+'::'+escaped)
+          for path in Path('resource/apps/bilibili/build/test-results').rglob('TEST-*.xml'):
+              for case in ET.parse(path).getroot().iter('testcase'):
+                  for failure in case.findall('failure')+case.findall('error'):
+                      name = case.get('classname', '')+'.'+case.get('name', '')
+                      report('BiliTV test', name+'\n'+(failure.text or failure.get('message', ''))[:5000])
+          for path in Path('resource/apps/bilibili/build/reports').glob('lint-results*.xml'):
+              for issue in ET.parse(path).getroot().findall('issue'):
+                  if issue.get('severity') in ('Error', 'Fatal'):
+                      locations = ['{file}:{line}'.format(file=item.get('file', ''), line=item.get('line', '')) for item in issue.findall('location')]
+                      report('BiliTV lint', issue.get('id', '')+': '+issue.get('message', '')+'\n'+'\n'.join(locations))
+          PY
       - name: Verify unsigned APK and collect previews
         run: |
           python3 - <<'PY'
@@ -177,3 +197,100 @@ jobs:
           path: bilibili-release/
           if-no-files-found: error
           retention-days: 14
+
+  export:
+    needs: [build, sign]
+    if: always() && github.event_name != 'pull_request' && github.repository == 'ecojust/pureTV' && (github.ref == 'refs/heads/feat/bilibili-tv' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve available test diagnostics
+        id: reports
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bilibili-test-reports
+          path: bilibili-export-input/reports
+      - name: Retrieve verified release
+        if: needs.sign.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: bilibili-release
+          path: bilibili-export-input/release
+      - name: Stage bounded diagnostics and verified release files
+        env:
+          BUILD_RESULT: ${{ needs.build.result }}
+          SIGN_RESULT: ${{ needs.sign.result }}
+          REPORT_DOWNLOAD: ${{ steps.reports.outcome }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, re, shutil
+          from pathlib import Path
+          source = Path('bilibili-export-input')
+          output = Path('release-staging/bilibili')
+          assert not output.exists(), 'Refusing to reuse a staging directory'
+          output.mkdir(parents=True)
+          records = []; skipped = []; total = 0
+          def copy(path, relative, maximum):
+              global total
+              assert path.is_file() and not path.is_symlink(), 'Only regular artifact files may be exported'
+              size = path.stat().st_size
+              assert 0 < size <= maximum, 'Artifact exceeds its export size bound: '+str(relative)
+              total += size
+              assert total <= 25000000, 'Export exceeds 25 MB'
+              target = output/relative
+              target.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(path, target)
+              records.append({'path':relative.as_posix(), 'bytes':size,
+                              'sha256':hashlib.sha256(target.read_bytes()).hexdigest()})
+          reports = source/'reports'
+          if reports.is_dir():
+              for path in sorted(reports.rglob('*')):
+                  if path.is_symlink():
+                      raise AssertionError('Report symlink is not allowed')
+                  if not path.is_file() or path.suffix.lower() not in ('.xml', '.log', '.png'):
+                      continue
+                  relative = Path('reports')/path.relative_to(reports)
+                  if path.stat().st_size == 0 or path.stat().st_size > 4000000:
+                      skipped.append({'path':relative.as_posix(), 'reason':'empty or larger than 4 MB'})
+                      continue
+                  copy(path, relative, 4000000)
+          if os.environ['SIGN_RESULT'] == 'success':
+              release = source/'release'
+              metadata = json.loads((release/'metadata.json').read_text())
+              assert metadata['sourceSha'] == os.environ['GITHUB_SHA']
+              assert metadata['buildRun'].endswith('/actions/runs/'+os.environ['GITHUB_RUN_ID'])
+              assert metadata['signatureVerified'] is True
+              assert metadata['packageName'] == 'com.ecojust.bilitv'
+              assert re.fullmatch(r'\d+\.\d+\.\d+', metadata['versionName'])
+              assert metadata['certificateSha256'] == Path('tools/puretv-release-certificate-v2.sha256').read_text().strip()
+              apk = release/('bilibili-'+metadata['versionName']+'.apk')
+              assert apk.stat().st_size == metadata['bytes']
+              assert hashlib.sha256(apk.read_bytes()).hexdigest() == metadata['sha256']
+              for path in (apk, release/'metadata.json', release/'SHA256SUMS.txt'):
+                  copy(path, Path('release')/path.name, 10000000 if path == apk else 64000)
+              for path in sorted((release/'previews').glob('*.png')):
+                  copy(path, Path('release/previews')/path.name, 4000000)
+          manifest = {'sourceSha':os.environ['GITHUB_SHA'], 'runId':os.environ['GITHUB_RUN_ID'],
+                      'runUrl':'https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['GITHUB_RUN_ID'],
+                      'buildResult':os.environ['BUILD_RESULT'], 'signResult':os.environ['SIGN_RESULT'],
+                      'reportDownload':os.environ['REPORT_DOWNLOAD'], 'files':records, 'skipped':skipped}
+          (output/'export-metadata.json').write_text(json.dumps(manifest, indent=2)+'\n')
+          PY
+      - name: Export to a new temporary build-assets branch
+        run: |
+          export_branch="build-assets/bilibili-${GITHUB_RUN_ID}"
+          if git ls-remote --exit-code --heads origin "$export_branch" >/dev/null; then
+            echo "::error::This run already has an export branch; it will not be overwritten."
+            exit 1
+          fi
+          git checkout -b "$export_branch"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -f release-staging/bilibili
+          git commit -m "Stage BiliTV build ${GITHUB_RUN_ID} diagnostics and verified artifacts"
+          git push origin "HEAD:refs/heads/$export_branch"

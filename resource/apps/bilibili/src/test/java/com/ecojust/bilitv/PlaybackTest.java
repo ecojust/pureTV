@@ -109,7 +109,10 @@ public class PlaybackTest {
     @Test @Config(sdk=28,qualifiers="en-rUS-w640dp-h360dp-land-mdpi") @GraphicsMode(GraphicsMode.Mode.NATIVE)
     public void englishControlsFitCompactTvAndRetainKeyboardFocus()throws Exception{
         try{open();waitEngines(1);ViewGroup root=(ViewGroup)((ViewGroup)controller.get().findViewById(android.R.id.content)).getChildAt(0);
-            root.measure(View.MeasureSpec.makeMeasureSpec(640,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(360,View.MeasureSpec.EXACTLY));root.layout(0,0,640,360);checkButtons(root,root);assertNotNull(controller.get().getCurrentFocus());
+            root.measure(View.MeasureSpec.makeMeasureSpec(640,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(360,View.MeasureSpec.EXACTLY));root.layout(0,0,640,360);
+            checkButtons(root,root);
+            assertNotNull("A visible playback control receives initial keyboard focus, including touch-mode entry",controller.get().getCurrentFocus());
+            assertTrue(controller.get().getCurrentFocus().isShown());
             String destination=System.getenv("BILIBILI_UI_CAPTURE_DIR");if(destination!=null&&!destination.isEmpty()){File file=new File(destination,"bilibili-player-controls.en.png");file.getParentFile().mkdirs();Bitmap bitmap=Bitmap.createBitmap(640,360,Bitmap.Config.ARGB_8888);root.draw(new Canvas(bitmap));try(FileOutputStream out=new FileOutputStream(file)){bitmap.compress(Bitmap.CompressFormat.PNG,100,out);}bitmap.recycle();}
         }finally{close();}
     }

@@ -42,3 +42,15 @@ gh run download RUN_ID --repo ecojust/pureTV --name bilibili-release --dir /abso
 ```
 
 将 `RUN_ID` 换为实际成功的工作流编号。`metadata.json` 保存源码 SHA、工作流链接、包名、版本、文件大小、SHA256 和签名指纹。对下载的 APK 再执行 `apksigner verify --min-sdk-version 19 --print-certs` 与 SHA256 核验，确认来源后再更新应用目录的 `resource.json`、APK、预览与索引。工作流 artifact 与仓库资源、GitHub Release 是不同交付状态。
+
+## Artifact 下载不可用时
+
+可信分支的 export job 会将有界的 XML／日志／PNG 诊断写入临时分支 `build-assets/bilibili-RUN_ID` 的 `release-staging/bilibili/reports/`；签名成功时同一目录的 `release/` 包含 APK、元数据、哈希和预览。只有该 job 有 `contents: write`，签名 job 保持只读；PR 不导出，既有导出分支不覆盖，master 不被改写。
+
+```bash
+git fetch origin refs/heads/build-assets/bilibili-RUN_ID:refs/remotes/origin/build-assets/bilibili-RUN_ID
+git show origin/build-assets/bilibili-RUN_ID:release-staging/bilibili/export-metadata.json
+git archive origin/build-assets/bilibili-RUN_ID release-staging/bilibili | tar -x -C /absolute/scratch/bilibili-export
+```
+
+先创建目标 scratch 目录。核对 `export-metadata.json` 中的 `sourceSha`、`runId`、build/sign 结论和各文件 SHA256；失败流程的诊断不代表发布成功。完成取回并归档之后可删除临时远程分支。导出不包含密钥、源码缓存或 HTML 报告，也不会创建 GitHub Release。

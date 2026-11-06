@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-06",
+  "physicalTvTested": false,
+  "realPlaybackVerified": false,
+  "privateCredentialsUsed": false,
+  "probes": [
+    {
+      "endpoint": "/x/web-interface/nav",
+      "httpStatus": 200,
+      "apiCode": -101,
+      "wbiKeysPresent": true
+    },
+    {
+      "endpoint": "/x/web-interface/search/type",
+      "keyword": "数学",
+      "httpStatus": 200,
+      "apiCode": 0,
+      "resultCount": 20
+    },
+    {
+      "endpoint": "/x/web-interface/view",
+      "httpStatus": 412
+    },
+    {
+      "endpoint": "/x/web-interface/search/type",
+      "keyword": "科普",
+      "httpStatus": 412
+    }
+  ],
+  "limits": "Read-only probes used urllib with a browser User-Agent. No media URLs were obtained; no audio/video playback was attempted. HTTP 412 must remain an explicit service restriction error, not a simulated success."
+}

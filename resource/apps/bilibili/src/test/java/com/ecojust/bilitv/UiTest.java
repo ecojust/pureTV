@@ -55,7 +55,7 @@ public class UiTest {
             @Override public void favorite(long aid,long folder,boolean add){favoriteWrites++;}
         };}
     }
-    @Before public void before(){new SessionStore(RuntimeEnvironment.getApplication()).clear();failSearch=historyHasMore=blockFirstSearch=blockQrVerification=false;favoriteWrites=qrPolls=qrStarts=searchPage=0;qrStatus=AccountApi.Status.WAITING;entered=new CountDownLatch(1);release=new CountDownLatch(1);}
+    @Before public void before(){new android.app.Instrumentation().setInTouchMode(false);new SessionStore(RuntimeEnvironment.getApplication()).clear();failSearch=historyHasMore=blockFirstSearch=blockQrVerification=false;favoriteWrites=qrPolls=qrStarts=searchPage=0;qrStatus=AccountApi.Status.WAITING;entered=new CountDownLatch(1);release=new CountDownLatch(1);}
     @After public void after(){release.countDown();}
     static Object field(Object target,String key)throws Exception{Field f=MainActivity.class.getDeclaredField(key);f.setAccessible(true);return f.get(target);}
     static void flush(MainActivity activity)throws Exception{for(int i=0;i<6;i++){shadowOf(Looper.getMainLooper()).idle();Future<?> pending=(Future<?>)field(activity,"pending");if(pending!=null&&!pending.isCancelled())pending.get(3,TimeUnit.SECONDS);shadowOf(Looper.getMainLooper()).idle();if(field(activity,"pending")==null)return;}throw new AssertionError("UI work did not settle");}
@@ -70,7 +70,7 @@ public class UiTest {
         try(ActivityController<TestActivity> c=Robolectric.buildActivity(TestActivity.class).setup().visible()){
             TestActivity a=c.get();assertTrue(visibleText(root(a)).contains("只保留你想看的内容"));assertEquals(0,searchPage);search(a,"摄影");assertEquals(1,searchPage);assertEquals(0,favoriteWrites);
             button(root(a),"下一页").performClick();flush(a);assertEquals(2,searchPage);button(root(a),"上一页").performClick();flush(a);
-            View card=tag(a,"video-0");card.requestFocus();assertTrue(card.hasFocus());card.performClick();flush(a);assertNotNull(dialog(a));button(dialog(a).getWindow().getDecorView(),"继续播放").performClick();
+            layout(root(a),960,540);View card=tag(a,"video-0");assertFalse("TV navigation leaves touch mode",card.isInTouchMode());assertTrue("The result card accepts keyboard focus",card.requestFocus());assertTrue(card.hasFocus());a.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_DPAD_CENTER));a.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,KeyEvent.KEYCODE_DPAD_CENTER));flush(a);assertNotNull(dialog(a));button(dialog(a).getWindow().getDecorView(),"继续播放").performClick();
             Intent playback=shadowOf(a).getNextStartedActivity();assertEquals("com.ecojust.bilitv.PlaybackActivity",playback.getComponent().getClassName());assertEquals(500,playback.getLongExtra("cid",0));assertEquals(42,playback.getLongExtra("positionSeconds",0));assertEquals(0,favoriteWrites);
         }
     }
