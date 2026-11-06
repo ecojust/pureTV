@@ -32,4 +32,4 @@
 
 未取得可用于实播的媒体地址；没有进行真实扫码登录、收藏写入、账号历史同步或实际音视频解码。没有测试实体Android4.4、Android6或其他电视。平台权限、访问校验、旧系统证书与硬件解码限制仍可能影响使用；应用对失败显示错误，不使用演示内容替代真实结果。
 
-安装包、源码和README资源交付到GitHub仓库；本次未创建pureTV管理器的新版本或GitHub Release，也未上传Gitee市场。
+安装包、源码和README资源已在 `99f0ef3d` 交付到GitHub master；公开下载大小和SHA256再次核对一致，见 [publication.json](validation/publication.json)。本次未创建pureTV管理器的新版本或GitHub Release，也未上传Gitee市场。
