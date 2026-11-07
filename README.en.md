@@ -132,8 +132,6 @@ This page currently features eight games from the new hundred-game collection al
 
 <!-- resource-index:end -->
 
-TV app APKs and source code developed by ecojust are available in [resource/apps/](resource/apps/).
-
 ## MCP / Agent
 
 Open “Device connection → MCP · Agent debugging,” copy the configuration into your client, and keep the manager window open. Its 34 tools cover system information, connections, app management, APK installation, launcher switching and layouts, market browsing/downloads/installation, background images, ADB configuration, language and theme settings, cancellation, and logs. The Agent and the interface share the same state.

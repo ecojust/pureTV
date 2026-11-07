@@ -130,8 +130,6 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 <!-- resource-index:end -->
 
-桔子桑开发的电视应用 APK 与源码见 [resource/apps/](resource/apps/)。
-
 ## MCP / Agent
 
 在「设备连接 → MCP · Agent 调试」复制配置到客户端，保持管理器窗口打开。34 个工具覆盖系统信息、连接、应用管理、APK 安装、启动器切换与布局、市场目录／下载／安装、背景图、ADB 配置、语言与主题、取消及记录；Agent 与界面共享状态。
