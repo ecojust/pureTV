@@ -1,31 +1,25 @@
-# pureTV Manager 0.5.3
+# pureTV Manager 0.5.4
 
 ## 简体中文
 
-- 在 SDK 19 兼容处理的基础上，将旧版系统进程信息中的当前用户识别回退扩展到 Android 5.0／5.1／6.0（SDK 21／22／23）；无法确认身份时不猜测用户为 0，仍拒绝修改。
-- 修复 Android 4.4 包列表因已知 `libdvm.so` 非致命 linker 警告而读取失败的问题；仅忽略已核实的完整诊断，权限错误、未知警告和无效列表仍拒绝。
-- 两种 `df` 查询均无法解析 `/data` 容量时，使用固定 `stat -f -c %S:%b:%a /data` 直接读取文件系统，兼容挂载别名，不把其他分区容量当作 `/data`。
-- 默认 HOME 只接受唯一、明确且非 Resolver／Chooser 的组件；结果缺失或有歧义时，继续阻止停用与卸载，保留默认桌面保护。
-- 更新离线 Info 页的三语命令与兼容性说明，补充品牌／系统版本验收清单、只读设备能力采集工具及可复查的 Android 系统模拟器证据。
-- Android 4.4／6／11 系统镜像已验证对应读取、安装结果与保护行为，旧镜像仍受 root 测试条件限制，不代表全部电视功能可用。小米电视 2 的系统尚待确认，小米电视 4 的 Android 6 为用户报告；两者均尚无实体电视验证（E4）。
+- 默认主题更新为蓝白色「晴空」，另提供浅青色「海盐」和灰蓝色「石墨」。统一侧栏、卡片、表单、按钮、弹窗及键盘焦点配色，保留已有主题偏好。
+- 将 Info 更名为「兼容性方案」，保留可离线阅读的 7 组、19 项 ADB 命令、参数与系统兼容性说明；移除“无需电视 ADB 的操作”分组和设备兼容性列表。
+- 调整紧凑窗口中的导航留白，使英文 Compatibility 在较宽系统字体下也能完整显示。
+- 沿用 0.5.3 的旧版 Android 兼容处理与默认桌面保护；本次界面更新不代表新增厂商电视的实机兼容性认证。
 
 ## 繁體中文
 
-- 在 SDK 19 相容處理的基礎上，將舊版系統程序資訊中的目前使用者識別回退擴展至 Android 5.0／5.1／6.0（SDK 21／22／23）；無法確認身分時不猜測使用者為 0，仍拒絕修改。
-- 修正 Android 4.4 套件清單因已知 `libdvm.so` 非致命 linker 警告而讀取失敗的問題；僅忽略已核實的完整診斷，權限錯誤、未知警告與無效清單仍拒絕。
-- 兩種 `df` 查詢均無法解析 `/data` 容量時，使用固定 `stat -f -c %S:%b:%a /data` 直接讀取檔案系統，相容掛載別名，不將其他分割區容量當成 `/data`。
-- 預設 HOME 僅接受唯一、明確且非 Resolver／Chooser 的元件；結果缺失或有歧義時，繼續阻止停用與解除安裝，保留預設桌面保護。
-- 更新離線 Info 頁面的三語命令與相容性說明，補充品牌／系統版本驗收清單、唯讀裝置能力採集工具及可複查的 Android 系統模擬器證據。
-- Android 4.4／6／11 系統映像已驗證對應的讀取、安裝結果與保護行為，舊映像仍受 root 測試條件限制，不代表全部電視功能可用。小米電視 2 的系統尚待確認，小米電視 4 的 Android 6 為使用者回報；兩者均尚無實體電視驗證（E4）。
+- 預設主題更新為藍白色「晴空」，另提供淺青色「海鹽」和灰藍色「石墨」。統一側欄、卡片、表單、按鈕、對話框及鍵盤焦點配色，保留既有主題偏好。
+- 將 Info 更名為「相容性方案」，保留可離線閱讀的 7 組、19 項 ADB 命令、參數與系統相容性說明；移除「無需電視 ADB 的操作」分組和裝置相容性清單。
+- 調整緊湊視窗中的導覽留白，讓英文 Compatibility 使用較寬的系統字型時也能完整顯示。
+- 沿用 0.5.3 的舊版 Android 相容處理與預設桌面保護；本次介面更新不代表新增廠商電視的實機相容性認證。
 
 ## English
 
-- Extends the legacy activity-process fallback for current-user identification from SDK 19 to Android 5.0, 5.1 and 6.0 (SDK 21, 22 and 23). An unverified identity still blocks changes; user 0 is never assumed.
-- Fixes Android 4.4 package-list reads interrupted by the known non-fatal `libdvm.so` linker warning. Only the exact verified diagnostic is ignored; permission errors, unknown warnings and invalid lists remain rejected.
-- When neither `df` query yields a valid `/data` capacity, uses the fixed command `stat -f -c %S:%b:%a /data` to query that filesystem directly. This supports mount aliases without treating another partition's capacity as `/data`.
-- Accepts a default HOME only when it resolves to one unambiguous component other than a Resolver or Chooser. Missing or ambiguous results continue to block disabling and uninstalling apps, preserving launcher protection.
-- Updates the offline Info page's command and compatibility explanations in all three languages, and adds a brand/system acceptance checklist, a read-only capability collector and reviewable Android emulator evidence.
-- Android 4.4, 6 and 11 system images verified the corresponding reads, installation outcomes and protections. Older images retain root-related test limitations; this is not full TV compatibility certification. Xiaomi TV 2's system is unconfirmed, and Android 6 on Xiaomi TV 4 is user-reported; neither has physical-TV validation (E4).
+- Refreshes the default Sky theme with blue and white, alongside pale teal Sea Salt and neutral blue-gray Graphite. Sidebar, cards, forms, buttons, dialogs and keyboard focus use consistent colors, while existing theme preferences are preserved.
+- Renames Info to Compatibility. The page remains available offline with 7 groups covering 19 ADB operations, parameters and Android compatibility explanations. It removes the section for operations that do not use TV ADB and the device compatibility list.
+- Adjusts compact navigation spacing so the Compatibility label fits with wider system fonts.
+- Retains the legacy Android support and default-launcher protections from 0.5.3. This interface update does not certify additional vendor televisions through physical-device testing.
 
 ---
 

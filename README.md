@@ -15,6 +15,8 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
 [![MIT license](https://img.shields.io/badge/license-MIT-f4c430?style=flat-square)](LICENSE)
 
+[下载 pureTV Manager 0.5.4](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.4) · Windows / macOS / Linux · 新主题与兼容性方案页面
+
 ![当前源码的晴空主题，使用模拟设备数据](docs/previews/manager-zh.png)
 
 ## 连接与应用管理
