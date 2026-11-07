@@ -1,0 +1,1306 @@
+{
+  "version": "0.5.4",
+  "tag": "desktop-v0.5.4",
+  "sourceCommit": "4dce70bde1b4eb281f036b58a90c50ca6f9f0e99",
+  "workflowId": 42349769846,
+  "workflowUrl": "https://github.com/ecojust/pureTV/actions/runs/42349769846",
+  "status": "released",
+  "verifiedAt": "2026-11-07T07:13:09.502726+00:00",
+  "preflight": {
+    "version": "0.5.4",
+    "baseCommit": "b6d28fa710ab53501153561549d0447a029d5952",
+    "versionFiles": [
+      "desktop/package.json",
+      "desktop/package-lock.json",
+      "desktop/src-tauri/tauri.conf.json",
+      "desktop/core/Cargo.toml",
+      "desktop/src-tauri/Cargo.toml",
+      "desktop/core/Cargo.lock",
+      "desktop/src-tauri/Cargo.lock"
+    ],
+    "metadataAndLocksConsistent": true,
+    "dependencyVersionsChanged": false,
+    "priorDesktopWorkflow": 42236244828,
+    "priorDesktopWorkflowConclusion": "success",
+    "priorReleaseTagObject": "9fd60c65e92f6d4b6a8d55d6c270b16898752a5b"
+  },
+  "publication": {
+    "url": "https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.4",
+    "publishedAt": "2026-11-07T07:12:52Z",
+    "latest": true,
+    "releaseBodyMatchesSource": true,
+    "tagObject": "d6b3ea41382dab04a275b1f8dd72536f70acfc57",
+    "prior053TagUnchanged": true
+  },
+  "downloadVerification": {
+    "allSixAssetsDownloaded": true,
+    "installerCount": 5,
+    "completeAssetSetVerified": true,
+    "retainedLocally": "SHA256 manifest and evidence only; installers were streamed in full for verification",
+    "assets": [
+      {
+        "name": "SHA256SUMS.txt",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.4/SHA256SUMS.txt",
+        "bytes": 526,
+        "sha256": "31fbd8595d2f8e1d68300b48d9b3db4f4452b6cc412d84bf85fee9593ee5fafd",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": null
+      },
+      {
+        "name": "pureTV-Manager-0.5.4-linux-x64.deb",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.4/pureTV-Manager-0.5.4-linux-x64.deb",
+        "bytes": 4177392,
+        "sha256": "11d0ad90ebe252389f3033808cfcde9e7a0276d71150a40fc2400e3f15090e08",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.4-macos-arm64.dmg",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.4/pureTV-Manager-0.5.4-macos-arm64.dmg",
+        "bytes": 9804727,
+        "sha256": "8db1c368c4d1fcab4fa3a475ec74a52484dd1cdc044e4adfc9d540f948dde98d",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.4-macos-x64.dmg",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.4/pureTV-Manager-0.5.4-macos-x64.dmg",
+        "bytes": 10052199,
+        "sha256": "11e4f88c18de04deab3bff0296915a320c99ed5c2bf0aae333b5790e21152d05",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.4-windows-x64-portable.exe",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.4/pureTV-Manager-0.5.4-windows-x64-portable.exe",
+        "bytes": 5536256,
+        "sha256": "1eea08a1c7d17653824db3291d886e0bcc2fa1d9b7e2d354b40fe47f686429ae",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.4-windows-x64-setup.exe",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.4/pureTV-Manager-0.5.4-windows-x64-setup.exe",
+        "bytes": 2268398,
+        "sha256": "28aa3f9160862bc714f43c8d23492a290c36de0eb0543d2cb8f31061db9b685f",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      }
+    ]
+  },
+  "jobs": [
+    {
+      "name": "macos-x64",
+      "conclusion": "success",
+      "url": "https://github.com/ecojust/pureTV/actions/runs/42349769846/job/128335212468",
+      "startedAt": "2026-11-07T07:05:17Z",
+      "completedAt": "2026-11-07T07:12:09Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Linux desktop libraries",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify version metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install frontend dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check and build frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test subnet comparison",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test read-only TV compatibility probe",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test ADB core",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test Platform Tools installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Report native test failures",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify official Platform Tools download and offline reuse",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Tencent mirror download and ADB",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install UI test browser",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test desktop UI",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test SVG normalization",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Build native desktop and installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify actual client update installation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify MCP against the running desktop",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify macOS DMG, bundle signature and installed startup",
+          "conclusion": "success"
+        },
+        {
+          "name": "Collect release files",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "macos-arm64",
+      "conclusion": "success",
+      "url": "https://github.com/ecojust/pureTV/actions/runs/42349769846/job/128335212724",
+      "startedAt": "2026-11-07T07:05:17Z",
+      "completedAt": "2026-11-07T07:09:53Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Linux desktop libraries",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify version metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install frontend dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check and build frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test subnet comparison",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test read-only TV compatibility probe",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test ADB core",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test Platform Tools installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Report native test failures",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify official Platform Tools download and offline reuse",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Tencent mirror download and ADB",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install UI test browser",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test desktop UI",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test SVG normalization",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Build native desktop and installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify actual client update installation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify MCP against the running desktop",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify macOS DMG, bundle signature and installed startup",
+          "conclusion": "success"
+        },
+        {
+          "name": "Collect release files",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "windows-x64",
+      "conclusion": "success",
+      "url": "https://github.com/ecojust/pureTV/actions/runs/42349769846/job/128335212788",
+      "startedAt": "2026-11-07T07:05:17Z",
+      "completedAt": "2026-11-07T07:10:38Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Linux desktop libraries",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify version metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install frontend dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check and build frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test subnet comparison",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test read-only TV compatibility probe",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test ADB core",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test Platform Tools installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Report native test failures",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify official Platform Tools download and offline reuse",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Tencent mirror download and ADB",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install UI test browser",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test desktop UI",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test SVG normalization",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Build native desktop and installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify actual client update installation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify MCP against the running desktop",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify macOS DMG, bundle signature and installed startup",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Collect release files",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "linux-x64",
+      "conclusion": "success",
+      "url": "https://github.com/ecojust/pureTV/actions/runs/42349769846/job/128335212795",
+      "startedAt": "2026-11-07T07:05:17Z",
+      "completedAt": "2026-11-07T07:11:25Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Linux desktop libraries",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify version metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install frontend dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check and build frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test subnet comparison",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test read-only TV compatibility probe",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test ADB core",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test Platform Tools installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Report native test failures",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify official Platform Tools download and offline reuse",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Tencent mirror download and ADB",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install UI test browser",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test desktop UI",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test SVG normalization",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build native desktop and installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify actual client update installation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify MCP against the running desktop",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify macOS DMG, bundle signature and installed startup",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Collect release files",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "Publish desktop release",
+      "conclusion": "success",
+      "url": "https://github.com/ecojust/pureTV/actions/runs/42349769846/job/128336713263",
+      "startedAt": "2026-11-07T07:12:12Z",
+      "completedAt": "2026-11-07T07:12:55Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify complete artifact set and publish",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "physicalTvTested": false,
+  "giteeUploadPerformed": false,
+  "coreUiUpdateAudit": {
+    "runId": 42349769846,
+    "url": "https://github.com/ecojust/pureTV/actions/runs/42349769846",
+    "sourceCommit": "4dce70bde1b4eb281f036b58a90c50ca6f9f0e99",
+    "conclusion": "success",
+    "recordedAt": "2026-11-07T07:13:42.877452+00:00",
+    "fullLog": "/workspace/scratch/desktop-release-0.5.4/ci-full.log",
+    "fullLogBytes": 1047994,
+    "fullLogSha256": "26efdc7f116c362e7ea244f097bed539b5fadc25037bc78a6834e8ed0bd694ea",
+    "platforms": {
+      "windows-x64": {
+        "jobConclusion": "success",
+        "versionVerified": true,
+        "frontendBuild": "success",
+        "subnet": {
+          "tests": 3,
+          "suites": 0,
+          "pass": 3,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "readOnlyCompatibilityProbe": [
+          "Ran 28 tests in 1.617s",
+          "OK"
+        ],
+        "coreTests": [
+          {
+            "result": "ok",
+            "passed": 110,
+            "failed": 0,
+            "ignored": 2,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 0,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          }
+        ],
+        "nativeTests": [
+          {
+            "result": "ok",
+            "passed": 99,
+            "failed": 0,
+            "ignored": 8,
+            "measured": 0,
+            "filtered": 0
+          }
+        ],
+        "officialAdb": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 106
+          }
+        ],
+        "tencentAdb": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 106
+          }
+        ],
+        "updateStepConclusion": "success",
+        "updateVerification": [
+          "Verified actual 0.4.10 -> 0.5.4 helper upgrade, normal shutdown, relaunch and retained data"
+        ],
+        "updateNativePreparationTest": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 106
+          }
+        ],
+        "updateScope": "Pinned 0.4.10 installation upgraded to current build using real helper; normal shutdown, relaunch and retained data",
+        "ignoredCoreCases": [
+          "test adb::processes::tests::process_fixture ... ignored, subprocess fixture; only the parent cleanup test launches this",
+          "test adb::windows_process::tests::child_process ... ignored, Only launched as the owned process fixture for native cleanup tests"
+        ],
+        "ignoredNativeCases": [
+          "test client_install::tests::native_update_package_preparation ... ignored, requires an actual current-platform release package and isolated installation",
+          "test client_updates::tests::live_gitee_discovery_and_verified_client_download ... ignored, downloads one public client package into an isolated temporary directory",
+          "test forum::tests::live_public_gitee_detail_and_replies ... ignored, reads the live public Gitee API; run explicitly",
+          "test forum::tests::live_public_gitee_issues ... ignored, reads the live public Gitee API; run explicitly",
+          "test market::tests::live_store_catalog_and_download ... ignored, downloads the public catalog, small and large APKs, and reuses verified cache",
+          "test package_insights::tests::live_source_has_known_android_entry_and_exact_unknown_lookup ... ignored, downloads the public UAD-ng list; no list is bundled",
+          "test platform_tools::tests::mirror_download_and_adb_check ... ignored, Downloads the pinned Tencent mirror package and executes adb version; no device commands",
+          "test platform_tools::tests::official_download_and_offline_reuse ... ignored, Downloads the pinned Google package and executes adb version; no device commands"
+        ]
+      },
+      "linux-x64": {
+        "jobConclusion": "success",
+        "versionVerified": true,
+        "frontendBuild": "success",
+        "subnet": {
+          "tests": 3,
+          "suites": 0,
+          "pass": 3,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "readOnlyCompatibilityProbe": [
+          "Ran 28 tests in 1.299s",
+          "OK"
+        ],
+        "coreTests": [
+          {
+            "result": "ok",
+            "passed": 110,
+            "failed": 0,
+            "ignored": 1,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 0,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          }
+        ],
+        "nativeTests": [
+          {
+            "result": "ok",
+            "passed": 100,
+            "failed": 0,
+            "ignored": 8,
+            "measured": 0,
+            "filtered": 0
+          }
+        ],
+        "officialAdb": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 107
+          }
+        ],
+        "tencentAdb": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 107
+          }
+        ],
+        "updateStepConclusion": "success",
+        "updateVerification": [
+          "Verified actual DEB identity and native metadata preparation; no system installation performed"
+        ],
+        "updateNativePreparationTest": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 107
+          }
+        ],
+        "uiStepConclusion": "success",
+        "uiScenarioCounts": [
+          171
+        ],
+        "svgTests": {
+          "tests": 7,
+          "suites": 0,
+          "pass": 7,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "mcpStepConclusion": "success",
+        "mcpPassAssertions": 71,
+        "mcpMilestones": [
+          "PASS: persisted application SVG reaches launcher layout through the running MCP bridge",
+          "PASS: independent Nova and pureTV providers, v5 editing, system lock, covers and reset",
+          "PASS: third-party layout provider discovered dynamically without a package allowlist",
+          "PASS: normal shutdown stops ADB exactly once before exiting",
+          "PASS: real GUI, MCP stdio, all device actions, protection, cancellation, and closed-window errors"
+        ],
+        "updateScope": "DEB identity and native metadata preparation only; no system installation",
+        "ignoredCoreCases": [
+          "test adb::processes::tests::process_fixture ... ignored, subprocess fixture; only the parent cleanup test launches this"
+        ],
+        "ignoredNativeCases": [
+          "test client_install::tests::native_update_package_preparation ... ignored, requires an actual current-platform release package and isolated installation",
+          "test client_updates::tests::live_gitee_discovery_and_verified_client_download ... ignored, downloads one public client package into an isolated temporary directory",
+          "test forum::tests::live_public_gitee_detail_and_replies ... ignored, reads the live public Gitee API; run explicitly",
+          "test forum::tests::live_public_gitee_issues ... ignored, reads the live public Gitee API; run explicitly",
+          "test market::tests::live_store_catalog_and_download ... ignored, downloads the public catalog, small and large APKs, and reuses verified cache",
+          "test package_insights::tests::live_source_has_known_android_entry_and_exact_unknown_lookup ... ignored, downloads the public UAD-ng list; no list is bundled",
+          "test platform_tools::tests::mirror_download_and_adb_check ... ignored, Downloads the pinned Tencent mirror package and executes adb version; no device commands",
+          "test platform_tools::tests::official_download_and_offline_reuse ... ignored, Downloads the pinned Google package and executes adb version; no device commands"
+        ]
+      },
+      "macos-arm64": {
+        "jobConclusion": "success",
+        "versionVerified": true,
+        "frontendBuild": "success",
+        "subnet": {
+          "tests": 3,
+          "suites": 0,
+          "pass": 3,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "readOnlyCompatibilityProbe": [
+          "Ran 28 tests in 1.481s",
+          "OK"
+        ],
+        "coreTests": [
+          {
+            "result": "ok",
+            "passed": 110,
+            "failed": 0,
+            "ignored": 1,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 0,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          }
+        ],
+        "nativeTests": [
+          {
+            "result": "ok",
+            "passed": 101,
+            "failed": 0,
+            "ignored": 8,
+            "measured": 0,
+            "filtered": 0
+          }
+        ],
+        "officialAdb": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 108
+          }
+        ],
+        "tencentAdb": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 108
+          }
+        ],
+        "updateStepConclusion": "success",
+        "updateVerification": [
+          "Verified actual 0.4.10 -> 0.5.4 helper upgrade, normal shutdown, relaunch and retained data"
+        ],
+        "updateNativePreparationTest": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 108
+          }
+        ],
+        "updateScope": "Pinned 0.4.10 installation upgraded to current build using real helper; normal shutdown, relaunch and retained data",
+        "ignoredCoreCases": [
+          "test adb::processes::tests::process_fixture ... ignored, subprocess fixture; only the parent cleanup test launches this"
+        ],
+        "ignoredNativeCases": [
+          "test client_install::tests::native_update_package_preparation ... ignored, requires an actual current-platform release package and isolated installation",
+          "test client_updates::tests::live_gitee_discovery_and_verified_client_download ... ignored, downloads one public client package into an isolated temporary directory",
+          "test forum::tests::live_public_gitee_detail_and_replies ... ignored, reads the live public Gitee API; run explicitly",
+          "test forum::tests::live_public_gitee_issues ... ignored, reads the live public Gitee API; run explicitly",
+          "test market::tests::live_store_catalog_and_download ... ignored, downloads the public catalog, small and large APKs, and reuses verified cache",
+          "test package_insights::tests::live_source_has_known_android_entry_and_exact_unknown_lookup ... ignored, downloads the public UAD-ng list; no list is bundled",
+          "test platform_tools::tests::mirror_download_and_adb_check ... ignored, Downloads the pinned Tencent mirror package and executes adb version; no device commands",
+          "test platform_tools::tests::official_download_and_offline_reuse ... ignored, Downloads the pinned Google package and executes adb version; no device commands"
+        ]
+      },
+      "macos-x64": {
+        "jobConclusion": "success",
+        "versionVerified": true,
+        "frontendBuild": "success",
+        "subnet": {
+          "tests": 3,
+          "suites": 0,
+          "pass": 3,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "readOnlyCompatibilityProbe": [
+          "Ran 28 tests in 1.477s",
+          "OK"
+        ],
+        "coreTests": [
+          {
+            "result": "ok",
+            "passed": 110,
+            "failed": 0,
+            "ignored": 1,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 0,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          }
+        ],
+        "nativeTests": [
+          {
+            "result": "ok",
+            "passed": 101,
+            "failed": 0,
+            "ignored": 8,
+            "measured": 0,
+            "filtered": 0
+          }
+        ],
+        "officialAdb": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 108
+          }
+        ],
+        "tencentAdb": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 108
+          }
+        ],
+        "updateStepConclusion": "success",
+        "updateVerification": [
+          "Verified actual 0.4.10 -> 0.5.4 helper upgrade, normal shutdown, relaunch and retained data"
+        ],
+        "updateNativePreparationTest": [
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 108
+          }
+        ],
+        "updateScope": "Pinned 0.4.10 installation upgraded to current build using real helper; normal shutdown, relaunch and retained data",
+        "ignoredCoreCases": [
+          "test adb::processes::tests::process_fixture ... ignored, subprocess fixture; only the parent cleanup test launches this"
+        ],
+        "ignoredNativeCases": [
+          "test client_install::tests::native_update_package_preparation ... ignored, requires an actual current-platform release package and isolated installation",
+          "test client_updates::tests::live_gitee_discovery_and_verified_client_download ... ignored, downloads one public client package into an isolated temporary directory",
+          "test forum::tests::live_public_gitee_detail_and_replies ... ignored, reads the live public Gitee API; run explicitly",
+          "test forum::tests::live_public_gitee_issues ... ignored, reads the live public Gitee API; run explicitly",
+          "test market::tests::live_store_catalog_and_download ... ignored, downloads the public catalog, small and large APKs, and reuses verified cache",
+          "test package_insights::tests::live_source_has_known_android_entry_and_exact_unknown_lookup ... ignored, downloads the public UAD-ng list; no list is bundled",
+          "test platform_tools::tests::mirror_download_and_adb_check ... ignored, Downloads the pinned Tencent mirror package and executes adb version; no device commands",
+          "test platform_tools::tests::official_download_and_offline_reuse ... ignored, Downloads the pinned Google package and executes adb version; no device commands"
+        ]
+      }
+    },
+    "evidenceExcerpts": "core-ui-update-excerpts.log",
+    "scopeNotes": [
+      "Core/compatibility tests use simulated device responses, not physical TV firmware.",
+      "Linux UI uses browser automation; MCP executes the built desktop with isolated mock ADB.",
+      "Client update integration does not publish the Gitee client catalog."
+    ],
+    "archivedExcerptFile": "release-0.5.4-evidence/core-ui-update-excerpts.txt"
+  },
+  "macosAudit": {
+    "workflowRun": 42349769846,
+    "sourceCommit": "4dce70bde1b4eb281f036b58a90c50ca6f9f0e99",
+    "tag": "desktop-v0.5.4",
+    "workflowConclusion": "success",
+    "publishJobConclusion": "success",
+    "completeLogBytes": 1047994,
+    "completeLogSha256": "26efdc7f116c362e7ea244f097bed539b5fadc25037bc78a6834e8ed0bd694ea",
+    "jobs": [
+      {
+        "workflowRun": 42349769846,
+        "sourceCommit": "4dce70bde1b4eb281f036b58a90c50ca6f9f0e99",
+        "tag": "desktop-v0.5.4",
+        "version": "0.5.4",
+        "jobId": 128335212724,
+        "name": "macos-arm64",
+        "architecture": "arm64",
+        "conclusion": "success",
+        "collectedAt": "2026-11-07T07:13:24.108805+00:00",
+        "counts": {
+          "Test read-only TV compatibility probe": [
+            {
+              "passed": 28,
+              "line": 2417
+            }
+          ],
+          "Test ADB core": [
+            {
+              "result": "ok",
+              "passed": 110,
+              "failed": 0,
+              "ignored": 1,
+              "line": 2557
+            },
+            {
+              "result": "ok",
+              "passed": 0,
+              "failed": 0,
+              "ignored": 0,
+              "line": 2563
+            }
+          ],
+          "Test Platform Tools installer": [
+            {
+              "result": "ok",
+              "passed": 101,
+              "failed": 0,
+              "ignored": 8,
+              "line": 2728
+            }
+          ],
+          "Verify official Platform Tools download and offline reuse": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "line": 2788
+            }
+          ],
+          "Verify Tencent mirror download and ADB": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "line": 2843
+            }
+          ],
+          "Verify actual client update installation": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "line": 2958
+            }
+          ]
+        },
+        "checks": {
+          "frozenSHAInLog": true,
+          "versionMetadata": true,
+          "actualUpgrade": true,
+          "architectureAndCompleteSignatureTwice": true,
+          "startupFiveSeconds": true,
+          "normalShutdown": true,
+          "dmgChecksPassed": true,
+          "collectorOK": true
+        },
+        "evidenceFile": "macos-arm64-evidence.txt",
+        "evidenceBytes": 3273,
+        "evidenceSha256": "2aac78886654acfea365d44d4f00b27621fcbcddba8eae0882b64965915785ac",
+        "limitations": [
+          "Startup check observes an installed copy for 5 seconds without device operations.",
+          "Normal shutdown uses simulated ADB.",
+          "Complete bundle signature is ad-hoc signing; no Apple notarization or Gatekeeper approval is asserted.",
+          "Mac CI is not physical-TV compatibility testing."
+        ],
+        "archivedEvidenceFile": "release-0.5.4-evidence/macos-arm64-evidence.txt"
+      },
+      {
+        "workflowRun": 42349769846,
+        "sourceCommit": "4dce70bde1b4eb281f036b58a90c50ca6f9f0e99",
+        "tag": "desktop-v0.5.4",
+        "version": "0.5.4",
+        "jobId": 128335212468,
+        "name": "macos-x64",
+        "architecture": "x86_64",
+        "conclusion": "success",
+        "collectedAt": "2026-11-07T07:13:24.116190+00:00",
+        "counts": {
+          "Test read-only TV compatibility probe": [
+            {
+              "passed": 28,
+              "line": 865
+            }
+          ],
+          "Test ADB core": [
+            {
+              "result": "ok",
+              "passed": 110,
+              "failed": 0,
+              "ignored": 1,
+              "line": 1005
+            },
+            {
+              "result": "ok",
+              "passed": 0,
+              "failed": 0,
+              "ignored": 0,
+              "line": 1011
+            }
+          ],
+          "Test Platform Tools installer": [
+            {
+              "result": "ok",
+              "passed": 101,
+              "failed": 0,
+              "ignored": 8,
+              "line": 1176
+            }
+          ],
+          "Verify official Platform Tools download and offline reuse": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "line": 1236
+            }
+          ],
+          "Verify Tencent mirror download and ADB": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "line": 1291
+            }
+          ],
+          "Verify actual client update installation": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "line": 1405
+            }
+          ]
+        },
+        "checks": {
+          "frozenSHAInLog": true,
+          "versionMetadata": true,
+          "actualUpgrade": true,
+          "architectureAndCompleteSignatureTwice": true,
+          "startupFiveSeconds": true,
+          "normalShutdown": true,
+          "dmgChecksPassed": true,
+          "collectorOK": true
+        },
+        "evidenceFile": "macos-x64-evidence.txt",
+        "evidenceBytes": 3223,
+        "evidenceSha256": "6902ecf07bed2596622d0c8b21ede9af46c389c8851f0d005bd9211e5a24b042",
+        "limitations": [
+          "Startup check observes an installed copy for 5 seconds without device operations.",
+          "Normal shutdown uses simulated ADB.",
+          "Complete bundle signature is ad-hoc signing; no Apple notarization or Gatekeeper approval is asserted.",
+          "Mac CI is not physical-TV compatibility testing."
+        ],
+        "archivedEvidenceFile": "release-0.5.4-evidence/macos-x64-evidence.txt"
+      }
+    ]
+  },
+  "giteeClientSync": {
+    "api": "https://gitee.com/api/v5/repos/juzisang331/pure-tv-store/contents/client?ref=master",
+    "checkedAt": "2026-11-07T07:13:39.042625+00:00",
+    "uploadPerformed": false,
+    "readSucceeded": true,
+    "observedFiles": [
+      "client/.DS_Store",
+      "client/pureTV-Manager-0.5.3-macos-arm64.dmg",
+      "client/pureTV-Manager-0.5.3-macos-x64.dmg",
+      "client/pureTV-Manager-0.5.3-windows-x64-setup.exe"
+    ]
+  },
+  "archivedEvidence": [
+    {
+      "path": "release-0.5.4-evidence/core-ui-update-excerpts.txt",
+      "bytes": 17051,
+      "sha256": "bd45d8db23001fb3e0e33559113c2b7f9a82123089bc7459f44376dbd22f59a7"
+    },
+    {
+      "path": "release-0.5.4-evidence/macos-arm64-evidence.txt",
+      "bytes": 3273,
+      "sha256": "2aac78886654acfea365d44d4f00b27621fcbcddba8eae0882b64965915785ac"
+    },
+    {
+      "path": "release-0.5.4-evidence/macos-x64-evidence.txt",
+      "bytes": 3223,
+      "sha256": "6902ecf07bed2596622d0c8b21ede9af46c389c8851f0d005bd9211e5a24b042"
+    },
+    {
+      "path": "release-0.5.4-evidence/SHA256SUMS.txt",
+      "bytes": 526,
+      "sha256": "31fbd8595d2f8e1d68300b48d9b3db4f4452b6cc412d84bf85fee9593ee5fafd"
+    }
+  ],
+  "evidenceRetention": "Selected original CI excerpts and SHA256 manifest are archived. The full log was downloaded and hashed; its scratch path is temporary and GitHub controls remote log retention. Public installers were streamed in full without retaining redundant local copies."
+}
