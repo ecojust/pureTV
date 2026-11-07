@@ -1,0 +1,40 @@
+# 目录来源与维护
+
+商城使用本项目维护的 APK 目录，按启动器、影音、游戏、工具分类。每组沿用 `tools/resource-order.json` 的制作顺序，新做的项目排前面。当前首版内置 126 个已经发布的资源，所有项目均来自 `resource.json` 与真实签名 APK；目录并不等同于 Gitee 市场的第三方软件集合。
+
+远程目录是 [`resource/tv-store-catalog.json`](../../../tv-store-catalog.json)。客户端先读取 `https://api.github.com/repos/ecojust/pureTV/git/ref/heads/master`，取得完整提交 SHA，再从这个固定提交下载目录、封面和 APK。刷新目录即可发现新资源，不需要先更新商城自身。只有同包名的较高 `versionCode` 才属于更新；文件名及显示版本不参与更新判断。安装前还须核对系统版本、APK 身份和签名，不能因为下载结束就显示安装成功。
+
+目录每项包含中英文名称和说明、分类、包名、版本名与版本号、最低 SDK、APK 大小、SHA256、Git blob SHA1、签名证书 SHA256、仓库内 APK/封面路径，以及不超过 8 KiB 的静态 SVG。SVG 仅保留布局协议支持的形状；外链、脚本等内容不进入目录。历史资源没有合规 SVG 时使用空值，并在生成器输出中记录原因。
+
+在线目录通过后写入应用私有目录的原子缓存，五分钟内可复用；手动刷新会重新请求。网络或目录校验失败时展示上次有效目录，首次离线则展示内置目录，明确提示它可能已过期。离线目录只能证明收录时的版本，不能证明所有软件都是最新。取消操作不会被当作成功或悄悄继续刷新。
+
+网络只允许 HTTPS 的指定 GitHub API 路径和固定提交下的本仓库资源路径；所有重定向再次校验，最多三次。连接与单次读取超时为 10 秒，总传输上限 15 分钟。JSON 上限 4 MiB、条目上限 1024，APK 上限 512 MiB。Android 4.4 显式启用 TLS 1.2，保留系统证书和域名校验；旧电视缺失根证书时可能仍无法连接，此时使用过期目录提示，不绕过证书检查。
+
+## 发布后刷新目录
+
+在新增或更新资源 APK、`resource.json`、顺序和英文数据后运行：
+
+```bash
+python3 tools/update-tv-store-catalog.py \
+  --build-tools /path/to/android-sdk/build-tools/34.0.0
+python3 -m unittest discover -s tools -p test_tv_store_catalog.py
+```
+
+生成器通过 `aapt`、`apksigner` 严格检查所有发布 APK 的真实身份、版本、固定证书和哈希，并从真实 APK 提取最低 SDK。生成文件不写“本次生成时间”；输入不变则输出字节和文件时间不变。使用 `--check` 可验证已提交的文件是否仍是最新。公开新资源时应把 APK、元数据和刷新后的目录一起提交；客户端从同一提交读取它们。
+
+首版源码引导只允许 `--allow-unpublished-store` 跳过精确的 `resource/apps/putrtv-store`，且该目录必须同时没有 `resource.json` 和顶层 APK。该开关不会允许其他应用缺失或损坏。正式发布必须使用默认严格模式，把已经签名并登记的商城自身加入远程目录。
+
+## 内置快照与自身更新
+
+首版内置 `src/main/assets/catalog-snapshot.json` 固定到已发布提交 `23bf3b11c156922a70a64d5f10f2700c52ac10f6`，含 126 项，不含尚未发布的商城自身。引导生成命令是：
+
+```bash
+python3 tools/update-tv-store-catalog.py \
+  --build-tools /path/to/android-sdk/build-tools/34.0.0 \
+  --allow-unpublished-store \
+  --snapshot-revision 23bf3b11c156922a70a64d5f10f2700c52ac10f6
+```
+
+快照命令核对各项元数据及 APK、封面和指定提交一致，使用该提交时间作为资料时间。商城签名完成后只刷新远程目录，不重新改写冻结的内置文件，避免让 APK 内容与它自身的哈希循环依赖。后续商城版本可以选择新的已发布快照，仍须在源码冻结前完成。
+
+Gitee 原始目录目前不能提供足够的包名、版本号和证书元数据，因此首版不把第三方文件名当作更新依据，也不自动猜测未知软件包。实体电视上的网络、安装和旧证书兼容性仍需按实际机型验证；自动化测试不代表已完成真机测试。

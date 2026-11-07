@@ -52,7 +52,9 @@ for name in names:
     for before,after in [('home-render.png','thumb.png'),('apps-render.png','apps.png')]:
         data=artifact(before);assert data.startswith(b'\x89PNG');(folder/after).write_bytes(data)
     write_english_previews(root,'launcher',name,actual['versionName'],args.source_sha,status['html_url'],artifact('home-render.en.png'),artifact('apps-render.en.png'))
-    archive=git('archive','--format=tar',args.source_sha,source_path)
+    archive_paths=[source_path]
+    if git('ls-tree',args.source_sha,'resource/launcher/shared').strip():archive_paths.append('resource/launcher/shared')
+    archive=git('archive','--format=tar',args.source_sha,*archive_paths)
     with tarfile.open(fileobj=io.BytesIO(archive)) as source,tarfile.open(folder/'source.tar.gz','w:gz') as target:
         for member in source:
             if member.name.endswith(('.apk','source.tar.gz','resource.json','SHA256SUMS.txt','thumb.png','apps.png')):continue

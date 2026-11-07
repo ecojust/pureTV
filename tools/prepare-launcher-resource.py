@@ -73,6 +73,8 @@ with tempfile.TemporaryDirectory(prefix='puretv-resource-') as temporary:
         files=set(git('ls-tree','--name-only',args.source_sha+':'+prefix).decode().splitlines())
         if 'build.gradle' in files:
             archive_paths += [prefix+'/'+name for name in sorted(files & module_inputs)]
+    if git('ls-tree',args.source_sha,'resource/launcher/shared').strip():
+        archive_paths.append('resource/launcher/shared')
     archive_paths += ['tools/tests','LICENSE','NOTICE.md']
     with source.open('wb') as output:
         subprocess.run(['git','-C',str(root),'archive','--format=tar.gz',args.source_sha,*archive_paths],stdout=output,check=True)

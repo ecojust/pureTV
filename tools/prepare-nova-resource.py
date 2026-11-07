@@ -53,7 +53,9 @@ for source,target in [('home-render.png','thumb.png'),('apps-render.png','apps.p
     data=artifact(source);assert data.startswith(b'\x89PNG');(folder/target).write_bytes(data)
 write_english_previews(root,'launcher','nova',version,args.source_sha,status['html_url'],artifact('home-render.en.png'),artifact('apps-render.en.png'))
 # Archive the exact build revision, excluding generated catalog artifacts.
-archive=git('archive','--format=tar',args.source_sha,'resource/launcher/nova')
+archive_paths=['resource/launcher/nova']
+if git('ls-tree',args.source_sha,'resource/launcher/shared').strip():archive_paths.append('resource/launcher/shared')
+archive=git('archive','--format=tar',args.source_sha,*archive_paths)
 with tarfile.open(fileobj=io.BytesIO(archive)) as source,tarfile.open(folder/'source.tar.gz','w:gz') as target:
     for member in source:
         if member.name.endswith(('.apk','source.tar.gz','resource.json','SHA256SUMS.txt','thumb.png','apps.png')):continue

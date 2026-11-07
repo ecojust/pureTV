@@ -85,6 +85,39 @@ class ReleaseCertificatesTest(unittest.TestCase):
             with self.assertRaisesRegex(AssertionError, 'unexpected release signing certificate'):
                 resource_catalog.verify_catalog(self.root, Path('/unused'))
 
+    def test_store_bootstrap_is_source_only_and_published_signer_stays_pinned(self):
+        identity = self.identity('com.ecojust.putrtvstore', 1, '0.1.0', self.new)
+        self.assertEqual(resource_catalog.expected_release_certificate(self.root, identity), self.new)
+        self.assertEqual(resource_catalog.expected_release_certificate(
+            self.root, self.identity('com.ecojust.putrtvstore.clone', 1, '0.1.0')), self.old)
+        tank = self.identity('com.ecojust.tanktv', 7, '0.5.0', self.new)
+        self.fixture('tank', tank)
+        folder = self.root / 'resource/apps/putrtv-store'
+        folder.mkdir()
+        with patch.object(resource_catalog, 'apk_info', return_value=tank):
+            with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+                resource_catalog.verify_catalog(self.root, Path('/unused'))
+            self.assertEqual(len(resource_catalog.verify_catalog(
+                self.root, Path('/unused'), allow_unpublished_putrtv_store=True)), 1)
+            (folder / 'putrtv-store.APK').write_bytes(b'unsigned')
+            with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+                resource_catalog.verify_catalog(self.root, Path('/unused'), allow_unpublished_putrtv_store=True)
+        shutil.rmtree(folder)
+        wrong = dict(identity, certificateSha256=self.old)
+        self.fixture('putrtv-store', wrong)
+        with patch.object(resource_catalog, 'apk_info', side_effect=lambda path, tools: wrong if path.parent.name == 'putrtv-store' else tank):
+            with self.assertRaisesRegex(AssertionError, 'unexpected release signing certificate'):
+                resource_catalog.verify_catalog(self.root, Path('/unused'), allow_unpublished_putrtv_store=True)
+
+    def test_shared_launcher_code_is_not_a_resource_and_cannot_hide_apks(self):
+        shared = self.root / 'resource/launcher/shared'
+        shared.mkdir()
+        (shared / 'src').mkdir()
+        self.assertEqual(list(resource_catalog.catalog_directories(self.root)), [])
+        (shared / 'hidden.apk').write_bytes(b'APK')
+        with self.assertRaisesRegex(AssertionError, 'Publish launcher APKs'):
+            list(resource_catalog.catalog_directories(self.root))
+
     def test_unknown_and_similar_package_names_cannot_automatically_use_the_new_pin(self):
         for package in ('com.ecojust.unknown', 'com.ecojust.newapp',
                         'com.ecojust.coastkarttv.clone', 'com.ecojust.tanktv2',

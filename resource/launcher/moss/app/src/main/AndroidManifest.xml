@@ -46,6 +46,16 @@
         <provider android:name=".LauncherLayoutProvider" android:authorities="com.ecojust.mosstv.layout" android:exported="true" android:permission="android.permission.DUMP" />
 
         <activity
+            android:name=".AddToHomeActivity"
+            android:exported="true"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="com.ecojust.puretv.action.ADD_TO_HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask"

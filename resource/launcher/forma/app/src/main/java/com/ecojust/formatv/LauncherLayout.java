@@ -149,7 +149,7 @@ final class LauncherLayout {
     static LauncherLayout defaults(Context ctx) throws Exception {
         return new LauncherLayout(UnifiedLayout.withInstalled(ctx,template(ctx).json));
     }
-    static void apply(Context ctx, JSONObject json) throws Exception {
+    static synchronized void apply(Context ctx, JSONObject json) throws Exception {
         LauncherLayout layout = new LauncherLayout(json);
         if(json.optInt("version")==5)layout=canonicalLocale(ctx,layout,template(ctx).json);
         else if(json.optInt("version")==4)UnifiedLayout.locked(json,template(ctx).json);
@@ -167,7 +167,7 @@ final class LauncherLayout {
         MainActivity.reloadLayoutFromManager();
         AppsActivity.reloadLayoutFromManager();
     }
-    static void reset(Context ctx) {
+    static synchronized void reset(Context ctx) {
         new AtomicFile(file(ctx)).delete();
         File directory=ctx.getExternalFilesDir(null);
         if(directory!=null) for(String name:Arrays.asList("layout.json")) {
@@ -203,7 +203,7 @@ final class LauncherLayout {
         return result;
     }
     /** Desktop wallpaper picker writes the very same JSON scene the manager reads. */
-    static void wallpaper(Context ctx,File file) throws Exception {
+    static synchronized void wallpaper(Context ctx,File file) throws Exception {
         LauncherLayout current=effective(ctx);
         JSONObject draft=new JSONObject(current.json.toString());
         JSONObject bg;

@@ -8,26 +8,28 @@ root=Path(__file__).resolve().parents[1]
 entries=[(folder.relative_to(root/'resource').as_posix(),json.loads((folder/'resource.json').read_text())) for folder in catalog_directories(root)]
 counts={kind:sum(info['kind']==kind for _,info in entries) for kind in ('launcher','app')}
 LOCALES={
-    'zh':{'launcher':'启动器','media':'应用-影音','game':'应用-游戏','alt':'{name} 界面'},
-    'en':{'launcher':'Launchers','media':'Apps - Media','game':'Apps - Games','alt':'{name} preview'},
+    'zh':{'launcher':'启动器','media':'应用-影音','game':'应用-游戏','tools':'应用-工具','alt':'{name} 界面'},
+    'en':{'launcher':'Launchers','media':'Apps - Media','game':'Apps - Games','tools':'Apps - Tools','alt':'{name} preview'},
 }
 ENGLISH=json.loads((root/'tools/resource-index.en.json').read_text())
 # Persist creation order so version updates and checkout dates cannot reorder cards.
 RESOURCE_ORDER=json.loads((root/'tools/resource-order.json').read_text())
 # Media apps have no game manifest or bundled game entry point.
 MEDIA_APPS={'apps/bilibili','apps/cctv','apps/hifini','apps/shortvideo','apps/webtv'}
+TOOL_APPS={'apps/putrtv-store'}
 
 def section(key,info):
     if info['kind']=='launcher':return 'launcher'
     if key in MEDIA_APPS:return 'media'
+    if key in TOOL_APPS:return 'tools'
     directory=root/'resource'/key
     if (directory/'game.json').is_file() or (directory/'src/main/assets/game.js').is_file():return 'game'
     raise ValueError(f'{key}: classify the new app before generating the README index')
 
 def ordered_groups():
     """Validate the oldest-first manifest and return newest-first resource groups."""
-    groups=('launcher','media','game')
-    assert set(RESOURCE_ORDER)==set(groups),'Expected launcher, media and game creation order'
+    groups=('launcher','media','game','tools')
+    assert set(RESOURCE_ORDER)==set(groups),'Expected launcher, media, game and tools creation order'
     indexed=dict(entries)
     keys=[key for group in groups for key in RESOURCE_ORDER[group]]
     assert len(keys)==len(set(keys)),'Duplicate resource in tools/resource-order.json'
@@ -63,7 +65,7 @@ def root_readme_groups(groups):
 def tables(prefix,groups,locale='zh'):
     labels=LOCALES[locale]
     output=[]
-    for group in ('launcher','media','game'):
+    for group in ('launcher','media','game','tools'):
         count=len(groups[group])
         suffix=f'（{count}）' if locale=='zh' else f' ({count})'
         output+=['### '+labels[group]+suffix,'']

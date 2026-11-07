@@ -10,8 +10,8 @@ android {
         applicationId 'com.ecojust.formatv'
         minSdk 26
         targetSdk 29
-        versionCode 3
-        versionName '0.5.0'
+        versionCode 4
+        versionName '0.5.1'
     }
 
     // Release credentials are supplied locally or through GitHub Actions secrets.
@@ -37,6 +37,11 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    sourceSets {
+        main.java.srcDirs += '../../shared/src/main/java'
+        test.java.srcDirs += '../../shared/src/test/java'
     }
 
     testOptions {

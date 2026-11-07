@@ -62,7 +62,10 @@ python3 resource/game-kit/build.py \
 ```bash
 python3 tools/resource_catalog.py --build-tools /absolute/android-sdk/build-tools/34.0.0
 python3 tools/update-resource-index.py
+python3 tools/update-tv-store-catalog.py --build-tools /absolute/android-sdk/build-tools/34.0.0
 ```
+
+电视商城使用同提交中的 `resource/tv-store-catalog.json` 与 APK；每次新增或更新资源都要重新生成目录，不能只更新版本文案。首次源码构建的商城跳过参数只用于尚未发布的源码目录，发布时仍运行默认严格校验。更新商城内置快照时固定一个已发布提交，避免把自身 APK 哈希写进自身安装包。
 
 `tools/verify-game-publication.py` 仅支持其注册的旧游戏，不要直接套用于新 Game Kit 游戏。签名产物、GitHub 提交、GitHub Release 和 Gitee 市场发布是不同状态，分别如实记录。
 
