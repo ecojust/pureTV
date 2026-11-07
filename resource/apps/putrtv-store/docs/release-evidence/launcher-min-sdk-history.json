@@ -1,0 +1,84 @@
+{
+  "method": "Extract historical Git APK blobs, verify metadata size/SHA256, inspect binary AndroidManifest via aapt dump badging",
+  "repositoryIsShallow": false,
+  "apkChecks": [
+    {
+      "commit": "a46fe554f3d0c65acf002565741dd775f947562b",
+      "apkPath": "resource/puretv-launcher/pureTV-0.3.0.apk",
+      "version": "0.3.0",
+      "packageName": "com.ecojust.puretv",
+      "versionCode": 9,
+      "minSdk": 26,
+      "sha256": "4ede23f5e98b7633d59cfbfab37187ee91c0ae781e6a8dd5b06989a7cda4245c",
+      "bytes": 688135,
+      "metadataMatchesApk": true
+    },
+    {
+      "commit": "612218e263a387e8cb9bf2a670317be5d4d43138",
+      "apkPath": "resource/launcher/puretv/pureTV-0.5.0.apk",
+      "version": "0.5.0",
+      "packageName": "com.ecojust.puretv",
+      "versionCode": 14,
+      "minSdk": 26,
+      "sha256": "e254cd0cf8b59d0db9d024f750ad45bb8214755200386e67186be274f3190406",
+      "bytes": 757909,
+      "metadataMatchesApk": true
+    },
+    {
+      "commit": "6e4774b40f2010c2e8e6050126b271ae4a13e2e8",
+      "apkPath": "resource/launcher/puretv/pureTV-0.5.1.apk",
+      "version": "0.5.1",
+      "packageName": "com.ecojust.puretv",
+      "versionCode": 15,
+      "minSdk": 26,
+      "sha256": "941fbc7cf2d94890dc1d5def3323a50de72f34e1832449d3ab4ed369929e612e",
+      "bytes": 846286,
+      "metadataMatchesApk": true
+    },
+    {
+      "commit": "6651421342c81a35429eac1d094310d848a4584a",
+      "apkPath": "resource/launcher/puretv/pureTV-0.5.2.apk",
+      "version": "0.5.2",
+      "packageName": "com.ecojust.puretv",
+      "versionCode": 16,
+      "minSdk": 26,
+      "sha256": "ff5bc81fb4ea2cb7c9b3ad0d6f793c5bdd53f29590c9a98c30d30ac89c2f6f63",
+      "bytes": 860309,
+      "metadataMatchesApk": true
+    }
+  ],
+  "deviceTested": false,
+  "sourceHistoryAudit": {
+    "headAtAudit": "6651421342c81a35429eac1d094310d848a4584a",
+    "scope": "All locally available refs; git rev-list --objects --all, covering directory migrations",
+    "reachableCommits": 1031,
+    "uniqueLauncherGradleBlobs": 63,
+    "observedMinSdkValues": [
+      26
+    ],
+    "initialSources": [
+      {
+        "launcher": "pureTV predecessor cleanyourtv-c",
+        "commit": "81b5685c90794d8fdeade83c435f55cc6c62b1ef",
+        "path": "launcher/app/build.gradle",
+        "version": "0.1.0",
+        "minSdk": 26
+      },
+      {
+        "launcher": "Nova",
+        "commit": "1e1d3b06ea085b001bcdee3a97647e1a95928a58",
+        "path": "resource/launcher/nova/app/build.gradle",
+        "version": "0.1.0",
+        "minSdk": 26
+      },
+      {
+        "launcher": "Aster/Circuit/Drift/Forma/Mono/Moss/Pixel/Sol",
+        "commit": "6f6cd9a7f975f0b75c5595a10041adb08a5682b9",
+        "path": "resource/launcher/<id>/app/build.gradle",
+        "version": "0.1.0",
+        "minSdk": 26
+      }
+    ]
+  },
+  "unresolved": "User recalls an earlier launcher running on Mi TV 2; installed launcher name/version and actual device Android version have not been identified."
+}
