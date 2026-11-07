@@ -5,10 +5,17 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 /** Public repository transport. Every redirect is checked before opening a connection. */
 public final class StoreNetwork {
@@ -58,9 +65,9 @@ public final class StoreNetwork {
             // Android 4.4 supports TLS 1.2 but does not enable it for all default HTTPS sockets.
             // Keep the platform trust store and hostname verifier; never accept invalid certificates.
             try {
-                SSLContext tls = SSLContext.getInstance("TLSv1.2");
+                SSLContext tls = SSLContext.getInstance("TLS");
                 tls.init(null, null, null);
-                connection.setSSLSocketFactory(tls.getSocketFactory());
+                connection.setSSLSocketFactory(new EnabledTlsFactory(tls.getSocketFactory()));
                 int status = connection.getResponseCode();
                 cancellation.check();
                 if (status == 301 || status == 302 || status == 303 || status == 307 || status == 308) {
@@ -92,6 +99,52 @@ public final class StoreNetwork {
             }
         }
         throw new IOException("Too many repository redirects");
+    }
+
+    /** Android 4.4 aliases TLS context names and still creates SSLv3/TLSv1-only
+     * sockets by default. Configure each delegated socket before its handshake.
+     * The delegate retains the platform trust manager and enabled cipher suites;
+     * HttpsURLConnection retains its default hostname verifier.
+     */
+    static final class EnabledTlsFactory extends SSLSocketFactory {
+        private final SSLSocketFactory delegate;
+        EnabledTlsFactory(SSLSocketFactory delegate) { this.delegate = delegate; }
+        @Override public String[] getDefaultCipherSuites() { return delegate.getDefaultCipherSuites(); }
+        @Override public String[] getSupportedCipherSuites() { return delegate.getSupportedCipherSuites(); }
+
+        private Socket enable(Socket socket) throws IOException {
+            try {
+                if (!(socket instanceof SSLSocket)) throw new IOException("HTTPS did not create a TLS socket");
+                SSLSocket ssl = (SSLSocket) socket;
+                List<String> supported = Arrays.asList(ssl.getSupportedProtocols());
+                List<String> enabled = new ArrayList<>();
+                if (supported.contains("TLSv1.3")) enabled.add("TLSv1.3");
+                if (supported.contains("TLSv1.2")) enabled.add("TLSv1.2");
+                if (enabled.isEmpty()) throw new IOException("This device does not support TLS 1.2 or newer");
+                ssl.setEnabledProtocols(enabled.toArray(new String[0]));
+                return ssl;
+            } catch (IOException | RuntimeException failure) {
+                try { if (socket != null) socket.close(); } catch (IOException ignored) { }
+                if (failure instanceof IOException) throw (IOException) failure;
+                throw new IOException("Cannot enable secure TLS protocols", failure);
+            }
+        }
+        @Override public Socket createSocket() throws IOException { return enable(delegate.createSocket()); }
+        @Override public Socket createSocket(Socket socket, String host, int port, boolean close) throws IOException {
+            return enable(delegate.createSocket(socket, host, port, close));
+        }
+        @Override public Socket createSocket(String host, int port) throws IOException {
+            return enable(delegate.createSocket(host, port));
+        }
+        @Override public Socket createSocket(String host, int port, InetAddress local, int localPort) throws IOException {
+            return enable(delegate.createSocket(host, port, local, localPort));
+        }
+        @Override public Socket createSocket(InetAddress host, int port) throws IOException {
+            return enable(delegate.createSocket(host, port));
+        }
+        @Override public Socket createSocket(InetAddress host, int port, InetAddress local, int localPort) throws IOException {
+            return enable(delegate.createSocket(host, port, local, localPort));
+        }
     }
 
     public static byte[] read(URL url, int maxBytes, Cancellation cancellation) throws IOException {

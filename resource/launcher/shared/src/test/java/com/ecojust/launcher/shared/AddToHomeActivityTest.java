@@ -74,8 +74,8 @@ public class AddToHomeActivityTest {
     private void write(JSONObject layout) throws Exception {
         try (FileOutputStream out = new FileOutputStream(file)) { out.write(layout.toString().getBytes(StandardCharsets.UTF_8)); }
     }
-    private JSONObject read() throws Exception { return new JSONObject(Files.readString(file.toPath())); }
-    private String bytes() throws Exception { return Files.readString(file.toPath()); }
+    private JSONObject read() throws Exception { return new JSONObject(bytes()); }
+    private String bytes() throws Exception { return new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8); }
     private Intent request(String pkg) { return new Intent(ConfirmHomeActivity.ACTION).putExtra("packageName", pkg).putExtra("logoSvg", SVG); }
     private ActivityController<? extends ConfirmHomeActivity> start(Intent intent) throws Exception {
         Class<? extends ConfirmHomeActivity> type = Class.forName(ctx.getPackageName() + ".AddToHomeActivity").asSubclass(ConfirmHomeActivity.class);

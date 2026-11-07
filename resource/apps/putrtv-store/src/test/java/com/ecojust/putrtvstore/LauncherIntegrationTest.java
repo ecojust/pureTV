@@ -3,6 +3,8 @@ package com.ecojust.putrtvstore;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,12 +18,16 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 28)
 public class LauncherIntegrationTest {
-    static ResolveInfo handler(String pkg, String cls) { ResolveInfo result = new ResolveInfo(); result.activityInfo = new ActivityInfo(); result.activityInfo.packageName = pkg; result.activityInfo.name = cls; result.activityInfo.exported = true; result.activityInfo.enabled = true; return result; }
+    static ResolveInfo handler(String pkg, String cls) { ResolveInfo result = new ResolveInfo(); result.activityInfo = new ActivityInfo(); result.activityInfo.packageName = pkg; result.activityInfo.name = cls; result.activityInfo.applicationInfo = new ApplicationInfo(); result.activityInfo.applicationInfo.packageName = pkg; result.activityInfo.applicationInfo.enabled = true; result.activityInfo.applicationInfo.flags = ApplicationInfo.FLAG_INSTALLED; result.activityInfo.exported = true; result.activityInfo.enabled = true; return result; }
     static void home(Activity activity, String pkg) { shadowOf(activity.getPackageManager()).addResolveInfoForIntent(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME), handler(pkg, pkg + ".MainActivity")); }
     @Test public void currentHomeIsExplicitAndCannotBeHijackedByAnotherHandler() {
         try (ActivityController<Activity> c = Robolectric.buildActivity(Activity.class).setup()) {
             Activity a = c.get(); home(a, "com.ecojust.puretv");
             Intent action = new Intent(LauncherIntegration.ACTION).setPackage("com.ecojust.puretv"); shadowOf(a.getPackageManager()).addResolveInfoForIntent(action, handler("com.example.other", "com.example.other.Handler"));
+            // Supply a complete identity: Robolectric fills missing ApplicationInfo from
+            // Intent.setPackage(), then copies that package onto ActivityInfo. That would
+            // turn this intentionally foreign handler into the current-home fixture.
+            assertEquals("com.example.other", a.getPackageManager().queryIntentActivities(action, PackageManager.MATCH_DEFAULT_ONLY).get(0).activityInfo.packageName);
             assertEquals(LauncherIntegration.Availability.NEEDS_LAUNCHER_UPDATE, new LauncherIntegration(a).target().availability);
         }
     }

@@ -77,6 +77,11 @@ public class CatalogRepositoryTest {
         item = entry(); item.put("unexpected", true); invalid(feed(item));
         item = entry(); item.put("category", "launcher"); invalid(feed(item));
     }
+    @Test public void catalogAndDownloaderShareTheApkSizeLimit() throws Exception {
+        JSONObject item = entry(); item.put("bytes", StoreDownloader.MAX_APK_BYTES);
+        assertEquals(StoreDownloader.MAX_APK_BYTES, parse(feed(item)).entries.get(0).bytes);
+        item.put("bytes", StoreDownloader.MAX_APK_BYTES + 1); invalid(feed(item));
+    }
     @Test public void strictJsonRejectsDuplicatesCommentsTrailingAndInvalidUtf8() throws Exception {
         String valid = new String(feed(entry()), StandardCharsets.UTF_8);
         invalid(valid.replace("\"schemaVersion\":1", "\"schemaVersion\":1,\"schemaVersion\":1").getBytes(StandardCharsets.UTF_8));

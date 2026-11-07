@@ -140,7 +140,7 @@ public class CatalogRepository {
                     string(item, "description", 2048, true), string(item, "descriptionEn", 2048, true), category, packageName,
                     string(item, "versionName", 80, false), apk, cover, logo, hash(item, "sha256", 64),
                     hash(item, "certificateSha256", 64), hash(item, "gitBlobSha", 40),
-                    number(item, "versionCode", 1, Long.MAX_VALUE), number(item, "bytes", 1, 512L * 1024 * 1024),
+                    number(item, "versionCode", 1, Long.MAX_VALUE), number(item, "bytes", 1, StoreDownloader.MAX_APK_BYTES),
                     (int) number(item, "minSdk", 1, 1000)));
         }
         return new StoreCatalog(revision, source, warning, fetchedAt, stale, entries);

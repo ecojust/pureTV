@@ -41,7 +41,7 @@ public class StoreUiTest {
         List<StoreEntry> entries = new ArrayList<>();
         String[] zh = {"pureTV", "Nova", "Sol", "Forma", "Moss", "Aster", "Mono", "Pixel", "Circuit", "Drift", "BiliTV", "电视音乐", "四则二十四", "putrtv商城"};
         String[] en = {"pureTV", "Nova", "Sol", "Forma", "Moss", "Aster", "Mono", "Pixel", "Circuit", "Drift", "BiliTV", "TV Music", "Twenty Four", "putrtv Store"};
-        for (int i = 0; i < zh.length; i++) entries.add(new StoreEntry("fixture" + i, zh[i], en[i], "为电视遥控器设计，轻松发现大屏应用。", "Designed for your remote. Discover more on your TV.", i < 10 ? "launcher" : i < 12 ? "media" : i == 12 ? "game" : "tools", "com.example.app" + i, "0.5.1", "resource/apps/fixture/fixture.apk", "", "", repeat('a', 64), repeat('b', 64), repeat('c', 40), 3, 820000 + i * 31000, 19));
+        for (int i = 0; i < zh.length; i++) entries.add(new StoreEntry("fixture" + i, zh[i], en[i], "为电视遥控器设计，轻松发现大屏应用。", "Designed for your remote. Discover more on your TV.", i < 10 ? "launcher" : i < 12 ? "media" : i == 12 ? "game" : "tools", "com.example.app" + i, "0.5.2", "resource/apps/fixture/fixture.apk", "", "", repeat('a', 64), repeat('b', 64), repeat('c', 40), 3, 820000 + i * 31000, 19));
         return entries;
     }
     static String repeat(char c, int n) { StringBuilder s = new StringBuilder(); while (n-- > 0) s.append(c); return s.toString(); }
@@ -63,8 +63,8 @@ public class StoreUiTest {
         }; }
         @Override protected InstalledApps createInstalledApps() { return new InstalledApps(this) {
             @Override public Status inspect(StoreEntry entry) {
-                if (entry.id.equals("fixture0")) return new Status(installedNow ? State.CURRENT : State.UPDATE_AVAILABLE, installedNow ? 3 : 2, installedNow ? "0.5.1" : "0.5.0", true);
-                if (entry.id.equals("fixture1")) return new Status(State.CURRENT, 3, "0.5.1", true);
+                if (entry.id.equals("fixture0")) return new Status(installedNow ? State.CURRENT : State.UPDATE_AVAILABLE, installedNow ? 3 : 2, installedNow ? "0.5.2" : "0.5.1", true);
+                if (entry.id.equals("fixture1")) return new Status(State.CURRENT, 3, "0.5.2", true);
                 return new Status(State.NOT_INSTALLED, 0, "", false);
             }
             @Override public Intent launchIntent(StoreEntry entry) { return entry.id.equals("fixture0") ? new Intent("fixture.OPEN").setPackage(entry.packageName) : null; }
