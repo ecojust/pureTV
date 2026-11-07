@@ -51,3 +51,5 @@ Certificate SHA256: eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492
 ## 发布文件
 
 签名APK、resource.json、校验清单、源码归档、原生图与127项目录同时入库。商城为0.1.0预览版；本次不创建GitHub Release，也未同步Gitee市场。下载入口使用仓库资源目录，不能把这两种发布渠道混为一谈。
+
+资源发布提交 [`ca10d146`](https://github.com/ecojust/pureTV/commit/ca10d1460c756114776dbec0371dbb23d3366607) 已同步master。公开的127项目录及11份APK均重新通过HTTPS完整读取，5,261,748字节APK与本地大小/SHA256全部一致；见[公开下载校验](release-evidence/public-downloads.json)。这项检查验证下载文件，不代表电视端安装验收。
