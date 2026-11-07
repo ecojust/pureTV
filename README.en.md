@@ -10,13 +10,15 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![GitHub Release total downloads](https://img.shields.io/github/downloads/ecojust/pureTV/total?style=flat-square&label=downloads&color=16a34a)](https://github.com/ecojust/pureTV/releases)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-116-f97316?style=flat-square)](resource/apps/)
+[![App count](https://img.shields.io/badge/apps-117-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
 [![License](https://img.shields.io/badge/license-MIT-f4c430?style=flat-square)](LICENSE)
 
 [Download pureTV Manager 0.5.4](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.4) · Windows / macOS / Linux · New themes and Compatibility page
+
+[Download putrtv Store 0.1.0 for TV](resource/apps/putrtv-store/putrtv-store-0.1.0.apk?raw=1) · Browse, install and check updates on your TV; use an [updated launcher](resource/README.md) to choose where to add an app.
 
 ![Current source preview in the Sky theme using simulated device data](docs/previews/manager-en.png)
 
@@ -126,6 +128,17 @@ This page currently features eight games from the new hundred-game collection al
     <td align="center" valign="top" width="25%"><a href="resource/apps/jewel/"><img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"><br>Magic Jewelry TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/jackal/"><img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"><br>Jackal TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tank/"><img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"><br>Tank TV</a></td>
+    <td width="25%"></td>
+  </tr>
+</table>
+
+### Apps - Tools (1)
+
+<table>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/putrtv-store/"><img src="docs/previews/en/app-putrtv-store.png" width="180" alt="putrtv Store preview"><br>putrtv Store</a></td>
+    <td width="25%"></td>
+    <td width="25%"></td>
     <td width="25%"></td>
   </tr>
 </table>

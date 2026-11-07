@@ -217,6 +217,17 @@
   </tr>
 </table>
 
+### 应用-工具（1）
+
+<table>
+  <tr>
+    <td align="center" valign="top" width="25%"><a href="apps/putrtv-store/"><img src="apps/putrtv-store/thumb.png" width="180" alt="putrtv商城 界面"><br>putrtv商城</a></td>
+    <td width="25%"></td>
+    <td width="25%"></td>
+    <td width="25%"></td>
+  </tr>
+</table>
+
 开发者请参阅 [开发与协议 README](README-development.md)，包含 layout.json 字段说明、画面对照、构建与测试。
 
 维护校验：`python tools/resource_catalog.py --build-tools <Android Build Tools 34.0.0 目录>`。索引由 `python tools/update-resource-index.py` 根据资源元数据生成。

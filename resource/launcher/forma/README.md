@@ -1,4 +1,16 @@
-# Forma TV 0.5.0
+# Forma TV 0.5.1
+
+## 电视上添加应用 / Add apps on TV
+
+0.5.1 新增与 [putrtv商城](../../apps/putrtv-store/) 的添加入口。商城确认安装成功后，选择「添加到桌面」，用遥控器选择首页或应用页的空位并确认；自动读取应用名称与图标，文字默认白色，已有布局不会重排。没有空位、应用已存在或布局无效时会明确提示。
+
+安装此启动器需要 **Android 8 / API 26 或更新版本**。本版沿用0.5.0起的发布证书，可覆盖更新同证书版本并保留布局。
+
+After installation in putrtv Store, choose **Add to home**, select a free position on Home or Apps, and confirm with the remote. The app's name and icon are filled in with white text; existing tiles stay in place. This launcher requires **Android 8 / API 26 or later**, and keeps the signing certificate used since 0.5.0.
+
+![电视添加应用确认页](docs/previews/add-to-home.png)
+
+此图是实际 Android View 的原生测试渲染，使用模拟应用资料，非实体电视截图。验证结果见[商城与启动器联动验证](../../apps/putrtv-store/docs/VALIDATION.md)。
 
 ## 0.5.0 安装说明 / Installation
 
@@ -8,7 +20,7 @@ Version 0.5.0 uses the new shared pureTV signing certificate and cannot update i
 
 包豪斯几何风格，三原色构成与应用拼贴。独立包名 `com.ecojust.formatv`，可以与其他启动器同时安装。
 
-[下载 APK](FormaTV-0.5.0.apk?raw=1) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [协议与接入说明](../../README-development.md#第三方启动器接入与动态检测) · [校验值](SHA256SUMS.txt)
+[下载 APK](FormaTV-0.5.1.apk?raw=1) · [源码归档](source.tar.gz) · [layout.json 示例](layout.example.json) · [协议与接入说明](../../README-development.md#第三方启动器接入与动态检测) · [校验值](SHA256SUMS.txt)
 
 | 首页 | 应用页 |
 | --- | --- |

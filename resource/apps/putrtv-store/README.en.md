@@ -4,6 +4,14 @@
 
 Browse, install and check app updates directly on your TV. Native remote-friendly interface, no ads or account. Package `com.ecojust.putrtvstore`; Android 4.4 / API 19 or later. The interface follows the system language, in Chinese or English.
 
+## Download and preview
+
+[Download putrtv Store 0.1.0 APK](putrtv-store-0.1.0.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Validation](docs/VALIDATION.md)
+
+![putrtv Store native interface](../../../docs/previews/en/app-putrtv-store.png)
+
+This is the actual Android UI rendered with a fixture catalog, not a physical TV capture. Install the store once using the desktop manager, a USB drive, or your TV's installation method; subsequent app downloads and update checks run on the TV.
+
 ## Use
 
 Install the store on your TV once, then open it to refresh the catalog and check installed versions. Browse Launchers, Media, Games and Tools, search by name, or select Updates.
@@ -30,6 +38,6 @@ Old Android devices still depend on their system trust store and network for HTT
 
 ## Build and verification
 
-Source is in `src/`; fixed-certificate builds are documented in [BUILD.md](docs/BUILD.md). Native UI tests use fixture catalogs and a simulated package manager, not a physical TV. Signed downloads and detailed validation results will accompany the resource publication.
+Source is in `src/`; fixed-certificate builds are documented in [BUILD.md](docs/BUILD.md). Native UI tests use fixture catalogs and a simulated package manager, not a physical TV. See [validation results](docs/VALIDATION.md) for the tested scope and physical-device limitations.
 
 Source and the original store icon are MIT licensed. Downloaded applications retain their own licenses.

@@ -147,7 +147,11 @@ def publish(run_id, kind, tools):
         for name, content in previews.items():
             assert PurePosixPath(name).name == name and name.endswith('.png')
             _, width, height = validate_png(content)
-            assert width >= 640 and height >= 360 and width > height, 'Expected a TV landscape preview'
+            # The actual Dialog decor is captured at 600x470; its parent TV is
+            # 960x540 or 1280x720. Keep the full-screen minimum for every other view.
+            dialog = kind == 'store' and name in ('putrtv-store-detail.png', 'putrtv-store-detail.en.png', 'putrtv-store-detail-1280.png')
+            minimum_width, minimum_height = (480, 320) if dialog else (640, 360)
+            assert width >= minimum_width and height >= minimum_height and width > height, 'Expected a TV screen or documented dialog preview'
         with tempfile.TemporaryDirectory(prefix='tv-store-verify-') as temporary:
             apk = Path(temporary) / apk_name; apk.write_bytes(apk_bytes)
             actual = apk_info(apk, tools)
