@@ -1552,6 +1552,20 @@ try {
   const store=marketCatalog();
   const marketCard=(p,item)=>p.locator('.market-card').filter({has:p.locator(`[data-act="download-market"][data-id="${item.id}"]`)});
   const marketAuthor=(p,item)=>marketCard(p,item).locator('.market-author-name');
+  const inlineProvider=async(p,item)=>{
+    const card=marketCard(p,item);
+    assert.equal(await card.locator('.market-author').count(),0,'There is no separate author label or row');
+    const bounds=await card.locator('.market-card-heading').evaluate(heading=>{
+      const title=heading.querySelector('h2'),provider=heading.querySelector('.market-author-name');
+      const measure=element=>({box:element.getBoundingClientRect().toJSON(),width:element.clientWidth,total:element.scrollWidth,overflow:getComputedStyle(element).textOverflow,whiteSpace:getComputedStyle(element).whiteSpace});
+      return {heading:heading.getBoundingClientRect().toJSON(),direct:title.parentElement===heading&&provider.parentElement===heading,onlyNames:heading.textContent.replace(/\s/g,'')===(title.textContent+provider.textContent).replace(/\s/g,''),title:measure(title),provider:measure(provider)};
+    });
+    assert.ok(bounds.direct&&bounds.onlyNames,'The heading contains the app name and provider directly, without an added label');
+    assert.ok(bounds.title.box.right<=bounds.provider.box.left&&bounds.title.box.top<bounds.provider.box.bottom&&bounds.provider.box.top<bounds.title.box.bottom,`Provider stays to the right of the app name on the same line: ${JSON.stringify(bounds)}`);
+    assert.ok(bounds.title.box.left>=bounds.heading.left-1&&bounds.provider.box.right<=bounds.heading.right+1,'Names stay within the heading');
+    assert.equal(await card.locator('.market-card-heading .market-downloaded').count(),0,'Download status does not compete with names');
+    return bounds;
+  };
   const openMarket=async p=>{await nav(p,'market');await p.locator('.market-card').first().waitFor();await settled(p);};
   const marketRequests=p=>p.evaluate(()=>window.__marketRequests);
   const versionedItem=version=>({...store.items[0],id:`apps/hifini/hifini-${version}.apk`,version,fileName:`hifini-${version}.apk`,bytes:Number(version.split('.')[1])*1048576,blobSha:version.replaceAll('.','').padStart(40,'0'),coverUrl:`https://gitee.com/juzisang331/pure-tv-store/raw/${store.revision}/apps/hifini/hifini-${version}.thumb.png`});
@@ -1603,7 +1617,7 @@ try {
       assert.deepEqual(tabs.map(text=>text.replace(/\d+\s*$/,'').trim()),labels);
       assert.equal(await marketCard(p,olderGame).locator('.market-category').innerText(),badge);
       assert.equal(await marketAuthor(p,olderGame).innerText(),olderGame.provider,'Provider stays as repository text in every language and selected version');
-      assert.match(await marketCard(p,olderGame).locator('.market-author').innerText(),language==='en'?/Author/:/作者/);
+      await inlineProvider(p,olderGame);
       assert.equal(await versionSelect(p,olderGame).inputValue(),olderGame.id);
     }
     assert.equal((await marketRequests(p)).filter(request=>request.command==='get_market_catalog').length,1,'Switching tabs, search and locale reuse the same catalog visit');
@@ -1745,6 +1759,7 @@ try {
     await p.locator('[data-market-category="launcher"]').click();
     assert.equal(await p.locator('.market-card').count(),2);assert.equal(await marketCard(p,sameNameLauncher).count(),1,'Apps and launchers never share a version group');
     assert.equal(await marketAuthor(p,store.items[2]).innerText(),store.items[2].provider,'Launcher cards also show their own provider');
+    await inlineProvider(p,store.items[2]);
     assert.deepEqual(await requests(p),[],'Version grouping never invokes ADB');
     await shot(p,'market-versions-grouped');
   },withoutAdb(),{marketCatalog:{...versionedStore,items:[...versionedStore.items,sameNameOtherFolder,sameFolderOtherApp,sameNameLauncher]}});
@@ -1763,11 +1778,14 @@ try {
     assert.equal(await versionSelect(p,selected).inputValue(),selected.id);
     await p.locator('[name="locale"]').selectOption('en');assert.equal(await versionSelect(p,selected).inputValue(),selected.id);
     assert.equal(await marketAuthor(p,selected).innerText(),selected.provider);
+    const beforeDownload=await inlineProvider(p,selected);
     await marketCard(p,selected).locator('[data-act="download-market"]').click();await held(p,'downloadMarketItem');
     assert.equal(await versionSelect(p,selected).isDisabled(),true,'A pending download locks version selection');
     await release(p,'downloadMarketItem');await result(p,'success');await acknowledge(p);
     assert.deepEqual((await marketRequests(p)).filter(value=>value.command==='download_market_item'),[{command:'download_market_item',id:selected.id,revision:versionedStore.revision}]);
     assert.equal(await marketCard(p,selected).locator('.market-downloaded').count(),1);
+    const afterDownload=await inlineProvider(p,selected);
+    assert.equal(afterDownload.provider.width,beforeDownload.provider.width,'A downloaded badge leaves provider space unchanged');
     await versionSelect(p,selected).selectOption(latest.id);assert.equal(await marketCard(p,latest).locator('.market-downloaded').count(),0,'Downloading an older version does not mark the latest APK as downloaded');
     await versionSelect(p,latest).selectOption(selected.id);assert.equal(await marketCard(p,selected).locator('.market-downloaded').count(),1);
     await p.locator('[data-act="market-pending"][data-kind="app"]').click();assert.equal(await p.locator('.apk-item').count(),1);assert.match(await p.locator('.apk-item').innerText(),/hifini-0\.8\.0\.apk/);
@@ -1814,6 +1832,7 @@ try {
     assert.match(await marketCard(p,store.items[0]).innerText(),/onerror/);
     assert.equal(await marketAuthor(p,store.items[0]).textContent(),unsafeMarket.items[0].provider,'Provider markup is literal text');
     assert.equal(await marketAuthor(p,store.items[0]).getAttribute('title'),unsafeMarket.items[0].provider,'Attribute quotes are escaped without changing provider text');
+    await inlineProvider(p,store.items[0]);
     assert.equal(await p.evaluate(()=>window.__xss),false);
     assert.match(await marketCard(p,store.items[0]).innerText(),/193\.1 KB/);
     assert.match(await marketCard(p,store.items[1]).innerText(),/2\.0 MB/);
@@ -1893,7 +1912,12 @@ try {
     assert.match(await marketCard(p,store.items[0]).innerText(),/HIFINi TV/);
     assert.equal(await marketAuthor(p,store.items[0]).innerText(),store.items[0].provider,'Provider is not passed through the UI translation catalog');
     assert.equal(await marketAuthor(p,store.items[1]).innerText(),'Not provided');
+    await inlineProvider(p,store.items[1]);
     await shot(p,'market-provider-en');
+    await p.locator('[name="locale"]').selectOption('zh-TW');
+    assert.equal(await marketAuthor(p,store.items[1]).innerText(),'未提供');
+    await inlineProvider(p,store.items[1]);
+    await p.locator('[name="locale"]').selectOption('en');
     const updated=marketCatalog();updated.revision='f'.repeat(40);updated.items=[updated.items[1]];
     await p.evaluate(value=>{window.__marketCatalog=value;},updated);
     await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
@@ -1909,7 +1933,7 @@ try {
     await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'APK市場');
     assert.match(await p.locator('[data-market-category="launcher"]').innerText(),/啟動器/);
     assert.equal(await marketAuthor(p,updated.items[0]).innerText(),'更新后的演示作者','Provider remains unchanged in Traditional Chinese');
-    assert.match(await marketCard(p,updated.items[0]).locator('.market-author').innerText(),/作者/);
+    await inlineProvider(p,updated.items[0]);
     await p.locator('[data-market-category="launcher"]').click();assert.equal(await p.locator('.market-card').count(),0);
     await shot(p,'market-traditional-empty');
   },withoutAdb(),{marketCatalog:{...marketCatalog(),stale:true,warning:'网络暂不可用，正在显示缓存目录'}});
@@ -1923,7 +1947,7 @@ try {
     assert.deepEqual(await newMarketIds(p),[],'The first successful retry establishes the initial baseline');
   },withoutAdb(),{failMarketCatalog:true});
   const longProvider='演示长作者 · '+'LongProviderName'.repeat(8);
-  const largeMarket=marketCatalog();largeMarket.items=Array.from({length:45},(_,index)=>({...store.items[0],id:`apps/example${index}/example-${index}.apk`,name:`Example ${index}`,provider:longProvider,fileName:`example-${index}.apk`}));
+  const largeMarket=marketCatalog();largeMarket.items=Array.from({length:45},(_,index)=>({...store.items[0],id:`apps/example${index}/example-${index}.apk`,name:`Example ${index}${index<2?' · '+'超长应用名称 LongApplicationName '.repeat(4):''}`,provider:index===0?'桔子桑':longProvider,fileName:`example-${index}.apk`}));
   await check('market long catalogs scroll internally in compact windows and all themes',async p=>{
     await p.setViewportSize({width:960,height:640});await openMarket(p);
     const area=p.locator('[data-scroll="market-media"]');
@@ -1933,19 +1957,47 @@ try {
     assert.ok(cardBounds.card.height>=250,`Cards must not collapse into grid lines: ${JSON.stringify(cardBounds)}`);
     assert.ok(cardBounds.cover.height>100,'Cover keeps a visible aspect ratio in a long catalog');
     assert.ok(cardBounds.buttons.every(button=>button.top>=cardBounds.card.top && button.bottom<=cardBounds.card.bottom && button.left>=cardBounds.card.left && button.right<=cardBounds.card.right),`Download and install controls stay inside the card: ${JSON.stringify(cardBounds)}`);
-    const author=p.locator('.market-author-name').first();
-    assert.equal(await author.getAttribute('title'),longProvider,'A shortened author still exposes the complete value');
-    const authorBounds=await author.evaluate(element=>({box:element.getBoundingClientRect().toJSON(),width:element.clientWidth,total:element.scrollWidth,overflow:getComputedStyle(element).textOverflow,whiteSpace:getComputedStyle(element).whiteSpace}));
-    assert.ok(authorBounds.width>0 && authorBounds.total>authorBounds.width,'The long author exercises actual truncation');
-    assert.equal(authorBounds.overflow,'ellipsis');assert.equal(authorBounds.whiteSpace,'nowrap');
-    assert.ok(authorBounds.box.left>=cardBounds.card.left && authorBounds.box.right<=cardBounds.card.right,'Long authors stay within compact cards');
+    const shortProviderItem=largeMarket.items[0],longProviderItem=largeMarket.items[1];
+    const shortBounds=await inlineProvider(p,shortProviderItem),longBounds=await inlineProvider(p,longProviderItem);
+    for(const [item,bounds] of [[shortProviderItem,shortBounds],[longProviderItem,longBounds]]) {
+      assert.equal(await marketCard(p,item).locator('h2').getAttribute('title'),item.name,'A shortened application name exposes its complete value');
+      assert.ok(bounds.title.width>0&&bounds.title.total>bounds.title.width,'The long application name exercises actual truncation');
+      assert.equal(bounds.title.overflow,'ellipsis');assert.equal(bounds.title.whiteSpace,'nowrap');
+      assert.equal(await marketAuthor(p,item).getAttribute('title'),item.provider,'A shortened provider exposes its complete value');
+    }
+    assert.ok(shortBounds.provider.total<=shortBounds.provider.width+1,'A short provider remains fully readable beside a long application name');
+    assert.ok(longBounds.provider.width>0&&longBounds.provider.total>longBounds.provider.width,'Both long names stay bounded and the provider truncates');
+    assert.ok(longBounds.provider.width<=longBounds.heading.width/2,'A long provider leaves room for the application name');
+    assert.equal(longBounds.provider.overflow,'ellipsis');assert.equal(longBounds.provider.whiteSpace,'nowrap');
+    await marketCard(p,shortProviderItem).locator('[data-act="download-market"]').click();await result(p,'success');await acknowledge(p);
+    assert.equal(await marketCard(p,shortProviderItem).locator('.market-downloaded').count(),1);
+    const downloadedBounds=await inlineProvider(p,shortProviderItem);
+    assert.equal(downloadedBounds.provider.width,shortBounds.provider.width,'Downloaded status cannot shrink the name beside a long title');
+    assert.equal(downloadedBounds.title.width,shortBounds.title.width,'Downloaded status cannot shrink the application title');
+    assert.ok(downloadedBounds.provider.total<=downloadedBounds.provider.width+1);
+    await shot(p,'market-inline-names-zh');
+    await p.locator('[name="theme"]').selectOption('ocean');
+    await inlineProvider(p,shortProviderItem);await inlineProvider(p,longProviderItem);
+    await shot(p,'market-inline-names-ocean');
     assert.ok(await p.evaluate(()=>document.documentElement.scrollHeight<=innerHeight+1),'Document does not scroll');
     assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Cards do not overflow horizontally');
     const top=(await p.locator('.page-header').boundingBox()).y;
     await area.evaluate(element=>{element.scrollTop=1000;});assert.ok(await area.evaluate(element=>element.scrollTop>0));
     assert.equal((await p.locator('.page-header').boundingBox()).y,top);assert.equal(await p.evaluate(()=>scrollY),0);
     await p.locator('[name="theme"]').selectOption('graphite');assert.equal(await p.locator('html').getAttribute('data-theme'),'graphite');
-    await p.locator('[name="locale"]').selectOption('en');await shot(p,'market-en-graphite');
+    await p.locator('[name="locale"]').selectOption('en');
+    await area.evaluate(element=>{element.scrollTop=0;});
+    await inlineProvider(p,shortProviderItem);await inlineProvider(p,longProviderItem);
+    await shot(p,'market-en-graphite');
+    await p.setViewportSize({width:1366,height:768});
+    const narrowCard=await marketCard(p,shortProviderItem).boundingBox();
+    assert.ok(narrowCard.width<=260,'Four columns also exercise cards near their minimum width');
+    const narrowShort=await inlineProvider(p,shortProviderItem),narrowLong=await inlineProvider(p,longProviderItem);
+    assert.ok(narrowShort.provider.total<=narrowShort.provider.width+1,'The short provider remains complete in a minimum-width card with downloaded status');
+    assert.ok(narrowShort.title.total>narrowShort.title.width&&narrowLong.title.total>narrowLong.title.width,'Long app names truncate in minimum-width cards');
+    assert.ok(narrowLong.provider.total>narrowLong.provider.width,'An exceptionally long provider also truncates in minimum-width cards');
+    assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+    await shot(p,'market-inline-names-min-card-en');
   },withoutAdb(),{marketCatalog:largeMarket});
   const scrollMarket={...largeMarket,items:[...largeMarket.items,...largeMarket.items.map(item=>({...item,id:item.id.replace(/^apps\//,'apps/game/')})),...largeMarket.items.map(item=>({...item,kind:'launcher',id:item.id.replace(/^apps\//,'launcher/')}))]};
   await check('market updates preserve scroll within a visit and show new cards at the top after reentry',async p=>{

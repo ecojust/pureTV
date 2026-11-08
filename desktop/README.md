@@ -1,18 +1,18 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.5.5** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.5.6** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.5.5 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.5)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
+下载：[0.5.6 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.6)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
-四平台正式检查与公开下载校验见[0.5.5验证记录](docs/release-0.5.5-validation.md)。
+四平台正式检查与公开下载校验见[0.5.6验证记录](docs/release-0.5.6-validation.md)。
 
-0.5.5 在 APK 市场每款应用的名称下显示作者，读取 Gitee 同目录 `manifest.json` 的 `provider`。作者原文随目录缓存，升级后重新检查；缺失作者显示「未提供」，长名称可悬停查看完整内容。
+0.5.6 在 APK 市场的应用名右侧直接显示 `provider` 名称，去掉「作者」标签。过长的应用名优先省略，为右侧名称保留显示空间；完整内容可悬停查看。「已下载」状态移到文件信息行。仍读取 Gitee 同目录 `manifest.json`，缺失信息显示「未提供」。
 
 0.5.4 将蓝白色「晴空」、浅青色「海盐」和灰蓝色「石墨」三套主题加入安装包，Info 更名为「兼容性方案」，移除页面中的设备兼容性列表和“无需电视 ADB 的操作”分组。保留 0.5.3 的旧系统连接、信息读取与默认桌面保护修复；本版不扩大实体电视兼容性声明。
 
 ## 功能
 
-左下角版本旁的「检查更新」会读取 Gitee 商店的 `client/` 目录；启动后也会后台检查一次。发现匹配当前平台的新版本后，点击「下载并安装」，管理器会校验安装包、结束 ADB 连接并交给更新助手安装和重启。本次发布未同步 Gitee 商店安装包，请从上方 GitHub 发布页获取 0.5.5；应用内更新以该目录实际版本为准。详见[客户端更新说明与仓库文件约定](docs/client-updates.md)。
+左下角版本旁的「检查更新」会读取 Gitee 商店的 `client/` 目录；启动后也会后台检查一次。发现匹配当前平台的新版本后，点击「下载并安装」，管理器会校验安装包、结束 ADB 连接并交给更新助手安装和重启。本次发布未同步 Gitee 商店安装包，请从上方 GitHub 发布页获取 0.5.6；应用内更新以该目录实际版本为准。详见[客户端更新说明与仓库文件约定](docs/client-updates.md)。
 
 所有应用内弹窗统一使用半透明毛玻璃背景，包括布局中的嵌套弹窗；背景虚化，弹窗内容保持清晰。
 
@@ -46,14 +46,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.5.5 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.5) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.5.6 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.6) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.5.5-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.5.6-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.5.5-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.5.6-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -118,7 +118,7 @@
 
 侧栏「启动器」之后的「APK市场」依次显示「启动器」「影音」「游戏」三个 tab。内容来自 [pure-tv-store](https://gitee.com/juzisang331/pure-tv-store) 的 `launcher/`、`apps/media/` 和 `apps/game/` 目录，按仓库实际 APK 自动发现；新增资源无需重新发布管理器。旧版未分目录的 `apps/<软件>/` 仍在「影音」显示。同一目录中同名应用的多个版本合并为一张卡片，启动器同样处理。版本下拉框按数字版本号从新到旧显示最近 5 个版本，默认选中最新版；选择后，APK 大小、文件名、封面、下载状态和下载／安装目标同步更新。搜索仅作用于当前 tab，分类计数按合并后的卡片显示，各分类独立保留本次浏览中的滚动位置。
 
-每张卡片在名称下显示作者，读取对应 APK 同目录 `manifest.json` 的 `provider` 字段，保留作者原文。没有可用作者信息时显示「未提供」，长名称省略显示，可悬停查看完整内容。作者随目录一同缓存，刷新市场会重新获取；旧版缓存离线仍可浏览。
+每张卡片在应用名右侧直接显示 `provider` 名称，不额外显示「作者」标签；值来自对应 APK 同目录的 `manifest.json`，保留原文。过长的应用名会省略，优先为右侧名称保留空间；右侧名称自身过长时同样省略，悬停可查看完整内容。没有可用信息时显示「未提供」。下载状态显示在文件信息行，不占用名称行。信息随目录一同缓存，刷新市场会重新获取；旧版缓存离线仍可浏览。
 
 版本从 `名称-1.2.3.apk` 这样的文件名解析（支持 2～4 段数字）；不同目录或不同名称的 APK 不会合并，没有可识别版本号的 APK 使用文件名作为选项，并排在已识别版本之后。刷新后保留仍在最近 5 个版本内的选择，否则回到最新版。
 

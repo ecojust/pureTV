@@ -1,22 +1,22 @@
-# pureTV Manager 0.5.5
+# pureTV Manager 0.5.6
 
 ## 简体中文
 
-- APK市场在每款应用和启动器的名称下显示作者，读取 Gitee 软件目录中 `manifest.json` 的 `provider` 字段。
-- 作者按原文显示，不随界面语言翻译；长名称省略显示，悬停可查看完整内容。没有可用作者信息时显示「未提供」。
-- 作者与目录固定在同一仓库提交中，刷新市场时更新；升级后重新获取作者，离线时仍可浏览旧缓存。
+- APK市场将 provider 名称直接显示在应用名右侧，移除独立信息行和「作者」标签。
+- 过长的应用名优先省略，为右侧名称保留空间；两边都过长时分别省略，并可悬停查看完整内容。
+- 将「已下载」状态移到文件信息行，避免挤占名称的显示空间。
 
 ## 繁體中文
 
-- APK市場在每款應用與啟動器的名稱下顯示作者，讀取 Gitee 軟體目錄中 `manifest.json` 的 `provider` 欄位。
-- 作者按原文顯示，不隨介面語言翻譯；長名稱以省略號顯示，懸停可查看完整內容。沒有可用作者資訊時顯示「未提供」。
-- 作者與目錄固定於同一儲存庫提交，重新整理市場時更新；升級後重新取得作者，離線時仍可瀏覽舊快取。
+- APK市場將 provider 名稱直接顯示在應用名右側，移除獨立資訊列和「作者」標籤。
+- 過長的應用名優先省略，為右側名稱保留空間；兩側都過長時分別省略，並可懸停查看完整內容。
+- 將「已下載」狀態移至檔案資訊列，避免擠壓名稱的顯示空間。
 
 ## English
 
-- Shows each app or launcher's author below its name in the APK Market, using `provider` from `manifest.json` in the corresponding Gitee software directory.
-- Preserves author names across interface languages. Long names are shortened visually with the full text available on hover; missing author information appears as “Not provided”.
-- Pins authors to the same repository revision as the catalog and updates them on refresh. Upgrading checks for author metadata while retaining old cached catalogs for offline browsing.
+- Displays the provider name directly to the right of the app name in the APK Market, without a separate row or an “Author” label.
+- Truncates long app names first to preserve space for the provider. If both names are long, each is shortened visually and retains its complete hover text.
+- Moves “Downloaded” to the file information row so it does not compete for space with the names.
 
 ---
 

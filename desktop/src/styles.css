@@ -1454,11 +1454,9 @@ main.list-page { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden;
 .market-category { position:absolute; top:12px; left:12px; border-radius:20px; padding:4px 9px; background:#203149db; color:#fff; font-size:11px; }
 .market-new { position:absolute; top:12px; right:12px; display:inline-flex; align-items:center; justify-content:center; min-width:28px; padding:4px 9px; border:1px solid #ffffff50; border-radius:20px; background:var(--green); color:var(--on-accent); font-size:12px; font-weight:700; line-height:1.35; box-shadow:0 2px 8px #0003; }
 .market-card-body { display:flex; flex-direction:column; flex:1 0 auto; min-width:0; padding:16px; }
-.market-card-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; min-width:0; }
-.market-card-heading h2 { margin:0; font-size:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.market-author { display:flex; align-items:baseline; gap:8px; min-width:0; color:var(--muted); font-size:12px; margin:8px 0 0; }
-.market-author > :first-child { flex-shrink:0; }
-.market-author-name { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.market-card-heading { display:flex; align-items:baseline; gap:8px; min-width:0; }
+.market-card-heading h2 { flex:1; min-width:0; margin:0; font-size:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.market-author-name { flex:0 0 auto; min-width:0; max-width:45%; color:var(--muted); font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .market-downloaded { display:inline-flex; align-items:center; gap:3px; font-size:11px; flex-shrink:0; color:var(--green); }
 .market-downloaded .icon { width:13px; height:13px; }
 .market-meta { display:flex; align-items:center; flex-wrap:wrap; gap:8px; color:var(--muted); font-size:12px; margin-top:10px; }
@@ -1466,7 +1464,8 @@ main.list-page { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden;
 .market-version > span { flex-shrink:0; }
 .market-version select { width:100%; min-width:0; max-width:180px; height:34px; min-height:34px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--text); font-size:12px; }
 .market-size { flex-shrink:0; margin-left:auto; }
-.market-file { color:var(--muted); font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin:8px 0 16px; }
+.market-file-row { display:flex; align-items:center; gap:8px; min-width:0; margin:8px 0 16px; }
+.market-file { flex:1; min-width:0; color:var(--muted); font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin:0; }
 .market-card-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; }
 .market-card-actions button { flex:1 1 auto; justify-content:center; white-space:normal; }
 .market-card-actions button .icon { width:15px; height:15px; flex-shrink:0; }
