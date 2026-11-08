@@ -6,7 +6,7 @@
 
 ## 下载与预览
 
-[下载 putrtv商城 0.1.0 APK](putrtv-store-0.1.0.apk?raw=1) · [校验清单](SHA256SUMS.txt) · [验证记录](docs/VALIDATION.md)
+[下载 putrtv商城 0.1.1 APK](putrtv-store-0.1.1.apk?raw=1) · [校验清单](SHA256SUMS.txt) · [验证记录](docs/VALIDATION.md)
 
 ![putrtv商城电视界面](thumb.png)
 
