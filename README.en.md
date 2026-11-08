@@ -145,6 +145,8 @@ This page currently features eight games from the new hundred-game collection al
 
 <!-- resource-index:end -->
 
+Third-party apps under 10 MB are collected in the [fork/ catalog](fork/README.md): 14 apps and 23 APKs from TVAPP, with icons, catalog covers and manifests.
+
 ## MCP / Agent
 
 Open “Device connection → MCP · Agent debugging,” copy the configuration into your client, and keep the manager window open. Its 34 tools cover system information, connections, app management, APK installation, launcher switching and layouts, market browsing/downloads/installation, background images, ADB configuration, language and theme settings, cancellation, and logs. The Agent and the interface share the same state.

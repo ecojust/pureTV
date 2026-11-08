@@ -1,6 +1,8 @@
 # 维护 APK 资源
 
-根目录只保留电脑管理器与公共资源入口。原 Android 源码整体位于 `resource/launcher/puretv/` 与 `resource/apps/`；启动器与应用均按软件分目录：`resource/launcher/<启动器名>/` 和 `resource/apps/<应用名>/`，每个目录直接存放对应 APK。每个软件目录必须有实际 APK、resource.json、README、LICENSE 和 SHA256SUMS.txt。源码可直接放在目录中，也可附对应源码归档；封面使用 thumb.png。
+电脑管理器与公共资源入口位于根目录，第三方小体积 APK 独立收录于 [fork/](../fork/README.md)，维护方式见其 [MAINTENANCE.md](../fork/MAINTENANCE.md)。下列 resource 约定用于原有启动器与应用目录；fork 不计入自研资源目录或自动上架商城。
+
+原 Android 源码整体位于 `resource/launcher/puretv/` 与 `resource/apps/`；启动器与应用均按软件分目录：`resource/launcher/<启动器名>/` 和 `resource/apps/<应用名>/`，每个目录直接存放对应 APK。每个软件目录必须有实际 APK、resource.json、README、LICENSE 和 SHA256SUMS.txt。源码可直接放在目录中，也可附对应源码归档；封面使用 thumb.png。
 
 新应用还必须随 APK 提供同目录的 `logo.svg`：`width="64"`、`height="64"`、`viewBox="0 0 64 64"`，UTF-8 文件不超过 8192 字节，遵循 layout.json 的静态 SVG 子集。README 链接图标，SHA256SUMS.txt 记录其校验值；第三方图标保留来源及许可说明。完整要求、市场多版本目录示例及缓存到布局 `icon` 的流程见 [应用资源与 logo.svg 约定](../resource/README-development.md#应用资源与-logosvg-约定)。历史商店资源没有图标时仍可下载安装。
 

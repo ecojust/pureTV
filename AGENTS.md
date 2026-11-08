@@ -14,6 +14,7 @@
 
 - `desktop/`：电脑端 Android TV / Google TV 管理器；开发入口为 `desktop/README.md`。
 - `resource/launcher/<id>/`：独立启动器；`resource/apps/<id>/`：独立电视应用或游戏。
+- `fork/<分类>/<id>/`：第三方小体积 APK 归档；保留上游原包和证书，按 `fork/MAINTENANCE.md` 生成来源、图标、封面与校验清单，不计入自研资源或自动上架商城。
 - `resource/game-kit/`：小游戏原生宿主、局域网手机手柄、公共 Web 运行时、渲染器、构建和验证工具。
 - `tools/`：资源目录、签名证书及索引维护；`docs/`：公共说明与预览；`history/`：用户请求和可复查的行动记录。
 - 新游戏的规则、素材、测试和说明放在自己的目录。只有确有共性需求或缺陷时才改公共组件，修改后运行相关共享回归。
