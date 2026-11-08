@@ -143,7 +143,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 <!-- resource-index:end -->
 
-第三方小体积应用见 [fork/ 分类目录](fork/README.md)：收录 TVAPP 中小于 10 MB 的 14 款应用、23 个 APK，提供图标、介绍封面与 manifest。
+第三方小体积应用见 [fork/ 分类目录](fork/README.md)：收录 TVAPP 中小于 10 MB 的 14 款应用、23 个 APK，提供图标、介绍封面与 manifest。超过限制的 205 个文件另见[未收录应用与复刻参考](fork/OVERSIZED.md)。
 
 ## MCP / Agent
 

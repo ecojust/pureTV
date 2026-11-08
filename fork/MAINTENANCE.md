@@ -1,5 +1,7 @@
 # 维护与复现
 
+超过10 MB、未收录的文件见 [完整清单与复刻参考](OVERSIZED.md)。其版本、系统和架构仅为文件名线索；应用家族与开发评估维护在 `planning/app-notes.json`，运行 `python3 tools/update-tvapp-oversized.py` 生成 Markdown、JSON、CSV，使用 `--check` 验证205个文件的完整覆盖及生成结果。此清单与已下载小包的实际元数据验证分别记录。
+
 范围为上游固定提交的实际APK文件，按 **0 < bytes < 10,000,000** 筛选，保留所有合格版本和架构命名变体。当前228个APK中符合条件23个，按实际包名分为14款应用。分类由用途和上游目录确定；娱乐目录中的直播、音乐、戏曲归media，游戏归game。没有为凑分类收录超限文件。
 
 目录结构：`fork/<media|game|education|tools|fitness>/<应用>/`。每款提供 `manifest.json`（真实包信息、来源、签名及provider）、`assets.json`（原图标及生成方式）、`logo.svg`、可提取的原始图标、960×540的 `thumb.png`、原APK、README和SHA256清单。相同包名的多个版本保留在同一目录；VsTV HarmonyOS使用不同包名，因此单独分组。

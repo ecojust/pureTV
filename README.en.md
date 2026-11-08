@@ -145,7 +145,7 @@ This page currently features eight games from the new hundred-game collection al
 
 <!-- resource-index:end -->
 
-Third-party apps under 10 MB are collected in the [fork/ catalog](fork/README.md): 14 apps and 23 APKs from TVAPP, with icons, catalog covers and manifests.
+Third-party apps under 10 MB are collected in the [fork/ catalog](fork/README.md): 14 apps and 23 APKs from TVAPP, with icons, catalog covers and manifests. See the [oversized-app inventory and implementation notes](fork/OVERSIZED.md) for the 205 excluded files.
 
 ## MCP / Agent
 

@@ -4,7 +4,7 @@
 
 每款应用提供原APK、`logo.svg`、原图标（可提取时）、`thumb.png`、`manifest.json`、`assets.json`、README和SHA256清单。下方封面均为生成的介绍卡，不是运行截图。署名没有可靠依据时provider为null，未把收集者当作应用作者。
 
-[机器目录](catalog.json) · [完整性校验](verification/report.json) · [来源与许可](NOTICE.md) · [维护说明](MAINTENANCE.md)
+[机器目录](catalog.json) · [超限应用与复刻清单](OVERSIZED.md) · [完整性校验](verification/report.json) · [来源与许可](NOTICE.md) · [维护说明](MAINTENANCE.md)
 
 本目录为独立第三方归档，尚未接入Gitee APK市场或电视商城。原APK未改签、未执行；包签名验证只证明完整性，不代表原开发者身份或内容安全。戏曲多多两版签名不同，详见对应目录。
 
