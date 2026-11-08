@@ -29,6 +29,6 @@ Certificate SHA256: eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492
 
 ## 发布记录
 
-签名APK、资源元数据、117项目录、README下载入口及预览同步发布至仓库。公开下载核验结果补充在本次证据目录中；本次不创建GitHub Release，不上传Gitee。
+签名APK、资源元数据、117项目录、README下载入口及预览同步发布至仓库。资源发布提交 [`a9d2ea7c`](https://github.com/ecojust/pureTV/commit/a9d2ea7cb90eb1e4c89e620f411673400b2cf105) 已同步master。已通过公开HTTPS重新完整读取117项目录和140,037字节APK，大小及SHA256与本地一致；见 [公开下载核验](release-evidence/42446839496/public-downloads.json)。本次不创建GitHub Release，不上传Gitee。
 
 历史0.1.0与十款启动器集成的测试、失败报告及发布文件证据保留在 [VALIDATION-0.1.0.md](VALIDATION-0.1.0.md)，不将旧版结果改写成此次验证。
