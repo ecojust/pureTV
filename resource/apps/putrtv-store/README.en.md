@@ -14,7 +14,7 @@ This is the actual Android UI rendered with a fixture catalog, not a physical TV
 
 ## Use
 
-Install the store on your TV once, then open it to refresh the catalog and check installed versions. Browse Launchers, Media, Games and Tools, search by name, or select Updates.
+Install the store on your TV once, then open it to refresh the catalog and check installed versions. Browse Media, Games and Tools, search by name, or select Updates. Launchers are not listed in the store.
 
 Select an app to download it, then confirm installation in the TV's system installer. On Android 8 or later you may first need to allow putrtv Store to install unknown apps in system settings. TV manufacturers can impose additional restrictions. On return, the store checks the actual installed package before reporting success.
 
@@ -24,13 +24,13 @@ Updates compare exact package IDs and integer version codes. A newer local versi
 
 After installation, select **Add to home** in app details. Your current launcher opens a confirmation page where you select a free position on the Home or Apps page with the remote. The launcher saves the app's actual name and icon, using white text, without rearranging existing tiles.
 
-This requires an updated pureTV family launcher supporting the add-to-home entry point. Update older launchers first. These launchers require Android 8 or later, independently of the store's Android 4.4 minimum. Manufacturer launchers use their own app list or pinning controls.
+This requires an updated pureTV family launcher supporting the add-to-home entry point. Update older launchers using this repository’s [launcher resources](../../README.md). These launchers require Android 8 or later, independently of the store's Android 4.4 minimum. Manufacturer launchers use their own app list or pinning controls.
 
 The store passes only the installed package ID and catalog SVG. The launcher validates and saves its own layout; the ADB layout provider remains protected. If there is no free position or the layout contains removed apps, the launcher reports the issue instead of overwriting or deleting tiles.
 
 ## Catalog and updates
 
-The initial catalog contains this project's verified APK resources. Each refresh pins one GitHub commit for both catalog and APKs. Downloads check file size, SHA256, Git blob, package ID, version and signing certificate. Offline browsing is marked stale and does not imply a fresh update check.
+The catalog contains this project's verified app APK resources. Launchers are excluded from online, cached and bundled offline catalogs. Each refresh pins one GitHub commit for both catalog and APKs. Downloads check file size, SHA256, Git blob, package ID, version and signing certificate. Offline browsing is marked stale and does not imply a fresh update check.
 
 Checks run when opening the store or refreshing manually. There is no automatic background installation. Store updates use the same catalog. The desktop manager's Gitee marketplace is a separate publication channel and may differ.
 

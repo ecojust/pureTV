@@ -1,6 +1,6 @@
 # putrtv商城 构建与签名
 
-独立原生 Android TV 模块 `:putrtv-store`，包名 `com.ecojust.putrtvstore`，首版0.1.0／versionCode1。构建根目录为 `resource/launcher/puretv`，使用已有 Gradle Wrapper、JDK17、Android SDK35与Build Tools34.0.0。
+独立原生 Android TV 模块 `:putrtv-store`，包名 `com.ecojust.putrtvstore`，当前0.1.1／versionCode2。构建根目录为 `resource/launcher/puretv`，使用已有 Gradle Wrapper、JDK17、Android SDK35与Build Tools34.0.0。
 
 ```bash
 cd resource/launcher/puretv

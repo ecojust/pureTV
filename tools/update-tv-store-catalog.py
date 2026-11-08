@@ -4,8 +4,10 @@
 Refresh after publishing resource APKs:
   python3 tools/update-tv-store-catalog.py --build-tools /path/to/android-sdk/build-tools/34.0.0
 
-The bundled snapshot is deliberately separate from the live feed. To bootstrap a new
-store APK, use --allow-unpublished-store --snapshot-revision <published 40-hex commit>.
+The feed lists apps only; all repository resources, including launchers, are verified.
+The bundled snapshot is deliberately separate from the live feed. Before freezing a
+store APK, use --snapshot-revision <published 40-hex commit>. The initial source-only
+bootstrap additionally requires --allow-unpublished-store.
 Only resources whose metadata, APK and covers match that commit may enter its snapshot.
 Future feed refreshes do not rewrite the frozen store APK's bundled snapshot.
 """
@@ -25,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FEED = 'resource/tv-store-catalog.json'
 SNAPSHOT = 'resource/apps/putrtv-store/src/main/assets/catalog-snapshot.json'
 CATEGORIES = ('launcher', 'media', 'game', 'tools')
+STORE_CATEGORIES = ('media', 'game', 'tools')
 SVG_NS = 'http://www.w3.org/2000/svg'
 SVG_TAGS = {'svg', 'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon'}
 SVG_ATTRS = {'viewBox', 'width', 'height', 'x', 'y', 'x1', 'y1', 'x2', 'y2', 'cx', 'cy', 'r', 'rx', 'ry', 'd', 'points', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'fill-rule', 'clip-rule', 'opacity', 'fill-opacity', 'stroke-opacity', 'transform', 'color'}
@@ -113,7 +116,7 @@ def generate(root, tools, allow_unpublished_store=False):
     resources = verify_catalog(root, tools, allow_unpublished_putrtv_store=allow_unpublished_store)
     order = json.loads((root / 'tools/resource-order.json').read_text())
     translations = json.loads((root / 'tools/resource-index.en.json').read_text())
-    assert set(order) == set(CATEGORIES), 'Resource order must contain the four store categories'
+    assert set(order) == set(CATEGORIES), 'Resource order must contain the four repository categories'
     indexed = {str(Path(info['path']).parent.relative_to('resource')): info for info in resources}
     ordered_ids = [key for group in CATEGORIES for key in order[group]]
     assert len(ordered_ids) == len(set(ordered_ids)), 'Duplicate resource creation-order entry'
@@ -153,16 +156,20 @@ def generate(root, tools, allow_unpublished_store=False):
                 'minSdk': min_sdk(apk, tools),
             }
             assert 0 < entry['versionCode'] <= 9223372036854775807
-            entries.append(entry)
+            # Keep launchers in every validation above, including creation order,
+            # metadata and APK identity. Only the public store listing excludes them.
+            if category in STORE_CATEGORIES:
+                entries.append(entry)
     return {'schemaVersion': 1, 'entries': entries}, lint
 
 
 def snapshot(root, catalog, revision):
     assert re.fullmatch(r'[a-f0-9]{40}', revision), 'Use a full immutable published Git commit for a snapshot'
+    assert all(entry['category'] in STORE_CATEGORIES for entry in catalog['entries']), 'Store snapshot must contain apps only'
     actual = subprocess.check_output(['git', 'rev-parse', revision + '^{commit}'], cwd=root, text=True).strip()
     assert actual == revision, 'Snapshot ref must be the exact commit'
-    # An APK embedded in the store cannot hash itself. The first snapshot includes
-    # the already published resources only, before the store is registered.
+    # Embed only already published resources. Later snapshots can include the
+    # previous store release, but never the APK currently being built.
     frozen = []
     for entry in catalog['entries']:
         directory = 'resource/' + entry['id']

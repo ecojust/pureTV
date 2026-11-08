@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.os.Bundle;
 import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.View;
@@ -35,13 +36,14 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(sdk = 28, qualifiers = "zh-rCN-w960dp-h540dp-land-mdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 public class StoreUiTest {
-    private static boolean stale, fail, installedNow, permissionAllowed, settingsOpened;
+    private static boolean stale, fail, installedNow, permissionAllowed, settingsOpened, legacyCatalog;
+    private static int launcherInspections;
     private static CountDownLatch downloadEntered, downloadCancelled;
     static List<StoreEntry> entries() {
         List<StoreEntry> entries = new ArrayList<>();
-        String[] zh = {"pureTV", "Nova", "Sol", "Forma", "Moss", "Aster", "Mono", "Pixel", "Circuit", "Drift", "BiliTV", "电视音乐", "四则二十四", "putrtv商城"};
-        String[] en = {"pureTV", "Nova", "Sol", "Forma", "Moss", "Aster", "Mono", "Pixel", "Circuit", "Drift", "BiliTV", "TV Music", "Twenty Four", "putrtv Store"};
-        for (int i = 0; i < zh.length; i++) entries.add(new StoreEntry("fixture" + i, zh[i], en[i], "为电视遥控器设计，轻松发现大屏应用。", "Designed for your remote. Discover more on your TV.", i < 10 ? "launcher" : i < 12 ? "media" : i == 12 ? "game" : "tools", "com.example.app" + i, "0.5.2", "resource/apps/fixture/fixture.apk", "", "", repeat('a', 64), repeat('b', 64), repeat('c', 40), 3, 820000 + i * 31000, 19));
+        String[] zh = {"BiliTV", "CCTV Live", "HIFINi TV", "WebTV", "ShortVideo TV", "折光工坊", "镜光接力", "拉索桥梁", "窗口装配", "异形装箱", "叠塔工匠", "夜桥接力", "四则二十四", "推箱子", "数独", "putrtv商城"};
+        String[] en = {"BiliTV", "CCTV Live", "HIFINi TV", "WebTV", "ShortVideo TV", "Refraction Workshop", "Mirror Relay", "Cable Bridge", "Window Assembly", "Shape Packing", "Tower Crafter", "Night Bridge Relay", "Twenty Four", "Sokoban", "Sudoku", "putrtv Store"};
+        for (int i = 0; i < zh.length; i++) entries.add(new StoreEntry("fixture" + i, zh[i], en[i], "为电视遥控器设计，轻松发现大屏应用。", "Designed for your remote. Discover more on your TV.", i < 5 ? "media" : i < 15 ? "game" : "tools", "com.example.app" + i, "0.1.0", "resource/apps/fixture/fixture.apk", "", "", repeat('a', 64), repeat('b', 64), repeat('c', 40), 3, 820000 + i * 31000, 19));
         return entries;
     }
     static String repeat(char c, int n) { StringBuilder s = new StringBuilder(); while (n-- > 0) s.append(c); return s.toString(); }
@@ -59,18 +61,23 @@ public class StoreUiTest {
         }; }
         @Override protected boolean enableNetworkArtwork() { return false; }
         @Override protected CatalogRepository createRepository() { return new CatalogRepository(this) {
-            @Override public StoreCatalog load(boolean force, Cancellation cancellation) throws IOException { if (fail) throw new IOException("fixture offline"); return new StoreCatalog(repeat('d', 40), stale ? "bundled" : "network", "", 1794013200000L, stale, entries()); }
+            @Override public StoreCatalog load(boolean force, Cancellation cancellation) throws IOException {
+                if (fail) throw new IOException("fixture offline");
+                if (legacyCatalog) return CatalogRepository.parse(CatalogRepositoryTest.legacyFeed(), repeat('d', 40), "legacy", 1794013200000L, stale, "");
+                return new StoreCatalog(repeat('d', 40), stale ? "bundled" : "network", "", 1794013200000L, stale, entries());
+            }
         }; }
         @Override protected InstalledApps createInstalledApps() { return new InstalledApps(this) {
             @Override public Status inspect(StoreEntry entry) {
-                if (entry.id.equals("fixture0")) return new Status(installedNow ? State.CURRENT : State.UPDATE_AVAILABLE, installedNow ? 3 : 2, installedNow ? "0.5.2" : "0.5.1", true);
-                if (entry.id.equals("fixture1")) return new Status(State.CURRENT, 3, "0.5.2", true);
+                if (entry.id.equals("launcher/puretv")) { launcherInspections++; return new Status(State.UPDATE_AVAILABLE, 15, "0.5.1", true); }
+                if (entry.id.equals("fixture0") || entry.id.equals("apps/bilibili")) return new Status(installedNow ? State.CURRENT : State.UPDATE_AVAILABLE, installedNow ? entry.versionCode : entry.versionCode - 1, installedNow ? entry.versionName : "0.0.9", true);
+                if (entry.id.equals("fixture1")) return new Status(State.CURRENT, 3, "0.1.0", true);
                 return new Status(State.NOT_INSTALLED, 0, "", false);
             }
             @Override public Intent launchIntent(StoreEntry entry) { return entry.id.equals("fixture0") ? new Intent("fixture.OPEN").setPackage(entry.packageName) : null; }
         }; }
     }
-    @Before public void before() { stale = fail = installedNow = permissionAllowed = settingsOpened = false; downloadEntered = new CountDownLatch(1); downloadCancelled = new CountDownLatch(1); new android.app.Instrumentation().setInTouchMode(false); }
+    @Before public void before() { stale = fail = installedNow = permissionAllowed = settingsOpened = legacyCatalog = false; launcherInspections = 0; downloadEntered = new CountDownLatch(1); downloadCancelled = new CountDownLatch(1); new android.app.Instrumentation().setInTouchMode(false); }
     static Object field(MainActivity a, String name) throws Exception { Field f = MainActivity.class.getDeclaredField(name); f.setAccessible(true); return f.get(a); }
     static View root(MainActivity a) { return a.getWindow().getDecorView(); }
     static View tag(MainActivity a, String name) { View v = root(a).findViewWithTag(name); assertNotNull(name, v); return v; }
@@ -81,7 +88,8 @@ public class StoreUiTest {
     @Test public void remoteSearchUpdatesAndInstallStateRefresh() throws Exception {
         try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup().visible().windowFocusChanged(true)) {
             TestActivity a = c.get(); flush(a); layout(root(a), 960, 540);
-            assertTrue(text(tag(a, "tab-launcher")).contains("10")); assertTrue(text(tag(a, "tab-updates")).contains("1"));
+            assertNull(root(a).findViewWithTag("tab-launcher")); assertEquals("media", field(a, "category"));
+            assertTrue(text(tag(a, "tab-media")).contains("5")); assertTrue(text(tag(a, "tab-game")).contains("10")); assertTrue(text(tag(a, "tab-tools")).contains("1")); assertTrue(text(tag(a, "tab-updates")).contains("1"));
             tag(a, "tab-updates").performClick(); layout(root(a), 960, 540);
             View card = tag(a, "card-0"); assertTrue(card.requestFocus()); assertSame(card, root(a).findFocus());
             a.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_CENTER)); a.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_CENTER));
@@ -94,9 +102,43 @@ public class StoreUiTest {
     }
     @Test public void pagingKeepsEveryAppReachableWithoutLoadingEntireCatalog() throws Exception {
         try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup().visible().windowFocusChanged(true)) {
-            TestActivity a = c.get(); flush(a); layout(root(a), 960, 540); assertNull(root(a).findViewWithTag("card-9"));
-            tag(a, "next-page").performClick(); assertTrue(text(tag(a, "card-0")).contains("Drift")); assertTrue(tag(a, "card-0").hasFocus());
-            tag(a, "previous-page").performClick(); assertTrue(text(tag(a, "card-0")).contains("pureTV"));
+            TestActivity a = c.get(); flush(a); tag(a, "tab-game").performClick(); layout(root(a), 960, 540); assertNull(root(a).findViewWithTag("card-9"));
+            tag(a, "next-page").performClick(); assertTrue(text(tag(a, "card-0")).contains("数独")); assertTrue(tag(a, "card-0").hasFocus());
+            tag(a, "previous-page").performClick(); assertTrue(text(tag(a, "card-0")).contains("折光工坊"));
+            a.onBackPressed(); assertEquals("media", field(a, "category")); assertSame(tag(a, "tab-media"), root(a).findFocus()); assertTrue(text(tag(a, "card-0")).contains("BiliTV"));
+        }
+    }
+    @Test public void oldLauncherCategoryAndDetailsRestoreToMediaWithoutLauncherSearchOrUpdates() throws Exception {
+        legacyCatalog = true;
+        Bundle saved = new Bundle(); saved.putString("category", "launcher"); saved.putString("selectedPackage", "com.ecojust.puretv");
+        try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup(saved).visible().windowFocusChanged(true)) {
+            TestActivity a = c.get(); flush(a); layout(root(a), 960, 540);
+            assertEquals("media", field(a, "category")); assertNull(root(a).findViewWithTag("tab-launcher")); assertNull(modal(a));
+            assertTrue(text(tag(a, "card-0")).contains("BiliTV")); assertNull(root(a).findViewWithTag("card-1"));
+            assertEquals("应用更新  1\n", text(tag(a, "tab-updates")));
+            tag(a, "tab-updates").performClick(); assertTrue(text(tag(a, "card-0")).contains("BiliTV")); assertNull(root(a).findViewWithTag("card-1"));
+            for (String keyword : new String[]{"pureTV", "com.ecojust.puretv"}) {
+                ((EditText) tag(a, "search-input")).setText(keyword); tag(a, "search-submit").performClick();
+                assertNull(root(a).findViewWithTag("card-0")); assertTrue(text(root(a)).contains("没有找到应用"));
+            }
+            installedNow = true; tag(a, "tab-updates").performClick(); tag(a, "refresh").performClick(); flush(a);
+            assertEquals("应用更新  0\n", text(tag(a, "tab-updates"))); assertTrue(text(root(a)).contains("未发现可用更新"));
+            // The old feed offers launcher code 16 over the fixture's installed code 15.
+            // It must be excluded before inspecting installed versions or opening details.
+            assertEquals(0, launcherInspections);
+        }
+    }
+    @Test public void addToHomeRemainsAvailableAndOldHomeHelpPointsToDesktopManager() throws Exception {
+        try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup().visible()) {
+            TestActivity a = c.get(); flush(a); LauncherIntegrationTest.home(a, "com.ecojust.puretv");
+            tag(a, "card-0").performClick(); String help = text(modal(a).getWindow().getDecorView());
+            assertTrue(help.contains("电脑端 pureTV 管理器")); assertFalse(help.contains("在商城更新当前启动器"));
+            a.onBackPressed();
+            Intent action = new Intent(LauncherIntegration.ACTION).setPackage("com.ecojust.puretv");
+            shadowOf(a.getPackageManager()).addResolveInfoForIntent(action, LauncherIntegrationTest.handler("com.ecojust.puretv", "com.ecojust.puretv.AddToHomeActivity"));
+            tag(a, "card-0").performClick(); modal(a).getWindow().getDecorView().findViewWithTag("add-to-home").performClick();
+            Intent request = shadowOf(a).getNextStartedActivityForResult().intent;
+            assertEquals("com.ecojust.puretv", request.getComponent().getPackageName()); assertEquals("com.example.app0", request.getStringExtra("packageName"));
         }
     }
     @Test public void offlineCatalogNeverClaimsApplicationsAreCurrentAndCanRecover() throws Exception {
@@ -137,7 +179,7 @@ public class StoreUiTest {
     }
     private void capture(int w, int h, String suffix) throws Exception {
         try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup().visible().windowFocusChanged(true)) {
-            TestActivity a = c.get(); flush(a); layout(root(a), w, h); tag(a, "tab-launcher").requestFocus();
+            TestActivity a = c.get(); flush(a); layout(root(a), w, h); tag(a, "tab-media").requestFocus();
             bounds(tag(a, "search-input"), w, h); bounds(tag(a, "refresh"), w, h); bounds(tag(a, "card-0"), w, h); bounds(tag(a, "tab-updates"), w, h);
             assertNotNull(root(a).findFocus()); assertTrue(root(a).findFocus().isShown()); if (a.english()) assertFalse(text(root(a)).matches("(?s).*\\p{IsHan}.*"));
             save(root(a), w, h, "putrtv-store" + suffix + ".png");

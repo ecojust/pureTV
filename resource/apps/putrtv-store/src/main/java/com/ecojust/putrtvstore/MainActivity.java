@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
     private EditText search;
     private Dialog modal;
     private StoreEntry selected;
-    private String category = "launcher", query = "", reopenPackage;
+    private String category = "media", query = "", reopenPackage;
     private View lastCard;
 
     protected CatalogRepository createRepository() { return new CatalogRepository(this); }
@@ -99,7 +99,11 @@ public class MainActivity extends Activity {
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
-        if (state != null) { category = state.getString("category", "launcher"); query = state.getString("query", ""); reopenPackage = state.getString("selectedPackage"); }
+        if (state != null) {
+            String savedCategory = state.getString("category", "media");
+            if ("game".equals(savedCategory) || "tools".equals(savedCategory) || "updates".equals(savedCategory)) category = savedCategory;
+            query = state.getString("query", ""); reopenPackage = state.getString("selectedPackage");
+        }
         repository = createRepository(); installed = createInstalledApps(); installer = createInstaller(); downloader = createDownloader(); launcher = new LauncherIntegration(this); artwork = new StoreArtwork();
         build(); refresh(false);
     }
@@ -108,7 +112,7 @@ public class MainActivity extends Activity {
         LinearLayout side = column(); side.setPadding(0, dp(3), dp(20), 0);
         TextView brand = text("putrtv", 27, BLUE); brand.setTypeface(null, Typeface.BOLD); side.addView(brand);
         TextView brandHint = text(tr("电视应用商城", "TV app store"), 12, MUTED); side.addView(brandHint, space(-1, -2, 30));
-        String[] kinds = {"launcher", "media", "game", "tools", "updates"};
+        String[] kinds = {"media", "game", "tools", "updates"};
         for (String kind : kinds) {
             Button tab = button(categoryName(kind), "tab-" + kind, v -> navigate(kind)); tab.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             LinearLayout.LayoutParams lp = space(-1, 43, 9); if ("updates".equals(kind)) lp.topMargin = dp(18); side.addView(tab, lp); tabs.put(kind, tab);
@@ -132,7 +136,7 @@ public class MainActivity extends Activity {
         root.addView(body, new LinearLayout.LayoutParams(0, -1, 1)); setContentView(root); render(); tabs.get(category).requestFocus();
     }
     private String categoryName(String value) {
-        switch (value) { case "launcher": return tr("启动器", "Launchers"); case "media": return tr("影音", "Media"); case "game": return tr("游戏", "Games"); case "tools": return tr("工具", "Tools"); default: return tr("应用更新", "Updates"); }
+        switch (value) { case "media": return tr("影音", "Media"); case "game": return tr("游戏", "Games"); case "tools": return tr("工具", "Tools"); default: return tr("应用更新", "Updates"); }
     }
     private void navigate(String value) { page = 0; category = value; query = ""; search.setText(""); render(); scroll.smoothScrollTo(0, 0); tabs.get(value).requestFocus(); }
     private void search() {
@@ -219,7 +223,7 @@ public class MainActivity extends Activity {
         Button close = action(body, tr("返回", "Back"), "close-detail", v -> closeModal()); if (first == null) first = close; first.requestFocus();
     }
     private String homeHelp(LauncherIntegration.Availability value) {
-        switch (value) { case NEEDS_LAUNCHER_UPDATE: return tr("添加到自定义桌面：请先在商城更新当前启动器，然后重新打开这里。", "To add this app to your custom home, update the current launcher in the store, then reopen these details."); case NO_DEFAULT_HOME: return tr("请先设置默认桌面，再添加应用。", "Choose your default home app before adding apps."); default: return tr("当前桌面不支持商城添加入口，请使用电视桌面自己的应用管理功能。", "Your current home does not support adding apps from this store. Use your TV home’s app management."); }
+        switch (value) { case NEEDS_LAUNCHER_UPDATE: return tr("当前桌面版本暂不支持从商城添加应用。可在电脑端 pureTV 管理器更新桌面后重试，或使用桌面自己的编辑功能添加。", "This home version cannot add apps from the store yet. Update your home app with the pureTV desktop manager and retry, or use your home’s own editor."); case NO_DEFAULT_HOME: return tr("请先设置默认桌面，再添加应用。", "Choose your default home app before adding apps."); default: return tr("当前桌面不支持商城添加入口，请使用电视桌面自己的应用管理功能。", "Your current home does not support adding apps from this store. Use your TV home’s app management."); }
     }
     private void download(StoreEntry entry) {
         if (!installer.canInstall()) {
@@ -288,5 +292,5 @@ public class MainActivity extends Activity {
     @Override protected void onPause() { active = false; if (pending != null && modal != null && modal.getWindow().getDecorView().findViewWithTag("download-progress") != null) { downloadInterrupted = true; dismissModal(); } if (loading) { cancelRequest(); loading = false; refresh.setEnabled(true); syncStatus.setText(tr("检查已暂停，请返回后刷新。", "Check paused. Refresh when you return.")); } else cancelRequest(); artwork.cancel(); super.onPause(); }
     @Override protected void onDestroy() { destroyed = true; cancelRequest(); dismissModal(); artwork.close(); worker.shutdownNow(); main.removeCallbacksAndMessages(null); super.onDestroy(); }
     @Override protected void onSaveInstanceState(Bundle state) { super.onSaveInstanceState(state); state.putString("category", category); state.putString("query", query); if (selected != null) state.putString("selectedPackage", selected.packageName); }
-    @Override public void onBackPressed() { if (modal != null) { closeModal(); return; } if (!query.isEmpty()) { query = ""; search.setText(""); render(); tabs.get(category).requestFocus(); return; } if (!"launcher".equals(category)) { navigate("launcher"); return; } super.onBackPressed(); }
+    @Override public void onBackPressed() { if (modal != null) { closeModal(); return; } if (!query.isEmpty()) { query = ""; search.setText(""); render(); tabs.get(category).requestFocus(); return; } if (!"media".equals(category)) { navigate("media"); return; } super.onBackPressed(); }
 }

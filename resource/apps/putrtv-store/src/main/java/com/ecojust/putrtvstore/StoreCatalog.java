@@ -14,6 +14,12 @@ public final class StoreCatalog {
             boolean stale, List<StoreEntry> entries) {
         this.revision = revision; this.source = source; this.warning = warning;
         this.fetchedAt = fetchedAt; this.stale = stale;
-        this.entries = Collections.unmodifiableList(new ArrayList<>(entries));
+        // Older online feeds, saved caches and bundled snapshots can still contain launchers.
+        // Filter at the shared boundary so listings, searches and update counts agree.
+        List<StoreEntry> apps = new ArrayList<>();
+        for (StoreEntry entry : entries) {
+            if (!"launcher".equals(entry.category) && !entry.id.startsWith("launcher/")) apps.add(entry);
+        }
+        this.entries = Collections.unmodifiableList(apps);
     }
 }

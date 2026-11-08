@@ -5,6 +5,7 @@ import android.content.Context;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import org.robolectric.annotation.Config;
 @Config(sdk = 28)
 public class CatalogRepositoryTest {
     private static final String REV = "23bf3b11c156922a70a64d5f10f2700c52ac10f6";
+    private static final String SNAPSHOT_REV = "801bf6c212fd17a63399f7eb48d7b05936f8954b";
     private Context context;
 
     @Before public void cleanCache() {
@@ -45,6 +47,13 @@ public class CatalogRepositoryTest {
         return new JSONObject().put("schemaVersion", 1).put("entries", new JSONArray().put(entry)).toString().getBytes(StandardCharsets.UTF_8);
     }
     private static StoreCatalog parse(byte[] bytes) throws IOException { return CatalogRepository.parse(bytes, REV, "fixture", 1, false, ""); }
+    /** Unmodified pureTV/BiliTV entries from the published 801bf6c2 catalog. */
+    static byte[] legacyFeed() throws IOException {
+        try (InputStream input = CatalogRepositoryTest.class.getResourceAsStream("/legacy-catalog-with-launcher.json")) {
+            if (input == null) throw new IOException("Missing legacy catalog fixture");
+            return StoreNetwork.readBounded(input, CatalogRepository.MAX_CATALOG_BYTES, new Cancellation());
+        }
+    }
     private static void invalid(byte[] bytes) throws Exception {
         try { parse(bytes); fail("Invalid feed was accepted"); } catch (IOException expected) { }
     }
@@ -120,10 +129,28 @@ public class CatalogRepositoryTest {
         StoreCatalog stillStale = malformed.load(false, new Cancellation());
         assertTrue(stillStale.stale); assertEquals("Sample", stillStale.entries.get(0).nameEn);
     }
+    @Test public void legacyOnlineAndCachedCatalogsExcludeLaunchersAndKeepApps() throws Exception {
+        byte[] legacy = legacyFeed(); AtomicInteger calls = new AtomicInteger();
+        JSONArray original = new JSONObject(new String(legacy, StandardCharsets.UTF_8)).getJSONArray("entries");
+        assertEquals("launcher/puretv", original.getJSONObject(0).getString("id")); assertEquals(16, original.getJSONObject(0).getLong("versionCode"));
+        CatalogRepository online = new CatalogRepository(context, (url, limit, cancel) -> {
+            calls.incrementAndGet();
+            return url.toString().equals(StoreNetwork.REF_URL)
+                    ? ("{\"object\":{\"type\":\"commit\",\"sha\":\"" + SNAPSHOT_REV + "\"}}").getBytes(StandardCharsets.UTF_8) : legacy;
+        });
+        StoreCatalog fresh = online.load(true, new Cancellation());
+        assertFalse(fresh.stale); assertEquals(1, fresh.entries.size()); assertEquals("apps/bilibili", fresh.entries.get(0).id);
+        StoreCatalog cached = online.load(false, new Cancellation());
+        assertFalse(cached.stale); assertEquals(1, cached.entries.size()); assertEquals(2, calls.get());
+        CatalogRepository offline = new CatalogRepository(context, (url, limit, cancel) -> { throw new IOException("offline"); });
+        StoreCatalog saved = offline.load(true, new Cancellation());
+        assertTrue(saved.stale); assertEquals(1, saved.entries.size()); assertEquals("apps/bilibili", saved.entries.get(0).id);
+    }
     @Test public void firstOfflineStartUsesExplicitlyStaleFrozenSnapshot() throws Exception {
         CatalogRepository offline = new CatalogRepository(context, (url, limit, cancel) -> { throw new IOException("offline"); });
         StoreCatalog bundled = offline.load(true, new Cancellation());
-        assertTrue(bundled.stale); assertEquals(REV, bundled.revision); assertEquals(126, bundled.entries.size());
+        assertTrue(bundled.stale); assertEquals(SNAPSHOT_REV, bundled.revision); assertEquals(117, bundled.entries.size());
+        for (StoreEntry app : bundled.entries) { assertFalse(app.id.startsWith("launcher/")); assertNotEquals("launcher", app.category); }
         assertFalse(bundled.warning.isEmpty());
     }
     @Test public void cancellationNeverPretendsRefreshSucceeded() throws Exception {
