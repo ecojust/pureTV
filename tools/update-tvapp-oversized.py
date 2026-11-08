@@ -188,7 +188,7 @@ P1：优先验证轻量核心功能；P2：需要先确认内容/接口或较多
     for file in files:
         writer.writerow({key: ' | '.join(file[key]) if isinstance(file[key], list) else file[key] for key in columns})
     outputs = {'fork/OVERSIZED.md': '\n\n'.join(overview) + '\n',
-               'fork/planning/replication-notes.md': '\n\n'.join(details) + '\n',
+               'fork/planning/replication-notes.md': '\n\n'.join(details).rstrip() + '\n',
                'fork/planning/oversized-apks.md': '\n\n'.join(package_md) + '\n',
                'fork/planning/oversized.json': json.dumps(result, ensure_ascii=False, indent=2) + '\n',
                'fork/planning/oversized.csv': buffer.getvalue()}
