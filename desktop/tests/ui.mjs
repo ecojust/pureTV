@@ -1551,6 +1551,7 @@ try {
 
   const store=marketCatalog();
   const marketCard=(p,item)=>p.locator('.market-card').filter({has:p.locator(`[data-act="download-market"][data-id="${item.id}"]`)});
+  const marketAuthor=(p,item)=>marketCard(p,item).locator('.market-author-name');
   const openMarket=async p=>{await nav(p,'market');await p.locator('.market-card').first().waitFor();await settled(p);};
   const marketRequests=p=>p.evaluate(()=>window.__marketRequests);
   const versionedItem=version=>({...store.items[0],id:`apps/hifini/hifini-${version}.apk`,version,fileName:`hifini-${version}.apk`,bytes:Number(version.split('.')[1])*1048576,blobSha:version.replaceAll('.','').padStart(40,'0'),coverUrl:`https://gitee.com/juzisang331/pure-tv-store/raw/${store.revision}/apps/hifini/hifini-${version}.thumb.png`});
@@ -1559,7 +1560,7 @@ try {
   const versionSelect=(p,item)=>marketCard(p,item).locator('select[data-market-version]');
   const mockVersionCovers=p=>p.route('https://gitee.com/**',route=>route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=','base64')}));
   const categorizedMedia={...store.items[0],id:'apps/media/hifini/hifini-0.1.3.apk',name:'游戏影评 TV',folderUrl:store.items[0].folderUrl.replace('/apps/','/apps/media/')};
-  const categorizedGame=version=>({...store.items[1],id:`apps/game/prism-relay/prism-relay-${version}.apk`,name:'镜光接力',version,fileName:`prism-relay-${version}.apk`,folderUrl:store.items[1].folderUrl.replace('/apps/webtv','/apps/game/prism-relay')});
+  const categorizedGame=version=>({...store.items[1],id:`apps/game/prism-relay/prism-relay-${version}.apk`,name:'镜光接力',provider:'演示游戏工作室',version,fileName:`prism-relay-${version}.apk`,folderUrl:store.items[1].folderUrl.replace('/apps/webtv','/apps/game/prism-relay')});
   const latestGame=categorizedGame('0.2.1'),olderGame=categorizedGame('0.2.0');
   const categorizedStore={...store,items:[categorizedMedia,store.items[1],olderGame,latestGame,store.items[2]]};
   await check('market media and game tabs isolate search and grouped counts while preserving versions and the app download queue',async p=>{
@@ -1571,6 +1572,8 @@ try {
     assert.equal(await marketCard(p,store.items[1]).count(),1,'Old unclassified app paths remain available in Media');
     assert.equal(await marketCard(p,latestGame).count(),0);
     assert.equal(await marketCard(p,categorizedMedia).locator('.market-category').innerText(),'影音');
+    assert.equal(await marketAuthor(p,categorizedMedia).innerText(),categorizedMedia.provider);
+    assert.equal(await marketAuthor(p,store.items[1]).innerText(),'未提供','Old catalogs without provider do not invent an author');
     await shot(p,'market-media-tab-zh');
     await p.locator('[name="marketSearch"]').fill('镜光接力');
     assert.equal(await p.locator('.market-card').count(),0,'Media search cannot expose game cards');
@@ -1580,6 +1583,7 @@ try {
     assert.equal(await p.locator('[data-market-category="game"]').getAttribute('aria-selected'),'true');
     assert.equal(await p.locator('.market-card').count(),1);
     assert.equal(await marketCard(p,latestGame).locator('.market-category').innerText(),'游戏');
+    assert.equal(await marketAuthor(p,latestGame).innerText(),latestGame.provider);
     assert.equal(await marketCard(p,categorizedMedia).count(),0);
     assert.match(await p.locator('#market-count').innerText(),/1\s*\/\s*1/);
     assert.deepEqual(await versionSelect(p,latestGame).locator('option').evaluateAll(options=>options.map(option=>option.value)),[latestGame.id,olderGame.id]);
@@ -1598,6 +1602,8 @@ try {
       const tabs=await p.locator('[data-market-category]').allTextContents();
       assert.deepEqual(tabs.map(text=>text.replace(/\d+\s*$/,'').trim()),labels);
       assert.equal(await marketCard(p,olderGame).locator('.market-category').innerText(),badge);
+      assert.equal(await marketAuthor(p,olderGame).innerText(),olderGame.provider,'Provider stays as repository text in every language and selected version');
+      assert.match(await marketCard(p,olderGame).locator('.market-author').innerText(),language==='en'?/Author/:/作者/);
       assert.equal(await versionSelect(p,olderGame).inputValue(),olderGame.id);
     }
     assert.equal((await marketRequests(p)).filter(request=>request.command==='get_market_catalog').length,1,'Switching tabs, search and locale reuse the same catalog visit');
@@ -1612,7 +1618,7 @@ try {
     assert.equal(await p.locator('[data-launcher-apk]').count(),0,'Downloading a game cannot add a launcher');
     assert.deepEqual(await requests(p),[],'Browsing and downloading games do not invoke ADB');
   },withoutAdb(),{marketCatalog:categorizedStore});
-  const sameNameOtherFolder={...versionedItem('0.10.0'),id:'apps/another/hifini-0.10.0.apk',folderUrl:store.items[0].folderUrl.replace('/hifini','/another')};
+  const sameNameOtherFolder={...versionedItem('0.10.0'),id:'apps/another/hifini-0.10.0.apk',provider:'其他目录演示作者',folderUrl:store.items[0].folderUrl.replace('/hifini','/another')};
   const sameFolderOtherApp={...versionedItem('0.10.0'),id:'apps/hifini/hifini-lite-0.10.0.apk',fileName:'hifini-lite-0.10.0.apk'};
   const sameNameLauncher={...versionedItem('0.99.0'),kind:'launcher',id:'launcher/hifini/hifini-0.99.0.apk',folderUrl:store.items[0].folderUrl.replace('/apps/','/launcher/')};
   const seenItem=(kind,folder,stem,item)=>({id:JSON.stringify([kind,folder,stem]),name:item.name,version:item.version});
@@ -1732,10 +1738,13 @@ try {
     assert.deepEqual(await select.locator('option').evaluateAll(options=>options.map(option=>option.value)),topVersions.map(item=>item.id));
     assert.equal(await select.inputValue(),topVersions[0].id,'0.10.0 is newer than 0.9.0');
     assert.equal(await marketCard(p,sameNameOtherFolder).count(),1,'Equal display names in different application folders remain separate');
+    assert.equal(await marketAuthor(p,sameNameOtherFolder).innerText(),sameNameOtherFolder.provider,'Equal app names do not share their author');
+    assert.equal(await marketAuthor(p,topVersions[0]).innerText(),topVersions[0].provider);
     assert.equal(await marketCard(p,sameFolderOtherApp).count(),1,'Different filename bases in one folder remain separate applications');
     assert.equal(await versionSelect(p,store.items[1]).locator('option').count(),1,'A single-version app keeps a usable version selector');
     await p.locator('[data-market-category="launcher"]').click();
     assert.equal(await p.locator('.market-card').count(),2);assert.equal(await marketCard(p,sameNameLauncher).count(),1,'Apps and launchers never share a version group');
+    assert.equal(await marketAuthor(p,store.items[2]).innerText(),store.items[2].provider,'Launcher cards also show their own provider');
     assert.deepEqual(await requests(p),[],'Version grouping never invokes ADB');
     await shot(p,'market-versions-grouped');
   },withoutAdb(),{marketCatalog:{...versionedStore,items:[...versionedStore.items,sameNameOtherFolder,sameFolderOtherApp,sameNameLauncher]}});
@@ -1744,6 +1753,7 @@ try {
     await versionSelect(p,latest).selectOption(selected.id);
     let card=marketCard(p,selected);
     assert.equal(await card.getAttribute('data-market-id'),selected.id);
+    assert.equal(await marketAuthor(p,selected).innerText(),selected.provider);
     assert.equal(await card.locator('.market-file').innerText(),selected.fileName);
     assert.match(await card.locator('.market-meta').innerText(),/8\.0 MB/);
     assert.equal(await card.locator('.market-cover img').getAttribute('src'),selected.coverUrl);
@@ -1752,6 +1762,7 @@ try {
     await p.locator('[name="marketSearch"]').fill('');await nav(p,'apps');await nav(p,'market');
     assert.equal(await versionSelect(p,selected).inputValue(),selected.id);
     await p.locator('[name="locale"]').selectOption('en');assert.equal(await versionSelect(p,selected).inputValue(),selected.id);
+    assert.equal(await marketAuthor(p,selected).innerText(),selected.provider);
     await marketCard(p,selected).locator('[data-act="download-market"]').click();await held(p,'downloadMarketItem');
     assert.equal(await versionSelect(p,selected).isDisabled(),true,'A pending download locks version selection');
     await release(p,'downloadMarketItem');await result(p,'success');await acknowledge(p);
@@ -1777,11 +1788,14 @@ try {
     await mockVersionCovers(p);await openMarket(p);const selected=topVersions[4];
     await versionSelect(p,topVersions[0]).selectOption(selected.id);
     const refresh=async catalog=>{await p.evaluate(value=>{window.__marketCatalog=value;},catalog);await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);};
-    await refresh({...versionedStore,revision:'e'.repeat(40)});
+    const changedProvider='演示目录更新后的作者';
+    await refresh({...versionedStore,revision:'e'.repeat(40),items:versionedStore.items.map(item=>({...item,provider:changedProvider}))});
     assert.equal(await versionSelect(p,selected).inputValue(),selected.id,'A valid manual selection survives a catalog refresh');
+    assert.equal(await marketAuthor(p,selected).innerText(),changedProvider,'Refreshing updates the author even while keeping an older APK selected');
     const latest=versionedItem('0.11.0'),updated={...versionedStore,revision:'f'.repeat(40),items:[latest,...versionedStore.items]};
     await refresh(updated);
     assert.equal(await versionSelect(p,latest).inputValue(),latest.id,'A selected version outside the latest five falls back to the newest');
+    assert.equal(await marketAuthor(p,latest).innerText(),latest.provider,'Falling back to a different item does not retain previous provider text');
     assert.equal(await versionSelect(p,latest).locator(`option[value="${selected.id}"]`).count(),0);
     const removed=topVersions[1];await versionSelect(p,latest).selectOption(removed.id);
     await refresh({...updated,revision:'d'.repeat(40),items:updated.items.filter(item=>item.id!==removed.id)});
@@ -1790,6 +1804,7 @@ try {
     assert.deepEqual((await marketRequests(p)).filter(value=>value.command==='download_market_item'),[{command:'download_market_item',id:latest.id,revision:'d'.repeat(40)}],'Fallback uses the refreshed revision and latest APK identifier');
   },withoutAdb(),{marketCatalog:versionedStore});
   const unsafeMarket=marketCatalog();unsafeMarket.items[0].name='<img src=x onerror="window.__xss=true">';
+  unsafeMarket.items[0].provider='<img src=x onerror="window.__xss=true">作者 & "团队"';
   await check('market discovers categorized APKs without ADB and escapes repository metadata',async p=>{
     await openMarket(p);
     const navigation=await p.locator('nav [data-page]').evaluateAll(elements=>elements.map(element=>element.dataset.page));
@@ -1797,6 +1812,8 @@ try {
     assert.equal(await p.locator('.market-card').count(),2);
     assert.equal(await marketCard(p,store.items[0]).locator('img[src="x"]').count(),0);
     assert.match(await marketCard(p,store.items[0]).innerText(),/onerror/);
+    assert.equal(await marketAuthor(p,store.items[0]).textContent(),unsafeMarket.items[0].provider,'Provider markup is literal text');
+    assert.equal(await marketAuthor(p,store.items[0]).getAttribute('title'),unsafeMarket.items[0].provider,'Attribute quotes are escaped without changing provider text');
     assert.equal(await p.evaluate(()=>window.__xss),false);
     assert.match(await marketCard(p,store.items[0]).innerText(),/193\.1 KB/);
     assert.match(await marketCard(p,store.items[1]).innerText(),/2\.0 MB/);
@@ -1870,16 +1887,29 @@ try {
   },snapshot(),{holdActions:['downloadMarketItem']});
   await check('market refresh replaces a stale catalog and preserves localized controls',async p=>{
     await openMarket(p);assert.match(await p.locator('main').innerText(),/缓存目录/);
+    assert.equal(await marketAuthor(p,store.items[0]).innerText(),store.items[0].provider,'Cached provider metadata remains visible while offline');
     await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'APK Market');
     assert.match(await p.locator('[data-market-category="launcher"]').innerText(),/Launchers/);
     assert.match(await marketCard(p,store.items[0]).innerText(),/HIFINi TV/);
+    assert.equal(await marketAuthor(p,store.items[0]).innerText(),store.items[0].provider,'Provider is not passed through the UI translation catalog');
+    assert.equal(await marketAuthor(p,store.items[1]).innerText(),'Not provided');
+    await shot(p,'market-provider-en');
     const updated=marketCatalog();updated.revision='f'.repeat(40);updated.items=[updated.items[1]];
     await p.evaluate(value=>{window.__marketCatalog=value;},updated);
     await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
     assert.equal(await p.locator('.market-card').count(),1);assert.match(await p.locator('.market-card').innerText(),/WebTV/);
     assert.equal((await marketRequests(p)).at(-1).refresh,true,'Manual refresh bypasses catalog cache');
+    // A provider matching a translated UI phrase must still remain repository text.
+    for(const provider of [null,' \t ','  游戏  ','  更新后的演示作者  ']) {
+      updated.items[0].provider=provider;
+      await p.evaluate(value=>{window.__marketCatalog=value;},updated);
+      await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
+      assert.equal(await marketAuthor(p,updated.items[0]).innerText(),provider?.trim()||'Not provided','Missing and blank providers share the localized fallback; provided names are trimmed');
+    }
     await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'APK市場');
     assert.match(await p.locator('[data-market-category="launcher"]').innerText(),/啟動器/);
+    assert.equal(await marketAuthor(p,updated.items[0]).innerText(),'更新后的演示作者','Provider remains unchanged in Traditional Chinese');
+    assert.match(await marketCard(p,updated.items[0]).locator('.market-author').innerText(),/作者/);
     await p.locator('[data-market-category="launcher"]').click();assert.equal(await p.locator('.market-card').count(),0);
     await shot(p,'market-traditional-empty');
   },withoutAdb(),{marketCatalog:{...marketCatalog(),stale:true,warning:'网络暂不可用，正在显示缓存目录'}});
@@ -1892,7 +1922,8 @@ try {
     assert.equal(await p.locator('.market-card').count(),2);assert.deepEqual(await requests(p),[]);
     assert.deepEqual(await newMarketIds(p),[],'The first successful retry establishes the initial baseline');
   },withoutAdb(),{failMarketCatalog:true});
-  const largeMarket=marketCatalog();largeMarket.items=Array.from({length:45},(_,index)=>({...store.items[0],id:`apps/example${index}/example-${index}.apk`,name:`Example ${index}`,fileName:`example-${index}.apk`}));
+  const longProvider='演示长作者 · '+'LongProviderName'.repeat(8);
+  const largeMarket=marketCatalog();largeMarket.items=Array.from({length:45},(_,index)=>({...store.items[0],id:`apps/example${index}/example-${index}.apk`,name:`Example ${index}`,provider:longProvider,fileName:`example-${index}.apk`}));
   await check('market long catalogs scroll internally in compact windows and all themes',async p=>{
     await p.setViewportSize({width:960,height:640});await openMarket(p);
     const area=p.locator('[data-scroll="market-media"]');
@@ -1902,6 +1933,12 @@ try {
     assert.ok(cardBounds.card.height>=250,`Cards must not collapse into grid lines: ${JSON.stringify(cardBounds)}`);
     assert.ok(cardBounds.cover.height>100,'Cover keeps a visible aspect ratio in a long catalog');
     assert.ok(cardBounds.buttons.every(button=>button.top>=cardBounds.card.top && button.bottom<=cardBounds.card.bottom && button.left>=cardBounds.card.left && button.right<=cardBounds.card.right),`Download and install controls stay inside the card: ${JSON.stringify(cardBounds)}`);
+    const author=p.locator('.market-author-name').first();
+    assert.equal(await author.getAttribute('title'),longProvider,'A shortened author still exposes the complete value');
+    const authorBounds=await author.evaluate(element=>({box:element.getBoundingClientRect().toJSON(),width:element.clientWidth,total:element.scrollWidth,overflow:getComputedStyle(element).textOverflow,whiteSpace:getComputedStyle(element).whiteSpace}));
+    assert.ok(authorBounds.width>0 && authorBounds.total>authorBounds.width,'The long author exercises actual truncation');
+    assert.equal(authorBounds.overflow,'ellipsis');assert.equal(authorBounds.whiteSpace,'nowrap');
+    assert.ok(authorBounds.box.left>=cardBounds.card.left && authorBounds.box.right<=cardBounds.card.right,'Long authors stay within compact cards');
     assert.ok(await p.evaluate(()=>document.documentElement.scrollHeight<=innerHeight+1),'Document does not scroll');
     assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Cards do not overflow horizontally');
     const top=(await p.locator('.page-header').boundingBox()).y;

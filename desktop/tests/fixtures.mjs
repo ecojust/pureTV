@@ -26,13 +26,14 @@ export function snapshot() {
 
 export function marketCatalog() {
   const revision = 'a'.repeat(40);
+  // Author names below are simulated provider metadata, not live marketplace claims.
   return {
     sourceUrl: 'https://gitee.com/juzisang331/pure-tv-store', revision,
     fetchedAt: 1792886400000, stale: false, warning: null,
     items: [
-      {id:'apps/hifini/hifini-0.1.3.apk',kind:'app',name:'HIFINi TV',version:'0.1.3',fileName:'hifini-0.1.3.apk',bytes:197732,blobSha:'b'.repeat(40),folderUrl:'https://gitee.com/juzisang331/pure-tv-store/tree/'+revision+'/apps/hifini',coverUrl:null},
+      {id:'apps/hifini/hifini-0.1.3.apk',kind:'app',name:'HIFINi TV',provider:'演示影音作者',version:'0.1.3',fileName:'hifini-0.1.3.apk',bytes:197732,blobSha:'b'.repeat(40),folderUrl:'https://gitee.com/juzisang331/pure-tv-store/tree/'+revision+'/apps/hifini',coverUrl:null},
       {id:'apps/webtv/webtv-0.2.1.apk',kind:'app',name:'WebTV',version:'0.2.1',fileName:'webtv-0.2.1.apk',bytes:2097152,blobSha:'c'.repeat(40),folderUrl:'https://gitee.com/juzisang331/pure-tv-store/tree/'+revision+'/apps/webtv',coverUrl:null},
-      {id:'launcher/nova/nova-0.1.1.apk',kind:'launcher',name:'Nova TV',version:'0.1.1',fileName:'nova-0.1.1.apk',bytes:1048576,blobSha:'d'.repeat(40),folderUrl:'https://gitee.com/juzisang331/pure-tv-store/tree/'+revision+'/launcher/nova',coverUrl:null},
+      {id:'launcher/nova/nova-0.1.1.apk',kind:'launcher',name:'Nova TV',provider:'Demo Home Studio',version:'0.1.1',fileName:'nova-0.1.1.apk',bytes:1048576,blobSha:'d'.repeat(40),folderUrl:'https://gitee.com/juzisang331/pure-tv-store/tree/'+revision+'/launcher/nova',coverUrl:null},
     ],
   };
 }

@@ -291,7 +291,7 @@ mod tests {
     fn reading_or_saving_seen_apps_does_not_change_catalog_cache() {
         let directory = Directory::new();
         fs::create_dir_all(directory.0.join("market")).unwrap();
-        let catalog = directory.0.join("market/catalog-v2.json");
+        let catalog = directory.0.join("market/catalog-v3.json");
         fs::write(&catalog, b"catalog cache owned by market.rs").unwrap();
         assert!(load(&directory.0).entries.is_none());
         save(&directory.0, &apps()).unwrap();

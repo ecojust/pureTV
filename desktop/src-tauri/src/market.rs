@@ -1,6 +1,6 @@
 //! Read-only Gitee catalog and verified APK cache. The repository tree is the catalog;
 //! no launcher names or application IDs are compiled into the manager.
-use base64::{engine::general_purpose::STANDARD, read::DecoderReader};
+use base64::{engine::general_purpose::STANDARD, read::DecoderReader, Engine as _};
 use reqwest::{
     blocking::{Client, Response},
     header, redirect, Url,
@@ -29,6 +29,10 @@ const MAX_APK: u64 = 512 * 1024 * 1024;
 const MAX_BLOB_APK: u64 = 32 * 1024 * 1024;
 const BLOB_METADATA_BYTES: u64 = 8192;
 const MAX_ITEMS: usize = 1024;
+const MAX_MANIFEST: u64 = 64 * 1024;
+const MAX_MANIFEST_JSON: u64 = MAX_MANIFEST.div_ceil(3) * 4 + BLOB_METADATA_BYTES;
+const MAX_PROVIDER_BYTES: usize = 512;
+const MANIFEST_TIMEOUT: Duration = Duration::from_secs(30);
 const NETWORK_TIMEOUT: Duration = Duration::from_secs(10);
 const TRANSFER_TIMEOUT: Duration = Duration::from_secs(15 * 60);
 static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
@@ -39,6 +43,8 @@ pub struct Item {
     pub id: String,
     pub kind: String,
     pub name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub provider: Option<String>,
     pub version: Option<String>,
     pub file_name: String,
     pub bytes: u64,
@@ -228,6 +234,7 @@ fn item_from_entry(
         id: entry.path.clone(),
         kind: kind.into(),
         name,
+        provider: None,
         version,
         file_name: file_name.into(),
         bytes,
@@ -292,6 +299,89 @@ fn parse_tree(bytes: &[u8], revision: &str, fetched_at: u64) -> Result<Catalog, 
     }
     Ok(catalog)
 }
+fn valid_provider(value: &str) -> bool {
+    !value.is_empty()
+        && value.len() <= MAX_PROVIDER_BYTES
+        && value.trim() == value
+        && !value.chars().any(char::is_control)
+}
+fn provider_from_blob(bytes: &[u8], manifest: &TreeEntry, cancel: &AtomicBool) -> Option<String> {
+    if bytes.len() as u64 > MAX_MANIFEST_JSON {
+        return None;
+    }
+    let blob: Blob<'_> = serde_json::from_slice(bytes).ok()?;
+    if blob.sha != manifest.sha
+        || Some(blob.size) != manifest.size
+        || blob.encoding != "base64"
+        || blob.content.len() as u64 != blob.size.div_ceil(3) * 4
+    {
+        return None;
+    }
+    let decoded = STANDARD.decode(blob.content.as_bytes()).ok()?;
+    if decoded.len() as u64 != blob.size
+        || git_hash_reader(decoded.as_slice(), blob.size, cancel).ok()? != manifest.sha
+    {
+        return None;
+    }
+    let value: serde_json::Value = serde_json::from_slice(&decoded).ok()?;
+    let provider = value.get("provider")?.as_str()?.trim();
+    valid_provider(provider).then(|| provider.to_string())
+}
+fn enrich_providers(
+    catalog: &mut Catalog,
+    tree_bytes: &[u8],
+    cancel: &AtomicBool,
+    fetch: &mut impl FnMut(&str) -> Result<Vec<u8>, String>,
+) -> Result<(), String> {
+    // APK identity still comes exclusively from the verified tree. Optional authors
+    // come only from a regular manifest in that exact folder at the same commit.
+    let tree: Tree = serde_json::from_slice(tree_bytes).map_err(|_| "无法解析市场目录")?;
+    let manifests: HashMap<_, _> = tree
+        .tree
+        .iter()
+        .filter(|entry| {
+            entry.path.ends_with("/manifest.json")
+                && entry.kind == "blob"
+                && ["100644", "100755"].contains(&entry.mode.as_str())
+                && valid_sha(&entry.sha)
+                && entry.size.is_some_and(|size| size > 0 && size <= MAX_MANIFEST)
+        })
+        .map(|entry| (entry.path.as_str(), entry))
+        .collect();
+    let mut providers = HashMap::new();
+    let started = Instant::now();
+    for item in &mut catalog.items {
+        check_cancel(cancel)?;
+        let (folder, _) = item.id.rsplit_once('/').ok_or("市场 APK 路径无效")?;
+        let manifest_path = format!("{folder}/manifest.json");
+        let Some(manifest) = manifests.get(manifest_path.as_str()) else {
+            continue;
+        };
+        let key = (manifest.sha.clone(), manifest.size);
+        if !providers.contains_key(&key) {
+            if started.elapsed() > MANIFEST_TIMEOUT {
+                continue;
+            }
+            let provider = fetch(&api_path("git/blobs", &manifest.sha))
+                .ok()
+                .and_then(|bytes| provider_from_blob(&bytes, manifest, cancel));
+            // A cancelled fetch must never be converted into a successful catalog.
+            check_cancel(cancel)?;
+            providers.insert(key.clone(), provider);
+        }
+        item.provider = providers.get(&key).cloned().flatten();
+    }
+    // Providers are display-only; missing/malformed metadata must not hide APKs.
+    // Recheck the serialized bound after enrichment before caching/MCP delivery.
+    if serde_json::to_vec(catalog)
+        .map_err(|_| "无法编码市场目录")?
+        .len()
+        > MAX_CATALOG
+    {
+        return Err("市场目录超过支持的大小，请联系市场维护者".into());
+    }
+    Ok(())
+}
 fn validate_catalog(catalog: &Catalog) -> bool {
     if catalog.source_url != SOURCE_URL
         || !valid_sha(&catalog.revision)
@@ -322,6 +412,7 @@ fn validate_catalog(catalog: &Catalog) -> bool {
             _ => false,
         };
         ids.insert(&item.id)
+            && item.provider.as_deref().is_none_or(valid_provider)
             && logo_valid
             && item.kind == kind
             && item.file_name == file_name
@@ -338,8 +429,10 @@ fn validate_catalog(catalog: &Catalog) -> bool {
     })
 }
 fn read_cache(directory: &Path) -> Option<Catalog> {
-    // Versioned cache forces the first upgraded client to discover logo metadata.
-    let path = directory.join("market/catalog-v2.json");
+    read_cache_file(directory, "catalog-v3.json")
+}
+fn read_cache_file(directory: &Path, name: &str) -> Option<Catalog> {
+    let path = directory.join("market").join(name);
     if fs::symlink_metadata(&path)
         .ok()
         .is_none_or(|m| !m.is_file() || m.len() > MAX_CATALOG as u64)
@@ -381,7 +474,7 @@ fn write_cache(directory: &Path, catalog: &Catalog) -> Result<(), String> {
     serde_json::to_writer(&mut file, catalog).map_err(|_| "无法写入市场缓存")?;
     file.sync_all().map_err(|_| "无法保存市场缓存")?;
     drop(file);
-    fs::rename(&temporary.0, root.join("catalog-v2.json")).map_err(|_| "无法保存市场缓存")?;
+    fs::rename(&temporary.0, root.join("catalog-v3.json")).map_err(|_| "无法保存市场缓存")?;
     Ok(())
 }
 fn client() -> Result<Client, String> {
@@ -463,17 +556,27 @@ fn require_ok(response: Response) -> Result<Response, String> {
 fn response(client: &Client, address: &str, cancel: &AtomicBool) -> Result<Response, String> {
     require_ok(response_with_status(client, address, cancel)?)
 }
-fn fetch_json(client: &Client, address: &str, cancel: &AtomicBool) -> Result<Vec<u8>, String> {
+fn fetch_json(
+    client: &Client,
+    address: &str,
+    cancel: &AtomicBool,
+    maximum: u64,
+) -> Result<Vec<u8>, String> {
     let mut response = response(client, address, cancel)?;
-    if response.content_length().is_some_and(|n| n > MAX_JSON) {
+    if response.content_length().is_some_and(|n| n > maximum) {
         return Err("市场目录文件过大".into());
     }
     let started = Instant::now();
+    let timeout = if maximum == MAX_MANIFEST_JSON {
+        NETWORK_TIMEOUT
+    } else {
+        Duration::from_secs(45)
+    };
     let mut bytes = Vec::new();
     let mut buffer = [0u8; 16_384];
     loop {
         check_cancel(cancel)?;
-        if started.elapsed() > Duration::from_secs(45) {
+        if started.elapsed() > timeout {
             return Err("读取市场目录超时".into());
         }
         let count = response.read(&mut buffer).map_err(|_| {
@@ -484,7 +587,7 @@ fn fetch_json(client: &Client, address: &str, cancel: &AtomicBool) -> Result<Vec
         if count == 0 {
             break;
         }
-        if bytes.len() as u64 + count as u64 > MAX_JSON {
+        if bytes.len() as u64 + count as u64 > maximum {
             return Err("市场目录文件过大".into());
         }
         bytes.extend_from_slice(&buffer[..count]);
@@ -508,6 +611,9 @@ fn catalog_with(
             }
         }
     }
+    // Upgrade the metadata cache once online, but keep the old catalog available
+    // for explicit stale/offline fallback. Old data must not suppress this refresh.
+    let cached = cached.or_else(|| read_cache_file(directory, "catalog-v2.json"));
     report(Progress {
         stage: "catalog".into(),
         downloaded: 0,
@@ -528,14 +634,12 @@ fn catalog_with(
             return Err("市场提交版本无效".into());
         }
         check_cancel(cancel)?;
-        let catalog = parse_tree(
-            &fetch(&format!(
-                "{}?recursive=1",
-                api_path("git/trees", &branch.commit.sha)
-            ))?,
-            &branch.commit.sha,
-            now_ms(),
-        )?;
+        let tree = fetch(&format!(
+            "{}?recursive=1",
+            api_path("git/trees", &branch.commit.sha)
+        ))?;
+        let mut catalog = parse_tree(&tree, &branch.commit.sha, now_ms())?;
+        enrich_providers(&mut catalog, &tree, cancel, &mut fetch)?;
         check_cancel(cancel)?;
         write_cache(directory, &catalog)?;
         Ok::<_, String>(catalog)
@@ -562,7 +666,12 @@ pub fn catalog(
 ) -> Result<Catalog, String> {
     let client = client()?;
     catalog_with(directory, refresh, cancel, report, |url| {
-        fetch_json(&client, url, cancel)
+        let maximum = if url.starts_with(&format!("{API}/git/blobs/")) {
+            MAX_MANIFEST_JSON
+        } else {
+            MAX_JSON
+        };
+        fetch_json(&client, url, cancel, maximum)
     })
 }
 fn git_hash_reader(mut input: impl Read, size: u64, cancel: &AtomicBool) -> Result<String, String> {
@@ -1007,6 +1116,7 @@ fn save_optional_logo(directory: &Path, apk: &Path, item: &Item, cancel: &Atomic
 #[cfg(test)]
 mod tests {
     use super::*;
+    use base64::Engine;
     use serde_json::json;
     use std::io::Cursor;
     const REV: &str = "06f4b4d782be0d0a82b915b64ca0587fa6f703bf";
@@ -1028,6 +1138,7 @@ mod tests {
             id: "apps/example/Example-1.2.3.apk".into(),
             kind: "app".into(),
             name: "Example".into(),
+            provider: None,
             version: Some("1.2.3".into()),
             file_name: "Example-1.2.3.apk".into(),
             bytes: bytes.len() as u64,
@@ -1038,6 +1149,154 @@ mod tests {
             logo_blob_sha: None,
             logo_bytes: None,
         }
+    }
+    fn manifest_entry(path: &str, bytes: &[u8]) -> serde_json::Value {
+        json!({"path":path,"type":"blob","mode":"100644","size":bytes.len(),
+            "sha":git_hash_reader(bytes, bytes.len() as u64, &AtomicBool::new(false)).unwrap()})
+    }
+    fn manifest_blob(entry: &serde_json::Value, bytes: &[u8]) -> Vec<u8> {
+        serde_json::to_vec(&json!({"sha":entry["sha"],"size":entry["size"],
+            "encoding":"base64","content":STANDARD.encode(bytes)})).unwrap()
+    }
+    fn with_manifests(paths: &[&str], entries: &[serde_json::Value]) -> Vec<u8> {
+        let mut value: serde_json::Value = serde_json::from_slice(&tree(paths)).unwrap();
+        value["tree"].as_array_mut().unwrap().extend_from_slice(entries);
+        serde_json::to_vec(&value).unwrap()
+    }
+    #[test]
+    fn providers_use_exact_folder_and_pinned_blobs_once_across_versions_and_categories() {
+        let root = temp();
+        let cancel = AtomicBool::new(false);
+        let shared = "{\"provider\":\"  桔子桑  \"}".as_bytes();
+        let other = br#"{"provider":"Other & <author>","url":"https://untrusted.example/"}"#;
+        let first = manifest_entry("apps/media/music/manifest.json", shared);
+        let second = manifest_entry("launcher/home/manifest.json", shared);
+        let game = manifest_entry("apps/game/game/manifest.json", other);
+        let tree = with_manifests(&["apps/media/music/Music-1.0.apk", "apps/media/music/Music-2.0.apk",
+            "launcher/home/Home.apk", "apps/game/game/Game.apk", "apps/media/unknown/Unknown.apk"],
+            &[first.clone(), second, game.clone(), manifest_entry("apps/media/manifest.json", shared)]);
+        let mut addresses = Vec::new();
+        let catalog = catalog_with(&root.0, true, &cancel, |_| Ok(()), |url| {
+            addresses.push(url.to_string());
+            Ok(if url == API { br#"{"default_branch":"master"}"#.to_vec() }
+            else if url == api_path("branches", "master") { serde_json::to_vec(&json!({"commit":{"sha":REV}})).unwrap() }
+            else if url == format!("{}?recursive=1", api_path("git/trees", REV)) { tree.clone() }
+            else if url == api_path("git/blobs", first["sha"].as_str().unwrap()) { manifest_blob(&first, shared) }
+            else if url == api_path("git/blobs", game["sha"].as_str().unwrap()) { manifest_blob(&game, other) }
+            else { panic!("Unexpected metadata URL: {url}") })
+        }).unwrap();
+        assert_eq!(addresses.len(), 5, "Each immutable manifest blob is fetched once");
+        for item in &catalog.items {
+            let expected = if item.id.contains("unknown/") { None }
+                else if item.kind == "launcher" || item.id.contains("music/") { Some("桔子桑") }
+                else { Some("Other & <author>") };
+            assert_eq!(item.provider.as_deref(), expected, "{}", item.id);
+        }
+        assert!(validate_catalog(&catalog));
+        assert_eq!(read_cache(&root.0).unwrap().items, catalog.items);
+        let offline = catalog_with(&root.0, true, &cancel, |_| Ok(()), |_| Err("offline".into())).unwrap();
+        assert!(offline.stale);
+        assert_eq!(offline.items, catalog.items, "Verified authors survive stale fallback");
+        fs::remove_dir_all(&root.0).unwrap();
+    }
+    #[test]
+    fn optional_provider_values_are_bounded_plain_text_and_blob_integrity_is_required() {
+        let cancel = AtomicBool::new(false);
+        let cases = [json!({}), json!({"provider":null}), json!({"provider":false}),
+            json!({"provider":123}), json!({"provider":[]}), json!({"provider":{"name":"wrong"}}),
+            json!({"provider":" \n\t "}), json!({"provider":"bad\nname"}),
+            json!({"provider":"a".repeat(MAX_PROVIDER_BYTES+1)})];
+        for value in cases {
+            let bytes = serde_json::to_vec(&value).unwrap();
+            let entry = manifest_entry("apps/one/manifest.json", &bytes);
+            let manifest = serde_json::from_value(entry.clone()).unwrap();
+            assert_eq!(provider_from_blob(&manifest_blob(&entry, &bytes), &manifest, &cancel), None);
+        }
+        let valid = br#"{"provider":"Author"}"#;
+        let entry = manifest_entry("apps/one/manifest.json", valid);
+        let manifest = serde_json::from_value(entry.clone()).unwrap();
+        let blob = manifest_blob(&entry, valid);
+        assert_eq!(provider_from_blob(&blob, &manifest, &cancel).as_deref(), Some("Author"));
+        for (key, value) in [("sha", json!("b".repeat(40))), ("size", json!(1)),
+            ("encoding", json!("utf8")), ("content", json!(STANDARD.encode(br#"{"provider":"Spoof!"}"#)))] {
+            let mut altered: serde_json::Value = serde_json::from_slice(&blob).unwrap();
+            altered[key] = value;
+            assert!(provider_from_blob(&serde_json::to_vec(&altered).unwrap(), &manifest, &cancel).is_none());
+        }
+        assert!(provider_from_blob(b"not json", &manifest, &cancel).is_none());
+    }
+    #[test]
+    fn optional_metadata_failures_do_not_hide_apks_or_fetch_unsafe_manifests() {
+        let cancel = AtomicBool::new(false);
+        let bytes = br#"{"provider":"Author"}"#;
+        let valid = manifest_entry("apps/one/manifest.json", bytes);
+        let mut symlink = manifest_entry("apps/two/manifest.json", bytes); symlink["mode"] = json!("120000");
+        let mut large = manifest_entry("apps/three/manifest.json", bytes); large["size"] = json!(MAX_MANIFEST + 1);
+        let tree = with_manifests(&["apps/one/One.apk", "apps/two/Two.apk", "apps/three/Three.apk"],
+            &[valid, symlink, large]);
+        let mut catalog = parse_tree(&tree, REV, now_ms()).unwrap();
+        let original = catalog.items.clone();
+        let mut requests = 0;
+        enrich_providers(&mut catalog, &tree, &cancel, &mut |_| { requests += 1; Err("offline".into()) }).unwrap();
+        assert_eq!(requests, 1, "Symlinks and oversized manifests are never requested");
+        assert_eq!(catalog.items, original, "Author failure leaves APK identities intact");
+        assert!(validate_catalog(&catalog));
+        catalog.items[0].provider = Some("bad\nname".into());
+        assert!(!validate_catalog(&catalog));
+        catalog.items[0].provider = Some(" Author ".into());
+        assert!(!validate_catalog(&catalog));
+    }
+    #[test]
+    fn v2_cache_is_offline_fallback_but_never_suppresses_first_author_refresh() {
+        let root = temp();
+        let cancel = AtomicBool::new(false);
+        let tree = tree(&["apps/one/One.apk"]);
+        let original = parse_tree(&tree, REV, now_ms()).unwrap();
+        fs::create_dir_all(root.0.join("market")).unwrap();
+        let legacy = serde_json::to_vec(&original).unwrap();
+        assert!(!String::from_utf8_lossy(&legacy).contains("provider"));
+        fs::write(root.0.join("market/catalog-v2.json"), &legacy).unwrap();
+        assert!(read_cache(&root.0).is_none());
+        let offline = catalog_with(&root.0, false, &cancel, |_| Ok(()), |_| Err("offline".into())).unwrap();
+        assert!(offline.stale); assert_eq!(offline.items, original.items);
+        assert!(read_cache(&root.0).is_none(), "Old catalog is not promoted to a fresh v3 cache");
+        let mut calls = 0;
+        let refreshed = catalog_with(&root.0, false, &cancel, |_| Ok(()), |_| {
+            calls += 1;
+            Ok(match calls {
+                1 => br#"{"default_branch":"master"}"#.to_vec(),
+                2 => serde_json::to_vec(&json!({"commit":{"sha":REV}})).unwrap(),
+                _ => tree.clone(),
+            })
+        }).unwrap();
+        assert_eq!(calls, 3); assert!(!refreshed.stale);
+        assert_eq!(read_cache(&root.0).unwrap().items, refreshed.items);
+        assert_eq!(fs::read(root.0.join("market/catalog-v2.json")).unwrap(), legacy);
+        fs::remove_dir_all(&root.0).unwrap();
+    }
+    #[test]
+    fn cancelling_manifest_fetch_keeps_previous_catalog_and_never_succeeds() {
+        let root = temp();
+        let cancel = AtomicBool::new(false);
+        let original = parse_tree(&tree(&["apps/old/Old.apk"]), REV, now_ms()).unwrap();
+        write_cache(&root.0, &original).unwrap();
+        let bytes = br#"{"provider":"Author"}"#;
+        let manifest = manifest_entry("apps/new/manifest.json", bytes);
+        let tree = with_manifests(&["apps/new/New.apk"], &[manifest.clone()]);
+        let mut calls = 0;
+        let result = catalog_with(&root.0, true, &cancel, |_| Ok(()), |_| {
+            calls += 1;
+            Ok(match calls {
+                1 => br#"{"default_branch":"master"}"#.to_vec(),
+                2 => serde_json::to_vec(&json!({"commit":{"sha":REV}})).unwrap(),
+                3 => tree.clone(),
+                _ => { cancel.store(true, Ordering::Release); manifest_blob(&manifest, bytes) },
+            })
+        });
+        assert!(result.unwrap_err().contains("取消"));
+        assert_eq!(calls, 4);
+        assert_eq!(read_cache(&root.0).unwrap().items, original.items);
+        fs::remove_dir_all(&root.0).unwrap();
     }
     #[test]
     fn discovers_commit_pinned_folder_logos_and_rejects_cache_url_tampering() {

@@ -45,6 +45,7 @@ export interface DownloadProgress {
 export type MarketKind = 'app' | 'launcher';
 export interface MarketItem {
   id: string; kind: MarketKind; name: string; version?: string | null; fileName: string;
+  provider?: string | null;
   bytes: number; blobSha: string; folderUrl: string; coverUrl?: string | null;
   logoUrl?: string | null; logoBlobSha?: string | null; logoBytes?: number | null;
 }

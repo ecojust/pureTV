@@ -112,7 +112,7 @@ def seed_market(root):
         items.append({'id':item_id,'kind':kind,'name':name,'version':'1.0','fileName':filename,'bytes':len(apk),'blobSha':digest,'folderUrl':f'{source}/tree/{revision}/{folder}','coverUrl':None,'logoUrl':f'{source}/raw/{revision}/{folder}/logo.svg','logoBlobSha':logo_digest,'logoBytes':len(logo)})
         paths[kind]=path
     catalog={'sourceUrl':source,'revision':revision,'fetchedAt':int(time.time()*1000),'stale':False,'warning':None,'items':items}
-    (directory/'catalog-v2.json').write_text(json.dumps(catalog))
+    (directory/'catalog-v3.json').write_text(json.dumps(catalog))
     # This fixture's APKs deliberately use a text manifest. Real binary-manifest
     # identity/save coverage lives in app_logos.rs against all nine shipped APKs;
     # seed the persisted identity here to exercise the running GUI/MCP read path.
