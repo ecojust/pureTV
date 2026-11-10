@@ -2,7 +2,13 @@
 
 [English](README.en.md) · [原创 SVG 图标](logo.svg) · [源码](src/main/) · [公开内容来源](docs/research/SOURCES.md)
 
+**[下载梨园 TV 0.1.0 APK](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/opera/opera-0.1.0.apk)** · 54,011 字节（约53 KiB） · Android 4.4+ · [校验清单](SHA256SUMS.txt) · [验证记录](docs/VALIDATION.md)
+
+![梨园 TV 原生界面，节目为预览测试数据](thumb.png)
+
 面向电视遥控器的独立戏曲播放器。提供央视网公开戏曲栏目，以及自己的视频链接、M3U/JSON片单和本机视频；支持收藏、最近观看与续播。包名 `com.ecojust.operatv`，首版0.1.0，最低Android4.4/API19。界面随系统显示中文或英文。
+
+安装后即可浏览并联网播放内置栏目，无需自行添加节目源；导入功能用于补充自己的内容。当前内置内容是上述央视栏目，未复刻七星原版的完整片库。
 
 应用不包含第三方原生 `.so`，使用Android系统播放器，避免把某一种CPU架构的播放器库带入安装包。能否播放某种视频仍取决于系统解码器、网络及来源是否可用。它与七星戏曲使用不同包名，不是原应用的更新包，也不会迁移其数据。
 
@@ -36,7 +42,9 @@ https://example.com/my-opera.mp4
 
 内置目录来自央视公开栏目，播放时请求该节目的公开点播信息，不缓存临时流地址。来源返回限制、失效或没有有效内容时显示提示；没有访问收费内容、登录账户或受保护资源的流程。节目与媒体权利属于各内容提供者。
 
-本目录的原生界面预览使用测试数据时会在验证记录明确标注；模拟器本地测试视频、实际在线节目播放和实体电视测试分别记录。当前仍在构建验证阶段，不能把源码目录视为已交付的安装包。
+0.1.0为正式签名的首版预览包。本地与CI各73项测试通过；Linux上的Android TV 16/API36模拟器已验证安装、M3U导入、收藏、播放/暂停和进程重启后续播，并实际播放《空中剧院》黄梅戏《五月的鲜花》选场至4秒。没有进行整期播放、声音听测、Mac Apple Silicon模拟器或实体电视测试。
+
+上方首页图片来自Robolectric原生界面，使用预览测试数据。[实际模拟器节目画面](docs/validation/ci-42825506718/runtime/06-public-paused.png)与[原始运行报告](docs/validation/ci-42825506718/runtime/report.json)单独保留。
 
 ## 开发
 

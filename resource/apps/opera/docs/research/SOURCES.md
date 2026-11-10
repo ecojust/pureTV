@@ -34,4 +34,4 @@ pureTV 的 CCTV Live 使用 WebView 加载官方直播页面并保留官网播�
 
 ## 实现与验证状态
 
-Backend: OperaItem.java / OperaHttp.java / CctvCatalog.java。HTTP正文/重定向/总时限受限；TLS1.2旧系统适配不替换信任管理器或主机验证。导入HTTP与SAF内容源均与内置CCTV公开权限判断分离。模型及provider/HTTP边界测试已编写，具体执行结果由后续Gradle记录补充，不能把上述网络探测当作单元/原生运行测试通过。
+Backend: OperaItem.java / OperaHttp.java / CctvCatalog.java。HTTP正文/重定向/总时限受限；TLS1.2旧系统适配不替换信任管理器或主机验证。导入HTTP与SAF内容源均与内置CCTV公开权限判断分离。单元测试和实际Android运行结果见[最终验证记录](../VALIDATION.md)，与本次只读网络探测分别记录。
