@@ -230,17 +230,34 @@ def grid(apps, prefix=''):
     return '<table>\n' + '\n'.join(rows) + '\n</table>\n'
 
 
+def compatibility_notes(apps, output, compatibility, prefix=''):
+    notes = []
+    for app in apps:
+        manifest = read(output / app['manifest'])
+        for package in manifest['packages']:
+            result = compatibility.get(package['sha256'])
+            if result:
+                notes.append(f"- [{app['name']} {package['versionName']}]({prefix}{app['path']}/)：{result['summary']} [检查记录]({prefix}{result['report']})")
+    return '\n'.join(notes) + '\n\n' if notes else ''
+
+
 def finalize(output):
     catalog = read(output / 'catalog.json')
+    compatibility_file = output / 'compatibility.json'
+    compatibility = read(compatibility_file)['packages'] if compatibility_file.exists() else {}
     for app in catalog['apps']:
         folder = output / app['path']
         manifest = read(folder / 'manifest.json')
         manifest['assets'] = read(folder / 'assets.json')
+        results = [compatibility[p['sha256']] for p in manifest['packages'] if p['sha256'] in compatibility]
+        if results:
+            manifest['apkExecuted'] = any(result['apkExecuted'] for result in results)
         write(folder / 'manifest.json', manifest)
         rows = []
         for p in manifest['packages']:
             rows.append(f"| [{p['file']}]({quote(p['file'])}?raw=1) | {p['versionName']} / {p['versionCode']} | {p['bytes']:,} | {p['minSdk']} |")
         notes = '\n'.join('- ' + n for n in manifest['notes'])
+        compatibility_text = ''.join(f"> **兼容性**：{result['summary']} [检查记录](../../{result['report']})\n\n" for result in results)
         body = f'''# {app['name']}
 
 {manifest['description']}
@@ -253,7 +270,7 @@ def finalize(output):
 | --- | --- | ---: | ---: |
 {chr(10).join(rows)}
 
-每份APK均保留原始二进制与签名，通过上游Git blob、SHA256、ZIP CRC及apksigner校验。未在实体电视运行；最低SDK来自APK声明，不表示已验证所有设备兼容性。
+{compatibility_text}每份APK均保留原始二进制与签名，通过上游Git blob、SHA256、ZIP CRC及apksigner校验。未在实体电视运行；最低SDK来自APK声明，不表示已验证所有设备兼容性。
 
 {notes}
 
@@ -278,10 +295,11 @@ def finalize(output):
             content = '上游3个游戏APK均超过限制，最小为24,678,211字节，本次不收录。\n'
         else:
             content = '上游8个教育APK均超过限制，最小为14,096,805字节，本次不收录。\n'
-        sections.append('## ' + heading + '\n\n' + content)
+        category_notes = compatibility_notes(members, output, compatibility)
+        sections.append('## ' + heading + '\n\n' + content + ('\n' + category_notes.rstrip() + '\n' if category_notes else ''))
         folder = output / category['id']
         folder.mkdir(exist_ok=True)
-        (folder / 'README.md').write_text('# ' + heading + '\n\n' + (grid(members, '../') if members else content) + '\n[返回收录目录](../README.md)\n', encoding='utf-8')
+        (folder / 'README.md').write_text('# ' + heading + '\n\n' + (grid(members, '../') if members else content) + '\n' + compatibility_notes(members, output, compatibility, '../') + '[返回收录目录](../README.md)\n', encoding='utf-8')
     selection = catalog.get('selection') or {}
     override_count = selection.get('explicitOverrideCount', 0)
     selection_text = (f"收录全部严格小于 **10,000,000字节** 的{selection['baseApkCount']}个APK，并按用户指定额外收录{override_count}个超限APK（见[例外清单](upstream/selection-overrides.json)）" if override_count else "收录全部严格小于 **10,000,000字节** 的APK")
@@ -293,7 +311,7 @@ def finalize(output):
 
 [机器目录](catalog.json) · [超限应用与复刻清单](OVERSIZED.md) · [完整性校验](verification/README.md) · [来源与许可](NOTICE.md) · [维护说明](MAINTENANCE.md)
 
-本目录为独立第三方归档，尚未接入Gitee APK市场或电视商城。原APK未改签、未执行；包签名验证只证明完整性，不代表原开发者身份或内容安全。戏曲多多两版签名不同，详见对应目录。
+本目录为独立第三方归档，尚未接入Gitee APK市场或电视商城。原APK未改签；运行检查情况见各应用的兼容性说明，没有记录的应用尚未执行验证。包签名验证只证明完整性，不代表原开发者身份或内容安全。戏曲多多两版签名不同，详见对应目录。
 
 ''' + '\n'.join(sections)
     (output / 'README.md').write_text(text, encoding='utf-8')

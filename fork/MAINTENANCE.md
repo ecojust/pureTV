@@ -16,6 +16,8 @@ python3 tools/verify-fork-tvapp.py --root fork --report /tmp/tvapp-verification.
 
 校验器对照完整上游树及显式例外清单检查筛选是否漏项或多收，核对实际APK大小、SHA256、Git blob、ZIP结构、签名证据、分类统计、图像、SVG静态子集、manifest及校验清单。原始aapt与apksigner输出保存在 `verification/apks/<GitBlobSHA>/`。
 
+兼容性反馈保存在 `compatibility.json`，以原 APK 的 SHA256 匹配，记录具体环境、结论、证据链接和是否实际执行 APK。`import-tvapp.py --finalize` 会同步应用说明、分类和总目录的提示，并按记录更新 `apkExecuted`；静态检查和安装失败不算执行成功，`apkExecuted:true` 也不表示启动、播放或实体电视验证通过。新 APK 哈希不能继承旧包的运行结论；追加报告时保留旧证据。更新后重新生成清单并运行上述校验。
+
 ## 从固定快照重建
 
 需要JDK 17、Android SDK Build Tools 34.0.0、Python 3/Pillow、Node.js、Inkscape及可用Chromium。资源工具使用仓库已有Playwright依赖（`desktop/node_modules`）；也可按工具参数指定浏览器。下面的变量必须替换成实际工具目录：
