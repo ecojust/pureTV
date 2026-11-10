@@ -15,7 +15,7 @@ ENGLISH=json.loads((root/'tools/resource-index.en.json').read_text())
 # Persist creation order so version updates and checkout dates cannot reorder cards.
 RESOURCE_ORDER=json.loads((root/'tools/resource-order.json').read_text())
 # Media apps have no game manifest or bundled game entry point.
-MEDIA_APPS={'apps/bilibili','apps/cctv','apps/hifini','apps/shortvideo','apps/webtv'}
+MEDIA_APPS={'apps/opera','apps/bilibili','apps/cctv','apps/hifini','apps/shortvideo','apps/webtv'}
 TOOL_APPS={'apps/putrtv-store'}
 
 def section(key,info):
