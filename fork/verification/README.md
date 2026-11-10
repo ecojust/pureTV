@@ -3,6 +3,7 @@
 当前收录：原23个小包，加2026-11-10用户指定的儿歌多多TV和宝宝趣学，共16款应用、25个APK。
 
 - [2026-11-10完整归档校验](2026-11-10-education/report.json)：当前25包的来源、哈希、签名证据、资源和清单检查。
+- [新增两包公开下载核验](2026-11-10-education/publication.json)：从GitHub固定提交完整下载，大小、SHA256和Git blob全部一致。
 - [新增两包下载校验](2026-11-10-education/download.json)与[静态检查](2026-11-10-education/inspection.json)：APK没有执行或改签。
 - [首次23包校验](report.json)及[首次公开下载核验](publication.json)：保留原始历史结果，不代表新增两包的验证。
 
