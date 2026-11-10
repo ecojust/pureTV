@@ -96,7 +96,7 @@ CI使用与签名记录SHA256一致的APK和独立干净的Linux Android TV 16/A
 | 实际最低SDK/目标SDK/原生库条目 | 最终APK为19/29，普通/TV双入口、无.so；APK中的1份源资产LICENSE逐字节一致。 |
 | 真实AVD fixture结果 | 通过，详见[原始报告](validation/ci-42825506718/runtime/report.json)。 |
 | 真实AVD公开节目结果 | 通过4秒首段实播；[实际画面](validation/ci-42825506718/runtime/06-public-paused.png)。未进行声音听测/声画同步或整期播放。 |
-| 资源接入与发布 | 已准备资源元数据、SHA256SUMS、双语预览/README及电视商城目录；完整校验和远程下载结果见[交付汇总](validation/delivery-verification.json)与[history](../../../../history/2026-11-10-002.md)。 |
+| 资源接入与发布 | `3f66a13392024aa0b8d19473643cfd61f46061f4` 已发布master；128资源严格校验通过，电视商城118项且原117项未改写。7份公开下载均HTTP200且逐字节一致，见[公开下载复核](validation/public-download-verification.json)、[交付汇总](validation/delivery-verification.json)与[history](../../../../history/2026-11-10-002.md)。 |
 
 若冻结后修改源代码或测试脚本，应记录新提交及哪些检查重跑；旧失败和旧预览继续作为历史保存，不冒充新产物的验证结果。
 
