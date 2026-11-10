@@ -56,7 +56,7 @@ Linux 对照不能代替 Apple Silicon Mac 验证；用户 Mac 是否发生同�
 
 APK Checker 侧的[完整报告与证据](https://github.com/ecojust/apk-checker/blob/a5188ef4547107b877c1b68dc04c41ac9222acce/docs/testing/education-apk-compatibility.md)已在独立诊断分支归档；没有修改生产运行时代码或发布新客户端安装包。
 
-静态 Manifest/DEX 由 androguard 4.1.3 只读解析，原生库 ELF 头部由 Python 标准库 `zipfile` / `struct` 读取；ZIP CRC、实际包摘要与归档元数据交叉核对。原始 APK 不在宿主机执行。静态证据内的工作目录指本次临时环境，后续应通过上述固定提交恢复原包。
+静态 Manifest/DEX 由 androguard 4.1.3 只读解析，归档反汇编文本只清理了行末空白，原生库 ELF 头部由 Python 标准库 `zipfile` / `struct` 读取；ZIP CRC、实际包摘要与归档元数据交叉核对。原始 APK 不在宿主机执行。静态证据内的工作目录指本次临时环境，后续应通过上述固定提交恢复原包。
 
 [本轮完整归档检查](archive-check.json)：49项通过，19款/28个APK；这是归档完整性检查，不是两款应用运行成功。
 
