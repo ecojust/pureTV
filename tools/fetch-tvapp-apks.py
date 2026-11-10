@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch immutable APKs below 10 MB and save reproducible static inspection evidence.
+"""Fetch immutable selected APKs and save reproducible static inspection evidence.
 
 The inventory is an explicit fixed-commit selection, not a source of download URLs.
 The original APK bytes and signing certificates remain unchanged. A successful
@@ -8,6 +8,7 @@ No APK code is executed. Each record preserves the actual aapt/apksigner results
 """
 import argparse,concurrent.futures,datetime,hashlib,json,os,re,subprocess,time,urllib.parse,urllib.request,zipfile
 from pathlib import Path,PurePosixPath
+from tvapp_selection import load_overrides
 parser=argparse.ArgumentParser(description="Download fixed-commit TVAPP APK candidates and inspect their original metadata/signatures without executing or resigning them.")
 parser.add_argument('--inventory',type=Path,required=True,help='JSON with repository, commit and candidates (path/sha/size)')
 parser.add_argument('--output',type=Path,required=True,help='Destination containing apks/ and apk-audit/')
@@ -15,6 +16,7 @@ parser.add_argument('--build-tools',type=Path,required=True,help='Android SDK bu
 parser.add_argument('--java-home',type=Path,required=True,help='JDK directory used by apksigner')
 parser.add_argument('--apk-cache',type=Path,help='Optional shared directory of <GitBlobSHA>.apk files; avoids duplicate download storage')
 parser.add_argument('--jobs',type=int,default=3,choices=[1,2,3],help='Maximum concurrent downloads/checks (default: 3)')
+parser.add_argument('--overrides-only',action='store_true',help='Fetch only explicitly selected oversized APKs from sibling selection-overrides.json')
 args=parser.parse_args()
 BASE=args.output.resolve(); AUDIT=BASE/'apk-audit'; APKS=args.apk_cache.resolve() if args.apk_cache else BASE/'apks'
 AUDIT.mkdir(parents=True,exist_ok=True); APKS.mkdir(parents=True,exist_ok=True)
@@ -31,6 +33,11 @@ for candidate in inv['candidates']:
  if path.is_absolute() or '..' in path.parts or path.suffix.lower()!='.apk':parser.error('Invalid APK source path')
 if len({candidate['sha'] for candidate in inv['candidates']})!=len(inv['candidates']):
  parser.error('Candidate Git blobs must be unique; record duplicate source paths separately')
+try:overrides=load_overrides(args.inventory.parent/'selection-overrides.json',revision)
+except (ValueError,KeyError,OSError) as error:parser.error(str(error))
+if args.overrides_only and not overrides:parser.error('No explicit selection overrides found')
+candidates=([] if args.overrides_only else inv['candidates'])+overrides
+if len({candidate['sha'] for candidate in candidates})!=len(candidates):parser.error('Selected Git blobs must be unique')
 env=dict(os.environ);env['JAVA_HOME']=str(JDK);env['PATH']=str(JDK/'bin')+os.pathsep+env.get('PATH','')
 def run(tool,args,folder,name):
  command=[str(BUILD/tool),*args]
@@ -47,8 +54,8 @@ def inspect(item):
    else:
     with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'pureTV-fork-resource-import'}),timeout=45) as response:
      assert response.status==200
-     data=response.read(10_000_001)
-   assert len(data)==item['size'] and 0<len(data)<10_000_000
+     data=response.read(item['size']+1)
+   assert len(data)==item['size'] and len(data)>0
    assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()==sha
    if not dest.is_file():
     partial=dest.with_suffix('.apk.part');partial.write_bytes(data);partial.replace(dest)
@@ -101,10 +108,10 @@ def inspect(item):
  return record
 records=[]
 with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool:
- futures={pool.submit(inspect,item):item for item in inv['candidates']}
+ futures={pool.submit(inspect,item):item for item in candidates}
  for future in concurrent.futures.as_completed(futures):
   records.append(future.result())
 records.sort(key=lambda r:r['sourcePath'])
-summary={'repository':repository,'revision':revision,'inspectedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'maxBytesExclusive':10_000_000,'apkCount':len(records),'apkBytes':sum(r['bytes'] for r in records),'uniquePackages':len(set(r['packageName'] for r in records)),'signatureVerifiedCount':sum(r['signatureVerified'] for r in records),'physicalTvTested':False,'apkExecuted':False,'records':records}
+summary={'repository':repository,'revision':revision,'inspectedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'maxBytesExclusive':10_000_000,'explicitOverrideCount':len(overrides),'overridesOnly':args.overrides_only,'apkCount':len(records),'apkBytes':sum(r['bytes'] for r in records),'uniquePackages':len(set(r['packageName'] for r in records)),'signatureVerifiedCount':sum(r['signatureVerified'] for r in records),'physicalTvTested':False,'apkExecuted':False,'records':records}
 (AUDIT/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps({key:val for key,val in summary.items() if key!='records'},ensure_ascii=False,indent=2),flush=True)

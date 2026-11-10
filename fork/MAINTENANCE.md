@@ -1,8 +1,8 @@
 # 维护与复现
 
-超过10 MB、未收录的文件见 [完整清单与复刻参考](OVERSIZED.md)。其版本、系统和架构仅为文件名线索；应用家族与开发评估维护在 `planning/app-notes.json`，运行 `python3 tools/update-tvapp-oversized.py` 生成 Markdown、JSON、CSV，使用 `--check` 验证205个文件的完整覆盖及生成结果。此清单与已下载小包的实际元数据验证分别记录。
+超过10 MB的全部205份文件见 [完整清单与复刻参考](OVERSIZED.md)，包括按用户要求额外收录的2份和仍未收录的203份。未归档文件的版本、系统和架构仅为文件名线索；已归档条目关联实际manifest。应用家族与开发评估维护在 `planning/app-notes.json`，运行 `python3 tools/update-tvapp-oversized.py` 生成 Markdown、JSON、CSV，使用 `--check` 验证205个文件的完整覆盖及当前归档状态。
 
-范围为上游固定提交的实际APK文件，按 **0 < bytes < 10,000,000** 筛选，保留所有合格版本和架构命名变体。当前228个APK中符合条件23个，按实际包名分为14款应用。分类由用途和上游目录确定；娱乐目录中的直播、音乐、戏曲归media，游戏归game。没有为凑分类收录超限文件。
+范围为上游固定提交的实际APK文件，基础规则为 **0 < bytes < 10,000,000**，保留所有合格版本和架构命名变体：228个APK中符合条件23个，按实际包名分为14款应用。另按2026-11-10用户明确要求收录儿歌多多TV1.3.1.0、宝宝趣学3.0.1，具体路径、字节数、Git blob及原因登记在 `upstream/selection-overrides.json`。共16款应用、25个APK；只有登记的两个原文件享有体积例外，不扩大到其他版本或七星智教。分类由用途和上游目录确定；娱乐目录中的直播、音乐、戏曲归media，游戏归game。
 
 目录结构：`fork/<media|game|education|tools|fitness>/<应用>/`。每款提供 `manifest.json`（真实包信息、来源、签名及provider）、`assets.json`（原图标及生成方式）、`logo.svg`、可提取的原始图标、960×540的 `thumb.png`、原APK、README和SHA256清单。相同包名的多个版本保留在同一目录；VsTV HarmonyOS使用不同包名，因此单独分组。
 
@@ -14,7 +14,7 @@
 python3 tools/verify-fork-tvapp.py --root fork --report /tmp/tvapp-verification.json
 ```
 
-校验器对照完整上游树检查筛选是否漏项或多收，核对实际APK大小、SHA256、Git blob、ZIP结构、签名证据、分类统计、图像、SVG静态子集、manifest及校验清单。原始aapt与apksigner输出保存在 `verification/apks/<GitBlobSHA>/`。
+校验器对照完整上游树及显式例外清单检查筛选是否漏项或多收，核对实际APK大小、SHA256、Git blob、ZIP结构、签名证据、分类统计、图像、SVG静态子集、manifest及校验清单。原始aapt与apksigner输出保存在 `verification/apks/<GitBlobSHA>/`。
 
 ## 从固定快照重建
 
@@ -44,6 +44,12 @@ python3 tools/verify-fork-tvapp.py --root fork --report "$TVAPP_STAGE/report.jso
 下载工具固定仓库、提交和Git blob，不信任清单中的任意下载域名。检查时不执行APK。导入器遇到同名但哈希不同的本地APK会停止；`--move`仅用于移动专用暂存目录中的已验证文件以减少磁盘占用。
 
 原图标保留APK内部文件字节；`logo.svg`是符合启动器静态SVG子集的转换或简化版本，具体方法和是否近似在assets中说明。封面为真实浏览器渲染的信息卡，明确标注“应用介绍封面 · 非运行截图”。
+
+## 追加指定的超限文件
+
+`upstream/tree.json`、`commit.json`、`inventory.json`和`candidates-raw.json`保留原快照；额外选择只写入`selection-overrides.json`，必须与同一完整树中的路径、大小和Git blob完全匹配。下载和导入工具的`--overrides-only`仅处理这批显式选择，再与原目录合并。使用`--move`避免保存两份APK；素材生成只对本次batch运行。
+
+每轮审核输出和验证报告使用新的日期目录，旧的 `verification/report.json`、`verification/publication.json`及既有审查文件作为历史证据保留。追加后重新生成目录、SHA256清单和超限文件归档状态；下载、签名静态验证与实机运行是不同状态。
 
 ## 更新上游版本
 

@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import shutil
 from urllib.parse import quote
+from tvapp_selection import load_overrides
 
 CATEGORIES = {'media': '影音', 'game': '游戏', 'education': '教育', 'tools': '工具', 'fitness': '健身'}
 DESCRIPTIONS = {
@@ -26,6 +27,8 @@ DESCRIPTIONS = {
     'huan-assistant': '电视应用管理辅助工具。',
     'tv-screen-master': '电视屏幕测试工具。',
     'fittime-tv': '电视健身训练应用。',
+    'ergeduoduo': '上游收录的儿童儿歌与故事电视应用，保留“无限制版”原文件名。',
+    'baby-fun-learning': '上游收录的儿童学习电视应用，包含儿童和家长模式。',
 }
 
 
@@ -49,16 +52,34 @@ def arrange(args):
     source = {'repository': inventory['repository'], 'commit': inventory['commit'],
               'thresholdExclusiveBytes': inventory['thresholdExclusiveBytes'],
               'sourceApkCount': inventory['apkCount']}
+    overrides = load_overrides(args.inventory / 'selection-overrides.json', source['commit'])
+    override_by_path = {entry['path']: entry for entry in overrides}
+    candidates = [] if args.overrides_only else list(inventory['candidates'])
+    for entry in overrides:
+        encoded = quote(entry['path'], safe='/')
+        candidates.append({'upstreamPath': entry['path'], 'bytes': entry['size'], 'gitBlobSha': entry['sha'],
+                           'category': entry['category'], 'suggestedGroup': entry['id'],
+                           'suggestedDisplayName': entry['name'], 'provider': None,
+                           'sourceUrl': f"{source['repository']}/blob/{source['commit']}/{encoded}",
+                           'downloadUrl': f"https://raw.githubusercontent.com/youhunwl/TVAPP/{source['commit']}/{encoded}"})
+    previous = read(output / 'catalog.json') if args.overrides_only else None
+    if previous is not None:
+        assert overrides, 'Incremental import requires explicit selection overrides'
+        assert previous['source'] == source, 'Incremental import must preserve the same source snapshot'
     (output / 'upstream').mkdir(parents=True, exist_ok=True)
     (output / 'verification').mkdir(exist_ok=True)
     for name in ['tree.json', 'commit.json', 'inventory.json', 'candidates-raw.json', 'README.md', 'LICENSE', 'VsTV-README.md']:
         incoming, target = args.inventory / name, output / 'upstream' / name
         if incoming.resolve() != target.resolve():
             shutil.copyfile(incoming, target)
+    incoming = args.inventory / 'selection-overrides.json'
+    target = output / 'upstream/selection-overrides.json'
+    if incoming.exists() and incoming.resolve() != target.resolve():
+        shutil.copyfile(incoming, target)
     by_path = {r['sourcePath']: r for r in audit['records']}
-    assert set(by_path) == {c['upstreamPath'] for c in inventory['candidates']}
+    assert set(by_path) == {c['upstreamPath'] for c in candidates}
     groups = collections.defaultdict(list)
-    for candidate in inventory['candidates']:
+    for candidate in candidates:
         group = candidate['suggestedGroup']
         if candidate['upstreamPath'].endswith('-HarmonyOS.apk'):
             group = 'vstv-harmony'
@@ -78,7 +99,8 @@ def arrange(args):
             target = output / category / group / Path(candidate['upstreamPath']).name
             incoming = target if target.exists() else args.apks / (blob + '.apk')
             data = incoming.read_bytes()
-            assert 0 < len(data) == candidate['bytes'] == record['bytes'] < source['thresholdExclusiveBytes']
+            assert 0 < len(data) == candidate['bytes'] == record['bytes']
+            assert len(data) < source['thresholdExclusiveBytes'] or candidate['upstreamPath'] in override_by_path
             assert hashlib.sha256(data).hexdigest() == record['sha256']
             assert hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest() == blob
     apps, batch = [], []
@@ -101,7 +123,7 @@ def arrange(args):
                 incoming.rename(target)
             else:
                 shutil.copyfile(incoming, target)
-            assert target.stat().st_size == candidate['bytes'] < source['thresholdExclusiveBytes']
+            assert target.stat().st_size == candidate['bytes']
             assert digest(target) == record['sha256']
             assert hashlib.sha1(b'blob ' + str(target.stat().st_size).encode() + b'\0' + target.read_bytes()).hexdigest() == blob
             evidence = output / 'verification' / 'apks' / blob
@@ -125,6 +147,9 @@ def arrange(args):
             }
             packages.append(package)
         warnings = []
+        selected_overrides = [override_by_path[c['upstreamPath']] for c, _ in pairs if c['upstreamPath'] in override_by_path]
+        if selected_overrides:
+            warnings.append('按用户指定额外收录此超10MB原包；初始小于10MB的筛选门槛保持不变。未验证运行后的收费或内容可用性。')
         certificates = {tuple(c['sha256'] for c in p['signature']['certificates']) for p in packages}
         if len(certificates) > 1:
             warnings.append('同包名的收录版本使用不同签名，不能作为同一签名链直接覆盖升级。')
@@ -141,6 +166,8 @@ def arrange(args):
                     'packages': packages, 'notes': warnings,
                     'licenseNote': 'APK及原图标版权归各原作者；上游仓库Apache-2.0不等于各APK获得该许可。见../../NOTICE.md。',
                     'physicalTvTested': False, 'apkExecuted': False}
+        if selected_overrides:
+            manifest['selectionOverrides'] = selected_overrides
         write(folder / 'manifest.json', manifest)
         apps.append({'id': group, 'name': name, 'category': category, 'path': f'{category}/{group}',
                      'manifest': f'{category}/{group}/manifest.json', 'apkCount': len(packages)})
@@ -148,13 +175,21 @@ def arrange(args):
         batch.append({'appDir': str(folder), 'apk': str(folder / manifest['representativeApk']),
                       'name': name, 'category': category, 'version': rep['versionName'], 'bytes': rep['bytes'],
                       'badgingFile': str(output / 'verification/apks' / rep['blobSha1'] / 'badging.stdout.txt')})
+    if previous is not None:
+        incoming_ids = {app['id'] for app in apps}
+        apps.extend(app for app in previous['apps'] if app['id'] not in incoming_ids)
+        apps.sort(key=lambda app: (app['category'], app['id']))
+    all_packages = [package for app in apps for package in read(output / app['manifest'])['packages']]
     categories = [{'id': key, 'name': value, 'appCount': sum(a['category'] == key for a in apps),
                    'apkCount': sum(a['apkCount'] for a in apps if a['category'] == key)} for key, value in CATEGORIES.items()]
     write(output / 'catalog.json', {'schemaVersion': 1, 'source': source, 'appCount': len(apps),
-                                  'apkCount': len(by_path), 'apkBytes': audit['apkBytes'],
+                                  'apkCount': len(all_packages), 'apkBytes': sum(p['bytes'] for p in all_packages),
+                                  'selection': {'baseApkCount': len(inventory['candidates']),
+                                                'explicitOverrideCount': len(overrides),
+                                                'overrides': 'upstream/selection-overrides.json'} if overrides else None,
                                   'categories': categories, 'apps': apps})
     write(args.batch_output, batch)
-    print(f'Arranged {len(by_path)} APKs in {len(apps)} app directories; assets batch: {args.batch_output}')
+    print(f'Arranged {len(by_path)} incoming APKs; catalog has {len(all_packages)} APKs in {len(apps)} app directories; assets batch: {args.batch_output}')
 
 
 def grid(apps, prefix=''):
@@ -221,13 +256,16 @@ def finalize(output):
         folder = output / category['id']
         folder.mkdir(exist_ok=True)
         (folder / 'README.md').write_text('# ' + heading + '\n\n' + (grid(members, '../') if members else content) + '\n[返回收录目录](../README.md)\n', encoding='utf-8')
-    text = f'''# TVAPP 小体积应用收录
+    selection = catalog.get('selection') or {}
+    override_count = selection.get('explicitOverrideCount', 0)
+    selection_text = (f"收录全部严格小于 **10,000,000字节** 的{selection['baseApkCount']}个APK，并按用户指定额外收录{override_count}个超限APK（见[例外清单](upstream/selection-overrides.json)）" if override_count else "收录全部严格小于 **10,000,000字节** 的APK")
+    text = f'''# TVAPP 应用收录
 
-从 [youhunwl/TVAPP](https://github.com/youhunwl/TVAPP) 的固定提交 [`{catalog['source']['commit'][:8]}`](https://github.com/youhunwl/TVAPP/tree/{catalog['source']['commit']}) 收录全部严格小于 **10,000,000字节** 的APK：**{catalog['appCount']}款应用（按包名分组），{catalog['apkCount']}个APK，共{catalog['apkBytes']:,}字节**。不同版本和架构命名变体均保留；筛选针对该提交实际存放的APK，不含历史已删除文件或外链仓库。
+从 [youhunwl/TVAPP](https://github.com/youhunwl/TVAPP) 的固定提交 [`{catalog['source']['commit'][:8]}`](https://github.com/youhunwl/TVAPP/tree/{catalog['source']['commit']}) {selection_text}：**{catalog['appCount']}款应用（按包名分组），{catalog['apkCount']}个APK，共{catalog['apkBytes']:,}字节**。小于10MB的合格版本和架构命名变体均保留；超限例外仅收录清单明确指定的文件。筛选针对该提交实际存放的APK，不含历史已删除文件或外链仓库。
 
 每款应用提供原APK、`logo.svg`、原图标（可提取时）、`thumb.png`、`manifest.json`、`assets.json`、README和SHA256清单。下方封面均为生成的介绍卡，不是运行截图。署名没有可靠依据时provider为null，未把收集者当作应用作者。
 
-[机器目录](catalog.json) · [超限应用与复刻清单](OVERSIZED.md) · [完整性校验](verification/report.json) · [来源与许可](NOTICE.md) · [维护说明](MAINTENANCE.md)
+[机器目录](catalog.json) · [超限应用与复刻清单](OVERSIZED.md) · [完整性校验](verification/README.md) · [来源与许可](NOTICE.md) · [维护说明](MAINTENANCE.md)
 
 本目录为独立第三方归档，尚未接入Gitee APK市场或电视商城。原APK未改签、未执行；包签名验证只证明完整性，不代表原开发者身份或内容安全。戏曲多多两版签名不同，详见对应目录。
 
@@ -246,6 +284,7 @@ def main():
     parser.add_argument('--apks', type=Path)
     parser.add_argument('--batch-output', type=Path)
     parser.add_argument('--move', action='store_true', help='Move verified staging APKs instead of copying them.')
+    parser.add_argument('--overrides-only', action='store_true', help='Add only explicit oversized selections to an existing catalog, preserving other app files.')
     parser.add_argument('--finalize', action='store_true', help='Merge generated assets and write documentation/checksums.')
     args = parser.parse_args()
     if args.finalize:

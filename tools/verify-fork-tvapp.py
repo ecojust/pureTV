@@ -21,6 +21,7 @@ import zlib
 from pathlib import Path
 
 from PIL import Image
+from tvapp_selection import load_overrides
 
 REPOSITORY = 'https://github.com/youhunwl/TVAPP'
 LIMIT = 10_000_000
@@ -211,7 +212,10 @@ def verify_package(root, folder, package, expected):
     path = within(root, folder, name)
     require(path.is_file(), f'Missing APK: {name}')
     data = path.read_bytes()
-    require(0 < len(data) < LIMIT and len(data) == package.get('bytes') == entry['size'], f'APK size mismatch: {name}')
+    # Eligibility (including exact explicit exceptions) was established from the
+    # archived tree before inspecting local bytes; a large file is never accepted
+    # solely because its manifest lists a larger size.
+    require(0 < len(data) == package.get('bytes') == entry['size'], f'APK size mismatch: {name}')
     digest = hashlib.sha256(data).hexdigest()
     git_blob = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
     require(digest == package.get('sha256'), f'APK SHA256 mismatch: {name}')
@@ -334,12 +338,27 @@ def main():
         for item in inventory['candidates']:
             row = expected[item['upstreamPath']]
             require(item['bytes'] == row['size'] and item['gitBlobSha'] == row['sha'], 'Inventory tree identity mismatch')
-        return {'catalog': catalog, 'expected': expected, 'source': source}
+        base_count = len(expected)
+        overrides = load_overrides(root / 'upstream/selection-overrides.json', source['commit'])
+        override_by_path = {entry['path']: entry for entry in overrides}
+        for entry in overrides:
+            require(entry['path'] not in expected, 'Explicit override must not duplicate a small APK')
+            expected[entry['path']] = {'path': entry['path'], 'size': entry['size'], 'sha': entry['sha']}
+        if overrides:
+            require(catalog.get('selection') == {'baseApkCount': base_count,
+                    'explicitOverrideCount': len(overrides), 'overrides': 'upstream/selection-overrides.json'},
+                    'Catalog selection summary differs from original threshold and explicit overrides')
+        else:
+            require(not catalog.get('selection'), 'Catalog declares overrides without a pinned override inventory')
+        return {'catalog': catalog, 'expected': expected, 'source': source,
+                'baseCount': base_count, 'overrides': override_by_path}
 
     context = check('upstream-inventory', inventory_check)
     if context:
         # Keep report small; store provenance/counts instead of duplicate full source trees.
-        report['checks'][-1]['details'] = {'source': context['source'], 'eligibleApks': len(context['expected'])}
+        report['checks'][-1]['details'] = {'source': context['source'], 'eligibleApks': len(context['expected']),
+                                         'belowThresholdApks': context['baseCount'],
+                                         'explicitlySelectedApks': len(context['overrides'])}
         catalog, expected = context['catalog'], context['expected']
         recorded, local_apks, app_dirs, counts, app_counts = [], set(), [], collections.Counter(), collections.Counter()
         ids, app_package_names = [], []
@@ -366,6 +385,13 @@ def main():
                 require(folder.relative_to(root).parts[0] == app['category'], 'Folder category differs from catalog')
                 app_dirs.append(folder)
                 app_counts[app['category']] += 1
+                app_overrides = [context['overrides'][package['sourcePath']] for package in packages
+                                 if package.get('sourcePath') in context['overrides']]
+                require(manifest.get('selectionOverrides', []) == app_overrides,
+                        'Manifest explicit selection differs from the approved source files')
+                require(all(entry['id'] == app['id'] and entry['category'] == app['category']
+                            and entry['name'] == app['name'] for entry in app_overrides),
+                        'Explicit selection app identity differs from catalog')
                 for package in packages:
                     source = package.get('sourcePath')
                     recorded.append(source)
