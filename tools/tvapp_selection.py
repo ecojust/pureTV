@@ -44,3 +44,16 @@ def load_overrides(path, commit):
             raise ValueError(f'Invalid or unpinned explicit APK selection: {source}')
         seen.add(source)
     return entries
+
+
+def select_overrides(entries, only_ids=None):
+    """Select registered IDs without introducing new paths or changing source order."""
+    if not only_ids:
+        return list(entries)
+    requested = set(only_ids)
+    if len(requested) != len(only_ids):
+        raise ValueError('--only-id must not repeat an application ID')
+    unknown = requested - {entry['id'] for entry in entries}
+    if unknown:
+        raise ValueError('Unknown explicit selection ID: ' + ', '.join(sorted(unknown)))
+    return [entry for entry in entries if entry['id'] in requested]

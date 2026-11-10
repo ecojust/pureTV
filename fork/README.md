@@ -1,6 +1,6 @@
 # TVAPP 应用收录
 
-从 [youhunwl/TVAPP](https://github.com/youhunwl/TVAPP) 的固定提交 [`08ec332c`](https://github.com/youhunwl/TVAPP/tree/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3) 收录全部严格小于 **10,000,000字节** 的23个APK，并按用户指定额外收录2个超限APK（见[例外清单](upstream/selection-overrides.json)）：**16款应用（按包名分组），25个APK，共184,782,363字节**。小于10MB的合格版本和架构命名变体均保留；超限例外仅收录清单明确指定的文件。筛选针对该提交实际存放的APK，不含历史已删除文件或外链仓库。
+从 [youhunwl/TVAPP](https://github.com/youhunwl/TVAPP) 的固定提交 [`08ec332c`](https://github.com/youhunwl/TVAPP/tree/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3) 收录全部严格小于 **10,000,000字节** 的23个APK，并按用户指定额外收录5个超限APK（见[例外清单](upstream/selection-overrides.json)）：**19款应用（按包名分组），28个APK，共313,771,424字节**。小于10MB的合格版本和架构命名变体均保留；超限例外仅收录清单明确指定的文件。筛选针对该提交实际存放的APK，不含历史已删除文件或外链仓库。
 
 每款应用提供原APK、`logo.svg`、原图标（可提取时）、`thumb.png`、`manifest.json`、`assets.json`、README和SHA256清单。下方封面均为生成的介绍卡，不是运行截图。署名没有可靠依据时provider为null，未把收集者当作应用作者。
 
@@ -8,22 +8,23 @@
 
 本目录为独立第三方归档，尚未接入Gitee APK市场或电视商城。原APK未改签、未执行；包签名验证只证明完整性，不代表原开发者身份或内容安全。戏曲多多两版签名不同，详见对应目录。
 
-## 影音 / media（11款 / 20个APK）
+## 影音 / media（13款 / 22个APK）
 
 <table>
-<tr><td width="25%" align="center"><a href="media/bbll/"><img src="media/bbll/thumb.png" width="240" alt="BBLL"><br>BBLL</a></td><td width="25%" align="center"><a href="media/bilibili-tv/"><img src="media/bilibili-tv/thumb.png" width="240" alt="哔哩哔哩TV"><br>哔哩哔哩TV</a></td><td width="25%" align="center"><a href="media/fantaiying/"><img src="media/fantaiying/thumb.png" width="240" alt="饭太硬"><br>饭太硬</a></td><td width="25%" align="center"><a href="media/kuandai-tv/"><img src="media/kuandai-tv/thumb.png" width="240" alt="宽带直播"><br>宽带直播</a></td></tr>
-<tr><td width="25%" align="center"><a href="media/my-tv/"><img src="media/my-tv/thumb.png" width="240" alt="我的电视"><br>我的电视</a></td><td width="25%" align="center"><a href="media/myyy/"><img src="media/myyy/thumb.png" width="240" alt="Myyy"><br>Myyy</a></td><td width="25%" align="center"><a href="media/qianxun-tv/"><img src="media/qianxun-tv/thumb.png" width="240" alt="千寻直播"><br>千寻直播</a></td><td width="25%" align="center"><a href="media/vstv/"><img src="media/vstv/thumb.png" width="240" alt="VsTV"><br>VsTV</a></td></tr>
-<tr><td width="25%" align="center"><a href="media/vstv-harmony/"><img src="media/vstv-harmony/thumb.png" width="240" alt="VsTV · HarmonyOS"><br>VsTV · HarmonyOS</a></td><td width="25%" align="center"><a href="media/webviewtv/"><img src="media/webviewtv/thumb.png" width="240" alt="WebViewTV"><br>WebViewTV</a></td><td width="25%" align="center"><a href="media/xiqu-duoduo/"><img src="media/xiqu-duoduo/thumb.png" width="240" alt="戏曲多多"><br>戏曲多多</a></td><td width="25%"></td></tr>
+<tr><td width="25%" align="center"><a href="media/bbll/"><img src="media/bbll/thumb.png" width="240" alt="BBLL"><br>BBLL</a></td><td width="25%" align="center"><a href="media/bilibili-tv/"><img src="media/bilibili-tv/thumb.png" width="240" alt="哔哩哔哩TV"><br>哔哩哔哩TV</a></td><td width="25%" align="center"><a href="media/fantaiying/"><img src="media/fantaiying/thumb.png" width="240" alt="饭太硬"><br>饭太硬</a></td><td width="25%" align="center"><a href="media/jasmine-music/"><img src="media/jasmine-music/thumb.png" width="240" alt="茉莉音乐"><br>茉莉音乐</a></td></tr>
+<tr><td width="25%" align="center"><a href="media/kuandai-tv/"><img src="media/kuandai-tv/thumb.png" width="240" alt="宽带直播"><br>宽带直播</a></td><td width="25%" align="center"><a href="media/my-tv/"><img src="media/my-tv/thumb.png" width="240" alt="我的电视"><br>我的电视</a></td><td width="25%" align="center"><a href="media/myyy/"><img src="media/myyy/thumb.png" width="240" alt="Myyy"><br>Myyy</a></td><td width="25%" align="center"><a href="media/qianxun-tv/"><img src="media/qianxun-tv/thumb.png" width="240" alt="千寻直播"><br>千寻直播</a></td></tr>
+<tr><td width="25%" align="center"><a href="media/qixing-opera/"><img src="media/qixing-opera/thumb.png" width="240" alt="七星戏曲"><br>七星戏曲</a></td><td width="25%" align="center"><a href="media/vstv/"><img src="media/vstv/thumb.png" width="240" alt="VsTV"><br>VsTV</a></td><td width="25%" align="center"><a href="media/vstv-harmony/"><img src="media/vstv-harmony/thumb.png" width="240" alt="VsTV · HarmonyOS"><br>VsTV · HarmonyOS</a></td><td width="25%" align="center"><a href="media/webviewtv/"><img src="media/webviewtv/thumb.png" width="240" alt="WebViewTV"><br>WebViewTV</a></td></tr>
+<tr><td width="25%" align="center"><a href="media/xiqu-duoduo/"><img src="media/xiqu-duoduo/thumb.png" width="240" alt="戏曲多多"><br>戏曲多多</a></td><td width="25%"></td><td width="25%"></td><td width="25%"></td></tr>
 </table>
 
 ## 游戏 / game（0款 / 0个APK）
 
 上游3个游戏APK均超过限制，最小为24,678,211字节，本次不收录。
 
-## 教育 / education（2款 / 2个APK）
+## 教育 / education（3款 / 3个APK）
 
 <table>
-<tr><td width="25%" align="center"><a href="education/baby-fun-learning/"><img src="education/baby-fun-learning/thumb.png" width="240" alt="宝宝趣学"><br>宝宝趣学</a></td><td width="25%" align="center"><a href="education/ergeduoduo/"><img src="education/ergeduoduo/thumb.png" width="240" alt="儿歌多多TV"><br>儿歌多多TV</a></td><td width="25%"></td><td width="25%"></td></tr>
+<tr><td width="25%" align="center"><a href="education/baby-fun-learning/"><img src="education/baby-fun-learning/thumb.png" width="240" alt="宝宝趣学"><br>宝宝趣学</a></td><td width="25%" align="center"><a href="education/ergeduoduo/"><img src="education/ergeduoduo/thumb.png" width="240" alt="儿歌多多TV"><br>儿歌多多TV</a></td><td width="25%" align="center"><a href="education/taozhi-classroom/"><img src="education/taozhi-classroom/thumb.png" width="240" alt="淘知学堂TV"><br>淘知学堂TV</a></td><td width="25%"></td></tr>
 </table>
 
 ## 工具 / tools（2款 / 2个APK）

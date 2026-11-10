@@ -1,6 +1,6 @@
 # 超过10 MB的应用清单与收录状态
 
-与归档目录使用同一上游快照：[`08ec332c`](https://github.com/youhunwl/TVAPP/tree/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3)。228个APK文件包含23个小包和 **205个超限文件 / 199份不同Git blob内容**，按名称和用途整理为 **84个参考家族**。超限文件中 **2个已按用户指定收录，203个尚未收录**；本页保留全部205条原始记录。超限文件总大小 **8,711,445,311字节（约8.71 GB，含重复文件）**。
+与归档目录使用同一上游快照：[`08ec332c`](https://github.com/youhunwl/TVAPP/tree/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3)。228个APK文件包含23个小包和 **205个超限文件 / 199份不同Git blob内容**，按名称和用途整理为 **84个参考家族**。超限文件中 **5个已按用户指定收录，200个尚未收录**；本页保留全部205条原始记录。超限文件总大小 **8,711,445,311字节（约8.71 GB，含重复文件）**。
 
 阈值按10,000,000字节计算；本快照没有刚好等于阈值的APK。本清单保留全部版本、手机/电视变体及同内容别名，家族数不代表已经核验的包名数量。
 
@@ -101,10 +101,10 @@ P1：优先验证轻量核心功能；P2：需要先确认内容/接口或较多
 | [BiliTV（上游1.2.2）](planning/replication-notes.md#bili-tv-upstream) | 1 | 22.83 | 上游称其为另一款第三方哔哩哔哩客户端。 | P1 / 中 | 尚未收录 |
 | [BV](planning/replication-notes.md#bv) | 1 | 12.52 | 上游列为第三方哔哩哔哩电视客户端。 | P1 / 中 | 尚未收录 |
 | [梨园行戏曲 / 4K梨园戏](planning/replication-notes.md#liyuan-opera) | 1 | 36.55 | 上游介绍为电视戏曲播放应用，具体资源目录和检索能力待进一步调查。 | P2 / 中 | 尚未收录 |
-| [七星戏曲](planning/replication-notes.md#qixing-opera) | 1 | 78.73 | 上游列为box风格的戏曲播放应用。 | P2 / 中 | 尚未收录 |
+| [七星戏曲](planning/replication-notes.md#qixing-opera) | 1 | 78.73 | 上游列为box风格的戏曲播放应用。 | P2 / 中 | 1/1个APK已收录 |
 | [云视听快TV](planning/replication-notes.md#kuaishou-tv) | 1 | 18.01 | 上游将其描述为快手的电视客户端旧版。 | P3 / 高 | 尚未收录 |
 | [音悦](planning/replication-notes.md#yinyue-music) | 1 | 64.60 | 上游介绍为音乐播放、下载工具，并明确支持自定义音乐源。 | P2 / 中 | 尚未收录 |
-| [茉莉音乐](planning/replication-notes.md#jasmine-music) | 2 | 24.99–25.07 | 上游介绍为音乐播放与下载应用。 | P2 / 中 | 尚未收录 |
+| [茉莉音乐](planning/replication-notes.md#jasmine-music) | 2 | 24.99–25.07 | 上游介绍为音乐播放与下载应用。 | P2 / 中 | 1/2个APK已收录 |
 | [魔音MORIN](planning/replication-notes.md#morin-music) | 1 | 25.09 | 上游介绍为音乐播放器和音频下载工具。 | P2 / 中 | 尚未收录 |
 | [TG音乐台](planning/replication-notes.md#tg-music) | 1 | 89.25 | 上游描述为基于TVBox的音乐/MV客户端，附带本地配置的资源目录。 | P2 / 中 | 尚未收录 |
 
@@ -124,7 +124,7 @@ P1：优先验证轻量核心功能；P2：需要先确认内容/接口或较多
 | [贝乐虎儿歌](planning/replication-notes.md#beilehu-rhymes) | 1 | 30.34 | 上游介绍为电视儿歌应用，并注明目前无法获取数据。 上游标红，状态待核实。 | P2 / 中 | 尚未收录 |
 | [儿歌多多TV](planning/replication-notes.md#ergeduoduo) | 2 | 14.10–17.82 | 按应用名称和上游教育分类，可作为电视儿歌播放应用参考；细节尚未运行核验。（名称推断） | P2 / 中 | 1/2个APK已收录 |
 | [七星智教](planning/replication-notes.md#qixing-education) | 2 | 42.73–55.67 | 上游介绍为面向儿童、结合教育与娱乐的资源应用。 | P2 / 中 | 尚未收录 |
-| [淘知学堂TV](planning/replication-notes.md#taozhi-classroom) | 1 | 25.27 | 上游描述为面向学生、提供学习内容播放的应用。 | P3 / 高 | 尚未收录 |
+| [淘知学堂TV](planning/replication-notes.md#taozhi-classroom) | 1 | 25.27 | 上游描述为面向学生、提供学习内容播放的应用。 | P3 / 高 | 1/1个APK已收录 |
 
 ## 工具 / tools（5个家族）
 

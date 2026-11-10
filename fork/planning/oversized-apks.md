@@ -2,7 +2,7 @@
 
 [返回总清单](../OVERSIZED.md) · [JSON](oversized.json) · [CSV](oversized.csv)
 
-保留全部205个源文件路径，其中2个已收录、203个尚未收录。版本/构建/设备/系统列均为**文件名线索**，不是解包验证结果；已收录条目的真实包信息见收录目录manifest。大小采用十进制MB；上游链接固定到源提交。Git blob相同的文件是内容别名，不能据不同文件名重复计算开发项目。
+保留全部205个源文件路径，其中5个已收录、200个尚未收录。版本/构建/设备/系统列均为**文件名线索**，不是解包验证结果；已收录条目的真实包信息见收录目录manifest。大小采用十进制MB；上游链接固定到源提交。Git blob相同的文件是内容别名，不能据不同文件名重复计算开发项目。
 
 
 ## live-dianshijia
@@ -617,7 +617,7 @@
 
 | 上游APK原路径 / 链接 | 文件名版本 / 构建线索 | 字节数（MB） | 终端 / 架构 / 系统线索 | 同内容别名 | 收录状态 |
 | --- | --- | ---: | --- | --- | --- |
-| [娱乐应用/七星戏曲1.0.apk](https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/%E5%A8%B1%E4%B9%90%E5%BA%94%E7%94%A8/%E4%B8%83%E6%98%9F%E6%88%8F%E6%9B%B21.0.apk) | 1.0 | 78,731,581（78.732） | 未标明 | — | 尚未收录 |
+| [娱乐应用/七星戏曲1.0.apk](https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/%E5%A8%B1%E4%B9%90%E5%BA%94%E7%94%A8/%E4%B8%83%E6%98%9F%E6%88%8F%E6%9B%B21.0.apk) | 1.0 | 78,731,581（78.732） | 未标明 | — | [已收录](../media/qixing-opera/) |
 
 ## kuaishou-tv
 
@@ -642,7 +642,7 @@
 | 上游APK原路径 / 链接 | 文件名版本 / 构建线索 | 字节数（MB） | 终端 / 架构 / 系统线索 | 同内容别名 | 收录状态 |
 | --- | --- | ---: | --- | --- | --- |
 | [娱乐应用/茉莉音乐1.0.1高级版.apk](https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/%E5%A8%B1%E4%B9%90%E5%BA%94%E7%94%A8/%E8%8C%89%E8%8E%89%E9%9F%B3%E4%B9%901.0.1%E9%AB%98%E7%BA%A7%E7%89%88.apk) | 1.0.1 | 25,069,108（25.069） | 未标明 | — | 尚未收录 |
-| [娱乐应用/茉莉音乐1.0.2.apk](https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/%E5%A8%B1%E4%B9%90%E5%BA%94%E7%94%A8/%E8%8C%89%E8%8E%89%E9%9F%B3%E4%B9%901.0.2.apk) | 1.0.2 | 24,989,887（24.990） | 未标明 | — | 尚未收录 |
+| [娱乐应用/茉莉音乐1.0.2.apk](https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/%E5%A8%B1%E4%B9%90%E5%BA%94%E7%94%A8/%E8%8C%89%E8%8E%89%E9%9F%B3%E4%B9%901.0.2.apk) | 1.0.2 | 24,989,887（24.990） | 未标明 | — | [已收录](../media/jasmine-music/) |
 
 ## morin-music
 
@@ -725,7 +725,7 @@
 
 | 上游APK原路径 / 链接 | 文件名版本 / 构建线索 | 字节数（MB） | 终端 / 架构 / 系统线索 | 同内容别名 | 收录状态 |
 | --- | --- | ---: | --- | --- | --- |
-| [教育学习/淘知学堂TV已解锁会员.apk](https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/%E6%95%99%E8%82%B2%E5%AD%A6%E4%B9%A0/%E6%B7%98%E7%9F%A5%E5%AD%A6%E5%A0%82TV%E5%B7%B2%E8%A7%A3%E9%94%81%E4%BC%9A%E5%91%98.apk) | 未标明 | 25,267,593（25.268） | TV | — | 尚未收录 |
+| [教育学习/淘知学堂TV已解锁会员.apk](https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/%E6%95%99%E8%82%B2%E5%AD%A6%E4%B9%A0/%E6%B7%98%E7%9F%A5%E5%AD%A6%E5%A0%82TV%E5%B7%B2%E8%A7%A3%E9%94%81%E4%BC%9A%E5%91%98.apk) | 未标明 | 25,267,593（25.268） | TV | — | [已收录](../education/taozhi-classroom/) |
 
 ## app-housekeeper
 

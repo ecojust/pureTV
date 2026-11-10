@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 import shutil
 from urllib.parse import quote
-from tvapp_selection import load_overrides
+from tvapp_selection import load_overrides, select_overrides
 
 CATEGORIES = {'media': '影音', 'game': '游戏', 'education': '教育', 'tools': '工具', 'fitness': '健身'}
 DESCRIPTIONS = {
@@ -29,6 +29,9 @@ DESCRIPTIONS = {
     'fittime-tv': '电视健身训练应用。',
     'ergeduoduo': '上游收录的儿童儿歌与故事电视应用，保留“无限制版”原文件名。',
     'baby-fun-learning': '上游收录的儿童学习电视应用，包含儿童和家长模式。',
+    'jasmine-music': '上游收录的电视音乐播放与下载应用。',
+    'taozhi-classroom': '上游收录的学生课程学习电视应用，保留“已解锁会员”原文件名。',
+    'qixing-opera': '上游收录的电视戏曲播放应用。',
 }
 
 
@@ -54,8 +57,9 @@ def arrange(args):
               'sourceApkCount': inventory['apkCount']}
     overrides = load_overrides(args.inventory / 'selection-overrides.json', source['commit'])
     override_by_path = {entry['path']: entry for entry in overrides}
+    selected_overrides = select_overrides(overrides, args.only_id)
     candidates = [] if args.overrides_only else list(inventory['candidates'])
-    for entry in overrides:
+    for entry in selected_overrides:
         encoded = quote(entry['path'], safe='/')
         candidates.append({'upstreamPath': entry['path'], 'bytes': entry['size'], 'gitBlobSha': entry['sha'],
                            'category': entry['category'], 'suggestedGroup': entry['id'],
@@ -64,7 +68,7 @@ def arrange(args):
                            'downloadUrl': f"https://raw.githubusercontent.com/youhunwl/TVAPP/{source['commit']}/{encoded}"})
     previous = read(output / 'catalog.json') if args.overrides_only else None
     if previous is not None:
-        assert overrides, 'Incremental import requires explicit selection overrides'
+        assert selected_overrides, 'Incremental import requires explicit selection overrides'
         assert previous['source'] == source, 'Incremental import must preserve the same source snapshot'
     (output / 'upstream').mkdir(parents=True, exist_ok=True)
     (output / 'verification').mkdir(exist_ok=True)
@@ -88,6 +92,22 @@ def arrange(args):
         assert not Path(candidate['upstreamPath']).is_absolute() and '..' not in Path(candidate['upstreamPath']).parts
         assert '\n' not in candidate['upstreamPath'] and '\r' not in candidate['upstreamPath']
         groups[(candidate['category'], group)].append((candidate, by_path[candidate['upstreamPath']]))
+    expected = {entry['upstreamPath']: (entry['bytes'], entry['gitBlobSha']) for entry in inventory['candidates']}
+    expected.update({entry['path']: (entry['size'], entry['sha']) for entry in overrides})
+    merged = {record['sourcePath']: (record['bytes'], record['blobSha1']) for record in audit['records']}
+    if previous is not None:
+        incoming_ids = {group for _, group in groups}
+        for app in previous['apps']:
+            if app['id'] in incoming_ids:
+                continue
+            previous_manifest = read(output / app['manifest'])
+            assert previous_manifest['source'] == source
+            for package in previous_manifest['packages']:
+                assert package['sourcePath'] not in merged, 'Duplicate source path in retained catalog'
+                apk = output / app['path'] / package['file']
+                assert apk.is_file() and apk.stat().st_size == package['bytes']
+                merged[package['sourcePath']] = (package['bytes'], package['gitBlobSha'])
+    assert merged == expected, 'Merged catalog must cover every original small APK and registered override exactly'
     # Validate the entire incoming batch before moving any original file.
     for (category, group), pairs in groups.items():
         assert len({r['packageName'] for _, r in pairs}) == 1
@@ -157,6 +177,10 @@ def arrange(args):
             warnings.append('部分文件的 versionCode 相同，文件名变体和版本名不代表可自动判定升级顺序。')
         if group == 'xiqu-duoduo':
             warnings.append('上游“老版本免费版”的内部版本为9.9.9/code9999；保留真实元数据，不把此数值解释为官方最新版本。')
+        if group == 'jasmine-music':
+            for package in packages:
+                if set(package['nativeCode']) == {'arm64-v8a', 'x86'}:
+                    warnings.append(package['file'] + '仅包含arm64-v8a和x86原生库，未包含armeabi/armeabi-v7a；仅支持32位ARM的电视不满足此包的架构要求。64位芯片运行32位系统时，也不能据芯片型号认定兼容。')
         if group.startswith('vstv'):
             warnings.append('上游架构命名仅保留为文件名；APK实际同时含arm64-v8a、armeabi-v7a和x86_64库，以nativeCode为准。')
         manifest = {'schemaVersion': 1, 'id': group, 'name': name, 'category': category,
@@ -180,6 +204,8 @@ def arrange(args):
         apps.extend(app for app in previous['apps'] if app['id'] not in incoming_ids)
         apps.sort(key=lambda app: (app['category'], app['id']))
     all_packages = [package for app in apps for package in read(output / app['manifest'])['packages']]
+    assert len(all_packages) == len(expected)
+    assert {p['sourcePath']: (p['bytes'], p['gitBlobSha']) for p in all_packages} == expected
     categories = [{'id': key, 'name': value, 'appCount': sum(a['category'] == key for a in apps),
                    'apkCount': sum(a['apkCount'] for a in apps if a['category'] == key)} for key, value in CATEGORIES.items()]
     write(output / 'catalog.json', {'schemaVersion': 1, 'source': source, 'appCount': len(apps),
@@ -285,8 +311,11 @@ def main():
     parser.add_argument('--batch-output', type=Path)
     parser.add_argument('--move', action='store_true', help='Move verified staging APKs instead of copying them.')
     parser.add_argument('--overrides-only', action='store_true', help='Add only explicit oversized selections to an existing catalog, preserving other app files.')
+    parser.add_argument('--only-id', action='append', help='With --overrides-only, import only this registered override ID; repeat for multiple apps.')
     parser.add_argument('--finalize', action='store_true', help='Merge generated assets and write documentation/checksums.')
     args = parser.parse_args()
+    if args.only_id and (not args.overrides_only or args.finalize):
+        parser.error('--only-id requires --overrides-only and cannot be used with --finalize')
     if args.finalize:
         finalize(args.output.resolve())
     else:

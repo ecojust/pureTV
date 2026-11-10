@@ -1,8 +1,8 @@
 # 维护与复现
 
-超过10 MB的全部205份文件见 [完整清单与复刻参考](OVERSIZED.md)，包括按用户要求额外收录的2份和仍未收录的203份。未归档文件的版本、系统和架构仅为文件名线索；已归档条目关联实际manifest。应用家族与开发评估维护在 `planning/app-notes.json`，运行 `python3 tools/update-tvapp-oversized.py` 生成 Markdown、JSON、CSV，使用 `--check` 验证205个文件的完整覆盖及当前归档状态。
+超过10 MB的全部205份文件见 [完整清单与复刻参考](OVERSIZED.md)，包括按用户要求额外收录的5份和仍未收录的200份。未归档文件的版本、系统和架构仅为文件名线索；已归档条目关联实际manifest。应用家族与开发评估维护在 `planning/app-notes.json`，运行 `python3 tools/update-tvapp-oversized.py` 生成 Markdown、JSON、CSV，使用 `--check` 验证205个文件的完整覆盖及当前归档状态。
 
-范围为上游固定提交的实际APK文件，基础规则为 **0 < bytes < 10,000,000**，保留所有合格版本和架构命名变体：228个APK中符合条件23个，按实际包名分为14款应用。另按2026-11-10用户明确要求收录儿歌多多TV1.3.1.0、宝宝趣学3.0.1，具体路径、字节数、Git blob及原因登记在 `upstream/selection-overrides.json`。共16款应用、25个APK；只有登记的两个原文件享有体积例外，不扩大到其他版本或七星智教。分类由用途和上游目录确定；娱乐目录中的直播、音乐、戏曲归media，游戏归game。
+范围为上游固定提交的实际APK文件，基础规则为 **0 < bytes < 10,000,000**，保留所有合格版本和架构命名变体：228个APK中符合条件23个，按实际包名分为14款应用。另按2026-11-10用户明确要求收录儿歌多多TV1.3.1.0、宝宝趣学3.0.1、茉莉音乐1.0.2、淘知学堂TV1.0.0、七星戏曲1.0，具体路径、字节数、Git blob及原因登记在 `upstream/selection-overrides.json`。共19款应用、28个APK；只有登记的五个原文件享有体积例外，不扩大到其他版本或七星智教。分类由用途和上游目录确定；娱乐目录中的直播、音乐、戏曲归media，游戏归game。
 
 目录结构：`fork/<media|game|education|tools|fitness>/<应用>/`。每款提供 `manifest.json`（真实包信息、来源、签名及provider）、`assets.json`（原图标及生成方式）、`logo.svg`、可提取的原始图标、960×540的 `thumb.png`、原APK、README和SHA256清单。相同包名的多个版本保留在同一目录；VsTV HarmonyOS使用不同包名，因此单独分组。
 
@@ -47,7 +47,7 @@ python3 tools/verify-fork-tvapp.py --root fork --report "$TVAPP_STAGE/report.jso
 
 ## 追加指定的超限文件
 
-`upstream/tree.json`、`commit.json`、`inventory.json`和`candidates-raw.json`保留原快照；额外选择只写入`selection-overrides.json`，必须与同一完整树中的路径、大小和Git blob完全匹配。下载和导入工具的`--overrides-only`仅处理这批显式选择，再与原目录合并。使用`--move`避免保存两份APK；素材生成只对本次batch运行。
+`upstream/tree.json`、`commit.json`、`inventory.json`和`candidates-raw.json`保留原快照；额外选择只写入`selection-overrides.json`，必须与同一完整树中的路径、大小和Git blob完全匹配。下载和导入工具的`--overrides-only`处理显式选择，再与原目录合并；追加时可重复传入`--only-id <登记ID>`仅处理本轮指定应用，保留早先已归档目录。该参数不能引入清单外的APK。使用`--move`避免保存两份APK；素材生成只对本次batch运行。
 
 每轮审核输出和验证报告使用新的日期目录，旧的 `verification/report.json`、`verification/publication.json`及既有审查文件作为历史证据保留。追加后重新生成目录、SHA256清单和超限文件归档状态；下载、签名静态验证与实机运行是不同状态。
 
