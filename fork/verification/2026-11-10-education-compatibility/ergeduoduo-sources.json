@@ -1,0 +1,64 @@
+{
+  "checkedAtUtc": "2026-11-10T12:15:34.318994+00:00",
+  "upstreamVersions": [
+    {
+      "commit": "08ec332c0a25e9ae97fb73d3b3e40784dab65fc3",
+      "apiUrl": "https://api.github.com/repos/youhunwl/TVAPP/git/trees/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3?recursive=1",
+      "truncated": false,
+      "matches": [
+        {
+          "path": "教育学习/儿歌多多TV-v1.3.0.0无限制版.apk",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "3224d4c32676990dc1c91ec65f677b5118aff169",
+          "size": 17821231,
+          "url": "https://api.github.com/repos/youhunwl/TVAPP/git/blobs/3224d4c32676990dc1c91ec65f677b5118aff169"
+        },
+        {
+          "path": "教育学习/儿歌多多TV_1.3.1.0无限制版.apk",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "188479e51a9e2e9dd3ae927f219ee10c302556d8",
+          "size": 14096805,
+          "url": "https://api.github.com/repos/youhunwl/TVAPP/git/blobs/188479e51a9e2e9dd3ae927f219ee10c302556d8"
+        }
+      ]
+    },
+    {
+      "commit": "30ee2cdc71f635f666ed4e8c2b57e4b689ededa8",
+      "apiUrl": "https://api.github.com/repos/youhunwl/TVAPP/git/trees/30ee2cdc71f635f666ed4e8c2b57e4b689ededa8?recursive=1",
+      "truncated": false,
+      "matches": [
+        {
+          "path": "教育学习/儿歌多多TV-v1.3.0.0无限制版.apk",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "3224d4c32676990dc1c91ec65f677b5118aff169",
+          "size": 17821231,
+          "url": "https://api.github.com/repos/youhunwl/TVAPP/git/blobs/3224d4c32676990dc1c91ec65f677b5118aff169"
+        },
+        {
+          "path": "教育学习/儿歌多多TV_1.3.1.0无限制版.apk",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "188479e51a9e2e9dd3ae927f219ee10c302556d8",
+          "size": 14096805,
+          "url": "https://api.github.com/repos/youhunwl/TVAPP/git/blobs/188479e51a9e2e9dd3ae927f219ee10c302556d8"
+        }
+      ]
+    }
+  ],
+  "downloadedOriginalApkUnmodified": true,
+  "repositoryModified": false,
+  "findings": [
+    "归档1.3.1.0的8个本地库均为ELF32/EM_ARM，唯一ABI为armeabi-v7a；SHA256与用户失败路径精确一致。",
+    "固定快照及当前main均仅包含儿歌多多TV1.3.0.0与1.3.1.0，两个版本都是仅ARM32，退回该旧版无助于此ABI错误。",
+    "INSTALL_FAILED_NO_MATCHING_ABIS是系统安装器拒绝本地库架构的直接证据；不能通过延长安装超时、重签或改ABI目录名称修复。",
+    "候选可行路线：提供实际含arm64-v8a的同应用TV版；或使用明确支持armeabi-v7a的Android设备/系统。仅CPU为ARM或版本较旧不保证兼容，仍需实际abilist与运行验证。"
+  ],
+  "searchLimitations": [
+    "仅实际验证了已知上游两份TV包；没有找到可验证的同应用ARM64 TV版，但不据此断言全网不存在。",
+    "公开搜索尝试无法取得可信的官方ARM64 TV下载证据：Baidu返回验证页、DuckDuckGo返回挑战页、Bing结果不相关。猜测域名不作为官方来源证据。",
+    "未实际执行任一APK，未操作用户模拟器；ABI成功匹配也不等于内容播放功能可用。"
+  ]
+}
