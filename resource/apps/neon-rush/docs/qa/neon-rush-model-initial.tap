@@ -1,0 +1,80 @@
+✔ grid has six independent seeded competitors and safe finite track selection (8.689162ms)
+✔ countdown prevents early throttle, steering, nitro and distance gain (0.667103ms)
+✔ right/left steering changes real heading and position; unsteered motion is not a rail follower (47.794958ms)
+✔ automatic acceleration has a bounded top speed and brake stops without reverse motion (2.307842ms)
+✔ nitro requires a full charge and a press edge, consumes charge and expires (2.417317ms)
+✔ holding drift on a straight or at rest grants neither charge nor a mini boost (1.491414ms)
+✔ a sustained genuine drift charges nitro and a timely release grants a short mini boost (3.21025ms)
+✔ cancellation invalidates held drift and nitro and cannot synthesize a release reward (1.852767ms)
+✔ barriers reduce speed and retain the player inside the road without yaw rail-following (3.018061ms)
+✔ car contacts separate vehicles and cost speed once per cooldown (1.306916ms)
+✔ crossing a jump pad produces a ballistic arc and landing reward, not a permanent float (6.577506ms)
+✖ reset during a jump removes ungrounded progress and cannot farm distance or gates (3.390742ms)
+✖ a position discontinuity does not award a finish-line or checkpoint shortcut (4.011155ms)
+✔ reverse crossings of the start line cannot create laps (1.278253ms)
+✔ AI planning does not mutate a detached JSON observation (1.001207ms)
+✔ JSON round-trip state can resume without breaking the player reference (9.829799ms)
+✔ track 0: ordinary analog inputs complete two ordered laps, with finite AI competition (97.810444ms)
+✔ track 1: ordinary analog inputs complete two ordered laps, with finite AI competition (130.573146ms)
+✔ track 2: ordinary analog inputs complete two ordered laps, with finite AI competition (72.138641ms)
+✔ track 0: keyboard-quantized directions and normalized braking can finish (74.573261ms)
+✔ track 1: keyboard-quantized directions and normalized braking can finish (66.170418ms)
+✔ track 2: keyboard-quantized directions and normalized braking can finish (70.102549ms)
+✔ finish is deterministic and freezes the result under every further input (126.960221ms)
+✔ running out of race time produces a frozen result rather than claiming a finish (23.489052ms)
+✔ invalid/large deltas cannot skip a race and out-of-range inputs remain finite (0.553622ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 23
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 837.45412
+
+✖ failing tests:
+
+test at resource/apps/neon-rush/tests/model.test.mjs:167:1
+✖ reset during a jump removes ungrounded progress and cannot farm distance or gates (3.390742ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 101.76690869122226
+  - 101.76607470990265
+           ^
+  
+      at TestContext.<anonymous> (file:///workspace/pureTV/resource/apps/neon-rush/tests/model.test.mjs:173:49)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 101.76690869122226,
+    expected: 101.76607470990265,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at resource/apps/neon-rush/tests/model.test.mjs:178:1
+✖ a position discontinuity does not award a finish-line or checkpoint shortcut (4.011155ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(s.player.progress <= progress)
+  
+      at TestContext.<anonymous> (file:///workspace/pureTV/resource/apps/neon-rush/tests/model.test.mjs:183:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

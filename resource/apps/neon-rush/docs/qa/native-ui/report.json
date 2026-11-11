@@ -1,0 +1,2431 @@
+{
+  "startedAt": "2026-11-11T12:18:30.108Z",
+  "status": "passed",
+  "sourceAssetHashes": {
+    "assets-index.json": "6d11dc1dea59968278cbee0746d2f961762a0cb63653e964935315834c73770a",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "93d162537d8629cb59288646c917e20997d8462b39226745f03bf5ad0c618d2e",
+    "game-model.js": "f34fe5441f96b7bea33aa0e23fd12fa99ef9ee36b7e37a4448663d4468f8af13",
+    "game.js": "e15bbaafa794c28191c4f9255d5122ecab4a92d5775564b0d7322ce1b88afb27",
+    "LICENSE.txt": "93a8777f8776e6aa280f486fb84a5a12b64fcb00d9b58086ee1cc203e7311a15",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "12c42c31b0afcfb502116a6dc26e3ac93ba08fa354bb5fbce6f51fb03befe0ce",
+    "rush-theme.css": "b65c9b198ad76480eb86e481dc214e808e8629fdae9abd3bb51eb546f0135a73",
+    "THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "tv.css": "2572030056a405079866f27211f425c858c8c853cac2e699c58b85af69e03a6b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "scriptSha256": "bee5ffbf5e275780859ce97c746f9635ba83b3537b46259aaa4c6a61d0862b4b",
+  "scope": "Synthetic native-bridge UI regression using the actual final bundle; not a real Android WebView, TV, phone, LAN server or QR pairing test",
+  "environment": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "actualAndroidHostTested": false,
+    "syntheticNativeBridge": true,
+    "browser": "154.0.8037.57"
+  },
+  "inputMethod": "Ordinary Chromium keyboard Enter/P and mouse click; no model/state writes or clock overrides",
+  "fixture": {
+    "entryUrl": "https://game-kit.invalid/tv.html",
+    "getInfo": {
+      "language": "en",
+      "url": "http://192.0.2.1:1234/controller.html?room=fixture",
+      "qrImageType": "valid local SVG data URL; not scanned"
+    },
+    "snapshot": {
+      "players": []
+    },
+    "publish": "no-op; no writes"
+  },
+  "tests": [
+    {
+      "name": "fresh native English locale retains the LAN address and supplied image",
+      "status": "passed",
+      "details": {
+        "language": "en",
+        "address": "http://192.0.2.1:1234/controller.html",
+        "phase": "menu"
+      },
+      "wallSeconds": 0.08241857399999936
+    },
+    {
+      "name": "native menu automatically shows all panel text at 960 and 1280",
+      "status": "passed",
+      "details": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "phase": "menu",
+          "language": "en",
+          "textNodes": 13,
+          "sidebar": {
+            "box": {
+              "left": 653,
+              "top": 66,
+              "right": 939,
+              "bottom": 503,
+              "width": 286,
+              "height": 437
+            },
+            "clientWidth": 284,
+            "clientHeight": 435,
+            "scrollWidth": 284,
+            "scrollHeight": 435,
+            "scrollTop": 0,
+            "scrollLeft": 0
+          }
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "phase": "menu",
+          "language": "en",
+          "textNodes": 13,
+          "sidebar": {
+            "box": {
+              "left": 960,
+              "top": 90,
+              "right": 1246,
+              "bottom": 670,
+              "width": 286,
+              "height": 580
+            },
+            "clientWidth": 284,
+            "clientHeight": 578,
+            "scrollWidth": 284,
+            "scrollHeight": 578,
+            "scrollTop": 0,
+            "scrollLeft": 0
+          }
+        }
+      ],
+      "wallSeconds": 3.670213281
+    },
+    {
+      "name": "ordinary start hides the panel and P pause restores it without advancing the race",
+      "status": "passed",
+      "details": {
+        "pausedTick": 31,
+        "layouts": [
+          {
+            "viewport": {
+              "width": 960,
+              "height": 540
+            },
+            "phase": "paused",
+            "language": "en",
+            "textNodes": 13,
+            "sidebar": {
+              "box": {
+                "left": 653,
+                "top": 66,
+                "right": 939,
+                "bottom": 503,
+                "width": 286,
+                "height": 437
+              },
+              "clientWidth": 284,
+              "clientHeight": 435,
+              "scrollWidth": 284,
+              "scrollHeight": 435,
+              "scrollTop": 0,
+              "scrollLeft": 0
+            }
+          },
+          {
+            "viewport": {
+              "width": 1280,
+              "height": 720
+            },
+            "phase": "paused",
+            "language": "en",
+            "textNodes": 13,
+            "sidebar": {
+              "box": {
+                "left": 960,
+                "top": 90,
+                "right": 1246,
+                "bottom": 670,
+                "width": 286,
+                "height": 580
+              },
+              "clientWidth": 284,
+              "clientHeight": 578,
+              "scrollWidth": 284,
+              "scrollHeight": 578,
+              "scrollTop": 0,
+              "scrollLeft": 0
+            }
+          }
+        ]
+      },
+      "wallSeconds": 5.305132167999999
+    },
+    {
+      "name": "clicking language reloads the exact native URL and persists Chinese over native English",
+      "status": "passed",
+      "details": {
+        "url": "https://game-kit.invalid/tv.html",
+        "storedLanguage": "zh",
+        "navigationType": "reload",
+        "layouts": [
+          {
+            "viewport": {
+              "width": 960,
+              "height": 540
+            },
+            "phase": "menu",
+            "language": "zh",
+            "textNodes": 13,
+            "sidebar": {
+              "box": {
+                "left": 653,
+                "top": 66,
+                "right": 939,
+                "bottom": 503,
+                "width": 286,
+                "height": 437
+              },
+              "clientWidth": 284,
+              "clientHeight": 435,
+              "scrollWidth": 284,
+              "scrollHeight": 435,
+              "scrollTop": 0,
+              "scrollLeft": 0
+            }
+          },
+          {
+            "viewport": {
+              "width": 1280,
+              "height": 720
+            },
+            "phase": "menu",
+            "language": "zh",
+            "textNodes": 13,
+            "sidebar": {
+              "box": {
+                "left": 960,
+                "top": 90,
+                "right": 1246,
+                "bottom": 670,
+                "width": 286,
+                "height": 580
+              },
+              "clientWidth": 284,
+              "clientHeight": 578,
+              "scrollWidth": 284,
+              "scrollHeight": 578,
+              "scrollTop": 0,
+              "scrollLeft": 0
+            }
+          }
+        ]
+      },
+      "wallSeconds": 7.4918929819999995
+    }
+  ],
+  "layouts": [
+    {
+      "requestedPhase": "menu",
+      "requestedLanguage": "en",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "language": "en",
+      "phase": "menu",
+      "page": {
+        "scrollWidth": 960,
+        "scrollHeight": 540,
+        "bodyScrollWidth": 960,
+        "bodyScrollHeight": 540
+      },
+      "sidebar": {
+        "box": {
+          "left": 653,
+          "top": 66,
+          "right": 939,
+          "bottom": 503,
+          "width": 286,
+          "height": 437
+        },
+        "clientWidth": 284,
+        "clientHeight": 435,
+        "scrollWidth": 284,
+        "scrollHeight": 435,
+        "scrollTop": 0,
+        "scrollLeft": 0
+      },
+      "qr": {
+        "box": {
+          "left": 672,
+          "top": 85,
+          "right": 794,
+          "bottom": 207,
+          "width": 122,
+          "height": 122
+        },
+        "visible": true,
+        "loaded": true
+      },
+      "texts": [
+        {
+          "text": "PHONE CONTROLLER",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 810,
+              "top": 111.5,
+              "right": 925.78125,
+              "bottom": 122.5
+            }
+          ]
+        },
+        {
+          "text": "LOCAL",
+          "parent": "room-status",
+          "rects": [
+            {
+              "left": 816,
+              "top": 134.5,
+              "right": 845.515625,
+              "bottom": 144.5
+            }
+          ]
+        },
+        {
+          "text": "http://192.0.2.1:1234/controller.html",
+          "parent": "room-address",
+          "rects": [
+            {
+              "left": 810,
+              "top": 155.5,
+              "right": 926.765625,
+              "bottom": 166.5
+            },
+            {
+              "left": 810,
+              "top": 169.5,
+              "right": 850.015625,
+              "bottom": 180.5
+            }
+          ]
+        },
+        {
+          "text": "CONTROLS",
+          "parent": "H3",
+          "rects": [
+            {
+              "left": 665,
+              "top": 231,
+              "right": 732.34375,
+              "bottom": 245
+            }
+          ]
+        },
+        {
+          "text": "↔",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 672,
+              "top": 259.59375,
+              "right": 684,
+              "bottom": 273.59375
+            }
+          ]
+        },
+        {
+          "text": "← → steer · ↓ brake · auto throttle",
+          "parent": "move-help",
+          "rects": [
+            {
+              "left": 699,
+              "top": 258.890625,
+              "right": 880.40625,
+              "bottom": 272.890625
+            }
+          ]
+        },
+        {
+          "text": "A",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 673.984375,
+              "top": 293.59375,
+              "right": 682,
+              "bottom": 307.59375
+            }
+          ]
+        },
+        {
+          "text": "Hold Shift / Space / OK to drift",
+          "parent": "a-help",
+          "rects": [
+            {
+              "left": 699,
+              "top": 292.890625,
+              "right": 859.078125,
+              "bottom": 306.890625
+            }
+          ]
+        },
+        {
+          "text": "B",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 673.984375,
+              "top": 327.59375,
+              "right": 682,
+              "bottom": 341.59375
+            }
+          ]
+        },
+        {
+          "text": "B / Ctrl / remote Menu: nitro",
+          "parent": "b-help",
+          "rects": [
+            {
+              "left": 699,
+              "top": 326.890625,
+              "right": 846.390625,
+              "bottom": 340.890625
+            }
+          ]
+        },
+        {
+          "text": "P pause · R restart · Enter start / hold to drift",
+          "parent": "small-help",
+          "rects": [
+            {
+              "left": 665,
+              "top": 359.59375,
+              "right": 881.21875,
+              "bottom": 371.59375
+            }
+          ]
+        },
+        {
+          "text": "RACE TIP",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 673,
+              "top": 392.09375,
+              "right": 723.671875,
+              "bottom": 403.09375
+            }
+          ]
+        },
+        {
+          "text": "Brake before a corner, then drift. Pass every checkpoint in order.",
+          "parent": "tip",
+          "rects": [
+            {
+              "left": 728.671875,
+              "top": 391.09375,
+              "right": 913.9375,
+              "bottom": 403.09375
+            },
+            {
+              "left": 673,
+              "top": 406.484375,
+              "right": 798.359375,
+              "bottom": 418.484375
+            }
+          ]
+        }
+      ],
+      "controls": [
+        {
+          "selector": ".side-heading .eyebrow",
+          "visible": true,
+          "text": "PHONE CONTROLLER",
+          "box": {
+            "left": 810,
+            "top": 109.5,
+            "right": 925.78125,
+            "bottom": 124.5,
+            "width": 115.78125,
+            "height": 15
+          }
+        },
+        {
+          "selector": "#room-address",
+          "visible": true,
+          "text": "http://192.0.2.1:1234/controller.html",
+          "box": {
+            "left": 810,
+            "top": 154.5,
+            "right": 927,
+            "bottom": 182.5,
+            "width": 117,
+            "height": 28
+          }
+        },
+        {
+          "selector": "aside h3",
+          "visible": true,
+          "text": "CONTROLS",
+          "box": {
+            "left": 665,
+            "top": 231,
+            "right": 927,
+            "bottom": 246.59375,
+            "width": 262,
+            "height": 15.59375
+          }
+        },
+        {
+          "selector": "#move-help",
+          "visible": true,
+          "text": "← → steer · ↓ brake · auto throttle",
+          "box": {
+            "left": 699,
+            "top": 257.890625,
+            "right": 880.40625,
+            "bottom": 275.28125,
+            "width": 181.40625,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#a-help",
+          "visible": true,
+          "text": "Hold Shift / Space / OK to drift",
+          "box": {
+            "left": 699,
+            "top": 291.890625,
+            "right": 859.078125,
+            "bottom": 309.28125,
+            "width": 160.078125,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#b-help",
+          "visible": true,
+          "text": "B / Ctrl / remote Menu: nitro",
+          "box": {
+            "left": 699,
+            "top": 325.890625,
+            "right": 846.390625,
+            "bottom": 343.28125,
+            "width": 147.390625,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "aside .small-help",
+          "visible": true,
+          "text": "P pause · R restart · Enter start / hold to drift",
+          "box": {
+            "left": 665,
+            "top": 357.59375,
+            "right": 927,
+            "bottom": 374.09375,
+            "width": 262,
+            "height": 16.5
+          }
+        },
+        {
+          "selector": "#tip",
+          "visible": true,
+          "text": "Brake before a corner, then drift. Pass every checkpoint in order.",
+          "box": {
+            "left": 673,
+            "top": 391.09375,
+            "right": 913.9375,
+            "bottom": 418.484375,
+            "width": 240.9375,
+            "height": 27.390625
+          }
+        },
+        {
+          "selector": "#primary",
+          "visible": true,
+          "text": "START RACE · ENTER",
+          "box": {
+            "left": 61,
+            "top": 359.296875,
+            "right": 483,
+            "bottom": 400.296875,
+            "width": 422,
+            "height": 41
+          }
+        },
+        {
+          "selector": "#dialog-title",
+          "visible": true,
+          "text": "Neon Rush",
+          "box": {
+            "left": 61,
+            "top": 167.796875,
+            "right": 483,
+            "bottom": 204.515625,
+            "width": 422,
+            "height": 36.71875
+          }
+        },
+        {
+          "selector": "#rush-language-button",
+          "visible": true,
+          "text": "中文",
+          "box": {
+            "left": 907,
+            "top": 14,
+            "right": 947,
+            "bottom": 45,
+            "width": 40,
+            "height": 31
+          }
+        }
+      ]
+    },
+    {
+      "requestedPhase": "menu",
+      "requestedLanguage": "en",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "language": "en",
+      "phase": "menu",
+      "page": {
+        "scrollWidth": 1280,
+        "scrollHeight": 720,
+        "bodyScrollWidth": 1280,
+        "bodyScrollHeight": 720
+      },
+      "sidebar": {
+        "box": {
+          "left": 960,
+          "top": 90,
+          "right": 1246,
+          "bottom": 670,
+          "width": 286,
+          "height": 580
+        },
+        "clientWidth": 284,
+        "clientHeight": 578,
+        "scrollWidth": 284,
+        "scrollHeight": 578,
+        "scrollTop": 0,
+        "scrollLeft": 0
+      },
+      "qr": {
+        "box": {
+          "left": 982,
+          "top": 112,
+          "right": 1104,
+          "bottom": 234,
+          "width": 122,
+          "height": 122
+        },
+        "visible": true,
+        "loaded": true
+      },
+      "texts": [
+        {
+          "text": "PHONE CONTROLLER",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 1121,
+              "top": 127.5,
+              "right": 1159.0625,
+              "bottom": 138.5
+            },
+            {
+              "left": 1121,
+              "top": 142.5,
+              "right": 1195.453125,
+              "bottom": 153.5
+            }
+          ]
+        },
+        {
+          "text": "LOCAL",
+          "parent": "room-status",
+          "rects": [
+            {
+              "left": 1127,
+              "top": 165.5,
+              "right": 1156.515625,
+              "bottom": 175.5
+            }
+          ]
+        },
+        {
+          "text": "http://192.0.2.1:1234/controller.html",
+          "parent": "room-address",
+          "rects": [
+            {
+              "left": 1121,
+              "top": 189.5,
+              "right": 1230.484375,
+              "bottom": 201.5
+            },
+            {
+              "left": 1121,
+              "top": 206,
+              "right": 1183.984375,
+              "bottom": 218
+            }
+          ]
+        },
+        {
+          "text": "CONTROLS",
+          "parent": "H3",
+          "rects": [
+            {
+              "left": 975,
+              "top": 264,
+              "right": 1047.953125,
+              "bottom": 279
+            }
+          ]
+        },
+        {
+          "text": "↔",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 982,
+              "top": 296.890625,
+              "right": 994,
+              "bottom": 310.890625
+            }
+          ]
+        },
+        {
+          "text": "← → steer · ↓ brake · auto throttle",
+          "parent": "move-help",
+          "rects": [
+            {
+              "left": 1009,
+              "top": 296.1875,
+              "right": 1190.40625,
+              "bottom": 310.1875
+            }
+          ]
+        },
+        {
+          "text": "A",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 983.984375,
+              "top": 332.890625,
+              "right": 992,
+              "bottom": 346.890625
+            }
+          ]
+        },
+        {
+          "text": "Hold Shift / Space / OK to drift",
+          "parent": "a-help",
+          "rects": [
+            {
+              "left": 1009,
+              "top": 332.1875,
+              "right": 1169.078125,
+              "bottom": 346.1875
+            }
+          ]
+        },
+        {
+          "text": "B",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 983.984375,
+              "top": 368.890625,
+              "right": 992,
+              "bottom": 382.890625
+            }
+          ]
+        },
+        {
+          "text": "B / Ctrl / remote Menu: nitro",
+          "parent": "b-help",
+          "rects": [
+            {
+              "left": 1009,
+              "top": 368.1875,
+              "right": 1156.390625,
+              "bottom": 382.1875
+            }
+          ]
+        },
+        {
+          "text": "P pause · R restart · Enter start / hold to drift",
+          "parent": "small-help",
+          "rects": [
+            {
+              "left": 975,
+              "top": 403.890625,
+              "right": 1191.21875,
+              "bottom": 415.890625
+            }
+          ]
+        },
+        {
+          "text": "RACE TIP",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 985,
+              "top": 441.390625,
+              "right": 1035.671875,
+              "bottom": 452.390625
+            }
+          ]
+        },
+        {
+          "text": "Brake before a corner, then drift. Pass every checkpoint in order.",
+          "parent": "tip",
+          "rects": [
+            {
+              "left": 1040.671875,
+              "top": 440.390625,
+              "right": 1198.4375,
+              "bottom": 452.390625
+            },
+            {
+              "left": 985,
+              "top": 456.890625,
+              "right": 1137.859375,
+              "bottom": 468.890625
+            }
+          ]
+        }
+      ],
+      "controls": [
+        {
+          "selector": ".side-heading .eyebrow",
+          "visible": true,
+          "text": "PHONE CONTROLLER",
+          "box": {
+            "left": 1121,
+            "top": 125.5,
+            "right": 1231,
+            "bottom": 155.5,
+            "width": 110,
+            "height": 30
+          }
+        },
+        {
+          "selector": "#room-address",
+          "visible": true,
+          "text": "http://192.0.2.1:1234/controller.html",
+          "box": {
+            "left": 1121,
+            "top": 187.5,
+            "right": 1231,
+            "bottom": 220.5,
+            "width": 110,
+            "height": 33
+          }
+        },
+        {
+          "selector": "aside h3",
+          "visible": true,
+          "text": "CONTROLS",
+          "box": {
+            "left": 975,
+            "top": 264,
+            "right": 1231,
+            "bottom": 280.890625,
+            "width": 256,
+            "height": 16.890625
+          }
+        },
+        {
+          "selector": "#move-help",
+          "visible": true,
+          "text": "← → steer · ↓ brake · auto throttle",
+          "box": {
+            "left": 1009,
+            "top": 295.1875,
+            "right": 1190.40625,
+            "bottom": 312.578125,
+            "width": 181.40625,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#a-help",
+          "visible": true,
+          "text": "Hold Shift / Space / OK to drift",
+          "box": {
+            "left": 1009,
+            "top": 331.1875,
+            "right": 1169.078125,
+            "bottom": 348.578125,
+            "width": 160.078125,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#b-help",
+          "visible": true,
+          "text": "B / Ctrl / remote Menu: nitro",
+          "box": {
+            "left": 1009,
+            "top": 367.1875,
+            "right": 1156.390625,
+            "bottom": 384.578125,
+            "width": 147.390625,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "aside .small-help",
+          "visible": true,
+          "text": "P pause · R restart · Enter start / hold to drift",
+          "box": {
+            "left": 975,
+            "top": 401.890625,
+            "right": 1231,
+            "bottom": 418.390625,
+            "width": 256,
+            "height": 16.5
+          }
+        },
+        {
+          "selector": "#tip",
+          "visible": true,
+          "text": "Brake before a corner, then drift. Pass every checkpoint in order.",
+          "box": {
+            "left": 985,
+            "top": 440.390625,
+            "right": 1198.4375,
+            "bottom": 468.890625,
+            "width": 213.4375,
+            "height": 28.5
+          }
+        },
+        {
+          "selector": "#primary",
+          "visible": true,
+          "text": "START RACE · ENTER",
+          "box": {
+            "left": 84,
+            "top": 474.640625,
+            "right": 516,
+            "bottom": 523.640625,
+            "width": 432,
+            "height": 49
+          }
+        },
+        {
+          "selector": "#dialog-title",
+          "visible": true,
+          "text": "Neon Rush",
+          "box": {
+            "left": 84,
+            "top": 235.3125,
+            "right": 516,
+            "bottom": 280.671875,
+            "width": 432,
+            "height": 45.359375
+          }
+        },
+        {
+          "selector": "#rush-language-button",
+          "visible": true,
+          "text": "中文",
+          "box": {
+            "left": 1211.984375,
+            "top": 23.5,
+            "right": 1258,
+            "bottom": 58.5,
+            "width": 46.015625,
+            "height": 35
+          }
+        }
+      ]
+    },
+    {
+      "requestedPhase": "paused",
+      "requestedLanguage": "en",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "language": "en",
+      "phase": "paused",
+      "page": {
+        "scrollWidth": 960,
+        "scrollHeight": 540,
+        "bodyScrollWidth": 960,
+        "bodyScrollHeight": 540
+      },
+      "sidebar": {
+        "box": {
+          "left": 653,
+          "top": 66,
+          "right": 939,
+          "bottom": 503,
+          "width": 286,
+          "height": 437
+        },
+        "clientWidth": 284,
+        "clientHeight": 435,
+        "scrollWidth": 284,
+        "scrollHeight": 435,
+        "scrollTop": 0,
+        "scrollLeft": 0
+      },
+      "qr": {
+        "box": {
+          "left": 672,
+          "top": 85,
+          "right": 794,
+          "bottom": 207,
+          "width": 122,
+          "height": 122
+        },
+        "visible": true,
+        "loaded": true
+      },
+      "texts": [
+        {
+          "text": "PHONE CONTROLLER",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 810,
+              "top": 111.5,
+              "right": 925.78125,
+              "bottom": 122.5
+            }
+          ]
+        },
+        {
+          "text": "LOCAL",
+          "parent": "room-status",
+          "rects": [
+            {
+              "left": 816,
+              "top": 134.5,
+              "right": 845.515625,
+              "bottom": 144.5
+            }
+          ]
+        },
+        {
+          "text": "http://192.0.2.1:1234/controller.html",
+          "parent": "room-address",
+          "rects": [
+            {
+              "left": 810,
+              "top": 155.5,
+              "right": 926.765625,
+              "bottom": 166.5
+            },
+            {
+              "left": 810,
+              "top": 169.5,
+              "right": 850.015625,
+              "bottom": 180.5
+            }
+          ]
+        },
+        {
+          "text": "CONTROLS",
+          "parent": "H3",
+          "rects": [
+            {
+              "left": 665,
+              "top": 231,
+              "right": 732.34375,
+              "bottom": 245
+            }
+          ]
+        },
+        {
+          "text": "↔",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 672,
+              "top": 259.59375,
+              "right": 684,
+              "bottom": 273.59375
+            }
+          ]
+        },
+        {
+          "text": "← → steer · ↓ brake · auto throttle",
+          "parent": "move-help",
+          "rects": [
+            {
+              "left": 699,
+              "top": 258.890625,
+              "right": 880.40625,
+              "bottom": 272.890625
+            }
+          ]
+        },
+        {
+          "text": "A",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 673.984375,
+              "top": 293.59375,
+              "right": 682,
+              "bottom": 307.59375
+            }
+          ]
+        },
+        {
+          "text": "Hold Shift / Space / OK to drift",
+          "parent": "a-help",
+          "rects": [
+            {
+              "left": 699,
+              "top": 292.890625,
+              "right": 859.078125,
+              "bottom": 306.890625
+            }
+          ]
+        },
+        {
+          "text": "B",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 673.984375,
+              "top": 327.59375,
+              "right": 682,
+              "bottom": 341.59375
+            }
+          ]
+        },
+        {
+          "text": "B / Ctrl / remote Menu: nitro",
+          "parent": "b-help",
+          "rects": [
+            {
+              "left": 699,
+              "top": 326.890625,
+              "right": 846.390625,
+              "bottom": 340.890625
+            }
+          ]
+        },
+        {
+          "text": "P pause · R restart · Enter start / hold to drift",
+          "parent": "small-help",
+          "rects": [
+            {
+              "left": 665,
+              "top": 359.59375,
+              "right": 881.21875,
+              "bottom": 371.59375
+            }
+          ]
+        },
+        {
+          "text": "RACE TIP",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 673,
+              "top": 392.09375,
+              "right": 723.671875,
+              "bottom": 403.09375
+            }
+          ]
+        },
+        {
+          "text": "Brake before a corner, then drift. Pass every checkpoint in order.",
+          "parent": "tip",
+          "rects": [
+            {
+              "left": 728.671875,
+              "top": 391.09375,
+              "right": 913.9375,
+              "bottom": 403.09375
+            },
+            {
+              "left": 673,
+              "top": 406.484375,
+              "right": 798.359375,
+              "bottom": 418.484375
+            }
+          ]
+        }
+      ],
+      "controls": [
+        {
+          "selector": ".side-heading .eyebrow",
+          "visible": true,
+          "text": "PHONE CONTROLLER",
+          "box": {
+            "left": 810,
+            "top": 109.5,
+            "right": 925.78125,
+            "bottom": 124.5,
+            "width": 115.78125,
+            "height": 15
+          }
+        },
+        {
+          "selector": "#room-address",
+          "visible": true,
+          "text": "http://192.0.2.1:1234/controller.html",
+          "box": {
+            "left": 810,
+            "top": 154.5,
+            "right": 927,
+            "bottom": 182.5,
+            "width": 117,
+            "height": 28
+          }
+        },
+        {
+          "selector": "aside h3",
+          "visible": true,
+          "text": "CONTROLS",
+          "box": {
+            "left": 665,
+            "top": 231,
+            "right": 927,
+            "bottom": 246.59375,
+            "width": 262,
+            "height": 15.59375
+          }
+        },
+        {
+          "selector": "#move-help",
+          "visible": true,
+          "text": "← → steer · ↓ brake · auto throttle",
+          "box": {
+            "left": 699,
+            "top": 257.890625,
+            "right": 880.40625,
+            "bottom": 275.28125,
+            "width": 181.40625,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#a-help",
+          "visible": true,
+          "text": "Hold Shift / Space / OK to drift",
+          "box": {
+            "left": 699,
+            "top": 291.890625,
+            "right": 859.078125,
+            "bottom": 309.28125,
+            "width": 160.078125,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#b-help",
+          "visible": true,
+          "text": "B / Ctrl / remote Menu: nitro",
+          "box": {
+            "left": 699,
+            "top": 325.890625,
+            "right": 846.390625,
+            "bottom": 343.28125,
+            "width": 147.390625,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "aside .small-help",
+          "visible": true,
+          "text": "P pause · R restart · Enter start / hold to drift",
+          "box": {
+            "left": 665,
+            "top": 357.59375,
+            "right": 927,
+            "bottom": 374.09375,
+            "width": 262,
+            "height": 16.5
+          }
+        },
+        {
+          "selector": "#tip",
+          "visible": true,
+          "text": "Brake before a corner, then drift. Pass every checkpoint in order.",
+          "box": {
+            "left": 673,
+            "top": 391.09375,
+            "right": 913.9375,
+            "bottom": 418.484375,
+            "width": 240.9375,
+            "height": 27.390625
+          }
+        },
+        {
+          "selector": "#primary",
+          "visible": true,
+          "text": "RESUME · P",
+          "box": {
+            "left": 61,
+            "top": 299.703125,
+            "right": 483,
+            "bottom": 340.703125,
+            "width": 422,
+            "height": 41
+          }
+        },
+        {
+          "selector": "#dialog-title",
+          "visible": true,
+          "text": "Paused",
+          "box": {
+            "left": 61,
+            "top": 227.390625,
+            "right": 483,
+            "bottom": 264.109375,
+            "width": 422,
+            "height": 36.71875
+          }
+        },
+        {
+          "selector": "#rush-language-button",
+          "visible": true,
+          "text": "中文",
+          "box": {
+            "left": 907,
+            "top": 14,
+            "right": 947,
+            "bottom": 45,
+            "width": 40,
+            "height": 31
+          }
+        }
+      ]
+    },
+    {
+      "requestedPhase": "paused",
+      "requestedLanguage": "en",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "language": "en",
+      "phase": "paused",
+      "page": {
+        "scrollWidth": 1280,
+        "scrollHeight": 720,
+        "bodyScrollWidth": 1280,
+        "bodyScrollHeight": 720
+      },
+      "sidebar": {
+        "box": {
+          "left": 960,
+          "top": 90,
+          "right": 1246,
+          "bottom": 670,
+          "width": 286,
+          "height": 580
+        },
+        "clientWidth": 284,
+        "clientHeight": 578,
+        "scrollWidth": 284,
+        "scrollHeight": 578,
+        "scrollTop": 0,
+        "scrollLeft": 0
+      },
+      "qr": {
+        "box": {
+          "left": 982,
+          "top": 112,
+          "right": 1104,
+          "bottom": 234,
+          "width": 122,
+          "height": 122
+        },
+        "visible": true,
+        "loaded": true
+      },
+      "texts": [
+        {
+          "text": "PHONE CONTROLLER",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 1121,
+              "top": 127.5,
+              "right": 1159.0625,
+              "bottom": 138.5
+            },
+            {
+              "left": 1121,
+              "top": 142.5,
+              "right": 1195.453125,
+              "bottom": 153.5
+            }
+          ]
+        },
+        {
+          "text": "LOCAL",
+          "parent": "room-status",
+          "rects": [
+            {
+              "left": 1127,
+              "top": 165.5,
+              "right": 1156.515625,
+              "bottom": 175.5
+            }
+          ]
+        },
+        {
+          "text": "http://192.0.2.1:1234/controller.html",
+          "parent": "room-address",
+          "rects": [
+            {
+              "left": 1121,
+              "top": 189.5,
+              "right": 1230.484375,
+              "bottom": 201.5
+            },
+            {
+              "left": 1121,
+              "top": 206,
+              "right": 1183.984375,
+              "bottom": 218
+            }
+          ]
+        },
+        {
+          "text": "CONTROLS",
+          "parent": "H3",
+          "rects": [
+            {
+              "left": 975,
+              "top": 264,
+              "right": 1047.953125,
+              "bottom": 279
+            }
+          ]
+        },
+        {
+          "text": "↔",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 982,
+              "top": 296.890625,
+              "right": 994,
+              "bottom": 310.890625
+            }
+          ]
+        },
+        {
+          "text": "← → steer · ↓ brake · auto throttle",
+          "parent": "move-help",
+          "rects": [
+            {
+              "left": 1009,
+              "top": 296.1875,
+              "right": 1190.40625,
+              "bottom": 310.1875
+            }
+          ]
+        },
+        {
+          "text": "A",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 983.984375,
+              "top": 332.890625,
+              "right": 992,
+              "bottom": 346.890625
+            }
+          ]
+        },
+        {
+          "text": "Hold Shift / Space / OK to drift",
+          "parent": "a-help",
+          "rects": [
+            {
+              "left": 1009,
+              "top": 332.1875,
+              "right": 1169.078125,
+              "bottom": 346.1875
+            }
+          ]
+        },
+        {
+          "text": "B",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 983.984375,
+              "top": 368.890625,
+              "right": 992,
+              "bottom": 382.890625
+            }
+          ]
+        },
+        {
+          "text": "B / Ctrl / remote Menu: nitro",
+          "parent": "b-help",
+          "rects": [
+            {
+              "left": 1009,
+              "top": 368.1875,
+              "right": 1156.390625,
+              "bottom": 382.1875
+            }
+          ]
+        },
+        {
+          "text": "P pause · R restart · Enter start / hold to drift",
+          "parent": "small-help",
+          "rects": [
+            {
+              "left": 975,
+              "top": 403.890625,
+              "right": 1191.21875,
+              "bottom": 415.890625
+            }
+          ]
+        },
+        {
+          "text": "RACE TIP",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 985,
+              "top": 441.390625,
+              "right": 1035.671875,
+              "bottom": 452.390625
+            }
+          ]
+        },
+        {
+          "text": "Brake before a corner, then drift. Pass every checkpoint in order.",
+          "parent": "tip",
+          "rects": [
+            {
+              "left": 1040.671875,
+              "top": 440.390625,
+              "right": 1198.4375,
+              "bottom": 452.390625
+            },
+            {
+              "left": 985,
+              "top": 456.890625,
+              "right": 1137.859375,
+              "bottom": 468.890625
+            }
+          ]
+        }
+      ],
+      "controls": [
+        {
+          "selector": ".side-heading .eyebrow",
+          "visible": true,
+          "text": "PHONE CONTROLLER",
+          "box": {
+            "left": 1121,
+            "top": 125.5,
+            "right": 1231,
+            "bottom": 155.5,
+            "width": 110,
+            "height": 30
+          }
+        },
+        {
+          "selector": "#room-address",
+          "visible": true,
+          "text": "http://192.0.2.1:1234/controller.html",
+          "box": {
+            "left": 1121,
+            "top": 187.5,
+            "right": 1231,
+            "bottom": 220.5,
+            "width": 110,
+            "height": 33
+          }
+        },
+        {
+          "selector": "aside h3",
+          "visible": true,
+          "text": "CONTROLS",
+          "box": {
+            "left": 975,
+            "top": 264,
+            "right": 1231,
+            "bottom": 280.890625,
+            "width": 256,
+            "height": 16.890625
+          }
+        },
+        {
+          "selector": "#move-help",
+          "visible": true,
+          "text": "← → steer · ↓ brake · auto throttle",
+          "box": {
+            "left": 1009,
+            "top": 295.1875,
+            "right": 1190.40625,
+            "bottom": 312.578125,
+            "width": 181.40625,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#a-help",
+          "visible": true,
+          "text": "Hold Shift / Space / OK to drift",
+          "box": {
+            "left": 1009,
+            "top": 331.1875,
+            "right": 1169.078125,
+            "bottom": 348.578125,
+            "width": 160.078125,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#b-help",
+          "visible": true,
+          "text": "B / Ctrl / remote Menu: nitro",
+          "box": {
+            "left": 1009,
+            "top": 367.1875,
+            "right": 1156.390625,
+            "bottom": 384.578125,
+            "width": 147.390625,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "aside .small-help",
+          "visible": true,
+          "text": "P pause · R restart · Enter start / hold to drift",
+          "box": {
+            "left": 975,
+            "top": 401.890625,
+            "right": 1231,
+            "bottom": 418.390625,
+            "width": 256,
+            "height": 16.5
+          }
+        },
+        {
+          "selector": "#tip",
+          "visible": true,
+          "text": "Brake before a corner, then drift. Pass every checkpoint in order.",
+          "box": {
+            "left": 985,
+            "top": 440.390625,
+            "right": 1198.4375,
+            "bottom": 468.890625,
+            "width": 213.4375,
+            "height": 28.5
+          }
+        },
+        {
+          "selector": "#primary",
+          "visible": true,
+          "text": "RESUME · P",
+          "box": {
+            "left": 84,
+            "top": 402.046875,
+            "right": 516,
+            "bottom": 451.046875,
+            "width": 432,
+            "height": 49
+          }
+        },
+        {
+          "selector": "#dialog-title",
+          "visible": true,
+          "text": "Paused",
+          "box": {
+            "left": 84,
+            "top": 307.890625,
+            "right": 516,
+            "bottom": 353.25,
+            "width": 432,
+            "height": 45.359375
+          }
+        },
+        {
+          "selector": "#rush-language-button",
+          "visible": true,
+          "text": "中文",
+          "box": {
+            "left": 1211.984375,
+            "top": 23.5,
+            "right": 1258,
+            "bottom": 58.5,
+            "width": 46.015625,
+            "height": 35
+          }
+        }
+      ]
+    },
+    {
+      "requestedPhase": "menu",
+      "requestedLanguage": "zh",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "language": "zh-CN",
+      "phase": "menu",
+      "page": {
+        "scrollWidth": 960,
+        "scrollHeight": 540,
+        "bodyScrollWidth": 960,
+        "bodyScrollHeight": 540
+      },
+      "sidebar": {
+        "box": {
+          "left": 653,
+          "top": 66,
+          "right": 939,
+          "bottom": 503,
+          "width": 286,
+          "height": 437
+        },
+        "clientWidth": 284,
+        "clientHeight": 435,
+        "scrollWidth": 284,
+        "scrollHeight": 435,
+        "scrollTop": 0,
+        "scrollLeft": 0
+      },
+      "qr": {
+        "box": {
+          "left": 672,
+          "top": 85,
+          "right": 794,
+          "bottom": 207,
+          "width": 122,
+          "height": 122
+        },
+        "visible": true,
+        "loaded": true
+      },
+      "texts": [
+        {
+          "text": "手机就是手柄",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 810,
+              "top": 124,
+              "right": 873,
+              "bottom": 135
+            }
+          ]
+        },
+        {
+          "text": "LOCAL",
+          "parent": "room-status",
+          "rects": [
+            {
+              "left": 884,
+              "top": 124.5,
+              "right": 913.515625,
+              "bottom": 134.5
+            }
+          ]
+        },
+        {
+          "text": "http://192.0.2.1:1234/controller.html",
+          "parent": "room-address",
+          "rects": [
+            {
+              "left": 810,
+              "top": 145.5,
+              "right": 926.765625,
+              "bottom": 156.5
+            },
+            {
+              "left": 810,
+              "top": 159.5,
+              "right": 850.015625,
+              "bottom": 170.5
+            }
+          ]
+        },
+        {
+          "text": "怎么操作",
+          "parent": "H3",
+          "rects": [
+            {
+              "left": 665,
+              "top": 231,
+              "right": 713.015625,
+              "bottom": 245
+            }
+          ]
+        },
+        {
+          "text": "↔",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 672,
+              "top": 259.59375,
+              "right": 684,
+              "bottom": 273.59375
+            }
+          ]
+        },
+        {
+          "text": "← → 转向，↓ 刹车；自动油门",
+          "parent": "move-help",
+          "rects": [
+            {
+              "left": 699,
+              "top": 258.890625,
+              "right": 859.015625,
+              "bottom": 272.890625
+            }
+          ]
+        },
+        {
+          "text": "A",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 673.984375,
+              "top": 293.59375,
+              "right": 682,
+              "bottom": 307.59375
+            }
+          ]
+        },
+        {
+          "text": "Shift / 空格 / 确认：按住漂移",
+          "parent": "a-help",
+          "rects": [
+            {
+              "left": 699,
+              "top": 292.890625,
+              "right": 851.03125,
+              "bottom": 306.890625
+            }
+          ]
+        },
+        {
+          "text": "B",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 673.984375,
+              "top": 327.59375,
+              "right": 682,
+              "bottom": 341.59375
+            }
+          ]
+        },
+        {
+          "text": "B / Ctrl / 遥控器菜单键：氮气",
+          "parent": "b-help",
+          "rects": [
+            {
+              "left": 699,
+              "top": 326.890625,
+              "right": 853.671875,
+              "bottom": 340.890625
+            }
+          ]
+        },
+        {
+          "text": "P 暂停 · R 重开 · 确认开始 / 按住漂移",
+          "parent": "small-help",
+          "rects": [
+            {
+              "left": 665,
+              "top": 359.59375,
+              "right": 846.921875,
+              "bottom": 371.59375
+            }
+          ]
+        },
+        {
+          "text": "小提示",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 673,
+              "top": 392.09375,
+              "right": 704.5,
+              "bottom": 403.09375
+            }
+          ]
+        },
+        {
+          "text": "弯前减速，入弯再按漂移。每个检查点都要按顺序经过。",
+          "parent": "tip",
+          "rects": [
+            {
+              "left": 709.5,
+              "top": 391.09375,
+              "right": 918.5,
+              "bottom": 403.09375
+            },
+            {
+              "left": 673,
+              "top": 406.484375,
+              "right": 739,
+              "bottom": 418.484375
+            }
+          ]
+        }
+      ],
+      "controls": [
+        {
+          "selector": ".side-heading .eyebrow",
+          "visible": true,
+          "text": "手机就是手柄",
+          "box": {
+            "left": 810,
+            "top": 122,
+            "right": 873,
+            "bottom": 137,
+            "width": 63,
+            "height": 15
+          }
+        },
+        {
+          "selector": "#room-address",
+          "visible": true,
+          "text": "http://192.0.2.1:1234/controller.html",
+          "box": {
+            "left": 810,
+            "top": 144.5,
+            "right": 927,
+            "bottom": 172.5,
+            "width": 117,
+            "height": 28
+          }
+        },
+        {
+          "selector": "aside h3",
+          "visible": true,
+          "text": "怎么操作",
+          "box": {
+            "left": 665,
+            "top": 231,
+            "right": 927,
+            "bottom": 246.59375,
+            "width": 262,
+            "height": 15.59375
+          }
+        },
+        {
+          "selector": "#move-help",
+          "visible": true,
+          "text": "← → 转向，↓ 刹车；自动油门",
+          "box": {
+            "left": 699,
+            "top": 257.890625,
+            "right": 859.015625,
+            "bottom": 275.28125,
+            "width": 160.015625,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#a-help",
+          "visible": true,
+          "text": "Shift / 空格 / 确认：按住漂移",
+          "box": {
+            "left": 699,
+            "top": 291.890625,
+            "right": 851.03125,
+            "bottom": 309.28125,
+            "width": 152.03125,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#b-help",
+          "visible": true,
+          "text": "B / Ctrl / 遥控器菜单键：氮气",
+          "box": {
+            "left": 699,
+            "top": 325.890625,
+            "right": 853.671875,
+            "bottom": 343.28125,
+            "width": 154.671875,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "aside .small-help",
+          "visible": true,
+          "text": "P 暂停 · R 重开 · 确认开始 / 按住漂移",
+          "box": {
+            "left": 665,
+            "top": 357.59375,
+            "right": 927,
+            "bottom": 374.09375,
+            "width": 262,
+            "height": 16.5
+          }
+        },
+        {
+          "selector": "#tip",
+          "visible": true,
+          "text": "弯前减速，入弯再按漂移。每个检查点都要按顺序经过。",
+          "box": {
+            "left": 673,
+            "top": 391.09375,
+            "right": 918.5,
+            "bottom": 418.484375,
+            "width": 245.5,
+            "height": 27.390625
+          }
+        },
+        {
+          "selector": "#primary",
+          "visible": true,
+          "text": "开始竞速 · ENTER",
+          "box": {
+            "left": 61,
+            "top": 356,
+            "right": 483,
+            "bottom": 398,
+            "width": 422,
+            "height": 42
+          }
+        },
+        {
+          "selector": "#dialog-title",
+          "visible": true,
+          "text": "霓虹飞车",
+          "box": {
+            "left": 61,
+            "top": 170.09375,
+            "right": 483,
+            "bottom": 206.8125,
+            "width": 422,
+            "height": 36.71875
+          }
+        },
+        {
+          "selector": "#rush-language-button",
+          "visible": true,
+          "text": "EN",
+          "box": {
+            "left": 907,
+            "top": 14,
+            "right": 947,
+            "bottom": 45,
+            "width": 40,
+            "height": 31
+          }
+        }
+      ]
+    },
+    {
+      "requestedPhase": "menu",
+      "requestedLanguage": "zh",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "language": "zh-CN",
+      "phase": "menu",
+      "page": {
+        "scrollWidth": 1280,
+        "scrollHeight": 720,
+        "bodyScrollWidth": 1280,
+        "bodyScrollHeight": 720
+      },
+      "sidebar": {
+        "box": {
+          "left": 960,
+          "top": 90,
+          "right": 1246,
+          "bottom": 670,
+          "width": 286,
+          "height": 580
+        },
+        "clientWidth": 284,
+        "clientHeight": 578,
+        "scrollWidth": 284,
+        "scrollHeight": 578,
+        "scrollTop": 0,
+        "scrollLeft": 0
+      },
+      "qr": {
+        "box": {
+          "left": 982,
+          "top": 112,
+          "right": 1104,
+          "bottom": 234,
+          "width": 122,
+          "height": 122
+        },
+        "visible": true,
+        "loaded": true
+      },
+      "texts": [
+        {
+          "text": "手机就是手柄",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 1121,
+              "top": 147.5,
+              "right": 1184,
+              "bottom": 158.5
+            }
+          ]
+        },
+        {
+          "text": "LOCAL",
+          "parent": "room-status",
+          "rects": [
+            {
+              "left": 1195,
+              "top": 148,
+              "right": 1224.515625,
+              "bottom": 158
+            }
+          ]
+        },
+        {
+          "text": "http://192.0.2.1:1234/controller.html",
+          "parent": "room-address",
+          "rects": [
+            {
+              "left": 1121,
+              "top": 172,
+              "right": 1230.484375,
+              "bottom": 184
+            },
+            {
+              "left": 1121,
+              "top": 188.5,
+              "right": 1183.984375,
+              "bottom": 200.5
+            }
+          ]
+        },
+        {
+          "text": "怎么操作",
+          "parent": "H3",
+          "rects": [
+            {
+              "left": 975,
+              "top": 264,
+              "right": 1027.015625,
+              "bottom": 279
+            }
+          ]
+        },
+        {
+          "text": "↔",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 982,
+              "top": 296.890625,
+              "right": 994,
+              "bottom": 310.890625
+            }
+          ]
+        },
+        {
+          "text": "← → 转向，↓ 刹车；自动油门",
+          "parent": "move-help",
+          "rects": [
+            {
+              "left": 1009,
+              "top": 296.1875,
+              "right": 1169.015625,
+              "bottom": 310.1875
+            }
+          ]
+        },
+        {
+          "text": "A",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 983.984375,
+              "top": 332.890625,
+              "right": 992,
+              "bottom": 346.890625
+            }
+          ]
+        },
+        {
+          "text": "Shift / 空格 / 确认：按住漂移",
+          "parent": "a-help",
+          "rects": [
+            {
+              "left": 1009,
+              "top": 332.1875,
+              "right": 1161.03125,
+              "bottom": 346.1875
+            }
+          ]
+        },
+        {
+          "text": "B",
+          "parent": "key",
+          "rects": [
+            {
+              "left": 983.984375,
+              "top": 368.890625,
+              "right": 992,
+              "bottom": 382.890625
+            }
+          ]
+        },
+        {
+          "text": "B / Ctrl / 遥控器菜单键：氮气",
+          "parent": "b-help",
+          "rects": [
+            {
+              "left": 1009,
+              "top": 368.1875,
+              "right": 1163.671875,
+              "bottom": 382.1875
+            }
+          ]
+        },
+        {
+          "text": "P 暂停 · R 重开 · 确认开始 / 按住漂移",
+          "parent": "small-help",
+          "rects": [
+            {
+              "left": 975,
+              "top": 403.890625,
+              "right": 1156.921875,
+              "bottom": 415.890625
+            }
+          ]
+        },
+        {
+          "text": "小提示",
+          "parent": "eyebrow",
+          "rects": [
+            {
+              "left": 985,
+              "top": 441.390625,
+              "right": 1016.5,
+              "bottom": 452.390625
+            }
+          ]
+        },
+        {
+          "text": "弯前减速，入弯再按漂移。每个检查点都要按顺序经过。",
+          "parent": "tip",
+          "rects": [
+            {
+              "left": 1021.5,
+              "top": 440.390625,
+              "right": 1219.5,
+              "bottom": 452.390625
+            },
+            {
+              "left": 985,
+              "top": 456.890625,
+              "right": 1062,
+              "bottom": 468.890625
+            }
+          ]
+        }
+      ],
+      "controls": [
+        {
+          "selector": ".side-heading .eyebrow",
+          "visible": true,
+          "text": "手机就是手柄",
+          "box": {
+            "left": 1121,
+            "top": 145.5,
+            "right": 1184,
+            "bottom": 160.5,
+            "width": 63,
+            "height": 15
+          }
+        },
+        {
+          "selector": "#room-address",
+          "visible": true,
+          "text": "http://192.0.2.1:1234/controller.html",
+          "box": {
+            "left": 1121,
+            "top": 170,
+            "right": 1231,
+            "bottom": 203,
+            "width": 110,
+            "height": 33
+          }
+        },
+        {
+          "selector": "aside h3",
+          "visible": true,
+          "text": "怎么操作",
+          "box": {
+            "left": 975,
+            "top": 264,
+            "right": 1231,
+            "bottom": 280.890625,
+            "width": 256,
+            "height": 16.890625
+          }
+        },
+        {
+          "selector": "#move-help",
+          "visible": true,
+          "text": "← → 转向，↓ 刹车；自动油门",
+          "box": {
+            "left": 1009,
+            "top": 295.1875,
+            "right": 1169.015625,
+            "bottom": 312.578125,
+            "width": 160.015625,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#a-help",
+          "visible": true,
+          "text": "Shift / 空格 / 确认：按住漂移",
+          "box": {
+            "left": 1009,
+            "top": 331.1875,
+            "right": 1161.03125,
+            "bottom": 348.578125,
+            "width": 152.03125,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "#b-help",
+          "visible": true,
+          "text": "B / Ctrl / 遥控器菜单键：氮气",
+          "box": {
+            "left": 1009,
+            "top": 367.1875,
+            "right": 1163.671875,
+            "bottom": 384.578125,
+            "width": 154.671875,
+            "height": 17.390625
+          }
+        },
+        {
+          "selector": "aside .small-help",
+          "visible": true,
+          "text": "P 暂停 · R 重开 · 确认开始 / 按住漂移",
+          "box": {
+            "left": 975,
+            "top": 401.890625,
+            "right": 1231,
+            "bottom": 418.390625,
+            "width": 256,
+            "height": 16.5
+          }
+        },
+        {
+          "selector": "#tip",
+          "visible": true,
+          "text": "弯前减速，入弯再按漂移。每个检查点都要按顺序经过。",
+          "box": {
+            "left": 985,
+            "top": 440.390625,
+            "right": 1219.5,
+            "bottom": 468.890625,
+            "width": 234.5,
+            "height": 28.5
+          }
+        },
+        {
+          "selector": "#primary",
+          "visible": true,
+          "text": "开始竞速 · ENTER",
+          "box": {
+            "left": 84,
+            "top": 469.953125,
+            "right": 516,
+            "bottom": 519.953125,
+            "width": 432,
+            "height": 50
+          }
+        },
+        {
+          "selector": "#dialog-title",
+          "visible": true,
+          "text": "霓虹飞车",
+          "box": {
+            "left": 84,
+            "top": 239,
+            "right": 516,
+            "bottom": 284.359375,
+            "width": 432,
+            "height": 45.359375
+          }
+        },
+        {
+          "selector": "#rush-language-button",
+          "visible": true,
+          "text": "EN",
+          "box": {
+            "left": 1218,
+            "top": 23.5,
+            "right": 1258,
+            "bottom": 58.5,
+            "width": 40,
+            "height": 35
+          }
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "en-menu-960x540.png",
+    "en-menu-1280x720.png",
+    "en-playing-1280x720.png",
+    "en-paused-960x540.png",
+    "en-paused-1280x720.png",
+    "zh-menu-960x540.png",
+    "zh-menu-1280x720.png"
+  ],
+  "navigations": [
+    "https://game-kit.invalid/tv.html",
+    "https://game-kit.invalid/tv.html"
+  ],
+  "servedAssets": {
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "tv.css": "2572030056a405079866f27211f425c858c8c853cac2e699c58b85af69e03a6b",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "game-model.js": "f34fe5441f96b7bea33aa0e23fd12fa99ef9ee36b7e37a4448663d4468f8af13",
+    "game.js": "e15bbaafa794c28191c4f9255d5122ecab4a92d5775564b0d7322ce1b88afb27",
+    "runtime.js": "12c42c31b0afcfb502116a6dc26e3ac93ba08fa354bb5fbce6f51fb03befe0ce",
+    "game-config.json": "93d162537d8629cb59288646c917e20997d8462b39226745f03bf5ad0c618d2e",
+    "rush-theme.css": "b65c9b198ad76480eb86e481dc214e808e8629fdae9abd3bb51eb546f0135a73"
+  },
+  "visualReviewCompleted": false,
+  "browserErrors": {
+    "page": [],
+    "console": [],
+    "network": []
+  },
+  "finishedAt": "2026-11-11T12:18:50.502Z"
+}

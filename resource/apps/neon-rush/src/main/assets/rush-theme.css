@@ -1,0 +1,212 @@
+/* Neon Rush: original motorsport interface. No external fonts or image assets. */
+:root{
+  --accent:#ff784b;--rush-cyan:#7ae7f3;--bg:#09111f;--surface:#142236;
+  --muted:#a5b6c8;--line:#38485d;--text:#fff3dd;
+  font-family:Arial,"Noto Sans CJK SC","Microsoft YaHei",sans-serif;
+  background:#09111f;color:#fff3dd;
+}
+body{background:radial-gradient(ellipse at 80% 0,#183249 0,transparent 55%),#09111f}
+button{border-radius:6px;background:#17283b;border-color:#43536b;color:var(--text);font-weight:700;transition:background-color .12s,border-color .12s;min-height:35px}
+button:hover{background:#253b50;border-color:var(--rush-cyan)}
+button:focus,button:focus-visible{outline:3px solid var(--rush-cyan);outline-offset:3px}
+button:disabled{opacity:.4}
+button:active{background:#304a61}
+.app{max-width:none;width:100%;height:100%;padding:14px 22px 8px;grid-template-rows:54px minmax(0,1fr) 20px;gap:10px}
+header{min-width:0;position:relative;z-index:12;gap:18px}
+.brand{gap:11px;min-width:0;flex-shrink:0}
+.brand-mark{width:45px;height:43px;flex-shrink:0;clip-path:polygon(15% 0,100% 0,85% 100%,0 100%);border-radius:0;color:#0c1926;background:var(--accent);font-size:22px;letter-spacing:-2px;font-style:italic;box-shadow:none}
+.brand .eyebrow{color:#8ba8bc;letter-spacing:2.5px;font-size:9px;margin-bottom:4px}
+h1{font-size:25px;font-weight:900;letter-spacing:.5px;color:#fff3dd;line-height:1.16;white-space:nowrap}
+.top-actions{gap:7px;min-width:0}
+.top-actions button{padding:7px 10px;min-height:35px;font-size:12px;white-space:nowrap;background:#121f31}
+.top-actions button[aria-pressed="true"],#rush-phone-button[aria-expanded="true"]{color:#102131;background:var(--rush-cyan);border-color:var(--rush-cyan)}
+.connection{color:#a6bacb;font-size:11px;white-space:nowrap;margin-right:4px}
+#rush-language-button{color:var(--rush-cyan);min-width:40px}
+.workspace{display:block;position:relative;min-width:0;min-height:0}
+.stage{display:block;position:relative;width:100%;height:100%;min-width:0;min-height:0;border:1px solid #40556a;border-radius:10px;overflow:hidden;background:#102133;box-shadow:0 8px 35px #0004}
+#arena{position:absolute;inset:0;display:block;width:100%;height:100%;border:0;border-radius:0;box-shadow:none;background:#101f34}
+#scene{width:100%!important;height:100%!important;position:relative;overflow:hidden}
+#game{width:100%;height:100%;display:block;background:#101f34;touch-action:none}
+.hud{position:absolute;z-index:6;left:20px;top:17px;display:flex;gap:0;max-width:calc(100% - 40px);pointer-events:none;border:1px solid #71899c55;border-radius:7px;overflow:hidden;background:#0b1927e8;box-shadow:0 5px 16px #0003;transition:opacity .12s}
+.stat{flex:none;min-width:106px;padding:10px 17px 11px;border:0;border-right:1px solid #71899c55;border-radius:0;background:transparent}
+.stat:last-child{border-right:0}
+.stat-label{font-size:10px;color:#a5bfd1;letter-spacing:1.5px;font-weight:700;margin-bottom:5px;white-space:nowrap}
+.stat-value{font-size:26px;line-height:1.05;font-weight:900;font-style:italic;color:#fff4dd;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat[data-tone="good"] .stat-value{color:var(--rush-cyan)}
+.stat[data-tone="warn"] .stat-value{color:var(--accent)}
+.message{position:absolute;left:19px;right:19px;bottom:13px;z-index:6;min-height:22px;gap:8px;padding:0;color:#e0e9eb;text-shadow:0 1px 3px #000;font-size:11px;pointer-events:none}
+.message p{min-width:0;line-height:1.4}
+.live-dot{background:var(--rush-cyan);width:5px;height:5px;flex-shrink:0}
+#best{color:#c8d8e3;font-size:10px;white-space:nowrap}
+footer{padding:0 1px;color:#8a9eb1;font-size:10px;letter-spacing:.4px}
+footer span:last-child{font-variant-numeric:tabular-nums;color:#9babbc}
+#tagline{color:#7693a9}
+/* The TV picture stays visible behind the menu; no full-screen blur pass. */
+.overlay{z-index:20;justify-content:flex-start;align-items:center;padding:22px 32px;background:linear-gradient(90deg,#06111be8 0,#081725a8 43%,#0b1b2a14 78%);backdrop-filter:none;-webkit-backdrop-filter:none}
+.dialog{position:relative;width:min(490px,100%);max-height:100%;overflow:auto;padding:26px 28px 22px;border:1px solid #728b9e70;border-top:3px solid var(--accent);border-radius:9px;background:linear-gradient(135deg,#14283cee,#0c192ae8);box-shadow:0 18px 52px #0005;text-align:left;scrollbar-width:thin;scrollbar-color:#536d83 transparent}
+.dialog::after{content:"";position:absolute;right:18px;top:20px;width:55px;height:11px;background:repeating-linear-gradient(120deg,transparent 0 8px,#7ae7f32c 8px 13px);pointer-events:none}
+.dialog .eyebrow{color:var(--rush-cyan);font-size:10px;letter-spacing:2px;margin:0 55px 8px 0;line-height:1.4}
+.dialog h2{font-size:42px;line-height:1.08;letter-spacing:1px;font-weight:900;font-style:italic;margin:10px 0 15px;color:#fff3db;overflow-wrap:break-word}
+.dialog>p:not(.eyebrow){font-size:14px;line-height:1.7;color:#c5d7e5;margin:10px 0}
+.dialog .fine{font-size:11px!important;color:#a9c0d2!important;line-height:1.55!important;margin:14px 0 0!important}
+.difficulty{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:7px;margin:19px 0 14px;font-size:12px}
+.difficulty>span{grid-column:1/-1;color:#a6baca;font-size:10px;font-weight:700;letter-spacing:1.7px;margin:0 0 3px}
+.difficulty button{display:block;width:100%;min-width:0;min-height:65px;border-radius:6px;border-color:#4d6378;background:#0b1b2d;color:#c2d6e6;padding:10px 9px 11px;text-align:left;font-size:13px;line-height:1.4;font-weight:800;white-space:normal;overflow-wrap:break-word}
+.difficulty button::before{display:block;color:#6f8ba4;font-family:monospace;font-size:10px;line-height:1;letter-spacing:1px;margin-bottom:8px}
+.difficulty button[data-level="0"]::before{content:"01"}
+.difficulty button[data-level="1"]::before{content:"02"}
+.difficulty button[data-level="2"]::before{content:"03"}
+.difficulty .selected{background:#ff784b18;border-color:var(--accent);color:#fff1da;box-shadow:inset 0 -3px var(--accent)}
+.difficulty .selected::before{color:var(--accent)}
+.primary{display:block;background:var(--accent);color:#141a24;border:1px solid var(--accent);border-radius:5px;min-height:49px;font-weight:900;font-size:16px;letter-spacing:.5px;margin:8px 0 0;padding:12px 18px;box-shadow:0 4px 0 #ab422d;text-align:center}
+.primary:hover{background:#ff966f;color:#101a26;border-color:#ff966f}
+.primary:active{background:#f3693d;box-shadow:0 2px 0 #ab422d}
+body[data-rush-phase="menu"] .hud,body[data-rush-phase="paused"] .hud,body[data-rush-phase="won"] .hud,body[data-rush-phase="lost"] .hud{visibility:hidden}
+body:not([data-rush-phase="playing"]) #rush-dashboard,body:not([data-rush-phase="playing"]) #rush-touch{visibility:hidden}
+body:not([data-rush-phase="playing"]) .message{visibility:hidden}
+body[data-rush-phase="paused"] .overlay,body[data-rush-phase="won"] .overlay,body[data-rush-phase="lost"] .overlay{justify-content:center;background:#0713219c}
+/* Additional racing instruments do not intercept normal controls. */
+#rush-dashboard{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden}
+#rush-map{position:absolute;left:20px;bottom:47px;width:160px;height:110px;border:1px solid #91adbe66;border-radius:7px;background:#0c1c2ad9;box-shadow:0 5px 18px #0003}
+#rush-countdown{position:absolute;left:0;right:0;top:35%;text-align:center;font-size:clamp(60px,11vw,110px);font-weight:900;font-style:italic;letter-spacing:-4px;line-height:1;color:#fff6e4;text-shadow:4px 5px 0 #0b213c,0 0 32px #79e8ff55;pointer-events:none}
+#rush-countdown:empty{display:none}
+#rush-feedback{position:absolute;left:25%;right:25%;bottom:23%;text-align:center;color:var(--rush-cyan);font-size:clamp(14px,2.2vw,24px);font-weight:900;font-style:italic;letter-spacing:1px;text-shadow:0 2px 5px #001427,0 0 12px #001427}
+#rush-meters{position:absolute;right:20px;bottom:47px;width:230px;padding:12px 14px 13px;border:1px solid #91adbe66;border-radius:7px;background:#0c1c2aeb;box-shadow:0 5px 18px #0003}
+.rush-meter-label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:1.5px;line-height:1.4;color:#c0d7e5;margin:0 0 6px}
+.rush-meter-label:not(:first-child){margin-top:11px}
+.rush-meter-label span:last-child{color:#fff1da;font-variant-numeric:tabular-nums;letter-spacing:.4px;text-align:right}
+.rush-meter-track{height:8px;overflow:hidden;background:#40526580;border:1px solid #7394a34d;transform:skewX(-11deg);border-radius:1px}
+#rush-nitro-fill,#rush-drift-fill{display:block;height:100%;width:0;min-width:0;transition:width .1s linear}
+#rush-nitro-fill{background:linear-gradient(90deg,#e45230,#ffb66f);box-shadow:0 0 9px #ff784b66}
+#rush-drift-fill{background:linear-gradient(90deg,#31a9bd,#91f4ec);box-shadow:0 0 9px #7ae7f366}
+/* The QR and complete control guide remain available as an explicit panel. */
+aside{display:none!important;position:absolute;z-index:35;right:12px;top:12px;bottom:12px;width:272px;max-width:calc(100% - 24px);padding:18px;overflow:auto;border-radius:8px;border:1px solid #6b879c;background:#102338f5;box-shadow:0 12px 48px #0009;scrollbar-width:thin;scrollbar-color:#63809a #14263b}
+body.rush-phone-open aside{display:block!important}
+aside>*{grid-column:auto!important;grid-row:auto!important}
+aside .side-heading{display:flex;justify-content:space-between;gap:7px;align-items:center}
+aside .side-heading .eyebrow{font-size:11px;letter-spacing:1px;margin:0;color:var(--rush-cyan)}
+aside .badge{font-size:9px;padding:4px 5px;flex-shrink:0}
+aside .qr-wrap{width:136px;height:136px;padding:9px;margin:17px auto 10px;background:#fff9ed;border-radius:7px}
+aside .address{margin:7px 0 0;text-align:center;overflow-wrap:anywhere;color:#b6cbdc;font-size:11px;line-height:1.45}
+aside #qr-empty{font-size:11px;line-height:1.4}
+aside .phone-icon{font-size:28px}
+aside .divider{margin:14px 0;background:#39536c}
+aside h3{font-size:14px;margin:0 0 9px;line-height:1.3}
+aside .control{display:flex;align-items:center;gap:9px;margin:9px 0}
+aside .key{width:29px;height:29px;font-size:12px;color:var(--rush-cyan);border-color:#5b7890}
+aside .control p{font-size:12px;line-height:1.5;color:#e2eaf0}
+aside .small-help{font-size:11px;line-height:1.65;margin-top:14px;color:#a6c0d5}
+aside .tip{margin-top:14px;padding:10px;background:#1c3c5080;border-color:#4c6e83}
+aside .tip .eyebrow{display:block;font-size:10px;letter-spacing:1px;margin:0;color:var(--rush-cyan)}
+aside .tip p{display:block;font-size:11px;line-height:1.6;color:#c7dce9;margin:6px 0 0}
+/* On-device touch controls preserve a clear centerline and support simultaneous presses. */
+#rush-touch{display:none;position:absolute;inset:0;z-index:9;pointer-events:none;touch-action:none}
+body.rush-touch #rush-touch{display:block}
+#rush-touch button{position:absolute;bottom:41px;width:65px;height:54px;min-height:54px;padding:5px;border-radius:8px;border:1px solid #b7d8e5aa;background:#0c2037d9;color:#eff8ff;pointer-events:auto;touch-action:none;font-size:14px;font-weight:800;box-shadow:0 3px 8px #0005;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#rush-touch button:active,#rush-touch button[aria-pressed="true"],#rush-touch button.active,#rush-touch button.pressed{background:#3b6d86ed;border-color:#e1fcff;color:#fff}
+[data-rush-control="left"]{left:17px}
+[data-rush-control="right"]{left:89px}
+[data-rush-control="brake"]{left:161px}
+#rush-touch [data-rush-control="drift"]{right:99px;width:76px;border-color:#81dce9;background:#113c50e8;color:#bdf9ff}
+#rush-touch [data-rush-control="nitro"]{right:17px;width:76px;border-color:#ffa078;background:#8c3a24e8;color:#fff0d4}
+body.rush-touch #rush-map{bottom:111px;width:128px;height:88px}
+body.rush-touch #rush-meters{bottom:111px;width:210px}
+body.rush-touch #rush-feedback{bottom:34%}
+body.rush-webgl-error .hud,body.rush-webgl-error #rush-dashboard,body.rush-webgl-error #rush-touch{display:none!important}
+body.rush-webgl-error .overlay{display:flex!important;justify-content:center;background:#071321e8}
+body.rush-webgl-error .dialog{border-top-color:#ff9773}
+@media(max-width:1100px){.connection{display:none}.stat{min-width:94px;padding:9px 14px}.stat-value{font-size:23px}}
+@media(max-height:620px){
+  .app{padding:8px 13px 5px;grid-template-rows:43px minmax(0,1fr) 17px;gap:7px}
+  h1{font-size:22px}.brand-mark{width:39px;height:37px;font-size:19px}.brand .eyebrow{font-size:8px;margin-bottom:3px}
+  .top-actions button{font-size:11px;padding:6px 8px;min-height:31px}
+  .stage{border-radius:7px}.hud{left:14px;top:12px}.stat{min-width:88px;padding:7px 12px 8px}.stat-label{font-size:9px;margin-bottom:3px}.stat-value{font-size:21px}
+  .overlay{padding:16px 24px}.dialog{width:min(468px,100%);padding:17px 22px 15px}.dialog h2{font-size:34px;margin:8px 0 9px}.dialog>p:not(.eyebrow){font-size:12px;line-height:1.55;margin:8px 0}.dialog .eyebrow{font-size:9px;margin-bottom:5px}
+  .difficulty{margin:12px 0 10px;gap:6px}.difficulty button{min-height:57px;font-size:12px;padding:8px 8px}.difficulty button::before{margin-bottom:6px;font-size:9px}
+  .primary{font-size:14px;min-height:41px;padding:10px 13px;margin-top:5px}.dialog .fine{font-size:10px!important;margin-top:10px!important}
+  .message{left:14px;right:14px;bottom:9px;font-size:10px;min-height:19px}#best{font-size:9px}
+  #rush-map{left:14px;bottom:38px;width:132px;height:91px}#rush-meters{right:14px;bottom:38px;width:205px;padding:9px 11px 10px}.rush-meter-label{font-size:10px;margin-bottom:5px}.rush-meter-label:not(:first-child){margin-top:8px}.rush-meter-track{height:7px}
+  #rush-feedback{font-size:18px;bottom:24%}#rush-countdown{top:34%;font-size:78px}
+  footer{font-size:9px}aside{top:8px;right:8px;bottom:8px;width:286px;padding:13px}
+  aside .qr-wrap{width:104px;height:104px;margin:10px auto 7px;padding:6px}aside .divider{margin:10px 0}aside .control{margin:6px 0}aside .tip{margin-top:10px;padding:8px}
+  #rush-touch button{bottom:34px;height:49px;min-height:49px;width:60px;font-size:12px}body.rush-touch #rush-map{bottom:96px}body.rush-touch #rush-meters{bottom:96px}
+}
+@media(max-width:850px){
+  .app{padding:8px 10px 5px;grid-template-rows:45px minmax(0,1fr) 18px;gap:7px}
+  header{gap:9px}.brand{gap:7px}.brand-mark{width:34px;height:34px;font-size:17px}h1{font-size:20px}.brand .eyebrow{font-size:7px;letter-spacing:1.2px}
+  .top-actions{gap:5px}.top-actions button{padding:6px 7px;min-height:30px;font-size:10px}#rush-language-button{min-width:33px}
+  .hud{left:11px;top:11px}.stat{padding:7px 11px;min-width:78px}.stat-value{font-size:20px}.stat-label{font-size:8px;letter-spacing:1px}
+  .overlay{padding:16px 20px}.dialog{width:min(440px,100%);padding:20px}.dialog h2{font-size:34px}.dialog>p:not(.eyebrow){font-size:12px}
+  #rush-meters{right:11px;width:190px}#rush-map{left:11px;width:128px;height:88px}
+  .message{left:11px;right:11px;font-size:10px}#best{display:none}#tagline{display:none}
+}
+@media(max-width:560px){
+  .app{padding:6px;grid-template-rows:65px minmax(0,1fr) 17px;gap:5px}
+  header{align-items:center;gap:5px}.brand{gap:6px;max-width:43%;flex-shrink:1}.brand>div{min-width:0}.brand-mark{width:29px;height:32px;font-size:15px}h1{font-size:17px;white-space:normal;line-height:1.15}.brand .eyebrow{font-size:6px;letter-spacing:.6px}
+  .top-actions{max-width:55%;flex-shrink:0;justify-content:flex-end;flex-wrap:wrap;gap:4px}.top-actions button{padding:4px 6px;min-height:27px;font-size:10px}#rush-language-button{min-width:29px}
+  .stage{border-radius:6px}.hud{left:7px;right:7px;top:8px;max-width:none;width:auto}.stat{flex:1;min-width:0;padding:7px 6px;text-align:center}.stat-label{font-size:8px;letter-spacing:.5px}.stat-value{font-size:19px}
+  .overlay{justify-content:center;padding:15px 12px;background:linear-gradient(0deg,#081523e8,#0b1c2970)}
+  .dialog{width:100%;padding:19px 17px 17px;max-height:100%;border-radius:7px}.dialog h2{font-size:34px;line-height:1.12;margin:9px 0 12px}.dialog>p:not(.eyebrow){font-size:12px;line-height:1.65}.dialog .eyebrow{font-size:9px;letter-spacing:1.5px}.dialog::after{width:36px;right:13px;top:17px}
+  .difficulty{gap:5px;margin:15px 0 13px}.difficulty button{font-size:11px;min-height:65px;padding:8px 6px;line-height:1.35}.difficulty button::before{font-size:9px;margin-bottom:7px}.difficulty>span{font-size:9px}
+  .primary{font-size:14px;min-height:45px;margin-top:7px;padding:11px 10px}.dialog .fine{font-size:10px!important;line-height:1.55!important;margin-top:12px!important}
+  #rush-map{display:none}#rush-meters,body.rush-touch #rush-meters{right:9px;bottom:107px;width:164px;padding:9px 10px}.rush-meter-label{font-size:9px;letter-spacing:1px}.rush-meter-label:not(:first-child){margin-top:7px}.rush-meter-track{height:6px}
+  #rush-countdown{top:37%;font-size:80px}#rush-feedback,body.rush-touch #rush-feedback{left:10px;right:10px;bottom:34%;font-size:16px}
+  .message{left:9px;right:9px;bottom:8px;font-size:9px;gap:5px}.live-dot{width:4px;height:4px}
+  #rush-touch button{bottom:34px;width:54px;height:55px;min-height:55px;font-size:11px;padding:3px;border-radius:7px}
+  [data-rush-control="left"]{left:8px}[data-rush-control="right"]{left:68px}[data-rush-control="brake"]{left:128px}
+  #rush-touch [data-rush-control="drift"]{right:71px;width:57px}#rush-touch [data-rush-control="nitro"]{right:8px;width:57px}
+  aside{top:8px;right:8px;bottom:8px;max-width:calc(100% - 16px);width:280px;padding:15px}aside .qr-wrap{width:136px;height:136px}aside .control p{font-size:12px}
+  footer{font-size:8px;letter-spacing:0}
+}
+@media(max-width:360px){
+  .app{grid-template-rows:72px minmax(0,1fr) 17px}.brand-mark{display:none}.brand{max-width:39%}.top-actions{max-width:61%}
+  h1{font-size:16px}.dialog{padding:16px 13px}.dialog h2{font-size:29px}.difficulty button{font-size:10px;padding:7px 5px}.primary{font-size:13px}
+  .stat-value{font-size:17px}.stat-label{font-size:7px}.message{font-size:8px}
+  #rush-touch button{width:46px;font-size:10px}[data-rush-control="left"]{left:6px}[data-rush-control="right"]{left:57px}[data-rush-control="brake"]{left:108px}
+  #rush-touch [data-rush-control="drift"]{right:62px;width:50px}#rush-touch [data-rush-control="nitro"]{right:6px;width:50px}
+}
+@media(max-height:440px) and (min-width:561px){
+  .app{padding:5px 8px 3px;grid-template-rows:34px minmax(0,1fr) 13px;gap:4px}.brand-mark{height:28px;width:29px}.brand .eyebrow{display:none}h1{font-size:18px}.top-actions button{min-height:27px;padding:4px 6px;font-size:10px}
+  .overlay{padding:10px 16px}.dialog{width:440px;padding:11px 17px}.dialog h2{font-size:28px;margin:5px 0 6px}.dialog>p:not(.eyebrow){font-size:11px;line-height:1.4;margin:6px 0}.dialog .eyebrow{font-size:8px;line-height:1}
+  .difficulty{margin:8px 0;gap:5px}.difficulty button{min-height:45px;padding:6px 8px;font-size:11px}.difficulty button::before{display:none}.difficulty>span{font-size:8px;margin:0}.primary{min-height:35px;font-size:12px;padding:7px 10px}.dialog .fine{font-size:9px!important;margin-top:7px!important;line-height:1.3!important}
+  .hud{top:8px;left:10px}.stat{min-width:77px;padding:5px 10px}.stat-value{font-size:18px}.stat-label{font-size:8px;margin-bottom:2px}
+  #rush-map{width:103px;height:71px;bottom:31px}#rush-meters{bottom:31px;width:173px;padding:7px 9px}.rush-meter-label{font-size:9px}.rush-meter-label:not(:first-child){margin-top:6px}.rush-meter-track{height:6px}
+  #rush-touch button{height:42px;min-height:42px;bottom:29px}body.rush-touch #rush-map{display:none}body.rush-touch #rush-meters{bottom:81px;width:173px}
+  .message{font-size:9px;bottom:7px}#rush-countdown{font-size:60px}.dialog::after{top:12px}footer{font-size:8px}
+}
+/* The controller panel uses the same two-column layout when opened by a
+   browser button or automatically between races by the native TV host. */
+@media(min-width:851px){
+  body.rush-phone-open .overlay{justify-content:flex-start;padding-right:322px}
+  body.rush-phone-open .dialog{width:min(490px,100%)}
+  body.rush-phone-open aside{display:grid!important;grid-template-columns:136px minmax(0,1fr);column-gap:10px;align-content:start;width:286px;padding:14px}
+  body.rush-phone-open aside>*{grid-column:1 / -1!important;grid-row:auto!important}
+  body.rush-phone-open aside>.side-heading{grid-column:2!important;grid-row:1!important;align-self:end;justify-content:flex-start;flex-wrap:wrap;gap:5px}
+  body.rush-phone-open aside>.qr-wrap{grid-column:1!important;grid-row:1 / 3!important;width:136px;height:136px;margin:0;padding:7px}
+  body.rush-phone-open aside>.address{grid-column:2!important;grid-row:2!important;align-self:start;text-align:left;margin:7px 0 0;min-width:0;line-height:1.5}
+  body.rush-phone-open aside .side-heading .eyebrow{font-size:10px;letter-spacing:.5px;line-height:1.5}
+  body.rush-phone-open aside .divider{margin:11px 0}
+  body.rush-phone-open aside h3{font-size:13px;margin:0 0 5px}
+  body.rush-phone-open aside .control{margin:5px 0;gap:8px}
+  body.rush-phone-open aside .key{width:26px;height:26px}
+  body.rush-phone-open aside .control p{min-width:0;font-size:12px;line-height:1.45}
+  body.rush-phone-open aside .small-help{font-size:11px;line-height:1.5;margin:8px 0 0}
+  body.rush-phone-open aside .tip{margin:10px 0 0;padding:9px}
+  body.rush-phone-open aside .tip .eyebrow{display:inline;font-size:10px;letter-spacing:.5px;margin-right:5px}
+  body.rush-phone-open aside .tip p{display:inline;font-size:11px;line-height:1.5;margin:0}
+}
+@media(min-width:851px) and (max-height:620px){
+  body.rush-phone-open .dialog{width:min(468px,100%)}
+  body.rush-phone-open aside{grid-template-columns:136px minmax(0,1fr);column-gap:9px;padding:11px}
+  body.rush-phone-open aside>.qr-wrap{width:136px;height:136px;padding:7px}
+  body.rush-phone-open aside>.address{font-size:10px;margin-top:5px;line-height:1.4}
+  body.rush-phone-open aside .divider{margin:8px 0}
+  body.rush-phone-open aside h3{font-size:12px;margin-bottom:3px}
+  body.rush-phone-open aside .control{margin:4px 0;gap:8px}
+  body.rush-phone-open aside .key{width:26px;height:26px;font-size:12px}
+  body.rush-phone-open aside .control p{font-size:12px;line-height:1.45}
+  body.rush-phone-open aside .small-help{font-size:11px;line-height:1.5;margin-top:6px}
+  body.rush-phone-open aside .tip{margin-top:8px;padding:7px}
+  body.rush-phone-open aside .tip p{font-size:11px;line-height:1.4}
+}
+@media(prefers-reduced-motion:reduce){button,.hud,#rush-nitro-fill,#rush-drift-fill{transition:none}}

@@ -25,6 +25,8 @@ python3 resource/game-kit/build.py \
 - `GameDef.holdConfirmAsA=true` 可把键盘/遥控器确认键作为持续按住的 A；默认仍为每次确认触发一次 A。开始、暂停恢复与结算菜单的确认操作不算游戏动作。
 - `input.cancelEpoch` 在输入清除或手机 `cancelSeq` 变化时递增，暂停或没有物理步时保留到下一次 `step`。`input.cancelled=true` 表示取消所属的整帧，或被取消的 A/B/确认键仍未真实松开；这种合成中立输入不能用于“松开后计分”或重新武装按键。需要按住时长的游戏应在新 epoch 清除未完成信号，并等下一次非取消输入中的真实松开后再接收信号。
 - `GameDef` 声明标题、说明、手柄标签、HUD、结算文字与 `render(renderer, state, time, input)`。
+- 三维游戏可选 `GameDef.createRenderer(canvas)`，返回实现 `begin/end/dispose` 和 `metrics` 的独立渲染器，由本游戏的 `render` 使用；未提供时仍使用默认图集渲染器。渲染器不能写入规则状态，指标须来自实际绘制。
+- 可选 `GameDef.afterUI(state, context)` 在共享界面更新后处理本游戏的附加仪表或翻译；`context` 包含 `phase/paused/level/best/phoneConnected/disconnected`，回调不得更改模型或跳过输入生命周期。
 - `GameDef.levelNames` 定义完整关卡列表，菜单按钮、遥控器／手机选关按实际关数循环；未提供时保留三个默认关卡。每款可用 `GameDef.stylesheet='game-theme.css'` 加载自身资产中的本地样式，独立组织舞台、仪表与操作面板，沿用共享输入和连接逻辑。
 - `PureTVQA.snapshot()` 只返回深拷贝，用于观察真实输入的结果；不提供改分数或强制胜利的入口。
 - `PureRenderer` 用单个烘焙图集合并图形与 ASCII 字符；中文界面在 DOM 层绘制。可通过 `GameDef.atlas` 使用[每款游戏自己的素材布局](RENDERER.md)。`metrics.drawCalls` 只统计 WebGL 提交，Canvas 降级单独标记。

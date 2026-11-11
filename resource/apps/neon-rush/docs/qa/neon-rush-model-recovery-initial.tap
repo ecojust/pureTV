@@ -1,0 +1,35 @@
+✔ grid has six independent seeded competitors and safe finite track selection (31.602865ms)
+✔ countdown prevents early throttle, steering, nitro and distance gain (2.422017ms)
+✔ right/left steering changes real heading and position; unsteered motion is not a rail follower (246.866462ms)
+✔ automatic acceleration has a bounded top speed and brake stops without reverse motion (1.371104ms)
+✔ nitro requires a full charge and a press edge, consumes charge and expires (2.172351ms)
+✔ holding drift on a straight or at rest grants neither charge nor a mini boost (2.582709ms)
+✔ a sustained genuine drift charges nitro and a timely release grants a short mini boost (11.577282ms)
+✔ cancellation invalidates held drift and nitro and cannot synthesize a release reward (1.790656ms)
+✔ barriers reduce speed and retain the player inside the road without yaw rail-following (3.168982ms)
+✔ a player genuinely stalled against a barrier recovers after four seconds without gate credit (6.153315ms)
+✔ automatic recovery does not repeat every tick or manufacture progress while braking (3.477336ms)
+✔ car contacts separate vehicles and cost speed once per cooldown (0.62445ms)
+✔ crossing a jump pad produces a ballistic arc and landing reward, not a permanent float (3.155721ms)
+✔ reset during a jump removes ungrounded progress and cannot farm distance or gates (7.216165ms)
+✔ a position discontinuity does not award a finish-line or checkpoint shortcut (0.935719ms)
+✔ reverse crossings of the start line cannot create laps (11.255487ms)
+✔ AI planning does not mutate a detached JSON observation (1.91276ms)
+✔ JSON round-trip state can resume without breaking the player reference (58.199418ms)
+✔ track 0: ordinary analog inputs complete two ordered laps, with finite AI competition (247.926961ms)
+✔ track 1: ordinary analog inputs complete two ordered laps, with finite AI competition (365.574988ms)
+✔ track 2: ordinary analog inputs complete two ordered laps, with finite AI competition (214.023533ms)
+✔ track 0: keyboard-quantized directions and normalized braking can finish (225.245239ms)
+✔ track 1: keyboard-quantized directions and normalized braking can finish (266.369122ms)
+✔ track 2: keyboard-quantized directions and normalized braking can finish (213.169024ms)
+✔ finish is deterministic and freezes the result under every further input (487.20465ms)
+✔ running out of race time produces a frozen result rather than claiming a finish (85.58602ms)
+✔ invalid/large deltas cannot skip a race and out-of-range inputs remain finite (0.921227ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2745.950738

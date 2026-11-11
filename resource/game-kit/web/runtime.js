@@ -4,7 +4,7 @@
   const def=root.GameDef, model=root.PureModel, $=id=>document.getElementById(id);
   if(!def||!model||!root.PureRenderer){$('dialog-title').textContent='游戏资源未就绪';$('dialog-copy').textContent='请重新打开应用。';return;}
   const native=root.PureGameHost, keys=new Set(), pulses={}, pendingActions={a:false,b:false};
-  const renderer=new root.PureRenderer($('game'),{atlas:def.atlas});
+  const renderer=typeof def.createRenderer==='function'?def.createRenderer($('game')):new root.PureRenderer($('game'),{atlas:def.atlas});
   let state=model.create(def.seed||1,0), phase='menu', paused=false, level=0, tick=0, elapsed=0;
   let last=0, lastUi=0, accumulator=0, endedRecorded=false, phoneSeen=false, disconnected=false;
   let previous={a:false,b:false,start:false,select:false}, info={}, soundEnabled=false, audio=null, disposed=false, nativePauseBefore=false, phoneConnected=false, menuStick=0;
@@ -111,6 +111,7 @@
     const show=phase!=='playing'||paused;$('overlay').hidden=!show;
     if(show){const won=phase==='won',lost=phase==='lost';$('dialog-kicker').textContent=paused?'休息一下':won?'任务完成':lost?'再试一次':'PURETV ORIGINALS';$('dialog-title').textContent=paused?'已暂停':won?(def.winTitle||'任务完成'):lost?(def.loseTitle||'本次任务结束'):def.title;$('dialog-copy').textContent=paused?'场景与计时已暂停。继续后从当前位置出发。':(won||lost)?def.result(state):def.description;$('primary').textContent=paused?'继续游戏 · P':(won||lost)?'再次出发 · ENTER':'开始游戏 · ENTER';$('difficulty-controls').hidden=paused;$('dialog-help').textContent=paused?'手机 START / 遥控器播放键继续':'左右选择'+levelLabel+' · B 切换声音 · START / 确认开始';}
     if(native){try{native.publish(JSON.stringify({title:def.title,phase:paused?'paused':phase,score:state.score||0,message:state.message||'',actions:def.actionLabels||['操作 A','操作 B']}));}catch(_){}}
+    if(typeof def.afterUI==='function')def.afterUI(state,{phase,paused,level,best,phoneConnected,disconnected});
   }
   function frame(now){
     if(disposed)return;
