@@ -4,7 +4,11 @@
 
 六辆赛车、三条原创赛道、两圈决胜。用漂移积攒氮气，出弯松手获得小喷，在直道冲刺、在山谷跳台腾空。车辆自动加油，你负责选择路线、转向和刹车。
 
-**当前为 0.1.0 开发版本。正式签名 APK、下载入口、实玩录像和最终验证结果尚待发布步骤补齐。** 包名为 `com.ecojust.neonrushtv`。需要 Android 8.0/API26 或更新系统，以及支持 WebGL 的 Android System WebView；若提示无法建立 3D 画面，请先更新系统 WebView。最低系统版本不等于所有电视均已验证。
+**0.1.0 · 正式签名 APK：435,692 字节（约 436 KB）。** [下载安装包](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.0.apk) · [实玩录像](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json) · [图标](logo.svg)
+
+![霓虹飞车实际比赛画面](thumb.png)
+
+包名为 `com.ecojust.neonrushtv`。需要 Android 8.0/API26 或更新系统，以及支持 WebGL 的 Android System WebView；若提示无法建立 3D 画面，请先更新系统 WebView。最低系统版本不等于所有电视均已验证。
 
 ## 开始一局
 
@@ -55,6 +59,6 @@ python3 tools/prepare-web.py --output /tmp/neon-rush-web
 python3 -m http.server 8080 --directory /tmp/neon-rush-web
 ```
 
-打开 `http://127.0.0.1:8080/tv.html` 查看实际宿主页面。浏览器预览和实体电视测试分别记录；软件渲染速度、录屏帧率不能当作设备帧率。已有阶段性原始记录放在 [docs/qa](docs/qa/)，最终通过范围、源码冻结、签名及公开下载状态由发布记录补充。
+打开 `http://127.0.0.1:8080/tv.html` 查看实际宿主页面。浏览器预览和实体电视测试分别记录；软件渲染速度、录屏帧率不能当作设备帧率。规则与几何测试 45 项通过；三条赛道的实际比赛、输入、画面与签名结果见[最终验证](docs/verification.json)，原始报告及保留的初次失败记录见 [docs/qa](docs/qa/)。尚未在实体电视或实体手机上测试。
 
 Android 构建和固定证书签名沿用 [Game Kit 构建说明](../../game-kit/BUILD.md)。本地 builder 只生成未签名包；只有源码、资产、签名和验证证据核对完成的 APK 才作为发布包。

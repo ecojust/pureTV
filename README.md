@@ -10,7 +10,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 [![GitHub Release 总下载量](https://img.shields.io/github/downloads/ecojust/pureTV/total?style=flat-square&label=downloads&color=16a34a)](https://github.com/ecojust/pureTV/releases)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-118-f97316?style=flat-square)](resource/apps/)
+[![应用数量](https://img.shields.io/badge/apps-119-f97316?style=flat-square)](resource/apps/)
 [![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
@@ -95,38 +95,38 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
   </tr>
 </table>
 
-### 应用-游戏（19）
+### 应用-游戏（20）
 
 <table>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/neon-rush/"><img src="resource/apps/neon-rush/thumb.png" width="180" alt="霓虹飞车 界面"><br>霓虹飞车</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/twenty-four/"><img src="resource/apps/twenty-four/thumb.png" width="180" alt="四则二十四 界面"><br>四则二十四</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/torch-bridge/"><img src="resource/apps/torch-bridge/thumb.png" width="180" alt="夜桥接力 界面"><br>夜桥接力</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tower-overlap/"><img src="resource/apps/tower-overlap/thumb.png" width="180" alt="叠塔工匠 界面"><br>叠塔工匠</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱 界面"><br>异形装箱</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱 界面"><br>异形装箱</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/conveyor-window/"><img src="resource/apps/conveyor-window/thumb.png" width="180" alt="窗口装配 界面"><br>窗口装配</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/glass-fold/"><img src="resource/apps/glass-fold/thumb.png" width="180" alt="折光工坊 界面"><br>折光工坊</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tension-span/"><img src="resource/apps/tension-span/thumb.png" width="180" alt="拉索桥梁 界面"><br>拉索桥梁</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"><br>镜光接力</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"><br>镜光接力</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/alien-shooter/"><img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"><br>孤胆枪手 TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/used-car-racing/"><img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"><br>极品二手车</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/cozy-island/"><img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"><br>Cozy Island TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"><br>Coast Kart TV</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"><br>Coast Kart TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/super-mario/"><img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"><br>Super Mario TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/bomb-jack/"><img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"><br>Mighty Bomb Jack TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/adventure-island/"><img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"><br>Adventure Island TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"><br>Tetris TV</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"><br>Tetris TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/jewel/"><img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"><br>Magic Jewelry TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/jackal/"><img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"><br>Jackal TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tank/"><img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"><br>Tank TV</a></td>
-    <td width="25%"></td>
   </tr>
 </table>
 

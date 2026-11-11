@@ -4,7 +4,11 @@
 
 Six racers, three original circuits, and a two-lap finish. Drift to charge nitro, release a clean drift for a mini turbo, and use the straights and canyon ramp to gain ground. Auto throttle keeps the car moving; you control the racing line, steering, and brakes.
 
-**Version 0.1.0 is under development. The release-signed APK, download link, gameplay recording, and final validation results will be added during publication.** Package: `com.ecojust.neonrushtv`. Requires Android 8.0/API26 or later and an Android System WebView with WebGL support. Update the system WebView if the game reports that 3D graphics cannot start. The minimum Android version is not a claim that every TV has been tested.
+**0.1.0 · Release-signed APK: 435,692 bytes (about 436 KB).** [Download APK](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.0.apk) · [Gameplay video](docs/gameplay-0.1.0.mp4) · [Verification](docs/verification.json) · [Icon](logo.svg)
+
+![Actual English Neon Rush menu](../../../docs/previews/en/app-neon-rush.png)
+
+Package: `com.ecojust.neonrushtv`. Requires Android 8.0/API26 or later and an Android System WebView with WebGL support. Update the system WebView if the game reports that 3D graphics cannot start. The minimum Android version is not a claim that every TV has been tested.
 
 ## Start a race
 
@@ -57,6 +61,6 @@ python3 tools/prepare-web.py --output /tmp/neon-rush-web
 python3 -m http.server 8080 --directory /tmp/neon-rush-web
 ```
 
-Open `http://127.0.0.1:8080/tv.html`. Browser results and physical TV tests are reported separately. Software-renderer speed and recording frame rate are not device performance measurements. Interim raw records are in [docs/qa](docs/qa/); final coverage, source freeze, signing, and public-download verification will be recorded during release.
+Open `http://127.0.0.1:8080/tv.html`. Browser results and physical TV tests are reported separately. Software-renderer speed and recording frame rate are not device performance measurements. See [final verification](docs/verification.json) for the 45 model/geometry checks, actual races, input checks, source freeze, and signature. Raw reports and initial failures are in [docs/qa](docs/qa/). Physical TVs and phones have not been tested.
 
 Android builds and the existing release certificate follow the [Game Kit build instructions](../../game-kit/BUILD.md). Local builds are unsigned; source, payload, signature, and evidence must match before an APK is published.

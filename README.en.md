@@ -10,7 +10,7 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![GitHub Release total downloads](https://img.shields.io/github/downloads/ecojust/pureTV/total?style=flat-square&label=downloads&color=16a34a)](https://github.com/ecojust/pureTV/releases)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
 [![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-118-f97316?style=flat-square)](resource/apps/)
+[![App count](https://img.shields.io/badge/apps-119-f97316?style=flat-square)](resource/apps/)
 [![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
 [![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
@@ -97,38 +97,38 @@ This page currently features eight games from the new hundred-game collection al
   </tr>
 </table>
 
-### Apps - Games (19)
+### Apps - Games (20)
 
 <table>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/neon-rush/"><img src="docs/previews/en/app-neon-rush.png" width="180" alt="Neon Rush TV preview"><br>Neon Rush TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/twenty-four/"><img src="docs/previews/en/app-twenty-four.png" width="180" alt="Twenty Four preview"><br>Twenty Four</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/torch-bridge/"><img src="docs/previews/en/app-torch-bridge.png" width="180" alt="Torch Bridge preview"><br>Torch Bridge</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tower-overlap/"><img src="docs/previews/en/app-tower-overlap.png" width="180" alt="Tower Overlap preview"><br>Tower Overlap</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="docs/previews/en/app-packing-sculptor.png" width="180" alt="Packing Sculptor preview"><br>Packing Sculptor</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="docs/previews/en/app-packing-sculptor.png" width="180" alt="Packing Sculptor preview"><br>Packing Sculptor</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/conveyor-window/"><img src="docs/previews/en/app-conveyor-window.png" width="180" alt="Conveyor Window (Chinese UI) preview"><br>Conveyor Window (Chinese UI)</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/glass-fold/"><img src="docs/previews/en/app-glass-fold.png" width="180" alt="Glass Fold (Chinese UI) preview"><br>Glass Fold (Chinese UI)</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tension-span/"><img src="docs/previews/en/app-tension-span.png" width="180" alt="Tension Span (Chinese UI) preview"><br>Tension Span (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="docs/previews/en/app-prism-relay.png" width="180" alt="Light Relay (Chinese UI) preview"><br>Light Relay (Chinese UI)</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="docs/previews/en/app-prism-relay.png" width="180" alt="Light Relay (Chinese UI) preview"><br>Light Relay (Chinese UI)</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/alien-shooter/"><img src="docs/previews/en/app-alien-shooter.png" width="180" alt="Alien Shooter TV preview"><br>Alien Shooter TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/used-car-racing/"><img src="docs/previews/en/app-used-car-racing.png" width="180" alt="Used Car Racing TV preview"><br>Used Car Racing TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/cozy-island/"><img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"><br>Cozy Island TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"><br>Coast Kart TV</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"><br>Coast Kart TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/super-mario/"><img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"><br>Super Mario TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/bomb-jack/"><img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"><br>Mighty Bomb Jack TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/adventure-island/"><img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"><br>Adventure Island TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"><br>Tetris TV</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"><br>Tetris TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/jewel/"><img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"><br>Magic Jewelry TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/jackal/"><img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"><br>Jackal TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tank/"><img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"><br>Tank TV</a></td>
-    <td width="25%"></td>
   </tr>
 </table>
 
