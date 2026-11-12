@@ -8,3 +8,5 @@ Follow the repository AGENTS.md and current history entry first.
 - The Android bridge permits the exact local entry URL. Native language changes must persist the preference and reload that same URL. Do not replace a real LAN address/error with placeholder text.
 - Run meaningful model checks and actual normal-input browser races after relevant changes. Do not block the driving input loop while taking screenshots. Native bridge/layout fixtures are synthetic, not device execution.
 - Browser acceptance, fixed-certificate signing and gameplay recording must refer to identical asset bytes. Keep failed reports and exact executed test scripts; see `docs/qa/` and the repository Game Kit QA guide.
+
+- The ESP32 Wi-Fi controller uses the shared native TCP JSONL server and `_puretv._tcp` NSD discovery, separately from QR/WebSocket phone control. Preserve ACK sequence, alias-key aggregation, sync suppression, reconnect identity, and foreground-only service lifetime; see `docs/WIFI-CONTROLLER.md`.

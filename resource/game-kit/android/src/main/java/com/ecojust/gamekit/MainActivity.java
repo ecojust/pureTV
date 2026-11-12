@@ -56,6 +56,9 @@ public class MainActivity extends Activity {
     private final Object roomLock = new Object();
     private volatile LanGameServer server;
     private LanGameServer pendingServer;
+    private volatile WifiControllerServer wifiServer;
+    private WifiControllerServer pendingWifiServer;
+    private WifiControllerDiscovery wifiDiscovery;
     private volatile String info = "{}";
     private volatile boolean suspended = true;
     private WebView web;
@@ -63,7 +66,7 @@ public class MainActivity extends Activity {
     private FrameLayout root;
     private TextView status;
     private boolean active, destroyed, processTerminated;
-    private int generation;
+    private volatile int generation;
     private AlertDialog exitDialog;
     private ConnectivityManager connectivity;
     private ConnectivityManager.NetworkCallback networkCallback;
@@ -92,6 +95,10 @@ public class MainActivity extends Activity {
         root.addView(status, new FrameLayout.LayoutParams(-1,-1));
         setContentView(root);
         connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        wifiDiscovery = new WifiControllerDiscovery(this, (discoveryState, name, port, error) -> {
+            final int expected = generation;
+            main.post(() -> updateWifiInfo(expected, discoveryState, name, port, error));
+        });
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -236,6 +243,7 @@ public class MainActivity extends Activity {
         status.setVisibility(View.VISIBLE);
         worker.execute(() -> {
             LanGameServer created = new LanGameServer(name -> getAssets().open(name));
+            WifiControllerServer createdWifi = new WifiControllerServer();
             String payload;
             try {
                 int port;
@@ -250,15 +258,44 @@ public class MainActivity extends Activity {
                 created.stop();
                 payload = roomInfo("", addresses, getString(R.string.server_error));
             }
+            int wifiPort = 0;
+            try {
+                synchronized (roomLock) {
+                    if (generation != expected || !active || destroyed) { created.stop(); return; }
+                    pendingWifiServer = createdWifi;
+                    wifiPort = createdWifi.start();
+                }
+            } catch (Exception unavailableWifi) { createdWifi.stop(); }
+            final int readyWifiPort = wifiPort;
             final String ready = payload;
             main.post(() -> {
-                if (!active || destroyed || generation != expected || web == null) { created.stop(); return; }
-                synchronized (roomLock) { server = created; pendingServer = null; }
+                if (!active || destroyed || generation != expected || web == null) { created.stop(); createdWifi.stop(); return; }
+                synchronized (roomLock) {
+                    server = created; pendingServer = null;
+                    wifiServer = readyWifiPort > 0 ? createdWifi : null; pendingWifiServer = null;
+                }
                 info = ready;
                 suspended = false;
+                if (readyWifiPort > 0 && !addresses.isEmpty()) {
+                    wifiDiscovery.start(getString(R.string.app_name), readyWifiPort);
+                } else updateWifiInfo(expected, "unavailable", getString(R.string.app_name), readyWifiPort, -1);
                 web.loadUrl(GAME_URL);
             });
         });
+    }
+
+    private void updateWifiInfo(int expected, String state, String name, int port, int error) {
+        if (!active || destroyed || generation != expected || web == null) return;
+        WifiControllerServer current = wifiServer;
+        if (port > 0 && (current == null || current.getPort() != port)) return;
+        try {
+            JSONObject value = new JSONObject(info);
+            value.put("wifiController", new JSONObject().put("state", state).put("serviceName", name)
+                .put("port", port).put("serviceType", WifiControllerDiscovery.SERVICE_TYPE)
+                .put("version", "1").put("error", error));
+            info = value.toString();
+            web.evaluateJavascript("window.PureGame && window.PureGame.roomInfo(" + info + ")", null);
+        } catch (Exception ignored) { }
     }
 
     private String roomInfo(String url, List<String> addresses, String error) {
@@ -308,8 +345,15 @@ public class MainActivity extends Activity {
     final class HostBridge {
         @JavascriptInterface public String getInfo() { return info; }
         @JavascriptInterface public String snapshot() {
+            if (suspended) return "{\"players\":[],\"connections\":0}";
+            WifiControllerServer wifi = wifiServer;
+            if (wifi != null) {
+                String sample = wifi.snapshot();
+                try { if (new JSONObject(sample).optInt("connections") > 0) return sample; }
+                catch (Exception ignored) { }
+            }
             LanGameServer current = server;
-            return current == null || suspended ? "{\"players\":[],\"connections\":0}" : current.snapshot();
+            return current == null ? "{\"players\":[],\"connections\":0}" : current.snapshot();
         }
         @JavascriptInterface public void publish(String state) {
             LanGameServer current = server;
@@ -322,6 +366,11 @@ public class MainActivity extends Activity {
         synchronized (roomLock) {
             generation++;
             suspended = true;
+            if (wifiDiscovery != null) wifiDiscovery.stop();
+            WifiControllerServer oldWifi = wifiServer;
+            wifiServer = null;
+            if (oldWifi != null) oldWifi.stop();
+            if (pendingWifiServer != null) { pendingWifiServer.stop(); pendingWifiServer = null; }
             LanGameServer old = server;
             server = null;
             if (old != null) old.stop();
@@ -382,6 +431,7 @@ public class MainActivity extends Activity {
         if (exitDialog != null || destroyed) return;
         suspended = true;
         if (server != null) server.releaseInputs();
+        if (wifiServer != null) wifiServer.releaseInputs();
         if (web != null) web.evaluateJavascript("window.PureGame && window.PureGame.suspend && window.PureGame.suspend(true)",null);
         exitDialog = new AlertDialog.Builder(this).setTitle(R.string.exit_title).setMessage(R.string.exit_message)
             .setPositiveButton(R.string.exit,(dialog,which) -> { closeRoom(); finishAndRemoveTask(); })
@@ -390,6 +440,10 @@ public class MainActivity extends Activity {
         exitDialog.setOnDismissListener(dialog -> {
             exitDialog = null;
             if (active && !isFinishing()) {
+                // Events received while the native confirmation dialog was open
+                // must not replay when the WebView resumes.
+                if (server != null) server.releaseInputs();
+                if (wifiServer != null) wifiServer.releaseInputs();
                 suspended = false;
                 if (web != null) web.evaluateJavascript("window.PureGame && window.PureGame.suspend && window.PureGame.suspend(false)",null);
             }

@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.net.nsd.NsdManager;
+import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Base64;
@@ -31,6 +33,9 @@ import org.robolectric.shadows.ShadowWebView;
 import org.robolectric.util.ReflectionHelpers;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.ServerSocket;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -42,7 +47,7 @@ import static org.robolectric.Shadows.shadowOf;
 
 /** Verifies the actual Android host boundary and room lifetime, not a simulated browser bridge. */
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk=28,qualifiers="zh-rCN-w960dp-h540dp-land-xhdpi")
+@Config(sdk=28,qualifiers="zh-rCN-w960dp-h540dp-land-xhdpi", shadows=WifiControllerDiscoveryTest.RecordingNsdShadow.class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 public class MainActivityTest {
@@ -58,6 +63,8 @@ public class MainActivityTest {
     private boolean started, destroyed;
 
     @Before public void create() {
+        WifiControllerDiscoveryTest.RecordingNsdShadow.reset();
+        WifiControllerDiscoveryTest.RecordingNsdShadow.autoRegister=true;
         controller = Robolectric.buildActivity(TestActivity.class).create();
         activity = controller.get();
         // The test has a deterministic LAN address and does not subscribe to the host machine's network.
@@ -73,6 +80,7 @@ public class MainActivityTest {
     private WebView web() { return ReflectionHelpers.getField(activity,"web"); }
     private ShadowWebView browser() { return shadowOf(web()); }
     private LanGameServer server() { return ReflectionHelpers.getField(activity,"server"); }
+    private WifiControllerServer wifiServer() { return ReflectionHelpers.getField(activity,"wifiServer"); }
     private MainActivity.HostBridge bridge() { return (MainActivity.HostBridge) browser().getJavascriptInterface("PureGameHost"); }
     private void start() throws Exception {
         controller.start().resume(); started=true;
@@ -249,13 +257,18 @@ public class MainActivityTest {
         // The worker has started a room but its main-thread attachment has not run yet.
         assertNull(server());
         LanGameServer pending=ReflectionHelpers.getField(activity,"pendingServer");assertNotNull(pending);
+        WifiControllerServer pendingWifi=ReflectionHelpers.getField(activity,"pendingWifiServer");assertNotNull(pendingWifi);
+        int wifiPort=pendingWifi.getPort();assertTrue(wifiPort>0);
+        assertTrue("Pending listeners must not be advertised before the activity accepts them",WifiControllerDiscoveryTest.RecordingNsdShadow.registrations.isEmpty());
         int pendingPort=pending.start();
         assertTrue(get(pendingPort,"/controller.js").startsWith("HTTP/1.1 200"));
         controller.pause().stop();started=false;
         assertClosed(pendingPort);
         assertNull(ReflectionHelpers.getField(activity,"pendingServer"));
         shadowOf(Looper.getMainLooper()).idle();
-        assertNull(server());assertClosed(pendingPort);
+        assertNull(server());assertClosed(pendingPort);assertClosed(wifiPort);
+        assertNull(wifiServer());assertNull(ReflectionHelpers.getField(activity,"pendingWifiServer"));
+        assertTrue(WifiControllerDiscoveryTest.RecordingNsdShadow.registrations.isEmpty());
     }
 
     @Test public void cancelledExitRestoresInputWithoutTogglingPlayerPause() throws Exception {
@@ -300,4 +313,116 @@ public class MainActivityTest {
         activity.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BUTTON_START, 1));
         assertEquals("A held Start key must not send repeated presses", released, browser().getLastEvaluatedJavascript());
     }
+
+    private Socket wifiClient() throws Exception {
+        Socket socket=new Socket("127.0.0.1",wifiServer().getPort());socket.setSoTimeout(2000);return socket;
+    }
+    private JSONObject wifiButton(Socket socket,long seq,String key,boolean pressed,String action) throws Exception {
+        JSONObject message=new JSONObject().put("type","button").put("seq",seq).put("controller_id","esp32-host-fixture")
+                .put("key",key).put("pressed",pressed).put("action",action).put("duration_ms",0);
+        socket.getOutputStream().write((message+"\n").getBytes(StandardCharsets.UTF_8));socket.getOutputStream().flush();
+        JSONObject ack=new JSONObject(new BufferedReader(new InputStreamReader(socket.getInputStream(),StandardCharsets.UTF_8)).readLine());
+        assertEquals("ack",ack.getString("type"));assertEquals(seq,ack.getLong("seq"));return ack;
+    }
+    private void phoneInput(Socket socket,int seq,int x,boolean a) throws Exception {
+        byte[] payload=new JSONObject().put("type","input").put("seq",seq).put("x",x).put("y",0).put("a",a).put("b",false).toString().getBytes(StandardCharsets.UTF_8);
+        assertTrue(payload.length<126);byte[] mask={1,2,3,4};ByteArrayOutputStream frame=new ByteArrayOutputStream();
+        frame.write(0x81);frame.write(0x80|payload.length);frame.write(mask);for(int i=0;i<payload.length;i++)frame.write(payload[i]^mask[i%4]);
+        socket.getOutputStream().write(frame.toByteArray());socket.getOutputStream().flush();
+    }
+    private interface BridgeCondition { boolean satisfied() throws Exception; }
+    private void awaitBridge(BridgeCondition condition) throws Exception {
+        long deadline=System.nanoTime()+2_000_000_000L;
+        while(!condition.satisfied()){if(System.nanoTime()>deadline)fail("Timed out waiting for native input");Thread.sleep(10);}
+    }
+    private JSONObject bridgePlayer() throws Exception { return new JSONObject(bridge().snapshot()).getJSONArray("players").getJSONObject(0); }
+
+    @Test public void wifiServiceAnnouncesTheAlreadyListeningTcpPortAndVersion() throws Exception {
+        final boolean[] connectedBeforeRegistration={false};
+        WifiControllerDiscoveryTest.RecordingNsdShadow.onRegister=service->{
+            try(Socket probe=new Socket("127.0.0.1",service.getPort())){connectedBeforeRegistration[0]=true;}
+            catch(Exception failure){throw new AssertionError("NSD was published before TCP was listening",failure);}
+        };
+        start();assertTrue(connectedBeforeRegistration[0]);assertNotNull(wifiServer());
+        WifiControllerDiscoveryTest.Registration registration=WifiControllerDiscoveryTest.RecordingNsdShadow.registrations.get(0);
+        assertEquals("_puretv._tcp",registration.service.getServiceType());assertEquals(NsdManager.PROTOCOL_DNS_SD,registration.protocol);
+        assertEquals(activity.getString(R.string.app_name),registration.service.getServiceName());
+        assertEquals(wifiServer().getPort(),registration.service.getPort());assertNotEquals(port(),registration.service.getPort());
+        assertEquals("1",new String(registration.service.getAttributes().get("version"),StandardCharsets.UTF_8));
+        JSONObject info=new JSONObject(bridge().getInfo());assertEquals("available",info.getJSONObject("wifiController").getString("state"));
+        assertEquals(wifiServer().getPort(),info.getJSONObject("wifiController").getInt("port"));assertFalse(info.getString("qr").isEmpty());
+    }
+
+    @Test public void busyDefaultPortAdvertisesItsActualFallback() throws Exception {
+        try(ServerSocket occupied=new ServerSocket()){
+            occupied.setReuseAddress(true);occupied.bind(new InetSocketAddress("0.0.0.0",8765));
+            start();assertNotEquals(8765,wifiServer().getPort());assertTrue(wifiServer().getPort()>0);
+            assertEquals(wifiServer().getPort(),WifiControllerDiscoveryTest.RecordingNsdShadow.registrations.get(0).service.getPort());
+        }
+    }
+
+    @Test public void discoveryFailureLeavesGameQrAndTcpAvailable() throws Exception {
+        WifiControllerDiscoveryTest.RecordingNsdShadow.registrationError=NsdManager.FAILURE_INTERNAL_ERROR;
+        start();JSONObject info=new JSONObject(bridge().getInfo());assertEquals("unavailable",info.getJSONObject("wifiController").getString("state"));
+        assertEquals(MainActivity.GAME_URL,browser().getLastLoadedUrl());assertFalse(info.getString("qr").isEmpty());
+        assertTrue(get(port(),"/controller.js").startsWith("HTTP/1.1 200"));
+        try(Socket client=wifiClient()){wifiButton(client,1,"RIGHT",true,"down");assertEquals(1,bridgePlayer().getDouble("x"),0);}
+    }
+
+    @Test public void wifiAndPhoneInputsNeverMixAndDisconnectReturnsToThePhone() throws Exception {
+        start();try(Socket phone=controllerClient(port(),server().roomToken());Socket wifi=wifiClient()){
+            phoneInput(phone,1,1,true);awaitBridge(()->bridgePlayer().getDouble("x")==1);
+            wifiButton(wifi,1,"LEFT",true,"down");JSONObject selected=bridgePlayer();
+            assertEquals("wifi",selected.getString("transport"));assertEquals(-1,selected.getDouble("x"),0);assertFalse(selected.getBoolean("a"));
+            String session=selected.getString("session");assertTrue(session.startsWith("wifi-"));
+            wifi.close();awaitBridge(()->!wifiServer().hasController());
+            phoneInput(phone,2,1,true);awaitBridge(()->bridgePlayer().getDouble("x")==1);
+            assertNotEquals(session,bridgePlayer().optString("session"));assertFalse("wifi".equals(bridgePlayer().optString("transport")));
+        }
+    }
+
+    @Test public void exitDialogCancelsBothInputsAndHeldWifiActionMustBeReleased() throws Exception {
+        start();try(Socket phone=controllerClient(port(),server().roomToken());Socket wifi=wifiClient()){
+            phoneInput(phone,1,1,true);awaitBridge(()->bridgePlayer().getDouble("x")==1);
+            wifiButton(wifi,1,"A",true,"down");assertTrue(bridgePlayer().getBoolean("a"));activity.onBackPressed();
+            assertEquals(0,new JSONObject(bridge().snapshot()).getInt("connections"));
+            assertFalse(new JSONObject(wifiServer().snapshot()).getJSONArray("players").getJSONObject(0).getBoolean("a"));
+            assertFalse(new JSONObject(server().snapshot()).getJSONArray("players").getJSONObject(0).getBoolean("a"));
+            AlertDialog dialog=ReflectionHelpers.getField(activity,"exitDialog");dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();shadowOf(Looper.getMainLooper()).idle();
+            assertFalse(bridgePlayer().getBoolean("a"));wifiButton(wifi,2,"A",true,"long_press");assertFalse(bridgePlayer().getBoolean("a"));
+            wifiButton(wifi,3,"A",false,"long_release");wifiButton(wifi,4,"A",true,"down");assertTrue(bridgePlayer().getBoolean("a"));
+        }
+    }
+
+    @Test public void homeClosesWifiOwnersPendingSocketsAndWithdrawsItsNsdListener() throws Exception {
+        start();int tcpPort=wifiServer().getPort();MainActivity.HostBridge oldBridge=bridge();
+        NsdManager.RegistrationListener registration=WifiControllerDiscoveryTest.RecordingNsdShadow.registrations.get(0).listener;
+        Socket owner=wifiClient(),pending=wifiClient();pending.setSoTimeout(2000);wifiButton(owner,1,"RIGHT",true,"down");
+        controller.pause().stop();started=false;assertNull(wifiServer());assertClosed(tcpPort);assertDisconnected(owner);assertDisconnected(pending);
+        assertTrue(WifiControllerDiscoveryTest.RecordingNsdShadow.unregisters.contains(registration));assertEquals(0,new JSONObject(oldBridge.snapshot()).getInt("connections"));
+    }
+
+    @Test public void renderCrashWithdrawsWifiAndClosesAcceptedController() throws Exception {
+        start();int tcpPort=wifiServer().getPort();Socket owner=wifiClient();wifiButton(owner,1,"LEFT",true,"down");
+        NsdManager.RegistrationListener registration=WifiControllerDiscoveryTest.RecordingNsdShadow.registrations.get(0).listener;
+        assertTrue(browser().getWebViewClient().onRenderProcessGone(web(),null));assertClosed(tcpPort);assertDisconnected(owner);assertNull(wifiServer());
+        assertTrue(WifiControllerDiscoveryTest.RecordingNsdShadow.unregisters.contains(registration));
+    }
+
+
+    @Test public void freshWifiButtonsPressedBehindExitDialogCannotQueueActionsOnResume() throws Exception {
+        start();try(Socket wifi=wifiClient()){
+            wifiButton(wifi,1,"RIGHT",true,"down");activity.onBackPressed();
+            wifiButton(wifi,2,"A",true,"down");wifiButton(wifi,3,"B",true,"down");wifiButton(wifi,4,"START",true,"down");
+            assertEquals(0,new JSONObject(bridge().snapshot()).getInt("connections"));
+            AlertDialog dialog=ReflectionHelpers.getField(activity,"exitDialog");dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();shadowOf(Looper.getMainLooper()).idle();
+            JSONObject resumed=bridgePlayer();assertFalse(resumed.getBoolean("a"));assertFalse(resumed.getBoolean("b"));assertFalse(resumed.getBoolean("start"));
+            assertEquals(0,resumed.getDouble("x"),0);
+            wifiButton(wifi,5,"A",false,"tap");wifiButton(wifi,6,"A",true,"down");assertTrue(bridgePlayer().getBoolean("a"));
+            wifiButton(wifi,7,"B",false,"tap");wifiButton(wifi,8,"START",false,"tap");
+            wifiButton(wifi,9,"B",true,"down");wifiButton(wifi,10,"START",true,"down");
+            JSONObject fresh=bridgePlayer();assertTrue(fresh.getBoolean("b"));assertTrue(fresh.getBoolean("start"));
+        }
+    }
+
 }

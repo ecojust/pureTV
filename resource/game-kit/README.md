@@ -48,3 +48,10 @@ node resource/game-kit/qa/input-lifecycle-test.mjs --output /tmp/puretv-input-li
 进度见 [progress.json](progress.json)。只有完成上述项目并逐款提交到 GitHub 后才计数，草稿与公共组件不计数。浏览器软件渲染的帧耗时不代表实体电视表现；报告必须说明是否做过真机验证。
 
 原生宿主与局域网协议基于本仓库既有游戏实现，继续遵循根目录 [MIT 许可证](../../LICENSE)。新增公共渲染素材为代码绘制的原创图集，不包含第三方游戏资源。
+
+
+## pureTV Wi-Fi 实体手柄
+
+共享宿主同时提供 TCP JSONL v1 手柄服务：首选端口8765，冲突时广播实际分配端口；通过NsdManager注册`_puretv._tcp`和TXT `version=1`，退出/后台撤销。ESP32协议按仓库AGENTS实现，扫码手机的HTTP/WebSocket入口继续保留。
+
+UP/DOWN/LEFT/RIGHT对应方向，START对应开始/暂停，A/X对应动作A，B/Y对应动作B。Wi-Fi连接优先于扫码手机；控制源或连接代际改变会暂停并取消旧输入。动作/START的sync不产生新操作，长按不依赖扫码协议的750ms刷新周期。`GameDef.afterUI`另收到`controllerKind`和`wifiController`发现状态；具体飞车说明见[Wi-Fi接入](../apps/neon-rush/docs/WIFI-CONTROLLER.md)。

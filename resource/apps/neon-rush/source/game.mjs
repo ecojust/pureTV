@@ -24,7 +24,9 @@ function install(){
   document.querySelector('.brand-mark').textContent='NR';
   document.querySelector('header .eyebrow').textContent='PURETV RACING CLUB';
   document.querySelector('footer > span').textContent=text('桔子桑 · 原创竞速','ecojust · Original racing');
-  const phone=document.createElement('button');phone.id='rush-phone-button';phone.type='button';phone.hidden=!!root.PureGameHost;phone.textContent=text('手机手柄','Phone');phone.setAttribute('aria-expanded','false');phone.onclick=()=>{const open=document.body.classList.toggle('rush-phone-open');phone.setAttribute('aria-expanded',String(open));};document.querySelector('.top-actions').prepend(phone);
+  const phone=document.createElement('button');phone.id='rush-phone-button';phone.type='button';phone.hidden=!!root.PureGameHost;phone.textContent=text('连接手柄','Controllers');phone.setAttribute('aria-expanded','false');phone.onclick=()=>{const open=document.body.classList.toggle('rush-phone-open');phone.setAttribute('aria-expanded',String(open));};document.querySelector('.top-actions').prepend(phone);
+  document.querySelector('.side-heading .eyebrow').textContent=text('扫码手柄','SCAN TO CONNECT');
+  const wifi=document.createElement('section');wifi.id='rush-wifi-help';wifi.innerHTML='<strong>'+text('Wi-Fi 实体手柄','Wi-Fi CONTROLLER')+'</strong><p id="rush-wifi-status"></p>';document.querySelector('aside').insertBefore(wifi,document.querySelector('aside .divider'));
   const lang=document.createElement('button');lang.id='rush-language-button';lang.type='button';lang.textContent=english?'中文':'EN';lang.setAttribute('aria-label',text('切换英文','Switch to Chinese'));lang.onclick=()=>{clearExtras();const next=english?'zh':'en';try{localStorage.setItem('neon-rush.language',next);}catch{}if(root.PureGameHost){location.reload();return;}const url=new URL(location.href);url.searchParams.set('lang',next);location.href=url.href;};document.querySelector('.top-actions').append(lang);
   const dashboard=document.createElement('div');dashboard.id='rush-dashboard';dashboard.innerHTML='<canvas id="rush-map" width="160" height="110" aria-label="'+text('赛道小地图','Track minimap')+'"></canvas><div id="rush-countdown" hidden></div><div id="rush-feedback"></div><div id="rush-meters"><div class="rush-meter-label"><span>'+text('氮气储备','NITRO')+'</span><span id="rush-nitro-text"></span></div><div class="rush-meter-track"><i id="rush-nitro-fill"></i></div><div class="rush-meter-label rush-drift-label"><span>'+text('漂移蓄力','DRIFT CHARGE')+'</span><span id="rush-drift-text"></span></div><div class="rush-meter-track rush-drift-track"><i id="rush-drift-fill"></i></div></div>';
   $('scene').insertBefore(dashboard,$('overlay'));
@@ -50,14 +52,13 @@ function install(){
   $('game').addEventListener('webglcontextlost',()=>{renderFailure=text('3D画面已中断，请重新打开游戏。','The 3D context was lost. Reopen the game.');document.body.classList.add('rush-webgl-error');clearExtras();});
   root.addEventListener('pagehide',()=>{clearExtras();audio.dispose();});
   if(english){
-    document.querySelector('.side-heading .eyebrow').textContent='PHONE CONTROLLER';
     $('qr').alt='Scan for the local phone controller';
     $('qr-empty').innerHTML='<span class="phone-icon">▣</span><p>Open the TV app<br>then scan to connect</p>';
     if(!root.PureGameHost)$('room-address').textContent='Phone and TV on the same Wi-Fi';
     document.querySelector('aside h3').textContent='CONTROLS';
-    document.querySelector('.small-help').textContent='P pause · R restart · Enter start / hold to drift';
+    document.querySelector('.small-help').textContent='START start / pause · P pause · R restart';
     document.querySelector('.tip .eyebrow').textContent='RACE TIP';
-  }else document.querySelector('.small-help').textContent='P 暂停 · R 重开 · 确认开始 / 按住漂移';
+  }else document.querySelector('.small-help').textContent='START 开始/暂停 · P 暂停 · R 重开';
 }
 function drawMap(state){
   if(lastMapTrack!==state.trackId){lastMapTrack=state.trackId;mapTrack=makeTrack(state.trackId);}
@@ -72,6 +73,10 @@ function afterUI(state,ctx){
   document.body.dataset.rushPhase=ctx.paused?'paused':ctx.phase;
   const p=state.player||state.cars[0],active=ctx.phase==='playing'&&!ctx.paused;
   if(root.PureGameHost)document.body.classList.toggle('rush-phone-open',!active);
+  const wifi=ctx.wifiController;
+  $('room-status').textContent=ctx.phoneConnected&&ctx.controllerKind==='phone'?'CONNECTED':'LOCAL';
+  $('rush-wifi-help').hidden=!root.PureGameHost;
+  $('rush-wifi-status').textContent=ctx.phoneConnected&&ctx.controllerKind==='wifi'?text('已连接 · START 开始/暂停','Connected · START starts / pauses'):wifi?.state==='available'?text('同一网络，按搜索键连接 '+(wifi.serviceName||'霓虹飞车'),'Same Wi-Fi: press Search for '+(wifi.serviceName||'Neon Rush')):wifi?.state==='registering'?text('正在准备自动发现…','Preparing discovery…'):text('暂不可发现，请重开游戏或扫码连接。','Discovery unavailable. Reopen the game or scan to connect.');
   const enabled=$('sound-button').getAttribute('aria-pressed')==='true';
   audio.update(state,active,enabled);
   $('rush-nitro-fill').style.width=Math.max(0,Math.min(100,p.nitro))+'%';
@@ -80,16 +85,16 @@ function afterUI(state,ctx){
   $('rush-drift-text').textContent=p.drifting?text('松开小喷','RELEASE TO BURST'):text('Shift / 空格','Shift / Space');
   const countdown=$('rush-countdown');countdown.hidden=!active||state.countdown<=0&&state.raceTime>=.8;countdown.textContent=state.countdown>0?String(Math.ceil(state.countdown)):'GO!';
   $('rush-feedback').textContent=!active?'':p.resetCooldown>0?text('返回赛道 · 继续出发','BACK ON TRACK'):p.boostTime>0?text('氮气加速','NITRO BOOST'):p.miniBoostTime>0?text('出弯小喷','MINI TURBO'):p.airHeight>.3?text('飞跃！','AIR TIME'):p.drifting?text('漂移集气','DRIFTING'):'';
-  $('message').textContent=ctx.disconnected?text('手机断开，比赛已暂停。','Phone disconnected. Race paused.'):renderFailure||state.countdown>0?renderFailure||text('准备发车 · 自动油门','Get ready · Auto throttle'):p.drifting?text('保持转向，松开漂移触发小喷。','Hold the turn; release drift for a mini turbo.'):p.nitro>=99.5?text('氮气已满，按 B / Ctrl 提速！','Nitro ready. Press B / Ctrl to boost!'):text('自动油门 · ↓ 刹车 · Shift 漂移 · B 氮气','Auto throttle · ↓ Brake · Shift Drift · B Nitro');
+  $('message').textContent=ctx.disconnected?text('手柄断开，比赛已暂停。','Controller disconnected. Race paused.'):renderFailure||state.countdown>0?renderFailure||text('准备发车 · 自动油门','Get ready · Auto throttle'):p.drifting?text('保持转向，松开漂移触发小喷。','Hold the turn; release drift for a mini turbo.'):p.nitro>=99.5?text('氮气已满，按 B / Ctrl 提速！','Nitro ready. Press B / Ctrl to boost!'):text('自动油门 · ↓ 刹车 · Shift 漂移 · B 氮气','Auto throttle · ↓ Brake · Shift Drift · B Nitro');
   $('best').textContent=text('最佳积分 ','BEST ')+Math.floor(ctx.best);
   if(english){
-    $('connection').textContent=ctx.phoneConnected?'Phone connected':ctx.disconnected?'Disconnected · Paused':'REMOTE / KEYBOARD';
+    $('connection').textContent=ctx.phoneConnected?(ctx.controllerKind==='wifi'?'Wi-Fi controller connected':'Phone controller connected'):ctx.disconnected?'Disconnected · Paused':'REMOTE / KEYBOARD';
     $('pause-button').textContent=ctx.paused?'Resume P':'Pause P';$('sound-button').textContent='Sound: '+(enabled?'On':'Off');
     $('dialog-kicker').textContent=ctx.paused?'TAKE A BREATHER':ctx.phase==='won'?'RACE COMPLETE':ctx.phase==='lost'?'TIME IS UP':'PURETV RACING CLUB';
     $('dialog-title').textContent=ctx.paused?'Paused':ctx.phase==='won'?'Across the line':ctx.phase==='lost'?'One more run?':'Neon Rush';
     if(ctx.paused)$('dialog-copy').textContent='Race time and driving are paused. Resume from here.';
     $('primary').textContent=ctx.paused?'RESUME · P':ctx.phase==='won'||ctx.phase==='lost'?'RACE AGAIN · ENTER':'START RACE · ENTER';
-    $('dialog-help').textContent=ctx.paused?'Phone START or remote Play to resume':'Choose a circuit · B sound · ENTER / START race';
+    $('dialog-help').textContent=ctx.paused?'Controller START or remote Play to resume':'Choose a circuit · B sound · ENTER / START race';
   }else{
     $('primary').textContent=ctx.paused?'继续比赛 · P':ctx.phase==='won'||ctx.phase==='lost'?'再跑一场 · ENTER':'开始竞速 · ENTER';
     if(ctx.phase==='menu')$('dialog-kicker').textContent='PURETV RACING CLUB';
@@ -102,7 +107,7 @@ root.GameDef={
   seed:417,levelLabel:text('赛道','CIRCUIT'),levelNames:TRACKS.map(t=>english?t.nameEn:t.name),
   description:text('六车同场，两圈决胜。自动油门，压弯漂移集气，松手小喷，再用氮气冲过终点。','Six racers. Two laps. Auto throttle keeps you moving. Drift to charge, release for a mini turbo, then unleash nitro.'),
   tip:text('弯前减速，入弯再按漂移。每个检查点都要按顺序经过。','Brake before a corner, then drift. Pass every checkpoint in order.'),
-  controls:{move:text('← → 转向，↓ 刹车；自动油门','← → steer · ↓ brake · auto throttle'),a:text('Shift / 空格 / 确认：按住漂移','Hold Shift / Space / OK to drift'),b:text('B / Ctrl / 遥控器菜单键：氮气','B / Ctrl / remote Menu: nitro')},
+  controls:{move:text('← → 转向，↓ 刹车；自动油门','← → steer · ↓ brake · auto throttle'),a:text('手柄 A/X · Shift/空格/确认：漂移','Pad A/X · Shift/Space/OK: drift'),b:text('手柄 B/Y · B/Ctrl/菜单：氮气','Pad B/Y · B/Ctrl/Menu: nitro')},
   actionLabels:[text('漂移','Drift'),text('氮气','Nitro')],holdConfirmAsA:true,accent:'#ff784b',background:'#101a2e',stylesheet:'rush-theme.css',
   winTitle:text('冲线完成！','Across the line!'),loseTitle:text('时间到，再跑一场','Time is up'),
   hud(s){const p=s.player||s.cars[0];return[{label:text('排名','POSITION'),value:String(s.rank||1).padStart(2,'0')+' / 06'},{label:text('圈数','LAP'),value:Math.min(s.lapTarget,p.lap)+' / '+s.lapTarget},{label:text('用时','TIME'),value:seconds(s.raceTime)},{label:text('时速 km/h','SPEED km/h'),value:Math.round(Math.max(0,p.speed)*3.6),tone:p.boostTime>0?'good':''}];},
