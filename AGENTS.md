@@ -45,6 +45,13 @@
 - 未做实体电视／手机测试时明确记录 `physicalTvTested:false` / `physicalPhoneTested:false`。软件浏览器结果和视频导出帧率不能当作设备帧率。
 - 运行与改动有关的检查；通过后除非有新修改、失败或未解决疑点，不反复运行相同测试。
 
+## 游戏 App 接入 pureTV Wi-Fi 手柄
+
+- 支持手柄自动发现的游戏 App，必须在局域网提供 TCP 手柄输入服务，并通过 mDNS/DNS-SD 发布 `_puretv._tcp`。可由游戏 App 自行实现，也可复用 pureTV 原生宿主统一发布的服务，由宿主将输入转发给当前游戏。
+- Android TV 端先启动 TCP 监听，再用 `NsdManager` 注册服务。发布可辨认的实例名及实际监听端口，默认端口为 `8765`，TXT 属性使用 `version=1`。停止服务时撤销注册。
+- TCP 服务按换行读取 UTF-8 JSON，使用 `controller_id` 区分手柄，按 `key`、`action`、`pressed` 处理输入，并用相同的 `seq` 回复逐行 JSON ACK。重连时用 `sync` 更新按键状态。
+- 验收时让电视与手柄加入同一局域网，确认手柄能发现广播的地址和端口。当前固件只在发现单个服务时自动连接。连接后验证按下、松开和断线重连。
+
 ## 构建、签名与资源同步
 
 以 `resource/game-kit/BUILD.md` 为准。Game Kit 使用 JDK 17、Android Platform 35、Build Tools 34.0.0、固定哈希的 ZXing 3.5.3。工具链放仓库外，构建输出也不得写入游戏源码或公共组件目录。
