@@ -7,12 +7,19 @@ on:
       - '.github/workflows/game-apk-launch-probe.yml'
       - 'tools/probe-game-apk-launch.py'
   workflow_dispatch:
+    inputs:
+      evidence_run_id:
+        description: 'Optional completed launch run to export; no emulator runs when set'
+        type: string
+        required: false
+        default: ''
 
 permissions:
   contents: read
 
 jobs:
   launch:
+    if: ${{ inputs.evidence_run_id == '' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
@@ -72,5 +79,59 @@ jobs:
         with:
           name: game-apk-launch-api36-x86_64
           path: ${{ runner.temp }}/game-apk-launch/
+          if-no-files-found: warn
+          retention-days: 14
+
+  export:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.evidence_run_id != '' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/export-game-launch-evidence.py
+      - name: Validate the completed original run and artifact identity
+        id: evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVIDENCE_RUN_ID: ${{ inputs.evidence_run_id }}
+        run: >-
+          python3 tools/export-game-launch-evidence.py
+          --evidence-run-id "$EVIDENCE_RUN_ID"
+          --artifact "$RUNNER_TEMP/launch-evidence-input"
+          --output "$RUNNER_TEMP/launch-evidence-export"
+          --prepare-only
+      - name: Download the existing launch evidence without rerunning APKs
+        id: download
+        if: ${{ steps.evidence.outputs.artifact_present == 'true' }}
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.evidence_run_id }}
+          artifact-ids: ${{ steps.evidence.outputs.artifact_id }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/launch-evidence-input
+      - name: Create a new isolated evidence ref
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVIDENCE_RUN_ID: ${{ inputs.evidence_run_id }}
+          ARTIFACT_DOWNLOAD_OUTCOME: ${{ steps.download.outcome }}
+        run: >-
+          python3 tools/export-game-launch-evidence.py
+          --evidence-run-id "$EVIDENCE_RUN_ID"
+          --artifact "$RUNNER_TEMP/launch-evidence-input"
+          --output "$RUNNER_TEMP/launch-evidence-export"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: game-launch-evidence-export-${{ inputs.evidence_run_id }}
+          path: ${{ runner.temp }}/launch-evidence-export/
           if-no-files-found: warn
           retention-days: 14
