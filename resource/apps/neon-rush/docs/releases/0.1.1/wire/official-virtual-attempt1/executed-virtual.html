@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pureTV 虚拟手柄</title>
+<style>
+:root{color-scheme:dark;font:16px system-ui,sans-serif;background:#181526;color:#f4eefc}
+body{max-width:670px;margin:6vh auto;padding:20px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-size:clamp(23px,5vw,36px);margin:0}
+p{color:#c8bbd8}
+button{color:inherit;background:#352c49;border:1px solid #766789;border-radius:12px;padding:10px;font:inherit}
+button:focus-visible{outline:2px solid #ffce91}
+.pad{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;background:#241e36;border:1px solid #574967;border-radius:28px;padding:clamp(9px,3vw,30px);margin:24px 0}
+.pad button{min-height:50px;padding:0;touch-action:none;user-select:none;font-weight:700}
+.pad button[data-key=START]{font-size:clamp(10px,2.6vw,16px)}
+.pad button.active{background:#ffce91;color:#26182c}
+</style>
+<header><h1>pureTV 虚拟手柄</h1><button id="connect">连接游戏</button></header>
+<p id="status" role="status">TCP 未连接</p>
+<div class="pad" aria-label="九键手柄"></div>
+<p>支持触控、鼠标和键盘。方向键控制十字键，Enter 对应 START，A、B、X、Y 对应同名按键。</p>
+<script>
+const layout = [
+  ['UP','↑',1,2], ['LEFT','←',2,1], ['RIGHT','→',2,3], ['DOWN','↓',3,2],
+  ['START','START',2,4], ['Y','Y',1,6], ['X','X',2,5], ['B','B',2,7], ['A','A',3,6],
+];
+const shortcuts = {ArrowUp:'UP', ArrowDown:'DOWN', ArrowLeft:'LEFT', ArrowRight:'RIGHT', Enter:'START', a:'A', b:'B', x:'X', y:'Y'};
+const status = document.querySelector('#status');
+const connect = document.querySelector('#connect');
+const pad = document.querySelector('.pad');
+const held = new Map();
+const buttons = new Map();
+let online = false;
+let pending = Promise.resolve();
+
+function setOnline(value, label) {
+  online = value;
+  status.textContent = label;
+  connect.textContent = value ? '断开连接' : '连接游戏';
+  if (!value) {
+    for (const [key, state] of held) {
+      clearTimeout(state.timer);
+      buttons.get(key).classList.remove('active');
+    }
+    held.clear();
+  }
+}
+function send(action, fields = {}) {
+  pending = pending.then(async () => {
+    if (!online && action !== 'connect') return;
+    const response = await fetch('/event', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action, ...fields}),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+    setOnline(result.connected, result.connected ? 'TCP 已连接 · ' + result.id : 'TCP 已断开');
+  }).catch(error => setOnline(false, '连接失败 · ' + error.message));
+  return pending;
+}
+function down(key, source) {
+  if (!online || held.has(key)) return;
+  const start = performance.now();
+  const state = {source, start, long:false};
+  held.set(key, state);
+  buttons.get(key).classList.add('active');
+  send('down', {key});
+  state.timer = setTimeout(() => {
+    state.long = true;
+    send('long_press', {key, duration_ms:Math.round(performance.now()-start)});
+  }, 500);
+}
+function up(key, source) {
+  const state = held.get(key);
+  if (!state || (source !== undefined && source !== state.source)) return;
+  held.delete(key);
+  clearTimeout(state.timer);
+  buttons.get(key).classList.remove('active');
+  send(state.long ? 'long_release' : 'tap', {key, duration_ms:Math.round(performance.now()-state.start)});
+}
+for (const [key, label, row, column] of layout) {
+  const button = document.createElement('button');
+  button.textContent = label;
+  button.dataset.key = key;
+  button.setAttribute('aria-label', key);
+  button.style.gridArea = row + ' / ' + column;
+  buttons.set(key, button);
+  pad.append(button);
+  button.addEventListener('pointerdown', event => {
+    if (event.button !== 0) return;
+    button.setPointerCapture(event.pointerId);
+    down(key, event.pointerId);
+  });
+  for (const name of ['pointerup','pointercancel','lostpointercapture']) {
+    button.addEventListener(name, event => up(key, event.pointerId));
+  }
+  button.addEventListener('click', event => {
+    if (event.detail === 0 && !held.has(key)) {
+      down(key, 'activation');
+      up(key, 'activation');
+    }
+  });
+}
+function releaseAll() {
+  for (const key of held.keys()) up(key);
+}
+connect.addEventListener('click', async () => {
+  connect.disabled = true;
+  try {
+    if (online) releaseAll();
+    await send(online ? 'disconnect' : 'connect');
+  } finally {
+    connect.disabled = false;
+  }
+});
+for (const name of ['keydown','keyup']) {
+  window.addEventListener(name, event => {
+    const key = shortcuts[event.key] || shortcuts[event.key.toLowerCase()];
+    if (!key || (event.key === 'Enter' && event.target instanceof HTMLButtonElement)) return;
+    event.preventDefault();
+    if (name === 'keyup') up(key, 'keyboard');
+    else if (!event.repeat) down(key, 'keyboard');
+  });
+}
+window.addEventListener('blur', releaseAll);
+window.addEventListener('pagehide', () => {
+  if (online) navigator.sendBeacon('/event', new Blob(['{"action":"disconnect"}'], {type:'application/json'}));
+});
+setInterval(() => { if (online) send('ping'); }, 5000);
+</script>
+</html>

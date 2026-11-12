@@ -1,0 +1,53 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Checking the license for package Android SDK Platform-Tools in /workspace/scratch/neon-rush-toolchain/sdk/licenses
+Warning: License for package Android SDK Platform-Tools not accepted.
+WARNING: platform-tools package is not installed. Please accept the installation licence to continue
+> Task :preBuild UP-TO-DATE
+> Task :preDebugBuild UP-TO-DATE
+> Task :javaPreCompileDebug
+> Task :generateDebugResValues
+> Task :checkDebugAarMetadata
+> Task :mapDebugSourceSetPaths
+> Task :generateDebugResources
+> Task :packageDebugResources
+> Task :mergeDebugResources
+> Task :createDebugCompatibleScreenManifests
+> Task :extractDeepLinksDebug
+> Task :parseDebugLocalResources
+> Task :processDebugMainManifest
+> Task :processDebugManifest
+> Task :preDebugUnitTestBuild UP-TO-DATE
+> Task :javaPreCompileDebugUnitTest
+> Task :mergeDebugShaders
+> Task :processDebugManifestForPackage
+> Task :compileDebugShaders NO-SOURCE
+> Task :generateDebugAssets UP-TO-DATE
+> Task :mergeDebugAssets
+> Task :processDebugJavaRes NO-SOURCE
+> Task :processDebugUnitTestJavaRes NO-SOURCE
+> Task :preDebugAndroidTestBuild SKIPPED
+> Task :generateDebugAndroidTestResValues
+> Task :extractProguardFiles
+> Task :processDebugResources
+
+> Task :compileDebugJavaWithJavac FAILED
+/workspace/scratch/neon-rush-wifi-native/current-1/resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java:98: error: variable state is already defined in method onCreate(Bundle)
+        wifiDiscovery = new WifiControllerDiscovery(this, (state, name, port, error) -> {
+                                                           ^
+Note: /workspace/scratch/neon-rush-wifi-native/current-1/resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+1 error
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileDebugJavaWithJavac'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+
+BUILD FAILED in 13s
+20 actionable tasks: 20 executed

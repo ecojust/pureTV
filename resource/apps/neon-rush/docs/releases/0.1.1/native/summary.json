@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "archived_utc": "2026-11-12T16:54:10.097459+00:00",
+  "final_run_created_utc": "2026-11-12T16:51:56.072503+00:00",
+  "result": "66 tests passed; lint passed with three unchanged baseline warnings.",
+  "relative_artifacts": {
+    "final": "final",
+    "baseline": "baseline",
+    "compile_failure": "attempt-1-compile-failure",
+    "test_failure": "attempt-2-fixture-failure",
+    "executed_runner": "environment/run-gradle.executed.sh",
+    "executed_test_jvm_network_config": "environment/test-network.executed.init.gradle",
+    "original_summary": "environment/summary.original.json",
+    "checksums": "SHA256SUMS"
+  },
+  "attempts": [
+    {
+      "id": "baseline",
+      "path": "baseline",
+      "source_files": 24,
+      "source_archive": "baseline/source.tar.gz",
+      "source_inputs": "baseline/source-inputs.json",
+      "build_log": "baseline/build.log",
+      "test_suites": [
+        {
+          "name": "com.ecojust.gamekit.LanGameServerTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "time": "25.035",
+          "report": "baseline/test-results/TEST-com.ecojust.gamekit.LanGameServerTest.xml",
+          "failed_tests": []
+        },
+        {
+          "name": "com.ecojust.gamekit.MainActivityTest",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "time": "3.447",
+          "report": "baseline/test-results/TEST-com.ecojust.gamekit.MainActivityTest.xml",
+          "failed_tests": []
+        }
+      ],
+      "test_total": 29,
+      "failures": 0,
+      "result": "passed",
+      "exit_code": 0,
+      "lint_report": "baseline/reports/lint-results-debug.xml",
+      "clean_commit": "216edb1c587c43580e72cff8ff4e8f68d25f2ddd"
+    },
+    {
+      "id": "current-1",
+      "path": "attempt-1-compile-failure",
+      "source_files": 28,
+      "source_archive": "attempt-1-compile-failure/source.tar.gz",
+      "source_inputs": "attempt-1-compile-failure/source-inputs.json",
+      "build_log": "attempt-1-compile-failure/build.log",
+      "test_suites": [],
+      "test_total": 0,
+      "failures": 0,
+      "result": "compilation_failed",
+      "exit_code": 1,
+      "explanation": "MainActivity onCreate parameter state conflicted with lambda parameter state. Compilation stopped before tests or lint; no JUnit/lint report was produced."
+    },
+    {
+      "id": "current-2",
+      "path": "attempt-2-fixture-failure",
+      "source_files": 28,
+      "source_archive": "attempt-2-fixture-failure/source.tar.gz",
+      "source_inputs": "attempt-2-fixture-failure/source-inputs.json",
+      "build_log": "attempt-2-fixture-failure/build.log",
+      "test_suites": [
+        {
+          "name": "com.ecojust.gamekit.LanGameServerTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "time": "10.319",
+          "report": "attempt-2-fixture-failure/test-results/TEST-com.ecojust.gamekit.LanGameServerTest.xml",
+          "failed_tests": []
+        },
+        {
+          "name": "com.ecojust.gamekit.MainActivityTest",
+          "tests": 19,
+          "failures": 2,
+          "errors": 0,
+          "skipped": 0,
+          "time": "5.68",
+          "report": "attempt-2-fixture-failure/test-results/TEST-com.ecojust.gamekit.MainActivityTest.xml",
+          "failed_tests": [
+            {
+              "name": "wifiServiceAnnouncesTheAlreadyListeningTcpPortAndVersion",
+              "message": "java.lang.AssertionError: expected:<8765> but was:<39413>"
+            },
+            {
+              "name": "stoppingBeforeQueuedStartupAttachesStillClosesItsPendingListener",
+              "message": "java.lang.AssertionError: Pending listeners must not be advertised before the activity accepts them"
+            }
+          ]
+        },
+        {
+          "name": "com.ecojust.gamekit.WifiControllerDiscoveryTest",
+          "tests": 7,
+          "failures": 5,
+          "errors": 0,
+          "skipped": 0,
+          "time": "0.194",
+          "report": "attempt-2-fixture-failure/test-results/TEST-com.ecojust.gamekit.WifiControllerDiscoveryTest.xml",
+          "failed_tests": [
+            {
+              "name": "previousGenerationCallbackCannotPromoteOrCancelNewRegistration",
+              "message": "java.lang.IndexOutOfBoundsException: Index -1 out of bounds for length 0"
+            },
+            {
+              "name": "asynchronousFailureReportsUnavailableAndLateSuccessIsStillWithdrawn",
+              "message": "java.lang.IndexOutOfBoundsException: Index -1 out of bounds for length 0"
+            },
+            {
+              "name": "lateSuccessAfterStopIsWithdrawnEvenIfFirstUnregisterWasPending",
+              "message": "java.lang.IndexOutOfBoundsException: Index -1 out of bounds for length 0"
+            },
+            {
+              "name": "unregistrationFailureNeverResurrectsAStoppedService",
+              "message": "java.lang.IndexOutOfBoundsException: Index -1 out of bounds for length 0"
+            },
+            {
+              "name": "registersExactProtocolFieldsAndKeepsActualBoundPortOnRename",
+              "message": "java.lang.IndexOutOfBoundsException: Index -1 out of bounds for length 0"
+            }
+          ]
+        },
+        {
+          "name": "com.ecojust.gamekit.WifiControllerServerTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "time": "6.288",
+          "report": "attempt-2-fixture-failure/test-results/TEST-com.ecojust.gamekit.WifiControllerServerTest.xml",
+          "failed_tests": []
+        }
+      ],
+      "test_total": 62,
+      "failures": 7,
+      "result": "tests_failed",
+      "exit_code": 1,
+      "explanation": "Custom NSD shadow static state was not automatically reset between tests. Added explicit reset in both Before fixtures. Seven failures were retained; lint was not reached."
+    },
+    {
+      "id": "current-3",
+      "path": "final",
+      "source_files": 28,
+      "source_archive": "final/source.tar.gz",
+      "source_inputs": "final/source-inputs.json",
+      "build_log": "final/build.log",
+      "test_suites": [
+        {
+          "name": "com.ecojust.gamekit.LanGameServerTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "time": "10.404",
+          "report": "final/test-results/TEST-com.ecojust.gamekit.LanGameServerTest.xml",
+          "failed_tests": []
+        },
+        {
+          "name": "com.ecojust.gamekit.MainActivityTest",
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "time": "4.711",
+          "report": "final/test-results/TEST-com.ecojust.gamekit.MainActivityTest.xml",
+          "failed_tests": []
+        },
+        {
+          "name": "com.ecojust.gamekit.WifiControllerDiscoveryTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "time": "0.203",
+          "report": "final/test-results/TEST-com.ecojust.gamekit.WifiControllerDiscoveryTest.xml",
+          "failed_tests": []
+        },
+        {
+          "name": "com.ecojust.gamekit.WifiControllerServerTest",
+          "tests": 22,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "time": "9.345",
+          "report": "final/test-results/TEST-com.ecojust.gamekit.WifiControllerServerTest.xml",
+          "failed_tests": []
+        }
+      ],
+      "test_total": 66,
+      "failures": 0,
+      "result": "passed",
+      "exit_code": 0,
+      "lint_report": "final/reports/lint-results-debug.xml",
+      "build_result": "BUILD SUCCESSFUL in 57s",
+      "parent_commit": "a5fd8b2adc7f2df2f319b495595d9a4f5a893e7e",
+      "working_tree_changes_included": true,
+      "verified_repo_source_mismatches": [],
+      "lint_issues": [
+        {
+          "id": "AndroidGradlePluginVersion",
+          "severity": "Warning",
+          "message": "A newer version of com.android.application than 8.5.2 is available: 9.5.1"
+        },
+        {
+          "id": "DiscouragedApi",
+          "severity": "Warning",
+          "message": "Should not restrict activity to fixed orientation. This may not be suitable for different form factors, causing the app to be letterboxed."
+        },
+        {
+          "id": "UnusedResources",
+          "severity": "Warning",
+          "message": "The resource `R.raw.license` appears to be unused"
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "java": "Temurin OpenJDK 17.0.21+9",
+    "gradle": "8.9",
+    "gradle_distribution": "https://downloads.gradle.org/distributions/gradle-8.9-bin.zip",
+    "gradle_distribution_sha256": "d725d707bfabd4dfdc958c624003b3c80accc03f7037b5122c4b1d0ef15cecab",
+    "android_compile_sdk": 35,
+    "android_build_tools": "34.0.0",
+    "android_gradle_plugin": "8.5.2",
+    "robolectric": "4.14.1",
+    "robolectric_test_sdk": 28,
+    "gradle_args": [
+      "--no-daemon",
+      "--max-workers=2",
+      "testDebugUnitTest",
+      "lintDebug"
+    ],
+    "temporary_origin": {
+      "note": "All /workspace/scratch paths in raw logs, HTML reports, executed helper scripts and original metadata are temporary paths from this execution environment. Use the relative archived artifacts and source snapshots for handoff. The toolchain, cache and local proxy truststore are intentionally not included.",
+      "scratch_root": "/workspace/scratch/neon-rush-wifi-native",
+      "jdk": "/workspace/scratch/neon-rush-toolchain/jdk17",
+      "sdk": "/workspace/scratch/neon-rush-toolchain/sdk"
+    },
+    "network_setup": "The execution environment required proxy JVM properties and its installed CA imported into a copied JDK truststore. The same properties were passed to forked Test JVMs; TLS verification remained enabled. Normal direct-network reproduction does not require those environment-specific settings."
+  },
+  "coverage_limits": [
+    "Robolectric Android API 28 with actual Java loopback TCP/WebSocket sockets; NSD manager calls recorded via custom shadow.",
+    "No physical Android TV/ESP32 or multicast mDNS discovery exercised by this native suite."
+  ],
+  "reuse_note": "Final run compiled and executed the complete current-3 native snapshot. Baseline and earlier failures were archived from their original runs, not rerun or relabeled as current results. This archive does not cover browser gameplay, signed APK installation, physical controllers, or real multicast discovery."
+}

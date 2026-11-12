@@ -4,7 +4,7 @@
 
 Six racers, three original circuits, and a two-lap finish. Drift to charge nitro, release a clean drift for a mini turbo, and use the straights and canyon ramp to gain ground. Auto throttle keeps the car moving; you control the racing line, steering, and brakes.
 
-**0.1.0 · Release-signed APK: 435,692 bytes (about 436 KB).** [Download APK](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.0.apk) · [Gameplay video](docs/gameplay-0.1.0.mp4) · [Verification](docs/verification.json) · [Icon](logo.svg)
+**0.1.1 · Release-signed APK: 443,884 bytes (about 444 KB).** [Download APK](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.1.apk) · [Gameplay video](docs/releases/0.1.1/gameplay.mp4) · [Verification](docs/releases/0.1.1/verification.json) · [Icon](logo.svg)
 
 ![Actual English Neon Rush menu](../../../docs/previews/en/app-neon-rush.png)
 
@@ -42,6 +42,14 @@ You do not need to hold the accelerator. Drift charge requires a real turn and e
 
 The installed TV app shows its QR panel on menu and pause screens. Connect the phone and TV to the same Wi-Fi, then scan the code. In the browser preview, click Phone to see the controls. The left stick steers and brakes; the two right-hand regions control drift and nitro. The race pauses when the phone disconnects. Touchscreens also have local steering, brake, drift, and nitro buttons. The QR controller requires the installed app's LAN service; the standalone static preview does not host that service.
 
+## pureTV Wi-Fi controller
+
+Version 0.1.1 adds the nine-key pureTV TCP controller and mDNS service advertisement. Put the TV and controller on the same network, wait for the game's discovery status, and press the controller's Search key. START starts/pauses; Left/Right steer; Down brakes; A/X drift; B/Y trigger nitro. Disconnecting clears input and pauses the race. Press START again after reconnecting.
+
+The repository's original virtual controller also works: run `python3 puretv-joystick/bridge.py TV_IP --port 8765`, then open `http://127.0.0.1:8767/`. Use the advertised port if the default port was occupied. See [protocol and controls](docs/WIFI-CONTROLLER.md).
+
+All 66 native regressions and six actual-game checks through the original virtual page/SDK passed. NSD registration/lifecycle was tested in software; physical TV/ESP32 discovery and control remain untested.
+
 ## Presentation
 
 The original cars, roads, city, coast, canyon scenery, textures, and sound are generated locally. Gameplay does not need online art or audio downloads. The HUD shows a minimap, position, laps, time, speed, and drift/nitro feedback. Sound can be toggled in the top bar or with B / remote Menu while on the race menu. The installed app initially follows the system Chinese/English language; mouse and touch users can also switch it in the top bar.
@@ -61,6 +69,6 @@ python3 tools/prepare-web.py --output /tmp/neon-rush-web
 python3 -m http.server 8080 --directory /tmp/neon-rush-web
 ```
 
-Open `http://127.0.0.1:8080/tv.html`. Browser results and physical TV tests are reported separately. Software-renderer speed and recording frame rate are not device performance measurements. See [final verification](docs/verification.json) for the 45 model/geometry checks, actual races, input checks, source freeze, and signature. Raw reports and initial failures are in [docs/qa](docs/qa/). Physical TVs and phones have not been tested.
+Open `http://127.0.0.1:8080/tv.html`. Browser results and physical TV tests are reported separately. Software-renderer speed and recording frame rate are not device performance measurements. See [0.1.1 verification](docs/releases/0.1.1/verification.json) for current input, UI, native, signature and recording results. The unchanged model/tracks reuse 45 rule checks from 0.1.0; its complete three-track races remain historical baseline evidence. See the [evidence index](docs/README.md). Physical TVs, phones and ESP32 devices have not been tested.
 
 Android builds and the existing release certificate follow the [Game Kit build instructions](../../game-kit/BUILD.md). Local builds are unsigned; source, payload, signature, and evidence must match before an APK is published.

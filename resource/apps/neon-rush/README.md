@@ -4,9 +4,9 @@
 
 六辆赛车、三条原创赛道、两圈决胜。用漂移积攒氮气，出弯松手获得小喷，在直道冲刺、在山谷跳台腾空。车辆自动加油，你负责选择路线、转向和刹车。
 
-**0.1.0 · 正式签名 APK：435,692 字节（约 436 KB）。** [下载安装包](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.0.apk) · [实玩录像](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json) · [图标](logo.svg)
+**0.1.1 · 正式签名 APK：443,884 字节（约 444 KB）。** [下载安装包](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.1.apk) · [实玩录像](docs/releases/0.1.1/gameplay.mp4) · [验证记录](docs/releases/0.1.1/verification.json) · [图标](logo.svg)
 
-![霓虹飞车实际比赛画面](thumb.png)
+![霓虹飞车实际菜单画面](thumb.png)
 
 包名为 `com.ecojust.neonrushtv`。需要 Android 8.0/API26 或更新系统，以及支持 WebGL 的 Android System WebView；若提示无法建立 3D 画面，请先更新系统 WebView。最低系统版本不等于所有电视均已验证。
 
@@ -40,6 +40,14 @@
 
 电视安装版在菜单和暂停页直接显示二维码。让手机与电视连接同一 Wi-Fi，扫码打开手柄。浏览器预览可点顶部“手机手柄”查看说明。连接后用左侧摇杆转向、下拉刹车，右侧两块区域分别控制漂移和氮气。手机断开时比赛会暂停。触屏设备也提供画面内的方向、刹车、漂移和氮气按钮。扫码手柄依赖安装版提供的局域网服务，单独的静态网页预览不提供电视端服务。
 
+## pureTV Wi-Fi 实体手柄
+
+0.1.1 已接入 pureTV 九键 TCP 手柄与 mDNS 自动发现。电视与手柄连接同一网络，游戏显示手柄搜索提示后按手柄搜索键；START 开始/暂停，左右转向，下键刹车，A/X 漂移，B/Y 氮气。断线会清除输入并暂停，重连后重新按 START 继续。
+
+也可以在电脑运行仓库的 `python3 puretv-joystick/bridge.py 电视IP --port 8765`，打开 `http://127.0.0.1:8767/` 使用原版虚拟手柄；若服务使用备用端口，请填写实际端口。操作和协议见[Wi-Fi 手柄说明](docs/WIFI-CONTROLLER.md)。
+
+原生 66 项回归与原版虚拟手柄网页 6 项实际游戏联调通过。自动发现的注册字段/生命周期已做软件回归；实体电视与 ESP32 的同网搜索、连接尚未实测。
+
 ## 画面与声音
 
 原创三维赛车、赛道、城市、海岸和山谷由本地代码生成，游戏内容不依赖在线图片、模型或音频下载。界面提供小地图、名次、圈数、计时、时速，以及漂移和氮气提示。声音可在顶部按钮开启或关闭，菜单中也可用 B / 遥控器菜单键切换。安装版首次跟随系统中英文，使用鼠标或触屏时也可点顶部语言按钮切换。
@@ -59,6 +67,6 @@ python3 tools/prepare-web.py --output /tmp/neon-rush-web
 python3 -m http.server 8080 --directory /tmp/neon-rush-web
 ```
 
-打开 `http://127.0.0.1:8080/tv.html` 查看实际宿主页面。浏览器预览和实体电视测试分别记录；软件渲染速度、录屏帧率不能当作设备帧率。规则与几何测试 45 项通过；三条赛道的实际比赛、输入、画面与签名结果见[最终验证](docs/verification.json)，原始报告及保留的初次失败记录见 [docs/qa](docs/qa/)。尚未在实体电视或实体手机上测试。
+打开 `http://127.0.0.1:8080/tv.html` 查看实际宿主页面。浏览器预览和实体电视测试分别记录；软件渲染速度、录屏帧率不能当作设备帧率。新版验证见[0.1.1 验证](docs/releases/0.1.1/verification.json)。未改动的模型/赛道复用 0.1.0 的 45 项规则证据，三赛道完赛记录保留为历史基线；原始报告见 [docs/README.md](docs/README.md)。新版输入、UI、原生与录像另行验证。尚未在实体电视、手机或 ESP32 上测试。
 
 Android 构建和固定证书签名沿用 [Game Kit 构建说明](../../game-kit/BUILD.md)。本地 builder 只生成未签名包；只有源码、资产、签名和验证证据核对完成的 APK 才作为发布包。
