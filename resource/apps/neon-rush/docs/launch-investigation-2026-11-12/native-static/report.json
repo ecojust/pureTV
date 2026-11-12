@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-11-12T17:22:14.115259+00:00",
+  "scope": "Read-only launch audit. Static API-reference verification and source review; not Android or user-machine execution.",
+  "status": "no_definite_native_launch_crash_identified",
+  "apk": "/workspace/scratch/neon-rush-wifi-signed-final/neon-rush-0.1.1.apk",
+  "apkSha256": "7a76f3fb85f006cefa95afbc876fe4a0abbda52c537f28f560241b42c9018376",
+  "sourceSha256": {
+    "resource/game-kit/build.py": "4476c855b8a6fb5634c7949c4c0543acf036bcc57a9ee045cb4769303b4e2f7c",
+    "resource/game-kit/android/src/main/AndroidManifest.xml": "b92c3d649b7171e2f895cde3108538ad38dfc0dbeaee8d1cf2cb2e2f9e31d9b9",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java": "8edb03a4edcd8845a1e90e8f93aecffbda1c0599a69446a236dedaa33b6dc8d5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "012267b799975c5140dc53cbed44ace48c2eff1c0e430f3c4c3a0e90091c7703",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+    "resource/apps/hifini/src/main/java/com/ecojust/hifinitv/MainActivity.java": "931d0c20a56586c952c85294af180db216c57909be70898a5c14b8c0f1ae23e5"
+  },
+  "apiReferenceAudit": {
+    "scope": "Game Kit class invoke references to Android, Java and org.json APIs, including superclass/interface resolution",
+    "minSdk": 26,
+    "platformMethodReferences": 288,
+    "requiringHigherThan26": [],
+    "unmapped": [],
+    "executedScript": "executed-api-audit.py",
+    "scriptSha256": "47632a1c9d552683c95f61027948a00e55c085f16bae7bca53472a8789b4e6ea",
+    "executionNote": "Archived verbatim script previously executed through stdin; not executed again during archival.",
+    "apiMetadataPath": "/workspace/scratch/neon-rush-toolchain/sdk/platforms/android-35/data/api-versions.xml",
+    "apiMetadataSha256": "74573d56d0712739b4763d2a5db64acfe309f3c098a6135257572f1f5302dbcf",
+    "dexdumpPath": "/workspace/scratch/neon-rush-toolchain/sdk/build-tools/34.0.0/dexdump",
+    "dexdumpSha256": "4115253cd1433c1836ae8a80b96e045e3b9ce9964166a4fc007b48258eb7333a"
+  },
+  "dexInspection": {
+    "dexVersion": "038",
+    "invokeCustomInstructionCount": 0,
+    "invokePolymorphicInstructionCount": 0,
+    "lambdaDesugaring": "ExternalSyntheticLambda classes implement Runnable / ThreadFactory / listener interfaces in released DEX"
+  },
+  "sourceFindings": [
+    {
+      "item": "R namespace and launcher",
+      "finding": "aapt2 --custom-package com.ecojust.gamekit matches native source R namespace; manifest declares absolute com.ecojust.gamekit.MainActivity while appId is com.ecojust.neonrushtv. No mismatch found.",
+      "checkerSupplement": "Parent independently verified APK Checker parsing resolves that exact cross-package component; no component-concatenation defect in tested path."
+    },
+    {
+      "item": "NSD and sockets",
+      "finding": "NSD uses public API16/21 calls. Manifest INTERNET permission covers registration/socket access; no app-created multicast socket or Wi-Fi multicast lock is used. NSD register RuntimeException and socket-start Exception are caught; failed registration should still reach web.loadUrl."
+    },
+    {
+      "item": "Local HTTPS origin",
+      "finding": "GAME_URL exact local origin and intercepted assets logic are unchanged from 0.1.0. Asset URLs are served from APK through shouldInterceptRequest; no live DNS/TLS request needed for the allowed entry. Actual emulator probe remains separate."
+    },
+    {
+      "item": "HIFINi comparison",
+      "finding": "HIFINi MainActivity builds native Views and does not create WebView; its login activity uses WebView separately. HIFINi main screen opening does not establish that a working System WebView exists."
+    },
+    {
+      "item": "0.1.0 vs 0.1.1",
+      "finding": "Build pipeline/manifest/local-WebView setup unchanged. Additions are Wi-Fi TCP/NSD plus runtime/UI input integration. No new method exceeds API26."
+    },
+    {
+      "item": "Diagnostic limits",
+      "finding": "Robolectric fixture runs source/Gradle SDK28, not released DEX on a physical device. Current static review cannot establish missing/OEM-broken WebView, GPU-driver failure, or actual process-crash reason; requires real device/emulator logcat."
+    }
+  ],
+  "repositoryFilesModified": false,
+  "actualAndroidHostTested": false
+}

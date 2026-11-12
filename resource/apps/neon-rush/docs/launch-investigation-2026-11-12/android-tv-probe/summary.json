@@ -1,0 +1,862 @@
+{
+  "schema": 1,
+  "startedAt": "2026-11-12T17:22:29.999181+00:00",
+  "status": "observations-complete",
+  "sourceCommit": "b101eaa64e678d62c2c85914c37d1a4b5b50aaf3",
+  "method": "Install unchanged published APKs, launch their normal activities, observe ADB process/window/UI/screenshots, and send one ordinary DPAD_CENTER key to a surviving game.",
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "appleSiliconTested": false,
+  "apkCheckerHostTested": false,
+  "scope": "Linux Android TV API36 x86_64 emulator with SwiftShader; different CPU/GPU path from APK Checker on Apple Silicon API36 arm64 with gpu=auto.",
+  "webglGameplayAutomaticallyVerified": false,
+  "cases": [
+    {
+      "id": "neon-rush-0.1.1",
+      "apk": "resource/apps/neon-rush/neon-rush-0.1.1.apk",
+      "apkSha256": "7a76f3fb85f006cefa95afbc876fe4a0abbda52c537f28f560241b42c9018376",
+      "apkBytes": 443884,
+      "package": "com.ecojust.neonrushtv",
+      "activity": "com.ecojust.gamekit.MainActivity",
+      "startedAt": "2026-11-12T17:22:30.553068+00:00",
+      "status": "process-survived",
+      "amStartExitCode": 0,
+      "amStartReportedError": false,
+      "afterTenSeconds": {
+        "observedAt": "2026-11-12T17:22:55.977073+00:00",
+        "pid": "2697",
+        "processAlive": true,
+        "foregroundLines": [
+          "topResumedActivity=ActivityRecord{82000896 u0 com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity t6}",
+          "mCurrentFocus=Window{4f020ba u0 com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity}",
+          "mFocusedApp=ActivityRecord{82000896 u0 com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity t6}",
+          "mCurrentFocus=Window{4f020ba u0 com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity}",
+          "mFocusedApp=ActivityRecord{82000896 u0 com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity t6}"
+        ],
+        "packageInForeground": true,
+        "screenshotValidPng": true,
+        "uiDumpExitCode": 0,
+        "uiReadExitCode": 0,
+        "visibleAccessibilityText": [],
+        "note": "Process, foreground and screenshots are observations, not an assertion of WebGL gameplay."
+      },
+      "afterOrdinaryConfirm": {
+        "observedAt": "2026-11-12T17:23:11.210658+00:00",
+        "pid": "2697",
+        "processAlive": true,
+        "foregroundLines": [
+          "topResumedActivity=ActivityRecord{82000896 u0 com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity t6}",
+          "mCurrentFocus=Window{4f020ba u0 com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity}",
+          "mFocusedApp=ActivityRecord{82000896 u0 com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity t6}",
+          "mCurrentFocus=Window{4f020ba u0 com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity}",
+          "mFocusedApp=ActivityRecord{82000896 u0 com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity t6}"
+        ],
+        "packageInForeground": true,
+        "screenshotValidPng": true,
+        "uiDumpExitCode": 0,
+        "uiReadExitCode": 0,
+        "visibleAccessibilityText": [],
+        "note": "Process, foreground and screenshots are observations, not an assertion of WebGL gameplay."
+      },
+      "crashBufferMentionsPackage": false,
+      "javaFatalExceptionObserved": false,
+      "webviewErrorCandidates": [
+        "11-12 17:22:39.455  2697  2732 I chromium: [1112/172239.452528:INFO:android_webview/browser/variations/variations_seed_loader.cc:67] Failed to open file for reading.: No such file or directory (2)",
+        "11-12 17:22:39.455  2697  2732 I chromium: [1112/172239.455799:INFO:android_webview/browser/variations/variations_seed_loader.cc:67] Failed to open file for reading.: No such file or directory (2)",
+        "11-12 17:22:41.256  2748  2844 E chromium: [ERROR:cc/tiles/tile_manager.cc:998] WARNING: tile memory limits exceeded, some content may not draw",
+        "11-12 17:22:41.256  2748  2844 E chromium: [ERROR:cc/tiles/tile_manager.cc:998] WARNING: tile memory limits exceeded, some content may not draw"
+      ],
+      "cleanupSucceeded": true,
+      "finishedAt": "2026-11-12T17:23:11.942462+00:00"
+    },
+    {
+      "id": "hifini-0.5.0",
+      "apk": "resource/apps/hifini/hifini-0.5.0.apk",
+      "apkSha256": "11953adb659f93838f37535ba73bf7cf8a73e3409374abe0e9016f46240ee2af",
+      "apkBytes": 205924,
+      "package": "com.ecojust.hifinitv",
+      "activity": "com.ecojust.hifinitv.MainActivity",
+      "startedAt": "2026-11-12T17:23:11.942603+00:00",
+      "status": "probe-or-app-failure",
+      "error": "RuntimeError: APK install failed",
+      "crashBufferMentionsPackage": false,
+      "javaFatalExceptionObserved": false,
+      "webviewErrorCandidates": [],
+      "cleanupSucceeded": false,
+      "finishedAt": "2026-11-12T17:25:12.418017+00:00"
+    },
+    {
+      "id": "neon-rush-0.1.0",
+      "apk": "resource/apps/neon-rush/neon-rush-0.1.0.apk",
+      "apkSha256": "7582c084f14d2ef951a51237a9d2b2641f0f55d845f38926c2e8d138ad8f47a9",
+      "apkBytes": 435692,
+      "package": "com.ecojust.neonrushtv",
+      "activity": "com.ecojust.gamekit.MainActivity",
+      "startedAt": "2026-11-12T17:25:12.418143+00:00",
+      "status": "probe-or-app-failure",
+      "error": "RuntimeError: APK install failed",
+      "crashBufferMentionsPackage": false,
+      "javaFatalExceptionObserved": false,
+      "webviewErrorCandidates": [],
+      "cleanupSucceeded": false,
+      "finishedAt": "2026-11-12T17:27:12.705773+00:00"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop",
+        "ro.kernel.qemu"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.025,
+      "stdout": "safety-qemu.stdout.txt",
+      "stderr": "safety-qemu.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "emu",
+        "avd",
+        "name"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.006,
+      "stdout": "safety-avd-name.stdout.txt",
+      "stderr": "safety-avd-name.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "pm",
+        "path",
+        "com.ecojust.hifinitv"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 0.05,
+      "stdout": "safety-package-com.ecojust.hifinitv.stdout.txt",
+      "stderr": "safety-package-com.ecojust.hifinitv.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "pm",
+        "path",
+        "com.ecojust.neonrushtv"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 0.028,
+      "stdout": "safety-package-com.ecojust.neonrushtv.stdout.txt",
+      "stderr": "safety-package-com.ecojust.neonrushtv.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.031,
+      "stdout": "device-properties.stdout.txt",
+      "stderr": "device-properties.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "pm",
+        "list",
+        "features"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.094,
+      "stdout": "device-features.stdout.txt",
+      "stderr": "device-features.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "wm",
+        "size"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.249,
+      "stdout": "device-display.stdout.txt",
+      "stderr": "device-display.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "dumpsys",
+        "webviewupdate"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.033,
+      "stdout": "webview-provider.stdout.txt",
+      "stderr": "webview-provider.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "dumpsys",
+        "SurfaceFlinger"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.033,
+      "stdout": "device-surfaceflinger.stdout.txt",
+      "stderr": "device-surfaceflinger.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-c"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.148,
+      "stdout": "neon-rush-0.1.1/logcat-clear.stdout.txt",
+      "stderr": "neon-rush-0.1.1/logcat-clear.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-b",
+        "crash",
+        "-c"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.063,
+      "stdout": "neon-rush-0.1.1/crash-clear.stdout.txt",
+      "stderr": "neon-rush-0.1.1/crash-clear.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "--user",
+        "0",
+        "/home/runner/work/pureTV/pureTV/resource/apps/neon-rush/neon-rush-0.1.1.apk"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 8.868,
+      "stdout": "neon-rush-0.1.1/install.stdout.txt",
+      "stderr": "neon-rush-0.1.1/install.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "dumpsys",
+        "package",
+        "com.ecojust.neonrushtv"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.215,
+      "stdout": "neon-rush-0.1.1/installed-package.stdout.txt",
+      "stderr": "neon-rush-0.1.1/installed-package.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "start",
+        "-W",
+        "-n",
+        "com.ecojust.neonrushtv/com.ecojust.gamekit.MainActivity"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.773,
+      "stdout": "neon-rush-0.1.1/launch.stdout.txt",
+      "stderr": "neon-rush-0.1.1/launch.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "pidof",
+        "com.ecojust.neonrushtv"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.072,
+      "stdout": "neon-rush-0.1.1/after-ten-seconds-pid.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-ten-seconds-pid.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "dumpsys",
+        "activity",
+        "activities"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.106,
+      "stdout": "neon-rush-0.1.1/after-ten-seconds-activities.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-ten-seconds-activities.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "dumpsys",
+        "window"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.087,
+      "stdout": "neon-rush-0.1.1/after-ten-seconds-window.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-ten-seconds-window.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "exec-out",
+        "screencap",
+        "-p"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.323,
+      "stdout": "neon-rush-0.1.1/after-ten-seconds-screen.png",
+      "stderr": "neon-rush-0.1.1/after-ten-seconds-screen.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "rm",
+        "-f",
+        "/data/local/tmp/puretv-launch-probe-neon-rush-0.1.1-after-ten-seconds.xml"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.031,
+      "stdout": "neon-rush-0.1.1/after-ten-seconds-ui-remove-old.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-ten-seconds-ui-remove-old.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "uiautomator",
+        "dump",
+        "/data/local/tmp/puretv-launch-probe-neon-rush-0.1.1-after-ten-seconds.xml"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 2.7,
+      "stdout": "neon-rush-0.1.1/after-ten-seconds-ui-dump.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-ten-seconds-ui-dump.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "exec-out",
+        "cat",
+        "/data/local/tmp/puretv-launch-probe-neon-rush-0.1.1-after-ten-seconds.xml"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.034,
+      "stdout": "neon-rush-0.1.1/after-ten-seconds-ui.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-ten-seconds-ui.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "input",
+        "keyevent",
+        "KEYCODE_DPAD_CENTER"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.444,
+      "stdout": "neon-rush-0.1.1/ordinary-confirm.stdout.txt",
+      "stderr": "neon-rush-0.1.1/ordinary-confirm.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "pidof",
+        "com.ecojust.neonrushtv"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.043,
+      "stdout": "neon-rush-0.1.1/after-confirm-pid.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-confirm-pid.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "dumpsys",
+        "activity",
+        "activities"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.066,
+      "stdout": "neon-rush-0.1.1/after-confirm-activities.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-confirm-activities.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "dumpsys",
+        "window"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.082,
+      "stdout": "neon-rush-0.1.1/after-confirm-window.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-confirm-window.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "exec-out",
+        "screencap",
+        "-p"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.153,
+      "stdout": "neon-rush-0.1.1/after-confirm-screen.png",
+      "stderr": "neon-rush-0.1.1/after-confirm-screen.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "rm",
+        "-f",
+        "/data/local/tmp/puretv-launch-probe-neon-rush-0.1.1-after-confirm.xml"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.035,
+      "stdout": "neon-rush-0.1.1/after-confirm-ui-remove-old.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-confirm-ui-remove-old.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "uiautomator",
+        "dump",
+        "/data/local/tmp/puretv-launch-probe-neon-rush-0.1.1-after-confirm.xml"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 8.311,
+      "stdout": "neon-rush-0.1.1/after-confirm-ui-dump.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-confirm-ui-dump.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "exec-out",
+        "cat",
+        "/data/local/tmp/puretv-launch-probe-neon-rush-0.1.1-after-confirm.xml"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.098,
+      "stdout": "neon-rush-0.1.1/after-confirm-ui.stdout.txt",
+      "stderr": "neon-rush-0.1.1/after-confirm-ui.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-d",
+        "-v",
+        "threadtime",
+        "-t",
+        "4000"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.14,
+      "stdout": "neon-rush-0.1.1/logcat.stdout.txt",
+      "stderr": "neon-rush-0.1.1/logcat.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-b",
+        "crash",
+        "-d",
+        "-v",
+        "threadtime"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.069,
+      "stdout": "neon-rush-0.1.1/logcat-crash.stdout.txt",
+      "stderr": "neon-rush-0.1.1/logcat-crash.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-d",
+        "-v",
+        "threadtime",
+        "chromium:V",
+        "WebViewFactory:V",
+        "AndroidRuntime:V",
+        "*:S"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.109,
+      "stdout": "neon-rush-0.1.1/webview-console.stdout.txt",
+      "stderr": "neon-rush-0.1.1/webview-console.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "force-stop",
+        "com.ecojust.neonrushtv"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.114,
+      "stdout": "neon-rush-0.1.1/stop.stdout.txt",
+      "stderr": "neon-rush-0.1.1/stop.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "uninstall",
+        "com.ecojust.neonrushtv"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.298,
+      "stdout": "neon-rush-0.1.1/uninstall.stdout.txt",
+      "stderr": "neon-rush-0.1.1/uninstall.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-c"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.198,
+      "stdout": "hifini-0.5.0/logcat-clear.stdout.txt",
+      "stderr": "hifini-0.5.0/logcat-clear.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-b",
+        "crash",
+        "-c"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.079,
+      "stdout": "hifini-0.5.0/crash-clear.stdout.txt",
+      "stderr": "hifini-0.5.0/crash-clear.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "--user",
+        "0",
+        "/home/runner/work/pureTV/pureTV/resource/apps/hifini/hifini-0.5.0.apk"
+      ],
+      "exitCode": -1,
+      "elapsedSeconds": 120.102,
+      "stdout": "hifini-0.5.0/install.stdout.txt",
+      "stderr": "hifini-0.5.0/install.stderr.txt",
+      "error": "command_timeout"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-d",
+        "-v",
+        "threadtime",
+        "-t",
+        "4000"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.029,
+      "stdout": "hifini-0.5.0/logcat.stdout.txt",
+      "stderr": "hifini-0.5.0/logcat.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-b",
+        "crash",
+        "-d",
+        "-v",
+        "threadtime"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.015,
+      "stdout": "hifini-0.5.0/logcat-crash.stdout.txt",
+      "stderr": "hifini-0.5.0/logcat-crash.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-d",
+        "-v",
+        "threadtime",
+        "chromium:V",
+        "WebViewFactory:V",
+        "AndroidRuntime:V",
+        "*:S"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.017,
+      "stdout": "hifini-0.5.0/webview-console.stdout.txt",
+      "stderr": "hifini-0.5.0/webview-console.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "force-stop",
+        "com.ecojust.hifinitv"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.017,
+      "stdout": "hifini-0.5.0/stop.stdout.txt",
+      "stderr": "hifini-0.5.0/stop.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "uninstall",
+        "com.ecojust.hifinitv"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 0.016,
+      "stdout": "hifini-0.5.0/uninstall.stdout.txt",
+      "stderr": "hifini-0.5.0/uninstall.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-c"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.093,
+      "stdout": "neon-rush-0.1.0/logcat-clear.stdout.txt",
+      "stderr": "neon-rush-0.1.0/logcat-clear.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-b",
+        "crash",
+        "-c"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.033,
+      "stdout": "neon-rush-0.1.0/crash-clear.stdout.txt",
+      "stderr": "neon-rush-0.1.0/crash-clear.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "--user",
+        "0",
+        "/home/runner/work/pureTV/pureTV/resource/apps/neon-rush/neon-rush-0.1.0.apk"
+      ],
+      "exitCode": -1,
+      "elapsedSeconds": 120.082,
+      "stdout": "neon-rush-0.1.0/install.stdout.txt",
+      "stderr": "neon-rush-0.1.0/install.stderr.txt",
+      "error": "command_timeout"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-d",
+        "-v",
+        "threadtime",
+        "-t",
+        "4000"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.017,
+      "stdout": "neon-rush-0.1.0/logcat.stdout.txt",
+      "stderr": "neon-rush-0.1.0/logcat.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-b",
+        "crash",
+        "-d",
+        "-v",
+        "threadtime"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.015,
+      "stdout": "neon-rush-0.1.0/logcat-crash.stdout.txt",
+      "stderr": "neon-rush-0.1.0/logcat-crash.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "logcat",
+        "-d",
+        "-v",
+        "threadtime",
+        "chromium:V",
+        "WebViewFactory:V",
+        "AndroidRuntime:V",
+        "*:S"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.015,
+      "stdout": "neon-rush-0.1.0/webview-console.stdout.txt",
+      "stderr": "neon-rush-0.1.0/webview-console.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "force-stop",
+        "com.ecojust.neonrushtv"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.017,
+      "stdout": "neon-rush-0.1.0/stop.stdout.txt",
+      "stderr": "neon-rush-0.1.0/stop.stderr.txt"
+    },
+    {
+      "argv": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "uninstall",
+        "com.ecojust.neonrushtv"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 0.015,
+      "stdout": "neon-rush-0.1.0/uninstall.stdout.txt",
+      "stderr": "neon-rush-0.1.0/uninstall.stderr.txt"
+    }
+  ],
+  "allProcessesSurvived": false,
+  "packageMutationAuthorized": true,
+  "finishedAt": "2026-11-12T17:27:12.705787+00:00"
+}
