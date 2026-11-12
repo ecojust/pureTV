@@ -1,0 +1,76 @@
+name: Game APK launch probe
+
+on:
+  push:
+    branches: [fix/neon-rush-launch]
+    paths:
+      - '.github/workflows/game-apk-launch-probe.yml'
+      - 'tools/probe-game-apk-launch.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  launch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      PURETV_DISPOSABLE_EMULATOR: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/probe-game-apk-launch.py
+            /resource/apps/neon-rush/neon-rush-0.1.0.apk
+            /resource/apps/neon-rush/neon-rush-0.1.1.apk
+            /resource/apps/hifini/hifini-0.5.0.apk
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - name: Check probe syntax and enable disposable emulator acceleration
+        run: |
+          python3 -m py_compile tools/probe-game-apk-launch.py
+          test -e /dev/kvm
+          sudo chmod a+rw /dev/kvm
+      - name: Observe published APKs on an actual Android TV emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: android-tv
+          arch: x86_64
+          profile: tv_1080p
+          avd-name: GameApkLaunch_Validation
+          force-avd-creation: true
+          disable-animations: true
+          emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          script: python3 tools/probe-game-apk-launch.py --serial emulator-5554 --output "$RUNNER_TEMP/game-apk-launch"
+      - name: Summarize observed launches
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          path = Path(os.environ['RUNNER_TEMP'])/'game-apk-launch/summary.json'
+          if path.is_file():
+              report = json.loads(path.read_text())
+              summary = {key:report.get(key) for key in ('status','scope','allProcessesSurvived','error')}
+              summary['cases'] = [{key:case.get(key) for key in ('id','status','javaFatalExceptionObserved','error')} for case in report['cases']]
+              text = json.dumps(summary, ensure_ascii=False, indent=2)
+              print(text)
+              with Path(os.environ['GITHUB_STEP_SUMMARY']).open('a') as output:
+                  output.write('### Existing APK launch observations\n```json\n'+text+'\n```\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: game-apk-launch-api36-x86_64
+          path: ${{ runner.temp }}/game-apk-launch/
+          if-no-files-found: warn
+          retention-days: 14
