@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pureTV 手柄监测</title>
+<style>
+:root{color-scheme:dark;background:#171628;color:#f1eef9;font:16px/1.5 "Instrument Sans",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{max-width:800px;margin:0 auto;padding:clamp(16px,5vw,44px)}
+header{border-bottom:1px solid #514865;padding-bottom:16px;margin-bottom:24px}
+h1{font:700 clamp(24px,6vw,40px)/1.15 "Barlow Semi Condensed",system-ui,sans-serif;margin:0 0 8px}
+p{margin:0;color:#c8bed8}
+article{margin:16px 0;padding:clamp(12px,4vw,28px);border:1px solid #655774;border-radius:24px;background:#29243c}
+.device{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+code{font-family:"IBM Plex Mono",monospace;overflow-wrap:anywhere}
+.link{color:#efbd95}.link.online{color:#abe7ce}
+.pad{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(3px,1vw,8px);max-width:430px;margin:auto}
+.key{display:grid;place-items:center;min-height:clamp(34px,9vw,56px);border:1px solid #716387;border-radius:12px;background:#3b3351;font-weight:750}
+.key.lit{background:#ffce91;color:#2d1b2c;border-color:#ffe5c7;box-shadow:0 0 16px #ffce9170}
+</style>
+<header><h1>pureTV 手柄监测</h1><p id="service" role="status">正在连接监测服务…</p></header>
+<main id="controllers"></main>
+<script>
+const service = document.querySelector('#service');
+const list = document.querySelector('#controllers');
+const layout = [
+  ['UP','↑',1,2], ['LEFT','←',2,1], ['RIGHT','→',2,3], ['DOWN','↓',3,2],
+  ['START','START',2,4], ['Y','Y',1,6], ['X','X',2,5], ['B','B',2,7], ['A','A',3,6],
+];
+const cards = new Map();
+function createCard(id) {
+  const article = document.createElement('article');
+  article.innerHTML = '<div class="device"><code></code><span class="link"></span></div><div class="pad"></div>';
+  article.querySelector('code').textContent = id;
+  const pad = article.querySelector('.pad');
+  const keys = new Map();
+  for (const [key, label, row, column] of layout) {
+    const element = document.createElement('span');
+    element.className = 'key';
+    element.textContent = label;
+    element.style.gridArea = row + ' / ' + column;
+    pad.append(element);
+    keys.set(key, element);
+  }
+  list.append(article);
+  const card = {article, keys, link: article.querySelector('.link')};
+  cards.set(id, card);
+  return card;
+}
+function render(states) {
+  for (const [id, card] of cards) {
+    if (Object.hasOwn(states, id)) continue;
+    card.article.remove();
+    cards.delete(id);
+  }
+  for (const [id, state] of Object.entries(states)) {
+    const {link, keys} = cards.get(id) || createCard(id);
+    link.textContent = state.online ? 'Socket 已连接' : 'Socket 已断开';
+    link.classList.toggle('online', state.online);
+    for (const [key, element] of keys) {
+      const lit = state.online && state.pressed.includes(key);
+      element.classList.toggle('lit', lit);
+      element.setAttribute('aria-label', key + (lit ? ' 触发' : ' 未触发'));
+    }
+  }
+}
+async function update() {
+  try {
+    const response = await fetch('/state', {signal: AbortSignal.timeout(2000)});
+    if (!response.ok) throw new Error();
+    const states = await response.json();
+    const count = Object.values(states).filter(state => state.online).length;
+    service.textContent = '监测服务在线 · ' + count + ' 个手柄已连接';
+    render(states);
+  } catch {
+    service.textContent = '监测服务暂不可用，正在重试…';
+    for (const {link, keys} of cards.values()) {
+      link.textContent = 'Socket 状态未知';
+      link.classList.remove('online');
+      for (const element of keys.values()) element.classList.remove('lit');
+    }
+  } finally {
+    setTimeout(update, 40);
+  }
+}
+update();
+</script>
+</html>

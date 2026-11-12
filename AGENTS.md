@@ -47,41 +47,7 @@
 
 ## 游戏 App 接入 pureTV Wi-Fi 手柄
 
-- 支持手柄自动发现的游戏 App，必须在局域网提供 TCP 手柄输入服务，并通过 mDNS/DNS-SD 发布 `_puretv._tcp`。可由游戏 App 自行实现，也可复用 pureTV 原生宿主统一发布的服务，由宿主将输入转发给当前游戏。
-- Android TV 端先启动 TCP 监听，再用 `NsdManager` 注册服务。发布可辨认的实例名及实际监听端口，默认端口为 `8765`，TXT 属性使用 `version=1`。停止服务时撤销注册。
-- TCP 服务按换行读取 UTF-8 JSON，使用 `controller_id` 区分手柄，按 `key`、`action`、`pressed` 处理输入，并用相同的 `seq` 回复逐行 JSON ACK。重连时用 `sync` 更新按键状态。
-- 验收时让电视与手柄加入同一局域网，确认手柄能发现广播的地址和端口。当前固件只在发现单个服务时自动连接。连接后验证按下、松开和断线重连。
-
-### Android TV 的 NsdServiceInfo 字段
-
-| 字段 | 注册要求 |
-| --- | --- |
-| `serviceType` | 必须为 `_puretv._tcp`，与手柄搜索的服务类型一致 |
-| `serviceName` | 使用可辨认的实例名，例如 `客厅电视` |
-| `port` | 必须是 TCP 服务实际监听的端口，默认使用 `8765` |
-| TXT `version` | 使用 `setAttribute("version", "1")` 声明协议版本。当前 ESP32 固件尚未按此字段筛选 |
-
-### 按键消息字段
-
-| 实体按键 | 上 | 下 | 左 | 右 | 确认 / START | A | B | X | Y |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `key` | `UP` | `DOWN` | `LEFT` | `RIGHT` | `START` | `A` | `B` | `X` | `Y` |
-
-| 字段 | 类型 | 约定 |
-| --- | --- | --- |
-| `type` | 字符串 | 按键消息固定为 `button` |
-| `seq` | 整数 | 手柄逐条递增的消息序号，重启后重新计数 |
-| `controller_id` | 字符串 | 基于 ESP32 出厂 MAC 生成的手柄 ID |
-| `key` | 字符串 | 使用上表中的值，区分大小写 |
-| `pressed` | 布尔值 | 当前是否按住该键 |
-| `action` | 字符串 | `down`、`tap`、`long_press`、`long_release` 或 `sync` |
-| `duration_ms` | 整数 | 已按住的毫秒数，`down` 和 `sync` 为 0 |
-
-`down` 和 `long_press` 的 `pressed` 为 `true`。短按松开时发送 `tap`，长按松开时发送 `long_release`，两者的 `pressed` 为 `false`。`sync` 携带各键当前状态。搜索键只触发手柄本机的服务发现。
-
-```json
-{"type":"button","seq":12,"controller_id":"esp32-001122334455","key":"A","pressed":true,"action":"down","duration_ms":0}
-```
+开发或验收支持手柄的游戏时，参考 [puretv-joystick/README.md](puretv-joystick/README.md) 中的服务发现、TCP 协议和虚拟手柄测试说明。
 
 ## 构建、签名与资源同步
 
