@@ -62,3 +62,35 @@ python3 server.py --host 0.0.0.0 --port 8765
 
 
 服务端示例见 [server.py](server.py)。建立连接后手柄发送 `hello` 和九条 `sync`，随后约每五秒发送 `ping`。`hello` 和 `ping` 携带 `type`、`seq` 和 `controller_id`。每条消息的 ACK 形如 `{"type":"ack","seq":12}`，以换行结束。游戏端在连接断开时应清除该连接的按键状态，避免按键卡住。
+
+## Python SDK
+
+将 [joystick_sdk.py](joystick_sdk.py) 放到自己的项目中。虚拟手柄网页的 TCP 桥接也使用这个 SDK。
+
+```python
+import time
+from joystick_sdk import JoystickClient
+
+controller = JoystickClient("192.168.1.100", 8765)
+controller.connect()
+try:
+    controller.button("A", "down")
+    time.sleep(0.1)
+    controller.button("A", "tap", duration=100)
+finally:
+    controller.disconnect()
+```
+
+每个实例拥有独立手柄 ID。连接后自动发送 `hello` 和九键初始同步。调用方负责将输入映射为 `down`、`tap`、`long_press` 和 `long_release`，并约每五秒调用一次 `ping()`。断线后可再次调用 `connect()`。
+
+## ESP32 固件
+
+[puretv-esp32dev.bin](firmware/puretv-esp32dev.bin) 是经典 ESP32 Dev Module（PlatformIO `esp32dev`）的合并烧录镜像，包含九键输入和 GPIO 23 搜索键。镜像不含本机 Wi-Fi 凭据。
+
+使用 esptool 4.x，将下列串口改成开发板实际串口。
+
+```sh
+python3 -m esptool --chip esp32 --port /dev/cu.usbserial-0001 write_flash 0x0 firmware/puretv-esp32dev.bin
+```
+
+SHA-256 为 `6f0e3e2d552ae718f749b3f62da877616f4406263c8b8beed17bbe5433dcb277`。

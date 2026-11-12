@@ -1,59 +1,10 @@
 """Serve a virtual controller locally and relay its events to a game over TCP."""
 import argparse
 import json
-import socket
-import threading
-import uuid
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
-KEYS = ("UP", "DOWN", "LEFT", "RIGHT", "START", "A", "B", "X", "Y")
-
-
-class Bridge:
-    def __init__(self, target):
-        self.target = target
-        self.identity = f"virtual-{uuid.uuid4().hex[:12]}"
-        self.lock = threading.Lock()
-        self.sock = None
-        self.seq = 0
-
-    def send(self, kind, **fields):
-        self.seq += 1
-        event = dict(type=kind, seq=self.seq, controller_id=self.identity, **fields)
-        self.sock.sendall(json.dumps(event).encode() + b"\n")
-
-    def button(self, key, action, duration=0):
-        self.send("button", key=key, action=action,
-                  pressed=action in ("down", "long_press"), duration_ms=duration)
-
-    def disconnect(self):
-        if self.sock is not None:
-            self.sock.close()
-            self.sock = None
-
-    def connect(self):
-        self.disconnect()
-        sock = socket.create_connection(self.target, timeout=2)
-        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-        self.sock = sock
-        self.send("hello")
-        for key in KEYS:
-            self.button(key, "sync")
-        threading.Thread(target=self.drain_replies, args=(sock,), daemon=True).start()
-
-    def drain_replies(self, sock):
-        while True:
-            try:
-                if not sock.recv(4096):
-                    break
-            except socket.timeout:
-                continue
-            except OSError:
-                break
-        with self.lock:
-            if self.sock is sock:
-                self.disconnect()
+from joystick_sdk import KEYS, JoystickClient
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -94,7 +45,7 @@ class Handler(BaseHTTPRequestHandler):
                     elif bridge.sock is None:
                         raise ConnectionError("游戏 TCP 未连接")
                     elif action == "ping":
-                        bridge.send("ping")
+                        bridge.ping()
                     else:
                         key, duration = event.get("key"), event.get("duration_ms", 0)
                         if (key not in KEYS or action not in ("down", "tap", "long_press", "long_release")
@@ -117,6 +68,6 @@ if __name__ == "__main__":
     parser.add_argument("--web-port", type=int, default=8767)
     args = parser.parse_args()
     with HTTPServer(("127.0.0.1", args.web_port), Handler) as server:
-        server.bridge = Bridge((args.host, args.port))
+        server.bridge = JoystickClient(args.host, args.port)
         print(f"http://127.0.0.1:{server.server_port}/ → {args.host}:{args.port}", flush=True)
         server.serve_forever()
