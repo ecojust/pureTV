@@ -52,6 +52,28 @@
 - TCP 服务按换行读取 UTF-8 JSON，使用 `controller_id` 区分手柄，按 `key`、`action`、`pressed` 处理输入，并用相同的 `seq` 回复逐行 JSON ACK。重连时用 `sync` 更新按键状态。
 - 验收时让电视与手柄加入同一局域网，确认手柄能发现广播的地址和端口。当前固件只在发现单个服务时自动连接。连接后验证按下、松开和断线重连。
 
+### 按键消息字段
+
+| 实体按键 | 上 | 下 | 左 | 右 | 确认 / START | A | B | X | Y |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `key` | `UP` | `DOWN` | `LEFT` | `RIGHT` | `START` | `A` | `B` | `X` | `Y` |
+
+| 字段 | 类型 | 约定 |
+| --- | --- | --- |
+| `type` | 字符串 | 按键消息固定为 `button` |
+| `seq` | 整数 | 手柄逐条递增的消息序号，重启后重新计数 |
+| `controller_id` | 字符串 | 基于 ESP32 出厂 MAC 生成的手柄 ID |
+| `key` | 字符串 | 使用上表中的值，区分大小写 |
+| `pressed` | 布尔值 | 当前是否按住该键 |
+| `action` | 字符串 | `down`、`tap`、`long_press`、`long_release` 或 `sync` |
+| `duration_ms` | 整数 | 已按住的毫秒数，`down` 和 `sync` 为 0 |
+
+`down` 和 `long_press` 的 `pressed` 为 `true`。短按松开时发送 `tap`，长按松开时发送 `long_release`，两者的 `pressed` 为 `false`。`sync` 携带各键当前状态。搜索键只触发手柄本机的服务发现。
+
+```json
+{"type":"button","seq":12,"controller_id":"esp32-001122334455","key":"A","pressed":true,"action":"down","duration_ms":0}
+```
+
 ## 构建、签名与资源同步
 
 以 `resource/game-kit/BUILD.md` 为准。Game Kit 使用 JDK 17、Android Platform 35、Build Tools 34.0.0、固定哈希的 ZXing 3.5.3。工具链放仓库外，构建输出也不得写入游戏源码或公共组件目录。
