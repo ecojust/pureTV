@@ -52,6 +52,15 @@
 - TCP 服务按换行读取 UTF-8 JSON，使用 `controller_id` 区分手柄，按 `key`、`action`、`pressed` 处理输入，并用相同的 `seq` 回复逐行 JSON ACK。重连时用 `sync` 更新按键状态。
 - 验收时让电视与手柄加入同一局域网，确认手柄能发现广播的地址和端口。当前固件只在发现单个服务时自动连接。连接后验证按下、松开和断线重连。
 
+### Android TV 的 NsdServiceInfo 字段
+
+| 字段 | 注册要求 |
+| --- | --- |
+| `serviceType` | 必须为 `_puretv._tcp`，与手柄搜索的服务类型一致 |
+| `serviceName` | 使用可辨认的实例名，例如 `客厅电视` |
+| `port` | 必须是 TCP 服务实际监听的端口，默认使用 `8765` |
+| TXT `version` | 使用 `setAttribute("version", "1")` 声明协议版本。当前 ESP32 固件尚未按此字段筛选 |
+
 ### 按键消息字段
 
 | 实体按键 | 上 | 下 | 左 | 右 | 确认 / START | A | B | X | Y |
