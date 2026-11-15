@@ -371,6 +371,14 @@ class NativeCheck:
                 raise AssertionError('Official bridge exited: '+text)
             time.sleep(.1)
         assert url, 'Official bridge startup URL missing'
+        # A first-run macOS prompt for the original Python bridge can temporarily
+        # background the game. Wait for its real foreground service, then use the
+        # currently advertised port if the old one was unavailable after restart.
+        current=self.until(lambda s:s.get('active') and s['server']['wifiController']['state']=='available', 'Game foreground after Python network permission', 30)
+        self.port=int(current['server']['wifiController']['port'])
+        self.service=current['server']['wifiController']['serviceName']
+        self.proxy.target=('127.0.0.1',self.port)
+        self.report['virtualControllerPort']=self.port
         log=(self.out/'official-virtual-output.txt').open('w')
         self.logs.append(log)
         result=subprocess.run(['node',str(HERE/'official-virtual-native.mjs'),'--url',url,'--diagnostics',str(self.diag),'--output',str(self.out/'official-virtual')],stdout=log,stderr=subprocess.STDOUT,timeout=100)

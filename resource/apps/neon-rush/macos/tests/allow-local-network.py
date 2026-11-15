@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Approve only Neon Rush's network prompt on a disposable GitHub macOS runner.
+"""Approve the game's and its test bridge's observed network prompts on a CI Mac.
 
 Never runs on a user's Mac. Preserve the prompt text and action in test evidence.
 """
@@ -38,9 +38,9 @@ tell application "System Events"
         end try
       end repeat
       set observed to observed & wording
-      if (wording contains "Neon Rush" or wording contains "NeonRush" or wording contains "霓虹飞车") and (wording contains "local network" or wording contains "本地网络" or wording contains "incoming network" or wording contains "传入网络") and allowButton is not missing value then
+      if (wording contains "Neon Rush" or wording contains "NeonRush" or wording contains "霓虹飞车" or wording contains "“Python”") and (wording contains "local network" or wording contains "本地网络" or wording contains "incoming network" or wording contains "传入网络") and allowButton is not missing value then
         click allowButton
-        return "Approved Neon Rush network prompt: " & wording
+        return "Approved test network prompt: " & wording
       end if
     end repeat
     return "Observed notification: " & observed
@@ -56,7 +56,7 @@ while time.monotonic() < end:
         if message != last:
             print(message, flush=True)
             last = message
-        if message.startswith('Approved Neon Rush network prompt:'):
+        if message.startswith('Approved test network prompt:'):
             time.sleep(.5)
             if len(sys.argv) > 1:
                 app = sys.argv[1].replace('\\', '\\\\').replace('"', '\\"')
