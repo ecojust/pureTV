@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -57,7 +57,7 @@ jobs:
       matrix:
         include:
           - platform: macos-arm64
-            runner: macos-14
+            runner: macos-latest
             architecture: arm64
           - platform: macos-x64
             runner: macos-15-intel
