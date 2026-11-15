@@ -27,6 +27,25 @@ BATCHES = {
     'kit-3': ('kit', ['glass-fold', 'tension-span', 'prism-relay']),
 }
 
+def runtime_plan(requested=''):
+    """Validate dispatch selection before it can become a matrix or shell input."""
+    names = json.loads(requested) if requested.strip() else list(BATCHES)
+    assert isinstance(names, list) and names, 'batches must be a nonempty JSON array'
+    assert all(isinstance(name, str) and name in BATCHES for name in names), 'Only predefined batch names are accepted'
+    assert len(names) == len(set(names)), 'Duplicate batches are not accepted'
+    selected = [name for name in BATCHES if name in names]
+    slugs = [slug for name in selected for slug in BATCHES[name][1]]
+    assert len(slugs) == len(set(slugs))
+    standard_options = '-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot'
+    matrix = [{'group': BATCHES[name][0], 'batch': name,
+               'emulatorOptions': standard_options + (' -feature -Vulkan -verbose' if name == 'worlds-2' else '')}
+              for name in selected]
+    return {'requestedBatches': names, 'selectedBatches': selected, 'plannedSlugs': slugs,
+            'completeCatalogRequested': len(slugs) == len(release.ALL_SLUGS),
+            'matrix': {'include': matrix},
+            'worlds2GraphicsExperiment': {'selected': 'worlds-2' in selected,
+                'description': 'Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause.'}}
+
 def selected_slugs(group, batch=None):
     allowed = release.KIT_SLUGS if group == 'kit' else release.GROUPS[group]
     if batch is None:

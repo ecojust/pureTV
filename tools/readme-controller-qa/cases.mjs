@@ -52,6 +52,17 @@ export async function gameplay(slug,{read,tap,hold,until,record}){
       await tap('B');after=await read();record('bag-button',before,after); // Bag assertion added once the diagnostic includes modal state.
     }else if(slug==='alien-shooter'){
       await tap('B');after=await read();assert.ok(player(after).grenades<player(before).grenades,'grenade consumed');record('grenade',before,after);
+    }else if(slug==='tank'){
+      // Tank fires once per press. Its bullet may hit a wall or leave the screen
+      // before an Android diagnostic round trip observes it. The game's fire
+      // event is emitted only after a real player bullet is successfully added.
+      before=await read();record('fire-before',null,before);
+      const owner=player(before).id;
+      const previousFireFrame=Math.max(-1,...(before.effects?.events||[]).filter(e=>e.type==='fire'&&e.player===owner).map(e=>e.frame));
+      await hold('A',0,async()=>{
+        after=await until(s=>(s.effects?.events||[]).some(e=>e.type==='fire'&&e.player===owner&&e.frame>previousFireFrame),'Tank creates a new player bullet');
+        record('fire',before,after);
+      });
     }else{
       await hold('A',140,async()=>{after=await read();});assert.ok((after.effects?.bullets||[]).some(b=>b.team==='player')||(after.effects?.weapons||[]).some(w=>w.team==='player'),'weapon fires');record('fire',before,after);
     }

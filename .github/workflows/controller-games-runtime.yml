@@ -10,32 +10,63 @@ on:
         description: 'JSON: sourceSha, optional legacySourceSha, legacyRunId, legacyAttempt, kitRuns mapping all nine Game Kit IDs to successful signing run IDs'
         type: string
         required: true
+      batches:
+        description: 'Optional JSON array of predefined batch names; empty means all eight batches'
+        type: string
+        required: false
+        default: ''
 
 permissions:
   contents: read
   actions: read
 
 jobs:
+  plan:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.selection.outputs.matrix }}
+      selection: ${{ steps.selection.outputs.selection }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            tools/controller-emulator-batch.py
+            tools/controller-release.py
+            tools/resource_catalog.py
+      - name: Validate the requested batches before creating the matrix
+        id: selection
+        env:
+          REQUESTED_BATCHES: ${{ inputs.batches }}
+        run: |
+          python3 - <<'PY'
+          import importlib.util,json,os,sys
+          sys.path.insert(0,'tools')
+          spec=importlib.util.spec_from_file_location('runtime_batch','tools/controller-emulator-batch.py')
+          batch=importlib.util.module_from_spec(spec);spec.loader.exec_module(batch)
+          plan=batch.runtime_plan(os.environ['REQUESTED_BATCHES'])
+          plan['qaSourceSha']=os.environ['GITHUB_SHA']
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write('matrix='+json.dumps(plan['matrix'],separators=(',',':'))+'\n')
+              out.write('selection='+json.dumps(plan,separators=(',',':'))+'\n')
+          print(json.dumps(plan,indent=2))
+          PY
+
   runtime:
     name: runtime (${{ matrix.batch }})
+    needs: plan
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 50
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - {group: arcade, batch: arcade-1}
-          - {group: arcade, batch: arcade-2}
-          - {group: arcade, batch: arcade-3}
-          - {group: worlds, batch: worlds-1}
-          - {group: worlds, batch: worlds-2}
-          - {group: kit, batch: kit-1}
-          - {group: kit, batch: kit-2}
-          - {group: kit, batch: kit-3}
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     env:
       PYTHONUNBUFFERED: '1'
       PURETV_DISPOSABLE_EMULATOR: '1'
+      RUNTIME_SELECTION: ${{ needs.plan.outputs.selection }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -58,6 +89,9 @@ jobs:
           manifest=json.loads(os.environ['BUNDLE_MANIFEST'])
           assert re.fullmatch('[a-f0-9]{40}',manifest['sourceSha'])
           (Path(os.environ['RUNNER_TEMP'])/'bundle-manifest.json').write_text(json.dumps(manifest)+'\n')
+          selection=json.loads(os.environ['RUNTIME_SELECTION'])
+          assert selection['qaSourceSha']==os.environ['GITHUB_SHA']
+          (Path(os.environ['RUNNER_TEMP'])/'runtime-selection.json').write_text(json.dumps(selection,indent=2)+'\n')
           legacy_source=manifest.get('legacySourceSha',manifest['sourceSha'])
           assert re.fullmatch('[a-f0-9]{40}',legacy_source)
           with open(os.environ['GITHUB_ENV'],'a') as out:
@@ -100,7 +134,7 @@ jobs:
           avd-name: ControllerGamesValidation
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: ${{ matrix.emulatorOptions }}
           script: >-
             python3 tools/controller-emulator-batch.py --group '${{ matrix.group }}'
             --batch '${{ matrix.batch }}'
@@ -120,7 +154,7 @@ jobs:
           root=Path(os.environ['RUNNER_TEMP']);out=root/'controller-runtime-output';out.mkdir(exist_ok=True)
           if (root/'controller-host-diagnostics').is_dir():
               shutil.copytree(root/'controller-host-diagnostics',out/'host-diagnostics')
-          for name in ['bundle-manifest.json','controller-runtime-input/input-verification.json']:
+          for name in ['bundle-manifest.json','runtime-selection.json','controller-runtime-input/input-verification.json']:
               path=root/name
               if path.is_file():shutil.copy2(path,out/path.name)
           source=out/'executed-sources';source.mkdir(exist_ok=True)
@@ -141,14 +175,13 @@ jobs:
           if-no-files-found: error
 
   export:
-    if: always() && github.event_name == 'workflow_dispatch'
-    needs: runtime
+    if: always() && github.event_name == 'workflow_dispatch' && needs.plan.result == 'success'
+    needs: [plan, runtime]
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           pattern: controller-runtime-*
@@ -156,6 +189,7 @@ jobs:
       - name: Describe actual runtime results without changing raw reports
         env:
           RUNTIME_RESULT: ${{ needs.runtime.result }}
+          RUNTIME_SELECTION: ${{ needs.plan.outputs.selection }}
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -163,7 +197,9 @@ jobs:
           out=Path(os.environ['RUNNER_TEMP'])/'controller-runtime-export';rows={}
           for p in out.rglob('*'):
               if p.is_file():rows[p.relative_to(out).as_posix()]={'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
-          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'runId':os.environ['GITHUB_RUN_ID'],'runtimeResult':os.environ['RUNTIME_RESULT'],'files':rows},indent=2)+'\n')
+          selection=json.loads(os.environ['RUNTIME_SELECTION'])
+          assert selection['qaSourceSha']==os.environ['GITHUB_SHA']
+          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'runId':os.environ['GITHUB_RUN_ID'],'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeResultScope':'selected batches only','selection':selection,'files':rows},indent=2)+'\n')
           PY
       - name: Export original evidence on a new isolated branch
         env:
@@ -171,12 +207,13 @@ jobs:
         run: |
           set -euo pipefail
           export_branch="build-assets/controller-runtime-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
-          test -z "$(git ls-remote --heads origin "refs/heads/$export_branch")"
+          repository_url="https://github.com/$GITHUB_REPOSITORY.git"
+          gh auth setup-git
+          test -z "$(git ls-remote --heads "$repository_url" "refs/heads/$export_branch")"
           git init --initial-branch "$export_branch" "$RUNNER_TEMP/controller-runtime-export"
           git -C "$RUNNER_TEMP/controller-runtime-export" config user.name github-actions[bot]
           git -C "$RUNNER_TEMP/controller-runtime-export" config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git -C "$RUNNER_TEMP/controller-runtime-export" add .
           git -C "$RUNNER_TEMP/controller-runtime-export" commit -q -m "Actual controller runtime evidence ${GITHUB_RUN_ID}"
-          gh auth setup-git
-          git -C "$RUNNER_TEMP/controller-runtime-export" remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git -C "$RUNNER_TEMP/controller-runtime-export" remote add origin "$repository_url"
           git -C "$RUNNER_TEMP/controller-runtime-export" push origin "HEAD:refs/heads/$export_branch"

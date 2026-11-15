@@ -38,6 +38,10 @@
 
 八个独立 Android TV API 36 模拟器批次并行运行，每批只验收2–3款；来源分组仍是 arcade/worlds/kit，正式包、观察器和严格验收内容不变。批次为 arcade-1/2/3、worlds-1/2、kit-1/2/3，各款只出现一次。只读观察 APK 声明为 testOnly，安装时单独使用 `adb install -r -t`。只有 `PURETV_DISPOSABLE_EMULATOR=1`、明确的 `emulator-*` 序列号和设备 `ro.kernel.qemu=1` 三项同时满足时，批处理才在该临时模拟器内关闭云端 ADB 安装验证，并保存平台指纹和设置前后值；这不会更改实体设备设置或免除正式 APK 的签名校验。每款通过 `git show` 从所属 APK 的源码提交读取旧 `resource.json`，校验保留的旧 APK 实际包名、版本、哈希及证书后安装，再 `adb install -r` 覆盖新正式 APK，并安装同证书只读观察器。观察器通过正常启动 Activity 找到真实 WebView，只提供读取快照的本机接口；普通输入由未修改的 pureTV SDK 和虚拟手柄发送到实际 Android TCP 服务。
 
+可选 `batches` 输入留空时运行全部8批；例如 `["arcade-1","worlds-1","worlds-2","kit-3"]` 只运行这4批的9款。独立计划任务严格拒绝未知、重复或空数组；批内仍执行每款完整验收。每份证据和导出清单记录准确 QA 提交、所选批次及全部计划游戏；局部运行成功只表示所选批次成功，不能表述为20款全部通过。组合多次验收时必须逐款保存对应 run、QA 提交和正式包哈希，并保留失败原件。
+
+仅 worlds-2 使用 `-feature -Vulkan -verbose`，保留同一 SwiftShader、Android TV 系统和所有正式包，验证替代 GL 渲染路径并记录详细模拟器输出。该开关由 [Android 官方排障文档](https://developer.android.com/studio/run/emulator-troubleshooting) 明确支持；此前整个 AVD 失响应的根因仍未确定，没有据此认定为游戏或 Vulkan 缺陷。其他7批参数保持一致。
+
 `controller-emulator-batch.py` 管理安装、观察器生命周期、ADB 端口转发及原始日志；`tools/readme-controller-qa/run.mjs` 判定各款实际操作与输入取消行为。每款以 Android screenrecord 保存普通输入阶段的新录像（最长120秒，960×540，600,000 bit/s；编码帧率不代表实体设备性能）。失败保留录像、截图、logcat、准确命令和原始报告，并继续其他款；只有全部通过，组任务才成功。证据导出至独立的 `build-assets/controller-runtime-<run>-attempt-<attempt>`。
 
 `controller-runtime-diagnostics.py` 在模拟器启动前每5秒记录主机内存、压力指标、进程名/RSS（不收集进程参数和环境变量），并保留前后内核日志和模拟器崩溃文件；设备端持续 logcat 即使 AVD 随后离线也保留已读日志。诊断只读取状态，不重启设备、不重试或放宽验收。每个 `controller-runtime-<batch>` artifact 保存这些原始文件以及实际执行源码和哈希，包含证据目录内的隐藏工作流副本。上游 emulator-runner v2 无关闭 `keyevent 82` 的配置，启动失败仍真实报告失败。
