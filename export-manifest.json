@@ -1,0 +1,1163 @@
+{
+  "qaSourceSha": "a381b69f2cad78d9466872af656b3cb28d153211",
+  "runId": "43738487701",
+  "runtimeResult": "failure",
+  "runtimeResultScope": "selected batches only",
+  "selection": {
+    "requestedBatches": [
+      "retry-used-car",
+      "retry-alien",
+      "retry-prism",
+      "retry-arcade-visual"
+    ],
+    "selectedBatches": [
+      "retry-used-car",
+      "retry-alien",
+      "retry-prism",
+      "retry-arcade-visual"
+    ],
+    "plannedSlugs": [
+      "used-car-racing",
+      "alien-shooter",
+      "prism-relay",
+      "tank",
+      "jackal"
+    ],
+    "completeCatalogRequested": false,
+    "matrix": {
+      "include": [
+        {
+          "group": "worlds",
+          "batch": "retry-used-car",
+          "apiLevel": 29,
+          "arch": "x86",
+          "renderer": "swiftshader_indirect",
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -feature -Vulkan -verbose"
+        },
+        {
+          "group": "worlds",
+          "batch": "retry-alien",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "kit",
+          "batch": "retry-prism",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "arcade",
+          "batch": "retry-arcade-visual",
+          "apiLevel": 29,
+          "arch": "x86",
+          "renderer": "swiftshader_indirect",
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -feature -Vulkan -verbose"
+        }
+      ]
+    },
+    "worlds2GraphicsExperiment": {
+      "selected": true,
+      "description": "Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause."
+    },
+    "usedCarStableImageComparison": {
+      "selected": true,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "channel": "stable",
+      "revisionListedByOfficialRepository": 3,
+      "description": "Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory."
+    },
+    "arcadeVisualStableImageComparison": {
+      "selected": true,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "description": "Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence."
+    },
+    "qaSourceSha": "a381b69f2cad78d9466872af656b3cb28d153211"
+  },
+  "files": {
+    "evidence/controller-runtime-retry-alien/bundle-manifest.json": {
+      "bytes": 464,
+      "sha256": "7f82902c543be7628a119a3f04839cda225163669240f40d66313fd36dc12153"
+    },
+    "evidence/controller-runtime-retry-alien/runtime-selection.json": {
+      "bytes": 2538,
+      "sha256": "faa082ca8b402e26787bd2ab5b995396dff9444e82ab99aceeb03d49ea6ad82e"
+    },
+    "evidence/controller-runtime-retry-alien/continuous-logcat.txt": {
+      "bytes": 3770488,
+      "sha256": "45920e537cd51c4d2a9cdb326350e1ae2602023d15f288809e6265b4d1fae5fc"
+    },
+    "evidence/controller-runtime-retry-alien/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-retry-alien/input-verification.json": {
+      "bytes": 3091,
+      "sha256": "f42ce030db6d01a760bb149514897a0908df626c214f6b4a51a321e330341554"
+    },
+    "evidence/controller-runtime-retry-alien/executed-source-manifest.json": {
+      "bytes": 2647,
+      "sha256": "de92e60e9eb33cf02f623efbbdd378d354a0ce084291c3158b4a822a684eb89f"
+    },
+    "evidence/controller-runtime-retry-alien/report.json": {
+      "bytes": 25096,
+      "sha256": "bf918da1e320f76db8bc63c37cbdbb3ff36e398159f61d014c3a923c1eddd10a"
+    },
+    "evidence/controller-runtime-retry-alien/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/bundle-manifest.json": {
+      "bytes": 464,
+      "sha256": "7f82902c543be7628a119a3f04839cda225163669240f40d66313fd36dc12153"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/runtime-selection.json": {
+      "bytes": 2538,
+      "sha256": "faa082ca8b402e26787bd2ab5b995396dff9444e82ab99aceeb03d49ea6ad82e"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/continuous-logcat.txt": {
+      "bytes": 2605700,
+      "sha256": "c01606e1eb3b4d1bfd7f5c872030c4668d1d92619998848ba7240eec80a7cd24"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/emulator-configuration.json": {
+      "bytes": 1124,
+      "sha256": "090f05d79deab2dc85c71b05a690abd07cbc45f0ad56e0a678a8b295bd1e8d72"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/input-verification.json": {
+      "bytes": 5170,
+      "sha256": "9e1d1dea65bea2074a1f38547df3f52dbac4b64b3b1123b13ee788b96fc0fe6b"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-source-manifest.json": {
+      "bytes": 2647,
+      "sha256": "de92e60e9eb33cf02f623efbbdd378d354a0ce084291c3158b4a822a684eb89f"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/report.json": {
+      "bytes": 14300,
+      "sha256": "ad0bb3fcd31952745125dc113ffcd7d7e54fde49796d05c04f9b968ccbe0b739"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-retry-prism/bundle-manifest.json": {
+      "bytes": 464,
+      "sha256": "7f82902c543be7628a119a3f04839cda225163669240f40d66313fd36dc12153"
+    },
+    "evidence/controller-runtime-retry-prism/runtime-selection.json": {
+      "bytes": 2538,
+      "sha256": "faa082ca8b402e26787bd2ab5b995396dff9444e82ab99aceeb03d49ea6ad82e"
+    },
+    "evidence/controller-runtime-retry-prism/continuous-logcat.txt": {
+      "bytes": 3601811,
+      "sha256": "3385b67225fb3b0e67c75d3769ec9bfb320d4d72f7250645efe1c38fe62494e9"
+    },
+    "evidence/controller-runtime-retry-prism/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-retry-prism/input-verification.json": {
+      "bytes": 6638,
+      "sha256": "3b42bcad334f8b41927b0df97d8a081ff915f3808c6d465b6cb148c774a014aa"
+    },
+    "evidence/controller-runtime-retry-prism/executed-source-manifest.json": {
+      "bytes": 2647,
+      "sha256": "de92e60e9eb33cf02f623efbbdd378d354a0ce084291c3158b4a822a684eb89f"
+    },
+    "evidence/controller-runtime-retry-prism/report.json": {
+      "bytes": 24674,
+      "sha256": "5323235575c1332cc3de19e2c18fee20dd235b00a1364945c2c12ceb87d14a19"
+    },
+    "evidence/controller-runtime-retry-prism/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-retry-used-car/bundle-manifest.json": {
+      "bytes": 464,
+      "sha256": "7f82902c543be7628a119a3f04839cda225163669240f40d66313fd36dc12153"
+    },
+    "evidence/controller-runtime-retry-used-car/runtime-selection.json": {
+      "bytes": 2538,
+      "sha256": "faa082ca8b402e26787bd2ab5b995396dff9444e82ab99aceeb03d49ea6ad82e"
+    },
+    "evidence/controller-runtime-retry-used-car/continuous-logcat.txt": {
+      "bytes": 2211397,
+      "sha256": "996237358d8297b654aa0a06d2d1b6fdb6877f29a2419c7c96d2ac22a0e7fb3c"
+    },
+    "evidence/controller-runtime-retry-used-car/emulator-configuration.json": {
+      "bytes": 1124,
+      "sha256": "090f05d79deab2dc85c71b05a690abd07cbc45f0ad56e0a678a8b295bd1e8d72"
+    },
+    "evidence/controller-runtime-retry-used-car/input-verification.json": {
+      "bytes": 3091,
+      "sha256": "f42ce030db6d01a760bb149514897a0908df626c214f6b4a51a321e330341554"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-source-manifest.json": {
+      "bytes": 2647,
+      "sha256": "de92e60e9eb33cf02f623efbbdd378d354a0ce084291c3158b4a822a684eb89f"
+    },
+    "evidence/controller-runtime-retry-used-car/report.json": {
+      "bytes": 13900,
+      "sha256": "4037f4d11633f10e8deb2693c53e9b9f5f13db0dcc2ebe27f15e6d6fdfffd831"
+    },
+    "evidence/controller-runtime-retry-used-car/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "ae6654841fdd8af74d83eafb70e589f75f486fea08ead1ca35e9be4040d5380f"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "a05849893542c664d20d5be54b3e7dc33f5b93b1a7361703adc04dfb149fd746"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "1e1f828960ee1628ead2be7fb46a3ad1d641bee8d94538360eb53b8f53a3cb00"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "1d0890e9a010937fe4416fcb6842f2a619864a405fec2e581b1c3073e0cf40c3"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "6cc304b996c4d69f22d014d78c2a598a4ae9d60d741a3b7cbfd592c224271ec9"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/host-samples.jsonl": {
+      "bytes": 215660,
+      "sha256": "7df94c12823c3d4ec958d0ab7e0f9b5fdc0542638875876ac17e4738ea8505e4"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-before.txt": {
+      "bytes": 57964,
+      "sha256": "dfb6eecffadbc47ed50a09941aa2524f904ac8d4707e8e0b68430bf92d7b484e"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "7ca1eb0072c5d32f946b16cf45065a8800421d51ff3e3dc0dbe0656ccd765aec"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-after.txt": {
+      "bytes": 58088,
+      "sha256": "31401ae1d1d7e29e2347eb2ae950b8ad39ed414c47754d5bacb2c761422fef84"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/initial-snapshot.json": {
+      "bytes": 8378,
+      "sha256": "b10ac964381dc06bdc3d84f364a56a413249af976e5741d9494cb0d66a87f3b7"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/driver.log": {
+      "bytes": 507,
+      "sha256": "6663a9e3d36dda96189e50d700e2b9887ac81ea38b78e249ea1c0b09cef6c202"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/logcat.txt": {
+      "bytes": 1876793,
+      "sha256": "bca5756d3558904e48c529b05d7c041aed686918b52bf3caaa5f32c49911a2b6"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/baseline-release.json": {
+      "bytes": 430,
+      "sha256": "3fe4a410cdf16a82fecadf7e727e1837d290aa726157d3648c860b51fa982700"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/recording-probe.json": {
+      "bytes": 4359,
+      "sha256": "aeab7e372055075f3f59cb748516762ad20078f781ac3198edc7cb15b0ac7f30"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/commands.json": {
+      "bytes": 1054,
+      "sha256": "5b4109147dcdce4c56dea3a4ecd203cb61bcb2dc64b69133b17aeae22b6ef251"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/case.json": {
+      "bytes": 1152,
+      "sha256": "de7116766985fe41f52e945f2de3ab480ed471dbad8590df8e0dd3c34c4adec4"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/failure-screen.png": {
+      "bytes": 270533,
+      "sha256": "6282927e439a3c75e8c3ac963da1c5f2466d07d3e898e0c3a8e200d5fe13aa90"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay.mp4": {
+      "bytes": 451766,
+      "sha256": "8fc8121c3978cc86154461c3ee5263b2dc7240c302847dfa9a8aba40d7d8cc04"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/emulator-crash-data/emu-crash-37.2.13.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "bbfb01b79311135ea80496dd025d09101e95877c4fbf1a232002861313e789f8"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 17884,
+      "sha256": "05dae8e353ac93ddfcda606dc26f554d37c3073bd6adad435aba43325f2a4d86"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8096,
+      "sha256": "5c6cd2165a87c075ddaf7ad7638e8afef4afbc1d9643b37aa73fe5d629a58cb4"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-release.py": {
+      "bytes": 16723,
+      "sha256": "caee3818477e965cbb44dc6c9cbd2acc5b59ba917bdc2680831829ef473c2f1c"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 10888,
+      "sha256": "a7164019bf729e78585c0b626541d3941a123b471ab3c2ae609bca4cdf6ad7b3"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 10730,
+      "sha256": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 22677,
+      "sha256": "1ce8a253f9b1735215a43897c46bdca74b2abdd07b9cf50b9f34c032ed22e495"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 935,
+      "sha256": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/gameplay.png": {
+      "bytes": 1114765,
+      "sha256": "6dc5436f0d5f797f38d1c10392e47bd763489a2eddf371a6ae5f2917d002c0fe"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-cases.mjs": {
+      "bytes": 10730,
+      "sha256": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/failure.png": {
+      "bytes": 270861,
+      "sha256": "0f858caaee7e351ddc96f99a9dbceb97ee511009329b4ffdc074cfac78e612cb"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-run.mjs": {
+      "bytes": 22677,
+      "sha256": "1ce8a253f9b1735215a43897c46bdca74b2abdd07b9cf50b9f34c032ed22e495"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-sdk-peer.py": {
+      "bytes": 935,
+      "sha256": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/bridge-stderr.txt": {
+      "bytes": 2242,
+      "sha256": "689c5550fadaf1b342273d95ebee253621978e2ee64b57864923430a5942955d"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/report.json": {
+      "bytes": 176121,
+      "sha256": "e90b884ec8e7c9e19ed677024e0828b8d6636019f9c9cdeb2f4e6571b0ccd165"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/menu-android.png": {
+      "bytes": 1247095,
+      "sha256": "ea37d8d508734a6c5db9e79f69652fe37ff6ed9c3cf556766bf7f7d15005b725"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/paused.png": {
+      "bytes": 1118747,
+      "sha256": "de8f23e4d82f939ad71734acacd20fb43a61a3913f58bf7209303faf397b4775"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "2408f302b14c8f3259c6339af41c05c9b179befb781d83900fd41bc81c433638"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "75438b6af402511a5f2b2d894218e1a237be1093e0d30cdae3fbd124416d9e44"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "3bd31c705b2539ca60f18b2a30deb89d39cc5637722118a3017d6653a9e3bda3"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "4e2a0f1e9d21a063752cf62f65a755f1cce23133448bd9ec4af463edd3bf0503"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/host-samples.jsonl": {
+      "bytes": 219127,
+      "sha256": "ee3270e87e427c113746bd6e5df75d5cedd5aa14f612cc10cba6dd4b296fab70"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/kernel-before.txt": {
+      "bytes": 59845,
+      "sha256": "76d62faea6b1d5720c650249891b3a01d2900cec959a149dc069000498118292"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "5904db9486230cd37bc11833e39e84af107e47ebc6b0601f75cb82b1832841e8"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/kernel-after.txt": {
+      "bytes": 59969,
+      "sha256": "44f98378a731776d903112d425c28b20da3b27c6e4d921089c155665c34cde2d"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/initial-snapshot.json": {
+      "bytes": 6878,
+      "sha256": "ce759cabb20c81a4ab8de08df37f0f38c0eea25b747b62b7ba22fcfa7562ef82"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/driver.log": {
+      "bytes": 688,
+      "sha256": "e03f009005b71e48c3097c83422efe099377bd26c5b899f1018eaeecb1d7213c"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/logcat.txt": {
+      "bytes": 293623,
+      "sha256": "9eae898a40b65a70739c0def55784794380050b8e7593e87ff529a9755f673cb"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/baseline-release.json": {
+      "bytes": 418,
+      "sha256": "8fccc040aa4d6472798339dcf31ca0d0af62c746db1d4b0fc0ab6727f2fe5f36"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/recording-probe.json": {
+      "bytes": 2434,
+      "sha256": "ba386bf5dd0c003c673b1c4a0487eb1ad0d088c6777ab49bc66aa34161f3a6b6"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/commands.json": {
+      "bytes": 1027,
+      "sha256": "6cd00aeb0dab87ade86272a39eb347ea4be1920ab24a75ccc1b7bd91de4f3a8e"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/case.json": {
+      "bytes": 741,
+      "sha256": "dac985e49297c80760ae6962fcc1160222b6a108b8f6fe384a656106013f99cb"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay.mp4": {
+      "bytes": 1481617,
+      "sha256": "cceb0604d4fdf39d42a429a85e7a1274d72d5d4c32688e383b668e48d88e99d1"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/initial-snapshot.json": {
+      "bytes": 8288,
+      "sha256": "4259ddcedbbcc796bf1191a13f0a641ca810a51d0d784710cc3174a8e7c0e718"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/driver.log": {
+      "bytes": 668,
+      "sha256": "2cc5021f6903c89aef022f3b79f57c829b255227aad89960ca35eb878ffc2b73"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/logcat.txt": {
+      "bytes": 1355570,
+      "sha256": "d8070a5b5ef26cda4b29d2a17052cb29dff1fd50af0df7621f9b4b51274ecf29"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/baseline-release.json": {
+      "bytes": 412,
+      "sha256": "8b2ad64ff11f78e3d733639612aab288cbcfd8aeceecb4cb06672eb88aa7ab85"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/recording-probe.json": {
+      "bytes": 2430,
+      "sha256": "1e53476508ea60629fd3c37276b3022a4116a4f701ef4d52a76a1499655b5700"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/commands.json": {
+      "bytes": 1019,
+      "sha256": "a2fb541d47575bde83dfa4dc246b6449de3a9aa35f63e26aa7d485dc3836005c"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/case.json": {
+      "bytes": 738,
+      "sha256": "4195c9c2865a83332570064e0d4e7f6175ea37cb9ec1b655abf7ec2ba5893662"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay.mp4": {
+      "bytes": 463460,
+      "sha256": "fd1bc617f598c52b79e97ea02888b65ecbc475e924addc392d7a8c434b38aabb"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/host-diagnostics/emulator-crash-data/emu-crash-37.2.13.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "a8c7550b2fab5712777d25ac1a84b347519ad7d6fb683c5bee4a5f796b1c7fe8"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 17884,
+      "sha256": "05dae8e353ac93ddfcda606dc26f554d37c3073bd6adad435aba43325f2a4d86"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8096,
+      "sha256": "5c6cd2165a87c075ddaf7ad7638e8afef4afbc1d9643b37aa73fe5d629a58cb4"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/controller-release.py": {
+      "bytes": 16723,
+      "sha256": "caee3818477e965cbb44dc6c9cbd2acc5b59ba917bdc2680831829ef473c2f1c"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 10888,
+      "sha256": "a7164019bf729e78585c0b626541d3941a123b471ab3c2ae609bca4cdf6ad7b3"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 10730,
+      "sha256": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 22677,
+      "sha256": "1ce8a253f9b1735215a43897c46bdca74b2abdd07b9cf50b9f34c032ed22e495"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 935,
+      "sha256": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/reconnected.png": {
+      "bytes": 113695,
+      "sha256": "95abf1aabacf1f422f64398fa27675fbc767b1a94bf5f53c2f73fbd6a6eb951b"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/gameplay.png": {
+      "bytes": 112753,
+      "sha256": "8c66b2c5f780cfad1c46c1bf8ff27bafc13767e5b1e4dddab758ba0b092bbf16"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/executed-cases.mjs": {
+      "bytes": 10730,
+      "sha256": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/executed-run.mjs": {
+      "bytes": 22677,
+      "sha256": "1ce8a253f9b1735215a43897c46bdca74b2abdd07b9cf50b9f34c032ed22e495"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/executed-sdk-peer.py": {
+      "bytes": 935,
+      "sha256": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/bridge-stderr.txt": {
+      "bytes": 4090,
+      "sha256": "fbbce42618e6b5c3754bd6b4f10efac358dd4ab6d983e1d2a4aabe4881650cbd"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/report.json": {
+      "bytes": 267649,
+      "sha256": "468f0bade5faf6b2ee0d2aa8a35d13ab66eb7ec7e58af188aef4d2e3efd919d6"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/menu-android.png": {
+      "bytes": 92680,
+      "sha256": "7afd258216ab0da778d851d57160a2aa057ff1e12a71b3defe1ee226c1fd9a45"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/jackal/gameplay/paused.png": {
+      "bytes": 112679,
+      "sha256": "46b4ba7e29c4dd639f5a9cd768246b1177347ae3bf3593b39fcf9d2d83cf3b88"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/reconnected.png": {
+      "bytes": 85727,
+      "sha256": "6447d1c7cafa9956f4212ebbdca6deb35dbd4cf94f3c4dd1a3b9a8b8550dc1c9"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/gameplay.png": {
+      "bytes": 85068,
+      "sha256": "11bcec9ee7973ec7a5f087b753434676c3631cb05692614d61c21dc6aee72670"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/executed-cases.mjs": {
+      "bytes": 10730,
+      "sha256": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/executed-run.mjs": {
+      "bytes": 22677,
+      "sha256": "1ce8a253f9b1735215a43897c46bdca74b2abdd07b9cf50b9f34c032ed22e495"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/executed-sdk-peer.py": {
+      "bytes": 935,
+      "sha256": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/bridge-stderr.txt": {
+      "bytes": 4024,
+      "sha256": "780ed34acbb32c9cf1946eeef132f123a68beb2f0b19f99d3fc608d456bddca2"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/report.json": {
+      "bytes": 262208,
+      "sha256": "e2c09ce67ae2f0b4e302514a2a4c01fed6287849cd91f2aff3806db245a8fc5c"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/menu-android.png": {
+      "bytes": 84246,
+      "sha256": "4e28a5236c4489c2135d2372b8f553087767372fc75c768bc6325b8658693ae1"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-retry-arcade-visual/tank/gameplay/paused.png": {
+      "bytes": 84916,
+      "sha256": "68b382d643ea643f3a12a0222032047d12e1ac98769995462e9c1697eccb24e0"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "8d6b33c9028fdc77ac1e24578101c4ed1d5007e61065111caeec2991b42d3acc"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "bea62fb32bb47fb0ad00351d57a21b23ac184d3843128db6392bef45816b2d0e"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "ad2837558a48ba7f5c5aea75f84ac3d389291f57f07a08f59c7c42aeb92722d4"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "1a6f1e3992e1877911f343b073c78cc5a3d2566ed909112706428f833018a11a"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/host-samples.jsonl": {
+      "bytes": 222696,
+      "sha256": "99bed1b9d2d89ddeb49f6169169a81ecda87cac871b29b81daccd80a89279025"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/kernel-before.txt": {
+      "bytes": 58074,
+      "sha256": "6477618f8c2fc981e5de2bc0374dea02e4ba3b10b227c528282156d0a62f4b2b"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "cb3800b8a7fc598dda7703b922472a87580d67fbfdb1da7557eef9370ebd60a6"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/kernel-after.txt": {
+      "bytes": 58192,
+      "sha256": "3e4cd2e9fb550c64a413367cf99bcebafd094de4ee5da109c4ac27ad3da76a96"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/initial-snapshot.json": {
+      "bytes": 6301,
+      "sha256": "7f958a401eaaac2d06fad42f00deec6956144db32a956087875e1e549c389205"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/driver.log": {
+      "bytes": 647,
+      "sha256": "be487edb18506679460c994c643a25230e97d72bbb8efa7d069a1237aa328f11"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/logcat.txt": {
+      "bytes": 1651775,
+      "sha256": "a077d8e62e9aaa43871256d43e520b6d67773e1bb865dcc843e2ee92adb7effb"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/baseline-release.json": {
+      "bytes": 425,
+      "sha256": "78c4b3d54e0513ab7058101d4dcdd47a1d3cb20cf1aee1b2288366e60a8c78db"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/recording-probe.json": {
+      "bytes": 4357,
+      "sha256": "cad9921a72f2d9f7d562188a66794bfd0f12c002118a98d67d5906cbfd7db2b2"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/commands.json": {
+      "bytes": 1046,
+      "sha256": "8fe02eef5116a0027705dcac9d7c801b9ea31be0131175a928a4c0045e5af0d0"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/case.json": {
+      "bytes": 745,
+      "sha256": "acbe16dc75fe505392739a995464f925a939ad36c5765b4dbd04b5a2f79ad67c"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay.mp4": {
+      "bytes": 709511,
+      "sha256": "1d07a884f0a9a72beb914eb8141c740aa07aa9bb22ccc4c8fa53b7d304a447ae"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-retry-prism/host-diagnostics/emulator-crash-data/emu-crash-37.2.13.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "f10fc5c83148e0aecd9dd2f7c06902a536bb5987359b345305f641da80f222ed"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 17884,
+      "sha256": "05dae8e353ac93ddfcda606dc26f554d37c3073bd6adad435aba43325f2a4d86"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8096,
+      "sha256": "5c6cd2165a87c075ddaf7ad7638e8afef4afbc1d9643b37aa73fe5d629a58cb4"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/controller-release.py": {
+      "bytes": 16723,
+      "sha256": "caee3818477e965cbb44dc6c9cbd2acc5b59ba917bdc2680831829ef473c2f1c"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 10888,
+      "sha256": "a7164019bf729e78585c0b626541d3941a123b471ab3c2ae609bca4cdf6ad7b3"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 10730,
+      "sha256": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 22677,
+      "sha256": "1ce8a253f9b1735215a43897c46bdca74b2abdd07b9cf50b9f34c032ed22e495"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 935,
+      "sha256": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3"
+    },
+    "evidence/controller-runtime-retry-prism/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/reconnected.png": {
+      "bytes": 417813,
+      "sha256": "fab803d5ca308cf92c0923a9bfb4cb1a56ca4ed7e2b228d37ddfb907effe3b89"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/gameplay.png": {
+      "bytes": 410429,
+      "sha256": "74ca94f58d408a9c7f5b01d2dfb42ef69a7a886a82f7c824c0dec31d51cc5afa"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/executed-cases.mjs": {
+      "bytes": 10730,
+      "sha256": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/executed-run.mjs": {
+      "bytes": 22677,
+      "sha256": "1ce8a253f9b1735215a43897c46bdca74b2abdd07b9cf50b9f34c032ed22e495"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/executed-sdk-peer.py": {
+      "bytes": 935,
+      "sha256": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/bridge-stderr.txt": {
+      "bytes": 4420,
+      "sha256": "b035254bdfc64fa23b9649a03f3b6d99a2badfa4957ed15a6f34993f71c9d711"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/report.json": {
+      "bytes": 207132,
+      "sha256": "7416f7e93d7d4bd08dd221dc32e1879fcad7e2522827c3c9c0dd57b2aa6daa51"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/menu-android.png": {
+      "bytes": 382506,
+      "sha256": "cbb8957700b79b7c136dc5e43d42ead373e398f6c8ee471713e8593dd02ece86"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-retry-prism/prism-relay/gameplay/paused.png": {
+      "bytes": 339951,
+      "sha256": "7e715de04d88ac5884b6013464aca5daec39a35a4fa8547f62f4ba00aa1c115f"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "09a32eb48583d8dc91e21e705a46d630fcd2445561baccebca853eebb28bb48b"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "689c3e08f10f4b5e7439d0ba090f5c937b15d38e40c80c5f7140e99c9a6f23d7"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "658ecfd0bf54100cc320b319542b4f7fe8c94b1a60e41f2f4873627ce3457fb6"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "21503a32a95141a80bb8eccd11dd24b8e32e145cb5e377edbdf411e3ab8b9384"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/host-samples.jsonl": {
+      "bytes": 244143,
+      "sha256": "bb92ece867e736552bf50dbbc2225fc5fdb78343324d549ec26364f0fd211041"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/kernel-before.txt": {
+      "bytes": 59844,
+      "sha256": "5ae326d9f3b0086d7d83628f40e73aac9541e19c265cf0ba6ca590c749396a06"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "169fdfc0212368ed06c37aed8c35e19c257a99820eef9f016ba1cecffd3752b4"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/kernel-after.txt": {
+      "bytes": 59968,
+      "sha256": "0813796e310ed81bb3f67c950a0b9c556428d63827f4a58a1d4ca3255b722dce"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/initial-snapshot.json": {
+      "bytes": 16008,
+      "sha256": "ee9015f0e09151bfb4334a40916666f8c10bdcf0a14adb3ffbfcbfc08dc05388"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/driver.log": {
+      "bytes": 282,
+      "sha256": "7b3af81037a7247a7fc1c39768d547c2c80946c2f8a43231c9f0b5fa0fe6ac54"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/logcat-error.txt": {
+      "bytes": 128,
+      "sha256": "b3a1974570bc4248a5dc4c0c3c967bc5083f2ac74666a796f5c68d5df906774c"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/baseline-release.json": {
+      "bytes": 427,
+      "sha256": "17ff1396e292c63cdf4284e2d0833999bad2a2d5845bcc3edbab7c1563dd72d9"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/commands.json": {
+      "bytes": 1061,
+      "sha256": "be605f498ff0d76cc567d837dbfe06cdf540c49e648c86d61f59ec609333f71a"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/case.json": {
+      "bytes": 1196,
+      "sha256": "79238ca3dcc1848ffa8c636f79d63671dea583c9eaba5fc88a2a4ada56e866cd"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/instrumentation.txt": {
+      "bytes": 115,
+      "sha256": "f62cfe5e80e6f3a1ecf3803651b968cee4c8f3099c4af3130fc0bd80e7e374a0"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/emulator-crash-data/emu-crash-37.2.13.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "e03e641c1516b4b23461c81ccb3647896380b150d33068f0e91422458a0ba86e"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 17884,
+      "sha256": "05dae8e353ac93ddfcda606dc26f554d37c3073bd6adad435aba43325f2a4d86"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8096,
+      "sha256": "5c6cd2165a87c075ddaf7ad7638e8afef4afbc1d9643b37aa73fe5d629a58cb4"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/controller-release.py": {
+      "bytes": 16723,
+      "sha256": "caee3818477e965cbb44dc6c9cbd2acc5b59ba917bdc2680831829ef473c2f1c"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 10888,
+      "sha256": "a7164019bf729e78585c0b626541d3941a123b471ab3c2ae609bca4cdf6ad7b3"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 10730,
+      "sha256": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 22677,
+      "sha256": "1ce8a253f9b1735215a43897c46bdca74b2abdd07b9cf50b9f34c032ed22e495"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 935,
+      "sha256": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-cases.mjs": {
+      "bytes": 10730,
+      "sha256": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-run.mjs": {
+      "bytes": 22677,
+      "sha256": "1ce8a253f9b1735215a43897c46bdca74b2abdd07b9cf50b9f34c032ed22e495"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-sdk-peer.py": {
+      "bytes": 935,
+      "sha256": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/bridge-stderr.txt": {
+      "bytes": 1054,
+      "sha256": "5797a03aff71d44cf113873f7ed50fe8c8d901f0c957a945afba2fddbacbd33d"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/report.json": {
+      "bytes": 29380,
+      "sha256": "01ea6141374a49922c7a4c6a85c4ac186837048ab0427cd45db04c85fa094194"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/menu-android.png": {
+      "bytes": 1068091,
+      "sha256": "5a33f1f8b33fc0f3d8f41efc0788aeb20b0381d2797d2c28c4fd24e332ec01ff"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    }
+  }
+}
