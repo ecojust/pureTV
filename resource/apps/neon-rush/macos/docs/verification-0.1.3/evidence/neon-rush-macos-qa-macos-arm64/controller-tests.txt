@@ -1,0 +1,28 @@
+PASS 1: hello and all nine sync messages ACK their sequence without action pulses
+PASS 2: direction pairs cancel while independent axes remain
+PASS 3: quick taps survive snapshots as cumulative counters
+PASS 4: A/X aliases keep a hold until both release and do not double-pulse
+PASS 5: B/Y aliases aggregate without a duplicate nitro edge
+PASS 6: held START and action sync require release before a new action
+PASS 7: long_press without down is a continuation, not a fresh action
+PASS 8: duplicate and stale sequence acknowledge but never replay
+PASS 9: repeated hello and ping preserve held controls and refresh heartbeat
+PASS 10: background cancellation quarantines held keys without new pulses
+PASS 11: input enable transitions cancel actions but retain the controller session
+PASS 12: all nine background buttons are ACKed without gameplay input or pulses
+PASS 13: a preexisting hold can release in the background without a release reward
+PASS 14: keys newly held in background remain blocked after foreground until physical release
+PASS 15: background held sync blocks every key including continuous directions
+PASS 16: first connection while background never queues a start for foreground
+PASS 17: background reconnect retains the input gate while resetting the connection generation
+PASS 18: same ID reconnect replaces old peer with new session and clean sequence
+PASS 19: different ID cannot steal occupied controller seat
+PASS 20: identity changes on an existing socket are rejected
+PASS 21: disconnect neutralizes every control and advances cancellation
+PASS 22: bounded peers and unauthenticated handshake deadline
+PASS 23: invalid JSON, UTF-8 and top-level arrays fail closed
+PASS 24: strict JSON scalar types and safe integer sequence
+PASS 25: TCP framing accepts split frames, batched lines and CRLF
+PASS 26: TCP framing rejects oversized terminated and partial frames
+PASS 27: stop releases owner and preserves monotonic snapshot revision
+27 controller protocol tests passed

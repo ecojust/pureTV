@@ -6,7 +6,7 @@
 
 **0.1.1 · 正式签名 APK：443,884 字节（约 444 KB）。** [下载安装包](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.1.apk) · [实玩录像](docs/releases/0.1.1/gameplay.mp4) · [验证记录](docs/releases/0.1.1/verification.json) · [图标](logo.svg)
 
-**macOS 0.1.2：** [下载通用 DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.2-macos-universal.dmg) · [ZIP、安装与手柄说明](macos/README.md)。需要 macOS 11+ 和 WebGL，包含 Apple 芯片／Intel 代码，支持键盘与 pureTV Wi-Fi 手柄。
+**macOS 0.1.3：** [下载通用 DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.3-macos-universal.dmg) · [ZIP、安装与手柄说明](macos/README.md)。需要 macOS 11+ 和 WebGL，包含 Apple 芯片／Intel 代码，支持键盘与 pureTV Wi-Fi 手柄。0.1.3 修复左右转向反向；此修复尚未重打包到上方 Android 0.1.1 APK。
 
 ![霓虹飞车实际菜单画面](thumb.png)
 
@@ -69,6 +69,6 @@ python3 tools/prepare-web.py --output /tmp/neon-rush-web
 python3 -m http.server 8080 --directory /tmp/neon-rush-web
 ```
 
-打开 `http://127.0.0.1:8080/tv.html` 查看实际宿主页面。浏览器预览和实体电视测试分别记录；软件渲染速度、录屏帧率不能当作设备帧率。新版验证见[0.1.1 验证](docs/releases/0.1.1/verification.json)。未改动的模型/赛道复用 0.1.0 的 45 项规则证据，三赛道完赛记录保留为历史基线；原始报告见 [docs/README.md](docs/README.md)。新版输入、UI、原生与录像另行验证。尚未在实体电视、手机或 ESP32 上测试。
+打开 `http://127.0.0.1:8080/tv.html` 查看实际宿主页面。浏览器预览和实体电视测试分别记录；软件渲染速度、录屏帧率不能当作设备帧率。新版验证见[0.1.1 验证](docs/releases/0.1.1/verification.json)。Android 0.1.1 包的模型/赛道复用 0.1.0 的 45 项规则证据，三赛道完赛记录保留为历史基线；原始报告见 [docs/README.md](docs/README.md)。当前源码另包含 macOS 0.1.3 的转向修复，独立方向和三赛道回归见 [Mac 验证记录](macos/docs/verification-0.1.3/README.md)。尚未在实体电视、手机或 ESP32 上测试。
 
 Android 构建和固定证书签名沿用 [Game Kit 构建说明](../../game-kit/BUILD.md)。本地 builder 只生成未签名包；只有源码、资产、签名和验证证据核对完成的 APK 才作为发布包。

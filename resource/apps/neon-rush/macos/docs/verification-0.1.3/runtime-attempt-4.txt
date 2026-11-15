@@ -1,0 +1,37 @@
+▶ Wi-Fi controller snapshots integrate with the real racing rules
+  ✖ Wi-Fi START, steering, drift release and nitro reach actual model (3972.937257ms)
+  ✔ Disconnect freezes race; stale reconnect actions cannot resume or earn a boost (2551.646393ms)
+  ✔ Phone and Wi-Fi source switches pause even with identical seat/session values (2761.954543ms)
+  ✔ A cancellation sequence clears drift without an implicit controller switch pause (1932.145705ms)
+✖ Wi-Fi controller snapshots integrate with the real racing rules (12064.048147ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 3
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13181.963521
+
+✖ failing tests:
+
+test at resource/apps/neon-rush/tests/wifi-runtime.test.mjs:42:41
+✖ Wi-Fi START, steering, drift release and nitro reach actual model (3972.937257ms)
+  AssertionError [ERR_ASSERTION]: The drift fixture must avoid new collisions
+  
+  1 !== 0
+  
+      at file:///dev/shm/puretv-neon-macos/resource/apps/neon-rush/tests/wifi-runtime.test.mjs:47:126
+      at async TestContext.<anonymous> (file:///dev/shm/puretv-neon-macos/resource/apps/neon-rush/tests/wifi-runtime.test.mjs:42:86)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async run (file:///dev/shm/puretv-neon-macos/resource/apps/neon-rush/tests/wifi-runtime.test.mjs:42:33)
+      at async TestContext.<anonymous> (file:///dev/shm/puretv-neon-macos/resource/apps/neon-rush/tests/wifi-runtime.test.mjs:43:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

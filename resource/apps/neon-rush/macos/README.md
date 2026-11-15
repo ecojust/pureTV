@@ -1,12 +1,12 @@
-# 霓虹飞车 · macOS 0.1.2
+# 霓虹飞车 · macOS 0.1.3
 
-独立 Mac 客户端，复用霓虹飞车 0.1.1 的三条赛道、六车竞速和漂移／氮气玩法。需要 macOS 11 或更新版本及支持 WebGL 的图形环境；通用安装包包含 Apple 芯片和 Intel 代码，不需要 Android 模拟器、ADB 或另装 Python。
+独立 Mac 客户端，复用霓虹飞车 0.1.1 的三条赛道、六车竞速和漂移／氮气玩法。需要 macOS 11 或更新版本及支持 WebGL 的图形环境；通用安装包包含 Apple 芯片和 Intel 代码，不需要 Android 模拟器、ADB 或另装 Python。0.1.3 修复了左右转向与追尾视角相反的问题，键盘与 pureTV 手柄均按画面方向转向；默认63485及切换窗口保持连接的行为不变。
 
 ## 下载与安装
 
-- **[下载 DMG（888 KB）](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.2-macos-universal.dmg)**：打开后将 `Neon Rush.app` 拖入 Applications。
-- [下载 ZIP（555 KB）](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.2-macos-universal.zip)：解压后将应用移入“应用程序”。
-- [SHA256 校验清单](SHA256SUMS.txt) · [构建与验证记录](docs/verification-0.1.2/README.md)
+- **[下载 DMG（888 KB）](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.3-macos-universal.dmg)**：打开后将 `Neon Rush.app` 拖入 Applications。
+- [下载 ZIP（555 KB）](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.3-macos-universal.zip)：解压后将应用移入“应用程序”。
+- [SHA256 校验清单](SHA256SUMS.txt) · [构建与验证记录](docs/verification-0.1.3/README.md)
 
 首次打开时，允许 Neon Rush 访问本地网络，以便 pureTV 手柄发现并连接游戏。若曾拒绝，可在系统设置的“隐私与安全性 → 本地网络”中重新允许。安装包直接随仓库存放。
 
@@ -50,10 +50,10 @@ xcrun swiftc -swift-version 5 resource/apps/neon-rush/macos/Sources/ControllerSe
 /tmp/neon-controller-tests
 ```
 
-原生验收由 `tests/verify-native.py` 驱动实际AppKit／WKWebView应用，使用原Python SDK与原虚拟手柄页面发送普通按键，通过只读诊断快照检查游戏；不写入游戏状态或修改时钟。[最终工作流 43714427066](https://github.com/ecojust/pureTV/actions/runs/43714427066) 已验证同一份通用包：
+原生验收由 `tests/verify-native.py` 驱动实际AppKit／WKWebView应用，使用原Python SDK与原虚拟手柄页面发送普通按键，通过只读诊断快照检查游戏；不写入游戏状态或修改时钟。[最终工作流 43724380197](https://github.com/ecojust/pureTV/actions/runs/43724380197) 已验证同一份通用包：
 
-- Apple 芯片原生、默认端口被占用的备用端口模式、Rosetta 下的 Intel 程序各通过 10 组验收，包括真实游戏驾驶、三轮窗口切换保持同端口和同连接、原版虚拟手柄网页。
+- Apple 芯片原生、默认端口被占用的备用端口模式、Rosetta 下的 Intel 程序各通过 11 组验收，包括独立的左右屏幕转向、真实游戏驾驶、三轮窗口切换保持同端口和同连接、原版虚拟手柄网页。
 - 原生 Intel 云端运行机缺少 WebGL，通过安装包及 7 组通信／生命周期检查，未在该机验证 3D 驾驶。
 - 两个平台各通过 27 项协议测试，网页桥接通过 14 项测试。
 
-最低部署版本为 macOS 11，实际 CI 使用较新系统；未实测 macOS 11、实体 Intel 显卡或 ESP32 实物手柄。详细范围与原始记录见[验证说明](docs/verification-0.1.2/README.md)。
+最低部署版本为 macOS 11，实际 CI 使用较新系统；未实测 macOS 11、实体 Intel 显卡或 ESP32 实物手柄。详细范围与原始记录见[验证说明](docs/verification-0.1.3/README.md)。

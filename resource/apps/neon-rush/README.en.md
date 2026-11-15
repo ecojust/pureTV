@@ -6,7 +6,7 @@ Six racers, three original circuits, and a two-lap finish. Drift to charge nitro
 
 **0.1.1 · Release-signed APK: 443,884 bytes (about 444 KB).** [Download APK](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.1.apk) · [Gameplay video](docs/releases/0.1.1/gameplay.mp4) · [Verification](docs/releases/0.1.1/verification.json) · [Icon](logo.svg)
 
-**macOS 0.1.2:** [Download universal DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.2-macos-universal.dmg) · [ZIP, installation and controller guide](macos/README.md). Requires macOS 11+ and WebGL; includes Apple silicon / Intel code with keyboard and pureTV Wi-Fi controller support.
+**macOS 0.1.3:** [Download universal DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.3-macos-universal.dmg) · [ZIP, installation and controller guide](macos/README.md). Requires macOS 11+ and WebGL; includes Apple silicon / Intel code with keyboard and pureTV Wi-Fi controller support. Version 0.1.3 fixes reversed left/right steering; the Android 0.1.1 APK above has not been rebuilt with this fix.
 
 ![Actual English Neon Rush menu](../../../docs/previews/en/app-neon-rush.png)
 
@@ -71,6 +71,6 @@ python3 tools/prepare-web.py --output /tmp/neon-rush-web
 python3 -m http.server 8080 --directory /tmp/neon-rush-web
 ```
 
-Open `http://127.0.0.1:8080/tv.html`. Browser results and physical TV tests are reported separately. Software-renderer speed and recording frame rate are not device performance measurements. See [0.1.1 verification](docs/releases/0.1.1/verification.json) for current input, UI, native, signature and recording results. The unchanged model/tracks reuse 45 rule checks from 0.1.0; its complete three-track races remain historical baseline evidence. See the [evidence index](docs/README.md). Physical TVs, phones and ESP32 devices have not been tested.
+Open `http://127.0.0.1:8080/tv.html`. Browser results and physical TV tests are reported separately. Software-renderer speed and recording frame rate are not device performance measurements. See [0.1.1 verification](docs/releases/0.1.1/verification.json) for current input, UI, native, signature and recording results. The Android 0.1.1 package reuses 45 model/track rule checks from 0.1.0; its complete three-track races remain historical baseline evidence. Current source also includes the macOS 0.1.3 steering fix; see its [independent direction and three-track checks](macos/docs/verification-0.1.3/README.md) and the [evidence index](docs/README.md). Physical TVs, phones and ESP32 devices have not been tested.
 
 Android builds and the existing release certificate follow the [Game Kit build instructions](../../game-kit/BUILD.md). Local builds are unsigned; source, payload, signature, and evidence must match before an APK is published.
