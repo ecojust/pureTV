@@ -82,7 +82,8 @@ jobs:
           import json,os,re,subprocess
           out=Path(os.environ['RUNNER_TEMP'])/'controller-diagnostic-export'
           job=os.environ['ORIGINAL_JOB_ID'];assert re.fullmatch('[1-9][0-9]*',job)
-          result=subprocess.run(['gh','api','repos/ecojust/pureTV/actions/jobs/'+job+'/logs?cachebust='+os.environ['GITHUB_RUN_ID']],capture_output=True,text=True)
+          # Capture raw logs to a file, never render their terminal control sequences.
+          result=subprocess.run(['gh','api','--allow-escape-sequences','repos/ecojust/pureTV/actions/jobs/'+job+'/logs?cachebust='+os.environ['GITHUB_RUN_ID']],capture_output=True,text=True)
           status={'originalJobId':job,'downloaded':result.returncode==0,'exitCode':result.returncode}
           if result.returncode==0:
               (out/'original-job.log').write_text(result.stdout)
