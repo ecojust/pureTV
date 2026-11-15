@@ -45,6 +45,6 @@
 | NeonRush-0.1.3-macos-universal.dmg | 888032 | `8f8ef19a933fc0e15acef4bdc798b6250c8a35bd97d828395a9ae2dc7fe625a9` |
 | NeonRush-0.1.3-macos-universal.zip | 555160 | `68a6b92afaafd121d61ba9b7e13b261050bc21c28dcb40b2ec5552db7176bb9c` |
 
-[下载与安装](../../README.md)。顶层SHA256SUMS保留0.1.1、0.1.2及0.1.3全部六个包；本轮原始两包清单见[package-SHA256SUMS.txt](package-SHA256SUMS.txt)。公开下载核验将在推送master后记录。
+[下载与安装](../../README.md)。顶层SHA256SUMS保留0.1.1、0.1.2及0.1.3全部六个包；本轮原始两包清单见[package-SHA256SUMS.txt](package-SHA256SUMS.txt)。安装包和说明随`698b3e84b6034b54508a30d9fb78690207ad58a7`原子推送master及工作分支。对不可变提交与master的DMG、ZIP、校验清单及三份下载说明进行完整匿名HTTPS下载，共12份均HTTP200且逐字节一致，见[公开下载核验](public-download-verification.json)。
 
 既有范围限制保持：ad-hoc签名，未Apple公证；部署目标macOS11，实际CI使用较新系统。原生Intel云端若无WebGL，只计通信/生命周期，完整x86_64图形由Rosetta验证。未实测实体ESP32、电视、手机、实体Intel显卡或macOS11。未创建GitHub Release或上传应用服务器。
