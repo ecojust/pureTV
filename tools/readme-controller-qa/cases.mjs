@@ -90,7 +90,12 @@ export async function gameplay(slug,{read,tap,hold,until,record}){
         await hold(key,0,async()=>{after=await read();});record(key+'-rendered-direction',before,after);
         const p=before.camera?.projection,v=before.camera?.view;assert.ok(p&&v,'actual camera required');
         const project=c=>{const q=[c.x,c.y,c.z,1],e=[0,0,0,0].map((_,r)=>q.reduce((n,x,i)=>n+v[4*i+r]*x,0)),f=[0,0,0,0].map((_,r)=>e.reduce((n,x,i)=>n+p[4*i+r]*x,0));return f[0]/f[3];};
-        assert.ok((project(player(after))-project(player(before)))*sign>0,key+' actual camera projection');
+        // Countersteering changes heading before existing momentum reverses.
+        // Compare both real yaw values at one origin through the same camera.
+        const origin=player(before),heading=c=>project({...origin,x:origin.x+3*Math.sin(c.yaw),z:origin.z+3*Math.cos(c.yaw)});
+        const centerDelta=project(player(after))-project(origin),headingDelta=heading(player(after))-heading(origin);
+        record(key+'-direction-projection',null,{origin:{x:origin.x,y:origin.y,z:origin.z},rayLength:3,centerDelta,headingDelta});
+        assert.ok(headingDelta*sign>0,key+' actual camera heading projection');
       }
     });
     before=await read();await hold('B',0,async()=>{after=await until(s=>player(s).telemetry.pedalForceN>player(before).telemetry.pedalForceN,'actual brake pedal pressure');});record('brake-pedal',before,after);return;

@@ -33,6 +33,13 @@ BATCHES.update({
     'retry-prism': ('kit', ['prism-relay']),
     'retry-arcade-visual': ('arcade', ['tank', 'jackal']),
 })
+USED_CAR_EMULATOR = {
+    'version': '35.6.11', 'build': '13610412',
+    'url': 'https://dl.google.com/android/repository/emulator-linux_x64-13610412.zip',
+    'sha256': '2fe2b56fe93ce75e1d478a40162131381d911c355efeaedb54dd1e0d0897a5cf',
+    'bytes': 319086252,
+    'officialArchive': 'https://developer.android.com/studio/emulator_archive',
+}
 
 def runtime_plan(requested=''):
     """Validate dispatch selection before it can become a matrix or shell input."""
@@ -48,6 +55,8 @@ def runtime_plan(requested=''):
                'apiLevel': 29 if name in ['retry-used-car', 'retry-arcade-visual'] else 36,
                'arch': 'x86' if name in ['retry-used-car', 'retry-arcade-visual'] else 'x86_64',
                'renderer': 'swiftshader' if name == 'retry-used-car' else 'swiftshader_indirect',
+               'emulatorBuild': USED_CAR_EMULATOR['build'] if name == 'retry-used-car' else '',
+               'emulatorArchive': USED_CAR_EMULATOR if name == 'retry-used-car' else None,
                'emulatorOptions': (standard_options.replace('-gpu swiftshader_indirect', '-gpu swiftshader') if name == 'retry-used-car' else standard_options)
                     + (' -feature -Vulkan -verbose' if name in ['worlds-2', 'retry-used-car', 'retry-arcade-visual'] else '')}
               for name in selected]
@@ -63,6 +72,9 @@ def runtime_plan(requested=''):
                     'previousRenderer': 'swiftshader_indirect', 'requestedRenderer': 'swiftshader',
                     'previousRendererDeprecatedSince': '36.4.9',
                     'officialReference': 'https://developer.android.com/studio/run/emulator-acceleration'},
+                'hostVersionComparison': {'previousObservedEmulatorVersion': '37.2.13',
+                    'requested': USED_CAR_EMULATOR,
+                    'description': 'Change only the host emulator version; retain API29/x86/swiftshader/disabled Vulkan and verbose options. The preceding host RenderThread segmentation fault has no established product cause.'},
                 'description': 'Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory.'},
             'arcadeVisualStableImageComparison': {'selected': 'retry-arcade-visual' in selected,
                 'systemImage': 'system-images;android-29;android-tv;x86',
@@ -76,6 +88,24 @@ def selected_slugs(group, batch=None):
     assert group == expected_group and set(slugs) <= set(allowed), 'Batch must retain its exact artifact source group'
     assert 1 <= len(slugs) <= 3 and len(set(slugs)) == len(slugs)
     return list(slugs)
+
+
+def verify_emulator_version(output, batch_name):
+    """Reject a runner that silently ignored the exact Used emulator build pin."""
+    expected = USED_CAR_EMULATOR if batch_name == 'retry-used-car' else None
+    record = {'rawVersionOutput': output, 'requestedArchive': expected}
+    if expected:
+        match = re.search(r'Android emulator version ([0-9.]+)\s+\(build_id ([0-9]+)\)', output)
+        assert match, 'Actual emulator version/build must be recorded'
+        version, build = match.groups()
+        assert version in [expected['version'], expected['version'] + '.0'] and build == expected['build'], 'Installed emulator must match the pinned official build'
+        record.update({'version': version, 'build': build, 'exactBuildVerified': True})
+    return record
+
+
+def verify_emulator_process(result, batch_name):
+    assert result['exitCode'] == 0, 'Emulator version command must exit successfully'
+    return verify_emulator_version(result['stdout'] + '\n' + result['stderr'], batch_name)
 
 
 class ContinuousLogcat:
@@ -162,6 +192,13 @@ def main():
         return result.stdout
     def save(path,value):path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
     report={'sourceSha':a.artifact_source,'legacySourceSha':a.legacy_source,'group':a.group,'batch':a.batch,'plannedSlugs':slugs,'physicalTvTested':False,'physicalEsp32Tested':False,'actualAndroidEmulator':True,'cases':[]}
+    version_command=[str(Path(os.environ['ANDROID_HOME'])/'emulator/emulator'),'-version']
+    version_result=subprocess.run(version_command,capture_output=True,text=True,timeout=120)
+    emulator_version={'command':version_command,'exitCode':version_result.returncode,
+                      'stdout':version_result.stdout,'stderr':version_result.stderr}
+    save(a.output/'emulator-version-raw.json',emulator_version)
+    report['hostEmulator']=verify_emulator_process(emulator_version,a.batch)
+    save(a.output/'emulator-version.json',report['hostEmulator'])
     report['androidProperties']=command(adb+['shell','getprop'])
     report['emulatorConfiguration']=configure_disposable_emulator(command,adb,a.serial,os.environ,a.output/'emulator-configuration.json')
     live_logcat=ContinuousLogcat(adb,a.output)

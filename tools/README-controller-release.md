@@ -46,6 +46,8 @@ worlds-2、独立 Used 及街机视觉复验使用 `-feature -Vulkan -verbose`�
 
 Used 在 API29/x86 对照中仍出现整个 AVD 失响应后，仅 `retry-used-car` 将 GPU 模式改为 `swiftshader`，保留其 API29/x86、禁用 Vulkan 和 verbose 参数。先前原日志记录 emulator 37.2.13；[官方图形加速文档](https://developer.android.com/studio/run/emulator-acceleration) 明确 `swiftshader_indirect` 从36.4.9起废弃，并列出受支持的 `swiftshader` GLES/Vulkan 软件渲染模式。计划记录这次单因素变化及依据，原始运行日志保留每次实际 emulator 版本；这不表示已经确定或修复失响应的根因。其他批次的 GPU 模式不变。
 
+随后该配置的宿主内核日志记录到 RenderThread 段错误；仅 Used 再固定为[官方归档](https://developer.android.com/studio/emulator_archive)的稳定 emulator **35.6.11 / build 13610412**，API29/x86、`swiftshader`、禁 Vulkan 和 verbose 均保持。使用 runner 官方 `emulator-build` 输入，计划记录下载 URL、公布的 SHA256 和大小。CI 对同一官方 URL 另作流式下载校验（不冒称拦截了 action 自行下载的文件），并在实际验收前记录和严格校验安装版本/build；原始失败仍保留。这是宿主版本的单因素对照，不表示已找到或修复游戏缺陷。其他批次不固定或改变 emulator build。
+
 `controller-emulator-batch.py` 管理安装、观察器生命周期、ADB 端口转发及原始日志；`tools/readme-controller-qa/run.mjs` 判定各款实际操作与输入取消行为。每款以 Android screenrecord 保存普通输入阶段的新录像（最长120秒，960×540，600,000 bit/s；编码帧率不代表实体设备性能）。失败保留录像、截图、logcat、准确命令和原始报告，并继续其他款；只有全部通过，组任务才成功。证据导出至独立的 `build-assets/controller-runtime-<run>-attempt-<attempt>`。
 
 `controller-runtime-diagnostics.py` 在模拟器启动前每5秒记录主机内存、压力指标、进程名/RSS（不收集进程参数和环境变量），并保留前后内核日志和模拟器崩溃文件；设备端持续 logcat 即使 AVD 随后离线也保留已读日志。诊断只读取状态，不重启设备、不重试或放宽验收。每个 `controller-runtime-<batch>` artifact 保存这些原始文件以及实际执行源码和哈希，包含证据目录内的隐藏工作流副本。上游 emulator-runner v2 无关闭 `keyevent 82` 的配置，启动失败仍真实报告失败。

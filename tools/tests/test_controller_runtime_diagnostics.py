@@ -106,6 +106,43 @@ class BatchIsolation(unittest.TestCase):
             self.assertEqual(rows[name]['renderer'], 'swiftshader_indirect')
             self.assertIn('-gpu swiftshader_indirect', rows[name]['emulatorOptions'])
 
+    def test_only_used_car_pins_the_exact_official_old_host_build(self):
+        for name in batch.BATCHES:
+            row = batch.runtime_plan(json.dumps([name]))['matrix']['include'][0]
+            if name == 'retry-used-car':
+                self.assertEqual(row['emulatorBuild'], '13610412')
+                archive = row['emulatorArchive']
+                self.assertEqual(archive['version'], '35.6.11')
+                self.assertEqual(archive['url'], 'https://dl.google.com/android/repository/emulator-linux_x64-13610412.zip')
+                self.assertEqual(archive['sha256'], '2fe2b56fe93ce75e1d478a40162131381d911c355efeaedb54dd1e0d0897a5cf')
+                self.assertEqual(archive['bytes'], 319086252)
+                self.assertEqual((row['apiLevel'], row['arch'], row['renderer']), (29, 'x86', 'swiftshader'))
+                self.assertIn('-feature -Vulkan -verbose', row['emulatorOptions'])
+            else:
+                self.assertEqual(row['emulatorBuild'], '')
+                self.assertIsNone(row['emulatorArchive'])
+
+    def test_exact_installed_host_version_is_required_for_used_car(self):
+        output = 'Android emulator version 35.6.11.0 (build_id 13610412) (CL:N/A)\n'
+        record = batch.verify_emulator_version(output, 'retry-used-car')
+        self.assertEqual(record['rawVersionOutput'], output)
+        self.assertTrue(record['exactBuildVerified'])
+        for bad in ['', 'Android emulator version 37.2.13.0 (build_id 16740729)',
+                    'Android emulator version 35.6.11.0 (build_id 13610413)',
+                    'Android emulator version 35.6.12.0 (build_id 13610412)']:
+            with self.subTest(output=bad), self.assertRaises(AssertionError):
+                batch.verify_emulator_version(bad, 'retry-used-car')
+        self.assertIsNone(batch.verify_emulator_version('another default version', 'retry-alien')['requestedArchive'])
+
+    def test_version_stream_choice_does_not_hide_failure_or_reject_valid_version(self):
+        output = 'Android emulator version 35.6.11.0 (build_id 13610412) (CL:N/A)\n'
+        for stdout, stderr in [(output, ''), ('', output)]:
+            result = {'exitCode': 0, 'stdout': stdout, 'stderr': stderr}
+            self.assertTrue(batch.verify_emulator_process(result, 'retry-used-car')['exactBuildVerified'])
+            result['exitCode'] = 1
+            with self.assertRaisesRegex(AssertionError, 'exit successfully'):
+                batch.verify_emulator_process(result, 'retry-used-car')
+
     def test_retry_selection_does_not_silently_include_completed_neighbors(self):
         self.assertEqual(batch.selected_slugs('worlds', 'retry-alien'), ['alien-shooter'])
         self.assertEqual(batch.selected_slugs('kit', 'retry-prism'), ['prism-relay'])
