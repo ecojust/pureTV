@@ -9,6 +9,7 @@
   let last=0, lastUi=0, accumulator=0, endedRecorded=false, phoneSeen=false, disconnected=false;
   let previous={a:false,b:false,start:false,select:false}, info={}, soundEnabled=false, audio=null, disposed=false, nativePauseBefore=false, phoneConnected=false, controllerKind=null, menuStick=0;
   let cancelEpoch=0, cancelPending=false, phoneIdentity=null, phoneCancelSeq=null;
+  let observedControllers=[];
   const localQuarantine=new Set(), remoteHeld={a:false,b:false,start:false,select:false}, remoteQuarantine={a:false,b:false,start:false,select:false};
   const frameTimes=[], soundQueue=new Set();
   let best=0;
@@ -67,8 +68,8 @@
   function chooseLevel(value){level=((value%levelNames.length)+levelNames.length)%levelNames.length;document.querySelectorAll('[data-level]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.level)===level));if(phase==='menu')state=model.create(def.seed||1,level);updateUi();}
   document.querySelectorAll('[data-level]').forEach(button=>button.onclick=()=>chooseLevel(Number(button.dataset.level)));
   function inputs(){
-    let player=null;
-    try{if(native){const room=JSON.parse(native.snapshot());player=(room.players||[]).find(p=>p.connected);}}catch(_){}
+    let player=null;observedControllers=[];
+    try{if(native){const room=JSON.parse(native.snapshot());observedControllers=Array.isArray(room.players)?room.players:[];player=observedControllers.find(p=>p.connected);}}catch(_){}
     phoneConnected=!!player;
     if(player){
       controllerKind=player.transport==='wifi'?'wifi':'phone';
@@ -104,6 +105,20 @@
     return val;
   }
   function beep(type){if(!soundEnabled||!audio||audio.state!=='running')return;try{const osc=audio.createOscillator(),gain=audio.createGain(),now=audio.currentTime;const tones={pickup:660,delivery:880,delivered:880,collision:150,win:1040,refuel:440};osc.type='sine';osc.frequency.setValueAtTime(tones[type]||520,now);gain.gain.setValueAtTime(.04,now);gain.gain.exponentialRampToValueAtTime(.001,now+.14);osc.connect(gain);gain.connect(audio.destination);osc.start(now);osc.stop(now+.15);}catch(_){} }
+  function updateWifiUi(){
+    const panel=$('kit-wifi-help');if(!panel)return;
+    const wifi=info.wifiController;
+    // Neon Rush already supplies its own translated controller panel.
+    panel.hidden=!wifi||!!$('rush-wifi-help');if(panel.hidden)return;
+    const aside=panel.parentElement;aside.classList.toggle('controller-strip',aside.clientWidth>aside.clientHeight*3);
+    const en=info.language==='en',text=(zh,enText)=>en?enText:zh;
+    panel.querySelector('strong').textContent=text('pureTV 手柄','pureTV CONTROLLER');
+    const connected=phoneConnected&&controllerKind==='wifi';
+    $('kit-wifi-status').textContent=connected?text('已连接 · START 开始或暂停','Connected · START: play/pause'):wifi.state==='available'?text('同网，按搜索键连接','Same Wi-Fi · press Search'):wifi.port>0?(wifi.state==='registering'?text('正在发布，可用地址直连','Publishing · direct IP ready'):text('发现不可用，请用地址直连','No discovery · use IP below')):text('服务未启动，请用扫码/遥控','Offline · use QR or remote');
+    const address=Array.isArray(info.addresses)?info.addresses[0]:'';
+    $('kit-wifi-address').textContent=address&&wifi.port>0?String(address)+':'+wifi.port:'';
+    $('kit-wifi-keys').textContent=text('A/X → A · B/Y → B','A/X → A · B/Y → B');
+  }
   function updateUi(){
     $('connection').textContent=phoneConnected?(controllerKind==='wifi'?'Wi-Fi 手柄已连接':'扫码手柄已连接'):disconnected?'手柄已断开 · 已暂停':'遥控器 / 键盘可直接游玩';
     $('room-status').textContent=phoneConnected?'CONNECTED':'LOCAL';
@@ -115,7 +130,8 @@
     const show=phase!=='playing'||paused;$('overlay').hidden=!show;
     if(show){const won=phase==='won',lost=phase==='lost';$('dialog-kicker').textContent=paused?'休息一下':won?'任务完成':lost?'再试一次':'PURETV ORIGINALS';$('dialog-title').textContent=paused?'已暂停':won?(def.winTitle||'任务完成'):lost?(def.loseTitle||'本次任务结束'):def.title;$('dialog-copy').textContent=paused?'场景与计时已暂停。继续后从当前位置出发。':(won||lost)?def.result(state):def.description;$('primary').textContent=paused?'继续游戏 · P':(won||lost)?'再次出发 · ENTER':'开始游戏 · ENTER';$('difficulty-controls').hidden=paused;$('dialog-help').textContent=paused?'手柄 START / 遥控器播放键继续':'左右选择'+levelLabel+' · B 切换声音 · START / 确认开始';}
     if(native){try{native.publish(JSON.stringify({title:def.title,phase:paused?'paused':phase,score:state.score||0,message:state.message||'',actions:def.actionLabels||['操作 A','操作 B']}));}catch(_){}}
-    if(typeof def.afterUI==='function')def.afterUI(state,{phase,paused,level,best,phoneConnected,disconnected,controllerKind,wifiController:info.wifiController||null});
+    if(typeof def.afterUI==='function')def.afterUI(state,{phase,paused,level,best,phoneConnected,disconnected,controllerKind,wifiController:info.wifiController||null,wifiAddresses:Array.isArray(info.addresses)?info.addresses:[]});
+    updateWifiUi();
   }
   function frame(now){
     if(disposed)return;
@@ -142,8 +158,8 @@
     if(now-lastUi>100){lastUi=now;updateUi();}
     root.requestAnimationFrame(frame);
   }
-  root.PureGame=Object.freeze({key,suspend(value){if(value){nativePauseBefore=paused;setPaused(true);}else{clearInput();if(!nativePauseBefore)setPaused(false);}},roomInfo(value){syncInfo(value);},networkChanged(value){syncInfo(value);if(phase==='playing')setPaused(true);}});
-  root.PureTVQA=Object.freeze({snapshot(){return JSON.parse(JSON.stringify({id:def.id,phase,paused,tick,elapsed,level,best,model:state,renderer:renderer.metrics||{},frameTimesMs:frameTimes.slice(),connection:{phoneSeen,disconnected,connected:phoneConnected,controllerKind}}));}});
+  root.PureGame=Object.freeze({key,focus(value){if(!value&&phase==='playing')setPaused(true);else clearInput();},suspend(value){if(value){nativePauseBefore=paused;setPaused(true);}else{clearInput();if(!nativePauseBefore)setPaused(false);}},roomInfo(value){syncInfo(value);},networkChanged(value){syncInfo(value);if(phase==='playing')setPaused(true);}});
+  root.PureTVQA=Object.freeze({snapshot(){return JSON.parse(JSON.stringify({id:def.id,phase,paused,tick,elapsed,level,best,model:state,controllers:observedControllers,renderer:renderer.metrics||{},frameTimesMs:frameTimes.slice(),connection:{phoneSeen,disconnected,connected:phoneConnected,controllerKind}}));}});
   $('game').addEventListener('webglcontextlost',()=>setPaused(true));
   root.addEventListener('pagehide',()=>{disposed=true;clearInput();if(arenaObserver)arenaObserver.disconnect();if(renderer.dispose)renderer.dispose();if(audio)audio.close().catch(()=>{});});
   updateUi();root.requestAnimationFrame(frame);

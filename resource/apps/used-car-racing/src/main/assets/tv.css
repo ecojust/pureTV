@@ -133,3 +133,15 @@
  .room-certificate>small{font-size:8px;line-height:10px}
  .room-panel[data-secure="true"] #room-certificate-fingerprint{font-size:10px;line-height:12px}
 }
+
+/* Controller discovery is independent from the existing QR phone room. */
+.puretv-panel{margin:8px 0;padding:8px 9px;border:1px solid #88cfd744;border-radius:7px;background:#0b2029;color:#e7f8ff;font-size:11px;line-height:1.45;text-align:left}.puretv-panel strong{font-size:11px;color:#8de5ef}.puretv-panel code,.puretv-panel span,.puretv-panel small{display:block;overflow-wrap:anywhere}.puretv-panel code{font-size:11px;color:#fff}.puretv-panel small{font-size:10px;color:#bfd4df}
+.sidebar{overflow-y:auto;min-height:0}.room-panel{max-height:calc(100vh - 100px);overflow-y:auto}
+@media(max-height:600px){.puretv-panel{padding:5px 7px;margin:5px 0;font-size:10px}.puretv-panel small{font-size:9px}.puretv-panel code{font-size:10px}.qr-frame{max-width:100px;max-height:100px;margin:7px auto}.qr-frame img{max-width:100%;max-height:100%}}
+
+/* Keep the compact garage QR card; its Wi-Fi block sits fully below it. */
+.room-panel{overflow:visible}
+.room-panel .puretv-panel{position:absolute;top:100%;left:-1px;right:-1px;margin:7px 0 0;padding:8px 10px;line-height:1.45}
+.room-panel .puretv-panel code{font-size:11px;line-height:1.45;white-space:normal;overflow:visible;color:#fff}
+.room-panel .puretv-panel small{font-size:10px;line-height:1.45}
+@media(max-height:600px){.room-panel .puretv-panel{padding:6px 9px}.room-panel .puretv-panel code{font-size:10px}}

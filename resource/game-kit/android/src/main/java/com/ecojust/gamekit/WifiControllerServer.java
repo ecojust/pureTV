@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 /** ESP32 pureTV v1: newline-delimited UTF-8 JSON over TCP, not a WebSocket. */
 public final class WifiControllerServer implements AutoCloseable {
-    public static final int DEFAULT_PORT = 8765;
+    public static final int DEFAULT_PORT = 63485;
     private static final int MAX_LINE_BYTES = 1024;
     private static final int MAX_CLIENTS = 4;
     private static final long FRAME_DEADLINE_MS = 5000;
@@ -46,18 +46,33 @@ public final class WifiControllerServer implements AutoCloseable {
     private ThreadPoolExecutor workers;
     private ScheduledExecutorService watchdog;
     private Thread acceptor;
-    private Peer owner;
+    private final Seat[] seats;
+    private final boolean ySelect;
+    private boolean inputActive = true;
     private long sessionCounter;
-    private long cancelSeq;
-    private String lastControllerId = "";
-    private String lastSession = "";
+    private static final long RECONNECT_SEAT_MS = 15_000;
 
-    public WifiControllerServer() { this(IDLE_TIMEOUT_MS); }
+    private static final class Seat {
+        Peer owner;
+        String controllerId = "", session = "";
+        long cancelSeq, disconnectedAt;
+    }
+
+    public WifiControllerServer() { this(IDLE_TIMEOUT_MS, 1, false); }
+
+    /** Legacy games may expose two seats and use Y for their SELECT action. */
+    public WifiControllerServer(int maxPlayers, boolean ySelect) { this(IDLE_TIMEOUT_MS, maxPlayers, ySelect); }
 
     // Package-private deadline for real-socket liveness tests; production allows four 5s ping intervals.
-    WifiControllerServer(long idleTimeoutMs) {
+    WifiControllerServer(long idleTimeoutMs) { this(idleTimeoutMs, 1, false); }
+
+    private WifiControllerServer(long idleTimeoutMs, int maxPlayers, boolean ySelect) {
         if (idleTimeoutMs < 500) throw new IllegalArgumentException("Heartbeat timeout too short");
+        if (maxPlayers < 1 || maxPlayers > 2) throw new IllegalArgumentException("Expected one or two players");
         this.idleTimeoutMs = idleTimeoutMs;
+        this.ySelect = ySelect;
+        seats = new Seat[maxPlayers];
+        for (int i = 0; i < seats.length; i++) seats[i] = new Seat();
     }
 
     public int start() throws IOException { return start(DEFAULT_PORT); }
@@ -95,36 +110,62 @@ public final class WifiControllerServer implements AutoCloseable {
     }
 
     public int getPort() { ServerSocket current = listener; return current == null || current.isClosed() ? 0 : current.getLocalPort(); }
-    public boolean hasController() { synchronized (lock) { return owner != null && !owner.closed; } }
+    public boolean hasController() {
+        synchronized (lock) { for (Seat seat : seats) if (seat.owner != null && !seat.owner.closed) return true; return false; }
+    }
 
-    /** Deep JSON snapshot in the shared runtime's single-player transport format. */
+    /** Deep JSON snapshot; each physical controller has a stable independent seat. */
     public String snapshot() {
         synchronized (lock) {
-            Peer p = owner;
-            boolean connected = p != null && !p.closed;
             try {
-                JSONObject player = new JSONObject().put("id", 1).put("transport", "wifi")
-                        .put("controllerId", lastControllerId).put("session", lastSession)
-                        .put("connected", connected).put("cancelSeq", cancelSeq)
-                        .put("x", connected ? (p.input(3) ? 1 : 0) - (p.input(2) ? 1 : 0) : 0)
-                        .put("y", connected ? (p.input(1) ? 1 : 0) - (p.input(0) ? 1 : 0) : 0)
-                        .put("aimX", 0).put("aimY", 0)
-                        .put("a", connected && (p.input(5) || p.input(7)))
-                        .put("b", connected && (p.input(6) || p.input(8)))
-                        .put("start", connected && p.input(4)).put("select", false);
-                if (connected) p.clearPulses();
-                return new JSONObject().put("players", new JSONArray().put(player))
-                        .put("connections", connected ? 1 : 0).toString();
+                JSONArray players = new JSONArray();
+                int connections = 0;
+                for (int i = 0; i < seats.length; i++) {
+                    Seat seat = seats[i]; Peer p = seat.owner;
+                    boolean connected = p != null && !p.closed;
+                    if (connected) connections++;
+                    JSONObject buttons = new JSONObject();
+                    for (int k = 0; k < KEYS.length; k++) buttons.put(KEYS[k], connected && p.input(k));
+                    JSONObject player = new JSONObject().put("id", i + 1).put("transport", "wifi")
+                            .put("controllerId", seat.controllerId).put("session", seat.session)
+                            .put("connected", connected).put("cancelSeq", seat.cancelSeq).put("inputActive", inputActive)
+                            .put("x", connected ? (p.input(3) ? 1 : 0) - (p.input(2) ? 1 : 0) : 0)
+                            .put("y", connected ? (p.input(1) ? 1 : 0) - (p.input(0) ? 1 : 0) : 0)
+                            .put("aimX", 0).put("aimY", 0)
+                            .put("a", connected && (p.input(5) || p.input(7)))
+                            .put("b", connected && (p.input(6) || (!ySelect && p.input(8))))
+                            .put("start", connected && p.input(4)).put("select", connected && ySelect && p.input(8))
+                            .put("buttons", buttons);
+                    players.put(player);
+                    if (connected) p.clearPulses();
+                }
+                return new JSONObject().put("players", players).put("connections", connections).put("inputActive", inputActive).toString();
             } catch (JSONException impossible) { return "{\"players\":[],\"connections\":0}"; }
         }
     }
 
-    /** Pause/background cancellation must not turn a held key into a fresh action. */
-    public void releaseInputs() {
+    /** Focus/dialog input isolation never closes or rebinds the TCP listener. */
+    public void setInputActive(boolean value) {
         synchronized (lock) {
-            if (owner != null) owner.cancelInputs();
-            cancelSeq++;
+            if (inputActive == value) return;
+            inputActive = value;
+            cancelInputsLocked();
         }
+    }
+
+    /** Pause/background cancellation must not turn a held key into a fresh action. */
+    public void releaseInputs() { synchronized (lock) { cancelInputsLocked(); } }
+
+    private void cancelInputsLocked() {
+        for (Peer peer : peers) peer.cancelInputs();
+        for (Seat seat : seats) seat.cancelSeq++;
+    }
+
+    private Seat availableSeat(String id) {
+        for (Seat seat : seats) if (id.equals(seat.controllerId)) return seat;
+        for (Seat seat : seats) if (seat.controllerId.isEmpty()) return seat;
+        for (Seat seat : seats) if (seat.owner == null && (seats.length == 1 || now() - seat.disconnectedAt >= RECONNECT_SEAT_MS)) return seat;
+        return null;
     }
 
     @Override public void close() { stop(); }
@@ -136,7 +177,7 @@ public final class WifiControllerServer implements AutoCloseable {
         synchronized (lock) {
             for (Peer peer : new ArrayList<>(peers)) peer.disconnect();
             peers.clear();
-            if (owner != null) { owner.cancelInputs(); owner = null; cancelSeq++; }
+            for (Seat seat : seats) seat.cancelSeq++;
         }
         if (workers != null) workers.shutdownNow();
         if (watchdog != null) watchdog.shutdownNow();
@@ -189,9 +230,10 @@ public final class WifiControllerServer implements AutoCloseable {
         long lastSeq = -1;
         long lastMessageAt;
         boolean identified;
+        Seat seat;
 
         Peer(Socket socket) { this.socket = socket; }
-        boolean input(int key) { return !blocked[key] && (held[key] || pulse[key]); }
+        boolean input(int key) { return inputActive && !blocked[key] && (held[key] || pulse[key]); }
         void clearPulses() { java.util.Arrays.fill(pulse, false); }
         void cancelInputs() {
             for (int i = 0; i < held.length; i++) { blocked[i] |= held[i]; pulse[i] = false; }
@@ -219,16 +261,17 @@ public final class WifiControllerServer implements AutoCloseable {
                     synchronized (lock) {
                         if (closed || !running) return;
                         if (identified && !controllerId.equals(message.id)) failure = "controller_id_changed";
-                        else if (owner != null && owner != this && !owner.controllerId.equals(message.id)) failure = "controller_busy";
+                        else if (!identified && availableSeat(message.id) == null) failure = "controller_busy";
                         else {
                             if (!identified) {
                                 // Same device may reconnect before its old TCP socket detects
                                 // Wi-Fi loss. The ID distinguishes peers; it is not authentication.
-                                if (owner != null && owner != this) owner.disconnect();
-                                identified = true; controllerId = message.id; owner = this;
-                                lastControllerId = controllerId;
-                                lastSession = "wifi-" + instanceId + "-" + (++sessionCounter);
-                                cancelSeq++;
+                                seat = availableSeat(message.id);
+                                if (seat.owner != null && seat.owner != this) seat.owner.disconnect();
+                                identified = true; controllerId = message.id; seat.owner = this;
+                                seat.controllerId = controllerId;
+                                seat.session = "wifi-" + instanceId + "-" + (++sessionCounter);
+                                seat.cancelSeq++;
                             }
                             lastMessageAt = now();
                             if (message.seq > lastSeq) {
@@ -250,6 +293,7 @@ public final class WifiControllerServer implements AutoCloseable {
             boolean before = held[key];
             if (!m.pressed) { held[key] = false; blocked[key] = false; return; }
             held[key] = true;
+            if (!inputActive) { blocked[key] = true; pulse[key] = false; return; }
             if ("sync".equals(m.action)) {
                 // Directions are continuous; action/start held across reconnect
                 // must be released before they may produce an edge or drift reward.
@@ -302,7 +346,7 @@ public final class WifiControllerServer implements AutoCloseable {
                 if (closed) return;
                 closed = true;
                 cancelInputs();
-                if (owner == this) { owner = null; cancelSeq++; }
+                if (seat != null && seat.owner == this) { seat.owner = null; seat.cancelSeq++; seat.disconnectedAt = now(); }
                 peers.remove(this);
             }
             closeQuietly(socket);

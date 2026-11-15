@@ -60,9 +60,22 @@
     $("pause-button").setAttribute("aria-label", tr("暂停", "Pause"));
     $("battle-help").textContent = tr("SELECT 切换武器  ·  START 暂停 / 扫码", "SELECT switch weapon  ·  START pause / QR code");
 
+        var lastWifiRefresh = -1000;
+    function updateWifi(refresh) {
+      if (refresh && performance.now() - lastWifiRefresh >= 500) {
+        lastWifiRefresh = performance.now();
+        try { if (bridge) info = Object.assign({}, info, JSON.parse(bridge.getInfo())); } catch (_) {}
+      }
+      var wifi = info.wifiController || {}, address = (wifi.addresses || []).filter(function(v){return typeof v === 'string';}).join(' / ');
+      var node = document.getElementById('puretv-address');
+      if (!node) return;
+      node.textContent = wifi.port > 0 && address ? address + ':' + wifi.port : tr('等待局域网地址', 'Waiting for LAN address');
+      document.getElementById('puretv-status').textContent = (wifi.state === 'unavailable' ? (wifi.port > 0 ? tr('自动发现暂不可用，可按地址直连', 'Discovery unavailable; connect by address') : tr('手柄服务暂不可用，请重新打开游戏', 'Controller service unavailable; reopen game')) : wifi.connected ? tr('已连接 · START 开始 / 暂停', 'Connected · START begin / pause') : wifi.state === 'available' ? tr('同一网络，按手柄搜索键连接', 'Same network: press controller Search') : tr('正在准备手柄服务', 'Preparing controller service'));
+      document.getElementById('puretv-help').textContent = tr('方向移动 · A/X 射击 · B 手雷 · Y 换枪', 'Move · A/X fire · B grenade · Y weapon');
+    }
     function updateRoom(value) {
       if (destroyed) return;
-      info = Object.assign({}, info, value || {});
+      info = Object.assign({}, info, value || {}); updateWifi();
       var ready = !!(info.qr && info.url);
       $("room-qr").hidden = !ready;
       $("qr-pending").hidden = ready;
@@ -128,11 +141,25 @@
       pending[action] = true;
       unlock();
     }
+    root.PureTVQA = {snapshot: function () {
+      var players = game && game.players ? game.players.map(function(player) {
+        var copy = {};
+        ['id','x','y','z','yaw','angle','facing','speed','movingSpeed','lateral','s','u','v','steerAngle','driftTime','drifting','driftCharge','boost','item','heldItem','inventory','tool','netRaised','weapon','ammo','grenades','fireCooldown','previous','lap','rank','connected','joined','active','cancelSeq','telemetry'].forEach(function(key){if (player[key] !== undefined) copy[key] = player[key];});
+        return copy;
+      }) : [];
+      var model = {phase: game ? game.phase : 'loading', players: players};
+      ['elapsed','raceTime','clock','countdown','stage','trackIndex','trackId','selectedPlayers','playerCount','kills','credits','eventSerial','events','projectiles','bullets'].forEach(function(key){if(game && game[key] !== undefined) model[key] = game[key];});
+      var camera = renderer && renderer.camera;
+      return JSON.parse(JSON.stringify({phase:model.phase,paused:!!(suspended || !visible || model.phase === 'paused'),controllerPaused:!!(game && model.phase === 'paused'),controllers:controllerAdapter.peek(),info:info,model:model,players:players,camera:camera && camera.matrixWorldInverse ? {projection:camera.projectionMatrix.elements,view:camera.matrixWorldInverse.elements} : null}));
+    }};
+    var controllerInputs = [], controllerAdapter = root.PureTVControllerAdapter.create({onCancel: function (event) { if (!game || ["playing", "paused"].indexOf(game.phase) < 0) return false;
+        game.pause("controller"); releaseKeys(); return true; }});
     function inputs() {
       var list = [];
       try { if (bridge) list = JSON.parse(bridge.snapshot()).players || []; } catch (_) {}
+      list = controllerAdapter.read(list); controllerInputs = list;
       list = list.filter(function (p) { return p && Number(p.id) === 1; }).map(function (p) {
-        return { id: Number(p.id), connected: !!p.connected, x: clamp(num(p.x), -1, 1), y: clamp(num(p.y), -1, 1), aimX: clamp(num(p.aimX), -1, 1), aimY: clamp(num(p.aimY), -1, 1), a: !!p.a, b: !!p.b, start: !!p.start, select: !!p.select, cancelSeq: Number.isSafeInteger(p.cancelSeq) && p.cancelSeq >= 0 ? p.cancelSeq : 0 };
+        return { id: Number(p.id), transport: p.transport, session: p.session, connected: !!p.connected, x: clamp(num(p.x), -1, 1), y: clamp(num(p.y), -1, 1), aimX: clamp(num(p.aimX), -1, 1), aimY: clamp(num(p.aimY), -1, 1), a: !!p.a, b: !!p.b, start: !!p.start, select: !!p.select, cancelSeq: Number.isSafeInteger(p.cancelSeq) && p.cancelSeq >= 0 ? p.cancelSeq : 0 };
       });
       var local = list[0];
       var phoneConnected = !!(local && local.connected);
@@ -180,9 +207,10 @@
     function updateRoomPlayers(current) {
       var controller = current.find(function (p) { return p.id === 1; });
       var connected = !!(controller && controller.connected);
-      if (connected === roomConnected) return;
-      roomConnected = connected;
-      var value = '<div class="room-player' + (connected ? ' connected' : '') + '"><span class="player-tag">LINK</span><strong>' + esc(tr("手机手柄", "CONTROLLER")) + '</strong><span>' + esc(connected ? tr("已就绪", "READY") : tr("等待连接", "WAITING")) + '</span></div>';
+      var connectionLabel = connected + ":" + (controller && controller.transport || "phone");
+      if (connectionLabel === roomConnected) return;
+      roomConnected = connectionLabel;
+      var value = '<div class="room-player' + (connected ? ' connected' : '') + '"><span class="player-tag">LINK</span><strong>' + esc(controller && controller.transport === "wifi" ? tr("Wi-Fi 手柄", "WI-FI PAD") : tr("手机手柄", "PHONE")) + '</strong><span>' + esc(connected ? tr("已就绪", "READY") : tr("等待连接", "WAITING")) + '</span></div>';
       if (value !== roomHtml) { $("room-players").innerHTML = value; roomHtml = value; runtimeStats.domWrites++; }
     }
     function titleMenu() {
@@ -312,6 +340,7 @@
       c.restore();
     }
     function updateUi(current) {
+      updateWifi(true);
       if (!game || destroyed) return;
       runtimeStats.uiPasses++; updateRoomPlayers(current); updateMenus(); updateHud();
       setText($("sound-button"), tr("声音：", "SOUND: ") + (muted ? tr("关", "OFF") : tr("开", "ON")));
@@ -440,7 +469,7 @@
       canvas.removeEventListener("pointerdown", onPointerDown); canvas.removeEventListener("pointermove", onPointerMove); canvas.removeEventListener("pointerup", onPointerUp); canvas.removeEventListener("pointercancel", onPointerCancel); canvas.removeEventListener("lostpointercapture", onPointerCancel);
       $("menu-content").removeEventListener("click", onMenuClick); $("sound-button").removeEventListener("click", toggleSound);
     }
-    root.AlienShooterTV = { key: function (code, pressed) { key(code, pressed, true); }, updateRoom: updateRoom, suspend: suspend, dispose: dispose, get game() { return game; }, get renderer() { return renderer; }, runtimeStats: runtimeStats };
+    root.AlienShooterTV = { controllerSnapshot: function () { return controllerAdapter.peek(); }, key: function (code, pressed) { key(code, pressed, true); }, updateRoom: updateRoom, suspend: suspend, dispose: dispose, get game() { return game; }, get renderer() { return renderer; }, runtimeStats: runtimeStats };
     root.addEventListener("resize", resize); root.addEventListener("blur", onBlur); root.addEventListener("pagehide", dispose);
     document.addEventListener("keydown", onKeyDown); document.addEventListener("keyup", onKeyUp); document.addEventListener("visibilitychange", onVisibility); document.addEventListener("contextmenu", onContextMenu);
     canvas.addEventListener("pointerdown", onPointerDown); canvas.addEventListener("pointermove", onPointerMove); canvas.addEventListener("pointerup", onPointerUp); canvas.addEventListener("pointercancel", onPointerCancel); canvas.addEventListener("lostpointercapture", onPointerCancel);

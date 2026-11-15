@@ -413,3 +413,12 @@ canvas {
     border-radius: 9px;
   }
 }
+
+/* Controller discovery is independent from the existing QR phone room. */
+.puretv-panel{margin:8px 0;padding:8px 9px;border:1px solid #88cfd744;border-radius:7px;background:#0b2029;color:#e7f8ff;font-size:11px;line-height:1.45;text-align:left}.puretv-panel strong{font-size:11px;color:#8de5ef}.puretv-panel code,.puretv-panel span,.puretv-panel small{display:block;overflow-wrap:anywhere}.puretv-panel code{font-size:11px;color:#fff}.puretv-panel small{font-size:10px;color:#bfd4df}
+.sidebar{overflow-y:auto;min-height:0}.room-panel{max-height:calc(100vh - 100px);overflow-y:auto}
+@media(max-height:600px){.puretv-panel{padding:5px 7px;margin:5px 0;font-size:10px}.puretv-panel small{font-size:9px}.puretv-panel code{font-size:10px}.qr-frame{max-width:100px;max-height:100px;margin:7px auto}.qr-frame img{max-width:100%;max-height:100%}}
+
+/* Keep the beginning of a tall controller sidebar reachable on small TVs. */
+.sidebar{justify-content:flex-start}.sidebar > *{flex-shrink:0}
+@media(max-height:600px){.sidebar .control-legend{display:none}.sidebar .menu-help{font-size:9px;line-height:1.3;margin:5px 0}.sidebar .player-card{padding-top:6px;padding-bottom:6px}.sidebar .join-card{padding-top:9px;padding-bottom:9px}}

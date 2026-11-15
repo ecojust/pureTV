@@ -77,6 +77,8 @@ function afterUI(state,ctx){
   $('room-status').textContent=ctx.phoneConnected&&ctx.controllerKind==='phone'?'CONNECTED':'LOCAL';
   $('rush-wifi-help').hidden=!root.PureGameHost;
   $('rush-wifi-status').textContent=ctx.phoneConnected&&ctx.controllerKind==='wifi'?text('已连接 · START 开始/暂停','Connected · START starts / pauses'):wifi?.state==='available'?text('同一网络，按搜索键连接 '+(wifi.serviceName||'霓虹飞车'),'Same Wi-Fi: press Search for '+(wifi.serviceName||'Neon Rush')):wifi?.state==='registering'?text('正在准备自动发现…','Preparing discovery…'):text('暂不可发现，请重开游戏或扫码连接。','Discovery unavailable. Reopen the game or scan to connect.');
+  const wifiAddress=ctx.wifiAddresses?.[0];
+  if(wifiAddress&&wifi?.port>0)$('rush-wifi-status').textContent+=' · '+wifiAddress+':'+wifi.port;
   const enabled=$('sound-button').getAttribute('aria-pressed')==='true';
   audio.update(state,active,enabled);
   $('rush-nitro-fill').style.width=Math.max(0,Math.min(100,p.nitro))+'%';

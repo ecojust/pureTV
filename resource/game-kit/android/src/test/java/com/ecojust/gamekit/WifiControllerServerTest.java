@@ -286,6 +286,57 @@ public class WifiControllerServerTest {
         assertTrue(cancelled.getLong("cancelSeq") > original.getLong("cancelSeq"));
     }
 
+    @Test public void defaultPortIsTheDocumentedGamePort() { assertEquals(63485, WifiControllerServer.DEFAULT_PORT); }
+
+    @Test public void inactiveNineKeysAckWithoutActionsAndFreshReleaseRearmsThem() throws Exception {
+        Socket socket=socket();send(socket,control("hello",1,DEVICE));String session=player().getString("session");
+        server.setInputActive(false);long seq=2;
+        for(String key:new String[]{"UP","DOWN","LEFT","RIGHT","START","A","B","X","Y"}) {
+            assertEquals("ack",send(socket,message(seq++,DEVICE,key,true,"down")).getString("type"));
+        }
+        JSONObject inactive=player();assertFalse(inactive.getBoolean("inputActive"));assertEquals(0,inactive.getDouble("x"),0);assertEquals(0,inactive.getDouble("y"),0);
+        for(String key:new String[]{"a","b","start","select"})assertFalse(inactive.getBoolean(key));
+        assertEquals(port,server.start());assertEquals(session,inactive.getString("session"));
+        assertEquals("ack",send(socket,control("ping",seq++,DEVICE)).getString("type"));
+        server.setInputActive(true);JSONObject resumed=player();assertEquals(session,resumed.getString("session"));assertFalse(resumed.getBoolean("a"));assertFalse(resumed.getBoolean("start"));
+        for(String key:new String[]{"UP","DOWN","LEFT","RIGHT","START","A","B","X","Y"})send(socket,message(seq++,DEVICE,key,false,"long_release"));
+        send(socket,message(seq++,DEVICE,"A",true,"down"));send(socket,message(seq,DEVICE,"RIGHT",true,"down"));
+        JSONObject fresh=player();assertTrue(fresh.getBoolean("a"));assertEquals(1,fresh.getDouble("x"),0);
+    }
+
+    @Test public void inactiveQuickTapsNeverQueuePulsesForTheForeground() throws Exception {
+        Socket socket=socket();server.setInputActive(false);
+        send(socket,message(1,DEVICE,"START",true,"down"));send(socket,message(2,DEVICE,"START",false,"tap"));
+        send(socket,message(3,DEVICE,"A",true,"down"));send(socket,message(4,DEVICE,"A",false,"tap"));
+        server.setInputActive(true);assertFalse(player().getBoolean("start"));assertFalse(player().getBoolean("a"));
+    }
+
+    @Test public void legacyYSelectRetainsAXAggregationWithoutContributingToB() throws Exception {
+        server.stop();server=new WifiControllerServer(1,true);port=server.start(0);Socket socket=socket();
+        send(socket,message(1,DEVICE,"Y",true,"down"));JSONObject y=player();assertTrue(y.getBoolean("select"));assertFalse(y.getBoolean("b"));
+        send(socket,message(2,DEVICE,"Y",false,"tap"));send(socket,message(3,DEVICE,"A",true,"down"));send(socket,message(4,DEVICE,"X",true,"down"));
+        send(socket,message(5,DEVICE,"A",false,"tap"));assertTrue(player().getBoolean("a"));send(socket,message(6,DEVICE,"X",false,"tap"));assertFalse(player().getBoolean("a"));
+        send(socket,message(7,DEVICE,"Y",true,"sync"));assertFalse(player().getBoolean("select"));
+        send(socket,message(8,DEVICE,"Y",false,"long_release"));send(socket,message(9,DEVICE,"Y",true,"down"));assertTrue(player().getBoolean("select"));
+    }
+
+    @Test public void twoControllersKeepIndependentSeatsAndReconnectTheirOriginalSeat() throws Exception {
+        server.stop();server=new WifiControllerServer(2,true);port=server.start(0);Socket first=socket(),second=socket();
+        send(first,message(1,DEVICE,"LEFT",true,"down"));send(second,message(1,"esp32-second","RIGHT",true,"down"));
+        JSONObject before=new JSONObject(server.snapshot());assertEquals(2,before.getInt("connections"));
+        assertEquals(-1,before.getJSONArray("players").getJSONObject(0).getDouble("x"),0);assertEquals(1,before.getJSONArray("players").getJSONObject(1).getDouble("x"),0);
+        String original=before.getJSONArray("players").getJSONObject(0).getString("session"),retained=before.getJSONArray("players").getJSONObject(1).getString("session");
+        first.close();await(()->new JSONObject(server.snapshot()).getInt("connections")==1);
+        Socket replacement=socket();send(replacement,control("hello",1,DEVICE));send(replacement,message(2,DEVICE,"START",true,"sync"));
+        JSONObject after=new JSONObject(server.snapshot());assertEquals(2,after.getInt("connections"));
+        assertEquals(DEVICE,after.getJSONArray("players").getJSONObject(0).getString("controllerId"));assertNotEquals(original,after.getJSONArray("players").getJSONObject(0).getString("session"));
+        assertFalse(after.getJSONArray("players").getJSONObject(0).getBoolean("start"));assertEquals(retained,after.getJSONArray("players").getJSONObject(1).getString("session"));
+        assertEquals(1,after.getJSONArray("players").getJSONObject(1).getDouble("x"),0);
+        Socket third=socket();assertEquals("controller_busy",send(third,control("hello",1,"esp32-third")).getString("message"));
+        server.setInputActive(false);server.setInputActive(true);JSONObject gated=new JSONObject(server.snapshot());
+        for(int i=0;i<2;i++)assertEquals(0,gated.getJSONArray("players").getJSONObject(i).getDouble("x"),0);
+    }
+
     private static JSONObject control(String kind, long seq, String id) throws Exception {
         return new JSONObject().put("type", kind).put("seq", seq).put("controller_id", id);
     }

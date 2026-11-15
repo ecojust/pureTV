@@ -176,6 +176,16 @@ try {
     const rows = await samples(s, from); assert.ok(rows.length >= 5 && rows.every(x => x.cancelled), 'One cancellation-owned frame covers every physics substep');
     await s.pump(2); assert.ok((await samples(s)).at(-1).cancelled === false);
   });
+  await test('Native focus loss freezes the game and focus return requires a fresh resume', async s => {
+    await s.start(); await s.key('Space', true); await s.pump(6);
+    await s.page.evaluate(() => PureGame.focus(false)); await s.pump(5);
+    const frozen = await s.snap(); assert.equal(frozen.paused, true);
+    await s.page.evaluate(() => PureGame.focus(true)); await s.pump(8);
+    assert.equal((await s.snap()).paused, true); assert.deepEqual((await s.snap()).model, frozen.model);
+    await s.key('Space', false); await s.tap('p'); await s.pump(4);
+    assert.equal((await s.snap()).paused, false);
+    assert.ok((await samples(s, frozen.model.tick)).every(x => !x.a && !x.aPressed));
+  });
   await test('Retry clears held keyboard input and ignores its later DOM repeats', async s => {
     await s.start(); await s.key('Space', true); await s.pump(6); await s.tap('r');
     await s.repeat(' '); await s.pump(8); assert.ok((await samples(s)).every(x => !x.a && !x.aPressed));

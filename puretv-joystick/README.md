@@ -7,7 +7,7 @@
 在电视或开发机启动游戏的 TCP 输入服务。在电脑进入本目录，把下例地址换成游戏主机的实际 IP，然后启动桥接程序。
 
 ```sh
-python3 bridge.py 192.168.1.100 --port 8765
+python3 bridge.py 192.168.1.100 --port 63485
 ```
 
 打开 [虚拟手柄](http://127.0.0.1:8767/)，点「连接游戏」。可使用鼠标、触控或键盘方向键、Enter 和 A/B/X/Y。按住约 500 ms 触发长按。虚拟手柄使用指定地址直连，用于验证游戏的 TCP 输入协议。mDNS 发现可另用实体手柄的 GPIO 23 搜索键验证。
@@ -17,15 +17,15 @@ python3 bridge.py 192.168.1.100 --port 8765
 也可以用参考服务接收实体或虚拟手柄的输入，观察每只手柄的连接和按键状态。
 
 ```sh
-python3 server.py --host 0.0.0.0 --port 8765
+python3 server.py --host 0.0.0.0 --port 63485
 ```
 
-打开 [手柄监测页](http://127.0.0.1:8766/)。实体手柄填写电脑的局域网 IP。虚拟手柄在同一台电脑上测试时使用 `python3 bridge.py 127.0.0.1`。
+打开 [手柄监测页](http://127.0.0.1:8766/)。实体手柄填写电脑的局域网 IP。虚拟手柄在同一台电脑上测试时使用 `python3 bridge.py 127.0.0.1 --port 63485`。
 
 ## 游戏 App 接入 pureTV Wi-Fi 手柄
 
 - 支持手柄自动发现的游戏 App，必须在局域网提供 TCP 手柄输入服务，并通过 mDNS/DNS-SD 发布 `_puretv._tcp`。可由游戏 App 自行实现，也可复用 pureTV 原生宿主统一发布的服务，由宿主将输入转发给当前游戏。
-- Android TV 端先启动 TCP 监听，再用 `NsdManager` 注册服务。发布可辨认的实例名及实际监听端口，默认端口为 `8765`，TXT 属性使用 `version=1`。停止服务时撤销注册。
+- Android TV 端先启动 TCP 监听，再用 `NsdManager` 注册服务。发布可辨认的实例名及实际监听端口，默认端口为 `63485`，TXT 属性使用 `version=1`。停止服务时撤销注册。
 - TCP 服务按换行读取 UTF-8 JSON，使用 `controller_id` 区分手柄，按 `key`、`action`、`pressed` 处理输入，并用相同的 `seq` 回复逐行 JSON ACK。重连时用 `sync` 更新按键状态。
 - 验收时让电视与手柄加入同一局域网，确认手柄能发现广播的地址和端口。当前固件只在发现单个服务时自动连接。连接后验证按下、松开和断线重连。
 
@@ -35,7 +35,7 @@ python3 server.py --host 0.0.0.0 --port 8765
 | --- | --- |
 | `serviceType` | 必须为 `_puretv._tcp`，与手柄搜索的服务类型一致 |
 | `serviceName` | 使用可辨认的实例名，例如 `客厅电视` |
-| `port` | 必须是 TCP 服务实际监听的端口，默认使用 `8765` |
+| `port` | 必须是 TCP 服务实际监听的端口，默认使用 `63485` |
 | TXT `version` | 使用 `setAttribute("version", "1")` 声明协议版本。当前 ESP32 固件尚未按此字段筛选 |
 
 ### 按键消息字段
@@ -71,7 +71,7 @@ python3 server.py --host 0.0.0.0 --port 8765
 import time
 from joystick_sdk import JoystickClient
 
-controller = JoystickClient("192.168.1.100", 8765)
+controller = JoystickClient("192.168.1.100", 63485)
 controller.connect()
 try:
     controller.button("A", "down")

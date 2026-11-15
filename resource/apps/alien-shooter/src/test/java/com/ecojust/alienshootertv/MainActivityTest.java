@@ -359,4 +359,111 @@ public class MainActivityTest {
         activity.dispatchKeyEvent(new KeyEvent(0, 0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BUTTON_START, 1));
         assertEquals("A held Start key must not send repeated presses", released, browser().getLastEvaluatedJavascript());
     }
+
+    private static final class WifiPeer implements AutoCloseable {
+        final Socket socket;
+        final java.io.BufferedReader input;
+        final String id;
+        int seq;
+        WifiPeer(int port, String id) throws Exception {
+            this.id = id;
+            socket = new Socket("127.0.0.1", port);
+            socket.setSoTimeout(2000);
+            input = new java.io.BufferedReader(new java.io.InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+            send(new JSONObject().put("type", "hello"));
+            for (String key : new String[]{"UP","DOWN","LEFT","RIGHT","START","A","B","X","Y"}) button(key,"sync",false);
+        }
+        void send(JSONObject message) throws Exception {
+            int expected = ++seq;
+            message.put("controller_id", id).put("seq", expected);
+            socket.getOutputStream().write((message.toString()+"\n").getBytes(StandardCharsets.UTF_8));
+            socket.getOutputStream().flush();
+            JSONObject reply = new JSONObject(input.readLine());
+            assertEquals("ack", reply.getString("type"));
+            assertEquals(expected, reply.getInt("seq"));
+        }
+        void button(String key, String action, boolean pressed) throws Exception {
+            send(new JSONObject().put("type","button").put("key",key).put("action",action).put("pressed",pressed).put("duration_ms",0));
+        }
+        void ping() throws Exception { send(new JSONObject().put("type","ping")); }
+        @Override public void close() throws Exception { socket.close(); }
+    }
+    private int wifiPort() throws Exception {
+        return new JSONObject(bridge().getInfo()).getJSONObject("wifiController").getInt("port");
+    }
+    private JSONObject wifiPlayer(int seat) throws Exception {
+        org.json.JSONArray players = new JSONObject(bridge().snapshot()).getJSONArray("players");
+        for (int i=0;i<players.length();i++) if (players.getJSONObject(i).getInt("id")==seat) return players.getJSONObject(i);
+        throw new AssertionError("Missing Wi-Fi seat "+seat);
+    }
+
+    @Test public void wifiProtocolReachesTheActualHostBridgeAndPreservesQuickTaps() throws Exception {
+        start(); activity.onWindowFocusChanged(true);
+        assertTrue(wifiPort()>0);
+        assertEquals("_puretv._tcp",new JSONObject(bridge().getInfo()).getJSONObject("wifiController").getString("serviceType"));
+        try (WifiPeer peer=new WifiPeer(wifiPort(),"native-mapping")) {
+            peer.button("RIGHT","down",true);
+            JSONObject sample=wifiPlayer(1);
+            assertEquals("wifi",sample.getString("transport"));
+            assertEquals(1,sample.getInt("x"));
+            peer.button("RIGHT","tap",false); wifiPlayer(1);
+            peer.button("X","down",true); peer.button("X","tap",false);
+            assertTrue(wifiPlayer(1).getBoolean("a"));
+            assertFalse(wifiPlayer(1).getBoolean("a"));
+            peer.button("Y","down",true);
+            sample=wifiPlayer(1); assertTrue(sample.getBoolean("select")); assertFalse(sample.getBoolean("b"));
+            peer.button("Y","tap",false); wifiPlayer(1);
+            peer.button("B","down",true);
+            sample=wifiPlayer(1); assertTrue(sample.getBoolean("b")); assertFalse(sample.getBoolean("select"));
+            peer.button("A","sync",true);
+            assertFalse(wifiPlayer(1).getBoolean("a"));
+            peer.button("A","tap",false); peer.button("A","down",true);
+            assertTrue(wifiPlayer(1).getBoolean("a"));
+        }
+    }
+
+    @Test public void wifiFocusIsolationKeepsTcpSessionPortAndRequiresFreshPress() throws Exception {
+        start(); activity.onWindowFocusChanged(true);
+        int originalPort=wifiPort();
+        try (WifiPeer peer=new WifiPeer(originalPort,"native-focus")) {
+            String session=wifiPlayer(1).getString("session");
+            peer.button("RIGHT","down",true);
+            activity.onWindowFocusChanged(false);
+            peer.button("A","down",true); peer.button("START","down",true); peer.ping();
+            assertEquals(originalPort,wifiPort());
+            assertFalse(new JSONObject(bridge().getInfo()).getJSONObject("wifiController").getBoolean("inputActive"));
+            assertEquals(0,new JSONObject(bridge().snapshot()).getJSONArray("players").length());
+            activity.onWindowFocusChanged(true);
+            JSONObject sample=wifiPlayer(1);
+            assertEquals(session,sample.getString("session"));
+            assertEquals(0,sample.getInt("x")); assertFalse(sample.getBoolean("a")); assertFalse(sample.getBoolean("start"));
+            peer.button("RIGHT","tap",false); peer.button("A","tap",false); peer.button("START","tap",false);
+            peer.button("START","down",true);
+            assertTrue(wifiPlayer(1).getBoolean("start"));
+            assertEquals(originalPort,wifiPort()); peer.ping();
+        }
+    }
+
+    @Test public void singlePlayerWifiDoesNotCreateAnExtraActor() throws Exception {
+        start(); activity.onWindowFocusChanged(true);
+        try (WifiPeer first=new WifiPeer(wifiPort(),"native-single"); Socket second=new Socket("127.0.0.1",wifiPort())) {
+            second.setSoTimeout(2000);
+            second.getOutputStream().write("{\"type\":\"hello\",\"controller_id\":\"second-actor\",\"seq\":1}\n".getBytes(StandardCharsets.UTF_8));
+            JSONObject error=new JSONObject(new java.io.BufferedReader(new java.io.InputStreamReader(second.getInputStream(),StandardCharsets.UTF_8)).readLine());
+            assertEquals("error",error.getString("type"));
+            assertEquals(1,new JSONObject(bridge().snapshot()).getJSONArray("players").length());
+            assertEquals("native-single",wifiPlayer(1).getString("controllerId"));
+        }
+    }
+
+    @Test public void actualActivityStopClosesTheWifiListenerAndExistingPeer() throws Exception {
+        start(); activity.onWindowFocusChanged(true);
+        int originalPort=wifiPort();
+        try (WifiPeer peer=new WifiPeer(originalPort,"native-exit")) {
+            peer.ping();
+            controller.pause().stop(); started=false;
+            assertClosed(originalPort);
+            assertNull(peer.input.readLine());
+        }
+    }
 }

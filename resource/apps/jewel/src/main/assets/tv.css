@@ -401,3 +401,23 @@ canvas {
 
 /* A quiet indigo bezel frames the original-style jewel field. */
 :root{--accent:#bba7ff;--line:#3a3554}body{background:#101020}.arena-panel{background:#090914}.room-brand{color:#e5d2ff}.player-card.connected{border-color:#8a79be}.sound-toggle{width:100%;margin:0 0 12px;padding:9px 12px;border:1px solid #52496c;border-radius:7px;background:#221e34;color:#e8def8;font:inherit;font-size:13px;text-align:left}.sound-toggle:focus{outline:2px solid #d6bdff;outline-offset:2px}@media(max-height:560px){.sound-toggle{margin-bottom:5px;padding:5px 8px;font-size:11px}}
+
+/* Keep both controller choices visible on compact TV displays. */
+.wifi-controller { margin: 0 0 12px; padding: 8px; border: 1px solid #4b7469; border-radius: 6px; text-align: left; color: #bfeddb; }
+.wifi-controller strong { display: block; font-size: 11px; }
+#wifi-address { font: 10px/1.5 monospace; overflow-wrap: anywhere; }
+.wifi-controller #wifi-help { font-size: 10px; line-height: 1.5; color: #bbd4cb; margin-top: 3px; }
+.has-wifi-controller .qr-frame { width: 112px; height: 112px; padding: 6px; }
+.has-wifi-controller .room-brand { margin-bottom: 10px; }
+.has-wifi-controller .section-heading { margin-bottom: 7px; }
+.has-wifi-controller .join-card h2 { margin: 8px 0 4px; }
+.has-wifi-controller .sidebar { --sidebar-space: 10px; max-height: 100%; overflow-y: auto; }
+.wifi-pause { position: absolute; z-index: 5; top: 8px; left: 8px; right: 8px; padding: 10px; border: 1px solid #bfeddb; background: #122720; color: #fff; font: 12px/1.5 Arial, sans-serif; text-align: center; }
+@media (max-height: 600px) {
+  .has-wifi-controller .qr-frame { width: 84px; height: 84px; }
+  .has-wifi-controller .sidebar { --sidebar-space: 7px; }
+  .has-wifi-controller .wifi-controller { margin-bottom: 7px; padding: 6px; }
+  .has-wifi-controller #scan-description { display: none; }
+  .has-wifi-controller .players { --players-space: 12px; }
+  .has-wifi-controller .room-brand { margin-bottom: 8px; }
+}

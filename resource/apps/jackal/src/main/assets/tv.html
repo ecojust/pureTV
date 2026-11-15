@@ -24,6 +24,7 @@
               height="240"
               aria-label="JACKAL TV"
             ></canvas>
+            <div id="wifi-pause" class="wifi-pause" hidden></div>
             <div class="loading" id="game-loading">
               <strong id="loading-title">正在载入游戏…</strong>
               <p id="loading-detail"></p>
@@ -33,6 +34,11 @@
         <aside class="sidebar">
           <section class="join-card">
             <div class="room-brand" id="room-brand">JACKAL TV</div>
+            <div id="wifi-controller" class="wifi-controller" hidden>
+              <strong id="wifi-state"></strong>
+              <div id="wifi-address"></div>
+              <p id="wifi-help"></p>
+            </div>
             <div class="section-heading">
               <span id="join-label">手机手柄</span
               ><span id="lan-label">同一局域网</span>
@@ -84,6 +90,7 @@
     <script src="scene-updates.js"></script>
     <script src="nes-renderer.js"></script>
     <script src="nes-audio.js"></script>
+    <script src="puretv-controller.js"></script>
     <script src="runtime.js"></script>
     <script src="game.js"></script>
   </body>

@@ -53,8 +53,9 @@ import static org.robolectric.Shadows.shadowOf;
 public class MainActivityTest {
     public static class TestActivity extends MainActivity {
         boolean terminated;
+        List<String> addresses = Collections.singletonList("192.168.1.45");
         @Override public void onCreate(Bundle state) { setTheme(R.style.PureGameTheme); super.onCreate(state); }
-        @Override List<String> lanAddresses() { return Collections.singletonList("192.168.1.45"); }
+        @Override List<String> lanAddresses() { return addresses; }
         @Override void terminateProcess() { terminated = true; }
     }
 
@@ -355,8 +356,8 @@ public class MainActivityTest {
 
     @Test public void busyDefaultPortAdvertisesItsActualFallback() throws Exception {
         try(ServerSocket occupied=new ServerSocket()){
-            occupied.setReuseAddress(true);occupied.bind(new InetSocketAddress("0.0.0.0",8765));
-            start();assertNotEquals(8765,wifiServer().getPort());assertTrue(wifiServer().getPort()>0);
+            occupied.setReuseAddress(true);occupied.bind(new InetSocketAddress("0.0.0.0",63485));
+            start();assertNotEquals(63485,wifiServer().getPort());assertTrue(wifiServer().getPort()>0);
             assertEquals(wifiServer().getPort(),WifiControllerDiscoveryTest.RecordingNsdShadow.registrations.get(0).service.getPort());
         }
     }
@@ -409,6 +410,50 @@ public class MainActivityTest {
         assertTrue(WifiControllerDiscoveryTest.RecordingNsdShadow.unregisters.contains(registration));
     }
 
+
+    @Test public void networkRefreshAndStaleCallbacksKeepTheExistingFallbackTcpSession() throws Exception {
+        try(ServerSocket occupied=new ServerSocket()) {
+            occupied.setReuseAddress(true);occupied.bind(new InetSocketAddress("0.0.0.0",63485));start();
+            WifiControllerServer original=wifiServer();int originalPort=original.getPort();assertNotEquals(63485,originalPort);
+            try(Socket wifi=wifiClient()) {
+                wifiButton(wifi,1,"RIGHT",true,"down");String session=bridgePlayer().getString("session");
+                Runnable check=ReflectionHelpers.getField(activity,"checkNetwork");
+                ExecutorService worker=ReflectionHelpers.getField(activity,"worker");
+                activity.addresses=Collections.singletonList("192.168.1.46");check.run();
+                worker.submit(()->{}).get(10,TimeUnit.SECONDS);
+                // Leave this attachment queued, then queue a newer network generation.
+                activity.addresses=Collections.singletonList("192.168.1.47");check.run();
+                worker.submit(()->{}).get(10,TimeUnit.SECONDS);shadowOf(Looper.getMainLooper()).idle();
+                assertSame(original,wifiServer());assertEquals(originalPort,wifiServer().getPort());
+                wifiButton(wifi,2,"RIGHT",false,"tap");wifiButton(wifi,3,"RIGHT",true,"down");
+                JSONObject after=bridgePlayer();assertEquals(session,after.getString("session"));assertEquals(1,after.getDouble("x"),0);
+                JSONObject info=new JSONObject(bridge().getInfo());assertEquals("192.168.1.47",info.getJSONArray("addresses").getString(0));
+                assertEquals(originalPort,info.getJSONObject("wifiController").getInt("port"));
+                assertTrue(browser().getLastEvaluatedJavascript().contains("networkChanged")||browser().getLastEvaluatedJavascript().contains("roomInfo"));
+            }
+        }
+    }
+
+    @Test public void transientWindowFocusKeepsTcpSessionAndQuarantinesBackgroundButtons() throws Exception {
+        start();try(Socket wifi=wifiClient()){
+            wifiButton(wifi,1,"RIGHT",true,"down");JSONObject before=bridgePlayer();int originalPort=wifiServer().getPort();
+            int registrations=WifiControllerDiscoveryTest.RecordingNsdShadow.registrations.size();
+            for(int cycle=0;cycle<3;cycle++){
+                long seq=10+cycle*10;activity.onWindowFocusChanged(false);
+                assertTrue(browser().getLastEvaluatedJavascript().contains("focus(false)"));
+                wifiButton(wifi,seq,"START",true,"down");wifiButton(wifi,seq+1,"A",true,"down");
+                assertEquals(0,new JSONObject(bridge().snapshot()).getInt("connections"));
+                activity.onWindowFocusChanged(true);JSONObject after=bridgePlayer();
+                assertEquals(originalPort,wifiServer().getPort());assertEquals(before.getString("session"),after.getString("session"));
+                assertFalse(after.getBoolean("a"));assertFalse(after.getBoolean("start"));assertEquals(0,after.getDouble("x"),0);
+                assertTrue(browser().getLastEvaluatedJavascript().contains("focus(true)"));
+                wifiButton(wifi,seq+2,"A",false,"tap");wifiButton(wifi,seq+3,"START",false,"tap");
+                wifiButton(wifi,seq+4,"A",true,"down");assertTrue(bridgePlayer().getBoolean("a"));
+                wifiButton(wifi,seq+5,"A",false,"tap");
+            }
+            assertEquals(registrations,WifiControllerDiscoveryTest.RecordingNsdShadow.registrations.size());
+        }
+    }
 
     @Test public void freshWifiButtonsPressedBehindExitDialogCannotQueueActionsOnResume() throws Exception {
         start();try(Socket wifi=wifiClient()){

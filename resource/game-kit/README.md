@@ -52,6 +52,8 @@ node resource/game-kit/qa/input-lifecycle-test.mjs --output /tmp/puretv-input-li
 
 ## pureTV Wi-Fi 实体手柄
 
-共享宿主同时提供 TCP JSONL v1 手柄服务：首选端口8765，冲突时广播实际分配端口；通过NsdManager注册`_puretv._tcp`和TXT `version=1`，退出/后台撤销。ESP32协议按仓库AGENTS实现，扫码手机的HTTP/WebSocket入口继续保留。
+共享宿主同时提供 TCP JSONL v1 手柄服务：首选端口63485，冲突时广播实际分配端口；通过NsdManager注册`_puretv._tcp`和TXT `version=1`，退出/按Home切换应用时撤销；临时窗口失焦或原生确认框保留监听、端口和会话，但隔离所有按键，恢复后须真实松开再按。ESP32协议按仓库AGENTS实现，扫码手机的HTTP/WebSocket入口继续保留。
 
 UP/DOWN/LEFT/RIGHT对应方向，START对应开始/暂停，A/X对应动作A，B/Y对应动作B。Wi-Fi连接优先于扫码手机；控制源或连接代际改变会暂停并取消旧输入。动作/START的sync不产生新操作，长按不依赖扫码协议的750ms刷新周期。`GameDef.afterUI`另收到`controllerKind`和`wifiController`发现状态；具体飞车说明见[Wi-Fi接入](../apps/neon-rush/docs/WIFI-CONTROLLER.md)。
+
+旧独立游戏通过同一TCP实现的 `WifiControllerServer(maxPlayers, true)` 适配一至两席位：A/X=动作A、B=动作B、Y=SELECT；Game Kit默认单席位且B/Y仍为动作B。双人按controller_id区分，断线席位保留15秒；同ID新TCP替换旧连接并生成新session，同步按住的动作不触发新操作。网页只读快照包含抑制后的九键buttons用于诊断。

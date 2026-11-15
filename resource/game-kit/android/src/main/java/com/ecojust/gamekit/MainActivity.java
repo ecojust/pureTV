@@ -56,6 +56,8 @@ public class MainActivity extends Activity {
     private final Object roomLock = new Object();
     private volatile LanGameServer server;
     private LanGameServer pendingServer;
+    private volatile boolean windowFocused = true;
+    private boolean pageLoaded;
     private volatile WifiControllerServer wifiServer;
     private WifiControllerServer pendingWifiServer;
     private WifiControllerDiscovery wifiDiscovery;
@@ -234,16 +236,19 @@ public class MainActivity extends Activity {
     };
 
     private void startRoom() {
-        closeRoom();
+        closeRoom(false);
         if (!active || destroyed || web == null) return;
         final int expected = generation;
+        final WifiControllerServer retainedWifi = wifiServer;
+        if (pageLoaded) web.evaluateJavascript("window.PureGame && window.PureGame.focus && window.PureGame.focus(false)", null);
         lastAddresses = lanAddresses();
         final List<String> addresses = new ArrayList<>(lastAddresses);
         status.setText(R.string.starting);
         status.setVisibility(View.VISIBLE);
         worker.execute(() -> {
             LanGameServer created = new LanGameServer(name -> getAssets().open(name));
-            WifiControllerServer createdWifi = new WifiControllerServer();
+            final boolean ownsWifi = retainedWifi == null;
+            WifiControllerServer createdWifi = ownsWifi ? new WifiControllerServer() : retainedWifi;
             String payload;
             try {
                 int port;
@@ -262,24 +267,31 @@ public class MainActivity extends Activity {
             try {
                 synchronized (roomLock) {
                     if (generation != expected || !active || destroyed) { created.stop(); return; }
-                    pendingWifiServer = createdWifi;
+                    if (ownsWifi) pendingWifiServer = createdWifi;
                     wifiPort = createdWifi.start();
                 }
-            } catch (Exception unavailableWifi) { createdWifi.stop(); }
+            } catch (Exception unavailableWifi) { if (ownsWifi) createdWifi.stop(); }
             final int readyWifiPort = wifiPort;
             final String ready = payload;
             main.post(() -> {
-                if (!active || destroyed || generation != expected || web == null) { created.stop(); createdWifi.stop(); return; }
+                if (!active || destroyed || generation != expected || web == null) { created.stop(); if (ownsWifi) createdWifi.stop(); return; }
                 synchronized (roomLock) {
                     server = created; pendingServer = null;
                     wifiServer = readyWifiPort > 0 ? createdWifi : null; pendingWifiServer = null;
                 }
                 info = ready;
-                suspended = false;
+                suspended = exitDialog != null;
+                createdWifi.setInputActive(windowFocused && !suspended);
                 if (readyWifiPort > 0 && !addresses.isEmpty()) {
                     wifiDiscovery.start(getString(R.string.app_name), readyWifiPort);
                 } else updateWifiInfo(expected, "unavailable", getString(R.string.app_name), readyWifiPort, -1);
-                web.loadUrl(GAME_URL);
+                if (pageLoaded) {
+                    web.evaluateJavascript("window.PureGame && window.PureGame.networkChanged(" + info + ")", null);
+                    status.setVisibility(View.GONE);
+                } else {
+                    pageLoaded = true;
+                    web.loadUrl(GAME_URL);
+                }
             });
         });
     }
@@ -345,7 +357,7 @@ public class MainActivity extends Activity {
     final class HostBridge {
         @JavascriptInterface public String getInfo() { return info; }
         @JavascriptInterface public String snapshot() {
-            if (suspended) return "{\"players\":[],\"connections\":0}";
+            if (suspended || !windowFocused) return "{\"players\":[],\"connections\":0}";
             WifiControllerServer wifi = wifiServer;
             if (wifi != null) {
                 String sample = wifi.snapshot();
@@ -362,14 +374,18 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void exit() { main.post(MainActivity.this::onBackPressed); }
     }
 
-    private void closeRoom() {
+    private void closeRoom() { closeRoom(true); }
+
+    private void closeRoom(boolean closeWifi) {
         synchronized (roomLock) {
             generation++;
             suspended = true;
             if (wifiDiscovery != null) wifiDiscovery.stop();
             WifiControllerServer oldWifi = wifiServer;
-            wifiServer = null;
-            if (oldWifi != null) oldWifi.stop();
+            if (closeWifi) {
+                wifiServer = null;
+                if (oldWifi != null) oldWifi.stop();
+            } else if (oldWifi != null) oldWifi.setInputActive(false);
             if (pendingWifiServer != null) { pendingWifiServer.stop(); pendingWifiServer = null; }
             LanGameServer old = server;
             server = null;
@@ -431,7 +447,7 @@ public class MainActivity extends Activity {
         if (exitDialog != null || destroyed) return;
         suspended = true;
         if (server != null) server.releaseInputs();
-        if (wifiServer != null) wifiServer.releaseInputs();
+        if (wifiServer != null) wifiServer.setInputActive(false);
         if (web != null) web.evaluateJavascript("window.PureGame && window.PureGame.suspend && window.PureGame.suspend(true)",null);
         exitDialog = new AlertDialog.Builder(this).setTitle(R.string.exit_title).setMessage(R.string.exit_message)
             .setPositiveButton(R.string.exit,(dialog,which) -> { closeRoom(); finishAndRemoveTask(); })
@@ -443,12 +459,22 @@ public class MainActivity extends Activity {
                 // Events received while the native confirmation dialog was open
                 // must not replay when the WebView resumes.
                 if (server != null) server.releaseInputs();
-                if (wifiServer != null) wifiServer.releaseInputs();
+                if (wifiServer != null) wifiServer.setInputActive(windowFocused);
                 suspended = false;
                 if (web != null) web.evaluateJavascript("window.PureGame && window.PureGame.suspend && window.PureGame.suspend(false)",null);
             }
         });
         exitDialog.show();
+    }
+
+    @Override public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        windowFocused = hasFocus;
+        if (!active || destroyed || web == null) return;
+        if (server != null) server.releaseInputs();
+        if (wifiServer != null) wifiServer.setInputActive(hasFocus && !suspended);
+        // Losing focus pauses; regaining it never automatically resumes a game.
+        web.evaluateJavascript("window.PureGame && window.PureGame.focus && window.PureGame.focus(" + hasFocus + ")", null);
     }
 
     @Override public boolean dispatchKeyEvent(KeyEvent event) {
