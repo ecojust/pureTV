@@ -144,8 +144,8 @@ public class MainActivityTest {
     }
 
     @Test public void onlyBundledGameAssetsAreReadable() throws Exception {
-        String[] names={"tv.html","tv.css","bootstrap.js","game.js","game-model.js","runtime.js","renderer.js","three.min.js","renderer-3d.js","audio.js","world.js"};
-        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript"};
+        String[] names={"tv.html","tv.css","puretv-controller.js","bootstrap.js","game.js","game-model.js","runtime.js","renderer.js","three.min.js","renderer-3d.js","audio.js","world.js"};
+        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript"};
         java.util.Set<String> packaged = new java.util.HashSet<>(java.util.Arrays.asList(activity.getAssets().list("")));
         packaged.removeAll(java.util.Arrays.asList("controller.html", "controller.css", "controller.js", "THREE-LICENSE.txt"));
         // Robolectric merges these exact Android framework assets into the app's AssetManager.

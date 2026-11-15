@@ -144,9 +144,9 @@ public class MainActivityTest {
     }
 
     @Test public void onlyBundledGameAssetsAreReadable() throws Exception {
-        String[] names={"tv.html","tv.css","bootstrap.js","game.js","game-model.js","runtime.js","renderer.js","three.min.js","audio.js","world.js","baked-materials.js","baked-loader.js",
+        String[] names={"tv.html","tv.css","puretv-controller.js","bootstrap.js","game.js","game-model.js","runtime.js","renderer.js","three.min.js","audio.js","world.js","baked-materials.js","baked-loader.js",
             "baked-atlas.png","baked-floor.png","baked-light-0.png","baked-light-1.png","baked-light-2.png"};
-        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript",
+        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript",
             "image/png","image/png","image/png","image/png","image/png"};
         java.util.Set<String> packaged = new java.util.HashSet<>(java.util.Arrays.asList(activity.getAssets().list("")));
         packaged.removeAll(java.util.Arrays.asList("controller.html", "controller.css", "controller.js", "THREE-LICENSE.txt", "ART-NOTICE.txt"));

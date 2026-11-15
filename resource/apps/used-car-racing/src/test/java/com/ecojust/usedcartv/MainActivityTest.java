@@ -240,8 +240,8 @@ public class MainActivityTest {
     }
 
     @Test public void onlyBundledGameAssetsAreReadable() throws Exception {
-        String[] names={"tv.html","tv.css","tracks.js","vehicle-models.js","game-model.js","renderer-3d.js","game.js","audio.js","three.min.js","materials.js"};
-        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript"};
+        String[] names={"tv.html","tv.css","puretv-controller.js","tracks.js","vehicle-models.js","game-model.js","renderer-3d.js","game.js","audio.js","three.min.js","materials.js"};
+        String[] mimes={"text/html","text/css","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript","application/javascript"};
         java.util.Set<String> packaged = new java.util.HashSet<>(java.util.Arrays.asList(activity.getAssets().list("")));
         packaged.removeAll(java.util.Arrays.asList("controller.html", "controller.css", "controller.js", "steering.js", "secure-controller.js", "THREE-LICENSE.txt", "TEXTURE-LICENSE.txt", "textures"));
         // Robolectric may flatten descendant filenames into list(""); remove only
