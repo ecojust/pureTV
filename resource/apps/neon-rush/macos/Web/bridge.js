@@ -4,7 +4,7 @@
   const actions = ['a', 'b', 'start', 'left', 'right', 'up', 'down'];
   let info = { platform: 'macos', language: /^en\b/i.test(root.navigator?.language || '') ? 'en' : 'zh', wifiController: { state: 'starting' } };
   let player = null, identity = null, lastRevision = -1, initialized = false, everConnected = false;
-  let counters = {}, pending = {}, blocked = {}, suspendedRevision = -1, preferencesSeeded = false;
+  let counters = {}, pending = {}, blocked = {}, suspendedRevision = -1, preferencesSeeded = false, inputDisabled = false;
   const preferenceKeys = new Set(['puretv.neon-rush.best', 'neon-rush.language']);
   const originalSetItem = root.Storage?.prototype?.setItem;
   function validPreference(key, value) {
@@ -35,6 +35,18 @@
       }
       try { root.PureGame?.roomInfo(info); } catch (_) {}
     }
+    // TCP stays connected while backgrounded, but its messages must never drive
+    // the game or queue a pulse for the next foreground frame.
+    if (info.wifiController?.inputEnabled === false) {
+      if (!inputDisabled) suspend();
+      inputDisabled = true;
+      if (snapshot.players?.some(p => p?.connected)) everConnected = true;
+      lastRevision = snapshot.revision;
+      suspendedRevision = lastRevision;
+      initialized = true;
+      return true;
+    }
+    inputDisabled = false;
     // Discovery can become available without input changes after foregrounding.
     // Accept its info while keeping queued input suspended.
     if (snapshot.revision <= suspendedRevision) return false;

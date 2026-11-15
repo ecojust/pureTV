@@ -13,6 +13,8 @@
     const text = (zh, en) => english ? en : zh;
     const current = info(), wifi = current.wifiController || {};
     const phase = ctx.paused ? 'paused' : ctx.phase;
+    const background = wifi.inputEnabled === false;
+    if (/^\d+\.\d+\.\d+$/.test(current.appVersion || '')) $('version').textContent = current.appVersion;
     document.body.classList.add('neon-desktop');
     if (!installed) {
       installed = true;
@@ -33,20 +35,22 @@
     $('rush-phone-button').textContent = text('手柄与操作', 'Controllers');
     $('rush-phone-button').setAttribute('aria-expanded', String(panelRequested));
     document.querySelector('.side-heading .eyebrow').textContent = 'PURETV CONTROLLER';
-    $('room-status').textContent = ctx.phoneConnected ? 'CONNECTED' : wifi.state === 'available' ? 'READY' : 'OFFLINE';
+    $('room-status').textContent = background && wifi.port ? 'PAUSED' : ctx.phoneConnected ? 'CONNECTED' : wifi.state === 'available' ? 'READY' : 'OFFLINE';
     $('rush-wifi-help').hidden = false;
     $('rush-wifi-help').querySelector('strong').textContent = text('连接 pureTV 手柄', 'CONNECT YOUR CONTROLLER');
     const addresses = Array.isArray(wifi.addresses) ? wifi.addresses.filter(v => typeof v === 'string') : [];
     const endpoints = addresses.map(address => address + (wifi.port ? ':' + wifi.port : ''));
     $('room-address').textContent = endpoints.length ? endpoints.join(' · ') : wifi.port ? text('监听端口 ', 'Listening on port ') + wifi.port : text('正在准备本机地址…', 'Preparing local address…');
-    $('rush-wifi-status').textContent = ctx.phoneConnected
+    $('rush-wifi-status').textContent = background && wifi.port
+      ? text('游戏已暂停，连接与端口保持。回到窗口后，松开按键再按 START。', 'Game paused; connection and port are kept. Return to the window, release the buttons, then press START.')
+      : ctx.phoneConnected
       ? text('已连接 · START 开始、暂停或继续', 'Connected · START starts, pauses or resumes')
       : wifi.state === 'available'
         ? text('手柄与 Mac 加入同一网络，按搜索键连接“', 'On the same network as your Mac, press Search to find “') + (wifi.serviceName || 'Neon Rush') + text('”。', '”.')
         : wifi.state === 'registering' || wifi.state === 'starting'
           ? text('正在准备自动发现…', 'Preparing automatic discovery…')
           : wifi.state === 'stopped'
-            ? text('回到游戏窗口后恢复连接服务。', 'Return to the game window to restore the controller service.')
+            ? text('手柄服务已停止，请重新打开游戏。', 'The controller service stopped. Reopen the game.')
             : text('自动发现暂不可用。可按上方地址直连；请检查网络和系统权限。', 'Discovery is unavailable. Connect directly using the address above; check your network and system permissions.');
     if (wifi.error) $('rush-wifi-status').textContent += ' ' + String(wifi.error);
     $('move-help').textContent = text('← → 转向 · ↓ 刹车 · 自动油门', '← → steer · ↓ brake · auto throttle');

@@ -23,6 +23,7 @@ final class NeonApplication: NSObject, NSApplicationDelegate, NSWindowDelegate, 
     private var bridgeSource = ""
     private var ready = false
     private var terminating = false
+    private var sleeping = false
     private var pushing = false
     private var diagnosing = false
     private var takingScreenshot = false
@@ -31,7 +32,7 @@ final class NeonApplication: NSObject, NSApplicationDelegate, NSWindowDelegate, 
     private var lastJavaScriptError: String?
     private var observers: [NSObjectProtocol] = []
 
-    private var foreground: Bool { NSApp.isActive && window != nil && !window.isMiniaturized && window.isVisible && !terminating }
+    private var foreground: Bool { NSApp.isActive && window != nil && window.isKeyWindow && !window.isMiniaturized && window.isVisible && !terminating && !sleeping }
     private var english: Bool {
         if let saved = preferences.string(forKey: "neon-rush.language") { return saved == "en" }
         return !(Locale.preferredLanguages.first ?? "zh").lowercased().hasPrefix("zh")
@@ -64,10 +65,11 @@ final class NeonApplication: NSObject, NSApplicationDelegate, NSWindowDelegate, 
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         window.makeFirstResponder(webView)
+        controller.setInputEnabled(false)
         controller.onChange = { [weak self] in self?.pushInput() }
         let center = NSWorkspace.shared.notificationCenter
-        observers.append(center.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { [weak self] _ in self?.suspend() })
-        observers.append(center.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { [weak self] _ in self?.synchronizeForeground() })
+        observers.append(center.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { [weak self] _ in self?.sleeping = true; self?.suspend() })
+        observers.append(center.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { [weak self] _ in self?.sleeping = false; self?.synchronizeForeground() })
         guard let resources = Bundle.main.resourceURL else { fail("Missing application resources"); return }
         let root = resources.appendingPathComponent("Web", isDirectory: true)
         do { bridgeSource = try String(contentsOf: root.appendingPathComponent("bridge.js"), encoding: .utf8) }
@@ -122,7 +124,7 @@ final class NeonApplication: NSObject, NSApplicationDelegate, NSWindowDelegate, 
     }
 
     @objc private func showAbout() {
-        NSApp.orderFrontStandardAboutPanel(options: [.applicationName: text("霓虹飞车", "Neon Rush"), .applicationVersion: "0.1.1", .version: "1", .credits: NSAttributedString(string: text("pureTV 原创竞速 · 支持 pureTV Wi-Fi 手柄\nThree.js · MIT", "pureTV original racing · pureTV Wi-Fi controller support\nThree.js · MIT"))])
+        NSApp.orderFrontStandardAboutPanel(options: [.applicationName: text("霓虹飞车", "Neon Rush"), .applicationVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "", .version: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "", .credits: NSAttributedString(string: text("pureTV 原创竞速 · 支持 pureTV Wi-Fi 手柄\nThree.js · MIT", "pureTV original racing · pureTV Wi-Fi controller support\nThree.js · MIT"))])
     }
     @objc private func toggleFullScreen() { window.toggleFullScreen(nil) }
     @objc private func pauseRace() { gameKey("p") }
@@ -136,6 +138,7 @@ final class NeonApplication: NSObject, NSApplicationDelegate, NSWindowDelegate, 
         var info = controller.info()
         info["language"] = english ? "en" : "zh"
         info["platform"] = "macos"
+        info["appVersion"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
         info["url"] = ""
         info["qr"] = ""
         info["preferences"] = ["neon-rush.language": english ? "en" : "zh", "puretv.neon-rush.best": preferences.string(forKey: "puretv.neon-rush.best") ?? "0"]
@@ -156,17 +159,27 @@ final class NeonApplication: NSObject, NSApplicationDelegate, NSWindowDelegate, 
         }
     }
     private func synchronizeForeground() {
-        if ready && foreground { controller.start(); pushInput() }
+        // Focus changes and macOS permission dialogs must not change the endpoint
+        // that the controller just discovered. Only gameplay input is suspended.
+        if ready {
+            controller.setInputEnabled(foreground)
+            controller.start()
+        }
+        if ready && foreground { pushInput() }
         else { suspend() }
     }
     private func suspend() {
-        controller.stop()
+        controller.setInputEnabled(false)
         guard ready else { return }
         webView.evaluateJavaScript("window.NeonDesktop?.suspend();", completionHandler: nil)
         pushInput()
     }
     func applicationDidBecomeActive(_ notification: Notification) { synchronizeForeground() }
     func applicationDidResignActive(_ notification: Notification) { suspend() }
+    func applicationDidHide(_ notification: Notification) { suspend() }
+    func applicationDidUnhide(_ notification: Notification) { synchronizeForeground() }
+    func windowDidResignKey(_ notification: Notification) { suspend() }
+    func windowDidBecomeKey(_ notification: Notification) { synchronizeForeground() }
     func windowDidMiniaturize(_ notification: Notification) { suspend() }
     func windowDidDeminiaturize(_ notification: Notification) { synchronizeForeground() }
     func windowWillClose(_ notification: Notification) { NSApp.terminate(nil) }

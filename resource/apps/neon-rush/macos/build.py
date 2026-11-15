@@ -16,7 +16,8 @@ import xml.etree.ElementTree as ET
 MACOS = Path(__file__).resolve().parent
 GAME = MACOS.parent
 REPO = GAME.parents[2]
-VERSION = '0.1.1'
+VERSION = '0.1.2'
+BUILD_VERSION = '2'
 NAME = 'Neon Rush'
 EXECUTABLE = 'NeonRush'
 ARCHITECTURES = ('arm64', 'x86_64')
@@ -139,7 +140,7 @@ def main():
     plist = {
         'CFBundleName': NAME, 'CFBundleDisplayName': '霓虹飞车 · Neon Rush',
         'CFBundleIdentifier': 'com.ecojust.neonrush.macos', 'CFBundleExecutable': EXECUTABLE,
-        'CFBundlePackageType': 'APPL', 'CFBundleShortVersionString': VERSION, 'CFBundleVersion': '1',
+        'CFBundlePackageType': 'APPL', 'CFBundleShortVersionString': VERSION, 'CFBundleVersion': BUILD_VERSION,
         'CFBundleIconFile': 'NeonRush', 'LSMinimumSystemVersion': '11.0',
         'NSHighResolutionCapable': True, 'NSSupportsAutomaticGraphicsSwitching': True,
         'NSPrincipalClass': 'NSApplication', 'NSLocalNetworkUsageDescription':
@@ -186,7 +187,7 @@ def main():
     run('hdiutil', 'verify', dmg_path)
     packages = {p.name: {'bytes': p.stat().st_size, 'sha256': digest(p)} for p in (zip_path, dmg_path)}
     (output / 'SHA256SUMS.txt').write_text(''.join(f"{value['sha256']}  {name}\n" for name, value in sorted(packages.items())))
-    manifest = {'version': VERSION, 'bundleIdentifier': plist['CFBundleIdentifier'], 'sourceCommit': source_commit,
+    manifest = {'version': VERSION, 'buildVersion': BUILD_VERSION, 'bundleIdentifier': plist['CFBundleIdentifier'], 'sourceCommit': source_commit,
                 'architectures': list(ARCHITECTURES), 'minimumMacOS': '11.0', 'signature': 'ad-hoc',
                 'appleNotarized': False, 'gatekeeperApprovalTested': False,
                 'sdkVersion': capture('xcrun', '--sdk', 'macosx', '--show-sdk-version'),

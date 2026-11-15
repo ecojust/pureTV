@@ -35,6 +35,7 @@ final class ControllerProtocol {
     private(set) var owner: UUID?
     private(set) var revision: Int64 = 0
     private(set) var cancelSequence: Int64 = 0
+    private(set) var inputEnabled = true
     private var lastIdentity = ""
     private var session = ""
     private let instance = UUID().uuidString
@@ -58,6 +59,13 @@ final class ControllerProtocol {
         }
         cancelSequence += 1
         changed()
+    }
+    /// Keep the transport alive while a background game cannot consume input.
+    /// Every transition cancels queued actions and quarantines physically held keys.
+    func setInputEnabled(_ enabled: Bool) {
+        guard inputEnabled != enabled else { return }
+        inputEnabled = enabled
+        releaseInputs()
     }
     func stop() {
         peers.removeAll()
@@ -130,9 +138,10 @@ final class ControllerProtocol {
                 if !pressed { peer.held.remove(key); peer.blocked.remove(key) }
                 else {
                     peer.held.insert(key)
-                    if action == "sync" && ["START", "A", "B", "X", "Y"].contains(key) && !wasHeld { peer.blocked.insert(key) }
+                    if !inputEnabled { peer.blocked.insert(key) }
+                    else if action == "sync" && ["START", "A", "B", "X", "Y"].contains(key) && !wasHeld { peer.blocked.insert(key) }
                     else if action == "long_press" && !wasHeld { peer.blocked.insert(key) }
-                    if action == "down" && !wasHeld && !peer.blocked.contains(key) {
+                    if inputEnabled && action == "down" && !wasHeld && !peer.blocked.contains(key) {
                         for (name, previously) in before where !previously && peer.action(name) { peer.counters[name, default: 0] += 1 }
                     }
                 }
@@ -146,16 +155,17 @@ final class ControllerProtocol {
     func snapshot() -> [String: Any] {
         let p = owner.flatMap { peers[$0] }
         let active = p != nil
+        let input = inputEnabled ? p : nil
         let player: [String: Any] = [
             "id": 1, "transport": "wifi", "controllerId": lastIdentity, "session": session,
             "connected": active, "cancelSeq": cancelSequence,
-            "x": (p?.input("RIGHT") == true ? 1 : 0) - (p?.input("LEFT") == true ? 1 : 0),
-            "y": (p?.input("DOWN") == true ? 1 : 0) - (p?.input("UP") == true ? 1 : 0),
-            "aimX": 0, "aimY": 0, "a": p?.action("a") ?? false,
-            "b": p?.action("b") ?? false, "start": p?.action("start") ?? false, "select": false,
+            "x": (input?.input("RIGHT") == true ? 1 : 0) - (input?.input("LEFT") == true ? 1 : 0),
+            "y": (input?.input("DOWN") == true ? 1 : 0) - (input?.input("UP") == true ? 1 : 0),
+            "aimX": 0, "aimY": 0, "a": input?.action("a") ?? false,
+            "b": input?.action("b") ?? false, "start": input?.action("start") ?? false, "select": false,
             "pulseCounters": p?.counters ?? ["a": 0, "b": 0, "start": 0, "left": 0, "right": 0, "up": 0, "down": 0]
         ]
-        return ["revision": revision, "players": [player], "connections": active ? 1 : 0]
+        return ["revision": revision, "inputEnabled": inputEnabled, "players": [player], "connections": active ? 1 : 0]
     }
 }
 
@@ -191,6 +201,9 @@ final class ControllerServer: NSObject, NetServiceDelegate {
     private var serviceError: String?
     private var serviceName = "Neon Rush"
     private var port: UInt16 = 0
+    // Once successfully bound, explicit restarts must keep this endpoint.
+    // A transient bind failure must never silently move an existing controller.
+    private var selectedPort: UInt16?
     private final class Connection {
         let socket: NWConnection
         var lines = ControllerLines()
@@ -203,7 +216,7 @@ final class ControllerServer: NSObject, NetServiceDelegate {
     }
     private var connections: [UUID: Connection] = [:]
     private var now: TimeInterval { ProcessInfo.processInfo.systemUptime }
-    init(onChange: (() -> Void)? = nil, preferredPort: UInt16 = 8765) {
+    init(onChange: (() -> Void)? = nil, preferredPort: UInt16 = 63485) {
         self.onChange = onChange
         self.preferredPort = preferredPort
         super.init()
@@ -214,7 +227,7 @@ final class ControllerServer: NSObject, NetServiceDelegate {
         guard !running else { return }
         running = true; generation += 1; serviceError = nil
         serviceState = "registering"
-        listen(port: preferredPort, generation: generation, fallback: preferredPort != 0)
+        listen(port: selectedPort ?? preferredPort, generation: generation, fallback: selectedPort == nil && preferredPort != 0)
         guard running else { return }
         watchdog = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in self?.expireConnections() }
         onChange?()
@@ -235,20 +248,30 @@ final class ControllerServer: NSObject, NetServiceDelegate {
                 case .ready:
                     guard let actual = candidate?.port?.rawValue else { self.fail("TCP listener has no port"); return }
                     self.port = actual
+                    if self.selectedPort == nil { self.selectedPort = actual }
                     self.publishDiscovery()
+                case .waiting(let error):
+                    // Network.framework can report an occupied port as waiting
+                    // instead of failed. Only an initial conflict may choose a fallback.
+                    if case .posix(let code) = error, code == .EADDRINUSE {
+                        if fallback && self.selectedPort == nil {
+                            candidate?.cancel(); self.listener = nil
+                            self.listen(port: 0, generation: expected, fallback: false)
+                        } else { self.fail("TCP port \(wanted): \(error)") }
+                    }
                 case .failed(let error):
-                    if fallback, case .posix(let code) = error, code == .EADDRINUSE {
+                    if fallback, self.selectedPort == nil, case .posix(let code) = error, code == .EADDRINUSE {
                         candidate?.cancel(); self.listener = nil
                         self.listen(port: 0, generation: expected, fallback: false)
-                    } else { self.fail("TCP: \(error)") }
+                    } else { self.fail("TCP port \(wanted): \(error)") }
                 default: break
                 }
             }
             candidate.start(queue: .main)
         } catch {
-            if fallback, let networkError = error as? NWError, case .posix(let code) = networkError, code == .EADDRINUSE {
+            if fallback, selectedPort == nil, let networkError = error as? NWError, case .posix(let code) = networkError, code == .EADDRINUSE {
                 listen(port: 0, generation: expected, fallback: false)
-            } else { fail("TCP: \(error)") }
+            } else { fail("TCP port \(wanted): \(error)") }
         }
     }
     private func publishDiscovery() {
@@ -285,10 +308,11 @@ final class ControllerServer: NSObject, NetServiceDelegate {
         onChange?()
     }
     func releaseInputs() { precondition(Thread.isMainThread); protocolState.releaseInputs() }
+    func setInputEnabled(_ enabled: Bool) { precondition(Thread.isMainThread); protocolState.setInputEnabled(enabled) }
     func snapshot() -> [String: Any] { precondition(Thread.isMainThread); return protocolState.snapshot() }
     func info() -> [String: Any] {
         precondition(Thread.isMainThread)
-        var wifi: [String: Any] = ["state": serviceState, "serviceName": serviceName, "port": Int(port), "addresses": Self.localAddresses()]
+        var wifi: [String: Any] = ["state": serviceState, "serviceName": serviceName, "port": Int(port), "addresses": Self.localAddresses(), "inputEnabled": protocolState.inputEnabled]
         if let error = serviceError { wifi["error"] = error }
         return ["wifiController": wifi]
     }

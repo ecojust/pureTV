@@ -142,3 +142,21 @@ test('foreground discovery updates at the suspended revision without reviving in
   assert.equal(b.sample(), undefined);
   assert.deepEqual(b.suspension, [true]);
 });
+
+
+test('background TCP messages update discovery but cannot queue gameplay, even with newer revisions', () => {
+  const b = init(); b.NeonDesktop.receive(info, room(1));
+  b.NeonDesktop.receive(info, room(2, { a: true, pulseCounters: { a: 1 } }));
+  const disabled = { ...info, wifiController: { state: 'available', port: 8765, inputEnabled: false } };
+  b.NeonDesktop.receive(disabled, room(3, { cancelSeq: 1, pulseCounters: { a: 1 } }));
+  b.NeonDesktop.receive(disabled, room(4, { x: 1, start: true, pulseCounters: { a: 1, start: 1 } }));
+  assert.equal(b.sample(), undefined);
+  assert.equal(JSON.parse(b.PureGameHost.getInfo()).wifiController.port, 8765);
+  assert.deepEqual(b.suspension, [true], 'Repeated background delivery does not repeatedly suspend the game');
+  assert.equal(b.NeonDesktop.receive(info, room(2, { start: true })), false);
+  b.NeonDesktop.receive(info, room(5, { cancelSeq: 2, pulseCounters: { a: 1, start: 1 } }));
+  assert.equal(b.sample().start, false, 'Returning to foreground never replays a background START');
+  b.NeonDesktop.receive(info, room(6, { cancelSeq: 2, pulseCounters: { a: 1, start: 2 } }));
+  assert.equal(b.sample().start, true, 'A fresh foreground action works on the same connection');
+  assert.deepEqual(b.suspension, [true], 'Foreground delivery does not auto-resume');
+});

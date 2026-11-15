@@ -112,6 +112,7 @@ class NativeCheck:
         self.diag.mkdir()
         self.report = {'startedAt':now(), 'status':'running', 'system':platform.platform(),
             'architecture':platform.machine(), 'language':args.language,
+            'defaultPortOccupied':args.occupy_default_port,
             'method':'Actual AppKit/WKWebView app and production TCP receiver. Unchanged official Python SDK sends normal buttons through a byte-transparent observer. Read-only diagnostic snapshots and the existing observation-based driving strategy; no game state or clock writes.',
             'physicalTvTested':False, 'physicalPhoneTested':False, 'physicalEsp32Tested':False,
             'nativeMacOSAppTested':True, 'officialVirtualWebPageTested':False,
@@ -119,6 +120,7 @@ class NativeCheck:
             'sourceHashes':{str(p.relative_to(REPO)):digest(p) for p in [Path(__file__), HERE/'native-drive.mjs', HERE/'official-virtual-native.mjs', HERE/'allow-local-network.py', SDK, REPO/'puretv-joystick/bridge.py', REPO/'puretv-joystick/virtual.html',
                 HERE.parents[1]/'tests/automation.mjs', HERE.parents[1]/'source/model.mjs', HERE.parents[1]/'source/tracks.mjs']}}
         self.app = self.client = self.proxy = self.driver = self.browse = self.resolve = self.bridge = self.permission_watcher = None
+        self.port_blocker = None
         self.held = set()
         self.heartbeat_stop = threading.Event()
         self.last_state = None
@@ -233,6 +235,9 @@ class NativeCheck:
         self.port = int(info['port'])
         self.service = info['serviceName']
         assert 0<self.port<65536
+        self.report['initialControllerPort']=self.port
+        if self.args.occupy_default_port:
+            assert self.port!=63485, 'Occupied default port must select one fallback port at startup'
         self.browse = self.log_process(['/usr/bin/dns-sd','-B','_puretv._tcp','local.'], 'bonjour-browse.txt')
         self.resolve = self.log_process(['/usr/bin/dns-sd','-L',self.service,'_puretv._tcp','local.'], 'bonjour-resolve.txt')
         end = time.monotonic()+20
@@ -328,6 +333,97 @@ class NativeCheck:
         self.until(lambda s:not s['game']['paused'] and s['game']['tick']>paused['game']['tick'], 'START resume')
         return {'stats':after['model']['stats'],'progress':after['model']['player']['progress'],'variants':sorted(variants),'pauseFrozen':True}
 
+    def focus_lifecycle(self):
+        """Change real macOS focus; never fake host lifecycle or write game state."""
+        initial=self.read()
+        baseline_session=self.player(initial)['session']
+        baseline_id=self.player(initial)['controllerId']
+        baseline_socket=self.client.sock
+        baseline_connections=self.proxy.connections
+        cycles=[]
+        graphics=self.report['webglAvailable']
+        assert baseline_socket is not None
+        assert initial['server']['wifiController']['inputEnabled'] is True
+
+        def neutral(state):
+            p=self.player(state)
+            return p.get('x')==0 and p.get('y')==0 and not any(p.get(k) for k in ('a','b','start','select'))
+
+        def stable(state):
+            p=self.player(state)
+            info=state['server']['wifiController']
+            assert int(info['port'])==self.port, 'Focus change moved the TCP listener port'
+            assert info['state']=='available' and info['serviceName']==self.service, 'Focus change withdrew or renamed Bonjour'
+            assert p.get('session')==baseline_session and p.get('controllerId')==baseline_id, 'Focus change replaced the controller session'
+            assert self.client.sock is baseline_socket, 'Original SDK socket disconnected'
+            assert self.proxy.connections==baseline_connections, 'A new TCP connection was opened'
+
+        def activate(target, name):
+            target=target.replace('\\','\\\\').replace('"','\\"')
+            result=subprocess.run(['/usr/bin/osascript','-e','tell application "'+target+'" to activate'],capture_output=True,text=True,timeout=15)
+            (self.out/name).write_text(result.stdout+result.stderr)
+            assert result.returncode==0, 'Actual macOS focus change failed'
+
+        for index in range(1,4):
+            self.press('RIGHT')
+            self.press('A')
+            self.until(lambda s:self.player(s).get('x')==1 and self.player(s).get('a'), 'Held input before focus cycle '+str(index))
+            activate('Finder','focus-'+str(index)+'-finder.txt')
+            background=self.until(lambda s:not s.get('active') and s['server']['wifiController'].get('inputEnabled') is False and neutral(s) and (not graphics or s['game']['paused']), 'Background clears game input '+str(index))
+            stable(background)
+            assert background['frontmostApplication']['bundleIdentifier']=='com.apple.finder', 'Finder did not actually take focus'
+            frozen=background['game']['model']
+            counters=self.player(background)['pulseCounters']
+            # All nine keys are physically held at the end; none may produce
+            # a gameplay axis or edge while this app lacks foreground focus.
+            for key in KEYS:
+                if key not in self.held:
+                    self.press(key)
+                observed=self.until(neutral,'Background suppresses '+key+' '+str(index))
+                stable(observed)
+                assert self.player(observed)['pulseCounters']==counters, 'Background key generated a pulse'
+            self.client.button('A','long_press',duration=650)
+            self.client.ping()
+            ping_sequence=self.client.seq
+            end=time.monotonic()+5
+            while time.monotonic()<end:
+                if any(row['direction']=='game-to-sdk' and row['connection']==baseline_connections and row['message']=={'type':'ack','seq':ping_sequence} for row in self.report['wire']):
+                    break
+                time.sleep(.05)
+            else:
+                raise AssertionError('Background TCP heartbeat did not receive ACK')
+            time.sleep(.25)
+            observed=self.read()
+            stable(observed)
+            assert neutral(observed) and self.player(observed)['pulseCounters']==counters
+            assert observed['game']['model']==frozen, 'Background controller input advanced the model'
+            activate(str(self.args.app.resolve()),'focus-'+str(index)+'-game.txt')
+            foreground=self.until(lambda s:s.get('active') and s['server']['wifiController'].get('inputEnabled') is True,'Game foreground '+str(index))
+            stable(foreground)
+            time.sleep(.25)
+            foreground=self.read()
+            stable(foreground)
+            assert neutral(foreground), 'Held background keys became active on focus return'
+            assert self.player(foreground)['pulseCounters']==counters, 'Focus return replayed stale pulses'
+            assert foreground['game']['model']==frozen, 'Focus return auto-resumed the game'
+            if graphics:
+                assert foreground['game']['paused'], 'Fresh START must be required'
+            self.release_all()
+            released=self.until(neutral,'Release quarantined keys '+str(index))
+            assert released['game']['model']==frozen, 'Releasing quarantined keys rewarded gameplay'
+            if graphics:
+                self.tap('START')
+                self.until(lambda s:not s['game']['paused'] and s['game']['tick']>foreground['game']['tick'],'Fresh START works after focus '+str(index))
+            self.press('RIGHT')
+            self.press('A')
+            fresh=self.until(lambda s:self.player(s).get('x')==1 and self.player(s).get('a'),'Fresh direction and drift work '+str(index))
+            stable(fresh)
+            self.release_all()
+            self.until(neutral,'Fresh input release '+str(index))
+            cycles.append({'cycle':index,'port':self.port,'session':baseline_session,'backgroundPingAckSequence':ping_sequence,'sameConnection':True,'modelFrozenWhileBackground':True,'heldKeysQuarantined':True,'freshStartResumesGame':True if graphics else None})
+        self.report['portStability']={'cycles':len(cycles),'port':self.port,'session':baseline_session,'sameConnection':True,'samePort':True,'backgroundInputSuppressed':True,'foregroundHeldKeysQuarantined':True,'freshPressWorks':True,'defaultPortOccupied':self.args.occupy_default_port,'nativeGameplayAvailable':graphics,'observations':cycles}
+        return self.report['portStability']
+
     def reconnect(self):
         self.press('RIGHT')
         self.press('A')
@@ -371,13 +467,12 @@ class NativeCheck:
                 raise AssertionError('Official bridge exited: '+text)
             time.sleep(.1)
         assert url, 'Official bridge startup URL missing'
-        # A first-run macOS prompt for the original Python bridge can temporarily
-        # background the game. Wait for its real foreground service, then use the
-        # currently advertised port if the old one was unavailable after restart.
+        # A first-run macOS prompt may background the game, but it must not
+        # recreate the transport or move the already-advertised TCP endpoint.
         current=self.until(lambda s:s.get('active') and s['server']['wifiController']['state']=='available', 'Game foreground after Python network permission', 30)
-        self.port=int(current['server']['wifiController']['port'])
-        self.service=current['server']['wifiController']['serviceName']
-        self.proxy.target=('127.0.0.1',self.port)
+        assert int(current['server']['wifiController']['port'])==self.port, 'Controller port changed after a system prompt'
+        assert current['server']['wifiController']['serviceName']==self.service
+        assert self.proxy.target==('127.0.0.1',self.port), 'Observer endpoint must never be retargeted'
         self.report['virtualControllerPort']=self.port
         log=(self.out/'official-virtual-output.txt').open('w')
         self.logs.append(log)
@@ -435,6 +530,11 @@ class NativeCheck:
             (self.out/'graphics-system.json').write_text(profile.stdout or profile.stderr)
             if os.environ.get('GITHUB_ACTIONS')=='true' and os.environ.get('RUNNER_OS')=='macOS':
                 self.permission_watcher=self.log_process([sys.executable,str(HERE/'allow-local-network.py'),str(self.args.app.resolve())],'network-permission-test.txt')
+            if self.args.occupy_default_port:
+                self.port_blocker=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+                self.port_blocker.bind(('0.0.0.0',63485))
+                self.port_blocker.listen(1)
+                self.report['defaultPortOccupation']={'host':'0.0.0.0','port':63485,'listeningBeforeApplicationStart':True,'heldUntilApplicationExit':True}
             launch_prefix=['/usr/bin/arch','-'+self.args.launch_architecture] if self.args.launch_architecture else []
             self.app=self.log_process(launch_prefix+[str(binary),'--diagnostics-dir',str(self.diag),'--language',self.args.language,'--preferences-domain','com.ecojust.neonrush.qa.'+str(os.getpid())],'native-output.txt')
             initial=self.until(lambda s:s.get('ready') and s.get('game',{}).get('phase')=='menu' and s.get('active'), 'Native game menu', 60)
@@ -451,6 +551,8 @@ class NativeCheck:
             self.check('Directions, A/X aggregation, long hold and sync suppression',self.sync_and_aliases)
             if graphics_available:
                 self.check('Real race using TCP A/B and X/Y, drift, nitro and pause',self.drive)
+            self.check('Three real focus changes keep TCP stable and quarantine background input',self.focus_lifecycle)
+            if graphics_available:
                 self.check('Disconnect cancellation and held-sync reconnect safety',self.reconnect)
                 self.check('Official virtual page controls the actual native application',self.virtual_page)
             else:
@@ -480,6 +582,8 @@ class NativeCheck:
                         process.wait(timeout=5)
                     except subprocess.TimeoutExpired:
                         process.kill()
+            if self.port_blocker:
+                self.port_blocker.close()
             for log in self.logs:
                 log.close()
             shutil.copy2(__file__,self.out/'executed-verify-native.py')
@@ -498,6 +602,7 @@ if __name__=='__main__':
     parser.add_argument('--language',choices=['zh','en'],default='zh')
     parser.add_argument('--launch-architecture',choices=['arm64','x86_64'])
     parser.add_argument('--allow-unavailable-webgl',action='store_true')
+    parser.add_argument('--occupy-default-port',action='store_true',help='Occupy TCP 63485 before launch and verify one stable fallback throughout the same acceptance suite')
     arguments=parser.parse_args()
     if sys.platform!='darwin':
         parser.error('Run on macOS against the built .app; no simulated substitute')
