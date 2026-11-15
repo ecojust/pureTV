@@ -71,4 +71,21 @@ class Boundaries(unittest.TestCase):
     def test_mismatched_candidate_identity_is_rejected(self):
         with self.assertRaises(AssertionError):self.upgrade(candidate={**self.new,'versionName':'9.9.9'})
 
+class ObserverContract(unittest.TestCase):
+    def setUp(self):
+        self.manifest='A: android:targetPackage="com.ecojust.tetristv"\nA: android:name="com.ecojust.controllerqa.Observer"\nA: android:testOnly(0x01010272)=(type 0x12)0xffffffff\n'
+        self.badging="targetSdkVersion:'35'\n"
+    def validate(self):return release.observer_contract(self.manifest,self.badging,'com.ecojust.tetristv')
+    def test_modern_test_only_observer_is_accepted(self):
+        self.assertEqual(self.validate(),{'targetSdkVersion':35,'testOnly':True})
+    def test_legacy_observer_target_is_rejected(self):
+        self.badging="targetSdkVersion:'29'\n"
+        with self.assertRaisesRegex(AssertionError,'current Android SDK'):self.validate()
+    def test_observer_without_test_only_marker_is_rejected(self):
+        self.manifest=self.manifest.split('A: android:testOnly')[0]
+        with self.assertRaisesRegex(AssertionError,'testOnly'):self.validate()
+    def test_observer_for_another_package_is_rejected(self):
+        self.manifest=self.manifest.replace('com.ecojust.tetristv','com.ecojust.other')
+        with self.assertRaisesRegex(AssertionError,'exact game'):self.validate()
+
 if __name__=='__main__':unittest.main()

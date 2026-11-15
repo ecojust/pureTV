@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 import unittest
 import json
+import tempfile
 from unittest import mock
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
 spec=importlib.util.spec_from_file_location('runtime_inputs',ROOT/'tools/controller-runtime-inputs.py')
@@ -63,5 +64,48 @@ class Baselines(unittest.TestCase):
     def test_certificate_changed_between_versions_fails(self):
         self.new['certificateSha256']='f'*64
         with self.assertRaises(AssertionError):self.read()
+
+class DisposableEmulator(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        spec=importlib.util.spec_from_file_location('runtime_batch_emulator',ROOT/'tools/controller-emulator-batch.py')
+        cls.batch=importlib.util.module_from_spec(spec);spec.loader.exec_module(cls.batch)
+    def setUp(self):
+        self.calls=[];self.qemu='1';self.apply=True
+        self.settings={'verifier_verify_adb_installs':'1','package_verifier_enable':'null'}
+        self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
+        self.receipt=Path(self.temp.name)/'emulator.json'
+    def command(self,args):
+        self.calls.append(args);tail=args[3:]
+        if tail==['shell','getprop','ro.kernel.qemu']:return self.qemu+'\n'
+        if tail==['shell','getprop','ro.build.fingerprint']:return 'google/test-emulator:16/test/dev-keys\n'
+        if tail==['shell','getprop','ro.build.version.sdk']:return '36\n'
+        if tail[:4]==['shell','settings','get','global']:return self.settings[tail[4]]+'\n'
+        if tail[:4]==['shell','settings','put','global']:
+            if self.apply:self.settings[tail[4]]=tail[5]
+            return ''
+        raise AssertionError(args)
+    def configure(self,serial='emulator-5554',environment=None):
+        return self.batch.configure_disposable_emulator(self.command,['adb','-s',serial],serial,{'PURETV_DISPOSABLE_EMULATOR':'1'} if environment is None else environment,self.receipt)
+    def test_disposable_device_records_both_original_and_applied_values(self):
+        result=self.configure()
+        self.assertEqual(result['before'],{'verifier_verify_adb_installs':'1','package_verifier_enable':'null'})
+        self.assertEqual(result['after'],{'verifier_verify_adb_installs':'0','package_verifier_enable':'0'})
+        self.assertEqual(result['status'],'configured');self.assertEqual(json.loads(self.receipt.read_text()),result)
+        self.assertEqual(len(result['commands']),2)
+    def test_missing_disposable_opt_in_changes_nothing(self):
+        with self.assertRaisesRegex(AssertionError,'opt-in'):self.configure(environment={})
+        self.assertEqual(self.calls,[])
+    def test_physical_device_serial_changes_nothing(self):
+        with self.assertRaisesRegex(AssertionError,'serial'):self.configure(serial='192.168.1.16:5555')
+        self.assertEqual(self.calls,[])
+    def test_emulator_shaped_serial_without_qemu_changes_nothing(self):
+        self.qemu='0'
+        with self.assertRaisesRegex(AssertionError,'identify itself'):self.configure()
+        self.assertEqual(len(self.calls),1);self.assertNotIn('put',self.calls[0])
+    def test_unapplied_configuration_is_reported_as_failure(self):
+        self.apply=False
+        with self.assertRaisesRegex(AssertionError,'not applied'):self.configure()
+        record=json.loads(self.receipt.read_text());self.assertEqual(record['status'],'failed');self.assertEqual(record['after'],record['before'])
 
 if __name__=='__main__':unittest.main()

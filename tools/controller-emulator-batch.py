@@ -28,6 +28,34 @@ def baseline_release(slug, artifact_source, signed, build_tools):
     assert prior['certificateSha256']==signed['certificateSha256']
     return old_apk, {'baselineMetadataRef':artifact_source+':'+metadata_path,'identity':prior}
 
+def configure_disposable_emulator(command, adb, serial, environment, receipt_path):
+    # Never change verifier settings on a real device or without explicit CI opt-in.
+    assert environment.get('PURETV_DISPOSABLE_EMULATOR')=='1', 'Disposable emulator opt-in is required'
+    assert re.fullmatch(r'emulator-[0-9]+',serial), 'Only an explicit emulator serial is accepted'
+    assert adb[-2:]==['-s',serial], 'Every configuration command must target this emulator'
+    qemu=command(adb+['shell','getprop','ro.kernel.qemu']).strip()
+    assert qemu=='1', 'Device must independently identify itself as the Android emulator'
+    keys=['verifier_verify_adb_installs','package_verifier_enable']
+    record={'status':'configuring','disposableEmulator':True,'serial':serial,'kernelQemu':qemu,
+            'fingerprint':command(adb+['shell','getprop','ro.build.fingerprint']).strip(),
+            'sdk':command(adb+['shell','getprop','ro.build.version.sdk']).strip(),
+            'before':{key:command(adb+['shell','settings','get','global',key]).strip() for key in keys},
+            'after':{},'commands':[],
+            'purpose':'Only this disposable CI emulator skips cloud ADB install verification; release APK signature verification remains required.'}
+    release.write(receipt_path,record)
+    try:
+        for key in keys:
+            args=adb+['shell','settings','put','global',key,'0']
+            output=command(args);record['commands'].append({'command':args,'stdout':output})
+        record['after']={key:command(adb+['shell','settings','get','global',key]).strip() for key in keys}
+        assert all(value=='0' for value in record['after'].values()), 'Disposable emulator verifier settings were not applied'
+        record['status']='configured'
+        return record
+    except Exception as error:
+        record['status']='failed';record['error']=repr(error);raise
+    finally:
+        release.write(receipt_path,record)
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--group',choices=['arcade','worlds','kit'],required=True)
     p.add_argument('--input',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
@@ -43,6 +71,7 @@ def main():
     def save(path,value):path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
     report={'sourceSha':a.artifact_source,'legacySourceSha':a.legacy_source,'group':a.group,'physicalTvTested':False,'physicalEsp32Tested':False,'actualAndroidEmulator':True,'cases':[]}
     report['androidProperties']=command(adb+['shell','getprop'])
+    report['emulatorConfiguration']=configure_disposable_emulator(command,adb,a.serial,os.environ,a.output/'emulator-configuration.json')
     for slug in slugs:
         directory=a.output/slug;directory.mkdir()
         case={'slug':slug,'status':'running'};report['cases'].append(case)
@@ -65,7 +94,7 @@ def main():
             command(adb+['shell','am','force-stop',target])
             installs.append(command(adb+['install','-r',str(old_apk)]))
             installs.append(command(adb+['install','-r',str(apks[0])]))
-            installs.append(command(adb+['install','-r',str(observer_apk)]))
+            installs.append(command(adb+['install','-r','-t',str(observer_apk)]))
             assert all('Success' in text for text in installs)
             (directory/'install.txt').write_text('\n'.join(installs))
             case['inPlaceUpgradeInstalled']=True
@@ -90,7 +119,7 @@ def main():
             run=['node',str(ROOT/'tools/readme-controller-qa/run.mjs'),'--mode','android','--slug',slug,
                  '--diagnostics',diagnostics,'--tcp-port',str(ports[1]),'--output',str(directory/'gameplay'),
                  '--adb',a.adb,'--serial',a.serial]
-            video_command=adb+['shell','screenrecord','--size','960x540','--bit-rate','800000','--time-limit','120',remote_video]
+            video_command=adb+['shell','screenrecord','--size','960x540','--bit-rate','600000','--time-limit','120',remote_video]
             video_stream=(directory/'screenrecord.txt').open('w')
             video=subprocess.Popen(video_command,stdout=video_stream,stderr=subprocess.STDOUT,text=True)
             save(directory/'commands.json',{'instrumentation':instrument,'driver':run,'video':video_command,'ports':ports})
@@ -126,7 +155,7 @@ def main():
                     video_info=json.loads(command(['ffprobe','-v','error','-show_streams','-show_format','-of','json',str(video_file)],20))
                     assert any(v.get('codec_type')=='video' for v in video_info['streams']) and float(video_info['format']['duration'])>1
                     save(directory/'recording-probe.json',video_info)
-                    case['recording']={'file':'gameplay.mp4','bytes':video_file.stat().st_size,'sha256':release.digest(video_file),'method':'Android screenrecord during ordinary SDK/virtual-page inputs','maximumSeconds':120,'size':'960x540','encodingRateIsNotDevicePerformance':True}
+                    case['recording']={'file':'gameplay.mp4','bytes':video_file.stat().st_size,'sha256':release.digest(video_file),'method':'Android screenrecord during ordinary SDK/virtual-page inputs','maximumSeconds':120,'size':'960x540','bitRate':600000,'encodingRateIsNotDevicePerformance':True}
                 except Exception as error:
                     case['status']='failed';case['recordingError']=repr(error)
                     if video.poll() is None:video.terminate()

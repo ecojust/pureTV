@@ -36,9 +36,9 @@
 }
 ```
 
-三组 Android TV API 36 模拟器并行运行。每款通过 `git show` 从所属 APK 的源码提交读取旧 `resource.json`，校验保留的旧 APK 实际包名、版本、哈希及证书后安装，再 `adb install -r` 覆盖新正式 APK，并安装同证书只读观察器。观察器通过正常启动 Activity 找到真实 WebView，只提供读取快照的本机接口；普通输入由未修改的 pureTV SDK 和虚拟手柄发送到实际 Android TCP 服务。
+三组 Android TV API 36 模拟器并行运行。只读观察 APK 声明为 testOnly，安装时单独使用 `adb install -r -t`。只有 `PURETV_DISPOSABLE_EMULATOR=1`、明确的 `emulator-*` 序列号和设备 `ro.kernel.qemu=1` 三项同时满足时，批处理才在该临时模拟器内关闭云端 ADB 安装验证，并保存平台指纹和设置前后值；这不会更改实体设备设置或免除正式 APK 的签名校验。每款通过 `git show` 从所属 APK 的源码提交读取旧 `resource.json`，校验保留的旧 APK 实际包名、版本、哈希及证书后安装，再 `adb install -r` 覆盖新正式 APK，并安装同证书只读观察器。观察器通过正常启动 Activity 找到真实 WebView，只提供读取快照的本机接口；普通输入由未修改的 pureTV SDK 和虚拟手柄发送到实际 Android TCP 服务。
 
-`controller-emulator-batch.py` 管理安装、观察器生命周期、ADB 端口转发及原始日志；`tools/readme-controller-qa/run.mjs` 判定各款实际操作与输入取消行为。每款以 Android screenrecord 保存普通输入阶段的新录像（最长120秒，960×540；编码帧率不代表实体设备性能）。失败保留录像、截图、logcat、准确命令和原始报告，并继续其他款；只有全部通过，组任务才成功。证据导出至独立的 `build-assets/controller-runtime-<run>-attempt-<attempt>`。
+`controller-emulator-batch.py` 管理安装、观察器生命周期、ADB 端口转发及原始日志；`tools/readme-controller-qa/run.mjs` 判定各款实际操作与输入取消行为。每款以 Android screenrecord 保存普通输入阶段的新录像（最长120秒，960×540，600,000 bit/s；编码帧率不代表实体设备性能）。失败保留录像、截图、logcat、准确命令和原始报告，并继续其他款；只有全部通过，组任务才成功。证据导出至独立的 `build-assets/controller-runtime-<run>-attempt-<attempt>`。
 
 这不是实体电视或 ESP32 测试。NSD 注册可由宿主状态观察，ESP32 搜索发现需单独实机验证。没有把 TCP ACK 或安装成功等同于玩法验收通过。
 

@@ -73,6 +73,11 @@ def main():
         assert identity['packageName']==observer['targetPackage'] and observer['modelWrites'] is False
         observed=apk_info(a.output/'observers'/slug/observer['apk'],a.build_tools)
         assert observed==observer['apkIdentity'] and observed['certificateSha256']==pin
+        observer_apk=a.output/'observers'/slug/observer['apk']
+        observer_manifest=subprocess.check_output([str(a.build_tools/'aapt'),'dump','xmltree',str(observer_apk),'AndroidManifest.xml'],text=True)
+        observer_badging=subprocess.check_output([str(a.build_tools/'aapt'),'dump','badging',str(observer_apk)],text=True)
+        contract=release.observer_contract(observer_manifest,observer_badging,identity['packageName'])
+        assert all(observer[key]==value for key,value in contract.items())
         for name,value in observer['sourceFiles'].items():
             data=committed(legacy_source,name);assert value=={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
         native=receipt['nativeSourceSha256'] if slug in release.KIT_SLUGS else receipt['inputFiles']

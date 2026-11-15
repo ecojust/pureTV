@@ -129,6 +129,15 @@ def stage(args):
         write(output/'build-metadata.json', value)
 
 
+def observer_contract(manifest, badging, target):
+    targets = re.findall(r'android:targetPackage[^\n]*?="([^"]+)"', manifest)
+    assert targets == [target], 'Observer must target the exact game package'
+    assert '="com.ecojust.controllerqa.Observer"' in manifest
+    assert re.search(r"^targetSdkVersion:'35'$", badging, re.MULTILINE), 'Observer must target the current Android SDK'
+    assert re.search(r'android:testOnly[^\n]*\(type 0x12\)0xffffffff', manifest), 'Observer APK must be declared testOnly'
+    return {'targetSdkVersion':35,'testOnly':True}
+
+
 def sign_observers(args, commit, key, temporary, pin):
     assert args.observers and args.observer_output
     assert {p.name for p in args.observers.iterdir()} == set(ALL_SLUGS)
@@ -146,9 +155,8 @@ def sign_observers(args, commit, key, temporary, pin):
         observed = info(observer, args.build_tools, True)
         assert observed['packageName'] == receipt['packageName'] and observed['certificateSha256'] is None
         manifest = subprocess.check_output([str(args.build_tools/'aapt'), 'dump', 'xmltree', str(observer), 'AndroidManifest.xml'], text=True)
-        targets = re.findall(r'android:targetPackage[^\n]*?="([^"]+)"', manifest)
-        assert targets == [target], targets
-        assert '="com.ecojust.controllerqa.Observer"' in manifest
+        badging = subprocess.check_output([str(args.build_tools/'aapt'), 'dump', 'badging', str(observer)], text=True)
+        contract = observer_contract(manifest, badging, target)
         for name, value in receipt['sourceFiles'].items():
             assert not Path(name).is_absolute() and '..' not in Path(name).parts
             data = subprocess.check_output(['git', 'show', commit+':'+name], cwd=ROOT)
@@ -162,6 +170,7 @@ def sign_observers(args, commit, key, temporary, pin):
         with zipfile.ZipFile(observer) as unsigned_zip, zipfile.ZipFile(apk) as signed_zip:
             for name in unsigned_zip.namelist():
                 assert signed_zip.read(name) == unsigned_zip.read(name)
+        receipt.update(contract)
         receipt.update(signed=True, signatureVerified=True, sourceSha=commit, runId=os.environ['GITHUB_RUN_ID'],
                        apk=apk.name, apkIdentity=signed, testArtifactOnly=True)
         write(output/'observer-signing-receipt.json', receipt)
