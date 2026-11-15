@@ -47,8 +47,9 @@ def runtime_plan(requested=''):
     matrix = [{'group': BATCHES[name][0], 'batch': name,
                'apiLevel': 29 if name in ['retry-used-car', 'retry-arcade-visual'] else 36,
                'arch': 'x86' if name in ['retry-used-car', 'retry-arcade-visual'] else 'x86_64',
-               'renderer': 'swiftshader_indirect',
-               'emulatorOptions': standard_options + (' -feature -Vulkan -verbose' if name in ['worlds-2', 'retry-used-car', 'retry-arcade-visual'] else '')}
+               'renderer': 'swiftshader' if name == 'retry-used-car' else 'swiftshader_indirect',
+               'emulatorOptions': (standard_options.replace('-gpu swiftshader_indirect', '-gpu swiftshader') if name == 'retry-used-car' else standard_options)
+                    + (' -feature -Vulkan -verbose' if name in ['worlds-2', 'retry-used-car', 'retry-arcade-visual'] else '')}
               for name in selected]
     return {'requestedBatches': names, 'selectedBatches': selected, 'plannedSlugs': slugs,
             'completeCatalogRequested': len(slugs) == len(release.ALL_SLUGS),
@@ -58,6 +59,10 @@ def runtime_plan(requested=''):
             'usedCarStableImageComparison': {'selected': 'retry-used-car' in selected,
                 'systemImage': 'system-images;android-29;android-tv;x86',
                 'channel': 'stable', 'revisionListedByOfficialRepository': 3,
+                'rendererComparison': {'previousObservedEmulatorVersion': '37.2.13',
+                    'previousRenderer': 'swiftshader_indirect', 'requestedRenderer': 'swiftshader',
+                    'previousRendererDeprecatedSince': '36.4.9',
+                    'officialReference': 'https://developer.android.com/studio/run/emulator-acceleration'},
                 'description': 'Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory.'},
             'arcadeVisualStableImageComparison': {'selected': 'retry-arcade-visual' in selected,
                 'systemImage': 'system-images;android-29;android-tv;x86',

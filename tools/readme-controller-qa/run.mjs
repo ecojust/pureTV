@@ -35,6 +35,12 @@ async function tap(key){await down(key);await until(s=>(s.receiver?.players||con
 async function hold(key,ms,inspect){await down(key);await until(s=>(s.receiver?.players||controllers(s)).some(p=>p.connected&&p.buttons?.[key]),'held input reaches actual frame '+key,15000);await delay(ms);if(inspect)await inspect();await up(key);await until(s=>(s.receiver?.players||controllers(s)).some(p=>p.connected&&p.buttons?.[key]===false),'held release '+key,15000);await delay(90);}
 async function release(){for(const key of [...held])await up(key);}
 function modelFrozen(s){
+ if(args.slug==='alien-shooter'){
+  // Alien synchronizes connection status before its paused return. All other
+  // player fields, including inventory, cooldowns and actions, remain strict.
+  const players=rows=>rows.map(({connected,...gameplay})=>gameplay);
+  return {model:{...s.model,players:players(s.model.players)},players:players(s.players)};
+ }
  if(args.slug!=='cozy-island')return {model:s.model,players:s.players};
  // Cozy updates connection bookkeeping before its paused return. Preserve every
  // gameplay field; exclude only these two transport fields at the player level.

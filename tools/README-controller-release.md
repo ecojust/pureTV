@@ -40,9 +40,11 @@
 
 可选 `batches` 输入留空时运行全部8批；例如 `["arcade-1","worlds-1","worlds-2","kit-3"]` 只运行这4批的9款。独立计划任务严格拒绝未知、重复或空数组；批内仍执行每款完整验收。每份证据和导出清单记录准确 QA 提交、所选批次及全部计划游戏；局部运行成功只表示所选批次成功，不能表述为20款全部通过。组合多次验收时必须逐款保存对应 run、QA 提交和正式包哈希，并保留失败原件。
 
-另有3个明确的单款复验别名 `retry-used-car`、`retry-alien`、`retry-prism`，以及 Tank/Jackal 两款的 `retry-arcade-visual`，默认8批不会包含它们。每个别名使用独立 AVD，仍执行各款完整验收；选择父批与重复子游戏的组合会被计划任务拒绝。Used 和街机视觉复验使用官方 stable `system-images;android-29;android-tv;x86`（仓库列出的 revision 3），Alien 和 Prism 使用原 API36/x86_64；计划清单逐批记录 apiLevel、arch、renderer 和完整启动选项。街机复验由 API36 原始录像中的短暂黑块触发，不能仅以此前功能通过认定视觉正常。正式包和测试观察器均保持原签名/字节，最低 API26 不高于 API29，但旧镜像的实际 WebView/WebGL、安装与控制器操作仍必须通过实测。
+另有3个明确的单款复验别名 `retry-used-car`、`retry-alien`、`retry-prism`，以及 Tank/Jackal 两款的 `retry-arcade-visual`，默认8批不会包含它们。每个别名使用独立 AVD，仍执行各款完整验收；选择父批与重复子游戏的组合会被计划任务拒绝。Used 和街机视觉复验使用官方 stable `system-images;android-29;android-tv;x86`（仓库列出的 revision 3），Alien 和 Prism 使用原 API36/x86_64；计划清单逐批记录 apiLevel、arch、renderer 和完整启动选项。街机对照最初由查看器显示疑问触发；随后对原 PNG 与录像的像素复核撤回了黑块结论，原视觉证据保持有效。已启动的 API29 任务作为额外环境对照完成，不表示修复了视觉缺陷。正式包和测试观察器均保持原签名/字节，最低 API26 不高于 API29，但旧镜像的实际 WebView/WebGL、安装与控制器操作仍必须通过实测。
 
 worlds-2、独立 Used 及街机视觉复验使用 `-feature -Vulkan -verbose`，保留 SwiftShader 和所有正式包，验证替代 GL 渲染路径并记录详细模拟器输出。该开关由 [Android 官方排障文档](https://developer.android.com/studio/run/emulator-troubleshooting) 明确支持；此前整个 AVD 失响应的根因仍未确定，没有据此认定为游戏或 Vulkan 缺陷。其他批次参数保持一致。
+
+Used 在 API29/x86 对照中仍出现整个 AVD 失响应后，仅 `retry-used-car` 将 GPU 模式改为 `swiftshader`，保留其 API29/x86、禁用 Vulkan 和 verbose 参数。先前原日志记录 emulator 37.2.13；[官方图形加速文档](https://developer.android.com/studio/run/emulator-acceleration) 明确 `swiftshader_indirect` 从36.4.9起废弃，并列出受支持的 `swiftshader` GLES/Vulkan 软件渲染模式。计划记录这次单因素变化及依据，原始运行日志保留每次实际 emulator 版本；这不表示已经确定或修复失响应的根因。其他批次的 GPU 模式不变。
 
 `controller-emulator-batch.py` 管理安装、观察器生命周期、ADB 端口转发及原始日志；`tools/readme-controller-qa/run.mjs` 判定各款实际操作与输入取消行为。每款以 Android screenrecord 保存普通输入阶段的新录像（最长120秒，960×540，600,000 bit/s；编码帧率不代表实体设备性能）。失败保留录像、截图、logcat、准确命令和原始报告，并继续其他款；只有全部通过，组任务才成功。证据导出至独立的 `build-assets/controller-runtime-<run>-attempt-<attempt>`。
 

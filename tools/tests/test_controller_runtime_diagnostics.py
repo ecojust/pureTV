@@ -96,6 +96,16 @@ class BatchIsolation(unittest.TestCase):
         self.assertIn('-gpu swiftshader_indirect', row['emulatorOptions'])
         self.assertIn('-feature -Vulkan -verbose', row['emulatorOptions'])
 
+    def test_only_used_car_changes_the_deprecated_renderer(self):
+        plan = batch.runtime_plan('["retry-used-car","retry-alien","retry-prism","retry-arcade-visual"]')
+        rows = {row['batch']: row for row in plan['matrix']['include']}
+        used = rows['retry-used-car']; comparison = rows['retry-arcade-visual']
+        self.assertEqual((used['apiLevel'], used['arch'], used['renderer']), (29, 'x86', 'swiftshader'))
+        self.assertEqual(used['emulatorOptions'], comparison['emulatorOptions'].replace('-gpu swiftshader_indirect', '-gpu swiftshader'))
+        for name in ['retry-alien', 'retry-prism', 'retry-arcade-visual']:
+            self.assertEqual(rows[name]['renderer'], 'swiftshader_indirect')
+            self.assertIn('-gpu swiftshader_indirect', rows[name]['emulatorOptions'])
+
     def test_retry_selection_does_not_silently_include_completed_neighbors(self):
         self.assertEqual(batch.selected_slugs('worlds', 'retry-alien'), ['alien-shooter'])
         self.assertEqual(batch.selected_slugs('kit', 'retry-prism'), ['prism-relay'])
