@@ -1,0 +1,78 @@
+{
+  "reviewedAt": "2026-11-15T16:47:16.312689+00:00",
+  "reviewer": "controller_legacy_web_arcade",
+  "finding": "The original Android failure observed a projectile after it had naturally collided and disappeared. The production game emitted player-1 fire at frame 681 and hit_steel at frame 705. Only the Tank test observation changed.",
+  "productionChanges": false,
+  "officialSdkChanges": false,
+  "artifactSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+  "apkSha256": "c43671a903a641620e55d06d75e4b9bcd66c1980ada3be4b7bc881bf8f59ea30",
+  "browserAssetsMatchEveryReportedApkEntry": true,
+  "assetCount": 25,
+  "executedSourcesVerified": {
+    "tools/readme-controller-qa/run.mjs": {
+      "executedCopy": "browser-signed-apk-assets/executed-run.mjs",
+      "sha256": "ae02ed6c4965a04fee760e2dc0f36ef86084a5bbc396ce82e5effeec34f8ab57"
+    },
+    "tools/readme-controller-qa/cases.mjs": {
+      "executedCopy": "browser-signed-apk-assets/executed-cases.mjs",
+      "sha256": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6"
+    },
+    "tools/readme-controller-qa/sdk-peer.py": {
+      "executedCopy": "browser-signed-apk-assets/executed-sdk-peer.py",
+      "sha256": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3"
+    },
+    "tools/readme-controller-qa/WifiWireHarness.java": {
+      "executedCopy": "browser-signed-apk-assets/executed-WifiWireHarness.java",
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": {
+      "executedCopy": "browser-signed-apk-assets/executed-WifiControllerServer.java",
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "puretv-joystick/bridge.py": {
+      "executedCopy": "browser-signed-apk-assets/executed-bridge.py",
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "executedCopy": "browser-signed-apk-assets/executed-joystick_sdk.py",
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "puretv-joystick/virtual.html": {
+      "executedCopy": "browser-signed-apk-assets/executed-virtual.html",
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    }
+  },
+  "browserCompleteGroupsPassed": 9,
+  "wireMessages": 97,
+  "sameConnectionSequenceAcks": 97,
+  "connectionFinTimeouts": 0,
+  "previousPlayer1FireFrame": -1,
+  "newPlayer1FireEvents": [
+    {
+      "type": "fire",
+      "frame": 296,
+      "player": 1
+    }
+  ],
+  "livePlayerBulletAtNewObservation": [
+    {
+      "x": 48,
+      "y": 200,
+      "dx": -1,
+      "dy": 0,
+      "dir": 3,
+      "owner": 1,
+      "team": "player",
+      "speed": 2,
+      "steel": false,
+      "alive": true
+    }
+  ],
+  "gameplayScreenshotVisuallyReviewed": true,
+  "visualFinding": "A real tank scene, a player facing screen-left and a white projectile to its left; full sidebar. Browser synthetic native information and unavailable QR are fixture context, not Android visual proof.",
+  "androidRerunComplete": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "limits": "This new full nine-group pass uses Chromium, original SDK and the production Java TCP receiver with unmodified assets extracted from the exact failed signed Android APK. It does not replace the pending actual Android APK rerun."
+}

@@ -1,0 +1,65 @@
+{
+  "reviewedAt": "2026-11-15T16:31:45.562840+00:00",
+  "reviewer": "controller_legacy_web_arcade",
+  "result": "passed",
+  "reportSha256": "9a43fbd0b6faa29095083875bf8401d6a881c57427b80c13470f28ab8e83f3ec",
+  "productionModified": false,
+  "driverModifiedByReviewer": false,
+  "groupsPassed": 9,
+  "sdkMessages": 93,
+  "sameConnectionSequenceAcks": 93,
+  "connections": 4,
+  "transportErrors": [],
+  "pageErrors": [],
+  "connectionClosure": {
+    "forwardFinEvents": [
+      {
+        "connection": 1,
+        "event": "forward-fin",
+        "reason": "all-acked",
+        "at": "2026-11-15T16:29:17.566Z",
+        "waitMs": 2.2327649999988353,
+        "pendingSeq": []
+      },
+      {
+        "connection": 3,
+        "event": "forward-fin",
+        "reason": "all-acked",
+        "at": "2026-11-15T16:29:24.922Z",
+        "waitMs": 0.039046999998390675,
+        "pendingSeq": []
+      },
+      {
+        "connection": 4,
+        "event": "forward-fin",
+        "reason": "all-acked",
+        "at": "2026-11-15T16:29:25.394Z",
+        "waitMs": 0.04864199999792618,
+        "pendingSeq": []
+      }
+    ],
+    "timeoutObserved": false,
+    "maxAckDrainWaitMs": 2.2327649999988353,
+    "pendingAtEachFin": []
+  },
+  "heldDisconnectEvidence": {
+    "preDisconnectPhase": "playing",
+    "seat1X": 1,
+    "seat1A": true,
+    "rawRightAndA": true,
+    "afterReconnectPhase": "paused",
+    "playerAndModelFrozenThroughReconnect": true,
+    "freshStartRequired": true
+  },
+  "heldSyncEvidence": "After matching held-B sync ACK, a new ordinary RIGHT frame was observed for seat 2; B remained false, and game remained paused until a fresh START.",
+  "method": "Actual unchanged repository virtual page and Python SDK, production Java WifiControllerServer over TCP on desktop JVM, real Chromium game frames and synthetic Android bridge. The observer waits up to 2s for genuine ACKs at client EOF, then sends FIN; all three actual waits completed below 3ms without timeout. No game state, input protocol or clock is fabricated.",
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidLifecycleTested": false,
+  "nsdTested": false,
+  "executedSourceHashesVerified": true,
+  "assetHashesVerified": true,
+  "sourceBoundary": "Review uses immutable executed-* copies and sourceHashes in this report. A subsequent one-line driver selection change after completion belongs to a different run and is not attributed to this evidence.",
+  "visualEvidence": "Raw screenshots from this run are retained. UI source/assets are unchanged from attempt-9, whose five corresponding menu/gameplay/pause/reconnect screenshots were independently inspected; no new visual-only production change occurred for this connection-closure test."
+}

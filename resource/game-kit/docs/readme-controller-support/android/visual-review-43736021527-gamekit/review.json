@@ -1,0 +1,711 @@
+{
+  "runId": "43736021527",
+  "runUrl": "https://github.com/ecojust/pureTV/actions/runs/43736021527",
+  "reviewer": "/root/controller_gamekit",
+  "reviewType": "Direct visual inspection plus read-only actual-APK report/hash binding",
+  "reviewedGames": 5,
+  "directlyViewedScreenshotFiles": 20,
+  "actualApkRuntimePassedGames": 5,
+  "wholeRunResultAsReported": "failure",
+  "executedQaSourceSha": "e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb",
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "productionModified": false,
+  "rawEvidenceModified": false,
+  "imagesEdited": false,
+  "runtimeRerunByReview": false,
+  "videoPlaybackReviewed": false,
+  "publicationConfirmed": false,
+  "scopeNotes": [
+    "All 20 listed original PNGs were individually viewed. Functional PASS comes from the exact APK runtime reports, not from image appearance.",
+    "Only these five games are covered. The whole workflow result remains failure; other games must be resolved separately.",
+    "Packing primary controls, QR and address remain visible. Connected English status wraps, placing the optional tip tail below the viewport; these still images do not verify Android scrolling.",
+    "Neon has a different visual reviewer. Glass, Tension and Prism need later actual-APK startup/runtime evidence.",
+    "APK source, observer source and executed QA source are different refs and are recorded independently.",
+    "Recordings were hash-bound for README use; this review did not play or inspect every video frame.",
+    "Prior failed run 43734122992 and its visual review remain unchanged. This new per-game passing run does not rewrite earlier results."
+  ],
+  "sourceReceipts": [
+    {
+      "path": "../43736021527/evidence/controller-runtime-kit-1/report.json",
+      "sha256": "9b6405bb6c09d008cc6b994d665aa6ab2d868269e6b3785e671d7dbb2761489c",
+      "bytes": 26343
+    },
+    {
+      "path": "../43736021527/evidence/controller-runtime-kit-1/executed-source-manifest.json",
+      "sha256": "921bcd1941aecb716e15a3cabecc1d3568baacdda8f6e7f114e021efcfe6b513",
+      "bytes": 2471
+    },
+    {
+      "path": "../43736021527/evidence/controller-runtime-kit-1/emulator-configuration.json",
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6",
+      "bytes": 1131
+    },
+    {
+      "path": "../43736021527/evidence/controller-runtime-kit-1/bundle-manifest.json",
+      "sha256": "7f82902c543be7628a119a3f04839cda225163669240f40d66313fd36dc12153",
+      "bytes": 464
+    },
+    {
+      "path": "../43736021527/evidence/controller-runtime-kit-2/report.json",
+      "sha256": "5379a02c13642a2b2a0b6b05ebb4e730e3ecb0030a03933340fd1ebf4dc25841",
+      "bytes": 26372
+    },
+    {
+      "path": "../43736021527/evidence/controller-runtime-kit-2/executed-source-manifest.json",
+      "sha256": "921bcd1941aecb716e15a3cabecc1d3568baacdda8f6e7f114e021efcfe6b513",
+      "bytes": 2471
+    },
+    {
+      "path": "../43736021527/evidence/controller-runtime-kit-2/emulator-configuration.json",
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6",
+      "bytes": 1131
+    },
+    {
+      "path": "../43736021527/evidence/controller-runtime-kit-2/bundle-manifest.json",
+      "sha256": "7f82902c543be7628a119a3f04839cda225163669240f40d66313fd36dc12153",
+      "bytes": 464
+    }
+  ],
+  "exportManifestReceipt": {
+    "path": "../43736021527/export-manifest.json",
+    "sha256": "5d99503ad2760dafc9735db54e878c654e399f2e82f82c9d7d24af477060a7b4",
+    "bytes": 132380
+  },
+  "games": [
+    {
+      "game": "twenty-four",
+      "version": "0.2.1",
+      "batch": "kit-1",
+      "actualApkRuntimeStatus": "passed",
+      "runtimeTestCount": 8,
+      "runtimeTestsAsReported": [
+        {
+          "name": "menu layout and service address",
+          "status": "passed"
+        },
+        {
+          "name": "official hello and nine sync messages leave menu unchanged",
+          "status": "passed",
+          "result": {
+            "keys": 9
+          }
+        },
+        {
+          "name": "START begins actual game",
+          "status": "passed"
+        },
+        {
+          "name": "direction and game-specific action affect actual model",
+          "status": "passed"
+        },
+        {
+          "name": "START pause freezes game, fresh START resumes",
+          "status": "passed"
+        },
+        {
+          "name": "disconnect clears held input, reconnect sync requires fresh START",
+          "status": "passed"
+        },
+        {
+          "name": "all nine official keys and long hold have real protocol receipts",
+          "status": "passed",
+          "result": {
+            "keys": 9,
+            "unchangedOfficialPage": true,
+            "longPressAndRelease": true
+          }
+        },
+        {
+          "name": "same-sequence ACK for every original SDK message",
+          "status": "passed",
+          "result": {
+            "messages": 66,
+            "acks": 66,
+            "connections": 2
+          }
+        }
+      ],
+      "apkSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "executedQaSourceSha": "e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb",
+      "apkReceipt": {
+        "path": "../../../../../apps/twenty-four/twenty-four-0.2.1.apk",
+        "sha256": "0c20482e944f5817c48c9f123b11b0a4e30da19c5677ccaa3deda9447c1bdf10",
+        "bytes": 304486
+      },
+      "caseReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-1/twenty-four/case.json",
+        "sha256": "91a41d852815dfe480ebaf8241b3e509ff25af62215f09606371255bbf96fb71",
+        "bytes": 745
+      },
+      "gameplayReportReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-1/twenty-four/gameplay/report.json",
+        "sha256": "349d3bc729716bf441d5ce8352cbaf79f09f1555e41b17d664754016ba7f6396",
+        "bytes": 145914
+      },
+      "recordingReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-1/twenty-four/gameplay.mp4",
+        "sha256": "ff4724f3c1cb19661900ed16655646e919111f0129efdda8170d7a5d45c5e24c",
+        "bytes": 963838
+      },
+      "visualReviewStatus": "passed"
+    },
+    {
+      "game": "torch-bridge",
+      "version": "0.2.1",
+      "batch": "kit-1",
+      "actualApkRuntimeStatus": "passed",
+      "runtimeTestCount": 8,
+      "runtimeTestsAsReported": [
+        {
+          "name": "menu layout and service address",
+          "status": "passed"
+        },
+        {
+          "name": "official hello and nine sync messages leave menu unchanged",
+          "status": "passed",
+          "result": {
+            "keys": 9
+          }
+        },
+        {
+          "name": "START begins actual game",
+          "status": "passed"
+        },
+        {
+          "name": "direction and game-specific action affect actual model",
+          "status": "passed"
+        },
+        {
+          "name": "START pause freezes game, fresh START resumes",
+          "status": "passed"
+        },
+        {
+          "name": "disconnect clears held input, reconnect sync requires fresh START",
+          "status": "passed"
+        },
+        {
+          "name": "all nine official keys and long hold have real protocol receipts",
+          "status": "passed",
+          "result": {
+            "keys": 9,
+            "unchangedOfficialPage": true,
+            "longPressAndRelease": true
+          }
+        },
+        {
+          "name": "same-sequence ACK for every original SDK message",
+          "status": "passed",
+          "result": {
+            "messages": 67,
+            "acks": 67,
+            "connections": 2
+          }
+        }
+      ],
+      "apkSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "executedQaSourceSha": "e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb",
+      "apkReceipt": {
+        "path": "../../../../../apps/torch-bridge/torch-bridge-0.2.1.apk",
+        "sha256": "2a0b67fd33030ed835b3ca6c5cbbf0063887d332f9865e02660244930470b45f",
+        "bytes": 304486
+      },
+      "caseReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-1/torch-bridge/case.json",
+        "sha256": "db7272ab2e59000713b470e0f74e792276410bc7537999f7a572a4fcf227eea7",
+        "bytes": 746
+      },
+      "gameplayReportReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-1/torch-bridge/gameplay/report.json",
+        "sha256": "0f802e205f34dbd39d1ddd16d999a79ff5d0cbf3f625624b69d8d5e038abb0fd",
+        "bytes": 140137
+      },
+      "recordingReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-1/torch-bridge/gameplay.mp4",
+        "sha256": "3f0a366d6b9df2edaad4c99e6eea4a8171d5415dd62859b4aa46a222a65f4c55",
+        "bytes": 927588
+      },
+      "visualReviewStatus": "passed"
+    },
+    {
+      "game": "tower-overlap",
+      "version": "0.2.1",
+      "batch": "kit-2",
+      "actualApkRuntimeStatus": "passed",
+      "runtimeTestCount": 8,
+      "runtimeTestsAsReported": [
+        {
+          "name": "menu layout and service address",
+          "status": "passed"
+        },
+        {
+          "name": "official hello and nine sync messages leave menu unchanged",
+          "status": "passed",
+          "result": {
+            "keys": 9
+          }
+        },
+        {
+          "name": "START begins actual game",
+          "status": "passed"
+        },
+        {
+          "name": "direction and game-specific action affect actual model",
+          "status": "passed"
+        },
+        {
+          "name": "START pause freezes game, fresh START resumes",
+          "status": "passed"
+        },
+        {
+          "name": "disconnect clears held input, reconnect sync requires fresh START",
+          "status": "passed"
+        },
+        {
+          "name": "all nine official keys and long hold have real protocol receipts",
+          "status": "passed",
+          "result": {
+            "keys": 9,
+            "unchangedOfficialPage": true,
+            "longPressAndRelease": true
+          }
+        },
+        {
+          "name": "same-sequence ACK for every original SDK message",
+          "status": "passed",
+          "result": {
+            "messages": 63,
+            "acks": 63,
+            "connections": 2
+          }
+        }
+      ],
+      "apkSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "executedQaSourceSha": "e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb",
+      "apkReceipt": {
+        "path": "../../../../../apps/tower-overlap/tower-overlap-0.2.1.apk",
+        "sha256": "4b593ea07b9b90733e0544e7a43e0bb9a7f6b5c66afae9c80d6bfc9a36b1eb26",
+        "bytes": 304486
+      },
+      "caseReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-2/tower-overlap/case.json",
+        "sha256": "cef05a5d2320dae2d6541150217a6a5e245b2d86c3f3e67b04115fd2891a7ce4",
+        "bytes": 747
+      },
+      "gameplayReportReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-2/tower-overlap/gameplay/report.json",
+        "sha256": "f33f2fc7cedd91d32c119975f948cdac4653b5a7cdd1e6ddf2a5708df6073226",
+        "bytes": 120981
+      },
+      "recordingReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-2/tower-overlap/gameplay.mp4",
+        "sha256": "51004044077e727a5cad03e3c435e6c4a8e7bad876dcedea5cdba061daa3e08d",
+        "bytes": 636258
+      },
+      "visualReviewStatus": "passed"
+    },
+    {
+      "game": "packing-sculptor",
+      "version": "0.2.1",
+      "batch": "kit-2",
+      "actualApkRuntimeStatus": "passed",
+      "runtimeTestCount": 8,
+      "runtimeTestsAsReported": [
+        {
+          "name": "menu layout and service address",
+          "status": "passed"
+        },
+        {
+          "name": "official hello and nine sync messages leave menu unchanged",
+          "status": "passed",
+          "result": {
+            "keys": 9
+          }
+        },
+        {
+          "name": "START begins actual game",
+          "status": "passed"
+        },
+        {
+          "name": "direction and game-specific action affect actual model",
+          "status": "passed"
+        },
+        {
+          "name": "START pause freezes game, fresh START resumes",
+          "status": "passed"
+        },
+        {
+          "name": "disconnect clears held input, reconnect sync requires fresh START",
+          "status": "passed"
+        },
+        {
+          "name": "all nine official keys and long hold have real protocol receipts",
+          "status": "passed",
+          "result": {
+            "keys": 9,
+            "unchangedOfficialPage": true,
+            "longPressAndRelease": true
+          }
+        },
+        {
+          "name": "same-sequence ACK for every original SDK message",
+          "status": "passed",
+          "result": {
+            "messages": 68,
+            "acks": 68,
+            "connections": 2
+          }
+        }
+      ],
+      "apkSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "executedQaSourceSha": "e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb",
+      "apkReceipt": {
+        "path": "../../../../../apps/packing-sculptor/packing-sculptor-0.2.1.apk",
+        "sha256": "f92714749b71c1941372630310014ed1f0df9c711a40dbbfb73c8122132b5273",
+        "bytes": 308582
+      },
+      "caseReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-2/packing-sculptor/case.json",
+        "sha256": "65a0d9730ab53ae3e3de7c96caf39204742cad1cde97a58bb143c52c865a0891",
+        "bytes": 750
+      },
+      "gameplayReportReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-2/packing-sculptor/gameplay/report.json",
+        "sha256": "bca16dec6edf491f4828945b7adbe5f7154a6c05ffe36c8038cc336620c27f6c",
+        "bytes": 148809
+      },
+      "recordingReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-2/packing-sculptor/gameplay.mp4",
+        "sha256": "13b7e5c3adfc061e6a90fc5f0cb2123fcd270100ed2e993bf9a5c62619c85912",
+        "bytes": 935740
+      },
+      "visualReviewStatus": "passed-with-nonblocking-note"
+    },
+    {
+      "game": "conveyor-window",
+      "version": "0.2.1",
+      "batch": "kit-2",
+      "actualApkRuntimeStatus": "passed",
+      "runtimeTestCount": 8,
+      "runtimeTestsAsReported": [
+        {
+          "name": "menu layout and service address",
+          "status": "passed"
+        },
+        {
+          "name": "official hello and nine sync messages leave menu unchanged",
+          "status": "passed",
+          "result": {
+            "keys": 9
+          }
+        },
+        {
+          "name": "START begins actual game",
+          "status": "passed"
+        },
+        {
+          "name": "direction and game-specific action affect actual model",
+          "status": "passed"
+        },
+        {
+          "name": "START pause freezes game, fresh START resumes",
+          "status": "passed"
+        },
+        {
+          "name": "disconnect clears held input, reconnect sync requires fresh START",
+          "status": "passed"
+        },
+        {
+          "name": "all nine official keys and long hold have real protocol receipts",
+          "status": "passed",
+          "result": {
+            "keys": 9,
+            "unchangedOfficialPage": true,
+            "longPressAndRelease": true
+          }
+        },
+        {
+          "name": "same-sequence ACK for every original SDK message",
+          "status": "passed",
+          "result": {
+            "messages": 70,
+            "acks": 70,
+            "connections": 2
+          }
+        }
+      ],
+      "apkSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "executedQaSourceSha": "e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb",
+      "apkReceipt": {
+        "path": "../../../../../apps/conveyor-window/conveyor-window-0.2.1.apk",
+        "sha256": "410191c73492cc2208ceb77cbc379fe54f58d83aa9aa32d4677724efa7a0a252",
+        "bytes": 320870
+      },
+      "caseReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-2/conveyor-window/case.json",
+        "sha256": "e32a99055236cf95e76568577363052083754483019fc189c08cbe61c6044ce6",
+        "bytes": 749
+      },
+      "gameplayReportReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-2/conveyor-window/gameplay/report.json",
+        "sha256": "bbe4f07e0382ed0555a8090b7ecda78309bb99cf88ce701d7afe910f8ef613df",
+        "bytes": 353183
+      },
+      "recordingReceipt": {
+        "path": "../43736021527/evidence/controller-runtime-kit-2/conveyor-window/gameplay.mp4",
+        "sha256": "d35c9dd49bc392a73ca5e307fc9fddd3c3deefb7dfbfe1bdc11b6c130fdbd690",
+        "bytes": 900655
+      },
+      "visualReviewStatus": "passed"
+    }
+  ],
+  "screenshots": [
+    {
+      "game": "twenty-four",
+      "capture": "menu-android.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-1/twenty-four/gameplay/menu-android.png",
+      "sha256": "1e156ce35e621db952629c2edadf084b4da4334012fe4d7fa253ca1784b74f19",
+      "bytes": 670225,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Menu title, rules, six level choices and start action fit; QR, search instruction, Wi-Fi address 10.0.2.15:63485 and aliases are complete in the bottom rail."
+    },
+    {
+      "game": "twenty-four",
+      "capture": "gameplay.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-1/twenty-four/gameplay/gameplay.png",
+      "sha256": "67f76fae2539d7f4d7215b1f5a6ff6d30f0a1cb8b7293a11727f938fd5431476",
+      "bytes": 743380,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Four number cards, six operations, target and score/undo HUD are visible. Connected status, address and main controls are readable with no material clipping."
+    },
+    {
+      "game": "twenty-four",
+      "capture": "paused.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-1/twenty-four/gameplay/paused.png",
+      "sha256": "42f7b09a0cb2b51d150e4acf42b7e78bcf927e66b0cbc26cc901c4f7b6877d25",
+      "bytes": 671898,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Paused message, resume action and START instruction are clear; controller rail, QR and address remain visible."
+    },
+    {
+      "game": "twenty-four",
+      "capture": "reconnected.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-1/twenty-four/gameplay/reconnected.png",
+      "sha256": "cbdf8a8d5a74a2646fedbe5035a4ab55ed96aa5083a9fbbc5a19bbf7decbd0fe",
+      "bytes": 741559,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Reconnected gameplay visibly shows L=2, the next card selected, and clear operations/HUD. Connection status and address remain readable."
+    },
+    {
+      "game": "torch-bridge",
+      "capture": "menu-android.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-1/torch-bridge/gameplay/menu-android.png",
+      "sha256": "8dccc1a458dbd25b051a55c7e166cd7622f34d7147ac78e269722bdf6c95e97d",
+      "bytes": 722461,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Six level choices and start action are visible. Left QR, service address, aliases, primary controls and optional tip fit; the phone URL wraps legibly."
+    },
+    {
+      "game": "torch-bridge",
+      "capture": "gameplay.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-1/torch-bridge/gameplay/gameplay.png",
+      "sha256": "52db5ca17326142cc50f421a195e03e2cde75713d78a8988184af4ef661c453c",
+      "bytes": 728157,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Traveler 01 has crossed to the right and the ledger reads 1/19. Camp rosters, bridge and HUD are complete; connected status and service address fit."
+    },
+    {
+      "game": "torch-bridge",
+      "capture": "paused.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-1/torch-bridge/gameplay/paused.png",
+      "sha256": "550285bae79af81a5adfeb5f969437bbef4f356f4deb6d625785f7ae4e720318",
+      "bytes": 665279,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Pause/resume overlay is clear and confined to the game region; controller sidebar, address and bottom HUD remain visible."
+    },
+    {
+      "game": "torch-bridge",
+      "capture": "reconnected.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-1/torch-bridge/gameplay/reconnected.png",
+      "sha256": "7e745deb79bf7d724d014049a6a9f8fd49e20e04c5bf7490485976f5c0a24819",
+      "bytes": 720675,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Traveler 01 is selected on the right, with PARTY 1/2 and the ledger readable. Connection address, instructions and game area show no material clipping."
+    },
+    {
+      "game": "tower-overlap",
+      "capture": "menu-android.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/tower-overlap/gameplay/menu-android.png",
+      "sha256": "b3d260b83ef8784bfc7de8391b1a85833854613fcbf65adcc04f292023bfc3cb",
+      "bytes": 284871,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Six site choices and start action fit. Bottom QR/controller rail and 10.0.2.15:63485 are visible; primary drop/pause instructions are readable."
+    },
+    {
+      "game": "tower-overlap",
+      "capture": "gameplay.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/tower-overlap/gameplay/gameplay.png",
+      "sha256": "f7a70d66caf9b4c83eb8315218fd39e1f9d0369295429f23a5c044576f270457",
+      "bytes": 324305,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "One built floor, incoming slab, floor scale, overlap/rhythm/speed indicators and top HUD are visible; bottom connection card is complete."
+    },
+    {
+      "game": "tower-overlap",
+      "capture": "paused.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/tower-overlap/gameplay/paused.png",
+      "sha256": "cc1446743b10b2128946d77fa79fd751963823e48ae218f65a8ddeec31c920fc",
+      "bytes": 263438,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Paused message and resume action fit inside the game region, while top HUD and bottom controller rail remain visible."
+    },
+    {
+      "game": "tower-overlap",
+      "capture": "reconnected.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/tower-overlap/gameplay/reconnected.png",
+      "sha256": "91526e7a7a2254e448db8e6d4dd3d604e19f66b6bf1425c27c5f5913ecb0c7ce",
+      "bytes": 323617,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Two built floors and next slab are visible, with width 32.1 in the host HUD. Floor scale and rhythm/overlap panels fit; service address remains readable."
+    },
+    {
+      "game": "packing-sculptor",
+      "capture": "menu-android.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/packing-sculptor/gameplay/menu-android.png",
+      "sha256": "9873f34afd792d19df22d8b8c297a01812ce339aefbd7dcd5fa959e7151d2462",
+      "bytes": 596155,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Six tasks, start action, QR, controller address, three primary controls and optional tip are visible in this shorter menu status layout."
+    },
+    {
+      "game": "packing-sculptor",
+      "capture": "gameplay.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/packing-sculptor/gameplay/gameplay.png",
+      "sha256": "3b9a0f84555419313945154868109479abd64fd59ba9dcea8e74b1e6f7ff82ff",
+      "bytes": 581388,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed-with-nonblocking-note",
+      "conclusion": "Board, vertical rail preview, parts tray and CHECK are visible. Connected English status wraps to two lines; address and primary controls fit, but the optional tip tail extends below the viewport."
+    },
+    {
+      "game": "packing-sculptor",
+      "capture": "paused.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/packing-sculptor/gameplay/paused.png",
+      "sha256": "e3efa5d5d773ff67f6bc2eec8d9bcf23b91ef8a1d84308e5fd9e95e912d5535d",
+      "bytes": 534856,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed-with-nonblocking-note",
+      "conclusion": "Pause/resume action, address and primary controls remain visible. The connected English status wraps, and optional sidebar tip text extends below the viewport."
+    },
+    {
+      "game": "packing-sculptor",
+      "capture": "reconnected.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/packing-sculptor/gameplay/reconnected.png",
+      "sha256": "973fc73d630cbb5e06a5f7f0e920c49c69d60811727dd35c483a2480d1e7a7b3",
+      "bytes": 577529,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed-with-nonblocking-note",
+      "conclusion": "One placed rail, LOAD SHEET, exit condition and all tray actions are visible. Address and primary controls fit; optional sidebar tip tail is below viewport. Android scrolling is not demonstrated by a still image."
+    },
+    {
+      "game": "conveyor-window",
+      "capture": "menu-android.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/conveyor-window/gameplay/menu-android.png",
+      "sha256": "4932ea39261a562eabfa9ed8e4f24a2b9c5395a52c9c82e018ea91ba23d6ffd1",
+      "bytes": 308243,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Blueprint rules, six level choices and start action are complete. QR, search instruction, service address, controls and sidebar tip fit."
+    },
+    {
+      "game": "conveyor-window",
+      "capture": "gameplay.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/conveyor-window/gameplay/gameplay.png",
+      "sha256": "216a2614832338f5ede7c8c8e1d5b7943ea050de7e36517362a9e6ffc512f567",
+      "bytes": 484963,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Source/socket belts, part orientation detail and all four bottom HUD cards are visible. Connected status wraps legibly; address, controls and sidebar tip fit."
+    },
+    {
+      "game": "conveyor-window",
+      "capture": "paused.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/conveyor-window/gameplay/paused.png",
+      "sha256": "7ee97e6d686f4500fd6bd35cf7ae5fbac0d9aa8eccc5814f63ada404da695ccb",
+      "bytes": 304692,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Blueprint pause summary and resume action fit. Controller address, aliases, primary controls and sidebar tip remain complete."
+    },
+    {
+      "game": "conveyor-window",
+      "capture": "reconnected.png",
+      "path": "../43736021527/evidence/controller-runtime-kit-2/conveyor-window/gameplay/reconnected.png",
+      "sha256": "975b6c5fde941cdfcc170d632c8c055c75565f69d45aaf3f2746b257f5d4da3c",
+      "bytes": 485118,
+      "width": 1920,
+      "height": 1080,
+      "method": "Direct inspection of original image with view_image",
+      "visualStatus": "passed",
+      "conclusion": "Later belt positions and socket detail are visible after reconnect. Connection address, two-line status, bottom HUD and sidebar tip remain readable, with no material clipping."
+    }
+  ]
+}

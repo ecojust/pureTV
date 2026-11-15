@@ -1,0 +1,265 @@
+{
+  "runtimeRunId": "43734122992",
+  "attempt": 1,
+  "qaSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+  "rows": [
+    {
+      "group": "arcade",
+      "layer": "emulator-runner boot/unlock",
+      "cases": 0
+    },
+    {
+      "group": "worlds",
+      "slug": "coast-kart",
+      "status": "failed",
+      "upgradeInstalled": true,
+      "caseError": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'coast-kart', '--diagnostics', 'http://127.0.0.1:41933', '--tcp-port', '41817', '--output', '/home/runner/work/_temp/controller-runtime-output/coast-kart/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "gameplayError": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2",
+      "passedTests": 8,
+      "failedTests": [
+        "same-sequence ACK for every original SDK message"
+      ],
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 1207643,
+        "sha256": "31c94a23952f058ad632dc0ad99602808be92d92b98d1d38d8797c90c97717d3",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      },
+      "recordingError": null
+    },
+    {
+      "group": "worlds",
+      "slug": "cozy-island",
+      "status": "failed",
+      "upgradeInstalled": true,
+      "caseError": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'cozy-island', '--diagnostics', 'http://127.0.0.1:34613', '--tcp-port', '44809', '--output', '/home/runner/work/_temp/controller-runtime-output/cozy-island/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "gameplayError": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2",
+      "passedTests": 8,
+      "failedTests": [
+        "same-sequence ACK for every original SDK message"
+      ],
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 505735,
+        "sha256": "72b15d5cd05fd5ed91ff7573d36989db7641909a6a7e90900d45edf35c54cf28",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      },
+      "recordingError": null
+    },
+    {
+      "group": "worlds",
+      "slug": "used-car-racing",
+      "status": "failed",
+      "upgradeInstalled": true,
+      "caseError": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'used-car-racing', '--diagnostics', 'http://127.0.0.1:41685', '--tcp-port', '45331', '--output', '/home/runner/work/_temp/controller-runtime-output/used-car-racing/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "gameplayError": "TypeError: fetch failed\n    at node:internal/deps/undici/undici:15456:13\n    at async read (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:26:36)\n    at async gameplay (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/cases.mjs:5:14)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:77:80\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:77:2",
+      "passedTests": 3,
+      "failedTests": [
+        "direction and game-specific action affect actual model"
+      ],
+      "recording": null,
+      "recordingError": "RuntimeError('{\"command\": [\"/usr/local/lib/android/sdk/platform-tools/adb\", \"-s\", \"emulator-5554\", \"pull\", \"/sdcard/puretv-controller-used-car-racing.mp4\", \"/home/runner/work/_temp/controller-runtime-output/used-car-racing/gameplay.mp4\"], \"exitCode\": 1, \"stdout\": \"\", \"stderr\": \"adb: error: failed to get feature set: device offline\\\\n\"}')"
+    },
+    {
+      "group": "worlds",
+      "slug": "alien-shooter",
+      "status": "failed",
+      "upgradeInstalled": false,
+      "caseError": "RuntimeError('{\"command\": [\"/usr/local/lib/android/sdk/platform-tools/adb\", \"-s\", \"emulator-5554\", \"shell\", \"am\", \"force-stop\", \"com.ecojust.alienshootertv\"], \"exitCode\": 1, \"stdout\": \"\", \"stderr\": \"adb: device \\'emulator-5554\\' not found\\\\n\"}')",
+      "gameplayError": null,
+      "passedTests": 0,
+      "failedTests": [],
+      "recording": null,
+      "recordingError": null
+    },
+    {
+      "group": "kit",
+      "slug": "neon-rush",
+      "status": "failed",
+      "upgradeInstalled": true,
+      "caseError": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'neon-rush', '--diagnostics', 'http://127.0.0.1:41417', '--tcp-port', '32989', '--output', '/home/runner/work/_temp/controller-runtime-output/neon-rush/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "gameplayError": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2",
+      "passedTests": 7,
+      "failedTests": [
+        "same-sequence ACK for every original SDK message"
+      ],
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 1812535,
+        "sha256": "7a5d2a1007c5f16aed77eef98a94a70eb9bdb04c1f9da24763dd234bfe57b763",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      },
+      "recordingError": null
+    },
+    {
+      "group": "kit",
+      "slug": "twenty-four",
+      "status": "failed",
+      "upgradeInstalled": true,
+      "caseError": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'twenty-four', '--diagnostics', 'http://127.0.0.1:46043', '--tcp-port', '45583', '--output', '/home/runner/work/_temp/controller-runtime-output/twenty-four/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "gameplayError": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2",
+      "passedTests": 7,
+      "failedTests": [
+        "same-sequence ACK for every original SDK message"
+      ],
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 1449104,
+        "sha256": "dacb64fef2ecdbb9feb94fdb99e1e78c4bf059b238cf1c64deb1e5a8fc7e9799",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      },
+      "recordingError": null
+    },
+    {
+      "group": "kit",
+      "slug": "torch-bridge",
+      "status": "failed",
+      "upgradeInstalled": true,
+      "caseError": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'torch-bridge', '--diagnostics', 'http://127.0.0.1:35289', '--tcp-port', '36535', '--output', '/home/runner/work/_temp/controller-runtime-output/torch-bridge/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "gameplayError": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2",
+      "passedTests": 7,
+      "failedTests": [
+        "same-sequence ACK for every original SDK message"
+      ],
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 1398358,
+        "sha256": "b69707a63cadd79acb049c206d00229ed2a16dbccc2de4e407a52932b8fc9bc6",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      },
+      "recordingError": null
+    },
+    {
+      "group": "kit",
+      "slug": "tower-overlap",
+      "status": "passed",
+      "upgradeInstalled": true,
+      "caseError": null,
+      "gameplayError": null,
+      "passedTests": 8,
+      "failedTests": [],
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 620948,
+        "sha256": "86eca1caa35d247588f6a1048267b98be2cc894c41d45dc8cebadc643100861c",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      },
+      "recordingError": null
+    },
+    {
+      "group": "kit",
+      "slug": "packing-sculptor",
+      "status": "failed",
+      "upgradeInstalled": true,
+      "caseError": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'packing-sculptor', '--diagnostics', 'http://127.0.0.1:43409', '--tcp-port', '37887', '--output', '/home/runner/work/_temp/controller-runtime-output/packing-sculptor/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "gameplayError": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2",
+      "passedTests": 7,
+      "failedTests": [
+        "same-sequence ACK for every original SDK message"
+      ],
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 1375628,
+        "sha256": "712cb4e8105527e62024ef4ceddf1661ffd81f7b6ebff6db36ebe67a31f077c3",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      },
+      "recordingError": null
+    },
+    {
+      "group": "kit",
+      "slug": "conveyor-window",
+      "status": "failed",
+      "upgradeInstalled": true,
+      "caseError": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'conveyor-window', '--diagnostics', 'http://127.0.0.1:37741', '--tcp-port', '39627', '--output', '/home/runner/work/_temp/controller-runtime-output/conveyor-window/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "gameplayError": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2",
+      "passedTests": 7,
+      "failedTests": [
+        "same-sequence ACK for every original SDK message"
+      ],
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 1054300,
+        "sha256": "ec7db6173c73b1831319e32f75dd0f32251b8e7d58040b4e3c59019b5bc6971e",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      },
+      "recordingError": null
+    },
+    {
+      "group": "kit",
+      "slug": "glass-fold",
+      "status": "failed",
+      "upgradeInstalled": true,
+      "caseError": "AssertionError('Instrumentation exited before observer was ready')",
+      "gameplayError": null,
+      "passedTests": 0,
+      "failedTests": [],
+      "recording": null,
+      "recordingError": null
+    },
+    {
+      "group": "kit",
+      "slug": "tension-span",
+      "status": "failed",
+      "upgradeInstalled": false,
+      "caseError": "RuntimeError('{\"command\": [\"/usr/local/lib/android/sdk/platform-tools/adb\", \"-s\", \"emulator-5554\", \"shell\", \"am\", \"force-stop\", \"com.ecojust.tensionspantv\"], \"exitCode\": 1, \"stdout\": \"\", \"stderr\": \"adb: device \\'emulator-5554\\' not found\\\\n\"}')",
+      "gameplayError": null,
+      "passedTests": 0,
+      "failedTests": [],
+      "recording": null,
+      "recordingError": null
+    },
+    {
+      "group": "kit",
+      "slug": "prism-relay",
+      "status": "failed",
+      "upgradeInstalled": false,
+      "caseError": "RuntimeError('{\"command\": [\"/usr/local/lib/android/sdk/platform-tools/adb\", \"-s\", \"emulator-5554\", \"shell\", \"am\", \"force-stop\", \"com.ecojust.prismrelaytv\"], \"exitCode\": 1, \"stdout\": \"\", \"stderr\": \"adb: device \\'emulator-5554\\' not found\\\\n\"}')",
+      "gameplayError": null,
+      "passedTests": 0,
+      "failedTests": [],
+      "recording": null,
+      "recordingError": null
+    }
+  ],
+  "knownLayers": {
+    "arcade": "keyevent82 exit255 before batch",
+    "sevenGames": "ACK completeness timeout after gameplay passed",
+    "used-car-racing": "AVD disappeared during gameplay; host cause undetermined",
+    "glass-fold": "AVD disappeared after observer ready; host cause undetermined",
+    "alien-shooter,tension-span,prism-relay": "Not started because preceding AVD disappeared",
+    "tower-overlap": "complete controller acceptance passed"
+  },
+  "allFailureEvidenceRetained": true
+}

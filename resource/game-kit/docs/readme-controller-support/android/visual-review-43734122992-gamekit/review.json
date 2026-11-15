@@ -1,0 +1,559 @@
+{
+  "reviewer": "/root/controller_gamekit",
+  "reviewType": "read-only still-image inspection",
+  "runId": "43734122992",
+  "runUrl": "https://github.com/ecojust/pureTV/actions/runs/43734122992",
+  "apkSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+  "qaSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+  "runtimeGroupStatusAsReported": "failed",
+  "actualAndroidEmulatorAsReported": true,
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "reviewedGames": 5,
+  "reviewedScreenshotFiles": 28,
+  "directlyViewedUniqueScreenshotFiles": 27,
+  "screenshotsEdited": false,
+  "originalRawFilesModified": false,
+  "productionModified": false,
+  "runtimeSuiteRerunByThisReview": false,
+  "visualReviewIsRuntimeAcceptance": false,
+  "limitations": [
+    "Still images establish layout and displayed state only, not functional/protocol/physical-device acceptance.",
+    "Only tower-overlap has a passed raw runtime case in this reviewed subset; four others retain the reported final ACK timeout.",
+    "Packing connected English status wraps to two lines. Its optional tip tail is below the viewport; primary controls and the service address remain visible. Actual Android scrolling was not verified by these screenshots.",
+    "Glass, Tension and Prism have no screenshot in this run and need a later actual-APK run.",
+    "Neon is assigned to a different reviewer and is outside this report."
+  ],
+  "sourceReceipts": [
+    {
+      "path": "../43734122992/evidence/controller-runtime-kit/report.json",
+      "bytes": 32296,
+      "sha256": "e73e506bae0c270bbe9317754415f1021911247bfd8f8a4490cc0c040cf2f1c9"
+    },
+    {
+      "path": "../43734122992/evidence/controller-runtime-kit/bundle-manifest.json",
+      "bytes": 464,
+      "sha256": "7f82902c543be7628a119a3f04839cda225163669240f40d66313fd36dc12153"
+    },
+    {
+      "path": "../43734122992/evidence/controller-runtime-kit/executed-source-manifest.json",
+      "bytes": 2143,
+      "sha256": "8897bad8d26b2ace800e2914769bc2e96499e82280cd4a8a0ef7e7cfb01fbda0"
+    },
+    {
+      "path": "../43734122992/evidence/controller-runtime-kit/emulator-configuration.json",
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    }
+  ],
+  "exportManifestReceipt": {
+    "path": "../43734122992/export-manifest.json",
+    "bytes": 58549,
+    "sha256": "1c576179b2be045c78a807224a69f4907e28d34dc822dc8e3d6e4d9bebf71d00"
+  },
+  "games": [
+    {
+      "game": "twenty-four",
+      "screenshotCount": 6,
+      "visualReviewCompleted": true,
+      "runtimeCaseStatusAsReported": "failed",
+      "runtimeGameplayStatusAsReported": "failed",
+      "artifactSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "apkSha256AsReported": "0c20482e944f5817c48c9f123b11b0a4e30da19c5677ccaa3deda9447c1bdf10",
+      "caseReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/twenty-four/case.json",
+        "bytes": 1147,
+        "sha256": "e996293373e4e73d23f87cf00659b2f5340dacdca5dae30266f6bb9641372556"
+      },
+      "gameplayReportReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/twenty-four/gameplay/report.json",
+        "bytes": 148322,
+        "sha256": "8bf40254bca13855cf8cc537517bd39a991af2c54b5c5923e774db1e4b44965d"
+      },
+      "failedTestsAsReported": [
+        {
+          "name": "same-sequence ACK for every original SDK message",
+          "status": "failed",
+          "error": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2"
+        }
+      ]
+    },
+    {
+      "game": "torch-bridge",
+      "screenshotCount": 6,
+      "visualReviewCompleted": true,
+      "runtimeCaseStatusAsReported": "failed",
+      "runtimeGameplayStatusAsReported": "failed",
+      "artifactSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "apkSha256AsReported": "2a0b67fd33030ed835b3ca6c5cbbf0063887d332f9865e02660244930470b45f",
+      "caseReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/torch-bridge/case.json",
+        "bytes": 1150,
+        "sha256": "b0cbfa531394ed277bd1744e835c567f01e82adbe8504db6a3c58e53ee10a6c8"
+      },
+      "gameplayReportReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/torch-bridge/gameplay/report.json",
+        "bytes": 141609,
+        "sha256": "8d402d0e20e936cc4dfb845cb3c39049ff3173702eff926a57f7f4e281ba6130"
+      },
+      "failedTestsAsReported": [
+        {
+          "name": "same-sequence ACK for every original SDK message",
+          "status": "failed",
+          "error": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2"
+        }
+      ]
+    },
+    {
+      "game": "tower-overlap",
+      "screenshotCount": 4,
+      "visualReviewCompleted": true,
+      "runtimeCaseStatusAsReported": "passed",
+      "runtimeGameplayStatusAsReported": "passed",
+      "artifactSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "apkSha256AsReported": "4b593ea07b9b90733e0544e7a43e0bb9a7f6b5c66afae9c80d6bfc9a36b1eb26",
+      "caseReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/tower-overlap/case.json",
+        "bytes": 747,
+        "sha256": "bae782ed47d6b8997696e83c1ed02d9e102f0b07ef6e067ba3e42a54360435f2"
+      },
+      "gameplayReportReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/tower-overlap/gameplay/report.json",
+        "bytes": 103173,
+        "sha256": "026e5b51577078b1a5095b3ba8480f1f916565e85f4575f64543b5ebbff79f42"
+      },
+      "failedTestsAsReported": []
+    },
+    {
+      "game": "packing-sculptor",
+      "screenshotCount": 6,
+      "visualReviewCompleted": true,
+      "runtimeCaseStatusAsReported": "failed",
+      "runtimeGameplayStatusAsReported": "failed",
+      "artifactSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "apkSha256AsReported": "f92714749b71c1941372630310014ed1f0df9c711a40dbbfb73c8122132b5273",
+      "caseReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/packing-sculptor/case.json",
+        "bytes": 1162,
+        "sha256": "6b228c94cdbfcb3ae0ebaebc3ef00f61da3762e6ea6c597a3d71c0d2ffad7c80"
+      },
+      "gameplayReportReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/packing-sculptor/gameplay/report.json",
+        "bytes": 154420,
+        "sha256": "80fbb0c26bb3465b4d54c319c82f7cac0ba3f34c80f8ddab5fa922084a28e9a1"
+      },
+      "failedTestsAsReported": [
+        {
+          "name": "same-sequence ACK for every original SDK message",
+          "status": "failed",
+          "error": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2"
+        }
+      ]
+    },
+    {
+      "game": "conveyor-window",
+      "screenshotCount": 6,
+      "visualReviewCompleted": true,
+      "runtimeCaseStatusAsReported": "failed",
+      "runtimeGameplayStatusAsReported": "failed",
+      "artifactSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "apkSha256AsReported": "410191c73492cc2208ceb77cbc379fe54f58d83aa9aa32d4677724efa7a0a252",
+      "caseReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/conveyor-window/case.json",
+        "bytes": 1159,
+        "sha256": "e91baf205ed891973c3fd800dfc6b522c65beca0f90c23ca7d658b0fb2547fb9"
+      },
+      "gameplayReportReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/conveyor-window/gameplay/report.json",
+        "bytes": 358974,
+        "sha256": "275f831d2e29678bc0e5175442c8774b9f681cb367d19e642f0e57af56293c5e"
+      },
+      "failedTestsAsReported": [
+        {
+          "name": "same-sequence ACK for every original SDK message",
+          "status": "failed",
+          "error": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "game": "twenty-four",
+      "capture": "twenty-four/gameplay/menu-android.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/twenty-four/gameplay/menu-android.png",
+      "bytes": 669672,
+      "sha256": "a12679128c7872c31b33d962699043b71bd01ebb36fc67e7843934b849916a82",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Six level choices, title/rules and start button visible. QR and horizontal Wi-Fi card are complete; search instruction, 10.0.2.15:63485 and aliases fit.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "twenty-four",
+      "capture": "twenty-four/gameplay/gameplay.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/twenty-four/gameplay/gameplay.png",
+      "bytes": 742763,
+      "sha256": "c399e0cea9dd67c877e2db3f6fd81d4e87bd6d094e39cefb9b8688ed70b01ceb",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Connected Wi-Fi card and primary controls remain visible. Number cards, operator choices and game HUD are readable, with no material clipping.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "twenty-four",
+      "capture": "twenty-four/gameplay/paused.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/twenty-four/gameplay/paused.png",
+      "bytes": 671416,
+      "sha256": "aa31cba118d43e713927bafdac69d85d9b51ec49ce7623f143ebfe1ae7205b18",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Pause message and resume action are visible; controller address remains readable. No material clipping of primary controls.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "twenty-four",
+      "capture": "twenty-four/gameplay/reconnected.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/twenty-four/gameplay/reconnected.png",
+      "bytes": 740064,
+      "sha256": "5a22cb7414cfdce2bfb3e52f9d94273e5740f08f5693d41f299855ad8e163b82",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Connected status and address remain visible after reconnect; arithmetic board and actions are readable.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "twenty-four",
+      "capture": "twenty-four/gameplay/failure.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/twenty-four/gameplay/failure.png",
+      "bytes": 740064,
+      "sha256": "5a22cb7414cfdce2bfb3e52f9d94273e5740f08f5693d41f299855ad8e163b82",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "SHA-256-identical to directly viewed reconnected.png",
+      "visualConclusion": "Byte-identical to the directly inspected reconnected.png; same visual conclusion. This image is a failure-time capture, not proof that the runtime suite passed.",
+      "visualStatus": "no-material-clipping-observed",
+      "identicalTo": "../43734122992/evidence/controller-runtime-kit/twenty-four/gameplay/reconnected.png"
+    },
+    {
+      "game": "twenty-four",
+      "capture": "twenty-four/failure-screen.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/twenty-four/failure-screen.png",
+      "bytes": 667758,
+      "sha256": "ff043ead4962712f503de3361808b0947b0934610cc0d4091e055392ce5cc001",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Disconnected/paused state is visibly displayed, including resume action and address. Screenshot does not show an application crash or material layout clipping.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "torch-bridge",
+      "capture": "torch-bridge/gameplay/menu-android.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/torch-bridge/gameplay/menu-android.png",
+      "bytes": 721470,
+      "sha256": "3d89f9e18a677c777b02e6922801ace40345ccaa3beab4523bde8133004fc728",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Six level choices and start button are visible. Left QR, search instruction, Wi-Fi address and controls fit the side panel.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "torch-bridge",
+      "capture": "torch-bridge/gameplay/gameplay.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/torch-bridge/gameplay/gameplay.png",
+      "bytes": 727129,
+      "sha256": "465b43ba46d0711fb4f35148ba9487d5cbfb54096ba6a1b5928bded26be8c576",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Bridge/travelers and game HUD are visible; left connected status, 10.0.2.15:63485, aliases and controls are readable.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "torch-bridge",
+      "capture": "torch-bridge/gameplay/paused.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/torch-bridge/gameplay/paused.png",
+      "bytes": 664009,
+      "sha256": "f8c34394363e27cb0b943bc5385cd743402e6e63b8b2eaed0b3648d4522a4f57",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Pause overlay and resume action are clear; sidebar QR, Wi-Fi address and primary controls remain visible.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "torch-bridge",
+      "capture": "torch-bridge/gameplay/reconnected.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/torch-bridge/gameplay/reconnected.png",
+      "bytes": 719675,
+      "sha256": "80fb1f47851471bdf8dc5a14712a20d93f236f2e3ea9e0aae9c06ab2f66dea43",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Bridge scene and selected traveler are visible; connected status and service address fit. No material clipping.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "torch-bridge",
+      "capture": "torch-bridge/gameplay/failure.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/torch-bridge/gameplay/failure.png",
+      "bytes": 719670,
+      "sha256": "9d1418140df3c93bd6befa506c1fa2deeb4dbf6a5624470b7222e3008eaa3cb4",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Failure-time gameplay capture retains visible bridge scene, selected traveler, connected status, address and controls. Visual appearance does not resolve the ACK timeout.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "torch-bridge",
+      "capture": "torch-bridge/failure-screen.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/torch-bridge/failure-screen.png",
+      "bytes": 661655,
+      "sha256": "e6abfba63358d8426672c7971cb4e163cc424130e1d00e0069ee4b84324021f1",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Disconnected/paused state and resume action are visible. Sidebar address and instructions remain readable.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "tower-overlap",
+      "capture": "tower-overlap/gameplay/menu-android.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/tower-overlap/gameplay/menu-android.png",
+      "bytes": 284694,
+      "sha256": "58f8e245b27e8ec11d084a542d045c3b793db1d12f8e812b10752da3540eb8e6",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Six level choices and start action are visible; horizontal QR/controller rail is complete and address/aliases fit.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "tower-overlap",
+      "capture": "tower-overlap/gameplay/gameplay.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/tower-overlap/gameplay/gameplay.png",
+      "bytes": 324351,
+      "sha256": "62913ab14b2d7bb2000debb511b992d9b0fde587fb2684eab98baa730d77d08f",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "One built floor and moving slab are visible; tower area, effective-width/rhythm HUD and remaining-slab status are not materially clipped.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "tower-overlap",
+      "capture": "tower-overlap/gameplay/paused.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/tower-overlap/gameplay/paused.png",
+      "bytes": 264007,
+      "sha256": "2f284b5e13aebe477a87a778972c484eeef381bc21f6422d5d93e2ce775b4a9f",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Pause overlay and resume action are clear; controller rail and service address remain visible.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "tower-overlap",
+      "capture": "tower-overlap/gameplay/reconnected.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/tower-overlap/gameplay/reconnected.png",
+      "bytes": 321826,
+      "sha256": "cb040267a3529d98cd74f35c06bb3b6f93943e8c5a932323798e2de2c7bb6018",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Two built floors and moving slab are visible; connected status, address and tower/HUD remain readable.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "packing-sculptor",
+      "capture": "packing-sculptor/gameplay/menu-android.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/packing-sculptor/gameplay/menu-android.png",
+      "bytes": 596406,
+      "sha256": "f221ab2282ed7531a45cfac31462b74a9bf92db4de96b31d9d012129b7bd0d12",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Six level choices/start are visible. QR, service address, three primary controls and optional tip are visible in this shorter disconnected status layout.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "packing-sculptor",
+      "capture": "packing-sculptor/gameplay/gameplay.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/packing-sculptor/gameplay/gameplay.png",
+      "bytes": 581635,
+      "sha256": "2e34266fb2cab83699b5857ed8ef003df813a6eb8a06f093bbc9064ead425234",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Board, tray and check action are visible. Connected English status wraps to two lines; service address and primary controls fit, but the tail of optional sidebar tip lies below the viewport.",
+      "visualStatus": "primary-content-visible-with-optional-tip-below-viewport"
+    },
+    {
+      "game": "packing-sculptor",
+      "capture": "packing-sculptor/gameplay/paused.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/packing-sculptor/gameplay/paused.png",
+      "bytes": 534965,
+      "sha256": "5dd679a8d09107ca8ddc86fd36646aec574631f8a6f8c0cb22f610d6f107ba6b",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Pause/resume and sidebar primary controls/address remain visible. Two-line English connection status leaves part of the optional bottom tip below the viewport.",
+      "visualStatus": "primary-content-visible-with-optional-tip-below-viewport"
+    },
+    {
+      "game": "packing-sculptor",
+      "capture": "packing-sculptor/gameplay/reconnected.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/packing-sculptor/gameplay/reconnected.png",
+      "bytes": 577803,
+      "sha256": "4519fa2b552ab19c733c7a8c10d2158c9c9db03b7af92e90177ec59e6bafb4d9",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Connected state, address, board and primary actions remain visible. Optional sidebar tip extends below viewport; actual Android scrolling is not demonstrated by this still image.",
+      "visualStatus": "primary-content-visible-with-optional-tip-below-viewport"
+    },
+    {
+      "game": "packing-sculptor",
+      "capture": "packing-sculptor/gameplay/failure.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/packing-sculptor/gameplay/failure.png",
+      "bytes": 577809,
+      "sha256": "4a4f4783b63b63f66d3e3ac4e3aefd1262ba4f66ebe180fd77f47e800f7ce227",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Failure-time board capture retains visible address and primary actions. Connected status wraps and optional sidebar tip extends below viewport; this does not establish a passing runtime suite.",
+      "visualStatus": "primary-content-visible-with-optional-tip-below-viewport"
+    },
+    {
+      "game": "packing-sculptor",
+      "capture": "packing-sculptor/failure-screen.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/packing-sculptor/failure-screen.png",
+      "bytes": 535249,
+      "sha256": "6e9173d75429b160854c08fae09fb9b3e2034bff1f9aecc540f360c4bb21bd19",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Disconnected/paused state is visible, and the shorter status leaves more room for the optional tip. Resume action, service address and primary instructions are readable.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "conveyor-window",
+      "capture": "conveyor-window/gameplay/menu-android.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/conveyor-window/gameplay/menu-android.png",
+      "bytes": 307831,
+      "sha256": "8df5e47d4569c14a984066a15f1418426cded113bdc552865e8dde6561d31a73",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Blueprint introduction, six level choices and start are visible. QR, Wi-Fi address, primary controls and optional tip all fit.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "conveyor-window",
+      "capture": "conveyor-window/gameplay/gameplay.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/conveyor-window/gameplay/gameplay.png",
+      "bytes": 484062,
+      "sha256": "f8a3acaa8bff4813f8fccbfdaf1e5cd76b6c9575be5bcb94b7cc838c8492548c",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Source/socket belts, part details and four bottom HUD cards are visible. Connected status wraps to two lines but address, controls and sidebar tip remain visible.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "conveyor-window",
+      "capture": "conveyor-window/gameplay/paused.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/conveyor-window/gameplay/paused.png",
+      "bytes": 304511,
+      "sha256": "4a99c3a569027e1a8179433aa89d0027eda802db31d2c2c3c48b356f0c4a965e",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Blueprint pause panel and resume action are complete. Address, aliases and sidebar controls remain visible.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "conveyor-window",
+      "capture": "conveyor-window/gameplay/reconnected.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/conveyor-window/gameplay/reconnected.png",
+      "bytes": 484262,
+      "sha256": "7a04bb270dcd6c8ce866c5003d44cd53bacb0894dd9d1b6115cb86c8aaab0831",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Connected status and 10.0.2.15:63485 are readable. Belts, held-part/socket details, bottom HUD and sidebar tip are complete.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "conveyor-window",
+      "capture": "conveyor-window/gameplay/failure.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/conveyor-window/gameplay/failure.png",
+      "bytes": 487098,
+      "sha256": "7137b527e07570124cb34a04be6402b1cdf944f77971da7be0372d97fe7700fe",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Failure-time gameplay shows later belt positions/time; connected status, service address, details, controls and HUD remain visible. No material layout clipping; ACK status is independent.",
+      "visualStatus": "no-material-clipping-observed"
+    },
+    {
+      "game": "conveyor-window",
+      "capture": "conveyor-window/failure-screen.png",
+      "path": "../43734122992/evidence/controller-runtime-kit/conveyor-window/failure-screen.png",
+      "bytes": 302789,
+      "sha256": "afb5dc44ad1f381654125437f72c57a5cd4dd17f9f27b27c7c8aae9116ee877d",
+      "width": 1920,
+      "height": 1080,
+      "reviewMethod": "Direct image view via view_image",
+      "visualConclusion": "Disconnected/paused message, blueprint summary and resume action are visible. QR, service address, aliases, controls and sidebar tip fit.",
+      "visualStatus": "no-material-clipping-observed"
+    }
+  ],
+  "missingScreenshots": [
+    {
+      "game": "glass-fold",
+      "visualStatus": "not-reviewed-no-screenshot-in-this-run",
+      "runtimeStatusAsReported": "failed",
+      "errorAsReported": "AssertionError('Instrumentation exited before observer was ready')",
+      "caseReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/glass-fold/case.json",
+        "bytes": 474,
+        "sha256": "ec45ff00ec13be4368e1101caa9375224fed137fba0e954384055c44c9d6aba6"
+      }
+    },
+    {
+      "game": "tension-span",
+      "visualStatus": "not-reviewed-no-screenshot-in-this-run",
+      "runtimeStatusAsReported": "failed",
+      "errorAsReported": "RuntimeError('{\"command\": [\"/usr/local/lib/android/sdk/platform-tools/adb\", \"-s\", \"emulator-5554\", \"shell\", \"am\", \"force-stop\", \"com.ecojust.tensionspantv\"], \"exitCode\": 1, \"stdout\": \"\", \"stderr\": \"adb: device \\'emulator-5554\\' not found\\\\n\"}')",
+      "caseReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/tension-span/case.json",
+        "bytes": 474,
+        "sha256": "7f230a258e2bf45b3dcdad731946f203cb706fad7294acdf9475d313dd500aec"
+      }
+    },
+    {
+      "game": "prism-relay",
+      "visualStatus": "not-reviewed-no-screenshot-in-this-run",
+      "runtimeStatusAsReported": "failed",
+      "errorAsReported": "RuntimeError('{\"command\": [\"/usr/local/lib/android/sdk/platform-tools/adb\", \"-s\", \"emulator-5554\", \"shell\", \"am\", \"force-stop\", \"com.ecojust.prismrelaytv\"], \"exitCode\": 1, \"stdout\": \"\", \"stderr\": \"adb: device \\'emulator-5554\\' not found\\\\n\"}')",
+      "caseReceipt": {
+        "path": "../43734122992/evidence/controller-runtime-kit/prism-relay/case.json",
+        "bytes": 472,
+        "sha256": "f1c18d3f4393337949da922255753382d0564996c5cd9626347239b9d41f0e83"
+      }
+    }
+  ]
+}

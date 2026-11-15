@@ -1,0 +1,51 @@
+{
+  "instrumentation": [
+    "/usr/local/lib/android/sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "diagnosticPort",
+    "63486",
+    "com.ecojust.controllerqa.packingsculptor/com.ecojust.controllerqa.Observer"
+  ],
+  "driver": [
+    "node",
+    "/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs",
+    "--mode",
+    "android",
+    "--slug",
+    "packing-sculptor",
+    "--diagnostics",
+    "http://127.0.0.1:37809",
+    "--tcp-port",
+    "43077",
+    "--output",
+    "/home/runner/work/_temp/controller-runtime-output/packing-sculptor/gameplay",
+    "--adb",
+    "/usr/local/lib/android/sdk/platform-tools/adb",
+    "--serial",
+    "emulator-5554"
+  ],
+  "video": [
+    "/usr/local/lib/android/sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "screenrecord",
+    "--size",
+    "960x540",
+    "--bit-rate",
+    "600000",
+    "--time-limit",
+    "120",
+    "/sdcard/puretv-controller-packing-sculptor.mp4"
+  ],
+  "ports": [
+    37809,
+    43077
+  ]
+}

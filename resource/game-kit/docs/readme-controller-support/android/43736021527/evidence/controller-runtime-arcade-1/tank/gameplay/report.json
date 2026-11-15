@@ -1,0 +1,2010 @@
+{
+  "slug": "tank",
+  "mode": "android",
+  "startedAt": "2026-11-15T16:37:20.780Z",
+  "status": "failed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "c754c4c79f888419051c05a728ec356d802016f38de0c3680a3aaaa8874740e2",
+    "tools/readme-controller-qa/cases.mjs": "99e7a01d4e7554ee684561a5006c75564741ff310e8730544f68b535a1133342",
+    "tools/readme-controller-qa/sdk-peer.py": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: weapon fires\n    at gameplay (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/cases.mjs:56:65)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:111:80\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:111:2"
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "aimY": 0,
+            "aimX": 0,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "aimY": 0,
+            "aimX": 0,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "stage": 1,
+          "loop": 0,
+          "menuIndex": 0,
+          "selectedPlayers": 1,
+          "remaining": 20,
+          "players": [
+            {
+              "id": 1,
+              "connected": false,
+              "joined": false,
+              "alive": false,
+              "lives": 3,
+              "score": 0,
+              "stars": 0
+            },
+            {
+              "id": 2,
+              "connected": false,
+              "joined": false,
+              "alive": false,
+              "lives": 3,
+              "score": 0,
+              "stars": 0
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 72,
+            "y": 200,
+            "dir": 0,
+            "lives": 3,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 0,
+            "shieldFrames": 0,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": false,
+            "connected": false,
+            "joined": false,
+            "moving": false,
+            "extraLife": false
+          },
+          {
+            "id": 2,
+            "x": 136,
+            "y": 200,
+            "dir": 0,
+            "lives": 3,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 0,
+            "shieldFrames": 0,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": false,
+            "connected": false,
+            "joined": false,
+            "moving": false,
+            "extraLife": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "url": "https://tank.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-0170ee3b313c",
+            "session": "wifi-3c5d8e2f-2e6a-41dd-bf72-1d3f820ccc3b-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "loop": 0,
+          "menuIndex": 0,
+          "selectedPlayers": 1,
+          "remaining": 19,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "stars": 0
+            },
+            {
+              "id": 2,
+              "connected": false,
+              "joined": false,
+              "alive": false,
+              "lives": 0,
+              "score": 0,
+              "stars": 0
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 72,
+            "y": 200,
+            "dir": 0,
+            "lives": 3,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 0,
+            "shieldFrames": 0,
+            "freezeFrames": 0,
+            "spawnFrames": 36,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": true,
+            "connected": true,
+            "joined": true,
+            "moving": false,
+            "extraLife": false
+          },
+          {
+            "id": 2,
+            "x": 136,
+            "y": 200,
+            "dir": 0,
+            "lives": 0,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 0,
+            "shieldFrames": 0,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": false,
+            "connected": false,
+            "joined": false,
+            "moving": false,
+            "extraLife": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": [
+            {
+              "type": "stage_start",
+              "frame": 367
+            }
+          ]
+        },
+        "document": {
+          "url": "https://tank.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "right-position",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-0170ee3b313c",
+            "session": "wifi-3c5d8e2f-2e6a-41dd-bf72-1d3f820ccc3b-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "loop": 0,
+          "menuIndex": 0,
+          "selectedPlayers": 1,
+          "remaining": 19,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "stars": 0
+            },
+            {
+              "id": 2,
+              "connected": false,
+              "joined": false,
+              "alive": false,
+              "lives": 0,
+              "score": 0,
+              "stars": 0
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 72,
+            "y": 200,
+            "dir": 0,
+            "lives": 3,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 2,
+            "shieldFrames": 128,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": true,
+            "connected": true,
+            "joined": true,
+            "moving": false,
+            "extraLife": false
+          },
+          {
+            "id": 2,
+            "x": 136,
+            "y": 200,
+            "dir": 0,
+            "lives": 0,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 0,
+            "shieldFrames": 0,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": false,
+            "connected": false,
+            "joined": false,
+            "moving": false,
+            "extraLife": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": [
+            {
+              "type": "stage_start",
+              "frame": 367
+            }
+          ]
+        },
+        "document": {
+          "url": "https://tank.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAd4SURBVHic7d1BruM2EEDBOMj9r+zsvQgzkKUm/aq2A49kyf+Biwb5er/f778Agv6evgGAKQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkPXP0xd8vV5PX/JR7/f7P//97u9/+vVXn7/b1fu7+/vV/36+zQoQyBJAIEsAgSwBBLIEEMgSQCBLAIGsx+cAV6bnwFZOn8M6/fnePec4Ped31fT1V3b7+7ECBLIEEMgSQCBLAIEsAQSyBBDIEkAga7s5wJXp/ezudnUObfc5tavufv/T+/nd/X5+/e/nT1kBAlkCCGQJIJAlgECWAAJZAghkCSCQddwc4K+b3g9v5e799q5ef3qObnX90+bkfp0VIJAlgECWAAJZAghkCSCQJYBAlgACWeYAH3b3HNj0nN3V/QpXpuf8rn7eHOBerACBLAEEsgQQyBJAIEsAgSwBBLIEEMg6bg7w9Dmq6XNnV65ef/c5vav79Z0+57f7/T3NChDIEkAgSwCBLAEEsgQQyBJAIEsAgazt5gDvPtf2dNPnBt99/bvnEKfn+HafA62xAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOv1tkHYVqbnxKZ/DtNzjiu//vxrrACBLAEEsgQQyBJAIEsAgSwBBLIEEMh6fD/A6XNrd58Tm54zu/v9TD//6edzt9O/39NzkFaAQJYAAlkCCGQJIJAlgECWAAJZAghkbbcf4K/PIf36HNz0ubzT++1NX58/YwUIZAkgkCWAQJYAAlkCCGQJIJAlgEDW4/sBXjW9n9n0foYrV+/v7s/f/f2n9zu8anpO8qrT5hytAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuDvDu/eim59hWps/tvXvObno/yKtO/32sTH+/b7MCBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/E5wOn9+qbPnb37/qb3S5zej+/0OcKV6fe3svt+i5+sAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHq9Hx682X1Oa/rc15Xd729l+v6n5wh3309v9/0wv80KEMgSQCBLAIEsAQSyBBDIEkAgSwCBrMfnAK+a3o9ver/BlenXufvzXZmeU53eT3Fl+vrfZgUIZAkgkCWAQJYAAlkCCGQJIJAlgEDWcecCT8+RTV//qt33y1uZnkObnqNbmT73+jRWgECWAAJZAghkCSCQJYBAlgACWQIIZD0+B7j7nNLuc2ar+zt9zm9ler+83f//lek5v+nrf7ICBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/E5wLvtvh/g1f//6uen57B2Pzf41+fwpp/vbvsJWgECWQIIZAkgkCWAQJYAAlkCCGQJIJD1em82mDN9bur0HN/u+/Ht7tef//Qc3/Tfx7dZAQJZAghkCSCQJYBAlgACWQIIZAkgkPX4foDT59bufq7r9LnJ0/vVTf8+rjr9+a7sNsd3lRUgkCWAQJYAAlkCCGQJIJAlgECWAAJZj88Bnn7u6e5zatPXX5meg7t7znJ6TnV30+//kxUgkCWAQJYAAlkCCGQJIJAlgECWAAJZj58LvPt+ZNNzftP7ye0+h7b7fnS7/76v2m2O7yorQCBLAIEsAQSyBBDIEkAgSwCBLAEEsh6fA7xqek5v5bDH+XW//nx3/37Tc3rT1/9TVoBAlgACWQIIZAkgkCWAQJYAAlkCCGQdNwe4cvp+bLvvJzg9h/nr93fV6XOET7MCBLIEEMgSQCBLAIEsAQSyBBDIEkAg65+nL3j3nNXu5+Jevb/d5+Cuuvv5XP389PNZmb6/0+YIrQCBLAEEsgQQyBJAIEsAgSwBBLIEEMh6fA5wtzmgT7ufmzr9+bvtfn8ru+9Hefqc6LdZAQJZAghkCSCQJYBAlgACWQIIZAkgkHXcfoC7u7pf4fSc1q+/n+n9Hu9+P9PnAp/2+7ECBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/E5wJVf3+9tek5qeg5x9zm53d/v7n8fp7ECBLIEEMgSQCBLAIEsAQSyBBDIEkAga7s5wJVfn7O6ev3p/druvv+7Tc857j4nevfnn2YFCGQJIJAlgECWAAJZAghkCSCQJYBA1nFzgKebPrf19Dm1lbvn+Haf07z7/Z4257diBQhkCSCQJYBAlgACWQIIZAkgkCWAQJY5wM1Mz2FNzyle/f+nTb+/u5/P9Pf7NitAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjpsDPG3O6NP0HNXd59qePuc3vR/f9LnOK6f//X2yAgSyBBDIEkAgSwCBLAEEsgQQyBJAIGu7OcDpOadp03N60/vJrUzvh7j773P3OczpOdhPVoBAlgACWQIIZAkgkCWAQJYAAlkCCGS93r+2wRfA/2QFCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgEDWvygm+pwggzgUAAAAAElFTkSuQmCC",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-0170ee3b313c",
+            "session": "wifi-3c5d8e2f-2e6a-41dd-bf72-1d3f820ccc3b-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "loop": 0,
+          "menuIndex": 0,
+          "selectedPlayers": 1,
+          "remaining": 19,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "stars": 0
+            },
+            {
+              "id": 2,
+              "connected": false,
+              "joined": false,
+              "alive": false,
+              "lives": 0,
+              "score": 0,
+              "stars": 0
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 80,
+            "y": 200,
+            "dir": 1,
+            "lives": 3,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 1,
+            "shieldFrames": 64,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": true,
+            "connected": true,
+            "joined": true,
+            "moving": false,
+            "extraLife": false
+          },
+          {
+            "id": 2,
+            "x": 136,
+            "y": 200,
+            "dir": 0,
+            "lives": 0,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 0,
+            "shieldFrames": 0,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": false,
+            "connected": false,
+            "joined": false,
+            "moving": false,
+            "extraLife": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": [
+            {
+              "type": "stage_start",
+              "frame": 367
+            }
+          ]
+        },
+        "document": {
+          "url": "https://tank.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "left-position",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-0170ee3b313c",
+            "session": "wifi-3c5d8e2f-2e6a-41dd-bf72-1d3f820ccc3b-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "loop": 0,
+          "menuIndex": 0,
+          "selectedPlayers": 1,
+          "remaining": 19,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "stars": 0
+            },
+            {
+              "id": 2,
+              "connected": false,
+              "joined": false,
+              "alive": false,
+              "lives": 0,
+              "score": 0,
+              "stars": 0
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 80,
+            "y": 200,
+            "dir": 1,
+            "lives": 3,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 1,
+            "shieldFrames": 64,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": true,
+            "connected": true,
+            "joined": true,
+            "moving": false,
+            "extraLife": false
+          },
+          {
+            "id": 2,
+            "x": 136,
+            "y": 200,
+            "dir": 0,
+            "lives": 0,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 0,
+            "shieldFrames": 0,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": false,
+            "connected": false,
+            "joined": false,
+            "moving": false,
+            "extraLife": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": [
+            {
+              "type": "stage_start",
+              "frame": 367
+            }
+          ]
+        },
+        "document": {
+          "url": "https://tank.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-0170ee3b313c",
+            "session": "wifi-3c5d8e2f-2e6a-41dd-bf72-1d3f820ccc3b-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "loop": 0,
+          "menuIndex": 0,
+          "selectedPlayers": 1,
+          "remaining": 18,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "stars": 0
+            },
+            {
+              "id": 2,
+              "connected": false,
+              "joined": false,
+              "alive": false,
+              "lives": 0,
+              "score": 0,
+              "stars": 0
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 56,
+            "y": 200,
+            "dir": 3,
+            "lives": 3,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 0,
+            "shieldFrames": 0,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": true,
+            "connected": true,
+            "joined": true,
+            "moving": false,
+            "extraLife": false
+          },
+          {
+            "id": 2,
+            "x": 136,
+            "y": 200,
+            "dir": 0,
+            "lives": 0,
+            "score": 0,
+            "stars": 0,
+            "shieldCounter": 0,
+            "shieldFrames": 0,
+            "freezeFrames": 0,
+            "spawnFrames": 0,
+            "respawnFrames": 0,
+            "slideFrames": 0,
+            "alive": false,
+            "connected": false,
+            "joined": false,
+            "moving": false,
+            "extraLife": false
+          }
+        ],
+        "effects": {
+          "bullets": [
+            {
+              "x": 62,
+              "y": 8,
+              "dx": -1,
+              "dy": 0,
+              "dir": 3,
+              "owner": 13,
+              "team": "enemy",
+              "speed": 2,
+              "steel": false,
+              "alive": true
+            }
+          ],
+          "weapons": [],
+          "events": [
+            {
+              "type": "stage_start",
+              "frame": 367
+            }
+          ]
+        },
+        "document": {
+          "url": "https://tank.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tank TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.390Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-0170ee3b313c"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.390Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.390Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.390Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.390Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.390Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.390Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.390Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.390Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.390Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.398Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.562Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.601Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.649Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.649Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.649Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.649Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.649Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.649Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.649Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:27.752Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:27.771Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:28.233Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 479
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:28.254Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:28.879Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:28.933Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:29.244Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 365
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:29.281Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:31.091Z",
+      "message": {
+        "type": "ping",
+        "seq": 15,
+        "controller_id": "virtual-0170ee3b313c"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:31.102Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:31.941Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:31.952Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:32.320Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 377
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:32.347Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:32.874Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:32.911Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:33.372Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "LEFT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:33.427Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:33.478Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "LEFT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 604
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:33.483Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:34.255Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:34.266Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:34.749Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "A",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:34.762Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:34.991Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-0170ee3b313c",
+        "key": "A",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 736
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:35.027Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:36.087Z",
+      "message": {
+        "type": "ping",
+        "seq": 24,
+        "controller_id": "virtual-0170ee3b313c"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:36.095Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [],
+  "screenshots": [
+    "menu-android.png",
+    "failure.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "ports": {
+    "tcpPort": 45653,
+    "observerPort": 39029
+  },
+  "error": "AssertionError [ERR_ASSERTION]: weapon fires\n    at gameplay (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/cases.mjs:56:65)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:111:80\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:111:2",
+  "lastSnapshot": {
+    "phase": "playing",
+    "paused": false,
+    "controllerPaused": false,
+    "controllers": [
+      {
+        "id": 1,
+        "transport": "wifi",
+        "controllerId": "virtual-0170ee3b313c",
+        "session": "wifi-3c5d8e2f-2e6a-41dd-bf72-1d3f820ccc3b-1",
+        "connected": true,
+        "cancelSeq": 1,
+        "inputActive": true,
+        "x": 0,
+        "y": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "a": false,
+        "b": false,
+        "start": false,
+        "select": false,
+        "buttons": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        }
+      },
+      {
+        "id": 2,
+        "transport": "wifi",
+        "controllerId": "",
+        "session": "",
+        "connected": false,
+        "cancelSeq": 1,
+        "inputActive": true,
+        "x": 0,
+        "y": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "a": false,
+        "b": false,
+        "start": false,
+        "select": false,
+        "buttons": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        }
+      }
+    ],
+    "info": {
+      "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+      "qr": "data:image/png;base64,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",
+      "addresses": [
+        "10.0.2.15"
+      ],
+      "error": "",
+      "language": "en",
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Tank TV",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "10.0.2.15"
+        ],
+        "error": 0,
+        "connected": true,
+        "inputActive": true
+      }
+    },
+    "model": {
+      "phase": "playing",
+      "stage": 1,
+      "loop": 0,
+      "menuIndex": 0,
+      "selectedPlayers": 1,
+      "remaining": 18,
+      "players": [
+        {
+          "id": 1,
+          "connected": true,
+          "joined": true,
+          "alive": true,
+          "lives": 3,
+          "score": 0,
+          "stars": 0
+        },
+        {
+          "id": 2,
+          "connected": false,
+          "joined": false,
+          "alive": false,
+          "lives": 0,
+          "score": 0,
+          "stars": 0
+        }
+      ]
+    },
+    "players": [
+      {
+        "id": 1,
+        "x": 56,
+        "y": 200,
+        "dir": 3,
+        "lives": 3,
+        "score": 0,
+        "stars": 0,
+        "shieldCounter": 0,
+        "shieldFrames": 0,
+        "freezeFrames": 0,
+        "spawnFrames": 0,
+        "respawnFrames": 0,
+        "slideFrames": 0,
+        "alive": true,
+        "connected": true,
+        "joined": true,
+        "moving": false,
+        "extraLife": false
+      },
+      {
+        "id": 2,
+        "x": 136,
+        "y": 200,
+        "dir": 0,
+        "lives": 0,
+        "score": 0,
+        "stars": 0,
+        "shieldCounter": 0,
+        "shieldFrames": 0,
+        "freezeFrames": 0,
+        "spawnFrames": 0,
+        "respawnFrames": 0,
+        "slideFrames": 0,
+        "alive": false,
+        "connected": false,
+        "joined": false,
+        "moving": false,
+        "extraLife": false
+      }
+    ],
+    "effects": {
+      "bullets": [
+        {
+          "x": 200,
+          "y": 76,
+          "dx": 0,
+          "dy": 1,
+          "dir": 2,
+          "owner": 12,
+          "team": "enemy",
+          "speed": 2,
+          "steel": false,
+          "alive": true
+        },
+        {
+          "x": 147,
+          "y": 8,
+          "dx": 1,
+          "dy": 0,
+          "dir": 1,
+          "owner": 13,
+          "team": "enemy",
+          "speed": 2,
+          "steel": false,
+          "alive": true
+        }
+      ],
+      "weapons": [],
+      "events": [
+        {
+          "type": "stage_start",
+          "frame": 367
+        },
+        {
+          "type": "fire",
+          "frame": 681,
+          "player": 1
+        },
+        {
+          "type": "hit_steel",
+          "frame": 705
+        }
+      ]
+    },
+    "document": {
+      "url": "https://tank.invalid/tv.html",
+      "width": 960,
+      "height": 540,
+      "scrollWidth": 960,
+      "scrollHeight": 540,
+      "hidden": false,
+      "focused": true
+    },
+    "nativeInfo": {
+      "url": "http://10.0.2.15:43927/?room=E9XBPFM3zvrGOfwxsqdXXOwdRvM5VsFV",
+      "qr": "data:image/png;base64,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",
+      "addresses": [
+        "10.0.2.15"
+      ],
+      "error": "",
+      "language": "en",
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Tank TV",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "10.0.2.15"
+        ],
+        "error": 0,
+        "connected": true,
+        "inputActive": true
+      }
+    },
+    "activityState": "resumed"
+  },
+  "finishedAt": "2026-11-15T16:37:36.348Z"
+}

@@ -1,0 +1,75 @@
+{
+  "requestedBatches": [
+    "retry-used-car",
+    "retry-alien",
+    "retry-prism",
+    "retry-arcade-visual"
+  ],
+  "selectedBatches": [
+    "retry-used-car",
+    "retry-alien",
+    "retry-prism",
+    "retry-arcade-visual"
+  ],
+  "plannedSlugs": [
+    "used-car-racing",
+    "alien-shooter",
+    "prism-relay",
+    "tank",
+    "jackal"
+  ],
+  "completeCatalogRequested": false,
+  "matrix": {
+    "include": [
+      {
+        "group": "worlds",
+        "batch": "retry-used-car",
+        "apiLevel": 29,
+        "arch": "x86",
+        "renderer": "swiftshader_indirect",
+        "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -feature -Vulkan -verbose"
+      },
+      {
+        "group": "worlds",
+        "batch": "retry-alien",
+        "apiLevel": 36,
+        "arch": "x86_64",
+        "renderer": "swiftshader_indirect",
+        "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+      },
+      {
+        "group": "kit",
+        "batch": "retry-prism",
+        "apiLevel": 36,
+        "arch": "x86_64",
+        "renderer": "swiftshader_indirect",
+        "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+      },
+      {
+        "group": "arcade",
+        "batch": "retry-arcade-visual",
+        "apiLevel": 29,
+        "arch": "x86",
+        "renderer": "swiftshader_indirect",
+        "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -feature -Vulkan -verbose"
+      }
+    ]
+  },
+  "worlds2GraphicsExperiment": {
+    "selected": true,
+    "description": "Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause."
+  },
+  "usedCarStableImageComparison": {
+    "selected": true,
+    "systemImage": "system-images;android-29;android-tv;x86",
+    "channel": "stable",
+    "revisionListedByOfficialRepository": 3,
+    "description": "Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory."
+  },
+  "arcadeVisualStableImageComparison": {
+    "selected": true,
+    "systemImage": "system-images;android-29;android-tv;x86",
+    "description": "Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence."
+  },
+  "qaSourceSha": "a381b69f2cad78d9466872af656b3cb28d153211"
+}

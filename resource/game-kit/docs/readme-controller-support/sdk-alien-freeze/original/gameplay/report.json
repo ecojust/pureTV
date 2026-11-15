@@ -1,0 +1,4101 @@
+{
+  "slug": "alien-shooter",
+  "mode": "android",
+  "startedAt": "2026-11-15T17:03:02.227Z",
+  "status": "failed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "1ce8a253f9b1735215a43897c46bdca74b2abdd07b9cf50b9f34c032ed22e495",
+    "tools/readme-controller-qa/cases.mjs": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6",
+    "tools/readme-controller-qa/sdk-peer.py": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "passed"
+    },
+    {
+      "name": "START pause freezes game, fresh START resumes",
+      "status": "passed"
+    },
+    {
+      "name": "disconnect clears held input, reconnect sync requires fresh START",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: sync does not award gameplay\n+ actual - expected\n... Skipped lines\n\n  {\n    model: {\n      bullets: [],\n      credits: 20,\n      elapsed: 5.499999999999986,\n...\n          angle: -1.8471704885141502,\n+         connected: true,\n-         connected: false,\n          fireCooldown: 0.19,\n          grenades: 2,\n          id: 1,\n          weapon: 'pistol',\n          x: 5.919999999999995,\n...\n        angle: -1.8471704885141502,\n+       connected: true,\n-       connected: false,\n        fireCooldown: 0.19,\n        grenades: 2,\n        id: 1,\n        weapon: 'pistol',\n        x: 5.919999999999995,\n\n    at file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:134:842\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:133:2"
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "players": [
+            {
+              "id": 1,
+              "x": 5,
+              "y": 28,
+              "angle": -1.5707963267948966,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0,
+              "connected": false,
+              "active": true
+            }
+          ],
+          "elapsed": 0,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 0,
+          "events": [],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5,
+            "y": 28,
+            "angle": -1.5707963267948966,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 3,
+            "fireCooldown": 0,
+            "connected": false,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 5,
+              "y": 28,
+              "angle": -1.5707963267948966,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 0.41666666666666663,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 0,
+          "events": [],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5,
+            "y": 28,
+            "angle": -1.5707963267948966,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 3,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAduSURBVHic7d1BrsI4FkDRplX73zI1Z1AR8neewz1nDoEErjx4sl/v9/v9P4Cg/09/AIApAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQ9c/dF3y9Xndf8lbv93vp9Vf3Z/r9d3++abt/n7uf39Pd/fuxAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOv2OcArp8+RTc+JTc+B7Z4T3P36abvnKOv/n29ZAQJZAghkCSCQJYBAlgACWQIIZAkgkHXcHOCV6Tm8VdOff/r6068/fb/F3U5//nezAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOtxc4BPt3tOb3o/velzb6+uv3tO7WlzcHVWgECWAAJZAghkCSCQJYBAlgACWQIIZJkDPMz0fnbT+wmuOv1cYnOCZ7ECBLIEEMgSQCBLAIEsAQSyBBDIEkAg63FzgL8+R/X0ObLT9xPcvd/i6uvtV3gvK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKOmwM8fb+5VdP7zT19P8Hp7z997vKVX////DUrQCBLAIEsAQSyBBDIEkAgSwCBLAEEsm6fA7Qf2X+bnuM6/frTc4bT/H/+lhUgkCWAQJYAAlkCCGQJIJAlgECWAAJZt88B7p6zmt6PbdXq59+939/uc3dPd/oc4u45welzjf+aFSCQJYBAlgACWQIIZAkgkCWAQJYAAlnHnQt8ZXrO6Olzhqt2f/+nn8s7/flPvz+nzRFaAQJZAghkCSCQJYBAlgACWQIIZAkgkHXcHOD0nNmV0+fcVq1ef3pOc9X056/N4U2zAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOv1PmzwZ3q/tlWnzylOf/+nz0Femf47Td//6ef3LStAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsP8Mqvn5u6anpO67Q5r2+d/vlPn5Od/v19ywoQyBJAIEsAgSwBBLIEEMgSQCBLAIGs2+cAV+eYpuf4ps8V3v3+03Nap9/fp+/XuOrpn/+TFSCQJYBAlgACWQIIZAkgkCWAQJYAAlnH7Qc4PWe1e07w9Dmp0/dz23390+cIT7+/p++X+ckKEMgSQCBLAIEsAQSyBBDIEkAgSwCBrNvnAKfn4E6fI5s+l3X3foJ103OG089n+v//yQoQyBJAIEsAgSwBBLIEEMgSQCBLAIGsx50LfGX3HNTp5/pemZ5zXDW9n+OVX58zXTW9n+QnK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJ+7lzg3abPZT3d6c/vijm7ve9/2u/bChDIEkAgSwCBLAEEsgQQyBJAIEsAgazcucCn7ye3anrOa/X9r1xd/9ef75Xp53/anN8VK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLIedy7w6XNe03NQq3NcT58j23393e8/ff93m77+JytAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjjsX+Mr0HNWV6TmwK7uvf9qc17emfz+/bvr3/8kKEMgSQCBLAIEsAQSyBBDIEkAgSwCBrJ87F/j0Obfdc4LT++mtvv/q66fv79PnIFc97dxgK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKOOxf41+fsVu2+/vQc3PT9n36+V6bnDE+/P9+yAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOv1nh4s+nD6nN70nOH0fnxXdj+f0/eTnH79lV8/9/pbVoBAlgACWQIIZAkgkCWAQJYAAlkCCGQ9bj/Ap8+xrV7/yvQc2fSc3+lzaLvPRZ42fX+/ZQUIZAkgkCWAQJYAAlkCCGQJIJAlgEDW7XOAu8+N3e30/diebnqOcdXp++Wdfq7y3b9vK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKO2w/w6abn9E7fT2/3fnhPn6Nbvf7uOdvp7//XrACBLAEEsgQQyBJAIEsAgSwBBLIEEMi6fQ7wyvQc3ZXT95Nbff/d93/3fnmnnzu9anrO8fT/57esAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuDvDK9BzetNP3+1u9/u7XX5n+/tNziE//fX3LChDIEkAgSwCBLAEEsgQQyBJAIEsAgazHzQE+3fS5uqvvf9oc16fp/QJP309x1dPv3ycrQCBLAIEsAQSyBBDIEkAgSwCBLAEEsswB3mx6v7cru+e4njYn9q3p5zt9rvTTWAECWQIIZAkgkCWAQJYAAlkCCGQJIJD1uDnAX5tD+tbu/QSn95Nbff3p59pO399f3y/xW1aAQJYAAlkCCGQJIJAlgECWAAJZAghkHTcHOL2f2umm93PbPUd4+pzdbtNzerudNidoBQhkCSCQJYBAlgACWQIIZAkgkCWAQNbrfdoGXQA3sQIEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIOtfwtzow6G9y+MAAAAASUVORK5CYII=",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "right-position",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 5,
+              "y": 28,
+              "angle": -1.5707963267948966,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 0.9333333333333346,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 0,
+          "events": [],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5,
+            "y": 28,
+            "angle": -1.5707963267948966,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 3,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAduSURBVHic7d1BrsI4FkDRplX73zI1Z1AR8neewz1nDoEErjx4sl/v9/v9P4Cg/09/AIApAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQ9c/dF3y9Xndf8lbv93vp9Vf3Z/r9d3++abt/n7uf39Pd/fuxAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOv2OcArp8+RTc+JTc+B7Z4T3P36abvnKOv/n29ZAQJZAghkCSCQJYBAlgACWQIIZAkgkHXcHOCV6Tm8VdOff/r6068/fb/F3U5//nezAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOtxc4BPt3tOb3o/velzb6+uv3tO7WlzcHVWgECWAAJZAghkCSCQJYBAlgACWQIIZJkDPMz0fnbT+wmuOv1cYnOCZ7ECBLIEEMgSQCBLAIEsAQSyBBDIEkAg63FzgL8+R/X0ObLT9xPcvd/i6uvtV3gvK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKOmwM8fb+5VdP7zT19P8Hp7z997vKVX////DUrQCBLAIEsAQSyBBDIEkAgSwCBLAEEsm6fA7Qf2X+bnuM6/frTc4bT/H/+lhUgkCWAQJYAAlkCCGQJIJAlgECWAAJZt88B7p6zmt6PbdXq59+939/uc3dPd/oc4u45welzjf+aFSCQJYBAlgACWQIIZAkgkCWAQJYAAlnHnQt8ZXrO6Olzhqt2f/+nn8s7/flPvz+nzRFaAQJZAghkCSCQJYBAlgACWQIIZAkgkHXcHOD0nNmV0+fcVq1ef3pOc9X056/N4U2zAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOv1PmzwZ3q/tlWnzylOf/+nz0Femf47Td//6ef3LStAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsP8Mqvn5u6anpO67Q5r2+d/vlPn5Od/v19ywoQyBJAIEsAgSwBBLIEEMgSQCBLAIGs2+cAV+eYpuf4ps8V3v3+03Nap9/fp+/XuOrpn/+TFSCQJYBAlgACWQIIZAkgkCWAQJYAAlnH7Qc4PWe1e07w9Dmp0/dz23390+cIT7+/p++X+ckKEMgSQCBLAIEsAQSyBBDIEkAgSwCBrNvnAKfn4E6fI5s+l3X3foJ103OG089n+v//yQoQyBJAIEsAgSwBBLIEEMgSQCBLAIGsx50LfGX3HNTp5/pemZ5zXDW9n+OVX58zXTW9n+QnK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJ+7lzg3abPZT3d6c/vijm7ve9/2u/bChDIEkAgSwCBLAEEsgQQyBJAIEsAgazcucCn7ye3anrOa/X9r1xd/9ef75Xp53/anN8VK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLIedy7w6XNe03NQq3NcT58j23393e8/ff93m77+JytAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjjsX+Mr0HNWV6TmwK7uvf9qc17emfz+/bvr3/8kKEMgSQCBLAIEsAQSyBBDIEkAgSwCBrJ87F/j0Obfdc4LT++mtvv/q66fv79PnIFc97dxgK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKOOxf41+fsVu2+/vQc3PT9n36+V6bnDE+/P9+yAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOv1nh4s+nD6nN70nOH0fnxXdj+f0/eTnH79lV8/9/pbVoBAlgACWQIIZAkgkCWAQJYAAlkCCGQ9bj/Ap8+xrV7/yvQc2fSc3+lzaLvPRZ42fX+/ZQUIZAkgkCWAQJYAAlkCCGQJIJAlgEDW7XOAu8+N3e30/diebnqOcdXp++Wdfq7y3b9vK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKO2w/w6abn9E7fT2/3fnhPn6Nbvf7uOdvp7//XrACBLAEEsgQQyBJAIEsAgSwBBLIEEMi6fQ7wyvQc3ZXT95Nbff/d93/3fnmnnzu9anrO8fT/57esAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuDvDK9BzetNP3+1u9/u7XX5n+/tNziE//fX3LChDIEkAgSwCBLAEEsgQQyBJAIEsAgazHzQE+3fS5uqvvf9oc16fp/QJP309x1dPv3ycrQCBLAIEsAQSyBBDIEkAgSwCBLAEEsswB3mx6v7cru+e4njYn9q3p5zt9rvTTWAECWQIIZAkgkCWAQJYAAlkCCGQJIJD1uDnAX5tD+tbu/QSn95Nbff3p59pO399f3y/xW1aAQJYAAlkCCGQJIJAlgECWAAJZAghkHTcHOL2f2umm93PbPUd4+pzdbtNzerudNidoBQhkCSCQJYBAlgACWQIIZAkgkCWAQNbrfdoGXQA3sQIEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIOtfwtzow6G9y+MAAAAASUVORK5CYII=",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 6.456666666666658,
+              "y": 28,
+              "angle": 0,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 1.8333333333333317,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 0,
+          "events": [],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 6.456666666666658,
+            "y": 28,
+            "angle": 0,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 3,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "left-position",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 6.456666666666658,
+              "y": 28,
+              "angle": 0,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 1.8333333333333317,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 0,
+          "events": [],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 6.456666666666658,
+            "y": 28,
+            "angle": 0,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 3,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 4.4633333333333365,
+              "y": 28,
+              "angle": 3.141592653589793,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 2.8166666666666615,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 1,
+          "events": [
+            {
+              "id": 1,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 4.4633333333333365,
+            "y": 28,
+            "angle": 3.141592653589793,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 3,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "grenade",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 4.4633333333333365,
+              "y": 28,
+              "angle": 3.141592653589793,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 2.8166666666666615,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 1,
+          "events": [
+            {
+              "id": 1,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 4.4633333333333365,
+            "y": 28,
+            "angle": 3.141592653589793,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 3,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 4.4633333333333365,
+              "y": 28,
+              "angle": 3.141592653589793,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 2,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 3.4499999999999926,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 2,
+              "kind": "grenade",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 4.4633333333333365,
+            "y": 28,
+            "angle": 3.141592653589793,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 2,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "pause-freeze",
+      "before": {
+        "phase": "paused",
+        "paused": true,
+        "controllerPaused": true,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "paused",
+          "players": [
+            {
+              "id": 1,
+              "x": 4.4633333333333365,
+              "y": 28,
+              "angle": 3.141592653589793,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 2,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 4.149999999999991,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 2,
+          "credits": 13,
+          "eventSerial": 6,
+          "events": [
+            {
+              "id": 1,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 2,
+              "kind": "grenade",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 3,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 4,
+              "kind": "enemy-death",
+              "x": 5.642432233709349,
+              "y": 28.16552448636007,
+              "playerId": null,
+              "enemyType": "crawler"
+            },
+            {
+              "id": 5,
+              "kind": "enemy-death",
+              "x": 5.144226299876262,
+              "y": 28.029196229428408,
+              "playerId": null,
+              "enemyType": "runner"
+            },
+            {
+              "id": 6,
+              "kind": "explosion",
+              "x": 1.63212050324343,
+              "y": 28,
+              "playerId": null,
+              "large": true
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 4.4633333333333365,
+            "y": 28,
+            "angle": 3.141592653589793,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 2,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "paused",
+        "paused": true,
+        "controllerPaused": true,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "paused",
+          "players": [
+            {
+              "id": 1,
+              "x": 4.4633333333333365,
+              "y": 28,
+              "angle": 3.141592653589793,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 2,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 4.149999999999991,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 2,
+          "credits": 13,
+          "eventSerial": 6,
+          "events": [
+            {
+              "id": 1,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 2,
+              "kind": "grenade",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 3,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 4,
+              "kind": "enemy-death",
+              "x": 5.642432233709349,
+              "y": 28.16552448636007,
+              "playerId": null,
+              "enemyType": "crawler"
+            },
+            {
+              "id": 5,
+              "kind": "enemy-death",
+              "x": 5.144226299876262,
+              "y": 28.029196229428408,
+              "playerId": null,
+              "enemyType": "runner"
+            },
+            {
+              "id": 6,
+              "kind": "explosion",
+              "x": 1.63212050324343,
+              "y": 28,
+              "playerId": null,
+              "large": true
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 4.4633333333333365,
+            "y": 28,
+            "angle": 3.141592653589793,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 2,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "held-before-disconnect",
+      "before": null,
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 1,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": true,
+              "START": false,
+              "A": true,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 5.5366666666666635,
+              "y": 28,
+              "angle": 2.2117052527753285,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 2,
+              "fireCooldown": 0.09000000000000002,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 5.349999999999986,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 2,
+          "credits": 13,
+          "eventSerial": 9,
+          "events": [
+            {
+              "id": 1,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 2,
+              "kind": "grenade",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 3,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 4,
+              "kind": "enemy-death",
+              "x": 5.642432233709349,
+              "y": 28.16552448636007,
+              "playerId": null,
+              "enemyType": "crawler"
+            },
+            {
+              "id": 5,
+              "kind": "enemy-death",
+              "x": 5.144226299876262,
+              "y": 28.029196229428408,
+              "playerId": null,
+              "enemyType": "runner"
+            },
+            {
+              "id": 6,
+              "kind": "explosion",
+              "x": 1.63212050324343,
+              "y": 28,
+              "playerId": null,
+              "large": true
+            },
+            {
+              "id": 7,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 8,
+              "kind": "shot",
+              "x": 4.846666666666668,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            },
+            {
+              "id": 9,
+              "kind": "hit",
+              "x": 5.4664778109832435,
+              "y": 28.094092290282756,
+              "playerId": null
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5.5366666666666635,
+            "y": 28,
+            "angle": 2.2117052527753285,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 2,
+            "fireCooldown": 0.09000000000000002,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "reconnect",
+      "before": {
+        "phase": "paused",
+        "paused": true,
+        "controllerPaused": true,
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 3
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "paused",
+          "players": [
+            {
+              "id": 1,
+              "x": 5.919999999999995,
+              "y": 28,
+              "angle": -1.8471704885141502,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 2,
+              "fireCooldown": 0.19,
+              "connected": false,
+              "active": true
+            }
+          ],
+          "elapsed": 5.499999999999986,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 3,
+          "credits": 20,
+          "eventSerial": 11,
+          "events": [
+            {
+              "id": 1,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 2,
+              "kind": "grenade",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 3,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 4,
+              "kind": "enemy-death",
+              "x": 5.642432233709349,
+              "y": 28.16552448636007,
+              "playerId": null,
+              "enemyType": "crawler"
+            },
+            {
+              "id": 5,
+              "kind": "enemy-death",
+              "x": 5.144226299876262,
+              "y": 28.029196229428408,
+              "playerId": null,
+              "enemyType": "runner"
+            },
+            {
+              "id": 6,
+              "kind": "explosion",
+              "x": 1.63212050324343,
+              "y": 28,
+              "playerId": null,
+              "large": true
+            },
+            {
+              "id": 7,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 8,
+              "kind": "shot",
+              "x": 4.846666666666668,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            },
+            {
+              "id": 9,
+              "kind": "hit",
+              "x": 5.4664778109832435,
+              "y": 28.094092290282756,
+              "playerId": null
+            },
+            {
+              "id": 10,
+              "kind": "shot",
+              "x": 5.919999999999995,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            },
+            {
+              "id": 11,
+              "kind": "enemy-death",
+              "x": 5.4664778109832435,
+              "y": 28.094092290282756,
+              "playerId": null,
+              "enemyType": "crawler"
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5.919999999999995,
+            "y": 28,
+            "angle": -1.8471704885141502,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 2,
+            "fireCooldown": 0.19,
+            "connected": false,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "paused",
+        "paused": true,
+        "controllerPaused": true,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-4076c7b95a7d",
+            "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-2",
+            "connected": true,
+            "cancelSeq": 4,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "language": "en",
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "paused",
+          "players": [
+            {
+              "id": 1,
+              "x": 5.919999999999995,
+              "y": 28,
+              "angle": -1.8471704885141502,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 2,
+              "fireCooldown": 0.19,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 5.499999999999986,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 3,
+          "credits": 20,
+          "eventSerial": 11,
+          "events": [
+            {
+              "id": 1,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 2,
+              "kind": "grenade",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 3,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 4,
+              "kind": "enemy-death",
+              "x": 5.642432233709349,
+              "y": 28.16552448636007,
+              "playerId": null,
+              "enemyType": "crawler"
+            },
+            {
+              "id": 5,
+              "kind": "enemy-death",
+              "x": 5.144226299876262,
+              "y": 28.029196229428408,
+              "playerId": null,
+              "enemyType": "runner"
+            },
+            {
+              "id": 6,
+              "kind": "explosion",
+              "x": 1.63212050324343,
+              "y": 28,
+              "playerId": null,
+              "large": true
+            },
+            {
+              "id": 7,
+              "kind": "player-hit",
+              "x": 4.4633333333333365,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 8,
+              "kind": "shot",
+              "x": 4.846666666666668,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            },
+            {
+              "id": 9,
+              "kind": "hit",
+              "x": 5.4664778109832435,
+              "y": 28.094092290282756,
+              "playerId": null
+            },
+            {
+              "id": 10,
+              "kind": "shot",
+              "x": 5.919999999999995,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            },
+            {
+              "id": 11,
+              "kind": "enemy-death",
+              "x": 5.4664778109832435,
+              "y": 28.094092290282756,
+              "playerId": null,
+              "enemyType": "crawler"
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5.919999999999995,
+            "y": 28,
+            "angle": -1.8471704885141502,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 2,
+            "fireCooldown": 0.19,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://alien-shooter.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Alien Shooter TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:13.796Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-4076c7b95a7d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:13.796Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:13.796Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:13.796Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:13.796Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:13.796Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:13.796Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:13.796Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:13.796Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:13.796Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:13.822Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:13.826Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:13.833Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:13.835Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:13.860Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:13.877Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:13.883Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:13.884Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:13.884Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:13.884Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:14.005Z",
+      "message": {
+        "type": "ping",
+        "seq": 11,
+        "controller_id": "virtual-4076c7b95a7d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:14.016Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:14.206Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:14.209Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:14.694Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:14.700Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:14.768Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 568
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:14.771Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:19.002Z",
+      "message": {
+        "type": "ping",
+        "seq": 15,
+        "controller_id": "virtual-4076c7b95a7d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:19.010Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:19.188Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:19.257Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:19.685Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "RIGHT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:19.695Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:20.070Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "RIGHT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 882
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:20.074Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:21.107Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:21.135Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:21.599Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "LEFT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:21.654Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:21.793Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "LEFT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 694
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:21.823Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:22.838Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:22.849Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:23.329Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "B",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:23.339Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:23.395Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "B",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 562
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:23.414Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:24.000Z",
+      "message": {
+        "type": "ping",
+        "seq": 25,
+        "controller_id": "virtual-4076c7b95a7d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:24.031Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:26.627Z",
+      "message": {
+        "type": "button",
+        "seq": 26,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:26.640Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:26.962Z",
+      "message": {
+        "type": "button",
+        "seq": 27,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 329
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:26.979Z",
+      "message": {
+        "type": "ack",
+        "seq": 27
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:28.963Z",
+      "message": {
+        "type": "button",
+        "seq": 28,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:28.967Z",
+      "message": {
+        "type": "ack",
+        "seq": 28
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:29.000Z",
+      "message": {
+        "type": "ping",
+        "seq": 29,
+        "controller_id": "virtual-4076c7b95a7d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:29.002Z",
+      "message": {
+        "type": "ack",
+        "seq": 29
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:29.464Z",
+      "message": {
+        "type": "button",
+        "seq": 30,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:29.481Z",
+      "message": {
+        "type": "ack",
+        "seq": 30
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:30.088Z",
+      "message": {
+        "type": "button",
+        "seq": 31,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 1120
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:30.094Z",
+      "message": {
+        "type": "ack",
+        "seq": 31
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:31.374Z",
+      "message": {
+        "type": "button",
+        "seq": 32,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:31.388Z",
+      "message": {
+        "type": "button",
+        "seq": 33,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:31.425Z",
+      "message": {
+        "type": "ack",
+        "seq": 32
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:31.453Z",
+      "message": {
+        "type": "ack",
+        "seq": 33
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:31.873Z",
+      "message": {
+        "type": "button",
+        "seq": 34,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "RIGHT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:31.878Z",
+      "message": {
+        "type": "ack",
+        "seq": 34
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:31.892Z",
+      "message": {
+        "type": "button",
+        "seq": 35,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "A",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:31.916Z",
+      "message": {
+        "type": "ack",
+        "seq": 35
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:32.108Z",
+      "message": {
+        "type": "button",
+        "seq": 36,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "RIGHT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 737
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:32.124Z",
+      "message": {
+        "type": "button",
+        "seq": 37,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "A",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 723
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:32.136Z",
+      "message": {
+        "type": "ack",
+        "seq": 36
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:32.145Z",
+      "message": {
+        "type": "ack",
+        "seq": 37
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.483Z",
+      "message": {
+        "type": "hello",
+        "seq": 38,
+        "controller_id": "virtual-4076c7b95a7d"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.483Z",
+      "message": {
+        "type": "button",
+        "seq": 39,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.483Z",
+      "message": {
+        "type": "button",
+        "seq": 40,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.483Z",
+      "message": {
+        "type": "button",
+        "seq": 41,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.483Z",
+      "message": {
+        "type": "button",
+        "seq": 42,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.483Z",
+      "message": {
+        "type": "button",
+        "seq": 43,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.483Z",
+      "message": {
+        "type": "button",
+        "seq": 44,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.483Z",
+      "message": {
+        "type": "button",
+        "seq": 45,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.483Z",
+      "message": {
+        "type": "button",
+        "seq": 46,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.483Z",
+      "message": {
+        "type": "button",
+        "seq": 47,
+        "controller_id": "virtual-4076c7b95a7d",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:33.487Z",
+      "message": {
+        "type": "ack",
+        "seq": 38
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:33.488Z",
+      "message": {
+        "type": "ack",
+        "seq": 39
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:33.488Z",
+      "message": {
+        "type": "ack",
+        "seq": 40
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:33.489Z",
+      "message": {
+        "type": "ack",
+        "seq": 41
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:33.491Z",
+      "message": {
+        "type": "ack",
+        "seq": 42
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:33.493Z",
+      "message": {
+        "type": "ack",
+        "seq": 43
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:33.493Z",
+      "message": {
+        "type": "ack",
+        "seq": 44
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:33.494Z",
+      "message": {
+        "type": "ack",
+        "seq": 45
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:33.495Z",
+      "message": {
+        "type": "ack",
+        "seq": 46
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:33.495Z",
+      "message": {
+        "type": "ack",
+        "seq": 47
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T17:03:33.999Z",
+      "message": {
+        "type": "ping",
+        "seq": 48,
+        "controller_id": "virtual-4076c7b95a7d"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T17:03:34.007Z",
+      "message": {
+        "type": "ack",
+        "seq": 48
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [
+    {
+      "connection": 1,
+      "event": "client-eof",
+      "at": "2026-11-15T17:03:32.131Z",
+      "pendingSeq": [
+        36,
+        37
+      ]
+    },
+    {
+      "connection": 1,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-15T17:03:32.146Z",
+      "waitMs": 14.654551999999967,
+      "pendingSeq": []
+    }
+  ],
+  "screenshots": [
+    "menu-android.png",
+    "gameplay.png",
+    "paused.png",
+    "failure.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "ports": {
+    "tcpPort": 35737,
+    "observerPort": 40271
+  },
+  "error": "AssertionError [ERR_ASSERTION]: sync does not award gameplay\n+ actual - expected\n... Skipped lines\n\n  {\n    model: {\n      bullets: [],\n      credits: 20,\n      elapsed: 5.499999999999986,\n...\n          angle: -1.8471704885141502,\n+         connected: true,\n-         connected: false,\n          fireCooldown: 0.19,\n          grenades: 2,\n          id: 1,\n          weapon: 'pistol',\n          x: 5.919999999999995,\n...\n        angle: -1.8471704885141502,\n+       connected: true,\n-       connected: false,\n        fireCooldown: 0.19,\n        grenades: 2,\n        id: 1,\n        weapon: 'pistol',\n        x: 5.919999999999995,\n\n    at file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:134:842\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:133:2",
+  "lastSnapshot": {
+    "phase": "paused",
+    "paused": true,
+    "controllerPaused": true,
+    "controllers": [
+      {
+        "id": 1,
+        "transport": "wifi",
+        "controllerId": "virtual-4076c7b95a7d",
+        "session": "wifi-393385e9-d58e-4c5f-89f2-fdebd4744f2d-2",
+        "connected": true,
+        "cancelSeq": 4,
+        "inputActive": true,
+        "x": 0,
+        "y": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "a": false,
+        "b": false,
+        "start": false,
+        "select": false,
+        "buttons": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        }
+      }
+    ],
+    "info": {
+      "language": "en",
+      "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+      "qr": "data:image/png;base64,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",
+      "addresses": [
+        "10.0.2.15"
+      ],
+      "error": "",
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Alien Shooter TV",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "10.0.2.15"
+        ],
+        "error": 0,
+        "connected": true,
+        "inputActive": true
+      }
+    },
+    "model": {
+      "phase": "paused",
+      "players": [
+        {
+          "id": 1,
+          "x": 5.919999999999995,
+          "y": 28,
+          "angle": -1.8471704885141502,
+          "weapon": "pistol",
+          "ammo": {
+            "pistol": -1,
+            "smg": 0,
+            "shotgun": 0,
+            "minigun": 0,
+            "plasma": 0
+          },
+          "grenades": 2,
+          "fireCooldown": 0.19,
+          "connected": true,
+          "active": true
+        }
+      ],
+      "elapsed": 5.499999999999986,
+      "stage": 0,
+      "selectedPlayers": 1,
+      "kills": 3,
+      "credits": 20,
+      "eventSerial": 11,
+      "events": [
+        {
+          "id": 1,
+          "kind": "player-hit",
+          "x": 4.4633333333333365,
+          "y": 28,
+          "playerId": 1
+        },
+        {
+          "id": 2,
+          "kind": "grenade",
+          "x": 4.4633333333333365,
+          "y": 28,
+          "playerId": 1
+        },
+        {
+          "id": 3,
+          "kind": "player-hit",
+          "x": 4.4633333333333365,
+          "y": 28,
+          "playerId": 1
+        },
+        {
+          "id": 4,
+          "kind": "enemy-death",
+          "x": 5.642432233709349,
+          "y": 28.16552448636007,
+          "playerId": null,
+          "enemyType": "crawler"
+        },
+        {
+          "id": 5,
+          "kind": "enemy-death",
+          "x": 5.144226299876262,
+          "y": 28.029196229428408,
+          "playerId": null,
+          "enemyType": "runner"
+        },
+        {
+          "id": 6,
+          "kind": "explosion",
+          "x": 1.63212050324343,
+          "y": 28,
+          "playerId": null,
+          "large": true
+        },
+        {
+          "id": 7,
+          "kind": "player-hit",
+          "x": 4.4633333333333365,
+          "y": 28,
+          "playerId": 1
+        },
+        {
+          "id": 8,
+          "kind": "shot",
+          "x": 4.846666666666668,
+          "y": 28,
+          "playerId": 1,
+          "weapon": "pistol"
+        },
+        {
+          "id": 9,
+          "kind": "hit",
+          "x": 5.4664778109832435,
+          "y": 28.094092290282756,
+          "playerId": null
+        },
+        {
+          "id": 10,
+          "kind": "shot",
+          "x": 5.919999999999995,
+          "y": 28,
+          "playerId": 1,
+          "weapon": "pistol"
+        },
+        {
+          "id": 11,
+          "kind": "enemy-death",
+          "x": 5.4664778109832435,
+          "y": 28.094092290282756,
+          "playerId": null,
+          "enemyType": "crawler"
+        }
+      ],
+      "bullets": []
+    },
+    "players": [
+      {
+        "id": 1,
+        "x": 5.919999999999995,
+        "y": 28,
+        "angle": -1.8471704885141502,
+        "weapon": "pistol",
+        "ammo": {
+          "pistol": -1,
+          "smg": 0,
+          "shotgun": 0,
+          "minigun": 0,
+          "plasma": 0
+        },
+        "grenades": 2,
+        "fireCooldown": 0.19,
+        "connected": true,
+        "active": true
+      }
+    ],
+    "camera": {
+      "projection": [
+        0.0625,
+        0,
+        0,
+        0,
+        0,
+        0.1111111111111111,
+        0,
+        0,
+        0,
+        0,
+        -0.011117287381878822,
+        0,
+        0,
+        0,
+        -1.0011117287381879,
+        1
+      ],
+      "view": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.5999999999999999,
+        0.8,
+        0,
+        0,
+        -0.8,
+        0.5999999999999999,
+        0,
+        -15,
+        19.720000000000006,
+        -64.78999999999999,
+        1
+      ]
+    },
+    "document": {
+      "url": "https://alien-shooter.invalid/tv.html",
+      "width": 960,
+      "height": 540,
+      "scrollWidth": 960,
+      "scrollHeight": 540,
+      "hidden": false,
+      "focused": true
+    },
+    "nativeInfo": {
+      "url": "http://10.0.2.15:38079/?room=eFWZaXnyZxKRmiQJxinpB7ObNp-1OLCG",
+      "qr": "data:image/png;base64,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",
+      "addresses": [
+        "10.0.2.15"
+      ],
+      "error": "",
+      "language": "en",
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Alien Shooter TV",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "10.0.2.15"
+        ],
+        "error": 0,
+        "connected": true,
+        "inputActive": true
+      }
+    },
+    "activityState": "resumed"
+  },
+  "finishedAt": "2026-11-15T17:03:34.416Z"
+}

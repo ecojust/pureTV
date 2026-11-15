@@ -1,0 +1,30 @@
+test_controller_runtime_diagnostics (unittest.loader._FailedTest.test_controller_runtime_diagnostics) ... ERROR
+
+======================================================================
+ERROR: test_controller_runtime_diagnostics (unittest.loader._FailedTest.test_controller_runtime_diagnostics)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_controller_runtime_diagnostics
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "/dev/shm/puretv-controller-games/tools/tests/test_controller_runtime_diagnostics.py", line 19, in <module>
+    batch = module('runtime_small_batches', 'controller-emulator-batch.py')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-controller-games/tools/tests/test_controller_runtime_diagnostics.py", line 15, in module
+    value = importlib.util.module_from_spec(spec); spec.loader.exec_module(value)
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-controller-games/tools/controller-emulator-batch.py", line 17, in <module>
+    release=importlib.util.module_from_spec(spec);spec.loader.exec_module(release)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-controller-games/tools/controller-release.py", line 14, in <module>
+    from resource_catalog import apk_info, digest, expected_release_certificate
+ModuleNotFoundError: No module named 'resource_catalog'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

@@ -1,12 +1,14 @@
 # README 20款游戏的pureTV手柄接入
 
-当前状态：20款签名APK均已独立验证，384项原生JUnit与24项发布边界测试通过；实际Android TV模拟器验收正在[43731392410](https://github.com/ecojust/pureTV/actions/runs/43731392410)运行，公开下载尚未更新。范围来自根README游戏表，未把完整资源目录中另外92款未展示游戏自动计入本次。
+当前状态：20款签名APK均已独立验证，384项原生JUnit通过，19款完成实际APK完整验收。最后一款二手车赛车的完整SDK浏览器检查已通过；[43740983538](https://github.com/ecojust/pureTV/actions/runs/43740983538)正在用固定旧稳定模拟器补验原先的宿主渲染线程崩溃。公开下载尚未更新。范围来自根README游戏表，未把完整资源目录中另外92款未展示游戏自动计入本次。
 
 ## 连接方式
 
 这些Android游戏需要 **Android 8.0及以上**。安装各目录中的本轮新版APK后再连接手柄；完整版本与校验状态保存在[交付清单](rollout.json)。
 
 所有本次更新默认监听TCP `63485`，仅首次占用时选择备用端口并显示实际值。电视和手柄同一局域网，按GPIO23搜索；当前固件仅在发现恰好一个`_puretv._tcp`服务时自动连接。START开始／暂停，断线后清键并暂停，松开按键后重新按START继续。保留扫码手机与遥控器入口。
+
+二维码旁的地址用于手机控制页面，它的端口与pureTV手柄的TCP端口不同；连接pureTV手柄时以专用连接卡片显示的地址为准。
 
 短暂失焦、授权弹框或网络房间重建时保持已选择的TCP端口；后台输入隔离。Android Activity真正结束时关闭服务，不将退出后的新进程视为旧TCP连接。
 
@@ -46,7 +48,7 @@
 - [玩法模型复用核对](../../resource/game-kit/docs/readme-controller-support/model-reuse.json)：19款模型与上一正式Android包逐字节相同；霓虹采用已交付macOS 0.1.3的转向修复源码。原关卡验证保留，不把本轮手柄录像当作重新通关全部关卡。
 - [旧包基线盘点](../../tools/readme-controller-qa/baseline-inventory.json)：仅旧霓虹APK已有TCP服务，其他19款旧包未包含。
 - [共享协议与输入前测](../../resource/game-kit/docs/readme-controller-support/preflight/README.md)：27真实TCP测试、16合成runtime测试及未签名编译；各阶段来源哈希保留。
-- [11旧宿主原生编译](../../resource/game-kit/docs/readme-controller-native/README.md)：真实Android资源/Java编译和待CI执行的44项新增Activity回归。
+- [11旧宿主原生编译](../../resource/game-kit/docs/readme-controller-native/README.md)：384项原生JUnit通过，其中包含44项新增Activity回归；保留历次构建失败与修正记录。
 - [实际SDK浏览器预检](../../resource/game-kit/docs/readme-controller-support/sdk-browser/README.md)：20款方向和主要动作通过，原始失败和实际执行脚本保留；不等同于Android设备验收。
 - [构建与签名流程](../../tools/README-controller-release.md)：构建不接触发布密钥，签名核对来源、包名、递增版本和旧证书；测试观察器单独标为测试产物。
 - [任务记录](../../history/2026-11-15-003.md)。
