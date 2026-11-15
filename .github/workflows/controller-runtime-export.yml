@@ -62,7 +62,7 @@ jobs:
           artifact={k:selected[0].get(k) for k in ['id','name','size_in_bytes','digest','created_at','updated_at']}
           out=Path(os.environ['RUNNER_TEMP'])/'controller-diagnostic-export';out.mkdir()
           (out/'original-artifact.json').write_text(json.dumps({'sourceRunId':run,'qaSourceSha':source,'group':group,'originalJobId':completed[0]['id'],'originalJobConclusion':completed[0]['conclusion'],'artifact':artifact},indent=2)+'\n')
-          with open(os.environ['GITHUB_ENV'],'a') as stream:stream.write('ARTIFACT_ID='+str(artifact['id'])+'\n')
+          with open(os.environ['GITHUB_ENV'],'a') as stream:stream.write('ARTIFACT_ID='+str(artifact['id'])+'\nORIGINAL_JOB_ID='+str(completed[0]['id'])+'\n')
           print(json.dumps({'verifiedOriginalRun':run,'qaSourceSha':source,'group':group,'artifact':artifact}))
           PY
       - uses: actions/download-artifact@v4
@@ -73,6 +73,24 @@ jobs:
           artifact-ids: ${{ env.ARTIFACT_ID }}
           merge-multiple: true
           path: ${{ runner.temp }}/controller-diagnostic-export/artifact
+      - name: Preserve the original completed job log
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,os,re,subprocess
+          out=Path(os.environ['RUNNER_TEMP'])/'controller-diagnostic-export'
+          job=os.environ['ORIGINAL_JOB_ID'];assert re.fullmatch('[1-9][0-9]*',job)
+          result=subprocess.run(['gh','api','repos/ecojust/pureTV/actions/jobs/'+job+'/logs?cachebust='+os.environ['GITHUB_RUN_ID']],capture_output=True,text=True)
+          status={'originalJobId':job,'downloaded':result.returncode==0,'exitCode':result.returncode}
+          if result.returncode==0:
+              (out/'original-job.log').write_text(result.stdout)
+          else:
+              status['error']=re.sub(r'https?://\S+','[download URL redacted]',result.stderr)
+          (out/'job-log-download-status.json').write_text(json.dumps(status,indent=2)+'\n')
+          print(json.dumps({'originalJobId':job,'jobLogDownloaded':status['downloaded']}))
+          PY
       - name: Hash original evidence without altering its files
         run: |
           python3 - <<'PY'
