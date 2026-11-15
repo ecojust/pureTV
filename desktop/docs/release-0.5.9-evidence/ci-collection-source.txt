@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""Collect immutable final 0.5.9 GitHub Actions evidence; no test or publish actions."""
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+ROOT = Path('/dev/shm/puretv-market-sync/desktop/docs/release-0.5.9-evidence')
+RUN = 43702600015
+SOURCE = 'b2f8513c952e058df1a134fb2b564316733ee65c'
+TAG = 'c5a39644ed949226b2d38364529be2b03d5e498b'
+REPO = 'ecojust/pureTV'
+def gh(*args):
+    return subprocess.check_output(['gh', *args], cwd='/dev/shm/puretv-market-sync')
+def save(name, value):
+    (ROOT / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+run = json.loads(gh('run', 'view', str(RUN), '--repo', REPO, '--json', 'databaseId,status,conclusion,jobs,headSha,url,createdAt,updatedAt,headBranch,event,name,workflowName'))
+assert run['status'] == 'completed' and run['headSha'] == SOURCE
+save('ci-run-final.json', run)
+metadata = json.loads(gh('api', f'repos/{REPO}/actions/runs/{RUN}'))
+assert metadata['head_sha'] == SOURCE and metadata['id'] == RUN
+save('ci-run-metadata.json', metadata)
+ref = json.loads(gh('api', f'repos/{REPO}/git/ref/tags/desktop-v0.5.9'))
+assert ref['object']['sha'] == TAG
+save('ci-tag-ref.json', ref)
+tag = json.loads(gh('api', f'repos/{REPO}/git/tags/{TAG}'))
+assert tag['sha'] == TAG and tag['object']['sha'] == SOURCE
+save('ci-tag-metadata.json', tag)
+index = {}
+for job in run['jobs']:
+    name = job['name']
+    process = subprocess.run(['gh', 'run', 'view', str(RUN), '--repo', REPO, '--job', str(job['databaseId']), '--log'], cwd='/dev/shm/puretv-market-sync', capture_output=True)
+    if process.returncode:
+        index[name] = {'jobId':job['databaseId'], 'logRetrieved':False, 'error':process.stderr.decode(errors='replace').strip()}
+        save('ci-raw-log-index.json', index)
+        print(name, 'LOG UNAVAILABLE', index[name]['error'], flush=True)
+        continue
+    raw = process.stdout
+    stem = 'publish' if name == 'Publish desktop release' else name
+    path = ROOT / ('ci-' + stem + '.txt')
+    path.write_bytes(raw)
+    index[name] = {'jobId':job['databaseId'], 'logRetrieved':True, 'file':path.name, 'logBytes':len(raw), 'logSha256':hashlib.sha256(raw).hexdigest()}
+    save('ci-raw-log-index.json', index)
+    print(name, job['conclusion'], len(raw), flush=True)
+save('ci-raw-log-index.json', index)

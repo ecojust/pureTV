@@ -28,12 +28,12 @@
     "remoteIdentity": "HTTP HEAD metadata and conditional GET; not an immutable Git commit",
     "cacheIntegrity": "Local SHA256 receipt checked when reusing downloaded files",
     "optionalPublishedIntegrity": "Additionally compare SHA256 when the matching manifest packages entry provides it",
-    "allServerPackagesHavePublishedSha256": null,
+    "allServerPackagesHavePublishedSha256": false,
     "localReceiptIsIndependentSourceAuthentication": false,
     "giteeDownloadFallback": false,
     "reuseOldSourceCache": false,
     "forumSource": "Gitee issues",
-    "runtimeValidationStatus": "pending"
+    "runtimeValidationStatus": "local_and_live_download_validation_passed; official release cancelled"
   },
   "serverObservationDuringMigration": {
     "source": "Parent task observations before release preparation; not a new probe performed by this preparation",
@@ -52,20 +52,20 @@
   },
   "validation": {
     "versionMetadata": "passed",
-    "finalFrontendBuild": "pending",
-    "frontendRegression": "pending",
-    "liveDirectoryAndFullDownloads": "pending",
-    "fourPlatformCoreAndNativeTests": "pending",
-    "installerAndUpgradeChecks": "pending",
-    "linuxMcp": "pending",
-    "macosDmgAndStartup": "pending",
-    "officialCi": "pending",
-    "releasePublication": "pending",
-    "publicInstallerFullDownloads": "pending",
-    "serverPostReleaseState": "pending"
+    "finalFrontendBuild": "passed",
+    "frontendRegression": "53 related scenarios passed; see preflight for the interrupted fixture run and retry",
+    "liveDirectoryAndFullDownloads": "passed; production Rust and independent Python evidence",
+    "fourPlatformCoreAndNativeTests": "cancelled_before_completion",
+    "installerAndUpgradeChecks": "not_completed",
+    "linuxMcp": "not_completed",
+    "macosDmgAndStartup": "not_completed",
+    "officialCi": "cancelled",
+    "releasePublication": "not_published",
+    "publicInstallerFullDownloads": "not_applicable_no_release",
+    "serverPostReleaseState": "not_applicable_no_release"
   },
   "nativeTests": null,
-  "ciEvidence": null,
+  "ciEvidence": "release-0.5.8-evidence/ci-cancellation.json",
   "publicAssetsVerified": false,
   "physicalTvTested": false,
   "physicalPhoneTested": false,
@@ -76,5 +76,7 @@
     "A locally computed SHA256 receipt protects subsequent cache reuse but is not independent server-provided authentication of the first download.",
     "Server inventory is mutable and must be checked again during release verification."
   ],
-  "cancellationReason": "Server root returns HTTP 403; source button must open the actual client directory. Preserve this unpublished tag and deliver corrected links in 0.5.9."
+  "cancellationReason": "Server root returns HTTP 403; source button must open the actual client directory. Preserve this unpublished tag and deliver corrected links in 0.5.9.",
+  "preflightEvidence": "release-0.5.8-evidence/preflight.json",
+  "supersededBy": "0.5.9"
 }

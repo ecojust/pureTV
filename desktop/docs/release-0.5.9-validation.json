@@ -1,11 +1,234 @@
 {
   "version": "0.5.9",
-  "status": "preparing",
-  "released": false,
-  "sourceCommit": null,
-  "workflowId": null,
-  "scope": "Migrate market and client downloads to apps.b14f.com and direct source buttons to accessible category directories.",
-  "reusedMigrationEvidence": "release-0.5.8-evidence/preflight.json",
+  "status": "released_and_verified",
+  "released": true,
+  "sourceCommit": "b2f8513c952e058df1a134fb2b564316733ee65c",
+  "tag": "desktop-v0.5.9",
+  "workflowId": 43702600015,
+  "workflowUrl": "https://github.com/ecojust/pureTV/actions/runs/43702600015",
+  "runAttempt": 1,
+  "publication": {
+    "url": "https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9",
+    "publishedAt": "2026-11-15T10:29:29Z",
+    "latest": true,
+    "releaseBodyMatchesSource": true,
+    "tagObject": "c5a39644ed949226b2d38364529be2b03d5e498b",
+    "prior057TagUnchanged": true
+  },
+  "scope": {
+    "source": "https://apps.b14f.com",
+    "marketDirectories": [
+      "launcher/",
+      "media/",
+      "game/"
+    ],
+    "clientDirectory": "client/",
+    "giteeDownloadFallback": false,
+    "oldDownloadCacheReused": false,
+    "forumSource": "Gitee issues"
+  },
+  "verification": {
+    "frontendBuild": "passed; TypeScript, 744 translations, Vite",
+    "fullCiUiPassed": 172,
+    "svgPassed": 7,
+    "coreTests": {
+      "linux-x64": {
+        "result": "ok",
+        "passed": 110,
+        "failed": 0,
+        "ignored": 1,
+        "measured": 0,
+        "filteredOut": 0
+      },
+      "macos-x64": {
+        "result": "ok",
+        "passed": 110,
+        "failed": 0,
+        "ignored": 1,
+        "measured": 0,
+        "filteredOut": 0
+      },
+      "windows-x64": {
+        "result": "ok",
+        "passed": 110,
+        "failed": 0,
+        "ignored": 2,
+        "measured": 0,
+        "filteredOut": 0
+      },
+      "macos-arm64": {
+        "result": "ok",
+        "passed": 110,
+        "failed": 0,
+        "ignored": 1,
+        "measured": 0,
+        "filteredOut": 0
+      }
+    },
+    "nativeTests": {
+      "linux-x64": {
+        "result": "ok",
+        "passed": 109,
+        "failed": 0,
+        "ignored": 8,
+        "measured": 0,
+        "filteredOut": 0
+      },
+      "macos-x64": {
+        "result": "ok",
+        "passed": 110,
+        "failed": 0,
+        "ignored": 8,
+        "measured": 0,
+        "filteredOut": 0
+      },
+      "windows-x64": {
+        "result": "ok",
+        "passed": 108,
+        "failed": 0,
+        "ignored": 8,
+        "measured": 0,
+        "filteredOut": 0
+      },
+      "macos-arm64": {
+        "result": "ok",
+        "passed": 110,
+        "failed": 0,
+        "ignored": 8,
+        "measured": 0,
+        "filteredOut": 0
+      }
+    },
+    "large33MiBHttpFixture": "passed on all four platforms; fixture is not an installable APK",
+    "networkProbeTestsPerPlatform": 28,
+    "subnetTestsPerPlatform": 3,
+    "mcpPassLines": 72,
+    "mcpExpectedFailureLines": 12,
+    "mcpLinesAreUniqueFeatures": false,
+    "windowsAndMacUpgrade": "actual 0.4.10 to 0.5.9 helper installation, shutdown, relaunch and retained test data passed",
+    "linuxUpgrade": "actual DEB identity and native preparation passed; no system installation",
+    "macDmg": "ad-hoc signature, architecture, macOS 11 minimum, installed startup and simulated ADB shutdown passed",
+    "appleNotarizationVerified": false,
+    "gatekeeperApprovalVerified": false
+  },
+  "reusedMigrationEvidence": {
+    "sourceCommit": "0e0fa09dfb20fb068a9fc0f103bf8c58b12d2eae",
+    "downloadModulesUnchanged": {
+      "desktop/src-tauri/src/app_store.rs": "3a4eabdb135d42614b0119bd4915548e28208b7a148611b81c6fe3e2af375d0f",
+      "desktop/src-tauri/src/market.rs": "1dfdb9c8956f5d08c20c89c436ed79e6184ed07a4c57d43546c1e58943683a6f",
+      "desktop/src-tauri/src/client_updates.rs": "db4408e7f36a276d7a1afcfec97e4474d9940739ed63fa8202f2531f2d907122"
+    },
+    "preflight": "release-0.5.8-evidence/preflight.json",
+    "liveTests": "release-0.5.8-evidence/live-tests.txt",
+    "catalogItems": 36,
+    "countsByDirectory": {
+      "game": 20,
+      "launcher": 10,
+      "media": 6
+    },
+    "fullApkDownloadBytes": [
+      83318,
+      454320,
+      53570243
+    ],
+    "fullClientDownloadBytes": 2273072,
+    "clientDownloadVersion": "0.5.6",
+    "productionRustLiveTestsPassed": 2,
+    "liveTestsExplicitlyRunLocallyNotInCi": true,
+    "uiScenarios": 53,
+    "uiUnchangedScenariosReused": 52,
+    "uiChangedScenarioRerun": 1,
+    "uiUsesMockIpc": true
+  },
+  "ciEvidence": "release-0.5.9-evidence/ci-summary.json",
+  "totalFourPlatformRawLogBytes": 1467412,
+  "publicDownloadEvidence": "release-0.5.9-evidence/verified-release.json",
+  "downloadVerification": {
+    "allSixAssetsDownloaded": true,
+    "installerCount": 5,
+    "completeAssetSetVerified": true,
+    "retainedLocally": "SHA256 manifest and evidence only; installers were streamed in full for verification",
+    "assets": [
+      {
+        "name": "SHA256SUMS.txt",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.9/SHA256SUMS.txt",
+        "bytes": 526,
+        "sha256": "e39a3fd88d0f9fdc5c515c26310d854c9d5b7e710c00d465faba310c5d6facc2",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": null
+      },
+      {
+        "name": "pureTV-Manager-0.5.9-linux-x64.deb",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.9/pureTV-Manager-0.5.9-linux-x64.deb",
+        "bytes": 4188994,
+        "sha256": "d846e65d5d2628684a6e212a0c19db25585eebd4092c4a4e3e5fe11fbb68313f",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.9-macos-arm64.dmg",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.9/pureTV-Manager-0.5.9-macos-arm64.dmg",
+        "bytes": 9840213,
+        "sha256": "c38a02c241524abb02c627fba24458db244f85aca7240cf8b6a2600338ccddc7",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.9-macos-x64.dmg",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.9/pureTV-Manager-0.5.9-macos-x64.dmg",
+        "bytes": 10077806,
+        "sha256": "b3dbe831031be04373b483a23fda2dcc059afe24bc26166cda4b89641ca77f3d",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.9-windows-x64-portable.exe",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.9/pureTV-Manager-0.5.9-windows-x64-portable.exe",
+        "bytes": 5570048,
+        "sha256": "0c424587994c1c54f8aeb267c382ee0cd8a3e06f3b8074c1566a30159e5f2556",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.9-windows-x64-setup.exe",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.9/pureTV-Manager-0.5.9-windows-x64-setup.exe",
+        "bytes": 2280305,
+        "sha256": "43717fed6ec93c141b4e8ec05aafccd99b9b1294bd98200b5c88ba5b0b9c6c7a",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      }
+    ]
+  },
+  "serverAfterRelease": {
+    "checkedAt": "2026-11-15T10:29:52.901146+00:00",
+    "url": "https://apps.b14f.com/client/",
+    "httpStatus": 200,
+    "listingBytes": 540,
+    "listingSha256": "7a7d6b2cf629473940f4917027178c315fcf69c3df6c55ad688f0f1072523e36",
+    "files": [
+      "pureTV-Manager-0.5.6-macos-arm64.dmg",
+      "pureTV-Manager-0.5.6-macos-x64.dmg",
+      "pureTV-Manager-0.5.6-windows-x64-setup.exe"
+    ],
+    "versions": [
+      "0.5.6"
+    ],
+    "version059Present": false,
+    "uploadPerformed": false,
+    "scope": "Read-only directory listing; not another complete download verification"
+  },
+  "applicationServerUploadPerformed": false,
+  "supersedesUnpublishedVersion": "0.5.8",
+  "cancelledWorkflowId": 43702139682,
+  "unpublished058TagPreserved": true,
   "physicalTvTested": false,
-  "serverUploadPerformed": false
+  "physicalPhoneTested": false,
+  "limitations": [
+    "HTTP metadata is not an immutable Git commit or a content hash; nginx same-size/same-mtime replacement may not be detected.",
+    "A valid SHA256 in a manifest packages entry is additionally verified only for its matching file and exact byte count; most APKs and current client installers do not provide publisher hashes.",
+    "A locally calculated SHA256 receipt is checked for cache reuse and before client installation; it is not independent publisher authentication of the initial download.",
+    "Clients through 0.5.7 keep the old download source and need one manual installation of 0.5.9.",
+    "GitHub publication does not synchronize apps.b14f.com; its client directory still only has 0.5.6 and no Linux package at the recorded check time.",
+    "User network and physical TV behavior were not tested."
+  ]
 }

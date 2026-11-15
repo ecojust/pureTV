@@ -16,7 +16,9 @@ pureTV is a desktop system manager for Android TV and Google TV. Connect to your
 [![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
 [![License](https://img.shields.io/badge/license-MIT-f4c430?style=flat-square)](LICENSE)
 
-[Download pureTV Manager 0.5.7](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.7) · Windows / macOS / Linux · Fixed APK Market fallback downloads for large files
+[Download pureTV Manager 0.5.9](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9) · Windows / macOS / Linux · New server for APK Market and manager updates
+
+If you are using 0.5.7 or earlier, manually install 0.5.9 from the release page above first. Older clients do not switch download sources automatically. The new version uses the app directories and `client/` update directory on `apps.b14f.com`.
 
 [Download putrtv Store 0.1.1 for TV](resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) · Browse, install and check updates on your TV; use an [updated launcher](resource/README.md) to choose where to add an app.
 
