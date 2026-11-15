@@ -1,10 +1,10 @@
 {
   "version": "0.5.7",
   "tag": "desktop-v0.5.7",
-  "status": "preparing",
-  "released": false,
-  "sourceCommit": null,
-  "workflowId": null,
+  "status": "released",
+  "released": true,
+  "sourceCommit": "0f5c4ffa535b6f5f6c49758ca5be80290bfec21e",
+  "workflowId": 43696998459,
   "scope": "Raise the APK Market Git blob fallback limit from 32 MiB to 128 MiB for raw HTTP 403 responses; retain commit/blob identity, size/hash verification, cancellation and timeouts.",
   "confirmedCase": {
     "application": "Maidong KTV 2.1.10",
@@ -19,11 +19,831 @@
     "onlyOwnPackageVersionsChanged": true,
     "thirdPartyDependenciesUnchanged": true
   },
-  "nativeTests": "pending",
-  "frontendChecks": "pending",
-  "platformBuilds": "pending",
-  "publicDownloadVerification": "pending",
+  "nativeTests": {
+    "windows-x64": {
+      "core": [
+        {
+          "result": "ok",
+          "passed": 110,
+          "failed": 0,
+          "ignored": 2,
+          "measured": 0,
+          "filteredOut": 0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0
+        }
+      ],
+      "native": [
+        {
+          "result": "ok",
+          "passed": 105,
+          "failed": 0,
+          "ignored": 8,
+          "measured": 0,
+          "filteredOut": 0
+        }
+      ],
+      "largeApk33MiBRegression": {
+        "name": "market::tests::forbidden_raw_downloads_an_apk_larger_than_the_previous_32_mib_limit",
+        "result": "ok",
+        "fixtureBytes": 34603008,
+        "installableApk": false
+      }
+    },
+    "linux-x64": {
+      "core": [
+        {
+          "result": "ok",
+          "passed": 110,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filteredOut": 0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0
+        }
+      ],
+      "native": [
+        {
+          "result": "ok",
+          "passed": 106,
+          "failed": 0,
+          "ignored": 8,
+          "measured": 0,
+          "filteredOut": 0
+        }
+      ],
+      "largeApk33MiBRegression": {
+        "name": "market::tests::forbidden_raw_downloads_an_apk_larger_than_the_previous_32_mib_limit",
+        "result": "ok",
+        "fixtureBytes": 34603008,
+        "installableApk": false
+      }
+    },
+    "macos-x64": {
+      "core": [
+        {
+          "result": "ok",
+          "passed": 110,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filteredOut": 0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0
+        }
+      ],
+      "native": [
+        {
+          "result": "ok",
+          "passed": 107,
+          "failed": 0,
+          "ignored": 8,
+          "measured": 0,
+          "filteredOut": 0
+        }
+      ],
+      "largeApk33MiBRegression": {
+        "name": "market::tests::forbidden_raw_downloads_an_apk_larger_than_the_previous_32_mib_limit",
+        "result": "ok",
+        "fixtureBytes": 34603008,
+        "installableApk": false
+      }
+    },
+    "macos-arm64": {
+      "core": [
+        {
+          "result": "ok",
+          "passed": 110,
+          "failed": 0,
+          "ignored": 1,
+          "measured": 0,
+          "filteredOut": 0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filteredOut": 0
+        }
+      ],
+      "native": [
+        {
+          "result": "ok",
+          "passed": 107,
+          "failed": 0,
+          "ignored": 8,
+          "measured": 0,
+          "filteredOut": 0
+        }
+      ],
+      "largeApk33MiBRegression": {
+        "name": "market::tests::forbidden_raw_downloads_an_apk_larger_than_the_previous_32_mib_limit",
+        "result": "ok",
+        "fixtureBytes": 34603008,
+        "installableApk": false
+      }
+    }
+  },
+  "frontendChecks": {
+    "build": "passed",
+    "localDownloadUiPassed": 11,
+    "ciLinuxUiPassed": 171,
+    "ciLinuxSvgPassed": 7
+  },
+  "platformBuilds": "all four passed",
+  "publicDownloadVerification": "all five installers and SHA256SUMS fully downloaded and verified",
   "userSpecificFailureCauseConfirmed": false,
   "physicalTvTested": false,
-  "giteeUploadPerformed": false
+  "giteeUploadPerformed": false,
+  "workflowUrl": "https://github.com/ecojust/pureTV/actions/runs/43696998459",
+  "verifiedAt": "2026-11-15T09:17:43.310016+00:00",
+  "preflight": {
+    "frontendBuild057": "passed",
+    "initialDownloadUiPassed": 11,
+    "thirdPartyDependenciesUnchanged": true,
+    "realSmallApkVerified": true,
+    "realLargeBlobVerified": true,
+    "userSpecificApplicationNotYetProvided": true,
+    "physicalTvTested": false
+  },
+  "publication": {
+    "url": "https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.7",
+    "publishedAt": "2026-11-15T09:17:26Z",
+    "latest": true,
+    "releaseBodyMatchesSource": true,
+    "tagObject": "3b26212b53022a54dffa3f0177f9d99373492b35",
+    "prior056TagUnchanged": true
+  },
+  "downloadVerification": {
+    "allSixAssetsDownloaded": true,
+    "installerCount": 5,
+    "completeAssetSetVerified": true,
+    "retainedLocally": "SHA256 manifest and evidence only; installers were streamed in full for verification",
+    "assets": [
+      {
+        "name": "SHA256SUMS.txt",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.7/SHA256SUMS.txt",
+        "bytes": 526,
+        "sha256": "ffbfff85c99219244a5d61236f6ee6585551de1bb4c64124e9b58c470df4e03e",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": null
+      },
+      {
+        "name": "pureTV-Manager-0.5.7-linux-x64.deb",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.7/pureTV-Manager-0.5.7-linux-x64.deb",
+        "bytes": 4188938,
+        "sha256": "bed59864ca565aaa57249b9f3aa1a55acb6cfbc8ac94449079a77b4a1f2756f9",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.7-macos-arm64.dmg",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.7/pureTV-Manager-0.5.7-macos-arm64.dmg",
+        "bytes": 9839548,
+        "sha256": "f94806e1c3015fe3f76a0b8157dc0ee620f2e3844fd4d500b87a3cefdf960ff7",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.7-macos-x64.dmg",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.7/pureTV-Manager-0.5.7-macos-x64.dmg",
+        "bytes": 10074081,
+        "sha256": "626a4b6323145e0a4803819fae1833c654d809570e153a06ece8efb2ccf61487",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.7-windows-x64-portable.exe",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.7/pureTV-Manager-0.5.7-windows-x64-portable.exe",
+        "bytes": 5556736,
+        "sha256": "ce21ce3406e32ef13fc21fa9e186057a275d43fbb09f931dc57143c61f5203ce",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      },
+      {
+        "name": "pureTV-Manager-0.5.7-windows-x64-setup.exe",
+        "url": "https://github.com/ecojust/pureTV/releases/download/desktop-v0.5.7/pureTV-Manager-0.5.7-windows-x64-setup.exe",
+        "bytes": 2279601,
+        "sha256": "55b5f497f9767ebca541f3ec65d042ff1b31554c6dbf10bbf2909b7f0417a8da",
+        "releaseApiMatches": true,
+        "sha256ManifestMatches": true
+      }
+    ]
+  },
+  "jobs": [
+    {
+      "name": "windows-x64",
+      "conclusion": "success",
+      "url": "https://github.com/ecojust/pureTV/actions/runs/43696998459/job/132759674011",
+      "startedAt": "2026-11-15T08:58:59Z",
+      "completedAt": "2026-11-15T09:10:53Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Linux desktop libraries",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify version metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install frontend dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check and build frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test subnet comparison",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test read-only TV compatibility probe",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test ADB core",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test Platform Tools installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Report native test failures",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify official Platform Tools download and offline reuse",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Tencent mirror download and ADB",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install UI test browser",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test desktop UI",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test SVG normalization",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Build native desktop and installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify actual client update installation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify MCP against the running desktop",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify macOS DMG, bundle signature and installed startup",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Collect release files",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "linux-x64",
+      "conclusion": "success",
+      "url": "https://github.com/ecojust/pureTV/actions/runs/43696998459/job/132759674202",
+      "startedAt": "2026-11-15T08:59:00Z",
+      "completedAt": "2026-11-15T09:10:55Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Linux desktop libraries",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify version metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install frontend dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check and build frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test subnet comparison",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test read-only TV compatibility probe",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test ADB core",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test Platform Tools installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Report native test failures",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify official Platform Tools download and offline reuse",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Tencent mirror download and ADB",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install UI test browser",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test desktop UI",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test SVG normalization",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build native desktop and installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify actual client update installation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify MCP against the running desktop",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify macOS DMG, bundle signature and installed startup",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Collect release files",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "macos-x64",
+      "conclusion": "success",
+      "url": "https://github.com/ecojust/pureTV/actions/runs/43696998459/job/132759674226",
+      "startedAt": "2026-11-15T08:59:03Z",
+      "completedAt": "2026-11-15T09:16:05Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Linux desktop libraries",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify version metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install frontend dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check and build frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test subnet comparison",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test read-only TV compatibility probe",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test ADB core",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test Platform Tools installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Report native test failures",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify official Platform Tools download and offline reuse",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Tencent mirror download and ADB",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install UI test browser",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test desktop UI",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test SVG normalization",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Build native desktop and installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify actual client update installation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify MCP against the running desktop",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify macOS DMG, bundle signature and installed startup",
+          "conclusion": "success"
+        },
+        {
+          "name": "Collect release files",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "macos-arm64",
+      "conclusion": "success",
+      "url": "https://github.com/ecojust/pureTV/actions/runs/43696998459/job/132759674373",
+      "startedAt": "2026-11-15T08:59:01Z",
+      "completedAt": "2026-11-15T09:09:42Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Linux desktop libraries",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify version metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install frontend dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check and build frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test subnet comparison",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test read-only TV compatibility probe",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test ADB core",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test Platform Tools installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Report native test failures",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify official Platform Tools download and offline reuse",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Tencent mirror download and ADB",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install UI test browser",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test desktop UI",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Test SVG normalization",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Build native desktop and installer",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify actual client update installation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify MCP against the running desktop",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Verify macOS DMG, bundle signature and installed startup",
+          "conclusion": "success"
+        },
+        {
+          "name": "Collect release files",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "Publish desktop release",
+      "conclusion": "success",
+      "url": "https://github.com/ecojust/pureTV/actions/runs/43696998459/job/132763936252",
+      "startedAt": "2026-11-15T09:16:08Z",
+      "completedAt": "2026-11-15T09:17:29Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify complete artifact set and publish",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "ciEvidence": "release-0.5.7-evidence/ci-summary.json",
+  "giteeAfterRelease": {
+    "revision": "3960f3b7d13415574b37cc08ebd82b2f0e4dd34c",
+    "checkedAt": "2026-11-15T09:17:59.104815+00:00",
+    "files": [
+      {
+        "path": "client/.DS_Store",
+        "sha": "5008ddfcf53c02e82d7eee2e57c38e5672ef89f6",
+        "bytes": 6148
+      },
+      {
+        "path": "client/pureTV-Manager-0.5.6-macos-arm64.dmg",
+        "sha": "25f84d6937439d345bcd5a7940a1cebc6cf04102",
+        "bytes": 9811512
+      },
+      {
+        "path": "client/pureTV-Manager-0.5.6-macos-x64.dmg",
+        "sha": "33d560881c75fac6eacf77209c807025e010cb39",
+        "bytes": 10060993
+      },
+      {
+        "path": "client/pureTV-Manager-0.5.6-windows-x64-setup.exe",
+        "sha": "979ecc5507f03f5643964edc6168ab8c1b3cc6f9",
+        "bytes": 2273072
+      }
+    ],
+    "uploadPerformed": false
+  }
 }
