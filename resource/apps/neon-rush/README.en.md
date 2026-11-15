@@ -4,11 +4,17 @@
 
 Six racers, three original circuits, and a two-lap finish. Drift to charge nitro, release a clean drift for a mini turbo, and use the straights and canyon ramp to gain ground. Auto throttle keeps the car moving; you control the racing line, steering, and brakes.
 
-**0.1.1 · Release-signed APK: 443,884 bytes (about 444 KB).** [Download APK](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.1.apk) · [Gameplay video](docs/releases/0.1.1/gameplay.mp4) · [Verification](docs/releases/0.1.1/verification.json) · [Icon](logo.svg)
+**Android 0.1.2 · Release-signed APK: 447,980 bytes (about 448 KB).** [Download APK](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.2.apk) · [Actual Android controller regression video](docs/releases/0.1.2/gameplay.mp4) · [Release verification](docs/releases/0.1.2/verification.json) · [Controller rollout record](../../../docs/readme-controller-support/README.md) · [Icon](logo.svg)
 
-**macOS 0.1.3:** [Download universal DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.3-macos-universal.dmg) · [ZIP, installation and controller guide](macos/README.md). Requires macOS 11+ and WebGL; includes Apple silicon / Intel code with keyboard and pureTV Wi-Fi controller support. Version 0.1.3 fixes reversed left/right steering; the Android 0.1.1 APK above has not been rebuilt with this fix.
+This update defaults the pureTV controller service to port **63485**, shows its actual connection status/address, and preserves the TCP connection while isolating input during temporary focus loss or QR-room refresh. It also brings the steering-direction fix already delivered in macOS 0.1.3 to Android.
 
-![Actual English Neon Rush menu](../../../docs/previews/en/app-neon-rush.png)
+This release-signed APK passed all eight controller acceptance checks in an Android TV API 36 emulator, covering start, actual gameplay input, pause/resume, disconnect/reconnect, nine-key input, and per-message ACKs. An in-place upgrade from the previous release signed with the same certificate was also verified. The menu screenshot and linked video come from the actual Android 0.1.2 APK; the video records the controller regression run. Physical TVs, phones, and ESP32 devices have not been tested.
+
+Historical Android 0.1.1: [old English menu](https://raw.githubusercontent.com/ecojust/pureTV/bf58393ba8fa8bb3bdf731ab24f9ab09d90f5075/docs/previews/en/app-neon-rush.png) · [gameplay video](docs/releases/0.1.1/gameplay.mp4) · [verification](docs/releases/0.1.1/verification.json). These records describe the old version, not the 0.1.2 UI, steering fix, or controller validation.
+
+**macOS 0.1.3:** [Download universal DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.3-macos-universal.dmg) · [ZIP, installation and controller guide](macos/README.md). Requires macOS 11+ and WebGL; includes Apple silicon / Intel code with keyboard and pureTV Wi-Fi controller support. The macOS 0.1.3 packages remain unchanged; their left/right steering fix is now included in Android 0.1.2 as well.
+
+![Android 0.1.2 actual APK menu](docs/releases/0.1.2/menu.png)
 
 Package: `com.ecojust.neonrushtv`. Requires Android 8.0/API26 or later and an Android System WebView with WebGL support. Update the system WebView if the game reports that 3D graphics cannot start. The minimum Android version is not a claim that every TV has been tested.
 
@@ -46,11 +52,11 @@ The installed TV app shows its QR panel on menu and pause screens. Connect the p
 
 ## pureTV Wi-Fi controller
 
-Version 0.1.1 adds the nine-key pureTV TCP controller and mDNS service advertisement. Put the TV and controller on the same network, wait for the game's discovery status, and press the controller's Search key. START starts/pauses; Left/Right steer; Down brakes; A/X drift; B/Y trigger nitro. Disconnecting clears input and pauses the race. Press START again after reconnecting.
+Android 0.1.2 provides the nine-key pureTV TCP controller and mDNS service advertisement on default port **63485**. Put the TV and controller on the same network, wait for the game's connection address, and press the controller's GPIO23 Search key. Current firmware connects automatically only when it discovers exactly one target service. START starts/pauses; Left/Right steer; Down brakes; A/X drift; B/Y trigger nitro. Disconnecting or changing the control source clears input and pauses the race. Release the controls and press START again after reconnecting. Exiting the game closes the service.
 
-The repository's original virtual controller also works: run `python3 puretv-joystick/bridge.py TV_IP --port 8765`, then open `http://127.0.0.1:8767/`. Use the advertised port if the default port was occupied. See [protocol and controls](docs/WIFI-CONTROLLER.md).
+The repository's original virtual controller also works: run `python3 puretv-joystick/bridge.py TV_IP --port 63485`, then open `http://127.0.0.1:8767/`. Use the advertised port if the default port was occupied. See [protocol and controls](docs/WIFI-CONTROLLER.md).
 
-All 66 native regressions and six actual-game checks through the original virtual page/SDK passed. NSD registration/lifecycle was tested in software; physical TV/ESP32 discovery and control remain untested.
+Historical version 0.1.1 completed 66 native regressions and six actual-game checks through the original virtual page/SDK; those counts do not claim a new run for this update. See the [release verification](docs/releases/0.1.2/verification.json) and [current rollout record](../../../docs/readme-controller-support/README.md) for the eight completed actual-APK controller checks, verified in-place upgrade using the same certificate, and source hashes. Discovery and control on physical TVs, phones, and ESP32 devices remain untested.
 
 ## Presentation
 
@@ -71,6 +77,6 @@ python3 tools/prepare-web.py --output /tmp/neon-rush-web
 python3 -m http.server 8080 --directory /tmp/neon-rush-web
 ```
 
-Open `http://127.0.0.1:8080/tv.html`. Browser results and physical TV tests are reported separately. Software-renderer speed and recording frame rate are not device performance measurements. See [0.1.1 verification](docs/releases/0.1.1/verification.json) for current input, UI, native, signature and recording results. The Android 0.1.1 package reuses 45 model/track rule checks from 0.1.0; its complete three-track races remain historical baseline evidence. Current source also includes the macOS 0.1.3 steering fix; see its [independent direction and three-track checks](macos/docs/verification-0.1.3/README.md) and the [evidence index](docs/README.md). Physical TVs, phones and ESP32 devices have not been tested.
+Open `http://127.0.0.1:8080/tv.html`. Browser results and physical TV tests are reported separately. Software-renderer speed and recording frame rate are not device performance measurements. See the [current rollout record](../../../docs/readme-controller-support/README.md) for this update. The Android 0.1.2 rule model is byte-identical to the corrected model delivered in macOS 0.1.3; its rule and direction evidence is reused by exact hash. See the [Mac direction and three-track checks](macos/docs/verification-0.1.3/README.md). [Android 0.1.1 verification](docs/releases/0.1.1/verification.json), its reused 0.1.0 rule checks, and its three-track videos remain historical evidence; they do not validate the new steering fix. The [evidence index](docs/README.md) retains the original records. Physical TVs, phones and ESP32 devices have not been tested.
 
 Android builds and the existing release certificate follow the [Game Kit build instructions](../../game-kit/BUILD.md). Local builds are unsigned; source, payload, signature, and evidence must match before an APK is published.

@@ -1,10 +1,14 @@
 # 镜光接力 / Light Relay
 
-0.2.1：[签名安装包](prism-relay-0.2.1.apk) · [六关实际游玩录像](docs/gameplay-0.2.1.mp4) · [验证记录](docs/verification.json)
+**0.2.2 · pureTV 手柄更新：** [签名安装包](prism-relay-0.2.2.apk) · [Android 实包手柄回归录像](docs/releases/0.2.2/gameplay.mp4) · [版本验证](docs/releases/0.2.2/verification.json) · [本轮接入记录](../../../docs/readme-controller-support/README.md)
 
-将离散光学器件明确为 RGB 分光模块，说明滤光、转向镜与隔离器的组合；保留六关光路和胜负条件。本次为修正版，共六关，未增加关卡。普通输入与签名产物验证见发布记录；尚未进行实体电视或手机测试。
+新增 pureTV Wi-Fi 手柄支持，默认端口 **63485**，显示真实连接状态，断线时暂停并清除输入。保留原六关及规则，遥控器和扫码手机仍可使用。
 
-![0.2.1 实际游戏画面](thumb.png)
+本版 APK 已签名，并在 Android TV API 36 模拟器中完成同证书覆盖安装验证，通过全部 8 项手柄验收，覆盖开始、实际游戏操作、暂停恢复、断线重连、九键输入及逐消息 ACK。下图和上方录像来自本版本实际 APK；录像记录手柄回归过程，不是六关通关录像。尚未进行实体电视、手机或 ESP32 测试。
+
+![0.2.2 实际 Android APK 菜单](docs/releases/0.2.2/menu.png)
+
+历史 0.2.1：[签名安装包](prism-relay-0.2.1.apk) · [六关实际游玩录像](docs/gameplay-0.2.1.mp4) · [旧版验证记录](https://github.com/ecojust/pureTV/blob/bf58393ba8fa8bb3bdf731ab24f9ab09d90f5075/resource/apps/prism-relay/docs/verification.json)。这些旧版记录作为未改变规则的回归依据，不代表本轮界面、手柄链路或 Android 实包验收。
 
 历史 0.2.0：[签名安装包](prism-relay-0.2.0.apk) · [六关实际游玩录像](docs/gameplay-0.2.0.mp4) · [验证记录](docs/verification-0.2.0.json)
 
@@ -13,11 +17,11 @@
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.prismrelaytv`
-- 版本：`0.2.1`（versionCode 4）
+- 版本：`0.2.2`（versionCode 5）
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-上一稳定版 0.1.1：[下载安装包](prism-relay-0.1.1.apk) · [实际游玩视频](docs/gameplay-0.1.1.mp4) · [验证记录](docs/verification-0.1.1.json)
+历史 0.1.1：[下载安装包](prism-relay-0.1.1.apk) · [实际游玩视频](docs/gameplay-0.1.1.mp4) · [验证记录](docs/verification-0.1.1.json)
 
 ## 操作
 
@@ -57,4 +61,17 @@ node --test resource/apps/prism-relay/tests/game-model.test.cjs resource/apps/pr
 
 ## 历史版本
 
-[0.1.0 APK](prism-relay-0.1.0.apk) · [0.1.0 录像](docs/gameplay-0.1.0.mp4) · [0.1.0 验证记录](docs/verification-0.1.0.json)。这些文件保留原始内容，仅代表历史版本。后续原 APK 检查发现 960×540 侧栏提示存在裁切，两个测试尺寸均需要滚动；旧场景与弹窗几何检查未覆盖完整侧栏。0.1 系列修复后的界面验收与录像以 0.1.1 为准，0.2.0 记录见本页下载区与新版发布目录。
+[0.1.0 APK](prism-relay-0.1.0.apk) · [0.1.0 录像](docs/gameplay-0.1.0.mp4) · [0.1.0 验证记录](docs/verification-0.1.0.json)。这些文件保留原始内容，仅代表历史版本。后续原 APK 检查发现 960×540 侧栏提示存在裁切，两个测试尺寸均需要滚动；旧场景与弹窗几何检查未覆盖完整侧栏。0.1 系列修复后的界面验收与录像以 0.1.1 为准，0.2.0 记录见本页历史入口与其版本化发布目录。
+
+## pureTV Wi-Fi 手柄
+
+从 0.2.2 起，电视游戏提供 pureTV TCP 手柄服务，默认端口 **63485**。电视和手柄连同一个局域网，在游戏显示连接地址后按手柄 GPIO23 搜索键；同网仅保留一个目标游戏服务，固件才会自动选中。若端口被占用，以游戏显示的实际端口为准。
+
+- 方向键：对应游戏内方向操作和菜单选关。
+- START：开始、暂停或继续。
+- A / X：顺时针旋转。
+- B / Y：逆时针旋转。
+
+断线或切换控制来源会暂停并清除旧输入；重新连接后松开按键，再按 START 继续。临时失焦时保留TCP连接并隔离输入，真正退出游戏时关闭服务。遥控器、键盘和扫码手机入口继续可用。
+
+虚拟手柄联调：`python3 puretv-joystick/bridge.py 电视IP --port 63485`，再打开 `http://127.0.0.1:8767/`。使用备用端口时替换命令中的端口。验证范围见[20款游戏接入记录](../../../docs/readme-controller-support/README.md)。

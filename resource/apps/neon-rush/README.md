@@ -4,11 +4,17 @@
 
 六辆赛车、三条原创赛道、两圈决胜。用漂移积攒氮气，出弯松手获得小喷，在直道冲刺、在山谷跳台腾空。车辆自动加油，你负责选择路线、转向和刹车。
 
-**0.1.1 · 正式签名 APK：443,884 字节（约 444 KB）。** [下载安装包](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.1.apk) · [实玩录像](docs/releases/0.1.1/gameplay.mp4) · [验证记录](docs/releases/0.1.1/verification.json) · [图标](logo.svg)
+**Android 0.1.2 · 正式签名 APK：447,980 字节（约 448 KB）。** [下载安装包](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.2.apk) · [Android 实包手柄回归录像](docs/releases/0.1.2/gameplay.mp4) · [版本验证](docs/releases/0.1.2/verification.json) · [本轮接入记录](../../../docs/readme-controller-support/README.md) · [图标](logo.svg)
 
-**macOS 0.1.3：** [下载通用 DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.3-macos-universal.dmg) · [ZIP、安装与手柄说明](macos/README.md)。需要 macOS 11+ 和 WebGL，包含 Apple 芯片／Intel 代码，支持键盘与 pureTV Wi-Fi 手柄。0.1.3 修复左右转向反向；此修复尚未重打包到上方 Android 0.1.1 APK。
+本轮将 pureTV 手柄默认端口改为 **63485**，补充连接状态与地址说明，短暂失焦或扫码房间刷新时保留 TCP 连接并隔离输入。macOS 0.1.3 已交付的左右转向修复也已进入此 Android 安装包。
 
-![霓虹飞车实际菜单画面](thumb.png)
+本版 APK 已签名，并在 Android TV API 36 模拟器中完成同证书覆盖安装验证，通过全部 8 项手柄验收，覆盖开始、实际游戏操作、暂停恢复、断线重连、九键输入及逐消息 ACK。下图和上方录像来自 Android 0.1.2 实际 APK，录像记录本轮手柄回归过程。尚未进行实体电视、手机或 ESP32 测试。
+
+历史 Android 0.1.1：[旧版菜单](docs/controller-update-baseline/0.1.1/thumb.png) · [实玩录像](docs/releases/0.1.1/gameplay.mp4) · [验证记录](docs/releases/0.1.1/verification.json)。这些记录保留为旧版依据，不代表 0.1.2 的画面、转向或手柄验收。
+
+**macOS 0.1.3：** [下载通用 DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.3-macos-universal.dmg) · [ZIP、安装与手柄说明](macos/README.md)。需要 macOS 11+ 和 WebGL，包含 Apple 芯片／Intel 代码，支持键盘与 pureTV Wi-Fi 手柄。macOS 0.1.3 安装包保持原样，其左右转向修复现也包含在 Android 0.1.2 中。
+
+![Android 0.1.2 实际 APK 菜单](docs/releases/0.1.2/menu.png)
 
 包名为 `com.ecojust.neonrushtv`。需要 Android 8.0/API26 或更新系统，以及支持 WebGL 的 Android System WebView；若提示无法建立 3D 画面，请先更新系统 WebView。最低系统版本不等于所有电视均已验证。
 
@@ -44,11 +50,11 @@
 
 ## pureTV Wi-Fi 实体手柄
 
-0.1.1 已接入 pureTV 九键 TCP 手柄与 mDNS 自动发现。电视与手柄连接同一网络，游戏显示手柄搜索提示后按手柄搜索键；START 开始/暂停，左右转向，下键刹车，A/X 漂移，B/Y 氮气。断线会清除输入并暂停，重连后重新按 START 继续。
+Android 0.1.2 提供 pureTV 九键 TCP 手柄与 mDNS 自动发现，默认端口 **63485**。电视与手柄连接同一网络，游戏显示连接地址后按手柄 GPIO23 搜索键；当前固件仅在同网发现一个目标服务时自动连接。START 开始/暂停，左右转向，下键刹车，A/X 漂移，B/Y 氮气。断线或切换控制来源会清除输入并暂停，重连后先松开按键，再按 START 继续。真正退出游戏时关闭服务。
 
-也可以在电脑运行仓库的 `python3 puretv-joystick/bridge.py 电视IP --port 8765`，打开 `http://127.0.0.1:8767/` 使用原版虚拟手柄；若服务使用备用端口，请填写实际端口。操作和协议见[Wi-Fi 手柄说明](docs/WIFI-CONTROLLER.md)。
+也可以在电脑运行仓库的 `python3 puretv-joystick/bridge.py 电视IP --port 63485`，打开 `http://127.0.0.1:8767/` 使用原版虚拟手柄；若服务使用备用端口，请填写实际端口。操作和协议见[Wi-Fi 手柄说明](docs/WIFI-CONTROLLER.md)。
 
-原生 66 项回归与原版虚拟手柄网页 6 项实际游戏联调通过。自动发现的注册字段/生命周期已做软件回归；实体电视与 ESP32 的同网搜索、连接尚未实测。
+历史 0.1.1 完成了 66 项原生回归和 6 项原版虚拟手柄实际游戏联调；这些计数不代表本轮重新执行。0.1.2 已完成的 8 项实包手柄验收、同证书覆盖安装结果及来源哈希见[版本验证](docs/releases/0.1.2/verification.json)和[本轮记录](../../../docs/readme-controller-support/README.md)。实体电视、手机和 ESP32 的同网搜索、连接尚未实测。
 
 ## 画面与声音
 
@@ -69,6 +75,6 @@ python3 tools/prepare-web.py --output /tmp/neon-rush-web
 python3 -m http.server 8080 --directory /tmp/neon-rush-web
 ```
 
-打开 `http://127.0.0.1:8080/tv.html` 查看实际宿主页面。浏览器预览和实体电视测试分别记录；软件渲染速度、录屏帧率不能当作设备帧率。新版验证见[0.1.1 验证](docs/releases/0.1.1/verification.json)。Android 0.1.1 包的模型/赛道复用 0.1.0 的 45 项规则证据，三赛道完赛记录保留为历史基线；原始报告见 [docs/README.md](docs/README.md)。当前源码另包含 macOS 0.1.3 的转向修复，独立方向和三赛道回归见 [Mac 验证记录](macos/docs/verification-0.1.3/README.md)。尚未在实体电视、手机或 ESP32 上测试。
+打开 `http://127.0.0.1:8080/tv.html` 查看实际宿主页面。浏览器预览和实体电视测试分别记录；软件渲染速度、录屏帧率不能当作设备帧率。本轮验证范围见[20款游戏接入记录](../../../docs/readme-controller-support/README.md)。Android 0.1.2 的规则模型与已交付 macOS 0.1.3 的修正模型一致，按精确哈希复用其规则与方向回归依据；独立方向和三赛道记录见 [Mac 验证记录](macos/docs/verification-0.1.3/README.md)。[Android 0.1.1 验证](docs/releases/0.1.1/verification.json)及其复用的 0.1.0 规则检查、三赛道录像仅作历史基线，不作为新包转向修复的证据。原始报告见 [docs/README.md](docs/README.md)。尚未在实体电视、手机或 ESP32 上测试。
 
 Android 构建和固定证书签名沿用 [Game Kit 构建说明](../../game-kit/BUILD.md)。本地 builder 只生成未签名包；只有源码、资产、签名和验证证据核对完成的 APK 才作为发布包。

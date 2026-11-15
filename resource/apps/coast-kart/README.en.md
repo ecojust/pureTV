@@ -2,32 +2,40 @@
 
 [中文](README.md) · [English](README.en.md)
 
+## 0.5.3 pureTV controller update
+
+Current version **0.5.3 / versionCode 5** adds pureTV Wi-Fi controller input on default TCP port **63485**, while retaining phone QR and TV remote controls. The APK is signed with the existing release certificate. All 9/9 actual-APK controller acceptance checks passed in an Android TV emulator, including START, gameplay input, pause/resume, reconnect safety and same-sequence ACKs.
+
+See the [current twenty-game acceptance record](../../../docs/readme-controller-support/README.md) and [rollout status](../../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
+
+Acceptance resources for this version: [menu screenshot](docs/releases/0.5.3/menu.png) · [actual APK gameplay video](docs/releases/0.5.3/gameplay.mp4?raw=1) · [verification record](docs/releases/0.5.3/verification.json). Screenshots and recordings use an Android TV emulator; physical-TV testing has not been performed. See the verification record for the archived evidence, exact test scope and limitations.
+
 An independently made TV kart racer with actual WebGL 1 3D scenes and a following camera, four original tracks, drift boosts, items, computer opponents and split-screen play using LAN phone controllers.
 
-Version **0.5.2** requires Android 8.0 or later. Package: `com.ecojust.coastkarttv`.
+Current version **0.5.3** requires Android 8.0 or later. Package: `com.ecojust.coastkarttv`.
 
 <!-- apk-resource:start -->
-[Download APK](coast-kart-0.5.2.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
+[Download APK](coast-kart-0.5.3.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
-The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
+The APK is signed with the existing pureTV release certificate. An in-place installation from 0.5.2 to 0.5.3 succeeded in an Android TV emulator; upgrading an installation with existing saves and retaining its data were not tested. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
 <!-- visual-release:start -->
-## 0.5.2 visual update and verification
+## Historical: 0.5.2 visual update and verification
 
-The current release is **0.5.2**, with its signed APK available in this directory. It uses the same pureTV certificate as 0.5.0/0.5.1, allowing an in-place update that retains local data. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for per-game changes, verification scope and physical-device test status.
+The following preserves the **0.5.2** visual changes, source and verification records. These historical results do not verify the current pureTV controller update. That release retained the pureTV certificate used by 0.5.0/0.5.1. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for its per-game changes, verification scope and physical-device test status.
 
-This round uses Mario Kart 8 Deluxe as the visual reference for rebuilding karts, courses and camera as actual WebGL 1 3D scenes. Courses and characters are independently created; drift, items, racing and LAN two-player flows remain part of the game; focused results are recorded below. This is not a complete port of the commercial game.
+That visual update uses Mario Kart 8 Deluxe as the visual reference for rebuilding karts, courses and camera as actual WebGL 1 3D scenes. Courses and characters are independently created; drift, items, racing and LAN two-player flows remain part of the game; focused results are recorded below. This is not a complete port of the commercial game.
 
 See the [reference notes](docs/reference.md) for the implementation scope. 3D rendering uses locally bundled Three.js r124 under MIT, with no CDN dependency.
 
 <!-- final-verification -->
-Final source 0752b658aecbb1322cb7294e3176500639db1b54 passed Android CI 40843467072: 280 model/render-behavior regressions, 36 compatibility scenarios, 131 controller scenarios and 18 bilingual integration scenarios. Cozy Island input-runtime checks passed 9/9; both WebGL 1 rendering scripts and the Coast Kart combat suite also passed. Android builds, lint, size checks and staging succeeded; 15 modules executed JUnit tasks, including all 9 games, without an inferred JUnit case count. Signing run 40846148068 verified all nine APKs’ source assets, signatures and resource catalog. Chrome 61 syntax checks and old-API simulation in modern Chromium do not establish physical legacy-WebView compatibility. Physical TV/phone acceptance, device FPS and in-place installation/data retention remain untested.
+The historical frozen source 0752b658aecbb1322cb7294e3176500639db1b54 passed Android CI 40843467072: 280 model/render-behavior regressions, 36 compatibility scenarios, 131 controller scenarios and 18 bilingual integration scenarios. Cozy Island input-runtime checks passed 9/9; both WebGL 1 rendering scripts and the Coast Kart combat suite also passed. Android builds, lint, size checks and staging succeeded; 15 modules executed JUnit tasks, including all 9 games, without an inferred JUnit case count. Signing run 40846148068 verified all nine APKs’ source assets, signatures and resource catalog. Chrome 61 syntax checks and old-API simulation in modern Chromium do not establish physical legacy-WebView compatibility. At that time, physical TV/phone acceptance, device FPS and in-place installation/data retention had not been tested.
 
-Earlier checks in this round verified WebGL 1 drawing for all four themes, split views, resource reuse, no-WebGL fallback, context loss/restoration, the non-instanced 3D path and disposal. Continuous split-view drawing retained 25 geometries and 5 textures. These Chromium checks used ANGLE/SwiftShader software rendering and do not establish TV GPU frame rates. Final source 0752b65 passed the complete browser and native checks in Android CI 40843467072, including the near-camera rival-occlusion regression. Physical-TV image quality, FPS, thermals and long sessions have not been tested.
+Earlier checks for that release verified WebGL 1 drawing for all four themes, split views, resource reuse, no-WebGL fallback, context loss/restoration, the non-instanced 3D path and disposal. Continuous split-view drawing retained 25 geometries and 5 textures. These Chromium checks used ANGLE/SwiftShader software rendering and do not establish TV GPU frame rates. The historical frozen source 0752b65 passed the complete browser and native checks in Android CI 40843467072, including the near-camera rival-occlusion regression. Physical-TV image quality, FPS, thermals and long sessions have not been tested.
 <!-- visual-release:end -->
 
-## 0.5.1 gameplay review
+## Historical: 0.5.1 gameplay review
 
 Adds held-item defense, directional throws, rank-based item strategy and incoming warnings, with swept collisions across the finish line.
 
@@ -35,7 +43,7 @@ Uses the same signing certificate as 0.5.0 and supports an in-place update. See 
 
 ## Installation and signing
 
-Version 0.5.2 uses the same shared pureTV certificate as 0.5.0/0.5.1 and updates those versions in place while retaining local data. Installations of 0.4.x and earlier signed with the old certificate cannot be updated in place: back up exportable data before uninstalling. Uninstalling clears local saves and records; the project has no automatic cross-certificate migration.
+Version 0.5.3 uses the same pureTV release certificate as 0.5.0/0.5.1/0.5.2. An in-place 0.5.2 → 0.5.3 installation succeeded in an Android TV emulator; upgrading with existing saves and retaining data were not tested. Installations of 0.4.x and earlier signed with the old certificate cannot be updated in place: back up exportable data before uninstalling. Uninstalling clears local saves and records; the project has no automatic cross-certificate migration.
 
 ## Play
 
@@ -58,7 +66,7 @@ On the title screen, move the stick left/right to select a course and up/down to
 
 Changes in 0.5.0: drifting has three charge thresholds (0.65, 1.6 and 2.4 seconds), with blue, gold and purple sparks and stronger release boosts. Staying in a moving rival’s wake for 1.2 seconds grants a slipstream boost. Braking, going off-road or getting hit cancels drift charge.
 
-## Screenshots
+## Historical screenshots (0.5.2)
 
 Actual bundled game pages rendered in Chromium with a simulated native room bridge, not physical-TV captures.
 
@@ -92,3 +100,11 @@ cd resource/launcher/puretv
 ```
 
 Browser tests use desktop npm dependencies and Chromium (`CHROMIUM_PATH`). Physical TV and phone verification remains pending.
+
+## pureTV Wi-Fi controller
+
+Put the TV and controller on the same LAN, open the game and press GPIO 23 Search. The panel shows the actual address, port and discovery state. TCP defaults to **63485**, falls back only if occupied at startup, and keeps the selected port across temporary focus loss. Home or switching apps exits and closes the service. Automatic selection requires exactly one game service on the network.
+
+START begins, pauses or resumes. Left/right steer, Down brakes/reverses; A / X uses items; hold B to drift. Y changes player count at the title and toggles music while paused. Phone QR, TV remote and keyboard controls remain available. Y supplies SELECT in this game; X aliases A.
+
+Disconnects, replaced sessions and changes of control source cancel old input and pause. Release held buttons, then press START after reconnecting; held synchronization never starts an action. Two-player mode accepts two distinct Wi-Fi controllers; choose the player count at the title as required by the game.

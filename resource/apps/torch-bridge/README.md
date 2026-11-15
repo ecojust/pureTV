@@ -1,10 +1,14 @@
 # 夜桥接力 / Torch Bridge
 
-0.2.0：[签名安装包](torch-bridge-0.2.0.apk) · [六关实际游玩录像](docs/gameplay-0.2.0.mp4) · [验证记录](docs/verification.json)
+**0.2.1 · pureTV 手柄更新：** [签名安装包](torch-bridge-0.2.1.apk) · [Android 实包手柄回归录像](docs/releases/0.2.1/gameplay.mp4) · [版本验证](docs/releases/0.2.1/verification.json) · [本轮接入记录](../../../docs/readme-controller-support/README.md)
 
-本版共六关，新增三关。浏览器普通输入验证已完成；尚未进行实体电视或手机测试。
+新增 pureTV Wi-Fi 手柄支持，默认端口 **63485**，显示真实连接状态，断线时暂停并清除输入。保留原六关及规则，遥控器和扫码手机仍可使用。
 
-![0.2.0 实际游戏画面](thumb.png)
+本版 APK 已签名，并在 Android TV API 36 模拟器中完成同证书覆盖安装验证，通过全部 8 项手柄验收，覆盖开始、实际游戏操作、暂停恢复、断线重连、九键输入及逐消息 ACK。下图和上方录像来自本版本实际 APK；录像记录手柄回归过程，不是六关通关录像。尚未进行实体电视、手机或 ESP32 测试。
+
+![0.2.1 实际 Android APK 菜单](docs/releases/0.2.1/menu.png)
+
+历史 0.2.0：[签名安装包](torch-bridge-0.2.0.apk) · [六关实际游玩录像](docs/gameplay-0.2.0.mp4) · [旧版验证记录](https://github.com/ecojust/pureTV/blob/bf58393ba8fa8bb3bdf731ab24f9ab09d90f5075/resource/apps/torch-bridge/docs/verification.json)。这些旧版记录作为未改变规则的回归依据，不代表本轮界面、手柄链路或 Android 实包验收。
 
 一盏火把、一座最多容纳两人的桥，以及速度各不相同的旅人。你需要安排他们往返，把所有人送到右岸，并让总耗时不超过预算。
 
@@ -45,3 +49,16 @@ node resource/apps/torch-bridge/tests/model-test.cjs
 ```
 
 原创夜河、吊桥、旅人和火把素材由代码绘制，采用 [MIT 许可证](LICENSE)。浏览器键盘与软件渲染证据不等同于实体电视、手机或模拟器验证。
+
+## pureTV Wi-Fi 手柄
+
+从 0.2.1 起，电视游戏提供 pureTV TCP 手柄服务，默认端口 **63485**。电视和手柄连同一个局域网，在游戏显示连接地址后按手柄 GPIO23 搜索键；同网仅保留一个目标游戏服务，固件才会自动选中。若端口被占用，以游戏显示的实际端口为准。
+
+- 方向键：对应游戏内方向操作和菜单选关。
+- START：开始、暂停或继续。
+- A / X：选择旅人。
+- B / Y：携灯过桥。
+
+断线或切换控制来源会暂停并清除旧输入；重新连接后松开按键，再按 START 继续。临时失焦时保留TCP连接并隔离输入，真正退出游戏时关闭服务。遥控器、键盘和扫码手机入口继续可用。
+
+虚拟手柄联调：`python3 puretv-joystick/bridge.py 电视IP --port 63485`，再打开 `http://127.0.0.1:8767/`。使用备用端口时替换命令中的端口。验证范围见[20款游戏接入记录](../../../docs/readme-controller-support/README.md)。

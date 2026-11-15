@@ -1,10 +1,14 @@
 # 拉索桥梁 / Tension Span
 
-0.2.1：[签名安装包](tension-span-0.2.1.apk) · [六关实际游玩录像](docs/gameplay-0.2.1.mp4) · [验证记录](docs/verification.json)
+**0.2.2 · pureTV 手柄更新：** [签名安装包](tension-span-0.2.2.apk) · [Android 实包手柄回归录像](docs/releases/0.2.2/gameplay.mp4) · [版本验证](docs/releases/0.2.2/verification.json) · [本轮接入记录](../../../docs/readme-controller-support/README.md)
 
-修正车辆失去支承时的速度与转动连续性，标明固定塔基；保留六座桥及原有预算规则。本次为修正版，共六关，未增加关卡。普通输入与签名产物验证见发布记录；尚未进行实体电视或手机测试。
+新增 pureTV Wi-Fi 手柄支持，默认端口 **63485**，显示真实连接状态，断线时暂停并清除输入。保留原六关及规则，遥控器和扫码手机仍可使用。
 
-![0.2.1 实际游戏画面](thumb.png)
+本版 APK 已签名，并在 Android TV API 36 模拟器中完成同证书覆盖安装验证，通过全部 8 项手柄验收，覆盖开始、实际游戏操作、暂停恢复、断线重连、九键输入及逐消息 ACK。下图和上方录像来自本版本实际 APK；录像记录手柄回归过程，不是六关通关录像。尚未进行实体电视、手机或 ESP32 测试。
+
+![0.2.2 实际 Android APK 菜单](docs/releases/0.2.2/menu.png)
+
+历史 0.2.1：[签名安装包](tension-span-0.2.1.apk) · [六关实际游玩录像](docs/gameplay-0.2.1.mp4) · [旧版验证记录](https://github.com/ecojust/pureTV/blob/bf58393ba8fa8bb3bdf731ab24f9ab09d90f5075/resource/apps/tension-span/docs/verification.json)。这些旧版记录作为未改变规则的回归依据，不代表本轮界面、手柄链路或 Android 实包验收。
 
 历史 0.2.0：[签名安装包](tension-span-0.2.0.apk) · [六关实际游玩录像](docs/gameplay-0.2.0.mp4) · [验证记录](docs/verification-0.2.0.json)
 
@@ -12,7 +16,7 @@
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.tensionspantv`
-- 版本：`0.2.1`（versionCode 3）
+- 版本：`0.2.2`（versionCode 4）
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
@@ -59,6 +63,19 @@ node resource/apps/tension-span/tests/browser-checks.mjs --assets /absolute/buil
 
 ## 0.2.1 源码修正
 
-失去支承时保留车辆已有的水平、竖直与角速度，去除突然减速、竖直速度归零和固定旋转。离桥时冻结实际轮距，避免车轮与车身突然缩小；内移塔锚补画固定基础。六座桥的布局、材料预算与载荷规则保持原样。上方下载和录像已更新为 0.2.1；0.2.0 原版与验证证据保留在历史链接中。
+失去支承时保留车辆已有的水平、竖直与角速度，去除突然减速、竖直速度归零和固定旋转。离桥时冻结实际轮距，避免车轮与车身突然缩小；内移塔锚补画固定基础。六座桥的布局、材料预算与载荷规则保持原样。这些 0.2.1 修正继续包含在 0.2.2 中；0.2.1 六关录像与旧版验证见上方历史入口，0.2.0 原版与证据也继续保留。
 
 构建与手机手柄组件见 [game-kit](../../game-kit/README.md)。源码与原创素材遵循仓库 [MIT 许可证](../../../LICENSE)。
+
+## pureTV Wi-Fi 手柄
+
+从 0.2.2 起，电视游戏提供 pureTV TCP 手柄服务，默认端口 **63485**。电视和手柄连同一个局域网，在游戏显示连接地址后按手柄 GPIO23 搜索键；同网仅保留一个目标游戏服务，固件才会自动选中。若端口被占用，以游戏显示的实际端口为准。
+
+- 方向键：对应游戏内方向操作和菜单选关。
+- START：开始、暂停或继续。
+- A / X：连接 / 移除。
+- B / Y：测试 / 返回。
+
+断线或切换控制来源会暂停并清除旧输入；重新连接后松开按键，再按 START 继续。临时失焦时保留TCP连接并隔离输入，真正退出游戏时关闭服务。遥控器、键盘和扫码手机入口继续可用。
+
+虚拟手柄联调：`python3 puretv-joystick/bridge.py 电视IP --port 63485`，再打开 `http://127.0.0.1:8767/`。使用备用端口时替换命令中的端口。验证范围见[20款游戏接入记录](../../../docs/readme-controller-support/README.md)。

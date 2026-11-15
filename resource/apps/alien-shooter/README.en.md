@@ -1,16 +1,24 @@
 # Alien Shooter TV
 
 <!-- apk-resource:start -->
-[Download APK](alien-shooter-0.1.2.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
+[Download APK](alien-shooter-0.1.3.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
-The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
+The APK is signed with the existing pureTV release certificate. An in-place installation from 0.1.2 to 0.1.3 succeeded in an Android TV emulator; upgrading an installation with existing saves and retaining its data were not tested. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)
 
+## 0.1.3 pureTV controller update
+
+Current version **0.1.3 / versionCode 4** adds pureTV Wi-Fi controller input on default TCP port **63485**, while retaining phone QR and TV remote controls. The APK is signed with the existing release certificate. All 8/8 actual-APK controller acceptance checks passed in an Android TV emulator, including START, gameplay input, pause/resume, reconnect safety and same-sequence ACKs.
+
+See the [current twenty-game acceptance record](../../../docs/readme-controller-support/README.md) and [rollout status](../../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
+
+Acceptance resources for this version: [menu screenshot](docs/releases/0.1.3/menu.png) · [actual APK gameplay video](docs/releases/0.1.3/gameplay.mp4?raw=1) · [verification record](docs/releases/0.1.3/verification.json). Screenshots and recordings use an Android TV emulator; physical-TV testing has not been performed. See the verification record for the archived evidence, exact test scope and limitations.
+
 An independently built overhead shooter for Android TV. Fight through a quarantined freight depot, a biotech laboratory and a hive reactor. Restore consoles, survive incoming hostiles, buy supplies and defeat the guardian before extracting. Designed for a single player, using one phone as the controller.
 
-Version **0.1.2** · Package `com.ecojust.alienshootertv` · Android 8.0 or newer.
+Current version **0.1.3** · Package `com.ecojust.alienshootertv` · Android 8.0 or newer.
 
 ## Play
 
@@ -49,7 +57,7 @@ Fight crawlers, fast melee runners, ranged spitters, armored brutes and the fina
 
 Campaign progress lasts for the current session; quitting ends the run. The sound preference is stored locally. Reopening the app creates a new local room and requires scanning the new code.
 
-## Visuals and sound
+## Historical visuals and sound (0.1.1–0.1.2)
 
 Version 0.1.1 uses a bundled 1024 texture atlas to bake crate straps, fasteners, labels and wear onto low-poly geometry. All three stages share one detailed floor material with separate baked contact shading and local lighting. Opaque static scenery is batched; each enemy species shares one instanced draw for its body, animated legs and corpses. Offscreen objects are culled and only used buffer ranges are uploaded.
 
@@ -57,9 +65,9 @@ Version 0.1.2 studies the original game's official public imagery for revised hu
 
 HUD nodes and the static minimap layer are retained, while paused scenes avoid redundant drawing. Projectile, particle and corpse limits remain bounded. Simulation and controller input keep their original update frequency. Weapons, explosions, pickups and industrial ambience are synthesized locally with Web Audio.
 
-See the [character motion comparison and video](docs/character-motion.md), [baking methods](docs/baking.md) and the [0.1.1 environment performance comparison](docs/performance.md).
+See the [historical 0.1.2 character motion comparison and video](docs/character-motion.md), [baking methods](docs/baking.md) and the [0.1.1 environment performance comparison](docs/performance.md).
 
-[Watch normal campaign gameplay](docs/gameplay-0.1.2.mp4) · [Recording details](docs/gameplay.md). The recording uses the released game page and normal control inputs to demonstrate automated play. It is not physical-TV footage or a human-operated recording.
+[Watch historical 0.1.2 campaign gameplay](docs/gameplay-0.1.2.mp4) · [Recording details](docs/gameplay.md). The recording uses the released game page and normal control inputs to demonstrate automated play. It is not physical-TV footage or a human-operated recording.
 
 These captures show the bundled page rendered in Chromium with a simulated Android room bridge. Sector showcases use test scenarios; they are not physical-TV captures or a recording of a complete human playthrough.
 
@@ -72,6 +80,8 @@ These captures show the bundled page rendered in Chromium with a simulated Andro
 ![Hive reactor](docs/alien-shooter-stage-3.png)
 
 ## Development
+
+The commands below are reproducible check entry points, not a claim that all checks passed for this release. Current execution results are linked above.
 
 ```sh
 node --test resource/apps/alien-shooter/tests/*.test.cjs
@@ -89,3 +99,11 @@ cd resource/launcher/puretv
 Browser tests use the desktop package’s Playwright dependency. `CHROMIUM_PATH` selects Chromium; `ALIEN_SHOOTER_UI_CAPTURE_DIR` selects the capture directory. TV performance, real phone latency and device compatibility still require physical-device validation.
 
 Maps, characters, textures, sound and rules are independently created. See [production notes](docs/reference.md) for scope and sources. Application code and original assets use the [MIT license](LICENSE); the bundled Three.js license is included separately.
+
+## pureTV Wi-Fi controller
+
+Put the TV and controller on the same LAN, open the game and press GPIO 23 Search. The panel shows the actual address, port and discovery state. TCP defaults to **63485**, falls back only if occupied at startup, and keeps the selected port across temporary focus loss. Home or switching apps exits and closes the service. Automatic selection requires exactly one game service on the network.
+
+START begins, pauses or resumes. Directions move. Hold A / X to fire using the existing nearby-enemy aim assist; B throws a grenade; Y changes weapon. Phone QR, TV remote and keyboard controls remain available. Y supplies SELECT in this game; X aliases A.
+
+Disconnects, replaced sessions and changes of control source cancel old input and pause. Release held buttons, then press START after reconnecting; held synchronization never starts an action. This game accepts one Wi-Fi controller.

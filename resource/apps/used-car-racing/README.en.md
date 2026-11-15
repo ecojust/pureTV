@@ -1,20 +1,28 @@
 # Used Car Racing TV
 
 <!-- apk-resource:start -->
-[Download APK](used-car-racing-0.1.3.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
+[Download APK](used-car-racing-0.1.4.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
 
-The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
+The APK is signed with the existing pureTV release certificate. An in-place installation from 0.1.3 to 0.1.4 succeeded in an Android TV emulator; upgrading an installation with existing saves and retaining its data were not tested. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)
 
+## 0.1.4 pureTV controller update
+
+Current version **0.1.4 / versionCode 5** adds pureTV Wi-Fi controller input on default TCP port **63485**, while retaining phone QR and TV remote controls. The APK is signed with the existing release certificate. The complete official-SDK browser checks passed 9/9; native checks, release signing and in-place installation also passed. The actual APK passed menu, initial synchronization and START checks. A host RenderThread segmentation fault during acceleration blocked the remaining Android checks; complete Android gameplay acceptance is not claimed. See the verification record for original results and limitations.
+
+See the [current twenty-game acceptance record](../../../docs/readme-controller-support/README.md) and [rollout status](../../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
+
+Acceptance resources for this version: [actual Android APK menu screenshot](docs/releases/0.1.4/menu.png) · [browser gameplay screenshot](docs/releases/0.1.4/gameplay.png) · [browser gameplay video](docs/releases/0.1.4/gameplay.mp4?raw=1) · [verification record](docs/releases/0.1.4/verification.json). The menu comes from an Android TV emulator. Gameplay images and video show the bundled page driven by the official SDK in Chromium with a synthetic native bridge; they are not APK or physical-TV recordings. Exact sources, hashes and the Android environment limitation are documented in the verification record and the acceptance guide above.
+
 **Used Car Racing TV / 极品二手车** is an original 3D racing game. Each race starts with a randomly assigned used car and condition report. The inspection garage displays the model, power, weight, drivetrain and faults. One or two players use LAN phone controllers; AI drivers fill the remaining places in a six-car field.
 
-This source update targets **0.1.3 / versionCode 4**, package `com.ecojust.usedcartv`, for Android 8.0 or newer TVs. The release retains the pureTV v2 certificate used by 0.1.2, allowing updates over older versions signed with that certificate. See [resource.json](resource.json) for the downloadable APK’s actual version, signature and verification results.
+Current version **0.1.4 / versionCode 5**, package `com.ecojust.usedcartv`, requires Android 8.0 or newer TVs. It uses the existing pureTV v2 certificate. An in-place 0.1.3 → 0.1.4 installation succeeded in an Android TV emulator; upgrading with existing saves and retaining data were not tested. See [resource.json](resource.json) for the downloadable APK’s actual version, signature and verification results.
 
-## Gameplay video
+## Historical gameplay video: 0.1.3
 
-[Watch / download the 0.1.3 gameplay video](docs/gameplay-0.1.3.mp4?raw=1) · [Recording details](docs/gameplay-0.1.3.json) · [Checksums](SHA256SUMS.txt)
+[Watch / download the historical 0.1.3 gameplay video](docs/gameplay-0.1.3.mp4?raw=1) · [Recording details](docs/gameplay-0.1.3.json) · [Checksums](SHA256SUMS.txt)
 
 MP4 (H.264 / AAC), 1280×720 at 25 fps, approximately 2 minutes and 41.66 MB (41,659,881 bytes, below 100 MB). The first 18 seconds show all six cars in the actual inspection garage, including their names and specifications. Racing follows on Neon Docklands, Cloudline Pass and Solar Outrun, with chase and hood cameras and the brake pedal snapping after a sustained press reaches 1600 N. Vehicle and track chapters are available in compatible players.
 
@@ -22,7 +30,7 @@ The original assets from the released 0.1.3 APK run in Chromium with scripted ph
 
 The recording retains the version's existing behavior, including the hood camera falling back inside the cabin at speed, where the seats obstruct the view.
 
-## Steering fixes in 0.1.3
+## Historical: steering fixes in 0.1.3
 
 The shared direction mapping for the virtual stick, gyroscope and keyboard is corrected so that the car turns in the requested direction while driving forward. Progressive steering makes small inputs easier to control, reduces the maximum steering angle at speed, and moves the steering wheel gradually toward its target to soften sudden turns and reversals. See the [design and physics notes](docs/design.md) for the rules and validation methods.
 
@@ -88,7 +96,7 @@ Each route is a closed circuit raced over three laps. Lengths come from the same
 
 Version 0.1.2 adds a local HTTPS phone controller and retains the graphics and batching improvements from 0.1.1, along with the routes, vehicle physics, random mechanical faults and one/two-player race rules. The real WebGL 1 renderer uses bundled Three.js and local graphical assets, with no texture downloads during play.
 
-## Graphics in 0.1.1
+## Historical: graphics in 0.1.1
 
 The renderer keeps modest geometry complexity and adds 1024² color maps for asphalt, rock and the vehicle atlas, 512² color maps for the remaining environment materials, and 256–512² normal/specular maps for grain, strata, tire tread, lamp lenses and fabric. Paint, rubber, lamp lenses and fabric share a vehicle atlas; body and wheel batches reduce separate draws. The six cars share texture images. Paint, glass and metal use static environment reflections selected for the current setting, avoiding a new reflection render each frame.
 
@@ -98,7 +106,7 @@ Roads gain repairs and rubber marks, while buildings and containers use surface-
 
 The project’s [generator](../../../tools/generate-used-car-textures.py) bakes the original textures offline and packages them in the APK; see the [asset notice](src/main/assets/TEXTURE-LICENSE.txt). These changes do not use live reflection captures or full-screen post-processing. Actual TV frame rates still require device testing.
 
-## Vehicle and circuit views
+## Historical vehicle and circuit views
 
 These images are produced by the actual game renderer in Chromium to show the vehicles and circuits. They are not concept art or physical-TV photographs.
 
@@ -118,6 +126,8 @@ This is a reduced vehicle-dynamics game designed for phone controls and TVs. Mod
 
 ## Development
 
+The commands below are reproducible check entry points, not a claim that all checks passed for this release. Current execution results are linked above.
+
 ```sh
 node --test resource/apps/used-car-racing/tests/*.test.cjs
 node resource/apps/used-car-racing/tests/compatibility.mjs
@@ -130,14 +140,14 @@ cd resource/launcher/puretv
 ./gradlew :used-car-racing:assembleRelease :used-car-racing:testDebugUnitTest :used-car-racing:lintDebug :used-car-racing:verifyReleaseSize
 ```
 
-Browser checks use npm dependencies from `desktop/`; `CHROMIUM_PATH` selects Chromium. `USED_CAR_UI_CAPTURE_DIR` selects the directory for captures of the actual pages. Releases use the shared pureTV v2 certificate; this source update targets the independent release tag `android-used-car-v0.1.3`.
+Browser checks use npm dependencies from `desktop/`; `CHROMIUM_PATH` selects Chromium. `USED_CAR_UI_CAPTURE_DIR` selects the directory for captures of the actual pages. Releases use the shared pureTV v2 certificate; the historical 0.1.3 release tag is `android-used-car-v0.1.3`; this update follows the twenty-game rollout linked above.
 
-The local HTTPS integration check also needs a full JDK (`java` / `javac`), NSS `certutil` (the Linux `libnss3-tools` package), and a real private IPv4 address. It temporarily trusts an independent test CA, removes it afterward, and never skips certificate validation. CI additionally runs Android API 26 and 35 emulators to verify actual Keystore keys, TLS handshakes, persistent identity, and explicitly enabled pairing reset.
+The local HTTPS integration check also needs a full JDK (`java` / `javac`), NSS `certutil` (the Linux `libnss3-tools` package), and a real private IPv4 address. It temporarily trusts an independent test CA, removes it afterward, and never skips certificate validation. The existing HTTPS CI workflow also configures Android API 26 and 35 emulator checks for actual Keystore keys, TLS handshakes, persistent identity, and explicitly enabled pairing reset. The workflow configuration is not evidence that these checks ran for this update.
 
 Original code, cars, tracks, textures and synthesized sound use [MIT](LICENSE). Three.js retains its [upstream MIT license](src/main/assets/THREE-LICENSE.txt). No commercial racing-game ROMs, vehicle models or extracted maps are included. The project draws its own [64×64 SVG icon](logo.svg).
 
 <!-- verified-previews:start -->
-## Actual game views
+## Historical game views (0.1.3)
 
 Captured from the real game pages in Chromium with a simulated LAN room; these are not physical-TV photographs.
 
@@ -147,3 +157,11 @@ Captured from the real game pages in Chromium with a simulated LAN room; these a
 
 ![Steering and pedal input](docs/controller-active.en.png)
 <!-- verified-previews:end -->
+
+## pureTV Wi-Fi controller
+
+Put the TV and controller on the same LAN, open the game and press GPIO 23 Search. The panel shows the actual address, port and discovery state. TCP defaults to **63485**, falls back only if occupied at startup, and keeps the selected port across temporary focus loss. Home or switching apps exits and closes the service. Automatic selection requires exactly one game service on the network.
+
+START begins, pauses or resumes. Left/right steer; A / X throttle; hold B to brake. Y draws a car in the garage; during a race tap Y for camera or hold at low speed to switch D / R. Phone QR, TV remote and keyboard controls remain available. Y supplies SELECT in this game; X aliases A.
+
+Disconnects, replaced sessions and changes of control source cancel old input and pause. Release held buttons, then press START after reconnecting; held synchronization never starts an action. Two-player mode accepts two distinct Wi-Fi controllers. Connect both in the garage before starting; the player count follows connected controllers unless you select it manually.

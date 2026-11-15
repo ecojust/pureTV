@@ -1,10 +1,14 @@
 # 异形装箱 / Packing Sculptor
 
-0.2.0：[签名安装包](packing-sculptor-0.2.0.apk) · [六关实际游玩录像](docs/gameplay-0.2.0.mp4) · [验证记录](docs/verification.json)
+**0.2.1 · pureTV 手柄更新：** [签名安装包](packing-sculptor-0.2.1.apk) · [Android 实包手柄回归录像](docs/releases/0.2.1/gameplay.mp4) · [版本验证](docs/releases/0.2.1/verification.json) · [本轮接入记录](../../../docs/readme-controller-support/README.md)
 
-本版共六关，新增三关。浏览器普通输入验证已完成；尚未进行实体电视或手机测试。
+新增 pureTV Wi-Fi 手柄支持，默认端口 **63485**，显示真实连接状态，断线时暂停并清除输入。保留原六关及规则，遥控器和扫码手机仍可使用。
 
-![0.2.0 实际游戏画面](thumb.png)
+本版 APK 已签名，并在 Android TV API 36 模拟器中完成同证书覆盖安装验证，通过全部 8 项手柄验收，覆盖开始、实际游戏操作、暂停恢复、断线重连、九键输入及逐消息 ACK。下图和上方录像来自本版本实际 APK；录像记录手柄回归过程，不是六关通关录像。尚未进行实体电视、手机或 ESP32 测试。
+
+![0.2.1 实际 Android APK 菜单](docs/releases/0.2.1/menu.png)
+
+历史 0.2.0：[签名安装包](packing-sculptor-0.2.0.apk) · [六关实际游玩录像](docs/gameplay-0.2.0.mp4) · [旧版验证记录](https://github.com/ecojust/pureTV/blob/bf58393ba8fa8bb3bdf731ab24f9ab09d90f5075/resource/apps/packing-sculptor/docs/verification.json)。这些旧版记录作为未改变规则的回归依据，不代表本轮界面、手柄链路或 Android 实包验收。
 
 把不同轮廓的零件装进缺角箱体。零件可以顺时针旋转，每次移动一格；贴边允许，重叠和穿墙不允许。标有出口的零件还必须能保持当前朝向，沿箭头直线滑出指定门洞。检查某一零件时，其他零件都保持原位。
 
@@ -51,6 +55,19 @@ node --test resource/apps/packing-sculptor/tests/model.test.cjs resource/apps/pa
 node resource/apps/packing-sculptor/tests/browser-checks.mjs --assets /absolute/built-assets --output /absolute/qa-output
 ```
 
-0.2.0 的构建、六关普通输入录像和签名验收见上方下载区及 `docs/releases/0.2.0/`；历史 0.1.0 报告与产物继续保留。
+0.2.0 的构建、六关普通输入录像和签名验收见上方历史入口及 `docs/releases/0.2.0/`；历史 0.1.0 报告与产物继续保留。
 
 采用仓库的 [MIT 许可证](LICENSE)。
+
+## pureTV Wi-Fi 手柄
+
+从 0.2.1 起，电视游戏提供 pureTV TCP 手柄服务，默认端口 **63485**。电视和手柄连同一个局域网，在游戏显示连接地址后按手柄 GPIO23 搜索键；同网仅保留一个目标游戏服务，固件才会自动选中。若端口被占用，以游戏显示的实际端口为准。
+
+- 方向键：对应游戏内方向操作和菜单选关。
+- START：开始、暂停或继续。
+- A / X：选取 / 落定 / 验收。
+- B / Y：取回 / 旋转 / 清空。
+
+断线或切换控制来源会暂停并清除旧输入；重新连接后松开按键，再按 START 继续。临时失焦时保留TCP连接并隔离输入，真正退出游戏时关闭服务。遥控器、键盘和扫码手机入口继续可用。
+
+虚拟手柄联调：`python3 puretv-joystick/bridge.py 电视IP --port 63485`，再打开 `http://127.0.0.1:8767/`。使用备用端口时替换命令中的端口。验证范围见[20款游戏接入记录](../../../docs/readme-controller-support/README.md)。
