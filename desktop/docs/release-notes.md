@@ -1,21 +1,24 @@
-# pureTV Manager 0.5.8
+# pureTV Manager 0.5.9
 
 ## 简体中文
 
 - APK 市场的启动器、影音、游戏及管理器自身更新改用 `https://apps.b14f.com` 的对应目录，直接通过 HTTPS 下载文件。
 - 下载时核对文件大小与服务器提供的版本标记；应用清单提供匹配的 SHA256 时追加校验，复用本地缓存前重新计算 SHA256。
+- “查看下载目录”打开客户端目录，市场入口打开启动器目录，避免访问不开放的服务器根网址。
 - 新服务器缓存与旧 Gitee 缓存隔离，移除 Gitee 下载及备用下载；论坛继续使用 Gitee。
 
 ## 繁體中文
 
 - APK 市場的啟動器、影音、遊戲及管理器本身更新改用 `https://apps.b14f.com` 的對應目錄，直接透過 HTTPS 下載檔案。
 - 下載時核對檔案大小與伺服器提供的版本標記；應用程式清單提供相符的 SHA256 時追加校驗，重用本機快取前重新計算 SHA256。
+- 「查看下載目錄」開啟用戶端目錄，市場入口開啟啟動器目錄，避免存取不開放的伺服器根網址。
 - 新伺服器快取與舊 Gitee 快取隔離，移除 Gitee 下載及備用下載；論壇繼續使用 Gitee。
 
 ## English
 
 - APK Market launchers, media apps and games, along with manager updates, now use their respective directories on `https://apps.b14f.com` and download files directly over HTTPS.
 - Downloads check file size and server version metadata. A matching SHA256 from an app manifest is verified when available; cached files are hashed again before reuse.
+- Source links open the client or launcher directory rather than the server root, which is not publicly listed.
 - The new server uses a separate cache from Gitee. Gitee downloads and their fallback have been removed; the forum continues to use Gitee.
 
 ---

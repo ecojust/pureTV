@@ -1,11 +1,11 @@
 {
   "version": "0.5.8",
   "plannedTag": "desktop-v0.5.8",
-  "status": "preparing",
+  "status": "cancelled_before_publication",
   "released": false,
-  "tagCreated": false,
-  "sourceCommit": null,
-  "workflowId": null,
+  "tagCreated": true,
+  "sourceCommit": "0e0fa09dfb20fb068a9fc0f103bf8c58b12d2eae",
+  "workflowId": 43702139682,
   "scope": "Migrate APK Market and client update downloads to https://apps.b14f.com; retain the separate Gitee forum.",
   "versionPreparation": {
     "versionFileCount": 7,
@@ -75,5 +75,6 @@
     "In-app updates depend on the actual files in the server client directory; a GitHub Release does not establish server synchronization.",
     "A locally computed SHA256 receipt protects subsequent cache reuse but is not independent server-provided authentication of the first download.",
     "Server inventory is mutable and must be checked again during release verification."
-  ]
+  ],
+  "cancellationReason": "Server root returns HTTP 403; source button must open the actual client directory. Preserve this unpublished tag and deliver corrected links in 0.5.9."
 }

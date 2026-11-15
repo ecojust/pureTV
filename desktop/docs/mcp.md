@@ -51,7 +51,7 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 | `install_platform_tools` | `acceptedLicense: true`，可选 `forceDownload: true` | 下载、校验并配置 ADB；默认复用已校验缓存，强制模式重新下载；失败或取消保留当前配置，需先断开电视 |
 | `choose_apks` | 无 | 在管理器打开原生多选 APK 对话框，只返回路径，不安装 |
 | `choose_adb` | 无 | 在管理器打开原生可执行文件对话框，只返回路径，不配置 |
-| `open_resource` | `resource` | 打开 `catalog`、`market`、`repository`、`releases`、`platformTools` 或 `platformToolsLicense` 对应的固定网页；`market` 指向 apps.b14f.com 应用服务器，`repository` 指向 [pureTV GitHub 仓库](https://github.com/ecojust/pureTV)，用于提交软件上架 PR |
+| `open_resource` | `resource` | 打开 `catalog`、`market`、`client`、`repository`、`releases`、`platformTools` 或 `platformToolsLicense` 对应的固定网页；`market` 指向可浏览的[启动器目录](https://apps.b14f.com/launcher/)，`client` 指向[电脑端安装包目录](https://apps.b14f.com/client/)，`repository` 指向 [pureTV GitHub 仓库](https://github.com/ecojust/pureTV)，用于提交软件上架 PR |
 
 已安装应用及启动器的 `apkSizeBytes` 返回主 APK 和分包合计字节数，不含私有数据与缓存；无法读取时为 `null`，重新扫描会刷新。
 
@@ -79,7 +79,7 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 
 | 工具 | 参数 | 行为 |
 | --- | --- | --- |
-| `get_market_catalog` | 可选 `refresh: true` | 读取应用／启动器目录；强制刷新时重新检查 [apps.b14f.com](https://apps.b14f.com/)，无需连接电视 |
+| `get_market_catalog` | 可选 `refresh: true` | 读取应用／启动器目录；强制刷新时重新检查 [apps.b14f.com 应用目录](https://apps.b14f.com/launcher/)，无需连接电视 |
 | `download_market_item` | `id`，可选 `revision` | 下载目录中的 APK 到本机缓存，并同步加入应用或启动器待安装列表；不安装、不切换电视桌面 |
 | `install_market_item` | `id`，可选 `revision` | 在同一次共享操作中下载 APK 并安装到当前电视；安装启动器后仍需单独调用 `set_home` 才会切换桌面 |
 

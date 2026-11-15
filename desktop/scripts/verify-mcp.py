@@ -201,6 +201,7 @@ def main():
                     revision_schema=catalog[name]['inputSchema']['properties']['revision']
                     assert revision_schema['minLength']==64 and revision_schema['maxLength']==64
                 assert 'market' in catalog['open_resource']['inputSchema']['properties']['resource']['enum']
+                assert 'client' in catalog['open_resource']['inputSchema']['properties']['resource']['enum']
                 assert 'marketProgress' in client.call('get_status')
                 # Reject unsupported market arguments before any server request.
                 for name,args in [

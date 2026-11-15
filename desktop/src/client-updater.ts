@@ -57,7 +57,7 @@ export class ClientUpdater {
         case 'check': void this.check(); break;
         case 'install': void this.install(); break;
         case 'cancel': void this.cancel(); break;
-        case 'source': void api.openResource('market').catch(error => { this.linkError = this.errorText(error); this.changed(); }); break;
+        case 'source': void api.openResource('client').catch(error => { this.linkError = this.errorText(error); this.changed(); }); break;
       }
     });
   }

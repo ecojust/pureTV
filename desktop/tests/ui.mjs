@@ -316,10 +316,14 @@ try {
     assert.match(text,/pureTV-Manager-0\.4\.12-macos-arm64\.dmg/);
     assert.match(text,/https:\/\/apps\.b14f\.com\/client\//);
     assert.equal(await updateAction(p,'install').isEnabled(),true);
-    await updateAction(p,'source').click();assert.deepEqual(await p.evaluate(()=>window.__resources),['market']);
+    await updateAction(p,'source').click();assert.deepEqual(await p.evaluate(()=>window.__resources),['client']);
     assert.deepEqual(await updateInstalls(p),[]);
     await p.keyboard.press('Escape');assert.equal(await updateDialog(p).count(),0);
     assert.equal(await act(p,'client-update').evaluate(element=>document.activeElement===element),true);
+    await p.goto(url+'?demo=1');await p.locator('.demo-banner').waitFor();
+    await p.evaluate(()=>{window.__openedUpdateSources=[];window.open=(address,target,features)=>{window.__openedUpdateSources.push({address,target,features});return null;};});
+    await openUpdate(p);await updateAction(p,'source').click();
+    assert.deepEqual(await p.evaluate(()=>window.__openedUpdateSources),[{address:'https://apps.b14f.com/client/',target:'_blank',features:'noopener,noreferrer'}],'Browser/demo source opens the public client directory rather than the forbidden root');
   },snapshot(),{clientUpdate:newerClient});
   await check('client update: explicit install pins version and revision and handoff never claims completed installation',async p=>{
     await startupUpdate(p);await nav(p,'apps');await openUpdate(p);await updateAction(p,'install').click();await heldUpdate(p);

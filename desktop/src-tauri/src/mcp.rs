@@ -92,7 +92,7 @@ pub fn tools() -> Vec<Value> {
         tool("install_platform_tools","Download/verify/configure ADB or reuse verified offline cache. Set forceDownload=true to fetch a new verified copy even when the cache is valid. Google with Tencent fallback. Requires explicit Android SDK license acceptance; disconnect TV first.",json!({"forceDownload":{"type":"boolean","description":"Force a fresh download; preserve current ADB on cancellation or failure."},"acceptedLicense":{"type":"boolean","const":true,"description":"Set true only after the user accepts https://developer.android.com/studio/terms"}}),&["acceptedLicense"],false),
         tool("choose_apks","Open the manager's native multi-APK picker. Returns paths; does not install.",json!({}),&[],true),
         tool("choose_adb","Open the manager's native executable picker. Returns path; does not configure it.",json!({}),&[],true),
-        tool("open_resource","Open the allowlisted APK resource catalog, apps.b14f.com market, project repository or releases, Platform Tools or Android SDK license page in the user's browser.",json!({"resource":{"type":"string","enum":["catalog","market","repository","releases","platformTools","platformToolsLicense"]}}),&["resource"],false),
+        tool("open_resource","Open the allowlisted APK resource catalog, apps.b14f.com launcher market or client installation directory, project repository or releases, Platform Tools or Android SDK license page in the user's browser.",json!({"resource":{"type":"string","enum":["catalog","market","client","repository","releases","platformTools","platformToolsLicense"]}}),&["resource"],false),
     ]
 }
 fn error(id: Value, code: i64, message: &str) -> Value {
@@ -538,6 +538,7 @@ mod tests {
             ),
             ("install_market_item", selection.clone()),
             ("open_resource", json!({"resource":"market"})),
+            ("open_resource", json!({"resource":"client"})),
         ] {
             let response = dispatch(
                 json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":name,"arguments":args}}),
@@ -603,6 +604,10 @@ mod tests {
         );
 
         let catalog = tools();
+        let resources = &catalog.iter().find(|tool| tool["name"] == "open_resource").unwrap()
+            ["inputSchema"]["properties"]["resource"]["enum"];
+        assert!(resources.as_array().unwrap().contains(&json!("market")));
+        assert!(resources.as_array().unwrap().contains(&json!("client")));
         for name in ["download_market_item", "install_market_item"] {
             let revision_schema = &catalog.iter().find(|tool| tool["name"] == name).unwrap()
                 ["inputSchema"]["properties"]["revision"];
