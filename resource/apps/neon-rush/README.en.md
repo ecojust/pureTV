@@ -6,7 +6,7 @@ Six racers, three original circuits, and a two-lap finish. Drift to charge nitro
 
 **0.1.1 · Release-signed APK: 443,884 bytes (about 444 KB).** [Download APK](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.1.apk) · [Gameplay video](docs/releases/0.1.1/gameplay.mp4) · [Verification](docs/releases/0.1.1/verification.json) · [Icon](logo.svg)
 
-**macOS 0.1.1:** [Download universal DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.1-macos-universal.dmg) · [ZIP, installation and controller guide](macos/README.md). Requires macOS 11+ and WebGL; includes Apple silicon / Intel code with keyboard and pureTV Wi-Fi controller support.
+**macOS 0.1.2:** [Download universal DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.2-macos-universal.dmg) · [ZIP, installation and controller guide](macos/README.md). Requires macOS 11+ and WebGL; includes Apple silicon / Intel code with keyboard and pureTV Wi-Fi controller support.
 
 ![Actual English Neon Rush menu](../../../docs/previews/en/app-neon-rush.png)
 
