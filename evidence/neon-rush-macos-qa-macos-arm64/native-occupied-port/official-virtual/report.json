@@ -1,0 +1,334 @@
+{
+  "startedAt": "2026-11-15T12:36:44.770Z",
+  "status": "passed",
+  "method": "Unmodified official virtual page, actual mouse events, unchanged bridge.py and joystick_sdk.py, production native TCP receiver and WKWebView game. Read-only diagnostic observations.",
+  "physicalEsp32Tested": false,
+  "nativeMacOSAppTested": true,
+  "tests": [
+    {
+      "name": "Official connect button synchronizes without resuming native race",
+      "status": "passed",
+      "details": {
+        "nativePhase": "playing",
+        "paused": true
+      }
+    },
+    {
+      "name": "Original nine mouse buttons send long holds and START resumes native game",
+      "status": "passed",
+      "details": {
+        "keys": 9,
+        "longPressHoldMs": 650,
+        "nativeResumed": true,
+        "nativePaused": true
+      }
+    },
+    {
+      "name": "Original disconnect and reconnect stay paused until fresh START",
+      "status": "passed",
+      "details": {
+        "reconnectDoesNotStart": true,
+        "freshStartRequired": true
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "key": "UP",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:46.750Z"
+    },
+    {
+      "key": "UP",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:47.403Z"
+    },
+    {
+      "key": "DOWN",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:47.844Z"
+    },
+    {
+      "key": "DOWN",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:48.502Z"
+    },
+    {
+      "key": "LEFT",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:48.794Z"
+    },
+    {
+      "key": "LEFT",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:49.449Z"
+    },
+    {
+      "key": "RIGHT",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:49.874Z"
+    },
+    {
+      "key": "RIGHT",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:50.531Z"
+    },
+    {
+      "key": "A",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:50.821Z"
+    },
+    {
+      "key": "A",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:51.476Z"
+    },
+    {
+      "key": "B",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:51.769Z"
+    },
+    {
+      "key": "B",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:52.425Z"
+    },
+    {
+      "key": "X",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:52.663Z"
+    },
+    {
+      "key": "X",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:53.317Z"
+    },
+    {
+      "key": "Y",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:53.547Z"
+    },
+    {
+      "key": "Y",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:54.203Z"
+    },
+    {
+      "key": "START",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:54.486Z"
+    },
+    {
+      "key": "START",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:55.141Z"
+    },
+    {
+      "key": "START",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:55.647Z"
+    },
+    {
+      "key": "START",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:55.751Z"
+    },
+    {
+      "key": "START",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:56.990Z"
+    },
+    {
+      "key": "START",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:57.095Z"
+    },
+    {
+      "key": "START",
+      "action": "mouse-down",
+      "at": "2026-11-15T12:36:57.267Z"
+    },
+    {
+      "key": "START",
+      "action": "mouse-up",
+      "at": "2026-11-15T12:36:57.374Z"
+    }
+  ],
+  "requests": [
+    {
+      "action": "connect"
+    },
+    {
+      "action": "down",
+      "key": "UP"
+    },
+    {
+      "action": "long_press",
+      "key": "UP",
+      "duration_ms": 615
+    },
+    {
+      "action": "long_release",
+      "key": "UP",
+      "duration_ms": 653
+    },
+    {
+      "action": "down",
+      "key": "DOWN"
+    },
+    {
+      "action": "long_press",
+      "key": "DOWN",
+      "duration_ms": 580
+    },
+    {
+      "action": "long_release",
+      "key": "DOWN",
+      "duration_ms": 662
+    },
+    {
+      "action": "down",
+      "key": "LEFT"
+    },
+    {
+      "action": "long_press",
+      "key": "LEFT",
+      "duration_ms": 523
+    },
+    {
+      "action": "long_release",
+      "key": "LEFT",
+      "duration_ms": 658
+    },
+    {
+      "action": "down",
+      "key": "RIGHT"
+    },
+    {
+      "action": "long_press",
+      "key": "RIGHT",
+      "duration_ms": 602
+    },
+    {
+      "action": "long_release",
+      "key": "RIGHT",
+      "duration_ms": 657
+    },
+    {
+      "action": "down",
+      "key": "A"
+    },
+    {
+      "action": "ping"
+    },
+    {
+      "action": "long_press",
+      "key": "A",
+      "duration_ms": 612
+    },
+    {
+      "action": "long_release",
+      "key": "A",
+      "duration_ms": 654
+    },
+    {
+      "action": "down",
+      "key": "B"
+    },
+    {
+      "action": "long_press",
+      "key": "B",
+      "duration_ms": 585
+    },
+    {
+      "action": "long_release",
+      "key": "B",
+      "duration_ms": 656
+    },
+    {
+      "action": "down",
+      "key": "X"
+    },
+    {
+      "action": "long_press",
+      "key": "X",
+      "duration_ms": 504
+    },
+    {
+      "action": "long_release",
+      "key": "X",
+      "duration_ms": 654
+    },
+    {
+      "action": "down",
+      "key": "Y"
+    },
+    {
+      "action": "long_press",
+      "key": "Y",
+      "duration_ms": 548
+    },
+    {
+      "action": "long_release",
+      "key": "Y",
+      "duration_ms": 655
+    },
+    {
+      "action": "down",
+      "key": "START"
+    },
+    {
+      "action": "long_press",
+      "key": "START",
+      "duration_ms": 620
+    },
+    {
+      "action": "long_release",
+      "key": "START",
+      "duration_ms": 656
+    },
+    {
+      "action": "down",
+      "key": "START"
+    },
+    {
+      "action": "tap",
+      "key": "START",
+      "duration_ms": 105
+    },
+    {
+      "action": "ping"
+    },
+    {
+      "action": "disconnect"
+    },
+    {
+      "action": "connect"
+    },
+    {
+      "action": "down",
+      "key": "START"
+    },
+    {
+      "action": "tap",
+      "key": "START",
+      "duration_ms": 104
+    },
+    {
+      "action": "down",
+      "key": "START"
+    },
+    {
+      "action": "tap",
+      "key": "START",
+      "duration_ms": 106
+    },
+    {
+      "action": "disconnect"
+    }
+  ],
+  "errors": [],
+  "browser": "156.0.8078.4",
+  "originalHtmlSha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41",
+  "finishedAt": "2026-11-15T12:36:57.680Z"
+}
