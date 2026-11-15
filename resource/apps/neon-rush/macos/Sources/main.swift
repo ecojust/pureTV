@@ -247,6 +247,12 @@ final class NeonApplication: NSObject, NSApplicationDelegate, NSWindowDelegate, 
             state["server"] = self.information()
             state["input"] = self.controller.snapshot()
             state["active"] = self.foreground
+            if let front = NSWorkspace.shared.frontmostApplication { state["frontmostApplication"] = ["name": front.localizedName ?? "", "bundleIdentifier": front.bundleIdentifier ?? ""] }
+            #if arch(arm64)
+            state["processArchitecture"] = "arm64"
+            #else
+            state["processArchitecture"] = "x86_64"
+            #endif
             if let error = error { state["diagnosticError"] = error.localizedDescription }
             if let error = self.lastJavaScriptError { state["lastJavaScriptError"] = error }
             if let data = try? JSONSerialization.data(withJSONObject: state, options: [.sortedKeys]) { try? data.write(to: directory.appendingPathComponent("state.json"), options: .atomic) }

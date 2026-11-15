@@ -59,9 +59,11 @@ jobs:
           - platform: macos-arm64
             runner: macos-latest
             architecture: arm64
+            qa_options: ''
           - platform: macos-x64
             runner: macos-15-intel
             architecture: x86_64
+            qa_options: '--allow-unavailable-webgl'
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 15
     env:
@@ -150,6 +152,19 @@ jobs:
           python3 resource/apps/neon-rush/macos/tests/verify-native.py
           --app "$RUNNER_TEMP/neon-rush-package/installed/Neon Rush.app"
           --output "$RUNNER_TEMP/neon-rush-qa/native"
+          ${{ matrix.qa_options }}
+      - name: Exercise the Intel executable through Rosetta with graphics
+        if: matrix.architecture == 'arm64'
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/neon-rush-browser/node_modules/playwright/index.mjs
+        run: |
+          set -euo pipefail
+          if ! /usr/bin/arch -x86_64 /usr/bin/true; then
+            sudo /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+          fi
+          python3 resource/apps/neon-rush/macos/tests/verify-native.py \
+            --app "$RUNNER_TEMP/neon-rush-package/installed/Neon Rush.app" \
+            --output "$RUNNER_TEMP/neon-rush-qa/rosetta" --launch-architecture x86_64 --language en
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -205,7 +220,11 @@ jobs:
               for platform in ('macos-arm64', 'macos-x64'):
                   evidence = output / 'evidence' / ('neon-rush-macos-qa-' + platform)
                   assert (evidence / 'package-verification.json').is_file()
-                  assert (evidence / 'native').is_dir()
+                  report = json.loads((evidence / 'native/report.json').read_text())
+                  assert report['status'] == 'passed' or (platform == 'macos-x64' and report['status'] == 'limited_graphics' and report['webglAvailable'] is False)
+                  if platform == 'macos-arm64':
+                      translated = json.loads((evidence / 'rosetta/report.json').read_text())
+                      assert translated['status'] == 'passed' and translated['nativeProcessArchitecture'] == 'x86_64'
           files = {}
           for path in sorted(output.rglob('*')):
               if not path.is_file():
