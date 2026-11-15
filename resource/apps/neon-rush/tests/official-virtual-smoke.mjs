@@ -113,7 +113,7 @@ try{
   return {stats:after.model.stats,pings:wireMessages().filter(m=>m.type==='ping').length};
  });
  await test('official disconnect releases held keys and freezes game; reconnect sync waits for fresh START',async()=>{
-  await pad.keyboard.down('ArrowRight');held.add('RIGHT');await pad.keyboard.down('a');held.add('A');await observe(s=>s.model.player.steer>.3,10000,'Official held steering');
+  await pad.keyboard.down('ArrowRight');held.add('RIGHT');await pad.keyboard.down('a');held.add('A');await observe(s=>s.model.player.steer<-.3,10000,'Official held steering');
   const firstConnection=report.connectionCount;await pad.locator('#connect').click();held.clear();await pad.keyboard.up('ArrowRight');await pad.keyboard.up('a');
   await pad.waitForFunction(()=>document.querySelector('#status').textContent==='TCP 已断开');const paused=await observe(s=>s.paused&&s.connection.disconnected,10000,'Official disconnect pauses');
   const stable=await snapshot(game);await delay(350);assert.deepEqual((await snapshot(game)).model,stable.model);

@@ -289,6 +289,49 @@ class NativeCheck:
         self.until(lambda s:not any(self.player(s).get(key) for key in ['a','b','start']), 'Synced actions released')
         return {'directions':4,'driftAliasAggregation':True,'heldSyncDoesNotStart':True,'longHold':True}
 
+    def restart_race_from_menu(self, label):
+        # Command-R is the app's shipped Restart Race menu item. This invokes
+        # normal macOS input, not a diagnostic mutation or a model setter.
+        assert self.read()['active'], 'Native game must have focus for its menu shortcut'
+        self.release_all()
+        result=subprocess.run(['/usr/bin/osascript','-e','tell application "System Events" to keystroke "r" using command down'],capture_output=True,text=True,timeout=15)
+        (self.out/(label+'-menu-restart.txt')).write_text(result.stdout+result.stderr)
+        assert result.returncode==0, 'Normal Restart Race menu shortcut failed'
+        return self.until(lambda s:s['game']['phase']=='playing' and not s['game']['paused'] and s['game']['model']['countdown']>2 and s['game']['model']['raceTime']==0, label+' ordinary restart')
+
+    def steering_direction(self):
+        """Use the actual camera, not model yaw conventions or its AI strategy."""
+        def project(matrix, car):
+            assert len(matrix)==16
+            values=[matrix[row]*car['x']+matrix[4+row]*(car['y']+.5)+matrix[8+row]*car['z']+matrix[12+row] for row in range(4)]
+            assert values[3]>.01, 'Observed car is behind the frozen reference camera'
+            return values[0]/values[3]
+        cases=[]
+        for key,sign in [('LEFT',-1),('RIGHT',1)]:
+            self.restart_race_from_menu('steering-'+key.lower())
+            before=self.until(lambda s:s['game']['model']['raceTime']>=.9,'Straight acceleration before '+key,40)['game']
+            assert before['model']['trackId']=='skyport', 'Direction check starts on the known straight'
+            matrix=before['renderer']['cameraViewProjection']
+            assert isinstance(matrix,list) and len(matrix)==16
+            self.press(key)
+            after=self.until(lambda s:s['game']['model']['raceTime']>=before['model']['raceTime']+.65,'SDK turn '+key,20)['game']
+            self.release(key)
+            self.tap('START')
+            self.until(lambda s:s['game']['paused'],'Pause after SDK turn '+key)
+            self.screenshot('steering-'+key.lower()+'.png')
+            delta=project(matrix,after['model']['player'])-project(matrix,before['model']['player'])
+            row={'input':key,'expectedSign':sign,'screenDeltaX':delta,'before':before,'after':after}
+            cases.append(row)
+            # Save partial results too, so a failing first direction stays visible.
+            self.report['steeringDirection']={'passed':False,'reference':'actual renderer camera view-projection frozen at start of each turn','cases':cases,'sdkUnmodified':digest(SDK)==self.report['sourceHashes'][str(SDK.relative_to(REPO))],'gameStateWrites':False}
+            assert after['model']['stats']['collisions']==before['model']['stats']['collisions'], 'Collision interfered with the screen-direction check'
+            assert delta*sign>.015, key+' moved in the wrong screen direction: '+str(delta)
+        self.report['steeringDirection']['passed']=True
+        self.restart_race_from_menu('steering-cleanup')
+        self.tap('START')
+        self.until(lambda s:s['game']['paused'] and s['game']['model']['countdown']>1,'Fresh race paused for existing drive acceptance')
+        return self.report['steeringDirection']
+
     def drive(self):
         self.tap('START')
         self.until(lambda s:s['game']['phase']=='playing' and not s['game']['paused'], 'Fast START tap begins game')
@@ -550,6 +593,7 @@ class NativeCheck:
             self.check('Unmodified SDK connects and synchronizes nine keys',self.connect)
             self.check('Directions, A/X aggregation, long hold and sync suppression',self.sync_and_aliases)
             if graphics_available:
+                self.check('SDK LEFT and RIGHT move toward their actual screen directions',self.steering_direction)
                 self.check('Real race using TCP A/B and X/Y, drift, nitro and pause',self.drive)
             self.check('Three real focus changes keep TCP stable and quarantine background input',self.focus_lifecycle)
             if graphics_available:

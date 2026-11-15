@@ -276,7 +276,12 @@ export class RushRenderer {
     if (!this.cameraReady || discontinuity) { this.position.copy(wanted); this.look.copy(target); this.cameraReady = true; } else { this.position.lerp(wanted, 1 - Math.exp(-delta * 9)); this.look.lerp(target, 1 - Math.exp(-delta * 12)); }
     this.lastPlayer = { x: player.x, z: player.z, time: state.time || 0 };
     this.camera.position.copy(this.position); this.camera.lookAt(this.look); const fov = 64 + Math.min(9, speed * .13) + (player.boostTime > 0 ? 3 : 0); if (Math.abs(this.camera.fov - fov) > .1) { this.camera.fov = fov; this.camera.updateProjectionMatrix(); }
-    this.renderer.render(this.scene, this.camera); this.metrics.drawCalls = this.renderer.info.render.calls; this.metrics.triangles = this.renderer.info.render.triangles; this.metrics.geometries = this.renderer.info.memory.geometries; this.metrics.textures = this.renderer.info.memory.textures;
+    this.renderer.render(this.scene, this.camera);
+    // Read-only camera evidence lets input QA check visible direction rather
+    // than assuming that a positive world coordinate means screen-right.
+    this.metrics.cameraViewProjection = new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse).toArray();
+    this.metrics.cameraRight = this.camera.matrixWorld.elements.slice(0, 3);
+    this.metrics.drawCalls = this.renderer.info.render.calls; this.metrics.triangles = this.renderer.info.render.triangles; this.metrics.geometries = this.renderer.info.memory.geometries; this.metrics.textures = this.renderer.info.memory.textures;
   }
   dispose() { disposeGroup(this.world); disposeGroup(this.karts); this.renderer.dispose(); }
 }

@@ -74,7 +74,8 @@ export function aiInput(state, car = state.player) {
   const tz = target.z - Math.sin(target.yaw) * lane;
   const heading = Math.atan2(tx - car.x, tz - car.z);
   const error = angle(heading - car.yaw);
-  const x = clamp(error * 2.55 - car.slip * .32, -1, 1);
+  // Input x is screen-right positive; world +yaw turns left in the chase view.
+  const x = -clamp(error * 2.55 - car.slip * .32, -1, 1);
   const near = sampleTrack(track, car.trackS + 8);
   const further = sampleTrack(track, car.trackS + 44);
   const turn = Math.max(Math.abs(near.curvature || 0), Math.abs(target.curvature || 0), Math.abs(further.curvature || 0));
@@ -125,7 +126,9 @@ function advanceCar(state, car, track, dt, input) {
   const epoch = Number(input.cancelEpoch) || 0;
   const cancelled = !!input.cancelled || epoch !== car.cancelEpoch;
   car.cancelEpoch = epoch;
-  const steering = cancelled ? 0 : clamp(Number(input.x) || 0, -1, 1);
+  // With +Y up and +Z forward, camera-right is (-cos(yaw), 0, sin(yaw)).
+  // Keep car.steer in world-yaw units so body, slip and front wheels agree.
+  const steering = cancelled ? 0 : -clamp(Number(input.x) || 0, -1, 1);
   const brake = !cancelled && Number(input.y) > .25;
   car.driftGrace = Math.max(0, car.driftGrace - dt);
   const physicalTurn = Math.abs(car.steer) > .16;

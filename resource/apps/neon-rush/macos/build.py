@@ -16,8 +16,8 @@ import xml.etree.ElementTree as ET
 MACOS = Path(__file__).resolve().parent
 GAME = MACOS.parent
 REPO = GAME.parents[2]
-VERSION = '0.1.2'
-BUILD_VERSION = '2'
+VERSION = '0.1.3'
+BUILD_VERSION = '3'
 NAME = 'Neon Rush'
 EXECUTABLE = 'NeonRush'
 ARCHITECTURES = ('arm64', 'x86_64')
@@ -110,10 +110,11 @@ try image.representation(using: .png, properties: [:])!.write(to: URL(fileURLWit
     run('iconutil', '-c', 'icns', iconset, '-o', resources / 'NeonRush.icns')
 
 def source_inputs():
-    paths = [MACOS / 'build.py', GAME / 'game.json', GAME / 'logo.svg', GAME / 'LICENSE', GAME / 'NOTICE.md',
+    paths = [MACOS / 'build.py', GAME / 'package.json', GAME / 'package-lock.json', GAME / 'game.json', GAME / 'logo.svg', GAME / 'LICENSE', GAME / 'NOTICE.md',
              REPO / 'resource/game-kit/build.py', REPO / '.github/workflows/neon-rush-macos.yml']
     for directory in (MACOS / 'Sources', MACOS / 'Web', MACOS / 'tools', MACOS / 'tests',
-                      GAME / 'src/main/assets', REPO / 'resource/game-kit/web'):
+                      GAME / 'source', GAME / 'tests', GAME / 'tools', GAME / 'src/main/assets',
+                      REPO / 'resource/game-kit/web', REPO / 'resource/game-kit/qa'):
         if directory.exists():
             paths.extend(p for p in directory.rglob('*') if p.is_file() and '__pycache__' not in p.parts)
     return {p.relative_to(REPO).as_posix(): {'bytes': p.stat().st_size, 'sha256': digest(p)}

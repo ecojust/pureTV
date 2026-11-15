@@ -116,7 +116,7 @@ try{
  });
  await test('disconnect cancels held input and pauses; reconnect sync cannot auto-resume or boost',async()=>{
   await peer.send('RIGHT',true);held.add('RIGHT');await peer.send('A',true);held.add('A');
-  await observe(page,s=>s.model.player.steer>.3,10000,'Held TCP steering');
+  await observe(page,s=>s.model.player.steer<-.3,10000,'Held TCP steering');
   const before=await snapshot(page);peer.socket.end();await once(peer.socket,'close');held.clear();
   const paused=await observe(page,s=>s.paused&&s.connection.disconnected,10000,'Disconnected pause');const stable=await snapshot(page);await delay(350);assert.deepEqual((await snapshot(page)).model,stable.model);
   peer=await connect(ports.tcpPort);await peer.send('START',true,'sync');await peer.send('B',true,'sync');await peer.send('A',true,'sync');

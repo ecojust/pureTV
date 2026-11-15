@@ -160,7 +160,7 @@ try {
     const cdp=await session.context.newCDPSession(page);const bounds=await page.locator(selector('right')).boundingBox();const x=bounds.x+bounds.width/2,y=bounds.y+bounds.height/2;
     const drift=await page.locator(selector('drift')).boundingBox();
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1},{x:drift.x+drift.width/2,y:drift.y+drift.height/2,id:2}]});await delay(650);const held=await snapshot(page);
-    assert.ok(held.model.player.steer>0.1,'Real touch steers right');
+    assert.ok(held.model.player.steer<-.1,'Real touch steers right');
     await cdp.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});
     const cancelled=await observeUntil(page,s=>s.paused,5000,'Touch cancellation pauses safely');
     assert.equal(cancelled.model.stats.miniBoosts,held.model.stats.miniBoosts,'Cancellation is not a rewarded drift release');

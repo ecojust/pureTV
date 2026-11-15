@@ -1,5 +1,5 @@
 /** Original closed racing routes. All render and collision coordinates use this module.
- * Heading yaw is atan2(dx, dz): +Z is forward at yaw 0 and positive lateral is right.
+ * Heading yaw is atan2(dx, dz): +Z is forward at yaw 0 and positive lateral is world +X at yaw 0 (left in the trailing camera view).
  * points excludes a repeated end point; sampleTrack(track, track.length) wraps to start.
  */
 const TAU = Math.PI * 2;

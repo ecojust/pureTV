@@ -65,14 +65,17 @@ test('countdown prevents early throttle, steering, nitro and distance gain', () 
   assert.ok(s.countdown > 0);
 });
 
-test('right/left steering changes real heading and position; unsteered motion is not a rail follower', () => {
+test('right/left input follows the trailing camera screen basis, not world +X', () => {
   const straight = playerOnly(), right = playerOnly(), left = playerOnly();
   const initialYaw = right.player.yaw;
   advance(straight, 1.2); advance(right, 1.2, { x: 1 }); advance(left, 1.2, { x: -1 });
-  assert.ok(right.player.yaw > initialYaw + .15);
-  assert.ok(left.player.yaw < initialYaw - .15);
-  assert.ok(right.player.lateral > straight.player.lateral + 1);
-  assert.ok(left.player.lateral < straight.player.lateral - 1);
+  // Right = forward cross up in Three.js. This expectation is independent of
+  // aiInput and of the physics implementation's yaw/lateral sign choices.
+  const rightBasis = { x: -Math.cos(initialYaw), z: Math.sin(initialYaw) };
+  const screenDelta = car => (car.x - straight.player.x) * rightBasis.x + (car.z - straight.player.z) * rightBasis.z;
+  const headingRight = car => Math.sin(car.yaw) * rightBasis.x + Math.cos(car.yaw) * rightBasis.z;
+  assert.ok(screenDelta(right.player) > 1 && headingRight(right.player) > .15);
+  assert.ok(screenDelta(left.player) < -1 && headingRight(left.player) < -.15);
   const unattended = playerOnly(); advance(unattended, 90);
   assert.equal(unattended.player.completedLaps, 0);
   assert.ok(unattended.stats.collisions > 0);
@@ -111,7 +114,7 @@ test('holding drift on a straight or at rest grants neither charge nor a mini bo
 test('a sustained genuine drift charges nitro and a timely release grants a short mini boost', () => {
   const s = playerOnly(); place(s, 22); s.player.speed = 24; s.player.nitro = 0;
   advance(s, .85, { x: .43, a: true });
-  assert.ok(s.player.slip > .035); assert.ok(s.player.nitro > 5);
+  assert.ok(s.player.slip < -.035); assert.ok(s.player.nitro > 5);
   assert.equal(s.stats.drifts, 1);
   step(s, dt, { x: .25 });
   assert.equal(s.stats.miniBoosts, 1); assert.ok(s.player.miniBoostTime > .6);

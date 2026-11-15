@@ -8,6 +8,7 @@ import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { mkdtemp, copyFile, writeFile, readFile, mkdir, rm } from 'node:fs/promises';
 import { launch, serveAssets, sha256 } from '../../../game-kit/qa/common.mjs';
+import { aiInput } from '../source/model.mjs';
 
 const kit=fileURLToPath(new URL('../../../game-kit/web/',import.meta.url));
 const game=fileURLToPath(new URL('../src/main/assets/game-model.js',import.meta.url));
@@ -40,16 +41,35 @@ test('Wi-Fi controller snapshots integrate with the real racing rules', {timeout
       return {context,page,errors,put,pump,snap,start};
     }
     async function run(name,fn){await t.test(name,async()=>{const s=await open();try{await fn(s);assert.deepEqual(s.errors,[]);report.tests.push({name,passed:true});}catch(e){report.tests.push({name,passed:false,error:e.stack});throw e;}finally{await s.context.close();}});}
+    async function chargedDrift(s){
+      // Observe the real traffic and rules instead of assuming a fixed-duration
+      // launch drift survives collisions. The driving policy supplies ordinary
+      // bridge inputs only; screen-left/right has its own independent acceptance.
+      let drift;
+      for(let step=0;step<1000;step++){
+        const observed=await s.snap(),car=observed.model.player;
+        assert.equal(observed.paused,false);assert.equal(observed.phase,'playing');
+        if(car.drifting&&car.driftTime>=.5&&car.driftGrace>.25&&car.speed>11){drift=observed;break;}
+        const requested=aiInput(observed.model,car);
+        await s.put({x:requested.x,y:requested.y>0?1:0,a:requested.a});await s.pump(2);
+      }
+      assert.ok(drift,'Ordinary inputs must build a real releasable drift');
+      return drift;
+    }
     await run('Wi-Fi START, steering, drift release and nitro reach actual model',async s=>{
       await s.start();const initial=await s.snap();assert.ok(initial.model.player.speed>10);
-      await s.put({x:.55,a:true});await s.pump(55);const drift=await s.snap();assert.ok(drift.model.player.steer>.2);assert.ok(drift.model.stats.drifts>0);assert.equal(drift.connection.controllerKind,'wifi');
-      await s.put({x:.2});await s.pump(8);assert.ok((await s.snap()).model.stats.miniBoosts>0);
+      const drift=await chargedDrift(s);
+      assert.ok(Math.abs(drift.model.player.steer)>.06);assert.ok(drift.model.stats.drifts>0);assert.equal(drift.connection.controllerKind,'wifi');
+      const boostsBeforeRelease=drift.model.stats.miniBoosts;
+      await s.put({});await s.pump(2);
+      const released=await s.snap();assert.equal(released.model.stats.miniBoosts,boostsBeforeRelease+1);assert.ok(released.model.player.miniBoostTime>0);
+      report.driftRelease={before:drift,after:released,method:'Read-only observed AI policy sends ordinary synthetic bridge inputs until the actual rules report a charged, releasable drift; release earns exactly one mini boost.'};
       await s.put({b:true});await s.pump(2);await s.put({});await s.pump(3);assert.equal((await s.snap()).model.stats.nitros,1);
       await s.pump(6);assert.match(await s.page.locator('#connection').textContent(),/Wi-Fi/);
       const ui=await s.page.evaluate(()=>lastUi);assert.equal(ui.controllerKind,'wifi');assert.equal(ui.wifiController.port,8765);
     });
     await run('Disconnect freezes race; stale reconnect actions cannot resume or earn a boost',async s=>{
-      await s.start();await s.put({x:.5,a:true});await s.pump(50);const before=await s.snap();
+      await s.start();const before=await chargedDrift(s);
       await s.put(null);await s.pump(2);const paused=await s.snap();assert.equal(paused.paused,true);
       await s.pump(10);assert.deepEqual((await s.snap()).model,paused.model);
       await s.put({session:'reconnected',a:true,b:true,start:true,select:true,x:1});await s.pump(12);
@@ -64,7 +84,7 @@ test('Wi-Fi controller snapshots integrate with the real racing rules', {timeout
       await s.put({x:-1,a:true,start:true},'phone');await s.pump(4);state=await s.snap();assert.equal(state.paused,true);assert.equal(state.connection.controllerKind,'phone');await s.pump(6);assert.match(await s.page.locator('#connection').textContent(),/扫码/);
     });
     await run('A cancellation sequence clears drift without an implicit controller switch pause',async s=>{
-      await s.start();await s.put({x:.5,a:true});await s.pump(45);const before=await s.snap();
+      await s.start();const before=await chargedDrift(s);
       await s.put({cancelSeq:1});await s.pump(5);const after=await s.snap();assert.equal(after.paused,false);assert.equal(after.model.stats.miniBoosts,before.model.stats.miniBoosts);assert.equal(after.model.player.drifting,false);
     });
     report.passed=report.tests.every(t=>t.passed)&&report.tests.length===4;
