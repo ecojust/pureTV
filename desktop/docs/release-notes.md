@@ -1,22 +1,22 @@
-# pureTV Manager 0.5.6
+# pureTV Manager 0.5.7
 
 ## 简体中文
 
-- APK市场将 provider 名称直接显示在应用名右侧，移除独立信息行和「作者」标签。
-- 过长的应用名优先省略，为右侧名称保留空间；两边都过长时分别省略，并可悬停查看完整内容。
-- 将「已下载」状态移到文件信息行，避免挤占名称的显示空间。
+- 修复 APK 市场中部分大安装包无法下载的问题：Gitee 原始下载返回 HTTP 403 时，备用下载上限从 32 MiB 提高到 128 MiB。
+- 覆盖麦动KTV 2.1.10（53,570,243 字节）因超过旧备用上限而被管理器拒绝的场景。
+- 下载仍固定到所选目录提交及 Git blob，并验证文件大小和内容哈希；保留取消、超时及有界数据读取。
 
 ## 繁體中文
 
-- APK市場將 provider 名稱直接顯示在應用名右側，移除獨立資訊列和「作者」標籤。
-- 過長的應用名優先省略，為右側名稱保留空間；兩側都過長時分別省略，並可懸停查看完整內容。
-- 將「已下載」狀態移至檔案資訊列，避免擠壓名稱的顯示空間。
+- 修正 APK 市場中部分大型安裝套件無法下載的問題：Gitee 原始下載傳回 HTTP 403 時，備用下載上限由 32 MiB 提高至 128 MiB。
+- 涵蓋麥動KTV 2.1.10（53,570,243 位元組）因超過舊備用上限而遭管理器拒絕的情況。
+- 下載仍固定至所選目錄提交及 Git blob，並驗證檔案大小和內容雜湊；保留取消、逾時及有界資料讀取。
 
 ## English
 
-- Displays the provider name directly to the right of the app name in the APK Market, without a separate row or an “Author” label.
-- Truncates long app names first to preserve space for the provider. If both names are long, each is shortened visually and retains its complete hover text.
-- Moves “Downloaded” to the file information row so it does not compete for space with the names.
+- Fixes downloads of some large APK Market packages by raising the fallback download limit from 32 MiB to 128 MiB when Gitee's raw endpoint returns HTTP 403.
+- Covers Maidong KTV 2.1.10 (53,570,243 bytes), which the manager rejected because it exceeded the previous fallback limit.
+- Downloads remain pinned to the selected catalog commit and Git blob, with file size and content hash verification, cancellation, timeouts and bounded reads.
 
 ---
 

@@ -24,9 +24,11 @@ const MAX_JSON: u64 = 16 * 1024 * 1024;
 // MCP includes both a JSON value and its escaped textual representation.
 const MAX_CATALOG: usize = 256 * 1024;
 const MAX_APK: u64 = 512 * 1024 * 1024;
-// The JSON API expands APKs to Base64. Keep fallback memory bounded independently
-// of the streamed raw download limit, and decode without a second APK-sized buffer.
-const MAX_BLOB_APK: u64 = 32 * 1024 * 1024;
+// The JSON API expands APKs to Base64. Allow common TV apps above 32 MiB while
+// bounding the JSON response to about 171 MiB for a 128 MiB APK, independently of
+// the 512 MiB streamed raw limit. Borrow content and decode directly into the
+// output file instead of allocating a second APK-sized buffer.
+const MAX_BLOB_APK: u64 = 128 * 1024 * 1024;
 const BLOB_METADATA_BYTES: u64 = 8192;
 const MAX_ITEMS: usize = 1024;
 const MAX_MANIFEST: u64 = 64 * 1024;
@@ -830,7 +832,7 @@ fn copy_blob(
 ) -> Result<(), String> {
     check_cancel(cancel)?;
     if item.bytes > MAX_BLOB_APK {
-        return Err("市场备用下载仅支持不超过 32 MB 的 APK，请从发布页下载后手动安装".into());
+        return Err("市场备用下载仅支持不超过 128 MB 的 APK，请从发布页下载后手动安装".into());
     }
     let encoded_bytes = item.bytes.div_ceil(3) * 4;
     let maximum = encoded_bytes + BLOB_METADATA_BYTES;
@@ -907,7 +909,7 @@ fn download_apk_with(
         // blob endpoint addresses the identical immutable bytes without credentials.
         drop(raw);
         if item.bytes > MAX_BLOB_APK {
-            return Err("市场备用下载仅支持不超过 32 MB 的 APK，请从发布页下载后手动安装".into());
+            return Err("市场备用下载仅支持不超过 128 MB 的 APK，请从发布页下载后手动安装".into());
         }
         let blob = require_ok(fetch(&api_path("git/blobs", &item.blob_sha))?)?;
         let maximum = item.bytes.div_ceil(3) * 4 + BLOB_METADATA_BYTES;
@@ -1675,6 +1677,54 @@ mod tests {
         assert_eq!(stages.last().unwrap().downloaded, item.bytes);
     }
     #[test]
+    fn forbidden_raw_downloads_an_apk_larger_than_the_previous_32_mib_limit() {
+        // This is a transfer fixture, not an installable Android application. Its
+        // actual body crosses the old bound, so changing metadata alone cannot
+        // make the regression pass without decoding and verifying all bytes.
+        let mut bytes = vec![0xa5; 33 * 1024 * 1024];
+        bytes[..4].copy_from_slice(b"PK\x03\x04");
+        let selected = item(&bytes);
+        let cancel = AtomicBool::new(false);
+        let mut addresses = Vec::new();
+        let mut output = Vec::new();
+        let mut last_progress = None;
+        download_apk_with(
+            &mut output,
+            &selected,
+            REV,
+            &cancel,
+            |progress| {
+                last_progress = Some(progress);
+                Ok(())
+            },
+            |address| {
+                addresses.push(address.to_owned());
+                Ok(if addresses.len() == 1 {
+                    mock_response(403, b"large file require login for access.".to_vec())
+                } else {
+                    mock_response(200, blob_json(&bytes, &selected))
+                })
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            addresses,
+            vec![
+                repository_url("raw", REV, &selected.id),
+                api_path("git/blobs", &selected.blob_sha),
+            ]
+        );
+        assert_eq!(output, bytes);
+        assert_eq!(
+            git_hash_reader(output.as_slice(), selected.bytes, &cancel).unwrap(),
+            selected.blob_sha
+        );
+        let progress = last_progress.unwrap();
+        assert_eq!(progress.stage, "verifying");
+        assert_eq!(progress.downloaded, selected.bytes);
+        assert_eq!(progress.total, selected.bytes);
+    }
+    #[test]
     fn successful_raw_and_non_forbidden_failures_never_use_blob_api() {
         let bytes = b"PK\x03\x04raw fixture";
         let item = item(bytes);
@@ -1728,7 +1778,7 @@ mod tests {
                 |_| { Ok(mock_response(403, Vec::new())) }
             )
             .unwrap_err(),
-            "市场备用下载仅支持不超过 32 MB 的 APK，请从发布页下载后手动安装"
+            "市场备用下载仅支持不超过 128 MB 的 APK，请从发布页下载后手动安装"
         );
         assert_eq!(
             download_apk_with(
