@@ -1,0 +1,79 @@
+{
+  "version": "0.5.8",
+  "plannedTag": "desktop-v0.5.8",
+  "status": "preparing",
+  "released": false,
+  "tagCreated": false,
+  "sourceCommit": null,
+  "workflowId": null,
+  "scope": "Migrate APK Market and client update downloads to https://apps.b14f.com; retain the separate Gitee forum.",
+  "versionPreparation": {
+    "versionFileCount": 7,
+    "ownVersionFieldCount": 9,
+    "allVersionsMatch": true,
+    "onlyOwnPackageVersionsChanged": true,
+    "thirdPartyDependenciesUnchanged": true,
+    "existingAppsB14fCspPreserved": true,
+    "method": "Compare parsed JSON/TOML before and after this preparation, permitting only the nine own-package version fields."
+  },
+  "implementationScope": {
+    "origin": "https://apps.b14f.com",
+    "marketDirectories": [
+      "game/",
+      "launcher/",
+      "media/"
+    ],
+    "clientDirectory": "client/",
+    "catalogFormat": "HTML directory listings",
+    "remoteIdentity": "HTTP HEAD metadata and conditional GET; not an immutable Git commit",
+    "cacheIntegrity": "Local SHA256 receipt checked when reusing downloaded files",
+    "optionalPublishedIntegrity": "Additionally compare SHA256 when the matching manifest packages entry provides it",
+    "allServerPackagesHavePublishedSha256": null,
+    "localReceiptIsIndependentSourceAuthentication": false,
+    "giteeDownloadFallback": false,
+    "reuseOldSourceCache": false,
+    "forumSource": "Gitee issues",
+    "runtimeValidationStatus": "pending"
+  },
+  "serverObservationDuringMigration": {
+    "source": "Parent task observations before release preparation; not a new probe performed by this preparation",
+    "apkCount": 36,
+    "countsByDirectory": {
+      "game": 20,
+      "launcher": 10,
+      "media": 6
+    },
+    "clientVersions": [
+      "0.5.6"
+    ],
+    "version058Uploaded": false,
+    "uploadPerformedDuringPreparation": false,
+    "recheckRequiredBeforeAndAfterRelease": true
+  },
+  "validation": {
+    "versionMetadata": "passed",
+    "finalFrontendBuild": "pending",
+    "frontendRegression": "pending",
+    "liveDirectoryAndFullDownloads": "pending",
+    "fourPlatformCoreAndNativeTests": "pending",
+    "installerAndUpgradeChecks": "pending",
+    "linuxMcp": "pending",
+    "macosDmgAndStartup": "pending",
+    "officialCi": "pending",
+    "releasePublication": "pending",
+    "publicInstallerFullDownloads": "pending",
+    "serverPostReleaseState": "pending"
+  },
+  "nativeTests": null,
+  "ciEvidence": null,
+  "publicAssetsVerified": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "limitations": [
+    "Previous release test counts are not results for version 0.5.8.",
+    "This preparation neither creates a release nor uploads packages to the application server.",
+    "In-app updates depend on the actual files in the server client directory; a GitHub Release does not establish server synchronization.",
+    "A locally computed SHA256 receipt protects subsequent cache reuse but is not independent server-provided authentication of the first download.",
+    "Server inventory is mutable and must be checked again during release verification."
+  ]
+}

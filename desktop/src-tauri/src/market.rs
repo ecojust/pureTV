@@ -1,14 +1,14 @@
-//! Read-only Gitee catalog and verified APK cache. The repository tree is the catalog;
-//! no launcher names or application IDs are compiled into the manager.
-use base64::{engine::general_purpose::STANDARD, read::DecoderReader, Engine as _};
+//! Read-only HTTPS directory catalog and APK cache. Server validators identify a
+//! selected file; locally computed SHA256 receipts detect cached-file corruption.
+//! HTTP ETags are not advertised as publisher-supplied content hashes.
+use crate::app_store::{self, FileMetadata};
 use reqwest::{
     blocking::{Client, Response},
-    header, redirect, Url,
+    header, redirect, Method,
 };
 use serde::{Deserialize, Serialize};
-use sha1::{Digest, Sha1};
+use sha2::{Digest, Sha256};
 use std::{
-    borrow::Cow,
     collections::{HashMap, HashSet},
     fs::{self, File, OpenOptions},
     io::{Read, Write},
@@ -17,24 +17,16 @@ use std::{
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 
-pub const SOURCE_URL: &str = "https://gitee.com/juzisang331/pure-tv-store";
-const API: &str = "https://gitee.com/api/v5/repos/juzisang331/pure-tv-store";
+pub const SOURCE_URL: &str = app_store::SOURCE_URL;
+const CACHE_NAME: &str = "catalog-http-v1.json";
 const CACHE_AGE_MS: u64 = 5 * 60 * 1000;
-const MAX_JSON: u64 = 16 * 1024 * 1024;
-// MCP includes both a JSON value and its escaped textual representation.
+const MAX_DIRECTORY: u64 = 4 * 1024 * 1024;
 const MAX_CATALOG: usize = 256 * 1024;
 const MAX_APK: u64 = 512 * 1024 * 1024;
-// The JSON API expands APKs to Base64. Allow common TV apps above 32 MiB while
-// bounding the JSON response to about 171 MiB for a 128 MiB APK, independently of
-// the 512 MiB streamed raw limit. Borrow content and decode directly into the
-// output file instead of allocating a second APK-sized buffer.
-const MAX_BLOB_APK: u64 = 128 * 1024 * 1024;
-const BLOB_METADATA_BYTES: u64 = 8192;
 const MAX_ITEMS: usize = 1024;
 const MAX_MANIFEST: u64 = 64 * 1024;
-const MAX_MANIFEST_JSON: u64 = MAX_MANIFEST.div_ceil(3) * 4 + BLOB_METADATA_BYTES;
 const MAX_PROVIDER_BYTES: usize = 512;
-const MANIFEST_TIMEOUT: Duration = Duration::from_secs(30);
+const METADATA_TIMEOUT: Duration = Duration::from_secs(45);
 const NETWORK_TIMEOUT: Duration = Duration::from_secs(10);
 const TRANSFER_TIMEOUT: Duration = Duration::from_secs(15 * 60);
 static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
@@ -50,11 +42,17 @@ pub struct Item {
     pub version: Option<String>,
     pub file_name: String,
     pub bytes: u64,
+    /// Legacy IPC name: opaque SHA256 fingerprint of path and HTTP metadata,
+    /// not a Git blob hash or a publisher-supplied APK checksum.
     pub blob_sha: String,
+    pub download_metadata: FileMetadata,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub content_sha256: Option<String>,
     pub folder_url: String,
     pub cover_url: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub logo_url: Option<String>,
+    /// Legacy IPC name: SHA256 of the bounded SVG fetched with this catalog.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub logo_blob_sha: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -86,34 +84,13 @@ pub struct Download {
     pub home_background: Option<String>,
     pub home_background_color: Option<String>,
 }
-#[derive(Deserialize)]
-struct Repository {
-    default_branch: String,
+#[derive(Serialize, Deserialize)]
+struct Receipt {
+    id: String,
+    identity: String,
+    bytes: u64,
+    sha256: String,
 }
-#[derive(Deserialize)]
-struct Branch {
-    commit: Commit,
-}
-#[derive(Deserialize)]
-struct Commit {
-    sha: String,
-}
-#[derive(Deserialize)]
-struct Tree {
-    tree: Vec<TreeEntry>,
-    #[serde(default)]
-    truncated: bool,
-}
-#[derive(Deserialize)]
-struct TreeEntry {
-    path: String,
-    #[serde(rename = "type")]
-    kind: String,
-    mode: String,
-    sha: String,
-    size: Option<u64>,
-}
-
 fn now_ms() -> u64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -129,7 +106,7 @@ fn check_cancel(cancel: &AtomicBool) -> Result<(), String> {
     }
 }
 fn valid_sha(value: &str) -> bool {
-    value.len() == 40
+    value.len() == 64
         && value
             .bytes()
             .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
@@ -147,7 +124,7 @@ fn apk_kind(path: &str) -> Option<&'static str> {
     if !valid_path(path) || !path.to_ascii_lowercase().ends_with(".apk") {
         return None;
     }
-    if path.starts_with("apps/") {
+    if path.starts_with("game/") || path.starts_with("media/") {
         Some("app")
     } else if path.starts_with("launcher/") {
         Some("launcher")
@@ -155,28 +132,8 @@ fn apk_kind(path: &str) -> Option<&'static str> {
         None
     }
 }
-fn repository_url(mode: &str, revision: &str, path: &str) -> String {
-    let mut url = Url::parse(SOURCE_URL).expect("constant repository URL");
-    let mut segments = url.path_segments_mut().expect("HTTPS base URL");
-    segments.push(mode).push(revision);
-    for part in path.split('/') {
-        if !part.is_empty() {
-            segments.push(part);
-        }
-    }
-    drop(segments);
-    url.to_string()
-}
-fn api_path(suffix: &str, component: &str) -> String {
-    let mut url = Url::parse(&format!("{API}/{suffix}")).expect("constant API URL");
-    url.path_segments_mut()
-        .expect("HTTPS base URL")
-        .push(component);
-    url.to_string()
-}
 fn name_version(file_name: &str) -> (String, Option<String>) {
     let stem = &file_name[..file_name.len() - 4];
-    // A filename is a fallback only; actual Android package metadata is read after download.
     if let Some((name, version)) = stem.rsplit_once('-') {
         let pieces: Vec<_> = version.split('.').collect();
         if !name.is_empty()
@@ -190,9 +147,9 @@ fn name_version(file_name: &str) -> (String, Option<String>) {
     }
     (
         if stem.is_empty() {
-            file_name.to_string()
+            file_name.into()
         } else {
-            stem.to_string()
+            stem.into()
         },
         None,
     )
@@ -205,89 +162,177 @@ fn cover_paths(folder: &str, file_name: &str) -> [String; 3] {
         format!("{folder}/thumb.png"),
     ]
 }
-fn item_from_entry(
-    entry: &TreeEntry,
-    revision: &str,
-    paths: &HashSet<String>,
-    files: &HashMap<&str, &TreeEntry>,
-) -> Result<Item, String> {
-    let kind = apk_kind(&entry.path).ok_or("市场 APK 路径无效")?;
-    let bytes = entry
-        .size
-        .filter(|size| *size > 0 && *size <= MAX_APK)
-        .ok_or("市场 APK 大小无效或超过 512 MB")?;
-    if !valid_sha(&entry.sha) {
-        return Err("市场 APK 校验信息无效".into());
-    }
-    let (folder, file_name) = entry.path.rsplit_once('/').ok_or("市场 APK 路径无效")?;
-    let (name, version) = name_version(file_name);
-    let cover = cover_paths(folder, file_name)
-        .into_iter()
-        .find(|path| paths.contains(path));
-    // A shared logo belongs to this exact APK folder and repository commit.
-    let logo_path = format!("{folder}/logo.svg");
-    let logo = files.get(logo_path.as_str()).filter(|entry| {
-        valid_sha(&entry.sha)
-            && entry
-                .size
-                .is_some_and(|n| n > 0 && n <= crate::app_logos::MAX_LOGO as u64)
-    });
-    Ok(Item {
-        id: entry.path.clone(),
-        kind: kind.into(),
-        name,
-        provider: None,
-        version,
-        file_name: file_name.into(),
-        bytes,
-        blob_sha: entry.sha.clone(),
-        folder_url: repository_url("tree", revision, folder),
-        cover_url: cover.map(|path| repository_url("raw", revision, &path)),
-        logo_url: logo.map(|_| repository_url("raw", revision, &logo_path)),
-        logo_blob_sha: logo.map(|entry| entry.sha.clone()),
-        logo_bytes: logo.and_then(|entry| entry.size),
-    })
+fn valid_provider(value: &str) -> bool {
+    !value.is_empty()
+        && value.len() <= MAX_PROVIDER_BYTES
+        && value.trim() == value
+        && !value.chars().any(char::is_control)
 }
-fn parse_tree(bytes: &[u8], revision: &str, fetched_at: u64) -> Result<Catalog, String> {
-    if !valid_sha(revision) {
-        return Err("市场提交版本无效".into());
+fn provider_from_manifest(bytes: &[u8]) -> Option<String> {
+    if bytes.len() as u64 > MAX_MANIFEST {
+        return None;
     }
-    let tree: Tree = serde_json::from_slice(bytes).map_err(|_| "无法解析市场目录")?;
-    if tree.truncated {
-        return Err("市场目录过大，Gitee 返回了不完整的列表，请稍后重试".into());
+    let value: serde_json::Value = serde_json::from_slice(bytes).ok()?;
+    let provider = value.get("provider")?.as_str()?.trim();
+    valid_provider(provider).then(|| provider.to_owned())
+}
+fn checksum_from_manifest(bytes: &[u8], file_name: &str, file_bytes: u64) -> Option<String> {
+    if bytes.len() as u64 > MAX_MANIFEST {
+        return None;
     }
-    if tree.tree.len() > 50_000 {
-        return Err("市场目录超过支持的大小".into());
-    }
-    let files: Vec<_> = tree
-        .tree
-        .iter()
-        .filter(|entry| entry.kind == "blob" && ["100644", "100755"].contains(&entry.mode.as_str()))
-        .collect();
-    let mut paths = HashSet::new();
-    for file in &files {
-        if !valid_path(&file.path) || !paths.insert(file.path.clone()) {
-            return Err("市场目录包含无效或重复的路径".into());
+    let value: serde_json::Value = serde_json::from_slice(bytes).ok()?;
+    let packages = value.get("packages")?.as_array()?;
+    let mut expected: Option<String> = None;
+    for package in packages {
+        if package.get("file").and_then(|v| v.as_str()) != Some(file_name)
+            || package.get("bytes").and_then(|v| v.as_u64()) != Some(file_bytes)
+        {
+            continue;
         }
+        let digest = package.get("sha256")?.as_str()?.to_ascii_lowercase();
+        if !valid_sha(&digest) {
+            return None;
+        }
+        if expected
+            .as_ref()
+            .is_some_and(|previous| previous != &digest)
+        {
+            return None;
+        }
+        expected = Some(digest);
+    }
+    expected
+}
+fn catalog_revision(items: &[Item]) -> Result<String, String> {
+    let mut identity: Vec<_> = items
+        .iter()
+        .map(|item| (&item.id, &item.blob_sha))
+        .collect();
+    identity.sort_unstable();
+    let bytes = serde_json::to_vec(&identity).map_err(|_| "无法编码市场目录")?;
+    Ok(format!("{:x}", Sha256::digest(bytes)))
+}
+fn metadata_valid(metadata: &FileMetadata) -> bool {
+    let mut headers = header::HeaderMap::new();
+    let Ok(length) = header::HeaderValue::from_str(&metadata.bytes.to_string()) else {
+        return false;
+    };
+    headers.insert(header::CONTENT_LENGTH, length);
+    for (key, value) in [
+        (header::ETAG, metadata.etag.as_ref()),
+        (header::LAST_MODIFIED, metadata.last_modified.as_ref()),
+    ] {
+        if let Some(value) = value {
+            let Ok(value) = header::HeaderValue::from_str(value) else {
+                return false;
+            };
+            headers.insert(key, value);
+        }
+    }
+    app_store::metadata_from_headers(&headers, MAX_APK).is_ok_and(|parsed| parsed == *metadata)
+}
+fn build_catalog(
+    paths: Vec<String>,
+    cancel: &AtomicBool,
+    mut inspect: impl FnMut(&str) -> Result<FileMetadata, String>,
+    mut fetch: impl FnMut(&str, u64) -> Result<Vec<u8>, String>,
+) -> Result<Catalog, String> {
+    let mut unique = HashSet::new();
+    if paths.len() > 50_000
+        || paths
+            .iter()
+            .any(|p| !valid_path(p) || !unique.insert(p.clone()))
+    {
+        return Err("市场目录包含无效或重复的路径".into());
+    }
+    let mut apks: Vec<_> = paths
+        .iter()
+        .filter(|path| apk_kind(path).is_some())
+        .collect();
+    apks.sort();
+    if apks.len() > MAX_ITEMS {
+        return Err("市场应用数量超过支持的上限".into());
     }
     let mut items = Vec::new();
-    let files_by_path = files
-        .iter()
-        .map(|entry| (entry.path.as_str(), *entry))
-        .collect();
-    for entry in files {
-        if apk_kind(&entry.path).is_some() {
-            items.push(item_from_entry(entry, revision, &paths, &files_by_path)?);
-            if items.len() > MAX_ITEMS {
-                return Err("市场应用数量超过支持的上限".into());
-            }
+    for path in apks {
+        check_cancel(cancel)?;
+        let metadata = inspect(&app_store::file_url(path)?)?;
+        if !metadata_valid(&metadata) {
+            return Err("市场 APK 校验信息无效".into());
+        }
+        let (folder, file_name) = path.rsplit_once('/').ok_or("市场 APK 路径无效")?;
+        let (name, version) = name_version(file_name);
+        let cover = cover_paths(folder, file_name)
+            .into_iter()
+            .find(|p| unique.contains(p));
+        items.push(Item {
+            id: path.clone(),
+            kind: apk_kind(path).unwrap().into(),
+            name,
+            provider: None,
+            version,
+            file_name: file_name.into(),
+            bytes: metadata.bytes,
+            blob_sha: app_store::fingerprint(path, &metadata),
+            download_metadata: metadata,
+            content_sha256: None,
+            folder_url: format!("{}/", app_store::file_url(folder)?),
+            cover_url: cover.map(|p| app_store::file_url(&p)).transpose()?,
+            logo_url: None,
+            logo_blob_sha: None,
+            logo_bytes: None,
+        });
+    }
+    // Optional per-folder metadata is read once across multiple APK versions.
+    // A broken/absent manifest or SVG must not hide an otherwise valid APK.
+    let mut manifests: HashMap<String, Option<Vec<u8>>> = HashMap::new();
+    let mut logos: HashMap<String, Option<(String, u64)>> = HashMap::new();
+    let started = Instant::now();
+    for item in &mut items {
+        check_cancel(cancel)?;
+        let folder = item.id.rsplit_once('/').unwrap().0;
+        let manifest = format!("{folder}/manifest.json");
+        if unique.contains(&manifest)
+            && !manifests.contains_key(folder)
+            && started.elapsed() < METADATA_TIMEOUT
+        {
+            let value = fetch(&app_store::file_url(&manifest)?, MAX_MANIFEST)
+                .ok()
+                .filter(|bytes| bytes.len() as u64 <= MAX_MANIFEST);
+            check_cancel(cancel)?;
+            manifests.insert(folder.into(), value);
+        }
+        if let Some(Some(bytes)) = manifests.get(folder) {
+            item.provider = provider_from_manifest(bytes);
+            item.content_sha256 = checksum_from_manifest(bytes, &item.file_name, item.bytes);
+        }
+        let logo = format!("{folder}/logo.svg");
+        if unique.contains(&logo)
+            && !logos.contains_key(folder)
+            && started.elapsed() < METADATA_TIMEOUT
+        {
+            let value = fetch(
+                &app_store::file_url(&logo)?,
+                crate::app_logos::MAX_LOGO as u64,
+            )
+            .ok()
+            .and_then(|bytes| {
+                crate::app_logos::valid_svg(&bytes)?;
+                Some((format!("{:x}", Sha256::digest(&bytes)), bytes.len() as u64))
+            });
+            check_cancel(cancel)?;
+            logos.insert(folder.into(), value);
+        }
+        if let Some(Some((digest, bytes))) = logos.get(folder) {
+            item.logo_url = Some(app_store::file_url(&logo)?);
+            item.logo_blob_sha = Some(digest.clone());
+            item.logo_bytes = Some(*bytes);
         }
     }
-    items.sort_by(|a, b| a.id.cmp(&b.id));
     let catalog = Catalog {
         source_url: SOURCE_URL.into(),
-        revision: revision.into(),
-        fetched_at,
+        revision: catalog_revision(&items)?,
+        fetched_at: now_ms(),
         stale: false,
         warning: None,
         items,
@@ -301,94 +346,12 @@ fn parse_tree(bytes: &[u8], revision: &str, fetched_at: u64) -> Result<Catalog, 
     }
     Ok(catalog)
 }
-fn valid_provider(value: &str) -> bool {
-    !value.is_empty()
-        && value.len() <= MAX_PROVIDER_BYTES
-        && value.trim() == value
-        && !value.chars().any(char::is_control)
-}
-fn provider_from_blob(bytes: &[u8], manifest: &TreeEntry, cancel: &AtomicBool) -> Option<String> {
-    if bytes.len() as u64 > MAX_MANIFEST_JSON {
-        return None;
-    }
-    let blob: Blob<'_> = serde_json::from_slice(bytes).ok()?;
-    if blob.sha != manifest.sha
-        || Some(blob.size) != manifest.size
-        || blob.encoding != "base64"
-        || blob.content.len() as u64 != blob.size.div_ceil(3) * 4
-    {
-        return None;
-    }
-    let decoded = STANDARD.decode(blob.content.as_bytes()).ok()?;
-    if decoded.len() as u64 != blob.size
-        || git_hash_reader(decoded.as_slice(), blob.size, cancel).ok()? != manifest.sha
-    {
-        return None;
-    }
-    let value: serde_json::Value = serde_json::from_slice(&decoded).ok()?;
-    let provider = value.get("provider")?.as_str()?.trim();
-    valid_provider(provider).then(|| provider.to_string())
-}
-fn enrich_providers(
-    catalog: &mut Catalog,
-    tree_bytes: &[u8],
-    cancel: &AtomicBool,
-    fetch: &mut impl FnMut(&str) -> Result<Vec<u8>, String>,
-) -> Result<(), String> {
-    // APK identity still comes exclusively from the verified tree. Optional authors
-    // come only from a regular manifest in that exact folder at the same commit.
-    let tree: Tree = serde_json::from_slice(tree_bytes).map_err(|_| "无法解析市场目录")?;
-    let manifests: HashMap<_, _> = tree
-        .tree
-        .iter()
-        .filter(|entry| {
-            entry.path.ends_with("/manifest.json")
-                && entry.kind == "blob"
-                && ["100644", "100755"].contains(&entry.mode.as_str())
-                && valid_sha(&entry.sha)
-                && entry.size.is_some_and(|size| size > 0 && size <= MAX_MANIFEST)
-        })
-        .map(|entry| (entry.path.as_str(), entry))
-        .collect();
-    let mut providers = HashMap::new();
-    let started = Instant::now();
-    for item in &mut catalog.items {
-        check_cancel(cancel)?;
-        let (folder, _) = item.id.rsplit_once('/').ok_or("市场 APK 路径无效")?;
-        let manifest_path = format!("{folder}/manifest.json");
-        let Some(manifest) = manifests.get(manifest_path.as_str()) else {
-            continue;
-        };
-        let key = (manifest.sha.clone(), manifest.size);
-        if !providers.contains_key(&key) {
-            if started.elapsed() > MANIFEST_TIMEOUT {
-                continue;
-            }
-            let provider = fetch(&api_path("git/blobs", &manifest.sha))
-                .ok()
-                .and_then(|bytes| provider_from_blob(&bytes, manifest, cancel));
-            // A cancelled fetch must never be converted into a successful catalog.
-            check_cancel(cancel)?;
-            providers.insert(key.clone(), provider);
-        }
-        item.provider = providers.get(&key).cloned().flatten();
-    }
-    // Providers are display-only; missing/malformed metadata must not hide APKs.
-    // Recheck the serialized bound after enrichment before caching/MCP delivery.
-    if serde_json::to_vec(catalog)
-        .map_err(|_| "无法编码市场目录")?
-        .len()
-        > MAX_CATALOG
-    {
-        return Err("市场目录超过支持的大小，请联系市场维护者".into());
-    }
-    Ok(())
-}
 fn validate_catalog(catalog: &Catalog) -> bool {
     if catalog.source_url != SOURCE_URL
         || !valid_sha(&catalog.revision)
         || catalog.items.len() > MAX_ITEMS
         || catalog.fetched_at == 0
+        || catalog_revision(&catalog.items).ok().as_ref() != Some(&catalog.revision)
     {
         return false;
     }
@@ -401,12 +364,14 @@ fn validate_catalog(catalog: &Catalog) -> bool {
             return false;
         };
         let (name, version) = name_version(file_name);
-        let covers = cover_paths(folder, file_name)
-            .map(|path| repository_url("raw", &catalog.revision, &path));
+        let covers = cover_paths(folder, file_name).map(|path| app_store::file_url(&path).ok());
         let logo_valid = match (&item.logo_url, &item.logo_blob_sha, item.logo_bytes) {
             (None, None, None) => true,
             (Some(url), Some(sha), Some(bytes)) => {
-                *url == repository_url("raw", &catalog.revision, &format!("{folder}/logo.svg"))
+                app_store::file_url(&format!("{folder}/logo.svg"))
+                    .ok()
+                    .as_ref()
+                    == Some(url)
                     && valid_sha(sha)
                     && bytes > 0
                     && bytes <= crate::app_logos::MAX_LOGO as u64
@@ -415,39 +380,25 @@ fn validate_catalog(catalog: &Catalog) -> bool {
         };
         ids.insert(&item.id)
             && item.provider.as_deref().is_none_or(valid_provider)
+            && item.content_sha256.as_deref().is_none_or(valid_sha)
             && logo_valid
             && item.kind == kind
-            && item.file_name == file_name
             && item.name == name
             && item.version == version
-            && item.bytes > 0
-            && item.bytes <= MAX_APK
-            && valid_sha(&item.blob_sha)
-            && item.folder_url == repository_url("tree", &catalog.revision, folder)
+            && item.file_name == file_name
+            && metadata_valid(&item.download_metadata)
+            && item.bytes == item.download_metadata.bytes
+            && app_store::fingerprint(&item.id, &item.download_metadata) == item.blob_sha
+            && app_store::file_url(folder)
+                .ok()
+                .map(|url| format!("{url}/"))
+                .as_ref()
+                == Some(&item.folder_url)
             && item
                 .cover_url
                 .as_ref()
-                .is_none_or(|cover| covers.contains(cover))
+                .is_none_or(|url| covers.iter().any(|p| p.as_ref() == Some(url)))
     })
-}
-fn read_cache(directory: &Path) -> Option<Catalog> {
-    read_cache_file(directory, "catalog-v3.json")
-}
-fn read_cache_file(directory: &Path, name: &str) -> Option<Catalog> {
-    let path = directory.join("market").join(name);
-    if fs::symlink_metadata(&path)
-        .ok()
-        .is_none_or(|m| !m.is_file() || m.len() > MAX_CATALOG as u64)
-    {
-        return None;
-    }
-    let mut catalog: Catalog = serde_json::from_slice(&fs::read(path).ok()?).ok()?;
-    if !validate_catalog(&catalog) {
-        return None;
-    }
-    catalog.stale = false;
-    catalog.warning = None;
-    Some(catalog)
 }
 fn temporary_path(directory: &Path, extension: &str) -> PathBuf {
     directory.join(format!(
@@ -464,25 +415,43 @@ impl Drop for Temporary {
         let _ = fs::remove_file(&self.0);
     }
 }
+fn read_cache(directory: &Path) -> Option<Catalog> {
+    let path = directory.join("market").join(CACHE_NAME);
+    if fs::symlink_metadata(&path)
+        .ok()
+        .is_none_or(|m| !m.is_file() || m.len() > MAX_CATALOG as u64)
+    {
+        return None;
+    }
+    let mut catalog: Catalog = serde_json::from_slice(&fs::read(path).ok()?).ok()?;
+    if !validate_catalog(&catalog) {
+        return None;
+    }
+    catalog.stale = false;
+    catalog.warning = None;
+    Some(catalog)
+}
 fn write_cache(directory: &Path, catalog: &Catalog) -> Result<(), String> {
     let root = directory.join("market");
     fs::create_dir_all(&root).map_err(|_| "无法创建市场缓存目录")?;
-    let temporary = Temporary(temporary_path(&root, "json"));
+    write_json(&root.join(CACHE_NAME), catalog)
+}
+fn write_json(path: &Path, value: &impl Serialize) -> Result<(), String> {
+    let temporary = Temporary(temporary_path(
+        path.parent().ok_or("无法保存市场缓存")?,
+        "json",
+    ));
     let mut file = OpenOptions::new()
         .create_new(true)
         .write(true)
         .open(&temporary.0)
         .map_err(|_| "无法写入市场缓存")?;
-    serde_json::to_writer(&mut file, catalog).map_err(|_| "无法写入市场缓存")?;
+    serde_json::to_writer(&mut file, value).map_err(|_| "无法写入市场缓存")?;
     file.sync_all().map_err(|_| "无法保存市场缓存")?;
     drop(file);
-    fs::rename(&temporary.0, root.join("catalog-v3.json")).map_err(|_| "无法保存市场缓存")?;
-    Ok(())
+    fs::rename(&temporary.0, path).map_err(|_| "无法保存市场缓存".into())
 }
 fn client() -> Result<Client, String> {
-    // For reqwest::blocking this bounds send and each Read::read call separately;
-    // it does not set async ClientBuilder's whole-response timeout. The loops below
-    // enforce overall JSON/APK deadlines while checking cancellation between reads.
     Client::builder()
         .https_only(true)
         .redirect(redirect::Policy::none())
@@ -492,43 +461,32 @@ fn client() -> Result<Client, String> {
         .build()
         .map_err(|_| "无法准备市场 HTTPS 连接".into())
 }
-fn allowed_url(url: &Url) -> bool {
-    url.scheme() == "https"
-        && matches!(
-            url.host_str(),
-            Some("gitee.com" | "raw.giteeusercontent.com")
-        )
-        && url.port().is_none_or(|p| p == 443)
-        && url.username().is_empty()
-        && url.password().is_none()
-        && url.fragment().is_none()
-        && (url.path().starts_with("/juzisang331/pure-tv-store/")
-            || url.host_str() == Some("gitee.com")
-                && (url.path() == "/api/v5/repos/juzisang331/pure-tv-store"
-                    || url
-                        .path()
-                        .starts_with("/api/v5/repos/juzisang331/pure-tv-store/")))
-}
-fn response_with_status(
+fn response(
     client: &Client,
+    method: Method,
     address: &str,
+    metadata: Option<&FileMetadata>,
     cancel: &AtomicBool,
 ) -> Result<Response, String> {
-    let mut url = Url::parse(address).map_err(|_| "市场下载地址无效")?;
+    let mut url = reqwest::Url::parse(address).map_err(|_| "市场下载地址无效")?;
     for hop in 0..=5 {
         check_cancel(cancel)?;
-        if !allowed_url(&url) {
+        if !app_store::allowed_url(&url) {
             return Err("市场服务器返回了不受支持的下载地址".into());
         }
-        let response = client
-            .get(url.clone())
-            .header(header::ACCEPT_ENCODING, "identity")
-            .send()
-            .map_err(|_| {
-                check_cancel(cancel)
-                    .err()
-                    .unwrap_or_else(|| "无法连接市场，请检查网络后重试".into())
-            })?;
+        let request = client
+            .request(method.clone(), url.clone())
+            .header(header::ACCEPT_ENCODING, "identity");
+        let request = if let Some(metadata) = metadata {
+            app_store::apply_conditions(request, metadata)
+        } else {
+            request
+        };
+        let response = request.send().map_err(|_| {
+            check_cancel(cancel)
+                .err()
+                .unwrap_or_else(|| "无法连接市场，请检查网络后重试".into())
+        })?;
         check_cancel(cancel)?;
         if response.status().is_redirection() {
             if hop == 5 {
@@ -542,11 +500,14 @@ fn response_with_status(
             url = url.join(location).map_err(|_| "市场下载重定向无效")?;
             continue;
         }
-        return Ok(response);
+        return require_ok(response);
     }
     Err("市场下载失败".into())
 }
 fn require_ok(response: Response) -> Result<Response, String> {
+    if response.status() == reqwest::StatusCode::PRECONDITION_FAILED {
+        return Err("市场目录已更新，请刷新市场后重试".into());
+    }
     if response.status() != reqwest::StatusCode::OK {
         return Err(format!(
             "市场服务器返回 HTTP {}，请稍后重试",
@@ -555,21 +516,18 @@ fn require_ok(response: Response) -> Result<Response, String> {
     }
     Ok(response)
 }
-fn response(client: &Client, address: &str, cancel: &AtomicBool) -> Result<Response, String> {
-    require_ok(response_with_status(client, address, cancel)?)
-}
-fn fetch_json(
+fn fetch_bytes(
     client: &Client,
     address: &str,
     cancel: &AtomicBool,
     maximum: u64,
 ) -> Result<Vec<u8>, String> {
-    let mut response = response(client, address, cancel)?;
+    let mut response = response(client, Method::GET, address, None, cancel)?;
     if response.content_length().is_some_and(|n| n > maximum) {
         return Err("市场目录文件过大".into());
     }
     let started = Instant::now();
-    let timeout = if maximum == MAX_MANIFEST_JSON {
+    let deadline = if maximum <= MAX_MANIFEST {
         NETWORK_TIMEOUT
     } else {
         Duration::from_secs(45)
@@ -578,7 +536,7 @@ fn fetch_json(
     let mut buffer = [0u8; 16_384];
     loop {
         check_cancel(cancel)?;
-        if started.elapsed() > timeout {
+        if started.elapsed() > deadline {
             return Err("读取市场目录超时".into());
         }
         let count = response.read(&mut buffer).map_err(|_| {
@@ -601,9 +559,12 @@ fn catalog_with(
     refresh: bool,
     cancel: &AtomicBool,
     mut report: impl FnMut(Progress) -> Result<(), String>,
-    mut fetch: impl FnMut(&str) -> Result<Vec<u8>, String>,
+    mut discover: impl FnMut() -> Result<Vec<String>, String>,
+    inspect: impl FnMut(&str) -> Result<FileMetadata, String>,
+    fetch: impl FnMut(&str, u64) -> Result<Vec<u8>, String>,
 ) -> Result<Catalog, String> {
     check_cancel(cancel)?;
+    // Never load legacy Gitee catalog-v2/v3. A source migration starts a new cache.
     let cached = read_cache(directory);
     let now = now_ms();
     if !refresh {
@@ -613,9 +574,6 @@ fn catalog_with(
             }
         }
     }
-    // Upgrade the metadata cache once online, but keep the old catalog available
-    // for explicit stale/offline fallback. Old data must not suppress this refresh.
-    let cached = cached.or_else(|| read_cache_file(directory, "catalog-v2.json"));
     report(Progress {
         stage: "catalog".into(),
         downloaded: 0,
@@ -623,25 +581,7 @@ fn catalog_with(
         item_id: None,
     })?;
     let latest = (|| {
-        let repository: Repository =
-            serde_json::from_slice(&fetch(API)?).map_err(|_| "无法解析市场仓库信息")?;
-        if !valid_path(&repository.default_branch) {
-            return Err("市场默认分支无效".into());
-        }
-        check_cancel(cancel)?;
-        let branch: Branch =
-            serde_json::from_slice(&fetch(&api_path("branches", &repository.default_branch))?)
-                .map_err(|_| "无法解析市场版本")?;
-        if !valid_sha(&branch.commit.sha) {
-            return Err("市场提交版本无效".into());
-        }
-        check_cancel(cancel)?;
-        let tree = fetch(&format!(
-            "{}?recursive=1",
-            api_path("git/trees", &branch.commit.sha)
-        ))?;
-        let mut catalog = parse_tree(&tree, &branch.commit.sha, now_ms())?;
-        enrich_providers(&mut catalog, &tree, cancel, &mut fetch)?;
+        let catalog = build_catalog(discover()?, cancel, inspect, fetch)?;
         check_cancel(cancel)?;
         write_cache(directory, &catalog)?;
         Ok::<_, String>(catalog)
@@ -667,18 +607,25 @@ pub fn catalog(
     report: impl FnMut(Progress) -> Result<(), String>,
 ) -> Result<Catalog, String> {
     let client = client()?;
-    catalog_with(directory, refresh, cancel, report, |url| {
-        let maximum = if url.starts_with(&format!("{API}/git/blobs/")) {
-            MAX_MANIFEST_JSON
-        } else {
-            MAX_JSON
-        };
-        fetch_json(&client, url, cancel, maximum)
-    })
+    catalog_with(
+        directory,
+        refresh,
+        cancel,
+        report,
+        || {
+            app_store::list_files_with(&["launcher", "media", "game"], cancel, |url| {
+                fetch_bytes(&client, url, cancel, MAX_DIRECTORY)
+            })
+        },
+        |url| {
+            let response = response(&client, Method::HEAD, url, None, cancel)?;
+            app_store::metadata_from_headers(response.headers(), MAX_APK)
+        },
+        |url, maximum| fetch_bytes(&client, url, cancel, maximum),
+    )
 }
-fn git_hash_reader(mut input: impl Read, size: u64, cancel: &AtomicBool) -> Result<String, String> {
-    let mut digest = Sha1::new();
-    digest.update(format!("blob {size}\0").as_bytes());
+fn sha256_reader(mut input: impl Read, size: u64, cancel: &AtomicBool) -> Result<String, String> {
+    let mut digest = Sha256::new();
     let mut count = 0u64;
     let mut buffer = [0u8; 65_536];
     loop {
@@ -705,15 +652,37 @@ fn verified_file(path: &Path, item: &Item, cancel: &AtomicBool) -> Result<bool, 
     if !meta.is_file() || meta.len() != item.bytes {
         return Ok(false);
     }
-    Ok(git_hash_reader(
+    let receipt_path = path.with_extension("receipt.json");
+    if fs::symlink_metadata(&receipt_path)
+        .ok()
+        .is_none_or(|m| !m.is_file() || m.len() > 4096)
+    {
+        return Ok(false);
+    }
+    let Some(receipt) = fs::read(&receipt_path)
+        .ok()
+        .and_then(|bytes| serde_json::from_slice::<Receipt>(&bytes).ok())
+    else {
+        return Ok(false);
+    };
+    if receipt.id != item.id
+        || receipt.identity != item.blob_sha
+        || receipt.bytes != item.bytes
+        || !valid_sha(&receipt.sha256)
+        || item
+            .content_sha256
+            .as_ref()
+            .is_some_and(|expected| expected != &receipt.sha256)
+    {
+        return Ok(false);
+    }
+    Ok(sha256_reader(
         File::open(path).map_err(|_| "无法读取市场 APK 缓存")?,
         item.bytes,
         cancel,
-    )? == item.blob_sha)
+    )? == receipt.sha256)
 }
 fn cache_file_name(file_name: &str) -> String {
-    // Repository paths are not local paths. Keep recognizable names on every OS,
-    // including Windows, while the parent blob SHA provides the cache identity.
     let mut stem: String = file_name[..file_name.len() - 4]
         .chars()
         .map(|c| {
@@ -756,13 +725,12 @@ fn copy_apk(
     item: &Item,
     cancel: &AtomicBool,
     mut report: impl FnMut(Progress) -> Result<(), String>,
-) -> Result<(), String> {
+) -> Result<String, String> {
     let start = Instant::now();
     let mut last = Instant::now() - Duration::from_secs(1);
     let mut downloaded = 0u64;
     let mut prefix = Vec::new();
-    let mut digest = Sha1::new();
-    digest.update(format!("blob {}\0", item.bytes).as_bytes());
+    let mut digest = Sha256::new();
     let mut buffer = [0u8; 65_536];
     loop {
         check_cancel(cancel)?;
@@ -809,124 +777,31 @@ fn copy_apk(
     if downloaded != item.bytes || prefix != b"PK\x03\x04" {
         return Err("市场 APK 下载不完整".into());
     }
-    if format!("{:x}", digest.finalize()) != item.blob_sha {
+    output.flush().map_err(|_| "无法保存市场 APK")?;
+    let sha256 = format!("{:x}", digest.finalize());
+    if item
+        .content_sha256
+        .as_ref()
+        .is_some_and(|expected| expected != &sha256)
+    {
         return Err("市场 APK 校验失败，请刷新市场后重试".into());
     }
-    output.flush().map_err(|_| "无法保存市场 APK")?;
-    Ok(())
-}
-#[derive(Deserialize)]
-struct Blob<'a> {
-    sha: String,
-    size: u64,
-    encoding: String,
-    #[serde(borrow)]
-    content: Cow<'a, str>,
-}
-fn copy_blob(
-    mut input: impl Read,
-    output: impl Write,
-    item: &Item,
-    cancel: &AtomicBool,
-    mut report: impl FnMut(Progress) -> Result<(), String>,
-) -> Result<(), String> {
-    check_cancel(cancel)?;
-    if item.bytes > MAX_BLOB_APK {
-        return Err("市场备用下载仅支持不超过 128 MB 的 APK，请从发布页下载后手动安装".into());
-    }
-    let encoded_bytes = item.bytes.div_ceil(3) * 4;
-    let maximum = encoded_bytes + BLOB_METADATA_BYTES;
-    let started = Instant::now();
-    let mut last = Instant::now() - Duration::from_secs(1);
-    let mut json = Vec::new();
-    let mut buffer = [0u8; 65_536];
-    loop {
-        check_cancel(cancel)?;
-        if started.elapsed() > TRANSFER_TIMEOUT {
-            return Err("市场 APK 下载超时".into());
-        }
-        let count = input.read(&mut buffer).map_err(|_| {
-            check_cancel(cancel)
-                .err()
-                .unwrap_or_else(|| "市场 APK 下载中断".into())
-        })?;
-        if count == 0 {
-            break;
-        }
-        if json.len() as u64 + count as u64 > maximum {
-            return Err("市场备用下载数据超过预期大小".into());
-        }
-        json.extend_from_slice(&buffer[..count]);
-        if last.elapsed() >= Duration::from_millis(150) {
-            report(Progress {
-                stage: "downloading".into(),
-                downloaded: ((json.len() as u64).saturating_sub(BLOB_METADATA_BYTES) / 4 * 3)
-                    .min(item.bytes),
-                total: item.bytes,
-                item_id: Some(item.id.clone()),
-            })?;
-            last = Instant::now();
-        }
-    }
-    check_cancel(cancel)?;
-    let blob: Blob<'_> = serde_json::from_slice(&json).map_err(|_| "市场备用下载数据无效")?;
-    if blob.sha != item.blob_sha
-        || blob.size != item.bytes
-        || blob.encoding != "base64"
-        || blob.content.len() as u64 != encoded_bytes
-    {
-        return Err("市场备用下载信息与目录不一致".into());
-    }
-    // Contents API truncates files at 10 MiB, even while reporting the original size.
-    // Only Git blobs is used; decoded bytes still pass exact size and Git SHA checks.
-    copy_apk(
-        DecoderReader::new(blob.content.as_bytes(), &STANDARD),
-        output,
-        item,
-        cancel,
-        |mut progress| {
-            // Network transfer has completed. Decoding/hash verification must not make
-            // the download indicator jump backwards to the first decoded chunk.
-            progress.stage = "verifying".into();
-            progress.downloaded = item.bytes;
-            report(progress)
-        },
-    )
+    Ok(sha256)
 }
 fn download_apk_with(
     output: impl Write,
     item: &Item,
-    revision: &str,
     cancel: &AtomicBool,
     report: impl FnMut(Progress) -> Result<(), String>,
-    mut fetch: impl FnMut(&str) -> Result<Response, String>,
-) -> Result<(), String> {
+    mut fetch: impl FnMut(&str, &FileMetadata) -> Result<Response, String>,
+) -> Result<String, String> {
     check_cancel(cancel)?;
-    let raw = fetch(&repository_url("raw", revision, &item.id))?;
-    check_cancel(cancel)?;
-    if raw.status() == reqwest::StatusCode::FORBIDDEN {
-        // Public Gitee raw endpoints require login for large files. The public Git
-        // blob endpoint addresses the identical immutable bytes without credentials.
-        drop(raw);
-        if item.bytes > MAX_BLOB_APK {
-            return Err("市场备用下载仅支持不超过 128 MB 的 APK，请从发布页下载后手动安装".into());
-        }
-        let blob = require_ok(fetch(&api_path("git/blobs", &item.blob_sha))?)?;
-        let maximum = item.bytes.div_ceil(3) * 4 + BLOB_METADATA_BYTES;
-        if blob.content_length().is_some_and(|bytes| bytes > maximum) {
-            return Err("市场备用下载数据超过预期大小".into());
-        }
-        copy_blob(blob, output, item, cancel, report)
-    } else {
-        let raw = require_ok(raw)?;
-        if raw
-            .content_length()
-            .is_some_and(|bytes| bytes != item.bytes)
-        {
-            return Err("市场 APK 大小与目录不一致".into());
-        }
-        copy_apk(raw, output, item, cancel, report)
-    }
+    let response = require_ok(fetch(
+        &app_store::file_url(&item.id)?,
+        &item.download_metadata,
+    )?)?;
+    app_store::check_response_metadata(response.headers(), &item.download_metadata)?;
+    copy_apk(response, output, item, cancel, report)
 }
 pub fn download(
     directory: &Path,
@@ -951,7 +826,7 @@ pub fn download(
         .into_iter()
         .find(|item| item.id == id)
         .ok_or("市场中没有找到此 APK，请刷新市场")?;
-    let root = directory.join("market/apks").join(&item.blob_sha);
+    let root = directory.join("market/apks-http-v1").join(&item.blob_sha);
     fs::create_dir_all(&root).map_err(|_| "无法创建市场下载目录")?;
     let target = root.join(cache_file_name(&item.file_name));
     report(Progress {
@@ -960,48 +835,50 @@ pub fn download(
         total: item.bytes,
         item_id: Some(item.id.clone()),
     })?;
-    if verified_file(&target, &item, cancel)? {
+    if !verified_file(&target, &item, cancel)? {
+        check_cancel(cancel)?;
+        let temporary = Temporary(temporary_path(&root, "part"));
+        let mut output = OpenOptions::new()
+            .create_new(true)
+            .write(true)
+            .open(&temporary.0)
+            .map_err(|_| "无法创建市场下载文件")?;
         report(Progress {
-            stage: "verifying".into(),
-            downloaded: item.bytes,
+            stage: "downloading".into(),
+            downloaded: 0,
             total: item.bytes,
             item_id: Some(item.id.clone()),
         })?;
+        let client = client()?;
+        let sha256 =
+            download_apk_with(&mut output, &item, cancel, &mut report, |url, metadata| {
+                response(&client, Method::GET, url, Some(metadata), cancel)
+            })?;
+        output.sync_all().map_err(|_| "无法保存市场 APK")?;
+        drop(output);
         check_cancel(cancel)?;
-        save_optional_logo(directory, &target, &item, cancel);
-        return Ok(Download {
-            item,
-            path: target.to_string_lossy().into_owned(),
-            home_background: None,
-            home_background_color: None,
-        });
+        // A complete verified replacement is ready before touching a corrupt cache.
+        if target.exists() {
+            fs::remove_file(&target).map_err(|_| "无法完成市场 APK 下载")?;
+        }
+        fs::rename(&temporary.0, &target).map_err(|_| "无法完成市场 APK 下载")?;
+        write_json(
+            &target.with_extension("receipt.json"),
+            &Receipt {
+                id: item.id.clone(),
+                identity: item.blob_sha.clone(),
+                bytes: item.bytes,
+                sha256,
+            },
+        )?;
     }
-    check_cancel(cancel)?;
-    let temporary = Temporary(temporary_path(&root, "part"));
-    let mut output = OpenOptions::new()
-        .create_new(true)
-        .write(true)
-        .open(&temporary.0)
-        .map_err(|_| "无法创建市场下载文件")?;
     report(Progress {
-        stage: "downloading".into(),
-        downloaded: 0,
+        stage: "verifying".into(),
+        downloaded: item.bytes,
         total: item.bytes,
         item_id: Some(item.id.clone()),
     })?;
-    let client = client()?;
-    download_apk_with(
-        &mut output,
-        &item,
-        &catalog.revision,
-        cancel,
-        &mut report,
-        |address| response_with_status(&client, address, cancel),
-    )?;
-    output.sync_all().map_err(|_| "无法保存市场 APK")?;
-    drop(output);
     check_cancel(cancel)?;
-    fs::rename(&temporary.0, &target).map_err(|_| "无法完成市场 APK 下载")?;
     save_optional_logo(directory, &target, &item, cancel);
     Ok(Download {
         item,
@@ -1010,14 +887,11 @@ pub fn download(
         home_background_color: None,
     })
 }
-
 fn logo_matches(bytes: &[u8], item: &Item, cancel: &AtomicBool) -> bool {
-    item.logo_bytes == Some(bytes.len() as u64)
+    !cancel.load(Ordering::Acquire)
+        && item.logo_bytes == Some(bytes.len() as u64)
         && crate::app_logos::valid_svg(bytes).is_some()
-        && git_hash_reader(std::io::Cursor::new(bytes), bytes.len() as u64, cancel)
-            .ok()
-            .as_ref()
-            == item.logo_blob_sha.as_ref()
+        && item.logo_blob_sha.as_deref() == Some(format!("{:x}", Sha256::digest(bytes)).as_str())
 }
 fn cache_logo_with(
     root: &Path,
@@ -1034,16 +908,10 @@ fn cache_logo_with(
         .ok()
         .is_some_and(|m| m.is_file() && m.len() <= crate::app_logos::MAX_LOGO as u64)
     {
-        let mut bytes = Vec::new();
-        if File::open(&target)
-            .and_then(|file| {
-                file.take(crate::app_logos::MAX_LOGO as u64 + 1)
-                    .read_to_end(&mut bytes)
-            })
-            .is_ok()
-            && logo_matches(&bytes, item, cancel)
-        {
-            return Ok(String::from_utf8(bytes).ok());
+        if let Ok(bytes) = fs::read(&target) {
+            if logo_matches(&bytes, item, cancel) {
+                return Ok(String::from_utf8(bytes).ok());
+            }
         }
     }
     let bytes = fetch(address)?;
@@ -1083,33 +951,8 @@ fn save_optional_logo(directory: &Path, apk: &Path, item: &Item, cancel: &Atomic
             .user_agent(concat!("pureTV-Manager/", env!("CARGO_PKG_VERSION")))
             .build()
             .map_err(|_| "无法准备图标下载")?;
-        let mut stream = response(&client, address, cancel)?;
-        if stream
-            .content_length()
-            .is_some_and(|n| n > crate::app_logos::MAX_LOGO as u64)
-        {
-            return Err("应用图标过大".into());
-        }
-        let start = Instant::now();
-        let mut bytes = Vec::new();
-        let mut buffer = [0; 1024];
-        loop {
-            check_cancel(cancel)?;
-            if start.elapsed() > Duration::from_secs(10) {
-                return Err("应用图标下载超时".into());
-            }
-            let count = stream.read(&mut buffer).map_err(|_| "无法读取应用图标")?;
-            if count == 0 {
-                break;
-            }
-            if bytes.len() + count > crate::app_logos::MAX_LOGO {
-                return Err("应用图标过大".into());
-            }
-            bytes.extend_from_slice(&buffer[..count]);
-        }
-        Ok(bytes)
+        fetch_bytes(&client, address, cancel, crate::app_logos::MAX_LOGO as u64)
     });
-    // Optional artwork must never turn a verified APK download into a failure.
     if let Ok(Some(svg)) = result {
         let _ = crate::app_logos::save(directory, apk, &svg);
     }
@@ -1118,968 +961,681 @@ fn save_optional_logo(directory: &Path, apk: &Path, item: &Item, cancel: &Atomic
 #[cfg(test)]
 mod tests {
     use super::*;
-    use base64::Engine;
     use serde_json::json;
     use std::io::Cursor;
-    const REV: &str = "06f4b4d782be0d0a82b915b64ca0587fa6f703bf";
-    fn temp() -> Temporary {
+    const APK: &[u8] = b"PK\x03\x04test APK content";
+    const SVG: &[u8] = br##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path fill="#fff" d="M0 0h64v64H0z"/></svg>"##;
+    struct TestDirectory(PathBuf);
+    impl Drop for TestDirectory {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+    fn temp() -> TestDirectory {
         let path = std::env::temp_dir().join(format!(
-            "puretv-market-tests-{}-{}",
+            "puretv-http-market-{}-{}",
             std::process::id(),
             NEXT_TEMP.fetch_add(1, Ordering::Relaxed)
         ));
         fs::create_dir_all(&path).unwrap();
-        Temporary(path)
+        TestDirectory(path)
     }
-    fn tree(paths: &[&str]) -> Vec<u8> {
-        serde_json::to_vec(&json!({"sha":"master","truncated":false,"tree":paths.iter().map(|path|json!({"path":path,"type":"blob","mode":"100644","size":25,"sha":"a".repeat(40)})).collect::<Vec<_>>()})).unwrap()
+    fn cancel() -> AtomicBool {
+        AtomicBool::new(false)
     }
-    fn item(bytes: &[u8]) -> Item {
-        let cancel = AtomicBool::new(false);
-        Item {
-            id: "apps/example/Example-1.2.3.apk".into(),
-            kind: "app".into(),
-            name: "Example".into(),
-            provider: None,
-            version: Some("1.2.3".into()),
-            file_name: "Example-1.2.3.apk".into(),
+    fn metadata(bytes: &[u8]) -> FileMetadata {
+        FileMetadata {
             bytes: bytes.len() as u64,
-            blob_sha: git_hash_reader(Cursor::new(bytes), bytes.len() as u64, &cancel).unwrap(),
-            folder_url: repository_url("tree", REV, "apps/example"),
-            cover_url: None,
-            logo_url: None,
-            logo_blob_sha: None,
-            logo_bytes: None,
+            etag: Some(format!("\"{:x}\"", Sha256::digest(bytes))),
+            last_modified: Some("Sun, 15 Nov 2026 09:30:00 GMT".into()),
         }
     }
-    fn manifest_entry(path: &str, bytes: &[u8]) -> serde_json::Value {
-        json!({"path":path,"type":"blob","mode":"100644","size":bytes.len(),
-            "sha":git_hash_reader(bytes, bytes.len() as u64, &AtomicBool::new(false)).unwrap()})
-    }
-    fn manifest_blob(entry: &serde_json::Value, bytes: &[u8]) -> Vec<u8> {
-        serde_json::to_vec(&json!({"sha":entry["sha"],"size":entry["size"],
-            "encoding":"base64","content":STANDARD.encode(bytes)})).unwrap()
-    }
-    fn with_manifests(paths: &[&str], entries: &[serde_json::Value]) -> Vec<u8> {
-        let mut value: serde_json::Value = serde_json::from_slice(&tree(paths)).unwrap();
-        value["tree"].as_array_mut().unwrap().extend_from_slice(entries);
-        serde_json::to_vec(&value).unwrap()
-    }
-    #[test]
-    fn providers_use_exact_folder_and_pinned_blobs_once_across_versions_and_categories() {
-        let root = temp();
-        let cancel = AtomicBool::new(false);
-        let shared = "{\"provider\":\"  桔子桑  \"}".as_bytes();
-        let other = br#"{"provider":"Other & <author>","url":"https://untrusted.example/"}"#;
-        let first = manifest_entry("apps/media/music/manifest.json", shared);
-        let second = manifest_entry("launcher/home/manifest.json", shared);
-        let game = manifest_entry("apps/game/game/manifest.json", other);
-        let tree = with_manifests(&["apps/media/music/Music-1.0.apk", "apps/media/music/Music-2.0.apk",
-            "launcher/home/Home.apk", "apps/game/game/Game.apk", "apps/media/unknown/Unknown.apk"],
-            &[first.clone(), second, game.clone(), manifest_entry("apps/media/manifest.json", shared)]);
-        let mut addresses = Vec::new();
-        let catalog = catalog_with(&root.0, true, &cancel, |_| Ok(()), |url| {
-            addresses.push(url.to_string());
-            Ok(if url == API { br#"{"default_branch":"master"}"#.to_vec() }
-            else if url == api_path("branches", "master") { serde_json::to_vec(&json!({"commit":{"sha":REV}})).unwrap() }
-            else if url == format!("{}?recursive=1", api_path("git/trees", REV)) { tree.clone() }
-            else if url == api_path("git/blobs", first["sha"].as_str().unwrap()) { manifest_blob(&first, shared) }
-            else if url == api_path("git/blobs", game["sha"].as_str().unwrap()) { manifest_blob(&game, other) }
-            else { panic!("Unexpected metadata URL: {url}") })
-        }).unwrap();
-        assert_eq!(addresses.len(), 5, "Each immutable manifest blob is fetched once");
-        for item in &catalog.items {
-            let expected = if item.id.contains("unknown/") { None }
-                else if item.kind == "launcher" || item.id.contains("music/") { Some("桔子桑") }
-                else { Some("Other & <author>") };
-            assert_eq!(item.provider.as_deref(), expected, "{}", item.id);
-        }
-        assert!(validate_catalog(&catalog));
-        assert_eq!(read_cache(&root.0).unwrap().items, catalog.items);
-        let offline = catalog_with(&root.0, true, &cancel, |_| Ok(()), |_| Err("offline".into())).unwrap();
-        assert!(offline.stale);
-        assert_eq!(offline.items, catalog.items, "Verified authors survive stale fallback");
-        fs::remove_dir_all(&root.0).unwrap();
-    }
-    #[test]
-    fn optional_provider_values_are_bounded_plain_text_and_blob_integrity_is_required() {
-        let cancel = AtomicBool::new(false);
-        let cases = [json!({}), json!({"provider":null}), json!({"provider":false}),
-            json!({"provider":123}), json!({"provider":[]}), json!({"provider":{"name":"wrong"}}),
-            json!({"provider":" \n\t "}), json!({"provider":"bad\nname"}),
-            json!({"provider":"a".repeat(MAX_PROVIDER_BYTES+1)})];
-        for value in cases {
-            let bytes = serde_json::to_vec(&value).unwrap();
-            let entry = manifest_entry("apps/one/manifest.json", &bytes);
-            let manifest = serde_json::from_value(entry.clone()).unwrap();
-            assert_eq!(provider_from_blob(&manifest_blob(&entry, &bytes), &manifest, &cancel), None);
-        }
-        let valid = br#"{"provider":"Author"}"#;
-        let entry = manifest_entry("apps/one/manifest.json", valid);
-        let manifest = serde_json::from_value(entry.clone()).unwrap();
-        let blob = manifest_blob(&entry, valid);
-        assert_eq!(provider_from_blob(&blob, &manifest, &cancel).as_deref(), Some("Author"));
-        for (key, value) in [("sha", json!("b".repeat(40))), ("size", json!(1)),
-            ("encoding", json!("utf8")), ("content", json!(STANDARD.encode(br#"{"provider":"Spoof!"}"#)))] {
-            let mut altered: serde_json::Value = serde_json::from_slice(&blob).unwrap();
-            altered[key] = value;
-            assert!(provider_from_blob(&serde_json::to_vec(&altered).unwrap(), &manifest, &cancel).is_none());
-        }
-        assert!(provider_from_blob(b"not json", &manifest, &cancel).is_none());
-    }
-    #[test]
-    fn optional_metadata_failures_do_not_hide_apks_or_fetch_unsafe_manifests() {
-        let cancel = AtomicBool::new(false);
-        let bytes = br#"{"provider":"Author"}"#;
-        let valid = manifest_entry("apps/one/manifest.json", bytes);
-        let mut symlink = manifest_entry("apps/two/manifest.json", bytes); symlink["mode"] = json!("120000");
-        let mut large = manifest_entry("apps/three/manifest.json", bytes); large["size"] = json!(MAX_MANIFEST + 1);
-        let tree = with_manifests(&["apps/one/One.apk", "apps/two/Two.apk", "apps/three/Three.apk"],
-            &[valid, symlink, large]);
-        let mut catalog = parse_tree(&tree, REV, now_ms()).unwrap();
-        let original = catalog.items.clone();
-        let mut requests = 0;
-        enrich_providers(&mut catalog, &tree, &cancel, &mut |_| { requests += 1; Err("offline".into()) }).unwrap();
-        assert_eq!(requests, 1, "Symlinks and oversized manifests are never requested");
-        assert_eq!(catalog.items, original, "Author failure leaves APK identities intact");
-        assert!(validate_catalog(&catalog));
-        catalog.items[0].provider = Some("bad\nname".into());
-        assert!(!validate_catalog(&catalog));
-        catalog.items[0].provider = Some(" Author ".into());
-        assert!(!validate_catalog(&catalog));
-    }
-    #[test]
-    fn v2_cache_is_offline_fallback_but_never_suppresses_first_author_refresh() {
-        let root = temp();
-        let cancel = AtomicBool::new(false);
-        let tree = tree(&["apps/one/One.apk"]);
-        let original = parse_tree(&tree, REV, now_ms()).unwrap();
-        fs::create_dir_all(root.0.join("market")).unwrap();
-        let legacy = serde_json::to_vec(&original).unwrap();
-        assert!(!String::from_utf8_lossy(&legacy).contains("provider"));
-        fs::write(root.0.join("market/catalog-v2.json"), &legacy).unwrap();
-        assert!(read_cache(&root.0).is_none());
-        let offline = catalog_with(&root.0, false, &cancel, |_| Ok(()), |_| Err("offline".into())).unwrap();
-        assert!(offline.stale); assert_eq!(offline.items, original.items);
-        assert!(read_cache(&root.0).is_none(), "Old catalog is not promoted to a fresh v3 cache");
-        let mut calls = 0;
-        let refreshed = catalog_with(&root.0, false, &cancel, |_| Ok(()), |_| {
-            calls += 1;
-            Ok(match calls {
-                1 => br#"{"default_branch":"master"}"#.to_vec(),
-                2 => serde_json::to_vec(&json!({"commit":{"sha":REV}})).unwrap(),
-                _ => tree.clone(),
-            })
-        }).unwrap();
-        assert_eq!(calls, 3); assert!(!refreshed.stale);
-        assert_eq!(read_cache(&root.0).unwrap().items, refreshed.items);
-        assert_eq!(fs::read(root.0.join("market/catalog-v2.json")).unwrap(), legacy);
-        fs::remove_dir_all(&root.0).unwrap();
-    }
-    #[test]
-    fn cancelling_manifest_fetch_keeps_previous_catalog_and_never_succeeds() {
-        let root = temp();
-        let cancel = AtomicBool::new(false);
-        let original = parse_tree(&tree(&["apps/old/Old.apk"]), REV, now_ms()).unwrap();
-        write_cache(&root.0, &original).unwrap();
-        let bytes = br#"{"provider":"Author"}"#;
-        let manifest = manifest_entry("apps/new/manifest.json", bytes);
-        let tree = with_manifests(&["apps/new/New.apk"], &[manifest.clone()]);
-        let mut calls = 0;
-        let result = catalog_with(&root.0, true, &cancel, |_| Ok(()), |_| {
-            calls += 1;
-            Ok(match calls {
-                1 => br#"{"default_branch":"master"}"#.to_vec(),
-                2 => serde_json::to_vec(&json!({"commit":{"sha":REV}})).unwrap(),
-                3 => tree.clone(),
-                _ => { cancel.store(true, Ordering::Release); manifest_blob(&manifest, bytes) },
-            })
-        });
-        assert!(result.unwrap_err().contains("取消"));
-        assert_eq!(calls, 4);
-        assert_eq!(read_cache(&root.0).unwrap().items, original.items);
-        fs::remove_dir_all(&root.0).unwrap();
-    }
-    #[test]
-    fn discovers_commit_pinned_folder_logos_and_rejects_cache_url_tampering() {
-        let catalog = parse_tree(
-            &tree(&[
-                "apps/example/Example-1.0.0.apk",
-                "apps/example/Example-2.0.0.apk",
-                "apps/example/logo.svg",
-                "apps/other/Other.apk",
-                "launcher/home/Home.apk",
-                "launcher/home/logo.svg",
-                "apps/logo.svg",
-            ]),
-            REV,
-            1,
+    fn build(paths: &[&str]) -> Catalog {
+        build_catalog(
+            paths.iter().map(|p| p.to_string()).collect(),
+            &cancel(),
+            |_| Ok(metadata(APK)),
+            |_, _| Err("offline optional data".into()),
         )
-        .unwrap();
-        assert!(validate_catalog(&catalog));
-        let first = &catalog.items[0];
-        assert_eq!(first.logo_bytes, Some(25));
-        assert_eq!(
-            first.logo_blob_sha.as_deref(),
-            Some("a".repeat(40).as_str())
-        );
-        assert_eq!(first.logo_url, catalog.items[1].logo_url);
-        assert_eq!(
-            first.logo_url,
-            Some(repository_url("raw", REV, "apps/example/logo.svg"))
-        );
-        assert!(catalog.items[2].logo_url.is_none());
-        assert!(catalog.items[3]
-            .logo_url
+        .unwrap()
+    }
+    fn item() -> Item {
+        build(&["media/example/Example-1.2.3.apk"]).items.remove(0)
+    }
+    #[test]
+    fn discovers_three_categories_multiple_versions_and_named_covers() {
+        let result = build(&[
+            "launcher/home/Home-1.0.apk",
+            "game/中国游戏/中国游戏-2.0.apk",
+            "media/music/Music-1.0.apk",
+            "media/music/Music-2.0.APK",
+            "media/music/Music-1.0.thumb.png",
+            "media/music/thumb.png",
+            "client/not-an-app.exe",
+        ]);
+        assert_eq!(result.items.len(), 4);
+        assert!(validate_catalog(&result));
+        let game = result
+            .items
+            .iter()
+            .find(|i| i.id.starts_with("game/"))
+            .unwrap();
+        assert_eq!(game.kind, "app");
+        assert_eq!(game.name, "中国游戏");
+        assert!(game.folder_url.starts_with("https://apps.b14f.com/game/"));
+        let launcher = result
+            .items
+            .iter()
+            .find(|i| i.id.starts_with("launcher/"))
+            .unwrap();
+        assert_eq!(launcher.kind, "launcher");
+        let music = result
+            .items
+            .iter()
+            .find(|i| i.version.as_deref() == Some("1.0") && i.name == "Music")
+            .unwrap();
+        assert!(music
+            .cover_url
             .as_ref()
             .unwrap()
-            .ends_with("launcher/home/logo.svg"));
-        let mut tampered = catalog.clone();
-        tampered.items[0].logo_url = Some("https://evil.example/icon.svg".into());
-        assert!(!validate_catalog(&tampered));
-        tampered = catalog;
-        tampered.items[0].logo_blob_sha = None;
-        assert!(!validate_catalog(&tampered));
+            .ends_with("Music-1.0.thumb.png"));
+        assert_ne!(
+            music.blob_sha,
+            format!("{:x}", Sha256::digest(APK)),
+            "HTTP identity is not falsely presented as APK content hash"
+        );
     }
     #[test]
-    fn optional_logo_cache_checks_hash_content_and_revision_before_reuse() {
-        let root = temp();
-        let cancel = AtomicBool::new(false);
-        let bytes = b"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\" viewBox=\"0 0 64 64\"><path d=\"M0 0H64V64H0Z\"/></svg>";
-        let mut selected = item(b"PK\x03\x04test apk");
+    fn bounded_provider_and_logo_metadata_is_read_once_per_exact_folder() {
+        let paths = [
+            "media/music/Music-1.0.apk",
+            "media/music/Music-2.0.apk",
+            "media/music/manifest.json",
+            "media/music/logo.svg",
+            "game/other/Other.apk",
+            "media/manifest.json",
+        ];
+        let mut requests = Vec::new();
+        let result = build_catalog(
+            paths.iter().map(|s| s.to_string()).collect(),
+            &cancel(),
+            |_| Ok(metadata(APK)),
+            |url, maximum| {
+                requests.push(url.to_string());
+                if url.ends_with("/music/manifest.json") {
+                    assert_eq!(maximum, MAX_MANIFEST);
+                    Ok("{\"provider\":\"  桔子桑  \"}".as_bytes().to_vec())
+                } else if url.ends_with("/music/logo.svg") {
+                    assert_eq!(maximum, crate::app_logos::MAX_LOGO as u64);
+                    Ok(SVG.to_vec())
+                } else {
+                    panic!("Unexpected optional URL {url}")
+                }
+            },
+        )
+        .unwrap();
+        assert_eq!(requests.len(), 2);
+        for selected in result
+            .items
+            .iter()
+            .filter(|i| i.id.starts_with("media/music/"))
+        {
+            assert_eq!(selected.provider.as_deref(), Some("桔子桑"));
+            assert_eq!(
+                selected.logo_blob_sha.as_deref(),
+                Some(format!("{:x}", Sha256::digest(SVG)).as_str())
+            );
+            assert_eq!(selected.logo_bytes, Some(SVG.len() as u64));
+        }
         assert_eq!(
-            cache_logo_with(&root.0, &selected, &cancel, |_| panic!(
-                "No logo should not fetch"
-            ))
-            .unwrap(),
+            result
+                .items
+                .iter()
+                .find(|i| i.id.starts_with("game/"))
+                .unwrap()
+                .provider,
             None
         );
-        selected.logo_url = Some(repository_url("raw", REV, "apps/example/logo.svg"));
-        selected.logo_bytes = Some(bytes.len() as u64);
-        selected.logo_blob_sha =
-            Some(git_hash_reader(Cursor::new(bytes), bytes.len() as u64, &cancel).unwrap());
-        let result = cache_logo_with(&root.0, &selected, &cancel, |_| Ok(bytes.to_vec()))
-            .unwrap()
-            .unwrap();
-        assert_eq!(result.as_bytes(), bytes);
-        assert_eq!(fs::read(root.0.join("logo.svg")).unwrap(), bytes);
-        assert!(cache_logo_with(&root.0, &selected, &cancel, |_| panic!(
-            "Verified cache must not fetch"
-        ))
-        .unwrap()
-        .is_some());
-        fs::write(root.0.join("logo.svg"), b"<svg onload='evil()'/>").unwrap();
-        assert!(cache_logo_with(&root.0, &selected, &cancel, |_| Err("offline".into())).is_err());
-        assert!(cache_logo_with(&root.0, &selected, &cancel, |_| Ok(b"<svg/>".to_vec())).is_err());
-        let unsafe_svg = b"<svg onload='evil()'/>";
-        selected.logo_bytes = Some(unsafe_svg.len() as u64);
-        selected.logo_blob_sha = Some(
-            git_hash_reader(Cursor::new(unsafe_svg), unsafe_svg.len() as u64, &cancel).unwrap(),
-        );
-        assert!(cache_logo_with(&root.0, &selected, &cancel, |_| Ok(unsafe_svg.to_vec())).is_err());
-        cancel.store(true, Ordering::Release);
-        assert!(cache_logo_with(&root.0, &selected, &cancel, |_| panic!(
-            "Cancelled logo should not fetch"
-        ))
-        .is_err());
-        fs::remove_dir_all(root.0.clone()).unwrap();
-    }
-    #[test]
-    fn old_catalog_cache_is_refetched_once_to_discover_logos() {
-        let root = temp();
-        let value = parse_tree(&tree(&["apps/example/Example.apk"]), REV, now_ms()).unwrap();
-        fs::create_dir_all(root.0.join("market")).unwrap();
-        fs::write(
-            root.0.join("market/catalog.json"),
-            serde_json::to_vec(&value).unwrap(),
-        )
-        .unwrap();
-        assert!(read_cache(&root.0).is_none());
-        write_cache(&root.0, &value).unwrap();
-        assert!(read_cache(&root.0).is_some());
-        fs::remove_dir_all(root.0.clone()).unwrap();
-    }
-    #[test]
-    fn scans_both_roots_and_keeps_multiple_apks_without_hardcoded_names() {
-        let catalog = parse_tree(
-            &tree(&[
-                "apps/new app/TV App-1.2.3.apk",
-                "apps/new app/TV App-1.2.4.apk",
-                "apps/new app/thumb.png",
-                "launcher/new/Sample.apk",
-                "launcher/new/Sample.apk.thumb.png",
-                "docs/ignored.apk",
-            ]),
-            REV,
-            1,
-        )
-        .unwrap();
-        assert_eq!(catalog.items.len(), 3);
-        assert_eq!(catalog.items[0].name, "TV App");
-        assert_eq!(catalog.items[0].version.as_deref(), Some("1.2.3"));
-        assert!(catalog.items[0]
-            .cover_url
-            .as_ref()
-            .unwrap()
-            .contains("new%20app/thumb.png"));
-        assert_eq!(catalog.items[2].kind, "launcher");
-        assert!(catalog.items[2]
-            .cover_url
-            .as_ref()
-            .unwrap()
-            .ends_with("Sample.apk.thumb.png"));
-        assert!(validate_catalog(&catalog));
-    }
-    #[test]
-    fn named_thumbnail_wins_and_catalog_never_silently_truncates() {
-        let catalog = parse_tree(
-            &tree(&[
-                "launcher/new/Sample.apk",
-                "launcher/new/Sample.thumb.png",
-                "launcher/new/Sample.apk.thumb.png",
-                "launcher/new/thumb.png",
-            ]),
-            REV,
-            1,
-        )
-        .unwrap();
-        assert!(catalog.items[0]
-            .cover_url
-            .as_ref()
-            .unwrap()
-            .ends_with("Sample.thumb.png"));
-        assert!(validate_catalog(&catalog));
-        let paths: Vec<String> = (0..MAX_ITEMS)
-            .map(|n| format!("apps/application/{n:04}-{}.apk", "x".repeat(180)))
-            .collect();
-        assert!(parse_tree(
-            &tree(&paths.iter().map(String::as_str).collect::<Vec<_>>()),
-            REV,
-            1
-        )
-        .unwrap_err()
-        .contains("目录超过"));
-    }
-    #[test]
-    fn cache_names_remain_recognizable_without_windows_devices_or_path_escape() {
-        assert_eq!(cache_file_name("hifini-0.1.3.apk"), "hifini-0.1.3.apk");
-        assert_eq!(cache_file_name("音乐-1.2.apk"), "音乐-1.2.apk");
-        assert_eq!(cache_file_name("CON.apk"), "_CON.apk");
-        for name in [
-            "../evil.apk",
-            "..\\evil.apk",
-            "a:b?.apk",
-            "LPT1.apk",
-            ".apk",
+        assert!(validate_catalog(&result));
+        for value in [
+            json!({"provider":""}),
+            json!({"provider":123}),
+            json!({"provider":"bad\nprovider"}),
+            json!({"provider":"a".repeat(MAX_PROVIDER_BYTES+1)}),
         ] {
-            let safe = cache_file_name(name);
-            assert!(!safe.contains(['/', '\\', ':', '?']));
-            assert_eq!(Path::new(&safe).components().count(), 1);
-            assert!(!safe.starts_with('.'));
+            assert!(provider_from_manifest(&serde_json::to_vec(&value).unwrap()).is_none());
         }
-    }
-    #[test]
-    fn rejects_truncated_duplicate_unsafe_and_invalid_catalogs() {
-        assert!(parse_tree(br#"{"tree":[],"truncated":true}"#, REV, 1).is_err());
-        for paths in [
-            &["apps/a/../outside.apk"][..],
-            &["apps/a.apk", "apps/a.apk"][..],
-        ] {
-            assert!(parse_tree(&tree(paths), REV, 1).is_err());
-        }
-        let mut catalog = parse_tree(&tree(&["apps/ok.apk"]), REV, 1).unwrap();
-        catalog.items[0].folder_url = "https://evil.example/".into();
-        assert!(!validate_catalog(&catalog));
         assert_eq!(
-            parse_tree(&tree(&["other/only.apk"]), REV, 1)
-                .unwrap()
-                .items
-                .len(),
-            0
+            provider_from_manifest(br#"{"provider":"Other & <name>"}"#).as_deref(),
+            Some("Other & <name>")
         );
+        assert!(provider_from_manifest(&vec![b'a'; MAX_MANIFEST as usize + 1]).is_none());
     }
     #[test]
-    fn branch_name_uses_one_encoded_api_segment_and_commit_is_not_tree_response_sha() {
-        assert!(api_path("branches", "release/stable").ends_with("branches/release%2Fstable"));
-        let catalog = parse_tree(&tree(&["launcher/new/name.apk"]), REV, 1).unwrap();
-        assert_eq!(catalog.revision, REV);
-        assert!(catalog.items[0].folder_url.contains(REV));
-    }
-    #[test]
-    fn cancellation_never_falls_back_to_stale_catalog() {
-        let root = temp();
-        let cancel = AtomicBool::new(false);
-        write_cache(
-            &root.0,
-            &parse_tree(&tree(&["apps/a.apk"]), REV, now_ms()).unwrap(),
+    fn optional_provider_logo_and_checksum_availability_do_not_change_apk_revision() {
+        let paths = vec![
+            "media/test/Test-1.0.apk".into(),
+            "media/test/manifest.json".into(),
+            "media/test/logo.svg".into(),
+        ];
+        let absent = build_catalog(
+            paths.clone(),
+            &cancel(),
+            |_| Ok(metadata(APK)),
+            |_, _| Err("optional unavailable".into()),
         )
         .unwrap();
-        let result = catalog_with(
-            &root.0,
-            true,
-            &cancel,
-            |_| Ok(()),
-            |_| {
-                cancel.store(true, Ordering::Release);
-                Err("network cancelled".into())
-            },
-        );
-        assert!(result.unwrap_err().contains("取消"));
-        fs::remove_dir_all(&root.0).unwrap();
-    }
-    #[test]
-    fn fresh_cache_avoids_network_refresh_updates_and_failure_marks_stale() {
-        let root = temp();
-        let cancel = AtomicBool::new(false);
-        let original = parse_tree(&tree(&["apps/first.apk"]), REV, now_ms()).unwrap();
-        write_cache(&root.0, &original).unwrap();
-        let value = catalog_with(
-            &root.0,
-            false,
-            &cancel,
-            |_| Ok(()),
-            |_| panic!("fresh cache contacted server"),
-        )
-        .unwrap();
-        assert!(!value.stale);
-        let stale = catalog_with(
-            &root.0,
-            true,
-            &cancel,
-            |_| Ok(()),
-            |_| Err("offline".into()),
-        )
-        .unwrap();
-        assert!(stale.stale);
-        assert_eq!(stale.items, original.items);
-        assert!(stale.warning.unwrap().contains("offline"));
-        let mut addresses = Vec::new();
-        let updated = catalog_with(
-            &root.0,
-            true,
-            &cancel,
-            |_| Ok(()),
-            |url| {
-                addresses.push(url.to_string());
-                Ok(match addresses.len() {
-                    1 => br#"{"default_branch":"master"}"#.to_vec(),
-                    2 => serde_json::to_vec(&json!({"commit":{"sha":REV}})).unwrap(),
-                    _ => tree(&["apps/new.apk", "launcher/new.apk"]),
+        let manifest = serde_json::to_vec(&json!({"provider":"Name", "packages":[{"file":"Test-1.0.apk", "bytes":APK.len(), "sha256":format!("{:x}", Sha256::digest(APK))}]})).unwrap();
+        let present = build_catalog(
+            paths,
+            &cancel(),
+            |_| Ok(metadata(APK)),
+            |url, _| {
+                Ok(if url.ends_with("logo.svg") {
+                    SVG.to_vec()
+                } else {
+                    manifest.clone()
                 })
             },
         )
         .unwrap();
-        assert_eq!(updated.items.len(), 2);
-        assert!(addresses[2].contains(REV));
-        assert_eq!(read_cache(&root.0).unwrap().items, updated.items);
-        fs::remove_dir_all(&root.0).unwrap();
+        assert_eq!(absent.revision, present.revision);
+        assert!(present.items[0].provider.is_some());
+        assert!(present.items[0].logo_url.is_some());
+        assert!(present.items[0].content_sha256.is_some());
+        let mut changed = present.items.clone();
+        changed[0].download_metadata.etag = Some("\"new\"".into());
+        changed[0].blob_sha = app_store::fingerprint(&changed[0].id, &changed[0].download_metadata);
+        assert_ne!(catalog_revision(&changed).unwrap(), present.revision);
     }
     #[test]
-    fn downloads_check_git_blob_hash_not_plain_sha1_and_accept_chunked_data() {
-        let bytes = b"PK\x03\x04actual APK fixture";
-        let item = item(bytes);
-        let cancel = AtomicBool::new(false);
+    fn manifest_checksum_matches_exact_file_and_bytes_and_is_verified_for_download_and_cache() {
+        let mut selected = item();
+        let digest = format!("{:x}", Sha256::digest(APK));
+        let manifest = json!({"packages":[
+            {"file":"Other.apk", "bytes":APK.len(), "sha256":"0".repeat(64)},
+            {"file":selected.file_name, "bytes":APK.len()+1, "sha256":"1".repeat(64)},
+            {"file":selected.file_name, "bytes":APK.len(), "sha256":digest.to_uppercase()}
+        ]});
+        selected.content_sha256 = checksum_from_manifest(
+            &serde_json::to_vec(&manifest).unwrap(),
+            &selected.file_name,
+            selected.bytes,
+        );
+        assert_eq!(selected.content_sha256.as_deref(), Some(digest.as_str()));
+        assert!(copy_apk(APK, Vec::new(), &selected, &cancel(), |_| Ok(())).is_ok());
+        let root = temp();
+        let path = cache_fixture(&root.0, &selected, APK);
+        assert!(verified_file(&path, &selected, &cancel()).unwrap());
+        selected.content_sha256 = Some("f".repeat(64));
+        assert!(copy_apk(APK, Vec::new(), &selected, &cancel(), |_| Ok(()))
+            .unwrap_err()
+            .contains("校验失败"));
+        assert!(!verified_file(&path, &selected, &cancel()).unwrap());
+        assert!(
+            checksum_from_manifest(br#"{"packages":[]}"#, &selected.file_name, selected.bytes)
+                .is_none()
+        );
+    }
+    #[test]
+    fn rejects_bad_paths_duplicate_entries_invalid_sizes_and_missing_validators() {
+        for paths in [
+            vec!["media/a.apk", "media/a.apk"],
+            vec!["media/../a.apk"],
+            vec!["media/a\\b.apk"],
+            vec!["media//a.apk"],
+        ] {
+            assert!(build_catalog(
+                paths.into_iter().map(str::to_string).collect(),
+                &cancel(),
+                |_| Ok(metadata(APK)),
+                |_, _| Ok(vec![])
+            )
+            .is_err());
+        }
+        for bad in [
+            FileMetadata {
+                bytes: 0,
+                ..metadata(APK)
+            },
+            FileMetadata {
+                bytes: MAX_APK + 1,
+                ..metadata(APK)
+            },
+            FileMetadata {
+                bytes: 10,
+                etag: None,
+                last_modified: None,
+            },
+        ] {
+            assert!(build_catalog(
+                vec!["media/a.apk".into()],
+                &cancel(),
+                |_| Ok(bad.clone()),
+                |_, _| Ok(vec![])
+            )
+            .is_err());
+        }
+        assert_eq!(apk_kind("apps/game/old.apk"), None);
+        assert_eq!(apk_kind("client/a.apk"), None);
+    }
+    #[test]
+    fn cached_catalog_rejects_changed_urls_source_and_metadata() {
+        let original = build(&["game/a/A-1.0.apk", "game/a/thumb.png"]);
+        for mutate in [0, 1, 2, 3, 4] {
+            let mut value = original.clone();
+            match mutate {
+                0 => value.source_url = "https://gitee.com/juzisang331/pure-tv-store".into(),
+                1 => value.items[0].folder_url = "https://evil.invalid/".into(),
+                2 => value.items[0].cover_url = Some("https://apps.b14f.com/client/a.png".into()),
+                3 => value.items[0].download_metadata.etag = Some("\"different\"".into()),
+                _ => value.items[0].provider = Some("bad\nname".into()),
+            }
+            value.revision = catalog_revision(&value.items).unwrap();
+            assert!(!validate_catalog(&value), "mutation {mutate}");
+        }
+    }
+    #[test]
+    fn new_cache_is_fresh_or_explicitly_stale_and_never_uses_legacy_gitee_data() {
+        let root = temp();
+        let cached = build(&["media/a.apk"]);
+        write_cache(&root.0, &cached).unwrap();
+        let result = catalog_with(
+            &root.0,
+            false,
+            &cancel(),
+            |_| Ok(()),
+            || panic!("fresh cache requested network"),
+            |_| unreachable!(),
+            |_, _| unreachable!(),
+        )
+        .unwrap();
+        assert_eq!(result.revision, cached.revision);
+        assert!(!result.stale);
+        let failed = catalog_with(
+            &root.0,
+            true,
+            &cancel(),
+            |_| Ok(()),
+            || Err("network offline".into()),
+            |_| unreachable!(),
+            |_, _| unreachable!(),
+        )
+        .unwrap();
+        assert!(failed.stale);
+        assert!(failed.warning.unwrap().contains("network offline"));
+        fs::rename(
+            root.0.join("market").join(CACHE_NAME),
+            root.0.join("market/catalog-v3.json"),
+        )
+        .unwrap();
+        assert!(catalog_with(
+            &root.0,
+            false,
+            &cancel(),
+            |_| Ok(()),
+            || Err("network offline".into()),
+            |_| unreachable!(),
+            |_, _| unreachable!()
+        )
+        .is_err());
+    }
+    #[test]
+    fn cancellation_during_optional_fetch_preserves_cache_and_does_not_return_stale_success() {
+        let root = temp();
+        let cached = build(&["media/a.apk"]);
+        write_cache(&root.0, &cached).unwrap();
+        let cancelled = cancel();
+        let result = catalog_with(
+            &root.0,
+            true,
+            &cancelled,
+            |_| Ok(()),
+            || {
+                Ok(vec![
+                    "media/new/a.apk".into(),
+                    "media/new/manifest.json".into(),
+                ])
+            },
+            |_| Ok(metadata(APK)),
+            |_, _| {
+                cancelled.store(true, Ordering::Release);
+                Err("interrupted".into())
+            },
+        );
+        assert!(result.unwrap_err().contains("取消"));
+        assert_eq!(read_cache(&root.0).unwrap().revision, cached.revision);
+        assert!(catalog_with(
+            &root.0,
+            false,
+            &cancelled,
+            |_| Ok(()),
+            || unreachable!(),
+            |_| unreachable!(),
+            |_, _| unreachable!()
+        )
+        .is_err());
+    }
+    #[test]
+    fn displayed_revision_is_required_and_invalid_ids_fail_before_network() {
+        let root = temp();
+        let cached = build(&["media/a.apk"]);
+        write_cache(&root.0, &cached).unwrap();
+        assert!(download(
+            &root.0,
+            "media/a.apk",
+            Some(&"a".repeat(64)),
+            &cancel(),
+            |_| Ok(())
+        )
+        .unwrap_err()
+        .contains("目录已更新"));
+        for id in [
+            "../a.apk",
+            "apps/old/a.apk",
+            "client/a.apk",
+            "media//a.apk",
+            "media/a.exe",
+        ] {
+            assert!(download(&root.0, id, None, &cancel(), |_| Ok(()))
+                .unwrap_err()
+                .contains("标识无效"));
+        }
+        assert!(
+            download(&root.0, "media/a.apk", Some("bad"), &cancel(), |_| Ok(()))
+                .unwrap_err()
+                .contains("版本无效")
+        );
+    }
+    #[test]
+    fn copy_checks_size_and_apk_prefix_and_calculates_local_sha256() {
+        let selected = item();
         let mut output = Vec::new();
-        let mut stages = Vec::new();
-        copy_apk(Cursor::new(bytes), &mut output, &item, &cancel, |p| {
-            stages.push(p);
+        let sha = copy_apk(Cursor::new(APK), &mut output, &selected, &cancel(), |_| {
             Ok(())
         })
         .unwrap();
-        assert_eq!(output, bytes);
-        assert_ne!(item.blob_sha, format!("{:x}", Sha1::digest(bytes)));
-        assert_eq!(stages.last().unwrap().stage, "verifying");
-        for bad in [
-            &bytes[..8],
-            b"PK\x03\x04actual APK fixturE",
-            b"<html>sign in page",
+        assert_eq!(output, APK);
+        assert_eq!(sha, format!("{:x}", Sha256::digest(APK)));
+        for bytes in [
+            &APK[..APK.len() - 1],
+            b"PK\x03\x04test APK content extra",
+            b"<html>Server error</html>",
         ] {
-            assert!(copy_apk(Cursor::new(bad), Vec::new(), &item, &cancel, |_| Ok(())).is_err());
+            assert!(copy_apk(bytes, Vec::new(), &selected, &cancel(), |_| Ok(())).is_err());
         }
-        let mut oversized = bytes.to_vec();
-        oversized.push(0);
-        assert!(
-            copy_apk(Cursor::new(oversized), Vec::new(), &item, &cancel, |_| Ok(
-                ()
-            ))
-            .is_err()
-        );
     }
-    fn blob_json(bytes: &[u8], item: &Item) -> Vec<u8> {
-        use base64::Engine;
-        serde_json::to_vec(&json!({"sha":item.blob_sha,"size":item.bytes,
-            "encoding":"base64","content":STANDARD.encode(bytes)}))
-        .unwrap()
-    }
-    fn mock_response(status: u16, body: Vec<u8>) -> Response {
-        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
-        let address = listener.local_addr().unwrap();
+    fn mock_response(status: u16, body: Vec<u8>, etag: Option<&str>) -> Response {
+        let server = tiny_http::Server::http("127.0.0.1:0").unwrap();
+        let url = format!("http://{}", server.server_addr());
+        let etag = etag.map(str::to_string);
         std::thread::spawn(move || {
-            let (mut stream, _) = listener.accept().unwrap();
-            let mut request = [0; 4096];
-            stream.read(&mut request).unwrap();
-            write!(
-                stream,
-                "HTTP/1.1 {status} Test\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
-                body.len()
-            )
-            .unwrap();
-            let _ = stream.write_all(&body);
+            let request = server.recv().unwrap();
+            let mut response = tiny_http::Response::from_data(body).with_status_code(status);
+            if let Some(etag) = etag {
+                response =
+                    response.with_header(tiny_http::Header::from_bytes("ETag", etag).unwrap());
+            }
+            response = response.with_header(
+                tiny_http::Header::from_bytes("Last-Modified", "Sun, 15 Nov 2026 09:30:00 GMT")
+                    .unwrap(),
+            );
+            let _ = request.respond(response);
         });
         Client::builder()
             .no_proxy()
-            .timeout(Duration::from_secs(2))
             .build()
             .unwrap()
-            .get(format!("http://{address}"))
+            .get(url)
             .send()
             .unwrap()
     }
     #[test]
-    fn forbidden_raw_uses_only_the_selected_git_blob_and_verifies_decoded_apk() {
-        let bytes = b"PK\x03\x04large public APK fixture";
-        let item = item(bytes);
-        let cancel = AtomicBool::new(false);
-        let mut addresses = Vec::new();
+    fn direct_download_checks_selected_http_metadata_and_never_uses_a_gitee_fallback() {
+        let selected = item();
+        let mut calls = 0;
         let mut output = Vec::new();
-        let mut stages = Vec::new();
-        download_apk_with(
+        let sha = download_apk_with(
             &mut output,
-            &item,
-            REV,
-            &cancel,
+            &selected,
+            &cancel(),
+            |_| Ok(()),
+            |url, meta| {
+                calls += 1;
+                assert_eq!(url, "https://apps.b14f.com/media/example/Example-1.2.3.apk");
+                assert_eq!(meta, &selected.download_metadata);
+                Ok(mock_response(200, APK.to_vec(), meta.etag.as_deref()))
+            },
+        )
+        .unwrap();
+        assert_eq!(calls, 1);
+        assert_eq!(output, APK);
+        assert_eq!(sha, format!("{:x}", Sha256::digest(APK)));
+        for status in [403, 404, 412, 500] {
+            let mut calls = 0;
+            let result = download_apk_with(
+                Vec::new(),
+                &selected,
+                &cancel(),
+                |_| Ok(()),
+                |_, _| {
+                    calls += 1;
+                    Ok(mock_response(
+                        status,
+                        APK.to_vec(),
+                        selected.download_metadata.etag.as_deref(),
+                    ))
+                },
+            );
+            assert!(result.is_err());
+            assert_eq!(calls, 1);
+        }
+        for etag in [None, Some("\"changed\"")] {
+            assert!(download_apk_with(
+                Vec::new(),
+                &selected,
+                &cancel(),
+                |_| Ok(()),
+                |_, _| Ok(mock_response(200, APK.to_vec(), etag))
+            )
+            .is_err());
+        }
+    }
+    #[test]
+    fn direct_http_download_streams_an_apk_larger_than_32_mib() {
+        let mut bytes = vec![b'a'; 33 * 1024 * 1024];
+        bytes[..4].copy_from_slice(b"PK\x03\x04");
+        let selected = build_catalog(
+            vec!["media/large/Large-1.0.apk".into()],
+            &cancel(),
+            |_| Ok(metadata(&bytes)),
+            |_, _| unreachable!(),
+        )
+        .unwrap()
+        .items
+        .remove(0);
+        let expected = format!("{:x}", Sha256::digest(&bytes));
+        let mut body = Some(bytes);
+        let mut stages = Vec::new();
+        let sha = download_apk_with(
+            std::io::sink(),
+            &selected,
+            &cancel(),
             |p| {
                 stages.push(p);
                 Ok(())
             },
-            |address| {
-                addresses.push(address.to_owned());
-                Ok(if addresses.len() == 1 {
-                    mock_response(403, b"large file require login for access.".to_vec())
-                } else {
-                    mock_response(200, blob_json(bytes, &item))
-                })
-            },
+            |_, m| Ok(mock_response(200, body.take().unwrap(), m.etag.as_deref())),
         )
         .unwrap();
-        assert_eq!(
-            addresses,
-            vec![
-                repository_url("raw", REV, &item.id),
-                api_path("git/blobs", &item.blob_sha)
-            ]
-        );
-        assert_eq!(output, bytes);
-        assert!(stages
-            .windows(2)
-            .all(|pair| pair[0].downloaded <= pair[1].downloaded));
-        assert_eq!(stages.last().unwrap().stage, "verifying");
-        assert_eq!(stages.last().unwrap().downloaded, item.bytes);
+        assert_eq!(sha, expected);
+        let last = stages.last().unwrap();
+        assert_eq!(last.downloaded, selected.bytes);
+        assert_eq!(last.stage, "verifying");
     }
-    #[test]
-    fn forbidden_raw_downloads_an_apk_larger_than_the_previous_32_mib_limit() {
-        // This is a transfer fixture, not an installable Android application. Its
-        // actual body crosses the old bound, so changing metadata alone cannot
-        // make the regression pass without decoding and verifying all bytes.
-        let mut bytes = vec![0xa5; 33 * 1024 * 1024];
-        bytes[..4].copy_from_slice(b"PK\x03\x04");
-        let selected = item(&bytes);
-        let cancel = AtomicBool::new(false);
-        let mut addresses = Vec::new();
-        let mut output = Vec::new();
-        let mut last_progress = None;
-        download_apk_with(
-            &mut output,
-            &selected,
-            REV,
-            &cancel,
-            |progress| {
-                last_progress = Some(progress);
-                Ok(())
-            },
-            |address| {
-                addresses.push(address.to_owned());
-                Ok(if addresses.len() == 1 {
-                    mock_response(403, b"large file require login for access.".to_vec())
-                } else {
-                    mock_response(200, blob_json(&bytes, &selected))
-                })
-            },
-        )
-        .unwrap();
-        assert_eq!(
-            addresses,
-            vec![
-                repository_url("raw", REV, &selected.id),
-                api_path("git/blobs", &selected.blob_sha),
-            ]
-        );
-        assert_eq!(output, bytes);
-        assert_eq!(
-            git_hash_reader(output.as_slice(), selected.bytes, &cancel).unwrap(),
-            selected.blob_sha
-        );
-        let progress = last_progress.unwrap();
-        assert_eq!(progress.stage, "verifying");
-        assert_eq!(progress.downloaded, selected.bytes);
-        assert_eq!(progress.total, selected.bytes);
-    }
-    #[test]
-    fn successful_raw_and_non_forbidden_failures_never_use_blob_api() {
-        let bytes = b"PK\x03\x04raw fixture";
-        let item = item(bytes);
-        let cancel = AtomicBool::new(false);
-        for status in [200, 401, 404, 429, 500] {
-            let mut addresses = Vec::new();
-            let mut output = Vec::new();
-            let result = download_apk_with(
-                &mut output,
-                &item,
-                REV,
-                &cancel,
-                |_| Ok(()),
-                |address| {
-                    addresses.push(address.to_owned());
-                    Ok(mock_response(status, bytes.to_vec()))
-                },
-            );
-            assert_eq!(addresses, vec![repository_url("raw", REV, &item.id)]);
-            if status == 200 {
-                assert_eq!(output, bytes);
-                result.unwrap();
-            } else {
-                assert!(result.unwrap_err().contains(&format!("HTTP {status}")));
-            }
-        }
-        let mut calls = 0;
-        assert!(download_apk_with(
-            Vec::new(),
-            &item,
-            REV,
-            &cancel,
-            |_| Ok(()),
-            |_| {
-                calls += 1;
-                Err("offline".into())
-            }
-        )
-        .unwrap_err()
-        .contains("offline"));
-        assert_eq!(calls, 1);
-        let mut large = item.clone();
-        large.bytes = MAX_BLOB_APK + 1;
-        assert_eq!(
-            download_apk_with(
-                Vec::new(),
-                &large,
-                REV,
-                &cancel,
-                |_| Ok(()),
-                |_| { Ok(mock_response(403, Vec::new())) }
-            )
-            .unwrap_err(),
-            "市场备用下载仅支持不超过 128 MB 的 APK，请从发布页下载后手动安装"
-        );
-        assert_eq!(
-            download_apk_with(
-                Vec::new(),
-                &large,
-                REV,
-                &cancel,
-                |_| Ok(()),
-                |_| { Ok(mock_response(200, bytes.to_vec())) }
-            )
-            .unwrap_err(),
-            "市场 APK 大小与目录不一致",
-            "Raw downloads retain their independent 512 MB limit"
-        );
-    }
-    #[test]
-    fn blob_api_rejects_metadata_truncation_invalid_base64_and_wrong_content() {
-        use base64::Engine;
-        let bytes = b"PK\x03\x04blob fixture";
-        let item = item(bytes);
-        let cancel = AtomicBool::new(false);
-        let original: serde_json::Value = serde_json::from_slice(&blob_json(bytes, &item)).unwrap();
-        for (field, value) in [
-            ("sha", json!("0".repeat(40))),
-            ("size", json!(item.bytes + 1)),
-            ("encoding", json!("utf-8")),
-            ("content", json!(STANDARD.encode(&bytes[..4]))),
-            (
-                "content",
-                json!("!".repeat(item.bytes.div_ceil(3) as usize * 4)),
-            ),
-            ("content", json!(STANDARD.encode(b"PK\x03\x04blob fixturE"))),
-        ] {
-            let mut bad = original.clone();
-            bad[field] = value;
-            assert!(
-                copy_blob(
-                    Cursor::new(serde_json::to_vec(&bad).unwrap()),
-                    Vec::new(),
-                    &item,
-                    &cancel,
-                    |_| Ok(())
-                )
-                .is_err(),
-                "Accepted bad {field}"
-            );
-        }
-        assert!(copy_blob(
-            Cursor::new(b"<html>login</html>"),
-            Vec::new(),
-            &item,
-            &cancel,
-            |_| Ok(())
-        )
-        .is_err());
-        let oversized =
-            std::io::repeat(b' ').take(item.bytes.div_ceil(3) * 4 + BLOB_METADATA_BYTES + 1);
-        assert_eq!(
-            copy_blob(oversized, Vec::new(), &item, &cancel, |_| Ok(())).unwrap_err(),
-            "市场备用下载数据超过预期大小"
-        );
-    }
-    #[test]
-    fn blob_fallback_cancellation_and_errors_leave_no_partial_apk() {
-        let root = temp();
-        let bytes = b"PK\x03\x04cancelled blob fixture";
-        let item = item(bytes);
-        let cancel = AtomicBool::new(false);
-        let partial = temporary_path(&root.0, "part");
-        {
-            let guard = Temporary(partial.clone());
-            let mut output = File::create(&guard.0).unwrap();
-            let mut calls = 0;
-            let error = download_apk_with(
-                &mut output,
-                &item,
-                REV,
-                &cancel,
-                |_| {
-                    cancel.store(true, Ordering::Release);
-                    Ok(())
-                },
-                |_| {
-                    calls += 1;
-                    Ok(if calls == 1 {
-                        mock_response(403, Vec::new())
-                    } else {
-                        mock_response(200, blob_json(bytes, &item))
-                    })
-                },
-            )
-            .unwrap_err();
-            assert!(error.contains("取消"));
-            assert_eq!(calls, 2);
-        }
-        assert!(!partial.exists());
-        assert!(download_apk_with(
-            Vec::new(),
-            &item,
-            REV,
-            &cancel,
-            |_| Ok(()),
-            |_| { panic!("Cancelled download must not request another endpoint") }
-        )
-        .is_err());
-        cancel.store(false, Ordering::Release);
-        let mut calls = 0;
-        let error = download_apk_with(
-            Vec::new(),
-            &item,
-            REV,
-            &cancel,
-            |_| Ok(()),
-            |_| {
-                calls += 1;
-                cancel.store(true, Ordering::Release);
-                Ok(mock_response(403, Vec::new()))
-            },
-        )
-        .unwrap_err();
-        assert!(error.contains("取消"));
-        assert_eq!(
-            calls, 1,
-            "Cancellation after raw response must prevent the API request"
-        );
-        cancel.store(false, Ordering::Release);
-        let mut calls = 0;
-        let error = download_apk_with(
-            Vec::new(),
-            &item,
-            REV,
-            &cancel,
-            |_| Ok(()),
-            |_| {
-                calls += 1;
-                Ok(mock_response(
-                    if calls == 1 { 403 } else { 500 },
-                    Vec::new(),
-                ))
-            },
-        )
-        .unwrap_err();
-        assert!(error.contains("HTTP 500"));
-        assert_eq!(calls, 2);
-        fs::remove_dir_all(&root.0).unwrap();
-    }
-    #[test]
-    fn cache_hits_are_rehashed_and_cancelled_downloads_drop_partials() {
-        let root = temp();
-        let cancel = AtomicBool::new(false);
-        let bytes = b"PK\x03\x04sample file";
-        let item = item(bytes);
-        let path = root.0.join("cache.apk");
+    fn cache_fixture(root: &Path, selected: &Item, bytes: &[u8]) -> PathBuf {
+        let path = root.join(cache_file_name(&selected.file_name));
         fs::write(&path, bytes).unwrap();
-        assert!(verified_file(&path, &item, &cancel).unwrap());
-        fs::write(&path, b"PK\x03\x04sample filE").unwrap();
-        assert!(!verified_file(&path, &item, &cancel).unwrap());
-        let partial = temporary_path(&root.0, "part");
-        {
-            let guard = Temporary(partial.clone());
-            let mut output = File::create(&guard.0).unwrap();
-            assert!(
-                copy_apk(Cursor::new(bytes), &mut output, &item, &cancel, |_| {
-                    cancel.store(true, Ordering::Release);
-                    Ok(())
-                })
-                .is_err()
-            );
-        }
-        assert!(!partial.exists());
-        fs::remove_dir_all(&root.0).unwrap();
+        write_json(
+            &path.with_extension("receipt.json"),
+            &Receipt {
+                id: selected.id.clone(),
+                identity: selected.blob_sha.clone(),
+                bytes: selected.bytes,
+                sha256: format!("{:x}", Sha256::digest(bytes)),
+            },
+        )
+        .unwrap();
+        path
     }
     #[test]
-    fn invalid_ids_and_revisions_fail_before_touching_network_or_disk() {
+    fn cached_apk_is_rehashed_and_requires_the_matching_receipt() {
         let root = temp();
-        let cancel = AtomicBool::new(false);
-        for id in [
-            "",
-            "../x.apk",
-            "apps/../../x.apk",
-            "https://evil.example/app.apk",
-            "launcher/x.txt",
-        ] {
-            assert!(download(&root.0, id, Some(REV), &cancel, |_| Ok(())).is_err());
-        }
-        assert!(download(&root.0, "apps/a.apk", Some("master"), &cancel, |_| Ok(())).is_err());
-        assert!(!root.0.join("market").exists());
-        fs::remove_dir_all(&root.0).unwrap();
+        let selected = item();
+        let path = cache_fixture(&root.0, &selected, APK);
+        assert!(verified_file(&path, &selected, &cancel()).unwrap());
+        let mut corrupt = APK.to_vec();
+        corrupt[5] ^= 1;
+        fs::write(&path, &corrupt).unwrap();
+        assert!(!verified_file(&path, &selected, &cancel()).unwrap());
+        fs::write(&path, APK).unwrap();
+        let mut changed = selected.clone();
+        changed.blob_sha = "a".repeat(64);
+        assert!(!verified_file(&path, &changed, &cancel()).unwrap());
+        fs::remove_file(path.with_extension("receipt.json")).unwrap();
+        assert!(!verified_file(&path, &selected, &cancel()).unwrap());
     }
     #[test]
-    fn redirects_only_allow_fixed_repository_on_gitee_https_hosts() {
-        for url in [API.into(),format!("{SOURCE_URL}/raw/{REV}/apps/a.apk"),format!("https://raw.giteeusercontent.com/juzisang331/pure-tv-store/raw/{REV}/apps/a.apk?metadata=abc&signature=def")] {assert!(allowed_url(&Url::parse(&url).unwrap()));}
-        for url in [
-            "http://gitee.com/juzisang331/pure-tv-store/raw/master/a.apk",
-            "https://gitee.com/other/repo/raw/master/a.apk",
-            "https://raw.giteeusercontent.com.evil.example/juzisang331/pure-tv-store/a.apk",
-            "https://user:password@gitee.com/juzisang331/pure-tv-store/a.apk",
-        ] {
-            assert!(!allowed_url(&Url::parse(url).unwrap()));
-        }
-    }
-    #[test]
-    fn blocking_timeout_is_per_read_not_whole_download() {
-        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
-        let address = listener.local_addr().unwrap();
-        let server = std::thread::spawn(move || {
-            let (mut stream, _) = listener.accept().unwrap();
-            let mut request = [0; 1024];
-            stream.read(&mut request).unwrap();
-            stream
-                .write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 8\r\nConnection: close\r\n\r\n")
-                .unwrap();
-            for _ in 0..8 {
-                std::thread::sleep(Duration::from_millis(100));
-                stream.write_all(b"a").unwrap();
-                stream.flush().unwrap();
+    fn cancellation_and_progress_errors_remove_partial_files() {
+        for should_cancel in [true, false] {
+            let root = temp();
+            let selected = item();
+            let cancellation = cancel();
+            let partial = temporary_path(&root.0, "part");
+            {
+                let guard = Temporary(partial.clone());
+                let mut file = File::create(&guard.0).unwrap();
+                let result = copy_apk(APK, &mut file, &selected, &cancellation, |_| {
+                    if should_cancel {
+                        cancellation.store(true, Ordering::Release);
+                        Ok(())
+                    } else {
+                        Err("progress disconnected".into())
+                    }
+                });
+                assert!(result.is_err());
+                drop(file);
             }
-        });
-        let client = Client::builder()
-            .no_proxy()
-            .timeout(Duration::from_millis(500))
-            .build()
-            .unwrap();
-        let start = Instant::now();
-        let mut response = client.get(format!("http://{address}")).send().unwrap();
-        let mut bytes = Vec::new();
-        response.read_to_end(&mut bytes).unwrap();
-        assert_eq!(bytes, b"aaaaaaaa");
-        assert!(start.elapsed() > Duration::from_millis(500));
-        server.join().unwrap();
+            assert!(!partial.exists());
+        }
     }
     #[test]
-    #[ignore = "downloads the public catalog, small and large APKs, and reuses verified cache"]
+    fn optional_svg_cache_uses_catalog_content_digest_and_rejects_changed_artwork() {
+        let root = temp();
+        let mut selected = item();
+        selected.logo_url = Some("https://apps.b14f.com/media/example/logo.svg".into());
+        selected.logo_blob_sha = Some(format!("{:x}", Sha256::digest(SVG)));
+        selected.logo_bytes = Some(SVG.len() as u64);
+        let actual = cache_logo_with(&root.0, &selected, &cancel(), |_| Ok(SVG.to_vec()))
+            .unwrap()
+            .unwrap();
+        assert!(actual.starts_with("<svg"));
+        assert!(cache_logo_with(&root.0, &selected, &cancel(), |_| panic!(
+            "valid cache must be reused"
+        ))
+        .unwrap()
+        .is_some());
+        fs::write(root.0.join("logo.svg"), b"broken").unwrap();
+        assert!(cache_logo_with(&root.0, &selected, &cancel(), |_| Ok(
+            b"<svg>broken</svg>".to_vec()
+        ))
+        .is_err());
+        assert!(
+            cache_logo_with(&root.0, &selected, &cancel(), |_| Ok(SVG.to_vec()))
+                .unwrap()
+                .is_some()
+        );
+        let mut changed = selected.clone();
+        changed.logo_blob_sha = Some("a".repeat(64));
+        assert!(cache_logo_with(&root.0, &changed, &cancel(), |_| Ok(SVG.to_vec())).is_err());
+    }
+    #[test]
+    fn filenames_remain_safe_and_recognizable_across_platforms() {
+        for name in [
+            "CON.apk",
+            "COM1.apk",
+            "LPT9.apk",
+            "A:B?.apk",
+            " .apk",
+            "你好.apk",
+            "NUL.test.apk",
+        ] {
+            let result = cache_file_name(name);
+            assert!(result.ends_with(".apk"));
+            assert!(!result.contains(['/', '\\', ':', '?']));
+            assert!(!["CON.apk", "COM1.apk", "LPT9.apk", "NUL.test.apk"].contains(&result.as_str()));
+        }
+        assert_eq!(cache_file_name("你好.apk"), "你好.apk");
+        assert!(cache_file_name(&format!("{}.apk", "中".repeat(100))).len() <= 164);
+    }
+    #[test]
+    #[ignore = "downloads the live HTTPS catalog and representative APKs and verifies cache reuse"]
     fn live_store_catalog_and_download() {
         let root = temp();
-        let cancel = AtomicBool::new(false);
-        let catalog = catalog(&root.0, true, &cancel, |_| Ok(())).unwrap();
-        assert!(valid_sha(&catalog.revision));
-        assert!(!catalog.stale);
+        let cancellation = cancel();
+        let result = catalog(&root.0, true, &cancellation, |_| Ok(())).unwrap();
+        assert!(validate_catalog(&result));
+        assert!(!result.stale);
+        assert!(!result.items.is_empty());
         if let Ok(path) = std::env::var("PURETV_MARKET_CATALOG_OUTPUT") {
-            fs::write(path, serde_json::to_vec_pretty(&catalog).unwrap()).unwrap();
+            fs::write(path, serde_json::to_vec_pretty(&result).unwrap()).unwrap();
         }
-        eprintln!(
-            "public Gitee revision {}, {} APKs",
-            catalog.revision,
-            catalog.items.len()
-        );
         let mut samples: Vec<_> = ["app", "launcher"]
             .iter()
-            .map(|kind| {
-                catalog
+            .filter_map(|kind| {
+                result
                     .items
                     .iter()
                     .filter(|i| i.kind == *kind)
                     .min_by_key(|i| i.bytes)
-                    .unwrap()
             })
             .collect();
-        // Raw downloads of APKs above 10 MiB can require login; exercise that
-        // production path too instead of passing with only the smallest files.
         samples.extend(
-            catalog
+            result
                 .items
                 .iter()
-                .filter(|i| i.bytes >= 10 * 1024 * 1024 && i.bytes <= MAX_BLOB_APK),
+                .filter(|i| i.bytes > 32 * 1024 * 1024)
+                .max_by_key(|i| i.bytes),
         );
         samples.sort_by_key(|i| &i.id);
         samples.dedup_by_key(|i| &i.id);
-        for item in samples {
-            let result = download(&root.0, &item.id, Some(&catalog.revision), &cancel, |_| {
-                Ok(())
-            })
+        for selected in samples {
+            let downloaded = download(
+                &root.0,
+                &selected.id,
+                Some(&result.revision),
+                &cancellation,
+                |_| Ok(()),
+            )
             .unwrap();
-            assert_eq!(&result.item, item);
-            assert_eq!(fs::metadata(&result.path).unwrap().len(), item.bytes);
-            assert!(verified_file(Path::new(&result.path), item, &cancel).unwrap());
-            let mut archive = zip::ZipArchive::new(File::open(&result.path).unwrap()).unwrap();
+            assert_eq!(&downloaded.item, selected);
+            assert!(verified_file(Path::new(&downloaded.path), selected, &cancellation).unwrap());
+            let mut archive = zip::ZipArchive::new(File::open(&downloaded.path).unwrap()).unwrap();
             assert!(archive.by_name("AndroidManifest.xml").unwrap().size() > 0);
             drop(archive);
-            let modified = fs::metadata(&result.path).unwrap().modified().unwrap();
             let reused = download(
                 &root.0,
-                &item.id,
-                Some(&catalog.revision),
-                &cancel,
-                |progress| {
-                    assert_ne!(progress.stage, "downloading", "cache was not reused");
+                &selected.id,
+                Some(&result.revision),
+                &cancellation,
+                |p| {
+                    assert_ne!(p.stage, "downloading");
                     Ok(())
                 },
             )
             .unwrap();
-            assert_eq!(result.path, reused.path);
-            assert_eq!(
-                fs::metadata(&reused.path).unwrap().modified().unwrap(),
-                modified
-            );
-            eprintln!(
-                "verified {} {}: {} bytes, Git blob {}, cache reused",
-                item.kind, item.id, item.bytes, item.blob_sha
-            );
+            assert_eq!(reused.path, downloaded.path);
+            eprintln!("HTTPS direct APK {}: {} bytes; HTTP metadata matched; local SHA256 receipt and cache reuse verified", selected.id, selected.bytes);
         }
-        fs::remove_dir_all(&root.0).unwrap();
     }
 }

@@ -1,27 +1,27 @@
-# pureTV Manager 0.5.7
+# pureTV Manager 0.5.8
 
 ## 简体中文
 
-- 修复 APK 市场中部分大安装包无法下载的问题：Gitee 原始下载返回 HTTP 403 时，备用下载上限从 32 MiB 提高到 128 MiB。
-- 覆盖麦动KTV 2.1.10（53,570,243 字节）因超过旧备用上限而被管理器拒绝的场景。
-- 下载仍固定到所选目录提交及 Git blob，并验证文件大小和内容哈希；保留取消、超时及有界数据读取。
+- APK 市场的启动器、影音、游戏及管理器自身更新改用 `https://apps.b14f.com` 的对应目录，直接通过 HTTPS 下载文件。
+- 下载时核对文件大小与服务器提供的版本标记；应用清单提供匹配的 SHA256 时追加校验，复用本地缓存前重新计算 SHA256。
+- 新服务器缓存与旧 Gitee 缓存隔离，移除 Gitee 下载及备用下载；论坛继续使用 Gitee。
 
 ## 繁體中文
 
-- 修正 APK 市場中部分大型安裝套件無法下載的問題：Gitee 原始下載傳回 HTTP 403 時，備用下載上限由 32 MiB 提高至 128 MiB。
-- 涵蓋麥動KTV 2.1.10（53,570,243 位元組）因超過舊備用上限而遭管理器拒絕的情況。
-- 下載仍固定至所選目錄提交及 Git blob，並驗證檔案大小和內容雜湊；保留取消、逾時及有界資料讀取。
+- APK 市場的啟動器、影音、遊戲及管理器本身更新改用 `https://apps.b14f.com` 的對應目錄，直接透過 HTTPS 下載檔案。
+- 下載時核對檔案大小與伺服器提供的版本標記；應用程式清單提供相符的 SHA256 時追加校驗，重用本機快取前重新計算 SHA256。
+- 新伺服器快取與舊 Gitee 快取隔離，移除 Gitee 下載及備用下載；論壇繼續使用 Gitee。
 
 ## English
 
-- Fixes downloads of some large APK Market packages by raising the fallback download limit from 32 MiB to 128 MiB when Gitee's raw endpoint returns HTTP 403.
-- Covers Maidong KTV 2.1.10 (53,570,243 bytes), which the manager rejected because it exceeded the previous fallback limit.
-- Downloads remain pinned to the selected catalog commit and Git blob, with file size and content hash verification, cancellation, timeouts and bounded reads.
+- APK Market launchers, media apps and games, along with manager updates, now use their respective directories on `https://apps.b14f.com` and download files directly over HTTPS.
+- Downloads check file size and server version metadata. A matching SHA256 from an app manifest is verified when available; cached files are hashed again before reuse.
+- The new server uses a separate cache from Gitee. Gitee downloads and their fallback have been removed; the forum continues to use Gitee.
 
 ---
 
-提供 Windows x64 安装版／便携版、macOS ARM64／Intel DMG、Linux x64 DEB；校验值见 `SHA256SUMS.txt`。macOS 使用 ad-hoc 签名，未进行 Apple 公证；Windows 未进行商业代码签名。本次发布未同步 Gitee 商店安装包，应用内更新仍以 `client/` 中实际同步的版本为准。
+安装包格式：Windows x64 安装版／便携版、macOS ARM64／Intel DMG、Linux x64 DEB；发布文件的校验值见 `SHA256SUMS.txt`。macOS 使用 ad-hoc 签名，未进行 Apple 公证；Windows 未进行商业代码签名。应用内更新以 `https://apps.b14f.com/client/` 实际提供的版本为准。
 
-提供 Windows x64 安裝版／可攜版、macOS ARM64／Intel DMG、Linux x64 DEB；校驗值見 `SHA256SUMS.txt`。macOS 使用 ad-hoc 簽署，未經 Apple 公證；Windows 未進行商業程式碼簽署。本次發佈未同步 Gitee 商店安裝套件，應用內更新以 `client/` 實際同步的版本為準。
+安裝套件格式：Windows x64 安裝版／可攜版、macOS ARM64／Intel DMG、Linux x64 DEB；發佈檔案的校驗值見 `SHA256SUMS.txt`。macOS 使用 ad-hoc 簽署，未經 Apple 公證；Windows 未進行商業程式碼簽署。應用程式內更新以 `https://apps.b14f.com/client/` 實際提供的版本為準。
 
-Windows x64 installer/portable, macOS ARM64/Intel DMG and Linux x64 DEB packages are included. See `SHA256SUMS.txt`. macOS builds are ad-hoc signed and not notarized; Windows builds do not use commercial code signing. This release has not synchronized packages to Gitee; in-app updates depend on the versions actually available in the store's `client/` directory.
+Package formats: Windows x64 installer/portable, macOS ARM64/Intel DMG and Linux x64 DEB. Checksums for release files are listed in `SHA256SUMS.txt`. macOS builds use ad-hoc signing without Apple notarization; Windows builds do not use commercial code signing. In-app updates depend on the versions actually available at `https://apps.b14f.com/client/`.

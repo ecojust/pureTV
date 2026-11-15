@@ -56,7 +56,7 @@ pub fn tools() -> Vec<Value> {
     let packages = json!({"type":"array","items":{"type":"string"},"minItems":1,"maxItems":100});
     let market_item = json!({
         "id":{"type":"string","minLength":1,"description":"Exact APK-relative item id returned by get_market_catalog; arbitrary URLs and local paths are not accepted."},
-        "revision":{"type":"string","minLength":40,"maxLength":40,"description":"Optional 40-character lowercase hexadecimal catalog commit. Pass catalog.revision to reject a selection if the catalog has changed."}
+        "revision":{"type":"string","minLength":64,"maxLength":64,"description":"Optional 64-character lowercase hexadecimal catalog snapshot identifier. Pass catalog.revision unchanged to reject a selection if the catalog has changed. This is an opaque HTTP metadata fingerprint, not a Git commit or APK checksum."}
     });
     vec![
         tool("close_manager","Close the open manager after cancelling pending work and stopping the configured ADB server. In-flight mutations finish first. This interrupts connections using that ADB server; explicit user confirmation is required. A stdio disconnection during shutdown is expected.",json!({"confirmShutdown":{"type":"boolean","const":true}}),&["confirmShutdown"],false),
@@ -81,7 +81,7 @@ pub fn tools() -> Vec<Value> {
         tool("uninstall","Uninstall explicit packages for current Android user, retaining data. Does not delete system partition APKs.",json!({"packages":packages}),&["packages"],false),
         tool("restore","Restore packages still available on the device using install-existing.",json!({"packages":packages}),&["packages"],false),
         tool("install","Install local single APK files in order, reporting each result. APKS/XAPK are unsupported.",json!({"paths":{"type":"array","items":{"type":"string"},"minItems":1,"maxItems":10}}),&["paths"],false),
-        market_tool("get_market_catalog","Read the applications and launchers in the Gitee pure-tv-store catalog. Set refresh=true to fetch a fresh catalog. Returns commit revision, item ids, APK sizes and cover URLs; no TV connection required. A stale cached catalog is explicitly marked.",json!({"refresh":{"type":"boolean"}}),&[],true,false),
+        market_tool("get_market_catalog","Read applications and launchers from the apps.b14f.com HTTPS directories. Set refresh=true to fetch a fresh catalog. Returns an opaque catalog snapshot, item ids, exact APK sizes and cover URLs; no TV connection required. A stale cached catalog is explicitly marked.",json!({"refresh":{"type":"boolean"}}),&[],true,false),
         market_tool("download_market_item","Download an APK selected by catalog item id into the manager's local cache and import it into the matching pending applications or launchers list. Pass catalog.revision to keep the selection tied to the displayed version. Does not install or activate a launcher; no TV connection required.",market_item.clone(),&["id"],false,false),
         market_tool("install_market_item","Download a catalog APK and install it on the connected TV using the shared operation lock. Pass catalog.revision to keep the selection tied to the displayed version. Does not activate a launcher. If installation fails, the result retains the downloaded path with installed=false and isError=true for retry.",market_item,&["id"],false,true),
         tool("set_home","Set an installed HOME component as TV launcher and record previous HOME for recovery.",json!({"component":{"type":"string"}}),&["component"],false),
@@ -92,7 +92,7 @@ pub fn tools() -> Vec<Value> {
         tool("install_platform_tools","Download/verify/configure ADB or reuse verified offline cache. Set forceDownload=true to fetch a new verified copy even when the cache is valid. Google with Tencent fallback. Requires explicit Android SDK license acceptance; disconnect TV first.",json!({"forceDownload":{"type":"boolean","description":"Force a fresh download; preserve current ADB on cancellation or failure."},"acceptedLicense":{"type":"boolean","const":true,"description":"Set true only after the user accepts https://developer.android.com/studio/terms"}}),&["acceptedLicense"],false),
         tool("choose_apks","Open the manager's native multi-APK picker. Returns paths; does not install.",json!({}),&[],true),
         tool("choose_adb","Open the manager's native executable picker. Returns path; does not configure it.",json!({}),&[],true),
-        tool("open_resource","Open the allowlisted APK resource catalog, Gitee market, project repository or releases, Platform Tools or Android SDK license page in the user's browser.",json!({"resource":{"type":"string","enum":["catalog","market","repository","releases","platformTools","platformToolsLicense"]}}),&["resource"],false),
+        tool("open_resource","Open the allowlisted APK resource catalog, apps.b14f.com market, project repository or releases, Platform Tools or Android SDK license page in the user's browser.",json!({"resource":{"type":"string","enum":["catalog","market","repository","releases","platformTools","platformToolsLicense"]}}),&["resource"],false),
     ]
 }
 fn error(id: Value, code: i64, message: &str) -> Value {
@@ -526,8 +526,8 @@ mod tests {
     }
     #[test]
     fn market_protocol_validates_selection_and_retains_partial_results() {
-        let revision = "0123456789abcdef0123456789abcdef01234567";
-        let selection = json!({"id":"apps/hifini/hifini-0.1.3.apk","revision":revision});
+        let revision = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+        let selection = json!({"id":"media/hifini/hifini-0.1.3.apk","revision":revision});
         for (name, args) in [
             ("get_market_catalog", json!({})),
             ("get_market_catalog", json!({"refresh":true})),
@@ -560,15 +560,19 @@ mod tests {
             ("download_market_item", json!({"id":7})),
             (
                 "download_market_item",
-                json!({"id":"apps/music/music.apk","path":"/tmp/target.apk"}),
+                json!({"id":"media/music/music.apk","path":"/tmp/target.apk"}),
             ),
             (
                 "install_market_item",
-                json!({"id":"apps/music/music.apk","revision":"master"}),
+                json!({"id":"media/music/music.apk","revision":"master"}),
             ),
             (
                 "install_market_item",
-                json!({"id":"apps/music/music.apk","revision":format!("{revision}0")}),
+                json!({"id":"media/music/music.apk","revision":format!("{revision}0")}),
+            ),
+            (
+                "download_market_item",
+                json!({"id":"media/music/music.apk","revision":"a".repeat(40)}),
             ),
         ] {
             let response = dispatch(
@@ -599,6 +603,13 @@ mod tests {
         );
 
         let catalog = tools();
+        for name in ["download_market_item", "install_market_item"] {
+            let revision_schema = &catalog.iter().find(|tool| tool["name"] == name).unwrap()
+                ["inputSchema"]["properties"]["revision"];
+            assert_eq!(revision_schema["minLength"], 64);
+            assert_eq!(revision_schema["maxLength"], 64);
+            assert!(revision_schema["description"].as_str().unwrap().contains("snapshot"));
+        }
         for name in [
             "get_market_catalog",
             "download_market_item",

@@ -1,16 +1,13 @@
 //! Desktop update discovery and downloads from the fixed public client directory.
 //! This module never starts an installer; the caller owns the application lifecycle.
-use base64::{engine::general_purpose::STANDARD, read::DecoderReader};
+use crate::app_store::{self, FileMetadata};
 use reqwest::{
     blocking::{Client, Response},
-    header, redirect, Url,
+    header, redirect, Method, Url,
 };
 use serde::{Deserialize, Serialize};
-use sha1::{Digest, Sha1};
-use sha2::Sha256;
+use sha2::{Digest, Sha256};
 use std::{
-    borrow::Cow,
-    collections::HashSet,
     fs::{self, File, OpenOptions},
     io::{Read, Write},
     path::{Path, PathBuf},
@@ -21,12 +18,9 @@ use std::{
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 
-pub const SOURCE_URL: &str = "https://gitee.com/juzisang331/pure-tv-store";
-const API: &str = "https://gitee.com/api/v5/repos/juzisang331/pure-tv-store";
+pub const SOURCE_URL: &str = "https://apps.b14f.com/client/";
 const MAX_JSON: u64 = 16 * 1024 * 1024;
 const MAX_PACKAGE: u64 = 256 * 1024 * 1024;
-const MAX_BLOB: u64 = 32 * 1024 * 1024;
-const BLOB_ENVELOPE: u64 = 8192;
 const METADATA_TIMEOUT: Duration = Duration::from_secs(60);
 const DOWNLOAD_TIMEOUT: Duration = Duration::from_secs(15 * 60);
 static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
@@ -62,6 +56,7 @@ pub struct Downloaded {
     pub platform: String,
     pub file_name: String,
     pub bytes: u64,
+    /// Retained for installer fixture compatibility; HTTP packages have no Git blob SHA.
     pub blob_sha: String,
     pub sha256: String,
     pub revision: String,
@@ -71,8 +66,7 @@ struct Candidate {
     version: String,
     platform: String,
     file_name: String,
-    bytes: u64,
-    blob_sha: String,
+    metadata: FileMetadata,
     revision: String,
 }
 #[derive(Default)]
@@ -83,40 +77,12 @@ pub struct State {
     directory: PathBuf,
     selection: Mutex<Selection>,
 }
-#[derive(Deserialize)]
-struct Repository {
-    default_branch: String,
-}
-#[derive(Deserialize)]
-struct Branch {
-    commit: Commit,
-}
-#[derive(Deserialize)]
-struct Commit {
-    sha: String,
-}
-#[derive(Deserialize)]
-struct Tree {
-    tree: Vec<TreeEntry>,
-    #[serde(default)]
-    truncated: bool,
-}
-#[derive(Deserialize)]
-struct TreeEntry {
-    path: String,
-    #[serde(rename = "type")]
-    kind: String,
-    mode: String,
-    sha: String,
-    size: Option<u64>,
-}
-#[derive(Deserialize)]
-struct Blob<'a> {
-    sha: String,
-    size: u64,
-    encoding: String,
-    #[serde(borrow)]
-    content: Cow<'a, str>,
+/// A local receipt detects later cache corruption. It is not a server signature.
+#[derive(Serialize, Deserialize)]
+struct Receipt {
+    revision: String,
+    bytes: u64,
+    sha256: String,
 }
 
 pub fn platform() -> &'static str {
@@ -160,19 +126,10 @@ fn version(value: &str) -> Option<[u64; 3]> {
     Some(result)
 }
 fn valid_sha(value: &str) -> bool {
-    value.len() == 40
+    value.len() == 64
         && value
             .bytes()
             .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
-}
-fn valid_branch(value: &str) -> bool {
-    !value.is_empty()
-        && value.len() <= 255
-        && !value.contains(['\\', '\0'])
-        && !value.chars().any(char::is_control)
-        && value
-            .split('/')
-            .all(|part| !part.is_empty() && part != "." && part != "..")
 }
 fn now_ms() -> u64 {
     SystemTime::now()
@@ -196,33 +153,11 @@ fn active(cancel: &AtomicBool, deadline: Instant) -> Result<(), String> {
         Ok(())
     }
 }
-fn api_path(suffix: &str, component: &str) -> String {
-    let mut url = Url::parse(&format!("{API}/{suffix}")).expect("fixed API URL");
-    url.path_segments_mut().expect("HTTPS URL").push(component);
-    url.into()
-}
 fn raw_url(candidate: &Candidate) -> String {
-    format!(
-        "{SOURCE_URL}/raw/{}/client/{}",
-        candidate.revision, candidate.file_name
-    )
+    app_store::file_url(&format!("client/{}", candidate.file_name)).expect("validated package name")
 }
 fn allowed_url(url: &Url) -> bool {
-    url.scheme() == "https"
-        && matches!(
-            url.host_str(),
-            Some("gitee.com" | "raw.giteeusercontent.com")
-        )
-        && url.port().is_none_or(|p| p == 443)
-        && url.username().is_empty()
-        && url.password().is_none()
-        && url.fragment().is_none()
-        && (url.path().starts_with("/juzisang331/pure-tv-store/")
-            || url.host_str() == Some("gitee.com")
-                && (url.path() == "/api/v5/repos/juzisang331/pure-tv-store"
-                    || url
-                        .path()
-                        .starts_with("/api/v5/repos/juzisang331/pure-tv-store/")))
+    app_store::allowed_url(url) && url.path().starts_with("/client/")
 }
 fn client() -> Result<Client, String> {
     Client::builder()
@@ -237,6 +172,8 @@ fn client() -> Result<Client, String> {
 fn response(
     client: &Client,
     address: &str,
+    method: Method,
+    expected: Option<&FileMetadata>,
     cancel: &AtomicBool,
     deadline: Instant,
 ) -> Result<Response, String> {
@@ -246,15 +183,20 @@ fn response(
         if !allowed_url(&url) {
             return Err("客户端更新返回了不受支持的下载地址".into());
         }
-        let value = client
-            .get(url.clone())
-            .header(header::ACCEPT_ENCODING, "identity")
-            .send()
-            .map_err(|_| {
-                check_cancel(cancel)
-                    .err()
-                    .unwrap_or_else(|| "无法连接客户端更新仓库，请检查网络后重试".into())
-            })?;
+        // The blocking client's timeout bounds send/each Read separately. Do not
+        // set RequestBuilder::timeout: it also becomes an async whole-body limit.
+        // The explicit deadline below bounds the complete transfer independently.
+        let mut request = client
+            .request(method.clone(), url.clone())
+            .header(header::ACCEPT_ENCODING, "identity");
+        if let Some(metadata) = expected {
+            request = app_store::apply_conditions(request, metadata);
+        }
+        let value = request.send().map_err(|_| {
+            check_cancel(cancel)
+                .err()
+                .unwrap_or_else(|| "无法连接客户端更新服务器，请检查网络后重试".into())
+        })?;
         active(cancel, deadline)?;
         if value.status().is_redirection() {
             if hop == 5 {
@@ -308,63 +250,55 @@ fn read_bounded(
     }
     Ok(bytes)
 }
-fn fetch_json(
+fn fetch_directory(
     client: &Client,
     url: &str,
     cancel: &AtomicBool,
     deadline: Instant,
 ) -> Result<Vec<u8>, String> {
-    let response = require_ok(response(client, url, cancel, deadline)?)?;
+    let response = require_ok(response(client, url, Method::GET, None, cancel, deadline)?)?;
     if response.content_length().is_some_and(|n| n > MAX_JSON) {
         return Err("客户端更新目录过大".into());
     }
     read_bounded(response, MAX_JSON, cancel, deadline)
 }
-fn parse_tree(bytes: &[u8], revision: &str, target: &str) -> Result<Option<Candidate>, String> {
-    if !valid_sha(revision) || bytes.len() as u64 > MAX_JSON {
-        return Err("客户端更新目录无效".into());
-    }
-    let tree: Tree = serde_json::from_slice(bytes).map_err(|_| "无法解析客户端更新目录")?;
-    if tree.truncated || tree.tree.len() > 50_000 {
-        return Err("客户端更新目录不完整，请稍后重试".into());
-    }
-    let suffix = suffix(target).ok_or("当前平台不支持自动更新")?;
-    let mut selected: Option<Candidate> = None;
-    let mut seen = HashSet::new();
-    for item in tree.tree {
-        let Some(file_name) = item.path.strip_prefix("client/") else {
+fn fetch_metadata(
+    client: &Client,
+    url: &str,
+    cancel: &AtomicBool,
+    deadline: Instant,
+) -> Result<FileMetadata, String> {
+    let value = require_ok(response(client, url, Method::HEAD, None, cancel, deadline)?)?;
+    app_store::metadata_from_headers(value.headers(), MAX_PACKAGE)
+}
+fn select_file(bytes: &[u8], target: &str) -> Result<Option<(String, String)>, String> {
+    let ending = suffix(target).ok_or("当前平台不支持自动更新")?;
+    let entries = app_store::parse_directory(bytes, "client")?;
+    let mut selected: Option<(String, String)> = None;
+    for entry in entries {
+        if entry.directory {
+            continue;
+        }
+        let Some(file_name) = entry.path.strip_prefix("client/") else {
             continue;
         };
+        if file_name.contains('/') {
+            continue;
+        }
         let Some(value) = file_name
             .strip_prefix("pureTV-Manager-")
-            .and_then(|s| s.strip_suffix(&format!("-{suffix}")))
+            .and_then(|s| s.strip_suffix(&format!("-{ending}")))
         else {
             continue;
         };
         let Some(parsed) = version(value) else {
             continue;
         };
-        if !seen.insert(file_name.to_owned())
-            || item.kind != "blob"
-            || !matches!(item.mode.as_str(), "100644" | "100755")
-            || !valid_sha(&item.sha)
-            || item.size.is_none_or(|size| size == 0 || size > MAX_PACKAGE)
-        {
-            return Err("客户端安装包目录信息无效，请稍后重试".into());
-        }
-        let candidate = Candidate {
-            version: value.into(),
-            platform: target.into(),
-            file_name: file_name.into(),
-            bytes: item.size.unwrap(),
-            blob_sha: item.sha,
-            revision: revision.into(),
-        };
         if selected
             .as_ref()
-            .is_none_or(|old| parsed > version(&old.version).unwrap())
+            .is_none_or(|(old, _)| parsed > version(old).unwrap())
         {
-            selected = Some(candidate);
+            selected = Some((value.into(), file_name.into()));
         }
     }
     Ok(selected)
@@ -373,31 +307,34 @@ fn discover(
     target: &str,
     cancel: &AtomicBool,
     mut fetch: impl FnMut(&str) -> Result<Vec<u8>, String>,
+    mut head: impl FnMut(&str) -> Result<FileMetadata, String>,
 ) -> Result<(String, Option<Candidate>), String> {
     check_cancel(cancel)?;
-    let repository: Repository =
-        serde_json::from_slice(&fetch(API)?).map_err(|_| "无法解析客户端更新仓库")?;
-    if !valid_branch(&repository.default_branch) {
-        return Err("客户端更新默认分支无效".into());
+    let listing = fetch(SOURCE_URL)?;
+    if listing.len() as u64 > MAX_JSON {
+        return Err("客户端更新目录过大".into());
     }
+    let Some((version, file_name)) = select_file(&listing, target)? else {
+        return Ok((format!("{:x}", Sha256::digest(&listing)), None));
+    };
     check_cancel(cancel)?;
-    let branch: Branch =
-        serde_json::from_slice(&fetch(&api_path("branches", &repository.default_branch))?)
-            .map_err(|_| "无法解析客户端更新版本")?;
-    if !valid_sha(&branch.commit.sha) {
-        return Err("客户端更新提交版本无效".into());
+    let path = format!("client/{file_name}");
+    let metadata = head(&app_store::file_url(&path)?)?;
+    if metadata.bytes == 0 || metadata.bytes > MAX_PACKAGE {
+        return Err("客户端安装包目录信息无效，请稍后重试".into());
     }
+    let revision = app_store::fingerprint(&path, &metadata);
     check_cancel(cancel)?;
-    let selected = parse_tree(
-        &fetch(&format!(
-            "{}?recursive=1",
-            api_path("git/trees", &branch.commit.sha)
-        ))?,
-        &branch.commit.sha,
-        target,
-    )?;
-    check_cancel(cancel)?;
-    Ok((branch.commit.sha, selected))
+    Ok((
+        revision.clone(),
+        Some(Candidate {
+            version,
+            platform: target.into(),
+            file_name,
+            metadata,
+            revision,
+        }),
+    ))
 }
 fn info(
     target: &str,
@@ -426,7 +363,7 @@ fn info(
         latest_version: candidate.map(|c| c.version.clone()),
         revision,
         file_name: candidate.map(|c| c.file_name.clone()),
-        bytes: candidate.map(|c| c.bytes),
+        bytes: candidate.map(|c| c.metadata.bytes),
         source_url: SOURCE_URL,
         checked_at: now_ms(),
     })
@@ -441,12 +378,10 @@ fn hash_file(
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
         Err(_) => return Err("无法读取客户端更新缓存".into()),
     };
-    if !metadata.is_file() || metadata.len() != candidate.bytes {
+    if !metadata.is_file() || metadata.len() != candidate.metadata.bytes {
         return Ok(None);
     }
     let mut input = File::open(path).map_err(|_| "无法读取客户端更新缓存")?;
-    let mut git = Sha1::new();
-    git.update(format!("blob {}\0", candidate.bytes).as_bytes());
     let mut sha = Sha256::new();
     let mut count = 0;
     let mut buffer = [0; 65_536];
@@ -459,16 +394,25 @@ fn hash_file(
             break;
         }
         count += n as u64;
-        if count > candidate.bytes {
+        if count > candidate.metadata.bytes {
             return Ok(None);
         }
-        git.update(&buffer[..n]);
         sha.update(&buffer[..n]);
     }
-    if count != candidate.bytes || format!("{:x}", git.finalize()) != candidate.blob_sha {
+    if count != candidate.metadata.bytes {
         return Ok(None);
     }
-    Ok(Some(format!("{:x}", sha.finalize())))
+    let digest = format!("{:x}", sha.finalize());
+    let receipt_path = path.with_extension("receipt.json");
+    let receipt = match fs::symlink_metadata(&receipt_path) {
+        Ok(metadata) if metadata.is_file() && metadata.len() <= 4096 => fs::read(&receipt_path)
+            .ok()
+            .and_then(|bytes| serde_json::from_slice::<Receipt>(&bytes).ok()),
+        _ => None,
+    };
+    Ok(receipt
+        .filter(|r| r.revision == candidate.revision && r.bytes == count && r.sha256 == digest)
+        .map(|_| digest))
 }
 fn copy_verified(
     mut input: impl Read,
@@ -479,8 +423,6 @@ fn copy_verified(
     mut report: impl FnMut(Progress) -> Result<(), String>,
     stage: &'static str,
 ) -> Result<String, String> {
-    let mut git = Sha1::new();
-    git.update(format!("blob {}\0", candidate.bytes).as_bytes());
     let mut sha = Sha256::new();
     let mut downloaded = 0;
     let mut buffer = [0; 65_536];
@@ -496,82 +438,38 @@ fn copy_verified(
         if count == 0 {
             break;
         }
-        if downloaded + count as u64 > candidate.bytes {
+        if downloaded + count as u64 > candidate.metadata.bytes {
             return Err("客户端安装包大小与目录不一致".into());
         }
         output
             .write_all(&buffer[..count])
             .map_err(|_| "无法保存客户端安装包")?;
-        git.update(&buffer[..count]);
         sha.update(&buffer[..count]);
         downloaded += count as u64;
         if last.elapsed() >= Duration::from_millis(150) {
             report(Progress {
                 stage,
                 downloaded: if stage == "verifying" {
-                    candidate.bytes
+                    candidate.metadata.bytes
                 } else {
                     downloaded
                 },
-                total: candidate.bytes,
+                total: candidate.metadata.bytes,
             })?;
             last = Instant::now();
         }
     }
     check_cancel(cancel)?;
-    if downloaded != candidate.bytes || format!("{:x}", git.finalize()) != candidate.blob_sha {
+    if downloaded != candidate.metadata.bytes {
         return Err("客户端安装包校验失败，请重新检查更新".into());
     }
     output.flush().map_err(|_| "无法保存客户端安装包")?;
     report(Progress {
         stage: "verifying",
         downloaded,
-        total: candidate.bytes,
+        total: candidate.metadata.bytes,
     })?;
     Ok(format!("{:x}", sha.finalize()))
-}
-fn copy_blob(
-    input: impl Read,
-    output: impl Write,
-    candidate: &Candidate,
-    cancel: &AtomicBool,
-    deadline: Instant,
-    mut report: impl FnMut(Progress) -> Result<(), String>,
-) -> Result<String, String> {
-    if candidate.bytes > MAX_BLOB {
-        return Err("客户端备用下载仅支持不超过 32 MB 的安装包，请从仓库手动下载".into());
-    }
-    let encoded = candidate.bytes.div_ceil(3) * 4;
-    // Raw JSON bytes are not installation bytes; avoid presenting Base64 or JSON
-    // overhead as a fabricated install-package completion percentage.
-    report(Progress {
-        stage: "downloading",
-        downloaded: 0,
-        total: candidate.bytes,
-    })?;
-    let bytes = read_bounded(input, encoded + BLOB_ENVELOPE, cancel, deadline)?;
-    let blob: Blob<'_> = serde_json::from_slice(&bytes).map_err(|_| "客户端备用下载数据无效")?;
-    if blob.sha != candidate.blob_sha
-        || blob.size != candidate.bytes
-        || blob.encoding != "base64"
-        || blob.content.len() as u64 != encoded
-    {
-        return Err("客户端备用下载信息与目录不一致".into());
-    }
-    report(Progress {
-        stage: "verifying",
-        downloaded: candidate.bytes,
-        total: candidate.bytes,
-    })?;
-    copy_verified(
-        DecoderReader::new(blob.content.as_bytes(), &STANDARD),
-        output,
-        candidate,
-        cancel,
-        deadline,
-        report,
-        "verifying",
-    )
 }
 fn transfer(
     candidate: &Candidate,
@@ -582,7 +480,14 @@ fn transfer(
     let client = client()?;
     let deadline = Instant::now() + DOWNLOAD_TIMEOUT;
     transfer_with(candidate, output, cancel, &mut report, deadline, |url| {
-        response(&client, url, cancel, deadline)
+        response(
+            &client,
+            url,
+            Method::GET,
+            Some(&candidate.metadata),
+            cancel,
+            deadline,
+        )
     })
 }
 fn transfer_with(
@@ -596,40 +501,47 @@ fn transfer_with(
     active(cancel, deadline)?;
     let raw = fetch(&raw_url(candidate))?;
     active(cancel, deadline)?;
-    if raw.status() == reqwest::StatusCode::FORBIDDEN {
-        if candidate.bytes > MAX_BLOB {
-            return Err("客户端备用下载仅支持不超过 32 MB 的安装包，请从仓库手动下载".into());
-        }
-        drop(raw);
-        let blob = require_ok(fetch(&api_path("git/blobs", &candidate.blob_sha))?)?;
-        active(cancel, deadline)?;
-        if blob
-            .content_length()
-            .is_some_and(|n| n > candidate.bytes.div_ceil(3) * 4 + BLOB_ENVELOPE)
-        {
-            return Err("客户端备用下载数据超过大小限制".into());
-        }
-        copy_blob(blob, output, candidate, cancel, deadline, report)
-    } else {
-        let raw = require_ok(raw)?;
-        if raw.content_length().is_some_and(|n| n != candidate.bytes) {
-            return Err("客户端安装包大小与目录不一致".into());
-        }
-        report(Progress {
-            stage: "downloading",
-            downloaded: 0,
-            total: candidate.bytes,
-        })?;
-        copy_verified(
-            raw,
-            output,
-            candidate,
-            cancel,
-            deadline,
-            &mut report,
-            "downloading",
-        )
+    if raw.status() == reqwest::StatusCode::PRECONDITION_FAILED {
+        return Err("客户端更新目录已变化，请重新检查更新".into());
     }
+    let raw = require_ok(raw)?;
+    app_store::check_response_metadata(raw.headers(), &candidate.metadata)?;
+    report(Progress {
+        stage: "downloading",
+        downloaded: 0,
+        total: candidate.metadata.bytes,
+    })?;
+    copy_verified(
+        raw,
+        output,
+        candidate,
+        cancel,
+        deadline,
+        &mut report,
+        "downloading",
+    )
+}
+fn save_receipt(path: &Path, candidate: &Candidate, sha256: &str) -> Result<(), String> {
+    let receipt = Receipt {
+        revision: candidate.revision.clone(),
+        bytes: candidate.metadata.bytes,
+        sha256: sha256.into(),
+    };
+    let temporary = Temporary(path.with_extension(format!(
+        "receipt-{}-{}.part",
+        std::process::id(),
+        NEXT_TEMP.fetch_add(1, Ordering::Relaxed)
+    )));
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&temporary.0)
+        .map_err(|_| "无法保存客户端更新校验记录")?;
+    serde_json::to_writer(&mut file, &receipt).map_err(|_| "无法保存客户端更新校验记录")?;
+    file.sync_all().map_err(|_| "无法保存客户端更新校验记录")?;
+    drop(file);
+    fs::rename(&temporary.0, path.with_extension("receipt.json"))
+        .map_err(|_| "无法保存客户端更新校验记录".into())
 }
 struct Temporary(PathBuf);
 impl Drop for Temporary {
@@ -655,7 +567,8 @@ impl State {
             env!("CARGO_PKG_VERSION"),
             cancel,
             &mut report,
-            |url, deadline| fetch_json(&client()?, url, cancel, deadline),
+            |url, deadline| fetch_directory(&client()?, url, cancel, deadline),
+            |url, deadline| fetch_metadata(&client()?, url, cancel, deadline),
         )
     }
     fn check_with(
@@ -665,6 +578,7 @@ impl State {
         cancel: &AtomicBool,
         mut report: impl FnMut(Progress) -> Result<(), String>,
         mut fetch: impl FnMut(&str, Instant) -> Result<Vec<u8>, String>,
+        mut head: impl FnMut(&str, Instant) -> Result<FileMetadata, String>,
     ) -> Result<Info, String> {
         let mut selection = self.selection.lock().map_err(|_| "客户端更新状态不可用")?;
         selection.candidate = None;
@@ -678,10 +592,18 @@ impl State {
             return info(target, current, None, None);
         }
         let deadline = Instant::now() + METADATA_TIMEOUT;
-        let (revision, latest) = discover(target, cancel, |url| {
-            active(cancel, deadline)?;
-            fetch(url, deadline)
-        })?;
+        let (revision, latest) = discover(
+            target,
+            cancel,
+            |url| {
+                active(cancel, deadline)?;
+                fetch(url, deadline)
+            },
+            |url| {
+                active(cancel, deadline)?;
+                head(url, deadline)
+            },
+        )?;
         let value = info(target, current, Some(revision), latest.as_ref())?;
         if value.available {
             selection.candidate = latest;
@@ -732,14 +654,14 @@ impl State {
         }
         let root = self
             .directory
-            .join("client-updates/packages")
+            .join("client-updates/http-packages")
             .join(&candidate.revision);
         fs::create_dir_all(&root).map_err(|_| "无法创建客户端更新目录")?;
         let path = root.join(&candidate.file_name);
         report(Progress {
             stage: "verifying",
             downloaded: 0,
-            total: candidate.bytes,
+            total: candidate.metadata.bytes,
         })?;
         let sha256 = if let Some(sha) = hash_file(&path, &candidate, cancel)? {
             sha
@@ -760,21 +682,22 @@ impl State {
             drop(output);
             check_cancel(cancel)?;
             fs::rename(&temporary.0, &path).map_err(|_| "无法完成客户端安装包下载")?;
+            save_receipt(&path, &candidate, &sha)?;
             sha
         };
         check_cancel(cancel)?;
         report(Progress {
             stage: "verifying",
-            downloaded: candidate.bytes,
-            total: candidate.bytes,
+            downloaded: candidate.metadata.bytes,
+            total: candidate.metadata.bytes,
         })?;
         Ok(Downloaded {
             path,
             version: candidate.version,
             platform: candidate.platform,
             file_name: candidate.file_name,
-            bytes: candidate.bytes,
-            blob_sha: candidate.blob_sha,
+            bytes: candidate.metadata.bytes,
+            blob_sha: String::new(),
             sha256,
             revision: candidate.revision,
         })
@@ -784,33 +707,29 @@ impl State {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use base64::Engine;
-    use serde_json::{json, Value};
-    const REV: &str = "1111111111111111111111111111111111111111";
-    const REV2: &str = "2222222222222222222222222222222222222222";
+    const DATE: &str = "Sun, 15 Nov 2026 09:21:53 GMT";
     fn cancelled() -> AtomicBool {
         AtomicBool::new(false)
     }
-    fn git_sha(bytes: &[u8]) -> String {
-        let mut sha = Sha1::new();
-        sha.update(format!("blob {}\0", bytes.len()));
-        sha.update(bytes);
-        format!("{:x}", sha.finalize())
+    fn metadata(bytes: u64) -> FileMetadata {
+        FileMetadata {
+            bytes,
+            etag: Some("\"release-a\"".into()),
+            last_modified: Some(DATE.into()),
+        }
     }
-    fn entry(name: &str, bytes: &[u8]) -> Value {
-        json!({"path":format!("client/{name}"),"type":"blob","mode":"100644","sha":git_sha(bytes),"size":bytes.len()})
-    }
-    fn tree(entries: Vec<Value>) -> Vec<u8> {
-        serde_json::to_vec(&json!({"tree":entries,"truncated":false})).unwrap()
+    fn listing(names: &[&str]) -> Vec<u8> {
+        format!("<html><head><title>Index of /client/</title></head><body><h1>Index of /client/</h1><hr><pre><a href=\"../\">../</a>\n{}</pre><hr></body></html>", names.iter().map(|s| format!("<a href=\"{s}\">{s}</a> 15-Nov-2026 09:21 2M\n")).collect::<String>()).into_bytes()
     }
     fn candidate(bytes: &[u8]) -> Candidate {
+        let file_name = "pureTV-Manager-0.4.11-windows-x64-setup.exe".to_string();
+        let metadata = metadata(bytes.len() as u64);
         Candidate {
             version: "0.4.11".into(),
             platform: "windows-x64".into(),
-            file_name: "pureTV-Manager-0.4.11-windows-x64-setup.exe".into(),
-            bytes: bytes.len() as u64,
-            blob_sha: git_sha(bytes),
-            revision: REV.into(),
+            revision: app_store::fingerprint(&format!("client/{file_name}"), &metadata),
+            file_name,
+            metadata,
         }
     }
     struct TemporaryDirectory(PathBuf);
@@ -829,19 +748,20 @@ mod tests {
             let _ = fs::remove_dir_all(&self.0);
         }
     }
-    fn fetch_fixture(url: &str) -> Result<Vec<u8>, String> {
-        if url == API {
-            Ok(br#"{"default_branch":"master"}"#.to_vec())
-        } else if url.ends_with("/branches/master") {
-            Ok(serde_json::to_vec(&json!({"commit":{"sha":REV}})).unwrap())
-        } else if url == format!("{API}/git/trees/{REV}?recursive=1") {
-            Ok(tree(vec![entry(
-                "pureTV-Manager-0.4.11-windows-x64-setup.exe",
-                b"installer",
-            )]))
-        } else {
-            panic!("Unexpected URL {url}")
-        }
+    fn fixture_check(state: &State, current: &str) -> Info {
+        state
+            .check_with(
+                "windows-x64",
+                current,
+                &cancelled(),
+                |_| Ok(()),
+                |url, _| {
+                    assert_eq!(url, SOURCE_URL);
+                    Ok(listing(&["pureTV-Manager-0.4.11-windows-x64-setup.exe"]))
+                },
+                |_, _| Ok(metadata(9)),
+            )
+            .unwrap()
     }
     #[test]
     fn versions_are_numeric_and_only_exact_stable_platform_files_are_selected() {
@@ -859,152 +779,161 @@ mod tests {
         ] {
             assert!(version(value).is_none(), "{value}");
         }
-        let mut entries = vec![
-            entry("pureTV-Manager-0.4.9-windows-x64-setup.exe", b"a"),
-            entry("pureTV-Manager-0.4.10-windows-x64-setup.exe", b"b"),
-        ];
-        for name in [
+        let entries = listing(&[
+            "pureTV-Manager-0.4.9-windows-x64-setup.exe",
+            "pureTV-Manager-0.4.10-windows-x64-setup.exe",
             "pureTV-Manager-9.0.0-windows-x64-portable.exe",
             "pureTV-Manager-9.0.0-macos-arm64.dmg",
             "pureTV-Manager-9.0.0-windows-x64-setup.exe.exe",
-            "../pureTV-Manager-9.0.0-windows-x64-setup.exe",
-            "nested/pureTV-Manager-9.0.0-windows-x64-setup.exe",
-        ] {
-            entries.push(entry(name, b"ignore"));
-        }
-        let selected = parse_tree(&tree(entries), REV, "windows-x64")
-            .unwrap()
-            .unwrap();
-        assert_eq!(selected.version, "0.4.10");
+            "nested/",
+        ]);
         assert_eq!(
-            selected.file_name,
-            "pureTV-Manager-0.4.10-windows-x64-setup.exe"
+            select_file(&entries, "windows-x64").unwrap().unwrap().0,
+            "0.4.10"
         );
-        assert!(parse_tree(
-            &tree(vec![entry("pureTV-Manager-0.4.10-macos-arm64.dmg", b"a")]),
-            REV,
-            "linux-x64"
-        )
-        .unwrap()
-        .is_none());
+        assert!(select_file(&entries, "linux-x64").unwrap().is_none());
     }
     #[test]
-    fn discovery_pins_branch_commit_and_rejects_untrusted_or_truncated_metadata() {
-        let (revision, value) = discover("windows-x64", &cancelled(), fetch_fixture).unwrap();
-        assert_eq!(revision, REV);
-        assert_eq!(value.unwrap().revision, REV);
-        for field in [
-            json!({"mode":"120000"}),
-            json!({"sha":"wrong"}),
-            json!({"size":0}),
-            json!({"size":MAX_PACKAGE+1}),
-            json!({"type":"tree"}),
-        ] {
-            let mut value = entry("pureTV-Manager-0.4.11-windows-x64-setup.exe", b"a");
-            for (key, value2) in field.as_object().unwrap() {
-                value[key] = value2.clone();
-            }
-            assert!(parse_tree(&tree(vec![value]), REV, "windows-x64").is_err());
-        }
-        assert!(parse_tree(br#"{"tree":[],"truncated":true}"#, REV, "windows-x64").is_err());
-        let duplicate = entry("pureTV-Manager-0.4.11-windows-x64-setup.exe", b"a");
-        assert!(parse_tree(
-            &tree(vec![duplicate.clone(), duplicate]),
-            REV,
-            "windows-x64"
+    fn discovery_heads_only_latest_matching_package_and_uses_exact_metadata() {
+        let mut heads = Vec::new();
+        let (revision, value) = discover(
+            "windows-x64",
+            &cancelled(),
+            |url| {
+                assert_eq!(url, SOURCE_URL);
+                Ok(listing(&[
+                    "pureTV-Manager-0.4.10-windows-x64-setup.exe",
+                    "pureTV-Manager-0.4.11-windows-x64-setup.exe",
+                    "pureTV-Manager-0.4.12-macos-arm64.dmg",
+                ]))
+            },
+            |url| {
+                heads.push(url.to_string());
+                Ok(metadata(2_273_072))
+            },
         )
-        .is_err());
-        assert!(parse_tree(b"bad", REV, "windows-x64").is_err());
-        assert!(discover("windows-x64", &cancelled(), |_| Ok(
-            br#"{"default_branch":"../other"}"#.to_vec()
-        ))
+        .unwrap();
+        let c = value.unwrap();
+        assert_eq!(heads, [raw_url(&c)]);
+        assert_eq!(c.version, "0.4.11");
+        assert_eq!(c.metadata.bytes, 2_273_072); // Do not use rounded HTML's "2M".
+        assert!(valid_sha(&revision));
+        assert_eq!(revision, c.revision);
+        assert_eq!(
+            revision,
+            app_store::fingerprint(&format!("client/{}", c.file_name), &c.metadata)
+        );
+        let mut changed = c.metadata.clone();
+        changed.etag = Some("\"replacement\"".into());
+        assert_ne!(
+            revision,
+            app_store::fingerprint(&format!("client/{}", c.file_name), &changed)
+        );
+    }
+    #[test]
+    fn missing_platform_does_not_head_files_and_invalid_sizes_are_rejected() {
+        assert!(discover(
+            "linux-x64",
+            &cancelled(),
+            |_| Ok(listing(&[])),
+            |_| panic!("no matching package")
+        )
+        .unwrap()
+        .1
+        .is_none());
+        for bytes in [0, MAX_PACKAGE + 1] {
+            assert!(discover(
+                "windows-x64",
+                &cancelled(),
+                |_| Ok(listing(&["pureTV-Manager-0.4.11-windows-x64-setup.exe"])),
+                |_| Ok(metadata(bytes))
+            )
+            .is_err());
+        }
+        let value = discover(
+            "windows-x64",
+            &cancelled(),
+            |_| Ok(listing(&["pureTV-Manager-0.4.11-windows-x64-setup.exe"])),
+            |_| Ok(metadata(33 * 1024 * 1024)),
+        )
+        .unwrap()
+        .1
+        .unwrap();
+        assert_eq!(value.metadata.bytes, 33 * 1024 * 1024);
+        assert!(discover(
+            "windows-x64",
+            &AtomicBool::new(true),
+            |_| panic!("cancelled"),
+            |_| panic!("cancelled")
+        )
         .is_err());
     }
     #[test]
     fn no_matching_platform_is_distinct_from_up_to_date_and_never_downgrades() {
         let c = candidate(b"a");
         assert_eq!(
-            info("windows-x64", "0.4.10", Some(REV.into()), Some(&c))
+            info("windows-x64", "0.4.10", Some(c.revision.clone()), Some(&c))
                 .unwrap()
                 .status,
             "available"
         );
         for current in ["0.4.11", "0.4.12", "1.0.0"] {
-            let value = info("windows-x64", current, Some(REV.into()), Some(&c)).unwrap();
+            let value = info("windows-x64", current, Some(c.revision.clone()), Some(&c)).unwrap();
             assert!(!value.available);
             assert_eq!(value.status, "upToDate");
         }
-        let no_package = info("linux-x64", "0.4.10", Some(REV.into()), None).unwrap();
-        assert_eq!(no_package.status, "notPublished");
-        assert!(no_package.supported);
-        let unsupported = info("unknown", "0.4.10", None, None).unwrap();
-        assert_eq!(unsupported.status, "unsupported");
-        assert!(!unsupported.supported);
+        assert_eq!(
+            info("linux-x64", "0.4.10", None, None).unwrap().status,
+            "notPublished"
+        );
+        assert!(!info("unknown", "0.4.10", None, None).unwrap().supported);
     }
     #[test]
     fn failed_checks_clear_previous_candidates_and_downloads_require_displayed_revision() {
         let dir = TemporaryDirectory::new();
         let state = State::new(dir.0.clone());
         let cancel = cancelled();
-        let value = state
-            .check_with(
-                "windows-x64",
-                "0.4.10",
-                &cancel,
-                |_| Ok(()),
-                |url, _| fetch_fixture(url),
-            )
-            .unwrap();
+        let value = fixture_check(&state, "0.4.10");
         assert!(value.available);
-        assert!(state
-            .download_with(
-                "0.4.12",
-                REV,
-                &cancel,
-                |_| Ok(()),
-                |_, _, _, _| panic!("must not download")
-            )
-            .is_err());
-        assert!(state
-            .download_with(
-                "0.4.11",
-                REV2,
-                &cancel,
-                |_| Ok(()),
-                |_, _, _, _| panic!("must not download")
-            )
-            .is_err());
+        let revision = value.revision.unwrap();
+        for (version, revision) in [
+            ("0.4.12", revision.as_str()),
+            ("0.4.11", "0".repeat(64).as_str()),
+        ] {
+            assert!(state
+                .download_with(
+                    version,
+                    revision,
+                    &cancel,
+                    |_| Ok(()),
+                    |_, _, _, _| panic!("must not download")
+                )
+                .is_err());
+        }
         assert!(state
             .check_with(
                 "windows-x64",
                 "0.4.10",
                 &cancel,
                 |_| Ok(()),
-                |_, _| Err("offline".into())
+                |_, _| Err("offline".into()),
+                |_, _| panic!("offline")
             )
             .is_err());
         assert!(state
             .download_with(
                 "0.4.11",
-                REV,
+                &revision,
                 &cancel,
                 |_| Ok(()),
                 |_, _, _, _| panic!("failed check cannot authorize download")
             )
             .is_err());
-        state
-            .check_with(
-                "windows-x64",
-                "0.4.12",
-                &cancel,
-                |_| Ok(()),
-                |url, _| fetch_fixture(url),
-            )
-            .unwrap();
+        fixture_check(&state, "0.4.12");
         assert!(state
             .download_with(
                 "0.4.11",
-                REV,
+                &revision,
                 &cancel,
                 |_| Ok(()),
                 |_, _, _, _| panic!("cannot downgrade")
@@ -1012,11 +941,43 @@ mod tests {
             .is_err());
     }
     #[test]
-    fn exact_bytes_and_git_hash_are_required_before_download_is_accepted() {
+    fn unsupported_platform_and_invalid_selection_never_touch_network_or_disk() {
+        let dir = TemporaryDirectory::new();
+        let state = State::new(dir.0.clone());
+        let cancel = cancelled();
+        assert_eq!(
+            state
+                .check_with(
+                    "unknown",
+                    "0.4.10",
+                    &cancel,
+                    |_| Ok(()),
+                    |_, _| panic!("unsupported"),
+                    |_, _| panic!("unsupported")
+                )
+                .unwrap()
+                .status,
+            "unsupported"
+        );
+        for revision in ["../a", "x", "0".repeat(40).as_str()] {
+            assert!(state
+                .download_with(
+                    "0.4.11",
+                    revision,
+                    &cancel,
+                    |_| Ok(()),
+                    |_, _, _, _| panic!("invalid input")
+                )
+                .is_err());
+        }
+        assert!(!dir.0.exists());
+    }
+    #[test]
+    fn transfers_enforce_exact_length_calculate_sha256_and_honor_cancel_and_timeout() {
         let bytes = b"MZ example installer fixture";
         let c = candidate(bytes);
         let cancel = cancelled();
-        let deadline = Instant::now() + Duration::from_secs(2);
+        let deadline = Instant::now() + Duration::from_secs(3);
         let mut output = Vec::new();
         let mut progress = Vec::new();
         let sha = copy_verified(
@@ -1037,7 +998,6 @@ mod tests {
         assert_eq!(progress.last().unwrap().downloaded, bytes.len() as u64);
         for corrupt in [
             &bytes[..bytes.len() - 1],
-            b"xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             b"MZ example installer fixture extra",
         ] {
             assert!(copy_verified(
@@ -1051,18 +1011,6 @@ mod tests {
             )
             .is_err());
         }
-        let mut plain_hash = c.clone();
-        plain_hash.blob_sha = format!("{:x}", Sha1::digest(bytes));
-        assert!(copy_verified(
-            &bytes[..],
-            Vec::new(),
-            &plain_hash,
-            &cancel,
-            deadline,
-            |_| Ok(()),
-            "downloading"
-        )
-        .is_err());
         assert!(copy_verified(
             &bytes[..],
             Vec::new(),
@@ -1073,59 +1021,33 @@ mod tests {
             "downloading"
         )
         .is_err());
-    }
-    #[test]
-    fn blob_fallback_checks_metadata_and_decoded_bytes_with_independent_size_bound() {
-        let bytes = b"installer bytes";
-        let c = candidate(bytes);
-        let cancel = cancelled();
-        let deadline = Instant::now() + Duration::from_secs(2);
-        let blob = json!({"sha":c.blob_sha,"size":c.bytes,"encoding":"base64","content":STANDARD.encode(bytes)});
-        let mut output = Vec::new();
-        let mut progress = Vec::new();
-        copy_blob(
-            serde_json::to_vec(&blob).unwrap().as_slice(),
-            &mut output,
+        assert!(copy_verified(
+            &bytes[..],
+            Vec::new(),
+            &c,
+            &cancel,
+            Instant::now(),
+            |_| Ok(()),
+            "downloading"
+        )
+        .is_err());
+        assert!(copy_verified(
+            &bytes[..],
+            Vec::new(),
             &c,
             &cancel,
             deadline,
-            |p| {
-                progress.push(p);
-                Ok(())
-            },
+            |_| Err("closed progress channel".into()),
+            "downloading"
         )
-        .unwrap();
-        assert_eq!(output, bytes);
-        assert!(progress.iter().all(|p| p.downloaded <= p.total));
-        for field in [
-            json!({"sha":REV2}),
-            json!({"size":bytes.len()+1}),
-            json!({"encoding":"utf-8"}),
-            json!({"content":STANDARD.encode(b"incorrect bytes")}),
-        ] {
-            let mut changed = blob.clone();
-            for (key, value) in field.as_object().unwrap() {
-                changed[key] = value.clone();
-            }
-            assert!(copy_blob(
-                serde_json::to_vec(&changed).unwrap().as_slice(),
-                Vec::new(),
-                &c,
-                &cancel,
-                deadline,
-                |_| Ok(())
-            )
-            .is_err());
-        }
-        let mut large = c.clone();
-        large.bytes = MAX_BLOB + 1;
-        assert!(copy_blob(&[][..], Vec::new(), &large, &cancel, deadline, |_| Ok(())).is_err());
+        .is_err());
     }
-    fn http_response(status: u16, bytes: &[u8]) -> Response {
+    fn http_response(status: u16, bytes: &[u8], etag: Option<&str>) -> Response {
         use std::net::TcpListener;
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         let address = listener.local_addr().unwrap();
         let bytes = bytes.to_vec();
+        let etag = etag.map(str::to_owned);
         let worker = std::thread::spawn(move || {
             let (mut socket, _) = listener.accept().unwrap();
             socket
@@ -1135,10 +1057,14 @@ mod tests {
             socket.read(&mut buffer).unwrap();
             write!(
                 socket,
-                "HTTP/1.1 {status} Test\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                "HTTP/1.1 {status} Test\r\nContent-Length: {}\r\nLast-Modified: {DATE}\r\n",
                 bytes.len()
             )
             .unwrap();
+            if let Some(etag) = etag {
+                write!(socket, "ETag: {etag}\r\n").unwrap();
+            }
+            socket.write_all(b"Connection: close\r\n\r\n").unwrap();
             socket.write_all(&bytes).unwrap();
         });
         let response = Client::builder()
@@ -1153,57 +1079,70 @@ mod tests {
         response
     }
     #[test]
-    fn only_raw_403_uses_the_same_immutable_blob_and_cancel_never_retries() {
+    fn direct_download_requires_selected_http_metadata_and_never_falls_back_to_gitee() {
         let bytes = b"fixture installer";
-        let candidate = candidate(bytes);
+        let c = candidate(bytes);
         let cancel = cancelled();
         let deadline = Instant::now() + Duration::from_secs(10);
-        let blob = serde_json::to_vec(&json!({"sha":candidate.blob_sha,"size":candidate.bytes,"encoding":"base64","content":STANDARD.encode(bytes)})).unwrap();
-        let mut urls = Vec::new();
         let mut output = Vec::new();
+        let mut urls = Vec::new();
         transfer_with(
-            &candidate,
+            &c,
             &mut output,
             &cancel,
             |_| Ok(()),
             deadline,
             |url| {
-                urls.push(url.to_string());
-                Ok(if urls.len() == 1 {
-                    http_response(403, b"login required")
-                } else {
-                    http_response(200, &blob)
-                })
+                urls.push(url.to_owned());
+                Ok(http_response(200, bytes, Some("\"release-a\"")))
             },
         )
         .unwrap();
         assert_eq!(output, bytes);
-        assert_eq!(
-            urls,
-            [
-                raw_url(&candidate),
-                api_path("git/blobs", &candidate.blob_sha)
-            ]
-        );
-        for status in [401, 404, 500] {
+        assert_eq!(urls, [raw_url(&c)]);
+        for status in [401, 403, 404, 412, 500] {
             let mut requests = 0;
             assert!(transfer_with(
-                &candidate,
+                &c,
                 Vec::new(),
                 &cancel,
                 |_| Ok(()),
                 deadline,
                 |_| {
                     requests += 1;
-                    Ok(http_response(status, b"unavailable"))
+                    Ok(http_response(status, b"unavailable", None))
                 }
             )
             .is_err());
             assert_eq!(requests, 1);
         }
+        for etag in [Some("\"replaced\""), None] {
+            let mut output = Vec::new();
+            assert!(transfer_with(
+                &c,
+                &mut output,
+                &cancel,
+                |_| Ok(()),
+                deadline,
+                |_| Ok(http_response(200, bytes, etag))
+            )
+            .is_err());
+            assert!(output.is_empty());
+        }
+        let mut output = Vec::new();
+        assert!(transfer_with(
+            &c,
+            &mut output,
+            &cancel,
+            |_| Ok(()),
+            deadline,
+            |_| Ok(http_response(200, b"short", Some("\"release-a\"")))
+        )
+        .is_err());
+        assert!(output.is_empty());
         let mut requests = 0;
         assert!(transfer_with(
-            &candidate,
+            &c,
             Vec::new(),
             &cancel,
             |_| Ok(()),
@@ -1211,123 +1150,121 @@ mod tests {
             |_| {
                 requests += 1;
                 cancel.store(true, Ordering::Release);
-                Ok(http_response(403, b"cancelled"))
-            }
-        )
-        .is_err());
-        assert_eq!(requests, 1);
-        cancel.store(false, Ordering::Release);
-        let mut large = candidate.clone();
-        large.bytes = MAX_BLOB + 1;
-        requests = 0;
-        assert!(transfer_with(
-            &large,
-            Vec::new(),
-            &cancel,
-            |_| Ok(()),
-            deadline,
-            |_| {
-                requests += 1;
-                Ok(http_response(403, b"too large for fallback"))
+                Ok(http_response(200, bytes, Some("\"release-a\"")))
             }
         )
         .is_err());
         assert_eq!(requests, 1);
     }
     #[test]
-    fn cached_packages_are_rehashed_and_failed_transfers_leave_no_partial_file() {
+    fn cached_packages_require_matching_receipt_and_are_rehashed_before_reuse() {
         let dir = TemporaryDirectory::new();
         let state = State::new(dir.0.clone());
         let cancel = cancelled();
         let bytes = b"verified installer";
         let c = candidate(bytes);
         state.selection.lock().unwrap().candidate = Some(c.clone());
-        let first = state
-            .download_with(
-                &c.version,
-                REV,
-                &cancel,
-                |_| Ok(()),
-                |c, out, cancel, report| {
-                    copy_verified(
-                        &bytes[..],
-                        out,
-                        c,
-                        cancel,
-                        Instant::now() + Duration::from_secs(2),
-                        report,
-                        "downloading",
-                    )
-                },
-            )
-            .unwrap();
+        let download = |state: &State| {
+            state
+                .download_with(
+                    &c.version,
+                    &c.revision,
+                    &cancel,
+                    |_| Ok(()),
+                    |c, out, cancel, report| {
+                        copy_verified(
+                            &bytes[..],
+                            out,
+                            c,
+                            cancel,
+                            Instant::now() + Duration::from_secs(2),
+                            report,
+                            "downloading",
+                        )
+                    },
+                )
+                .unwrap()
+        };
+        let first = download(&state);
         assert_eq!(fs::read(&first.path).unwrap(), bytes);
-        assert_eq!(first.sha256, format!("{:x}", Sha256::digest(bytes)));
+        assert!(first.blob_sha.is_empty());
         state
             .download_with(
                 &c.version,
-                REV,
+                &c.revision,
                 &cancel,
                 |_| Ok(()),
                 |_, _, _, _| panic!("verified cache must avoid network"),
             )
             .unwrap();
-        fs::write(&first.path, b"broken cache").unwrap();
-        let failed = state.download_with(
-            &c.version,
-            REV,
-            &cancel,
-            |_| Ok(()),
-            |_, out, _, _| {
-                out.write_all(b"partial").unwrap();
-                Err("interrupted".into())
-            },
-        );
-        assert!(failed.is_err());
-        assert!(fs::read_dir(first.path.parent().unwrap())
-            .unwrap()
-            .all(|p| !p.unwrap().file_name().to_string_lossy().ends_with(".part")));
-        let fixed = state
-            .download_with(
-                &c.version,
-                REV,
-                &cancel,
-                |_| Ok(()),
-                |c, out, cancel, report| {
-                    copy_verified(
-                        &bytes[..],
-                        out,
-                        c,
-                        cancel,
-                        Instant::now() + Duration::from_secs(2),
-                        report,
-                        "downloading",
-                    )
-                },
-            )
-            .unwrap();
-        assert_eq!(fs::read(fixed.path).unwrap(), bytes);
+        fs::write(&first.path, vec![b'x'; bytes.len()]).unwrap(); // Same size corruption must not pass.
+        assert!(hash_file(&first.path, &c, &cancel).unwrap().is_none());
+        download(&state);
+        fs::remove_file(first.path.with_extension("receipt.json")).unwrap();
+        assert!(hash_file(&first.path, &c, &cancel).unwrap().is_none());
+        download(&state);
+        let mut changed = c.clone();
+        changed.revision = "0".repeat(64);
+        assert!(hash_file(&first.path, &changed, &cancel).unwrap().is_none());
+        fs::write(
+            first.path.with_extension("receipt.json"),
+            b"invalid receipt",
+        )
+        .unwrap();
+        assert!(hash_file(&first.path, &c, &cancel).unwrap().is_none());
     }
     #[test]
-    fn download_addresses_cannot_escape_fixed_https_repository() {
-        for good in [API.to_string(),format!("{SOURCE_URL}/raw/{REV}/client/pureTV-Manager-0.4.11-windows-x64-setup.exe"),format!("https://raw.giteeusercontent.com/juzisang331/pure-tv-store/raw/{REV}/client/a.exe?signature=abc")] {
+    fn failed_or_cancelled_transfers_leave_no_partial_files_or_valid_receipt() {
+        let dir = TemporaryDirectory::new();
+        let state = State::new(dir.0.clone());
+        let cancel = cancelled();
+        let c = candidate(b"installer");
+        state.selection.lock().unwrap().candidate = Some(c.clone());
+        for cancelled_transfer in [false, true] {
+            cancel.store(false, Ordering::Release);
+            assert!(state
+                .download_with(
+                    &c.version,
+                    &c.revision,
+                    &cancel,
+                    |_| Ok(()),
+                    |_, out, cancel, _| {
+                        out.write_all(b"partial").unwrap();
+                        if cancelled_transfer {
+                            cancel.store(true, Ordering::Release);
+                        }
+                        Err("interrupted".into())
+                    }
+                )
+                .is_err());
+            let root = dir.0.join("client-updates/http-packages").join(&c.revision);
+            assert!(fs::read_dir(root).unwrap().next().is_none());
+        }
+    }
+    #[test]
+    fn download_addresses_cannot_escape_fixed_https_client_directory() {
+        for good in [
+            SOURCE_URL.to_owned(),
+            "https://apps.b14f.com/client/pureTV-Manager-0.4.11-windows-x64-setup.exe".to_owned(),
+        ] {
             assert!(allowed_url(&Url::parse(&good).unwrap()));
         }
         for bad in [
-            "http://gitee.com/juzisang331/pure-tv-store/a",
-            "https://gitee.com.evil.example/juzisang331/pure-tv-store/a",
-            "https://gitee.com/other/repo/a",
-            "https://gitee.com/juzisang331/pure-tv-store/../../other/a",
-            "https://user:secret@gitee.com/juzisang331/pure-tv-store/a",
-            "https://gitee.com:8443/juzisang331/pure-tv-store/a",
-            "https://gitee.com/juzisang331/pure-tv-store/a#fragment",
+            "http://apps.b14f.com/client/a",
+            "https://apps.b14f.com.evil.example/client/a",
+            "https://apps.b14f.com/media/a",
+            "https://apps.b14f.com/client/../media/a",
+            "https://user:secret@apps.b14f.com/client/a",
+            "https://apps.b14f.com:8443/client/a",
+            "https://apps.b14f.com/client/a#fragment",
+            "https://gitee.com/juzisang331/pure-tv-store/raw/master/client/a",
         ] {
             assert!(!allowed_url(&Url::parse(bad).unwrap()), "{bad}");
         }
     }
     #[test]
     #[ignore = "downloads one public client package into an isolated temporary directory"]
-    fn live_gitee_discovery_and_verified_client_download() {
+    fn live_http_discovery_and_verified_client_download() {
         let directory = TemporaryDirectory::new();
         let state = State::new(directory.0.clone());
         let cancel = cancelled();
@@ -1337,7 +1274,8 @@ mod tests {
                 "0.0.0",
                 &cancel,
                 |_| Ok(()),
-                |url, deadline| fetch_json(&client()?, url, &cancel, deadline),
+                |url, deadline| fetch_directory(&client()?, url, &cancel, deadline),
+                |url, deadline| fetch_metadata(&client()?, url, &cancel, deadline),
             )
             .unwrap();
         assert!(value.available);
@@ -1350,9 +1288,6 @@ mod tests {
             )
             .unwrap();
         assert!(fs::read(&result.path).unwrap().starts_with(b"MZ"));
-        println!(
-            "Verified Gitee client {} {} bytes, Git blob {}, SHA256 {}",
-            result.version, result.bytes, result.blob_sha, result.sha256
-        );
+        println!("Verified HTTP client {} {} bytes, HTTP metadata revision {}, locally computed SHA256 {}", result.version, result.bytes, result.revision, result.sha256);
     }
 }

@@ -308,13 +308,13 @@ try {
     assert.match(await updateDialog(p).innerText(),/未下载或安装任何文件/);assert.equal(p.isClosed(),false);assert.deepEqual(remote,[]);
     assert.equal(await updateAction(p,'close').isEnabled(),true);
   },null);
-  await check('client update: manual lookup shows the exact platform package and Gitee source before installation',async p=>{
+  await check('client update: manual lookup shows the exact platform package and app server source before installation',async p=>{
     await startupUpdate(p);await openUpdate(p);
     const text=await updateDialog(p).innerText();
     assert.match(text,/0\.4\.12/);assert.ok(text.includes(newerClient.currentVersion));
     assert.match(text,/Apple Silicon/);assert.match(text,/5\.0 MiB/);
     assert.match(text,/pureTV-Manager-0\.4\.12-macos-arm64\.dmg/);
-    assert.match(text,/https:\/\/gitee\.com\/juzisang331\/pure-tv-store/);
+    assert.match(text,/https:\/\/apps\.b14f\.com\/client\//);
     assert.equal(await updateAction(p,'install').isEnabled(),true);
     await updateAction(p,'source').click();assert.deepEqual(await p.evaluate(()=>window.__resources),['market']);
     assert.deepEqual(await updateInstalls(p),[]);
@@ -358,7 +358,7 @@ try {
   },snapshot(),{clientUpdate:newerClient,holdActions:['installClientUpdate']});
   await check('client update: changed catalog rejection preserves the client and retry requires a fresh selection',async p=>{
     await startupUpdate(p);await openUpdate(p);
-    const updated=clientUpdate({...newerClient,latestVersion:'0.4.13',fileName:'pureTV-Manager-0.4.13-macos-arm64.dmg',revision:'f'.repeat(40)});
+    const updated=clientUpdate({...newerClient,latestVersion:'0.4.13',fileName:'pureTV-Manager-0.4.13-macos-arm64.dmg',revision:'f'.repeat(64)});
     await p.evaluate(value=>window.__clientUpdateInfo=value,updated);
     await updateAction(p,'install').click();await updateDialog(p).locator('[data-client-update-state="error"]').waitFor();
     assert.match(await updateDialog(p).innerText(),/目录已变化/);assert.equal(await updateAction(p,'install').isDisabled(),true);
@@ -417,8 +417,16 @@ try {
       const install=await updateAction(p,'install').boundingBox();assert.ok(install.x>=modal.x&&install.y>=modal.y&&install.x+install.width<=modal.x+modal.width+1&&install.y+install.height<=modal.y+modal.height+1,'The primary update action remains visible');
       assert.ok((await updateDialog(p).innerText()).includes(newerClient.fileName));
       if(language==='en')assert.doesNotMatch(await updateDialog(p).innerText(),/[\u3400-\u9fff]/);
+      assert.doesNotMatch(await updateDialog(p).innerText(),/Gitee/,'Update details use only the app server');
       await shot(p,'client-update-'+language);await updateAction(p,'close').click();
     }
+    await p.locator('[name="locale"]').selectOption('en');
+    await p.evaluate(()=>window.__clientUpdateError='应用服务器未提供有效的文件大小');
+    await openUpdate(p);await updateAction(p,'check').click();
+    await updateDialog(p).locator('[data-client-update-state="error"]').waitFor();
+    assert.match(await updateDialog(p).innerText(),/valid file size/);
+    assert.match(await updateDialog(p).innerText(),/https:\/\/apps\.b14f\.com\/client\//);
+    assert.doesNotMatch(await updateDialog(p).innerText(),/[\u3400-\u9fff]|Gitee/);
     assert.deepEqual(await updateInstalls(p),[]);assert.deepEqual(await requests(p),[]);
   },snapshot(),{clientUpdate:newerClient});
   const longState = snapshot();
@@ -1568,13 +1576,25 @@ try {
   };
   const openMarket=async p=>{await nav(p,'market');await p.locator('.market-card').first().waitFor();await settled(p);};
   const marketRequests=p=>p.evaluate(()=>window.__marketRequests);
-  const versionedItem=version=>({...store.items[0],id:`apps/hifini/hifini-${version}.apk`,version,fileName:`hifini-${version}.apk`,bytes:Number(version.split('.')[1])*1048576,blobSha:version.replaceAll('.','').padStart(40,'0'),coverUrl:`https://gitee.com/juzisang331/pure-tv-store/raw/${store.revision}/apps/hifini/hifini-${version}.thumb.png`});
+  const versionedItem=version=>({...store.items[0],id:`media/hifini/hifini-${version}.apk`,version,fileName:`hifini-${version}.apk`,bytes:Number(version.split('.')[1])*1048576,blobSha:version.replaceAll('.','').padStart(64,'0'),coverUrl:`https://apps.b14f.com/media/hifini/hifini-${version}.thumb.png`});
   const versionedStore={...store,items:[...['0.8.0','0.2.0','0.10.0','0.6.0','0.9.0','0.5.0','0.7.0'].map(versionedItem),store.items[1],store.items[2]]};
   const topVersions=['0.10.0','0.9.0','0.8.0','0.7.0','0.6.0'].map(versionedItem);
   const versionSelect=(p,item)=>marketCard(p,item).locator('select[data-market-version]');
-  const mockVersionCovers=p=>p.route('https://gitee.com/**',route=>route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=','base64')}));
-  const categorizedMedia={...store.items[0],id:'apps/media/hifini/hifini-0.1.3.apk',name:'游戏影评 TV',folderUrl:store.items[0].folderUrl.replace('/apps/','/apps/media/')};
-  const categorizedGame=version=>({...store.items[1],id:`apps/game/prism-relay/prism-relay-${version}.apk`,name:'镜光接力',provider:'演示游戏工作室',version,fileName:`prism-relay-${version}.apk`,folderUrl:store.items[1].folderUrl.replace('/apps/webtv','/apps/game/prism-relay')});
+  const mockVersionCovers=p=>p.route('https://apps.b14f.com/**',route=>route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=','base64')}));
+  const allowedCovers=['https://apps.b14f.com/media/hifini/thumb.png','https://apps.b14f.com/game/prism-relay/thumb.png','https://apps.b14f.com/launcher/nova/thumb.png'];
+  const rejectedCovers=['https://apps.b14f.com.evil.example/media/thumb.png','http://apps.b14f.com/media/thumb.png','https://user:secret@apps.b14f.com/media/thumb.png','https://apps.b14f.com:8443/media/thumb.png','https://apps.b14f.com/client/thumb.png','https://apps.b14f.com/media/../../client/thumb.png','https://apps.b14f.com/media/x%2f..%2fclient/thumb.png','https://gitee.com/juzisang331/pure-tv-store/raw/main/media/thumb.png'];
+  const coverItems=[...allowedCovers,...rejectedCovers].map((coverUrl,index)=>({...store.items[0],id:`media/cover-${index}/cover.apk`,name:`Cover ${index}`,fileName:'cover.apk',coverUrl}));
+  await check('market server covers load only from the exact HTTPS host and application directories',async p=>{
+    const remote=[];
+    p.on('request',request=>{if(request.resourceType()==='image'&&!request.url().startsWith(url))remote.push(request.url());});
+    await mockVersionCovers(p);await openMarket(p);
+    assert.deepEqual((await p.locator('.market-card img').evaluateAll(images=>images.map(image=>image.src))).sort(),[...allowedCovers].sort());
+    await p.waitForFunction(()=>[...document.querySelectorAll('.market-card img')].every(image=>image.complete&&image.naturalWidth>0));
+    assert.deepEqual(remote.sort(),[...allowedCovers].sort(),'Rejected metadata cannot trigger old-source or external image requests');
+    assert.equal(await p.locator('.app-footer').innerText(),'apps.b14f.com');
+  },withoutAdb(),{marketCatalog:{...store,items:coverItems}});
+  const categorizedMedia={...store.items[0],id:'media/hifini/hifini-0.1.3.apk',name:'游戏影评 TV',folderUrl:store.items[0].folderUrl};
+  const categorizedGame=version=>({...store.items[1],id:`game/prism-relay/prism-relay-${version}.apk`,name:'镜光接力',provider:'演示游戏工作室',version,fileName:`prism-relay-${version}.apk`,folderUrl:store.items[1].folderUrl.replace('/media/webtv','/game/prism-relay')});
   const latestGame=categorizedGame('0.2.1'),olderGame=categorizedGame('0.2.0');
   const categorizedStore={...store,items:[categorizedMedia,store.items[1],olderGame,latestGame,store.items[2]]};
   await check('market media and game tabs isolate search and grouped counts while preserving versions and the app download queue',async p=>{
@@ -1583,7 +1603,7 @@ try {
     assert.deepEqual(await p.locator('[data-market-category] span').allTextContents(),['1','2','1'],'Counts represent applications, not the number of APK versions');
     assert.equal(await p.locator('[data-market-category="media"]').getAttribute('aria-selected'),'true');
     assert.equal(await marketCard(p,categorizedMedia).count(),1,'A media path stays in Media even when its display name contains 游戏');
-    assert.equal(await marketCard(p,store.items[1]).count(),1,'Old unclassified app paths remain available in Media');
+    assert.equal(await marketCard(p,store.items[1]).count(),1,'Other media folders remain available in Media');
     assert.equal(await marketCard(p,latestGame).count(),0);
     assert.equal(await marketCard(p,categorizedMedia).locator('.market-category').innerText(),'影音');
     assert.equal(await marketAuthor(p,categorizedMedia).innerText(),categorizedMedia.provider);
@@ -1632,14 +1652,14 @@ try {
     assert.equal(await p.locator('[data-launcher-apk]').count(),0,'Downloading a game cannot add a launcher');
     assert.deepEqual(await requests(p),[],'Browsing and downloading games do not invoke ADB');
   },withoutAdb(),{marketCatalog:categorizedStore});
-  const sameNameOtherFolder={...versionedItem('0.10.0'),id:'apps/another/hifini-0.10.0.apk',provider:'其他目录演示作者',folderUrl:store.items[0].folderUrl.replace('/hifini','/another')};
-  const sameFolderOtherApp={...versionedItem('0.10.0'),id:'apps/hifini/hifini-lite-0.10.0.apk',fileName:'hifini-lite-0.10.0.apk'};
-  const sameNameLauncher={...versionedItem('0.99.0'),kind:'launcher',id:'launcher/hifini/hifini-0.99.0.apk',folderUrl:store.items[0].folderUrl.replace('/apps/','/launcher/')};
+  const sameNameOtherFolder={...versionedItem('0.10.0'),id:'media/another/hifini-0.10.0.apk',provider:'其他目录演示作者',folderUrl:store.items[0].folderUrl.replace('/hifini','/another')};
+  const sameFolderOtherApp={...versionedItem('0.10.0'),id:'media/hifini/hifini-lite-0.10.0.apk',fileName:'hifini-lite-0.10.0.apk'};
+  const sameNameLauncher={...versionedItem('0.99.0'),kind:'launcher',id:'launcher/hifini/hifini-0.99.0.apk',folderUrl:store.items[0].folderUrl.replace('/media/','/launcher/')};
   const seenItem=(kind,folder,stem,item)=>({id:JSON.stringify([kind,folder,stem]),name:item.name,version:item.version});
-  const originalSeen=[seenItem('app','apps/hifini','hifini',store.items[0]),seenItem('app','apps/webtv','webtv',store.items[1]),seenItem('launcher','launcher/nova','nova',store.items[2])];
-  const olderSeen=[seenItem('app','apps/hifini','hifini',versionedItem('0.9.0')),...originalSeen.slice(1)];
-  const newMarketApp={...store.items[1],id:'apps/zebra/zebra-1.0.0.apk',name:'Zebra TV',fileName:'zebra-1.0.0.apk',version:'1.0.0'};
-  const updateStore={...store,revision:'e'.repeat(40),items:[store.items[1],newMarketApp,versionedItem('0.9.0'),versionedItem('0.10.0'),store.items[2]]};
+  const originalSeen=[seenItem('app','media/hifini','hifini',store.items[0]),seenItem('app','media/webtv','webtv',store.items[1]),seenItem('launcher','launcher/nova','nova',store.items[2])];
+  const olderSeen=[seenItem('app','media/hifini','hifini',versionedItem('0.9.0')),...originalSeen.slice(1)];
+  const newMarketApp={...store.items[1],id:'media/zebra/zebra-1.0.0.apk',name:'Zebra TV',fileName:'zebra-1.0.0.apk',version:'1.0.0'};
+  const updateStore={...store,revision:'e'.repeat(64),items:[store.items[1],newMarketApp,versionedItem('0.9.0'),versionedItem('0.10.0'),store.items[2]]};
   const seenState=p=>p.evaluate(()=>window.__marketSeenApps);
   const seenWrites=p=>p.evaluate(()=>window.__marketSeenRequests.filter(value=>value.command==='set_market_seen_apps'));
   const newMarketIds=p=>p.locator('.market-card').filter({has:p.locator('.market-new')}).evaluateAll(cards=>cards.map(card=>card.dataset.marketId));
@@ -1694,12 +1714,12 @@ try {
   },withoutAdb(),{marketCatalog:{...store,items:[...store.items,sameNameOtherFolder,sameFolderOtherApp,sameNameLauncher]},marketSeenApps:originalSeen});
   await check('market updates ignore old-version backfills and same-version blob or cover changes',async p=>{
     await mockVersionCovers(p);await openMarket(p);assert.deepEqual(await newMarketIds(p),[]);
-    const replacement={...versionedItem('0.10.0'),blobSha:'f'.repeat(40),coverUrl:null};
-    await p.evaluate(value=>window.__marketCatalog=value,{...store,revision:'f'.repeat(40),items:[replacement,versionedItem('0.2.0'),versionedItem('0.9.0'),...store.items.slice(1)]});
+    const replacement={...versionedItem('0.10.0'),blobSha:'f'.repeat(64),coverUrl:null};
+    await p.evaluate(value=>window.__marketCatalog=value,{...store,revision:'f'.repeat(64),items:[replacement,versionedItem('0.2.0'),versionedItem('0.9.0'),...store.items.slice(1)]});
     await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);assert.deepEqual(await newMarketIds(p),[]);
-    await p.evaluate(value=>window.__marketCatalog=value,{...store,revision:'d'.repeat(40),items:[versionedItem('0.9.0'),...store.items.slice(1)]});
+    await p.evaluate(value=>window.__marketCatalog=value,{...store,revision:'d'.repeat(64),items:[versionedItem('0.9.0'),...store.items.slice(1)]});
     await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);assert.deepEqual(await newMarketIds(p),[],'A numeric downgrade is not an upgrade');
-  },withoutAdb(),{marketCatalog:{...store,items:[versionedItem('0.10.0'),...store.items.slice(1)]},marketSeenApps:[seenItem('app','apps/hifini','hifini',versionedItem('0.10.0')),...originalSeen.slice(1)]});
+  },withoutAdb(),{marketCatalog:{...store,items:[versionedItem('0.10.0'),...store.items.slice(1)]},marketSeenApps:[seenItem('app','media/hifini','hifini',versionedItem('0.10.0')),...originalSeen.slice(1)]});
   await check('market updates keep the baseline on stale catalogs failures and failed refreshes',async p=>{
     await mockVersionCovers(p);await openMarket(p);assert.deepEqual(await seenState(p),olderSeen);assert.deepEqual(await seenWrites(p),[]);assert.deepEqual(await newMarketIds(p),[]);
     await p.evaluate(value=>window.__marketCatalog=value,updateStore);await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
@@ -1807,19 +1827,19 @@ try {
     await versionSelect(p,topVersions[0]).selectOption(selected.id);
     const refresh=async catalog=>{await p.evaluate(value=>{window.__marketCatalog=value;},catalog);await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);};
     const changedProvider='演示目录更新后的作者';
-    await refresh({...versionedStore,revision:'e'.repeat(40),items:versionedStore.items.map(item=>({...item,provider:changedProvider}))});
+    await refresh({...versionedStore,revision:'e'.repeat(64),items:versionedStore.items.map(item=>({...item,provider:changedProvider}))});
     assert.equal(await versionSelect(p,selected).inputValue(),selected.id,'A valid manual selection survives a catalog refresh');
     assert.equal(await marketAuthor(p,selected).innerText(),changedProvider,'Refreshing updates the author even while keeping an older APK selected');
-    const latest=versionedItem('0.11.0'),updated={...versionedStore,revision:'f'.repeat(40),items:[latest,...versionedStore.items]};
+    const latest=versionedItem('0.11.0'),updated={...versionedStore,revision:'f'.repeat(64),items:[latest,...versionedStore.items]};
     await refresh(updated);
     assert.equal(await versionSelect(p,latest).inputValue(),latest.id,'A selected version outside the latest five falls back to the newest');
     assert.equal(await marketAuthor(p,latest).innerText(),latest.provider,'Falling back to a different item does not retain previous provider text');
     assert.equal(await versionSelect(p,latest).locator(`option[value="${selected.id}"]`).count(),0);
     const removed=topVersions[1];await versionSelect(p,latest).selectOption(removed.id);
-    await refresh({...updated,revision:'d'.repeat(40),items:updated.items.filter(item=>item.id!==removed.id)});
+    await refresh({...updated,revision:'d'.repeat(64),items:updated.items.filter(item=>item.id!==removed.id)});
     assert.equal(await versionSelect(p,latest).inputValue(),latest.id,'A removed APK cannot remain selected');
     await marketCard(p,latest).locator('[data-act="download-market"]').click();await result(p,'success');await acknowledge(p);
-    assert.deepEqual((await marketRequests(p)).filter(value=>value.command==='download_market_item'),[{command:'download_market_item',id:latest.id,revision:'d'.repeat(40)}],'Fallback uses the refreshed revision and latest APK identifier');
+    assert.deepEqual((await marketRequests(p)).filter(value=>value.command==='download_market_item'),[{command:'download_market_item',id:latest.id,revision:'d'.repeat(64)}],'Fallback uses the refreshed revision and latest APK identifier');
   },withoutAdb(),{marketCatalog:versionedStore});
   const unsafeMarket=marketCatalog();unsafeMarket.items[0].name='<img src=x onerror="window.__xss=true">';
   unsafeMarket.items[0].provider='<img src=x onerror="window.__xss=true">作者 & "团队"';
@@ -1918,7 +1938,7 @@ try {
     assert.equal(await marketAuthor(p,store.items[1]).innerText(),'未提供');
     await inlineProvider(p,store.items[1]);
     await p.locator('[name="locale"]').selectOption('en');
-    const updated=marketCatalog();updated.revision='f'.repeat(40);updated.items=[updated.items[1]];
+    const updated=marketCatalog();updated.revision='f'.repeat(64);updated.items=[updated.items[1]];
     await p.evaluate(value=>{window.__marketCatalog=value;},updated);
     await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
     assert.equal(await p.locator('.market-card').count(),1);assert.match(await p.locator('.market-card').innerText(),/WebTV/);
@@ -1947,7 +1967,7 @@ try {
     assert.deepEqual(await newMarketIds(p),[],'The first successful retry establishes the initial baseline');
   },withoutAdb(),{failMarketCatalog:true});
   const longProvider='演示长作者 · '+'LongProviderName'.repeat(8);
-  const largeMarket=marketCatalog();largeMarket.items=Array.from({length:45},(_,index)=>({...store.items[0],id:`apps/example${index}/example-${index}.apk`,name:`Example ${index}${index<2?' · '+'超长应用名称 LongApplicationName '.repeat(4):''}`,provider:index===0?'桔子桑':longProvider,fileName:`example-${index}.apk`}));
+  const largeMarket=marketCatalog();largeMarket.items=Array.from({length:45},(_,index)=>({...store.items[0],id:`media/example${index}/example-${index}.apk`,name:`Example ${index}${index<2?' · '+'超长应用名称 LongApplicationName '.repeat(4):''}`,provider:index===0?'桔子桑':longProvider,fileName:`example-${index}.apk`}));
   await check('market long catalogs scroll internally in compact windows and all themes',async p=>{
     await p.setViewportSize({width:960,height:640});await openMarket(p);
     const area=p.locator('[data-scroll="market-media"]');
@@ -1999,7 +2019,7 @@ try {
     assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
     await shot(p,'market-inline-names-min-card-en');
   },withoutAdb(),{marketCatalog:largeMarket});
-  const scrollMarket={...largeMarket,items:[...largeMarket.items,...largeMarket.items.map(item=>({...item,id:item.id.replace(/^apps\//,'apps/game/')})),...largeMarket.items.map(item=>({...item,kind:'launcher',id:item.id.replace(/^apps\//,'launcher/')}))]};
+  const scrollMarket={...largeMarket,items:[...largeMarket.items,...largeMarket.items.map(item=>({...item,id:item.id.replace(/^media\//,'game/')})),...largeMarket.items.map(item=>({...item,kind:'launcher',id:item.id.replace(/^media\//,'launcher/')}))]};
   await check('market updates preserve scroll within a visit and show new cards at the top after reentry',async p=>{
     await p.setViewportSize({width:960,height:640});await openMarket(p);
     const apps=p.locator('[data-scroll="market-media"]'),games=p.locator('[data-scroll="market-game"]'),launchers=p.locator('[data-scroll="market-launcher"]');
@@ -2011,7 +2031,7 @@ try {
     await p.locator('[data-market-category="game"]').click();assert.equal(await games.evaluate(element=>element.scrollTop),gameScroll,'Games retain their own scroll position independently of Media');
     await p.locator('[data-market-category="launcher"]').click();assert.equal(await launchers.evaluate(element=>element.scrollTop),launcherScroll,'Categories retain their independent positions during one visit');
     await p.locator('[data-market-category="media"]').click();
-    await nav(p,'apps');await p.evaluate(value=>window.__marketCatalog=value,{...scrollMarket,revision:'f'.repeat(40),items:[...scrollMarket.items,newMarketApp]});
+    await nav(p,'apps');await p.evaluate(value=>window.__marketCatalog=value,{...scrollMarket,revision:'f'.repeat(64),items:[...scrollMarket.items,newMarketApp]});
     await openMarket(p);assert.equal(await apps.evaluate(element=>element.scrollTop),0,'A new visit must reveal the new-first ordering instead of restoring an old scroll offset');
     const first=p.locator('.market-card').first();assert.equal(await first.getAttribute('data-market-id'),newMarketApp.id);assert.equal(await first.locator('.market-new').count(),1);
     const bounds=await first.evaluate(card=>({card:card.getBoundingClientRect().toJSON(),list:card.closest('.market-grid').getBoundingClientRect().toJSON()}));
@@ -2021,11 +2041,11 @@ try {
   },withoutAdb(),{marketCatalog:scrollMarket});
   await check('market MCP results synchronize catalog and download/install queues with the window',async p=>{
     await openMarket(p);
-    const imported={...store.items[0],id:'apps/agent/agent.apk',name:'Agent import',fileName:'agent.apk'};
+    const imported={...store.items[0],id:'media/agent/agent.apk',name:'Agent import',fileName:'agent.apk'};
     const catalog={...marketCatalog(),items:[imported]};
     await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'get_market_catalog',marketResult:{operation:'catalog',catalog:value}}),catalog);
     assert.equal(await p.locator('.market-card').count(),1);assert.match(await p.locator('.market-card').innerText(),/Agent import/);
-    await p.evaluate(()=>{window.__emitMcp('mcp-operation',{running:true,tool:'download_market_item'});window.__emitMcp('mcp-market-progress',{stage:'downloading',downloaded:50,total:100,itemId:'apps/agent/agent.apk'});});
+    await p.evaluate(()=>{window.__emitMcp('mcp-operation',{running:true,tool:'download_market_item'});window.__emitMcp('mcp-market-progress',{stage:'downloading',downloaded:50,total:100,itemId:'media/agent/agent.apk'});});
     await p.locator('.busy-bar').waitFor();assert.match(await p.locator('.busy-bar').innerText(),/50%/);
     const download={item:imported,path:'/tmp/puretv-market/agent.apk'};
     await p.evaluate(value=>window.__emitMcp('mcp-operation',{running:false,tool:'download_market_item',marketResult:{operation:'download',download:value,installed:false}}),download);

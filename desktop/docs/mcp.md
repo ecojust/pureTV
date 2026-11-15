@@ -51,7 +51,7 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 | `install_platform_tools` | `acceptedLicense: true`，可选 `forceDownload: true` | 下载、校验并配置 ADB；默认复用已校验缓存，强制模式重新下载；失败或取消保留当前配置，需先断开电视 |
 | `choose_apks` | 无 | 在管理器打开原生多选 APK 对话框，只返回路径，不安装 |
 | `choose_adb` | 无 | 在管理器打开原生可执行文件对话框，只返回路径，不配置 |
-| `open_resource` | `resource` | 打开 `catalog`、`market`、`repository`、`releases`、`platformTools` 或 `platformToolsLicense` 对应的固定网页；`market` 指向 Gitee 市场仓库，`repository` 指向 [pureTV GitHub 仓库](https://github.com/ecojust/pureTV)，用于提交软件上架 PR |
+| `open_resource` | `resource` | 打开 `catalog`、`market`、`repository`、`releases`、`platformTools` 或 `platformToolsLicense` 对应的固定网页；`market` 指向 apps.b14f.com 应用服务器，`repository` 指向 [pureTV GitHub 仓库](https://github.com/ecojust/pureTV)，用于提交软件上架 PR |
 
 已安装应用及启动器的 `apkSizeBytes` 返回主 APK 和分包合计字节数，不含私有数据与缓存；无法读取时为 `null`，重新扫描会刷新。
 
@@ -79,11 +79,11 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 
 | 工具 | 参数 | 行为 |
 | --- | --- | --- |
-| `get_market_catalog` | 可选 `refresh: true` | 读取应用／启动器目录；强制刷新时重新检查 [pure-tv-store](https://gitee.com/juzisang331/pure-tv-store)，无需连接电视 |
+| `get_market_catalog` | 可选 `refresh: true` | 读取应用／启动器目录；强制刷新时重新检查 [apps.b14f.com](https://apps.b14f.com/)，无需连接电视 |
 | `download_market_item` | `id`，可选 `revision` | 下载目录中的 APK 到本机缓存，并同步加入应用或启动器待安装列表；不安装、不切换电视桌面 |
 | `install_market_item` | `id`，可选 `revision` | 在同一次共享操作中下载 APK 并安装到当前电视；安装启动器后仍需单独调用 `set_home` 才会切换桌面 |
 
-目录返回 `sourceUrl`、`revision`（40 位小写十六进制提交标识）、`fetchedAt`（毫秒时间戳）、`stale`、可选 `warning` 和 `items`。每个项目包含 `id`（仓库中的 APK 相对路径）、`kind`（`app` 或 `launcher`）、`name`、可选 `version`、`fileName`、`bytes`、`blobSha`、`folderUrl` 和可选 `coverUrl`。封面为该提交中的资源 URL，不在目录中内嵌图片。刷新失败后若使用旧缓存，`stale` 和 `warning` 会明确说明。
+目录返回 `sourceUrl`、`revision`（64 位小写十六进制目录快照标识）、`fetchedAt`（毫秒时间戳）、`stale`、可选 `warning` 和 `items`。每个项目包含 `id`（服务器上的 APK 相对路径，如 `media/hifini/hifini-0.1.3.apk`）、`kind`（`app` 或 `launcher`）、`name`、可选 `provider`／`version`、`fileName`、精确 `bytes`、`blobSha`、`downloadMetadata`、`folderUrl` 和可选 `coverUrl`。`blobSha` 为兼容现有接口保留的字段名，其值是路径与 HTTP 文件信息的 SHA256 指纹，不是 Git blob 或 APK 内容哈希；`revision` 是这些标识组合的目录快照，Agent 应原样传回。`downloadMetadata` 包含精确字节数、ETag 与 Last-Modified；下载使用条件请求并检查响应，缓存另用本地 SHA256 记录复查。可选 `contentSha256` 来自应用 manifest 中匹配文件名及大小的校验信息，缺少时不声称有发布者哈希。封面为服务器资源 URL，不内嵌图片，也不保证 URL 永久不变。刷新失败后若使用旧缓存，`stale` 和 `warning` 会明确说明。
 
 下载／安装时应把选中目录的 `revision` 一并传入；若目录已更新，管理器会拒绝旧选择，Agent 应重新读取目录后再选择需要的项目。`id` 必须来自目录，工具不接受任意下载地址、目标文件路径或安装命令。
 
@@ -111,7 +111,7 @@ get_state {}
 
 ```text
 get_market_catalog {"refresh":true}
-download_market_item {"id":"apps/hifini/hifini-0.1.3.apk","revision":"<catalog.revision>"}
+download_market_item {"id":"media/hifini/hifini-0.1.3.apk","revision":"<catalog.revision>"}
 ```
 
 已有电视连接且需要直接安装时，将第二步换成 `install_market_item`。Agent 的操作、完成状态、ADB／市场下载进度和待安装列表会同步显示在窗口中。界面与 MCP 同时修改时，后到的操作收到「已有操作正在执行」；`get_state`、`get_status`、`cancel` 在任务执行时仍可调用。市场进度通过独立的 `mcp-market-progress` 事件同步；完成事件的 `marketResult` 提供目录或下载／安装结果。

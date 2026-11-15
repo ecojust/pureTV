@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod app_logos;
+mod app_store;
 mod client_install;
 mod client_updates;
 mod forum;
@@ -770,7 +771,7 @@ fn open_resource(resource: &str, app: tauri::AppHandle) -> Result<(), String> {
         "repository" => "https://github.com/ecojust/pureTV",
         "catalog" => "https://github.com/ecojust/pureTV/tree/master/resource",
         "releases" => "https://github.com/ecojust/pureTV/releases",
-        "market" => "https://gitee.com/juzisang331/pure-tv-store",
+        "market" => app_store::SOURCE_URL,
         "forum" => forum::SOURCE_URL,
         "forumCreate" => forum::NEW_POST_URL,
         "platformTools" => "https://developer.android.com/tools/releases/platform-tools",
