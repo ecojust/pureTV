@@ -17,13 +17,22 @@ permissions:
 
 jobs:
   runtime:
+    name: runtime (${{ matrix.batch }})
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 50
     strategy:
       fail-fast: false
       matrix:
-        group: [arcade, worlds, kit]
+        include:
+          - {group: arcade, batch: arcade-1}
+          - {group: arcade, batch: arcade-2}
+          - {group: arcade, batch: arcade-3}
+          - {group: worlds, batch: worlds-1}
+          - {group: worlds, batch: worlds-2}
+          - {group: kit, batch: kit-1}
+          - {group: kit, batch: kit-2}
+          - {group: kit, batch: kit-3}
     env:
       PYTHONUNBUFFERED: '1'
       PURETV_DISPOSABLE_EMULATOR: '1'
@@ -79,6 +88,8 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Start read-only host diagnostics before emulator boot
+        run: python3 tools/controller-runtime-diagnostics.py start --output "$RUNNER_TEMP/controller-host-diagnostics"
       - name: Upgrade and operate actual release APKs with the original pureTV SDK
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -92,10 +103,14 @@ jobs:
           emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           script: >-
             python3 tools/controller-emulator-batch.py --group '${{ matrix.group }}'
+            --batch '${{ matrix.batch }}'
             --input "$RUNNER_TEMP/controller-runtime-input"
             --output "$RUNNER_TEMP/controller-runtime-output"
             --artifact-source "$ARTIFACT_SOURCE" --legacy-source "$LEGACY_ARTIFACT_SOURCE" --adb "$ANDROID_HOME/platform-tools/adb"
             --serial emulator-5554 --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+      - name: Finish read-only host diagnostics
+        if: always()
+        run: python3 tools/controller-runtime-diagnostics.py stop --output "$RUNNER_TEMP/controller-host-diagnostics"
       - name: Preserve input verification and exact executed QA sources
         if: always()
         run: |
@@ -103,11 +118,13 @@ jobs:
           from pathlib import Path
           import os,shutil,json,hashlib
           root=Path(os.environ['RUNNER_TEMP']);out=root/'controller-runtime-output';out.mkdir(exist_ok=True)
+          if (root/'controller-host-diagnostics').is_dir():
+              shutil.copytree(root/'controller-host-diagnostics',out/'host-diagnostics')
           for name in ['bundle-manifest.json','controller-runtime-input/input-verification.json']:
               path=root/name
               if path.is_file():shutil.copy2(path,out/path.name)
           source=out/'executed-sources';source.mkdir(exist_ok=True)
-          paths=[Path('tools/controller-emulator-batch.py'),Path('tools/controller-runtime-inputs.py'),Path('.github/workflows/controller-games-runtime.yml'),Path('tools/controller-release.py'),Path('tools/resource_catalog.py'),Path('resource/game-kit/fetch-signed.py'),Path('resource/game-kit/qa/common.mjs'),Path('tools/readme-controller-qa/baseline-inventory.json')]
+          paths=[Path('tools/controller-emulator-batch.py'),Path('tools/controller-runtime-diagnostics.py'),Path('tools/controller-runtime-inputs.py'),Path('.github/workflows/controller-games-runtime.yml'),Path('tools/controller-release.py'),Path('tools/resource_catalog.py'),Path('resource/game-kit/fetch-signed.py'),Path('resource/game-kit/qa/common.mjs'),Path('tools/readme-controller-qa/baseline-inventory.json')]
           paths += [p for p in Path('tools/readme-controller-qa').rglob('*') if p.is_file() and p.suffix in ['.py','.mjs']]
           records={}
           for p in paths:
@@ -118,8 +135,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: controller-runtime-${{ matrix.group }}
+          name: controller-runtime-${{ matrix.batch }}
           path: ${{ runner.temp }}/controller-runtime-output/
+          include-hidden-files: true
           if-no-files-found: error
 
   export:

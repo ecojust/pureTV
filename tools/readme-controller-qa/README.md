@@ -6,7 +6,7 @@
 
 `run.mjs` 加载仓库原版 `virtual.html`，用正常鼠标/键盘操作它，原版 `bridge.py` 和 `joystick_sdk.py` 发出实际TCP消息。透明代理逐字节转发并记录消息与同序号ACK，不生成替代输入。第二手柄测试经 `sdk-peer.py` 调用同一未修改的 SDK，检查席位隔离、同ID重连及held-sync抑制。
 
-观察代理在客户端断开时向接收器发送FIN，继续读取服务器排空的真实ACK；不会用立即destroy截断回程。第二SDK的正常释放操作等对应ACK后才主动关闭。用户在虚拟页按住键直接断开的路径仍按原页面实际行为执行。
+观察代理在客户端断开后，先等待该连接已发送消息的真实ACK（最多2秒），再向转发端发送FIN，避免ADB收到EOF后关闭整个通道而截断回程。connectionEvents记录客户端EOF、待回执序号、实际等待耗时和FIN原因；超时仍由严格每消息ACK断言判失败。第二SDK的正常释放操作等对应ACK后才主动关闭。断线场景先确认真实游戏帧看见按住RIGHT+A，再按原虚拟页断开按钮；不修改SDK或合成回执。
 
 - Game Kit：方向、A/X=动作A、B/Y=动作B，START开始/暂停。
 - 旧11款：方向、A/X=动作A、B=动作B、Y=SELECT，START开始/暂停。保留原游戏的SELECT入口；孤胆枪手1席，其余旧游戏2席。
@@ -56,3 +56,7 @@ node tools/readme-controller-qa/run.mjs --mode android --slug tetris \
 启动阶段等待Observer就绪和实际游戏快照最长60秒；之后读取失败严格报错。输入仍走原SDK TCP，不经诊断端口。截图来自ADB screencap；批处理由 `tools/controller-emulator-batch.py` 安装旧包、覆盖安装新包、安装观察包、启动/终止进程并保留logcat及录像。
 
 Android NSD注册状态来自实际宿主信息，不等同实体ESP32 GPIO23发现检查。实际模拟器、桌面桥接及实体设备测试必须分别报告。
+
+## 观察代理关闭边界回归
+
+`node tools/readme-controller-qa/proxy-close-test.mjs BEFORE_RUN.mjs EMPTY_OUTPUT`用真实TCP套接字、未修改的SDK及受控延迟回执接收器重现EOF即关闭整个转发通道的边界。它对照旧代理丢尾部ACK、新代理收齐后关闭，并故意扣留最后ACK确认有界超时保留缺失、不会伪造成功。这是测试夹具回归，不是Android或游戏玩法验证。

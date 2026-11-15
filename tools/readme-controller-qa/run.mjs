@@ -17,7 +17,7 @@ const kit=entry.engine==='game-kit',output=path.resolve(args.output);await mkdir
 const official=path.join(root,'puretv-joystick'),production=path.join(root,'resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java');
 const inputs=[fileURLToPath(import.meta.url),path.join(here,'cases.mjs'),path.join(here,'sdk-peer.py'),path.join(here,'WifiWireHarness.java'),production,...['bridge.py','joystick_sdk.py','virtual.html'].map(n=>path.join(official,n))];
 const hashes={};for(const p of inputs){hashes[path.relative(root,p)]=sha256(await readFile(p));await copyFile(p,path.join(output,'executed-'+path.basename(p)));}
-const report={slug:args.slug,mode:args.mode,startedAt:new Date().toISOString(),status:'running',sourceHashes:hashes,physicalTvTested:false,physicalPhoneTested:false,physicalEsp32Tested:false,androidAppTested:args.mode==='android',syntheticNativeBridge:args.mode==='browser',browserVideoRequested:!!args.record,modelWrites:false,clockOverrides:false,tests:[],observations:[],wire:[],transportErrors:[],screenshots:[],limitations:args.mode==='browser'?['Desktop JVM and Chromium; Android lifecycle/NSD not exercised.']:['Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery.']};
+const report={slug:args.slug,mode:args.mode,startedAt:new Date().toISOString(),status:'running',sourceHashes:hashes,physicalTvTested:false,physicalPhoneTested:false,physicalEsp32Tested:false,androidAppTested:args.mode==='android',syntheticNativeBridge:args.mode==='browser',browserVideoRequested:!!args.record,modelWrites:false,clockOverrides:false,tests:[],observations:[],wire:[],transportErrors:[],connectionEvents:[],screenshots:[],limitations:args.mode==='browser'?['Desktop JVM and Chromium; Android lifecycle/NSD not exercised.']:['Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery.']};
 let secondary,java,bridge,proxy,gameBrowser,padBrowser,gameContext,padContext,game,pad,ports={},javaOutput='',javaError='',bridgeOutput='',bridgeError='';let connection=0;const sockets=new Set(),held=new Set();
 const keys=['UP','DOWN','LEFT','RIGHT','START','A','B','X','Y'];
 const keyCodes={UP:'ArrowUp',DOWN:'ArrowDown',LEFT:'ArrowLeft',RIGHT:'ArrowRight',START:'Enter',A:'a',B:'b',X:'x',Y:'y'};
@@ -54,7 +54,41 @@ try {
   game=await gameContext.newPage();report.pageErrors=[];game.on('pageerror',e=>report.pageErrors.push(e.message));await game.goto('http://127.0.0.1:'+ports.httpPort+'/',{waitUntil:'load'});await game.waitForFunction(()=>window.PureTVQA?.snapshot);
  } else {assert.ok(args.diagnostics&&args['tcp-port']);ports.tcpPort=Number(args['tcp-port']);await waitFor(async()=>{try{const s=await read();return s.phase&&s.phase!=='loading'?s:false;}catch{return false;}},'actual Android game ready',60000);}
  report.ports=ports;
- proxy=net.createServer(client=>{const id=++connection,upstream=net.createConnection({host:'127.0.0.1',port:ports.tcpPort});for(const [sock,direction]of[[client,'sdk-to-game'],[upstream,'game-to-sdk']]){sockets.add(sock);let buffer='';sock.on('data',data=>{buffer+=data;let i;while((i=buffer.indexOf('\n'))>=0){const line=buffer.slice(0,i);buffer=buffer.slice(i+1);report.wire.push({connection:id,direction,at:new Date().toISOString(),message:JSON.parse(line)});}});sock.on('close',()=>sockets.delete(sock));sock.on('error',e=>report.transportErrors.push({connection:id,direction,error:e.message}));}client.pipe(upstream);upstream.on('data',data=>{if(!client.destroyed&&!client.writableEnded)client.write(data);});client.on('close',()=>upstream.end());upstream.on('close',()=>client.destroy());});await new Promise(r=>proxy.listen(0,'127.0.0.1',r));ports.observerPort=proxy.address().port;
+ proxy=net.createServer(client=>{
+  const id=++connection,upstream=net.createConnection({host:'127.0.0.1',port:ports.tcpPort}),pending=new Set();
+  let closing=false,finished=false,timer,closeAt=0;
+  function finish(reason){
+   if(finished)return;finished=true;clearTimeout(timer);
+   report.connectionEvents.push({connection:id,event:'forward-fin',reason,at:new Date().toISOString(),waitMs:performance.now()-closeAt,pendingSeq:[...pending]});
+   upstream.end();
+  }
+  function closeAfterReplies(){
+   if(closing||finished)return;closing=true;closeAt=performance.now();
+   report.connectionEvents.push({connection:id,event:'client-eof',at:new Date().toISOString(),pendingSeq:[...pending]});
+   if(!pending.size)finish('all-acked');else timer=setTimeout(()=>finish('ack-timeout'),2000);
+  }
+  for(const [sock,direction]of[[client,'sdk-to-game'],[upstream,'game-to-sdk']]){
+   sockets.add(sock);let buffer='';
+   sock.on('data',data=>{
+    buffer+=data;let i;
+    while((i=buffer.indexOf('\n'))>=0){
+     const line=buffer.slice(0,i);buffer=buffer.slice(i+1);const message=JSON.parse(line);
+     report.wire.push({connection:id,direction,at:new Date().toISOString(),message});
+     if(direction==='sdk-to-game')pending.add(message.seq);
+     else if(message.type==='ack')pending.delete(message.seq);
+    }
+    if(closing&&!pending.size)finish('all-acked');
+   });
+   sock.on('close',()=>sockets.delete(sock));sock.on('error',e=>report.transportErrors.push({connection:id,direction,error:e.message}));
+  }
+  // ADB closes the whole forwarded stream on EOF. Preserve the real replies
+  // before forwarding FIN; a bounded timeout remains a strict missing-ACK failure.
+  client.pipe(upstream,{end:false});
+  upstream.on('data',data=>{if(!client.destroyed&&!client.writableEnded)client.write(data);});
+  client.on('end',closeAfterReplies);client.on('close',closeAfterReplies);
+  upstream.on('close',()=>{clearTimeout(timer);finished=true;client.destroy();});
+ });
+ await new Promise(r=>proxy.listen(0,'127.0.0.1',r));ports.observerPort=proxy.address().port;
  bridge=spawn('python3',[path.join(official,'bridge.py'),'127.0.0.1','--port',String(ports.observerPort),'--web-port','0'],{cwd:official,stdio:['ignore','pipe','pipe'],env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});bridge.stdout.on('data',b=>bridgeOutput+=b);bridge.stderr.on('data',b=>bridgeError+=b);
  await waitFor(()=>{if(bridge.exitCode!==null)throw Error(bridgeError);return bridgeOutput.includes('\n');},'official bridge');const padUrl=bridgeOutput.match(/http:\/\/127\.0\.0\.1:\d+\//)?.[0];assert.ok(padUrl);
  padBrowser=await launch();padContext=await padBrowser.newContext({viewport:{width:760,height:640}});pad=await padContext.newPage();const response=await pad.goto(padUrl);assert.equal(sha256(await response.body()),hashes['puretv-joystick/virtual.html']);
@@ -80,7 +114,7 @@ try {
   await release();await tap('START');await until(s=>s.paused||s.phase==='paused','manual pause');await delay(180);const before=await read();await delay(300);const after=await read();assert.deepEqual(modelFrozen(after),modelFrozen(before),'Paused actual model frozen');await screenshot('paused');await tap('START');await until(s=>!s.paused&&s.phase!=='paused','manual resume');trace('pause-freeze',before,after);
  });
  await test('disconnect clears held input, reconnect sync requires fresh START',async()=>{
-  await down('RIGHT');await down('A');await delay(120);await pad.locator('#connect').click();held.clear();await until(s=>s.paused||s.phase==='paused','disconnect pauses');await delay(180);const before=await read();await delay(250);assert.deepEqual(modelFrozen(await read()),modelFrozen(before));await pad.keyboard.up('ArrowRight');await pad.keyboard.up('a');await pad.locator('#connect').click();await pad.waitForFunction(()=>document.querySelector('#status').textContent.startsWith('TCP 已连接'));await delay(300);const after=await read();assert.ok(after.paused||after.phase==='paused','sync does not resume');assert.deepEqual(modelFrozen(after),modelFrozen(before),'sync does not award gameplay');await tap('START');await until(s=>!s.paused&&s.phase!=='paused','fresh reconnect START');await screenshot('reconnected');trace('reconnect',before,after);
+  await down('RIGHT');await down('A');const heldFrame=await until(s=>(s.receiver?.players||controllers(s)).some(p=>p.connected&&p.buttons?.RIGHT&&p.buttons?.A),'both held keys reach actual game frame');trace('held-before-disconnect',null,heldFrame);await pad.locator('#connect').click();held.clear();await until(s=>s.paused||s.phase==='paused','disconnect pauses');await delay(180);const before=await read();await delay(250);assert.deepEqual(modelFrozen(await read()),modelFrozen(before));await pad.keyboard.up('ArrowRight');await pad.keyboard.up('a');await pad.locator('#connect').click();await pad.waitForFunction(()=>document.querySelector('#status').textContent.startsWith('TCP 已连接'));await delay(300);const after=await read();assert.ok(after.paused||after.phase==='paused','sync does not resume');assert.deepEqual(modelFrozen(after),modelFrozen(before),'sync does not award gameplay');await tap('START');await until(s=>!s.paused&&s.phase!=='paused','fresh reconnect START');await screenshot('reconnected');trace('reconnect',before,after);
  });
  await test('all nine official keys and long hold have real protocol receipts',async()=>{
   await tap('START');await until(s=>s.paused||s.phase==='paused','protocol test pause');

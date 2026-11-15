@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Install actual signed APKs and drive them through the original SDK QA runner."""
 import argparse
+import atexit
 import importlib.util
 import json
 import os
@@ -14,6 +15,55 @@ import urllib.request
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('controller_release',ROOT/'tools/controller-release.py')
 release=importlib.util.module_from_spec(spec);spec.loader.exec_module(release)
+
+BATCHES = {
+    'arcade-1': ('arcade', ['tank', 'jackal']),
+    'arcade-2': ('arcade', ['jewel', 'tetris']),
+    'arcade-3': ('arcade', ['bomb-jack', 'adventure-island', 'super-mario']),
+    'worlds-1': ('worlds', ['coast-kart', 'cozy-island']),
+    'worlds-2': ('worlds', ['used-car-racing', 'alien-shooter']),
+    'kit-1': ('kit', ['neon-rush', 'twenty-four', 'torch-bridge']),
+    'kit-2': ('kit', ['tower-overlap', 'packing-sculptor', 'conveyor-window']),
+    'kit-3': ('kit', ['glass-fold', 'tension-span', 'prism-relay']),
+}
+
+def selected_slugs(group, batch=None):
+    allowed = release.KIT_SLUGS if group == 'kit' else release.GROUPS[group]
+    if batch is None:
+        return list(allowed)
+    expected_group, slugs = BATCHES[batch]
+    assert group == expected_group and set(slugs) <= set(allowed), 'Batch must retain its exact artifact source group'
+    assert 1 <= len(slugs) <= 3 and len(set(slugs)) == len(slugs)
+    return list(slugs)
+
+
+class ContinuousLogcat:
+    """Keep pre-crash device logs even if a later adb logcat -d cannot connect."""
+    def __init__(self, adb, directory):
+        self.directory = directory
+        self.stream = (directory / 'continuous-logcat.txt').open('w')
+        self.command = adb + ['logcat', '-v', 'threadtime']
+        self.process = subprocess.Popen(self.command, stdout=self.stream, stderr=subprocess.STDOUT, text=True)
+        self.closed = False
+        atexit.register(self.close)
+
+    def close(self):
+        if self.closed:
+            return
+        self.closed = True
+        exit_before_stop = self.process.poll()
+        if exit_before_stop is None:
+            self.process.terminate()
+            try:
+                self.process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                self.process.kill(); self.process.wait(timeout=5)
+        self.stream.close()
+        release.write(self.directory / 'continuous-logcat-status.json',
+                      {'command': self.command, 'exitBeforeCollectorStop': exit_before_stop,
+                       'finalExitCode': self.process.returncode,
+                       'terminatedOnlyOwnedAdbClient': exit_before_stop is None})
+        atexit.unregister(self.close)
 
 def baseline_release(slug, artifact_source, signed, build_tools):
     assert slug in release.ALL_SLUGS and re.fullmatch('[a-f0-9]{40}', artifact_source)
@@ -58,10 +108,11 @@ def configure_disposable_emulator(command, adb, serial, environment, receipt_pat
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--group',choices=['arcade','worlds','kit'],required=True)
+    p.add_argument('--batch', choices=sorted(BATCHES))
     p.add_argument('--input',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--adb',default='adb');p.add_argument('--serial',default='emulator-5554');p.add_argument('--artifact-source',required=True);p.add_argument('--legacy-source');p.add_argument('--build-tools',type=Path,default=Path(os.environ.get('ANDROID_HOME',''))/'build-tools/34.0.0')
     a=p.parse_args();a.legacy_source=a.legacy_source or a.artifact_source;a.output.mkdir(parents=True,exist_ok=False)
-    slugs=release.KIT_SLUGS if a.group=='kit' else release.GROUPS[a.group]
+    slugs=selected_slugs(a.group,a.batch)
     adb=[a.adb,'-s',a.serial]
     def command(args,timeout=120):
         result=subprocess.run(args,capture_output=True,text=True,timeout=timeout)
@@ -69,9 +120,10 @@ def main():
             raise RuntimeError(json.dumps({'command':args,'exitCode':result.returncode,'stdout':result.stdout,'stderr':result.stderr}))
         return result.stdout
     def save(path,value):path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
-    report={'sourceSha':a.artifact_source,'legacySourceSha':a.legacy_source,'group':a.group,'physicalTvTested':False,'physicalEsp32Tested':False,'actualAndroidEmulator':True,'cases':[]}
+    report={'sourceSha':a.artifact_source,'legacySourceSha':a.legacy_source,'group':a.group,'batch':a.batch,'plannedSlugs':slugs,'physicalTvTested':False,'physicalEsp32Tested':False,'actualAndroidEmulator':True,'cases':[]}
     report['androidProperties']=command(adb+['shell','getprop'])
     report['emulatorConfiguration']=configure_disposable_emulator(command,adb,a.serial,os.environ,a.output/'emulator-configuration.json')
+    live_logcat=ContinuousLogcat(adb,a.output)
     for slug in slugs:
         directory=a.output/slug;directory.mkdir()
         case={'slug':slug,'status':'running'};report['cases'].append(case)
@@ -175,6 +227,7 @@ def main():
             save(directory/'case.json',case);save(a.output/'report.json',report)
             print(json.dumps(case,ensure_ascii=False),flush=True)
     report['status']='passed' if all(row['status']=='passed' for row in report['cases']) else 'failed'
+    live_logcat.close()
     save(a.output/'report.json',report)
     assert report['status']=='passed','Some signed APKs failed actual Android controller checks'
 
