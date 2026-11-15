@@ -36,6 +36,10 @@
 
 应用使用ad-hoc签名，未做Apple公证或Gatekeeper首次批准测试。最低部署版本macOS11；实际CI为较新macOS。未实测实体ESP32、电视、手机、实体Intel显卡、macOS11或真实系统睡眠/唤醒。保留的连接在实际睡眠期间仍可能受系统和网络中断影响，恢复后重连所选端口。未创建GitHub Release或上传应用服务器。
 
+## 公开交付
+
+产物与README规范随 `9368d34078f3d6d28a920054cfa3e625cb868394` 推送 master。不可变提交及 master 的 DMG、ZIP、校验清单、根README共8份匿名完整下载均HTTP200且逐字节一致；见[公开下载记录](public-download-verification.json)。
+
 ## 原始记录
 
 - [结构化摘要](verification.json)、[CI状态](ci-run.json)、[原始CI日志](ci-workflow.log)
