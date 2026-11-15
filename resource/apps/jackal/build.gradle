@@ -1,4 +1,6 @@
 plugins { id 'com.android.application' }
+
+apply from: '../../game-kit/legacy-controller-native/integration.gradle'
 apply from: 'tools/preview-png.gradle'
 
 android {
@@ -21,12 +23,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-    }
-    // Compile the same audited TCP/NSD implementation as Game Kit, without its Activity.
-    sourceSets.main.java {
-        srcDir '../../game-kit/android/src/main/java'
-        srcDir '../../game-kit/legacy-controller-native/src/main/java'
-        include 'com/ecojust/jackaltv/**', 'com/ecojust/gamekit/WifiController*.java', 'com/ecojust/controller/**'
     }
     testOptions { unitTests.includeAndroidResources = true }
     lint { disable 'ExpiredTargetSdkVersion' }

@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       bundle_manifest:
-        description: 'JSON: sourceSha, legacyRunId, legacyAttempt, kitRuns mapping all nine Game Kit IDs to successful signing run IDs'
+        description: 'JSON: sourceSha, optional legacySourceSha, legacyRunId, legacyAttempt, kitRuns mapping all nine Game Kit IDs to successful signing run IDs'
         type: string
         required: true
 
@@ -49,7 +49,10 @@ jobs:
           manifest=json.loads(os.environ['BUNDLE_MANIFEST'])
           assert re.fullmatch('[a-f0-9]{40}',manifest['sourceSha'])
           (Path(os.environ['RUNNER_TEMP'])/'bundle-manifest.json').write_text(json.dumps(manifest)+'\n')
-          with open(os.environ['GITHUB_ENV'],'a') as out:out.write('ARTIFACT_SOURCE='+manifest['sourceSha']+'\n')
+          legacy_source=manifest.get('legacySourceSha',manifest['sourceSha'])
+          assert re.fullmatch('[a-f0-9]{40}',legacy_source)
+          with open(os.environ['GITHUB_ENV'],'a') as out:
+              out.write('ARTIFACT_SOURCE='+manifest['sourceSha']+'\nLEGACY_ARTIFACT_SOURCE='+legacy_source+'\n')
           PY
       - name: Fetch and verify the already signed game and observer APKs
         env:
@@ -91,8 +94,8 @@ jobs:
             python3 tools/controller-emulator-batch.py --group '${{ matrix.group }}'
             --input "$RUNNER_TEMP/controller-runtime-input"
             --output "$RUNNER_TEMP/controller-runtime-output"
-            --artifact-source "$ARTIFACT_SOURCE" --adb "$ANDROID_HOME/platform-tools/adb"
-            --serial emulator-5554
+            --artifact-source "$ARTIFACT_SOURCE" --legacy-source "$LEGACY_ARTIFACT_SOURCE" --adb "$ANDROID_HOME/platform-tools/adb"
+            --serial emulator-5554 --build-tools "$ANDROID_HOME/build-tools/34.0.0"
       - name: Preserve input verification and exact executed QA sources
         if: always()
         run: |

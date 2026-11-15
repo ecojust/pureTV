@@ -14,11 +14,12 @@
 
 ## 第二阶段：同一正式包的实际 Android TV 验收
 
-当 11 旧游戏构建签名流程及 9 个 Game Kit 签名流程全部成功，调用 `controller-games-runtime.yml`，其 `bundle_manifest` 输入为以下 JSON。所有签名包和观察器必须绑定同一个 `sourceSha`；QA 工具自身可由后续提交提供，报告单独保存 `qaSourceSha`。
+当 11 旧游戏构建签名流程及 9 个 Game Kit 签名流程全部成功，调用 `controller-games-runtime.yml`，其 `bundle_manifest` 输入为以下 JSON。`sourceSha` 精确绑定9款Game Kit包，`legacySourceSha` 精确绑定11款旧游戏及20份测试观察器（省略时默认等于 `sourceSha`）。仅旧游戏后续改动时，可复用生产源码未变的9个Game Kit签名包；逐款仍比较实际资产及原生来源收据与所属提交，不能只忽略提交差异。QA 工具自身可由后续提交提供，报告单独保存 `qaSourceSha`。
 
 ```json
 {
   "sourceSha": "准确40位源码提交",
+  "legacySourceSha": "旧游戏与观察器准确40位源码提交",
   "legacyRunId": "旧游戏controller-games运行编号",
   "legacyAttempt": 1,
   "kitRuns": {
@@ -35,7 +36,7 @@
 }
 ```
 
-三组 Android TV API 36 模拟器并行运行。每款先安装冻结源码中的旧正式 APK，再 `adb install -r` 覆盖新正式 APK，并安装同证书只读观察器。观察器通过正常启动 Activity 找到真实 WebView，只提供读取快照的本机接口；普通输入由未修改的 pureTV SDK 和虚拟手柄发送到实际 Android TCP 服务。
+三组 Android TV API 36 模拟器并行运行。每款通过 `git show` 从所属 APK 的源码提交读取旧 `resource.json`，校验保留的旧 APK 实际包名、版本、哈希及证书后安装，再 `adb install -r` 覆盖新正式 APK，并安装同证书只读观察器。观察器通过正常启动 Activity 找到真实 WebView，只提供读取快照的本机接口；普通输入由未修改的 pureTV SDK 和虚拟手柄发送到实际 Android TCP 服务。
 
 `controller-emulator-batch.py` 管理安装、观察器生命周期、ADB 端口转发及原始日志；`tools/readme-controller-qa/run.mjs` 判定各款实际操作与输入取消行为。每款以 Android screenrecord 保存普通输入阶段的新录像（最长120秒，960×540；编码帧率不代表实体设备性能）。失败保留录像、截图、logcat、准确命令和原始报告，并继续其他款；只有全部通过，组任务才成功。证据导出至独立的 `build-assets/controller-runtime-<run>-attempt-<attempt>`。
 
@@ -44,7 +45,7 @@
 ## 本地只读与边界验证
 
 ```sh
-TMPDIR=/path/to/scratch python3 -m unittest discover -s tools/tests -p test_controller_release.py -v
+TMPDIR=/path/to/scratch python3 -m unittest discover -s tools/tests -p 'test_controller_*.py' -v
 python3 tools/controller-release.py list --all
 ```
 

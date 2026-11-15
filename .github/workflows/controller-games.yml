@@ -6,7 +6,9 @@ on:
     paths:
       - '.github/workflows/controller-games.yml'
       - 'tools/controller-release.py'
-      - 'tools/tests/test_controller_release.py'
+      - 'tools/tests/test_controller_*.py'
+      - 'tools/controller-runtime-inputs.py'
+      - 'tools/controller-emulator-batch.py'
       - 'tools/readme-controller-qa/**'
       - 'resource/game-kit/android/**'
       - 'resource/game-kit/legacy-controller-native/**'
@@ -34,7 +36,7 @@ jobs:
           packages: platforms;android-35 build-tools;34.0.0
       - uses: gradle/actions/setup-gradle@v4
       - name: Verify release artifact rejection boundaries
-        run: python3 -m unittest discover -s tools/tests -p test_controller_release.py -v
+        run: python3 -m unittest discover -s tools/tests -p 'test_controller_*.py' -v
       - name: Test and lint the shared Android controller host
         run: |
           set -euo pipefail

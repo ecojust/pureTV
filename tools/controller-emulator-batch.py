@@ -3,6 +3,9 @@
 import argparse
 import importlib.util
 import json
+import os
+import re
+import signal
 from pathlib import Path
 import subprocess
 import time
@@ -12,11 +15,24 @@ ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('controller_release',ROOT/'tools/controller-release.py')
 release=importlib.util.module_from_spec(spec);spec.loader.exec_module(release)
 
+def baseline_release(slug, artifact_source, signed, build_tools):
+    assert slug in release.ALL_SLUGS and re.fullmatch('[a-f0-9]{40}', artifact_source)
+    metadata_path='resource/apps/'+slug+'/resource.json'
+    old=json.loads(subprocess.check_output(['git','show',artifact_source+':'+metadata_path],cwd=ROOT))
+    assert Path(old['apk']).name==old['apk'] and '/' not in old['apk'] and '\\' not in old['apk']
+    old_apk=ROOT/'resource/apps'/slug/old['apk']
+    prior=release.info(old_apk,build_tools)
+    keys={'packageName':'packageName','versionName':'version','versionCode':'versionCode','sha256':'sha256','bytes':'apkBytes','certificateSha256':'certificateSha256'}
+    assert all(prior[k]==old[v] for k,v in keys.items()),'Baseline APK must match its committed resource metadata'
+    assert old['packageName']==signed['packageName'] and old['versionCode']<signed['versionCode']
+    assert prior['certificateSha256']==signed['certificateSha256']
+    return old_apk, {'baselineMetadataRef':artifact_source+':'+metadata_path,'identity':prior}
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--group',choices=['arcade','worlds','kit'],required=True)
     p.add_argument('--input',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--adb',default='adb');p.add_argument('--serial',default='emulator-5554');p.add_argument('--artifact-source',required=True)
-    a=p.parse_args();a.output.mkdir(parents=True,exist_ok=False)
+    p.add_argument('--adb',default='adb');p.add_argument('--serial',default='emulator-5554');p.add_argument('--artifact-source',required=True);p.add_argument('--legacy-source');p.add_argument('--build-tools',type=Path,default=Path(os.environ.get('ANDROID_HOME',''))/'build-tools/34.0.0')
+    a=p.parse_args();a.legacy_source=a.legacy_source or a.artifact_source;a.output.mkdir(parents=True,exist_ok=False)
     slugs=release.KIT_SLUGS if a.group=='kit' else release.GROUPS[a.group]
     adb=[a.adb,'-s',a.serial]
     def command(args,timeout=120):
@@ -25,7 +41,7 @@ def main():
             raise RuntimeError(json.dumps({'command':args,'exitCode':result.returncode,'stdout':result.stdout,'stderr':result.stderr}))
         return result.stdout
     def save(path,value):path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
-    report={'sourceSha':a.artifact_source,'group':a.group,'physicalTvTested':False,'physicalEsp32Tested':False,'actualAndroidEmulator':True,'cases':[]}
+    report={'sourceSha':a.artifact_source,'legacySourceSha':a.legacy_source,'group':a.group,'physicalTvTested':False,'physicalEsp32Tested':False,'actualAndroidEmulator':True,'cases':[]}
     report['androidProperties']=command(adb+['shell','getprop'])
     for slug in slugs:
         directory=a.output/slug;directory.mkdir()
@@ -37,13 +53,14 @@ def main():
             signed=json.loads((package/'signing-receipt.json').read_text())
             observation=json.loads((a.input/'observers'/slug/'observer-signing-receipt.json').read_text())
             target=signed['packageName'];observer=observation['packageName']
-            assert signed['sourceSha']==observation['sourceSha']==a.artifact_source
+            artifact_source=a.artifact_source if slug in release.KIT_SLUGS else a.legacy_source
+            assert signed['sourceSha']==artifact_source and observation['sourceSha']==a.legacy_source
+            case['artifactSourceSha']=artifact_source;case['observerSourceSha']=a.legacy_source
             assert target==observation['targetPackage'] and observation['modelWrites'] is False
             apks=list(package.glob('*.apk'));assert len(apks)==1
             observer_apk=a.input/'observers'/slug/observation['apk']
-            old=json.loads((ROOT/'resource/apps'/slug/'resource.json').read_text())
-            old_apk=ROOT/'resource/apps'/slug/old['apk']
-            assert old['packageName']==target and old['versionCode']<signed['versionCode']
+            old_apk,baseline=baseline_release(slug,artifact_source,signed,a.build_tools)
+            save(directory/'baseline-release.json',baseline)
             installs=[]
             command(adb+['shell','am','force-stop',target])
             installs.append(command(adb+['install','-r',str(old_apk)]))
@@ -78,7 +95,16 @@ def main():
             video=subprocess.Popen(video_command,stdout=video_stream,stderr=subprocess.STDOUT,text=True)
             save(directory/'commands.json',{'instrumentation':instrument,'driver':run,'video':video_command,'ports':ports})
             with (directory/'driver.log').open('w') as log:
-                subprocess.run(run,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=360)
+                driver=subprocess.Popen(run,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+                try:
+                    return_code=driver.wait(timeout=360)
+                    if return_code:raise subprocess.CalledProcessError(return_code,run)
+                except subprocess.TimeoutExpired:
+                    os.killpg(driver.pid,signal.SIGTERM)
+                    try:driver.wait(timeout=10)
+                    except subprocess.TimeoutExpired:
+                        os.killpg(driver.pid,signal.SIGKILL);driver.wait(timeout=10)
+                    raise
             case['status']='passed'
         except Exception as error:
             case['status']='failed';case['error']=repr(error)
