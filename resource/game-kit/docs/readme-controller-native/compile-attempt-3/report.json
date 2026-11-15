@@ -1,0 +1,604 @@
+{
+  "method": "Real Android resource symbol generation and javac compilation; no execution or hardware validation",
+  "passed": true,
+  "results": [
+    {
+      "slug": "alien-shooter",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/alien-shooter/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/alien-shooter/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/alien-shooter/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/alien-shooter/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/alien-shooter/src/main/java/com/ecojust/alienshootertv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/alien-shooter/src/main/java/com/ecojust/alienshootertv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/alien-shooter/gen/com/ecojust/alienshootertv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/alien-shooter/src/main/java/com/ecojust/alienshootertv/LanGameServer.java": "739af1ffe1c114ee634fd80ac3405542bc2d36e9f0e725f47d9133472116bc8f",
+        "resource/apps/alien-shooter/src/main/java/com/ecojust/alienshootertv/MainActivity.java": "2be727804cbffd6d96174e6436d7d3f21f44ce5d103780e6f205ebed4a633311"
+      }
+    },
+    {
+      "slug": "used-car-racing",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/used-car-racing/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/used-car-racing/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/used-car-racing/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/used-car-racing/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/used-car-racing/src/main/java/com/ecojust/usedcartv/LanCertificates.java",
+            "/dev/shm/puretv-controller-games/resource/apps/used-car-racing/src/main/java/com/ecojust/usedcartv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/used-car-racing/src/main/java/com/ecojust/usedcartv/LanTlsIdentity.java",
+            "/dev/shm/puretv-controller-games/resource/apps/used-car-racing/src/main/java/com/ecojust/usedcartv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/used-car-racing/gen/com/ecojust/usedcartv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/used-car-racing/src/main/java/com/ecojust/usedcartv/LanCertificates.java": "a90177d5954fac09cabeb4afabb66bbbc8dfef41afb827c8310763688ce8fce1",
+        "resource/apps/used-car-racing/src/main/java/com/ecojust/usedcartv/LanGameServer.java": "48d77dabd470bd48c556f70018e7773d476489e6d467afa48d960f7186ac2c0c",
+        "resource/apps/used-car-racing/src/main/java/com/ecojust/usedcartv/LanTlsIdentity.java": "339776ae660610dd202c2c81c66a1c24cb903f2251315b83f56ad9fb17dfba86",
+        "resource/apps/used-car-racing/src/main/java/com/ecojust/usedcartv/MainActivity.java": "5459ad0094ea36dc2c35101818c393c1a53d1e63712b886cdcab2e7b1a9cb4d5"
+      }
+    },
+    {
+      "slug": "cozy-island",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/cozy-island/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/cozy-island/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/cozy-island/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/cozy-island/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/cozy-island/src/main/java/com/ecojust/cozyislandtv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/cozy-island/src/main/java/com/ecojust/cozyislandtv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/cozy-island/gen/com/ecojust/cozyislandtv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/cozy-island/src/main/java/com/ecojust/cozyislandtv/LanGameServer.java": "81274d5e95ef7f9db8f84d6361dd5fe4bb6a95c2e2f910843cd3dd3188a84241",
+        "resource/apps/cozy-island/src/main/java/com/ecojust/cozyislandtv/MainActivity.java": "024a10c3068b6ec0af88e00946c9c39ad1d058dccdb6cae06b2584a6ac9dbefc"
+      }
+    },
+    {
+      "slug": "coast-kart",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/coast-kart/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/coast-kart/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/coast-kart/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/coast-kart/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/coast-kart/src/main/java/com/ecojust/coastkarttv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/coast-kart/src/main/java/com/ecojust/coastkarttv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/coast-kart/gen/com/ecojust/coastkarttv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/coast-kart/src/main/java/com/ecojust/coastkarttv/LanGameServer.java": "0822168004eb908984932124cb6075ca95aae697839d2fe84b198d997b230edb",
+        "resource/apps/coast-kart/src/main/java/com/ecojust/coastkarttv/MainActivity.java": "34688609bee6ce12dfe0cced1c86a95bea229a6a95e68be799f985eb82460349"
+      }
+    },
+    {
+      "slug": "super-mario",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/super-mario/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/super-mario/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/super-mario/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/super-mario/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/super-mario/src/main/java/com/ecojust/supermariotv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/super-mario/src/main/java/com/ecojust/supermariotv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/super-mario/gen/com/ecojust/supermariotv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/super-mario/src/main/java/com/ecojust/supermariotv/LanGameServer.java": "e45c579d15a6b963b61878455decfb8805053e7bf706dc10658deaca7cefa065",
+        "resource/apps/super-mario/src/main/java/com/ecojust/supermariotv/MainActivity.java": "f7faae0ad57d3a9f267b276da82ae492128b60eb40907da05a28a71bba8b6d12"
+      }
+    },
+    {
+      "slug": "bomb-jack",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/bomb-jack/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/bomb-jack/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/bomb-jack/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/bomb-jack/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/bomb-jack/src/main/java/com/ecojust/bombjacktv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/bomb-jack/src/main/java/com/ecojust/bombjacktv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/bomb-jack/gen/com/ecojust/bombjacktv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/bomb-jack/src/main/java/com/ecojust/bombjacktv/LanGameServer.java": "055147cbe91a73f961bae009797e477b11803341fb21afc6b7b067125900b889",
+        "resource/apps/bomb-jack/src/main/java/com/ecojust/bombjacktv/MainActivity.java": "c6626dbead398f679b75e062805cb8a22993f0c4337e09e5e1eee91406c67b0a"
+      }
+    },
+    {
+      "slug": "adventure-island",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/adventure-island/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/adventure-island/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/adventure-island/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/adventure-island/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/adventure-island/src/main/java/com/ecojust/adventureislandtv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/adventure-island/src/main/java/com/ecojust/adventureislandtv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/adventure-island/gen/com/ecojust/adventureislandtv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/adventure-island/src/main/java/com/ecojust/adventureislandtv/LanGameServer.java": "f226db128c502651c94c09b4f134966b45383f11f381dde5eb65e8510ee910b4",
+        "resource/apps/adventure-island/src/main/java/com/ecojust/adventureislandtv/MainActivity.java": "3fb5cf2592bd4368d748101222ec93cd092850f0cbb4db4852e9a71e47b2560c"
+      }
+    },
+    {
+      "slug": "tetris",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/tetris/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/tetris/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/tetris/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/tetris/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/tetris/src/main/java/com/ecojust/tetristv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/tetris/src/main/java/com/ecojust/tetristv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/tetris/gen/com/ecojust/tetristv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/tetris/src/main/java/com/ecojust/tetristv/LanGameServer.java": "e4fc40ba2e5140174b3dd208d8debdb16f133399f5579f7484250ee03157187d",
+        "resource/apps/tetris/src/main/java/com/ecojust/tetristv/MainActivity.java": "da18618fd05b7212283fca64fc1125ef14c995aaadae3823b94f5a1d363cad3d"
+      }
+    },
+    {
+      "slug": "jewel",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/jewel/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/jewel/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/jewel/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/jewel/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/jewel/src/main/java/com/ecojust/jeweltv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/jewel/src/main/java/com/ecojust/jeweltv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/jewel/gen/com/ecojust/jeweltv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/jewel/src/main/java/com/ecojust/jeweltv/LanGameServer.java": "324528175a184030aea90a9a7394c8612017e6a837494dd47e5f866d520cded7",
+        "resource/apps/jewel/src/main/java/com/ecojust/jeweltv/MainActivity.java": "2bee09a8a9dc77b237c87f1b3550a4818c524a772cdd4d42e19095100357ae05"
+      }
+    },
+    {
+      "slug": "jackal",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/jackal/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/jackal/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/jackal/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/jackal/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/jackal/src/main/java/com/ecojust/jackaltv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/jackal/src/main/java/com/ecojust/jackaltv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/jackal/gen/com/ecojust/jackaltv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/jackal/src/main/java/com/ecojust/jackaltv/LanGameServer.java": "f1a0b0a03e071e59af4308576f95d63192339cc45a55485a058b4224f7270108",
+        "resource/apps/jackal/src/main/java/com/ecojust/jackaltv/MainActivity.java": "0742149d2bacfaf2b3e63615e3a8c8427e868ad6185b383afec976b5d85b6173"
+      }
+    },
+    {
+      "slug": "tank",
+      "passed": true,
+      "sourcesUnchangedDuringCompilation": true,
+      "steps": [
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/android-sdk/build-tools/34.0.0/aapt",
+            "package",
+            "-f",
+            "-m",
+            "-J",
+            "/dev/shm/legacy-native-compile-3/tank/gen",
+            "-M",
+            "/dev/shm/legacy-native-compile-3/tank/AndroidManifest.xml",
+            "-S",
+            "/dev/shm/puretv-controller-games/resource/apps/tank/src/main/res",
+            "-I",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar"
+          ],
+          "returncode": 0
+        },
+        {
+          "command": [
+            "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+            "-J-Djava.io.tmpdir=/dev/shm/legacy-native-compile-3",
+            "-encoding",
+            "UTF-8",
+            "-source",
+            "17",
+            "-target",
+            "17",
+            "-classpath",
+            "/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar:/workspace/scratch/game-polish-toolchain/core-3.5.3.jar",
+            "-d",
+            "/dev/shm/legacy-native-compile-3/tank/classes",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java",
+            "/dev/shm/puretv-controller-games/resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java",
+            "/dev/shm/puretv-controller-games/resource/apps/tank/src/main/java/com/ecojust/tanktv/LanGameServer.java",
+            "/dev/shm/puretv-controller-games/resource/apps/tank/src/main/java/com/ecojust/tanktv/MainActivity.java",
+            "/dev/shm/legacy-native-compile-3/tank/gen/com/ecojust/tanktv/R.java"
+          ],
+          "returncode": 0
+        }
+      ],
+      "sourceHashes": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerDiscovery.java": "9321b8357282c23513f7353cf36d111b79451aaf3a3a7d1ec8ea0d5f2fcb05da",
+        "resource/game-kit/legacy-controller-native/src/main/java/com/ecojust/controller/LegacyWifiController.java": "f12f15bce463e8bd05b8da49beb4b70e43eb4ceca692b10091cc39f5f42984d2",
+        "resource/apps/tank/src/main/java/com/ecojust/tanktv/LanGameServer.java": "e1cce7135423920defe8fe5f85b1ca6586bf88ef07d4273f2d91302d31cba114",
+        "resource/apps/tank/src/main/java/com/ecojust/tanktv/MainActivity.java": "a094ddc0e14d299a73717b24d0c29d5e94113c960a01c9196717615f7e7530df"
+      }
+    }
+  ]
+}

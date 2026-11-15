@@ -1,0 +1,133 @@
+{
+  "scope": "Seven legacy arcade Web runtimes, synthetic native bridge, real Chromium frames and normal inputs.",
+  "createdAt": "2026-11-15T15:04:55.890286+00:00",
+  "sourceBaseline": "bf58393b",
+  "finalCodeFrozen": true,
+  "fullInputRuns": [
+    "complete-final-zh/report.json",
+    "complete-final-en/report.json"
+  ],
+  "fullInputGamesPassed": 14,
+  "finalLayoutRuns": [
+    "wifi-states-final-zh/report.json",
+    "wifi-states-final-en/report.json"
+  ],
+  "finalLayoutGamesPassed": 14,
+  "nativeTcpTestedHere": false,
+  "nativeNsdTestedHere": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "gameStateWrites": false,
+  "runtimeAndModelFinalHashesMatchInputReports": true,
+  "postInputChange": null,
+  "actionAssertions": "Directional displacement, START state changes, disconnect freeze and held reconnect suppression asserted. A input is recorded observationally; this runner does not prove each A/B game effect. Separate actual TCP QA covers action effects.",
+  "jackalArtwork": {
+    "source": "Existing published APK recovered by resource/apps/jackal/tools/extract-artwork.py; artwork excluded from source by existing project design.",
+    "sourceApkSha256": "c9409bb2fb6a1056735da008356a30052c3d3382b5146c95d98ceb53856f4883",
+    "extractedAssets": 367,
+    "scratchDirectory": "/dev/shm/controller-jackal-art",
+    "regenerate": "python3 resource/apps/jackal/tools/extract-artwork.py --output /absolute/scratch/controller-jackal-art"
+  },
+  "failedAttempts": [
+    {
+      "path": "attempt-1/report.json",
+      "reason": "Mario inertia needed more than 220ms to reverse. Changed test to wait for actual negative displacement."
+    },
+    {
+      "path": "attempt-2/report.json",
+      "reason": "Jewel lost one-snapshot START on a RAF with no logical model tick. Fixed runtime pending action latch until actual logical tick; applied to all relevant fixed-step runtimes."
+    },
+    {
+      "path": "attempt-3/report.json",
+      "reason": "Jackal missing external art; extracted verified original APK assets using existing tool."
+    },
+    {
+      "path": "attempt-4/report.json",
+      "reason": "Tank movement tested before spawnFrames completed. Changed test to wait for normal spawn completion."
+    }
+  ],
+  "historicalAttempts": "Failure scripts/reports/screenshots remain raw. Earlier full source payloads are not archived; their observed asset hashes are in reports. Exact final payloads plus the earlier CSS are archived.",
+  "verifiedAssets": [
+    {
+      "game": "super-mario",
+      "finalAssetHashes": {
+        "runtime.js": "0903d16a4b561c84082a1c8246fa492dd3a3393f14c8891d0e4d9b4cc7550fd1",
+        "puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+        "tv.html": "72c097fccf1e870cf428212db7401c1ddcdc497117cf90ceaada63814ccc16d4",
+        "tv.css": "19c9812e00482dde00db5ccdc820d435294c0d8cbda86633babb0964595a1e9e",
+        "game-model.js": "6a5723c840ad2f7cca9ea62dfc390df0bc70364ba71cdb3c09cc56562363fab7"
+      }
+    },
+    {
+      "game": "bomb-jack",
+      "finalAssetHashes": {
+        "runtime.js": "4da9a5bcea8e57b8a206064aad8d30a8fabb506f53f39eb953cd00303ac5cb0e",
+        "puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+        "tv.html": "553392f2866854f23f4894a0995d6515684e0926ccc10ad59d248bc23bfc22f4",
+        "tv.css": "15f6bac8cd0d58cb30117be168eadf87534c3ac10ea49d5a2ea1842ee97cf42d",
+        "game-model.js": "d331061a3e37a5d873b5e988d573eb94b2b506d160a6768f50eb9ecdbc321d2c"
+      }
+    },
+    {
+      "game": "adventure-island",
+      "finalAssetHashes": {
+        "runtime.js": "4891bea951271d4421b5eece229d62b61bbe7a063494018df9292120e92714a2",
+        "puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+        "tv.html": "b3aac18a4b6922b72ef323fedd2383e7586e379fc855a532cca92c6837d316cf",
+        "tv.css": "a16545532251a5eccda863be479a166d92ada255da69afffe5ca592714246c01",
+        "game-model.js": "ca8c5cfaf0692d8ff6b64d10d048d3566e855435702e6d5a3b3721a8995f5ad6"
+      }
+    },
+    {
+      "game": "tetris",
+      "finalAssetHashes": {
+        "runtime.js": "16261c47c97fd106cfa347ee804cb3370917d2526898548cc366fa8f146ff7a0",
+        "puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+        "tv.html": "52c166b72f3ea3399b3a5cdc37304f5984ff96bbc2152a2b54d959cca401cc3f",
+        "tv.css": "fc6487881a6279c61fd1444dcee57945d17e92fad19e0edf8568c6a4dbf6cf03",
+        "game-model.js": "918eb5067bc63df07e40736264fa0a6966ccf32946aa3b714b3d078f60076849"
+      }
+    },
+    {
+      "game": "jewel",
+      "finalAssetHashes": {
+        "runtime.js": "b6a1b855fdf2ee47e1b7f7813857c739c3dd34700995aabe853d8b12dcbfb2fb",
+        "puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+        "tv.html": "d8d52430e6536a78dcfa73a4d196bfd1ceb6583f9361c02936182d17d7ccd3c4",
+        "tv.css": "0d177293a2cbff0f767817bc89273a28c2a2122601cf3db903a5d08b37f070c7",
+        "game-model.js": "cfef69155643615f2a331fa3a6ee6ad69f8c50d2db15d3cf7ae39a9e4d1f2063"
+      }
+    },
+    {
+      "game": "jackal",
+      "finalAssetHashes": {
+        "runtime.js": "f16a91b03119d9d481804d389946ec1a2ce2cce5aeb09162855d3120b5cc9040",
+        "puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+        "tv.html": "a9b65cd2c3b54bbb9aeacc35f5cf18b4c776e938e8c75d09c0c12f4afc39dbc3",
+        "tv.css": "948bedd2059f78c67f5ba4c2b49521c16d67a1f67f952e606a22492daf562b19",
+        "game-model.js": "fdd191558e1006aad1e460ad3e639c3db5f7d104eadf4fd518bc5c774b3e3104"
+      }
+    },
+    {
+      "game": "tank",
+      "finalAssetHashes": {
+        "runtime.js": "0cd66fc4ac4fdec8dde70c927edf6b4c4c0de996145021beb3909c0233d7f1c2",
+        "puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+        "tv.html": "60dd62bfc1d3c74dffa54954377f281e23133bae301104591c9c9123733cf3e1",
+        "tv.css": "9cd63481be7afba79e54e68ebafc9ba059b70567d697f8bbd1177bdeefae0892",
+        "game-model.js": "f1e2359189973fc7f9b6162d905ac9f9b99b14e579be234a3aa27abaea357ee5"
+      }
+    }
+  ],
+  "finalVerifiedAt": "2026-11-15T15:08:25.784095+00:00",
+  "finalServiceStateLayouts": 140,
+  "allFinalAssetHashesMatchFullInputAndStateLayoutReports": true,
+  "earlierCompleteRuns": [
+    "final-zh/report.json",
+    "final-en/report.json",
+    "layout-final-zh/report.json",
+    "layout-final-en/report.json"
+  ],
+  "subsequentWork": "After first complete input passes, 3 compact CSS rules eliminated sidebar clipping. A later presentation-only update replaced numeric native error help text with localized state/port-based guidance. Both language full-input runs and all service-state/layout checks were rerun on exactly the final assets; every hash matches. Initial frozen assets and initial input CSS remain archived."
+}
