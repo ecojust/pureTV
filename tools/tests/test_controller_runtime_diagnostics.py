@@ -23,7 +23,8 @@ diagnostics = module('runtime_host_diagnostics', 'controller-runtime-diagnostics
 class BatchIsolation(unittest.TestCase):
     def test_every_signed_game_is_planned_once_in_at_most_three_game_batches(self):
         planned = []
-        for name, (group, slugs) in batch.BATCHES.items():
+        for name in batch.DEFAULT_BATCHES:
+            group, slugs = batch.BATCHES[name]
             self.assertGreaterEqual(len(slugs), 2); self.assertLessEqual(len(slugs), 3)
             self.assertEqual(batch.selected_slugs(group, name), slugs)
             planned.extend(slugs)
@@ -41,7 +42,7 @@ class BatchIsolation(unittest.TestCase):
 
     def test_empty_dispatch_defaults_to_every_bounded_batch(self):
         plan = batch.runtime_plan('')
-        self.assertEqual(plan['selectedBatches'], list(batch.BATCHES))
+        self.assertEqual(plan['selectedBatches'], list(batch.DEFAULT_BATCHES))
         self.assertEqual(set(plan['plannedSlugs']), set(batch.release.ALL_SLUGS))
         self.assertTrue(plan['completeCatalogRequested'])
 
@@ -64,6 +65,42 @@ class BatchIsolation(unittest.TestCase):
         standard = '-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot'
         for row in plan['matrix']['include']:
             self.assertEqual(row['emulatorOptions'], standard + (' -feature -Vulkan -verbose' if row['batch'] == 'worlds-2' else ''))
+            self.assertEqual((row['apiLevel'], row['arch'], row['renderer']), (36, 'x86_64', 'swiftshader_indirect'))
+
+    def test_only_exact_requested_retry_aliases_exist(self):
+        aliases = set(batch.BATCHES) - set(batch.DEFAULT_BATCHES)
+        self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual'})
+        plan = batch.runtime_plan('["retry-used-car","retry-alien","retry-prism"]')
+        self.assertEqual(plan['plannedSlugs'], ['used-car-racing', 'alien-shooter', 'prism-relay'])
+        self.assertFalse(plan['completeCatalogRequested'])
+        self.assertTrue(plan['usedCarStableImageComparison']['selected'])
+        rows = plan['matrix']['include']
+        self.assertEqual([(r['group'], r['apiLevel'], r['arch']) for r in rows],
+                         [('worlds', 29, 'x86'), ('worlds', 36, 'x86_64'), ('kit', 36, 'x86_64')])
+        self.assertIn('-feature -Vulkan -verbose', rows[0]['emulatorOptions'])
+        self.assertNotIn('-Vulkan', rows[1]['emulatorOptions'])
+        self.assertNotIn('-Vulkan', rows[2]['emulatorOptions'])
+
+    def test_parent_and_retry_alias_cannot_test_or_claim_a_game_twice(self):
+        for raw in ['["worlds-2","retry-used-car"]', '["worlds-2","retry-alien"]', '["kit-3","retry-prism"]', '["arcade-1","retry-arcade-visual"]']:
+            with self.subTest(raw=raw), self.assertRaisesRegex(AssertionError, 'must not repeat a game'):
+                batch.runtime_plan(raw)
+
+    def test_visual_retry_keeps_full_two_game_scope_on_exact_stable_image(self):
+        plan = batch.runtime_plan('["retry-arcade-visual"]')
+        self.assertEqual(plan['plannedSlugs'], ['tank', 'jackal'])
+        self.assertTrue(plan['arcadeVisualStableImageComparison']['selected'])
+        self.assertFalse(plan['completeCatalogRequested'])
+        row = plan['matrix']['include'][0]
+        self.assertEqual((row['group'], row['apiLevel'], row['arch']), ('arcade', 29, 'x86'))
+        self.assertIn('-gpu swiftshader_indirect', row['emulatorOptions'])
+        self.assertIn('-feature -Vulkan -verbose', row['emulatorOptions'])
+
+    def test_retry_selection_does_not_silently_include_completed_neighbors(self):
+        self.assertEqual(batch.selected_slugs('worlds', 'retry-alien'), ['alien-shooter'])
+        self.assertEqual(batch.selected_slugs('kit', 'retry-prism'), ['prism-relay'])
+        with self.assertRaisesRegex(AssertionError, 'exact artifact source group'):
+            batch.selected_slugs('kit', 'retry-used-car')
 
 
 class HostEvidence(unittest.TestCase):

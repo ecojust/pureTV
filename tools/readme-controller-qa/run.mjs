@@ -43,6 +43,17 @@ function modelFrozen(s){
 }
 async function screenshot(name){const filename=name+'.png';if(args.mode==='android'){assert.ok(args.adb&&args.serial);const child=spawn(args.adb,['-s',args.serial,'exec-out','screencap','-p']);const chunks=[];child.stdout.on('data',x=>chunks.push(x));const [code]=await once(child,'close');assert.equal(code,0);await writeFile(path.join(output,filename),Buffer.concat(chunks));}else await game.screenshot({path:path.join(output,filename)});report.screenshots.push(filename);}
 function controllers(s){return Array.isArray(s.controllers)?s.controllers:s.controllers?.players||s.connection?.players||[];}
+async function pauseForProtocol(){
+ // A round can finish while a real screenshot is captured or between this read
+ // and START. In a result screen START restarts; only an observed pause is ready.
+ for(let attempt=1;attempt<=3;attempt++){
+  const before=await read();trace('protocol-pause-setup-before-'+attempt,null,before);
+  if(before.paused||before.phase==='paused')return before;
+  await tap('START');const after=await read();trace('protocol-pause-setup-attempt-'+attempt,before,after);
+  if(after.paused||after.phase==='paused')return after;
+ }
+ assert.fail('protocol test pause did not reach paused after 3 ordinary START presses');
+}
 try {
  if(args.mode==='browser'){
   assert.ok(args.assets&&args.jdk&&args['json-jar']);const assets=path.resolve(args.assets);report.assetHashes=await sourceHashes(assets);
@@ -123,7 +134,7 @@ try {
   await down('RIGHT');await down('A');const heldFrame=await until(s=>(s.receiver?.players||controllers(s)).some(p=>p.connected&&p.buttons?.RIGHT&&p.buttons?.A),'both held keys reach actual game frame');trace('held-before-disconnect',null,heldFrame);await pad.locator('#connect').click();held.clear();await until(s=>s.paused||s.phase==='paused','disconnect pauses');await delay(180);const before=await read();await delay(250);assert.deepEqual(modelFrozen(await read()),modelFrozen(before));await pad.keyboard.up('ArrowRight');await pad.keyboard.up('a');await pad.locator('#connect').click();await pad.waitForFunction(()=>document.querySelector('#status').textContent.startsWith('TCP 已连接'));await delay(300);const after=await read();trace('reconnect',before,after);assert.ok(after.paused||after.phase==='paused','sync does not resume');assert.deepEqual(modelFrozen(after),modelFrozen(before),'sync does not award gameplay');await tap('START');await until(s=>!s.paused&&s.phase!=='paused','fresh reconnect START');await screenshot('reconnected');
  });
  await test('all nine official keys and long hold have real protocol receipts',async()=>{
-  await tap('START');await until(s=>s.paused||s.phase==='paused','protocol test pause');
+  await pauseForProtocol();await until(s=>s.paused||s.phase==='paused','protocol test pause');
   for(const key of keys.filter(k=>k!=='START')){
    const start=report.wire.length;await hold(key,key==='LEFT'?650:110);
    await waitFor(()=>report.wire.slice(start).some(e=>e.direction==='sdk-to-game'&&e.message.key===key&&['tap','long_release'].includes(e.message.action)),'key receipt '+key);

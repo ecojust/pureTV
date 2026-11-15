@@ -26,25 +26,42 @@ BATCHES = {
     'kit-2': ('kit', ['tower-overlap', 'packing-sculptor', 'conveyor-window']),
     'kit-3': ('kit', ['glass-fold', 'tension-span', 'prism-relay']),
 }
+DEFAULT_BATCHES = tuple(BATCHES)
+BATCHES.update({
+    'retry-used-car': ('worlds', ['used-car-racing']),
+    'retry-alien': ('worlds', ['alien-shooter']),
+    'retry-prism': ('kit', ['prism-relay']),
+    'retry-arcade-visual': ('arcade', ['tank', 'jackal']),
+})
 
 def runtime_plan(requested=''):
     """Validate dispatch selection before it can become a matrix or shell input."""
-    names = json.loads(requested) if requested.strip() else list(BATCHES)
+    names = json.loads(requested) if requested.strip() else list(DEFAULT_BATCHES)
     assert isinstance(names, list) and names, 'batches must be a nonempty JSON array'
     assert all(isinstance(name, str) and name in BATCHES for name in names), 'Only predefined batch names are accepted'
     assert len(names) == len(set(names)), 'Duplicate batches are not accepted'
     selected = [name for name in BATCHES if name in names]
     slugs = [slug for name in selected for slug in BATCHES[name][1]]
-    assert len(slugs) == len(set(slugs))
+    assert len(slugs) == len(set(slugs)), 'Selected batches must not repeat a game through parent and retry aliases'
     standard_options = '-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot'
     matrix = [{'group': BATCHES[name][0], 'batch': name,
-               'emulatorOptions': standard_options + (' -feature -Vulkan -verbose' if name == 'worlds-2' else '')}
+               'apiLevel': 29 if name in ['retry-used-car', 'retry-arcade-visual'] else 36,
+               'arch': 'x86' if name in ['retry-used-car', 'retry-arcade-visual'] else 'x86_64',
+               'renderer': 'swiftshader_indirect',
+               'emulatorOptions': standard_options + (' -feature -Vulkan -verbose' if name in ['worlds-2', 'retry-used-car', 'retry-arcade-visual'] else '')}
               for name in selected]
     return {'requestedBatches': names, 'selectedBatches': selected, 'plannedSlugs': slugs,
             'completeCatalogRequested': len(slugs) == len(release.ALL_SLUGS),
             'matrix': {'include': matrix},
-            'worlds2GraphicsExperiment': {'selected': 'worlds-2' in selected,
-                'description': 'Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause.'}}
+            'worlds2GraphicsExperiment': {'selected': any(name in selected for name in ['worlds-2', 'retry-used-car']),
+                'description': 'Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause.'},
+            'usedCarStableImageComparison': {'selected': 'retry-used-car' in selected,
+                'systemImage': 'system-images;android-29;android-tv;x86',
+                'channel': 'stable', 'revisionListedByOfficialRepository': 3,
+                'description': 'Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory.'},
+            'arcadeVisualStableImageComparison': {'selected': 'retry-arcade-visual' in selected,
+                'systemImage': 'system-images;android-29;android-tv;x86',
+                'description': 'Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence.'}}
 
 def selected_slugs(group, batch=None):
     allowed = release.KIT_SLUGS if group == 'kit' else release.GROUPS[group]

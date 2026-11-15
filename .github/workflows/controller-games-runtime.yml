@@ -127,9 +127,9 @@ jobs:
       - name: Upgrade and operate actual release APKs with the original pureTV SDK
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 36
+          api-level: ${{ matrix.apiLevel }}
           target: android-tv
-          arch: x86_64
+          arch: ${{ matrix.arch }}
           profile: tv_1080p
           avd-name: ControllerGamesValidation
           force-avd-creation: true
