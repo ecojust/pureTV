@@ -1,0 +1,4154 @@
+{
+  "slug": "prism-relay",
+  "mode": "android",
+  "startedAt": "2026-11-15T16:50:42.751Z",
+  "status": "failed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "ae02ed6c4965a04fee760e2dc0f36ef86084a5bbc396ce82e5effeec34f8ab57",
+    "tools/readme-controller-qa/cases.mjs": "ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6",
+    "tools/readme-controller-qa/sdk-peer.py": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "passed"
+    },
+    {
+      "name": "START pause freezes game, fresh START resumes",
+      "status": "passed"
+    },
+    {
+      "name": "disconnect clears held input, reconnect sync requires fresh START",
+      "status": "passed"
+    },
+    {
+      "name": "all nine official keys and long hold have real protocol receipts",
+      "status": "failed",
+      "error": "Error: protocol test pause timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:126:22\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:125:2"
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "id": "prism-relay",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 0,
+          "tick": 0,
+          "timeLimit": 45,
+          "remaining": 45,
+          "timeLimitTicks": 450,
+          "remainingTicks": 450,
+          "score": 0,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 4.5,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 1,
+          "tracedStates": 4,
+          "message": "选中镜片 · A 顺时针 / B 逆时针 · 连续照亮目标 2 秒",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0,
+          "_aDown": false,
+          "_bDown": false,
+          "_direction": -1,
+          "_repeatIn": 0
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 370,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          50.14600000000064,
+          150,
+          100,
+          233.29999999999927,
+          1483.4000000000005,
+          133.30000000000018,
+          150,
+          150,
+          166.59999999999945,
+          233.40000000000055,
+          166.69999999999982
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false,
+          "connected": false,
+          "controllerKind": null
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:36049/?room=NySMHjAXCTk-iUHAXM5_tDtlr5Odh3Ey",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "id": "prism-relay",
+        "phase": "playing",
+        "paused": false,
+        "tick": 52,
+        "elapsed": 0.8666666666666677,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 0.8666666666666667,
+          "tick": 8,
+          "timeLimit": 45,
+          "remaining": 44.2,
+          "timeLimitTicks": 450,
+          "remainingTicks": 442,
+          "score": 0,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 4.5,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 1,
+          "tracedStates": 4,
+          "message": "选中镜片 · A 顺时针 / B 逆时针 · 连续照亮目标 2 秒",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0.06666666666666667,
+          "_aDown": false,
+          "_bDown": false,
+          "_direction": -1,
+          "_repeatIn": 0
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-2b793ddf3538",
+            "session": "wifi-7cd728bd-7992-49e3-a1da-ffd95204814d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 370,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          50.14600000000064,
+          150,
+          100,
+          233.29999999999927,
+          1483.4000000000005,
+          133.30000000000018,
+          150,
+          150,
+          166.59999999999945,
+          233.40000000000055,
+          166.69999999999982,
+          283.3000000000002,
+          200,
+          166.60000000000036,
+          233.39999999999964,
+          200,
+          150,
+          133.29999999999927,
+          133.39999999999964,
+          100,
+          149.90000000000146,
+          100.09999999999854,
+          166.60000000000036,
+          16.700000000000728,
+          100,
+          183.29999999999927,
+          216.70000000000073,
+          100,
+          183.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          33.30000000000109,
+          150,
+          83.29999999999927,
+          83.39999999999964,
+          116.60000000000036,
+          100,
+          16.700000000000728,
+          33.29999999999927,
+          150.10000000000036,
+          133.20000000000073
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:36049/?room=NySMHjAXCTk-iUHAXM5_tDtlr5Odh3Ey",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "rotate-both-ways",
+      "before": {
+        "id": "prism-relay",
+        "phase": "playing",
+        "paused": false,
+        "tick": 97,
+        "elapsed": 1.6166666666666658,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 1.6166666666666667,
+          "tick": 16,
+          "timeLimit": 45,
+          "remaining": 43.4,
+          "timeLimitTicks": 450,
+          "remainingTicks": 434,
+          "score": 0,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 4.5,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 1,
+          "tracedStates": 4,
+          "message": "选中镜片 · A 顺时针 / B 逆时针 · 连续照亮目标 2 秒",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0.016666666666666666,
+          "_aDown": false,
+          "_bDown": false,
+          "_direction": -1,
+          "_repeatIn": 0
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-2b793ddf3538",
+            "session": "wifi-7cd728bd-7992-49e3-a1da-ffd95204814d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 370,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          50.14600000000064,
+          150,
+          100,
+          233.29999999999927,
+          1483.4000000000005,
+          133.30000000000018,
+          150,
+          150,
+          166.59999999999945,
+          233.40000000000055,
+          166.69999999999982,
+          283.3000000000002,
+          200,
+          166.60000000000036,
+          233.39999999999964,
+          200,
+          150,
+          133.29999999999927,
+          133.39999999999964,
+          100,
+          149.90000000000146,
+          100.09999999999854,
+          166.60000000000036,
+          16.700000000000728,
+          100,
+          183.29999999999927,
+          216.70000000000073,
+          100,
+          183.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          33.30000000000109,
+          150,
+          83.29999999999927,
+          83.39999999999964,
+          116.60000000000036,
+          100,
+          16.700000000000728,
+          33.29999999999927,
+          150.10000000000036,
+          133.20000000000073,
+          16.69999999999891,
+          83.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          16.600000000000364,
+          66.69999999999891,
+          166.70000000000073,
+          33.29999999999927,
+          133.39999999999964,
+          33.30000000000109
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:36049/?room=NySMHjAXCTk-iUHAXM5_tDtlr5Odh3Ey",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "prism-relay",
+        "phase": "playing",
+        "paused": false,
+        "tick": 146,
+        "elapsed": 2.4333333333333296,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 2.433333333333333,
+          "tick": 24,
+          "timeLimit": 45,
+          "remaining": 42.6,
+          "timeLimitTicks": 450,
+          "remainingTicks": 426,
+          "score": 70,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 0,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 1,
+              "charge": 7,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 0,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 1,
+              "charge": 7,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 0,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 2,
+          "tracedStates": 6,
+          "message": "光路已接通 · 保持全部目标连续照亮 2 秒",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0.03333333333333333,
+          "_aDown": false,
+          "_bDown": false,
+          "_direction": -1,
+          "_repeatIn": 0
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-2b793ddf3538",
+            "session": "wifi-7cd728bd-7992-49e3-a1da-ffd95204814d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 372,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          50.14600000000064,
+          150,
+          100,
+          233.29999999999927,
+          1483.4000000000005,
+          133.30000000000018,
+          150,
+          150,
+          166.59999999999945,
+          233.40000000000055,
+          166.69999999999982,
+          283.3000000000002,
+          200,
+          166.60000000000036,
+          233.39999999999964,
+          200,
+          150,
+          133.29999999999927,
+          133.39999999999964,
+          100,
+          149.90000000000146,
+          100.09999999999854,
+          166.60000000000036,
+          16.700000000000728,
+          100,
+          183.29999999999927,
+          216.70000000000073,
+          100,
+          183.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          33.30000000000109,
+          150,
+          83.29999999999927,
+          83.39999999999964,
+          116.60000000000036,
+          100,
+          16.700000000000728,
+          33.29999999999927,
+          150.10000000000036,
+          133.20000000000073,
+          16.69999999999891,
+          83.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          16.600000000000364,
+          66.69999999999891,
+          166.70000000000073,
+          33.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          116.69999999999891,
+          33.30000000000109,
+          83.39999999999964,
+          100,
+          66.60000000000036,
+          116.69999999999891,
+          133.3000000000011,
+          50,
+          83.29999999999927,
+          116.70000000000073
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:36049/?room=NySMHjAXCTk-iUHAXM5_tDtlr5Odh3Ey",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "pause-freeze",
+      "before": {
+        "id": "prism-relay",
+        "phase": "playing",
+        "paused": true,
+        "tick": 252,
+        "elapsed": 4.19999999999999,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 4.2,
+          "tick": 42,
+          "timeLimit": 45,
+          "remaining": 40.8,
+          "timeLimitTicks": 450,
+          "remainingTicks": 408,
+          "score": 0,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 4.5,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 3,
+          "tracedStates": 4,
+          "message": "继续调整光路 · 红左转、绿直行、蓝右转",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0,
+          "_aDown": false,
+          "_bDown": false,
+          "_direction": -1,
+          "_repeatIn": 0
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-2b793ddf3538",
+            "session": "wifi-7cd728bd-7992-49e3-a1da-ffd95204814d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 370,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          50.14600000000064,
+          150,
+          100,
+          233.29999999999927,
+          1483.4000000000005,
+          133.30000000000018,
+          150,
+          150,
+          166.59999999999945,
+          233.40000000000055,
+          166.69999999999982,
+          283.3000000000002,
+          200,
+          166.60000000000036,
+          233.39999999999964,
+          200,
+          150,
+          133.29999999999927,
+          133.39999999999964,
+          100,
+          149.90000000000146,
+          100.09999999999854,
+          166.60000000000036,
+          16.700000000000728,
+          100,
+          183.29999999999927,
+          216.70000000000073,
+          100,
+          183.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          33.30000000000109,
+          150,
+          83.29999999999927,
+          83.39999999999964,
+          116.60000000000036,
+          100,
+          16.700000000000728,
+          33.29999999999927,
+          150.10000000000036,
+          133.20000000000073,
+          16.69999999999891,
+          83.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          16.600000000000364,
+          66.69999999999891,
+          166.70000000000073,
+          33.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          116.69999999999891,
+          33.30000000000109,
+          83.39999999999964,
+          100,
+          66.60000000000036,
+          116.69999999999891,
+          133.3000000000011,
+          50,
+          83.29999999999927,
+          116.70000000000073,
+          16.600000000000364,
+          83.39999999999964,
+          33.399999999999636,
+          16.600000000000364,
+          166.6999999999989,
+          133.3000000000011,
+          16.600000000000364,
+          116.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          83.39999999999964,
+          33.29999999999927,
+          100,
+          100,
+          83.30000000000109,
+          83.29999999999927,
+          83.39999999999964,
+          133.3000000000011,
+          33.399999999999636,
+          33.29999999999927,
+          83.30000000000109,
+          150,
+          83.39999999999964,
+          49.899999999999636,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          116.69999999999891,
+          133.3000000000011,
+          83.29999999999927,
+          266.7000000000007,
+          133.29999999999927,
+          183.39999999999964,
+          183.29999999999927,
+          33.30000000000291,
+          116.69999999999709,
+          166.60000000000218,
+          83.39999999999782,
+          166.70000000000073,
+          66.60000000000218,
+          133.39999999999782
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:36049/?room=NySMHjAXCTk-iUHAXM5_tDtlr5Odh3Ey",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdjSURBVHic7d3BTitHFEXREOX/f9kZh0ivhdrle5u91hwwxmzV4Kj66/V6vf4CCPp7+gUATBFAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgax/Pv0Dv76+Pv0jP+r1eh39/lfv39XPv/v1V6b/vtt//6e/v6ed/v/5zgkQyBJAIEsAgSwBBLIEEMgSQCBLAIGsj+8Ar3x6B/RTd3dYp3diV7bv0O7u+O66+/2nP7/TP//Kth2jEyCQJYBAlgACWQIIZAkgkCWAQJYAAlnrdoBXpndo099/+31123dop03vPK88/f/n3ZwAgSwBBLIEEMgSQCBLAIEsAQSyBBDIetwO8Om277BO33d45er1b99pXv3+23eCNU6AQJYAAlkCCGQJIJAlgECWAAJZAghk2QF+2N3n3p6+r2/7c3Gnd3Tb3x9+xgkQyBJAIEsAgSwBBLIEEMgSQCBLAIGsx+0An76jOn0f4PRObXqnd9f0+3fa9tf3aU6AQJYAAlkCCGQJIJAlgECWAAJZAghkrdsBnt7JbXf6vsDTz/2dvu/wru3v393vz385AQJZAghkCSCQJYBAlgACWQIIZAkgkPX1mh5e8R+nd1zTO7PtH7ft7z/v5QQIZAkgkCWAQJYAAlkCCGQJIJAlgEDWx+8D3H5f2en74O6afn3bd2zb7xs8vaOcvq9x+/v/nRMgkCWAQJYAAlkCCGQJIJAlgECWAAJZ6+4DnH5u6vb78qafC/z09+fu978y/fe5cvrfffr9/yknQCBLAIEsAQSyBBDIEkAgSwCBLAEEsj5+H+Bp0zus6Z3Xlbuvb3rnNf33nf75y2a7/7P99X3nBAhkCSCQJYBAlgACWQIIZAkgkCWAQNa65wL/9vvwpr9+eue4/bmx05+vu6bvu5z++/2UEyCQJYBAlgACWQIIZAkgkCWAQJYAAlnrngs8bXonOL3T276jvGIH92dPf/3v5gQIZAkgkCWAQJYAAlkCCGQJIJAlgEDW4+4DnPb0HdnT7yPcbnpneaW+E/3OCRDIEkAgSwCBLAEEsgQQyBJAIEsAgayP7wDv2r6Tuvv9r0z//lem358r21/f6c/f9A5z287XCRDIEkAgSwCBLAEEsgQQyBJAIEsAgax1zwXevtO6Mr2zujJ9n+H25/Y+fWc5fd/f9P/fTzkBAlkCCGQJIJAlgECWAAJZAghkCSCQte4+wLs7pOkd2Pb77O46/Vzh6d9vu+n377ftBJ0AgSwBBLIEEMgSQCBLAIEsAQSyBBDIch/gm51+/dM7x9Omn0v8223/fH36/9cJEMgSQCBLAIEsAQSyBBDIEkAgSwCBrI/fBzi9k5v+/ne5j+/Ppneg0+7el3natr+PEyCQJYBAlgACWQIIZAkgkCWAQJYAAlnrngt8ZXrn9/Tnok6/f9OmX9/0+3f6vsXpz/dPOQECWQIIZAkgkCWAQJYAAlkCCGQJIJC1bgc4vbOb3gneNf3782fTO7rpHei2naATIJAlgECWAAJZAghkCSCQJYBAlgACWet2gHdt39k9/ftP79S2vz93P3/bP7+nf79P7wSdAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHrcDnB6hzZ9n9pp9efGnv773v35dz8/T/98vZsTIJAlgECWAAJZAghkCSCQJYBAlgACWY/bAd51eqf29B3Z9Peffn2nd3KnX9/2r9/GCRDIEkAgSwCBLAEEsgQQyBJAIEsAgayv14eHO9M7remd35Xtv/+V6ffnrun78rab3mm+mxMgkCWAQJYAAlkCCGQJIJAlgECWAAJZH78PcPq+uLumd4TTP//K9vvkpu9LvLL995/++72bEyCQJYBAlgACWQIIZAkgkCWAQJYAAlkf3wH+9vvWtu+4Tt83uH0n9vSdm9f3Xk6AQJYAAlkCCGQJIJAlgECWAAJZAghkfXwHeGXbTui70/e9nd5JTr/+334f3dOf61zjBAhkCSCQJYBAlgACWQIIZAkgkCWAQNa6HeCV6efa3rX9PsTtO7zpnd325wqfNr0DfTcnQCBLAIEsAQSyBBDIEkAgSwCBLAEEsh63A+Seuzur0zu30zu87ffxTe8It+30TnMCBLIEEMgSQCBLAIEsAQSyBBDIEkAgyw5wmekd2PTO78r2HdrpHd5d23eMn+YECGQJIJAlgECWAAJZAghkCSCQJYBA1uN2gE/bGf3U9h3Y9H1zd79++rm/T3/u9G+7L9AJEMgSQCBLAIEsAQSyBBDIEkAgSwCBrHU7wNM7pu2md3pXTj93d/vObHrHeNpv//2+cwIEsgQQyBJAIEsAgSwBBLIEEMgSQCDr67VtmAPwIU6AQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGT9C9qw+31DKy3EAAAAAElFTkSuQmCC",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "prism-relay",
+        "phase": "playing",
+        "paused": true,
+        "tick": 252,
+        "elapsed": 4.19999999999999,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 4.2,
+          "tick": 42,
+          "timeLimit": 45,
+          "remaining": 40.8,
+          "timeLimitTicks": 450,
+          "remainingTicks": 408,
+          "score": 0,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 4.5,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 3,
+          "tracedStates": 4,
+          "message": "继续调整光路 · 红左转、绿直行、蓝右转",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0,
+          "_aDown": false,
+          "_bDown": false,
+          "_direction": -1,
+          "_repeatIn": 0
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-2b793ddf3538",
+            "session": "wifi-7cd728bd-7992-49e3-a1da-ffd95204814d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 370,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          50.14600000000064,
+          150,
+          100,
+          233.29999999999927,
+          1483.4000000000005,
+          133.30000000000018,
+          150,
+          150,
+          166.59999999999945,
+          233.40000000000055,
+          166.69999999999982,
+          283.3000000000002,
+          200,
+          166.60000000000036,
+          233.39999999999964,
+          200,
+          150,
+          133.29999999999927,
+          133.39999999999964,
+          100,
+          149.90000000000146,
+          100.09999999999854,
+          166.60000000000036,
+          16.700000000000728,
+          100,
+          183.29999999999927,
+          216.70000000000073,
+          100,
+          183.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          33.30000000000109,
+          150,
+          83.29999999999927,
+          83.39999999999964,
+          116.60000000000036,
+          100,
+          16.700000000000728,
+          33.29999999999927,
+          150.10000000000036,
+          133.20000000000073,
+          16.69999999999891,
+          83.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          16.600000000000364,
+          66.69999999999891,
+          166.70000000000073,
+          33.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          116.69999999999891,
+          33.30000000000109,
+          83.39999999999964,
+          100,
+          66.60000000000036,
+          116.69999999999891,
+          133.3000000000011,
+          50,
+          83.29999999999927,
+          116.70000000000073,
+          16.600000000000364,
+          83.39999999999964,
+          33.399999999999636,
+          16.600000000000364,
+          166.6999999999989,
+          133.3000000000011,
+          16.600000000000364,
+          116.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          83.39999999999964,
+          33.29999999999927,
+          100,
+          100,
+          83.30000000000109,
+          83.29999999999927,
+          83.39999999999964,
+          133.3000000000011,
+          33.399999999999636,
+          33.29999999999927,
+          83.30000000000109,
+          150,
+          83.39999999999964,
+          49.899999999999636,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          116.69999999999891,
+          133.3000000000011,
+          83.29999999999927,
+          266.7000000000007,
+          133.29999999999927,
+          183.39999999999964,
+          183.29999999999927,
+          33.30000000000291,
+          116.69999999999709,
+          166.60000000000218,
+          83.39999999999782,
+          166.70000000000073,
+          66.60000000000218,
+          133.39999999999782,
+          183.29999999999927,
+          83.30000000000291,
+          116.69999999999709,
+          133.3000000000029,
+          183.29999999999927
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:36049/?room=NySMHjAXCTk-iUHAXM5_tDtlr5Odh3Ey",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "held-before-disconnect",
+      "before": null,
+      "after": {
+        "id": "prism-relay",
+        "phase": "playing",
+        "paused": false,
+        "tick": 313,
+        "elapsed": 5.2166666666666535,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 5.216666666666667,
+          "tick": 52,
+          "timeLimit": 45,
+          "remaining": 39.8,
+          "timeLimitTicks": 450,
+          "remainingTicks": 398,
+          "score": 10,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 0,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 1,
+              "charge": 1,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 0,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 1,
+              "charge": 1,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 0,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 4,
+          "tracedStates": 6,
+          "message": "光路已接通 · 保持全部目标连续照亮 2 秒",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0.016666666666666666,
+          "_aDown": true,
+          "_bDown": false,
+          "_direction": 0,
+          "_repeatIn": 0.32
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-2b793ddf3538",
+            "session": "wifi-7cd728bd-7992-49e3-a1da-ffd95204814d-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 1,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": true,
+              "START": false,
+              "A": true,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 372,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          50.14600000000064,
+          150,
+          100,
+          233.29999999999927,
+          1483.4000000000005,
+          133.30000000000018,
+          150,
+          150,
+          166.59999999999945,
+          233.40000000000055,
+          166.69999999999982,
+          283.3000000000002,
+          200,
+          166.60000000000036,
+          233.39999999999964,
+          200,
+          150,
+          133.29999999999927,
+          133.39999999999964,
+          100,
+          149.90000000000146,
+          100.09999999999854,
+          166.60000000000036,
+          16.700000000000728,
+          100,
+          183.29999999999927,
+          216.70000000000073,
+          100,
+          183.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          33.30000000000109,
+          150,
+          83.29999999999927,
+          83.39999999999964,
+          116.60000000000036,
+          100,
+          16.700000000000728,
+          33.29999999999927,
+          150.10000000000036,
+          133.20000000000073,
+          16.69999999999891,
+          83.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          16.600000000000364,
+          66.69999999999891,
+          166.70000000000073,
+          33.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          116.69999999999891,
+          33.30000000000109,
+          83.39999999999964,
+          100,
+          66.60000000000036,
+          116.69999999999891,
+          133.3000000000011,
+          50,
+          83.29999999999927,
+          116.70000000000073,
+          16.600000000000364,
+          83.39999999999964,
+          33.399999999999636,
+          16.600000000000364,
+          166.6999999999989,
+          133.3000000000011,
+          16.600000000000364,
+          116.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          83.39999999999964,
+          33.29999999999927,
+          100,
+          100,
+          83.30000000000109,
+          83.29999999999927,
+          83.39999999999964,
+          133.3000000000011,
+          33.399999999999636,
+          33.29999999999927,
+          83.30000000000109,
+          150,
+          83.39999999999964,
+          49.899999999999636,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          116.69999999999891,
+          133.3000000000011,
+          83.29999999999927,
+          266.7000000000007,
+          133.29999999999927,
+          183.39999999999964,
+          183.29999999999927,
+          33.30000000000291,
+          116.69999999999709,
+          166.60000000000218,
+          83.39999999999782,
+          166.70000000000073,
+          66.60000000000218,
+          133.39999999999782,
+          183.29999999999927,
+          83.30000000000291,
+          116.69999999999709,
+          133.3000000000029,
+          183.29999999999927,
+          133.39999999999782,
+          83.40000000000146,
+          166.59999999999854,
+          133.40000000000146,
+          66.59999999999854,
+          233.40000000000146,
+          66.59999999999854,
+          183.40000000000146,
+          66.59999999999854,
+          183.3000000000029,
+          100.09999999999854,
+          133.29999999999927,
+          100,
+          200,
+          116.70000000000073,
+          116.59999999999854,
+          50,
+          116.60000000000218,
+          50.099999999998545,
+          100,
+          49.900000000001455,
+          100,
+          16.700000000000728,
+          33.39999999999782,
+          16.600000000002183,
+          100
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:36049/?room=NySMHjAXCTk-iUHAXM5_tDtlr5Odh3Ey",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "reconnect",
+      "before": {
+        "id": "prism-relay",
+        "phase": "playing",
+        "paused": true,
+        "tick": 328,
+        "elapsed": 5.466666666666653,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 5.466666666666667,
+          "tick": 54,
+          "timeLimit": 45,
+          "remaining": 39.6,
+          "timeLimitTicks": 450,
+          "remainingTicks": 396,
+          "score": 30,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 0,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 1,
+              "charge": 3,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 0,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 1,
+              "charge": 3,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 0,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 4,
+          "tracedStates": 6,
+          "message": "光路已接通 · 保持全部目标连续照亮 2 秒",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0.06666666666666667,
+          "_aDown": true,
+          "_bDown": false,
+          "_direction": 0,
+          "_repeatIn": 0.07000000000000006
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 372,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          50.14600000000064,
+          150,
+          100,
+          233.29999999999927,
+          1483.4000000000005,
+          133.30000000000018,
+          150,
+          150,
+          166.59999999999945,
+          233.40000000000055,
+          166.69999999999982,
+          283.3000000000002,
+          200,
+          166.60000000000036,
+          233.39999999999964,
+          200,
+          150,
+          133.29999999999927,
+          133.39999999999964,
+          100,
+          149.90000000000146,
+          100.09999999999854,
+          166.60000000000036,
+          16.700000000000728,
+          100,
+          183.29999999999927,
+          216.70000000000073,
+          100,
+          183.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          33.30000000000109,
+          150,
+          83.29999999999927,
+          83.39999999999964,
+          116.60000000000036,
+          100,
+          16.700000000000728,
+          33.29999999999927,
+          150.10000000000036,
+          133.20000000000073,
+          16.69999999999891,
+          83.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          16.600000000000364,
+          66.69999999999891,
+          166.70000000000073,
+          33.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          116.69999999999891,
+          33.30000000000109,
+          83.39999999999964,
+          100,
+          66.60000000000036,
+          116.69999999999891,
+          133.3000000000011,
+          50,
+          83.29999999999927,
+          116.70000000000073,
+          16.600000000000364,
+          83.39999999999964,
+          33.399999999999636,
+          16.600000000000364,
+          166.6999999999989,
+          133.3000000000011,
+          16.600000000000364,
+          116.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          83.39999999999964,
+          33.29999999999927,
+          100,
+          100,
+          83.30000000000109,
+          83.29999999999927,
+          83.39999999999964,
+          133.3000000000011,
+          33.399999999999636,
+          33.29999999999927,
+          83.30000000000109,
+          150,
+          83.39999999999964,
+          49.899999999999636,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          116.69999999999891,
+          133.3000000000011,
+          83.29999999999927,
+          266.7000000000007,
+          133.29999999999927,
+          183.39999999999964,
+          183.29999999999927,
+          33.30000000000291,
+          116.69999999999709,
+          166.60000000000218,
+          83.39999999999782,
+          166.70000000000073,
+          66.60000000000218,
+          133.39999999999782,
+          183.29999999999927,
+          83.30000000000291,
+          116.69999999999709,
+          133.3000000000029,
+          183.29999999999927,
+          133.39999999999782,
+          83.40000000000146,
+          166.59999999999854,
+          133.40000000000146,
+          66.59999999999854,
+          233.40000000000146,
+          66.59999999999854,
+          183.40000000000146,
+          66.59999999999854,
+          183.3000000000029,
+          100.09999999999854,
+          133.29999999999927,
+          100,
+          200,
+          116.70000000000073,
+          116.59999999999854,
+          50,
+          116.60000000000218,
+          50.099999999998545,
+          100,
+          49.900000000001455,
+          100,
+          16.700000000000728,
+          33.39999999999782,
+          16.600000000002183,
+          100,
+          166.6999999999971,
+          66.60000000000218,
+          100.09999999999854,
+          183.29999999999927,
+          100,
+          16.700000000000728,
+          266.6000000000022,
+          200
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": true,
+          "connected": false,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:36049/?room=NySMHjAXCTk-iUHAXM5_tDtlr5Odh3Ey",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "prism-relay",
+        "phase": "playing",
+        "paused": true,
+        "tick": 328,
+        "elapsed": 5.466666666666653,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 5.466666666666667,
+          "tick": 54,
+          "timeLimit": 45,
+          "remaining": 39.6,
+          "timeLimitTicks": 450,
+          "remainingTicks": 396,
+          "score": 30,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 0,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 1,
+              "charge": 3,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 0,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 1,
+              "charge": 3,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 0,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 4,
+          "tracedStates": 6,
+          "message": "光路已接通 · 保持全部目标连续照亮 2 秒",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0.06666666666666667,
+          "_aDown": true,
+          "_bDown": false,
+          "_direction": 0,
+          "_repeatIn": 0.07000000000000006
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-2b793ddf3538",
+            "session": "wifi-7cd728bd-7992-49e3-a1da-ffd95204814d-2",
+            "connected": true,
+            "cancelSeq": 3,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 372,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          50.14600000000064,
+          150,
+          100,
+          233.29999999999927,
+          1483.4000000000005,
+          133.30000000000018,
+          150,
+          150,
+          166.59999999999945,
+          233.40000000000055,
+          166.69999999999982,
+          283.3000000000002,
+          200,
+          166.60000000000036,
+          233.39999999999964,
+          200,
+          150,
+          133.29999999999927,
+          133.39999999999964,
+          100,
+          149.90000000000146,
+          100.09999999999854,
+          166.60000000000036,
+          16.700000000000728,
+          100,
+          183.29999999999927,
+          216.70000000000073,
+          100,
+          183.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          33.30000000000109,
+          150,
+          83.29999999999927,
+          83.39999999999964,
+          116.60000000000036,
+          100,
+          16.700000000000728,
+          33.29999999999927,
+          150.10000000000036,
+          133.20000000000073,
+          16.69999999999891,
+          83.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          16.600000000000364,
+          66.69999999999891,
+          166.70000000000073,
+          33.29999999999927,
+          133.39999999999964,
+          33.30000000000109,
+          116.69999999999891,
+          33.30000000000109,
+          83.39999999999964,
+          100,
+          66.60000000000036,
+          116.69999999999891,
+          133.3000000000011,
+          50,
+          83.29999999999927,
+          116.70000000000073,
+          16.600000000000364,
+          83.39999999999964,
+          33.399999999999636,
+          16.600000000000364,
+          166.6999999999989,
+          133.3000000000011,
+          16.600000000000364,
+          116.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          83.39999999999964,
+          33.29999999999927,
+          100,
+          100,
+          83.30000000000109,
+          83.29999999999927,
+          83.39999999999964,
+          133.3000000000011,
+          33.399999999999636,
+          33.29999999999927,
+          83.30000000000109,
+          150,
+          83.39999999999964,
+          49.899999999999636,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          116.69999999999891,
+          133.3000000000011,
+          83.29999999999927,
+          266.7000000000007,
+          133.29999999999927,
+          183.39999999999964,
+          183.29999999999927,
+          33.30000000000291,
+          116.69999999999709,
+          166.60000000000218,
+          83.39999999999782,
+          166.70000000000073,
+          66.60000000000218,
+          133.39999999999782,
+          183.29999999999927,
+          83.30000000000291,
+          116.69999999999709,
+          133.3000000000029,
+          183.29999999999927,
+          133.39999999999782,
+          83.40000000000146,
+          166.59999999999854,
+          133.40000000000146,
+          66.59999999999854,
+          233.40000000000146,
+          66.59999999999854,
+          183.40000000000146,
+          66.59999999999854,
+          183.3000000000029,
+          100.09999999999854,
+          133.29999999999927,
+          100,
+          200,
+          116.70000000000073,
+          116.59999999999854,
+          50,
+          116.60000000000218,
+          50.099999999998545,
+          100,
+          49.900000000001455,
+          100,
+          16.700000000000728,
+          33.39999999999782,
+          16.600000000002183,
+          100,
+          166.6999999999971,
+          66.60000000000218,
+          100.09999999999854,
+          183.29999999999927,
+          100,
+          16.700000000000728,
+          266.6000000000022,
+          200,
+          16.69999999999709,
+          133.3000000000029,
+          83.29999999999927,
+          216.70000000000073,
+          83.39999999999782,
+          116.60000000000218,
+          116.69999999999709,
+          233.3000000000029,
+          83.29999999999927,
+          16.700000000000728,
+          83.39999999999782
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:36049/?room=NySMHjAXCTk-iUHAXM5_tDtlr5Odh3Ey",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:47.413Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-2b793ddf3538"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:47.413Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:47.413Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:47.413Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:47.413Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:47.413Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:47.413Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:47.413Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:47.413Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:47.413Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:47.506Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:47.518Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:47.562Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:47.570Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:47.570Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:47.570Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:47.574Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:47.581Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:47.581Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:47.581Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:48.291Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:48.336Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:48.532Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 234
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:48.585Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:50.264Z",
+      "message": {
+        "type": "ping",
+        "seq": 13,
+        "controller_id": "virtual-2b793ddf3538"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:50.284Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:50.475Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:50.508Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:50.844Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 368
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:50.869Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:51.225Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:51.325Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:51.406Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "B",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 186
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:51.418Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:53.287Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:53.309Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:53.787Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 502
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:53.791Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:53.818Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 532
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:53.908Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:55.265Z",
+      "message": {
+        "type": "ping",
+        "seq": 21,
+        "controller_id": "virtual-2b793ddf3538"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:55.278Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:57.335Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:57.368Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:57.837Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 503
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:57.860Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:57.873Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 538
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:57.883Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:58.378Z",
+      "message": {
+        "type": "button",
+        "seq": 25,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:58.385Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:58.407Z",
+      "message": {
+        "type": "button",
+        "seq": 26,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:58.469Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:58.865Z",
+      "message": {
+        "type": "button",
+        "seq": 27,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 481
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:50:58.877Z",
+      "message": {
+        "type": "button",
+        "seq": 28,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 477
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:58.936Z",
+      "message": {
+        "type": "ack",
+        "seq": 27
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:50:58.941Z",
+      "message": {
+        "type": "ack",
+        "seq": 28
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:00.429Z",
+      "message": {
+        "type": "hello",
+        "seq": 29,
+        "controller_id": "virtual-2b793ddf3538"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:00.429Z",
+      "message": {
+        "type": "button",
+        "seq": 30,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:00.429Z",
+      "message": {
+        "type": "button",
+        "seq": 31,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:00.429Z",
+      "message": {
+        "type": "button",
+        "seq": 32,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:00.429Z",
+      "message": {
+        "type": "button",
+        "seq": 33,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:00.429Z",
+      "message": {
+        "type": "button",
+        "seq": 34,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:00.429Z",
+      "message": {
+        "type": "button",
+        "seq": 35,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:00.429Z",
+      "message": {
+        "type": "button",
+        "seq": 36,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:00.429Z",
+      "message": {
+        "type": "button",
+        "seq": 37,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:00.429Z",
+      "message": {
+        "type": "button",
+        "seq": 38,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:00.579Z",
+      "message": {
+        "type": "ack",
+        "seq": 29
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:00.585Z",
+      "message": {
+        "type": "ack",
+        "seq": 30
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:00.586Z",
+      "message": {
+        "type": "ack",
+        "seq": 31
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:00.587Z",
+      "message": {
+        "type": "ack",
+        "seq": 32
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:00.588Z",
+      "message": {
+        "type": "ack",
+        "seq": 33
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:00.590Z",
+      "message": {
+        "type": "ack",
+        "seq": 34
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:00.590Z",
+      "message": {
+        "type": "ack",
+        "seq": 35
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:00.591Z",
+      "message": {
+        "type": "ack",
+        "seq": 36
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:00.592Z",
+      "message": {
+        "type": "ack",
+        "seq": 37
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:00.595Z",
+      "message": {
+        "type": "ack",
+        "seq": 38
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:01.267Z",
+      "message": {
+        "type": "button",
+        "seq": 39,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:01.273Z",
+      "message": {
+        "type": "ack",
+        "seq": 39
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:01.771Z",
+      "message": {
+        "type": "button",
+        "seq": 40,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:01.780Z",
+      "message": {
+        "type": "ack",
+        "seq": 40
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:02.022Z",
+      "message": {
+        "type": "button",
+        "seq": 41,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 749
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:02.038Z",
+      "message": {
+        "type": "ack",
+        "seq": 41
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:03.633Z",
+      "message": {
+        "type": "button",
+        "seq": 42,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:03.660Z",
+      "message": {
+        "type": "ack",
+        "seq": 42
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:04.116Z",
+      "message": {
+        "type": "button",
+        "seq": 43,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:04.132Z",
+      "message": {
+        "type": "ack",
+        "seq": 43
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:04.153Z",
+      "message": {
+        "type": "button",
+        "seq": 44,
+        "controller_id": "virtual-2b793ddf3538",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 536
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:04.183Z",
+      "message": {
+        "type": "ack",
+        "seq": 44
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:05.262Z",
+      "message": {
+        "type": "ping",
+        "seq": 45,
+        "controller_id": "virtual-2b793ddf3538"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:05.264Z",
+      "message": {
+        "type": "ack",
+        "seq": 45
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:10.264Z",
+      "message": {
+        "type": "ping",
+        "seq": 46,
+        "controller_id": "virtual-2b793ddf3538"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:10.284Z",
+      "message": {
+        "type": "ack",
+        "seq": 46
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:15.262Z",
+      "message": {
+        "type": "ping",
+        "seq": 47,
+        "controller_id": "virtual-2b793ddf3538"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:15.299Z",
+      "message": {
+        "type": "ack",
+        "seq": 47
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:51:20.267Z",
+      "message": {
+        "type": "ping",
+        "seq": 48,
+        "controller_id": "virtual-2b793ddf3538"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:51:20.293Z",
+      "message": {
+        "type": "ack",
+        "seq": 48
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [
+    {
+      "connection": 1,
+      "event": "client-eof",
+      "at": "2026-11-15T16:50:58.897Z",
+      "pendingSeq": [
+        27,
+        28
+      ]
+    },
+    {
+      "connection": 1,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-15T16:50:58.941Z",
+      "waitMs": 44.24842300000091,
+      "pendingSeq": []
+    }
+  ],
+  "screenshots": [
+    "menu-android.png",
+    "gameplay.png",
+    "paused.png",
+    "reconnected.png",
+    "failure.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "ports": {
+    "tcpPort": 42235,
+    "observerPort": 43891
+  },
+  "error": "Error: protocol test pause timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:126:22\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:125:2",
+  "lastSnapshot": {
+    "id": "prism-relay",
+    "phase": "playing",
+    "paused": false,
+    "tick": 842,
+    "elapsed": 14.03333333333361,
+    "level": 0,
+    "best": 1958,
+    "model": {
+      "seed": 29,
+      "difficulty": 0,
+      "level": 1,
+      "levelName": "一束光的转弯",
+      "width": 7,
+      "height": 5,
+      "phase": "playing",
+      "elapsed": 14.033333333333333,
+      "tick": 140,
+      "timeLimit": 45,
+      "remaining": 31,
+      "timeLimitTicks": 450,
+      "remainingTicks": 310,
+      "score": 0,
+      "cells": [
+        {
+          "type": "source",
+          "x": 0,
+          "y": 3,
+          "id": "source-1",
+          "direction": 0,
+          "color": 1
+        },
+        {
+          "type": "mirror",
+          "x": 3,
+          "y": 3,
+          "id": "device-1",
+          "orientation": 1,
+          "name": "反射镜 1"
+        },
+        {
+          "type": "receiver",
+          "x": 3,
+          "y": 0,
+          "id": "receiver-1",
+          "required": 1,
+          "incident": 0,
+          "charge": 0,
+          "maxCharge": 20
+        }
+      ],
+      "devices": [
+        {
+          "type": "mirror",
+          "x": 3,
+          "y": 3,
+          "id": "device-1",
+          "orientation": 1,
+          "name": "反射镜 1"
+        }
+      ],
+      "receivers": [
+        {
+          "type": "receiver",
+          "x": 3,
+          "y": 0,
+          "id": "receiver-1",
+          "required": 1,
+          "incident": 0,
+          "charge": 0,
+          "maxCharge": 20
+        }
+      ],
+      "hazards": [],
+      "sources": [
+        {
+          "type": "source",
+          "x": 0,
+          "y": 3,
+          "id": "source-1",
+          "direction": 0,
+          "color": 1
+        }
+      ],
+      "beams": [
+        {
+          "x1": 0,
+          "y1": 3,
+          "x2": 3,
+          "y2": 3,
+          "colorBits": 1
+        },
+        {
+          "x1": 3,
+          "y1": 3,
+          "x2": 3,
+          "y2": 4.5,
+          "colorBits": 1
+        }
+      ],
+      "selectedId": "device-1",
+      "chargeTicks": 20,
+      "hazardLimit": 300,
+      "traceVersion": 1,
+      "tracedStates": 4,
+      "message": "选中镜片 · A 顺时针 / B 逆时针 · 连续照亮目标 2 秒",
+      "events": [],
+      "lostReason": null,
+      "_tickRemainder": 0.03333333333333333,
+      "_aDown": false,
+      "_bDown": false,
+      "_direction": -1,
+      "_repeatIn": 0
+    },
+    "controllers": [
+      {
+        "id": 1,
+        "transport": "wifi",
+        "controllerId": "virtual-2b793ddf3538",
+        "session": "wifi-7cd728bd-7992-49e3-a1da-ffd95204814d-2",
+        "connected": true,
+        "cancelSeq": 3,
+        "inputActive": true,
+        "x": 0,
+        "y": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "a": false,
+        "b": false,
+        "start": false,
+        "select": false,
+        "buttons": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        }
+      }
+    ],
+    "renderer": {
+      "kind": "webgl",
+      "drawCalls": 1,
+      "quads": 370,
+      "textureCount": 1,
+      "atlasSize": 1024,
+      "contextLost": false
+    },
+    "frameTimesMs": [
+      16.600000000000364,
+      33.399999999999636,
+      116.69999999999891,
+      133.3000000000011,
+      83.29999999999927,
+      266.7000000000007,
+      133.29999999999927,
+      183.39999999999964,
+      183.29999999999927,
+      33.30000000000291,
+      116.69999999999709,
+      166.60000000000218,
+      83.39999999999782,
+      166.70000000000073,
+      66.60000000000218,
+      133.39999999999782,
+      183.29999999999927,
+      83.30000000000291,
+      116.69999999999709,
+      133.3000000000029,
+      183.29999999999927,
+      133.39999999999782,
+      83.40000000000146,
+      166.59999999999854,
+      133.40000000000146,
+      66.59999999999854,
+      233.40000000000146,
+      66.59999999999854,
+      183.40000000000146,
+      66.59999999999854,
+      183.3000000000029,
+      100.09999999999854,
+      133.29999999999927,
+      100,
+      200,
+      116.70000000000073,
+      116.59999999999854,
+      50,
+      116.60000000000218,
+      50.099999999998545,
+      100,
+      49.900000000001455,
+      100,
+      16.700000000000728,
+      33.39999999999782,
+      16.600000000002183,
+      100,
+      166.6999999999971,
+      66.60000000000218,
+      100.09999999999854,
+      183.29999999999927,
+      100,
+      16.700000000000728,
+      266.6000000000022,
+      200,
+      16.69999999999709,
+      133.3000000000029,
+      83.29999999999927,
+      216.70000000000073,
+      83.39999999999782,
+      116.60000000000218,
+      116.69999999999709,
+      233.3000000000029,
+      83.29999999999927,
+      16.700000000000728,
+      83.39999999999782,
+      200,
+      149.90000000000146,
+      133.39999999999782,
+      83.40000000000146,
+      116.59999999999854,
+      133.3000000000029,
+      50.099999999998545,
+      133.29999999999927,
+      116.60000000000218,
+      100,
+      33.39999999999782,
+      83.29999999999927,
+      116.60000000000218,
+      33.39999999999782,
+      16.700000000000728,
+      99.90000000000146,
+      83.39999999999782,
+      100,
+      100,
+      66.60000000000218,
+      150.09999999999854,
+      16.700000000000728,
+      100,
+      33.29999999999927,
+      133.29999999999927,
+      116.70000000000073,
+      16.700000000000728,
+      33.29999999999927,
+      283.2999999999993,
+      150,
+      150.09999999999854,
+      100,
+      83.29999999999927,
+      66.70000000000073,
+      99.90000000000146,
+      50,
+      16.69999999999709,
+      33.30000000000291,
+      16.69999999999709,
+      100,
+      116.70000000000073,
+      149.90000000000146,
+      100,
+      16.700000000000728,
+      166.6999999999971,
+      16.700000000000728,
+      83.29999999999927,
+      166.70000000000073,
+      16.600000000002183,
+      100,
+      116.69999999999709,
+      83.40000000000146,
+      83.29999999999927,
+      33.29999999999927,
+      33.30000000000291,
+      83.39999999999782,
+      66.70000000000073,
+      149.90000000000146,
+      16.69999999999709,
+      66.70000000000073,
+      33.29999999999927,
+      116.60000000000218,
+      83.39999999999782,
+      116.70000000000073,
+      83.29999999999927,
+      33.30000000000291,
+      83.29999999999927,
+      83.39999999999782,
+      133.3000000000029,
+      83.39999999999782,
+      16.600000000002183,
+      83.29999999999927,
+      100.09999999999854,
+      16.600000000002183,
+      33.39999999999782,
+      83.29999999999927,
+      116.70000000000073,
+      83.29999999999927,
+      150,
+      33.400000000001455,
+      33.20000000000073,
+      83.39999999999782,
+      116.70000000000073,
+      133.29999999999927,
+      33.30000000000291,
+      16.69999999999709,
+      66.60000000000218,
+      66.70000000000073,
+      66.69999999999709,
+      133.40000000000146,
+      116.59999999999854,
+      66.60000000000218,
+      83.39999999999782,
+      33.30000000000291,
+      16.69999999999709,
+      100,
+      33.30000000000291,
+      166.6999999999971,
+      66.70000000000073,
+      33.29999999999927,
+      133.3000000000029,
+      50,
+      16.69999999999709,
+      16.600000000002183,
+      100.09999999999854,
+      133.29999999999927,
+      100,
+      83.30000000000291,
+      66.69999999999709,
+      133.3000000000029,
+      33.29999999999927,
+      66.79999999999927,
+      33.20000000000073,
+      16.799999999999272,
+      66.59999999999854,
+      116.70000000000437,
+      166.59999999999854,
+      33.400000000001455,
+      50,
+      16.69999999999709,
+      33.30000000000291,
+      200,
+      16.599999999998545,
+      133.29999999999563,
+      16.80000000000291,
+      83.30000000000291,
+      83.29999999999563,
+      133.3000000000029,
+      16.69999999999709,
+      83.40000000000146,
+      149.90000000000146,
+      83.40000000000146,
+      100,
+      33.299999999995634,
+      16.700000000004366,
+      16.69999999999709,
+      199.90000000000146,
+      83.40000000000146,
+      83.29999999999563,
+      116.59999999999854,
+      16.700000000004366,
+      66.69999999999709,
+      100,
+      66.70000000000437,
+      150,
+      116.59999999999854,
+      16.69999999999709,
+      16.599999999998545,
+      83.40000000000146,
+      150,
+      83.30000000000291,
+      100,
+      33.299999999995634,
+      16.700000000004366,
+      16.69999999999709,
+      100,
+      116.70000000000437,
+      83.29999999999563,
+      100,
+      83.30000000000291,
+      33.299999999995634,
+      83.40000000000146,
+      66.59999999999854,
+      100.10000000000582,
+      100,
+      66.69999999999709,
+      133.1999999999971,
+      33.400000000001455,
+      100,
+      16.700000000004366,
+      49.89999999999418,
+      133.40000000000146,
+      33.400000000001455,
+      116.59999999999854,
+      83.30000000000291,
+      100,
+      100,
+      16.69999999999709,
+      16.700000000004366,
+      33.299999999995634,
+      133.3000000000029,
+      166.6999999999971,
+      66.70000000000437,
+      33.299999999995634,
+      83.30000000000291,
+      66.69999999999709,
+      133.3000000000029,
+      50.099999999998545,
+      66.59999999999854,
+      116.70000000000437,
+      33.299999999995634,
+      83.30000000000291,
+      83.29999999999563,
+      83.40000000000146,
+      33.400000000001455,
+      133.3000000000029,
+      49.89999999999418,
+      66.70000000000437,
+      83.29999999999563,
+      133.40000000000146,
+      83.30000000000291,
+      116.69999999999709,
+      133.3000000000029,
+      50.099999999998545,
+      16.599999999998545,
+      16.599999999998545,
+      133.40000000000146,
+      133.3000000000029,
+      16.599999999998545,
+      83.40000000000146,
+      83.40000000000146,
+      83.29999999999563,
+      83.40000000000146,
+      116.59999999999854,
+      83.30000000000291,
+      100.09999999999854,
+      16.599999999998545,
+      83.30000000000291,
+      150.09999999999854,
+      33.19999999999709,
+      16.80000000000291,
+      33.19999999999709,
+      16.700000000004366,
+      116.69999999999709,
+      116.70000000000437,
+      66.69999999999709,
+      83.19999999999709,
+      66.80000000000291,
+      100,
+      66.59999999999854,
+      133.3000000000029,
+      33.400000000001455,
+      133.29999999999563,
+      16.700000000004366
+    ],
+    "connection": {
+      "phoneSeen": true,
+      "disconnected": false,
+      "connected": true,
+      "controllerKind": "wifi"
+    },
+    "document": {
+      "url": "https://game-kit.invalid/tv.html",
+      "width": 960,
+      "height": 540,
+      "scrollWidth": 960,
+      "scrollHeight": 540,
+      "hidden": false,
+      "focused": true
+    },
+    "nativeInfo": {
+      "url": "http://10.0.2.15:36049/?room=NySMHjAXCTk-iUHAXM5_tDtlr5Odh3Ey",
+      "qr": "data:image/png;base64,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",
+      "addresses": [
+        "10.0.2.15"
+      ],
+      "error": "",
+      "language": "en",
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Light Relay",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "error": 0
+      }
+    },
+    "activityState": "resumed"
+  },
+  "finishedAt": "2026-11-15T16:51:20.964Z"
+}
