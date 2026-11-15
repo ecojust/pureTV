@@ -1,0 +1,3301 @@
+{
+  "slug": "tower-overlap",
+  "mode": "android",
+  "startedAt": "2026-11-15T16:19:33.512Z",
+  "status": "passed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "c912791ee3543f73298a631015c2c6f2ac225b1cc929ba4bba31bf60ae5b12c4",
+    "tools/readme-controller-qa/cases.mjs": "99e7a01d4e7554ee684561a5006c75564741ff310e8730544f68b535a1133342",
+    "tools/readme-controller-qa/sdk-peer.py": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "passed"
+    },
+    {
+      "name": "START pause freezes game, fresh START resumes",
+      "status": "passed"
+    },
+    {
+      "name": "disconnect clears held input, reconnect sync requires fresh START",
+      "status": "passed"
+    },
+    {
+      "name": "all nine official keys and long hold have real protocol receipts",
+      "status": "passed",
+      "result": {
+        "keys": 9,
+        "unchangedOfficialPage": true,
+        "longPressAndRelease": true
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK message",
+      "status": "passed",
+      "result": {
+        "messages": 60,
+        "acks": 60,
+        "connections": 2
+      }
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "id": "tower-overlap",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            }
+          ],
+          "floorsBuilt": 0,
+          "goal": 6,
+          "slab": {
+            "x": 0,
+            "width": 220,
+            "direction": 1,
+            "velocity": 145,
+            "cycle": 0
+          },
+          "dropElapsed": 0,
+          "drops": 0,
+          "offcuts": [],
+          "lastLanding": null,
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板自动往返；看准与下层重合时按 A 落下。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 221,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          1866.7000000000003,
+          16.59999999999991,
+          16.799999999999727,
+          2133.3,
+          66.69999999999982,
+          33.30000000000018,
+          1700
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false,
+          "connected": false,
+          "controllerKind": null
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40577/?room=MsYNzXTXycTzyhyObHhGxd7Gr9zjCRzZ",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": false,
+        "tick": 42,
+        "elapsed": 0.7000000000000005,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            }
+          ],
+          "floorsBuilt": 0,
+          "goal": 6,
+          "slab": {
+            "x": 101.49999999999841,
+            "width": 220,
+            "direction": 1,
+            "velocity": 145,
+            "cycle": 0.7000000000000005
+          },
+          "dropElapsed": 0,
+          "drops": 0,
+          "offcuts": [],
+          "lastLanding": null,
+          "elapsed": 0.7000000000000005,
+          "elapsedCapped": false,
+          "calls": 42,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板自动往返；看准与下层重合时按 A 落下。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-24d4ad6f1e18",
+            "session": "wifi-994b0956-d0a4-4831-b8b5-45cecddfa85a-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 222,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          1866.7000000000003,
+          16.59999999999991,
+          16.799999999999727,
+          2133.3,
+          66.69999999999982,
+          33.30000000000018,
+          1700,
+          133.30000000000018,
+          66.69999999999982,
+          83.30000000000018,
+          83.39999999999964,
+          66.60000000000036,
+          116.69999999999982,
+          99.89999999999964,
+          116.70000000000073,
+          50,
+          83.39999999999964,
+          83.39999999999964,
+          66.60000000000036,
+          83.30000000000018,
+          100,
+          83.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          100,
+          83.39999999999964,
+          83.30000000000018,
+          66.69999999999982,
+          99.90000000000055,
+          83.30000000000018,
+          83.39999999999964,
+          83.30000000000018,
+          50.099999999999454,
+          33.30000000000109,
+          33.29999999999927,
+          116.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          83.39999999999964,
+          33.30000000000109,
+          16.599999999998545,
+          83.30000000000109,
+          83.39999999999964,
+          50,
+          50,
+          66.70000000000073
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40577/?room=MsYNzXTXycTzyhyObHhGxd7Gr9zjCRzZ",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "drop-slab",
+      "before": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": false,
+        "tick": 84,
+        "elapsed": 1.4,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            }
+          ],
+          "floorsBuilt": 0,
+          "goal": 6,
+          "slab": {
+            "x": 202.99999999999682,
+            "width": 220,
+            "direction": 1,
+            "velocity": 145,
+            "cycle": 0.40000000000000135
+          },
+          "dropElapsed": 0,
+          "drops": 0,
+          "offcuts": [],
+          "lastLanding": null,
+          "elapsed": 1.4,
+          "elapsedCapped": false,
+          "calls": 84,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板自动往返；看准与下层重合时按 A 落下。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-24d4ad6f1e18",
+            "session": "wifi-994b0956-d0a4-4831-b8b5-45cecddfa85a-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 222,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          1866.7000000000003,
+          16.59999999999991,
+          16.799999999999727,
+          2133.3,
+          66.69999999999982,
+          33.30000000000018,
+          1700,
+          133.30000000000018,
+          66.69999999999982,
+          83.30000000000018,
+          83.39999999999964,
+          66.60000000000036,
+          116.69999999999982,
+          99.89999999999964,
+          116.70000000000073,
+          50,
+          83.39999999999964,
+          83.39999999999964,
+          66.60000000000036,
+          83.30000000000018,
+          100,
+          83.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          100,
+          83.39999999999964,
+          83.30000000000018,
+          66.69999999999982,
+          99.90000000000055,
+          83.30000000000018,
+          83.39999999999964,
+          83.30000000000018,
+          50.099999999999454,
+          33.30000000000109,
+          33.29999999999927,
+          116.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          83.39999999999964,
+          33.30000000000109,
+          16.599999999998545,
+          83.30000000000109,
+          83.39999999999964,
+          50,
+          50,
+          66.70000000000073,
+          83.29999999999927,
+          16.700000000000728,
+          33.29999999999927,
+          50,
+          66.70000000000073,
+          66.59999999999854,
+          33.400000000001455,
+          49.899999999999636,
+          66.69999999999891,
+          50,
+          50,
+          83.30000000000109,
+          50
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40577/?room=MsYNzXTXycTzyhyObHhGxd7Gr9zjCRzZ",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": false,
+        "tick": 139,
+        "elapsed": 2.3166666666666633,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 231.99999999999636,
+              "width": 178.00000000000364
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 361.5833333333278,
+            "width": 178.00000000000364,
+            "direction": -1,
+            "velocity": -145,
+            "cycle": 0.41666666666666663
+          },
+          "dropElapsed": 0,
+          "drops": 1,
+          "offcuts": [
+            {
+              "x": 410,
+              "width": 41.99999999999636,
+              "side": 1,
+              "age": 0.41666666666666663
+            }
+          ],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 231.99999999999636,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 231.99999999999636,
+            "width": 178.00000000000364,
+            "leftTrim": 0,
+            "rightTrim": 41.99999999999636,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 2.3166666666666633,
+          "elapsedCapped": false,
+          "calls": 139,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "完成第 1 层，台面宽 178.0；下一层从右侧驶入。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-24d4ad6f1e18",
+            "session": "wifi-994b0956-d0a4-4831-b8b5-45cecddfa85a-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 218,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          1866.7000000000003,
+          16.59999999999991,
+          16.799999999999727,
+          2133.3,
+          66.69999999999982,
+          33.30000000000018,
+          1700,
+          133.30000000000018,
+          66.69999999999982,
+          83.30000000000018,
+          83.39999999999964,
+          66.60000000000036,
+          116.69999999999982,
+          99.89999999999964,
+          116.70000000000073,
+          50,
+          83.39999999999964,
+          83.39999999999964,
+          66.60000000000036,
+          83.30000000000018,
+          100,
+          83.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          100,
+          83.39999999999964,
+          83.30000000000018,
+          66.69999999999982,
+          99.90000000000055,
+          83.30000000000018,
+          83.39999999999964,
+          83.30000000000018,
+          50.099999999999454,
+          33.30000000000109,
+          33.29999999999927,
+          116.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          83.39999999999964,
+          33.30000000000109,
+          16.599999999998545,
+          83.30000000000109,
+          83.39999999999964,
+          50,
+          50,
+          66.70000000000073,
+          83.29999999999927,
+          16.700000000000728,
+          33.29999999999927,
+          50,
+          66.70000000000073,
+          66.59999999999854,
+          33.400000000001455,
+          49.899999999999636,
+          66.69999999999891,
+          50,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          16.700000000000728,
+          49.899999999999636,
+          66.70000000000073,
+          83.39999999999964,
+          33.29999999999927,
+          50,
+          83.40000000000146,
+          66.59999999999854,
+          16.700000000000728,
+          33.29999999999927,
+          16.700000000000728,
+          49.899999999999636,
+          83.39999999999964
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40577/?room=MsYNzXTXycTzyhyObHhGxd7Gr9zjCRzZ",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "pause-freeze",
+      "before": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": true,
+        "tick": 208,
+        "elapsed": 3.4666666666666592,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 231.99999999999636,
+              "width": 178.00000000000364
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 194.8333333333353,
+            "width": 178.00000000000364,
+            "direction": -1,
+            "velocity": -145,
+            "cycle": 0.5666666666666682
+          },
+          "dropElapsed": 0,
+          "drops": 1,
+          "offcuts": [],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 231.99999999999636,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 231.99999999999636,
+            "width": 178.00000000000364,
+            "leftTrim": 0,
+            "rightTrim": 41.99999999999636,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 3.4666666666666592,
+          "elapsedCapped": false,
+          "calls": 208,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "完成第 1 层，台面宽 178.0；下一层从右侧驶入。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-24d4ad6f1e18",
+            "session": "wifi-994b0956-d0a4-4831-b8b5-45cecddfa85a-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 219,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          1866.7000000000003,
+          16.59999999999991,
+          16.799999999999727,
+          2133.3,
+          66.69999999999982,
+          33.30000000000018,
+          1700,
+          133.30000000000018,
+          66.69999999999982,
+          83.30000000000018,
+          83.39999999999964,
+          66.60000000000036,
+          116.69999999999982,
+          99.89999999999964,
+          116.70000000000073,
+          50,
+          83.39999999999964,
+          83.39999999999964,
+          66.60000000000036,
+          83.30000000000018,
+          100,
+          83.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          100,
+          83.39999999999964,
+          83.30000000000018,
+          66.69999999999982,
+          99.90000000000055,
+          83.30000000000018,
+          83.39999999999964,
+          83.30000000000018,
+          50.099999999999454,
+          33.30000000000109,
+          33.29999999999927,
+          116.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          83.39999999999964,
+          33.30000000000109,
+          16.599999999998545,
+          83.30000000000109,
+          83.39999999999964,
+          50,
+          50,
+          66.70000000000073,
+          83.29999999999927,
+          16.700000000000728,
+          33.29999999999927,
+          50,
+          66.70000000000073,
+          66.59999999999854,
+          33.400000000001455,
+          49.899999999999636,
+          66.69999999999891,
+          50,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          16.700000000000728,
+          49.899999999999636,
+          66.70000000000073,
+          83.39999999999964,
+          33.29999999999927,
+          50,
+          83.40000000000146,
+          66.59999999999854,
+          16.700000000000728,
+          33.29999999999927,
+          16.700000000000728,
+          49.899999999999636,
+          83.39999999999964,
+          50,
+          50,
+          133.3000000000011,
+          16.69999999999891,
+          16.700000000000728,
+          66.70000000000073,
+          66.59999999999854,
+          100,
+          50,
+          66.70000000000073,
+          50,
+          16.600000000000364,
+          66.69999999999891,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          50,
+          66.70000000000073,
+          83.29999999999927,
+          66.70000000000073,
+          116.69999999999891,
+          66.60000000000036,
+          16.600000000000364,
+          16.799999999999272,
+          150,
+          66.60000000000036,
+          83.29999999999927,
+          66.70000000000073,
+          83.29999999999927,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          83.30000000000109,
+          100.10000000000036,
+          99.89999999999964,
+          100.10000000000036
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40577/?room=MsYNzXTXycTzyhyObHhGxd7Gr9zjCRzZ",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": true,
+        "tick": 208,
+        "elapsed": 3.4666666666666592,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 231.99999999999636,
+              "width": 178.00000000000364
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 194.8333333333353,
+            "width": 178.00000000000364,
+            "direction": -1,
+            "velocity": -145,
+            "cycle": 0.5666666666666682
+          },
+          "dropElapsed": 0,
+          "drops": 1,
+          "offcuts": [],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 231.99999999999636,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 231.99999999999636,
+            "width": 178.00000000000364,
+            "leftTrim": 0,
+            "rightTrim": 41.99999999999636,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 3.4666666666666592,
+          "elapsedCapped": false,
+          "calls": 208,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "完成第 1 层，台面宽 178.0；下一层从右侧驶入。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-24d4ad6f1e18",
+            "session": "wifi-994b0956-d0a4-4831-b8b5-45cecddfa85a-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 219,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          1866.7000000000003,
+          16.59999999999991,
+          16.799999999999727,
+          2133.3,
+          66.69999999999982,
+          33.30000000000018,
+          1700,
+          133.30000000000018,
+          66.69999999999982,
+          83.30000000000018,
+          83.39999999999964,
+          66.60000000000036,
+          116.69999999999982,
+          99.89999999999964,
+          116.70000000000073,
+          50,
+          83.39999999999964,
+          83.39999999999964,
+          66.60000000000036,
+          83.30000000000018,
+          100,
+          83.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          100,
+          83.39999999999964,
+          83.30000000000018,
+          66.69999999999982,
+          99.90000000000055,
+          83.30000000000018,
+          83.39999999999964,
+          83.30000000000018,
+          50.099999999999454,
+          33.30000000000109,
+          33.29999999999927,
+          116.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          83.39999999999964,
+          33.30000000000109,
+          16.599999999998545,
+          83.30000000000109,
+          83.39999999999964,
+          50,
+          50,
+          66.70000000000073,
+          83.29999999999927,
+          16.700000000000728,
+          33.29999999999927,
+          50,
+          66.70000000000073,
+          66.59999999999854,
+          33.400000000001455,
+          49.899999999999636,
+          66.69999999999891,
+          50,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          16.700000000000728,
+          49.899999999999636,
+          66.70000000000073,
+          83.39999999999964,
+          33.29999999999927,
+          50,
+          83.40000000000146,
+          66.59999999999854,
+          16.700000000000728,
+          33.29999999999927,
+          16.700000000000728,
+          49.899999999999636,
+          83.39999999999964,
+          50,
+          50,
+          133.3000000000011,
+          16.69999999999891,
+          16.700000000000728,
+          66.70000000000073,
+          66.59999999999854,
+          100,
+          50,
+          66.70000000000073,
+          50,
+          16.600000000000364,
+          66.69999999999891,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          50,
+          66.70000000000073,
+          83.29999999999927,
+          66.70000000000073,
+          116.69999999999891,
+          66.60000000000036,
+          16.600000000000364,
+          16.799999999999272,
+          150,
+          66.60000000000036,
+          83.29999999999927,
+          66.70000000000073,
+          83.29999999999927,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          83.30000000000109,
+          100.10000000000036,
+          99.89999999999964,
+          100.10000000000036,
+          49.899999999999636,
+          100.10000000000036,
+          49.899999999999636,
+          100,
+          50.100000000000364,
+          100
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40577/?room=MsYNzXTXycTzyhyObHhGxd7Gr9zjCRzZ",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "reconnect",
+      "before": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": true,
+        "tick": 271,
+        "elapsed": 4.516666666666656,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "dropping",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 231.99999999999636,
+              "width": 178.00000000000364
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 71.58333333334303,
+            "width": 178.00000000000364,
+            "direction": -1,
+            "velocity": 0,
+            "cycle": 0.41666666666666946
+          },
+          "dropElapsed": 0.19999999999999998,
+          "drops": 2,
+          "offcuts": [],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 231.99999999999636,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 231.99999999999636,
+            "width": 178.00000000000364,
+            "leftTrim": 0,
+            "rightTrim": 41.99999999999636,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 4.516666666666656,
+          "elapsedCapped": false,
+          "calls": 271,
+          "inputArmed": true,
+          "cancelEpoch": 3,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板正在落下；落地后按实际重合保留台面。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 208,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          1866.7000000000003,
+          16.59999999999991,
+          16.799999999999727,
+          2133.3,
+          66.69999999999982,
+          33.30000000000018,
+          1700,
+          133.30000000000018,
+          66.69999999999982,
+          83.30000000000018,
+          83.39999999999964,
+          66.60000000000036,
+          116.69999999999982,
+          99.89999999999964,
+          116.70000000000073,
+          50,
+          83.39999999999964,
+          83.39999999999964,
+          66.60000000000036,
+          83.30000000000018,
+          100,
+          83.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          100,
+          83.39999999999964,
+          83.30000000000018,
+          66.69999999999982,
+          99.90000000000055,
+          83.30000000000018,
+          83.39999999999964,
+          83.30000000000018,
+          50.099999999999454,
+          33.30000000000109,
+          33.29999999999927,
+          116.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          83.39999999999964,
+          33.30000000000109,
+          16.599999999998545,
+          83.30000000000109,
+          83.39999999999964,
+          50,
+          50,
+          66.70000000000073,
+          83.29999999999927,
+          16.700000000000728,
+          33.29999999999927,
+          50,
+          66.70000000000073,
+          66.59999999999854,
+          33.400000000001455,
+          49.899999999999636,
+          66.69999999999891,
+          50,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          16.700000000000728,
+          49.899999999999636,
+          66.70000000000073,
+          83.39999999999964,
+          33.29999999999927,
+          50,
+          83.40000000000146,
+          66.59999999999854,
+          16.700000000000728,
+          33.29999999999927,
+          16.700000000000728,
+          49.899999999999636,
+          83.39999999999964,
+          50,
+          50,
+          133.3000000000011,
+          16.69999999999891,
+          16.700000000000728,
+          66.70000000000073,
+          66.59999999999854,
+          100,
+          50,
+          66.70000000000073,
+          50,
+          16.600000000000364,
+          66.69999999999891,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          50,
+          66.70000000000073,
+          83.29999999999927,
+          66.70000000000073,
+          116.69999999999891,
+          66.60000000000036,
+          16.600000000000364,
+          16.799999999999272,
+          150,
+          66.60000000000036,
+          83.29999999999927,
+          66.70000000000073,
+          83.29999999999927,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          83.30000000000109,
+          100.10000000000036,
+          99.89999999999964,
+          100.10000000000036,
+          49.899999999999636,
+          100.10000000000036,
+          49.899999999999636,
+          100,
+          50.100000000000364,
+          100,
+          116.69999999999891,
+          16.5,
+          16.700000000000728,
+          50.100000000000364,
+          83.29999999999927,
+          166.60000000000036,
+          133.39999999999964,
+          66.70000000000073,
+          16.599999999998545,
+          83.40000000000146,
+          100,
+          100,
+          100,
+          66.59999999999854,
+          66.70000000000073,
+          83.29999999999927,
+          66.70000000000073,
+          50,
+          83.29999999999927,
+          66.70000000000073,
+          83.29999999999927,
+          66.70000000000073,
+          33.29999999999927,
+          66.60000000000036,
+          50.100000000000364,
+          66.60000000000036,
+          16.69999999999891,
+          50,
+          83.30000000000109,
+          66.79999999999927,
+          33.20000000000073,
+          16.799999999999272,
+          16.600000000000364,
+          50,
+          116.60000000000036,
+          66.79999999999927,
+          83.30000000000109,
+          100,
+          66.69999999999891,
+          83.30000000000109,
+          66.59999999999854
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": true,
+          "connected": false,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40577/?room=MsYNzXTXycTzyhyObHhGxd7Gr9zjCRzZ",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": true,
+        "tick": 271,
+        "elapsed": 4.516666666666656,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "dropping",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 231.99999999999636,
+              "width": 178.00000000000364
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 71.58333333334303,
+            "width": 178.00000000000364,
+            "direction": -1,
+            "velocity": 0,
+            "cycle": 0.41666666666666946
+          },
+          "dropElapsed": 0.19999999999999998,
+          "drops": 2,
+          "offcuts": [],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 231.99999999999636,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 231.99999999999636,
+            "width": 178.00000000000364,
+            "leftTrim": 0,
+            "rightTrim": 41.99999999999636,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 4.516666666666656,
+          "elapsedCapped": false,
+          "calls": 271,
+          "inputArmed": true,
+          "cancelEpoch": 3,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板正在落下；落地后按实际重合保留台面。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-24d4ad6f1e18",
+            "session": "wifi-994b0956-d0a4-4831-b8b5-45cecddfa85a-2",
+            "connected": true,
+            "cancelSeq": 3,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 208,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          1866.7000000000003,
+          16.59999999999991,
+          16.799999999999727,
+          2133.3,
+          66.69999999999982,
+          33.30000000000018,
+          1700,
+          133.30000000000018,
+          66.69999999999982,
+          83.30000000000018,
+          83.39999999999964,
+          66.60000000000036,
+          116.69999999999982,
+          99.89999999999964,
+          116.70000000000073,
+          50,
+          83.39999999999964,
+          83.39999999999964,
+          66.60000000000036,
+          83.30000000000018,
+          100,
+          83.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          100,
+          83.39999999999964,
+          83.30000000000018,
+          66.69999999999982,
+          99.90000000000055,
+          83.30000000000018,
+          83.39999999999964,
+          83.30000000000018,
+          50.099999999999454,
+          33.30000000000109,
+          33.29999999999927,
+          116.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          83.39999999999964,
+          33.30000000000109,
+          16.599999999998545,
+          83.30000000000109,
+          83.39999999999964,
+          50,
+          50,
+          66.70000000000073,
+          83.29999999999927,
+          16.700000000000728,
+          33.29999999999927,
+          50,
+          66.70000000000073,
+          66.59999999999854,
+          33.400000000001455,
+          49.899999999999636,
+          66.69999999999891,
+          50,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          16.700000000000728,
+          49.899999999999636,
+          66.70000000000073,
+          83.39999999999964,
+          33.29999999999927,
+          50,
+          83.40000000000146,
+          66.59999999999854,
+          16.700000000000728,
+          33.29999999999927,
+          16.700000000000728,
+          49.899999999999636,
+          83.39999999999964,
+          50,
+          50,
+          133.3000000000011,
+          16.69999999999891,
+          16.700000000000728,
+          66.70000000000073,
+          66.59999999999854,
+          100,
+          50,
+          66.70000000000073,
+          50,
+          16.600000000000364,
+          66.69999999999891,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          50,
+          66.70000000000073,
+          83.29999999999927,
+          66.70000000000073,
+          116.69999999999891,
+          66.60000000000036,
+          16.600000000000364,
+          16.799999999999272,
+          150,
+          66.60000000000036,
+          83.29999999999927,
+          66.70000000000073,
+          83.29999999999927,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          83.30000000000109,
+          100.10000000000036,
+          99.89999999999964,
+          100.10000000000036,
+          49.899999999999636,
+          100.10000000000036,
+          49.899999999999636,
+          100,
+          50.100000000000364,
+          100,
+          116.69999999999891,
+          16.5,
+          16.700000000000728,
+          50.100000000000364,
+          83.29999999999927,
+          166.60000000000036,
+          133.39999999999964,
+          66.70000000000073,
+          16.599999999998545,
+          83.40000000000146,
+          100,
+          100,
+          100,
+          66.59999999999854,
+          66.70000000000073,
+          83.29999999999927,
+          66.70000000000073,
+          50,
+          83.29999999999927,
+          66.70000000000073,
+          83.29999999999927,
+          66.70000000000073,
+          33.29999999999927,
+          66.60000000000036,
+          50.100000000000364,
+          66.60000000000036,
+          16.69999999999891,
+          50,
+          83.30000000000109,
+          66.79999999999927,
+          33.20000000000073,
+          16.799999999999272,
+          16.600000000000364,
+          50,
+          116.60000000000036,
+          66.79999999999927,
+          83.30000000000109,
+          100,
+          66.69999999999891,
+          83.30000000000109,
+          66.59999999999854,
+          66.60000000000218,
+          83.39999999999782,
+          83.40000000000146,
+          83.29999999999927,
+          50,
+          100,
+          83.29999999999927,
+          83.40000000000146,
+          66.59999999999854,
+          116.70000000000073,
+          83.29999999999927,
+          50.10000000000218,
+          83.29999999999927,
+          83.29999999999927
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40577/?room=MsYNzXTXycTzyhyObHhGxd7Gr9zjCRzZ",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdcSURBVHic7d1BcuNIEkXB0Vjf/8rsvRYFY6OSEeBz30ukQOoZFt8SP6/X6/U/gKD/T78BgCkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJD1z6df8Ofn59Mv+VGv1+vWz19dn9O//8rV6999/9t//q7pz2+7u9fnXe4AgSwBBLIEEMgSQCBLAIEsAQSyBBDI+vgO8Mqnd0Dvmt6JTb8+95zeeW7//LbtGN0BAlkCCGQJIJAlgECWAAJZAghkCSCQtW4HeOXpO7jp93/39U///Okd3PR5i9M7venv3zbuAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHrcDvDppnd60+cNXjn93OLTO7Wn7eDq3AECWQIIZAkgkCWAQJYAAlkCCGQJIJBlB7jM9Hl2V7afl3h6B7n98+E97gCBLAEEsgQQyBJAIEsAgSwBBLIEEMh63A7w23dU0zuy08/Fvfv6259rfPfnt3++38YdIJAlgECWAAJZAghkCSCQJYBAlgACWet2gNPPpT1t+ry57T9/1/T7n/77v/3/529zBwhkCSCQJYBAlgACWQIIZAkgkCWAQNbHd4DOI/uz6R3X6fPqps/7m97p3eX/5+9yBwhkCSCQJYBAlgACWQIIZAkgkCWAQNbP68PDou3nwU07/f5PP/d3+v1PP3d3+vs1/fc9bafoDhDIEkAgSwCBLAEEsgQQyBJAIEsAgax1zwW+a3pn+O227yynd4LTzxWe3mle2bYjdAcIZAkgkCWAQJYAAlkCCGQJIJAlgEDW454LPL1zOr1jmt5J3X39p1//abUd3jR3gECWAAJZAghkCSCQJYBAlgACWQIIZD3uucCnd3Z3X396ZzX9+ndNv//p7+ddp3ey27//73IHCGQJIJAlgECWAAJZAghkCSCQJYBA1uN2gFemd2Lbdk6/TZ9neGX6PMXtn+/09b1r2/V1BwhkCSCQJYBAlgACWQIIZAkgkCWAQNbHnwt8ZftzZbfv5LZfn+kd6PT12baDe9fT3/9v7gCBLAEEsgQQyBJAIEsAgSwBBLIEEMj6+A5w+07r7u+/sn0ntX3HNv36d919f9uv7+md59/mDhDIEkAgSwCBLAEEsgQQyBJAIEsAgayP7wCnz4O7Mr2Dmj6Pb/rzmb7+p22/vqdt22m6AwSyBBDIEkAgSwCBLAEEsgQQyBJAIOvntW2Yc+Hbd1SnX3/7eYhPP+9v+jzK6esz/f18lztAIEsAgSwBBLIEEMgSQCBLAIEsAQSyvu48wNOmzwPcbnrnV98pTl/f6R3tu9wBAlkCCGQJIJAlgECWAAJZAghkCSCQ9fEd4F3bd3h2ZH82vUPbbvo8vW/b+V1xBwhkCSCQJYBAlgACWQIIZAkgkCWAQNbHd4Cnd1rTO7DpHdTdHdf2Hdnpz/f051ffmU6//m/uAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHrceYDTpp+7esVO7M++/fPbbtv3zx0gkCWAQJYAAlkCCGQJIJAlgECWAAJZ63aAT38u6t3ff2X6ucjbzxOctv39nfa0HaM7QCBLAIEsAQSyBBDIEkAgSwCBLAEEsj6+Azz93NjTO7bpHd/pHdXp8wSnd2BPPy/xyvR5ik/jDhDIEkAgSwCBLAEEsgQQyBJAIEsAgayP7wCnd1jT592d9u07w+nzIu+afv/TO9bp6/+bO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLIedx7gtNM7qumd493ff9r28wZP2/73bf///c0dIJAlgECWAAJZAghkCSCQJYBAlgACWevOA9z++tt3etudfq7w9p+/8vTn+k6fd/gud4BAlgACWQIIZAkgkCWAQJYAAlkCCGStOw/w6aZ3XNt3itt3jne/n9M7u9Ofz7f9/7oDBLIEEMgSQCBLAIEsAQSyBBDIEkAg6+M7wCvfvhO76/R5ddM7xivbz/s7/f2Y/ny2/3++yx0gkCWAQJYAAlkCCGQJIJAlgECWAAJZ63aAV56+szpt+rm2Tzd9nt72nemVp32/3AECWQIIZAkgkCWAQJYAAlkCCGQJIJD1uB3g053eWd21/Ty8u6bPC7xr+vo//fr95g4QyBJAIEsAgSwBBLIEEMgSQCBLAIEsO8APO/3c3u3P3T1t+07utOnvx9O4AwSyBBDIEkAgSwCBLAEEsgQQyBJAIOtxO8Bv2yH9Nr0T3L6TO71zO71z3P77p3/+09wBAlkCCGQJIJAlgECWAAJZAghkCSCQtW4HOH2e2rTpHdjd33/l9E5x287sXdPX97Rtn587QCBLAIEsAQSyBBDIEkAgSwCBLAEEsn5eTx9OAfxH7gCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyPoXE/cIxO/gZrkAAAAASUVORK5CYII=",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:38.773Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-24d4ad6f1e18"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:38.773Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:38.773Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:38.773Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:38.773Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:38.773Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:38.773Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:38.773Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:38.773Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:38.773Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:38.857Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:38.857Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:38.857Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:38.857Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:38.861Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:38.861Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:38.861Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:38.861Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:38.861Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:38.874Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:39.120Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:39.123Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:39.476Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 366
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:39.524Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:40.843Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:40.854Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:40.868Z",
+      "message": {
+        "type": "ping",
+        "seq": 14,
+        "controller_id": "virtual-24d4ad6f1e18"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:40.883Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:41.092Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 251
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:41.103Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:42.732Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:42.747Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:42.886Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 158
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:42.907Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:45.626Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:45.631Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:45.865Z",
+      "message": {
+        "type": "ping",
+        "seq": 19,
+        "controller_id": "virtual-24d4ad6f1e18"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:45.881Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 254
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:45.911Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:45.918Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:46.441Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:46.448Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:46.458Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:46.508Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:46.632Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 191
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:46.636Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:46.642Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 176
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:46.666Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.046Z",
+      "message": {
+        "type": "hello",
+        "seq": 25,
+        "controller_id": "virtual-24d4ad6f1e18"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.047Z",
+      "message": {
+        "type": "button",
+        "seq": 26,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.047Z",
+      "message": {
+        "type": "button",
+        "seq": 27,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.048Z",
+      "message": {
+        "type": "button",
+        "seq": 28,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.048Z",
+      "message": {
+        "type": "button",
+        "seq": 29,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.048Z",
+      "message": {
+        "type": "button",
+        "seq": 30,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.050Z",
+      "message": {
+        "type": "button",
+        "seq": 31,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.050Z",
+      "message": {
+        "type": "button",
+        "seq": 32,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.051Z",
+      "message": {
+        "type": "button",
+        "seq": 33,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.051Z",
+      "message": {
+        "type": "button",
+        "seq": 34,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.058Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.059Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.060Z",
+      "message": {
+        "type": "ack",
+        "seq": 27
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.062Z",
+      "message": {
+        "type": "ack",
+        "seq": 28
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.115Z",
+      "message": {
+        "type": "ack",
+        "seq": 29
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.115Z",
+      "message": {
+        "type": "ack",
+        "seq": 30
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.119Z",
+      "message": {
+        "type": "ack",
+        "seq": 31
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.121Z",
+      "message": {
+        "type": "ack",
+        "seq": 32
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.168Z",
+      "message": {
+        "type": "ack",
+        "seq": 33
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.168Z",
+      "message": {
+        "type": "ack",
+        "seq": 34
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.627Z",
+      "message": {
+        "type": "button",
+        "seq": 35,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.645Z",
+      "message": {
+        "type": "ack",
+        "seq": 35
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:48.819Z",
+      "message": {
+        "type": "button",
+        "seq": 36,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 186
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:48.828Z",
+      "message": {
+        "type": "ack",
+        "seq": 36
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:50.561Z",
+      "message": {
+        "type": "button",
+        "seq": 37,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:50.571Z",
+      "message": {
+        "type": "ack",
+        "seq": 37
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:50.754Z",
+      "message": {
+        "type": "button",
+        "seq": 38,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 200
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:50.762Z",
+      "message": {
+        "type": "ack",
+        "seq": 38
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:50.869Z",
+      "message": {
+        "type": "ping",
+        "seq": 39,
+        "controller_id": "virtual-24d4ad6f1e18"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:50.878Z",
+      "message": {
+        "type": "ack",
+        "seq": 39
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:51.068Z",
+      "message": {
+        "type": "button",
+        "seq": 40,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "UP",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:51.082Z",
+      "message": {
+        "type": "ack",
+        "seq": 40
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:51.435Z",
+      "message": {
+        "type": "button",
+        "seq": 41,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "UP",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 377
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:51.454Z",
+      "message": {
+        "type": "ack",
+        "seq": 41
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:51.799Z",
+      "message": {
+        "type": "button",
+        "seq": 42,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "DOWN",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:51.806Z",
+      "message": {
+        "type": "ack",
+        "seq": 42
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:52.274Z",
+      "message": {
+        "type": "button",
+        "seq": 43,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "DOWN",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 477
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:52.306Z",
+      "message": {
+        "type": "ack",
+        "seq": 43
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:52.651Z",
+      "message": {
+        "type": "button",
+        "seq": 44,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:52.696Z",
+      "message": {
+        "type": "ack",
+        "seq": 44
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:53.148Z",
+      "message": {
+        "type": "button",
+        "seq": 45,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "LEFT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:53.199Z",
+      "message": {
+        "type": "ack",
+        "seq": 45
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:53.573Z",
+      "message": {
+        "type": "button",
+        "seq": 46,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "LEFT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 923
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:53.627Z",
+      "message": {
+        "type": "ack",
+        "seq": 46
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:53.947Z",
+      "message": {
+        "type": "button",
+        "seq": 47,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:54.019Z",
+      "message": {
+        "type": "ack",
+        "seq": 47
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:54.387Z",
+      "message": {
+        "type": "button",
+        "seq": 48,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 446
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:54.391Z",
+      "message": {
+        "type": "ack",
+        "seq": 48
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:54.792Z",
+      "message": {
+        "type": "button",
+        "seq": 49,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:54.843Z",
+      "message": {
+        "type": "ack",
+        "seq": 49
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:55.221Z",
+      "message": {
+        "type": "button",
+        "seq": 50,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 426
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:55.246Z",
+      "message": {
+        "type": "ack",
+        "seq": 50
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:55.652Z",
+      "message": {
+        "type": "button",
+        "seq": 51,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:55.658Z",
+      "message": {
+        "type": "ack",
+        "seq": 51
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:55.868Z",
+      "message": {
+        "type": "ping",
+        "seq": 52,
+        "controller_id": "virtual-24d4ad6f1e18"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:55.878Z",
+      "message": {
+        "type": "ack",
+        "seq": 52
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:56.028Z",
+      "message": {
+        "type": "button",
+        "seq": 53,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "B",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 381
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:56.071Z",
+      "message": {
+        "type": "ack",
+        "seq": 53
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:56.449Z",
+      "message": {
+        "type": "button",
+        "seq": 54,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "X",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:56.482Z",
+      "message": {
+        "type": "ack",
+        "seq": 54
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:56.954Z",
+      "message": {
+        "type": "button",
+        "seq": 55,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "X",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 503
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:56.983Z",
+      "message": {
+        "type": "ack",
+        "seq": 55
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:57.155Z",
+      "message": {
+        "type": "button",
+        "seq": 56,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "X",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 698
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:57.194Z",
+      "message": {
+        "type": "ack",
+        "seq": 56
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:57.583Z",
+      "message": {
+        "type": "button",
+        "seq": 57,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "Y",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:57.617Z",
+      "message": {
+        "type": "ack",
+        "seq": 57
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:57.943Z",
+      "message": {
+        "type": "button",
+        "seq": 58,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "Y",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 359
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:57.958Z",
+      "message": {
+        "type": "ack",
+        "seq": 58
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:58.348Z",
+      "message": {
+        "type": "button",
+        "seq": 59,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:58.392Z",
+      "message": {
+        "type": "ack",
+        "seq": 59
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:19:58.579Z",
+      "message": {
+        "type": "button",
+        "seq": 60,
+        "controller_id": "virtual-24d4ad6f1e18",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 232
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:19:58.595Z",
+      "message": {
+        "type": "ack",
+        "seq": 60
+      }
+    }
+  ],
+  "transportErrors": [],
+  "screenshots": [
+    "menu-android.png",
+    "gameplay.png",
+    "paused.png",
+    "reconnected.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "ports": {
+    "tcpPort": 42953,
+    "observerPort": 46187
+  },
+  "scope": "complete controller acceptance",
+  "finishedAt": "2026-11-15T16:19:59.556Z"
+}
