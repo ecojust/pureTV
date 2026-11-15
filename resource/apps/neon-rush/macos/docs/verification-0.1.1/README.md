@@ -29,6 +29,10 @@
 
 **未实测实体 ESP32、电视、手机、实体 Intel 显卡或 macOS 11。** Bonjour 通过 Mac 的 `dns-sd` 实际浏览和解析，不等于实体 ESP32 搜索验收。安装包未上传应用服务器，未创建独立 GitHub Release。
 
+## 公开下载
+
+产物随 `ea787d1de2235fa56b8ba98bc8818c4c4977fade` 推送 master。对不可变提交和 master 的 DMG、ZIP、SHA256SUMS 分别完整匿名下载，共 6 份均 HTTP 200，字节数、SHA256 和完整内容与入库文件一致；见[公开下载记录](public-download-verification.json)。
+
 ## 证据入口
 
 - [结构化验证摘要](verification.json)、[CI 状态](ci-run.json)、[CI 原始日志](ci-workflow.log)
