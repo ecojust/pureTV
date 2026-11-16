@@ -1,0 +1,3891 @@
+{
+  "slug": "cozy-island",
+  "mode": "android",
+  "startedAt": "2026-11-16T11:21:50.902Z",
+  "status": "passed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9",
+    "tools/readme-controller-qa/cases.mjs": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71",
+    "tools/readme-controller-qa/client-status-dom.mjs": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e",
+    "tools/readme-controller-qa/client-status-cases.mjs": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45",
+    "tools/readme-controller-qa/sdk-peer.py": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-fc6dedd6229f",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "two SDK identities display separate seats and update independently",
+      "status": "passed",
+      "result": {
+        "primaryControllerId": "virtual-fc6dedd6229f",
+        "secondaryControllerId": "virtual-e43c2755f788",
+        "seats": 2
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-fc6dedd6229f",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 55,
+        "acks": 55,
+        "connections": 4
+      }
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0,
+            "aimY": 0,
+            "aimX": 0
+          },
+          {
+            "id": 2,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0,
+            "aimY": 0,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42647/?room=6mVIUljvuBkQoieJU55Wi4tUaUYHnU8l",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "players": [
+            {
+              "id": 1,
+              "x": 11.899999999999999,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "elapsed": 0,
+          "clock": 540,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 11.899999999999999,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 734,
+                  "top": 12,
+                  "right": 944,
+                  "bottom": 513
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42647/?room=6mVIUljvuBkQoieJU55Wi4tUaUYHnU8l",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "controller-connected-android",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-fc6dedd6229f",
+            "session": "wifi-483feb66-a976-49c3-ba34-5a88fc5fb346-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42647/?room=6mVIUljvuBkQoieJU55Wi4tUaUYHnU8l",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "players": [
+            {
+              "id": 1,
+              "x": 11.899999999999999,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 0,
+          "clock": 540,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 11.899999999999999,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 734,
+                  "top": 12,
+                  "right": 944,
+                  "bottom": 80.7890625,
+                  "width": 210,
+                  "height": 68.7890625
+                },
+                "clip": {
+                  "left": 734,
+                  "top": 12,
+                  "right": 944,
+                  "bottom": 513
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-fc6dedd6229f",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-fc6dedd6229f",
+                    "idText": "ID: virtual-fc6dedd6229f",
+                    "visible": true,
+                    "rect": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 80.7890625,
+                      "width": 210,
+                      "height": 68.7890625
+                    },
+                    "clip": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 513
+                    },
+                    "idRect": {
+                      "left": 775,
+                      "top": 39.1953125,
+                      "right": 935,
+                      "bottom": 72.7890625,
+                      "width": 160,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 513
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 775,
+                        "top": 40.1953125,
+                        "right": 933.4296875,
+                        "bottom": 54.1953125,
+                        "width": 158.4296875,
+                        "height": 14
+                      },
+                      {
+                        "left": 775,
+                        "top": 56.9921875,
+                        "right": 789.40625,
+                        "bottom": 70.9921875,
+                        "width": 14.40625,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 160,
+                    "idScrollWidth": 160,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 743,
+                      "top": 20,
+                      "right": 767,
+                      "bottom": 44,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42647/?room=6mVIUljvuBkQoieJU55Wi4tUaUYHnU8l",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "controllers-two-android",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-fc6dedd6229f",
+            "session": "wifi-483feb66-a976-49c3-ba34-5a88fc5fb346-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "virtual-e43c2755f788",
+            "session": "wifi-483feb66-a976-49c3-ba34-5a88fc5fb346-2",
+            "connected": true,
+            "cancelSeq": 2,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42647/?room=6mVIUljvuBkQoieJU55Wi4tUaUYHnU8l",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "players": [
+            {
+              "id": 1,
+              "x": 11.899999999999999,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 2
+            }
+          ],
+          "elapsed": 0,
+          "clock": 540,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 11.899999999999999,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 2
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 734,
+                  "top": 12,
+                  "right": 944,
+                  "bottom": 155.578125,
+                  "width": 210,
+                  "height": 143.578125
+                },
+                "clip": {
+                  "left": 734,
+                  "top": 12,
+                  "right": 944,
+                  "bottom": 513
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-fc6dedd6229f",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-fc6dedd6229f",
+                    "idText": "ID: virtual-fc6dedd6229f",
+                    "visible": true,
+                    "rect": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 80.7890625,
+                      "width": 210,
+                      "height": 68.7890625
+                    },
+                    "clip": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 513
+                    },
+                    "idRect": {
+                      "left": 775,
+                      "top": 39.1953125,
+                      "right": 935,
+                      "bottom": 72.7890625,
+                      "width": 160,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 513
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 775,
+                        "top": 40.1953125,
+                        "right": 933.4296875,
+                        "bottom": 54.1953125,
+                        "width": 158.4296875,
+                        "height": 14
+                      },
+                      {
+                        "left": 775,
+                        "top": 56.9921875,
+                        "right": 789.40625,
+                        "bottom": 70.9921875,
+                        "width": 14.40625,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 160,
+                    "idScrollWidth": 160,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 743,
+                      "top": 20,
+                      "right": 767,
+                      "bottom": 44,
+                      "width": 24,
+                      "height": 24
+                    }
+                  },
+                  {
+                    "controllerId": "virtual-e43c2755f788",
+                    "playerId": 2,
+                    "text": "2PConnectedID: virtual-e43c2755f788",
+                    "idText": "ID: virtual-e43c2755f788",
+                    "visible": true,
+                    "rect": {
+                      "left": 734,
+                      "top": 86.7890625,
+                      "right": 944,
+                      "bottom": 155.578125,
+                      "width": 210,
+                      "height": 68.7890625
+                    },
+                    "clip": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 513
+                    },
+                    "idRect": {
+                      "left": 775,
+                      "top": 113.984375,
+                      "right": 935,
+                      "bottom": 147.578125,
+                      "width": 160,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 513
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 775,
+                        "top": 114.984375,
+                        "right": 933.4296875,
+                        "bottom": 128.984375,
+                        "width": 158.4296875,
+                        "height": 14
+                      },
+                      {
+                        "left": 775,
+                        "top": 131.78125,
+                        "right": 789.40625,
+                        "bottom": 145.78125,
+                        "width": 14.40625,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 160,
+                    "idScrollWidth": 160,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 743,
+                      "top": 94.7890625,
+                      "right": 767,
+                      "bottom": 118.7890625,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42647/?room=6mVIUljvuBkQoieJU55Wi4tUaUYHnU8l",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "controller-reconnected",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-fc6dedd6229f",
+            "session": "wifi-483feb66-a976-49c3-ba34-5a88fc5fb346-4",
+            "connected": true,
+            "cancelSeq": 4,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "virtual-e43c2755f788",
+            "session": "wifi-483feb66-a976-49c3-ba34-5a88fc5fb346-3",
+            "connected": false,
+            "cancelSeq": 7,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42647/?room=6mVIUljvuBkQoieJU55Wi4tUaUYHnU8l",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "players": [
+            {
+              "id": 1,
+              "x": 11.899999999999999,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 4
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 7
+            }
+          ],
+          "elapsed": 0,
+          "clock": 540,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 11.899999999999999,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 4
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 7
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 734,
+                  "top": 12,
+                  "right": 944,
+                  "bottom": 80.7890625,
+                  "width": 210,
+                  "height": 68.7890625
+                },
+                "clip": {
+                  "left": 734,
+                  "top": 12,
+                  "right": 944,
+                  "bottom": 513
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-fc6dedd6229f",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-fc6dedd6229f",
+                    "idText": "ID: virtual-fc6dedd6229f",
+                    "visible": true,
+                    "rect": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 80.7890625,
+                      "width": 210,
+                      "height": 68.7890625
+                    },
+                    "clip": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 513
+                    },
+                    "idRect": {
+                      "left": 775,
+                      "top": 39.1953125,
+                      "right": 935,
+                      "bottom": 72.7890625,
+                      "width": 160,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 734,
+                      "top": 12,
+                      "right": 944,
+                      "bottom": 513
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 775,
+                        "top": 40.1953125,
+                        "right": 933.4296875,
+                        "bottom": 54.1953125,
+                        "width": 158.4296875,
+                        "height": 14
+                      },
+                      {
+                        "left": 775,
+                        "top": 56.9921875,
+                        "right": 789.40625,
+                        "bottom": 70.9921875,
+                        "width": 14.40625,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 160,
+                    "idScrollWidth": 160,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 743,
+                      "top": 20,
+                      "right": 767,
+                      "bottom": 44,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42647/?room=6mVIUljvuBkQoieJU55Wi4tUaUYHnU8l",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:00.354Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-fc6dedd6229f"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:00.354Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:00.354Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:00.354Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:00.354Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:00.354Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:00.354Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:00.354Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:00.354Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:00.354Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:00.379Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:00.394Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:00.413Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:00.419Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:00.419Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:00.459Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:00.459Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:00.483Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:00.483Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:00.492Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:03.885Z",
+      "message": {
+        "type": "ping",
+        "seq": 11,
+        "controller_id": "virtual-fc6dedd6229f"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:04.265Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:07.614Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:07.614Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:07.614Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:07.614Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:07.614Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:07.614Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:07.614Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:07.614Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:07.614Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:07.614Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.000Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.006Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.006Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.006Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.006Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.009Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.009Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.009Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.009Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.009Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:08.613Z",
+      "message": {
+        "type": "ping",
+        "seq": 11,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.623Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:08.882Z",
+      "message": {
+        "type": "ping",
+        "seq": 12,
+        "controller_id": "virtual-fc6dedd6229f"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:08.892Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:09.614Z",
+      "message": {
+        "type": "ping",
+        "seq": 12,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:09.640Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:10.614Z",
+      "message": {
+        "type": "ping",
+        "seq": 13,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:10.618Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:11.614Z",
+      "message": {
+        "type": "ping",
+        "seq": 14,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:11.617Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:12.615Z",
+      "message": {
+        "type": "ping",
+        "seq": 15,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:12.642Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:13.614Z",
+      "message": {
+        "type": "ping",
+        "seq": 16,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:13.624Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:13.882Z",
+      "message": {
+        "type": "ping",
+        "seq": 13,
+        "controller_id": "virtual-fc6dedd6229f"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:14.155Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:14.614Z",
+      "message": {
+        "type": "ping",
+        "seq": 17,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:14.619Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.204Z",
+      "message": {
+        "type": "hello",
+        "seq": 18,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.204Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.204Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.204Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.204Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.204Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.204Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.204Z",
+      "message": {
+        "type": "button",
+        "seq": 25,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.204Z",
+      "message": {
+        "type": "button",
+        "seq": 26,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.204Z",
+      "message": {
+        "type": "button",
+        "seq": 27,
+        "controller_id": "virtual-e43c2755f788",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.222Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.227Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.231Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.234Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.234Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.245Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.256Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.261Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.261Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.264Z",
+      "message": {
+        "type": "ack",
+        "seq": 27
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:17.616Z",
+      "message": {
+        "type": "ping",
+        "seq": 28,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:17.624Z",
+      "message": {
+        "type": "ack",
+        "seq": 28
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:18.617Z",
+      "message": {
+        "type": "ping",
+        "seq": 29,
+        "controller_id": "virtual-e43c2755f788"
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:18.623Z",
+      "message": {
+        "type": "ack",
+        "seq": 29
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:18.886Z",
+      "message": {
+        "type": "ping",
+        "seq": 14,
+        "controller_id": "virtual-fc6dedd6229f"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:18.889Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:27.802Z",
+      "message": {
+        "type": "hello",
+        "seq": 15,
+        "controller_id": "virtual-fc6dedd6229f"
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:27.802Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:27.802Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:27.802Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:27.802Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:27.802Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:27.802Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:27.802Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:27.802Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:27.802Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-fc6dedd6229f",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.168Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.172Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.173Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.173Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.173Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.173Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.173Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.173Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.173Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.173Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:28.884Z",
+      "message": {
+        "type": "ping",
+        "seq": 25,
+        "controller_id": "virtual-fc6dedd6229f"
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:28.893Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T11:22:33.882Z",
+      "message": {
+        "type": "ping",
+        "seq": 26,
+        "controller_id": "virtual-fc6dedd6229f"
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T11:22:33.891Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [
+    {
+      "connection": 2,
+      "event": "client-eof",
+      "at": "2026-11-16T11:22:14.869Z",
+      "pendingSeq": []
+    },
+    {
+      "connection": 2,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-16T11:22:14.869Z",
+      "waitMs": 0.1187820000013744,
+      "pendingSeq": []
+    },
+    {
+      "connection": 3,
+      "event": "client-eof",
+      "at": "2026-11-16T11:22:19.189Z",
+      "pendingSeq": []
+    },
+    {
+      "connection": 3,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-16T11:22:19.189Z",
+      "waitMs": 0.04866100000072038,
+      "pendingSeq": []
+    },
+    {
+      "connection": 1,
+      "event": "client-eof",
+      "at": "2026-11-16T11:22:20.329Z",
+      "pendingSeq": []
+    },
+    {
+      "connection": 1,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-16T11:22:20.329Z",
+      "waitMs": 0.04603599999973085,
+      "pendingSeq": []
+    }
+  ],
+  "screenshots": [
+    "menu-android.png",
+    "controller-connected-android.png",
+    "controllers-two-android.png",
+    "controller-disconnected.png",
+    "controller-reconnected.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "scope": "controller client status acceptance",
+  "statusAcceptanceEnvironment": "android-menu",
+  "fullGameplayAcceptance": false,
+  "ports": {
+    "tcpPort": 43135,
+    "observerPort": 39913
+  },
+  "controllerStatusCaptures": [
+    {
+      "file": "menu-android.png",
+      "status": "captured-awaiting-pixel-review",
+      "expected": [],
+      "settleRequestedMs": 1500,
+      "compositorFence": false,
+      "pixelReviewRequired": true,
+      "beforeSettle": {
+        "at": "2026-11-16T11:21:54.730Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": false,
+              "hiddenAttribute": true,
+              "rect": {
+                "left": 0,
+                "top": 0,
+                "right": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": []
+            }
+          ]
+        }
+      },
+      "settleStartedAt": "2026-11-16T11:21:55.209Z",
+      "settleFinishedAt": "2026-11-16T11:21:56.710Z",
+      "settleElapsedMs": 1501.0292550000004,
+      "before": {
+        "at": "2026-11-16T11:21:56.710Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": false,
+              "hiddenAttribute": true,
+              "rect": {
+                "left": 0,
+                "top": 0,
+                "right": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": []
+            }
+          ]
+        }
+      },
+      "image": {
+        "file": "menu-android.png",
+        "bytes": 534096,
+        "sha256": "a2d723eb798e26b65b7294e45ec2a57dc5b92e9cede831dc0778b46e2b42528b",
+        "startedAt": "2026-11-16T11:21:56.793Z",
+        "finishedAt": "2026-11-16T11:21:59.508Z"
+      },
+      "after": {
+        "at": "2026-11-16T11:21:59.508Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": false,
+              "hiddenAttribute": true,
+              "rect": {
+                "left": 0,
+                "top": 0,
+                "right": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": []
+            }
+          ]
+        }
+      },
+      "domIdentityStable": true
+    },
+    {
+      "file": "controller-connected-android.png",
+      "status": "captured-awaiting-pixel-review",
+      "expected": [
+        {
+          "controllerId": "virtual-fc6dedd6229f",
+          "playerId": 1
+        }
+      ],
+      "settleRequestedMs": 1500,
+      "compositorFence": false,
+      "pixelReviewRequired": true,
+      "beforeSettle": {
+        "at": "2026-11-16T11:22:02.491Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": true,
+              "hiddenAttribute": false,
+              "rect": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 80.7890625,
+                "width": 210,
+                "height": 68.7890625
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": [
+                {
+                  "controllerId": "virtual-fc6dedd6229f",
+                  "playerId": 1,
+                  "text": "1PConnectedID: virtual-fc6dedd6229f",
+                  "idText": "ID: virtual-fc6dedd6229f",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 80.7890625,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 39.1953125,
+                    "right": 935,
+                    "bottom": 72.7890625,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 40.1953125,
+                      "right": 933.4296875,
+                      "bottom": 54.1953125,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 56.9921875,
+                      "right": 789.40625,
+                      "bottom": 70.9921875,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 20,
+                    "right": 767,
+                    "bottom": 44,
+                    "width": 24,
+                    "height": 24
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "settleStartedAt": "2026-11-16T11:22:04.259Z",
+      "settleFinishedAt": "2026-11-16T11:22:05.762Z",
+      "settleElapsedMs": 1503.2515700000004,
+      "before": {
+        "at": "2026-11-16T11:22:05.762Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": true,
+              "hiddenAttribute": false,
+              "rect": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 80.7890625,
+                "width": 210,
+                "height": 68.7890625
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": [
+                {
+                  "controllerId": "virtual-fc6dedd6229f",
+                  "playerId": 1,
+                  "text": "1PConnectedID: virtual-fc6dedd6229f",
+                  "idText": "ID: virtual-fc6dedd6229f",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 80.7890625,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 39.1953125,
+                    "right": 935,
+                    "bottom": 72.7890625,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 40.1953125,
+                      "right": 933.4296875,
+                      "bottom": 54.1953125,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 56.9921875,
+                      "right": 789.40625,
+                      "bottom": 70.9921875,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 20,
+                    "right": 767,
+                    "bottom": 44,
+                    "width": 24,
+                    "height": 24
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "image": {
+        "file": "controller-connected-android.png",
+        "bytes": 528269,
+        "sha256": "749c34195c88fccdf70d61c06b8cb3b27358131b167a15fac048029c64804f72",
+        "startedAt": "2026-11-16T11:22:05.943Z",
+        "finishedAt": "2026-11-16T11:22:07.431Z"
+      },
+      "after": {
+        "at": "2026-11-16T11:22:07.431Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": true,
+              "hiddenAttribute": false,
+              "rect": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 80.7890625,
+                "width": 210,
+                "height": 68.7890625
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": [
+                {
+                  "controllerId": "virtual-fc6dedd6229f",
+                  "playerId": 1,
+                  "text": "1PConnectedID: virtual-fc6dedd6229f",
+                  "idText": "ID: virtual-fc6dedd6229f",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 80.7890625,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 39.1953125,
+                    "right": 935,
+                    "bottom": 72.7890625,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 40.1953125,
+                      "right": 933.4296875,
+                      "bottom": 54.1953125,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 56.9921875,
+                      "right": 789.40625,
+                      "bottom": 70.9921875,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 20,
+                    "right": 767,
+                    "bottom": 44,
+                    "width": 24,
+                    "height": 24
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "domIdentityStable": true
+    },
+    {
+      "file": "controllers-two-android.png",
+      "status": "captured-awaiting-pixel-review",
+      "expected": [
+        {
+          "controllerId": "virtual-fc6dedd6229f",
+          "playerId": 1
+        },
+        {
+          "controllerId": "virtual-e43c2755f788",
+          "playerId": 2
+        }
+      ],
+      "settleRequestedMs": 1500,
+      "compositorFence": false,
+      "pixelReviewRequired": true,
+      "beforeSettle": {
+        "at": "2026-11-16T11:22:09.655Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": true,
+              "hiddenAttribute": false,
+              "rect": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 155.578125,
+                "width": 210,
+                "height": 143.578125
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": [
+                {
+                  "controllerId": "virtual-fc6dedd6229f",
+                  "playerId": 1,
+                  "text": "1PConnectedID: virtual-fc6dedd6229f",
+                  "idText": "ID: virtual-fc6dedd6229f",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 80.7890625,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 39.1953125,
+                    "right": 935,
+                    "bottom": 72.7890625,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 40.1953125,
+                      "right": 933.4296875,
+                      "bottom": 54.1953125,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 56.9921875,
+                      "right": 789.40625,
+                      "bottom": 70.9921875,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 20,
+                    "right": 767,
+                    "bottom": 44,
+                    "width": 24,
+                    "height": 24
+                  }
+                },
+                {
+                  "controllerId": "virtual-e43c2755f788",
+                  "playerId": 2,
+                  "text": "2PConnectedID: virtual-e43c2755f788",
+                  "idText": "ID: virtual-e43c2755f788",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 86.7890625,
+                    "right": 944,
+                    "bottom": 155.578125,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 113.984375,
+                    "right": 935,
+                    "bottom": 147.578125,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 114.984375,
+                      "right": 933.4296875,
+                      "bottom": 128.984375,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 131.78125,
+                      "right": 789.40625,
+                      "bottom": 145.78125,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 94.7890625,
+                    "right": 767,
+                    "bottom": 118.7890625,
+                    "width": 24,
+                    "height": 24
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "settleStartedAt": "2026-11-16T11:22:10.543Z",
+      "settleFinishedAt": "2026-11-16T11:22:12.044Z",
+      "settleElapsedMs": 1500.6461449999988,
+      "before": {
+        "at": "2026-11-16T11:22:12.044Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": true,
+              "hiddenAttribute": false,
+              "rect": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 155.578125,
+                "width": 210,
+                "height": 143.578125
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": [
+                {
+                  "controllerId": "virtual-fc6dedd6229f",
+                  "playerId": 1,
+                  "text": "1PConnectedID: virtual-fc6dedd6229f",
+                  "idText": "ID: virtual-fc6dedd6229f",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 80.7890625,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 39.1953125,
+                    "right": 935,
+                    "bottom": 72.7890625,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 40.1953125,
+                      "right": 933.4296875,
+                      "bottom": 54.1953125,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 56.9921875,
+                      "right": 789.40625,
+                      "bottom": 70.9921875,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 20,
+                    "right": 767,
+                    "bottom": 44,
+                    "width": 24,
+                    "height": 24
+                  }
+                },
+                {
+                  "controllerId": "virtual-e43c2755f788",
+                  "playerId": 2,
+                  "text": "2PConnectedID: virtual-e43c2755f788",
+                  "idText": "ID: virtual-e43c2755f788",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 86.7890625,
+                    "right": 944,
+                    "bottom": 155.578125,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 113.984375,
+                    "right": 935,
+                    "bottom": 147.578125,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 114.984375,
+                      "right": 933.4296875,
+                      "bottom": 128.984375,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 131.78125,
+                      "right": 789.40625,
+                      "bottom": 145.78125,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 94.7890625,
+                    "right": 767,
+                    "bottom": 118.7890625,
+                    "width": 24,
+                    "height": 24
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "image": {
+        "file": "controllers-two-android.png",
+        "bytes": 534444,
+        "sha256": "2863310769752ddd3eb2fae01f96295739725cfbf1fed6c71e2dd88520f1abf7",
+        "startedAt": "2026-11-16T11:22:12.473Z",
+        "finishedAt": "2026-11-16T11:22:14.712Z"
+      },
+      "after": {
+        "at": "2026-11-16T11:22:14.712Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": true,
+              "hiddenAttribute": false,
+              "rect": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 155.578125,
+                "width": 210,
+                "height": 143.578125
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": [
+                {
+                  "controllerId": "virtual-fc6dedd6229f",
+                  "playerId": 1,
+                  "text": "1PConnectedID: virtual-fc6dedd6229f",
+                  "idText": "ID: virtual-fc6dedd6229f",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 80.7890625,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 39.1953125,
+                    "right": 935,
+                    "bottom": 72.7890625,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 40.1953125,
+                      "right": 933.4296875,
+                      "bottom": 54.1953125,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 56.9921875,
+                      "right": 789.40625,
+                      "bottom": 70.9921875,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 20,
+                    "right": 767,
+                    "bottom": 44,
+                    "width": 24,
+                    "height": 24
+                  }
+                },
+                {
+                  "controllerId": "virtual-e43c2755f788",
+                  "playerId": 2,
+                  "text": "2PConnectedID: virtual-e43c2755f788",
+                  "idText": "ID: virtual-e43c2755f788",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 86.7890625,
+                    "right": 944,
+                    "bottom": 155.578125,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 113.984375,
+                    "right": 935,
+                    "bottom": 147.578125,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 114.984375,
+                      "right": 933.4296875,
+                      "bottom": 128.984375,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 131.78125,
+                      "right": 789.40625,
+                      "bottom": 145.78125,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 94.7890625,
+                    "right": 767,
+                    "bottom": 118.7890625,
+                    "width": 24,
+                    "height": 24
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "domIdentityStable": true
+    },
+    {
+      "file": "controller-disconnected.png",
+      "status": "captured-awaiting-pixel-review",
+      "expected": [],
+      "settleRequestedMs": 1500,
+      "compositorFence": false,
+      "pixelReviewRequired": true,
+      "beforeSettle": {
+        "at": "2026-11-16T11:22:23.442Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": false,
+              "hiddenAttribute": true,
+              "rect": {
+                "left": 0,
+                "top": 0,
+                "right": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": []
+            }
+          ]
+        }
+      },
+      "settleStartedAt": "2026-11-16T11:22:23.991Z",
+      "settleFinishedAt": "2026-11-16T11:22:25.494Z",
+      "settleElapsedMs": 1502.9418540000042,
+      "before": {
+        "at": "2026-11-16T11:22:25.494Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": false,
+              "hiddenAttribute": true,
+              "rect": {
+                "left": 0,
+                "top": 0,
+                "right": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": []
+            }
+          ]
+        }
+      },
+      "image": {
+        "file": "controller-disconnected.png",
+        "bytes": 534096,
+        "sha256": "a2d723eb798e26b65b7294e45ec2a57dc5b92e9cede831dc0778b46e2b42528b",
+        "startedAt": "2026-11-16T11:22:25.629Z",
+        "finishedAt": "2026-11-16T11:22:27.190Z"
+      },
+      "after": {
+        "at": "2026-11-16T11:22:27.190Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": false,
+              "hiddenAttribute": true,
+              "rect": {
+                "left": 0,
+                "top": 0,
+                "right": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": []
+            }
+          ]
+        }
+      },
+      "domIdentityStable": true
+    },
+    {
+      "file": "controller-reconnected.png",
+      "status": "captured-awaiting-pixel-review",
+      "expected": [
+        {
+          "controllerId": "virtual-fc6dedd6229f",
+          "playerId": 1
+        }
+      ],
+      "settleRequestedMs": 1500,
+      "compositorFence": false,
+      "pixelReviewRequired": true,
+      "beforeSettle": {
+        "at": "2026-11-16T11:22:29.307Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": true,
+              "hiddenAttribute": false,
+              "rect": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 80.7890625,
+                "width": 210,
+                "height": 68.7890625
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": [
+                {
+                  "controllerId": "virtual-fc6dedd6229f",
+                  "playerId": 1,
+                  "text": "1PConnectedID: virtual-fc6dedd6229f",
+                  "idText": "ID: virtual-fc6dedd6229f",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 80.7890625,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 39.1953125,
+                    "right": 935,
+                    "bottom": 72.7890625,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 40.1953125,
+                      "right": 933.4296875,
+                      "bottom": 54.1953125,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 56.9921875,
+                      "right": 789.40625,
+                      "bottom": 70.9921875,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 20,
+                    "right": 767,
+                    "bottom": 44,
+                    "width": 24,
+                    "height": 24
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "settleStartedAt": "2026-11-16T11:22:30.339Z",
+      "settleFinishedAt": "2026-11-16T11:22:31.842Z",
+      "settleElapsedMs": 1503.1497969999982,
+      "before": {
+        "at": "2026-11-16T11:22:31.842Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": true,
+              "hiddenAttribute": false,
+              "rect": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 80.7890625,
+                "width": 210,
+                "height": 68.7890625
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": [
+                {
+                  "controllerId": "virtual-fc6dedd6229f",
+                  "playerId": 1,
+                  "text": "1PConnectedID: virtual-fc6dedd6229f",
+                  "idText": "ID: virtual-fc6dedd6229f",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 80.7890625,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 39.1953125,
+                    "right": 935,
+                    "bottom": 72.7890625,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 40.1953125,
+                      "right": 933.4296875,
+                      "bottom": 54.1953125,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 56.9921875,
+                      "right": 789.40625,
+                      "bottom": 70.9921875,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 20,
+                    "right": 767,
+                    "bottom": 44,
+                    "width": 24,
+                    "height": 24
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "image": {
+        "file": "controller-reconnected.png",
+        "bytes": 528269,
+        "sha256": "749c34195c88fccdf70d61c06b8cb3b27358131b167a15fac048029c64804f72",
+        "startedAt": "2026-11-16T11:22:32.005Z",
+        "finishedAt": "2026-11-16T11:22:34.010Z"
+      },
+      "after": {
+        "at": "2026-11-16T11:22:34.010Z",
+        "phase": "title",
+        "paused": false,
+        "controllerClients": {
+          "containers": [
+            {
+              "visible": true,
+              "hiddenAttribute": false,
+              "rect": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 80.7890625,
+                "width": 210,
+                "height": 68.7890625
+              },
+              "clip": {
+                "left": 734,
+                "top": 12,
+                "right": 944,
+                "bottom": 513
+              },
+              "rows": [
+                {
+                  "controllerId": "virtual-fc6dedd6229f",
+                  "playerId": 1,
+                  "text": "1PConnectedID: virtual-fc6dedd6229f",
+                  "idText": "ID: virtual-fc6dedd6229f",
+                  "visible": true,
+                  "rect": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 80.7890625,
+                    "width": 210,
+                    "height": 68.7890625
+                  },
+                  "clip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idRect": {
+                    "left": 775,
+                    "top": 39.1953125,
+                    "right": 935,
+                    "bottom": 72.7890625,
+                    "width": 160,
+                    "height": 33.59375
+                  },
+                  "idClip": {
+                    "left": 734,
+                    "top": 12,
+                    "right": 944,
+                    "bottom": 513
+                  },
+                  "idTextRects": [
+                    {
+                      "left": 775,
+                      "top": 40.1953125,
+                      "right": 933.4296875,
+                      "bottom": 54.1953125,
+                      "width": 158.4296875,
+                      "height": 14
+                    },
+                    {
+                      "left": 775,
+                      "top": 56.9921875,
+                      "right": 789.40625,
+                      "bottom": 70.9921875,
+                      "width": 14.40625,
+                      "height": 14
+                    }
+                  ],
+                  "idClientWidth": 160,
+                  "idScrollWidth": 160,
+                  "idClientHeight": 34,
+                  "idScrollHeight": 34,
+                  "iconVisible": true,
+                  "iconRect": {
+                    "left": 743,
+                    "top": 20,
+                    "right": 767,
+                    "bottom": 44,
+                    "width": 24,
+                    "height": 24
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "domIdentityStable": true
+    }
+  ],
+  "finishedAt": "2026-11-16T11:22:34.877Z"
+}
