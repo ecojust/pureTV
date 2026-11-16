@@ -67,6 +67,63 @@ def verify_sources(source_sha, entries):
             assert len(data) == expected['bytes'], name
 
 
+def select_signed_candidates(selection, candidates):
+    """Conflicting builds require explicit source selection; never prefer newest."""
+    assert set(selection) == set(candidates)
+    selected = {}
+    for slug, options in candidates.items():
+        assert options
+        choice = selection[slug]
+        source = choice.get('artifactSourceSha')
+        package_hash = choice.get('packageSha256')
+        if source is not None:
+            assert re.fullmatch('[0-9a-f]{40}', source), slug
+        if package_hash is not None:
+            assert re.fullmatch('[0-9a-f]{64}', package_hash), slug
+        if len(options) > 1:
+            assert source is not None, 'Conflicting signed inputs require artifactSourceSha: '+slug
+        matches = [item for item in options
+                   if (source is None or item['row']['artifactSourceSha'] == source)
+                   and (package_hash is None or item['row']['package']['sha256'] == package_hash)]
+        assert len(matches) == 1, 'Signed input selection is missing or ambiguous: '+slug
+        selected[slug] = matches[0]
+    return selected
+
+
+def verify_signed_identity(choice, row, receipt, identity, certificate):
+    assert identity == row['package'], 'Actual APK differs from its original input verification'
+    assert identity['sha256'] == receipt['sha256'], 'Actual APK differs from its signing receipt'
+    assert identity['certificateSha256'] == certificate, 'Actual APK has an unexpected signing certificate'
+    assert receipt['signatureVerified'] is True
+    assert receipt['sourceSha'] == row['artifactSourceSha'], 'Receipt belongs to another production source'
+    if 'artifactSourceSha' in choice:
+        assert receipt['sourceSha'] == choice['artifactSourceSha'], 'APK differs from the explicitly selected source'
+    if 'packageSha256' in choice:
+        assert identity['sha256'] == choice['packageSha256'], 'APK differs from the explicitly selected digest'
+
+
+def verify_committed_assets(slug, host, source_sha, actual):
+    """Bind the selected APK to its own source commit, including Kit-generated JSON."""
+    assert re.fullmatch('[0-9a-f]{40}', source_sha)
+    prefixes = ['resource/apps/'+slug+'/src/main/assets/']
+    if host == 'game-kit':
+        prefixes.append('resource/game-kit/web/')
+    names = subprocess.check_output(['git','ls-tree','-r','--name-only',source_sha,'--',*prefixes],cwd=ROOT,text=True).splitlines()
+    expected = {}
+    for name in names:
+        prefix = next(p for p in prefixes if name.startswith(p))
+        relative_name = name[len(prefix):]
+        assert relative_name not in expected
+        expected[relative_name] = subprocess.check_output(['git','show',source_sha+':'+name],cwd=ROOT)
+    if host == 'game-kit':
+        config = json.loads(subprocess.check_output(['git','show',source_sha+':resource/apps/'+slug+'/game.json'],cwd=ROOT))
+        expected['game-config.json'] = (json.dumps(config,ensure_ascii=False,separators=(',',':'))+'\n').encode()
+        expected['assets-index.json'] = (json.dumps(sorted(expected),separators=(',',':'))+'\n').encode()
+    assert expected and all(actual.get(name) == data for name,data in expected.items()), 'APK asset bytes do not match the selected production commit: '+slug
+    extra = set(actual)-set(expected)
+    assert not extra or (slug == 'jackal' and all(name.startswith('art/') for name in extra)), 'Unexpected APK assets: '+slug
+
+
 def prepare_requests(args):
     assert re.fullmatch('[0-9a-f]{40}', args.source_sha)
     assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip() == args.source_sha
@@ -106,36 +163,46 @@ def stage(args):
     assert len(games) == len(rollout['games']) == 20
     selection = read(args.selection)['games']
     assert set(selection) == set(games)
-    signed = {}
+    candidates = {}
+    input_records = []
     for folder in args.signed_input:
         verification = read(folder/'input-verification.json')
         assert verification['status'] == 'passed'
+        report_hash = sha(folder/'input-verification.json')
+        input_records.append({'folder':folder,'sha256':report_hash,'group':verification['group']})
         for row in verification['packages']:
-            slug = row['slug']; assert slug in games and slug not in signed
-            package = folder/'packages'/slug
-            receipt = read(package/'signing-receipt.json')
-            apk = package/games[slug]['apk']
-            identity = apk_info(apk, args.build_tools)
-            badging = subprocess.check_output([str(args.build_tools/'aapt'),'dump','badging',str(apk)],text=True)
-            assert re.search(r"^sdkVersion:'26'$",badging,re.MULTILINE), 'Minimum Android version changed'
-            assert identity == row['package'] and sha(apk) == receipt['sha256']
-            assert receipt['signatureVerified'] is True and receipt['sourceSha'] == row['artifactSourceSha']
-            verify_sources(receipt['sourceSha'], receipt.get('nativeSourceSha256', receipt.get('inputFiles')))
-            expected_assets = receipt.get('assetsSha256') or {n:v['sha256'] for n,v in receipt['assets'].items()}
-            with zipfile.ZipFile(apk) as archive:
-                actual = {n[7:]:archive.read(n) for n in archive.namelist() if n.startswith('assets/') and not n.endswith('/')}
-            assert {n:hashlib.sha256(v).hexdigest() for n,v in actual.items()} == expected_assets
-            for name, data in actual.items():
-                local = ROOT/'resource/apps'/slug/'src/main/assets'/name
-                if not local.exists() and games[slug]['host'] == 'game-kit':
-                    local = ROOT/'resource/game-kit/web'/name
-                if local.is_file():
-                    assert local.read_bytes() == data, 'Production asset changed since signing: '+str(local)
-            model_path = 'resource/apps/'+slug+'/src/main/assets/game-model.js'
-            prior_model = subprocess.check_output(['git','show',rollout['baseCommit']+':'+model_path],cwd=ROOT)
-            assert actual['game-model.js'] == prior_model, 'UI update unexpectedly changes the game model: '+slug
-            row = {**row, 'modelReuse': {'sourceRef':rollout['baseCommit']+':'+model_path,'sha256':hashlib.sha256(prior_model).hexdigest(),'bytes':len(prior_model),'matchesNewApk':True}}
-            signed[slug] = (apk, receipt, row, package/'signing-receipt.json')
+            slug = row['slug']; assert slug in games
+            candidates.setdefault(slug, []).append({'folder':folder,'row':row,'inputReportSha256':report_hash})
+    chosen = select_signed_candidates(selection, candidates)
+    signed = {}
+    certificate = (ROOT/'tools/puretv-release-certificate-v2.sha256').read_text().strip()
+    for slug, item in chosen.items():
+        folder = item['folder'];row = item['row']
+        package = folder/'packages'/slug
+        receipt = read(package/'signing-receipt.json')
+        apk = package/games[slug]['apk']
+        identity = apk_info(apk, args.build_tools)
+        badging = subprocess.check_output([str(args.build_tools/'aapt'),'dump','badging',str(apk)],text=True)
+        assert re.search(r"^sdkVersion:'26'$",badging,re.MULTILINE), 'Minimum Android version changed'
+        verify_signed_identity(selection[slug], row, receipt, identity, certificate)
+        assert sha(apk) == receipt['sha256']
+        verify_sources(receipt['sourceSha'], receipt.get('nativeSourceSha256', receipt.get('inputFiles')))
+        expected_assets = receipt.get('assetsSha256') or {n:v['sha256'] for n,v in receipt['assets'].items()}
+        with zipfile.ZipFile(apk) as archive:
+            actual = {n[7:]:archive.read(n) for n in archive.namelist() if n.startswith('assets/') and not n.endswith('/')}
+        assert {n:hashlib.sha256(v).hexdigest() for n,v in actual.items()} == expected_assets
+        verify_committed_assets(slug, games[slug]['host'], receipt['sourceSha'], actual)
+        for name, data in actual.items():
+            local = ROOT/'resource/apps'/slug/'src/main/assets'/name
+            if not local.exists() and games[slug]['host'] == 'game-kit':
+                local = ROOT/'resource/game-kit/web'/name
+            if local.is_file():
+                assert local.read_bytes() == data, 'Production asset changed since signing: '+str(local)
+        model_path = 'resource/apps/'+slug+'/src/main/assets/game-model.js'
+        prior_model = subprocess.check_output(['git','show',rollout['baseCommit']+':'+model_path],cwd=ROOT)
+        assert actual['game-model.js'] == prior_model, 'UI update unexpectedly changes the game model: '+slug
+        row = {**row, 'modelReuse': {'sourceRef':rollout['baseCommit']+':'+model_path,'sha256':hashlib.sha256(prior_model).hexdigest(),'bytes':len(prior_model),'matchesNewApk':True}}
+        signed[slug] = (apk, receipt, row, package/'signing-receipt.json')
     assert set(signed) == set(games)
     exports = {}
     for folder in args.runtime_export:
@@ -187,6 +254,14 @@ def stage(args):
         prepared.append((slug, game, old, binding, receipt, receipt_file, case, driver, image, video, export, choice, probe))
     # Everything above is validation. Preserve immutable raw evidence before metadata writes.
     archive_root = ROOT/'docs/controller-client-status/android'
+    input_archive = ROOT/'docs/controller-client-status/signed-input-verification'
+    for item in input_records:
+        preserve(item['folder']/'input-verification.json', input_archive/(item['sha256']+'.json'))
+    write(input_archive/'selection.json', {
+        'scope':SCOPE,'explicitSelection':selection,
+        'originalInputReports':[{'group':item['group'],'file':item['sha256']+'.json','sha256':item['sha256']} for item in input_records],
+        'selected':[{'game':slug,'artifactSourceSha':item['row']['artifactSourceSha'],
+            'packageSha256':item['row']['package']['sha256'],'originalInputReport':item['inputReportSha256']+'.json'} for slug,item in chosen.items()]})
     for run, (source, manifest) in exports.items():
         target = archive_root/run
         for name in ['export-manifest.json', *manifest['files']]:
@@ -241,7 +316,7 @@ def stage(args):
             entry.update(version=game['version'],apk=game['apk'],apkBytes=binding['package']['bytes'],apkSha256=binding['package']['sha256'],sourceCommit=receipt['sourceSha'],signingRun=int(receipt.get('workflowRun',receipt.get('runId'))),checks='docs/releases/'+game['version']+'/verification.json',video=current['controllerStatusVideo'],videoBytes=video.stat().st_size,videoSha256=sha(video),videoScope=SCOPE,modelReuse=binding['modelReuse'],fullGameplayAcceptancePerformedInThisUpdate=False)
             entry['previousReleases'] = entry.get('previousReleases',[])+[previous_entry]
         game.update(status='signed_apk_status_verified',sourceCommit=receipt['sourceSha'],sha256=binding['package']['sha256'],verification='../../resource/apps/'+slug+'/docs/releases/'+game['version']+'/verification.json')
-        results.append({'game':slug,'runId':run,'qaSourceSha':export['qaSourceSha'],'apkSha256':binding['package']['sha256'],'scope':SCOPE})
+        results.append({'game':slug,'runId':run,'artifactSourceSha':receipt['sourceSha'],'qaSourceSha':export['qaSourceSha'],'apkSha256':binding['package']['sha256'],'scope':SCOPE})
     write(ROOT/'resource/game-kit/progress.json', progress)
     rollout.update(status='signed_apks_status_verified_pending_publication',acceptanceScope=SCOPE,fullGameplayAcceptancePerformedInThisUpdate=False)
     write(ROLLOUT, rollout)

@@ -45,6 +45,21 @@ Prepare an explicit selection JSON containing all twenty IDs:
 
 The example is abbreviated; staging rejects missing, duplicate or unknown games. It accepts original whole-workflow failures only when the specifically selected game passed its complete **status** acceptance, preserving the original workflow/group status.
 
+For a later correction to one game, keep both original input-verification reports intact and pass both signed input directories. When more than one signed candidate exists for a game, its selection **must** specify `artifactSourceSha`; add `packageSha256` to pin the exact already-tested package. Staging rejects missing or ambiguous source selection and verifies the chosen APK's actual certificate, digest, receipt and committed asset bytes. It never selects the newest build implicitly. This allows the original three Worlds packages to remain selected while only Cozy Island uses its corrected build. The original JSON reports are copied unchanged under `docs/controller-client-status/signed-input-verification/`, alongside an explicit per-game selection record.
+
+```json
+{
+  "games": {
+    "cozy-island": {
+      "runId": "NEW_CORRECTED_RUNTIME_RUN",
+      "group": "controller-runtime-retry-cozy",
+      "artifactSourceSha": "EXACT_40_CHARACTER_PRODUCTION_SHA",
+      "packageSha256": "EXACT_64_CHARACTER_VERIFIED_APK_SHA256"
+    }
+  }
+}
+```
+
 ```sh
 python3 tools/controller-status-release.py stage \
   --selection /dev/shm/controller-status-selection.json \
