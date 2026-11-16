@@ -1,0 +1,77 @@
+{
+  "status": "passed",
+  "scope": "Synthetic DOM/observer validation contract only; no game or Android acceptance",
+  "sourceHashes": {
+    "tools/readme-controller-qa/client-status-test.mjs": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78",
+    "tools/readme-controller-qa/client-status-dom.mjs": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e",
+    "tools/readme-controller-qa/client-status-cases.mjs": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45",
+    "tools/readme-controller-qa/run.mjs": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9",
+    "tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f",
+    "resource/game-kit/web/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a"
+  },
+  "tests": [
+    {
+      "name": "Android embeds exactly the same fixed read-only DOM function",
+      "status": "passed"
+    },
+    {
+      "name": "a rendered icon, seat and full real-ID-shaped text satisfy the observation contract",
+      "status": "passed"
+    },
+    {
+      "name": "a 128-character ID is fully measured across wrapped lines",
+      "status": "passed"
+    },
+    {
+      "name": "hidden ancestors cannot produce a false visible-ID pass",
+      "status": "passed"
+    },
+    {
+      "name": "attribute-only IDs with missing rendered text are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "missing icons are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "wrong seats are rejected even when the device ID matches",
+      "status": "passed"
+    },
+    {
+      "name": "cropped controller cards are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "duplicate visible identity rows are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "disconnected strips must actually disappear",
+      "status": "passed"
+    },
+    {
+      "name": "Android capture wrapper naturally settles and binds read-only DOM before and after the PNG",
+      "status": "passed"
+    },
+    {
+      "name": "connection loss during settling rejects capture before any screenshot",
+      "status": "passed"
+    },
+    {
+      "name": "a changed seat after screenshot fails validation while retaining PNG metadata",
+      "status": "passed"
+    },
+    {
+      "name": "browser capture keeps the existing screenshot path without Android settling or reads",
+      "status": "passed"
+    },
+    {
+      "name": "status-only cannot silently combine with gameplay-only",
+      "status": "passed"
+    }
+  ],
+  "modelWrites": false,
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false
+}
