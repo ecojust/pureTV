@@ -13,7 +13,7 @@ const output = path.resolve(args.output || path.join(os.tmpdir(), 'puretv-input-
 const web = fileURLToPath(new URL('../web/', import.meta.url));
 const fixture = await mkdtemp(path.join(os.tmpdir(), 'puretv-input-lifecycle-'));
 await mkdir(output, { recursive: true });
-for (const name of ['runtime.js', 'renderer.js', 'tv.html', 'tv.css']) await copyFile(path.join(web, name), path.join(fixture, name));
+for (const name of ['runtime.js', 'renderer.js', 'tv.html', 'tv.css', 'puretv-controller.js']) await copyFile(path.join(web, name), path.join(fixture, name));
 await writeFile(path.join(fixture, 'game-config.json'), JSON.stringify({ version: '0.0.0' }));
 await writeFile(path.join(fixture, 'game-model.js'), `window.PureModel={
  create(){return {phase:'playing',score:0,tick:0,elapsed:0,events:[],samples:[]};},

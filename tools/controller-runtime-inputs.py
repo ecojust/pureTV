@@ -79,7 +79,14 @@ def main():
         contract=release.observer_contract(observer_manifest,observer_badging,identity['packageName'])
         assert all(observer[key]==value for key,value in contract.items())
         for name,value in observer['sourceFiles'].items():
+            assert not Path(name).is_absolute() and '..' not in Path(name).parts
             data=committed(legacy_source,name);assert value=={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+            # Preserve the observer's actual signing source, which may differ
+            # from the later QA workflow commit. Do not relabel current Java as
+            # the source of an independently signed observation APK.
+            archived=a.output/'observer-source'/slug/name
+            archived.parent.mkdir(parents=True,exist_ok=True);archived.write_bytes(data)
+        (a.output/'observer-source'/slug/'source-manifest.json').write_text(json.dumps({'sourceSha':legacy_source,'observerSha256':observed['sha256'],'files':observer['sourceFiles']},indent=2)+'\n')
         native=receipt['nativeSourceSha256'] if slug in release.KIT_SLUGS else receipt['inputFiles']
         for name,value in native.items():
             data=committed(artifact_source,name);fingerprint=hashlib.sha256(data).hexdigest()

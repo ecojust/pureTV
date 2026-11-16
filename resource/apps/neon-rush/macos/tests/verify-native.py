@@ -116,9 +116,9 @@ class NativeCheck:
             'method':'Actual AppKit/WKWebView app and production TCP receiver. Unchanged official Python SDK sends normal buttons through a byte-transparent observer. Read-only diagnostic snapshots and the existing observation-based driving strategy; no game state or clock writes.',
             'physicalTvTested':False, 'physicalPhoneTested':False, 'physicalEsp32Tested':False,
             'nativeMacOSAppTested':True, 'officialVirtualWebPageTested':False,
-            'tests':[], 'wire':[], 'observerErrors':[], 'observerConnectionEnds':[], 'snapshots':[], 'screenshots':[],
+            'tests':[], 'wire':[], 'observerErrors':[], 'observerConnectionEnds':[], 'snapshots':[], 'screenshots':[], 'controllerIdentityDisplay':[],
             'sourceHashes':{str(p.relative_to(REPO)):digest(p) for p in [Path(__file__), HERE/'native-drive.mjs', HERE/'official-virtual-native.mjs', HERE/'allow-local-network.py', SDK, REPO/'puretv-joystick/bridge.py', REPO/'puretv-joystick/virtual.html',
-                HERE.parents[1]/'tests/automation.mjs', HERE.parents[1]/'source/model.mjs', HERE.parents[1]/'source/tracks.mjs']}}
+                HERE.parents[1]/'tests/automation.mjs', HERE.parents[1]/'source/model.mjs', HERE.parents[1]/'source/tracks.mjs', HERE.parent/'Sources/main.swift', REPO/'resource/game-kit/web/puretv-controller.js']}}
         self.app = self.client = self.proxy = self.driver = self.browse = self.resolve = self.bridge = self.permission_watcher = None
         self.port_blocker = None
         self.held = set()
@@ -164,9 +164,10 @@ class NativeCheck:
         self.logs.append(log)
         return subprocess.Popen(argv, stdout=log, stderr=subprocess.STDOUT)
 
-    def screenshot(self, name):
+    def screenshot(self, name, request=True):
         target = self.diag/name
-        (self.diag/'screenshot-request.txt').write_text(name)
+        if request:
+            (self.diag/'screenshot-request.txt').write_text(name)
         end = time.monotonic()+15
         while time.monotonic()<end:
             if target.exists() and target.stat().st_size>1000:
@@ -174,6 +175,35 @@ class NativeCheck:
                 return
             time.sleep(.1)
         raise AssertionError('Native screenshot not written: '+name)
+
+    def client_display(self, label, identity=None, present=True, screenshot=None):
+        """Observe already-rendered DOM; never invoke another input snapshot."""
+        if present:
+            assert isinstance(identity, str) and identity
+        def correct(state):
+            rows=[row for row in state.get('document',{}).get('controllerClients',[]) if row.get('visible')]
+            if not present:
+                return not rows and not self.player(state)
+            if len(rows)!=1:
+                return False
+            row=rows[0]
+            return (row.get('controllerId')==identity and row.get('playerId')=='1'
+                    and row.get('idText')=='ID: '+identity and row.get('fullyVisible') is True
+                    and row.get('iconVisible') is True and row.get('idTextFullyVisible') is True
+                    and row.get('idTextOverflow')!='ellipsis'
+                    and row.get('statusText')==('已连接' if self.args.language=='zh' else 'Connected'))
+        state=self.until(correct,label)
+        value={'label':label,'expectedControllerId':identity if present else None,
+               'expectedConnected':present,'gamePhase':state['game']['phase'],
+               'paused':state['game']['paused'],'document':state['document'],
+               'nativeControllerId':self.player(state).get('controllerId')}
+        if present:
+            assert value['nativeControllerId']==identity, 'Rendered identity differs from the real native receiver'
+        self.report['controllerIdentityDisplay'].append(value)
+        if screenshot:
+            self.screenshot(screenshot)
+            value['screenshot']='diagnostics/'+screenshot
+        return value
 
     def player(self, state):
         return next((p for p in state['input'].get('players', []) if p.get('connected')), {})
@@ -263,7 +293,10 @@ class NativeCheck:
         assert messages[0]['type']=='hello'
         assert [(m['key'],m['action'],m['pressed']) for m in messages[1:10]]==[(key,'sync',False) for key in KEYS]
         assert self.read()['game']['phase']=='menu'
-        return {'initialSyncKeys':len(KEYS),'sdkUnmodified':digest(SDK)==self.report['sourceHashes'][str(SDK.relative_to(REPO))]}
+        self.controller_identity=messages[0]['controller_id']
+        assert self.controller_identity==self.client.identity
+        display=self.client_display('Original SDK hello ID is visible in the menu',self.controller_identity,screenshot='controller-menu.png')
+        return {'initialSyncKeys':len(KEYS),'sdkUnmodified':digest(SDK)==self.report['sourceHashes'][str(SDK.relative_to(REPO))],'controllerIdentity':display}
 
     def sync_and_aliases(self):
         for key,field,value in [('UP','y',-1),('DOWN','y',1),('LEFT','x',-1),('RIGHT','x',1)]:
@@ -336,6 +369,10 @@ class NativeCheck:
         self.tap('START')
         self.until(lambda s:s['game']['phase']=='playing' and not s['game']['paused'], 'Fast START tap begins game')
         self.until(lambda s:s['game']['model']['countdown']<=0 and s['game']['model']['player']['speed']>10, 'Actual WebGL race movement', 40)
+        self.client_display('Controller ID remains visible during actual racing',self.controller_identity)
+        # Request the existing read-only capture asynchronously so driving inputs
+        # continue; collect its completed file after the race has been paused.
+        (self.diag/'screenshot-request.txt').write_text('controller-playing.png')
         self.driver=subprocess.Popen(['node',str(HERE/'native-drive.mjs')],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=(self.out/'driver-stderr.txt').open('w'),text=True,bufsize=1)
         before=self.read()['game']
         target=before['model']['raceTime']+28
@@ -368,7 +405,8 @@ class NativeCheck:
         assert variants=={'AB','XY'}
         self.tap('START')
         paused=self.until(lambda s:s['game']['paused'], 'START pause')
-        self.screenshot('driving-paused.png')
+        self.screenshot('controller-playing.png',request=False)
+        self.client_display('Controller ID remains visible while paused',self.controller_identity,screenshot='driving-paused.png')
         model=paused['game']['model']
         time.sleep(.35)
         assert self.read()['game']['model']==model, 'Paused simulation changed'
@@ -475,10 +513,12 @@ class NativeCheck:
         self.held.clear()
         paused=self.until(lambda s:s['game']['paused'] and s['game']['connection']['disconnected'], 'Disconnect pauses game')
         frozen=paused['game']['model']
+        self.client_display('Disconnected controller card disappears',present=False,screenshot='controller-disconnected.png')
         self.client.connect()
         for key in ('START','A','B','X','Y'):
             self.client.send('button',key=key,action='sync',pressed=True,duration_ms=0)
         self.until(lambda s:s['game']['connection']['connected'], 'Reconnected')
+        self.client_display('Reconnected SDK restores its original identity',self.controller_identity)
         time.sleep(.35)
         synced=self.read()['game']
         assert synced['paused'] and synced['model']==frozen, 'Held reconnect sync advanced the simulation'
@@ -491,8 +531,8 @@ class NativeCheck:
         assert resumed['game']['model']['stats']['miniBoosts']==frozen['stats']['miniBoosts']
         self.tap('START')
         self.until(lambda s:s['game']['paused'], 'Final paused screen')
-        self.screenshot('reconnected.png')
-        return {'disconnectClearsInput':True,'heldSyncDoesNotResume':True,'noRewardOnCancellation':True}
+        self.client_display('Reconnected paused controller identity is visible',self.controller_identity,screenshot='reconnected.png')
+        return {'disconnectClearsInput':True,'heldSyncDoesNotResume':True,'noRewardOnCancellation':True,'controllerIdentityRestored':self.controller_identity}
 
     def virtual_page(self):
         self.client.disconnect()
@@ -584,6 +624,7 @@ class NativeCheck:
             self.report['nativeProcessArchitecture']=initial.get('processArchitecture')
             graphics_available=not initial['document']['webglError']
             self.report['webglAvailable']=graphics_available
+            self.report['controllerIdentityScope']='menu, actual racing, pause, disconnect and reconnect' if graphics_available else 'menu only; no WebGL driving claim'
             assert graphics_available or self.args.allow_unavailable_webgl, 'Actual WKWebView could not create WebGL'
             assert initial['document']['scrollWidth']<=initial['document']['width']+1
             assert initial['document']['scrollHeight']<=initial['document']['height']+1
@@ -600,7 +641,7 @@ class NativeCheck:
                 self.check('Disconnect cancellation and held-sync reconnect safety',self.reconnect)
                 self.check('Official virtual page controls the actual native application',self.virtual_page)
             else:
-                self.report['limitations']=['This hosted Intel Mac could not create a WebGL context; actual 3D driving and virtual-page gameplay checks were not run on this machine. Package, native protocol, TCP/SDK, Bonjour and error UI checks still ran.']
+                self.report['limitations']=['This hosted Intel Mac could not create a WebGL context; actual 3D driving and virtual-page gameplay checks were not run on this machine. Package, native protocol, TCP/SDK, Bonjour, menu controller identity and error UI checks still ran; menu identity evidence does not establish gameplay display.']
             self.check('Every observed SDK message has the same-sequence ACK',self.ack_check)
             self.check('Normal quit closes TCP and withdraws Bonjour',self.shutdown)
             for path,expected in self.report['sourceHashes'].items():
@@ -631,6 +672,8 @@ class NativeCheck:
             for log in self.logs:
                 log.close()
             shutil.copy2(__file__,self.out/'executed-verify-native.py')
+            shutil.copy2(HERE.parent/'Sources/main.swift',self.out/'executed-main.swift')
+            shutil.copy2(REPO/'resource/game-kit/web/puretv-controller.js',self.out/'executed-puretv-controller.js')
             shutil.copy2(HERE/'native-drive.mjs',self.out/'executed-native-drive.mjs')
             shutil.copy2(HERE/'allow-local-network.py',self.out/'executed-allow-local-network.py')
             shutil.copy2(HERE/'official-virtual-native.mjs',self.out/'executed-official-virtual-native.mjs')

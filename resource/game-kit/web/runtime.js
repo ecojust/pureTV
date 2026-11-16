@@ -107,11 +107,26 @@
   function beep(type){if(!soundEnabled||!audio||audio.state!=='running')return;try{const osc=audio.createOscillator(),gain=audio.createGain(),now=audio.currentTime;const tones={pickup:660,delivery:880,delivered:880,collision:150,win:1040,refuel:440};osc.type='sine';osc.frequency.setValueAtTime(tones[type]||520,now);gain.gain.setValueAtTime(.04,now);gain.gain.exponentialRampToValueAtTime(.001,now+.14);osc.connect(gain);gain.connect(audio.destination);osc.start(now);osc.stop(now+.15);}catch(_){} }
   function updateWifiUi(){
     const panel=$('kit-wifi-help');if(!panel)return;
+    const clients=$('kit-wifi-clients'),en=info.language==='en',text=(zh,enText)=>en?enText:zh;
+    // Rendering reuses the input frame already sampled above. A second native
+    // snapshot here would consume short button pulses before the game sees them.
+    if(clients&&root.PureTVControllerAdapter){
+      const rush=$('rush-wifi-help');
+      if(rush){
+        // Run after platform presentation adapters have chosen whether the QR
+        // guide is open. Keep one client list visible without duplicate mounts.
+        const parent=document.body.classList.contains('rush-phone-open')?rush:document.querySelector('.workspace');
+        if(clients.parentElement!==parent)parent.append(clients);
+      }
+      const language=rush?(document.documentElement.lang==='en'?'en':'zh'):(en?'en':'zh');
+      root.PureTVControllerAdapter.renderClients(clients,observedControllers,{language});
+      panel.classList.toggle('has-controller-client',!clients.hidden);
+      if(rush)rush.classList.toggle('has-controller-client',!clients.hidden);
+    }
     const wifi=info.wifiController;
-    // Neon Rush already supplies its own translated controller panel.
+    // Neon moves the same client list to a compact side rail during a race.
     panel.hidden=!wifi||!!$('rush-wifi-help');if(panel.hidden)return;
     const aside=panel.parentElement;aside.classList.toggle('controller-strip',aside.clientWidth>aside.clientHeight*3);
-    const en=info.language==='en',text=(zh,enText)=>en?enText:zh;
     panel.querySelector('strong').textContent=text('pureTV 手柄','pureTV CONTROLLER');
     const connected=phoneConnected&&controllerKind==='wifi';
     $('kit-wifi-status').textContent=connected?text('已连接 · START 开始或暂停','Connected · START: play/pause'):wifi.state==='available'?text('同网，按搜索键连接','Same Wi-Fi · press Search'):wifi.port>0?(wifi.state==='registering'?text('正在发布，可用地址直连','Publishing · direct IP ready'):text('发现不可用，请用地址直连','No discovery · use IP below')):text('服务未启动，请用扫码/遥控','Offline · use QR or remote');

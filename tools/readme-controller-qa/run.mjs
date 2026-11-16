@@ -9,22 +9,28 @@ import {mkdir,readFile,writeFile,readdir,copyFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {parseArgs,sourceHashes,launch,delay,sha256,run} from '../../resource/game-kit/qa/common.mjs';
 import {gameplay} from './cases.mjs';
+import {controllerClientDom} from './client-status-dom.mjs';
+import {CLIENT_STATUS_SCOPE,assertControllerClients,statusAcceptance} from './client-status-cases.mjs';
 const args=parseArgs(),root=fileURLToPath(new URL('../../',import.meta.url)),here=path.dirname(fileURLToPath(import.meta.url));
 assert.ok(args.slug&&args.output&&['android','browser'].includes(args.mode),'--slug --output --mode android|browser');
+assert.ok(!(args['status-only']&&args['gameplay-only']),'Choose either --status-only or --gameplay-only, not both');
 const inventory=JSON.parse(await readFile(path.join(here,'baseline-inventory.json'),'utf8'));
 const entry=inventory.games.find(g=>g.slug===args.slug);assert.ok(entry,'Game must be in root README');
 const kit=entry.engine==='game-kit',output=path.resolve(args.output);await mkdir(output,{recursive:true});assert.equal((await readdir(output)).length,0,'Keep previous evidence; use empty output');
 const official=path.join(root,'puretv-joystick'),production=path.join(root,'resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java');
-const inputs=[fileURLToPath(import.meta.url),path.join(here,'cases.mjs'),path.join(here,'sdk-peer.py'),path.join(here,'WifiWireHarness.java'),production,...['bridge.py','joystick_sdk.py','virtual.html'].map(n=>path.join(official,n))];
+const inputs=[fileURLToPath(import.meta.url),path.join(here,'cases.mjs'),path.join(here,'client-status-dom.mjs'),path.join(here,'client-status-cases.mjs'),path.join(here,'sdk-peer.py'),path.join(here,'WifiWireHarness.java'),production,...['bridge.py','joystick_sdk.py','virtual.html'].map(n=>path.join(official,n))];
 const hashes={};for(const p of inputs){hashes[path.relative(root,p)]=sha256(await readFile(p));await copyFile(p,path.join(output,'executed-'+path.basename(p)));}
 const report={slug:args.slug,mode:args.mode,startedAt:new Date().toISOString(),status:'running',sourceHashes:hashes,physicalTvTested:false,physicalPhoneTested:false,physicalEsp32Tested:false,androidAppTested:args.mode==='android',syntheticNativeBridge:args.mode==='browser',browserVideoRequested:!!args.record,modelWrites:false,clockOverrides:false,tests:[],observations:[],wire:[],transportErrors:[],connectionEvents:[],screenshots:[],limitations:args.mode==='browser'?['Desktop JVM and Chromium; Android lifecycle/NSD not exercised.']:['Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery.']};
+if(args['status-only'])Object.assign(report,{scope:CLIENT_STATUS_SCOPE,statusAcceptanceEnvironment:args.mode==='android'?'android-menu':'browser-menu-and-playing',fullGameplayAcceptance:false});
 let secondary,java,bridge,proxy,gameBrowser,padBrowser,gameContext,padContext,game,pad,ports={},javaOutput='',javaError='',bridgeOutput='',bridgeError='';let connection=0;const sockets=new Set(),held=new Set();
 const keys=['UP','DOWN','LEFT','RIGHT','START','A','B','X','Y'];
 const keyCodes={UP:'ArrowUp',DOWN:'ArrowDown',LEFT:'ArrowLeft',RIGHT:'ArrowRight',START:'Enter',A:'a',B:'b',X:'x',Y:'y'};
 async function waitFor(fn,label,timeout=15000){const end=performance.now()+timeout;let last;do{last=await fn();if(last)return last;await delay(60);}while(performance.now()<end);throw Error(label+' timed out');}
 async function read(){
  if(args.mode==='android'){const r=await fetch(args.diagnostics+'/snapshot');assert.equal(r.status,200);const value=await r.json();return {...(value.game||{phase:'loading',observerError:value.error||null}),document:value.page,nativeInfo:value.info,activityState:value.activityState};}
- return game.evaluate(()=>({...window.PureTVQA.snapshot(),document:{width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight},nativeInfo:window.__qaNative.getInfoObject(),receiver:window.__qaNative.last}));
+ const state=await game.evaluate(()=>({...window.PureTVQA.snapshot(),document:{width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight},nativeInfo:window.__qaNative.getInfoObject(),receiver:window.__qaNative.last}));
+ if(args['status-only'])state.document.controllerClients=await game.evaluate(controllerClientDom);
+ return state;
 }
 async function until(predicate,label,timeout=15000){return waitFor(async()=>{const s=await read();return predicate(s)?s:null;},label,timeout);}
 const trace=(label,before,after)=>report.observations.push({label,before,after});
@@ -49,6 +55,16 @@ function modelFrozen(s){
 }
 async function screenshot(name){const filename=name+'.png';if(args.mode==='android'){assert.ok(args.adb&&args.serial);const child=spawn(args.adb,['-s',args.serial,'exec-out','screencap','-p']);const chunks=[];child.stdout.on('data',x=>chunks.push(x));const [code]=await once(child,'close');assert.equal(code,0);await writeFile(path.join(output,filename),Buffer.concat(chunks));}else await game.screenshot({path:path.join(output,filename)});report.screenshots.push(filename);}
 function controllers(s){return Array.isArray(s.controllers)?s.controllers:s.controllers?.players||s.connection?.players||[];}
+async function startStatusPeer(){
+ assert.equal(secondary,undefined);
+ secondary=spawn('python3',[path.join(here,'sdk-peer.py'),String(ports.observerPort),'--heartbeat'],{stdio:['pipe','pipe','pipe'],env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});
+ const child=secondary;let buffer='',reply;
+ child.stdout.on('data',data=>{buffer+=data;let i;while((i=buffer.indexOf('\n'))>=0){const value=JSON.parse(buffer.slice(0,i));buffer=buffer.slice(i+1);if(reply){const done=reply;reply=null;done(value);}}});
+ return {async command(value){
+  const result=await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{reply=null;reject(Error('SDK status peer reply timeout'));},5000);reply=row=>{clearTimeout(timer);resolve(row);};child.stdin.write(JSON.stringify(value)+'\n');});
+  assert.equal(result.ok,true,result.error);return result;
+ },async close(){child.stdin.end();await once(child,'exit');secondary=undefined;}};
+}
 async function pauseForProtocol(){
  // A round can finish while a real screenshot is captured or between this read
  // and START. In a result screen START restarts; only an observed pause is ready.
@@ -68,12 +84,13 @@ try {
   java=spawn(path.join(args.jdk,'bin/java'),['-cp',path.join(output,'classes')+path.delimiter+args['json-jar'],'WifiWireHarness',assets,kit||args.slug==='alien-shooter'?'1':'2',String(!kit)],{stdio:['pipe','pipe','pipe']});java.stdout.on('data',b=>javaOutput+=b);java.stderr.on('data',b=>javaError+=b);
   await waitFor(()=>{if(java.exitCode!==null)throw Error(javaError);return javaOutput.includes('\n');},'receiver startup');ports=JSON.parse(javaOutput.split('\n')[0]);
   gameBrowser=await launch();gameContext=await gameBrowser.newContext({viewport:{width:960,height:540},locale:'zh-CN',...(args.record?{recordVideo:{dir:path.join(output,'video'),size:{width:960,height:540}}}:{})});
-  await gameContext.addInitScript(({tcpPort})=>{
+  await gameContext.addInitScript(({tcpPort,statusOnly})=>{
    const info={language:'zh',url:'http://127.0.0.1:1/',qr:'',addresses:['127.0.0.1'],wifiController:{state:'available',serviceName:'Desktop QA receiver; no Android NSD',port:tcpPort,serviceType:'_puretv._tcp',version:'1',addresses:['127.0.0.1'],inputActive:true}};
-   const bridge={getInfo:()=>JSON.stringify(info),snapshot(){const r=new XMLHttpRequest();r.open('GET','/__wifi/snapshot',false);r.send();if(r.status!==200)throw Error('Receiver snapshot');window.__qaNative.last=JSON.parse(r.responseText);return r.responseText;},publish(){},exit(){},setLanguage(){}};
-   window.__qaNative={getInfoObject:()=>JSON.parse(JSON.stringify(info)),last:null};
+   const getInfoObject=()=>{const value=JSON.parse(JSON.stringify(info));if(statusOnly)value.wifiController.connected=(window.__qaNative?.last?.players||[]).filter(p=>p.connected&&p.transport==='wifi').length;return value;};
+   const bridge={getInfo:()=>JSON.stringify(getInfoObject()),snapshot(){const r=new XMLHttpRequest();r.open('GET','/__wifi/snapshot',false);r.send();if(r.status!==200)throw Error('Receiver snapshot');window.__qaNative.last=JSON.parse(r.responseText);return r.responseText;},publish(){},exit(){},setLanguage(){}};
+   window.__qaNative={getInfoObject,last:null};
    for(const n of ['PureGameHost','MarioHost','BombJackHost','AdventureHost','TetrisHost','JewelHost','JackalHost','TankHost','CozyIslandHost','CoastKartHost','AlienShooterHost','UsedCarHost'])window[n]=bridge;
-  },{tcpPort:ports.tcpPort});
+  },{tcpPort:ports.tcpPort,statusOnly:!!args['status-only']});
   game=await gameContext.newPage();report.pageErrors=[];game.on('pageerror',e=>report.pageErrors.push(e.message));await game.goto('http://127.0.0.1:'+ports.httpPort+'/',{waitUntil:'load'});await game.waitForFunction(()=>window.PureTVQA?.snapshot);
  } else {assert.ok(args.diagnostics&&args['tcp-port']);ports.tcpPort=Number(args['tcp-port']);await waitFor(async()=>{try{const s=await read();return s.phase&&s.phase!=='loading'?s:false;}catch{return false;}},'actual Android game ready',60000);}
  report.ports=ports;
@@ -118,13 +135,22 @@ try {
  await test('menu layout and service address',async()=>{
   for(const size of args.mode==='browser'?[[960,540],[1280,720]]:[null]){
    if(size){await game.setViewportSize({width:size[0],height:size[1]});await delay(180);}
-   const s=await read();assert.ok(s.document.scrollWidth<=s.document.width+1,'No horizontal overflow');assert.ok(s.document.scrollHeight<=s.document.height+1,'No vertical overflow');assert.equal(s.nativeInfo.wifiController.port,args.mode==='android'?63485:ports.tcpPort);await screenshot('menu-'+(size?size[0]:'android'));trace('menu',null,s);
+   const s=await read();if(args['status-only'])assertControllerClients(s,[]);assert.ok(s.document.scrollWidth<=s.document.width+1,'No horizontal overflow');assert.ok(s.document.scrollHeight<=s.document.height+1,'No vertical overflow');assert.equal(s.nativeInfo.wifiController.port,args.mode==='android'?63485:ports.tcpPort);await screenshot('menu-'+(size?size[0]:'android'));trace('menu',null,s);
   }
  });
  await test('official hello and nine sync messages leave menu unchanged',async()=>{
   const before=await read();await pad.locator('#connect').click();await pad.waitForFunction(()=>document.querySelector('#status').textContent.startsWith('TCP 已连接'));await waitFor(()=>report.wire.filter(x=>x.direction==='sdk-to-game').length>=10,'initial SDK sync');await delay(250);
   const msgs=report.wire.filter(x=>x.direction==='sdk-to-game').map(x=>x.message);assert.equal(msgs[0].type,'hello');assert.deepEqual(msgs.slice(1,10).map(x=>[x.key,x.action,x.pressed]),keys.map(k=>[k,'sync',false]));assert.equal((await read()).phase,before.phase);return {keys:9};
  });
+ if(args['status-only']){
+  await statusAcceptance({mode:args.mode,kit,slug:args.slug,report,test,read,until,waitFor,delay,trace,screenshot,tap,controllers,startPeer:startStatusPeer,
+   setViewport:async size=>game.setViewportSize({width:size[0],height:size[1]}),
+   connectPad:async()=>{await pad.locator('#connect').click();await pad.waitForFunction(()=>document.querySelector('#status').textContent.startsWith('TCP 已连接'));},
+   disconnectPad:async()=>{await pad.locator('#connect').click();}
+  });
+  await test('same-sequence ACK for every original SDK status message',async()=>{await release();await delay(180);const sent=report.wire.filter(x=>x.direction==='sdk-to-game');await waitFor(()=>sent.every(m=>report.wire.some(a=>a.direction==='game-to-sdk'&&a.connection===m.connection&&a.message.type==='ack'&&a.message.seq===m.message.seq)),'ACK for every status input');return {messages:sent.length,acks:report.wire.filter(x=>x.direction==='game-to-sdk'&&x.message.type==='ack').length,connections:connection};});
+  assert.deepEqual(report.transportErrors,[],'No status input transport errors');
+ }else{
  await test('START begins actual game',async()=>{
   if(args.mode==='browser'){await game.setViewportSize({width:960,height:540});report.gameplayViewport={width:960,height:540};}
   await tap('START');let s=await read();if(args.slug==='tank'){await tap('START');}
@@ -178,6 +204,7 @@ try {
  await test('same-sequence ACK for every original SDK message',async()=>{await release();await delay(180);const sent=report.wire.filter(x=>x.direction==='sdk-to-game');await waitFor(()=>sent.every(m=>report.wire.some(a=>a.direction==='game-to-sdk'&&a.connection===m.connection&&a.message.type==='ack'&&a.message.seq===m.message.seq)),'ACK for every sent original SDK message');return {messages:sent.length,acks:report.wire.filter(x=>x.direction==='game-to-sdk'&&x.message.type==='ack').length,connections:connection};});
  }
  report.scope=args['gameplay-only']?'menu, actual SDK startup and gameplay case only':'complete controller acceptance';
+ }
  assert.deepEqual(report.pageErrors||[],[]);for(const p of inputs)assert.equal(sha256(await readFile(p)),hashes[path.relative(root,p)],'Source changed during execution');if(args.mode==='browser')assert.deepEqual(await sourceHashes(args.assets),report.assetHashes);
  report.status='passed';
 }catch(error){report.status='failed';report.error=error.stack;process.exitCode=1;report.lastSnapshot=await read().catch(()=>null);await screenshot('failure').catch(()=>{});}

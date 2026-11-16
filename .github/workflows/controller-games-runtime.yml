@@ -15,6 +15,12 @@ on:
         type: string
         required: false
         default: ''
+      acceptance_mode:
+        description: 'Complete gameplay acceptance or controller client-status UI acceptance only'
+        type: choice
+        options: [complete, client-status]
+        default: complete
+        required: false
 
 permissions:
   contents: read
@@ -40,13 +46,14 @@ jobs:
         id: selection
         env:
           REQUESTED_BATCHES: ${{ inputs.batches }}
+          ACCEPTANCE_MODE: ${{ inputs.acceptance_mode }}
         run: |
           python3 - <<'PY'
           import importlib.util,json,os,sys
           sys.path.insert(0,'tools')
           spec=importlib.util.spec_from_file_location('runtime_batch','tools/controller-emulator-batch.py')
           batch=importlib.util.module_from_spec(spec);spec.loader.exec_module(batch)
-          plan=batch.runtime_plan(os.environ['REQUESTED_BATCHES'])
+          plan=batch.runtime_plan(os.environ['REQUESTED_BATCHES'],os.environ.get('ACCEPTANCE_MODE') or 'complete')
           plan['qaSourceSha']=os.environ['GITHUB_SHA']
           with open(os.environ['GITHUB_OUTPUT'],'a') as out:
               out.write('matrix='+json.dumps(plan['matrix'],separators=(',',':'))+'\n')
@@ -95,7 +102,8 @@ jobs:
           legacy_source=manifest.get('legacySourceSha',manifest['sourceSha'])
           assert re.fullmatch('[a-f0-9]{40}',legacy_source)
           with open(os.environ['GITHUB_ENV'],'a') as out:
-              out.write('ARTIFACT_SOURCE='+manifest['sourceSha']+'\nLEGACY_ARTIFACT_SOURCE='+legacy_source+'\n')
+              assert selection['acceptanceMode'] in ['complete','client-status']
+              out.write('ARTIFACT_SOURCE='+manifest['sourceSha']+'\nLEGACY_ARTIFACT_SOURCE='+legacy_source+'\nACCEPTANCE_MODE='+selection['acceptanceMode']+'\n')
           PY
       - name: Fetch and verify the already signed game and observer APKs
         env:
@@ -162,7 +170,7 @@ jobs:
           emulator-options: ${{ matrix.emulatorOptions }}
           script: >-
             python3 tools/controller-emulator-batch.py --group '${{ matrix.group }}'
-            --batch '${{ matrix.batch }}'
+            --batch '${{ matrix.batch }}' --acceptance-mode "$ACCEPTANCE_MODE"
             --input "$RUNNER_TEMP/controller-runtime-input"
             --output "$RUNNER_TEMP/controller-runtime-output"
             --artifact-source "$ARTIFACT_SOURCE" --legacy-source "$LEGACY_ARTIFACT_SOURCE" --adb "$ANDROID_HOME/platform-tools/adb"
@@ -179,6 +187,8 @@ jobs:
           root=Path(os.environ['RUNNER_TEMP']);out=root/'controller-runtime-output';out.mkdir(exist_ok=True)
           if (root/'controller-host-diagnostics').is_dir():
               shutil.copytree(root/'controller-host-diagnostics',out/'host-diagnostics')
+          if (root/'controller-runtime-input/observer-source').is_dir():
+              shutil.copytree(root/'controller-runtime-input/observer-source',out/'observer-source')
           for name in ['bundle-manifest.json','runtime-selection.json','controller-runtime-input/input-verification.json','emulator-archive-verification.json']:
               path=root/name
               if path.is_file():shutil.copy2(path,out/path.name)

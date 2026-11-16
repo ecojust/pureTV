@@ -60,3 +60,17 @@ Android NSD注册状态来自实际宿主信息，不等同实体ESP32 GPIO23发
 ## 观察代理关闭边界回归
 
 `node tools/readme-controller-qa/proxy-close-test.mjs BEFORE_RUN.mjs EMPTY_OUTPUT`用真实TCP套接字、未修改的SDK及受控延迟回执接收器重现EOF即关闭整个转发通道的边界。它对照旧代理丢尾部ACK、新代理收齐后关闭，并故意扣留最后ACK确认有界超时保留缺失、不会伪造成功。这是测试夹具回归，不是Android或游戏玩法验证。
+
+## 连接 ID 侧栏专项验收
+
+`run.mjs --status-only` 使用同一未修改的原版 SDK、虚拟页和真实 Java TCP 接收器／实际 APK，只验证本轮连接标识。它与 `--gameplay-only` 互斥；不传该参数时仍执行原完整玩法验收。
+
+专项读取每帧已经缓存的控制器身份，再与 `[data-puretv-controller-id]` 的可见文本、1P／2P、SVG 图标、文字 Range 和父级裁剪边界逐项核对。菜单初始无手柄；真实连接后显示准确 ID；双席宿主另验不同 ID、第二席单独断开和同 ID 重连；最后核对全部实际消息的同序号 ACK。没有额外调用生产 `native.snapshot()`，没有写入模型或游戏时钟。
+
+- Android：`scope="controller client status acceptance"`、`statusAcceptanceEnvironment="android-menu"`、`fullGameplayAcceptance=false`。只在真实 APK 菜单完成连接/断线/重连/截图，不能称为完整玩法通过。
+- 浏览器：相同 scope，environment 为 `browser-menu-and-playing`，另用普通 START 开始和暂停，验证游玩时二维码收起后连接标识仍可见。模拟宿主的 connected 数量仅从最后一个真实接收器快照派生，不另读或消费输入；页面仍明确为合成原生桥。
+- 标准 ESP32／原 SDK ID 必须整段可见，无需滚动。独立布局测试另覆盖最长 96 字符；如横栏需要内部滚动，须如实记录，不能把 DOM 保留全部文字当作整段同时可见。
+
+`client-status-dom.mjs` 是固定只读 DOM 采样函数。测试 Observer 嵌入其精确副本，契约测试核对字节相等；没有新增任意脚本执行或写入路由。`client-status-test.mjs EMPTY_OUTPUT` 用受控 DOM 检查隐藏祖先、错误席位、缺字/缺图标、裁剪、重复身份等错误必须被拒绝。这些测试不是 APK 或实体设备结果。
+
+专项截图使用 `controller-connected-{android|960|1280}.png`、双席 `controllers-two-*`、`controller-disconnected.png` 和 `controller-reconnected.png`；浏览器另有 `controller-playing.png` / `controller-paused.png`。每份报告保留实际脚本、资产哈希、原始消息和失败，不能沿用旧截图表示新 UI。

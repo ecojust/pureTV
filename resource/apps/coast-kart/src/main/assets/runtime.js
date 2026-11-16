@@ -235,6 +235,7 @@
     }
     function updateUi(current) {
       updateWifi(true);
+      root.PureTVControllerAdapter.renderClients($("controller-clients"), controllerAdapter.peek(), { language: english ? "en" : "zh" });
       if (game)
         $("music-button").textContent =
           tr("音乐：", "MUSIC: ") +

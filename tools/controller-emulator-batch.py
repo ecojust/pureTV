@@ -41,8 +41,38 @@ USED_CAR_EMULATOR = {
     'officialArchive': 'https://developer.android.com/studio/emulator_archive',
 }
 
-def runtime_plan(requested=''):
+ACCEPTANCE_SCOPES = {'complete': 'complete controller acceptance', 'client-status': 'controller client status acceptance'}
+
+def acceptance_config(mode):
+    assert mode in ACCEPTANCE_SCOPES, 'Only complete or client-status acceptance is supported'
+    return {'acceptanceMode': mode, 'acceptanceScope': ACCEPTANCE_SCOPES[mode],
+            'fullGameplayAcceptance': mode == 'complete',
+            'driverFlags': ['--status-only'] if mode == 'client-status' else []}
+
+def verify_driver_acceptance(report, mode):
+    expected = acceptance_config(mode)
+    assert report['status'] == 'passed' and report['mode'] == 'android'
+    assert report['scope'] == expected['acceptanceScope'], 'Driver evidence has a different acceptance scope'
+    assert report['modelWrites'] is False and report['clockOverrides'] is False
+    if mode == 'client-status':
+        assert report['fullGameplayAcceptance'] is False
+        assert report['statusAcceptanceEnvironment'] == 'android-menu'
+        required = {'menu layout and service address',
+            'official hello and nine sync messages leave menu unchanged',
+            'connected status displays the real SDK identity and controller icon',
+            'disconnect removes the ID and same-ID reconnect restores its seat',
+            'same-sequence ACK for every original SDK status message'}
+        assert report['slug'] in release.ALL_SLUGS
+        if report['slug'] not in release.KIT_SLUGS and report['slug'] != 'alien-shooter':
+            required.add('two SDK identities display separate seats and update independently')
+        names = [t['name'] for t in report['tests']]
+        assert len(names) == len(set(names)) and required <= set(names), 'Missing required controller-status checks'
+        assert all(t['status'] == 'passed' for t in report['tests'])
+    return expected
+
+def runtime_plan(requested='', acceptance_mode='complete'):
     """Validate dispatch selection before it can become a matrix or shell input."""
+    acceptance = acceptance_config(acceptance_mode)
     names = json.loads(requested) if requested.strip() else list(DEFAULT_BATCHES)
     assert isinstance(names, list) and names, 'batches must be a nonempty JSON array'
     assert all(isinstance(name, str) and name in BATCHES for name in names), 'Only predefined batch names are accepted'
@@ -60,7 +90,7 @@ def runtime_plan(requested=''):
                'emulatorOptions': (standard_options.replace('-gpu swiftshader_indirect', '-gpu swiftshader') if name == 'retry-used-car' else standard_options)
                     + (' -feature -Vulkan -verbose' if name in ['worlds-2', 'retry-used-car', 'retry-arcade-visual'] else '')}
               for name in selected]
-    return {'requestedBatches': names, 'selectedBatches': selected, 'plannedSlugs': slugs,
+    return {**acceptance, 'requestedBatches': names, 'selectedBatches': selected, 'plannedSlugs': slugs,
             'completeCatalogRequested': len(slugs) == len(release.ALL_SLUGS),
             'matrix': {'include': matrix},
             'worlds2GraphicsExperiment': {'selected': any(name in selected for name in ['worlds-2', 'retry-used-car']),
@@ -180,6 +210,7 @@ def configure_disposable_emulator(command, adb, serial, environment, receipt_pat
 def main():
     p=argparse.ArgumentParser();p.add_argument('--group',choices=['arcade','worlds','kit'],required=True)
     p.add_argument('--batch', choices=sorted(BATCHES))
+    p.add_argument('--acceptance-mode', choices=sorted(ACCEPTANCE_SCOPES), default='complete')
     p.add_argument('--input',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--adb',default='adb');p.add_argument('--serial',default='emulator-5554');p.add_argument('--artifact-source',required=True);p.add_argument('--legacy-source');p.add_argument('--build-tools',type=Path,default=Path(os.environ.get('ANDROID_HOME',''))/'build-tools/34.0.0')
     a=p.parse_args();a.legacy_source=a.legacy_source or a.artifact_source;a.output.mkdir(parents=True,exist_ok=False)
@@ -191,7 +222,8 @@ def main():
             raise RuntimeError(json.dumps({'command':args,'exitCode':result.returncode,'stdout':result.stdout,'stderr':result.stderr}))
         return result.stdout
     def save(path,value):path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
-    report={'sourceSha':a.artifact_source,'legacySourceSha':a.legacy_source,'group':a.group,'batch':a.batch,'plannedSlugs':slugs,'physicalTvTested':False,'physicalEsp32Tested':False,'actualAndroidEmulator':True,'cases':[]}
+    acceptance=acceptance_config(a.acceptance_mode)
+    report={**acceptance,'sourceSha':a.artifact_source,'legacySourceSha':a.legacy_source,'group':a.group,'batch':a.batch,'plannedSlugs':slugs,'physicalTvTested':False,'physicalEsp32Tested':False,'actualAndroidEmulator':True,'cases':[]}
     version_command=[str(Path(os.environ['ANDROID_HOME'])/'emulator/emulator'),'-version']
     version_result=subprocess.run(version_command,capture_output=True,text=True,timeout=120)
     emulator_version={'command':version_command,'exitCode':version_result.returncode,
@@ -204,7 +236,7 @@ def main():
     live_logcat=ContinuousLogcat(adb,a.output)
     for slug in slugs:
         directory=a.output/slug;directory.mkdir()
-        case={'slug':slug,'status':'running'};report['cases'].append(case)
+        case={'slug':slug,'status':'running',**acceptance};report['cases'].append(case)
         process=None;video=None;video_stream=None;ports=[];target=None;observer=None
         remote_video="/sdcard/puretv-controller-"+slug+".mp4"
         try:
@@ -248,7 +280,7 @@ def main():
             save(directory/'initial-snapshot.json',ready)
             run=['node',str(ROOT/'tools/readme-controller-qa/run.mjs'),'--mode','android','--slug',slug,
                  '--diagnostics',diagnostics,'--tcp-port',str(ports[1]),'--output',str(directory/'gameplay'),
-                 '--adb',a.adb,'--serial',a.serial]
+                 '--adb',a.adb,'--serial',a.serial]+acceptance['driverFlags']
             video_command=adb+['shell','screenrecord','--size','960x540','--bit-rate','600000','--time-limit','120',remote_video]
             video_stream=(directory/'screenrecord.txt').open('w')
             video=subprocess.Popen(video_command,stdout=video_stream,stderr=subprocess.STDOUT,text=True)
@@ -264,6 +296,8 @@ def main():
                     except subprocess.TimeoutExpired:
                         os.killpg(driver.pid,signal.SIGKILL);driver.wait(timeout=10)
                     raise
+            driver_report=json.loads((directory/'gameplay/report.json').read_text())
+            verify_driver_acceptance(driver_report,a.acceptance_mode)
             case['status']='passed'
         except Exception as error:
             case['status']='failed';case['error']=repr(error)
@@ -285,7 +319,7 @@ def main():
                     video_info=json.loads(command(['ffprobe','-v','error','-show_streams','-show_format','-of','json',str(video_file)],20))
                     assert any(v.get('codec_type')=='video' for v in video_info['streams']) and float(video_info['format']['duration'])>1
                     save(directory/'recording-probe.json',video_info)
-                    case['recording']={'file':'gameplay.mp4','bytes':video_file.stat().st_size,'sha256':release.digest(video_file),'method':'Android screenrecord during ordinary SDK/virtual-page inputs','maximumSeconds':120,'size':'960x540','bitRate':600000,'encodingRateIsNotDevicePerformance':True}
+                    case['recording']={'file':'gameplay.mp4','bytes':video_file.stat().st_size,'sha256':release.digest(video_file),'method':('Android screenrecord during ordinary SDK connection-state inputs; no gameplay acceptance' if a.acceptance_mode=='client-status' else 'Android screenrecord during ordinary SDK/virtual-page inputs'),'acceptanceMode':a.acceptance_mode,'maximumSeconds':120,'size':'960x540','bitRate':600000,'encodingRateIsNotDevicePerformance':True}
                 except Exception as error:
                     case['status']='failed';case['recordingError']=repr(error)
                     if video.poll() is None:video.terminate()

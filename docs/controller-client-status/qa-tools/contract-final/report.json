@@ -1,0 +1,61 @@
+{
+  "status": "passed",
+  "scope": "Synthetic DOM/observer validation contract only; no game or Android acceptance",
+  "sourceHashes": {
+    "tools/readme-controller-qa/client-status-test.mjs": "172d2c9f58096558aec1a5039dfa7e4d7efc8709684d868884a772bf2353f95e",
+    "tools/readme-controller-qa/client-status-dom.mjs": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e",
+    "tools/readme-controller-qa/client-status-cases.mjs": "53c3a55ba494288587d5883d4f8772dd3e16e78c375d471926e06534e872d493",
+    "tools/readme-controller-qa/run.mjs": "de274d7702154b1d7f767e92fee1c3d3e8a09dc1476e17dcbdf70ca84b8779d3",
+    "tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f",
+    "resource/game-kit/web/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a"
+  },
+  "tests": [
+    {
+      "name": "Android embeds exactly the same fixed read-only DOM function",
+      "status": "passed"
+    },
+    {
+      "name": "a rendered icon, seat and full real-ID-shaped text satisfy the observation contract",
+      "status": "passed"
+    },
+    {
+      "name": "a 128-character ID is fully measured across wrapped lines",
+      "status": "passed"
+    },
+    {
+      "name": "hidden ancestors cannot produce a false visible-ID pass",
+      "status": "passed"
+    },
+    {
+      "name": "attribute-only IDs with missing rendered text are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "missing icons are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "wrong seats are rejected even when the device ID matches",
+      "status": "passed"
+    },
+    {
+      "name": "cropped controller cards are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "duplicate visible identity rows are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "disconnected strips must actually disappear",
+      "status": "passed"
+    },
+    {
+      "name": "status-only cannot silently combine with gameplay-only",
+      "status": "passed"
+    }
+  ],
+  "modelWrites": false,
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false
+}

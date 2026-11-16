@@ -1,0 +1,64 @@
+{
+  "sourceCommit": "9af9f197855eb7a0ce7174c0e6295c8974b3250d",
+  "scope": "Read-only protocol and current published firmware/source inspection; no device execution.",
+  "conclusions": {
+    "controllerId": "Real protocol controller_id is already exposed as players[].controllerId. ESP32 ID derives from factory MAC; virtual SDK ID is per-instance virtual-<12 hex> and survives reconnect on the same instance.",
+    "numericSeat": "players[].id is a gameplay seat, not the device ID; session changes on reconnect and should not replace the displayed device ID.",
+    "rssiAvailable": false,
+    "rssiReason": "Published firmware message templates and SDK only send identity/keys/liveness; no RSSI telemetry. Repository includes merged firmware binary without firmware build sources.",
+    "deviceNameAvailable": false,
+    "connectionTimestampExposed": false,
+    "nonConsumingUiSource": "Use GameKit observedControllers and legacy adapter.peek/currentInputs. Do not call native.snapshot a second time: it consumes button pulses.",
+    "liveDisplay": "Filter transport=wifi and connected=true; show a gamepad icon, player seat, and full controllerId via textContent. Keep the connected indicator visible even while 3D games hide QR instructions."
+  },
+  "firmwareTemplates": [
+    "{\"type\":\"%s\",\"seq\":%lu,\"controller_id\":\"%s\",\"key\":\"%s\",\"pressed\":%s,\"action\":\"%s\",\"duration_ms\":%lu}",
+    "{\"type\":\"%s\",\"seq\":%lu,\"controller_id\":\"%s\"}",
+    "esp32-%012llx"
+  ],
+  "recommendedSignalUi": "Hide strength when unreported or show a concise unavailable label; no fabricated bars, host-WiFi RSSI, heartbeat-derived RF strength, or RTT-derived RF strength.",
+  "checks": [
+    "Connected controller ID follows actual protocol identity, not IP/seat/session.",
+    "Two seats show independent IDs, a disconnected seat cannot remain marked connected, same-ID reconnect retains correct seat.",
+    "Long accepted 96-character IDs wrap without clipping at 960x540 and 1280x720; use textContent rather than innerHTML.",
+    "UI does not poll the native snapshot again or consume short button pulses.",
+    "Connected badge remains visible during active 3D gameplay when QR instructions collapse.",
+    "RSSI absence does not produce a fabricated numeric value or strength bars; Chinese/English strings are consistent."
+  ],
+  "files": {
+    "puretv-joystick/README.md": {
+      "bytes": 5211,
+      "sha256": "43cd93deabea2d79f95e32eda777d0184502b2ed05d6027c7d9211aac249619c"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "puretv-joystick/firmware/puretv-esp32dev.bin": {
+      "bytes": 892512,
+      "sha256": "6f0e3e2d552ae718f749b3f62da877616f4406263c8b8beed17bbe5433dcb277"
+    },
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java": {
+      "bytes": 24438,
+      "sha256": "97ff2a53651aa2b148260088630a1eff51b5561c7ff5a88159b3e2cd993db29e"
+    },
+    "resource/game-kit/web/runtime.js": {
+      "bytes": 17013,
+      "sha256": "27b2a7a498cf952a132d5d2ce1795ae39f6696b57bb1ab9aa827663d1762b233"
+    },
+    "resource/apps/tank/src/main/assets/puretv-controller.js": {
+      "bytes": 2548,
+      "sha256": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2"
+    },
+    "resource/apps/tank/src/main/assets/runtime.js": {
+      "bytes": 16166,
+      "sha256": "0cd66fc4ac4fdec8dde70c927edf6b4c4c0de996145021beb3909c0233d7f1c2"
+    }
+  },
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false
+}

@@ -29,6 +29,12 @@ python3 server.py --host 0.0.0.0 --port 63485
 - TCP 服务按换行读取 UTF-8 JSON，使用 `controller_id` 区分手柄，按 `key`、`action`、`pressed` 处理输入，并用相同的 `seq` 回复逐行 JSON ACK。重连时用 `sync` 更新按键状态。
 - 验收时让电视与手柄加入同一局域网，确认手柄能发现广播的地址和端口。当前固件只在发现单个服务时自动连接。连接后验证按下、松开和断线重连。
 
+### 游戏侧边的连接标识
+
+游戏端在手柄连接后显示手柄图标、玩家席位（1P／2P）和实际 `controller_id`，双手柄分别显示。连接 ID 用来辨认设备，不能用临时会话号或服务地址代替；断线后及时更新，游戏收起扫码面板时仍保留连接标识。
+
+当前发布的 ESP32 固件和 Python SDK 没有在 `hello`、`ping` 或 `button` 中上报 RSSI，因此游戏不显示信号强度。电视自身的 Wi-Fi 信号和 TCP 心跳间隔不能代替手柄的无线信号强度。
+
 ### Android TV 的 NsdServiceInfo 字段
 
 | 字段 | 注册要求 |

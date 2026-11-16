@@ -16,8 +16,8 @@ import xml.etree.ElementTree as ET
 MACOS = Path(__file__).resolve().parent
 GAME = MACOS.parent
 REPO = GAME.parents[2]
-VERSION = '0.1.3'
-BUILD_VERSION = '3'
+VERSION = '0.1.4'
+BUILD_VERSION = '4'
 NAME = 'Neon Rush'
 EXECUTABLE = 'NeonRush'
 ARCHITECTURES = ('arm64', 'x86_64')
