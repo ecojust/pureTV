@@ -69,7 +69,7 @@ class BatchIsolation(unittest.TestCase):
 
     def test_only_exact_requested_retry_aliases_exist(self):
         aliases = set(batch.BATCHES) - set(batch.DEFAULT_BATCHES)
-        self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual'})
+        self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual', 'retry-cozy'})
         plan = batch.runtime_plan('["retry-used-car","retry-alien","retry-prism"]')
         self.assertEqual(plan['plannedSlugs'], ['used-car-racing', 'alien-shooter', 'prism-relay'])
         self.assertFalse(plan['completeCatalogRequested'])
@@ -82,7 +82,7 @@ class BatchIsolation(unittest.TestCase):
         self.assertNotIn('-Vulkan', rows[2]['emulatorOptions'])
 
     def test_parent_and_retry_alias_cannot_test_or_claim_a_game_twice(self):
-        for raw in ['["worlds-2","retry-used-car"]', '["worlds-2","retry-alien"]', '["kit-3","retry-prism"]', '["arcade-1","retry-arcade-visual"]']:
+        for raw in ['["worlds-2","retry-used-car"]', '["worlds-2","retry-alien"]', '["kit-3","retry-prism"]', '["arcade-1","retry-arcade-visual"]', '["worlds-1","retry-cozy"]']:
             with self.subTest(raw=raw), self.assertRaisesRegex(AssertionError, 'must not repeat a game'):
                 batch.runtime_plan(raw)
 

@@ -32,6 +32,7 @@ BATCHES.update({
     'retry-alien': ('worlds', ['alien-shooter']),
     'retry-prism': ('kit', ['prism-relay']),
     'retry-arcade-visual': ('arcade', ['tank', 'jackal']),
+    'retry-cozy': ('worlds', ['cozy-island']),
 })
 USED_CAR_EMULATOR = {
     'version': '35.6.11', 'build': '13610412',

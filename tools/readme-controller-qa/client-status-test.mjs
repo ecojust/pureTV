@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {launch,sha256} from '../../resource/game-kit/qa/common.mjs';
 import {controllerClientDom} from './client-status-dom.mjs';
-import {assertControllerClients} from './client-status-cases.mjs';
+import {assertControllerClients,captureControllerStatus} from './client-status-cases.mjs';
 
 const root=fileURLToPath(new URL('../../',import.meta.url));
 const output=path.resolve(process.argv[2]);await mkdir(output,{recursive:true});assert.equal((await readdir(output)).length,0);
@@ -57,6 +57,29 @@ try{
  });
  await test('disconnected strips must actually disappear',async()=>{
   await fixture();await page.evaluate(()=>window.PureTVControllerAdapter.renderClients(document.getElementById('host'),[],{language:'en'}));assertControllerClients(await sample(),[]);
+ });
+ await test('Android capture wrapper naturally settles and binds read-only DOM before and after the PNG',async()=>{
+  const wanted=await fixture(),report={},events=[];
+  const image=await captureControllerStatus({mode:'android',report,read:async()=>{events.push('read');return sample();},delay:async ms=>{events.push('settle');assert.equal(ms,1500);await new Promise(resolve=>setTimeout(resolve,ms));},screenshot:async name=>{events.push('screenshot');const data=await page.screenshot({path:path.join(output,name+'.png')});return {file:name+'.png',bytes:data.length,sha256:sha256(data)};}},'capture-contract',wanted);
+  assert.deepEqual(events,['read','settle','read','screenshot','read']);
+  const capture=report.controllerStatusCaptures[0];assert.equal(capture.status,'captured-awaiting-pixel-review');assert.equal(capture.compositorFence,false);assert.equal(capture.pixelReviewRequired,true);assert.equal(capture.domIdentityStable,true);assert.ok(capture.settleElapsedMs>=1400);assert.equal(capture.image.sha256,image.sha256);
+  assert.ok(Date.parse(capture.settleFinishedAt)>=Date.parse(capture.settleStartedAt)+1400);assert.ok(Date.parse(capture.after.at)>=Date.parse(capture.before.at));assert.equal(await page.evaluate(()=>window.snapshotCalls),0);
+  await writeFile(path.join(output,'capture-contract-observation.json'),JSON.stringify({scope:'Synthetic browser DOM exercises the Android capture wrapper only; no Android/compositor acceptance',...report},null,2)+'\n');
+ });
+ await test('connection loss during settling rejects capture before any screenshot',async()=>{
+  const wanted=await fixture(),report={};let screenshots=0;
+  await assert.rejects(captureControllerStatus({mode:'android',report,read:sample,delay:async()=>{await page.locator('#host').evaluate(node=>node.style.display='none');},screenshot:async()=>{screenshots++;}},'must-not-capture',wanted),/Exactly/);
+  assert.equal(screenshots,0);assert.equal(report.controllerStatusCaptures[0].status,'failed');
+ });
+ await test('a changed seat after screenshot fails validation while retaining PNG metadata',async()=>{
+  const wanted=await fixture(),report={};
+  await assert.rejects(captureControllerStatus({mode:'android',report,read:sample,delay:async()=>{},screenshot:async()=>{await page.locator('[data-player-id]').evaluate(node=>node.setAttribute('data-player-id','2'));return {file:'retained.png',bytes:123,sha256:'contract-placeholder'};}},'retained',wanted),/actual seat/);
+  const capture=report.controllerStatusCaptures[0];assert.equal(capture.status,'failed');assert.equal(capture.image.file,'retained.png');assert.notEqual(capture.domIdentityStable,true);
+ });
+ await test('browser capture keeps the existing screenshot path without Android settling or reads',async()=>{
+  let calls=0;const report={};
+  await captureControllerStatus({mode:'browser',report,read:async()=>{throw Error('Unexpected extra browser observation');},delay:async()=>{throw Error('Unexpected browser settling');},screenshot:async name=>{assert.equal(name,'browser-unchanged');calls++;}},'browser-unchanged',[]);
+  assert.equal(calls,1);assert.equal(report.controllerStatusCaptures,undefined);
  });
  await test('status-only cannot silently combine with gameplay-only',async()=>{
   const run=spawnSync(process.execPath,[path.join(root,'tools/readme-controller-qa/run.mjs'),'--slug','tank','--mode','browser','--output',path.join(output,'unused-output'),'--status-only','--gameplay-only'],{encoding:'utf8',env:process.env});

@@ -10,7 +10,7 @@ import {fileURLToPath} from 'node:url';
 import {parseArgs,sourceHashes,launch,delay,sha256,run} from '../../resource/game-kit/qa/common.mjs';
 import {gameplay} from './cases.mjs';
 import {controllerClientDom} from './client-status-dom.mjs';
-import {CLIENT_STATUS_SCOPE,assertControllerClients,statusAcceptance} from './client-status-cases.mjs';
+import {CLIENT_STATUS_SCOPE,assertControllerClients,statusAcceptance,captureControllerStatus} from './client-status-cases.mjs';
 const args=parseArgs(),root=fileURLToPath(new URL('../../',import.meta.url)),here=path.dirname(fileURLToPath(import.meta.url));
 assert.ok(args.slug&&args.output&&['android','browser'].includes(args.mode),'--slug --output --mode android|browser');
 assert.ok(!(args['status-only']&&args['gameplay-only']),'Choose either --status-only or --gameplay-only, not both');
@@ -53,7 +53,7 @@ function modelFrozen(s){
  const players=rows=>rows.map(({connected,cancelSeq,...gameplay})=>gameplay);
  return {model:{...s.model,players:players(s.model.players)},players:players(s.players)};
 }
-async function screenshot(name){const filename=name+'.png';if(args.mode==='android'){assert.ok(args.adb&&args.serial);const child=spawn(args.adb,['-s',args.serial,'exec-out','screencap','-p']);const chunks=[];child.stdout.on('data',x=>chunks.push(x));const [code]=await once(child,'close');assert.equal(code,0);await writeFile(path.join(output,filename),Buffer.concat(chunks));}else await game.screenshot({path:path.join(output,filename)});report.screenshots.push(filename);}
+async function screenshot(name){const filename=name+'.png',startedAt=new Date().toISOString();if(args.mode==='android'){assert.ok(args.adb&&args.serial);const child=spawn(args.adb,['-s',args.serial,'exec-out','screencap','-p']);const chunks=[];child.stdout.on('data',x=>chunks.push(x));const [code]=await once(child,'close');assert.equal(code,0);await writeFile(path.join(output,filename),Buffer.concat(chunks));}else await game.screenshot({path:path.join(output,filename)});report.screenshots.push(filename);if(args['status-only']&&args.mode==='android'){const data=await readFile(path.join(output,filename));return {file:filename,bytes:data.length,sha256:sha256(data),startedAt,finishedAt:new Date().toISOString()};}}
 function controllers(s){return Array.isArray(s.controllers)?s.controllers:s.controllers?.players||s.connection?.players||[];}
 async function startStatusPeer(){
  assert.equal(secondary,undefined);
@@ -135,7 +135,7 @@ try {
  await test('menu layout and service address',async()=>{
   for(const size of args.mode==='browser'?[[960,540],[1280,720]]:[null]){
    if(size){await game.setViewportSize({width:size[0],height:size[1]});await delay(180);}
-   const s=await read();if(args['status-only'])assertControllerClients(s,[]);assert.ok(s.document.scrollWidth<=s.document.width+1,'No horizontal overflow');assert.ok(s.document.scrollHeight<=s.document.height+1,'No vertical overflow');assert.equal(s.nativeInfo.wifiController.port,args.mode==='android'?63485:ports.tcpPort);await screenshot('menu-'+(size?size[0]:'android'));trace('menu',null,s);
+   const s=await read();if(args['status-only'])assertControllerClients(s,[]);assert.ok(s.document.scrollWidth<=s.document.width+1,'No horizontal overflow');assert.ok(s.document.scrollHeight<=s.document.height+1,'No vertical overflow');assert.equal(s.nativeInfo.wifiController.port,args.mode==='android'?63485:ports.tcpPort);if(args['status-only']&&args.mode==='android')await captureControllerStatus({mode:args.mode,report,read,delay,screenshot},'menu-android',[]);else await screenshot('menu-'+(size?size[0]:'android'));trace('menu',null,s);
   }
  });
  await test('official hello and nine sync messages leave menu unchanged',async()=>{

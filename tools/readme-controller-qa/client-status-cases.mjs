@@ -37,6 +37,32 @@ export function visibleControllerClients(snapshot) {
   return (snapshot.document?.controllerClients?.containers||[]).filter(c=>c.visible).flatMap(c=>c.rows.filter(r=>r.visible));
 }
 
+// A natural settling interval is not a compositor fence. Keep the raw PNG and
+// both fixed read-only DOM observations; the actual pixels still require review.
+export async function captureControllerStatus(ctx,name,expected) {
+  const {mode,report,read,delay,screenshot}=ctx;
+  if(mode!=='android')return screenshot(name);
+  const capture={file:name+'.png',status:'running',expected:expected.map(row=>({...row})),settleRequestedMs:1500,compositorFence:false,pixelReviewRequired:true};
+  (report.controllerStatusCaptures??=[]).push(capture);
+  async function observe(key) {
+    const at=new Date().toISOString(),state=await read();
+    capture[key]={at,phase:state.phase,paused:state.paused,controllerClients:state.document.controllerClients};
+    assertControllerClients(state,expected);
+  }
+  try {
+    await observe('beforeSettle');
+    capture.settleStartedAt=new Date().toISOString();const started=performance.now();
+    await delay(capture.settleRequestedMs);
+    capture.settleFinishedAt=new Date().toISOString();capture.settleElapsedMs=performance.now()-started;
+    await observe('before');
+    capture.image=await screenshot(name);
+    await observe('after');
+    capture.domIdentityStable=true;
+    capture.status='captured-awaiting-pixel-review';
+    return capture.image;
+  }catch(error){capture.status='failed';capture.error=error.stack;throw error;}
+}
+
 // Input must still come from the unchanged SDK. This module only reads state/DOM.
 export async function statusAcceptance(ctx) {
   const {mode,kit,slug,report,test,read,until,waitFor,delay,trace,screenshot,setViewport,connectPad,disconnectPad,tap,controllers,startPeer}=ctx;
@@ -54,7 +80,7 @@ export async function statusAcceptance(ctx) {
       const state=await ready(prefix,identities);
       assert.ok(state.document.scrollWidth<=state.document.width+1 && state.document.scrollHeight<=state.document.height+1,'Page stays within the viewport');
       trace(prefix+'-'+(size?size[0]:'android'),null,state);
-      await screenshot(prefix+'-'+(size?size[0]:'android'));
+      await captureControllerStatus(ctx,prefix+'-'+(size?size[0]:'android'),identities);
     }
   }
   await test('connected status displays the real SDK identity and controller icon',async()=>{
@@ -75,12 +101,12 @@ export async function statusAcceptance(ctx) {
     return {primaryControllerId:primaryId,secondaryControllerId:connected.identity,seats:2};
   });
   await test('disconnect removes the ID and same-ID reconnect restores its seat',async()=>{
-    await disconnectPad();await ready('Disconnected status cleared',[]);await screenshot('controller-disconnected');
+    await disconnectPad();await ready('Disconnected status cleared',[]);await captureControllerStatus(ctx,'controller-disconnected',[]);
     const mark=report.wire.length;await connectPad();
     await waitFor(()=>report.wire.slice(mark).some(e=>e.direction==='sdk-to-game'&&e.message.type==='hello'),'Reconnect hello');
     const hello=report.wire.slice(mark).find(e=>e.direction==='sdk-to-game'&&e.message.type==='hello');assert.equal(hello.message.controller_id,primaryId);
     const state=await ready('Reconnected identity visible');assert.equal(controllers(state).find(p=>p.connected&&p.controllerId===primaryId).id,1);
-    trace('controller-reconnected',null,state);await screenshot('controller-reconnected');return {controllerId:primaryId,playerId:1};
+    trace('controller-reconnected',null,state);await captureControllerStatus(ctx,'controller-reconnected',expected);return {controllerId:primaryId,playerId:1};
   });
   if(mode==='browser')await test('controller identity stays visible during ordinary play and pause',async()=>{
     await setViewport([960,540]);await tap('START');if(slug==='tank')await tap('START');

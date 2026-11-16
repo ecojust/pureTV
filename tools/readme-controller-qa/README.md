@@ -74,3 +74,5 @@ Android NSD注册状态来自实际宿主信息，不等同实体ESP32 GPIO23发
 `client-status-dom.mjs` 是固定只读 DOM 采样函数。测试 Observer 嵌入其精确副本，契约测试核对字节相等；没有新增任意脚本执行或写入路由。`client-status-test.mjs EMPTY_OUTPUT` 用受控 DOM 检查隐藏祖先、错误席位、缺字/缺图标、裁剪、重复身份等错误必须被拒绝。这些测试不是 APK 或实体设备结果。
 
 专项截图使用 `controller-connected-{android|960|1280}.png`、双席 `controllers-two-*`、`controller-disconnected.png` 和 `controller-reconnected.png`；浏览器另有 `controller-playing.png` / `controller-paused.png`。每份报告保留实际脚本、资产哈希、原始消息和失败，不能沿用旧截图表示新 UI。
+
+Android 专项截图先确认预期 ID／席位，等待 1500 ms 自然呈现，再于原 `adb screencap` 前后重新进行固定的只读 DOM 校验。`controllerStatusCaptures` 保留等待起止时间、实际耗时、前后 DOM、PNG 哈希及截图起止时间。此等待不是合成呈现栅栏，DOM 通过也不能代替像素目视；状态记作 `captured-awaiting-pixel-review`，不自动认定画面通过。采集失败保留原图和已获得的观察数据；默认完整玩法及浏览器流程不增加这一等待。

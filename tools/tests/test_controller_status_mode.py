@@ -28,6 +28,16 @@ class AcceptanceModeTests(unittest.TestCase):
             with self.subTest(mode=mode), self.assertRaises(AssertionError):
                 batch.runtime_plan('', mode)
 
+    def test_cozy_retry_preserves_original_emulator_without_repeating_coast(self):
+        original = batch.runtime_plan('["worlds-1"]', 'client-status')
+        retry = batch.runtime_plan('["retry-cozy"]', 'client-status')
+        self.assertEqual(retry['plannedSlugs'], ['cozy-island'])
+        self.assertEqual(batch.selected_slugs('worlds', 'retry-cozy'), ['cozy-island'])
+        self.assertEqual(
+            {k:v for k,v in retry['matrix']['include'][0].items() if k != 'batch'},
+            {k:v for k,v in original['matrix']['include'][0].items() if k != 'batch'})
+        self.assertNotIn('retry-cozy', batch.DEFAULT_BATCHES)
+
     def report(self):
         return {'mode':'android','status':'passed','scope':batch.ACCEPTANCE_SCOPES['client-status'],
                 'modelWrites':False,'clockOverrides':False,'fullGameplayAcceptance':False,
