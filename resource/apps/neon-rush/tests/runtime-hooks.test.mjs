@@ -22,7 +22,7 @@ test('optional renderer/UI hooks retain the shared default and real lifecycle', 
   const web=fileURLToPath(new URL('../../../game-kit/web/',import.meta.url));
   let browser,server;
   try{
-    for(const name of ['runtime.js','renderer.js','tv.html','tv.css'])await copyFile(path.join(web,name),path.join(temporary,name));
+    for(const name of ['runtime.js','renderer.js','tv.html','tv.css','puretv-controller.js'])await copyFile(path.join(web,name),path.join(temporary,name));
     await writeFile(path.join(temporary,'game-config.json'),JSON.stringify({version:'0.0.0'}));
     await writeFile(path.join(temporary,'game-model.js'),`window.PureModel={create(){return {phase:'playing',score:0,tick:0,events:[]};},step(s){s.tick++;}};`);
     await writeFile(path.join(temporary,'game.js'),fixtureSource);
