@@ -1,6 +1,6 @@
 # 游戏手柄连接标识
 
-根 README 展示的 **20 款 Android 游戏**和**霓虹飞车 macOS 0.1.4**增加了手柄连接标识。20款APK及Mac安装包均已签名并完成对应范围的检查，包和新画面已放入各游戏目录；发布状态见[交付清单](rollout.json)。
+根 README 展示的 **20 款 Android 游戏**和**霓虹飞车 macOS 0.1.4**增加了手柄连接标识。新版 APK、Mac 安装包及截图已发布到 GitHub 仓库各游戏目录，提交为 [`7a4e852b`](https://github.com/ecojust/pureTV/commit/7a4e852b9fa6c47cb2cc5e14ce5f9c3882f225af)。210 份公开文件已完成下载、大小和 SHA256 核对，见[下载验证](public-download-verification.json)及[交付清单](rollout.json)。
 
 ## 显示方式
 
