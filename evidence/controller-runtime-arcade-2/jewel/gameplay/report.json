@@ -1,0 +1,3422 @@
+{
+  "slug": "jewel",
+  "mode": "android",
+  "startedAt": "2026-11-16T10:12:42.305Z",
+  "status": "passed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "16dafb1efbfeb13efc4cdeaaa4b6f49356bb3a0d276d9d8b310d4b8ef1437931",
+    "tools/readme-controller-qa/cases.mjs": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71",
+    "tools/readme-controller-qa/client-status-dom.mjs": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e",
+    "tools/readme-controller-qa/client-status-cases.mjs": "53c3a55ba494288587d5883d4f8772dd3e16e78c375d471926e06534e872d493",
+    "tools/readme-controller-qa/sdk-peer.py": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-3cbeb8faaaf9",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "two SDK identities display separate seats and update independently",
+      "status": "passed",
+      "result": {
+        "primaryControllerId": "virtual-3cbeb8faaaf9",
+        "secondaryControllerId": "virtual-d14f2355b52e",
+        "seats": 2
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-3cbeb8faaaf9",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 43,
+        "acks": 43,
+        "connections": 4
+      }
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "aimY": 0,
+            "aimX": 0,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "aimY": 0,
+            "aimX": 0,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42927/?room=guULxjMD8DC07Dvv6iQ3uzHFJ5A3wScX",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Magic Jewelry TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "stage": 0,
+          "selectedPlayers": 1,
+          "muted": false,
+          "players": [
+            {
+              "id": 1,
+              "joined": false,
+              "alive": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "chain": 0
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "chain": 0
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": false,
+            "alive": false,
+            "connected": false,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "hidden": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "active": null,
+            "next": [
+              1,
+              2,
+              3
+            ],
+            "score": 0,
+            "level": 0,
+            "speedLevel": 0,
+            "cleared": 0,
+            "chain": 0,
+            "clearCells": [],
+            "clearTicks": 0,
+            "gravityMoves": [],
+            "gravityTicks": 0,
+            "gravityDuration": 0,
+            "status": "waiting",
+            "seq": 0,
+            "streak": 0,
+            "pendingMagic": 0,
+            "levelCleared": 0,
+            "last": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "input": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "dx": 0,
+            "das": 0,
+            "fall": 0,
+            "softArmed": false,
+            "lastLockY": 12,
+            "dropMatched": false,
+            "resolvingMagic": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": false,
+            "connected": false,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "hidden": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "active": null,
+            "next": [
+              1,
+              2,
+              3
+            ],
+            "score": 0,
+            "level": 0,
+            "speedLevel": 0,
+            "cleared": 0,
+            "chain": 0,
+            "clearCells": [],
+            "clearTicks": 0,
+            "gravityMoves": [],
+            "gravityTicks": 0,
+            "gravityDuration": 0,
+            "status": "waiting",
+            "seq": 0,
+            "streak": 0,
+            "pendingMagic": 0,
+            "levelCleared": 0,
+            "last": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "input": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "dx": 0,
+            "das": 0,
+            "fall": 0,
+            "softArmed": false,
+            "lastLockY": 12,
+            "dropMatched": false,
+            "resolvingMagic": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "url": "https://jewel.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 744,
+                  "top": 21.90625,
+                  "right": 938,
+                  "bottom": 498.90625
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42927/?room=guULxjMD8DC07Dvv6iQ3uzHFJ5A3wScX",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Magic Jewelry TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "controller-connected-android",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-3cbeb8faaaf9",
+            "session": "wifi-90cc7c75-a056-4fb7-9143-8e9af1430243-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42927/?room=guULxjMD8DC07Dvv6iQ3uzHFJ5A3wScX",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Magic Jewelry TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "stage": 0,
+          "selectedPlayers": 1,
+          "muted": false,
+          "players": [
+            {
+              "id": 1,
+              "joined": false,
+              "alive": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "chain": 0
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "chain": 0
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": false,
+            "alive": false,
+            "connected": true,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "hidden": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "active": null,
+            "next": [
+              1,
+              2,
+              3
+            ],
+            "score": 0,
+            "level": 0,
+            "speedLevel": 0,
+            "cleared": 0,
+            "chain": 0,
+            "clearCells": [],
+            "clearTicks": 0,
+            "gravityMoves": [],
+            "gravityTicks": 0,
+            "gravityDuration": 0,
+            "status": "waiting",
+            "seq": 0,
+            "streak": 0,
+            "pendingMagic": 0,
+            "levelCleared": 0,
+            "last": {
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "input": {
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "dx": 0,
+            "das": 0,
+            "fall": 0,
+            "softArmed": false,
+            "lastLockY": 12,
+            "dropMatched": false,
+            "resolvingMagic": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": false,
+            "connected": false,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "hidden": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "active": null,
+            "next": [
+              1,
+              2,
+              3
+            ],
+            "score": 0,
+            "level": 0,
+            "speedLevel": 0,
+            "cleared": 0,
+            "chain": 0,
+            "clearCells": [],
+            "clearTicks": 0,
+            "gravityMoves": [],
+            "gravityTicks": 0,
+            "gravityDuration": 0,
+            "status": "waiting",
+            "seq": 0,
+            "streak": 0,
+            "pendingMagic": 0,
+            "levelCleared": 0,
+            "last": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "input": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "dx": 0,
+            "das": 0,
+            "fall": 0,
+            "softArmed": false,
+            "lastLockY": 12,
+            "dropMatched": false,
+            "resolvingMagic": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "url": "https://jewel.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 714,
+                  "top": 16,
+                  "right": 938,
+                  "bottom": 75.9921875,
+                  "width": 224,
+                  "height": 59.9921875
+                },
+                "clip": {
+                  "left": 714,
+                  "top": 16,
+                  "right": 938,
+                  "bottom": 505
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-3cbeb8faaaf9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-3cbeb8faaaf9",
+                    "idText": "ID: virtual-3cbeb8faaaf9",
+                    "visible": true,
+                    "rect": {
+                      "left": 714,
+                      "top": 20,
+                      "right": 938,
+                      "bottom": 71.9921875,
+                      "width": 224,
+                      "height": 51.9921875
+                    },
+                    "clip": {
+                      "left": 714,
+                      "top": 16,
+                      "right": 938,
+                      "bottom": 505
+                    },
+                    "idRect": {
+                      "left": 755,
+                      "top": 47.1953125,
+                      "right": 929,
+                      "bottom": 63.9921875,
+                      "width": 174,
+                      "height": 16.796875
+                    },
+                    "idClip": {
+                      "left": 714,
+                      "top": 16,
+                      "right": 938,
+                      "bottom": 505
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 755,
+                        "top": 48.1953125,
+                        "right": 927.828125,
+                        "bottom": 62.1953125,
+                        "width": 172.828125,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 174,
+                    "idScrollWidth": 174,
+                    "idClientHeight": 17,
+                    "idScrollHeight": 17,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 723,
+                      "top": 28,
+                      "right": 747,
+                      "bottom": 52,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42927/?room=guULxjMD8DC07Dvv6iQ3uzHFJ5A3wScX",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Magic Jewelry TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "controllers-two-android",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-3cbeb8faaaf9",
+            "session": "wifi-90cc7c75-a056-4fb7-9143-8e9af1430243-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "virtual-d14f2355b52e",
+            "session": "wifi-90cc7c75-a056-4fb7-9143-8e9af1430243-2",
+            "connected": true,
+            "cancelSeq": 2,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42927/?room=guULxjMD8DC07Dvv6iQ3uzHFJ5A3wScX",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Magic Jewelry TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "stage": 0,
+          "selectedPlayers": 1,
+          "muted": false,
+          "players": [
+            {
+              "id": 1,
+              "joined": false,
+              "alive": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "chain": 0
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "chain": 0
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": false,
+            "alive": false,
+            "connected": true,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "hidden": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "active": null,
+            "next": [
+              1,
+              2,
+              3
+            ],
+            "score": 0,
+            "level": 0,
+            "speedLevel": 0,
+            "cleared": 0,
+            "chain": 0,
+            "clearCells": [],
+            "clearTicks": 0,
+            "gravityMoves": [],
+            "gravityTicks": 0,
+            "gravityDuration": 0,
+            "status": "waiting",
+            "seq": 0,
+            "streak": 0,
+            "pendingMagic": 0,
+            "levelCleared": 0,
+            "last": {
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "input": {
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "dx": 0,
+            "das": 0,
+            "fall": 0,
+            "softArmed": false,
+            "lastLockY": 12,
+            "dropMatched": false,
+            "resolvingMagic": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": false,
+            "connected": true,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "hidden": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "active": null,
+            "next": [
+              1,
+              2,
+              3
+            ],
+            "score": 0,
+            "level": 0,
+            "speedLevel": 0,
+            "cleared": 0,
+            "chain": 0,
+            "clearCells": [],
+            "clearTicks": 0,
+            "gravityMoves": [],
+            "gravityTicks": 0,
+            "gravityDuration": 0,
+            "status": "waiting",
+            "seq": 0,
+            "streak": 0,
+            "pendingMagic": 0,
+            "levelCleared": 0,
+            "last": {
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "input": {
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "dx": 0,
+            "das": 0,
+            "fall": 0,
+            "softArmed": false,
+            "lastLockY": 12,
+            "dropMatched": false,
+            "resolvingMagic": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "url": "https://jewel.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 714,
+                  "top": 16,
+                  "right": 938,
+                  "bottom": 133.984375,
+                  "width": 224,
+                  "height": 117.984375
+                },
+                "clip": {
+                  "left": 714,
+                  "top": 16,
+                  "right": 938,
+                  "bottom": 505
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-3cbeb8faaaf9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-3cbeb8faaaf9",
+                    "idText": "ID: virtual-3cbeb8faaaf9",
+                    "visible": true,
+                    "rect": {
+                      "left": 714,
+                      "top": 20,
+                      "right": 938,
+                      "bottom": 71.9921875,
+                      "width": 224,
+                      "height": 51.9921875
+                    },
+                    "clip": {
+                      "left": 714,
+                      "top": 16,
+                      "right": 938,
+                      "bottom": 505
+                    },
+                    "idRect": {
+                      "left": 755,
+                      "top": 47.1953125,
+                      "right": 929,
+                      "bottom": 63.9921875,
+                      "width": 174,
+                      "height": 16.796875
+                    },
+                    "idClip": {
+                      "left": 714,
+                      "top": 16,
+                      "right": 938,
+                      "bottom": 505
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 755,
+                        "top": 48.1953125,
+                        "right": 927.828125,
+                        "bottom": 62.1953125,
+                        "width": 172.828125,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 174,
+                    "idScrollWidth": 174,
+                    "idClientHeight": 17,
+                    "idScrollHeight": 17,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 723,
+                      "top": 28,
+                      "right": 747,
+                      "bottom": 52,
+                      "width": 24,
+                      "height": 24
+                    }
+                  },
+                  {
+                    "controllerId": "virtual-d14f2355b52e",
+                    "playerId": 2,
+                    "text": "2PConnectedID: virtual-d14f2355b52e",
+                    "idText": "ID: virtual-d14f2355b52e",
+                    "visible": true,
+                    "rect": {
+                      "left": 714,
+                      "top": 77.9921875,
+                      "right": 938,
+                      "bottom": 129.984375,
+                      "width": 224,
+                      "height": 51.9921875
+                    },
+                    "clip": {
+                      "left": 714,
+                      "top": 16,
+                      "right": 938,
+                      "bottom": 505
+                    },
+                    "idRect": {
+                      "left": 755,
+                      "top": 105.1875,
+                      "right": 929,
+                      "bottom": 121.984375,
+                      "width": 174,
+                      "height": 16.796875
+                    },
+                    "idClip": {
+                      "left": 714,
+                      "top": 16,
+                      "right": 938,
+                      "bottom": 505
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 755,
+                        "top": 106.1875,
+                        "right": 927.828125,
+                        "bottom": 120.1875,
+                        "width": 172.828125,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 174,
+                    "idScrollWidth": 174,
+                    "idClientHeight": 17,
+                    "idScrollHeight": 17,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 723,
+                      "top": 85.9921875,
+                      "right": 747,
+                      "bottom": 109.9921875,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42927/?room=guULxjMD8DC07Dvv6iQ3uzHFJ5A3wScX",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Magic Jewelry TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "controller-reconnected",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-3cbeb8faaaf9",
+            "session": "wifi-90cc7c75-a056-4fb7-9143-8e9af1430243-4",
+            "connected": true,
+            "cancelSeq": 4,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "virtual-d14f2355b52e",
+            "session": "wifi-90cc7c75-a056-4fb7-9143-8e9af1430243-3",
+            "connected": false,
+            "cancelSeq": 7,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42927/?room=guULxjMD8DC07Dvv6iQ3uzHFJ5A3wScX",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Magic Jewelry TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "stage": 0,
+          "selectedPlayers": 1,
+          "muted": false,
+          "players": [
+            {
+              "id": 1,
+              "joined": false,
+              "alive": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "chain": 0
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "chain": 0
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": false,
+            "alive": false,
+            "connected": true,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "hidden": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "active": null,
+            "next": [
+              1,
+              2,
+              3
+            ],
+            "score": 0,
+            "level": 0,
+            "speedLevel": 0,
+            "cleared": 0,
+            "chain": 0,
+            "clearCells": [],
+            "clearTicks": 0,
+            "gravityMoves": [],
+            "gravityTicks": 0,
+            "gravityDuration": 0,
+            "status": "waiting",
+            "seq": 0,
+            "streak": 0,
+            "pendingMagic": 0,
+            "levelCleared": 0,
+            "last": {
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "input": {
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "dx": 0,
+            "das": 0,
+            "fall": 0,
+            "softArmed": false,
+            "lastLockY": 12,
+            "dropMatched": false,
+            "resolvingMagic": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": false,
+            "connected": false,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "hidden": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "active": null,
+            "next": [
+              1,
+              2,
+              3
+            ],
+            "score": 0,
+            "level": 0,
+            "speedLevel": 0,
+            "cleared": 0,
+            "chain": 0,
+            "clearCells": [],
+            "clearTicks": 0,
+            "gravityMoves": [],
+            "gravityTicks": 0,
+            "gravityDuration": 0,
+            "status": "waiting",
+            "seq": 0,
+            "streak": 0,
+            "pendingMagic": 0,
+            "levelCleared": 0,
+            "last": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "input": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "dx": 0,
+            "das": 0,
+            "fall": 0,
+            "softArmed": false,
+            "lastLockY": 12,
+            "dropMatched": false,
+            "resolvingMagic": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "url": "https://jewel.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 714,
+                  "top": 16,
+                  "right": 938,
+                  "bottom": 75.9921875,
+                  "width": 224,
+                  "height": 59.9921875
+                },
+                "clip": {
+                  "left": 714,
+                  "top": 16,
+                  "right": 938,
+                  "bottom": 505
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-3cbeb8faaaf9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-3cbeb8faaaf9",
+                    "idText": "ID: virtual-3cbeb8faaaf9",
+                    "visible": true,
+                    "rect": {
+                      "left": 714,
+                      "top": 20,
+                      "right": 938,
+                      "bottom": 71.9921875,
+                      "width": 224,
+                      "height": 51.9921875
+                    },
+                    "clip": {
+                      "left": 714,
+                      "top": 16,
+                      "right": 938,
+                      "bottom": 505
+                    },
+                    "idRect": {
+                      "left": 755,
+                      "top": 47.1953125,
+                      "right": 929,
+                      "bottom": 63.9921875,
+                      "width": 174,
+                      "height": 16.796875
+                    },
+                    "idClip": {
+                      "left": 714,
+                      "top": 16,
+                      "right": 938,
+                      "bottom": 505
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 755,
+                        "top": 48.1953125,
+                        "right": 927.828125,
+                        "bottom": 62.1953125,
+                        "width": 172.828125,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 174,
+                    "idScrollWidth": 174,
+                    "idClientHeight": 17,
+                    "idScrollHeight": 17,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 723,
+                      "top": 28,
+                      "right": 747,
+                      "bottom": 52,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42927/?room=guULxjMD8DC07Dvv6iQ3uzHFJ5A3wScX",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Magic Jewelry TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:47.884Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-3cbeb8faaaf9"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:47.884Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:47.884Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:47.884Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:47.884Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:47.884Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:47.884Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:47.884Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:47.884Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:47.884Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:47.920Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:47.920Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:47.942Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:47.943Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:47.956Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:47.956Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:47.956Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:47.961Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:47.964Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:47.966Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:50.316Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-d14f2355b52e"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:50.316Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:50.316Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:50.317Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:50.317Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:50.317Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:50.317Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:50.317Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:50.317Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:50.317Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:50.368Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:50.370Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:50.374Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:50.374Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:50.375Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:50.384Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:50.391Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:50.391Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:50.391Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:50.391Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:51.313Z",
+      "message": {
+        "type": "ping",
+        "seq": 11,
+        "controller_id": "virtual-d14f2355b52e"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:51.314Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:51.327Z",
+      "message": {
+        "type": "ping",
+        "seq": 11,
+        "controller_id": "virtual-3cbeb8faaaf9"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:51.331Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:52.700Z",
+      "message": {
+        "type": "hello",
+        "seq": 12,
+        "controller_id": "virtual-d14f2355b52e"
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:52.700Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:52.700Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:52.700Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:52.700Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:52.700Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:52.700Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:52.700Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:52.700Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:52.700Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-d14f2355b52e",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:52.764Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:52.767Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:52.786Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:52.786Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:52.786Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:52.786Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:52.786Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:52.792Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:52.796Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:52.798Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:53.313Z",
+      "message": {
+        "type": "ping",
+        "seq": 22,
+        "controller_id": "virtual-d14f2355b52e"
+      }
+    },
+    {
+      "connection": 3,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:53.316Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:56.556Z",
+      "message": {
+        "type": "hello",
+        "seq": 12,
+        "controller_id": "virtual-3cbeb8faaaf9"
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:56.556Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:56.556Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:56.556Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:56.556Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:56.556Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:56.556Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:56.556Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:56.556Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:12:56.556Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-3cbeb8faaaf9",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:56.582Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:56.604Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:56.604Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:56.616Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:56.619Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:56.628Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:56.628Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:56.628Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:56.628Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 4,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:12:56.628Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [
+    {
+      "connection": 2,
+      "event": "client-eof",
+      "at": "2026-11-16T10:12:51.911Z",
+      "pendingSeq": []
+    },
+    {
+      "connection": 2,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-16T10:12:51.911Z",
+      "waitMs": 0.09033199999976205,
+      "pendingSeq": []
+    },
+    {
+      "connection": 3,
+      "event": "client-eof",
+      "at": "2026-11-16T10:12:53.666Z",
+      "pendingSeq": []
+    },
+    {
+      "connection": 3,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-16T10:12:53.666Z",
+      "waitMs": 0.03057500000068103,
+      "pendingSeq": []
+    },
+    {
+      "connection": 1,
+      "event": "client-eof",
+      "at": "2026-11-16T10:12:54.875Z",
+      "pendingSeq": []
+    },
+    {
+      "connection": 1,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-16T10:12:54.875Z",
+      "waitMs": 0.03555400000004738,
+      "pendingSeq": []
+    }
+  ],
+  "screenshots": [
+    "menu-android.png",
+    "controller-connected-android.png",
+    "controllers-two-android.png",
+    "controller-disconnected.png",
+    "controller-reconnected.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "scope": "controller client status acceptance",
+  "statusAcceptanceEnvironment": "android-menu",
+  "fullGameplayAcceptance": false,
+  "ports": {
+    "tcpPort": 37489,
+    "observerPort": 35033
+  },
+  "finishedAt": "2026-11-16T10:12:58.595Z"
+}
