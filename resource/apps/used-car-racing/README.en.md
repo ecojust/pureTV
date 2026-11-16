@@ -1,24 +1,28 @@
 # Used Car Racing TV
 
-<!-- apk-resource:start -->
-[Download APK](used-car-racing-0.1.4.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
-
-The APK is signed with the existing pureTV release certificate. An in-place installation from 0.1.3 to 0.1.4 succeeded in an Android TV emulator; upgrading an installation with existing saves and retaining its data were not tested. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
-<!-- apk-resource:end -->
-
 [中文](README.md) · [English](README.en.md)
 
-## 0.1.4 pureTV controller update
+<!-- controller-client-status:start -->
+## 0.1.5 · Connected controller identity
 
-Current version **0.1.4 / versionCode 5** adds pureTV Wi-Fi controller input on default TCP port **63485**, while retaining phone QR and TV remote controls. The APK is signed with the existing release certificate. The complete official-SDK browser checks passed 9/9; native checks, release signing and in-place installation also passed. The actual APK passed menu, initial synchronization and START checks. A host RenderThread segmentation fault during acceleration blocked the remaining Android checks; complete Android gameplay acceptance is not claimed. See the verification record for original results and limitations.
+<!-- apk-resource:start -->
+[Download signed APK](used-car-racing-0.1.5.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and source](resource.json) · [Source](src/) · [Icon](logo.svg)
+<!-- apk-resource:end -->
 
-See the [current twenty-game acceptance record](../../../docs/readme-controller-support/README.md) and [rollout status](../../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
+Android **0.1.5 / versionCode 6** shows a controller icon, player seat (1P/2P where supported), and the connected device's complete ID in the side area. Disconnected devices disappear. The default TCP port remains **63485**. Current controller firmware does not report RSSI, so signal strength is not displayed.
 
-Acceptance resources for this version: [actual Android APK menu screenshot](docs/releases/0.1.4/menu.png) · [browser gameplay screenshot](docs/releases/0.1.4/gameplay.png) · [browser gameplay video](docs/releases/0.1.4/gameplay.mp4?raw=1) · [verification record](docs/releases/0.1.4/verification.json). The menu comes from an Android TV emulator. Gameplay images and video show the bundled page driven by the official SDK in Chromium with a synthetic native bridge; they are not APK or physical-TV recordings. Exact sources, hashes and the Android environment limitation are documented in the verification record and the acceptance guide above.
+[Connected screenshot](docs/releases/0.1.5/connected.png) · [Controller-status recording](docs/releases/0.1.5/controller-status.mp4?raw=1) · [Version verification](docs/releases/0.1.5/verification.json) · [Twenty-game update record](../../../docs/controller-client-status/README.md)
+
+The APK uses the existing release certificate. This update verifies connection identity, disconnect/reconnect status and in-place installation in an Android TV emulator; the capture and video show the menu status checks. It does not repeat full gameplay acceptance. Unchanged model evidence is reused by exact hash, with previous reports retained below. Physical TVs, phones, ESP32 devices and upgrades containing existing user saves remain untested.
+
+![Android 0.1.5: connected controller ID](docs/releases/0.1.5/connected.png)
+
+The previous full Android gameplay run was blocked by an emulator RenderThread crash. This menu-status update does not resolve or close that limitation.
+<!-- controller-client-status:end -->
 
 **Used Car Racing TV / 极品二手车** is an original 3D racing game. Each race starts with a randomly assigned used car and condition report. The inspection garage displays the model, power, weight, drivetrain and faults. One or two players use LAN phone controllers; AI drivers fill the remaining places in a six-car field.
 
-Current version **0.1.4 / versionCode 5**, package `com.ecojust.usedcartv`, requires Android 8.0 or newer TVs. It uses the existing pureTV v2 certificate. An in-place 0.1.3 → 0.1.4 installation succeeded in an Android TV emulator; upgrading with existing saves and retaining data were not tested. See [resource.json](resource.json) for the downloadable APK’s actual version, signature and verification results.
+Current version **0.1.5 / versionCode 6** requires Android 8.0 or later. Package: `com.ecojust.usedcartv`. See [resource metadata](resource.json) for the signed APK and source.
 
 ## Historical gameplay video: 0.1.3
 
@@ -165,3 +169,26 @@ Put the TV and controller on the same LAN, open the game and press GPIO 23 Searc
 START begins, pauses or resumes. Left/right steer; A / X throttle; hold B to brake. Y draws a car in the garage; during a race tap Y for camera or hold at low speed to switch D / R. Phone QR, TV remote and keyboard controls remain available. Y supplies SELECT in this game; X aliases A.
 
 Disconnects, replaced sessions and changes of control source cancel old input and pause. Release held buttons, then press START after reconnecting; held synchronization never starts an action. Two-player mode accepts two distinct Wi-Fi controllers. Connect both in the garage before starting; the player count follows connected controllers unless you select it manually.
+
+<!-- controller-client-status-history:start -->
+<details>
+<summary>Historical 0.1.4 download and acceptance record</summary>
+
+The following describes the previous release; its tests and media do not validate the new controller-ID UI. [Original README at the previous source](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/used-car-racing/README.en.md).
+
+[Download APK](used-car-racing-0.1.4.apk?raw=1) · [Checksums](docs/controller-status-baseline/0.1.4/SHA256SUMS.txt) · [Signing and build provenance](docs/controller-status-baseline/0.1.4/resource.json) · [Source code](src/) · [64×64 SVG icon](logo.svg)
+
+The APK is signed with the existing pureTV release certificate. An in-place installation from 0.1.3 to 0.1.4 succeeded in an Android TV emulator; upgrading an installation with existing saves and retaining its data were not tested. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.
+
+## 0.1.4 pureTV controller update
+
+Historical version **0.1.4 / versionCode 5** adds pureTV Wi-Fi controller input on default TCP port **63485**, while retaining phone QR and TV remote controls. The APK is signed with the existing release certificate. The complete official-SDK browser checks passed 9/9; native checks, release signing and in-place installation also passed. The actual APK passed menu, initial synchronization and START checks. A host RenderThread segmentation fault during acceleration blocked the remaining Android checks; complete Android gameplay acceptance is not claimed. See the verification record for original results and limitations.
+
+See the [historical twenty-game acceptance record](../../../docs/readme-controller-support/README.md) and [rollout status](../../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
+
+Acceptance resources for that historical version: [actual Android APK menu screenshot](docs/releases/0.1.4/menu.png) · [browser gameplay screenshot](docs/releases/0.1.4/gameplay.png) · [browser gameplay video](docs/releases/0.1.4/gameplay.mp4?raw=1) · [verification record](docs/releases/0.1.4/verification.json). The menu comes from an Android TV emulator. Gameplay images and video show the bundled page driven by the official SDK in Chromium with a synthetic native bridge; they are not APK or physical-TV recordings. Exact sources, hashes and the Android environment limitation are documented in the verification record and the acceptance guide above.
+
+Historical version **0.1.4 / versionCode 5**, package `com.ecojust.usedcartv`, requires Android 8.0 or newer TVs. It uses the existing pureTV v2 certificate. An in-place 0.1.3 → 0.1.4 installation succeeded in an Android TV emulator; upgrading with existing saves and retaining data were not tested. See [resource.json](docs/controller-status-baseline/0.1.4/resource.json) for the downloadable APK’s actual version, signature and verification results.
+
+</details>
+<!-- controller-client-status-history:end -->

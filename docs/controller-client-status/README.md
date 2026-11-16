@@ -1,6 +1,6 @@
 # 游戏手柄连接标识
 
-根 README 展示的 **20 款 Android 游戏**和**霓虹飞车 macOS 0.1.4**增加了手柄连接标识。源码已冻结，正式安装包正在签名与专项验收；当前状态见[交付清单](rollout.json)。
+根 README 展示的 **20 款 Android 游戏**和**霓虹飞车 macOS 0.1.4**增加了手柄连接标识。20款APK及Mac安装包均已签名并完成对应范围的检查，包和新画面已放入各游戏目录；发布状态见[交付清单](rollout.json)。
 
 ## 显示方式
 
@@ -45,9 +45,11 @@ Android 游戏需要 **Android 8.0 及以上**。各游戏目录提供安装包�
 
 浏览器布局检查覆盖 20 款 × 两种尺寸（960×540、1280×720），另含霓虹 Mac 收起连接栏的两个展示检查。连接 ID 来自缓存输入状态，渲染界面不会额外读取会消费短按的原生快照。浏览器合成连接布局、原 SDK 通信、Android 安装包和原生 Mac 验证分别记录。
 
-正式 Android 包将进行菜单中的原版 SDK 连接身份、图标、双席区分、断开／重连和覆盖安装专项；截图与录像不冒充完整玩法测试。此前极品二手车完整 Android 玩法受模拟器宿主 RenderThread 崩溃阻塞，本次菜单专项不代表该限制已解决。
+20个正式Android包已通过菜单中的原版SDK连接身份、图标、双席区分、断开／重连和覆盖安装专项，共110项状态检查、667条消息与ACK对应通过，20张当前封面均逐张查看。见[选定产物与画面核对](acceptance-set.json)。当前截图和录像是连接状态专项，不是完整玩法测试。此前极品二手车完整 Android 玩法受模拟器宿主 RenderThread 崩溃阻塞，本次菜单专项不代表该限制已解决。
 
-尚未进行实体电视、手机和 ESP32 联调，也未验证带已有存档的升级与数据保留。
+Mac的ARM原生、默认端口被占用、Rosetta三种图形模式各通过11组及真实ID六阶段检查；原生Intel运行机无WebGL，仅通过7组通信／生命周期及菜单ID检查，未计为3D驾驶通过。详细范围见[Mac验证记录](../../resource/apps/neon-rush/macos/docs/verification-0.1.4/README.md)。
+
+尚未进行实体电视、手机和ESP32联调，也未验证带已有存档的升级与数据保留。Mac包为ad-hoc签名，未做Apple公证。本轮没有上传`apps.b14f.com`。
 
 ## 可复查记录
 
@@ -55,6 +57,7 @@ Android 游戏需要 **Android 8.0 及以上**。各游戏目录提供安装包�
 - [9 款 GameKit 布局](../../resource/game-kit/docs/controller-client-status/gamekit/README.md)：18/18，Mac 展示 2/2，原输入回归 16/16。
 - [7 款街机布局](arcade-ui/README.md)：最终 14/14，生产资产与最终报告哈希一致。
 - [4 款 3D 游戏布局](../../resource/game-kit/docs/controller-client-status/worlds/README.md)：当前8/8场、112项检查，另有Cozy两尺寸16个焦点/滚动状态，修正前记录保留。
+- [Android实际安装包与画面](acceptance-set.json)：110项、667条ACK，原始失败和被拒预览完整保留；部分非主截图仅作为卡片证据，限制见原图复核记录。
 - [原 SDK 和 Observer 预检](qa-tools/README.md)：真实 TCP、断线、重连及心跳边界；Android 只读 Observer 编译通过。
 - [实际来源范围](source-scope.json)：19款Android、Cozy布局修正及Mac测试夹具来源分别绑定，原APK/失败记录保留。
 - [签名与交付流程](../../tools/README-controller-status-release.md)；[任务记录](../../history/2026-11-16-001.md)。

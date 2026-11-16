@@ -1,24 +1,26 @@
 # 超级玛丽 TV
 
-<!-- apk-resource:start -->
-[下载 APK](super-mario-0.5.3.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
-
-本版本 APK 已使用原 pureTV 发布证书正式签名，并通过从上一版本覆盖安装的验证；本轮 Android 手柄验收结果见下方更新说明。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
-<!-- apk-resource:end -->
-
 [中文](README.md) · [English](README.en.md)
 
-## 0.5.3 pureTV 手柄更新
+<!-- controller-client-status:start -->
+## 0.5.4 · 手柄连接标识
 
-当前版本为 **0.5.3 / versionCode 5**，新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。正式签名 APK 已在 Android TV 模拟器完成 9/9 项手柄验收，并通过从上一版本执行 `adb install -r` 覆盖安装。未做带存档升级或数据保留验证。
+<!-- apk-resource:start -->
+[下载签名 APK](super-mario-0.5.4.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
+<!-- apk-resource:end -->
 
-实际结果和限制见[本轮 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+Android **0.5.4 / versionCode 6**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-本版本验收资源：[菜单截图](docs/releases/0.5.3/menu.png) · [实际 APK 运行录像](docs/releases/0.5.3/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.5.3/verification.json)。截图和录像来自 Android TV 模拟器，未做实体电视测试。验收范围和具体结果见验证记录；模拟器结果不代表实体电视或带存档升级验证。
+[连接截图](docs/releases/0.5.4/connected.png) · [连接状态专项录像](docs/releases/0.5.4/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.5.4/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+
+安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
+
+![Android 0.5.4 手柄已连接及完整 ID](docs/releases/0.5.4/connected.png)
+<!-- controller-client-status:end -->
 
 以《超级马力欧兄弟 1》为参考的独立重写：8 个世界、32 关，地面、地下、水下与城堡；包含顶砖、蘑菇变身、火球、龟壳、管道、旗杆与桥斧。
 
-当前版本 **0.5.3**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.supermariotv`。电视显示游戏与房间二维码，手机扫码作为手柄。
+当前版本 **0.5.4**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.supermariotv`。电视显示游戏与房间二维码，手机扫码作为手柄。
 <!-- visual-release:start -->
 ## 历史：0.5.2 视觉更新与验证
 
@@ -40,7 +42,7 @@
 
 ## 安装与签名
 
-0.5.3 已沿用 0.5.0／0.5.1／0.5.2 的 pureTV 统一发布证书；本轮已在 Android TV 模拟器成功从 0.5.2 执行 `adb install -r` 覆盖安装。该检查未预置存档，不代表已验证升级后存档或用户数据保留。使用旧证书的 0.4.x 及更早安装不能直接覆盖，请先备份可导出的数据再卸载；卸载会清除本机存档和记录，本项目没有跨证书自动迁移工具。
+历史 0.5.3 已沿用 0.5.0／0.5.1／0.5.2 的 pureTV 统一发布证书；当时已在 Android TV 模拟器成功从 0.5.2 执行 `adb install -r` 覆盖安装。该检查未预置存档，不代表已验证升级后存档或用户数据保留。使用旧证书的 0.4.x 及更早安装不能直接覆盖，请先备份可导出的数据再卸载；卸载会清除本机存档和记录，本项目没有跨证书自动迁移工具。
 
 ## 历史：0.5.0 玩法升级
 
@@ -107,3 +109,24 @@ cd resource/launcher/puretv
 方向键左右移动、下蹲或进入可用管道；**A/X** 跳跃／游泳，**B** 加速跑／发射火球。**Y（SELECT）** 在标题切换人数，暂停时切换音乐。**START** 开始、暂停／继续。两只 Wi-Fi 手柄对应两个席位，双人模式按原规则轮流游玩。扫码手机手柄和电视遥控器仍可使用。
 
 断线或切换控制来源会暂停游戏，松开按键后重新按 START 继续；重连同步和原先按住的键不会自动触发动作。临时失焦时隔离输入并保留监听服务；按 Home 或切换应用仍会按原有流程退出游戏并关闭服务。
+
+<!-- controller-client-status-history:start -->
+<details>
+<summary>历史 0.5.3 安装包与验收记录</summary>
+
+以下为旧版发布记录，其测试与画面不代表本次连接 ID 界面验收。[原提交中的完整说明](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/super-mario/README.md)。
+
+[下载 APK](super-mario-0.5.3.apk?raw=1) · [校验值](docs/controller-status-baseline/0.5.3/SHA256SUMS.txt) · [签名及构建来源](docs/controller-status-baseline/0.5.3/resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+
+该历史版本 APK 已使用原 pureTV 发布证书正式签名，并通过从上一版本覆盖安装的验证；当时 Android 手柄验收结果见下方更新说明。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
+
+## 0.5.3 pureTV 手柄更新
+
+历史版本为 **0.5.3 / versionCode 5**，新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。正式签名 APK 已在 Android TV 模拟器完成 9/9 项手柄验收，并通过从上一版本执行 `adb install -r` 覆盖安装。未做带存档升级或数据保留验证。
+
+实际结果和限制见[当时 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+
+该历史版本验收资源：[菜单截图](docs/releases/0.5.3/menu.png) · [实际 APK 运行录像](docs/releases/0.5.3/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.5.3/verification.json)。截图和录像来自 Android TV 模拟器，未做实体电视测试。验收范围和具体结果见验证记录；模拟器结果不代表实体电视或带存档升级验证。
+
+</details>
+<!-- controller-client-status-history:end -->

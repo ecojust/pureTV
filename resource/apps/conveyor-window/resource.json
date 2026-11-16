@@ -3,12 +3,12 @@
   "name": "窗口装配",
   "author": "ecojust / 桔子桑",
   "description": "在工厂操作台抓取、旋转并投送零件，趁快门开放完成连续装配；六张工单包含反向传送、窄窗快装与夜班错相协同。",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "packageName": "com.ecojust.conveyorwindowtv",
-  "versionCode": 3,
-  "apk": "conveyor-window-0.2.1.apk",
-  "apkBytes": 320870,
-  "sha256": "410191c73492cc2208ceb77cbc379fe54f58d83aa9aa32d4677724efa7a0a252",
+  "versionCode": 4,
+  "apk": "conveyor-window-0.2.2.apk",
+  "apkBytes": 320943,
+  "sha256": "b5e7f4cb2f79427aa2966a8b334ea11e25b4f2eb0e341cec4b35af32ec3d2eb7",
   "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
   "supportsLayoutJson": false,
   "languages": [
@@ -19,30 +19,24 @@
     "en"
   ],
   "cover": "thumb.png",
-  "coverSource": "Unmodified menu screenshot of this exact signed APK running in an Android TV emulator; not a physical TV capture.",
+  "coverSource": "Unmodified connected-controller screenshot of this signed APK running in an Android TV emulator.",
   "license": "MIT (original application code and generated artwork/audio)",
-  "sourceCommit": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
-  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43729078678",
-  "gameplayVideo": "docs/releases/0.2.1/gameplay.mp4",
-  "gameplayMetadata": "docs/releases/0.2.1/gameplay.json",
+  "sourceCommit": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43844870962",
   "romIncluded": false,
   "verification": {
     "status": "passed",
-    "acceptanceMode": "complete_android_acceptance",
-    "sourceAssetsMatchApk": true,
-    "checkedSourceAssetFiles": 12,
+    "scope": "controller client status acceptance",
     "signatureVerified": true,
+    "sourceAssetsMatchApk": true,
     "inPlaceUpgradeInstalled": true,
+    "controllerClientStatusAcceptancePassed": true,
+    "fullGameplayAcceptancePerformedInThisUpdate": false,
     "actualAndroidEmulator": true,
-    "androidControllerAcceptancePassed": true,
-    "androidControllerAcceptanceComplete": true,
-    "officialSdkAndroidTestsPassed": 8,
-    "officialSdkTestsPassed": 8,
-    "officialSdkTestEnvironment": "Android TV emulator",
     "physicalTvTested": false,
     "physicalPhoneTested": false,
     "physicalEsp32Tested": false,
-    "verificationReport": "docs/releases/0.2.1/verification.json"
+    "verificationReport": "docs/releases/0.2.2/verification.json"
   },
   "previousReleases": [
     {
@@ -134,6 +128,63 @@
         "physicalPhoneTested": false
       },
       "metadata": "docs/controller-update-baseline/0.2.0/resource.json"
+    },
+    {
+      "kind": "app",
+      "name": "窗口装配",
+      "author": "ecojust / 桔子桑",
+      "description": "在工厂操作台抓取、旋转并投送零件，趁快门开放完成连续装配；六张工单包含反向传送、窄窗快装与夜班错相协同。",
+      "version": "0.2.1",
+      "packageName": "com.ecojust.conveyorwindowtv",
+      "versionCode": 3,
+      "apk": "conveyor-window-0.2.1.apk",
+      "apkBytes": 320870,
+      "sha256": "410191c73492cc2208ceb77cbc379fe54f58d83aa9aa32d4677724efa7a0a252",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "supportsLayoutJson": false,
+      "languages": [
+        "zh"
+      ],
+      "controllerLanguages": [
+        "zh",
+        "en"
+      ],
+      "cover": "docs/controller-status-baseline/0.2.1/thumb.png",
+      "coverSource": "Unmodified menu screenshot of this exact signed APK running in an Android TV emulator; not a physical TV capture.",
+      "license": "MIT (original application code and generated artwork/audio)",
+      "sourceCommit": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43729078678",
+      "gameplayVideo": "docs/releases/0.2.1/gameplay.mp4",
+      "gameplayMetadata": "docs/releases/0.2.1/gameplay.json",
+      "romIncluded": false,
+      "verification": {
+        "status": "passed",
+        "acceptanceMode": "complete_android_acceptance",
+        "sourceAssetsMatchApk": true,
+        "checkedSourceAssetFiles": 12,
+        "signatureVerified": true,
+        "inPlaceUpgradeInstalled": true,
+        "actualAndroidEmulator": true,
+        "androidControllerAcceptancePassed": true,
+        "androidControllerAcceptanceComplete": true,
+        "officialSdkAndroidTestsPassed": 8,
+        "officialSdkTestsPassed": 8,
+        "officialSdkTestEnvironment": "Android TV emulator",
+        "physicalTvTested": false,
+        "physicalPhoneTested": false,
+        "physicalEsp32Tested": false,
+        "verificationReport": "docs/releases/0.2.1/verification.json"
+      },
+      "minSdk": 26,
+      "wifiController": {
+        "protocol": "puretv-tcp-jsonl-v1",
+        "defaultPort": 63485,
+        "discovery": "_puretv._tcp",
+        "maxPlayers": 1,
+        "buttonMapping": "A/X primary, B/Y secondary",
+        "guide": "../../../docs/readme-controller-support/README.md"
+      },
+      "metadata": "docs/controller-status-baseline/0.2.1/resource.json"
     }
   ],
   "minSdk": 26,
@@ -143,6 +194,16 @@
     "discovery": "_puretv._tcp",
     "maxPlayers": 1,
     "buttonMapping": "A/X primary, B/Y secondary",
-    "guide": "../../../docs/readme-controller-support/README.md"
+    "guide": "../../../docs/readme-controller-support/README.md",
+    "clientIdentityDisplay": true,
+    "signalStrength": "Unavailable: current controller protocol does not report RSSI; signal strength is not displayed."
+  },
+  "controllerStatusVideo": "docs/releases/0.2.2/controller-status.mp4",
+  "controllerStatusMetadata": "docs/releases/0.2.2/controller-status.json",
+  "historicalGameplayVideo": {
+    "version": "0.2.1",
+    "video": "docs/releases/0.2.1/gameplay.mp4",
+    "metadata": "docs/releases/0.2.1/gameplay.json",
+    "currentUiEvidence": false
   }
 }

@@ -1,0 +1,112 @@
+{
+  "status": "passed",
+  "scope": "controller client status acceptance",
+  "game": "tetris",
+  "version": "0.5.4",
+  "artifactSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "qaSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "runtimeRun": "43846050276",
+  "sourceWorkflowResult": "failure",
+  "sourceGroupResult": "passed",
+  "apk": {
+    "packageName": "com.ecojust.tetristv",
+    "versionCode": 6,
+    "versionName": "0.5.4",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "bytes": 95679,
+    "sha256": "97cfe5d354146ff25820d25aefd942477936d06d50b7e26b1dab38312f3223a3"
+  },
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "nativeSourceReceiptMatchesCommit": true,
+  "inPlaceUpgradeInstalled": true,
+  "controllerClientStatusAcceptancePassed": true,
+  "fullGameplayAcceptancePerformedInThisUpdate": false,
+  "modelReuse": {
+    "sourceRef": "9af9f197855eb7a0ce7174c0e6295c8974b3250d:resource/apps/tetris/src/main/assets/game-model.js",
+    "sha256": "918eb5067bc63df07e40736264fa0a6966ccf32946aa3b714b3d078f60076849",
+    "bytes": 14411,
+    "matchesNewApk": true
+  },
+  "previousReleaseVerification": {
+    "version": "0.5.3",
+    "metadata": "resource/apps/tetris/docs/controller-status-baseline/0.5.3/resource.json",
+    "scope": "Historical evidence, not current UI captures"
+  },
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-2e98f5a47155",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "two SDK identities display separate seats and update independently",
+      "status": "passed",
+      "result": {
+        "primaryControllerId": "virtual-2e98f5a47155",
+        "secondaryControllerId": "virtual-e74dea94a9c2",
+        "seats": 2
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-2e98f5a47155",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 43,
+        "acks": 43,
+        "connections": 4
+      }
+    }
+  ],
+  "originalEvidence": "docs/controller-client-status/android/43846050276/evidence/controller-runtime-arcade-2/tetris",
+  "originalDriverSha256": "1c339f22d9d75dc7745e7287af1ab5dd764148feb92b0b471a1a4dde2806cc21",
+  "captures": {
+    "menu-android.png": {
+      "sha256": "4ff89619638176a32913e4978b97ee0b2e5f005f7dd318f8ffc2ff9cab77d2f8",
+      "bytes": 97018
+    },
+    "controller-connected-android.png": {
+      "sha256": "6d626d3d00d8805a36ce8bb87a25f92f6183952c4ba81d28a978da30addfec18",
+      "bytes": 101869
+    },
+    "controllers-two-android.png": {
+      "sha256": "210842463d87b849eea5e90fdf5179ac4078d1012db1e54746cfc6fb7f487060",
+      "bytes": 105796
+    },
+    "controller-disconnected.png": {
+      "sha256": "85a59e9757446c42b1cddcbcb1c739f38cb8d175d2ec9a81051f36487e731084",
+      "bytes": 96656
+    },
+    "controller-reconnected.png": {
+      "sha256": "4ff89619638176a32913e4978b97ee0b2e5f005f7dd318f8ffc2ff9cab77d2f8",
+      "bytes": 97018
+    }
+  },
+  "connectedCaptureSha256": "6d626d3d00d8805a36ce8bb87a25f92f6183952c4ba81d28a978da30addfec18",
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false
+}

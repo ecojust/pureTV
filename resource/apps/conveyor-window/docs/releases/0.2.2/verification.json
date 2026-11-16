@@ -1,0 +1,99 @@
+{
+  "status": "passed",
+  "scope": "controller client status acceptance",
+  "game": "conveyor-window",
+  "version": "0.2.2",
+  "artifactSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "qaSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "runtimeRun": "43846050276",
+  "sourceWorkflowResult": "failure",
+  "sourceGroupResult": "passed",
+  "apk": {
+    "packageName": "com.ecojust.conveyorwindowtv",
+    "versionCode": 4,
+    "versionName": "0.2.2",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "bytes": 320943,
+    "sha256": "b5e7f4cb2f79427aa2966a8b334ea11e25b4f2eb0e341cec4b35af32ec3d2eb7"
+  },
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "nativeSourceReceiptMatchesCommit": true,
+  "inPlaceUpgradeInstalled": true,
+  "controllerClientStatusAcceptancePassed": true,
+  "fullGameplayAcceptancePerformedInThisUpdate": false,
+  "modelReuse": {
+    "sourceRef": "9af9f197855eb7a0ce7174c0e6295c8974b3250d:resource/apps/conveyor-window/src/main/assets/game-model.js",
+    "sha256": "5b411fd6ef588c22f0fd8590314c5d7b2c5639129eac6ae00821c232608e539f",
+    "bytes": 32201,
+    "matchesNewApk": true
+  },
+  "previousReleaseVerification": {
+    "version": "0.2.1",
+    "metadata": "resource/apps/conveyor-window/docs/controller-status-baseline/0.2.1/resource.json",
+    "scope": "Historical evidence, not current UI captures"
+  },
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-699c91d0c3e1",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-699c91d0c3e1",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 21,
+        "acks": 21,
+        "connections": 2
+      }
+    }
+  ],
+  "originalEvidence": "docs/controller-client-status/android/43846050276/evidence/controller-runtime-kit-2/conveyor-window",
+  "originalDriverSha256": "a76ee26a6e175798902bfd1bfa7a66edce8d7d09a23326a4bc9394b1245357e2",
+  "captures": {
+    "menu-android.png": {
+      "sha256": "fda8a799e0df60c1db0115cb1fe08e1bacfa402c11cdac08f310000ed16ede96",
+      "bytes": 307896
+    },
+    "controller-connected-android.png": {
+      "sha256": "71f7bf357dd1a5fc7ae9f76bf9a7153b1d53e4f1a778fe76acc98f681530a2f6",
+      "bytes": 307225
+    },
+    "controller-disconnected.png": {
+      "sha256": "e8cbf6ef851f33ba1cde741d7b5f1ef4811f8cbea20e33ded684a5f97739a72b",
+      "bytes": 305384
+    },
+    "controller-reconnected.png": {
+      "sha256": "71f7bf357dd1a5fc7ae9f76bf9a7153b1d53e4f1a778fe76acc98f681530a2f6",
+      "bytes": 307225
+    }
+  },
+  "connectedCaptureSha256": "71f7bf357dd1a5fc7ae9f76bf9a7153b1d53e4f1a778fe76acc98f681530a2f6",
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false
+}

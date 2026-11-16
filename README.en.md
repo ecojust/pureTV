@@ -147,7 +147,7 @@ This page currently features eight games from the new hundred-game collection al
 
 <!-- resource-index:end -->
 
-The **20 games shown above** have updated APKs with **pureTV Wi-Fi controller** support, requiring Android 8.0 or newer and using TCP port **63485** by default. Install the latest APK from each game directory, connect the TV and controller to the same LAN, press GPIO 23 to discover the game, and use START to begin or pause. See the [controller guide](docs/readme-controller-support/README.md) for button mappings, two-player support, versions, and verification scope (in Chinese).
+The **20 games shown above** have updated APKs with **pureTV Wi-Fi controller** support, requiring Android 8.0 or newer and using TCP port **63485** by default. Install the latest APK from each game directory, connect the TV and controller to the same LAN, press GPIO 23 to discover the game, and use START to begin or pause. A side indicator shows the controller icon, player seat (1P/2P), and complete connection ID, and disappears on disconnect. See the [identity-display update](docs/controller-client-status/README.md) for downloads and verification scope, and the [controller guide](docs/readme-controller-support/README.md) for button mappings and two-player support (in Chinese).
 
 The [fork/ catalog](fork/README.md) contains 14 apps and 23 APKs under 10 MB from TVAPP, plus five explicitly requested apps, Erge Duoduo TV, Baby Fun Learning, Jasmine Music, Taozhi Classroom TV and Qixing Opera: 19 apps and 28 APKs in total, with icons, catalog covers and manifests. The [oversized-app inventory and implementation notes](fork/OVERSIZED.md) retain all 205 oversized files, including five archived APKs and 200 still excluded files.
 

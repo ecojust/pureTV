@@ -1,24 +1,28 @@
 # 极品二手车
 
-<!-- apk-resource:start -->
-[下载 APK](used-car-racing-0.1.4.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
-
-APK 已使用原 pureTV 发布证书签名，已在 Android TV 模拟器完成 0.1.3 → 0.1.4 覆盖安装；未验证带存档升级及数据保留。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
-<!-- apk-resource:end -->
-
 [中文](README.md) · [English](README.en.md)
 
-## 0.1.4 pureTV 手柄更新
+<!-- controller-client-status:start -->
+## 0.1.5 · 手柄连接标识
 
-当前版本 **0.1.4 / versionCode 5** 新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。APK 已沿用原发布证书正式签名。原 SDK 完整浏览器检查已通过 9/9，原生检查、正式签名和覆盖安装均通过。实际 APK 的菜单、初始同步和 START 开赛三项通过；加速阶段遇到宿主 RenderThread 段错误，后续 Android 检查受模拟器环境阻塞，未宣称完整 Android 玩法验收通过。原始结果与限制见验证记录。
+<!-- apk-resource:start -->
+[下载签名 APK](used-car-racing-0.1.5.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
+<!-- apk-resource:end -->
 
-实际结果和限制见[本轮 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+Android **0.1.5 / versionCode 6**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-本版本验收资源：[实际 Android APK 菜单截图](docs/releases/0.1.4/menu.png) · [浏览器游戏截图](docs/releases/0.1.4/gameplay.png) · [浏览器游玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.1.4/verification.json)。菜单来自 Android TV 模拟器；游戏截图与录像来自实际打包页面在 Chromium 中的原 SDK 操作，使用合成原生桥接，不是 APK 或实体电视录像。具体来源、哈希和 Android 环境阻塞记录见验证记录及上方本轮验收说明。
+[连接截图](docs/releases/0.1.5/connected.png) · [连接状态专项录像](docs/releases/0.1.5/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.1.5/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+
+安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
+
+![Android 0.1.5 手柄已连接及完整 ID](docs/releases/0.1.5/connected.png)
+
+此前完整 Android 玩法检查受模拟器宿主 RenderThread 崩溃阻塞；本次菜单状态专项不代表该限制已解决。
+<!-- controller-client-status:end -->
 
 **极品二手车 / Used Car Racing TV** 是一款原创三维赛车游戏。开局随机获得车辆和车况，检车台展示车型、动力、重量、驱动形式以及故障说明；比赛支持一人或两人手机操控，其余车位由 AI 补齐，总计六车同场。
 
-当前版本为 **0.1.4 / versionCode 5**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。已沿用 0.1.2／0.1.3 的 pureTV v2 证书正式签名，并在 Android TV 模拟器完成 0.1.3 → 0.1.4 覆盖安装；未验证带存档升级及数据保留。可下载 APK 的实际版本、签名与验证结果以 [resource.json](resource.json) 为准。
+当前版本为 **0.1.5 / versionCode 6**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。签名安装包与来源见 [resource.json](resource.json)。
 
 ## 历史录像：0.1.3
 
@@ -165,3 +169,26 @@ cd resource/launcher/puretv
 START 开始、暂停或继续。左右键转向；A / X 油门；B 按住刹车；Y 在车库抽车，比赛中短按切换镜头、低速长按切换 D / R 挡。 手机扫码、遥控器和键盘仍可使用；此游戏的 Y 是 SELECT 功能，X 与 A 为同一动作。
 
 断线、手柄会话替换或控制来源切换会取消旧输入并暂停。重新连接后先松开按键，再按 START 继续，保持的按键不会自动触发操作。双人模式可连接两只独立 Wi-Fi 手柄；开始前在检车台连接两只手柄，人数默认跟随已连接手柄数量，也可手动选择。
+
+<!-- controller-client-status-history:start -->
+<details>
+<summary>历史 0.1.4 安装包与验收记录</summary>
+
+以下为旧版发布记录，其测试与画面不代表本次连接 ID 界面验收。[原提交中的完整说明](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/used-car-racing/README.md)。
+
+[下载 APK](used-car-racing-0.1.4.apk?raw=1) · [校验值](docs/controller-status-baseline/0.1.4/SHA256SUMS.txt) · [签名及构建来源](docs/controller-status-baseline/0.1.4/resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+
+APK 已使用原 pureTV 发布证书签名，已在 Android TV 模拟器完成 0.1.3 → 0.1.4 覆盖安装；未验证带存档升级及数据保留。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
+
+## 0.1.4 pureTV 手柄更新
+
+历史版本 **0.1.4 / versionCode 5** 新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。APK 已沿用原发布证书正式签名。原 SDK 完整浏览器检查已通过 9/9，原生检查、正式签名和覆盖安装均通过。实际 APK 的菜单、初始同步和 START 开赛三项通过；加速阶段遇到宿主 RenderThread 段错误，后续 Android 检查受模拟器环境阻塞，未宣称完整 Android 玩法验收通过。原始结果与限制见验证记录。
+
+实际结果和限制见[当时 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+
+该历史版本验收资源：[实际 Android APK 菜单截图](docs/releases/0.1.4/menu.png) · [浏览器游戏截图](docs/releases/0.1.4/gameplay.png) · [浏览器游玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.1.4/verification.json)。菜单来自 Android TV 模拟器；游戏截图与录像来自实际打包页面在 Chromium 中的原 SDK 操作，使用合成原生桥接，不是 APK 或实体电视录像。具体来源、哈希和 Android 环境阻塞记录见验证记录及上方当时验收说明。
+
+历史版本为 **0.1.4 / versionCode 5**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。已沿用 0.1.2／0.1.3 的 pureTV v2 证书正式签名，并在 Android TV 模拟器完成 0.1.3 → 0.1.4 覆盖安装；未验证带存档升级及数据保留。可下载 APK 的实际版本、签名与验证结果以 [resource.json](docs/controller-status-baseline/0.1.4/resource.json) 为准。
+
+</details>
+<!-- controller-client-status-history:end -->

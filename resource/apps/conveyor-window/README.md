@@ -1,16 +1,24 @@
 # 窗口装配 · Conveyor Window
 
-**0.2.1 · pureTV 手柄更新：** [签名安装包](conveyor-window-0.2.1.apk) · [Android 实包手柄回归录像](docs/releases/0.2.1/gameplay.mp4) · [版本验证](docs/releases/0.2.1/verification.json) · [本轮接入记录](../../../docs/readme-controller-support/README.md)
+<!-- controller-client-status:start -->
+## 0.2.2 · 手柄连接标识
 
-新增 pureTV Wi-Fi 手柄支持，默认端口 **63485**，显示真实连接状态，断线时暂停并清除输入。保留原六关及规则，遥控器和扫码手机仍可使用。
+<!-- apk-resource:start -->
+[下载签名 APK](conveyor-window-0.2.2.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
+<!-- apk-resource:end -->
 
-本版 APK 已签名，并在 Android TV API 36 模拟器中完成同证书覆盖安装验证，通过全部 8 项手柄验收，覆盖开始、实际游戏操作、暂停恢复、断线重连、九键输入及逐消息 ACK。下图和上方录像来自本版本实际 APK；录像记录手柄回归过程，不是六关通关录像。尚未进行实体电视、手机或 ESP32 测试。
+Android **0.2.2 / versionCode 4**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-![0.2.1 实际 Android APK 菜单](docs/releases/0.2.1/menu.png)
+[连接截图](docs/releases/0.2.2/connected.png) · [连接状态专项录像](docs/releases/0.2.2/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.2.2/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+
+安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
+
+![Android 0.2.2 手柄已连接及完整 ID](docs/releases/0.2.2/connected.png)
+<!-- controller-client-status:end -->
 
 历史 0.2.0：[签名安装包](conveyor-window-0.2.0.apk) · [六关实际游玩录像](docs/gameplay-0.2.0.mp4) · [旧版验证记录](https://github.com/ecojust/pureTV/blob/bf58393ba8fa8bb3bdf731ab24f9ab09d90f5075/resource/apps/conveyor-window/docs/verification.json)。这些旧版记录作为未改变规则的回归依据，不代表本轮界面、手柄链路或 Android 实包验收。
 
-原创双键传送线装配游戏，版本 `0.2.1`（versionCode 3），包名 `com.ecojust.conveyorwindowtv`。作者：ecojust / 桔子桑。
+原创双键传送线装配游戏，版本 `0.2.2`（versionCode 4），包名 `com.ecojust.conveyorwindowtv`。作者：ecojust / 桔子桑。
 
 左右移动磁性夹具，从上层传送带抓取零件，调整朝向，在快门开放时投送到下层匹配槽位。零件的完整宽度必须处于窗口内，目标槽位还必须满足距离、空闲、形状和朝向要求。游戏始终选择最近槽位，不会跳过已占用或不匹配的近处槽位。
 
@@ -57,7 +65,7 @@ node resource/apps/conveyor-window/tests/browser-checks.mjs --assets /absolute/b
 
 ## 0.1.0 安装与历史证据
 
-签名安装包为 [conveyor-window-0.1.0.apk](conveyor-window-0.1.0.apk)。完整规则和公开状态接口见 [模型合同](docs/model-contract.md)。
+历史安装包：签名安装包为 [conveyor-window-0.1.0.apk](conveyor-window-0.1.0.apk)。完整规则和公开状态接口见 [模型合同](docs/model-contract.md)。
 
 以下均为原 0.1.0 发布证据，保留原样，不作为 0.2.0 的画面或验证证据。旧版通过 20 项正式机制测试、最终来源的三胜三负普通输入回合及基于这些记录的独立审计。正式测试包含明确标注的合成边界 fixture；独立审计没有重玩游戏。早期六回合在导航停止策略修正前已通过，仍作为历史证据保留，未冒充最终策略的结果。
 
@@ -83,3 +91,20 @@ node resource/apps/conveyor-window/tests/browser-checks.mjs --assets /absolute/b
 断线或切换控制来源会暂停并清除旧输入；重新连接后松开按键，再按 START 继续。临时失焦时保留TCP连接并隔离输入，真正退出游戏时关闭服务。遥控器、键盘和扫码手机入口继续可用。
 
 虚拟手柄联调：`python3 puretv-joystick/bridge.py 电视IP --port 63485`，再打开 `http://127.0.0.1:8767/`。使用备用端口时替换命令中的端口。验证范围见[20款游戏接入记录](../../../docs/readme-controller-support/README.md)。
+
+<!-- controller-client-status-history:start -->
+<details>
+<summary>历史 0.2.1 安装包与验收记录</summary>
+
+以下为旧版发布记录，其测试与画面不代表本次连接 ID 界面验收。[原提交中的完整说明](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/conveyor-window/README.md)。
+
+**0.2.1 · pureTV 手柄更新：** [签名安装包](conveyor-window-0.2.1.apk) · [Android 实包手柄回归录像](docs/releases/0.2.1/gameplay.mp4) · [版本验证](docs/releases/0.2.1/verification.json) · [当时接入记录](../../../docs/readme-controller-support/README.md)
+
+新增 pureTV Wi-Fi 手柄支持，默认端口 **63485**，显示真实连接状态，断线时暂停并清除输入。保留原六关及规则，遥控器和扫码手机仍可使用。
+
+该历史版 APK 已签名，并在 Android TV API 36 模拟器中完成同证书覆盖安装验证，通过全部 8 项手柄验收，覆盖开始、实际游戏操作、暂停恢复、断线重连、九键输入及逐消息 ACK。下图和上方录像来自该历史版本实际 APK；录像记录手柄回归过程，不是六关通关录像。尚未进行实体电视、手机或 ESP32 测试。
+
+![0.2.1 实际 Android APK 菜单](docs/releases/0.2.1/menu.png)
+
+</details>
+<!-- controller-client-status-history:end -->

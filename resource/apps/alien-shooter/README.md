@@ -1,24 +1,26 @@
 # 孤胆枪手 TV
 
-<!-- apk-resource:start -->
-[下载 APK](alien-shooter-0.1.3.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
-
-APK 已使用原 pureTV 发布证书签名，已在 Android TV 模拟器完成 0.1.2 → 0.1.3 覆盖安装；未验证带存档升级及数据保留。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
-<!-- apk-resource:end -->
-
 [中文](README.md) · [English](README.en.md)
 
-## 0.1.3 pureTV 手柄更新
+<!-- controller-client-status:start -->
+## 0.1.4 · 手柄连接标识
 
-当前版本 **0.1.3 / versionCode 4** 新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。APK 已沿用原发布证书正式签名。Android TV 模拟器中的实际 APK 手柄验收已通过 8/8，覆盖 START、实际玩法输入、暂停恢复、断线重连和同序号 ACK。
+<!-- apk-resource:start -->
+[下载签名 APK](alien-shooter-0.1.4.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
+<!-- apk-resource:end -->
 
-实际结果和限制见[本轮 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+Android **0.1.4 / versionCode 5**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-本版本验收资源：[菜单截图](docs/releases/0.1.3/menu.png) · [实际 APK 运行录像](docs/releases/0.1.3/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.1.3/verification.json)。截图和录像来自 Android TV 模拟器，未做实体电视测试。完整归档、具体检查范围与限制见验证记录。
+[连接截图](docs/releases/0.1.4/connected.png) · [连接状态专项录像](docs/releases/0.1.4/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.1.4/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+
+安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
+
+![Android 0.1.4 手柄已连接及完整 ID](docs/releases/0.1.4/connected.png)
+<!-- controller-client-status:end -->
 
 一款独立制作的斜俯视基地射击游戏。进入被异形占据的货运站、实验室和反应堆，恢复控制台、守住怪潮、购买补给，击败母巢守卫后撤离。专为单人游玩设计，支持电视大屏与一部手机扫码操作。
 
-当前版本 **0.1.3** · 包名 `com.ecojust.alienshootertv` · Android 8.0 及以上。
+当前版本 **0.1.4** · 包名 `com.ecojust.alienshootertv` · Android 8.0 及以上。
 
 ## 开始游玩
 
@@ -107,3 +109,24 @@ cd resource/launcher/puretv
 START 开始、暂停或继续。方向键移动；A / X 持续射击并使用游戏原有的近敌自动瞄准；B 投掷手雷；Y 切换武器。 手机扫码、遥控器和键盘仍可使用；此游戏的 Y 是 SELECT 功能，X 与 A 为同一动作。
 
 断线、手柄会话替换或控制来源切换会取消旧输入并暂停。重新连接后先松开按键，再按 START 继续，保持的按键不会自动触发操作。本作支持一只 Wi-Fi 手柄。
+
+<!-- controller-client-status-history:start -->
+<details>
+<summary>历史 0.1.3 安装包与验收记录</summary>
+
+以下为旧版发布记录，其测试与画面不代表本次连接 ID 界面验收。[原提交中的完整说明](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/alien-shooter/README.md)。
+
+[下载 APK](alien-shooter-0.1.3.apk?raw=1) · [校验值](docs/controller-status-baseline/0.1.3/SHA256SUMS.txt) · [签名及构建来源](docs/controller-status-baseline/0.1.3/resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+
+APK 已使用原 pureTV 发布证书签名，已在 Android TV 模拟器完成 0.1.2 → 0.1.3 覆盖安装；未验证带存档升级及数据保留。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
+
+## 0.1.3 pureTV 手柄更新
+
+历史版本 **0.1.3 / versionCode 4** 新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。APK 已沿用原发布证书正式签名。Android TV 模拟器中的实际 APK 手柄验收已通过 8/8，覆盖 START、实际玩法输入、暂停恢复、断线重连和同序号 ACK。
+
+实际结果和限制见[当时 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+
+该历史版本验收资源：[菜单截图](docs/releases/0.1.3/menu.png) · [实际 APK 运行录像](docs/releases/0.1.3/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.1.3/verification.json)。截图和录像来自 Android TV 模拟器，未做实体电视测试。完整归档、具体检查范围与限制见验证记录。
+
+</details>
+<!-- controller-client-status-history:end -->

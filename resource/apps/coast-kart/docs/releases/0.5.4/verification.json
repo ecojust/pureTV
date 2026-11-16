@@ -1,0 +1,112 @@
+{
+  "status": "passed",
+  "scope": "controller client status acceptance",
+  "game": "coast-kart",
+  "version": "0.5.4",
+  "artifactSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "qaSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "runtimeRun": "43846050276",
+  "sourceWorkflowResult": "failure",
+  "sourceGroupResult": "passed",
+  "apk": {
+    "packageName": "com.ecojust.coastkarttv",
+    "versionCode": 6,
+    "versionName": "0.5.4",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "bytes": 276105,
+    "sha256": "535fa7a82faffada213f1870236d5506d36829f6b7557382c9cdd262e3773654"
+  },
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "nativeSourceReceiptMatchesCommit": true,
+  "inPlaceUpgradeInstalled": true,
+  "controllerClientStatusAcceptancePassed": true,
+  "fullGameplayAcceptancePerformedInThisUpdate": false,
+  "modelReuse": {
+    "sourceRef": "9af9f197855eb7a0ce7174c0e6295c8974b3250d:resource/apps/coast-kart/src/main/assets/game-model.js",
+    "sha256": "034aa554416e0c10a0495b815c38929ac45907b3350bd7f662804a56d38f7982",
+    "bytes": 25736,
+    "matchesNewApk": true
+  },
+  "previousReleaseVerification": {
+    "version": "0.5.3",
+    "metadata": "resource/apps/coast-kart/docs/controller-status-baseline/0.5.3/resource.json",
+    "scope": "Historical evidence, not current UI captures"
+  },
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-706b57da9665",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "two SDK identities display separate seats and update independently",
+      "status": "passed",
+      "result": {
+        "primaryControllerId": "virtual-706b57da9665",
+        "secondaryControllerId": "virtual-d855f2150b38",
+        "seats": 2
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-706b57da9665",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 47,
+        "acks": 47,
+        "connections": 4
+      }
+    }
+  ],
+  "originalEvidence": "docs/controller-client-status/android/43846050276/evidence/controller-runtime-worlds-1/coast-kart",
+  "originalDriverSha256": "8d56d7b007afaee703c6fe92cf1dcfe8afaa4f198b0b35b583698c4842ed48cb",
+  "captures": {
+    "menu-android.png": {
+      "sha256": "1170e67f8c20f34171477de649409e11b03d94b5a6763025bd0af023112ffb14",
+      "bytes": 1005426
+    },
+    "controller-connected-android.png": {
+      "sha256": "651a11c286dd9f31dc1a24231755f3e4e0f2f8b2a3fe48ad757b68d3849d00f1",
+      "bytes": 1006465
+    },
+    "controllers-two-android.png": {
+      "sha256": "4e72098888a37f8e188d3aa0845f91b94a672f619519c1760c79cee4dc70a346",
+      "bytes": 1001342
+    },
+    "controller-disconnected.png": {
+      "sha256": "c35d483989120a58a9bec6c6c7abae4b21fb39b6dac877f91906dd8e3b269930",
+      "bytes": 1013208
+    },
+    "controller-reconnected.png": {
+      "sha256": "ea767e573063f69543f41da96ebeb3dc50244b03147b51f2125b99083c3ffef4",
+      "bytes": 1011668
+    }
+  },
+  "connectedCaptureSha256": "651a11c286dd9f31dc1a24231755f3e4e0f2f8b2a3fe48ad757b68d3849d00f1",
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false
+}

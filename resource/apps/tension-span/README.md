@@ -1,12 +1,20 @@
 # 拉索桥梁 / Tension Span
 
-**0.2.2 · pureTV 手柄更新：** [签名安装包](tension-span-0.2.2.apk) · [Android 实包手柄回归录像](docs/releases/0.2.2/gameplay.mp4) · [版本验证](docs/releases/0.2.2/verification.json) · [本轮接入记录](../../../docs/readme-controller-support/README.md)
+<!-- controller-client-status:start -->
+## 0.2.3 · 手柄连接标识
 
-新增 pureTV Wi-Fi 手柄支持，默认端口 **63485**，显示真实连接状态，断线时暂停并清除输入。保留原六关及规则，遥控器和扫码手机仍可使用。
+<!-- apk-resource:start -->
+[下载签名 APK](tension-span-0.2.3.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
+<!-- apk-resource:end -->
 
-本版 APK 已签名，并在 Android TV API 36 模拟器中完成同证书覆盖安装验证，通过全部 8 项手柄验收，覆盖开始、实际游戏操作、暂停恢复、断线重连、九键输入及逐消息 ACK。下图和上方录像来自本版本实际 APK；录像记录手柄回归过程，不是六关通关录像。尚未进行实体电视、手机或 ESP32 测试。
+Android **0.2.3 / versionCode 5**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-![0.2.2 实际 Android APK 菜单](docs/releases/0.2.2/menu.png)
+[连接截图](docs/releases/0.2.3/connected.png) · [连接状态专项录像](docs/releases/0.2.3/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.2.3/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+
+安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
+
+![Android 0.2.3 手柄已连接及完整 ID](docs/releases/0.2.3/connected.png)
+<!-- controller-client-status:end -->
 
 历史 0.2.1：[签名安装包](tension-span-0.2.1.apk) · [六关实际游玩录像](docs/gameplay-0.2.1.mp4) · [旧版验证记录](https://github.com/ecojust/pureTV/blob/bf58393ba8fa8bb3bdf731ab24f9ab09d90f5075/resource/apps/tension-span/docs/verification.json)。这些旧版记录作为未改变规则的回归依据，不代表本轮界面、手柄链路或 Android 实包验收。
 
@@ -16,7 +24,7 @@
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.tensionspantv`
-- 版本：`0.2.2`（versionCode 4）
+- 版本：`0.2.3`（versionCode 5）
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
@@ -79,3 +87,20 @@ node resource/apps/tension-span/tests/browser-checks.mjs --assets /absolute/buil
 断线或切换控制来源会暂停并清除旧输入；重新连接后松开按键，再按 START 继续。临时失焦时保留TCP连接并隔离输入，真正退出游戏时关闭服务。遥控器、键盘和扫码手机入口继续可用。
 
 虚拟手柄联调：`python3 puretv-joystick/bridge.py 电视IP --port 63485`，再打开 `http://127.0.0.1:8767/`。使用备用端口时替换命令中的端口。验证范围见[20款游戏接入记录](../../../docs/readme-controller-support/README.md)。
+
+<!-- controller-client-status-history:start -->
+<details>
+<summary>历史 0.2.2 安装包与验收记录</summary>
+
+以下为旧版发布记录，其测试与画面不代表本次连接 ID 界面验收。[原提交中的完整说明](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/tension-span/README.md)。
+
+**0.2.2 · pureTV 手柄更新：** [签名安装包](tension-span-0.2.2.apk) · [Android 实包手柄回归录像](docs/releases/0.2.2/gameplay.mp4) · [版本验证](docs/releases/0.2.2/verification.json) · [当时接入记录](../../../docs/readme-controller-support/README.md)
+
+新增 pureTV Wi-Fi 手柄支持，默认端口 **63485**，显示真实连接状态，断线时暂停并清除输入。保留原六关及规则，遥控器和扫码手机仍可使用。
+
+该历史版 APK 已签名，并在 Android TV API 36 模拟器中完成同证书覆盖安装验证，通过全部 8 项手柄验收，覆盖开始、实际游戏操作、暂停恢复、断线重连、九键输入及逐消息 ACK。下图和上方录像来自该历史版本实际 APK；录像记录手柄回归过程，不是六关通关录像。尚未进行实体电视、手机或 ESP32 测试。
+
+![0.2.2 实际 Android APK 菜单](docs/releases/0.2.2/menu.png)
+
+</details>
+<!-- controller-client-status-history:end -->

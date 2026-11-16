@@ -1,24 +1,26 @@
 # Jackal TV · 赤色要塞
 
-<!-- apk-resource:start -->
-[下载 APK](jackal-0.5.3.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
-
-本版本 APK 已使用原 pureTV 发布证书正式签名，并通过从上一版本覆盖安装的验证；本轮 Android 手柄验收结果见下方更新说明。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
-<!-- apk-resource:end -->
-
 [中文](README.md) · [English](README.en.md)
 
-## 0.5.3 pureTV 手柄更新
+<!-- controller-client-status:start -->
+## 0.5.4 · 手柄连接标识
 
-当前版本为 **0.5.3 / versionCode 7**，新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。正式签名 APK 已在 Android TV 模拟器完成 9/9 项手柄验收，并通过从上一版本执行 `adb install -r` 覆盖安装。未做带存档升级或数据保留验证。
+<!-- apk-resource:start -->
+[下载签名 APK](jackal-0.5.4.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
+<!-- apk-resource:end -->
 
-实际结果和限制见[本轮 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+Android **0.5.4 / versionCode 8**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-本版本验收资源：[菜单截图](docs/releases/0.5.3/menu.png) · [实际 APK 运行录像](docs/releases/0.5.3/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.5.3/verification.json)。截图和录像来自 Android TV 模拟器，未做实体电视测试。验收范围和具体结果见验证记录；模拟器结果不代表实体电视或带存档升级验证。
+[连接截图](docs/releases/0.5.4/connected.png) · [连接状态专项录像](docs/releases/0.5.4/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.5.4/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+
+安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
+
+![Android 0.5.4 手柄已连接及完整 ID](docs/releases/0.5.4/connected.png)
+<!-- controller-client-status:end -->
 
 Jackal TV 独立重写红白机 NES 版《赤色要塞》的六关玩法：吉普车驾驶、营救战俘、直升机撤离、武器升级和六种首领战。电视显示游戏和房间二维码，手机扫码后使用左侧摇杆、右侧 A/B 与 START/SELECT 控制，支持 1–2 人局域网合作。
 
-当前版本为 **0.5.3**。安装后即可游玩，无须导入 ROM；包名保持不变。此版本包含六关重写内容，AI、部分碰撞、动画时序与音色尚有差异，尚未完成电视实机及逐帧对照验证。
+当前版本为 **0.5.4**。安装后即可游玩，无须导入 ROM；包名保持不变。此版本包含六关重写内容，AI、部分碰撞、动画时序与音色尚有差异，尚未完成电视实机及逐帧对照验证。
 
 <!-- visual-release:start -->
 ## 历史：0.5.2 视觉更新与验证
@@ -41,14 +43,14 @@ Jackal TV 独立重写红白机 NES 版《赤色要塞》的六关玩法：吉�
 
 ## 安装与签名
 
-0.5.3 已沿用 0.5.0／0.5.1／0.5.2 的 pureTV 统一发布证书；本轮已在 Android TV 模拟器成功从 0.5.2 执行 `adb install -r` 覆盖安装。该检查未预置存档，不代表已验证升级后存档或用户数据保留。使用旧证书的 0.4.x 及更早安装不能直接覆盖，请先备份可导出的数据再卸载；卸载会清除本机存档和记录，本项目没有跨证书自动迁移工具。
+历史 0.5.3 已沿用 0.5.0／0.5.1／0.5.2 的 pureTV 统一发布证书；当时已在 Android TV 模拟器成功从 0.5.2 执行 `adb install -r` 覆盖安装。该检查未预置存档，不代表已验证升级后存档或用户数据保留。使用旧证书的 0.4.x 及更早安装不能直接覆盖，请先备份可导出的数据再卸载；卸载会清除本机存档和记录，本项目没有跨证书自动迁移工具。
 
 ## 浮动摇杆与兼容性
 
 修复旧版电视 WebView 的启动黑屏与玩家状态不显示。房间状态独立于游戏绘制更新，启动或绘制失败时会显示可读提示。手机手柄改为浮动摇杆：默认隐藏，在左侧操作区任意位置按下确定本次中心，拖动驾驶，松手立即停止并隐藏。移动与 A/B 支持多指同时操作；触控中断、切后台或断线时清空输入。A 仍为榴弹／火箭，B 仍为机枪。
 
 ## APK
-适用于 Android 8.0 及以上电视，包名 `com.ecojust.jackaltv`。本目录 APK 版本为 `0.5.3`，签名、覆盖安装和运行验收见本轮记录。
+适用于 Android 8.0 及以上电视，包名 `com.ecojust.jackaltv`。本目录 APK 版本为 `0.5.4`，签名、覆盖安装和运行验收见[本次版本验证](docs/releases/0.5.4/verification.json)。
 
 ## 历史：0.5.0 手柄升级
 
@@ -126,3 +128,24 @@ APK 输出在 `resource/apps/jackal/build/outputs/apk/`。局域网协议、服�
 方向键驾驶；**A/X** 每次按下投掷手雷／发射火箭，**B** 按住向画面上方连续机枪射击。**Y（SELECT）** 在标题切换人数、Continue 画面切换选项。**START** 开始、暂停／继续。支持两只 Wi-Fi 手柄分别占据两个玩家席位。扫码手机手柄和电视遥控器仍可使用。
 
 断线或切换控制来源会暂停游戏，松开按键后重新按 START 继续；重连同步和原先按住的键不会自动触发动作。临时失焦时隔离输入并保留监听服务；按 Home 或切换应用仍会按原有流程退出游戏并关闭服务。
+
+<!-- controller-client-status-history:start -->
+<details>
+<summary>历史 0.5.3 安装包与验收记录</summary>
+
+以下为旧版发布记录，其测试与画面不代表本次连接 ID 界面验收。[原提交中的完整说明](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/jackal/README.md)。
+
+[下载 APK](jackal-0.5.3.apk?raw=1) · [校验值](docs/controller-status-baseline/0.5.3/SHA256SUMS.txt) · [签名及构建来源](docs/controller-status-baseline/0.5.3/resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+
+该历史版本 APK 已使用原 pureTV 发布证书正式签名，并通过从上一版本覆盖安装的验证；当时 Android 手柄验收结果见下方更新说明。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
+
+## 0.5.3 pureTV 手柄更新
+
+历史版本为 **0.5.3 / versionCode 7**，新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。正式签名 APK 已在 Android TV 模拟器完成 9/9 项手柄验收，并通过从上一版本执行 `adb install -r` 覆盖安装。未做带存档升级或数据保留验证。
+
+实际结果和限制见[当时 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+
+该历史版本验收资源：[菜单截图](docs/releases/0.5.3/menu.png) · [实际 APK 运行录像](docs/releases/0.5.3/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.5.3/verification.json)。截图和录像来自 Android TV 模拟器，未做实体电视测试。验收范围和具体结果见验证记录；模拟器结果不代表实体电视或带存档升级验证。
+
+</details>
+<!-- controller-client-status-history:end -->
