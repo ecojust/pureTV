@@ -44,3 +44,5 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 两款 Mac 原包均完成 Apple Silicon 原生运行、端口占用回退和 Rosetta 验证；安装包和测试资产逐字节绑定。Intel 托管运行机出现 WebGL 上下文丢失，仅完成协议与生命周期检查，不能据此宣称 Intel 图形运行已通过。独立复核见 [运输船 CF](docs/qa/macos-cf-run-44124342900-review.json) 与 [QQ 飞车](docs/qa/macos-qq-run-44120745068-review.json)。
 
 浏览器还完成了 QQ 飞车的一整圈正常比赛结算；各类测试范围、原始失败记录与来源分别保存在 [QA 说明](docs/qa/README.md) 和 [构建来源](docs/source-scope.json)。这些结果不代替实体电视与 ESP32 联调。
+
+六个安装文件已随提交 [`97a87e3`](https://github.com/ecojust/pureTV/commit/97a87e3c2ce8afde3849a57a199bdce7410e818c) 推送到 `master`。安装包及说明等 50 份文件均通过公开完整下载和 SHA256 核对，见[下载核验记录](docs/publication-verification.json)。
