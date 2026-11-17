@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.score",
+    "gameplay.playerX",
+    "gameplay.playerY",
+    "gameplay.shots"
+  ],
+  "steps": [
+    {
+      "name": "Start and show the original intro",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "story"
+        }
+      ]
+    },
+    {
+      "name": "Skip the intro through its normal control",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Fly and shoot",
+      "keys": [
+        "RIGHT",
+        "A"
+      ],
+      "holdMs": 650,
+      "expect": [
+        {
+          "path": "gameplay.playerX",
+          "op": "changed"
+        },
+        {
+          "path": "gameplay.shots",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Use one bomb",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.bombsUsed",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause the battle",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}

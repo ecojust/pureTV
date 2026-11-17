@@ -1,0 +1,814 @@
+{
+  "sourceCommit": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "qaSourceCommit": "b15beb969bfc83595143aec4ddc4817220ba8119",
+  "artifactRunId": 44150598155,
+  "batch": "one-button-01",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "blaze-thrust",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/blaze-thrust",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/blaze-thrust/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "blaze-thrust/package-verification.log",
+          "startedAt": "2026-11-17T19:21:14.900653+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "blaze-thrust",
+            "--app",
+            "/Users/runner/work/_temp/packages/blaze-thrust/installed/Blaze Thrust.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/blaze-thrust/native"
+          ],
+          "status": "passed",
+          "log": "blaze-thrust/native.log",
+          "startedAt": "2026-11-17T19:21:40.975907+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "blaze-thrust",
+            "--app",
+            "/Users/runner/work/_temp/packages/blaze-thrust/installed/Blaze Thrust.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/blaze-thrust/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "blaze-thrust/occupied-port.log",
+          "startedAt": "2026-11-17T19:22:14.755143+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "blaze-thrust",
+            "--app",
+            "/Users/runner/work/_temp/packages/blaze-thrust/installed/Blaze Thrust.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/blaze-thrust/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "blaze-thrust/rosetta.log",
+          "startedAt": "2026-11-17T19:22:15.082310+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "echo-bridge",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/echo-bridge",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/echo-bridge/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "echo-bridge/package-verification.log",
+          "startedAt": "2026-11-17T19:22:49.440283+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "echo-bridge",
+            "--app",
+            "/Users/runner/work/_temp/packages/echo-bridge/installed/Echo Bridge.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/echo-bridge/native"
+          ],
+          "status": "passed",
+          "log": "echo-bridge/native.log",
+          "startedAt": "2026-11-17T19:23:00.661643+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "echo-bridge",
+            "--app",
+            "/Users/runner/work/_temp/packages/echo-bridge/installed/Echo Bridge.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/echo-bridge/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "echo-bridge/occupied-port.log",
+          "startedAt": "2026-11-17T19:23:33.240445+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "echo-bridge",
+            "--app",
+            "/Users/runner/work/_temp/packages/echo-bridge/installed/Echo Bridge.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/echo-bridge/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "echo-bridge/rosetta.log",
+          "startedAt": "2026-11-17T19:23:33.600150+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "jet-stream",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/jet-stream",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/jet-stream/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "jet-stream/package-verification.log",
+          "startedAt": "2026-11-17T19:24:07.120722+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "jet-stream",
+            "--app",
+            "/Users/runner/work/_temp/packages/jet-stream/installed/Jet Stream.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/jet-stream/native"
+          ],
+          "status": "passed",
+          "log": "jet-stream/native.log",
+          "startedAt": "2026-11-17T19:24:19.627515+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "jet-stream",
+            "--app",
+            "/Users/runner/work/_temp/packages/jet-stream/installed/Jet Stream.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/jet-stream/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "jet-stream/occupied-port.log",
+          "startedAt": "2026-11-17T19:24:56.381287+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "jet-stream",
+            "--app",
+            "/Users/runner/work/_temp/packages/jet-stream/installed/Jet Stream.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/jet-stream/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "jet-stream/rosetta.log",
+          "startedAt": "2026-11-17T19:24:56.825827+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "kite-master",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/kite-master",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/kite-master/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "kite-master/package-verification.log",
+          "startedAt": "2026-11-17T19:25:38.658269+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kite-master",
+            "--app",
+            "/Users/runner/work/_temp/packages/kite-master/installed/Kite Master.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kite-master/native"
+          ],
+          "status": "passed",
+          "log": "kite-master/native.log",
+          "startedAt": "2026-11-17T19:25:54.891310+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kite-master",
+            "--app",
+            "/Users/runner/work/_temp/packages/kite-master/installed/Kite Master.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kite-master/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "kite-master/occupied-port.log",
+          "startedAt": "2026-11-17T19:26:31.514281+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kite-master",
+            "--app",
+            "/Users/runner/work/_temp/packages/kite-master/installed/Kite Master.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kite-master/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "kite-master/rosetta.log",
+          "startedAt": "2026-11-17T19:26:31.930645+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "marble-bounce",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/marble-bounce",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/marble-bounce/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "marble-bounce/package-verification.log",
+          "startedAt": "2026-11-17T19:27:07.892051+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "marble-bounce",
+            "--app",
+            "/Users/runner/work/_temp/packages/marble-bounce/installed/Marble Bounce.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/marble-bounce/native"
+          ],
+          "status": "passed",
+          "log": "marble-bounce/native.log",
+          "startedAt": "2026-11-17T19:27:19.663223+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "marble-bounce",
+            "--app",
+            "/Users/runner/work/_temp/packages/marble-bounce/installed/Marble Bounce.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/marble-bounce/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "marble-bounce/occupied-port.log",
+          "startedAt": "2026-11-17T19:27:54.506766+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "marble-bounce",
+            "--app",
+            "/Users/runner/work/_temp/packages/marble-bounce/installed/Marble Bounce.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/marble-bounce/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "marble-bounce/rosetta.log",
+          "startedAt": "2026-11-17T19:27:54.718167+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "microbial-focus",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/microbial-focus",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/microbial-focus/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "microbial-focus/package-verification.log",
+          "startedAt": "2026-11-17T19:28:30.856467+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "microbial-focus",
+            "--app",
+            "/Users/runner/work/_temp/packages/microbial-focus/installed/Microbial Focus.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/microbial-focus/native"
+          ],
+          "status": "passed",
+          "log": "microbial-focus/native.log",
+          "startedAt": "2026-11-17T19:28:43.824737+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "microbial-focus",
+            "--app",
+            "/Users/runner/work/_temp/packages/microbial-focus/installed/Microbial Focus.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/microbial-focus/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "microbial-focus/occupied-port.log",
+          "startedAt": "2026-11-17T19:29:19.528549+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "microbial-focus",
+            "--app",
+            "/Users/runner/work/_temp/packages/microbial-focus/installed/Microbial Focus.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/microbial-focus/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "microbial-focus/rosetta.log",
+          "startedAt": "2026-11-17T19:29:19.772194+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "pod-migration",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/pod-migration",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/pod-migration/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "pod-migration/package-verification.log",
+          "startedAt": "2026-11-17T19:29:55.481919+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "pod-migration",
+            "--app",
+            "/Users/runner/work/_temp/packages/pod-migration/installed/Pod Migration.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/pod-migration/native"
+          ],
+          "status": "passed",
+          "log": "pod-migration/native.log",
+          "startedAt": "2026-11-17T19:30:06.705667+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "pod-migration",
+            "--app",
+            "/Users/runner/work/_temp/packages/pod-migration/installed/Pod Migration.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/pod-migration/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "pod-migration/occupied-port.log",
+          "startedAt": "2026-11-17T19:30:47.585904+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "pod-migration",
+            "--app",
+            "/Users/runner/work/_temp/packages/pod-migration/installed/Pod Migration.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/pod-migration/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "failed",
+          "log": "pod-migration/rosetta.log",
+          "startedAt": "2026-11-17T19:30:48.042818+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "pulse-stream",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/pulse-stream",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/pulse-stream/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "pulse-stream/package-verification.log",
+          "startedAt": "2026-11-17T19:31:40.184499+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "pulse-stream",
+            "--app",
+            "/Users/runner/work/_temp/packages/pulse-stream/installed/Pulse Stream.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/pulse-stream/native"
+          ],
+          "status": "passed",
+          "log": "pulse-stream/native.log",
+          "startedAt": "2026-11-17T19:31:55.833358+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "pulse-stream",
+            "--app",
+            "/Users/runner/work/_temp/packages/pulse-stream/installed/Pulse Stream.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/pulse-stream/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "pulse-stream/occupied-port.log",
+          "startedAt": "2026-11-17T19:32:34.019709+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "pulse-stream",
+            "--app",
+            "/Users/runner/work/_temp/packages/pulse-stream/installed/Pulse Stream.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/pulse-stream/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "pulse-stream/rosetta.log",
+          "startedAt": "2026-11-17T19:32:34.242297+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "rocket-trail",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/rocket-trail",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/rocket-trail/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "rocket-trail/package-verification.log",
+          "startedAt": "2026-11-17T19:33:11.470309+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "rocket-trail",
+            "--app",
+            "/Users/runner/work/_temp/packages/rocket-trail/installed/Rocket Trail.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/rocket-trail/native"
+          ],
+          "status": "failed",
+          "log": "rocket-trail/native.log",
+          "startedAt": "2026-11-17T19:33:21.538801+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "rocket-trail",
+            "--app",
+            "/Users/runner/work/_temp/packages/rocket-trail/installed/Rocket Trail.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/rocket-trail/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "rocket-trail/occupied-port.log",
+          "startedAt": "2026-11-17T19:33:47.398925+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "rocket-trail",
+            "--app",
+            "/Users/runner/work/_temp/packages/rocket-trail/installed/Rocket Trail.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/rocket-trail/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "failed",
+          "log": "rocket-trail/rosetta.log",
+          "startedAt": "2026-11-17T19:33:47.637331+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "switchboard",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/switchboard",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/switchboard/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "switchboard/package-verification.log",
+          "startedAt": "2026-11-17T19:34:30.165488+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "switchboard",
+            "--app",
+            "/Users/runner/work/_temp/packages/switchboard/installed/Switchboard.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/switchboard/native"
+          ],
+          "status": "passed",
+          "log": "switchboard/native.log",
+          "startedAt": "2026-11-17T19:34:40.491070+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "switchboard",
+            "--app",
+            "/Users/runner/work/_temp/packages/switchboard/installed/Switchboard.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/switchboard/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "switchboard/occupied-port.log",
+          "startedAt": "2026-11-17T19:35:15.573580+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "switchboard",
+            "--app",
+            "/Users/runner/work/_temp/packages/switchboard/installed/Switchboard.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/switchboard/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "switchboard/rosetta.log",
+          "startedAt": "2026-11-17T19:35:15.714109+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "tectonic-tether",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/tectonic-tether",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/tectonic-tether/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "tectonic-tether/package-verification.log",
+          "startedAt": "2026-11-17T19:35:50.674598+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "tectonic-tether",
+            "--app",
+            "/Users/runner/work/_temp/packages/tectonic-tether/installed/Tectonic Tether.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/tectonic-tether/native"
+          ],
+          "status": "passed",
+          "log": "tectonic-tether/native.log",
+          "startedAt": "2026-11-17T19:35:58.881689+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "tectonic-tether",
+            "--app",
+            "/Users/runner/work/_temp/packages/tectonic-tether/installed/Tectonic Tether.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/tectonic-tether/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "tectonic-tether/occupied-port.log",
+          "startedAt": "2026-11-17T19:36:35.541549+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "tectonic-tether",
+            "--app",
+            "/Users/runner/work/_temp/packages/tectonic-tether/installed/Tectonic Tether.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/tectonic-tether/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "tectonic-tether/rosetta.log",
+          "startedAt": "2026-11-17T19:36:35.824329+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}

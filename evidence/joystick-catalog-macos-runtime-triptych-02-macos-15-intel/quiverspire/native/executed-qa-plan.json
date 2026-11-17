@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.playerX",
+    "gameplay.playerY",
+    "gameplay.hp",
+    "gameplay.lastShotAt"
+  ],
+  "steps": [
+    {
+      "name": "Start a run and open its real blessing choice",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "choice"
+        }
+      ]
+    },
+    {
+      "name": "Select an actual ability card",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "gameplay.choices",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Move right to dodge",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 850,
+      "expect": [
+        {
+          "path": "gameplay.playerX",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Advance up the room",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 850,
+      "expect": [
+        {
+          "path": "gameplay.playerY",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Stand still and let the original auto-archer shoot",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 2000,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.lastShotAt",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause the real room simulation",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Persist the original sound preference through its real control",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}

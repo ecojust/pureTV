@@ -1,0 +1,88 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "b15beb969bfc83595143aec4ddc4817220ba8119",
+  "artifactSourceCommit": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "artifactRunId": "44150598155",
+  "startedAt": "2026-11-17T19:22:14.960837+00:00",
+  "game": "blaze-thrust",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "f4aad5f2af7d9255a6beb3b898daa290f2209df26b29db5db7e15865ddca8904",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/blaze-thrust/qa-plan.json": "d88f32f83b6966f1d02ac6db30b26ac11d9ffcd8f169e3d0fc89c745edc93ef1",
+    "joystick-games/tools/qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "joystick-games/tools/macos-build.py": "1a0b81f2c712aff665be692f677573fa54b7466d6484a563588ea672b6ed2e0a",
+    "joystick-games/catalog-registry.json": "a34fc2e2892b3f5962e1ba2b45b48afb8358cc9d85728320a786805f4f55c30a",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "canvas2d",
+    "steps": [
+      {
+        "name": "start original rules with START",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 100,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "gameplay.ticks",
+            "op": "gt",
+            "value": 0
+          }
+        ]
+      },
+      {
+        "name": "original one-button action changes flame.pos.y",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 160,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "gameplay.flame.pos.y",
+            "op": "changed"
+          }
+        ]
+      }
+    ],
+    "pauseStablePaths": [
+      "gameplay.ticks",
+      "gameplay.score",
+      "gameplay.flame"
+    ]
+  },
+  "acceptedRenderers": [
+    "canvas2d"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "b707e0c52c976af022799ead4692918cae0536f6486c1bd96ffc56642b09a812",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 355, in run\n    if self.args.occupy_default_port:self.blocker=socket.socket();self.blocker.bind(('0.0.0.0',63485));self.blocker.listen(1)\n                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 48] Address already in use\n",
+  "lastState": null,
+  "finishedAt": "2026-11-17T19:22:14.987614+00:00"
+}
