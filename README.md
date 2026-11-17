@@ -153,6 +153,15 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 [joystick-games/](joystick-games/) 集中放置 Android TV 与 macOS 手柄游戏。首批为基于 riba2534 演示项目适配的[运输船 CF](joystick-games/cf-transport-ship/)和[QQ 飞车](joystick-games/qq-speed/)，保留各自地图与玩法，接入 pureTV 九键、开始／暂停及完整客户端 ID 显示。安装包和验证状态见[目录说明](joystick-games/README.md)。两款需要 WebGL2；现有应用资源继续保留原下载地址。
 
+<table>
+<tr>
+<td width="25%" align="center"><a href="joystick-games/cf-transport-ship/"><img src="joystick-games/cf-transport-ship/thumb.png" alt="运输船 CF" width="240" /><br />运输船 CF</a></td>
+<td width="25%" align="center"><a href="joystick-games/qq-speed/"><img src="joystick-games/qq-speed/thumb.png" alt="QQ 飞车" width="240" /><br />QQ 飞车</a></td>
+<td width="25%"></td>
+<td width="25%"></td>
+</tr>
+</table>
+
 ## MCP / Agent
 
 在「设备连接 → MCP · Agent 调试」复制配置到客户端，保持管理器窗口打开。34 个工具覆盖系统信息、连接、应用管理、APK 安装、启动器切换与布局、市场目录／下载／安装、背景图、ADB 配置、语言与主题、取消及记录；Agent 与界面共享状态。

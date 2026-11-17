@@ -14,6 +14,8 @@ import zipfile
 
 spec = importlib.util.spec_from_file_location('runtime_inputs', Path(__file__).with_name('android-runtime-inputs.py'))
 runtime = importlib.util.module_from_spec(spec); spec.loader.exec_module(runtime)
+spec = importlib.util.spec_from_file_location('runtime_copies', Path(__file__).with_name('android-runtime-copies.py'))
+copies = importlib.util.module_from_spec(spec); spec.loader.exec_module(copies)
 ARTIFACT = Path(os.environ['JOYSTICK_RUNTIME_TEST_EXPORT'])
 SOURCE = 'd30e1ce26abbf27d07d149b708c6a491abb105b3'
 RUN = '44110295680'
@@ -113,6 +115,29 @@ class ExportBoundaries(unittest.TestCase):
     def test_actual_signed_content_is_bound_by_receipt(self):
         apk = ARTIFACT / 'packages/qq-speed/qq-speed-0.1.0.apk'
         self.assertEqual(runtime.archive_content(apk), self.receipt['contentSha256'])
+
+    def test_hidden_workflow_copy_is_required_when_declared(self):
+        source = Path(self.temp.name) / 'executed-source'
+        path = source / '.github/workflows/runtime.yml'
+        path.parent.mkdir(parents=True); path.write_text('actual workflow fixture')
+        inventory = {'.github/workflows/runtime.yml': copies.file_record(path)}
+        errors = []; self.assertEqual(copies.check_inventory(source, inventory, errors, 'fixture'), 1)
+        self.assertEqual(errors, [])
+        path.unlink(); errors = []
+        self.assertEqual(copies.check_inventory(source, inventory, errors, 'fixture'), 0)
+        self.assertEqual(len(errors), 1); self.assertIn('missing regular file .github/workflows/runtime.yml', errors[0])
+
+    def test_missing_input_verification_cannot_pass_archive_check(self):
+        evidence = Path(self.temp.name) / 'evidence'
+        for slug in copies.GAMES:
+            folder = evidence / ('joystick-android-runtime-' + slug) / slug
+            source = folder / 'executed-source/.github/workflows/runtime.yml'
+            source.parent.mkdir(parents=True);source.write_text('workflow fixture')
+            (folder / 'executed-source.json').write_text(json.dumps({'files': {'.github/workflows/runtime.yml': copies.file_record(source)}}))
+        report = copies.audit(evidence)
+        self.assertEqual(report['status'], 'failed')
+        self.assertEqual(len(report['errors']), 2)
+        self.assertTrue(all('missing mandatory input-verification.json' in error for error in report['errors']))
 
 
 if __name__ == '__main__':

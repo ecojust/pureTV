@@ -2,7 +2,22 @@
 
 基于 [riba2534/claude-opus-5-5-demo](https://github.com/riba2534/claude-opus-5-5-demo/tree/54adc1fb64155f9dd7c1c90ecae7b8185ac540b8/cf-transport-ship) 的运输船团队竞技演示，保留地图、机器人、四种主武器、手枪、军刀、手雷和程序生成音效。是非官方演示适配，源码出处与许可状态见 [NOTICE](NOTICE.md)。
 
-Android TV 与 macOS 使用同一份离线页面资产，通过各自原生宿主提供 TCP 63485 与 `_puretv._tcp` 发现。电视／Mac 和手柄连同一个局域网，GPIO 23 搜索后用 START 开始。菜单可用方向键选择、A 确认；无需鼠标锁定。当前为单人对机器人，连接卡显示每只手柄的真实 ID，操作手柄由宿主选择；不能把第二张连接卡理解为双人分屏。
+## 安装包
+
+**打包与验证进行中，尚未发布。** 以下是本目录预定的安装包入口，文件导入后可用。
+
+| 平台 | 安装包 | 系统要求 |
+| --- | --- | --- |
+| Android TV | [cf-transport-ship-0.1.0.apk](cf-transport-ship-0.1.0.apk) | Android 8.0+，系统 WebView 与 GPU 必须支持 WebGL 2 |
+| macOS | [CFTransportShip-0.1.0-macos-universal.dmg](macos/CFTransportShip-0.1.0-macos-universal.dmg) · [ZIP](macos/CFTransportShip-0.1.0-macos-universal.zip) | macOS 11+，WebKit 与 GPU 必须支持 WebGL 2；通用包，包含 Apple Silicon／Intel 版本 |
+
+Mac 包使用 ad-hoc 签名，未做 Apple 公证。系统版本达到下限不保证旧 GPU 或虚拟机可运行；实体电视、手机及 ESP32 手柄尚未联调。
+
+![运输船 CF实际浏览器画面](thumb.png)
+
+预览为实际浏览器渲染、合成手柄输入夹具的原图，直接按字节复制；不是原生安装包或实体设备截图。[原图来源与目视记录](docs/preview-provenance.json)。
+
+Android TV 与 macOS 使用同一份离线页面资产，通过各自原生宿主提供 TCP 63485 与 `_puretv._tcp` 发现。电视／Mac 和手柄连同一个局域网，GPIO 23 搜索后用 START 开始。菜单可用方向键选择、A 确认；无需鼠标锁定。当前为单人对机器人，每个游戏同时接受一只 Wi-Fi 手柄，连接卡显示其真实 ID；第二只连接会被拒绝，不会抢占已有连接。
 
 | 手柄按键 | 对局操作 |
 | --- | --- |

@@ -5,6 +5,7 @@ All control comes through TCP from puretv-joystick/joystick_sdk.py. The observer
 only reads cached production diagnostics and DOM; it cannot set model state.
 """
 import argparse
+from collections import Counter
 import hashlib
 import json
 import math
@@ -36,6 +37,7 @@ class WireProxy:
         self.target = target
         self.records = []
         self.errors = []
+        self.expected_busy_ids = set()
         self.lock = threading.Lock()
         self.closed = threading.Event()
         self.workers = []
@@ -94,12 +96,52 @@ class WireProxy:
     def summary(self):
         with self.lock:
             records = list(self.records)
+            expected_busy_ids = set(self.expected_busy_ids)
         sent = [r for r in records if r['direction'] == 'sdk-to-game']
         replies = [r for r in records if r['direction'] == 'game-to-sdk']
-        acknowledgements = {(r['connection'], r['message'].get('seq')) for r in replies if r['message'].get('type') == 'ack'}
-        missing = [{'connection': r['connection'], 'seq': r['message']['seq']} for r in sent if (r['connection'], r['message']['seq']) not in acknowledgements]
-        return {'sdkMessages': len(sent), 'hostReplies': len(replies), 'matchingAcks': len(sent) - len(missing), 'missingAcks': missing,
-                'keysSent': sorted({r['message']['key'] for r in sent if r['message'].get('type') == 'button'}), 'errors': list(self.errors)}
+        rejected = []
+        for connection in sorted({r['connection'] for r in sent}):
+            outbound = [r['message'] for r in sent if r['connection'] == connection]
+            inbound = [r['message'] for r in replies if r['connection'] == connection]
+            hello = outbound[0]
+            identity = hello.get('controller_id')
+            # The unchanged SDK sends hello followed by up to nine held-state
+            # sync frames. The single-seat server rejects and closes this whole
+            # connection; these are recorded as rejected, never as ACKed.
+            expected_syncs = [{'type': 'button', 'seq': i + 2,
+                               'controller_id': identity, 'key': key, 'action': 'sync',
+                               'pressed': False, 'duration_ms': 0} for i, key in enumerate(KEYS)]
+            expected_tail = expected_syncs[:len(outbound)-1]
+            expected_tail += [{'type': 'ping', 'seq': i + 1, 'controller_id': identity}
+                              for i in range(len(KEYS) + 1, len(outbound))]
+            if (identity in expected_busy_ids and type(hello.get('seq')) is int
+                    and hello == {'type': 'hello', 'seq': 1, 'controller_id': identity}
+                    and outbound[1:] == expected_tail
+                    and inbound == [{'type': 'error', 'message': 'controller_busy', 'seq': 1}]
+                    and type(inbound[0].get('seq')) is int):
+                rejected.append({'connection': connection, 'controllerId': identity, 'helloSeq': 1,
+                                 'sdkMessages': len(outbound), 'response': inbound[0]})
+        rejected_connections = {r['connection'] for r in rejected}
+        accepted = [r for r in sent if r['connection'] not in rejected_connections]
+        acknowledgements = Counter((r['connection'], r['message'].get('seq')) for r in replies
+                                   if r['message'].get('type') == 'ack' and type(r['message'].get('seq')) is int)
+        expected = Counter((r['connection'], r['message']['seq']) for r in accepted)
+        missing = [{'connection': r['connection'], 'seq': r['message']['seq']} for r in accepted
+                   if acknowledgements[(r['connection'], r['message']['seq'])] != 1]
+        unexpected = [r for r in replies if r['connection'] not in rejected_connections
+                      and (r['message'].get('type') != 'ack' or type(r['message'].get('seq')) is not int
+                           or expected[(r['connection'], r['message'].get('seq'))] != 1)]
+        duplicate_acks = [{'connection': conn, 'seq': seq, 'count': count}
+                          for (conn, seq), count in acknowledgements.items() if count != 1]
+        return {'sdkMessages': len(sent), 'acceptedSdkMessages': len(accepted), 'rejectedSdkMessages': len(sent)-len(accepted),
+                'hostReplies': len(replies), 'matchingAcks': len(accepted) - len(missing), 'missingAcks': missing,
+                'expectedBusyIds': sorted(expected_busy_ids), 'rejectedConnections': rejected,
+                'unexpectedReplies': unexpected, 'duplicateAcks': duplicate_acks,
+                'keysSent': sorted({r['message']['key'] for r in accepted if r['message'].get('type') == 'button'}), 'errors': list(self.errors)}
+
+    def expect_busy(self, identity):
+        with self.lock:
+            self.expected_busy_ids.add(identity)
 
     def close(self):
         self.closed.set(); self.server.close()
@@ -266,6 +308,54 @@ class Acceptance:
         return [r['controllerId'] for c in snapshot.get('page', {}).get('controllerClients', {}).get('containers', []) if c['visible']
                 for r in c['rows'] if r['visible'] and r['iconVisible'] and Acceptance.full_id_text(r)]
 
+    @classmethod
+    def single_seat_session(cls, snapshot, identity):
+        players = [p for p in cls.game(snapshot).get('controller', {}).get('players', []) if p.get('connected')]
+        rows = [r for c in snapshot.get('page', {}).get('controllerClients', {}).get('containers', []) if c['visible']
+                for r in c['rows'] if r['visible']]
+        if (len(players) != 1 or players[0].get('id') != 1 or players[0].get('controllerId') != identity
+                or not players[0].get('session') or len(rows) != 1 or rows[0].get('playerId') != 1
+                or cls.visible_ids(snapshot) != [identity]):
+            return None
+        return players[0]['session']
+
+    def reject_second_controller(self):
+        primary = self.clients[0]
+        baseline = self.record('before-second-controller')
+        session = self.single_seat_session(baseline, primary.identity)
+        assert session, 'Primary player must own the only seat before rejection check'
+        second = JoystickClient('127.0.0.1', self.proxy.port)
+        self.proxy.expect_busy(second.identity)
+        try:
+            try:
+                second.connect()
+            except OSError as error:
+                # A genuine server rejection can close during the SDK's sync
+                # burst. Only the exact wire rejection below proves success.
+                self.report['secondConnectError'] = repr(error)
+            until = time.monotonic() + 10
+            rejection = None
+            while time.monotonic() < until:
+                rejection = next((r for r in self.proxy.summary()['rejectedConnections']
+                                  if r['controllerId'] == second.identity), None)
+                if rejection: break
+                time.sleep(0.05)
+            assert rejection, 'Second SDK hello did not receive exact controller_busy on its own connection'
+        finally:
+            second.disconnect()
+        stable = self.record('second-controller-rejected', self.wait_fresh(baseline, frames=3, label='single-seat-rejection-fresh-frames'))
+        assert self.single_seat_session(stable, primary.identity) == session, 'Rejected controller stole or replaced the primary seat'
+        assert self.game(stable)['stage'] == self.game(baseline)['stage'], 'Second connection changed game stage'
+        self.tap('START')
+        paused = self.wait_fresh(stable, self.paused, label='primary-pauses-after-rejection')
+        self.tap('START')
+        controlled = self.record('primary-controls-after-rejection', self.wait_fresh(paused,
+            lambda s: self.game(s)['stage'] == self.game(baseline)['stage'], label='primary-resumes-after-rejection'))
+        assert self.single_seat_session(controlled, primary.identity) == session
+        assert self.command('shell', 'pidof', self.package).decode().strip() == self.report['targetPid']
+        self.capture('second-rejected', [primary.identity])
+        self.passed('single-seat host rejects second SDK with controller_busy and preserves active primary input', rejection)
+
     def capture(self, name, expected_ids):
         # A real wait helps compositor settling; never represented as a presentation fence.
         time.sleep(1.5)
@@ -345,15 +435,7 @@ class Acceptance:
         self.capture('paused', [self.clients[0].identity]); self.passed('START pauses simulation and preserves controller card')
         self.tap('START')
         self.wait(lambda s: self.game(s).get('stage') in playing, label='START-resume'); self.passed('START resumes gameplay')
-        second = JoystickClient('127.0.0.1', self.proxy.port); self.clients.append(second); second.connect()
-        identities = [c.identity for c in self.clients]
-        self.wait(lambda s: sorted(self.visible_ids(s)) == sorted(identities), label='two-identities')
-        dual = self.record('two-identities')
-        rows = [row for container in dual['page']['controllerClients']['containers'] if container['visible'] for row in container['rows'] if row['visible']]
-        assert sorted((row['playerId'], row['controllerId']) for row in rows) == [(1, identities[0]), (2, identities[1])], rows
-        self.capture('two-controllers', identities); self.passed('two controllers have independent visible identities')
-        second.disconnect()
-        self.wait(lambda s: self.visible_ids(s) == [self.clients[0].identity], label='second-disconnect')
+        self.reject_second_controller()
         self.press_observed('UP', effective=True)
         self.clients[0].disconnect()
         self.wait(lambda s: not self.visible_ids(s) and not any(self.button_state(s, k) for k in KEYS), label='disconnect-cancels')
@@ -378,9 +460,11 @@ class Acceptance:
             time.sleep(0.15)
             if not self.proxy.summary()['missingAcks']: break
         wire = self.proxy.summary()
-        assert wire['sdkMessages'] > 30 and not wire['missingAcks'] and not wire['errors'], wire
+        assert wire['acceptedSdkMessages'] > 30 and not wire['missingAcks'] and not wire['errors'], wire
+        assert not wire['unexpectedReplies'] and not wire['duplicateAcks'], wire
+        assert len(wire['rejectedConnections']) == 1, wire
         assert wire['keysSent'] == sorted(KEYS)
-        self.report['wire'] = wire; self.passed('every SDK message has an actual matching host ACK', wire)
+        self.report['wire'] = wire; self.passed('every accepted SDK message has a matching host ACK; second connection has exact busy rejection', wire)
         assert self.snapshot()['info']['wifiController']['port'] == self.service_port
         assert self.command('shell', 'pidof', self.package).decode().strip() == self.report['targetPid'], 'Game process restarted during the purported same-session check'
         self.passed('controller service keeps the same port throughout live session and reconnection', self.service_port)

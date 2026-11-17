@@ -2,9 +2,24 @@
 
 基于 riba2534 的 [qq-speed](https://github.com/riba2534/claude-opus-5-5-demo/tree/54adc1fb64155f9dd7c1c90ecae7b8185ac540b8/qq-speed) 适配。保留 11 城、情迷爱琴海、法老金字塔、雪地大冒险四张赛道，以及竞速／道具两种模式。上游的车辆、场景、漂移集气、氮气、小喷、双喷、跳台和六车比赛沿用上游实现。
 
+## 安装包
+
+**打包与验证进行中，尚未发布。** 以下是本目录预定的安装包入口，文件导入后可用。
+
+| 平台 | 安装包 | 系统要求 |
+| --- | --- | --- |
+| Android TV | [qq-speed-0.1.0.apk](qq-speed-0.1.0.apk) | Android 8.0+，系统 WebView 与 GPU 必须支持 WebGL 2 |
+| macOS | [QQSpeed-0.1.0-macos-universal.dmg](macos/QQSpeed-0.1.0-macos-universal.dmg) · [ZIP](macos/QQSpeed-0.1.0-macos-universal.zip) | macOS 11+，WebKit 与 GPU 必须支持 WebGL 2；通用包，包含 Apple Silicon／Intel 版本 |
+
+Mac 包使用 ad-hoc 签名，未做 Apple 公证。系统版本达到下限不保证旧 GPU 或虚拟机可运行；实体电视、手机及 ESP32 手柄尚未联调。
+
+![QQ 飞车实际浏览器画面](thumb.png)
+
+预览为实际浏览器渲染、合成手柄输入夹具的原图，直接按字节复制；不是原生安装包或实体设备截图。[原图来源与目视记录](docs/preview-provenance.json)。
+
 ## pureTV 手柄
 
-电视／Mac 和手柄连接同一局域网，使用 GPIO 23 搜索游戏。默认 TCP 端口 63485，通过 `_puretv._tcp` 发现。当前是单人驾驶；侧边显示实际手柄 ID，未上报 RSSI 时不显示信号强度。
+电视／Mac 和手柄连接同一局域网，使用 GPIO 23 搜索游戏。默认 TCP 端口 63485，通过 `_puretv._tcp` 发现。当前是单人驾驶，每个游戏同时接受一只手柄，第二只连接会被拒绝；侧边显示实际手柄 ID，未上报 RSSI 时不显示信号强度。
 
 | 按键 | 比赛 | 菜单 |
 | --- | --- | --- |

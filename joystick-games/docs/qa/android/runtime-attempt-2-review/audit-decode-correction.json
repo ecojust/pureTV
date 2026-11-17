@@ -1,0 +1,7 @@
+{
+  "firstCommand": "ffmpeg -v error -i ORIGINAL.mp4 -f null -",
+  "firstResult": "Exit 0, but audit rejected stderr. Null output muxer reported duplicate quantized DTS; original variable-frame-rate screen recording was not changed.",
+  "correctedCommand": "ffmpeg -v error -i ORIGINAL.mp4 -vsync 0 -enc_time_base -1 -f null -",
+  "reason": "Keep demuxer timestamp timebase and passthrough frame timing for decoding verification, rather than quantizing to guessed output frame-rate timebase.",
+  "originalVideoModified": false
+}

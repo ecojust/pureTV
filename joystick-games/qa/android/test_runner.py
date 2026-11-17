@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Contract/proxy tests. These do not claim actual Android gameplay acceptance."""
 import importlib.util
+import copy
 import json
 import socketserver
 import tempfile
@@ -159,5 +160,96 @@ class Contracts(unittest.TestCase):
             acceptance.wait_sent_ack(client,12,timeout=.02)
         acceptance.proxy.records.append({'direction':'game-to-sdk','connection':1,'message':{'type':'ack','seq':12}})
         acceptance.wait_sent_ack(client,12,timeout=.02)
+
+    def single_seat_cases(self):
+        return json.loads((HERE/'fixtures/single-seat-run-44115154856.json').read_text())['cases']
+
+    def wire_summary(self, case, expected=True):
+        proxy = runner.WireProxy.__new__(runner.WireProxy)
+        proxy.lock = threading.Lock(); proxy.records = case['wire']; proxy.errors = []
+        proxy.expected_busy_ids = {case['rejectedId']} if expected else set()
+        return proxy.summary()
+
+    def test_real_single_seat_rejections_are_separate_from_primary_acks(self):
+        for case in self.single_seat_cases():
+            summary = self.wire_summary(case)
+            primary_count = sum(r['direction']=='sdk-to-game' and r['connection']==1 for r in case['wire'])
+            self.assertEqual(summary['matchingAcks'], primary_count)
+            self.assertEqual(summary['acceptedSdkMessages'], primary_count)
+            self.assertEqual(summary['sdkMessages'], primary_count + summary['rejectedSdkMessages'])
+            self.assertEqual(summary['missingAcks'], [])
+            self.assertEqual(summary['unexpectedReplies'], [])
+            self.assertEqual(summary['duplicateAcks'], [])
+            self.assertEqual(len(summary['rejectedConnections']), 1)
+            rejected = summary['rejectedConnections'][0]
+            self.assertEqual(rejected['controllerId'], case['rejectedId'])
+            self.assertEqual(rejected['response'], {'type':'error','message':'controller_busy','seq':1})
+            self.assertEqual(summary['hostReplies'], primary_count + 1)
+
+    def test_busy_must_be_expected_and_match_hello_identity_connection_and_sequence(self):
+        original = self.single_seat_cases()[0]
+        unregistered = self.wire_summary(original, expected=False)
+        self.assertEqual(unregistered['rejectedConnections'], [])
+        self.assertTrue(unregistered['unexpectedReplies'])
+        for mutation in ['non-busy', 'wrong-seq', 'boolean-seq', 'wrong-connection', 'wrong-identity', 'extra-ack']:
+            case = copy.deepcopy(original)
+            error = next(r for r in case['wire'] if r['direction']=='game-to-sdk' and r['connection']==2)
+            if mutation == 'non-busy': error['message']['message'] = 'invalid_message'
+            if mutation == 'wrong-seq': error['message']['seq'] = 2
+            if mutation == 'boolean-seq': error['message']['seq'] = True
+            if mutation == 'wrong-connection': error['connection'] = 3
+            if mutation == 'wrong-identity': case['rejectedId'] = 'virtual-unrelated'
+            if mutation == 'extra-ack': case['wire'].append({'direction':'game-to-sdk','connection':2,'message':{'type':'ack','seq':1}})
+            result = self.wire_summary(case)
+            self.assertEqual(result['rejectedConnections'], [], mutation)
+            self.assertTrue(result['unexpectedReplies'], mutation)
+
+    def test_busy_does_not_hide_missing_primary_ack_or_other_errors(self):
+        original = self.single_seat_cases()[0]
+        case = copy.deepcopy(original)
+        first_ack = next(r for r in case['wire'] if r['direction']=='game-to-sdk' and r['connection']==1)
+        case['wire'].remove(first_ack)
+        result = self.wire_summary(case)
+        self.assertEqual(len(result['rejectedConnections']), 1)
+        self.assertEqual(result['missingAcks'], [{'connection':1,'seq':first_ack['message']['seq']}])
+        for message in [{'type':'error','message':'controller_busy','seq':99}, {'type':'ack','seq':999}]:
+            case = copy.deepcopy(original)
+            case['wire'].append({'direction':'game-to-sdk','connection':1,'message':message})
+            self.assertTrue(self.wire_summary(case)['unexpectedReplies'])
+        case = copy.deepcopy(original); case['wire'].append(copy.deepcopy(first_ack))
+        self.assertTrue(self.wire_summary(case)['duplicateAcks'])
+        case = copy.deepcopy(original)
+        ack = next(r['message'] for r in case['wire'] if r['direction']=='game-to-sdk' and r['connection']==1 and r['message']['seq']==1)
+        ack['seq'] = True
+        result = self.wire_summary(case)
+        self.assertEqual(result['missingAcks'], [{'connection':1,'seq':1}])
+        self.assertTrue(result['unexpectedReplies'])
+
+    def test_rejected_connection_cannot_include_gameplay_or_another_identity(self):
+        original = self.single_seat_cases()[0]
+        for mutation in ['button-down', 'another-id', 'wrong-sync-key']:
+            case = copy.deepcopy(original)
+            sync = next(r['message'] for r in case['wire'] if r['direction']=='sdk-to-game' and r['connection']==2 and r['message']['type']=='button')
+            if mutation == 'button-down': sync.update(action='down',pressed=True)
+            if mutation == 'another-id': sync['controller_id'] = case['primaryId']
+            if mutation == 'wrong-sync-key': sync['key'] = 'Y'
+            self.assertEqual(self.wire_summary(case)['rejectedConnections'], [], mutation)
+
+    def test_real_single_seat_snapshot_rejects_stolen_or_duplicate_identity(self):
+        for case in self.single_seat_cases():
+            snapshot = case['timeoutSnapshot']
+            session = runner.Acceptance.single_seat_session(snapshot, case['primaryId'])
+            self.assertTrue(session)
+            self.assertIsNone(runner.Acceptance.single_seat_session(snapshot, case['rejectedId']))
+            for mutation in ['wrong-seat', 'extra-player', 'missing-session', 'wrong-dom-seat', 'truncated-id']:
+                bad = copy.deepcopy(snapshot)
+                player = bad['game']['controller']['players'][0]
+                row = bad['page']['controllerClients']['containers'][0]['rows'][0]
+                if mutation == 'wrong-seat': player['id'] = 2
+                if mutation == 'extra-player': bad['game']['controller']['players'].append(copy.deepcopy(player))
+                if mutation == 'missing-session': player['session'] = ''
+                if mutation == 'wrong-dom-seat': row['playerId'] = 2
+                if mutation == 'truncated-id': row['idText'] = 'ID: virtual-...'
+                self.assertIsNone(runner.Acceptance.single_seat_session(bad,case['primaryId']),mutation)
 
 if __name__=='__main__': unittest.main(verbosity=2)

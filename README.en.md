@@ -155,6 +155,15 @@ The [fork/ catalog](fork/README.md) contains 14 apps and 23 APKs under 10 MB fro
 
 [joystick-games/](joystick-games/) contains Android TV and macOS controller adaptations. The first two are [CF Transport Ship](joystick-games/cf-transport-ship/) and [QQ Speed](joystick-games/qq-speed/), based on riba2534's demos. They retain their maps and gameplay while adding the nine pureTV buttons, start/pause, and complete controller IDs. See the [directory guide](joystick-games/README.md) for packages and verification status. Both require WebGL2; existing app download paths remain available.
 
+<table>
+<tr>
+<td width="25%" align="center"><a href="joystick-games/cf-transport-ship/"><img src="joystick-games/cf-transport-ship/thumb.png" alt="CF Transport Ship" width="240" /><br />CF Transport Ship</a></td>
+<td width="25%" align="center"><a href="joystick-games/qq-speed/"><img src="joystick-games/qq-speed/thumb.png" alt="QQ Speed" width="240" /><br />QQ Speed</a></td>
+<td width="25%"></td>
+<td width="25%"></td>
+</tr>
+</table>
+
 ## MCP / Agent
 
 Open “Device connection → MCP · Agent debugging,” copy the configuration into your client, and keep the manager window open. Its 34 tools cover system information, connections, app management, APK installation, launcher switching and layouts, market browsing/downloads/installation, background images, ADB configuration, language and theme settings, cancellation, and logs. The Agent and the interface share the same state.

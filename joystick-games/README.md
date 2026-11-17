@@ -5,23 +5,34 @@
 - [运输船 CF](cf-transport-ship/)：保留运输船地图、机器人队伍对战、枪械和换装，增加九键移动、瞄准与射击。
 - [QQ 飞车](qq-speed/)：保留四张赛道、竞速与道具模式，以及漂移、氮气和小喷。
 
-当前正在开发与验收，尚未发布这两款的新安装包。已有 20 款支持手柄的游戏仍在原目录，入口见[原游戏接入说明](../docs/controller-client-status/README.md)。它们的下载地址保持有效。
+## 安装包
+
+首版 **0.1.0** 的安装包正在完成原生验收，以下为交付路径，最终状态见本文验证记录。
+
+| 游戏 | Android TV | macOS 通用安装包 |
+| --- | --- | --- |
+| [运输船 CF](cf-transport-ship/) | [APK](cf-transport-ship/cf-transport-ship-0.1.0.apk) | [DMG](cf-transport-ship/macos/CFTransportShip-0.1.0-macos-universal.dmg) · [ZIP](cf-transport-ship/macos/CFTransportShip-0.1.0-macos-universal.zip) |
+| [QQ 飞车](qq-speed/) | [APK](qq-speed/qq-speed-0.1.0.apk) | [DMG](qq-speed/macos/QQSpeed-0.1.0-macos-universal.dmg) · [ZIP](qq-speed/macos/QQSpeed-0.1.0-macos-universal.zip) |
+
+Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包同时包含 Apple Silicon 与 Intel。两平台均需要 **WebGL2**，旧电视的系统 WebView／GPU 可能无法运行。Mac 包采用 ad-hoc 签名，尚未 Apple 公证。
+
+已有 20 款支持手柄的游戏仍在原目录，入口见[原游戏接入说明](../docs/controller-client-status/README.md)。
 
 ## 连接与操作
 
 电视或 Mac 与手柄加入同一局域网，启动游戏后，按手柄 **GPIO 23 搜索键**连接。游戏通过 `_puretv._tcp` 广播，默认 TCP 端口 **63485**；发生端口占用时以游戏显示的实际端口为准，同一次连接期间不会自行更换端口。当前固件只在发现一个服务时自动连接，连接前关闭其他游戏。
 
-两款都是原有的单人游戏。侧边显示手柄图标、席位和实际客户端 ID；进入游戏后继续显示。断线或窗口失焦会清除输入并暂停，重新连接后主动继续。现有固件没有上报 RSSI，界面不显示信号强度。
+两款都是单人游戏，每个游戏同时接受一只手柄连接；第二只连接会被拒绝，不会抢走操作。侧边显示手柄图标、席位和实际客户端 ID；进入游戏后继续显示。断线或窗口失焦会清除输入并暂停，重新连接后主动继续。现有固件没有上报 RSSI，界面不显示信号强度。
 
 菜单用方向键选择、A 确认，START 开始或暂停。运输船使用 B 配合方向键精细瞄准；飞车使用 A 漂移、B 氮气／道具、X 小喷。详细组合键及键鼠操作见各游戏说明。
 
 ## 平台与源码
 
-两款都使用本地打包的 Three.js 与程序化素材，无需下载场景。运行要求 **WebGL2**；系统版本达到安装条件，也需要 WebView／GPU 实际支持。正式安装包与真实运行验证完成后在各游戏目录列出。实体电视、手机和 ESP32 联调尚未执行。
+两款都使用本地打包的 Three.js 与程序化素材，无需下载场景。运行要求 **WebGL2**；系统版本达到安装条件，也需要 WebView／GPU 实际支持。具体来源与验证记录见各游戏目录。实体电视、手机和 ESP32 联调尚未执行。
 
 - 各游戏 `src/` 保留上游玩法代码，`dist/tv.html` 为可复现的离线页面；不要将其他版本的素材或录像用于当前包验收。
 - `shared/web/` 负责九键输入与连接显示；每帧只消费一次原生快照，诊断只读缓存。
-- Android 复用现有 pureTV 原生 TCP／NSD 宿主，macOS 使用独立的共享桌面宿主；安装包版本、来源和签名分别核对。
+- Android 复用现有 pureTV 原生 TCP／NSD 宿主，macOS 使用独立的共享桌面宿主；重建方法见 [Android 构建说明](shared/android/README.md) 与 [Mac 构建说明](shared/macos/README.md)。
 - `qa/` 放置正常输入验收工具；`docs/` 留存原报告、来源哈希及失败记录。
 
 上游 CF 没有声明许可证，QQ 的 `package.json` 声明 ISC，仓库没有单独 LICENSE。准确来源与第三方许可事实保留在各游戏 `NOTICE.md` 和[上游审计](docs/upstream-audit.json)，不将上游全部代码重新标为本仓库许可证。本目录为非官方适配，与游戏品牌方无隶属关系。
