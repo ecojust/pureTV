@@ -14,6 +14,7 @@ private func jsonText(_ value: Any) -> String? {
 final class JoystickApplication: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNavigationDelegate, WKScriptMessageHandler {
     private let gameName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "pureTV Game"
     private let preferences = option("--preferences-domain").flatMap { UserDefaults(suiteName: $0) } ?? .standard
+    private lazy var gameStorage = GameStorage(defaults: preferences, declaredKeys: Bundle.main.object(forInfoDictionaryKey: "PureTVStorageKeys") as? [String], bundleIdentifier: Bundle.main.bundleIdentifier ?? "puretv-game")
     private let diagnostics = option("--diagnostics-dir").map { URL(fileURLWithPath: $0, isDirectory: true) }
     private var window: NSWindow!
     private var webView: WKWebView!
@@ -123,7 +124,8 @@ final class JoystickApplication: NSObject, NSApplicationDelegate, NSWindowDelega
     }
 
     @objc private func showAbout() {
-        NSApp.orderFrontStandardAboutPanel(options: [.applicationName: gameName, .applicationVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "", .version: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "", .credits: NSAttributedString(string: text("pureTV 手柄适配 · 上游 riba2534\n详见随包来源说明", "pureTV controller adaptation · upstream riba2534\nSee bundled source notices"))])
+        let upstream = Bundle.main.object(forInfoDictionaryKey: "PureTVUpstreamAttribution") as? String ?? "riba2534"
+        NSApp.orderFrontStandardAboutPanel(options: [.applicationName: gameName, .applicationVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "", .version: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "", .credits: NSAttributedString(string: text("pureTV 手柄适配 · 上游 \(upstream)\n详见随包来源说明", "pureTV controller adaptation · upstream \(upstream)\nSee bundled source notices"))])
     }
     @objc private func toggleFullScreen() { window.toggleFullScreen(nil) }
     @objc private func pauseRace() { gameKey("p") }
@@ -139,9 +141,9 @@ final class JoystickApplication: NSObject, NSApplicationDelegate, NSWindowDelega
         info["appVersion"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
         info["url"] = ""
         info["qr"] = ""
-        info["preferences"] = Dictionary(uniqueKeysWithValues: ["cf_ship_opts", "feiche3d.v1"].compactMap { key -> (String, String)? in
-            guard let value = preferences.string(forKey: key) else { return nil }; return (key, value)
-        })
+        info["storageKeys"] = gameStorage.keys
+        info["storageMaxBytes"] = gameStorage.maxBytes
+        info["preferences"] = gameStorage.snapshot()
         return info
     }
     private func configureBootstrap() {
@@ -207,9 +209,9 @@ final class JoystickApplication: NSObject, NSApplicationDelegate, NSWindowDelega
             loading.isHidden = true
             synchronizeForeground()
         case "preference":
-            guard let key = body["key"] as? String, let value = body["value"] as? String else { return }
-            if key == "joystick.language" && ["zh", "en"].contains(value) { preferences.set(value, forKey: key) }
-            else if ["cf_ship_opts", "feiche3d.v1"].contains(key), value.utf8.count <= 65536 { preferences.set(value, forKey: key) }
+            guard let key = body["key"] as? String, let value = body["value"] else { return }
+            if key == "joystick.language", let language = value as? String, ["zh", "en"].contains(language) { preferences.set(language, forKey: key) }
+            else { gameStorage.receive(key: key, value: value) }
         case "publish": break
         case "exit": NSApp.terminate(nil)
         default: break
@@ -273,7 +275,9 @@ final class JoystickApplication: NSObject, NSApplicationDelegate, NSWindowDelega
             const textRects=text?Array.from(range.getClientRects()).map(rectangle):[];
             return {controllerId:card.getAttribute('data-puretv-controller-id'),playerId:card.getAttribute('data-player-id'),visible:cardGeometry.visible,fullyVisible:cardGeometry.fullyVisible,rect:cardGeometry.rect,clip:cardGeometry.clip,iconVisible:iconGeometry.fullyVisible,iconRect:iconGeometry.rect,idText:text?.textContent||'',idTextRects:textRects,idTextFullyVisible:textGeometry.visible&&textRects.length>0&&textRects.every(r=>within(r,textGeometry.clip)),idTextOverflow:text?getComputedStyle(text).textOverflow:'',statusText:card.querySelector('.ptv-client-state')?.textContent||'',containerId:card.closest('[data-puretv-clients]')?.id||''};
           });
-          return {game:window.JoystickGameQA?.snapshot()||null,document:{url:location.href,title:document.title,width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,webglError:!!window.JoystickGameQA?.snapshot()?.webglError,primaryText:document.getElementById('primary')?.textContent||'',language:document.documentElement.lang,controllerClients}};
+          const storageKeys=JSON.parse(window.PureGameHost?.getInfo()||'{}').storageKeys||[];
+          const storage={origin:location.origin,initial:window.JoystickDesktop?.initialStorage()||{},current:Object.fromEntries(storageKeys.map(key=>[key,localStorage.getItem(key)]))};
+          return {game:window.JoystickGameQA?.snapshot()||null,storage,document:{url:location.href,title:document.title,width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,webglError:!!window.JoystickGameQA?.snapshot()?.webglError,primaryText:document.getElementById('primary')?.textContent||'',language:document.documentElement.lang,controllerClients}};
         })()
         """
         webView.evaluateJavaScript(script) { [weak self] value, error in

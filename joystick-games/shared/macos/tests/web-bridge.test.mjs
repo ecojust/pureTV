@@ -33,3 +33,40 @@ test('foreground cancellation suppresses all nine held keys and background pulse
 test('identity and port are native values and do not consume input',()=>{
  const x=setup();x.w.JoystickDesktop.receive({wifiController:{inputEnabled:true,port:63485}},x.sample(1,{Y:true},{Y:1}));assert.equal(JSON.parse(x.w.PureGameHost.getInfo()).wifiController.port,63485);assert.equal(x.read().players[0].controllerId,'sdk-test');assert.equal(x.read().players[0].buttons.Y,true);
 });
+
+function storagePage(saved, allowed=['save','settings'], old={}) {
+ class Storage {
+  constructor(values={}) { this.values=new Map(Object.entries(values)); }
+  getItem(key) { return this.values.get(String(key))??null; }
+  setItem(key,value) { this.values.set(String(key),String(value)); }
+  removeItem(key) { this.values.delete(String(key)); }
+  clear() { this.values.clear(); }
+ }
+ const messages=[];
+ const w={Storage,TextEncoder,localStorage:new Storage(old),sessionStorage:new Storage(),document:{addEventListener(){}},webkit:{messageHandlers:{joystickHost:{postMessage(m){messages.push({...m});if(m.type==='preference'&&allowed.includes(m.key)){if(m.value===null)delete saved[m.key];else saved[m.key]=m.value;}}}}}};
+ vm.runInNewContext(source,{window:w});
+ const receive=()=>w.JoystickDesktop.receive({storageKeys:allowed,storageMaxBytes:1048576,preferences:{...saved}}, {revision:0,inputEnabled:true,players:[]});
+ receive();return {w,messages,receive};
+}
+test('actual bridge restores a different origin before game code, then mirrors writes and deletion',()=>{
+ const saved={};const first=storagePage(saved);
+ first.w.localStorage.setItem('save','{"tick":123,"label":"存档"}');first.w.localStorage.setItem('settings','');
+ const reopened=storagePage(saved,undefined,{'save':'stale origin value'});
+ assert.equal(reopened.w.localStorage.getItem('save'),saved.save);assert.equal(reopened.w.localStorage.getItem('settings'),'');
+ assert.equal(reopened.messages.length,0,'hydration must not echo native writes');
+ const initial=reopened.w.JoystickDesktop.initialStorage();initial.save='tampered';
+ assert.equal(reopened.w.JoystickDesktop.initialStorage().save,saved.save,'diagnostics must not mutate hydrated evidence');
+ reopened.w.localStorage.removeItem('save');assert.equal(saved.save,undefined);
+ const third=storagePage(saved,undefined,{'save':'stale deleted save'});assert.equal(third.w.localStorage.getItem('save'),null);
+ third.w.localStorage.clear();assert.deepEqual(saved,{});
+ assert.equal(storagePage(saved).w.localStorage.getItem('settings'),null);
+});
+test('storage allowlists isolate games and never mirror session, unknown or oversized values',()=>{
+ const firstNative={},secondNative={};const first=storagePage(firstNative);first.w.localStorage.setItem('save','one');
+ assert.equal(storagePage(secondNative).w.localStorage.getItem('save'),null);
+ first.w.sessionStorage.setItem('save','session');first.w.localStorage.setItem('unknown','unlisted');
+ first.w.localStorage.setItem('save','界'.repeat(349526));assert.equal(firstNative.save,'one','UTF-8 bytes enforce native limit');
+ first.w.sessionStorage.clear();assert.equal(firstNative.save,'one');
+ const disabled=storagePage({},[]);disabled.w.localStorage.setItem('save','blocked');assert.equal(disabled.messages.length,0);
+ const stale={save:'native old'};const live=storagePage(stale);live.w.localStorage.setItem('save','current');stale.save='late stale push';live.receive();assert.equal(live.w.localStorage.getItem('save'),'current','later info pushes cannot overwrite active localStorage');
+});

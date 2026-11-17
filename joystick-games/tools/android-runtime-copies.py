@@ -28,9 +28,9 @@ def check_inventory(root, expected, errors, label):
     return verified
 
 
-def audit(evidence):
+def audit(evidence, games=GAMES):
     errors = []; jobs = []
-    for slug in GAMES:
+    for slug in games:
         folder = evidence / ('joystick-android-runtime-' + slug) / slug
         source = folder / 'executed-source.json'
         if not source.is_file():
@@ -42,8 +42,11 @@ def audit(evidence):
         artifact_count = 0
         if verification_file.is_file():
             verification = json.loads(verification_file.read_text())
+            verified_games = [item['game'] for item in verification.get('games', [])]
+            if not verified_games or len(set(verified_games)) != len(verified_games) or slug not in verified_games or not set(verified_games) <= set(games):
+                errors.append(slug + ': invalid verified game selection'); verified_games = []
             expected = {}
-            for game in GAMES:
+            for game in verified_games:
                 receipt_path = inputs / 'packages' / game / 'signing-receipt.json'
                 if not receipt_path.is_file():
                     errors.append(slug + ': missing signing receipt for ' + game); continue
@@ -55,7 +58,7 @@ def audit(evidence):
                     if name in expected and expected[name] != value:
                         errors.append(slug + ': conflicting artifact source hash ' + name)
                     expected[name] = value
-            for game in GAMES:
+            for game in verified_games:
                 receipt_path = inputs / 'observers' / game / 'observer-signing-receipt.json'
                 if not receipt_path.is_file():
                     errors.append(slug + ': missing Observer receipt for ' + game); continue
@@ -81,12 +84,16 @@ def audit(evidence):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--games', help='Comma-separated exact games in the evidence export; default CF/QQ')
     p.add_argument('--evidence', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--record-only', action='store_true', help='Preserve failed archives first; workflow must check this result after publishing evidence')
     args = p.parse_args()
     try:
-        result = audit(args.evidence)
+        games = args.games.split(',') if args.games else GAMES
+        import re
+        assert games and len(games) == len(set(games)) and all(re.fullmatch(r'[a-z][a-z0-9]*(?:-[a-z0-9]+)*', game) for game in games)
+        result = audit(args.evidence, games)
     except Exception as error:
         result = {'status': 'failed', 'scope': 'archived source-copy integrity only',
                   'errors': [type(error).__name__ + ': ' + str(error)], 'runtimeAcceptanceImplied': False}

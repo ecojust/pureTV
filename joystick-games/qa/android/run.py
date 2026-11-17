@@ -5,6 +5,7 @@ All control comes through TCP from puretv-joystick/joystick_sdk.py. The observer
 only reads cached production diagnostics and DOM; it cannot set model state.
 """
 import argparse
+import importlib.util
 from collections import Counter
 import hashlib
 import json
@@ -24,7 +25,11 @@ ROOT = HERE.parents[2]
 sys.path.insert(0, str(ROOT / 'puretv-joystick'))
 from joystick_sdk import JoystickClient, KEYS
 
-PACKAGES = {'cf-transport-ship': 'com.ecojust.joystickcf', 'qq-speed': 'com.ecojust.joystickqqspeed'}
+spec = importlib.util.spec_from_file_location('joystick_android_build', ROOT / 'joystick-games/tools/android-build.py')
+build = importlib.util.module_from_spec(spec); spec.loader.exec_module(build)
+PACKAGES = build.registered_packages()
+spec = importlib.util.spec_from_file_location('joystick_qa_plan', ROOT / 'joystick-games/tools/qa-plan.py')
+plan = importlib.util.module_from_spec(spec); spec.loader.exec_module(plan)
 
 
 def file_info(path):
@@ -162,6 +167,8 @@ class Acceptance:
         assert not list(self.out.iterdir()), 'Use a new output directory; never overwrite a previous result'
         self.adb = [args.adb] + (['-s', args.serial] if args.serial else [])
         self.package = PACKAGES[args.game]
+        self.plan_path = ROOT / 'joystick-games' / args.game / 'qa-plan.json'
+        self.plan = plan.load_plan(self.plan_path) if args.game not in build.LEGACY_PACKAGES else None
         self.tests = []; self.snapshots = []; self.captures = []; self.clients = []
         self.stop = threading.Event(); self.proxy = None; self.instrument = None; self.recorder = None
         self.observer_port = None; self.forwarded_port = None
@@ -174,7 +181,9 @@ class Acceptance:
                        'apk': {'path': str(args.apk), **file_info(args.apk)}, 'observer': {'path': str(args.observer), **file_info(args.observer)},
                        'sourceFiles': {}, 'tests': self.tests, 'snapshots': self.snapshots, 'captures': self.captures}
         provenance = self.out / 'source'; provenance.mkdir()
-        for source in [Path(__file__), HERE / 'build-observer.py', HERE / 'src/com/ecojust/controllerqa/Observer.java', ROOT / 'puretv-joystick/joystick_sdk.py']:
+        source_paths = [Path(__file__), HERE / 'build-observer.py', HERE / 'src/com/ecojust/controllerqa/Observer.java', ROOT / 'puretv-joystick/joystick_sdk.py', ROOT / 'joystick-games/tools/android-build.py', ROOT / 'joystick-games/tools/qa-plan.py']
+        if self.plan: source_paths += [self.plan_path, ROOT / build.REGISTRY]
+        for source in source_paths:
             relative = source.relative_to(ROOT)
             self.report['sourceFiles'][str(relative)] = file_info(source)
             dest = provenance / relative; dest.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(source, dest)
@@ -347,7 +356,7 @@ class Acceptance:
         assert self.single_seat_session(stable, primary.identity) == session, 'Rejected controller stole or replaced the primary seat'
         assert self.game(stable)['stage'] == self.game(baseline)['stage'], 'Second connection changed game stage'
         self.tap('START')
-        paused = self.wait_fresh(stable, self.paused, label='primary-pauses-after-rejection')
+        paused = self.wait_fresh(stable, (lambda s: self.game(s).get('stage') == 'playing') if self.paused(baseline) else self.paused, label='primary-toggles-after-rejection')
         self.tap('START')
         controlled = self.record('primary-controls-after-rejection', self.wait_fresh(paused,
             lambda s: self.game(s)['stage'] == self.game(baseline)['stage'], label='primary-resumes-after-rejection'))
@@ -376,6 +385,24 @@ class Acceptance:
         self.command('install', '-r', str(self.args.apk))
         self.command('install', '-r', '-t', str(self.args.observer))
         self.command('shell', 'am', 'force-stop', self.package)
+        if self.plan:
+            # Each catalog scenario replays its plan from first-install state.
+            # install -r preserves WebView storage, including viewed-story flags.
+            assert self.args.game not in build.LEGACY_PACKAGES
+            assert self.package == PACKAGES[self.args.game], 'Refuse to clear an unregistered target'
+            setup = {'mode': 'fresh-install-app-data', 'targetPackage': self.package,
+                     'method': 'pm clear', 'phase': 'before-target-launch', 'status': 'running'}
+            self.report['installationSetup'] = setup
+            try:
+                output = self.command('shell', 'pm', 'clear', self.package).decode(errors='replace').strip()
+                setup['stdout'] = output
+                assert output == 'Success', 'Catalog app-data reset did not return Success: ' + output
+            except Exception:
+                setup['status'] = 'failed'
+                self.save()
+                raise
+            setup['status'] = 'passed'
+            self.passed('catalog scenario starts with fresh app data before launch', dict(setup))
         self.observer_port = int(self.command('forward', 'tcp:0', 'tcp:63486').strip())
         self.instrument_log = (self.out / 'instrumentation.log').open('wb')
         component = 'com.ecojust.joystickqa.' + self.args.game.replace('-', '') + '/com.ecojust.controllerqa.Observer'
@@ -388,7 +415,10 @@ class Acceptance:
         self.service_port = service['port']
         assert service['serviceType'] == '_puretv._tcp' and service['version'] == '1', service
         assert (self.service_port != 63485) if self.args.occupy_default_port else (self.service_port == 63485), service
-        assert self.game(initial)['webglVersion'].startswith('WebGL 2'), self.game(initial)['webglVersion']
+        if self.plan:
+            self.validate_catalog_snapshot(initial)
+        else:
+            assert self.game(initial)['webglVersion'].startswith('WebGL 2'), self.game(initial)['webglVersion']
         self.forwarded_port = int(self.command('forward', 'tcp:0', 'tcp:' + str(self.service_port)).strip())
         self.report['adbForwards'] = {'observer': self.observer_port, 'controller': self.forwarded_port}
         self.report['controllerService'] = service
@@ -396,7 +426,7 @@ class Acceptance:
         assert self.report['targetPid'], 'Target process is not running'
         self.record('initial-menu', initial)
         assert self.visible_ids(initial) == []
-        self.passed('installed target launches WebGL menu with no controller card')
+        self.passed('installed target launches initialized game menu with no controller card')
         self.recording_log = (self.out / 'screenrecord.log').open('wb')
         self.recorder = subprocess.Popen(self.adb + ['shell', 'screenrecord', '--time-limit', '180', '--bit-rate', '4000000', self.remote_video], stdout=self.recording_log, stderr=subprocess.STDOUT)
         self.proxy = WireProxy(('127.0.0.1', self.forwarded_port), self.out / 'wire.jsonl')
@@ -407,6 +437,8 @@ class Acceptance:
         self.passed('original SDK hello and nine sync messages create actual controller ID card', {'identity': client.identity})
 
     def scenarios(self):
+        if self.plan:
+            return self.catalog_scenarios()
         self.tap('START')
         playing = {'playing'} if self.args.game == 'cf-transport-ship' else {'countdown', 'race'}
         self.wait(lambda s: self.game(s).get('stage') in playing, label='START-start')
@@ -468,6 +500,142 @@ class Acceptance:
         assert self.snapshot()['info']['wifiController']['port'] == self.service_port
         assert self.command('shell', 'pidof', self.package).decode().strip() == self.report['targetPid'], 'Game process restarted during the purported same-session check'
         self.passed('controller service keeps the same port throughout live session and reconnection', self.service_port)
+
+    def validate_catalog_snapshot(self, snapshot):
+        game = self.game(snapshot)
+        assert game.get('game') == self.args.game, 'Snapshot game identity mismatch'
+        assert game.get('renderer') in plan.accepted_renderers(self.plan), 'Actual renderer differs from QA plan'
+        if game['renderer'] in ('webgl1', 'webgl2'):
+            version = game.get('webglVersion')
+            prefix = 'WebGL 2' if game['renderer'] == 'webgl2' else 'WebGL 1'
+            assert isinstance(version, str) and version.startswith(prefix), 'No matching initialized WebGL context'
+        assert game.get('stage') in ('menu', 'playing', 'paused', 'ended')
+        assert type(game.get('paused')) is bool and type(game.get('frames')) is int
+        assert isinstance(game.get('gameplay'), dict) and game['gameplay'], 'Missing actual gameplay observations'
+        assert not game.get('error') and not game.get('errors'), 'Game initialization or runtime error'
+        if self.plan['renderer'] != 'dom':
+            assert any(c.get('width', 0) > 0 and c.get('height', 0) > 0 and c.get('visible')
+                       for c in snapshot.get('page', {}).get('canvases', [])), 'No visible initialized rendering canvas'
+        if game['stage'] in ('playing', 'paused'):
+            for path in self.plan['pauseStablePaths']:
+                plan.read_path(game, path)
+
+    def catalog_playing(self):
+        before = self.snapshot()
+        if self.game(before).get('stage') != 'playing':
+            self.tap('START')
+            before = self.wait(lambda s: self.game(s).get('stage') == 'playing', label='catalog-start-or-resume')
+        return before
+
+    def catalog_pause(self):
+        if not self.paused(self.snapshot()):
+            self.catalog_playing()
+            self.tap('START')
+        before = self.wait(self.paused, label='catalog-paused')
+        time.sleep(0.5)
+        after = self.wait_fresh(before, self.paused, frames=3, label='catalog-pause-fresh-frames')
+        values = {}
+        for path in self.plan['pauseStablePaths']:
+            a, b = plan.read_path(self.game(before), path), plan.read_path(self.game(after), path)
+            assert a == b, 'Simulation advances while paused: ' + path
+            values[path] = {'before': a, 'after': b}
+        assert any(plan.numeric(value['before']) for value in values.values()), 'Pause plan must include an actual finite numeric model observation'
+        self.record('paused-model-stable', after)
+        self.passed('explicit actual model observations remain stable while paused', values)
+        return after
+
+    def ack_barrier(self):
+        client = self.clients[0]
+        with client.lock:
+            client.ping()
+            sequence = client.seq
+        self.wait_sent_ack(client, sequence)
+
+    def catalog_scenarios(self):
+        # The per-game plan owns startup/menu navigation as well as gameplay inputs.
+        assert self.game(self.snapshot()).get('stage') == 'menu'
+        for step in self.plan['steps']:
+            self.release()
+            before = self.record('before-plan-' + step['name'])
+            for key in step['keys']: self.button(key)
+            held = self.wait_fresh(before, lambda s: all(self.native_buttons(s).get(k) is True for k in step['keys']),
+                                   label='plan-held-' + step['name'])
+            time.sleep(step['holdMs'] / 1000)
+            # Capture gameplay while input is still held; release-only changes can also satisfy the plan below.
+            observed = self.snapshot()
+            self.release()
+            after = observed if plan.matches(step['expect'], self.game(observed), self.game(before)) else self.wait_fresh(
+                held, lambda s: plan.matches(step['expect'], self.game(s), self.game(before)),
+                timeout=step.get('timeoutSeconds', 15), label='plan-gameplay-' + step['name'])
+            self.validate_catalog_snapshot(after)
+            self.record('after-plan-' + step['name'], after)
+            self.passed('actual SDK gameplay: ' + step['name'], {'expect': step['expect'], 'holdMs': step['holdMs']})
+        self.capture('playing', [self.clients[0].identity])
+        self.catalog_pause()
+        self.capture('paused', [self.clients[0].identity])
+        # Test independent raw physical keys in the paused screen, avoiding unintended game deaths.
+        for key in KEYS:
+            self.catalog_pause()
+            self.release()
+            down = self.press_observed(key)
+            buttons = self.native_buttons(down)
+            assert [k for k in KEYS if buttons.get(k)] == [key], (key, buttons)
+            self.record('key-down-' + key, down)
+            up = self.release_observed(key)
+            assert not any(self.native_buttons(up).get(k) for k in KEYS)
+            self.record('key-up-' + key, up)
+            # A/B and directions may legitimately navigate menus. Return through normal START input.
+            self.catalog_pause()
+            self.passed('independent cached input down/release ' + key)
+        self.reject_second_controller()
+        self.catalog_playing()
+        self.press_observed('UP', effective=True)
+        self.ack_barrier()
+        # Native foreground transition only; all gameplay inputs still come from the original SDK.
+        self.command('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+        lost_focus = self.wait(lambda s: self.paused(s) and s.get('windowFocused') is False, label='native-dialog-focus-loss')
+        self.record('native-exit-dialog-paused', lost_focus)
+        self.command('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+        focused = self.wait(lambda s: s.get('activityState') == 'resumed' and s.get('windowFocused') is True and self.paused(s), label='native-dialog-return-remains-paused')
+        assert not any(self.button_state(focused, key) for key in KEYS), 'Focus loss left effective input held'
+        self.release()
+        self.catalog_pause()
+        self.capture('focus-restored-paused', [self.clients[0].identity])
+        self.passed('native exit dialog and focus return cancel input and never automatically resume gameplay')
+        self.catalog_playing()
+        self.press_observed('UP', effective=True)
+        self.ack_barrier()
+        self.clients[0].disconnect()
+        lost = self.wait(lambda s: self.paused(s) and not self.visible_ids(s) and not any(self.button_state(s, k) for k in KEYS), label='disconnect-pauses-clears')
+        self.record('disconnect-paused', lost)
+        self.capture('disconnected', [])
+        self.clients[0].connect()
+        connected = self.wait(lambda s: self.visible_ids(s) == [self.clients[0].identity] and self.paused(s), label='reconnect-same-id-paused')
+        after = self.wait_fresh(connected, self.paused, frames=3, label='reconnect-does-not-resume')
+        self.capture('reconnected', [self.clients[0].identity])
+        self.passed('disconnect clears keys; reconnect keeps original ID and remains paused')
+        client = self.clients[0]
+        with client.lock:
+            client.send('button', key='START', action='sync', pressed=True, duration_ms=0)
+            sequence = client.seq
+        self.wait_sent_ack(client, sequence)
+        acked = self.record('held-sync-acked')
+        assert self.paused(acked), 'Held sync resumed gameplay'
+        self.record('held-start-sync', self.wait_fresh(acked, self.paused, frames=3, label='held-sync-no-resume'))
+        client.button('START', 'sync')
+        self.release()
+        self.passed('held START reconnect sync cannot resume gameplay')
+        self.stop.set()
+        self.ack_barrier()
+        wire = self.proxy.summary()
+        assert wire['acceptedSdkMessages'] > 30 and not wire['missingAcks'] and not wire['errors'], wire
+        assert not wire['unexpectedReplies'] and not wire['duplicateAcks'], wire
+        assert len(wire['rejectedConnections']) == 1 and wire['keysSent'] == sorted(KEYS), wire
+        self.report['wire'] = wire
+        self.passed('every accepted SDK message has exactly one original host ACK; busy rejection separately verified', wire)
+        assert self.snapshot()['info']['wifiController']['port'] == self.service_port
+        assert self.command('shell', 'pidof', self.package).decode().strip() == self.report['targetPid']
+        self.passed('same native process and service port survive focus, disconnect and reconnect', self.service_port)
 
     def cf_gameplay(self):
         base = self.wait(lambda s: self.game(s)['player']['alive'], timeout=60, label='CF-alive')

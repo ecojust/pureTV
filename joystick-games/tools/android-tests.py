@@ -141,5 +141,69 @@ class SignatureInputBoundaries(unittest.TestCase):
                     build.assert_committed({'source.js': build.record(p)}, commit)
 
 
+class CatalogRegistrationBoundaries(unittest.TestCase):
+    def registry(self, games=None):
+        games = games or {'fixture-game': {'packageName': 'com.ecojust.joystick.fixturegame'}}
+        return {'schemaVersion': 1, 'games': games, 'batches': {'fixture-batch': list(games)}}
+
+    def test_registration_derives_exact_separate_identity_and_preserves_legacy(self):
+        packages = build.registered_packages(data=self.registry())
+        self.assertEqual(packages['fixture-game'], 'com.ecojust.joystick.fixturegame')
+        for slug, package in build.LEGACY_PACKAGES.items(): self.assertEqual(packages[slug], package)
+        self.assertEqual(build.selected_games(), list(build.LEGACY_PACKAGES))
+        with self.assertRaises(AssertionError): build.selected_games('unregistered-game')
+        with self.assertRaises(AssertionError): build.selected_games('qq-speed,qq-speed')
+
+    def test_path_traversal_legacy_override_and_derived_package_collision_rejected(self):
+        for games in [
+            {'../escape': {'packageName': 'com.ecojust.joystick.escape'}},
+            {'qq-speed': {'packageName': 'com.ecojust.joystick.qqspeed'}},
+            {'fixture-game': {'packageName': 'com.ecojust.someothergame'}},
+            {'fixture-game': {'packageName': 'com.ecojust.joystick.fixturegame'},
+             'fixturegame': {'packageName': 'com.ecojust.joystick.fixturegame'}},
+        ]:
+            with self.assertRaises(AssertionError): build.registered_packages(data=self.registry(games))
+
+    def test_duplicate_json_keys_and_unregistered_batch_members_rejected(self):
+        with self.assertRaises(AssertionError): build.registry_data('{"games":{},"games":{}}')
+        registry = self.registry(); registry['batches']['fixture-batch'].append('unknown')
+        with self.assertRaises(AssertionError): build.registered_packages(data=registry)
+        registry = self.registry(); registry['schemaVersion'] = True
+        with self.assertRaises(AssertionError): build.registered_packages(data=registry)
+
+    def test_catalog_source_inventory_matches_frozen_qa_inventory(self):
+        spec = importlib.util.spec_from_file_location('catalog_runtime_inputs_under_test', HERE / 'android-runtime-inputs.py')
+        runtime = importlib.util.module_from_spec(spec); spec.loader.exec_module(runtime)
+        with tempfile.TemporaryDirectory(prefix='catalog-frozen-inventory-') as tmp:
+            root = Path(tmp); kit = root / 'resource/game-kit'; game = root / 'joystick-games/fixture-game'
+            for directory in ('resource/game-kit/android/src/main', 'joystick-games/shared/web', 'joystick-games/fixture-game/src', 'joystick-games/fixture-game/dist'):
+                (root / directory).mkdir(parents=True)
+            files = ['resource/game-kit/build.py', 'tools/resource_catalog.py', 'tools/puretv-release-certificate-v2.sha256',
+                     '.github/workflows/joystick-games-android.yml', build.CATALOG_WORKFLOW, 'joystick-games/tools/qa-plan.py',
+                     'joystick-games/tools/android-build.py', 'joystick-games/shared/crisp/vendor/engine.js',
+                     'joystick-games/shared/triptych/build.mjs', 'joystick-games/shared/web/input.js',
+                     'resource/game-kit/android/src/main/AndroidManifest.xml',
+                     *['resource/game-kit/web/' + name for name in build.PHONE],
+                     *['joystick-games/fixture-game/' + name for name in ('game.json', 'package.json', 'package-lock.json', 'build.mjs', 'qa-plan.json', 'NOTICE.md', 'LICENSE.txt', 'src/game.js', 'dist/tv.html')]]
+            for name in files:
+                path = root / name; path.parent.mkdir(parents=True, exist_ok=True); path.write_text('fixture')
+            (root / build.REGISTRY).write_text(json.dumps(self.registry()))
+            with patch.object(build, 'ROOT', root), patch.object(build, 'KIT', kit), patch.object(build, 'metadata', return_value={}):
+                inputs = build.sources('fixture-game')
+                subprocess.run(['git', 'init', '-q', str(root)], check=True)
+                subprocess.run(['git', '-C', str(root), 'add', '.'], check=True)
+                subprocess.run(['git', '-C', str(root), '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'frozen fixture'], check=True)
+                commit = subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip()
+                self.assertEqual(set(inputs), runtime.expected_inputs(root, commit, 'fixture-game'))
+                build.assert_committed(inputs, commit)
+                self.assertIn('joystick-games/shared/crisp/vendor/engine.js', inputs)
+                self.assertIn('joystick-games/shared/triptych/build.mjs', inputs)
+                (game / 'LICENSE').write_text('ambiguous second license')
+                with self.assertRaises(AssertionError): build.sources('fixture-game')
+                (game / 'LICENSE').unlink()
+                (root / build.CATALOG_WORKFLOW).unlink()
+                with self.assertRaises(AssertionError): build.sources('fixture-game')
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

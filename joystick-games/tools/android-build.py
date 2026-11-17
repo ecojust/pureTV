@@ -5,6 +5,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -14,8 +15,63 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
 KIT = ROOT / 'resource/game-kit'
-PACKAGES = {'cf-transport-ship': 'com.ecojust.joystickcf', 'qq-speed': 'com.ecojust.joystickqqspeed'}
+LEGACY_PACKAGES = {'cf-transport-ship': 'com.ecojust.joystickcf', 'qq-speed': 'com.ecojust.joystickqqspeed'}
+REGISTRY = 'joystick-games/catalog-registry.json'
+CATALOG_WORKFLOW = '.github/workflows/joystick-catalog-android.yml'
 PHONE = ('controller.html', 'controller.js', 'controller.css')
+
+
+def registry_data(raw):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            assert key not in result, 'Duplicate registry JSON key: ' + key
+            result[key] = value
+        return result
+    return json.loads(raw, object_pairs_hook=unique)
+
+
+def registered_packages(root=None, data=None):
+    """Explicit allowlist only. Never discover publishable games by scanning directories."""
+    root = root or ROOT
+    packages = dict(LEGACY_PACKAGES)
+    path = root / REGISTRY
+    if data is None:
+        if not path.exists():
+            return packages
+        assert path.is_file() and not path.is_symlink(), 'Registry must be a regular file'
+        data = registry_data(path.read_text())
+    assert isinstance(data, dict) and type(data.get('schemaVersion')) is int and data['schemaVersion'] == 1
+    assert isinstance(data.get('games'), dict)
+    seen = set()
+    for slug, entry in data['games'].items():
+        assert isinstance(entry, dict)
+        assert isinstance(slug, str) and re.fullmatch(r'[a-z][a-z0-9]*(?:-[a-z0-9]+)*', slug), 'Invalid registered game slug'
+        assert slug not in seen and slug not in LEGACY_PACKAGES, 'Duplicate or legacy registration'
+        seen.add(slug)
+        package = 'com.ecojust.joystick.' + slug.replace('-', '')
+        assert package not in packages.values(), 'Registered package collision'
+        assert entry.get('packageName') == package, 'Registry package does not match slug'
+        packages[slug] = package
+    batches = data.get('batches')
+    assert isinstance(batches, dict) and batches, 'Explicit catalog batches required'
+    for batch, games in batches.items():
+        assert re.fullmatch(r'[a-z][a-z0-9]*(?:-[a-z0-9]+)*', batch)
+        assert isinstance(games, list) and games and len(games) == len(set(games))
+        assert all(game in seen for game in games), 'Batch includes unregistered game'
+    return packages
+
+
+def selected_games(value=None):
+    packages = registered_packages()
+    # Omitting a selector keeps the historical CF/QQ workflows unchanged.
+    games = list(LEGACY_PACKAGES) if value is None else value.split(',')
+    assert games and len(games) == len(set(games)), 'Select a nonempty unique game list'
+    assert all(game in packages for game in games), 'Unregistered selected game'
+    return games
+
+
+PACKAGES = registered_packages()
 
 
 def sha(data):
@@ -41,10 +97,18 @@ def builder():
 
 
 def metadata(slug):
-    assert slug in PACKAGES, 'Unregistered joystick game'
+    packages = registered_packages()
+    assert slug in packages, 'Unregistered joystick game'
     value = builder().metadata(ROOT / 'joystick-games' / slug)
-    assert value['id'] == slug and value['packageName'] == PACKAGES[slug]
+    assert value['id'] == slug and value['packageName'] == packages[slug]
     return value
+
+
+def observer_sources(slug):
+    names = {'joystick-games/qa/android/build-observer.py', 'joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java'}
+    if slug not in LEGACY_PACKAGES:
+        names |= {REGISTRY, 'joystick-games/tools/android-build.py'}
+    return {name: record(ROOT / name) for name in sorted(names)}
 
 
 def sources(slug):
@@ -62,6 +126,20 @@ def sources(slug):
     paths += list((ROOT / 'joystick-games/tools').glob('android-*.py'))
     workflow = ROOT / '.github/workflows/joystick-games-android.yml'
     paths.append(workflow)  # Required even in CI sparse checkouts; never silently omit the workflow.
+    if slug not in LEGACY_PACKAGES:
+        paths += [ROOT / REGISTRY, ROOT / CATALOG_WORKFLOW, game / 'qa-plan.json', game / 'NOTICE.md', ROOT / 'joystick-games/tools/qa-plan.py']
+        licenses = [game / name for name in ('LICENSE', 'LICENSE.txt') if (game / name).exists()]
+        assert len(licenses) == 1, 'Catalog game must keep exactly one original LICENSE or LICENSE.txt'
+        paths += licenses
+        if (game / 'upstream.json').exists(): paths.append(game / 'upstream.json')
+        # Shared imported source/templates are build inputs as well as generated game files.
+        for folder in (ROOT / 'joystick-games/shared/crisp', ROOT / 'joystick-games/shared/triptych'):
+            if folder.exists():
+                assert folder.is_dir() and not folder.is_symlink()
+                for path in folder.rglob('*'):
+                    assert not path.is_symlink(), str(path)
+                    assert not set(path.relative_to(folder).parts) & {'node_modules', '__pycache__', '.cache'}, 'Shared build tree contains cache/dependency outputs'
+                    if path.is_file(): paths.append(path)
     if (game / 'icon.xml').exists():
         paths.append(game / 'icon.xml')
     return {p.relative_to(ROOT).as_posix(): record(p) for p in sorted(set(paths))}

@@ -1,0 +1,594 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-17T18:17:05.752132+00:00",
+  "reviewer": "macos_batch_host independent read-only game review",
+  "status": "passed_with_native_validation_pending",
+  "nativeMacTested": false,
+  "nativeAndroidTested": false,
+  "physicalControllerTested": false,
+  "fullGameCompletionTested": false,
+  "productionGameFilesChangedByReviewer": false,
+  "method": [
+    "Static review of shared adapter, original game main/input/save paths and actual QA plans",
+    "Manual inspection of six existing browser menu/pause screenshots",
+    "Independent Chromium execution with actual macOS bridge, synthetic native controller/persistence and real game input at two real HTTP origins"
+  ],
+  "findings": [
+    {
+      "id": "mac-storage-origin",
+      "severity": "blocking-before-fix",
+      "status": "host_patch_implemented_and_local_regressions_passed_native_ci_pending",
+      "description": "New per-launch HTTP ports changed localStorage origin while previous native bridge only preserved CF/QQ keys. Three games would lose access to saves across macOS launches. Fixed in host via declared exact game storageKeys, per-bundle native store, initial hydration and set/remove/clear synchronization. No original game rules changed.",
+      "nativeEvidence": "No native Mac execution in this Linux environment; CI now requires nonempty actual save and different-origin native restart for first three Triptych plans."
+    }
+  ],
+  "games": [
+    {
+      "game": "sugarplum-drop",
+      "existingBrowserEvidence": {
+        "path": "joystick-games/sugarplum-drop/docs/browser-attempt-3/report.json",
+        "bytes": 18397,
+        "sha256": "e7c8f9638e6b4970244d63d7ec40941c7b22140c33454e38d05c3096928fbe60"
+      },
+      "existingEvidenceReviewedNotRerun": true,
+      "manuallyViewed": [
+        {
+          "path": "joystick-games/sugarplum-drop/docs/browser-attempt-3/menu-960.png",
+          "bytes": 140963,
+          "sha256": "8a6e56b3fe942c57e9d8beabdedcacd817bff0a77f588caa45980e5699db3a8a"
+        },
+        {
+          "path": "joystick-games/sugarplum-drop/docs/browser-attempt-3/paused-1280.png",
+          "bytes": 217080,
+          "sha256": "cffe190e179eded4315a3805ee7243ce0cd6d90add93ce9154bddc40ab38562f"
+        }
+      ],
+      "visualResult": "Menu and pause choices, focus highlight, actual controller ID and right help panel readable within screenshot; no blank/error rendering observed. Original Popgun keyboard help remains alongside explicit pureTV help.",
+      "initialPlan": {
+        "schemaVersion": 1,
+        "renderer": "canvas2d",
+        "pauseStablePaths": [
+          "gameplay.tick",
+          "gameplay.score",
+          "gameplay.aimX",
+          "gameplay.drops"
+        ],
+        "steps": [
+          {
+            "name": "Start a candy jar",
+            "keys": [
+              "START"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              }
+            ]
+          },
+          {
+            "name": "Move the actual dropper",
+            "keys": [
+              "RIGHT"
+            ],
+            "holdMs": 450,
+            "expect": [
+              {
+                "path": "gameplay.aimX",
+                "op": "changed"
+              }
+            ]
+          },
+          {
+            "name": "Drop a treat into the physics simulation",
+            "keys": [
+              "A"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "gameplay.drops",
+                "op": "increased"
+              }
+            ]
+          },
+          {
+            "name": "Pause the jar",
+            "keys": [
+              "START"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "paused"
+              },
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ]
+          },
+          {
+            "name": "Resume explicitly",
+            "keys": [
+              "START"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              },
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": false
+              }
+            ]
+          }
+        ],
+        "storageRestartRequired": true
+      },
+      "sources": [
+        {
+          "path": "joystick-games/sugarplum-drop/src/js/main.js",
+          "bytes": 8401,
+          "sha256": "42e78bbf2e7680e6e6ad01cf7201444fab9e013201da0d79647679f27015bfac"
+        },
+        {
+          "path": "joystick-games/sugarplum-drop/src/js/input.js",
+          "bytes": 5346,
+          "sha256": "f3cd5a1b6bfbfaf2609b1846e743c11e4c410b64b3f1a972feb54c72cc35a5aa"
+        },
+        {
+          "path": "joystick-games/sugarplum-drop/src/js/save.js",
+          "bytes": 1593,
+          "sha256": "0f77d7a74838dfde90475a8ddb0141ff272cca6f169454adb45a04f50765bf86"
+        },
+        {
+          "path": "joystick-games/sugarplum-drop/game.json",
+          "bytes": 482,
+          "sha256": "94b5c2dacff358853b31979653ba0aeebb95342abc5dc6f521b8edc95585c8a9"
+        },
+        {
+          "path": "joystick-games/sugarplum-drop/qa-plan.json",
+          "bytes": 1566,
+          "sha256": "f0ee75bc6ea2519e1e6df27d64c1134b49957736c2f1c0faf4144bc8056e2b09"
+        },
+        {
+          "path": "joystick-games/sugarplum-drop/dist/tv.html",
+          "bytes": 73148,
+          "sha256": "2b156382a5c72b55f917b3d75c79974666796df2396d1c9a36134ab327fe9a05"
+        }
+      ],
+      "staticChecks": {
+        "oneNativePollPerAnimationFrame": true,
+        "snapshotReadsCachedControllerOnly": true,
+        "modelStepsGatedDuringPause": true,
+        "cancelClearsHeldAndEdgesWithoutReleaseReward": true,
+        "menuUsesDirectionalFocusAndActionButtons": true,
+        "planStartsFromActualMenu": true,
+        "storageKeysDeclared": true
+      },
+      "modelPauseExplanation": "Fixed simulation steps and autosave timer execute only while play has no screen; pause clears accumulated model time. Ambient visual snow/time may continue, and title attract demo intentionally runs."
+    },
+    {
+      "game": "starblazer-86",
+      "existingBrowserEvidence": {
+        "path": "joystick-games/starblazer-86/docs/browser-attempt-2/report.json",
+        "bytes": 16882,
+        "sha256": "d8bf4743b08c7841a01d50d8749ebbfc3eced677c8987b55722e69f661c2dafb"
+      },
+      "existingEvidenceReviewedNotRerun": true,
+      "manuallyViewed": [
+        {
+          "path": "joystick-games/starblazer-86/docs/browser-attempt-2/menu-960.png",
+          "bytes": 205302,
+          "sha256": "53a2bf1368af199741e370c0d6ba2ad03b9fe52e38f418367196e4c0d431b448"
+        },
+        {
+          "path": "joystick-games/starblazer-86/docs/browser-attempt-2/paused-1280.png",
+          "bytes": 208044,
+          "sha256": "e9ad7e4c507410ffb24ab1ba66bbbe5c5b34a2d85634e93b7a3c43adee567e3f"
+        }
+      ],
+      "visualResult": "Menu and pause choices, focus highlight, actual controller ID and right help panel readable within screenshot; no blank/error rendering observed. Original Popgun keyboard help remains alongside explicit pureTV help.",
+      "initialPlan": {
+        "schemaVersion": 1,
+        "renderer": "canvas2d",
+        "pauseStablePaths": [
+          "gameplay.tick",
+          "gameplay.score",
+          "gameplay.playerX",
+          "gameplay.playerY",
+          "gameplay.shots"
+        ],
+        "steps": [
+          {
+            "name": "Start and show the original intro",
+            "keys": [
+              "START"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "gameplay.screen",
+                "op": "eq",
+                "value": "story"
+              }
+            ]
+          },
+          {
+            "name": "Skip the intro through its normal control",
+            "keys": [
+              "B"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              }
+            ]
+          },
+          {
+            "name": "Fly and shoot",
+            "keys": [
+              "RIGHT",
+              "A"
+            ],
+            "holdMs": 650,
+            "expect": [
+              {
+                "path": "gameplay.playerX",
+                "op": "changed"
+              },
+              {
+                "path": "gameplay.shots",
+                "op": "increased"
+              }
+            ]
+          },
+          {
+            "name": "Use one bomb",
+            "keys": [
+              "B"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "gameplay.bombsUsed",
+                "op": "increased"
+              }
+            ]
+          },
+          {
+            "name": "Pause the battle",
+            "keys": [
+              "START"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "paused"
+              },
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ]
+          },
+          {
+            "name": "Resume explicitly",
+            "keys": [
+              "START"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              },
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": false
+              }
+            ]
+          }
+        ],
+        "storageRestartRequired": true
+      },
+      "sources": [
+        {
+          "path": "joystick-games/starblazer-86/src/js/main.js",
+          "bytes": 16186,
+          "sha256": "d6d2657c215df70b7459030463cbc572c99ba23c5815bf83157ddba94449492b"
+        },
+        {
+          "path": "joystick-games/starblazer-86/src/js/input.js",
+          "bytes": 9003,
+          "sha256": "8bd360983760f915c059a90d887992363b9be945e61273e5e67f3ff52da8785c"
+        },
+        {
+          "path": "joystick-games/starblazer-86/src/js/save.js",
+          "bytes": 2749,
+          "sha256": "fca6421a5471e94ecacc6f26cf0d008b87875d5d0a537ae0e08c2db48acdc6a6"
+        },
+        {
+          "path": "joystick-games/starblazer-86/game.json",
+          "bytes": 481,
+          "sha256": "35f4cd42134c2fd867e618a96adbe14ad4c732924cf5a9322341e62525b0bf7c"
+        },
+        {
+          "path": "joystick-games/starblazer-86/qa-plan.json",
+          "bytes": 1941,
+          "sha256": "d79b8cdc061dd6a60b1dc2994b0ffc480a612ca2af9bb5c1bbadc71474dcbaa4"
+        },
+        {
+          "path": "joystick-games/starblazer-86/dist/tv.html",
+          "bytes": 145072,
+          "sha256": "dad3d8f7c2926b071a6e8b59f979c8001d83c5167ca873a415a3dcd854cd00f5"
+        }
+      ],
+      "staticChecks": {
+        "oneNativePollPerAnimationFrame": true,
+        "snapshotReadsCachedControllerOnly": true,
+        "modelStepsGatedDuringPause": true,
+        "cancelClearsHeldAndEdgesWithoutReleaseReward": true,
+        "menuUsesDirectionalFocusAndActionButtons": true,
+        "planStartsFromActualMenu": true,
+        "storageKeysDeclared": true
+      },
+      "modelPauseExplanation": "Simulation, save timer and player inputs execute only in live play without screens; pause clears accumulator, view receives paused flag. Original title demo and story typing are menu behavior, not live model advancement."
+    },
+    {
+      "game": "popgun-pip",
+      "existingBrowserEvidence": {
+        "path": "joystick-games/popgun-pip/docs/browser-attempt-2/report.json",
+        "bytes": 16759,
+        "sha256": "8b2b94e67e7abbf142b67008bbe4e7baf21d8f7433b573b6258b9288a913fc09"
+      },
+      "existingEvidenceReviewedNotRerun": true,
+      "manuallyViewed": [
+        {
+          "path": "joystick-games/popgun-pip/docs/browser-attempt-2/menu-960.png",
+          "bytes": 43455,
+          "sha256": "7d44c5425476fa967add9a57af615e12eae460a7f4ef9caaa12745db8a10c7d2"
+        },
+        {
+          "path": "joystick-games/popgun-pip/docs/browser-attempt-2/paused-1280.png",
+          "bytes": 46555,
+          "sha256": "3eded22b031ec3e01a788174a0e1f1a2a65f1d5753246836a1952d7fc570b009"
+        }
+      ],
+      "visualResult": "Menu and pause choices, focus highlight, actual controller ID and right help panel readable within screenshot; no blank/error rendering observed. Original Popgun keyboard help remains alongside explicit pureTV help.",
+      "initialPlan": {
+        "schemaVersion": 1,
+        "renderer": "canvas2d",
+        "pauseStablePaths": [
+          "gameplay.tick",
+          "gameplay.score",
+          "gameplay.playerX",
+          "gameplay.playerY",
+          "gameplay.shots"
+        ],
+        "steps": [
+          {
+            "name": "Start a campaign and open the island map",
+            "keys": [
+              "START"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "gameplay.screen",
+                "op": "eq",
+                "value": "map"
+              }
+            ]
+          },
+          {
+            "name": "Enter the first real generated level",
+            "keys": [
+              "START"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              }
+            ]
+          },
+          {
+            "name": "Jump right and fire the popgun",
+            "keys": [
+              "RIGHT",
+              "A",
+              "B"
+            ],
+            "holdMs": 650,
+            "expect": [
+              {
+                "path": "gameplay.playerX",
+                "op": "changed"
+              },
+              {
+                "path": "gameplay.shots",
+                "op": "increased"
+              }
+            ]
+          },
+          {
+            "name": "Pause the platformer",
+            "keys": [
+              "START"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "paused"
+              },
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ]
+          },
+          {
+            "name": "Resume explicitly",
+            "keys": [
+              "START"
+            ],
+            "holdMs": 180,
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              },
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": false
+              }
+            ]
+          }
+        ],
+        "storageRestartRequired": true
+      },
+      "sources": [
+        {
+          "path": "joystick-games/popgun-pip/src/js/main.js",
+          "bytes": 26048,
+          "sha256": "8c3ded40f792bdb5ffc44448281decdb84cb664f445ce9270cbdf65608b84635"
+        },
+        {
+          "path": "joystick-games/popgun-pip/src/js/input.js",
+          "bytes": 7501,
+          "sha256": "1425b9e9e563821ad7983f5f4680597d3baf1baf637ed7bd408bca63d3fd0b62"
+        },
+        {
+          "path": "joystick-games/popgun-pip/src/js/save.js",
+          "bytes": 1896,
+          "sha256": "b073f14d0b2c80cb10b9c214d18a0bfb127113dbdb3701c9fbe4b1db9b6d2d94"
+        },
+        {
+          "path": "joystick-games/popgun-pip/game.json",
+          "bytes": 434,
+          "sha256": "7405e57ed4b533a2b67fa912713bbc0c8b78e5d383c1a4ac476bee4a31e6c10e"
+        },
+        {
+          "path": "joystick-games/popgun-pip/qa-plan.json",
+          "bytes": 1764,
+          "sha256": "bc77c540151a1d0270ef87b580f9fc6f28bc44ef734eb933568d6c3864f05550"
+        },
+        {
+          "path": "joystick-games/popgun-pip/dist/tv.html",
+          "bytes": 180202,
+          "sha256": "15717c9bd1f936c6d839a4332d65832baa713c9e8a7b5dab1d0c16db755e91ef"
+        }
+      ],
+      "staticChecks": {
+        "oneNativePollPerAnimationFrame": true,
+        "snapshotReadsCachedControllerOnly": true,
+        "modelStepsGatedDuringPause": true,
+        "cancelClearsHeldAndEdgesWithoutReleaseReward": true,
+        "menuUsesDirectionalFocusAndActionButtons": true,
+        "planStartsFromActualMenu": true,
+        "storageKeysDeclared": true
+      },
+      "modelPauseExplanation": "Pause overlay returns before game.step; controller cancellation during level card sets tvHeldPause and stops update until fresh START. Input releaseAll clears edge/held state. Original profile saves progression, not exact player position."
+    }
+  ],
+  "sharedSourceInputs": [
+    {
+      "path": "joystick-games/shared/triptych/tv.js",
+      "bytes": 2976,
+      "sha256": "3b07573ac7491a00e58e23e16133b33471b198917ae60fd1f9803bbf4488587e"
+    },
+    {
+      "path": "joystick-games/shared/triptych/tv.css",
+      "bytes": 1033,
+      "sha256": "fb50b3d3ebc54a357a3274d6d995c22042031545e7da450064119452a30313eb"
+    },
+    {
+      "path": "joystick-games/shared/triptych/build.mjs",
+      "bytes": 2172,
+      "sha256": "2c863097db3084c69f139339a31a96029d7deb529097aba58cd464e1f30fcfe1"
+    },
+    {
+      "path": "joystick-games/shared/triptych/tests/browser.mjs",
+      "bytes": 8549,
+      "sha256": "560e20e1e81e7b1116c4eabcb02bd3462a4914f5af14d3151c896eb6f3c77133"
+    },
+    {
+      "path": "joystick-games/shared/web/input.js",
+      "bytes": 8423,
+      "sha256": "d33a301f082f0100db81c055b4773e2947cf4c166f76f68dfe06344d5a4660f6"
+    }
+  ],
+  "independentRuntimeEvidence": [
+    {
+      "path": "/dev/shm/joystick-root-validation/storage-origin-browser.mjs",
+      "bytes": 5362,
+      "sha256": "2e8955b64aa6b3453fc82b3e8538e6c2ee47c89c5391a496c196878ede175331"
+    },
+    {
+      "path": "/dev/shm/joystick-root-validation/storage-origin-browser.json",
+      "bytes": 41579,
+      "sha256": "d2081f12b9f7e5d479a72b97af536e3b0753ec5f8de2154be15afab3aafcf90f"
+    }
+  ],
+  "independentRuntimeSummary": [
+    {
+      "game": "sugarplum-drop",
+      "status": "passed",
+      "realStorageWriteMessages": 2,
+      "oldOrigin": "http://127.0.0.1:34181",
+      "newOrigin": "http://127.0.0.1:33523",
+      "pausedModelDeepEquality600ms": true,
+      "initialHydrationExact": true
+    },
+    {
+      "game": "starblazer-86",
+      "status": "passed",
+      "realStorageWriteMessages": 2,
+      "oldOrigin": "http://127.0.0.1:34625",
+      "newOrigin": "http://127.0.0.1:39599",
+      "pausedModelDeepEquality600ms": true,
+      "initialHydrationExact": true
+    },
+    {
+      "game": "popgun-pip",
+      "status": "passed",
+      "realStorageWriteMessages": 4,
+      "oldOrigin": "http://127.0.0.1:45389",
+      "newOrigin": "http://127.0.0.1:35417",
+      "pausedModelDeepEquality600ms": true,
+      "initialHydrationExact": true
+    }
+  ],
+  "limitations": [
+    "Chromium test uses real game and bridge JavaScript, synthetic native postMessage persistence and input snapshots; it is not AppKit/WKWebView or the real TCP SDK.",
+    "Swift/GameStorage compilation and real native relaunch are configured in CI but have not run locally.",
+    "Independent review sampled menu at 960x540 and pause at 1280x720; existing adapter browser reports cover both sizes but were not redundantly rerun.",
+    "No exhaustive original game victory/failure, every submenu or physical hardware coverage."
+  ]
+}

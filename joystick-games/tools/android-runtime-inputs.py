@@ -3,6 +3,7 @@
 import argparse
 import fnmatch
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -16,7 +17,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 from resource_catalog import apk_info
 
-GAMES = {'cf-transport-ship': 'com.ecojust.joystickcf', 'qq-speed': 'com.ecojust.joystickqqspeed'}
+spec = importlib.util.spec_from_file_location('joystick_android_build', Path(__file__).with_name('android-build.py'))
+build = importlib.util.module_from_spec(spec); spec.loader.exec_module(build)
+GAMES = build.LEGACY_PACKAGES
 PHONE = {'resource/game-kit/web/' + name for name in ('controller.html', 'controller.js', 'controller.css')}
 
 
@@ -63,16 +66,26 @@ def expected_inputs(root, commit, slug):
     required = tree(root, commit, 'resource/game-kit/android/src/main', game + 'src', game + 'dist', 'joystick-games/shared/web')
     required |= {n for n in tree(root, commit, 'joystick-games/tools') if fnmatch.fnmatch(n, 'joystick-games/tools/android-*.py')}
     required |= tree(root, commit, game + 'icon.xml')
+    if slug not in GAMES:
+        registry = build.registry_data(frozen(root, commit, build.REGISTRY))
+        assert slug in build.registered_packages(root, registry), 'Game absent from frozen catalog registry'
+        exact |= {build.REGISTRY, build.CATALOG_WORKFLOW, 'joystick-games/tools/qa-plan.py', *[game + name for name in ('qa-plan.json', 'NOTICE.md')]}
+        licenses = tree(root, commit, game + 'LICENSE', game + 'LICENSE.txt')
+        assert len(licenses) == 1, 'Missing or ambiguous frozen original license'
+        exact |= licenses
+        required |= tree(root, commit, game + 'upstream.json')
+        required |= tree(root, commit, 'joystick-games/shared/crisp', 'joystick-games/shared/triptych')
     assert tree(root, commit, *sorted(exact)) == exact, 'Frozen source is missing mandatory build inputs'
     return required | exact
 
 
 def production_path(name, slug):
     game = 'joystick-games/' + slug + '/'
-    return (name.startswith('resource/game-kit/android/src/main/') or name in PHONE or
+    return (name == build.REGISTRY or name.startswith(('joystick-games/shared/crisp/', 'joystick-games/shared/triptych/')) or
+            name.startswith('resource/game-kit/android/src/main/') or name in PHONE or
             (name.startswith('joystick-games/shared/web/') and '.test.' not in name) or
             name.startswith(game + 'src/') or name.startswith(game + 'dist/') or
-            name in {game + x for x in ('game.json', 'icon.xml', 'build.mjs', 'package.json', 'package-lock.json')})
+            name in {game + x for x in ('game.json', 'icon.xml', 'build.mjs', 'package.json', 'package-lock.json', 'upstream.json', 'NOTICE.md', 'LICENSE', 'LICENSE.txt')})
 
 
 def verify_manifest(directory, manifest):
@@ -140,7 +153,13 @@ def verify(args):
     args.output.mkdir(parents=True)
     frozen_files = {sdk_name: sdk_bytes}
     games = []
-    for slug, package in GAMES.items():
+    selection = build.selected_games(getattr(args, 'games', None))
+    artifact_packages = dict(GAMES)
+    if any(slug not in GAMES for slug in selection):
+        artifact_packages = build.registered_packages(ROOT, build.registry_data(frozen(ROOT, args.artifact_source, build.REGISTRY)))
+    for slug in selection:
+        assert slug in artifact_packages, 'Game absent from original artifact registry'
+        package = artifact_packages[slug]
         folder = args.artifact / 'packages' / slug
         receipt = json.loads((folder / 'signing-receipt.json').read_text())
         check_receipt_origin(receipt, args.artifact_source, args.artifact_run_id)
@@ -183,6 +202,8 @@ def verify(args):
         assert observer_identity == observer['apkIdentity'] and observer_identity['certificateSha256'] == pin
         assert observer_identity['packageName'] == observer['observerPackage']
         required_observer = {'joystick-games/qa/android/build-observer.py', 'joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java'}
+        if slug not in GAMES:
+            required_observer |= {build.REGISTRY, 'joystick-games/tools/android-build.py'}
         assert set(observer['sourceFiles']) == required_observer
         for name, expected in observer['sourceFiles'].items():
             data = frozen(ROOT, args.artifact_source, name)
@@ -195,8 +216,9 @@ def verify(args):
     for name, data in frozen_files.items():
         dest = args.output / 'artifact-source' / name
         dest.parent.mkdir(parents=True, exist_ok=True); dest.write_bytes(data)
-    shutil.copytree(args.artifact / 'packages', args.output / 'packages')
-    shutil.copytree(args.artifact / 'observers', args.output / 'observers')
+    for slug in selection:
+        shutil.copytree(args.artifact / 'packages' / slug, args.output / 'packages' / slug)
+        shutil.copytree(args.artifact / 'observers' / slug, args.output / 'observers' / slug)
     shutil.copyfile(args.artifact / 'export-manifest.json', args.output / 'original-export-manifest.json')
     result = {'status': 'passed', 'artifactSourceSha': args.artifact_source, 'artifactExportCommit': args.export_commit,
               'artifactRunId': args.artifact_run_id, 'qaSourceSha': None if args.local_preflight else qa,
@@ -212,6 +234,7 @@ def verify(args):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--games', help='Comma-separated registered games; default CF/QQ')
     p.add_argument('--artifact-source', required=True)
     p.add_argument('--export-commit', required=True)
     p.add_argument('--artifact-run-id', required=True)

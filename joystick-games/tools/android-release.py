@@ -92,16 +92,25 @@ def sign_file(apk, output, key, tools, scratch):
     assert content(apk) == content(output), 'Signing altered package payload'
 
 
-def sign_observer(directory, output, slug, key, tools, scratch, commit):
+def validate_observer(directory, slug, tools, commit):
     receipt = json.loads((directory / 'observer-build.json').read_text())
     assert receipt['game'] == slug and receipt['targetPackage'] == build.PACKAGES[slug]
-    assert receipt['signed'] is False and receipt['modelWrites'] is False
+    assert receipt['signed'] is False and receipt['modelWrites'] is False and receipt['clockOverrides'] is False
+    assert receipt['observerPackage'] == 'com.ecojust.joystickqa.' + slug.replace('-', '')
+    assert receipt['sourceFiles'] == build.observer_sources(slug), 'Observer input inventory differs from source'
+    assert receipt['readonlyEndpoints'] == ['/status', '/snapshot']
     assert Path(receipt['apk']).name == receipt['apk']
     unsigned = directory / receipt['apk']
     assert build.record(unsigned) == receipt['apkIdentity']
     build.assert_committed(receipt['sourceFiles'], commit)
     original = apk_info(unsigned, tools, allow_unsigned=True)
     assert original['certificateSha256'] is None and original['packageName'] == receipt['observerPackage']
+    content(unsigned)  # Reject unsafe or duplicate ZIP entries before loading any key.
+    return receipt, unsigned
+
+
+def sign_observer(directory, output, slug, key, tools, scratch, commit):
+    receipt, unsigned = validate_observer(directory, slug, tools, commit)
     output.mkdir(parents=True)
     apk = output / ('observer-' + slug + '.apk')
     sign_file(unsigned, apk, key, tools, scratch)
@@ -116,7 +125,9 @@ def sign_observer(directory, output, slug, key, tools, scratch, commit):
 def sign(args):
     commit = source()
     # Verify artifacts and frozen source before loading the signing secret.
-    prepared = {slug: validate_unsigned(args.input / slug, slug, args.build_tools, commit) for slug in build.PACKAGES}
+    prepared = {slug: validate_unsigned(args.input / slug, slug, args.build_tools, commit) for slug in build.selected_games(args.games)}
+    for slug in prepared:
+        validate_observer(args.input / slug / 'observer', slug, args.build_tools, commit)
     assert not args.output.exists(), 'Use a new output directory'
     encoded = os.environ.get('PURETV_KEYSTORE_BASE64')
     assert encoded and os.environ.get('PURETV_KEYSTORE_PASSWORD'), 'Existing signing secrets required'
@@ -148,7 +159,7 @@ def sign(args):
 
 def verify(args):
     commit = source()
-    for slug in build.PACKAGES:
+    for slug in build.selected_games(args.games):
         folder = args.input / 'packages' / slug
         receipt = json.loads((folder / 'signing-receipt.json').read_text())
         assert receipt['sourceSha'] == commit and receipt['runId'] == os.environ['GITHUB_RUN_ID']
@@ -163,15 +174,20 @@ def verify(args):
         assert observer['signed'] is True and observer['modelWrites'] is False and observer['testArtifactOnly'] is True
         assert observer['sourceSha'] == commit and observer['runId'] == os.environ['GITHUB_RUN_ID']
         assert observer['targetPackage'] == build.PACKAGES[slug]
+        assert observer['sourceFiles'] == build.observer_sources(slug)
+        assert observer['observerPackage'] == 'com.ecojust.joystickqa.' + slug.replace('-', '')
+        assert Path(observer['apk']).name == observer['apk']
+        assert observer['apkIdentity']['packageName'] == observer['observerPackage']
         assert observer['apkIdentity'] == apk_info(observer_folder / observer['apk'], args.build_tools)
         assert observer['apkIdentity']['certificateSha256'] == pin()
         build.assert_committed(observer['sourceFiles'], commit)
-    print(json.dumps({'verifiedGames': len(build.PACKAGES), 'sourceSha': commit}))
+    print(json.dumps({'verifiedGames': len(build.selected_games(args.games)), 'sourceSha': commit}))
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('command', choices=('sign', 'verify'))
+    p.add_argument('--games', help='Comma-separated registered games; default preserves CF/QQ')
     p.add_argument('--input', type=Path, required=True)
     p.add_argument('--output', type=Path)
     p.add_argument('--build-tools', type=Path, required=True)

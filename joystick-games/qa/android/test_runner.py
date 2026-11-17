@@ -8,6 +8,7 @@ import tempfile
 import threading
 import time
 import unittest
+from unittest import mock
 from types import SimpleNamespace
 from pathlib import Path
 
@@ -23,8 +24,12 @@ class AckFixture(socketserver.StreamRequestHandler):
                 continue
             reply = (json.dumps({'type':'ack','seq':event['seq']})+'\n').encode()
             # Deliberate fragmentation validates real TCP line assembly.
-            self.wfile.write(reply[:4]); self.wfile.flush()
-            self.wfile.write(reply[4:]); self.wfile.flush()
+            try:
+                self.wfile.write(reply[:4]); self.wfile.flush()
+                self.wfile.write(reply[4:]); self.wfile.flush()
+            except (BrokenPipeError, ConnectionResetError):
+                # The missing-ACK negative case deliberately closes its TCP client.
+                return
 
 class Server(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
@@ -251,5 +256,151 @@ class Contracts(unittest.TestCase):
                 if mutation == 'wrong-dom-seat': row['playerId'] = 2
                 if mutation == 'truncated-id': row['idText'] = 'ID: virtual-...'
                 self.assertIsNone(runner.Acceptance.single_seat_session(bad,case['primaryId']),mutation)
+
+
+class CatalogContracts(unittest.TestCase):
+    def acceptance(self):
+        acceptance = runner.Acceptance.__new__(runner.Acceptance)
+        acceptance.args = SimpleNamespace(game='fixture-game')
+        acceptance.plan = {'renderer': 'canvas2d', 'pauseStablePaths': ['gameplay.tick']}
+        return acceptance
+
+    def snapshot(self):
+        return {'game': {'game': 'fixture-game', 'renderer': 'canvas2d', 'stage': 'menu', 'paused': False,
+                         'frames': 10, 'gameplay': {'tick': 0}, 'errors': []},
+                'page': {'canvases': [{'width': 960, 'height': 540, 'visible': True}]}}
+
+    def test_canvas_game_does_not_require_a_webgl_context(self):
+        acceptance = self.acceptance(); snapshot = self.snapshot()
+        snapshot['game']['webglVersion'] = None
+        acceptance.validate_catalog_snapshot(snapshot)
+
+    def test_failed_renderer_wrong_game_and_missing_actual_model_are_rejected(self):
+        for mutation in ('error', 'wrong-game', 'missing-state', 'null-state', 'invisible-canvas', 'wrong-renderer'):
+            snapshot = self.snapshot()
+            if mutation == 'error': snapshot['game']['errors'] = ['Renderer failed']
+            if mutation == 'wrong-game': snapshot['game']['game'] = 'another-game'
+            if mutation == 'missing-state': snapshot['game']['gameplay'] = {}
+            if mutation == 'null-state': snapshot['game'].update(stage='paused', paused=True); snapshot['game']['gameplay']['tick'] = None
+            if mutation == 'invisible-canvas': snapshot['page']['canvases'][0]['visible'] = False
+            if mutation == 'wrong-renderer': snapshot['game']['renderer'] = 'webgl2'
+            with self.assertRaises((AssertionError, ValueError), msg=mutation):
+                self.acceptance().validate_catalog_snapshot(snapshot)
+
+    def test_observer_never_allocates_canvas_context_for_diagnostics(self):
+        text = (HERE/'src/com/ecojust/controllerqa/Observer.java').read_text()
+        self.assertIn('canvases:Array.prototype.map.call', text)
+        self.assertNotIn('.getContext(', text)
+
+    def test_pause_observation_is_mandatory_and_cannot_pass_missing_values(self):
+        plan = {'schemaVersion': 1, 'renderer': 'canvas2d', 'pauseStablePaths': ['gameplay.tick'],
+                'steps': [{'name': 'actual movement', 'keys': ['A'], 'holdMs': 100,
+                           'expect': [{'path': 'gameplay.position', 'op': 'changed'}]}]}
+        runner.plan.validate_plan(plan)
+        self.assertFalse(runner.plan.matches(plan['steps'][0]['expect'], {'gameplay': {}}, {'gameplay': {}}))
+        plan['pauseStablePaths'] = []
+        with self.assertRaises(AssertionError): runner.plan.validate_plan(plan)
+
+
+class InstallationSetup(unittest.TestCase):
+    class LaunchReached(Exception):
+        pass
+
+    def setup_case(self, slug, occupied=False, reset_stdout=b'Success\n', reset_exit=0):
+        """Run the real setup until instrumentation launch against a stateful ADB fixture."""
+        directory = tempfile.TemporaryDirectory(prefix='joystick-install-', dir='/dev/shm')
+        self.addCleanup(directory.cleanup)
+        acceptance = runner.Acceptance.__new__(runner.Acceptance)
+        acceptance.out = Path(directory.name)
+        acceptance.adb = ['fixture-adb', '-s', 'isolated-tv']
+        acceptance.args = SimpleNamespace(game=slug, apk=Path('/fixture/game.apk'),
+            observer=Path('/fixture/observer.apk'), occupy_default_port=occupied)
+        acceptance.package = runner.PACKAGES[slug]
+        acceptance.plan = None if slug in runner.build.LEGACY_PACKAGES else {'renderer': 'canvas2d'}
+        acceptance.report = {}; acceptance.tests = []
+        state = {'gameInstalled': False, 'observerInstalled': False, 'stopped': False,
+                 'storySeen': True, 'observerData': 'preserved', 'unrelatedData': 'preserved',
+                 'cleared': [], 'launches': 0, 'forwards': 0}
+
+        def adb(argv, **kwargs):
+            self.assertEqual(argv[:3], acceptance.adb)
+            command = argv[3:]
+            stdout, status = b'', 0
+            if command == ['wait-for-device']:
+                pass
+            elif command[:1] == ['install']:
+                # Updating an installed APK preserves its existing story flag.
+                if command[-1] == str(acceptance.args.apk): state['gameInstalled'] = True
+                elif command[-1] == str(acceptance.args.observer): state['observerInstalled'] = True
+                else: self.fail('Unexpected installed package')
+            elif command[:3] == ['shell', 'am', 'force-stop']:
+                self.assertTrue(state['gameInstalled'] and state['observerInstalled'])
+                self.assertEqual(command[3:], [acceptance.package]); state['stopped'] = True
+            elif command[:3] == ['shell', 'pm', 'clear']:
+                self.assertTrue(state['stopped']); self.assertEqual(state['launches'], 0)
+                self.assertEqual(command[3:], [acceptance.package])
+                state['cleared'].append(command[3])
+                stdout, status = reset_stdout, reset_exit
+                if status == 0 and stdout.strip() == b'Success': state['storySeen'] = False
+            elif command[:1] == ['forward']:
+                state['forwards'] += 1; stdout = b'40123\n'
+            else:
+                self.fail('Unexpected ADB operation: ' + repr(command))
+            return SimpleNamespace(returncode=status, stdout=stdout, stderr=b'fixture failure' if status else b'')
+
+        def launch(argv, **kwargs):
+            self.assertEqual(argv[:6], acceptance.adb + ['shell', 'am', 'instrument'])
+            self.assertTrue(state['stopped'])
+            if acceptance.plan:
+                self.assertFalse(state['storySeen'], 'Story state must be reset before target launch')
+                self.assertEqual(acceptance.report['installationSetup']['status'], 'passed')
+            state['launches'] += 1
+            raise self.LaunchReached()
+
+        error = None
+        with mock.patch.object(runner.subprocess, 'run', side_effect=adb), \
+                mock.patch.object(runner.subprocess, 'Popen', side_effect=launch):
+            try:
+                acceptance.setup()
+            except (self.LaunchReached, AssertionError, RuntimeError) as caught:
+                error = caught
+            finally:
+                if hasattr(acceptance, 'instrument_log'): acceptance.instrument_log.close()
+        commands = [json.loads(line) for line in (acceptance.out/'adb-commands.jsonl').read_text().splitlines()]
+        self.assertEqual(state['observerData'], 'preserved')
+        self.assertEqual(state['unrelatedData'], 'preserved')
+        return acceptance, state, error, commands
+
+    def test_each_catalog_scenario_clears_only_target_before_launch(self):
+        for occupied in (False, True):
+            acceptance, state, error, commands = self.setup_case('starblazer-86', occupied)
+            self.assertIsInstance(error, self.LaunchReached)
+            self.assertEqual(state['launches'], 1)
+            self.assertEqual(state['cleared'], [acceptance.package])
+            self.assertFalse(state['storySeen'])
+            self.assertEqual(acceptance.report['installationSetup']['phase'], 'before-target-launch')
+            reset = next(item for item in commands if item['command'][3:6] == ['shell', 'pm', 'clear'])
+            self.assertEqual(reset['stdout'], 'Success\n')
+            self.assertEqual(reset['exitCode'], 0)
+
+    def test_failed_or_unconfirmed_reset_blocks_instrumentation_and_game_launch(self):
+        for stdout, code in [(b'Failed\n', 0), (b'', 0), (b'Success\nextra output\n', 0), (b'Success\n', 1)]:
+            acceptance, state, error, _ = self.setup_case('starblazer-86', reset_stdout=stdout, reset_exit=code)
+            self.assertIsInstance(error, (AssertionError, RuntimeError))
+            self.assertEqual(state['launches'], 0)
+            self.assertEqual(state['forwards'], 0)
+            self.assertTrue(state['storySeen'])
+            self.assertEqual(acceptance.report['installationSetup']['status'], 'failed')
+            saved = json.loads((acceptance.out/'report.json').read_text())
+            self.assertEqual(saved['installationSetup']['status'], 'failed')
+
+    def test_legacy_games_keep_existing_install_and_data_behavior(self):
+        for slug in runner.build.LEGACY_PACKAGES:
+            acceptance, state, error, _ = self.setup_case(slug)
+            self.assertIsInstance(error, self.LaunchReached)
+            self.assertEqual(state['launches'], 1)
+            self.assertEqual(state['cleared'], [])
+            self.assertTrue(state['storySeen'])
+            self.assertNotIn('installationSetup', acceptance.report)
 
 if __name__=='__main__': unittest.main(verbosity=2)

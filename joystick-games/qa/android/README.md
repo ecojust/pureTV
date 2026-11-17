@@ -38,3 +38,41 @@ ID 文本接受完整 `controller_id` 或共享组件的精确 `ID: ` 标签加�
 动作等待使用生产缓存的 `controller.pollCount`：按下后必须看到更新帧中的对应九键输入，再等更新帧中的实际位置、角度、射击或漂移变化，才松开。暂停和 held-sync 抑制也要跨越真实新帧；held-sync 先匹配同 TCP 连接和 seq 的真实 ACK。等待有墙钟上限，不以固定按住毫秒数推算已渲染帧数。工具修正来源及陈旧快照负例见 `../../docs/qa/android/freshness-correction/summary.json`。
 
 本地 `python3 joystick-games/qa/android/test_runner.py` 仅验证 SDK 透传/ACK、只读工具和快照契约，不能替代 Android 实包运行；实体电视、ESP32 及发现广播测试仍需单独进行。
+
+
+## Catalog 批次
+
+新游戏以 `joystick-games/catalog-registry.json` 明确注册，包名严格为
+`com.ecojust.joystick.<去连字符的slug>`。原 CF/QQ 的包名和默认双游戏工具入口保持不变。
+`android-release.py sign/verify --games a,b` 仅接受注册身份；源码输入包含 registry、
+原许可证、NOTICE、每游戏 qa-plan、shared/crisp 与 shared/triptych 实际构建输入。
+正式签名仍要求同一冻结 Git 提交、已有固定发布证书和逐字节 APK assets 绑定。
+
+Catalog 运行器读取每游戏 `qa-plan.json`，其 schemaVersion 为 1：`renderer` 指明实际
+`canvas2d`、`webgl1`、`webgl2` 或 `dom`，`pauseStablePaths` 是非空 `gameplay.*` 路径数组，
+`steps` 各含 `name`、`keys`（独立物理键数组）、`holdMs`、`expect`。每项 expect 包含
+`path`、`op` 和有需要时的 `value`；操作只支持 `eq/gt/lt/gte/lte/changed/increased`。
+路径只可读取 `stage/paused/frames/gameplay.*`；缺失、null、布尔伪装数字不能通过。
+真实玩法至少要求实际模型值变化，输入计数或 RAF 帧数本身不是玩法通过。
+计划不提供 JavaScript、模型写入或时间加速能力。
+
+每轮验证实际初始化画布、plan指定玩法、暂停模型稳定、九键独立、完整 ID、第二席拒绝、
+焦点清键、断连暂停与同 ID 重连不自动恢复、held START sync 不触发动作、原 SDK 每条
+接受消息的同连接/同序号唯一 ACK，以及同进程固定服务端口。Observer只读取已有canvas
+尺寸和布局，不调用 `getContext` 分配上下文；Canvas游戏不要求WebGL2。
+
+焦点测试通过 ADB 的 BACK 打开并取消原宿主退出确认；这两次只用于原生生命周期，
+所有玩法输入仍来自 SDK。原GameKit宿主的 HOME/onStop 会主动结束游戏进程，不能将其
+解释为同局后台恢复，也不能把重启后新会话当作固定端口/稳定连接证据。
+
+`android-catalog.py runtime` 使用正式签名包分别运行 normal 与 occupied 两轮，第一轮失败
+也保留原件并继续第二轮；最后整体仍失败。新工作流手动选择已注册批次/子集，限制并行，
+不按排队时间取消。原始失败报告、实际脚本与隐藏workflow原件均保留；QA-only验证独立
+记录构建来源与执行来源，并仅复制已核验的所选游戏包。未运行正式签名SDK验收时，
+本地边界测试或未签名编译结果不能标为Android玩法通过。
+
+每个 Catalog 独立场景在安装、停止目标游戏后且启动 Observer/游戏前，仅对注册的目标
+测试游戏包执行 `pm clear`，并要求命令成功且输出精确为 `Success`。这使 normal 与
+occupied 都从初始存档重放剧情及 qa-plan；不会清除 Observer 或其它包的数据，旧 CF/QQ
+保留原安装行为。原始 ADB 日志与报告 `installationSetup` 记录此次启动前重置；重置失败
+立即停止，不启动游戏。这是专用模拟器的场景准备，不是局中模型操作或存档持久性验收。

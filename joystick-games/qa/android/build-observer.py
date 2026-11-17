@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build a separate, unsigned read-only instrumentation APK; never generates a key."""
 import argparse
+import importlib.util
 import hashlib
 import json
 import subprocess
@@ -9,7 +10,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
-PACKAGES = {'cf-transport-ship': 'com.ecojust.joystickcf', 'qq-speed': 'com.ecojust.joystickqqspeed'}
+spec = importlib.util.spec_from_file_location('joystick_android_build', ROOT / 'joystick-games/tools/android-build.py')
+build = importlib.util.module_from_spec(spec); spec.loader.exec_module(build)
+PACKAGES = build.registered_packages()
 
 
 def identity(path):
@@ -25,9 +28,10 @@ def main():
     out = a.output.resolve()
     out.mkdir(parents=True, exist_ok=True)
     assert not list(out.iterdir()), 'Use an empty output directory; previous attempts are immutable'
-    package = PACKAGES[a.game]
+    package = build.metadata(a.game)['packageName']
     observer = 'com.ecojust.joystickqa.' + a.game.replace('-', '')
     source = HERE / 'src/com/ecojust/controllerqa/Observer.java'
+    source_inputs = build.observer_sources(a.game)
     android = a.sdk / 'platforms/android-35/android.jar'
     bt = a.sdk / 'build-tools/34.0.0'
     classes = out / 'classes'; classes.mkdir()
@@ -43,12 +47,13 @@ def main():
     with zipfile.ZipFile(apk, 'a', compression=zipfile.ZIP_DEFLATED) as z:
         for f in sorted(dex.glob('*.dex')):
             z.write(f, f.name)
+    assert source_inputs == build.observer_sources(a.game), 'Observer sources changed during compilation'
     report = {'game': a.game, 'targetPackage': package, 'observerPackage': observer, 'packageName': observer,
               'instrumentationRunner': 'com.ecojust.controllerqa.Observer',
               'component': observer + '/com.ecojust.controllerqa.Observer', 'diagnosticPort': 63486,
               'readonlyEndpoints': ['/status', '/snapshot'], 'modelWrites': False, 'clockOverrides': False,
               'signed': False, 'apk': apk.name, 'apkIdentity': identity(apk),
-              'sourceFiles': {str(f.relative_to(ROOT)): identity(f) for f in [source, Path(__file__)]},
+              'sourceFiles': source_inputs,
               'classFiles': {str(f.relative_to(classes)): identity(f) for f in sorted(classes.rglob('*.class'))}}
     (out / 'observer-build.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps({'apk': str(apk), 'component': report['component'], 'signed': False}))
