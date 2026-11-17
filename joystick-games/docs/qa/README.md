@@ -35,4 +35,12 @@ The QQ controls archive retains its actual CDP capture, raw timestamped JPEGs an
 
 [QQ race attempt 1](browser-attempts/qq-race-1/report.json) retained its original menu timeout: after choosing one lap, the QA driver pressed Enter while focus was still on that option. The game correctly confirmed the selected option again. The next driver uses the normal visible Start button. No product change or gameplay result is claimed from this attempt.
 
-Native Android evidence under `android/`, shared-input unit evidence under `shared/`, and the macOS workflow artifacts must be interpreted using their own recorded source/package hashes and explicit coverage. Browser results alone do not certify a release package.
+## Installed packages and native SDK
+
+The [Android independent review](android/runtime-attempt-3-review/summary.json) covers both signed APKs, each in normal and occupied-port runs: 92 groups, 985 uniquely acknowledged accepted SDK messages, 24 original screenshots and four decoded recordings. The recordings cover approximately the first 180 seconds of each run; later actions have separate snapshots and captures. Each game's `docs/releases/0.1.0/android/` retains its original build/signing receipts, runtime evidence and exact executed sources. Build source `d30e1ce` and QA source `06c73fa` are intentionally distinct; production assets are unchanged from `e7a7c9a`.
+
+The Mac packages were built at `8d64759` in run `44115155028`. [QQ's independent review](macos-qq-run-44120745068-review.json) uses QA source `6da4d96`, run `44120745068`; [CF's review](macos-cf-run-44124342900-review.json) uses QA source `09a656e`, run `44124342900`. Both original packages pass Apple Silicon native, occupied-port and Rosetta gameplay checks. Intel hosted runners lose the WebGL context, independently confirmed by three probe frames; they pass only SDK protocol and lifecycle checks, explicitly classified as `limited_graphics`.
+
+CF's final run reuses its successful Intel execution from attempt 1 and adds the ARM/Rosetta execution from attempt 2. Attempt 1's ARM job never acquired a runner and executed no steps. QQ's already completed evidence is reused unchanged from its original run; it is not relabelled as a new CF-run result. Earlier Mac failures and exact QA corrections remain in `shared/macos/docs/attempts/` and the history record.
+
+Shared-input unit evidence under `shared/`, browser observations and installed-package results retain separate scopes. No physical TV, phone or ESP32 test has been performed. Browser results alone do not certify a release package.

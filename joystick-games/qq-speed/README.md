@@ -4,14 +4,16 @@
 
 ## 安装包
 
-**打包与验证进行中，尚未发布。** 以下是本目录预定的安装包入口，文件导入后可用。
+**0.1.0** 安装包与验证记录已随本目录提供。
 
 | 平台 | 安装包 | 系统要求 |
 | --- | --- | --- |
 | Android TV | [qq-speed-0.1.0.apk](qq-speed-0.1.0.apk) | Android 8.0+，系统 WebView 与 GPU 必须支持 WebGL 2 |
 | macOS | [QQSpeed-0.1.0-macos-universal.dmg](macos/QQSpeed-0.1.0-macos-universal.dmg) · [ZIP](macos/QQSpeed-0.1.0-macos-universal.zip) | macOS 11+，WebKit 与 GPU 必须支持 WebGL 2；通用包，包含 Apple Silicon／Intel 版本 |
 
-Mac 包使用 ad-hoc 签名，未做 Apple 公证。系统版本达到下限不保证旧 GPU 或虚拟机可运行；实体电视、手机及 ESP32 手柄尚未联调。
+Mac 包使用 ad-hoc 签名，未做 Apple 公证。若首次打开被系统拦截，可在「系统设置 → 隐私与安全性」中选择「仍要打开」。系统版本达到下限不保证旧 GPU 或虚拟机可运行；实体电视、手机及 ESP32 手柄尚未联调。
+
+Android 正式包来源见 [android-release.json](android-release.json)；Mac 文件和原生验收记录见 [macos/](macos/)。两平台均验证实际 SDK 控制、断线重连和端口占用回退；Mac 的 Apple Silicon 原生与 Rosetta 图形检查通过，Intel 托管运行机因 WebGL 上下文丢失只通过协议检查。完整范围见[统一验证说明](../README.md#验证记录)，本目录文件校验见 [SHA256SUMS.txt](SHA256SUMS.txt)。
 
 ![QQ 飞车实际浏览器画面](thumb.png)
 

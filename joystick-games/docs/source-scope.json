@@ -30,8 +30,6 @@
       "status": "passed"
     }
   ],
-  "macQaSource": "6da4d967d41fb0b365b563777d6ada9e8c079fe2",
-  "macQaRun": 44120745068,
   "androidQaExport": "464a4482a4e74b2d652c9fc4deb63f494bfd12a8",
   "androidPackagesImported": true,
   "androidIndependentReview": "joystick-games/docs/qa/android/runtime-attempt-3-review/summary.json",
@@ -41,8 +39,48 @@
       "run": 44120745068,
       "exportCommit": "aa94876c0e0c8849070d03eaf55d6fb3d9316041",
       "status": "failed_cf_start_qa_predicate",
-      "qqArmNormalOccupiedRosetta": "passed_pending_independent_pixel_review",
+      "qqArmNormalOccupiedRosetta": "passed_independent_pixel_review_complete",
       "intel": "limited_graphics_with_independent_context_loss_probe"
+    },
+    {
+      "source": "09a656e35b30a81e9662791d774a4b60bc5d6445",
+      "run": 44124342900,
+      "status": "runner_capacity_failure_no_steps",
+      "attempt": 1
+    },
+    {
+      "source": "09a656e35b30a81e9662791d774a4b60bc5d6445",
+      "run": 44124342900,
+      "attempt": 2,
+      "status": "passed_with_intel_graphics_limit",
+      "reusedActualExecutions": {
+        "intel": "attempt_1",
+        "provenance": "attempt_1",
+        "qq": "run_44120745068_attempt_1"
+      },
+      "newActualExecutions": [
+        "cf_arm_native",
+        "cf_arm_occupied_port",
+        "cf_rosetta",
+        "export"
+      ],
+      "exportCommit": "9ba74c4a0ecd256825e707b70f8447420dc6bb5f"
     }
-  ]
+  ],
+  "macQaSources": {
+    "cf-transport-ship": "09a656e35b30a81e9662791d774a4b60bc5d6445",
+    "qq-speed": "6da4d967d41fb0b365b563777d6ada9e8c079fe2"
+  },
+  "macQaRuns": {
+    "cf-transport-ship": 44124342900,
+    "qq-speed": 44120745068
+  },
+  "macIndependentReviews": {
+    "cf-transport-ship": "joystick-games/docs/qa/macos-cf-run-44124342900-review.json",
+    "qq-speed": "joystick-games/docs/qa/macos-qq-run-44120745068-review.json"
+  },
+  "macQaExport": "9ba74c4a0ecd256825e707b70f8447420dc6bb5f",
+  "macIndependentPixelReviewsComplete": true,
+  "macPackagesImported": true,
+  "macImportAudit": "joystick-games/shared/macos/docs/delivery/44124342900-attempt-2/import-audit.json"
 }

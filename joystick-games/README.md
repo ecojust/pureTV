@@ -7,7 +7,7 @@
 
 ## 安装包
 
-首版 **0.1.0** 的安装包正在完成原生验收，以下为交付路径，最终状态见本文验证记录。
+首版 **0.1.0** 提供 Android TV APK，以及同时包含 Apple Silicon 与 Intel 的 macOS DMG／ZIP。
 
 | 游戏 | Android TV | macOS 通用安装包 |
 | --- | --- | --- |
@@ -36,3 +36,11 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 - `qa/` 放置正常输入验收工具；`docs/` 留存原报告、来源哈希及失败记录。
 
 上游 CF 没有声明许可证，QQ 的 `package.json` 声明 ISC，仓库没有单独 LICENSE。准确来源与第三方许可事实保留在各游戏 `NOTICE.md` 和[上游审计](docs/upstream-audit.json)，不将上游全部代码重新标为本仓库许可证。本目录为非官方适配，与游戏品牌方无隶属关系。
+
+## 验证记录
+
+两款正式签名 APK 在 Android TV 模拟器中完成实际安装、原 SDK 手柄输入、游戏画面、暂停、断线重连与端口占用回退，共 92 项检查、985 条真实 ACK；24 张截图逐张复核，4 段录像解码通过。详见 [Android 核验](docs/qa/android/runtime-attempt-3-review/summary.json)。
+
+两款 Mac 原包均完成 Apple Silicon 原生运行、端口占用回退和 Rosetta 验证；安装包和测试资产逐字节绑定。Intel 托管运行机出现 WebGL 上下文丢失，仅完成协议与生命周期检查，不能据此宣称 Intel 图形运行已通过。独立复核见 [运输船 CF](docs/qa/macos-cf-run-44124342900-review.json) 与 [QQ 飞车](docs/qa/macos-qq-run-44120745068-review.json)。
+
+浏览器还完成了 QQ 飞车的一整圈正常比赛结算；各类测试范围、原始失败记录与来源分别保存在 [QA 说明](docs/qa/README.md) 和 [构建来源](docs/source-scope.json)。这些结果不代替实体电视与 ESP32 联调。

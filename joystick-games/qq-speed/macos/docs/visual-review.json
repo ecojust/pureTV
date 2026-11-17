@@ -1,0 +1,1447 @@
+{
+  "reviewStatus": "qq_arm_visual_and_source_checks_passed_with_intel_graphics_limit",
+  "reviewer": "independent game_qa agent",
+  "scope": "Read-only independent review of original QQ macOS evidence; no recapture, original-report edit, production change, or rerun. CF is excluded.",
+  "qaRunId": 44120745068,
+  "qaRunAttempt": 1,
+  "qaSourceCommit": "6da4d967d41fb0b365b563777d6ada9e8c079fe2",
+  "artifactSourceCommit": "8d6475980ce2312df8839a38dd724794eb59b83b",
+  "artifactRunId": 44115155028,
+  "artifactRunAttempt": 1,
+  "originalExport": {
+    "branch": "build-assets/joystick-games-macos-qa-44120745068-attempt-1",
+    "manifest": {
+      "path": "export-manifest.json",
+      "bytes": 21723,
+      "sha256": "bb64f54ddca9eeaabec28ad66724ed3e716b044acb934150418a2f2a4e3989d8"
+    },
+    "verifyResult": "failure",
+    "installPackagesValidated": false
+  },
+  "provenance": {
+    "receipt": {
+      "path": "provenance/source-provenance.json",
+      "bytes": 40075,
+      "sha256": "62a35546ee32859d003196b3b4f861c67a8a20ec7f830988e5fe2587b687eb29"
+    },
+    "selectedArtifactId": 14342154064,
+    "selectedArtifactDigest": "sha256:d1ee338036706bd10c3013a8944ffce309a80cce40730b5a5f752006998783c5",
+    "sourceRunConclusion": "cancelled"
+  },
+  "commonReportedBinarySha256": "de2b3e313af4ffc4ff1ecbc3ceaa0acfbf2b8027721823690e91844db18b8753",
+  "binaryVerificationScope": "All four QQ mode reports record the same binary SHA-256; both runner package-verification receipts pass ZIP/DMG/installed-copy checks. This evidence-only export contains no app/ZIP/DMG bytes, so this review does not independently rehash the executable or certify the final imported package.",
+  "sourceBindings": [
+    {
+      "repositoryPath": "joystick-games/tools/macos-verify.py",
+      "commit": "6da4d967d41fb0b365b563777d6ada9e8c079fe2",
+      "sha256": "e987e2e164357e532425e7639cda2f217f7e1e0068891950454b61020248b18f"
+    },
+    {
+      "repositoryPath": "puretv-joystick/joystick_sdk.py",
+      "commit": "6da4d967d41fb0b365b563777d6ada9e8c079fe2",
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    {
+      "repositoryPath": "joystick-games/shared/macos/tools/webgl-probe.swift",
+      "commit": "6da4d967d41fb0b365b563777d6ada9e8c079fe2",
+      "sha256": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156"
+    },
+    {
+      "repositoryPath": "joystick-games/shared/macos/Sources/main.swift",
+      "commit": "8d6475980ce2312df8839a38dd724794eb59b83b",
+      "sha256": "4888c7ba767907e8d04723bbda333bf1efe07cc02d6563d0dcf5abab4367eaf7"
+    },
+    {
+      "repositoryPath": "joystick-games/shared/macos/Sources/ControllerServer.swift",
+      "commit": "8d6475980ce2312df8839a38dd724794eb59b83b",
+      "sha256": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430"
+    },
+    {
+      "repositoryPath": "joystick-games/shared/macos/Web/bridge.js",
+      "commit": "8d6475980ce2312df8839a38dd724794eb59b83b",
+      "sha256": "0aa29efcf46fbb60c25d2833262b5ca8589e957de59063d7e90cd372db760edf"
+    }
+  ],
+  "modes": [
+    {
+      "runner": "macos-latest",
+      "mode": "native",
+      "report": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/native/report.json",
+        "bytes": 748263,
+        "sha256": "03e474b9f783a3a92393be0dc34dd4b5e4ecdbf39caa779254d9a5993e035d14"
+      },
+      "probe": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/native/webgl-probe.json",
+        "bytes": 1803,
+        "sha256": "9244d2e9ffed9e9b7bc0c6bfc41b2715b38166de84f4a649168f394fd75fcef5"
+      },
+      "executedQa": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/native/executed-macos-verify.py",
+        "bytes": 26912,
+        "sha256": "e987e2e164357e532425e7639cda2f217f7e1e0068891950454b61020248b18f"
+      },
+      "executedProbe": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/native/executed-webgl-probe.swift",
+        "bytes": 4548,
+        "sha256": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156"
+      },
+      "status": "passed",
+      "initializationClassification": "ready",
+      "nativeProcessArchitecture": "arm64",
+      "webglAvailable": true,
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        }
+      ],
+      "reviewedScreenshots": [
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/native/diagnostics/menu.png",
+          "bytes": 755307,
+          "sha256": "0043ba978f5ffa5e07cdf24aed4a7cdf0c2af54fc8a8cc7cf692e812f2d0bc31",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/native/diagnostics/connected-menu.png",
+          "bytes": 767290,
+          "sha256": "3cddfa8a2844289fbdcd5d7a017af7ca716cb562758e0a311d59b0f12ab2a7a0",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/native/diagnostics/playing.png",
+          "bytes": 849176,
+          "sha256": "9fbae3d55dab92a279a2e67141b30e0d6af56588577756b4700ccd449086541b",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/native/diagnostics/paused.png",
+          "bytes": 506719,
+          "sha256": "20394a8475b3b78ae1c578377355ff2391b113f62bb9f3525c931383a73d9ae3",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/native/diagnostics/disconnected.png",
+          "bytes": 531568,
+          "sha256": "2ee8334df7e176de9ff68adc737c74db3d9f83861734d0e3c39fe8eebe47c14f",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/native/diagnostics/reconnected.png",
+          "bytes": 529053,
+          "sha256": "5f7bad07d1dc5d6570842957aff1a43075edf6472542c9324cb6a54a8aec0438",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        }
+      ],
+      "visualReviewCompleted": true,
+      "controllerId": "virtual-494f1d6cf16b",
+      "identitySnapshotChecks": [
+        {
+          "at": "2026-11-17T16:06:58.953842+00:00",
+          "gameStage": "menu",
+          "documentSize": [
+            1024,
+            645
+          ],
+          "card": {
+            "clip": {
+              "bottom": 205,
+              "left": 814,
+              "right": 1012,
+              "top": 16
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-494f1d6cf16b",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 83,
+              "height": 24,
+              "left": 834,
+              "right": 858,
+              "top": 59,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-494f1d6cf16b",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 92,
+                "height": 13,
+                "left": 866,
+                "right": 991.82861328125,
+                "top": 79,
+                "width": 125.82861328125
+              },
+              {
+                "bottom": 107,
+                "height": 13,
+                "left": 866,
+                "right": 899.11279296875,
+                "top": 94,
+                "width": 33.11279296875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 116,
+              "height": 65,
+              "left": 825,
+              "right": 1001,
+              "top": 51,
+              "width": 176
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        },
+        {
+          "at": "2026-11-17T16:07:04.658733+00:00",
+          "gameStage": "race",
+          "documentSize": [
+            1024,
+            645
+          ],
+          "card": {
+            "clip": {
+              "bottom": 305,
+              "left": 814,
+              "right": 1012,
+              "top": 240
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-494f1d6cf16b",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 272,
+              "height": 24,
+              "left": 823,
+              "right": 847,
+              "top": 248,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-494f1d6cf16b",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 281,
+                "height": 13,
+                "left": 855,
+                "right": 1000.6962890625,
+                "top": 268,
+                "width": 145.6962890625
+              },
+              {
+                "bottom": 296,
+                "height": 13,
+                "left": 855,
+                "right": 868.2451171875,
+                "top": 283,
+                "width": 13.2451171875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 305,
+              "height": 65,
+              "left": 814,
+              "right": 1012,
+              "top": 240,
+              "width": 198
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        },
+        {
+          "at": "2026-11-17T16:07:11.552783+00:00",
+          "gameStage": "paused",
+          "documentSize": [
+            1024,
+            645
+          ],
+          "card": {
+            "clip": {
+              "bottom": 205,
+              "left": 814,
+              "right": 1012,
+              "top": 16
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-494f1d6cf16b",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 83,
+              "height": 24,
+              "left": 834,
+              "right": 858,
+              "top": 59,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-494f1d6cf16b",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 92,
+                "height": 13,
+                "left": 866,
+                "right": 991.82861328125,
+                "top": 79,
+                "width": 125.82861328125
+              },
+              {
+                "bottom": 107,
+                "height": 13,
+                "left": 866,
+                "right": 899.11279296875,
+                "top": 94,
+                "width": 33.11279296875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 116,
+              "height": 65,
+              "left": 825,
+              "right": 1001,
+              "top": 51,
+              "width": 176
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        },
+        {
+          "at": "2026-11-17T16:07:21.647190+00:00",
+          "gameStage": "paused",
+          "documentSize": [
+            1024,
+            645
+          ],
+          "card": {
+            "clip": {
+              "bottom": 205,
+              "left": 814,
+              "right": 1012,
+              "top": 16
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-494f1d6cf16b",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 83,
+              "height": 24,
+              "left": 834,
+              "right": 858,
+              "top": 59,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-494f1d6cf16b",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 92,
+                "height": 13,
+                "left": 866,
+                "right": 991.82861328125,
+                "top": 79,
+                "width": 125.82861328125
+              },
+              {
+                "bottom": 107,
+                "height": 13,
+                "left": 866,
+                "right": 899.11279296875,
+                "top": 94,
+                "width": 33.11279296875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 116,
+              "height": 65,
+              "left": 825,
+              "right": 1001,
+              "top": 51,
+              "width": 176
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        }
+      ],
+      "port": 63485,
+      "threeLifecycleCycles": {
+        "cycles": [
+          {
+            "cycle": 1,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 45,
+            "freshStartResumes": true
+          },
+          {
+            "cycle": 2,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 67,
+            "freshStartResumes": true
+          },
+          {
+            "cycle": 3,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 88,
+            "freshStartResumes": true
+          }
+        ],
+        "port": 63485,
+        "defaultPortOccupied": false
+      },
+      "disconnectReconnect": {
+        "pausedAtDisconnect": true,
+        "pausedAfterHeldSyncReconnect": true,
+        "timeBefore": 9.48900000000003,
+        "timeAfter": 9.48900000000003,
+        "noHeldGameKeys": true
+      },
+      "visualObservations": [
+        "All six untouched screenshots were viewed individually.",
+        "Menu shows actual rendered city background, four map choices, mode/skin/lap settings and Start action. Normal internal menu scrolling remains available.",
+        "Connected menu, gameplay, paused and reconnected images show the complete expected ID, wrapping within the card, and a recognizable controller icon.",
+        "Gameplay shows actual cars, track, minimap, rank/lap/time HUD and control legend. Pause actions and identity panel remain within the captured bounds.",
+        "Disconnected image removes the identity card and leaves the game visibly paused; reconnected image restores the same full ID while retaining the paused scene.",
+        "Some sky/cloud areas show colored speckling in the original captures; no image cleanup was performed, and this review does not assert pixel-perfect rendering."
+      ]
+    },
+    {
+      "runner": "macos-latest",
+      "mode": "occupied-port",
+      "report": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/occupied-port/report.json",
+        "bytes": 749885,
+        "sha256": "09ea75e826fbea30d7890ee2f7dc1b7b150fc8748bbc899dfa3299ab6682a01b"
+      },
+      "probe": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/occupied-port/webgl-probe.json",
+        "bytes": 1803,
+        "sha256": "9244d2e9ffed9e9b7bc0c6bfc41b2715b38166de84f4a649168f394fd75fcef5"
+      },
+      "executedQa": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/occupied-port/executed-macos-verify.py",
+        "bytes": 26912,
+        "sha256": "e987e2e164357e532425e7639cda2f217f7e1e0068891950454b61020248b18f"
+      },
+      "executedProbe": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/occupied-port/executed-webgl-probe.swift",
+        "bytes": 4548,
+        "sha256": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156"
+      },
+      "status": "passed",
+      "initializationClassification": "ready",
+      "nativeProcessArchitecture": "arm64",
+      "webglAvailable": true,
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        }
+      ],
+      "reviewedScreenshots": [
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/occupied-port/diagnostics/menu.png",
+          "bytes": 760659,
+          "sha256": "bed72fde888503a6f1beaafb8445664e8c29f2881d1cf5737f7cd6093236b0c0",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/occupied-port/diagnostics/connected-menu.png",
+          "bytes": 759774,
+          "sha256": "1389d8f009f256e3c0ff33f8685a3d3473b0ec099948050e06ab976aaf2301e4",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/occupied-port/diagnostics/playing.png",
+          "bytes": 848077,
+          "sha256": "1931d008322245140548d45e8771e45e3acdb51c537088ee56b0215f4e99dc0b",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/occupied-port/diagnostics/paused.png",
+          "bytes": 501438,
+          "sha256": "c56ee3f9c1eec8c1d1ce0f824c0c2ebf69a08036a6d7ea424e2017af3c875aaf",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/occupied-port/diagnostics/disconnected.png",
+          "bytes": 504947,
+          "sha256": "4db51307f25e9e59366f7e0aa0f99ec3327860bd59a2af7acfd001c1c7e66cc0",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/occupied-port/diagnostics/reconnected.png",
+          "bytes": 505312,
+          "sha256": "d4d850b516a2dfeb44ead68b169c743ca600eb30bf0dbbc8dec435972573f56e",
+          "width": 1024,
+          "height": 645,
+          "viewedOriginal": true
+        }
+      ],
+      "visualReviewCompleted": true,
+      "controllerId": "virtual-27ffa3aaaeef",
+      "identitySnapshotChecks": [
+        {
+          "at": "2026-11-17T16:07:35.203217+00:00",
+          "gameStage": "menu",
+          "documentSize": [
+            1024,
+            645
+          ],
+          "card": {
+            "clip": {
+              "bottom": 205,
+              "left": 814,
+              "right": 1012,
+              "top": 16
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-27ffa3aaaeef",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 83,
+              "height": 24,
+              "left": 834,
+              "right": 858,
+              "top": 59,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-27ffa3aaaeef",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 92,
+                "height": 13,
+                "left": 866,
+                "right": 991.82861328125,
+                "top": 79,
+                "width": 125.82861328125
+              },
+              {
+                "bottom": 107,
+                "height": 13,
+                "left": 866,
+                "right": 899.11279296875,
+                "top": 94,
+                "width": 33.11279296875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 116,
+              "height": 65,
+              "left": 825,
+              "right": 1001,
+              "top": 51,
+              "width": 176
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        },
+        {
+          "at": "2026-11-17T16:07:40.594778+00:00",
+          "gameStage": "race",
+          "documentSize": [
+            1024,
+            645
+          ],
+          "card": {
+            "clip": {
+              "bottom": 305,
+              "left": 814,
+              "right": 1012,
+              "top": 240
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-27ffa3aaaeef",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 272,
+              "height": 24,
+              "left": 823,
+              "right": 847,
+              "top": 248,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-27ffa3aaaeef",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 281,
+                "height": 13,
+                "left": 855,
+                "right": 1000.6962890625,
+                "top": 268,
+                "width": 145.6962890625
+              },
+              {
+                "bottom": 296,
+                "height": 13,
+                "left": 855,
+                "right": 868.2451171875,
+                "top": 283,
+                "width": 13.2451171875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 305,
+              "height": 65,
+              "left": 814,
+              "right": 1012,
+              "top": 240,
+              "width": 198
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        },
+        {
+          "at": "2026-11-17T16:07:47.228783+00:00",
+          "gameStage": "paused",
+          "documentSize": [
+            1024,
+            645
+          ],
+          "card": {
+            "clip": {
+              "bottom": 205,
+              "left": 814,
+              "right": 1012,
+              "top": 16
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-27ffa3aaaeef",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 83,
+              "height": 24,
+              "left": 834,
+              "right": 858,
+              "top": 59,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-27ffa3aaaeef",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 92,
+                "height": 13,
+                "left": 866,
+                "right": 991.82861328125,
+                "top": 79,
+                "width": 125.82861328125
+              },
+              {
+                "bottom": 107,
+                "height": 13,
+                "left": 866,
+                "right": 899.11279296875,
+                "top": 94,
+                "width": 33.11279296875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 116,
+              "height": 65,
+              "left": 825,
+              "right": 1001,
+              "top": 51,
+              "width": 176
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        },
+        {
+          "at": "2026-11-17T16:07:56.822411+00:00",
+          "gameStage": "paused",
+          "documentSize": [
+            1024,
+            645
+          ],
+          "card": {
+            "clip": {
+              "bottom": 205,
+              "left": 814,
+              "right": 1012,
+              "top": 16
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-27ffa3aaaeef",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 83,
+              "height": 24,
+              "left": 834,
+              "right": 858,
+              "top": 59,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-27ffa3aaaeef",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 92,
+                "height": 13,
+                "left": 866,
+                "right": 991.82861328125,
+                "top": 79,
+                "width": 125.82861328125
+              },
+              {
+                "bottom": 107,
+                "height": 13,
+                "left": 866,
+                "right": 899.11279296875,
+                "top": 94,
+                "width": 33.11279296875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 116,
+              "height": 65,
+              "left": 825,
+              "right": 1001,
+              "top": 51,
+              "width": 176
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        }
+      ],
+      "port": 61054,
+      "threeLifecycleCycles": {
+        "cycles": [
+          {
+            "cycle": 1,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 45,
+            "freshStartResumes": true
+          },
+          {
+            "cycle": 2,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 67,
+            "freshStartResumes": true
+          },
+          {
+            "cycle": 3,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 88,
+            "freshStartResumes": true
+          }
+        ],
+        "port": 61054,
+        "defaultPortOccupied": true
+      },
+      "disconnectReconnect": {
+        "pausedAtDisconnect": true,
+        "pausedAfterHeldSyncReconnect": true,
+        "timeBefore": 9.836999999999993,
+        "timeAfter": 9.836999999999993,
+        "noHeldGameKeys": true
+      },
+      "visualObservations": [
+        "All six untouched screenshots were viewed individually.",
+        "Menu shows actual rendered city background, four map choices, mode/skin/lap settings and Start action. Normal internal menu scrolling remains available.",
+        "Connected menu, gameplay, paused and reconnected images show the complete expected ID, wrapping within the card, and a recognizable controller icon.",
+        "Gameplay shows actual cars, track, minimap, rank/lap/time HUD and control legend. Pause actions and identity panel remain within the captured bounds.",
+        "Disconnected image removes the identity card and leaves the game visibly paused; reconnected image restores the same full ID while retaining the paused scene.",
+        "Some sky/cloud areas show colored speckling in the original captures; no image cleanup was performed, and this review does not assert pixel-perfect rendering."
+      ]
+    },
+    {
+      "runner": "macos-latest",
+      "mode": "rosetta",
+      "report": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/rosetta/report.json",
+        "bytes": 753480,
+        "sha256": "1fd20059ccb5c6dcc24872b6bcd41953674210ef3a032b6c987535ac61df7c05"
+      },
+      "probe": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/rosetta/webgl-probe.json",
+        "bytes": 1804,
+        "sha256": "d9868ef162a4e6c8556c5fde9b19354afe0a8c0ca5d3270aeeb71d473e2d4a91"
+      },
+      "executedQa": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/rosetta/executed-macos-verify.py",
+        "bytes": 26912,
+        "sha256": "e987e2e164357e532425e7639cda2f217f7e1e0068891950454b61020248b18f"
+      },
+      "executedProbe": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/rosetta/executed-webgl-probe.swift",
+        "bytes": 4548,
+        "sha256": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156"
+      },
+      "status": "passed",
+      "initializationClassification": "ready",
+      "nativeProcessArchitecture": "x86_64",
+      "webglAvailable": true,
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        }
+      ],
+      "reviewedScreenshots": [
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/rosetta/diagnostics/menu.png",
+          "bytes": 741428,
+          "sha256": "974838d18607e46b8a82149a6e5c76cb5590a9dfdadd530864fbf00d45cde6df",
+          "width": 1024,
+          "height": 643,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/rosetta/diagnostics/connected-menu.png",
+          "bytes": 765203,
+          "sha256": "1b62da7b5debd1c3fa1a4172536a8ac18dc475587ea19184c5c007f92f9e817d",
+          "width": 1024,
+          "height": 643,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/rosetta/diagnostics/playing.png",
+          "bytes": 848229,
+          "sha256": "66b5df9cbc72e41cd6d173bce92f3f9f487b3c3fb396e7716912df023e8f1645",
+          "width": 1024,
+          "height": 643,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/rosetta/diagnostics/paused.png",
+          "bytes": 496413,
+          "sha256": "e19f902b8b71fcd9314cdd92f96ca09b18a66462a8e15ce9030a0f880aa76e74",
+          "width": 1024,
+          "height": 643,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/rosetta/diagnostics/disconnected.png",
+          "bytes": 541270,
+          "sha256": "591670c53108e956c8e0df95b7fbe857cd29e5e4a74d09e01533ef73f30ed468",
+          "width": 1024,
+          "height": 643,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/rosetta/diagnostics/reconnected.png",
+          "bytes": 541029,
+          "sha256": "5766d1f939cf191f421fe81a853a17405075663fb2258cb15b1f0a6eb914c374",
+          "width": 1024,
+          "height": 643,
+          "viewedOriginal": true
+        }
+      ],
+      "visualReviewCompleted": true,
+      "controllerId": "virtual-91c00744a262",
+      "identitySnapshotChecks": [
+        {
+          "at": "2026-11-17T16:08:22.662858+00:00",
+          "gameStage": "menu",
+          "documentSize": [
+            1024,
+            643
+          ],
+          "card": {
+            "clip": {
+              "bottom": 205,
+              "left": 814,
+              "right": 1012,
+              "top": 16
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-91c00744a262",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 83,
+              "height": 24,
+              "left": 834,
+              "right": 858,
+              "top": 59,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-91c00744a262",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 92,
+                "height": 13,
+                "left": 866,
+                "right": 991.82861328125,
+                "top": 79,
+                "width": 125.82861328125
+              },
+              {
+                "bottom": 107,
+                "height": 13,
+                "left": 866,
+                "right": 899.11279296875,
+                "top": 94,
+                "width": 33.11279296875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 116,
+              "height": 65,
+              "left": 825,
+              "right": 1001,
+              "top": 51,
+              "width": 176
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        },
+        {
+          "at": "2026-11-17T16:08:28.121334+00:00",
+          "gameStage": "race",
+          "documentSize": [
+            1024,
+            643
+          ],
+          "card": {
+            "clip": {
+              "bottom": 305,
+              "left": 814,
+              "right": 1012,
+              "top": 240
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-91c00744a262",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 272,
+              "height": 24,
+              "left": 823,
+              "right": 847,
+              "top": 248,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-91c00744a262",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 281,
+                "height": 13,
+                "left": 855,
+                "right": 1000.6962890625,
+                "top": 268,
+                "width": 145.6962890625
+              },
+              {
+                "bottom": 296,
+                "height": 13,
+                "left": 855,
+                "right": 868.2451171875,
+                "top": 283,
+                "width": 13.2451171875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 305,
+              "height": 65,
+              "left": 814,
+              "right": 1012,
+              "top": 240,
+              "width": 198
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        },
+        {
+          "at": "2026-11-17T16:08:35.234823+00:00",
+          "gameStage": "paused",
+          "documentSize": [
+            1024,
+            643
+          ],
+          "card": {
+            "clip": {
+              "bottom": 205,
+              "left": 814,
+              "right": 1012,
+              "top": 16
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-91c00744a262",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 83,
+              "height": 24,
+              "left": 834,
+              "right": 858,
+              "top": 59,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-91c00744a262",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 92,
+                "height": 13,
+                "left": 866,
+                "right": 991.82861328125,
+                "top": 79,
+                "width": 125.82861328125
+              },
+              {
+                "bottom": 107,
+                "height": 13,
+                "left": 866,
+                "right": 899.11279296875,
+                "top": 94,
+                "width": 33.11279296875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 116,
+              "height": 65,
+              "left": 825,
+              "right": 1001,
+              "top": 51,
+              "width": 176
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        },
+        {
+          "at": "2026-11-17T16:08:46.387672+00:00",
+          "gameStage": "paused",
+          "documentSize": [
+            1024,
+            643
+          ],
+          "card": {
+            "clip": {
+              "bottom": 205,
+              "left": 814,
+              "right": 1012,
+              "top": 16
+            },
+            "containerId": "puretv-controller-clients",
+            "controllerId": "virtual-91c00744a262",
+            "fullyVisible": true,
+            "iconRect": {
+              "bottom": 83,
+              "height": 24,
+              "left": 834,
+              "right": 858,
+              "top": 59,
+              "width": 24
+            },
+            "iconVisible": true,
+            "idText": "ID: virtual-91c00744a262",
+            "idTextFullyVisible": true,
+            "idTextOverflow": "clip",
+            "idTextRects": [
+              {
+                "bottom": 92,
+                "height": 13,
+                "left": 866,
+                "right": 991.82861328125,
+                "top": 79,
+                "width": 125.82861328125
+              },
+              {
+                "bottom": 107,
+                "height": 13,
+                "left": 866,
+                "right": 899.11279296875,
+                "top": 94,
+                "width": 33.11279296875
+              }
+            ],
+            "playerId": "1",
+            "rect": {
+              "bottom": 116,
+              "height": 65,
+              "left": 825,
+              "right": 1001,
+              "top": 51,
+              "width": 176
+            },
+            "statusText": "已连接",
+            "visible": true
+          }
+        }
+      ],
+      "port": 63485,
+      "threeLifecycleCycles": {
+        "cycles": [
+          {
+            "cycle": 1,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 45,
+            "freshStartResumes": true
+          },
+          {
+            "cycle": 2,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 67,
+            "freshStartResumes": true
+          },
+          {
+            "cycle": 3,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 89,
+            "freshStartResumes": true
+          }
+        ],
+        "port": 63485,
+        "defaultPortOccupied": false
+      },
+      "disconnectReconnect": {
+        "pausedAtDisconnect": true,
+        "pausedAfterHeldSyncReconnect": true,
+        "timeBefore": 10.276000000000002,
+        "timeAfter": 10.276000000000002,
+        "noHeldGameKeys": true
+      },
+      "visualObservations": [
+        "All six untouched screenshots were viewed individually.",
+        "Menu shows actual rendered city background, four map choices, mode/skin/lap settings and Start action. Normal internal menu scrolling remains available.",
+        "Connected menu, gameplay, paused and reconnected images show the complete expected ID, wrapping within the card, and a recognizable controller icon.",
+        "Gameplay shows actual cars, track, minimap, rank/lap/time HUD and control legend. Pause actions and identity panel remain within the captured bounds.",
+        "Disconnected image removes the identity card and leaves the game visibly paused; reconnected image restores the same full ID while retaining the paused scene.",
+        "Some sky/cloud areas show colored speckling in the original captures; no image cleanup was performed, and this review does not assert pixel-perfect rendering."
+      ]
+    },
+    {
+      "runner": "macos-15-intel",
+      "mode": "native",
+      "report": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-15-intel/native/report.json",
+        "bytes": 100341,
+        "sha256": "5101ea3640093335470e01305a3f04697e6700a81491944b0256882845f739b0"
+      },
+      "probe": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-15-intel/native/webgl-probe.json",
+        "bytes": 1013,
+        "sha256": "9fa3123bc67099b564783941e61e7131a19d35def53f7702e45facdc7cd833b3"
+      },
+      "executedQa": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-15-intel/native/executed-macos-verify.py",
+        "bytes": 26912,
+        "sha256": "e987e2e164357e532425e7639cda2f217f7e1e0068891950454b61020248b18f"
+      },
+      "executedProbe": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-15-intel/native/executed-webgl-probe.swift",
+        "bytes": 4548,
+        "sha256": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156"
+      },
+      "status": "limited_graphics",
+      "initializationClassification": "webgl_incomplete",
+      "nativeProcessArchitecture": "x86_64",
+      "webglAvailable": false,
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK native receiver without renderer",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        }
+      ],
+      "reviewedScreenshots": [
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-15-intel/native/diagnostics/menu.png",
+          "bytes": 47288,
+          "sha256": "312e572f2bc22ddbce5143f5b5ef97e9bb3a5f4966a04068fefbded0f8a9a7e8",
+          "width": 1280,
+          "height": 720,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-15-intel/native/diagnostics/connected-menu.png",
+          "bytes": 47288,
+          "sha256": "312e572f2bc22ddbce5143f5b5ef97e9bb3a5f4966a04068fefbded0f8a9a7e8",
+          "width": 1280,
+          "height": 720,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-15-intel/native/diagnostics/disconnected.png",
+          "bytes": 47288,
+          "sha256": "312e572f2bc22ddbce5143f5b5ef97e9bb3a5f4966a04068fefbded0f8a9a7e8",
+          "width": 1280,
+          "height": 720,
+          "viewedOriginal": true
+        },
+        {
+          "path": "evidence/joystick-macos-qa-qq-speed-macos-15-intel/native/diagnostics/reconnected.png",
+          "bytes": 47288,
+          "sha256": "312e572f2bc22ddbce5143f5b5ef97e9bb3a5f4966a04068fefbded0f8a9a7e8",
+          "width": 1280,
+          "height": 720,
+          "viewedOriginal": true
+        }
+      ],
+      "visualReviewCompleted": true,
+      "independentProbeSamples": [
+        {
+          "contextLost": true,
+          "fragmentHighFloat": null,
+          "glError": 37442,
+          "renderer": null,
+          "vendor": null,
+          "version": null,
+          "vertexHighFloat": null
+        },
+        {
+          "contextLost": true,
+          "fragmentHighFloat": null,
+          "glError": 0,
+          "renderer": null,
+          "vendor": null,
+          "version": null,
+          "vertexHighFloat": null
+        },
+        {
+          "contextLost": true,
+          "fragmentHighFloat": null,
+          "glError": 0,
+          "renderer": null,
+          "vendor": null,
+          "version": null,
+          "vertexHighFloat": null
+        }
+      ],
+      "actualAppError": {
+        "game": "qq-speed",
+        "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+        "stage": "error",
+        "webglError": true
+      },
+      "visualObservations": [
+        "All four untouched original captures show the same WebGL 2 initialization error text and contain identical bytes.",
+        "No actual game world, rendered controller icon or ID card is present; none is marked passed for this runner."
+      ],
+      "interpretation": "The independent three-frame WKWebView probe created a context object but every sample lost context and returned null shader precision. This matches the actual app error and supports only strict webgl_incomplete/protocol coverage."
+    }
+  ],
+  "limits": [
+    "The overall QA export reports verifyResult=failure and installPackagesValidated=false; QQ-specific success is not a pass of the entire workflow or CF.",
+    "The three successful graphics modes ran on the Apple Silicon macos-latest runner. Rosetta x86_64 success on Apple GPU does not establish Intel Mac graphics compatibility.",
+    "The Intel runner is protocol/lifecycle/error-screen evidence only; no rendered game or controller-card pass is claimed there.",
+    "The original Python SDK communicates with the actual AppKit/WKWebView native receiver through a byte-transparent observer. No physical ESP32 controller or consumer television was tested.",
+    "These native QQ reports do not complete a full race and only claim B/X input consumption, not naturally earned native boost/inventory mechanics. Separate browser evidence must retain its own scope.",
+    "Package receipts describe ad-hoc signing and appleNotarized=false. Final package byte verification remains a separate import/release step."
+  ],
+  "originalFilesModified": false,
+  "productionFilesModified": false,
+  "packageReceipts": [
+    {
+      "file": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-latest/package-verification.json",
+        "bytes": 490,
+        "sha256": "7b8f6e5daab8445a9117ae977bf1165613e8f7fe582756c726cf3be6c0cc172c"
+      },
+      "receipt": {
+        "status": "passed",
+        "artifactSourceCommit": "8d6475980ce2312df8839a38dd724794eb59b83b",
+        "artifactRunId": 44115155028,
+        "qaSourceCommit": "6da4d967d41fb0b365b563777d6ada9e8c079fe2",
+        "frozenInputFilesVerified": 83,
+        "unchangedProductionFilesVerified": 34,
+        "sourceCommit": "8d6475980ce2312df8839a38dd724794eb59b83b",
+        "game": "qq-speed",
+        "version": "0.1.0",
+        "buildVersion": "1",
+        "zipDmgAndInstalledCopyVerified": true,
+        "signature": "ad-hoc",
+        "appleNotarized": false
+      }
+    },
+    {
+      "file": {
+        "path": "evidence/joystick-macos-qa-qq-speed-macos-15-intel/package-verification.json",
+        "bytes": 490,
+        "sha256": "7b8f6e5daab8445a9117ae977bf1165613e8f7fe582756c726cf3be6c0cc172c"
+      },
+      "receipt": {
+        "status": "passed",
+        "artifactSourceCommit": "8d6475980ce2312df8839a38dd724794eb59b83b",
+        "artifactRunId": 44115155028,
+        "qaSourceCommit": "6da4d967d41fb0b365b563777d6ada9e8c079fe2",
+        "frozenInputFilesVerified": 83,
+        "unchangedProductionFilesVerified": 34,
+        "sourceCommit": "8d6475980ce2312df8839a38dd724794eb59b83b",
+        "game": "qq-speed",
+        "version": "0.1.0",
+        "buildVersion": "1",
+        "zipDmgAndInstalledCopyVerified": true,
+        "signature": "ad-hoc",
+        "appleNotarized": false
+      }
+    }
+  ],
+  "reviewedOriginalScreenshotCount": 22
+}
