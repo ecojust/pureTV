@@ -1,0 +1,11 @@
+# Original Android triptych-01 verification and UI findings
+
+Source `a73a1976e7d38ff27b8e457b933519ea66eaa949`, run [44150603503](https://github.com/ecojust/pureTV/actions/runs/44150603503), immutable export `1e2ebdd67c80d39bdf187c6981957f4389853935` (branch `build-assets/joystick-catalog-android-44150603503-attempt-1`).
+
+All 417 exported files were independently checked against the immutable manifest. The fixed certificate, package/version identity, exact source inventory, every production input, signed APK contents/assets and observer source were independently verified; `input-verification.json` is a local verification of the original packages, not a new native run. SDK normal/occupied reports contain 43/44/43 passing checks for Sugarplum/Starblazer/Popgun. All three normal services used 63485; occupied runs used 37973/41497/37673 and kept their selected port stable.
+
+Sugarplum's 14 original screenshots were reviewed individually and showed no overlap/clipping. Starblazer and Popgun passed SDK checks but failed visual review: Starblazer's phone BOMB covers TV instructions in playing states; Popgun's phone controls cover those instructions in all states. Other captured menus and IDs fit. Original images and reports are retained here; `native-visual-review.json` distinguishes individual and thumbnail inspection. Exact original videos remain in the immutable export and are indexed with their hashes in that file; they are not claimed as evidence of the subsequent touch correction.
+
+The later Starblazer/Popgun source change must be rebuilt and tested on Android/macOS. No APK was copied into a game delivery directory. Native emulator results do not claim physical TV/phone/ESP32 verification.
+
+Local verifier note: the live shared checkout had newer unrelated CSS edits, so verification used a minimal materialization of the exact original source and immutable Git objects, never bypassing production-byte checks. An initial materialization omitted Observer source; the next call correctly refused the already-created output directory. Both local setup failures were retained in scratch, followed by a new complete output that passed. A failed broad sparse clone briefly exhausted /dev/shm; only that newly created scratch clone was removed, then minimal source materialization was used. These are local setup events, not game/runtime failures.

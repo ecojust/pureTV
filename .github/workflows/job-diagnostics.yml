@@ -27,10 +27,13 @@ jobs:
           log = re.sub(r"https?://[^\s<>\"']+", '[URL omitted]', log)
           log = re.sub(r'\b(?:gh[pousr]_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)\b', '[token omitted]', log)
           log = re.sub(r'(?im)((?:authorization|(?:gh|github)[_-]token)\s*[:=]\s*)(?:bearer\s+|basic\s+)?[^\s]+', r'\1[token omitted]', log)
+          log = re.sub(r'(?im)^.*androidboot\.qemu\.adb\.pubkey=.*$', '[emulator public key omitted]', log)
           lines = log.splitlines()
           primary = [i for i, line in enumerate(lines) if re.search(r'FAILURE: Build failed|\* What went wrong:', line) and '##[error]' not in line]
           fallback = [i for i, line in enumerate(lines) if re.search(r'(?:error:|Error:|TimeoutError|ui\.mjs:|> Task .+ FAILED|Execution failed for task|failed with exit code|emulator: ERROR)', line)]
-          matches = primary or fallback
+          # Boot polling can log transient adb failures before the fatal step.
+          fatal = [i for i in fallback if '##[error]' in lines[i]]
+          matches = primary or fatal or fallback
           if matches:
               before = '\n'.join(lines[max(0, matches[0] - 50):matches[0]])[-3500:]
               print('::notice title=Failure preceding context::' + before.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))

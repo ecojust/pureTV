@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.score",
+    "gameplay.playerX",
+    "gameplay.playerY",
+    "gameplay.shots"
+  ],
+  "steps": [
+    {
+      "name": "Start a campaign and open the island map",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "map"
+        }
+      ]
+    },
+    {
+      "name": "Enter the first real generated level",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Jump right and fire the popgun",
+      "keys": [
+        "RIGHT",
+        "A",
+        "B"
+      ],
+      "holdMs": 650,
+      "expect": [
+        {
+          "path": "gameplay.playerX",
+          "op": "changed"
+        },
+        {
+          "path": "gameplay.shots",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause the platformer",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}
