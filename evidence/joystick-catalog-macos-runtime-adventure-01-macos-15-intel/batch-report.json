@@ -1,0 +1,87 @@
+{
+  "sourceCommit": "dfae2fb0979314424ef3e4f2c7cb7cfcac91885d",
+  "qaSourceCommit": "8fbc37223ec016f0c1716b27a5babaf56f894123",
+  "artifactRunId": 44157205988,
+  "batch": "adventure-01",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "passed",
+  "games": [
+    {
+      "game": "glup",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/glup",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/glup/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "glup/package-verification.log",
+          "startedAt": "2026-11-17T19:45:19.108106+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "glup",
+            "--app",
+            "/Users/runner/work/_temp/packages/glup/installed/GLUP.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/glup/native"
+          ],
+          "status": "passed",
+          "log": "glup/native.log",
+          "startedAt": "2026-11-17T19:46:11.736388+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "emberbrood",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/emberbrood",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/emberbrood/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "emberbrood/package-verification.log",
+          "startedAt": "2026-11-17T19:47:19.505801+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "emberbrood",
+            "--app",
+            "/Users/runner/work/_temp/packages/emberbrood/installed/Emberbrood.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/emberbrood/native"
+          ],
+          "status": "passed",
+          "log": "emberbrood/native.log",
+          "startedAt": "2026-11-17T19:47:58.282213+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}

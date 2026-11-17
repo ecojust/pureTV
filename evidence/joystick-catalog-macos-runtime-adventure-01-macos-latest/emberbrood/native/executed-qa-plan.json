@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "storageRestartRequired": true,
+  "renderer": "dom",
+  "pauseStablePaths": [
+    "gameplay.coin",
+    "gameplay.steps",
+    "gameplay.roster",
+    "gameplay.inventory",
+    "gameplay.quests",
+    "gameplay.clockElapsed"
+  ],
+  "steps": [
+    {
+      "name": "Create the real world and starter dragon",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.rosterCount",
+          "op": "eq",
+          "value": 1
+        },
+        {
+          "path": "gameplay.overlay",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Advance authored introduction line 1",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.rosterCount",
+          "op": "eq",
+          "value": 1
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Advance authored introduction line 2",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.rosterCount",
+          "op": "eq",
+          "value": 1
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Advance authored introduction line 3",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.rosterCount",
+          "op": "eq",
+          "value": 1
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Advance authored introduction line 4",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.rosterCount",
+          "op": "eq",
+          "value": 1
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Advance authored introduction line 5",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.rosterCount",
+          "op": "eq",
+          "value": 1
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Advance authored introduction line 6",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.rosterCount",
+          "op": "eq",
+          "value": 1
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Advance authored introduction line 7",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.rosterCount",
+          "op": "eq",
+          "value": 1
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Open the road map",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "map"
+        },
+        {
+          "path": "gameplay.overlay",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Move to settings in map focus order",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "map"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Move to current place in map focus order",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "map"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Select the Low Fields route",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "map"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Walk to the Low Fields using the original travel rule",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.node",
+          "op": "eq",
+          "value": "lowfields"
+        },
+        {
+          "path": "gameplay.steps",
+          "op": "increased"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Pause adventure",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ],
+      "timeoutSeconds": 60
+    }
+  ]
+}
