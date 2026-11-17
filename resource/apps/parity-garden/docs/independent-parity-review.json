@@ -1,0 +1,309 @@
+{
+  "kind": "independent-xor-and-direct-parity-review",
+  "passed": true,
+  "modelSha256": "b76c3e90c73dc16da60cea487c53b7ba3811478a644e989e374069b0192b3ae5",
+  "contractSha256": "9016d7184b6eafb607e9ef8fae9186c6a7250476c0145e95cbea4bff13afa6dd",
+  "reviewScriptSha256": "a4cf40c8aceecdec45d643abdfbf28974c4851d7a43e1344ce7bbd1144e42cad",
+  "sourceUnchanged": true,
+  "checks": [
+    {
+      "name": "all32 independent center-distance kernels match ordinary clipped sprays and only the selected direct count increments",
+      "passed": true,
+      "ordinaryKernelActions": 32,
+      "crossCornerSize": 3,
+      "diagonalCornerSize": 2
+    },
+    {
+      "name": "same-center same-nozzle double sprays restore flowers and all parities but preserve two real drops and the exact count2",
+      "passed": true,
+      "ordinaryDoubleSprays": 6
+    },
+    {
+      "name": "selection clamps without wrap and free B edges change the actual neighborhood without refunding or repeated toggles",
+      "passed": true
+    },
+    {
+      "name": "a committed spray retains its actual center/nozzle/changes while the cursor and nozzle subsequently move",
+      "passed": true
+    },
+    {
+      "name": "fixed-tick input priority and cancellation cannot duplicate, move or replay a cached water action",
+      "passed": true
+    },
+    {
+      "name": "independent MITM discovers ordinary within-budget pattern-only solutions that remain blocked by marked direct parity",
+      "passed": true,
+      "examples": [
+        {
+          "level": 1,
+          "waterUsed": 3,
+          "waterRemaining": 3,
+          "phase": "playing",
+          "patternMatched": true,
+          "satisfiedMarked": 3,
+          "markedCount": 4,
+          "oddMarkedIds": [
+            5
+          ],
+          "publicActions": [
+            {
+              "id": 1,
+              "mode": "diagonal"
+            },
+            {
+              "id": 3,
+              "mode": "diagonal"
+            },
+            {
+              "id": 5,
+              "mode": "diagonal"
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "waterUsed": 4,
+          "waterRemaining": 4,
+          "phase": "playing",
+          "patternMatched": true,
+          "satisfiedMarked": 4,
+          "markedCount": 6,
+          "oddMarkedIds": [
+            0,
+            3
+          ],
+          "publicActions": [
+            {
+              "id": 3,
+              "mode": "cross"
+            },
+            {
+              "id": 13,
+              "mode": "cross"
+            },
+            {
+              "id": 0,
+              "mode": "diagonal"
+            },
+            {
+              "id": 6,
+              "mode": "diagonal"
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "waterUsed": 4,
+          "waterRemaining": 6,
+          "phase": "playing",
+          "patternMatched": true,
+          "satisfiedMarked": 7,
+          "markedCount": 8,
+          "oddMarkedIds": [
+            13
+          ],
+          "publicActions": [
+            {
+              "id": 3,
+              "mode": "cross"
+            },
+            {
+              "id": 4,
+              "mode": "cross"
+            },
+            {
+              "id": 13,
+              "mode": "cross"
+            },
+            {
+              "id": 3,
+              "mode": "diagonal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "synthetic last-drop fixtures independently require open AND even and check the complete goal before exhausted water",
+      "passed": true,
+      "syntheticFixtures": 3,
+      "ordinaryPlayClaimed": false
+    },
+    {
+      "name": "synthetic deadline precedes queued A; terminal steps freeze all fields and retry recreates independent zero-count arrays",
+      "passed": true,
+      "syntheticDeadline": true,
+      "terminalSteps": 30
+    },
+    {
+      "name": "public32-action MITM finds exact minimum4/6/8, independent parity ranks and ordinary last-drop wins after two real demonstration drops",
+      "passed": true,
+      "solutions": [
+        {
+          "level": 1,
+          "minimumDrops": 4,
+          "patternRank": 14,
+          "combinedRank": 18,
+          "crossOnlyMinimumDrops": null,
+          "diagonalOnlyMinimumDrops": null,
+          "optimalSolutionRequiresBothModes": true,
+          "halfUniqueEffects": [
+            16384,
+            8192
+          ],
+          "publicActions": [
+            {
+              "id": 2,
+              "mode": "cross"
+            },
+            {
+              "id": 4,
+              "mode": "cross"
+            },
+            {
+              "id": 6,
+              "mode": "cross"
+            },
+            {
+              "id": 2,
+              "mode": "diagonal"
+            }
+          ],
+          "phase": "won",
+          "elapsed": 0.6166666666666667,
+          "score": 1925,
+          "waterUsed": 6,
+          "waterBudget": 6,
+          "patternMatched": true,
+          "allMarkedSatisfied": true,
+          "demonstrationDrops": 2
+        },
+        {
+          "level": 2,
+          "minimumDrops": 6,
+          "patternRank": 14,
+          "combinedRank": 20,
+          "crossOnlyMinimumDrops": null,
+          "diagonalOnlyMinimumDrops": null,
+          "optimalSolutionRequiresBothModes": true,
+          "halfUniqueEffects": [
+            32768,
+            16384
+          ],
+          "publicActions": [
+            {
+              "id": 1,
+              "mode": "cross"
+            },
+            {
+              "id": 2,
+              "mode": "cross"
+            },
+            {
+              "id": 3,
+              "mode": "cross"
+            },
+            {
+              "id": 13,
+              "mode": "cross"
+            },
+            {
+              "id": 3,
+              "mode": "diagonal"
+            },
+            {
+              "id": 6,
+              "mode": "diagonal"
+            }
+          ],
+          "phase": "won",
+          "elapsed": 0.9166666666666666,
+          "score": 2005,
+          "waterUsed": 8,
+          "waterBudget": 8,
+          "patternMatched": true,
+          "allMarkedSatisfied": true,
+          "demonstrationDrops": 2
+        },
+        {
+          "level": 3,
+          "minimumDrops": 8,
+          "patternRank": 14,
+          "combinedRank": 22,
+          "crossOnlyMinimumDrops": null,
+          "diagonalOnlyMinimumDrops": null,
+          "optimalSolutionRequiresBothModes": true,
+          "halfUniqueEffects": [
+            65536,
+            16384
+          ],
+          "publicActions": [
+            {
+              "id": 5,
+              "mode": "cross"
+            },
+            {
+              "id": 9,
+              "mode": "cross"
+            },
+            {
+              "id": 11,
+              "mode": "cross"
+            },
+            {
+              "id": 12,
+              "mode": "cross"
+            },
+            {
+              "id": 14,
+              "mode": "cross"
+            },
+            {
+              "id": 3,
+              "mode": "diagonal"
+            },
+            {
+              "id": 5,
+              "mode": "diagonal"
+            },
+            {
+              "id": 6,
+              "mode": "diagonal"
+            }
+          ],
+          "phase": "won",
+          "elapsed": 1.1166666666666667,
+          "score": 2080,
+          "waterUsed": 10,
+          "waterBudget": 10,
+          "patternMatched": true,
+          "allMarkedSatisfied": true,
+          "demonstrationDrops": 2
+        }
+      ]
+    },
+    {
+      "name": "ordinary sprays commute as XOR plus independent integer count additions, while every action still consumes water",
+      "passed": true,
+      "ordinaryOrdersCompared": 2
+    }
+  ],
+  "totals": {
+    "gardenChecks": 237,
+    "kernelActions": 32,
+    "doubleSprays": 6,
+    "mitmSubsetsEnumerated": 393216,
+    "ordinaryAuthoredWins": 3,
+    "ordinaryPatternOnlyCounterexamples": 3
+  },
+  "methodology": "Integer-coordinate distance kernels and direct-count arithmetic checked against ordinary model input. A separate16+16 meet-in-the-middle enumeration minimizes the32 public action columns including independent marked direct parity; no production helper, QA planner or authored answer is imported. Gaussian rank computation summarizes constraints only, not the solution search.",
+  "scope": {
+    "syntheticBoundaryFixtures": true,
+    "ordinaryAuthoredModelWins": 3,
+    "ordinaryPatternOnlyCounterexamples": 3,
+    "browserExecuted": false,
+    "normalGameplayVideoEvidence": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  }
+}

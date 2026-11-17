@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "inputSource": "Synthetic native bridge, regular model update and render; official SDK/TCP acceptance is separate.",
+  "method": "Project actual renderer kart group world positions with the real before-sample camera view and projection matrices. Camera is frozen only in this offline analysis, never written into the game. Positive NDC x is screen right. This does not use game.x sign to define screen direction.",
+  "source": "final-input/report.json",
+  "game": "coast-kart",
+  "samples": [
+    {
+      "sample": "before",
+      "renderedMeshWorldPosition": {
+        "id": 1,
+        "x": -1.056,
+        "y": 0,
+        "z": 0
+      },
+      "ndcX": -0.0541656667587573
+    },
+    {
+      "sample": "right",
+      "renderedMeshWorldPosition": {
+        "id": 1,
+        "x": 0.19587973625369193,
+        "y": 0,
+        "z": 0
+      },
+      "ndcX": 0.07378101766108071
+    },
+    {
+      "sample": "left",
+      "renderedMeshWorldPosition": {
+        "id": 1,
+        "x": -3.1882142592487877,
+        "y": 0,
+        "z": 0
+      },
+      "ndcX": -0.2736736540840194
+    }
+  ],
+  "checks": [
+    "right input increases projected screen x",
+    "left input decreases projected screen x"
+  ]
+}

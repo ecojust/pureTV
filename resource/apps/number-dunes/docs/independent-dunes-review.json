@@ -1,0 +1,1617 @@
+{
+  "kind": "independent-public-number-dunes-rule-review",
+  "passed": true,
+  "sourceHashes": {
+    "src/main/assets/game-model.js": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+    "docs/model-contract.md": "2a636094b001400c3465e461e3c0ce88feccca6079cb420a456b09d6d37fead8",
+    "tests/independent-dunes-math.mjs": "ecde86f46e2ff6c2e66d4bf5ba0ffd2f9f3bdfba8b5e6ceedec5065b742482a2",
+    "tests/independent-dunes-review.mjs": "6955c9a6d94552684241524d67d24dfe4095dac9516648d6986161789722d7a9"
+  },
+  "checks": [
+    {
+      "name": "bounded public rank-transition BFS proves each shortest solution and both independent goal-counterexample predicates",
+      "passed": true,
+      "boards": 3,
+      "maxVisitedPerBoard": 100000,
+      "shortestDepths": [
+        4,
+        5,
+        6
+      ],
+      "noAuthorRouteOrQaPlanner": true
+    },
+    {
+      "name": "all 81 sand/hole/pillar line patterns in four directions agree with per-stone ranks and preserve IDs without wrapping",
+      "passed": true,
+      "explicitPublicGeometryFixtures": 324,
+      "nonProductionLayouts": true,
+      "productionLineLength": 4,
+      "noClaimOfTwoMovableSegmentsOnOneFourCellLine": true
+    },
+    {
+      "name": "all ordered physical action-focus pairs are reachable with correct geometry and no compaction",
+      "passed": true,
+      "pairs": 256,
+      "diameter": 6
+    },
+    {
+      "name": "ordinary multi-stone compaction, free no-op and exact B restoration retain charged moves before three public shortest-route wins",
+      "passed": true,
+      "normalWins": 3,
+      "ordinaryModelInputOnly": true,
+      "notBrowserOrVideo": true
+    },
+    {
+      "name": "ordinary reachable correctly ordered/wrong-hole and exact-hole/wrong-order layouts never win",
+      "passed": true,
+      "ordinaryCounterexamples": 6
+    },
+    {
+      "name": "a real final-budget success beats budget loss, while ordinary unsuccessful compactions exhaust each board and freeze",
+      "passed": true,
+      "ordinaryLastMoveWins": 1,
+      "ordinaryBudgetLosses": 3
+    },
+    {
+      "name": "equal-valued distinct stones do not merge or satisfy strict order; compaction is demonstrably non-injective",
+      "passed": true,
+      "explicitDuplicateValueFixture": true,
+      "pureNonInjectivityFixture": true,
+      "noOrdinaryDuplicateBoardClaim": true
+    },
+    {
+      "name": "multi-stone layouts commit atomically and transition expiry is not extended by a no-op",
+      "passed": true,
+      "transitionSeconds": 0.24,
+      "ordinaryInput": true
+    },
+    {
+      "name": "zero/subtick edges, cancellation, held A and coalesced B/A preserve action budget and discard canceled work",
+      "passed": true,
+      "syntheticInputTiming": true,
+      "noRuntimeDeviceClaim": true
+    },
+    {
+      "name": "deadline precedes a predicted winning move; time clamps and fresh fixed retries remain isolated",
+      "passed": true,
+      "clockOnlyFixtureTick": 5399,
+      "terminalFreezeIncludesPrivateAndPublicFields": true
+    }
+  ],
+  "publicPuzzles": [
+    {
+      "level": 1,
+      "initialFacts": {
+        "stoneCount": 6,
+        "pillarCount": 2,
+        "targetHoleCount": 8,
+        "pillarIds": [
+          "C6",
+          "C11"
+        ],
+        "targetHoleIds": [
+          "C1",
+          "C3",
+          "C4",
+          "C5",
+          "C7",
+          "C9",
+          "C10",
+          "C15"
+        ],
+        "holeIds": [
+          "C1",
+          "C3",
+          "C5",
+          "C8",
+          "C12",
+          "C13",
+          "C14",
+          "C15"
+        ],
+        "snakeOrder": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C8",
+          "C7",
+          "C6",
+          "C5",
+          "C9",
+          "C10",
+          "C11",
+          "C12",
+          "C16",
+          "C15",
+          "C14",
+          "C13"
+        ],
+        "readCellIds": [
+          "C2",
+          "C4",
+          "C7",
+          "C9",
+          "C10",
+          "C16"
+        ],
+        "readStoneIds": [
+          "S1",
+          "S2",
+          "S3",
+          "S6",
+          "S5",
+          "S4"
+        ],
+        "readValues": [
+          1,
+          2,
+          3,
+          6,
+          5,
+          4
+        ],
+        "orderedPairs": 3,
+        "orderPairCount": 5,
+        "strictlyIncreasing": false,
+        "matchedHoleCount": 4,
+        "holesCorrect": false,
+        "goalReady": false
+      },
+      "initialScore": 155,
+      "moveLimit": 6,
+      "shortestDepth": 4,
+      "search": {
+        "expanded": 811,
+        "visited": 2443,
+        "transitions": 12976,
+        "maxVisited": 100000,
+        "maxDepth": 6,
+        "stoppedBy": "all-required-witnesses"
+      },
+      "solution": {
+        "path": [
+          "R2E",
+          "C1S",
+          "C2S",
+          "C4S"
+        ],
+        "position": [
+          null,
+          "S1",
+          null,
+          null,
+          null,
+          null,
+          null,
+          "S2",
+          null,
+          null,
+          null,
+          "S3",
+          "S6",
+          "S5",
+          null,
+          "S4"
+        ],
+        "depth": 4,
+        "facts": {
+          "stoneCount": 6,
+          "pillarCount": 2,
+          "targetHoleCount": 8,
+          "pillarIds": [
+            "C6",
+            "C11"
+          ],
+          "targetHoleIds": [
+            "C1",
+            "C3",
+            "C4",
+            "C5",
+            "C7",
+            "C9",
+            "C10",
+            "C15"
+          ],
+          "holeIds": [
+            "C1",
+            "C3",
+            "C4",
+            "C5",
+            "C7",
+            "C9",
+            "C10",
+            "C15"
+          ],
+          "snakeOrder": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C7",
+            "C6",
+            "C5",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C16",
+            "C15",
+            "C14",
+            "C13"
+          ],
+          "readCellIds": [
+            "C2",
+            "C8",
+            "C12",
+            "C16",
+            "C14",
+            "C13"
+          ],
+          "readStoneIds": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5",
+            "S6"
+          ],
+          "readValues": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "orderedPairs": 5,
+          "orderPairCount": 5,
+          "strictlyIncreasing": true,
+          "matchedHoleCount": 8,
+          "holesCorrect": true,
+          "goalReady": true
+        }
+      },
+      "orderedWrongHoles": {
+        "path": [
+          "C1S",
+          "C2S"
+        ],
+        "position": [
+          null,
+          "S1",
+          null,
+          "S2",
+          null,
+          null,
+          "S3",
+          null,
+          null,
+          null,
+          null,
+          null,
+          "S6",
+          "S5",
+          null,
+          "S4"
+        ],
+        "depth": 2,
+        "facts": {
+          "stoneCount": 6,
+          "pillarCount": 2,
+          "targetHoleCount": 8,
+          "pillarIds": [
+            "C6",
+            "C11"
+          ],
+          "targetHoleIds": [
+            "C1",
+            "C3",
+            "C4",
+            "C5",
+            "C7",
+            "C9",
+            "C10",
+            "C15"
+          ],
+          "holeIds": [
+            "C1",
+            "C3",
+            "C5",
+            "C8",
+            "C9",
+            "C10",
+            "C12",
+            "C15"
+          ],
+          "snakeOrder": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C7",
+            "C6",
+            "C5",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C16",
+            "C15",
+            "C14",
+            "C13"
+          ],
+          "readCellIds": [
+            "C2",
+            "C4",
+            "C7",
+            "C16",
+            "C14",
+            "C13"
+          ],
+          "readStoneIds": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5",
+            "S6"
+          ],
+          "readValues": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "orderedPairs": 5,
+          "orderPairCount": 5,
+          "strictlyIncreasing": true,
+          "matchedHoleCount": 6,
+          "holesCorrect": false,
+          "goalReady": false
+        }
+      },
+      "holesWrongOrder": {
+        "path": [
+          "C1S",
+          "C2S",
+          "C4S",
+          "R2E"
+        ],
+        "position": [
+          null,
+          "S1",
+          null,
+          null,
+          null,
+          null,
+          null,
+          "S3",
+          null,
+          null,
+          null,
+          "S2",
+          "S6",
+          "S5",
+          null,
+          "S4"
+        ],
+        "depth": 4,
+        "facts": {
+          "stoneCount": 6,
+          "pillarCount": 2,
+          "targetHoleCount": 8,
+          "pillarIds": [
+            "C6",
+            "C11"
+          ],
+          "targetHoleIds": [
+            "C1",
+            "C3",
+            "C4",
+            "C5",
+            "C7",
+            "C9",
+            "C10",
+            "C15"
+          ],
+          "holeIds": [
+            "C1",
+            "C3",
+            "C4",
+            "C5",
+            "C7",
+            "C9",
+            "C10",
+            "C15"
+          ],
+          "snakeOrder": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C7",
+            "C6",
+            "C5",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C16",
+            "C15",
+            "C14",
+            "C13"
+          ],
+          "readCellIds": [
+            "C2",
+            "C8",
+            "C12",
+            "C16",
+            "C14",
+            "C13"
+          ],
+          "readStoneIds": [
+            "S1",
+            "S3",
+            "S2",
+            "S4",
+            "S5",
+            "S6"
+          ],
+          "readValues": [
+            1,
+            3,
+            2,
+            4,
+            5,
+            6
+          ],
+          "orderedPairs": 4,
+          "orderPairCount": 5,
+          "strictlyIncreasing": false,
+          "matchedHoleCount": 8,
+          "holesCorrect": true,
+          "goalReady": false
+        }
+      },
+      "trial": {
+        "actionId": "R1W",
+        "movedCount": 2
+      }
+    },
+    {
+      "level": 2,
+      "initialFacts": {
+        "stoneCount": 7,
+        "pillarCount": 3,
+        "targetHoleCount": 6,
+        "pillarIds": [
+          "C2",
+          "C7",
+          "C13"
+        ],
+        "targetHoleIds": [
+          "C3",
+          "C5",
+          "C8",
+          "C11",
+          "C15",
+          "C16"
+        ],
+        "holeIds": [
+          "C4",
+          "C5",
+          "C8",
+          "C10",
+          "C14",
+          "C15"
+        ],
+        "snakeOrder": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C8",
+          "C7",
+          "C6",
+          "C5",
+          "C9",
+          "C10",
+          "C11",
+          "C12",
+          "C16",
+          "C15",
+          "C14",
+          "C13"
+        ],
+        "readCellIds": [
+          "C1",
+          "C3",
+          "C6",
+          "C9",
+          "C11",
+          "C12",
+          "C16"
+        ],
+        "readStoneIds": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7"
+        ],
+        "readValues": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "orderedPairs": 6,
+        "orderPairCount": 6,
+        "strictlyIncreasing": true,
+        "matchedHoleCount": 3,
+        "holesCorrect": false,
+        "goalReady": false
+      },
+      "initialScore": 210,
+      "moveLimit": 7,
+      "shortestDepth": 5,
+      "search": {
+        "expanded": 1577,
+        "visited": 4632,
+        "transitions": 25232,
+        "maxVisited": 100000,
+        "maxDepth": 7,
+        "stoppedBy": "all-required-witnesses"
+      },
+      "solution": {
+        "path": [
+          "R1E",
+          "C3S",
+          "R4W",
+          "C2N",
+          "R4W"
+        ],
+        "position": [
+          "S1",
+          null,
+          null,
+          "S2",
+          null,
+          "S3",
+          null,
+          null,
+          "S4",
+          "S5",
+          null,
+          "S6",
+          null,
+          "S7",
+          null,
+          null
+        ],
+        "depth": 5,
+        "facts": {
+          "stoneCount": 7,
+          "pillarCount": 3,
+          "targetHoleCount": 6,
+          "pillarIds": [
+            "C2",
+            "C7",
+            "C13"
+          ],
+          "targetHoleIds": [
+            "C3",
+            "C5",
+            "C8",
+            "C11",
+            "C15",
+            "C16"
+          ],
+          "holeIds": [
+            "C3",
+            "C5",
+            "C8",
+            "C11",
+            "C15",
+            "C16"
+          ],
+          "snakeOrder": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C7",
+            "C6",
+            "C5",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C16",
+            "C15",
+            "C14",
+            "C13"
+          ],
+          "readCellIds": [
+            "C1",
+            "C4",
+            "C6",
+            "C9",
+            "C10",
+            "C12",
+            "C14"
+          ],
+          "readStoneIds": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5",
+            "S6",
+            "S7"
+          ],
+          "readValues": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "orderedPairs": 6,
+          "orderPairCount": 6,
+          "strictlyIncreasing": true,
+          "matchedHoleCount": 6,
+          "holesCorrect": true,
+          "goalReady": true
+        }
+      },
+      "orderedWrongHoles": {
+        "path": [],
+        "position": [
+          "S1",
+          null,
+          "S2",
+          null,
+          null,
+          "S3",
+          null,
+          null,
+          "S4",
+          null,
+          "S5",
+          "S6",
+          null,
+          null,
+          null,
+          "S7"
+        ],
+        "depth": 0,
+        "facts": {
+          "stoneCount": 7,
+          "pillarCount": 3,
+          "targetHoleCount": 6,
+          "pillarIds": [
+            "C2",
+            "C7",
+            "C13"
+          ],
+          "targetHoleIds": [
+            "C3",
+            "C5",
+            "C8",
+            "C11",
+            "C15",
+            "C16"
+          ],
+          "holeIds": [
+            "C4",
+            "C5",
+            "C8",
+            "C10",
+            "C14",
+            "C15"
+          ],
+          "snakeOrder": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C7",
+            "C6",
+            "C5",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C16",
+            "C15",
+            "C14",
+            "C13"
+          ],
+          "readCellIds": [
+            "C1",
+            "C3",
+            "C6",
+            "C9",
+            "C11",
+            "C12",
+            "C16"
+          ],
+          "readStoneIds": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5",
+            "S6",
+            "S7"
+          ],
+          "readValues": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "orderedPairs": 6,
+          "orderPairCount": 6,
+          "strictlyIncreasing": true,
+          "matchedHoleCount": 3,
+          "holesCorrect": false,
+          "goalReady": false
+        }
+      },
+      "holesWrongOrder": {
+        "path": [
+          "R1E",
+          "R4W",
+          "C2N",
+          "C3S",
+          "R4W"
+        ],
+        "position": [
+          "S1",
+          null,
+          null,
+          "S2",
+          null,
+          "S3",
+          null,
+          null,
+          "S4",
+          "S7",
+          null,
+          "S6",
+          null,
+          "S5",
+          null,
+          null
+        ],
+        "depth": 5,
+        "facts": {
+          "stoneCount": 7,
+          "pillarCount": 3,
+          "targetHoleCount": 6,
+          "pillarIds": [
+            "C2",
+            "C7",
+            "C13"
+          ],
+          "targetHoleIds": [
+            "C3",
+            "C5",
+            "C8",
+            "C11",
+            "C15",
+            "C16"
+          ],
+          "holeIds": [
+            "C3",
+            "C5",
+            "C8",
+            "C11",
+            "C15",
+            "C16"
+          ],
+          "snakeOrder": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C7",
+            "C6",
+            "C5",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C16",
+            "C15",
+            "C14",
+            "C13"
+          ],
+          "readCellIds": [
+            "C1",
+            "C4",
+            "C6",
+            "C9",
+            "C10",
+            "C12",
+            "C14"
+          ],
+          "readStoneIds": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S7",
+            "S6",
+            "S5"
+          ],
+          "readValues": [
+            1,
+            2,
+            3,
+            4,
+            7,
+            6,
+            5
+          ],
+          "orderedPairs": 4,
+          "orderPairCount": 6,
+          "strictlyIncreasing": false,
+          "matchedHoleCount": 6,
+          "holesCorrect": true,
+          "goalReady": false
+        }
+      },
+      "trial": {
+        "actionId": "R3W",
+        "movedCount": 2
+      }
+    },
+    {
+      "level": 3,
+      "initialFacts": {
+        "stoneCount": 8,
+        "pillarCount": 3,
+        "targetHoleCount": 5,
+        "pillarIds": [
+          "C5",
+          "C7",
+          "C14"
+        ],
+        "targetHoleIds": [
+          "C1",
+          "C10",
+          "C11",
+          "C15",
+          "C16"
+        ],
+        "holeIds": [
+          "C2",
+          "C8",
+          "C9",
+          "C10",
+          "C12"
+        ],
+        "snakeOrder": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C8",
+          "C7",
+          "C6",
+          "C5",
+          "C9",
+          "C10",
+          "C11",
+          "C12",
+          "C16",
+          "C15",
+          "C14",
+          "C13"
+        ],
+        "readCellIds": [
+          "C1",
+          "C3",
+          "C4",
+          "C6",
+          "C11",
+          "C16",
+          "C15",
+          "C13"
+        ],
+        "readStoneIds": [
+          "S1",
+          "S2",
+          "S3",
+          "S5",
+          "S4",
+          "S6",
+          "S7",
+          "S8"
+        ],
+        "readValues": [
+          1,
+          2,
+          3,
+          5,
+          4,
+          6,
+          7,
+          8
+        ],
+        "orderedPairs": 6,
+        "orderPairCount": 7,
+        "strictlyIncreasing": false,
+        "matchedHoleCount": 1,
+        "holesCorrect": false,
+        "goalReady": false
+      },
+      "initialScore": 170,
+      "moveLimit": 8,
+      "shortestDepth": 6,
+      "search": {
+        "expanded": 2323,
+        "visited": 5679,
+        "transitions": 37168,
+        "maxVisited": 100000,
+        "maxDepth": 8,
+        "stoppedBy": "all-required-witnesses"
+      },
+      "solution": {
+        "path": [
+          "R1E",
+          "R3E",
+          "C4N",
+          "R3W",
+          "R4E",
+          "C4N"
+        ],
+        "position": [
+          null,
+          "S1",
+          "S2",
+          "S3",
+          null,
+          "S5",
+          null,
+          "S4",
+          "S6",
+          null,
+          null,
+          "S7",
+          "S8",
+          null,
+          null,
+          null
+        ],
+        "depth": 6,
+        "facts": {
+          "stoneCount": 8,
+          "pillarCount": 3,
+          "targetHoleCount": 5,
+          "pillarIds": [
+            "C5",
+            "C7",
+            "C14"
+          ],
+          "targetHoleIds": [
+            "C1",
+            "C10",
+            "C11",
+            "C15",
+            "C16"
+          ],
+          "holeIds": [
+            "C1",
+            "C10",
+            "C11",
+            "C15",
+            "C16"
+          ],
+          "snakeOrder": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C7",
+            "C6",
+            "C5",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C16",
+            "C15",
+            "C14",
+            "C13"
+          ],
+          "readCellIds": [
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C6",
+            "C9",
+            "C12",
+            "C13"
+          ],
+          "readStoneIds": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5",
+            "S6",
+            "S7",
+            "S8"
+          ],
+          "readValues": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "orderedPairs": 7,
+          "orderPairCount": 7,
+          "strictlyIncreasing": true,
+          "matchedHoleCount": 5,
+          "holesCorrect": true,
+          "goalReady": true
+        }
+      },
+      "orderedWrongHoles": {
+        "path": [
+          "R3W",
+          "C2S"
+        ],
+        "position": [
+          "S1",
+          null,
+          "S2",
+          "S3",
+          null,
+          null,
+          null,
+          null,
+          "S4",
+          "S5",
+          null,
+          null,
+          "S8",
+          null,
+          "S7",
+          "S6"
+        ],
+        "depth": 2,
+        "facts": {
+          "stoneCount": 8,
+          "pillarCount": 3,
+          "targetHoleCount": 5,
+          "pillarIds": [
+            "C5",
+            "C7",
+            "C14"
+          ],
+          "targetHoleIds": [
+            "C1",
+            "C10",
+            "C11",
+            "C15",
+            "C16"
+          ],
+          "holeIds": [
+            "C2",
+            "C6",
+            "C8",
+            "C11",
+            "C12"
+          ],
+          "snakeOrder": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C7",
+            "C6",
+            "C5",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C16",
+            "C15",
+            "C14",
+            "C13"
+          ],
+          "readCellIds": [
+            "C1",
+            "C3",
+            "C4",
+            "C9",
+            "C10",
+            "C16",
+            "C15",
+            "C13"
+          ],
+          "readStoneIds": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5",
+            "S6",
+            "S7",
+            "S8"
+          ],
+          "readValues": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "orderedPairs": 7,
+          "orderPairCount": 7,
+          "strictlyIncreasing": true,
+          "matchedHoleCount": 1,
+          "holesCorrect": false,
+          "goalReady": false
+        }
+      },
+      "holesWrongOrder": {
+        "path": [
+          "R1E",
+          "R3W",
+          "C4N",
+          "R4E",
+          "C4N"
+        ],
+        "position": [
+          null,
+          "S1",
+          "S2",
+          "S3",
+          null,
+          "S5",
+          null,
+          "S6",
+          "S4",
+          null,
+          null,
+          "S7",
+          "S8",
+          null,
+          null,
+          null
+        ],
+        "depth": 5,
+        "facts": {
+          "stoneCount": 8,
+          "pillarCount": 3,
+          "targetHoleCount": 5,
+          "pillarIds": [
+            "C5",
+            "C7",
+            "C14"
+          ],
+          "targetHoleIds": [
+            "C1",
+            "C10",
+            "C11",
+            "C15",
+            "C16"
+          ],
+          "holeIds": [
+            "C1",
+            "C10",
+            "C11",
+            "C15",
+            "C16"
+          ],
+          "snakeOrder": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C7",
+            "C6",
+            "C5",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C16",
+            "C15",
+            "C14",
+            "C13"
+          ],
+          "readCellIds": [
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C6",
+            "C9",
+            "C12",
+            "C13"
+          ],
+          "readStoneIds": [
+            "S1",
+            "S2",
+            "S3",
+            "S6",
+            "S5",
+            "S4",
+            "S7",
+            "S8"
+          ],
+          "readValues": [
+            1,
+            2,
+            3,
+            6,
+            5,
+            4,
+            7,
+            8
+          ],
+          "orderedPairs": 5,
+          "orderPairCount": 7,
+          "strictlyIncreasing": false,
+          "matchedHoleCount": 5,
+          "holesCorrect": true,
+          "goalReady": false
+        }
+      },
+      "trial": {
+        "actionId": "R1W",
+        "movedCount": 2
+      }
+    }
+  ],
+  "ordinaryWins": [
+    {
+      "level": 1,
+      "path": [
+        "R2E",
+        "C1S",
+        "C2S",
+        "C4S"
+      ],
+      "trialAction": "R1W",
+      "movesUsed": 5,
+      "movesRemaining": 1,
+      "undos": 1,
+      "noOpAttempts": 1,
+      "elapsed": 0.7833333333333333,
+      "score": 1780,
+      "terminalFrozen": true
+    },
+    {
+      "level": 2,
+      "path": [
+        "R1E",
+        "C3S",
+        "R4W",
+        "C2N",
+        "R4W"
+      ],
+      "trialAction": "R3W",
+      "movesUsed": 6,
+      "movesRemaining": 1,
+      "undos": 1,
+      "noOpAttempts": 1,
+      "elapsed": 1.0166666666666666,
+      "score": 1760,
+      "terminalFrozen": true
+    },
+    {
+      "level": 3,
+      "path": [
+        "R1E",
+        "R3E",
+        "C4N",
+        "R3W",
+        "R4E",
+        "C4N"
+      ],
+      "trialAction": "R1W",
+      "movesUsed": 7,
+      "movesRemaining": 1,
+      "undos": 1,
+      "noOpAttempts": 1,
+      "elapsed": 1.0833333333333333,
+      "score": 1765,
+      "terminalFrozen": true
+    }
+  ],
+  "ordinaryConjunctCounterexamples": [
+    {
+      "level": 1,
+      "type": "orderedWrongHoles",
+      "path": [
+        "C1S",
+        "C2S"
+      ],
+      "movesUsed": 2,
+      "readValues": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "holeIds": [
+        "C1",
+        "C3",
+        "C5",
+        "C8",
+        "C9",
+        "C10",
+        "C12",
+        "C15"
+      ],
+      "goalReady": false
+    },
+    {
+      "level": 1,
+      "type": "holesWrongOrder",
+      "path": [
+        "C1S",
+        "C2S",
+        "C4S",
+        "R2E"
+      ],
+      "movesUsed": 4,
+      "readValues": [
+        1,
+        3,
+        2,
+        4,
+        5,
+        6
+      ],
+      "holeIds": [
+        "C1",
+        "C3",
+        "C4",
+        "C5",
+        "C7",
+        "C9",
+        "C10",
+        "C15"
+      ],
+      "goalReady": false
+    },
+    {
+      "level": 2,
+      "type": "orderedWrongHoles",
+      "path": [],
+      "movesUsed": 0,
+      "readValues": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "holeIds": [
+        "C4",
+        "C5",
+        "C8",
+        "C10",
+        "C14",
+        "C15"
+      ],
+      "goalReady": false
+    },
+    {
+      "level": 2,
+      "type": "holesWrongOrder",
+      "path": [
+        "R1E",
+        "R4W",
+        "C2N",
+        "C3S",
+        "R4W"
+      ],
+      "movesUsed": 5,
+      "readValues": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        6,
+        5
+      ],
+      "holeIds": [
+        "C3",
+        "C5",
+        "C8",
+        "C11",
+        "C15",
+        "C16"
+      ],
+      "goalReady": false
+    },
+    {
+      "level": 3,
+      "type": "orderedWrongHoles",
+      "path": [
+        "R3W",
+        "C2S"
+      ],
+      "movesUsed": 2,
+      "readValues": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "holeIds": [
+        "C2",
+        "C6",
+        "C8",
+        "C11",
+        "C12"
+      ],
+      "goalReady": false
+    },
+    {
+      "level": 3,
+      "type": "holesWrongOrder",
+      "path": [
+        "R1E",
+        "R3W",
+        "C4N",
+        "R4E",
+        "C4N"
+      ],
+      "movesUsed": 5,
+      "readValues": [
+        1,
+        2,
+        3,
+        6,
+        5,
+        4,
+        7,
+        8
+      ],
+      "holeIds": [
+        "C1",
+        "C10",
+        "C11",
+        "C15",
+        "C16"
+      ],
+      "goalReady": false
+    }
+  ],
+  "ordinaryBudgetLosses": [
+    {
+      "level": 1,
+      "path": [
+        "R1W",
+        "R1E",
+        "R1W",
+        "R1E",
+        "R1W",
+        "R1E"
+      ],
+      "searchExpanded": 6,
+      "movesUsed": 6,
+      "elapsed": 0.85,
+      "terminalFrozen": true
+    },
+    {
+      "level": 2,
+      "path": [
+        "R1E",
+        "R1W",
+        "R1E",
+        "R1W",
+        "R1E",
+        "R1W",
+        "R1E"
+      ],
+      "searchExpanded": 7,
+      "movesUsed": 7,
+      "elapsed": 1.15,
+      "terminalFrozen": true
+    },
+    {
+      "level": 3,
+      "path": [
+        "R1W",
+        "R1E",
+        "R1W",
+        "R1E",
+        "R1W",
+        "R1E",
+        "R1W",
+        "R1E"
+      ],
+      "searchExpanded": 8,
+      "movesUsed": 8,
+      "elapsed": 1.1833333333333333,
+      "terminalFrozen": true
+    }
+  ],
+  "scope": "Independent per-stone predecessor ranks, bounded breadth-first public search and ordinary directional/A/B Model inputs. Synthetic 4-cell geometry, duplicate-value and clock/input boundary cases are explicitly labelled. No QA planner, author route, browser, video or physical hardware is used.",
+  "qaPilotImported": false,
+  "authorRoutesRead": false,
+  "browserUsed": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "ordinaryLastMoveWin": {
+    "level": 1,
+    "movesUsed": 6,
+    "undos": 2,
+    "elapsed": 0.6833333333333333,
+    "score": 1730
+  },
+  "sourceHashesAfter": {
+    "src/main/assets/game-model.js": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+    "docs/model-contract.md": "2a636094b001400c3465e461e3c0ce88feccca6079cb420a456b09d6d37fead8",
+    "tests/independent-dunes-math.mjs": "ecde86f46e2ff6c2e66d4bf5ba0ffd2f9f3bdfba8b5e6ceedec5065b742482a2",
+    "tests/independent-dunes-review.mjs": "6955c9a6d94552684241524d67d24dfe4095dac9516648d6986161789722d7a9"
+  },
+  "sourceUnchanged": true,
+  "totals": {
+    "checks": 10,
+    "observations": 5644,
+    "navigationInputs": 1944,
+    "orderedFocusPairs": 256,
+    "explicitPublicGeometryFixtures": 324,
+    "ordinaryWins": 3,
+    "ordinaryGoalCounterexamples": 6,
+    "ordinaryBudgetLosses": 3
+  },
+  "limitations": [
+    "Small reviewed authored-board searches are not exhaustive over all 4x4 permutations.",
+    "324 ternary line cases are explicitly synthetic public geometry, not ordinary authored play.",
+    "Equal-value and final-clock fixtures are labelled; normal wins and failures use original boards and ordinary inputs.",
+    "Fast Model input sequences are not software-browser recordings or physical-device tests."
+  ]
+}

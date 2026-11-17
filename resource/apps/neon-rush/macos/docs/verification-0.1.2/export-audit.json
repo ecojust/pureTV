@@ -1,0 +1,943 @@
+{
+  "sourceCommit": "13748656d0b4122cbf263eecb0aeae74af036422",
+  "runId": 43714427066,
+  "exportFilesVerified": 108,
+  "inputFilesVerified": 32,
+  "appFilesVerified": 25,
+  "version": "0.1.2",
+  "buildVersion": "2",
+  "binarySha256": "d11624e0b8de9dd45aeca4ba8b2345158618940bce51b313282123cd2f3161f2",
+  "packages": {
+    "NeonRush-0.1.2-macos-universal.zip": {
+      "bytes": 555104,
+      "sha256": "50bf196900311c14c879762415eea0b1f5c9e2d4e1764acf7ca816be2969f9ba"
+    },
+    "NeonRush-0.1.2-macos-universal.dmg": {
+      "bytes": 887972,
+      "sha256": "765026ccc0e026a2e2cd1674d47001ab3125c6215fe3ff8215ed5b8b4dfab0ec"
+    }
+  },
+  "reports": {
+    "macos-arm64/native-occupied-port": {
+      "status": "passed",
+      "architecture": "arm64",
+      "nativeProcessArchitecture": "arm64",
+      "initialControllerPort": 63713,
+      "defaultPortOccupied": true,
+      "webglAvailable": true,
+      "mdns": {
+        "type": "_puretv._tcp",
+        "serviceName": "Neon Rush",
+        "port": 63713,
+        "txtVersion": "1",
+        "observedWith": "macOS dns-sd browse and resolve; not ESP32 search"
+      },
+      "portStability": {
+        "cycles": 3,
+        "port": 63713,
+        "session": "wifi-E7062DAB-E185-4438-80FE-C256486AD511-1",
+        "sameConnection": true,
+        "samePort": true,
+        "backgroundInputSuppressed": true,
+        "foregroundHeldKeysQuarantined": true,
+        "freshPressWorks": true,
+        "defaultPortOccupied": true,
+        "nativeGameplayAvailable": true,
+        "observations": [
+          {
+            "cycle": 1,
+            "port": 63713,
+            "session": "wifi-E7062DAB-E185-4438-80FE-C256486AD511-1",
+            "backgroundPingAckSequence": 200,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": true
+          },
+          {
+            "cycle": 2,
+            "port": 63713,
+            "session": "wifi-E7062DAB-E185-4438-80FE-C256486AD511-1",
+            "backgroundPingAckSequence": 227,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": true
+          },
+          {
+            "cycle": 3,
+            "port": 63713,
+            "session": "wifi-E7062DAB-E185-4438-80FE-C256486AD511-1",
+            "backgroundPingAckSequence": 254,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": true
+          }
+        ]
+      },
+      "limitations": null,
+      "tests": [
+        {
+          "name": "Local HTTP assets match the bundle and reject invalid requests",
+          "status": "passed",
+          "details": [
+            {
+              "file": "tv.html",
+              "bytes": 3115,
+              "sha256": "c354447ca2b5340acc6fdd57c0f588bbab876c1ba8849a088d2cc60f33a97e65",
+              "getMatchesBundle": true,
+              "headMatchesGet": true
+            },
+            {
+              "file": "game-config.json",
+              "bytes": 228,
+              "sha256": "ddb9ed6beb2e983f7e10664fc825e22a3591ce8d8ad3dcff79aa4f2893e2b794",
+              "getMatchesBundle": true,
+              "headMatchesGet": true
+            },
+            {
+              "method": "GET",
+              "path": "/game-config.json",
+              "host": "example.invalid",
+              "status": 403
+            },
+            {
+              "method": "GET",
+              "path": "/%2e%2e/Info.plist",
+              "host": "127.0.0.1:56711",
+              "status": 404
+            },
+            {
+              "method": "GET",
+              "path": "/not-bundled.txt",
+              "host": "127.0.0.1:56711",
+              "status": 404
+            },
+            {
+              "method": "POST",
+              "path": "/game-config.json",
+              "host": "127.0.0.1:56711",
+              "status": 405
+            }
+          ]
+        },
+        {
+          "name": "Bonjour resolves the actual TCP port and version",
+          "status": "passed",
+          "details": {
+            "type": "_puretv._tcp",
+            "serviceName": "Neon Rush",
+            "port": 63713,
+            "txtVersion": "1",
+            "observedWith": "macOS dns-sd browse and resolve; not ESP32 search"
+          }
+        },
+        {
+          "name": "Unmodified SDK connects and synchronizes nine keys",
+          "status": "passed",
+          "details": {
+            "initialSyncKeys": 9,
+            "sdkUnmodified": true
+          }
+        },
+        {
+          "name": "Directions, A/X aggregation, long hold and sync suppression",
+          "status": "passed",
+          "details": {
+            "directions": 4,
+            "driftAliasAggregation": true,
+            "heldSyncDoesNotStart": true,
+            "longHold": true
+          }
+        },
+        {
+          "name": "Real race using TCP A/B and X/Y, drift, nitro and pause",
+          "status": "passed",
+          "details": {
+            "stats": {
+              "collisions": 1,
+              "drifts": 6,
+              "jumps": 0,
+              "miniBoosts": 5,
+              "nitros": 2
+            },
+            "progress": 1001.4446565247199,
+            "variants": [
+              "AB",
+              "XY"
+            ],
+            "pauseFrozen": true
+          }
+        },
+        {
+          "name": "Three real focus changes keep TCP stable and quarantine background input",
+          "status": "passed",
+          "details": {
+            "cycles": 3,
+            "port": 63713,
+            "session": "wifi-E7062DAB-E185-4438-80FE-C256486AD511-1",
+            "sameConnection": true,
+            "samePort": true,
+            "backgroundInputSuppressed": true,
+            "foregroundHeldKeysQuarantined": true,
+            "freshPressWorks": true,
+            "defaultPortOccupied": true,
+            "nativeGameplayAvailable": true,
+            "observations": [
+              {
+                "cycle": 1,
+                "port": 63713,
+                "session": "wifi-E7062DAB-E185-4438-80FE-C256486AD511-1",
+                "backgroundPingAckSequence": 200,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": true
+              },
+              {
+                "cycle": 2,
+                "port": 63713,
+                "session": "wifi-E7062DAB-E185-4438-80FE-C256486AD511-1",
+                "backgroundPingAckSequence": 227,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": true
+              },
+              {
+                "cycle": 3,
+                "port": 63713,
+                "session": "wifi-E7062DAB-E185-4438-80FE-C256486AD511-1",
+                "backgroundPingAckSequence": 254,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "Disconnect cancellation and held-sync reconnect safety",
+          "status": "passed",
+          "details": {
+            "disconnectClearsInput": true,
+            "heldSyncDoesNotResume": true,
+            "noRewardOnCancellation": true
+          }
+        },
+        {
+          "name": "Official virtual page controls the actual native application",
+          "status": "passed",
+          "details": {
+            "report": "official-virtual/report.json",
+            "testsPassed": 3,
+            "originalHtmlSha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+          }
+        },
+        {
+          "name": "Every observed SDK message has the same-sequence ACK",
+          "status": "passed",
+          "details": {
+            "messages": 354,
+            "matchingAcks": 354,
+            "connections": 4
+          }
+        },
+        {
+          "name": "Normal quit closes TCP and withdraws Bonjour",
+          "status": "passed",
+          "details": {
+            "normalExit": true,
+            "mdnsWithdrawn": true,
+            "tcpClosed": true
+          }
+        }
+      ],
+      "originalSdkSha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "macos-arm64/native": {
+      "status": "passed",
+      "architecture": "arm64",
+      "nativeProcessArchitecture": "arm64",
+      "initialControllerPort": 63485,
+      "defaultPortOccupied": false,
+      "webglAvailable": true,
+      "mdns": {
+        "type": "_puretv._tcp",
+        "serviceName": "Neon Rush",
+        "port": 63485,
+        "txtVersion": "1",
+        "observedWith": "macOS dns-sd browse and resolve; not ESP32 search"
+      },
+      "portStability": {
+        "cycles": 3,
+        "port": 63485,
+        "session": "wifi-F034D9C6-F0BD-4FD8-80F0-8CBDD79EC8DD-1",
+        "sameConnection": true,
+        "samePort": true,
+        "backgroundInputSuppressed": true,
+        "foregroundHeldKeysQuarantined": true,
+        "freshPressWorks": true,
+        "defaultPortOccupied": false,
+        "nativeGameplayAvailable": true,
+        "observations": [
+          {
+            "cycle": 1,
+            "port": 63485,
+            "session": "wifi-F034D9C6-F0BD-4FD8-80F0-8CBDD79EC8DD-1",
+            "backgroundPingAckSequence": 206,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": true
+          },
+          {
+            "cycle": 2,
+            "port": 63485,
+            "session": "wifi-F034D9C6-F0BD-4FD8-80F0-8CBDD79EC8DD-1",
+            "backgroundPingAckSequence": 233,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": true
+          },
+          {
+            "cycle": 3,
+            "port": 63485,
+            "session": "wifi-F034D9C6-F0BD-4FD8-80F0-8CBDD79EC8DD-1",
+            "backgroundPingAckSequence": 260,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": true
+          }
+        ]
+      },
+      "limitations": null,
+      "tests": [
+        {
+          "name": "Local HTTP assets match the bundle and reject invalid requests",
+          "status": "passed",
+          "details": [
+            {
+              "file": "tv.html",
+              "bytes": 3115,
+              "sha256": "c354447ca2b5340acc6fdd57c0f588bbab876c1ba8849a088d2cc60f33a97e65",
+              "getMatchesBundle": true,
+              "headMatchesGet": true
+            },
+            {
+              "file": "game-config.json",
+              "bytes": 228,
+              "sha256": "ddb9ed6beb2e983f7e10664fc825e22a3591ce8d8ad3dcff79aa4f2893e2b794",
+              "getMatchesBundle": true,
+              "headMatchesGet": true
+            },
+            {
+              "method": "GET",
+              "path": "/game-config.json",
+              "host": "example.invalid",
+              "status": 403
+            },
+            {
+              "method": "GET",
+              "path": "/%2e%2e/Info.plist",
+              "host": "127.0.0.1:56712",
+              "status": 404
+            },
+            {
+              "method": "GET",
+              "path": "/not-bundled.txt",
+              "host": "127.0.0.1:56712",
+              "status": 404
+            },
+            {
+              "method": "POST",
+              "path": "/game-config.json",
+              "host": "127.0.0.1:56712",
+              "status": 405
+            }
+          ]
+        },
+        {
+          "name": "Bonjour resolves the actual TCP port and version",
+          "status": "passed",
+          "details": {
+            "type": "_puretv._tcp",
+            "serviceName": "Neon Rush",
+            "port": 63485,
+            "txtVersion": "1",
+            "observedWith": "macOS dns-sd browse and resolve; not ESP32 search"
+          }
+        },
+        {
+          "name": "Unmodified SDK connects and synchronizes nine keys",
+          "status": "passed",
+          "details": {
+            "initialSyncKeys": 9,
+            "sdkUnmodified": true
+          }
+        },
+        {
+          "name": "Directions, A/X aggregation, long hold and sync suppression",
+          "status": "passed",
+          "details": {
+            "directions": 4,
+            "driftAliasAggregation": true,
+            "heldSyncDoesNotStart": true,
+            "longHold": true
+          }
+        },
+        {
+          "name": "Real race using TCP A/B and X/Y, drift, nitro and pause",
+          "status": "passed",
+          "details": {
+            "stats": {
+              "collisions": 1,
+              "drifts": 5,
+              "jumps": 0,
+              "miniBoosts": 4,
+              "nitros": 2
+            },
+            "progress": 994.4371634304528,
+            "variants": [
+              "AB",
+              "XY"
+            ],
+            "pauseFrozen": true
+          }
+        },
+        {
+          "name": "Three real focus changes keep TCP stable and quarantine background input",
+          "status": "passed",
+          "details": {
+            "cycles": 3,
+            "port": 63485,
+            "session": "wifi-F034D9C6-F0BD-4FD8-80F0-8CBDD79EC8DD-1",
+            "sameConnection": true,
+            "samePort": true,
+            "backgroundInputSuppressed": true,
+            "foregroundHeldKeysQuarantined": true,
+            "freshPressWorks": true,
+            "defaultPortOccupied": false,
+            "nativeGameplayAvailable": true,
+            "observations": [
+              {
+                "cycle": 1,
+                "port": 63485,
+                "session": "wifi-F034D9C6-F0BD-4FD8-80F0-8CBDD79EC8DD-1",
+                "backgroundPingAckSequence": 206,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": true
+              },
+              {
+                "cycle": 2,
+                "port": 63485,
+                "session": "wifi-F034D9C6-F0BD-4FD8-80F0-8CBDD79EC8DD-1",
+                "backgroundPingAckSequence": 233,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": true
+              },
+              {
+                "cycle": 3,
+                "port": 63485,
+                "session": "wifi-F034D9C6-F0BD-4FD8-80F0-8CBDD79EC8DD-1",
+                "backgroundPingAckSequence": 260,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "Disconnect cancellation and held-sync reconnect safety",
+          "status": "passed",
+          "details": {
+            "disconnectClearsInput": true,
+            "heldSyncDoesNotResume": true,
+            "noRewardOnCancellation": true
+          }
+        },
+        {
+          "name": "Official virtual page controls the actual native application",
+          "status": "passed",
+          "details": {
+            "report": "official-virtual/report.json",
+            "testsPassed": 3,
+            "originalHtmlSha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+          }
+        },
+        {
+          "name": "Every observed SDK message has the same-sequence ACK",
+          "status": "passed",
+          "details": {
+            "messages": 360,
+            "matchingAcks": 360,
+            "connections": 4
+          }
+        },
+        {
+          "name": "Normal quit closes TCP and withdraws Bonjour",
+          "status": "passed",
+          "details": {
+            "normalExit": true,
+            "mdnsWithdrawn": true,
+            "tcpClosed": true
+          }
+        }
+      ],
+      "originalSdkSha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "macos-arm64/rosetta": {
+      "status": "passed",
+      "architecture": "arm64",
+      "nativeProcessArchitecture": "x86_64",
+      "initialControllerPort": 63485,
+      "defaultPortOccupied": false,
+      "webglAvailable": true,
+      "mdns": {
+        "type": "_puretv._tcp",
+        "serviceName": "Neon Rush",
+        "port": 63485,
+        "txtVersion": "1",
+        "observedWith": "macOS dns-sd browse and resolve; not ESP32 search"
+      },
+      "portStability": {
+        "cycles": 3,
+        "port": 63485,
+        "session": "wifi-05CB3339-5AF2-46E5-9F72-1D47A5643610-1",
+        "sameConnection": true,
+        "samePort": true,
+        "backgroundInputSuppressed": true,
+        "foregroundHeldKeysQuarantined": true,
+        "freshPressWorks": true,
+        "defaultPortOccupied": false,
+        "nativeGameplayAvailable": true,
+        "observations": [
+          {
+            "cycle": 1,
+            "port": 63485,
+            "session": "wifi-05CB3339-5AF2-46E5-9F72-1D47A5643610-1",
+            "backgroundPingAckSequence": 188,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": true
+          },
+          {
+            "cycle": 2,
+            "port": 63485,
+            "session": "wifi-05CB3339-5AF2-46E5-9F72-1D47A5643610-1",
+            "backgroundPingAckSequence": 215,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": true
+          },
+          {
+            "cycle": 3,
+            "port": 63485,
+            "session": "wifi-05CB3339-5AF2-46E5-9F72-1D47A5643610-1",
+            "backgroundPingAckSequence": 242,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": true
+          }
+        ]
+      },
+      "limitations": null,
+      "tests": [
+        {
+          "name": "Local HTTP assets match the bundle and reject invalid requests",
+          "status": "passed",
+          "details": [
+            {
+              "file": "tv.html",
+              "bytes": 3115,
+              "sha256": "c354447ca2b5340acc6fdd57c0f588bbab876c1ba8849a088d2cc60f33a97e65",
+              "getMatchesBundle": true,
+              "headMatchesGet": true
+            },
+            {
+              "file": "game-config.json",
+              "bytes": 228,
+              "sha256": "ddb9ed6beb2e983f7e10664fc825e22a3591ce8d8ad3dcff79aa4f2893e2b794",
+              "getMatchesBundle": true,
+              "headMatchesGet": true
+            },
+            {
+              "method": "GET",
+              "path": "/game-config.json",
+              "host": "example.invalid",
+              "status": 403
+            },
+            {
+              "method": "GET",
+              "path": "/%2e%2e/Info.plist",
+              "host": "127.0.0.1:56713",
+              "status": 404
+            },
+            {
+              "method": "GET",
+              "path": "/not-bundled.txt",
+              "host": "127.0.0.1:56713",
+              "status": 404
+            },
+            {
+              "method": "POST",
+              "path": "/game-config.json",
+              "host": "127.0.0.1:56713",
+              "status": 405
+            }
+          ]
+        },
+        {
+          "name": "Bonjour resolves the actual TCP port and version",
+          "status": "passed",
+          "details": {
+            "type": "_puretv._tcp",
+            "serviceName": "Neon Rush",
+            "port": 63485,
+            "txtVersion": "1",
+            "observedWith": "macOS dns-sd browse and resolve; not ESP32 search"
+          }
+        },
+        {
+          "name": "Unmodified SDK connects and synchronizes nine keys",
+          "status": "passed",
+          "details": {
+            "initialSyncKeys": 9,
+            "sdkUnmodified": true
+          }
+        },
+        {
+          "name": "Directions, A/X aggregation, long hold and sync suppression",
+          "status": "passed",
+          "details": {
+            "directions": 4,
+            "driftAliasAggregation": true,
+            "heldSyncDoesNotStart": true,
+            "longHold": true
+          }
+        },
+        {
+          "name": "Real race using TCP A/B and X/Y, drift, nitro and pause",
+          "status": "passed",
+          "details": {
+            "stats": {
+              "collisions": 0,
+              "drifts": 5,
+              "jumps": 0,
+              "miniBoosts": 4,
+              "nitros": 2
+            },
+            "progress": 994.7731935195757,
+            "variants": [
+              "AB",
+              "XY"
+            ],
+            "pauseFrozen": true
+          }
+        },
+        {
+          "name": "Three real focus changes keep TCP stable and quarantine background input",
+          "status": "passed",
+          "details": {
+            "cycles": 3,
+            "port": 63485,
+            "session": "wifi-05CB3339-5AF2-46E5-9F72-1D47A5643610-1",
+            "sameConnection": true,
+            "samePort": true,
+            "backgroundInputSuppressed": true,
+            "foregroundHeldKeysQuarantined": true,
+            "freshPressWorks": true,
+            "defaultPortOccupied": false,
+            "nativeGameplayAvailable": true,
+            "observations": [
+              {
+                "cycle": 1,
+                "port": 63485,
+                "session": "wifi-05CB3339-5AF2-46E5-9F72-1D47A5643610-1",
+                "backgroundPingAckSequence": 188,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": true
+              },
+              {
+                "cycle": 2,
+                "port": 63485,
+                "session": "wifi-05CB3339-5AF2-46E5-9F72-1D47A5643610-1",
+                "backgroundPingAckSequence": 215,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": true
+              },
+              {
+                "cycle": 3,
+                "port": 63485,
+                "session": "wifi-05CB3339-5AF2-46E5-9F72-1D47A5643610-1",
+                "backgroundPingAckSequence": 242,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "Disconnect cancellation and held-sync reconnect safety",
+          "status": "passed",
+          "details": {
+            "disconnectClearsInput": true,
+            "heldSyncDoesNotResume": true,
+            "noRewardOnCancellation": true
+          }
+        },
+        {
+          "name": "Official virtual page controls the actual native application",
+          "status": "passed",
+          "details": {
+            "report": "official-virtual/report.json",
+            "testsPassed": 3,
+            "originalHtmlSha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+          }
+        },
+        {
+          "name": "Every observed SDK message has the same-sequence ACK",
+          "status": "passed",
+          "details": {
+            "messages": 341,
+            "matchingAcks": 341,
+            "connections": 4
+          }
+        },
+        {
+          "name": "Normal quit closes TCP and withdraws Bonjour",
+          "status": "passed",
+          "details": {
+            "normalExit": true,
+            "mdnsWithdrawn": true,
+            "tcpClosed": true
+          }
+        }
+      ],
+      "originalSdkSha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "macos-x64/native": {
+      "status": "limited_graphics",
+      "architecture": "x86_64",
+      "nativeProcessArchitecture": "x86_64",
+      "initialControllerPort": 63485,
+      "defaultPortOccupied": false,
+      "webglAvailable": false,
+      "mdns": {
+        "type": "_puretv._tcp",
+        "serviceName": "Neon Rush",
+        "port": 63485,
+        "txtVersion": "1",
+        "observedWith": "macOS dns-sd browse and resolve; not ESP32 search"
+      },
+      "portStability": {
+        "cycles": 3,
+        "port": 63485,
+        "session": "wifi-66E39726-CAF6-47AC-9CCD-9F70303C9583-1",
+        "sameConnection": true,
+        "samePort": true,
+        "backgroundInputSuppressed": true,
+        "foregroundHeldKeysQuarantined": true,
+        "freshPressWorks": true,
+        "defaultPortOccupied": false,
+        "nativeGameplayAvailable": false,
+        "observations": [
+          {
+            "cycle": 1,
+            "port": 63485,
+            "session": "wifi-66E39726-CAF6-47AC-9CCD-9F70303C9583-1",
+            "backgroundPingAckSequence": 44,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": null
+          },
+          {
+            "cycle": 2,
+            "port": 63485,
+            "session": "wifi-66E39726-CAF6-47AC-9CCD-9F70303C9583-1",
+            "backgroundPingAckSequence": 69,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": null
+          },
+          {
+            "cycle": 3,
+            "port": 63485,
+            "session": "wifi-66E39726-CAF6-47AC-9CCD-9F70303C9583-1",
+            "backgroundPingAckSequence": 93,
+            "sameConnection": true,
+            "modelFrozenWhileBackground": true,
+            "heldKeysQuarantined": true,
+            "freshStartResumesGame": null
+          }
+        ]
+      },
+      "limitations": [
+        "This hosted Intel Mac could not create a WebGL context; actual 3D driving and virtual-page gameplay checks were not run on this machine. Package, native protocol, TCP/SDK, Bonjour and error UI checks still ran."
+      ],
+      "tests": [
+        {
+          "name": "Local HTTP assets match the bundle and reject invalid requests",
+          "status": "passed",
+          "details": [
+            {
+              "file": "tv.html",
+              "bytes": 3115,
+              "sha256": "c354447ca2b5340acc6fdd57c0f588bbab876c1ba8849a088d2cc60f33a97e65",
+              "getMatchesBundle": true,
+              "headMatchesGet": true
+            },
+            {
+              "file": "game-config.json",
+              "bytes": 228,
+              "sha256": "ddb9ed6beb2e983f7e10664fc825e22a3591ce8d8ad3dcff79aa4f2893e2b794",
+              "getMatchesBundle": true,
+              "headMatchesGet": true
+            },
+            {
+              "method": "GET",
+              "path": "/game-config.json",
+              "host": "example.invalid",
+              "status": 403
+            },
+            {
+              "method": "GET",
+              "path": "/%2e%2e/Info.plist",
+              "host": "127.0.0.1:64171",
+              "status": 404
+            },
+            {
+              "method": "GET",
+              "path": "/not-bundled.txt",
+              "host": "127.0.0.1:64171",
+              "status": 404
+            },
+            {
+              "method": "POST",
+              "path": "/game-config.json",
+              "host": "127.0.0.1:64171",
+              "status": 405
+            }
+          ]
+        },
+        {
+          "name": "Bonjour resolves the actual TCP port and version",
+          "status": "passed",
+          "details": {
+            "type": "_puretv._tcp",
+            "serviceName": "Neon Rush",
+            "port": 63485,
+            "txtVersion": "1",
+            "observedWith": "macOS dns-sd browse and resolve; not ESP32 search"
+          }
+        },
+        {
+          "name": "Unmodified SDK connects and synchronizes nine keys",
+          "status": "passed",
+          "details": {
+            "initialSyncKeys": 9,
+            "sdkUnmodified": true
+          }
+        },
+        {
+          "name": "Directions, A/X aggregation, long hold and sync suppression",
+          "status": "passed",
+          "details": {
+            "directions": 4,
+            "driftAliasAggregation": true,
+            "heldSyncDoesNotStart": true,
+            "longHold": true
+          }
+        },
+        {
+          "name": "Three real focus changes keep TCP stable and quarantine background input",
+          "status": "passed",
+          "details": {
+            "cycles": 3,
+            "port": 63485,
+            "session": "wifi-66E39726-CAF6-47AC-9CCD-9F70303C9583-1",
+            "sameConnection": true,
+            "samePort": true,
+            "backgroundInputSuppressed": true,
+            "foregroundHeldKeysQuarantined": true,
+            "freshPressWorks": true,
+            "defaultPortOccupied": false,
+            "nativeGameplayAvailable": false,
+            "observations": [
+              {
+                "cycle": 1,
+                "port": 63485,
+                "session": "wifi-66E39726-CAF6-47AC-9CCD-9F70303C9583-1",
+                "backgroundPingAckSequence": 44,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": null
+              },
+              {
+                "cycle": 2,
+                "port": 63485,
+                "session": "wifi-66E39726-CAF6-47AC-9CCD-9F70303C9583-1",
+                "backgroundPingAckSequence": 69,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": null
+              },
+              {
+                "cycle": 3,
+                "port": 63485,
+                "session": "wifi-66E39726-CAF6-47AC-9CCD-9F70303C9583-1",
+                "backgroundPingAckSequence": 93,
+                "sameConnection": true,
+                "modelFrozenWhileBackground": true,
+                "heldKeysQuarantined": true,
+                "freshStartResumesGame": null
+              }
+            ]
+          }
+        },
+        {
+          "name": "Every observed SDK message has the same-sequence ACK",
+          "status": "passed",
+          "details": {
+            "messages": 108,
+            "matchingAcks": 108,
+            "connections": 1
+          }
+        },
+        {
+          "name": "Normal quit closes TCP and withdraws Bonjour",
+          "status": "passed",
+          "details": {
+            "normalExit": true,
+            "mdnsWithdrawn": true,
+            "tcpClosed": true
+          }
+        }
+      ],
+      "originalSdkSha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    }
+  }
+}

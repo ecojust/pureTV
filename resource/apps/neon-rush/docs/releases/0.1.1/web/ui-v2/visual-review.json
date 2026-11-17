@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "reviewer": "wifi_web_integration visual inspection",
+  "reviewedScreenshotSha256": {
+    "zh-wifi-menu-960.png": "9eddf886168dfa2fae5ee64386454748c0560c400a865779fe213b7aecda06f4",
+    "zh-wifi-menu-1280.png": "7299f1b2047f2364e6db6485e7b84a12144df85ac4d7e45efcbf2195612dde99",
+    "en-wifi-menu-960.png": "3e91b8f257819bcffacd775f0db4d42420d0c3dacbae44fe5f619cdf091d4d26",
+    "en-wifi-menu-1280.png": "7297c22b4e9c43e2420d9c48efe00ffae8a8e6a4d4aea074e5daf59fa496a350"
+  },
+  "findings": [
+    "Chinese and English menus retain visible QR fixture, Wi-Fi help, complete controls and race tip at 960x540 and 1280x720.",
+    "No text clipping, scrolling or overlap between primary action and controller sidebar.",
+    "Separate automated assertions verify Wi-Fi alone leaves QR status LOCAL; phone sets CONNECTED; switching back to Wi-Fi restores LOCAL."
+  ],
+  "scope": "Actual final 3D bundle rendered in Chromium with synthetic native bridge. Fixture QR is not a scannability test; no physical hardware, NSD or radio claim."
+}

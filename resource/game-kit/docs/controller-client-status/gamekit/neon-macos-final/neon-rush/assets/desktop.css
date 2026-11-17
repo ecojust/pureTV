@@ -1,0 +1,16 @@
+/* Native macOS controls occupy the existing panel without a TV-only QR card. */
+body.neon-desktop #qr-wrap { display:none!important; }
+body.neon-desktop.rush-phone-open aside { display:block!important; padding:18px; }
+body.neon-desktop.rush-phone-open aside > .side-heading { display:flex; justify-content:space-between; align-items:center; }
+body.neon-desktop.rush-phone-open aside > .address { text-align:left; margin:12px 0; font-size:12px; line-height:1.5; }
+body.neon-desktop #rush-wifi-help { padding:11px; margin:12px 0 0; }
+body.neon-desktop #rush-wifi-status { font-size:12px; line-height:1.6; }
+body.neon-desktop aside .small-help { white-space:pre-line; }
+body.neon-desktop aside .tip { margin-top:14px; }
+@media(max-height:620px) {
+  body.neon-desktop.rush-phone-open aside { padding:12px; }
+  body.neon-desktop.rush-phone-open aside > .address { font-size:11px; margin:8px 0; }
+  body.neon-desktop #rush-wifi-help { padding:8px; margin-top:8px; }
+  body.neon-desktop #rush-wifi-status { font-size:11px; line-height:1.45; }
+  body.neon-desktop aside .tip { margin-top:9px; }
+}

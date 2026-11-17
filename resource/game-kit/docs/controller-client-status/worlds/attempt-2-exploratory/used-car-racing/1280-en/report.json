@@ -1,0 +1,805 @@
+{
+  "slug": "used-car-racing",
+  "width": 1280,
+  "height": 720,
+  "language": "en",
+  "status": "failed",
+  "assetHashes": {
+    "audio.js": "3d1497474c0f7b1133d4a88d93323ddc7f831d9e641aa9aec39f790e8461bbef",
+    "controller.css": "08a93ace0e224952d2f2edce17ec09f868d17873dabbdd1c35dd160da987c5a9",
+    "controller.html": "be322923260aa688d75cc9c3c8422ded5d0cd34e2de31aee7fcb45a8734663cc",
+    "controller.js": "4f1ffed239a41e9f33f9da55277da2c70f5e9bc72cad7f98078bab1b3ace20a0",
+    "game-model.js": "32666a4429fb0dc34c2003f34cb5783e075be5437251f87ffd12109b08ba5166",
+    "game.js": "fd7026f229749cf538c747ac691a87a334459b5c769b3fc6b356a64f25709e3e",
+    "materials.js": "f57f743c30d4563d64ec81be87092c32c5bc1203fbe1299ecd85b4573d9687fe",
+    "puretv-controller.js": "8e3c8d33bba6b302322f984f8e1cb09d7b8b8797f17957c9c5cca7218a86332c",
+    "renderer-3d.js": "ae7177e7b957e108fbda4562d5906c90f0322acbe6b6e7e8016c9a2aa36e3fb4",
+    "secure-controller.js": "30204d3c8d732ae25e054a16f80a2fcf0ba10d42b9ba4c9c745d4105249e04ec",
+    "steering.js": "d16c7e8434505a427ce5856ab447a0732dbbbaf2b51a80444ed6542104d30d11",
+    "TEXTURE-LICENSE.txt": "ae77e01340f81a9e73e84069eb9d8eaf461ce9ed5a3ac949f4c042d948a5d10b",
+    "textures/asphalt-color.jpg": "6ef06ac2eb2e85990c8a0260d68309cef11591c6c5b60cef29eea3259c0cc654",
+    "textures/asphalt-normal.jpg": "fea3406de552b81dbb5b3b35d60d4a72af2e34952052efd4bccff529b3155fc9",
+    "textures/asphalt-specular.jpg": "6a55ca9ada50cd6053bcc45fef5f95d06adf17097e3895edd3ec4ce01117f33f",
+    "textures/concrete-color.jpg": "82db406252c7bc9706db0671de566997b1084358ccf81b3b1b6d421bc563b6fb",
+    "textures/concrete-normal.jpg": "f7d341a26ea272e4395bcef8dd1f803255ca2e708ac2f35ba7e086dc6abaa2c0",
+    "textures/container-color.jpg": "5eaa65639fe322ed0f64897177b3558465b6aa23ceb137169eb458c6fc7b1735",
+    "textures/container-normal.jpg": "dff0614c6e2bb7eef1a3837e5eb53ca6ad4f41294f95a981ca43001088c0959e",
+    "textures/facade-color.jpg": "2685d655a60a0dc730df2c34aba7dd5c3eac2a1598e6ee364b06d37e6c1263d7",
+    "textures/foliage-color.png": "577cacf6394a4eb91b248947cb57f9aee323c5182bc3bd781b5c2072fc24c27e",
+    "textures/grass-color.jpg": "3cfca2299ba7a8cf6c8e3ee75886d8190e6b2d58ae59b8ab6ad0f3c496fa8750",
+    "textures/grass-normal.jpg": "5075ea94770319013f31a2e177ce6901af40a50ad59776ea499cbdf02cbd173b",
+    "textures/manifest.json": "b02e01157a6faf492701665f64a89a0b8a3874911c499f4e4860cc868077074c",
+    "textures/rock-color.jpg": "690dcd6e1d5f73f4c7f4198c43c11bb6eba9148dfb1363a72fb0faff8d3338a2",
+    "textures/rock-normal.jpg": "0054fad039286bcf15584ad6a5bd7da5551cdbd4c3e0bcb5248ea1071cdabe1e",
+    "textures/sand-color.jpg": "a0dfc925d06547da6648e86bac96103916aaa07519bb414db3e27a8c1cd29ac8",
+    "textures/sand-normal.jpg": "6e6465a54381df1fb0434252dd94d1a5150f4287ecd16e354aacf2c6da782cf7",
+    "textures/solar-color.jpg": "7b0f65dfe56c680a2b0e2b6f8d7ee5be0f6d05022614087da67a70adf81b3959",
+    "textures/solar-specular.jpg": "5e9a6aa0677a4b3a2ed2eabbe0f416bc25602a0c4d0332a41fd8a5ed50e69458",
+    "textures/vehicle-atlas-color.jpg": "e24126b10194e3bf0b3b165dd233ee0420f95b912cc15f4f61236a2fc486dbf8",
+    "textures/vehicle-atlas-normal.jpg": "be139e62180492623dec5ed6fe08537792c1e8b3d69c04f52590e68a4021567b",
+    "textures/vehicle-atlas-specular.jpg": "fdfd498486c3825280e60377e42d047ef5793aa1913f121c7fb9f26a25c022aa",
+    "THREE-LICENSE.txt": "b53cfcb10e8642d82814dc14de5b4ea363300aa6a2de35f0669b33cd7d3f5c39",
+    "three.min.js": "a8a966c3de0bac23630957e8b6ceb1330725bc2889a0b2dad952d710797ba179",
+    "tracks.js": "8b6bb446bb3a494eea8757a2bab299547330dbd8fc3c5851efea8e74b8130a98",
+    "tv.css": "bbbbb57a64a6a02578e56e0914c22714d5c407a5358a9fa2476a87852696f1cc",
+    "tv.html": "998de653dee9d3d35346003286de13d3328269be3e882702ccfa01b46157515e",
+    "vehicle-models.js": "7c3a59cccdfff97b1deb12343be4b3d812d8e3853afc582e62580599cb6b1e86"
+  },
+  "checks": [
+    {
+      "label": "disconnected",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "phase": "garage",
+      "clients": [],
+      "important": [
+        {
+          "id": "vehicle-cards",
+          "rect": {
+            "x": 34,
+            "y": 420,
+            "width": 1212,
+            "height": 122,
+            "right": 1246,
+            "bottom": 542
+          }
+        },
+        {
+          "id": "start",
+          "rect": {
+            "x": 1055,
+            "y": 615,
+            "width": 190,
+            "height": 66,
+            "right": 1245,
+            "bottom": 681
+          }
+        }
+      ],
+      "sidebar": [
+        {
+          "rect": {
+            "x": 928,
+            "y": 20,
+            "width": 322,
+            "height": 128,
+            "right": 1250,
+            "bottom": 148
+          },
+          "scrollHeight": 207,
+          "clientHeight": 126
+        }
+      ]
+    },
+    {
+      "label": "menu-connected",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "phase": "garage",
+      "clients": [
+        {
+          "id": "esp32-001122334455",
+          "seat": "1",
+          "text": "ID: esp32-001122334455",
+          "rect": {
+            "x": 34,
+            "y": 182,
+            "width": 330,
+            "height": 42.296875,
+            "right": 364,
+            "bottom": 224.296875
+          },
+          "textRect": {
+            "x": 68,
+            "y": 205.296875,
+            "width": 288,
+            "height": 13,
+            "right": 356,
+            "bottom": 218.296875
+          },
+          "textScrollWidth": 288,
+          "textClientWidth": 288
+        },
+        {
+          "id": "esp32-aabbccddeeff",
+          "seat": "2",
+          "text": "ID: esp32-aabbccddeeff",
+          "rect": {
+            "x": 34,
+            "y": 230.296875,
+            "width": 330,
+            "height": 42.296875,
+            "right": 364,
+            "bottom": 272.59375
+          },
+          "textRect": {
+            "x": 68,
+            "y": 253.59375,
+            "width": 288,
+            "height": 13,
+            "right": 356,
+            "bottom": 266.59375
+          },
+          "textScrollWidth": 288,
+          "textClientWidth": 288
+        }
+      ],
+      "important": [
+        {
+          "id": "vehicle-cards",
+          "rect": {
+            "x": 34,
+            "y": 420,
+            "width": 1212,
+            "height": 122,
+            "right": 1246,
+            "bottom": 542
+          }
+        },
+        {
+          "id": "start",
+          "rect": {
+            "x": 1055,
+            "y": 615,
+            "width": 190,
+            "height": 66,
+            "right": 1245,
+            "bottom": 681
+          }
+        }
+      ],
+      "sidebar": [
+        {
+          "rect": {
+            "x": 928,
+            "y": 20,
+            "width": 322,
+            "height": 128,
+            "right": 1250,
+            "bottom": 148
+          },
+          "scrollHeight": 207,
+          "clientHeight": 126
+        }
+      ]
+    },
+    {
+      "label": "playing-connected",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "phase": "countdown",
+      "clients": [
+        {
+          "id": "esp32-001122334455",
+          "seat": "1",
+          "text": "ID: esp32-001122334455",
+          "rect": {
+            "x": 32,
+            "y": 136,
+            "width": 236,
+            "height": 45.59375,
+            "right": 268,
+            "bottom": 181.59375
+          },
+          "textRect": {
+            "x": 66,
+            "y": 160.296875,
+            "width": 194,
+            "height": 14.296875,
+            "right": 260,
+            "bottom": 174.59375
+          },
+          "textScrollWidth": 194,
+          "textClientWidth": 194
+        },
+        {
+          "id": "esp32-aabbccddeeff",
+          "seat": "2",
+          "text": "ID: esp32-aabbccddeeff",
+          "rect": {
+            "x": 32,
+            "y": 187.59375,
+            "width": 236,
+            "height": 45.59375,
+            "right": 268,
+            "bottom": 233.1875
+          },
+          "textRect": {
+            "x": 66,
+            "y": 211.890625,
+            "width": 194,
+            "height": 14.296875,
+            "right": 260,
+            "bottom": 226.1875
+          },
+          "textScrollWidth": 194,
+          "textClientWidth": 194
+        }
+      ],
+      "important": [
+        {
+          "id": "race-time",
+          "rect": {
+            "x": 182.859375,
+            "y": 89,
+            "width": 119.21875,
+            "height": 25,
+            "right": 302.078125,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "driver-huds",
+          "rect": {
+            "x": 0,
+            "y": 557,
+            "width": 1280,
+            "height": 125,
+            "right": 1280,
+            "bottom": 682
+          }
+        },
+        {
+          "id": "pause-button",
+          "rect": {
+            "x": 1198.421875,
+            "y": 83,
+            "width": 49.578125,
+            "height": 31,
+            "right": 1248,
+            "bottom": 114
+          }
+        }
+      ],
+      "sidebar": []
+    },
+    {
+      "label": "paused-connected",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "phase": "paused",
+      "clients": [
+        {
+          "id": "esp32-001122334455",
+          "seat": "1",
+          "text": "ID: esp32-001122334455",
+          "rect": {
+            "x": 32,
+            "y": 136,
+            "width": 236,
+            "height": 45.59375,
+            "right": 268,
+            "bottom": 181.59375
+          },
+          "textRect": {
+            "x": 66,
+            "y": 160.296875,
+            "width": 194,
+            "height": 14.296875,
+            "right": 260,
+            "bottom": 174.59375
+          },
+          "textScrollWidth": 194,
+          "textClientWidth": 194
+        },
+        {
+          "id": "esp32-aabbccddeeff",
+          "seat": "2",
+          "text": "ID: esp32-aabbccddeeff",
+          "rect": {
+            "x": 32,
+            "y": 187.59375,
+            "width": 236,
+            "height": 45.59375,
+            "right": 268,
+            "bottom": 233.1875
+          },
+          "textRect": {
+            "x": 66,
+            "y": 211.890625,
+            "width": 194,
+            "height": 14.296875,
+            "right": 260,
+            "bottom": 226.1875
+          },
+          "textScrollWidth": 194,
+          "textClientWidth": 194
+        }
+      ],
+      "important": [
+        {
+          "id": "race-time",
+          "rect": {
+            "x": 182.859375,
+            "y": 89,
+            "width": 119.21875,
+            "height": 25,
+            "right": 302.078125,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "driver-huds",
+          "rect": {
+            "x": 0,
+            "y": 557,
+            "width": 1280,
+            "height": 125,
+            "right": 1280,
+            "bottom": 682
+          }
+        },
+        {
+          "id": "pause-button",
+          "rect": {
+            "x": 1198.421875,
+            "y": 83,
+            "width": 49.578125,
+            "height": 31,
+            "right": 1248,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "resume",
+          "rect": {
+            "x": 468,
+            "y": 398.59375,
+            "width": 344,
+            "height": 38,
+            "right": 812,
+            "bottom": 436.59375
+          }
+        }
+      ],
+      "sidebar": [
+        {
+          "rect": {
+            "x": 1080,
+            "y": 106,
+            "width": 170,
+            "height": 382,
+            "right": 1250,
+            "bottom": 488
+          },
+          "scrollHeight": 498,
+          "clientHeight": 380
+        }
+      ]
+    },
+    {
+      "label": "long-ids",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "phase": "paused",
+      "clients": [
+        {
+          "id": "esp32-111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+          "seat": "1",
+          "text": "ID: esp32-111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+          "rect": {
+            "x": 32,
+            "y": 136,
+            "width": 236,
+            "height": 88.484375,
+            "right": 268,
+            "bottom": 224.484375
+          },
+          "textRect": {
+            "x": 66,
+            "y": 160.296875,
+            "width": 194,
+            "height": 57.1875,
+            "right": 260,
+            "bottom": 217.484375
+          },
+          "textScrollWidth": 194,
+          "textClientWidth": 194
+        },
+        {
+          "id": "esp32-222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",
+          "seat": "2",
+          "text": "ID: esp32-222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",
+          "rect": {
+            "x": 32,
+            "y": 230.484375,
+            "width": 236,
+            "height": 88.484375,
+            "right": 268,
+            "bottom": 318.96875
+          },
+          "textRect": {
+            "x": 66,
+            "y": 254.78125,
+            "width": 194,
+            "height": 57.1875,
+            "right": 260,
+            "bottom": 311.96875
+          },
+          "textScrollWidth": 194,
+          "textClientWidth": 194
+        }
+      ],
+      "important": [
+        {
+          "id": "race-time",
+          "rect": {
+            "x": 182.859375,
+            "y": 89,
+            "width": 119.21875,
+            "height": 25,
+            "right": 302.078125,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "driver-huds",
+          "rect": {
+            "x": 0,
+            "y": 557,
+            "width": 1280,
+            "height": 125,
+            "right": 1280,
+            "bottom": 682
+          }
+        },
+        {
+          "id": "pause-button",
+          "rect": {
+            "x": 1198.421875,
+            "y": 83,
+            "width": 49.578125,
+            "height": 31,
+            "right": 1248,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "resume",
+          "rect": {
+            "x": 468,
+            "y": 398.59375,
+            "width": 344,
+            "height": 38,
+            "right": 812,
+            "bottom": 436.59375
+          }
+        }
+      ],
+      "sidebar": [
+        {
+          "rect": {
+            "x": 1080,
+            "y": 106,
+            "width": 170,
+            "height": 382,
+            "right": 1250,
+            "bottom": 488
+          },
+          "scrollHeight": 498,
+          "clientHeight": 380
+        }
+      ]
+    },
+    {
+      "label": "phone-only",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "phase": "paused",
+      "clients": [],
+      "important": [
+        {
+          "id": "race-time",
+          "rect": {
+            "x": 182.859375,
+            "y": 89,
+            "width": 119.21875,
+            "height": 25,
+            "right": 302.078125,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "driver-huds",
+          "rect": {
+            "x": 0,
+            "y": 557,
+            "width": 1280,
+            "height": 125,
+            "right": 1280,
+            "bottom": 682
+          }
+        },
+        {
+          "id": "pause-button",
+          "rect": {
+            "x": 1198.421875,
+            "y": 83,
+            "width": 49.578125,
+            "height": 31,
+            "right": 1248,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "resume",
+          "rect": {
+            "x": 468,
+            "y": 398.59375,
+            "width": 344,
+            "height": 38,
+            "right": 812,
+            "bottom": 436.59375
+          }
+        }
+      ],
+      "sidebar": [
+        {
+          "rect": {
+            "x": 1080,
+            "y": 106,
+            "width": 170,
+            "height": 382,
+            "right": 1250,
+            "bottom": 488
+          },
+          "scrollHeight": 498,
+          "clientHeight": 380
+        }
+      ]
+    },
+    {
+      "label": "reconnected",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "phase": "paused",
+      "clients": [
+        {
+          "id": "esp32-001122334455",
+          "seat": "1",
+          "text": "ID: esp32-001122334455",
+          "rect": {
+            "x": 32,
+            "y": 136,
+            "width": 236,
+            "height": 45.59375,
+            "right": 268,
+            "bottom": 181.59375
+          },
+          "textRect": {
+            "x": 66,
+            "y": 160.296875,
+            "width": 194,
+            "height": 14.296875,
+            "right": 260,
+            "bottom": 174.59375
+          },
+          "textScrollWidth": 194,
+          "textClientWidth": 194
+        },
+        {
+          "id": "esp32-aabbccddeeff",
+          "seat": "2",
+          "text": "ID: esp32-aabbccddeeff",
+          "rect": {
+            "x": 32,
+            "y": 187.59375,
+            "width": 236,
+            "height": 45.59375,
+            "right": 268,
+            "bottom": 233.1875
+          },
+          "textRect": {
+            "x": 66,
+            "y": 211.890625,
+            "width": 194,
+            "height": 14.296875,
+            "right": 260,
+            "bottom": 226.1875
+          },
+          "textScrollWidth": 194,
+          "textClientWidth": 194
+        }
+      ],
+      "important": [
+        {
+          "id": "race-time",
+          "rect": {
+            "x": 182.859375,
+            "y": 89,
+            "width": 119.21875,
+            "height": 25,
+            "right": 302.078125,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "driver-huds",
+          "rect": {
+            "x": 0,
+            "y": 557,
+            "width": 1280,
+            "height": 125,
+            "right": 1280,
+            "bottom": 682
+          }
+        },
+        {
+          "id": "pause-button",
+          "rect": {
+            "x": 1198.421875,
+            "y": 83,
+            "width": 49.578125,
+            "height": 31,
+            "right": 1248,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "resume",
+          "rect": {
+            "x": 468,
+            "y": 398.59375,
+            "width": 344,
+            "height": 38,
+            "right": 812,
+            "bottom": 436.59375
+          }
+        }
+      ],
+      "sidebar": [
+        {
+          "rect": {
+            "x": 1080,
+            "y": 106,
+            "width": 170,
+            "height": 382,
+            "right": 1250,
+            "bottom": 488
+          },
+          "scrollHeight": 498,
+          "clientHeight": 380
+        }
+      ]
+    },
+    {
+      "label": "disconnected-after",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "phase": "paused",
+      "clients": [],
+      "important": [
+        {
+          "id": "race-time",
+          "rect": {
+            "x": 182.859375,
+            "y": 89,
+            "width": 119.21875,
+            "height": 25,
+            "right": 302.078125,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "driver-huds",
+          "rect": {
+            "x": 0,
+            "y": 557,
+            "width": 1280,
+            "height": 125,
+            "right": 1280,
+            "bottom": 682
+          }
+        },
+        {
+          "id": "pause-button",
+          "rect": {
+            "x": 1198.421875,
+            "y": 83,
+            "width": 49.578125,
+            "height": 31,
+            "right": 1248,
+            "bottom": 114
+          }
+        },
+        {
+          "id": "resume",
+          "rect": {
+            "x": 468,
+            "y": 398.59375,
+            "width": 344,
+            "height": 38,
+            "right": 812,
+            "bottom": 436.59375
+          }
+        }
+      ],
+      "sidebar": [
+        {
+          "rect": {
+            "x": 1080,
+            "y": 106,
+            "width": 170,
+            "height": 382,
+            "right": 1250,
+            "bottom": 488
+          },
+          "scrollHeight": 498,
+          "clientHeight": 380
+        }
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "screenshots": [
+    {
+      "file": "menu-connected.png",
+      "sha256": "3d717f7737ad7cd175e32827a9fb807b01b96627abda3c3eae7276b13937405b"
+    },
+    {
+      "file": "playing-connected.png",
+      "sha256": "26b458b933eb25f5ce3b7bf2f17522da23e0142ddc4a4568b705c42c5a3c9f0c"
+    },
+    {
+      "file": "paused-connected.png",
+      "sha256": "8f9b2fd64d856c1f6c30f7a0234c798ad322630a40f3ace7b3415ed23ce13c9f"
+    },
+    {
+      "file": "long-ids.png",
+      "sha256": "276fee0b551bdda76698a1a93f0d33066165b0a5efbc551192bb2570206d6651"
+    }
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    'TEXTURE-LICENSE.txt': 'ae77e01340f81a9e73e84069eb9d8eaf461ce9ed5a3ac949f4c042d948a5d10b',\n    'THREE-LICENSE.txt': 'b53cfcb10e8642d82814dc14de5b4ea363300aa6a2de35f0669b33cd7d3f5c39',\n    'audio.js': '3d1497474c0f7b1133d4a88d93323ddc7f831d9e641aa9aec39f790e8461bbef',\n    'controller.css': '08a93ace0e224952d2f2edce17ec09f868d17873dabbdd1c35dd160da987c5a9',\n...\n    'game-model.js': '32666a4429fb0dc34c2003f34cb5783e075be5437251f87ffd12109b08ba5166',\n+   'game.js': 'ccd88662f70c24ee9a6e5d7dc0566dc372207ef7386c1fc9dd985f8e560ca876',\n-   'game.js': 'fd7026f229749cf538c747ac691a87a334459b5c769b3fc6b356a64f25709e3e',\n    'materials.js': 'f57f743c30d4563d64ec81be87092c32c5bc1203fbe1299ecd85b4573d9687fe',\n+   'puretv-controller.js': '3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a',\n-   'puretv-controller.js': '8e3c8d33bba6b302322f984f8e1cb09d7b8b8797f17957c9c5cca7218a86332c',\n    'renderer-3d.js': 'ae7177e7b957e108fbda4562d5906c90f0322acbe6b6e7e8016c9a2aa36e3fb4',\n    'secure-controller.js': '30204d3c8d732ae25e054a16f80a2fcf0ba10d42b9ba4c9c745d4105249e04ec',\n    'steering.js': 'd16c7e8434505a427ce5856ab447a0732dbbbaf2b51a80444ed6542104d30d11',\n    'textures/asphalt-color.jpg': '6ef06ac2eb2e85990c8a0260d68309cef11591c6c5b60cef29eea3259c0cc654',\n    'textures/asphalt-normal.jpg': 'fea3406de552b81dbb5b3b35d60d4a72af2e34952052efd4bccff529b3155fc9',\n...\n    'tracks.js': '8b6bb446bb3a494eea8757a2bab299547330dbd8fc3c5851efea8e74b8130a98',\n+   'tv.css': 'a6be8ce054ca68494febfd3ac5b338233d613f748d41f1444c64d08be3320268',\n-   'tv.css': 'bbbbb57a64a6a02578e56e0914c22714d5c407a5358a9fa2476a87852696f1cc',\n    'tv.html': '998de653dee9d3d35346003286de13d3328269be3e882702ccfa01b46157515e',\n    'vehicle-models.js': '7c3a59cccdfff97b1deb12343be4b3d812d8e3853afc582e62580599cb6b1e86'\n  }\n\n    at file:///dev/shm/puretv-controller-status/resource/game-kit/docs/controller-client-status/worlds/layout-check.mjs:51:50"
+}

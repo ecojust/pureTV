@@ -1,0 +1,377 @@
+import {readFileSync} from 'node:fs';
+const managerVersion=JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8')).version;
+
+export function snapshot() {
+  return {
+    localNetwork:{addresses:[{interfaceName:'Wi-Fi',ip:'192.168.0.2',prefixLength:24},{interfaceName:'Ethernet',ip:'10.0.0.2',prefixLength:24},{interfaceName:'Test LAN',ip:'192.168.1.2',prefixLength:24}],error:null},
+    systemInfo:{manufacturer:'Test Maker',brand:'Test',sdkVersion:'33',securityPatch:'2026-10-01',cpu:'test-cpu',cpuAbi:'arm64-v8a',memoryTotalBytes:4294967296,memoryAvailableBytes:1073741824,storageTotalBytes:34359738368,storageAvailableBytes:8589934592,displayResolution:'1920x1080',uptimeSeconds:3600,queriedAt:1},
+    revision: 0, adbPath: 'C:\\platform-tools\\adb.exe', adbAvailable: true,
+    device: { serial: '192.168.1.50:5555', model: '测试电视', androidVersion: '12', userId: 0, status: 'device' },
+    packages: [
+      { packageName: 'com.vendor.recommendations', label: '厂商推荐', system: true, enabled: true, installed: true, protectedReason: null },
+      { packageName: 'com.vendor.disabled', label: '已停用示例', system: true, enabled: false, installed: true, protectedReason: null },
+      { packageName: 'com.vendor.removed', label: '可恢复示例', system: true, enabled: false, installed: false, protectedReason: null },
+      { apkSizeBytes: 12582912, packageName: 'com.ecojust.webtv', label: 'WebTV', system: false, enabled: true, installed: true, protectedReason: null },
+      { packageName: 'com.ecojust.puretv', label: 'pureTV', system: false, enabled: true, installed: true, protectedReason: null },
+      { packageName: 'com.vendor.home', label: '原厂桌面', system: true, enabled: true, installed: true, protectedReason: '当前默认启动器' },
+      { packageName: 'com.android.settings', label: '系统设置', system: true, enabled: true, installed: true, protectedReason: '关键系统组件' },
+    ],
+    launchers: [
+      { packageName: 'com.vendor.home', component: 'com.vendor.home/.Main', label: '原厂桌面', isDefault: true },
+      { packageName: 'com.ecojust.puretv', component: 'com.ecojust.puretv/.MainActivity', label: 'pureTV', isDefault: false },
+    ],
+    defaultHome: 'com.vendor.home/.Main', originalHome: null, history: [], message: '',
+  };
+}
+
+export function marketCatalog() {
+  const revision = 'a'.repeat(64);
+  // Author names below are simulated provider metadata, not live marketplace claims.
+  return {
+    sourceUrl: 'https://apps.b14f.com/', revision,
+    fetchedAt: 1792886400000, stale: false, warning: null,
+    items: [
+      {id:'media/hifini/hifini-0.1.3.apk',kind:'app',name:'HIFINi TV',provider:'演示影音作者',version:'0.1.3',fileName:'hifini-0.1.3.apk',bytes:197732,blobSha:'b'.repeat(64),folderUrl:'https://apps.b14f.com/media/hifini',coverUrl:null},
+      {id:'media/webtv/webtv-0.2.1.apk',kind:'app',name:'WebTV',version:'0.2.1',fileName:'webtv-0.2.1.apk',bytes:2097152,blobSha:'c'.repeat(64),folderUrl:'https://apps.b14f.com/media/webtv',coverUrl:null},
+      {id:'launcher/nova/nova-0.1.1.apk',kind:'launcher',name:'Nova TV',provider:'Demo Home Studio',version:'0.1.1',fileName:'nova-0.1.1.apk',bytes:1048576,blobSha:'d'.repeat(64),folderUrl:'https://apps.b14f.com/launcher/nova',coverUrl:null},
+    ],
+  };
+}
+
+export function packageInsight(packageName, overrides = {}) {
+  return {
+    packageName, found: true, description: 'Optional recommendations for the TV home screen.',
+    removal: 'Recommended', risk: 'low', list: 'Oem',
+    sourceName: 'UAD-ng', sourceUrl: 'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/resources/assets/uad_lists.json',
+    licenseUrl: 'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/LICENSE',
+    fetchedAt: 1793318400000, stale: false, warning: null, ...overrides,
+  };
+}
+
+export function clientUpdate(overrides = {}) {
+  return {
+    currentVersion:managerVersion,platform:'macos-arm64',supported:true,status:'upToDate',available:false,
+    latestVersion:managerVersion,revision:'e'.repeat(64),fileName:`pureTV-Manager-${managerVersion}-macos-arm64.dmg`,bytes:4866503,
+    sourceUrl:'https://apps.b14f.com/client/',checkedAt:1793358000000,...overrides,
+  };
+}
+
+export function forumPage(overrides = {}) {
+  return {
+    posts: [
+      {number:'IABC123',title:'电视应用使用交流',author:'论坛用户',state:'open',comments:3,updatedAt:'2026-11-01T08:00:00+08:00',labels:['使用交流']},
+      {number:'IABC122',title:'已解决的连接问题',author:'桔子桑',state:'closed',comments:5,updatedAt:'2026-10-31T19:30:00+08:00',labels:['问题反馈']},
+    ],
+    page:1,hasMore:false,fetchedAt:1793491200000,
+    sourceUrl:'https://gitee.com/juzisang331/pure-tv-store/issues',stale:false,warning:null,
+    ...overrides,
+  };
+}
+
+export function forumDetail(number = 'IABC123', overrides = {}) {
+  const item=forumPage().posts.find(post=>post.number===number) || {...forumPage().posts[0],number,title:'帖子 '+number};
+  return {
+    post:{...item,createdAt:'2026-10-31T09:00:00+08:00',body:'这是帖子正文。\n第二段记录电视的使用体验。'},
+    fetchedAt:1793491200000,stale:false,warning:null,...overrides,
+  };
+}
+
+export function forumReplies(number = 'IABC123', overrides = {}) {
+  return {
+    number,replies:[{id:'R1001',body:'这是一条跟帖。\n可以在这里阅读完整讨论。',author:'回复用户',createdAt:'2026-11-01T07:00:00+08:00',updatedAt:'2026-11-01T07:30:00+08:00'}],
+    page:1,hasMore:false,fetchedAt:1793491200000,stale:false,warning:null,...overrides,
+  };
+}
+
+export async function mockBridge(page, initial = snapshot(), options = {}) {
+  await page.addInitScript(({initial, options, defaultMarketCatalog, defaultClientUpdate, defaultForumPage, defaultForumDetails, defaultForumReplies}) => {
+    const state = structuredClone(initial);
+    const defaultLayout=options.layout || {version:2,home:{columns:4,items:[{action:'music',icon:'music',color:'#303338'},{action:'files',icon:'files',color:'#3B4C46'},{action:'apps',icon:'apps',color:'#374959'}]},apps:{columns:3,items:[]}};
+    let launcherLayout=structuredClone(defaultLayout), customLayout=false;
+    let layoutApps=options.layoutApps ? structuredClone(options.layoutApps) : null, nextLayoutReadError='';
+    window.__interfacePreferences={};
+    window.__launcherRequests=[];let covers=structuredClone(options.covers || {});
+    // Tests hold a real bridge promise until assertions have observed its pending UI.
+    window.__pendingOperations=[];
+    const heldOnce=new Set();window.__holdNextOperation=action=>heldOnce.add(action);
+    window.__releaseOperation=(action,outcome={})=>{
+      const index=window.__pendingOperations.findIndex(operation=>operation.action===action);
+      if(index<0)throw new Error('No held operation: '+action);
+      window.__pendingOperations.splice(index,1)[0].resolve(outcome);
+    };
+    const holdOperation=async action=>{
+      const once=heldOnce.delete(action);if(!once&&!options.holdActions?.includes(action))return {};
+      const modal=document.querySelector('dialog.operation-feedback[open]');
+      const feedback={phase:modal?.dataset.phase,modal:!!modal?.matches(':modal'),text:modal?.textContent || ''};
+      const outcome=await new Promise(resolve=>window.__pendingOperations.push({action,resolve,feedback}));
+      if(outcome.error)throw new Error(outcome.error);
+      return outcome;
+    };
+    window.__setMockState=value=>Object.assign(state,structuredClone(value));
+    window.__setMockLayout=value=>{launcherLayout=structuredClone(value);};
+    window.__setMockLayoutApps=value=>{layoutApps=structuredClone(value);};
+    window.__failNextLayoutRead=value=>{nextLayoutReadError=String(value);};
+    window.__homeBackgrounds=structuredClone(options.homeBackgrounds || {});window.__homeBackgroundColors=structuredClone(options.homeBackgroundColors || {});
+    window.__failedBackgroundComponents=structuredClone(options.failedBackgroundComponents || []);
+    const callbacks = new Map(); let nextCallback = 1, downloadCancelled = false, marketCancelled = false, toolsInstalled = !!options.toolsInstalled;
+    window.__marketCatalog=structuredClone(options.marketCatalog || defaultMarketCatalog);
+    window.__marketRequests=[];window.__marketCatalogError=options.failMarketCatalog?'无法读取市场目录，请检查网络后重试':null;
+    // This fixture models the desktop JSON file across page/application reloads.
+    const marketSeenStorage='puretv-test-market-seen-apps';
+    if(localStorage.getItem(marketSeenStorage)===null && options.marketSeenApps!==undefined)localStorage.setItem(marketSeenStorage,JSON.stringify(options.marketSeenApps));
+    window.__marketSeenApps=JSON.parse(localStorage.getItem(marketSeenStorage) || 'null');
+    window.__marketSeenRequests=[];window.__marketSeenWarning=options.marketSeenWarning || null;
+    window.__marketSeenReadError=options.marketSeenReadError || null;window.__marketSeenSaveError=options.marketSeenSaveError || null;
+    window.__packageInsights=structuredClone(options.packageInsights || {});
+    window.__packageInsightRequests=[];window.__packageResources=[];
+    window.__packageInsightError=options.packageInsightError || null;
+    window.__clientUpdateInfo=structuredClone(options.clientUpdate || defaultClientUpdate);
+    window.__clientUpdateRequests=[];window.__clientUpdateError=options.clientUpdateError || null;
+    window.__clientInstallError=options.clientInstallError || null;window.__clientUpdateResult=structuredClone(options.clientUpdateResult || null);
+    window.__forumPages=structuredClone(options.forumPages || {1:defaultForumPage});
+    window.__forumRequests=[];window.__forumOpenRequests=[];
+    window.__forumError=options.forumError || null;window.__forumOpenError=options.forumOpenError || null;
+    window.__forumDetails=structuredClone(options.forumDetails || defaultForumDetails);
+    window.__forumReplyPages=structuredClone(options.forumReplyPages || defaultForumReplies);
+    window.__forumPostRequests=[];window.__forumReplyRequests=[];
+    window.__forumDetailError=options.forumDetailError || null;window.__forumRepliesError=options.forumRepliesError || null;
+    window.__resourceErrors=structuredClone(options.resourceErrors || {});
+    let clientUpdateCancelled=false;
+    window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
+    window.__eventListeners = {};
+    window.__networkReads=0; window.__requests = []; window.__pickerCalls = 0; window.__xss = false; window.__toolsInstalls = 0; window.__resources = [];
+    window.__TAURI_INTERNALS__ = {
+      transformCallback: callback => { const id = nextCallback++; callbacks.set(id, callback); return id; },
+      unregisterCallback: id => { callbacks.delete(id); },
+      invoke: async (command, args = {}) => {
+        if (command === 'plugin:event|listen') { (window.__eventListeners[args.event] ||= []).push(args.handler); return args.handler; }
+        if (command === 'plugin:event|unlisten') return;
+        if(command==='get_local_network'){window.__networkReads++;return structuredClone(options.preflightNetwork || state.localNetwork || {addresses:[],error:null});}
+        if(command==='get_interface_preferences')return structuredClone(window.__interfacePreferences);
+        if(command==='set_interface_preferences'){Object.assign(window.__interfacePreferences,args.preferences);window.__emitMcp('interface-preferences',structuredClone(window.__interfacePreferences));return structuredClone(window.__interfacePreferences);}
+        if (command === 'mcp_info') return {config:{mcpServers:{puretv:{command:'/Applications/pureTV Manager.app/Contents/MacOS/puretv-desktop',args:['--mcp','/Users/test/mcp-session.json']}}},sessionPath:'/Users/test/mcp-session.json'};
+        if(command==='get_launcher_covers')return structuredClone(covers);
+        if(command==='choose_launcher_cover'){if(args.remove)delete covers[args.key];else covers[args.key]='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=';return structuredClone(covers);}
+        if(command==='choose_launcher_apks')return options.launcherApks || [{path:'/tmp/pureTV.apk',cover:options.thumbnail?'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII=':null}];
+        if (command === 'choose_launcher_json') return JSON.stringify({version:2,home:{columns:2,items:[{packageName:'com.ecojust.webtv',icon:'app'}]},apps:{columns:3,items:[]}});
+        if (command === 'launcher_execute') {
+          window.__launcherRequests.push(structuredClone(args.request));
+          if(args.request.action==='getLayout' && nextLayoutReadError){const error=nextLayoutReadError;nextLayoutReadError='';throw new Error(error);}
+          const held=await holdOperation(args.request.action);
+          if(held.response)return structuredClone(held.response);
+          if(args.request.action==='getBackgrounds'){
+            const backgrounds=structuredClone(window.__homeBackgrounds),backgroundColors=structuredClone(window.__homeBackgroundColors);
+            const home=options.layoutSupported?([4,5].includes(launcherLayout.version)?launcherLayout.home.background:launcherLayout.home.scene?.background):null;
+            if(home){backgroundColors[state.defaultHome]=home.color;if(home.image)backgrounds[state.defaultHome]=home.image;else delete backgrounds[state.defaultHome];}
+            const failedComponents=structuredClone(window.__failedBackgroundComponents);
+            for(const component of failedComponents){delete backgrounds[component];delete backgroundColors[component];}
+            const result={supported:true,serial:state.device?.serial,userId:state.device?.userId,backgrounds,backgroundColors,failedComponents};
+            await new Promise(resolve=>setTimeout(resolve,options.backgroundDelay || 70));return result;
+          }
+          await new Promise(resolve=>setTimeout(resolve,70));
+          if (!options.layoutSupported) return {supported:false,component:state.defaultHome,message:'此启动器尚未接入可验证的布局接口，请使用它自身的设置。'};
+          if (args.request.action === 'applyLayout') {launcherLayout=structuredClone(args.request.layout);customLayout=true;}
+          if (args.request.action === 'resetLayout') {launcherLayout=structuredClone(defaultLayout);customLayout=false;}
+          return {supported:true,serial:state.device?.serial,userId:state.device?.userId,version:launcherLayout.version,systemBasis:[4,5].includes(launcherLayout.version)?{screen:defaultLayout.screen,home:defaultLayout.home.system,apps:defaultLayout.apps.system}:undefined,component:state.defaultHome,custom:customLayout,layout:structuredClone(launcherLayout),apps:structuredClone(layoutApps || [...(state.packages.some(p=>p.packageName==='com.imported.app')?[{packageName:'com.imported.app',label:'新安装应用'}]:[]),{packageName:'com.ecojust.webtv',label:'WebTV',iconPng:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZCksAAAAASUVORK5CYII='},{packageName:'com.vendor.home',label:'系统启动器'},{packageName:'com.not.installed',label:'未安装应用'}]),message:args.request.action === 'getLayout' ? '布局已读取' : '布局已应用并复查'};
+        }
+        if (command === 'choose_apks') {
+          if (options.apkPaths) return options.apkPaths;
+          window.__pickerCalls++;
+          return window.__pickerCalls === 1 ? ['C:\\我的安装包\\custom music.apk'] : ['C:\\我的安装包\\custom music.apk','C:\\Downloads\\second.apk'];
+        }
+        if (command === 'choose_adb') return 'C:\\platform-tools\\adb.exe';
+        if (command === 'cancel') { window.__requests.push({action:'cancel'}); downloadCancelled = true; marketCancelled = true; return; }
+        if (command === 'open_resource') {
+          window.__resources.push(args.resource);
+          if(window.__resourceErrors[args.resource])throw new Error(window.__resourceErrors[args.resource]);
+          return;
+        }
+        if (command === 'get_forum_posts') {
+          window.__forumRequests.push(structuredClone(args));
+          const held=await holdOperation('forum:'+args.page);
+          if(held.response)return structuredClone(held.response);
+          if(window.__forumError)throw new Error(window.__forumError);
+          return structuredClone(window.__forumPages[args.page] || {...defaultForumPage,page:args.page,posts:[],hasMore:false});
+        }
+        if (command === 'get_forum_post') {
+          window.__forumPostRequests.push(structuredClone(args));
+          const held=await holdOperation('forumPost:'+args.number);
+          if(held.response)return structuredClone(held.response);
+          if(window.__forumDetailError)throw new Error(window.__forumDetailError);
+          if(!window.__forumDetails[args.number])throw new Error('论坛帖子不存在或已不可访问');
+          return structuredClone(window.__forumDetails[args.number]);
+        }
+        if (command === 'get_forum_replies') {
+          window.__forumReplyRequests.push(structuredClone(args));
+          const held=await holdOperation('forumReplies:'+args.number+':'+args.page);
+          if(held.response)return structuredClone(held.response);
+          if(window.__forumRepliesError)throw new Error(window.__forumRepliesError);
+          return structuredClone(window.__forumReplyPages[args.number]?.[args.page] || {number:args.number,replies:[],page:args.page,hasMore:false,fetchedAt:1793491200000,stale:false,warning:null});
+        }
+        if (command === 'open_forum_post') {
+          window.__forumOpenRequests.push(structuredClone(args));
+          if(window.__forumOpenError)throw new Error(window.__forumOpenError);
+          return;
+        }
+        if (command === 'get_package_insight') {
+          window.__packageInsightRequests.push(structuredClone(args));
+          const held=await holdOperation('packageInsight:'+args.packageName);
+          if(held.response)return structuredClone(held.response);
+          if(window.__packageInsightError)throw new Error(window.__packageInsightError);
+          return structuredClone(window.__packageInsights[args.packageName] || {
+            packageName:args.packageName,found:false,description:null,removal:null,risk:'unknown',list:null,
+            sourceName:'UAD-ng',sourceUrl:'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/resources/assets/uad_lists.json',
+            licenseUrl:'https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/blob/main/LICENSE',
+            fetchedAt:1793318400000,stale:false,warning:null,
+          });
+        }
+        if (command === 'open_package_resource') { window.__packageResources.push(structuredClone(args)); return; }
+        if (command === 'client_update_result') {
+          window.__clientUpdateRequests.push({command});
+          const value=window.__clientUpdateResult;window.__clientUpdateResult=null;return structuredClone(value);
+        }
+        if (command === 'check_client_update') {
+          window.__clientUpdateRequests.push({command});
+          const held=await holdOperation('checkClientUpdate');
+          if(held.response)return structuredClone(held.response);
+          if(window.__clientUpdateError)throw new Error(window.__clientUpdateError);
+          return structuredClone(window.__clientUpdateInfo);
+        }
+        if (command === 'cancel_client_update') {
+          window.__clientUpdateRequests.push({command});clientUpdateCancelled=true;return;
+        }
+        if (command === 'install_client_update') {
+          window.__clientUpdateRequests.push({command,version:args.version,revision:args.revision});
+          clientUpdateCancelled=false;let index=0;
+          const total=window.__clientUpdateInfo.bytes || 0;
+          const emit=(stage,downloaded=0,totalBytes=total)=>callbacks.get(args.onProgress?.id)?.({index:index++,message:{stage,downloaded,total:totalBytes}});
+          window.__emitClientUpdateProgress=emit;
+          try {
+            if(args.version!==window.__clientUpdateInfo.latestVersion || args.revision!==window.__clientUpdateInfo.revision)throw new Error('客户端更新目录已变化，请重新检查');
+            emit('downloading',Math.floor(total/2));
+            await holdOperation('installClientUpdate');
+            if(clientUpdateCancelled)throw new Error('更新下载已取消，当前客户端未更改');
+            if(window.__clientInstallError)throw new Error(window.__clientInstallError);
+            emit('verifying',total);emit('preparing',total);emit('installing',total);
+            return;
+          } finally {callbacks.get(args.onProgress?.id)?.({index,end:true});}
+        }
+        if (command === 'platform_tools_info') return {version:'37.0.1',platform:'macos',downloadBytes:16110554,installed:toolsInstalled,supported:!options.unsupportedTools,message:options.unsupportedTools ? '此系统请手动配置 ADB' : ''};
+        if (command === 'install_platform_tools') {
+          if (args.acceptedLicense !== true) throw new Error('必须先同意 Android SDK 许可协议');
+          if (state.device) throw new Error('请先断开电视');
+          window.__toolsInstalls++; window.__requests.push({action:'installPlatformTools',acceptedLicense:args.acceptedLicense,...(args.forceDownload?{forceDownload:true}:{})});
+          downloadCancelled = false; let index = 0;
+          const emit = (stage,downloaded) => callbacks.get(args.onProgress.id)?.({index:index++,message:{stage,downloaded,total:16110554}});
+          try {
+            window.__emitToolsProgress=emit;
+            emit(toolsInstalled && !args.forceDownload ? 'checking' : 'downloading', 8055277);
+            await holdOperation('installPlatformTools');
+            await new Promise(resolve => setTimeout(resolve, options.slowDownload ? 900 : 180));
+            if (downloadCancelled) throw new Error('下载已取消，临时文件已清理');
+            if (options.failDownloadOnce && window.__toolsInstalls === 1) throw new Error('下载失败，请检查网络后重试');
+            emit('verifying',16110554); emit('extracting',16110554); emit('checking',16110554);
+            state.adbPath = args.forceDownload?'/Users/test/Library/Application Support/com.ecojust.puretv.manager/tools/platform-tools-37.0.1-fresh-'+window.__toolsInstalls+'/platform-tools/adb':'/Users/test/Library/Application Support/com.ecojust.puretv.manager/tools/platform-tools-37.0.1/platform-tools/adb';
+            state.adbAvailable = true; toolsInstalled = true; state.message = 'ADB 已就绪，可以连接电视';
+            return structuredClone(state);
+          } finally { callbacks.get(args.onProgress.id)?.({index,end:true}); }
+        }
+        if(command==='get_market_seen_apps') {
+          window.__marketSeenRequests.push({command});await holdOperation('getMarketSeenApps');
+          if(window.__marketSeenReadError)throw new Error(window.__marketSeenReadError);
+          return {entries:structuredClone(window.__marketSeenApps),warning:window.__marketSeenWarning};
+        }
+        if(command==='set_market_seen_apps') {
+          window.__marketSeenRequests.push({command,entries:structuredClone(args.entries)});await holdOperation('setMarketSeenApps');
+          if(window.__marketSeenSaveError)throw new Error(window.__marketSeenSaveError);
+          window.__marketSeenApps=structuredClone(args.entries);localStorage.setItem(marketSeenStorage,JSON.stringify(args.entries));return;
+        }
+        if (['get_market_catalog','download_market_item','install_market_item'].includes(command)) {
+          const action={get_market_catalog:'getMarketCatalog',download_market_item:'downloadMarketItem',install_market_item:'installMarketItem'}[command];
+          window.__marketRequests.push({command,...(args.id?{id:args.id}:{}),...(args.revision?{revision:args.revision}:{}),...(args.refresh!==undefined?{refresh:args.refresh}:{})});
+          marketCancelled=false;let index=0;
+          const item=window.__marketCatalog.items.find(item=>item.id===args.id);
+          const emit=(stage,downloaded=0,total=item?.bytes || 0)=>callbacks.get(args.onProgress?.id)?.({index:index++,message:{stage,downloaded,total,itemId:item?.id || null}});
+          try {
+            emit(command==='get_market_catalog'?'catalog':'downloading',item?Math.floor(item.bytes/2):0);
+            const held=await holdOperation(action);
+            await new Promise(resolve=>setTimeout(resolve,options.marketDelay || 90));
+            if(marketCancelled)throw new Error('下载已取消，临时文件已清理');
+            if(held.response)return structuredClone(held.response);
+            if(command==='get_market_catalog') {
+              if(window.__marketCatalogError)throw new Error(window.__marketCatalogError);
+              return structuredClone(window.__marketCatalog);
+            }
+            if(!item)throw new Error('市场项目不存在，请刷新目录');
+            if(args.revision && args.revision!==window.__marketCatalog.revision)throw new Error('市场目录已更新，请刷新后重试');
+            if(options.failMarketDownload)throw new Error('下载校验失败，请重试');
+            emit('verifying',item.bytes);
+            const download={item:structuredClone(item),path:'/tmp/puretv-market/'+item.fileName,...(item.kind==='launcher'?{homeBackgroundColor:'#223344'}:{})};
+            if(command==='download_market_item')return {operation:'download',download,installed:false};
+            if(!state.device)return {operation:'install',download,installed:false,error:'请先连接电视'};
+            emit('installing',item.bytes);
+            state.revision++;
+            const error=options.marketInstallError || null;
+            state.installResults=[{path:download.path,success:!error,message:error || '电视已确认安装成功，已刷新应用列表'}];
+            state.message=error || '安装完成：成功 1 项，失败 0 项';
+            if(!error && item.kind==='app')state.packages.push({packageName:'com.market.'+item.fileName.split('-')[0],label:item.name,installed:true,enabled:true,system:false,protectedReason:null,apkSizeBytes:item.bytes});
+            if(!error && item.kind==='launcher')state.launchers.push({packageName:'com.market.nova',component:'com.market.nova/.Main',label:item.name,isDefault:false});
+            return {operation:'install',download,installed:!error,snapshot:structuredClone(state),...(error?{error}:{})};
+          } finally { callbacks.get(args.onProgress?.id)?.({index,end:true}); }
+        }
+        if (command !== 'execute') throw new Error('Unexpected command: '+command);
+        const r = args.request;
+        if (r.action === 'getState') {
+          if(window.__holdNextStateRead || heldOnce.has('getState')){window.__holdNextStateRead=false;await holdOperation('getState');}
+          return structuredClone(state);
+        }
+        window.__requests.push(structuredClone(r));
+        const held=await holdOperation(r.action);
+        if(held.response){Object.assign(state,structuredClone(held.response));return structuredClone(state);}
+        if(r.action==='refreshLocalNetwork'){state.localNetwork=options.localNetworkAfterRefresh || state.localNetwork;state.message='本机局域网地址已刷新';return structuredClone(state);}
+        if(r.action==='connect') {state.lastConnection={host:r.host,port:r.port};if(options.connectError){state.device=null;state.message=options.connectError;throw new Error(options.connectError);}}
+        if (options.failAction === r.action) throw new Error('电视拒绝了操作，请检查授权');
+        if (r.action === 'scan' && options.slowScan) await new Promise(resolve => setTimeout(resolve,600));
+        if (options.partialFailure && r.action === 'setEnabled') {
+          state.history.unshift({id:'partial',timestamp:1,action:r.action,target:r.packages[0],device:state.device.serial,userId:0,success:false,message:'固件拒绝停用'});
+          state.message = '成功 0 项，失败 1 项'; return structuredClone(state);
+        }
+        if (r.action === 'setEnabled' || r.action === 'uninstall' || r.action === 'restore') {
+          for (const name of r.packages) {
+            const p = state.packages.find(p => p.packageName === name);
+            if (!p || p.protectedReason) throw new Error('受保护');
+            if (r.action === 'setEnabled') p.enabled = r.enabled;
+            else if (r.action === 'uninstall') p.installed = false;
+            else { p.installed = true; p.enabled = true; }
+          }
+        }
+        if (r.action === 'install') {
+          state.installResults=r.paths.map((path,index)=>({path,success:!(options.partialInstall && index===1),message:options.partialInstall && index===1?'安装失败':'电视已确认安装成功，已刷新应用列表'}));
+          if(options.partialInstall){
+            for(const [index,result] of state.installResults.entries())state.history.unshift({id:'install-'+index,timestamp:1,action:'install',target:result.path,device:state.device.serial,userId:0,success:result.success,message:result.message});
+            state.message='安装完成：成功 1 项，失败 1 项';return structuredClone(state);
+          }
+          if(!state.packages.some(p=>p.packageName==='com.imported.app'))state.packages.push({packageName:'com.imported.app',label:'新安装应用',installed:true,enabled:true,system:false,protectedReason:null,apkSizeBytes:1048576});
+        }
+        if (r.action === 'connect') state.device={serial:`${r.host}:${r.port}`,model:'测试电视',androidVersion:'12',userId:0,status:'device'};
+        if (r.action === 'setHome') { state.originalHome ??= state.defaultHome; state.defaultHome = r.component; }
+        if (r.action === 'restoreHome') state.defaultHome = state.originalHome;
+        if (r.action === 'setHome' || r.action === 'restoreHome') {
+          for (const p of state.packages) {
+            if (p.protectedReason === '当前默认启动器') p.protectedReason = null;
+            if (p.packageName === state.defaultHome?.split('/')[0]) p.protectedReason = '当前默认启动器';
+          }
+          state.launchers.forEach(l => l.isDefault = l.component === state.defaultHome);
+        }
+        if (r.action === 'disconnect') { state.device = null; state.packages = []; state.launchers = []; }
+        if (r.action === 'clearHistory') state.history = [];
+        else for(const [index,target] of (r.packages||r.paths||[r.component||'电视']).entries())state.history.unshift({id: `${Date.now()}-${index}`, timestamp: Math.floor(Date.now()/1000), action:r.action, target, device:initial.device?.serial||'',userId:0,success:true,message:'执行后状态已核对'});
+        state.message = '操作完成，状态已核对';
+        return structuredClone(state);
+      },
+    };
+  }, {initial, options, defaultMarketCatalog:marketCatalog(), defaultClientUpdate:clientUpdate(), defaultForumPage:forumPage(),
+    defaultForumDetails:Object.fromEntries(['IABC123','IABC122','IABC121'].map(number=>[number,forumDetail(number)])),
+    defaultForumReplies:Object.fromEntries(['IABC123','IABC122','IABC121'].map(number=>[number,{1:forumReplies(number)}])),
+  });
+}

@@ -1,0 +1,89 @@
+{
+  "activeStep": "manager-connect",
+  "assertionsPassed": false,
+  "attemptedEvidenceLevel": "E3",
+  "elapsedSeconds": 5.315776098,
+  "emulatorTested": true,
+  "evidenceLevel": "E3",
+  "expectedSdk": 30,
+  "failure": "Manager memory or /data information is missing or invalid",
+  "failureDiagnostics": {
+    "df": {
+      "output": "Filesystem     1K-blocks   Used Available Use% Mounted on\n/dev/block/vdc   6094400 179932   5772256   4% /storage/emulated/0/Android/obb\n",
+      "truncated": false
+    },
+    "dfK": {
+      "output": "Filesystem     1K-blocks   Used Available Use% Mounted on\n/dev/block/vdc   6094400 179800   5772388   4% /storage/emulated/0/Android/obb\n",
+      "truncated": false
+    },
+    "memory": {
+      "selectedFields": [
+        "MemTotal:        2028624 kB",
+        "MemFree:           33580 kB",
+        "MemAvailable:    1172340 kB",
+        "Buffers:           36820 kB",
+        "Cached:          1122892 kB"
+      ]
+    },
+    "packages": {
+      "lineCount": 95,
+      "linkerWarnings": [],
+      "nonPackageLineCount": 0,
+      "packageLineCount": 95
+    },
+    "statFs": {
+      "output": "4096:1523600:1443191\n",
+      "truncated": false
+    },
+    "status": "COLLECTED",
+    "targetVerified": true
+  },
+  "fixturePackage": "org.puretv.compatfixture",
+  "fullPhysicalCompatibilityVerified": false,
+  "latestManagerSnapshot": {
+    "catalogueCount": 95,
+    "defaultHome": "com.google.android.tvlauncher/com.google.android.tvlauncher.MainActivity",
+    "device": {
+      "androidVersion": "11",
+      "model": "AOSP TV on x86",
+      "serial": "127.0.0.1:5555",
+      "status": "device",
+      "userId": 0
+    },
+    "installedPackageCount": 95,
+    "launcherCount": 2,
+    "systemInfo": {
+      "brand": "google",
+      "cpu": "ranchu",
+      "cpuAbi": "x86",
+      "displayResolution": "320x640",
+      "manufacturer": "Google",
+      "memoryAvailableBytes": 1226821632,
+      "memoryTotalBytes": 2077310976,
+      "queriedAt": 1793901362,
+      "sdkVersion": "30",
+      "securityPatch": "2022-12-01",
+      "storageAvailableBytes": null,
+      "storageTotalBytes": null,
+      "uptimeSeconds": 48
+    }
+  },
+  "limitations": [],
+  "physicalTvTested": false,
+  "schemaVersion": 1,
+  "scope": "Production Manager API on an isolated Android emulator; not a Xiaomi or physical TV test",
+  "sourceCommit": "3c9f5cc5d10b2afffb141291bedb7165450db908",
+  "status": "FAIL",
+  "steps": [
+    {
+      "data": {
+        "initialSerial": "emulator-5554",
+        "qemu": "1",
+        "sdk": 30
+      },
+      "name": "isolated-emulator-guard",
+      "status": "PASS"
+    }
+  ],
+  "testedScopeCompatibility": "NOT_CONFIRMED"
+}

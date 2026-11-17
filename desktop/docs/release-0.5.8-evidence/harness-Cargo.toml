@@ -1,0 +1,13 @@
+[package]
+name = "puretv-http-tests"
+version = "0.5.8"
+edition = "2021"
+[dependencies]
+reqwest = { version = "=0.13.5", default-features = false, features = ["blocking", "native-tls-no-alpn", "system-proxy"] }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "=1.0.154"
+sha2 = "=0.10.9"
+zip = { version = "=9.0.5", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+puretv-core = { path = "/dev/shm/puretv-market-sync/desktop/core" }
+tiny_http = "0.12"
+getrandom = "0.3"

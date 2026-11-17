@@ -1,0 +1,1227 @@
+{
+  "schema": 1,
+  "game": "island-dominoes",
+  "version": "0.1.0",
+  "sourceCommit": "fdf4703aed90b9a944f24af5792b4d049b525964",
+  "automationSha256": "549adac27d79e5e76d3ee25c9d2ee6b6fb5d71a430f517bc316987d37e7dd3a2",
+  "islandBridgeModel": "Unique physical bridge IDs retain their integer straight-line length and destination-color requirement. Integer segment geometry rejects crossings, overlaps, nonshared touches and third-island passage. Legal placement uses an oriented source and target; connectivity is undirected and includes every isolated island. All pieces must be placed in one connected network. A locally legal final placement that leaves disconnected components loses; three illegal target commits also lose. Bank undo restores the exact last instance without refunding the active 90-second clock or lifetime/error counters.",
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "unresolvedFindings": [],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+      "game.js": "bb78195707f29e9a82994e1809a1111eaf3d3a9665d034955c795ab1b738045a",
+      "game-config.json": "59e7a936d95681a2aec8f48fa250feb69e78f59ee36554da1ef5a550a1aa5527",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game-model.js": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+      "src/main/assets/game.js": "bb78195707f29e9a82994e1809a1111eaf3d3a9665d034955c795ab1b738045a",
+      "tests/automation.mjs": "549adac27d79e5e76d3ee25c9d2ee6b6fb5d71a430f517bc316987d37e7dd3a2",
+      "tests/game-model.test.cjs": "f095cd0efbbb57c8782f5250e2ba8dc5855e5386c4952f6862af380ae3852a3e",
+      "docs/model-contract.md": "3167e28a3d8efa060575a6b735152b793f53b0a7cd5f2093d5310a0f287f070b"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime/01-menu.png",
+        "sha256": "41949ffb064f72e1b4642172d1403be4761d4cb55be57f7ef6930798571d1ca3",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/02-exact-length-color-preview.png",
+        "sha256": "84ea4fe1daf182f4c5d7d0ddaf2846e684bd1eb1dce415d13a816d00282f21be",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/03-trial-bridge.png",
+        "sha256": "f2071b445d9a787049f93f03000babf92c2348865e38a8c9eaecae6fff662ef2",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/04-undo-physical-instance.png",
+        "sha256": "3bcbcc8ad7680ac39c4e771c6d0f427056f1fdc8676123256292c805e824142c",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/05-repaired-bridge.png",
+        "sha256": "f6a76cc97380ad5d069eedc05675955b94928c7870447352758504a46cc21a3c",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/06-last-connected-preview.png",
+        "sha256": "5d35513e43c0b43744aa4728cc9ded794c02e031599aba2f2b1ba25b4e03de1d",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/07-connected-network-won.png",
+        "sha256": "96c185093daa5d4e27af36a2fcf6c5b336124bf9a20bc73490456c9b26c823d6",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/08-small-won.png",
+        "sha256": "3cc3607bfabb3747618e3bba951d7cfacba16dbca56ebbdeb7abe6ddb279bb3a",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/09-small-menu.png",
+        "sha256": "e05b03cb701af206c64c582b8796a9cc065f135319269e72f2a3adac709c5de5",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/10-small-playing.png",
+        "sha256": "4f5a28a3330559aa42b6ef70fd58031216b6d6ead7f6404d8bf9d37482e1184e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/11-small-pause.png",
+        "sha256": "9bf8f95495e8f986990808c134bde5da23735881b36bc8df7bab0ed32b383cec",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "0878d9cb66107be3682f8a40ba291e96cdee88d0c257bc570a63eec7445c5157",
+    "scope": "Actually reviewed software-browser candidate using exactly the final bundled assets, before source freeze; separate from final packaged QA and video."
+  },
+  "modelTests": {
+    "passed": 33,
+    "command": "node --test --test-reporter=tap resource/apps/island-dominoes/tests/game-model.test.cjs",
+    "sourceHashesBefore": {
+      "model": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+      "tests": "f095cd0efbbb57c8782f5250e2ba8dc5855e5386c4952f6862af380ae3852a3e",
+      "automation": "549adac27d79e5e76d3ee25c9d2ee6b6fb5d71a430f517bc316987d37e7dd3a2",
+      "contract": "3167e28a3d8efa060575a6b735152b793f53b0a7cd5f2093d5310a0f287f070b"
+    },
+    "sourceHashesAfter": {
+      "model": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+      "tests": "f095cd0efbbb57c8782f5250e2ba8dc5855e5386c4952f6862af380ae3852a3e",
+      "automation": "549adac27d79e5e76d3ee25c9d2ee6b6fb5d71a430f517bc316987d37e7dd3a2",
+      "contract": "3167e28a3d8efa060575a6b735152b793f53b0a7cd5f2093d5310a0f287f070b"
+    },
+    "testLogSha256": "53fc9f55a36accf9b35aac929551116c9da91c5a66d2ccd7554a101632b1b0c0",
+    "rawReportSha256": "e43aa8cda4c62143993e4b2566e6796a43566827a2b34dd542ca75c74ac3e569",
+    "scope": "Integer geometry, exact inventory, connectivity and input boundary tests plus three fresh public-geometry planner wins with actual same-instance undo/repair, and three fresh ordinary-input illegal-placement losses. Explicit synthetic segment/clock fixtures are separate from ordinary-input gameplay evidence.",
+    "scheduling": "Ordinary wins use runtime 60 Hz ticks and public observations every five ticks, genuine A/B edges and no state edits. Losses use ordinary navigation and press/release. These are defined legal-input scenarios, not guarantees for arbitrary input timing."
+  },
+  "independentIslandReview": {
+    "passed": true,
+    "file": "independent-island-review.json",
+    "sha256": "5bed24d45268eb3d85aadf79f4ac348e0328ebefe2650aa9fa3463717a7fcd30",
+    "checksPassed": 8,
+    "totals": {
+      "abstractGeometryGroups": 8,
+      "previewComparisons": 2109,
+      "previewReasons": {
+        "same-island": 327,
+        "valid": 127,
+        "length": 1488,
+        "color": 157,
+        "occupied": 7,
+        "through-island": 3
+      },
+      "navigationTransitions": 133,
+      "bankSubsetCount": 125,
+      "ordinaryConnectedWins": 3,
+      "ordinaryDisconnectedLosses": 1
+    },
+    "configurationEnumeration": [
+      {
+        "level": 1,
+        "complete": true,
+        "nodes": 24,
+        "configurations": 8,
+        "connectedConfigurations": 4,
+        "disconnectedConfigurations": 4
+      },
+      {
+        "level": 2,
+        "complete": true,
+        "nodes": 88,
+        "configurations": 54,
+        "connectedConfigurations": 24,
+        "disconnectedConfigurations": 30
+      },
+      {
+        "level": 3,
+        "complete": true,
+        "nodes": 310,
+        "configurations": 144,
+        "connectedConfigurations": 48,
+        "disconnectedConfigurations": 96
+      }
+    ],
+    "ordinaryPublicModelRounds": [
+      {
+        "level": 1,
+        "phase": "won",
+        "componentCount": 1,
+        "placedCount": 5,
+        "remainingPieces": 0,
+        "failedCommits": 0,
+        "totalPlacements": 5,
+        "elapsed": 0.8833333333333333,
+        "score": 2145,
+        "placements": [
+          {
+            "id": "bridge-P1",
+            "pieceId": "P1",
+            "sourceId": "I1",
+            "targetId": "I2",
+            "length": 4,
+            "targetColor": "gold"
+          },
+          {
+            "id": "bridge-P2",
+            "pieceId": "P2",
+            "sourceId": "I1",
+            "targetId": "I4",
+            "length": 3,
+            "targetColor": "teal"
+          },
+          {
+            "id": "bridge-P3",
+            "pieceId": "P3",
+            "sourceId": "I2",
+            "targetId": "I6",
+            "length": 5,
+            "targetColor": "coral"
+          },
+          {
+            "id": "bridge-P4",
+            "pieceId": "P4",
+            "sourceId": "I3",
+            "targetId": "I5",
+            "length": 2,
+            "targetColor": "gold"
+          },
+          {
+            "id": "bridge-P5",
+            "pieceId": "P5",
+            "sourceId": "I6",
+            "targetId": "I5",
+            "length": 2,
+            "targetColor": "gold"
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "phase": "won",
+        "componentCount": 1,
+        "placedCount": 5,
+        "remainingPieces": 0,
+        "failedCommits": 0,
+        "totalPlacements": 5,
+        "elapsed": 0.9166666666666666,
+        "score": 2145,
+        "placements": [
+          {
+            "id": "bridge-P1",
+            "pieceId": "P1",
+            "sourceId": "I1",
+            "targetId": "I2",
+            "length": 3,
+            "targetColor": "coral"
+          },
+          {
+            "id": "bridge-P2",
+            "pieceId": "P2",
+            "sourceId": "I3",
+            "targetId": "I4",
+            "length": 3,
+            "targetColor": "coral"
+          },
+          {
+            "id": "bridge-P3",
+            "pieceId": "P3",
+            "sourceId": "I5",
+            "targetId": "I6",
+            "length": 3,
+            "targetColor": "coral"
+          },
+          {
+            "id": "bridge-P4",
+            "pieceId": "P4",
+            "sourceId": "I2",
+            "targetId": "I3",
+            "length": 4,
+            "targetColor": "gold"
+          },
+          {
+            "id": "bridge-P5",
+            "pieceId": "P5",
+            "sourceId": "I5",
+            "targetId": "I3",
+            "length": 5,
+            "targetColor": "gold"
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "phase": "won",
+        "componentCount": 1,
+        "placedCount": 6,
+        "remainingPieces": 0,
+        "failedCommits": 0,
+        "totalPlacements": 6,
+        "elapsed": 1.2166666666666666,
+        "score": 2280,
+        "placements": [
+          {
+            "id": "bridge-P1",
+            "pieceId": "P1",
+            "sourceId": "I1",
+            "targetId": "I4",
+            "length": 3,
+            "targetColor": "coral"
+          },
+          {
+            "id": "bridge-P2",
+            "pieceId": "P2",
+            "sourceId": "I3",
+            "targetId": "I2",
+            "length": 3,
+            "targetColor": "coral"
+          },
+          {
+            "id": "bridge-P3",
+            "pieceId": "P3",
+            "sourceId": "I2",
+            "targetId": "I1",
+            "length": 4,
+            "targetColor": "gold"
+          },
+          {
+            "id": "bridge-P4",
+            "pieceId": "P4",
+            "sourceId": "I5",
+            "targetId": "I3",
+            "length": 5,
+            "targetColor": "gold"
+          },
+          {
+            "id": "bridge-P5",
+            "pieceId": "P5",
+            "sourceId": "I3",
+            "targetId": "I7",
+            "length": 2,
+            "targetColor": "teal"
+          },
+          {
+            "id": "bridge-P6",
+            "pieceId": "P6",
+            "sourceId": "I6",
+            "targetId": "I7",
+            "length": 2,
+            "targetColor": "teal"
+          }
+        ]
+      }
+    ],
+    "ordinaryDisconnectedLosses": [
+      {
+        "level": 1,
+        "phase": "lost",
+        "reason": "disconnected",
+        "componentCount": 2,
+        "cycleEdges": 1,
+        "placedCount": 5,
+        "remainingPieces": 0,
+        "failedCommits": 0,
+        "elapsed": 0.9166666666666666,
+        "score": 660,
+        "finalPreview": {
+          "pieceId": "P5",
+          "sourceId": "I6",
+          "targetId": "I5",
+          "length": 2,
+          "targetColor": "gold",
+          "distanceSquared": 4,
+          "requiredSquared": 4,
+          "targetColorMatches": true,
+          "valid": true,
+          "reason": null,
+          "blockingPieceId": null,
+          "blockingIslandId": null,
+          "resultingComponentCount": 2,
+          "wouldFinish": true,
+          "wouldConnectAll": false,
+          "wouldLoseDisconnected": true
+        },
+        "placements": [
+          {
+            "id": "bridge-P1",
+            "pieceId": "P1",
+            "sourceId": "I1",
+            "targetId": "I2",
+            "length": 4,
+            "targetColor": "gold"
+          },
+          {
+            "id": "bridge-P2",
+            "pieceId": "P2",
+            "sourceId": "I2",
+            "targetId": "I3",
+            "length": 3,
+            "targetColor": "teal"
+          },
+          {
+            "id": "bridge-P3",
+            "pieceId": "P3",
+            "sourceId": "I2",
+            "targetId": "I6",
+            "length": 5,
+            "targetColor": "coral"
+          },
+          {
+            "id": "bridge-P4",
+            "pieceId": "P4",
+            "sourceId": "I3",
+            "targetId": "I5",
+            "length": 2,
+            "targetColor": "gold"
+          },
+          {
+            "id": "bridge-P5",
+            "pieceId": "P5",
+            "sourceId": "I6",
+            "targetId": "I5",
+            "length": 2,
+            "targetColor": "gold"
+          }
+        ]
+      }
+    ],
+    "scope": {
+      "pureIntegerGeometry": true,
+      "publicFactsOnlySearch": true,
+      "productionSolverImported": false,
+      "authoringSolutionsRead": false,
+      "fixtureChecksSeparateFromOrdinaryInputs": true,
+      "browserExecuted": false,
+      "normalGameplayVideoEvidence": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    },
+    "limitations": [
+      "Synthetic previews and the deadline boundary mutate explicit original states; they are not gameplay captures.",
+      "Ordinary model sequences use real input fields at fixed60Hz but run without wall-clock delays; browser duration/performance comes from separate QA.",
+      "Complete configuration counts preserve distinct physical piece IDs and directed endpoints; they are not counts of visually distinct unlabeled networks."
+    ]
+  },
+  "independentPilotReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "5f5eeb36cf542f258bd6d565dfdd38b5515f115145f45aa5360a30257fadebb2",
+    "checksPassed": 9,
+    "pilotCalls": 86,
+    "exportCalls": 11,
+    "observationCalls": 97,
+    "deepFrozenObservations": 97,
+    "sourceHashes": {
+      "tests/automation.mjs": "549adac27d79e5e76d3ee25c9d2ee6b6fb5d71a430f517bc316987d37e7dd3a2",
+      "src/main/assets/game-model.js": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+      "docs/model-contract.md": "3167e28a3d8efa060575a6b735152b793f53b0a7cd5f2093d5310a0f287f070b"
+    },
+    "scope": "Hand-authored three-island/two-equal-attribute-piece snapshots exercise public input observation, exact physical IDs and stage-specific cancellation/undo. One separate four-island triangle fixture exercises the public disconnected planner. No production model create/step, authored layout or reference placement is used. The reviewed public pilot and its own public geometry/planner are executed. These are synthetic protocol fixtures, not normal gameplay, footage or device evidence."
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "101f7302328c7dc5f133b10b1f97f7d9424d56713dbb16d827efed31126a9608",
+    "scope": "Final source art; ordinary authored model states plus one clearly labelled crossing-geometry boundary fixture. DOM state snapshots use explicit no-op simulation fixtures. Actual runtime menu/play/pick/pause uses original states. No APK/device/video/browser-earned-win claim.",
+    "finalSourceHashes": {
+      "game": {
+        "path": "resource/apps/island-dominoes/src/main/assets/game.js",
+        "sha256": "bb78195707f29e9a82994e1809a1111eaf3d3a9665d034955c795ab1b738045a"
+      },
+      "model": {
+        "path": "resource/apps/island-dominoes/src/main/assets/game-model.js",
+        "sha256": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06"
+      },
+      "pilot": {
+        "path": "resource/apps/island-dominoes/tests/automation.mjs",
+        "sha256": "549adac27d79e5e76d3ee25c9d2ee6b6fb5d71a430f517bc316987d37e7dd3a2"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "runtime": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
+      },
+      "css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "icon": {
+        "path": "resource/apps/island-dominoes/icon.xml",
+        "sha256": "daa83fdf295bef32e4c7414972ce08341d5f89c71dfafaa84fc39de4387f3746"
+      },
+      "logo": {
+        "path": "resource/apps/island-dominoes/logo.svg",
+        "sha256": "c694fb101ac78cdd8099b121a54173e1758d45635fb228f9420ac8af60774cab"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+      "game.js": "bb78195707f29e9a82994e1809a1111eaf3d3a9665d034955c795ab1b738045a",
+      "game-config.json": "59e7a936d95681a2aec8f48fa250feb69e78f59ee36554da1ef5a550a1aa5527",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "549adac27d79e5e76d3ee25c9d2ee6b6fb5d71a430f517bc316987d37e7dd3a2"
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "sourceUnchanged": true,
+    "sourceCommitHashesMatched": true,
+    "buildSourceSha": "fdf4703aed90b9a944f24af5792b4d049b525964",
+    "startHashes": {
+      "tests/automation.mjs": "549adac27d79e5e76d3ee25c9d2ee6b6fb5d71a430f517bc316987d37e7dd3a2",
+      "tests/game-model.test.cjs": "f095cd0efbbb57c8782f5250e2ba8dc5855e5386c4952f6862af380ae3852a3e",
+      "src/main/assets/game-model.js": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+      "src/main/assets/game.js": "bb78195707f29e9a82994e1809a1111eaf3d3a9665d034955c795ab1b738045a"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "549adac27d79e5e76d3ee25c9d2ee6b6fb5d71a430f517bc316987d37e7dd3a2",
+      "tests/game-model.test.cjs": "f095cd0efbbb57c8782f5250e2ba8dc5855e5386c4952f6862af380ae3852a3e",
+      "src/main/assets/game-model.js": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+      "src/main/assets/game.js": "bb78195707f29e9a82994e1809a1111eaf3d3a9665d034955c795ab1b738045a"
+    },
+    "rawReportSha256": "294b26fd092bbf8ac8d477eb3f644ceb392e92f20e0c5686a4d71f179741861e"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three public networks preserve unique repeated-attribute pieces and true diagonal geometry",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick select one puzzle per press",
+        "passed": true
+      },
+      {
+        "name": "menu blur and sound buttons reflect their actual visual state",
+        "passed": true
+      },
+      {
+        "name": "held phone START begins once without taking a piece or placing a bridge",
+        "passed": true
+      },
+      {
+        "name": "held phone A advances one selection phase without reserving or placing a physical piece",
+        "passed": true
+      },
+      {
+        "name": "B returns target to original source then source to the same bank instance without undo",
+        "passed": true
+      },
+      {
+        "name": "length and color reject without reservation while the real directed 3-4-5 preview remains valid",
+        "passed": true
+      },
+      {
+        "name": "held phone A commits only that exact physical piece and updates both endpoint ledgers",
+        "passed": true
+      },
+      {
+        "name": "bank B returns the precise last physical instance and occupancy while preserving lifetime and time",
+        "passed": true
+      },
+      {
+        "name": "bank navigation follows card geometry and skips placed IDs with held-repeat timing",
+        "passed": true
+      },
+      {
+        "name": "connected cancelSeq preserves target preview and quarantines held A until a real release",
+        "passed": true
+      },
+      {
+        "name": "held Enter remains edge-only and does not skip source selection or commit",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes held preview and exact network and clears stale navigation on resume",
+        "passed": true
+      },
+      {
+        "name": "pause primary and header freeze and resume the current target preview",
+        "passed": true
+      },
+      {
+        "name": "three fresh invalid placement commits cause a real loss without consuming any physical instance",
+        "passed": true
+      },
+      {
+        "name": "R resets illegal attempts and exact authored puzzle and does not retain an old held piece",
+        "passed": true
+      },
+      {
+        "name": "a public locally legal full network with a cycle and isolated islands really loses as disconnected",
+        "passed": true
+      },
+      {
+        "name": "R after a disconnected network restores every exact piece and island occupancy",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "disconnected",
+      "pieceCount": 5,
+      "elapsed": 4.533333333333333,
+      "remaining": 85.46666666666667,
+      "score": 660,
+      "placedCount": 5,
+      "remainingPieces": 0,
+      "componentCount": 2,
+      "connected": false,
+      "largestComponentSize": 5,
+      "totalPlacements": 5,
+      "undos": 0,
+      "cancels": 0,
+      "failedCommits": 0,
+      "maxFailedCommits": 3,
+      "placementAttempts": 5
+    },
+    "separateIllegalCommitFailure": {
+      "reason": "invalid",
+      "failedCommits": 3,
+      "placedCount": 0,
+      "elapsed": 1.2666666666666666,
+      "score": 0
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+      "game.js": "bb78195707f29e9a82994e1809a1111eaf3d3a9665d034955c795ab1b738045a",
+      "game-config.json": "59e7a936d95681a2aec8f48fa250feb69e78f59ee36554da1ef5a550a1aa5527",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "虚线只是预览。长度按直线网格单位算，D2 是距离平方；撤销不退用时或错次。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "虚线只是预览。长度按直线网格单位算，D2 是距离平方；撤销不退用时或错次。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 384.5625,
+          "tipTextLeft": 765,
+          "tipTextRight": 925.1875,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "虚线只是预览。长度按直线网格单位算，D2 是距离平方；撤销不退用时或错次。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 384.5625,
+          "tipTextLeft": 765,
+          "tipTextRight": 925.1875,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 203.71875,
+          "width": 420,
+          "height": 377.5625,
+          "right": 726.984375,
+          "bottom": 581.28125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "虚线只是预览。长度按直线网格单位算，D2 是距离平方；撤销不退用时或错次。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "虚线只是预览。长度按直线网格单位算，D2 是距离平方；撤销不退用时或错次。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "虚线只是预览。长度按直线网格单位算，D2 是距离平方；撤销不退用时或错次。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 384.5625,
+          "tipTextLeft": 765,
+          "tipTextRight": 925.1875,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "ebdd3328099addab637c6732377c6c172d504bdd5e92bf545257f2ae8613aee7"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 220,
+    "rafIntervalMs": {
+      "count": 220,
+      "min": 16.599999999998545,
+      "median": 49.899999999999636,
+      "p95": 83.30000000000018,
+      "max": 133.30000000000018,
+      "mean": 45.15
+    },
+    "webglDrawCalls": {
+      "count": 220,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 220,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 56.001617188999994,
+      "pieceCount": 5,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1890,
+      "elapsed": 51.88333333333333,
+      "remaining": 38.11666666666667,
+      "placedCount": 5,
+      "remainingPieces": 0,
+      "componentCount": 1,
+      "connected": true,
+      "largestComponentSize": 6,
+      "totalPlacements": 6,
+      "undos": 1,
+      "cancels": 0,
+      "failedCommits": 0,
+      "maxFailedCommits": 3,
+      "placementAttempts": 6
+    },
+    "trialPlacement": {
+      "observedAt": 12.004350998,
+      "lastObservedAt": 14.036569575999998,
+      "restoreBDispatchedAt": 15.35443573,
+      "bridge": {
+        "id": "bridge-P3",
+        "pieceId": "P3",
+        "sourceId": "I2",
+        "targetId": "I6",
+        "length": 5,
+        "targetColor": "coral"
+      },
+      "bridges": [
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I2",
+          "targetId": "I6",
+          "length": 5,
+          "targetColor": "coral"
+        }
+      ],
+      "availablePieceIds": [
+        "P1",
+        "P2",
+        "P4",
+        "P5"
+      ],
+      "elapsed": 9.9,
+      "placedCount": 1,
+      "componentCount": 5,
+      "totalPlacements": 1,
+      "undos": 0,
+      "placementAttempts": 1,
+      "failedCommits": 0
+    },
+    "trialDisplayedSecondsAtLeast": 2.0322185779999984,
+    "trialHoldBasis": "trial-samples",
+    "undoRestored": {
+      "observedAt": 16.001587877,
+      "pieceId": "P3",
+      "bridges": [],
+      "availablePieceIds": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "elapsed": 13.866666666666667,
+      "selectedPieceId": "P3",
+      "placedCount": 0,
+      "componentCount": 6,
+      "totalPlacements": 1,
+      "undos": 1,
+      "placementAttempts": 1,
+      "failedCommits": 0
+    },
+    "repairedPlacement": {
+      "observedAt": 26.036539576,
+      "bridge": {
+        "id": "bridge-P3",
+        "pieceId": "P3",
+        "sourceId": "I2",
+        "targetId": "I6",
+        "length": 5,
+        "targetColor": "coral"
+      },
+      "bridges": [
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I2",
+          "targetId": "I6",
+          "length": 5,
+          "targetColor": "coral"
+        }
+      ],
+      "availablePieceIds": [
+        "P1",
+        "P2",
+        "P4",
+        "P5"
+      ],
+      "elapsed": 23.85,
+      "placedCount": 1,
+      "componentCount": 5,
+      "totalPlacements": 2,
+      "undos": 1,
+      "placementAttempts": 2,
+      "failedCommits": 0
+    },
+    "finalWinHeldSecondsAtLeast": 14.035029845000018,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "bd8f33d78440e001f23c6d240c29cd58ce96bf6b28d0ccebc76a3d4a18ee2174"
+      },
+      {
+        "name": "menu-two-0.85s.png",
+        "sha256": "5b65c72744c9154ecab4264c9bd47c2ce688ee04d2ea838a2a06d5a325adc39f"
+      },
+      {
+        "name": "menu-three-1.35s.png",
+        "sha256": "a994b86aa3b7202b5e774ee860208293c7133ce852f95696ea8378103e59e542"
+      },
+      {
+        "name": "trial-bridge-12.10s.png",
+        "sha256": "e31efa4bce628854633c9cf0fc3096ad6f2a28a6c2f6bda93a6922a422ca1da4"
+      },
+      {
+        "name": "undo-instance-16.10s.png",
+        "sha256": "bc295d04d9a024ad9d8a65b8eeeb37b4e1ccc7584e126662c8307fc7ac8b6a4e"
+      },
+      {
+        "name": "repaired-same-bridge-26.14s.png",
+        "sha256": "4efc03569a3339c2d519cc976aa24e751f01ff2926fa8fa8038e185358a03d1d"
+      },
+      {
+        "name": "gameplay-thumb-34.14s.png",
+        "sha256": "8408274926ba5fe94035d3b4238a9b0ac59b3f9ab93897d1c97474f1402c6a03"
+      },
+      {
+        "name": "last-connected-preview-52.14s.png",
+        "sha256": "2012040c1bff986050f9252819857dbd8ffb7288d2a66d3447290b062f46859e"
+      },
+      {
+        "name": "settlement-68.37s.png",
+        "sha256": "290edfa8acc5c7f20bed6df3655e3ae9589db49db387d2141b3271561bd3c7a7"
+      },
+      {
+        "name": "last-connected-preview-stable-52.45s.png",
+        "sha256": "1f3a7e096710b7e603d793820a93b210ebaa444d7e94d96e9b37a722fbd09f19"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "f67c465f5847c671b6a07eb6a3d3f1bf9fb0e1884e4d70cda4d841b523d1c90c",
+    "displayTransitionObservation": {
+      "kind": "measured-local-canvas-DOM-refresh-transition",
+      "videoUnmodified": true,
+      "videoSha256": "f67c465f5847c671b6a07eb6a3d3f1bf9fb0e1884e4d70cda4d841b523d1c90c",
+      "originalReviewFrame": "review/last-connected-preview-52.14s.png",
+      "originalReviewFrameSha256": "2012040c1bff986050f9252819857dbd8ffb7288d2a66d3447290b062f46859e",
+      "originalRequestedSeconds": 52.136625271999996,
+      "encodedFrameRate": 30,
+      "lastBothOldFrameIndex": 1564,
+      "lastBothOldFrameSeconds": 52.13333333333333,
+      "mismatchedEncodedFrameIndices": [
+        1565,
+        1566
+      ],
+      "mismatchedFrameCount": 2,
+      "intervalStartSeconds": 52.166666666666664,
+      "intervalEndExclusiveSeconds": 52.233333333333334,
+      "durationSeconds": 0.06666666666666667,
+      "firstSynchronizedFrameIndex": 1567,
+      "firstSynchronizedFrameSeconds": 52.233333333333334,
+      "stableReviewFrame": "review/last-connected-preview-stable-52.45s.png",
+      "stableReviewFrameSha256": "1f3a7e096710b7e603d793820a93b210ebaa444d7e94d96e9b37a722fbd09f19",
+      "stableRequestedSeconds": 52.45,
+      "stableDecodedFrameIndex": 1574,
+      "stableDecodedFrameSeconds": 52.46666666666667,
+      "continuousFramesReport": "review/preview-transition/frame-classification.json",
+      "boundaryImagesOpened": [
+        "review/preview-transition/frames-30fps/frame-10.png",
+        "review/preview-transition/frames-30fps/frame-11.png",
+        "review/preview-transition/frames-30fps/frame-12.png",
+        "review/preview-transition/frames-30fps/frame-13.png"
+      ],
+      "rawModelSamplesConsistentAtSeconds": [
+        52.036625271999995,
+        54.036883657
+      ],
+      "scope": "Two encoded 30-fps frames in this inspected transition show the newly valid canvas preview while the DOM footer still describes the prior same-island selection. The next decoded frame synchronizes and later inspected frames remain consistent. This is a measured local display limitation, not a claim that every frame or device synchronizes within this duration.",
+      "cause": "Canvas renders every RAF while shared DOM UI refresh is throttled to 100 ms. Actual boundary frames and sampled model messages distinguish transient display lag from persistent model error.",
+      "persistentModelError": false,
+      "sourceChanged": false,
+      "videoEditedOrRerecorded": false
+    }
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+    "game.js": "bb78195707f29e9a82994e1809a1111eaf3d3a9665d034955c795ab1b738045a",
+    "game-config.json": "59e7a936d95681a2aec8f48fa250feb69e78f59ee36554da1ef5a550a1aa5527",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "f43b470cf55b41abcb5af6635c10cd70e98db22d6ae685628ebcbf7164521db8",
+    "sign": "4a9e8042241db929f85317fa66d39b7964aa2d424dd8fe6a56c257dc16fd5f4b",
+    "fetch": "0f86c22b8d0c9c5a64cd8cdf669dff41f5fa1d2fadf52f9752f3d81815fdcd9c",
+    "qa": "03f1f4f1a967bd2f306ed3f14044d7d51e0d9c963d7a88733db0ad34da6a0291",
+    "ui": "2af1ad62d44e5754a56b2e5ca7dab160d3708fbfd0924d8e994a63ed94a9971c",
+    "layout": "ebdd3328099addab637c6732377c6c172d504bdd5e92bf545257f2ae8613aee7",
+    "viewport": "a48072edb42bc4e0322e8ce12541444df001128e6538a582c4762d6aeb64bd69",
+    "summary": "577081866eed1216f8517e40dd20f5ddfee9f0294fee9fedeeb11fbeaba83e04",
+    "record": "ee7206fc0680cce88708fd3d8f3c81ed24693d467e3a688ec0b17cabf617e196",
+    "review": "0ca4c559c605d6e2d879a34744dc91a105a4ff973d074f536415aa712d208a20",
+    "videoValidation": "91450962a859390bc575d8bac7c77c175d621eefb99ce39df1870fb9a362b62f",
+    "artifacts": "0270d4862f492c20c3a44452c0c83976a741b934d039b5e1de64495a5f98c926",
+    "independentModel": "5bed24d45268eb3d85aadf79f4ac348e0328ebefe2650aa9fa3463717a7fcd30",
+    "independentPilot": "5f5eeb36cf542f258bd6d565dfdd38b5515f115145f45aa5360a30257fadebb2",
+    "artReview": "22f953ea08982c7b24bfe5242f758c35dc6c2298a9145d6e49ae82ca21d92679",
+    "modelTests": "e43aa8cda4c62143993e4b2566e6796a43566827a2b34dd542ca75c74ac3e569",
+    "candidateReview": "0878d9cb66107be3682f8a40ba291e96cdee88d0c257bc570a63eec7445c5157",
+    "testProvenance": "294b26fd092bbf8ac8d477eb3f644ceb392e92f20e0c5686a4d71f179741861e"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium gameplay uses real browser input events. Synthetic observer, native-room/phone, geometry and no-op source layout fixtures are separately labelled; no physical TV/phone installation or device performance is claimed."
+  },
+  "release": {
+    "sourceSha": "fdf4703aed90b9a944f24af5792b4d049b525964",
+    "signerCommit": "fdf4703aed90b9a944f24af5792b4d049b525964",
+    "signingRun": 41353669124,
+    "bytes": 296227,
+    "sha256": "6ec644dcf76cd0414c11a7dd349006b4bb6b3ceef03c4131d9dce27a020ec2fa",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "bf43ff82f28431d81d5690aa28264615ee8ee548"
+  }
+}

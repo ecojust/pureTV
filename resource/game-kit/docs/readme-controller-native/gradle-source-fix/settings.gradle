@@ -1,0 +1,8 @@
+pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
+dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
+rootProject.name = 'LegacyControllerSourceVerification'
+def repo = file('/dev/shm/puretv-controller-games')
+['alien-shooter','used-car-racing','cozy-island','coast-kart','super-mario','bomb-jack','adventure-island','tetris','jewel','jackal','tank'].each { slug ->
+    include ':' + slug
+    project(':' + slug).projectDir = new File(repo, 'resource/apps/' + slug)
+}

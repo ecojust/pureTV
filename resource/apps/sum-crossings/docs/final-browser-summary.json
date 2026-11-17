@@ -1,0 +1,94 @@
+{
+  "passed": true,
+  "sourceCommit": "9a601deb96dd2d0d0e5529ef980f8a905c255754",
+  "testedAssets": "/workspace/scratch/sum-crossings/assets",
+  "dedicatedDirectory": "/workspace/scratch/sum-crossings/browser",
+  "sharedDirectory": "/workspace/scratch/sum-crossings/qa",
+  "dedicatedChecksPassed": 7,
+  "sharedChecksPassed": 10,
+  "ordinaryRecordedWins": [
+    {
+      "level": 0,
+      "encodedSeconds": 13,
+      "filledCount": 8,
+      "checks": 1,
+      "mistakes": 0,
+      "edits": 43,
+      "evidence": "manually viewed actual encoded video frame",
+      "note": "Actual13-second encoded success shows8/8, one completed check, zero mistakes and43edits. The2-second samples bracket this short result at12/14s.",
+      "encodedScreenshot": "screenshots/encoded-level-1-win-13.png",
+      "encodedScreenshotSha256": "f5a81d9c87753e276b9fc66d51d4df9d11905c1e02fe008936790eb49bd616ce"
+    },
+    {
+      "level": 1,
+      "seconds": 32.004739098,
+      "filledCount": 13,
+      "checks": 1,
+      "mistakes": 0,
+      "edits": 64
+    },
+    {
+      "level": 2,
+      "seconds": 56.007309267000004,
+      "filledCount": 16,
+      "checks": 1,
+      "mistakes": 0,
+      "edits": 95
+    }
+  ],
+  "video": {
+    "path": "/workspace/scratch/sum-crossings/qa/recording/gameplay.mp4",
+    "bytes": 3411109,
+    "sha256": "b8fbe1c3706a42d6fe1a10c145c49df89aef251d915c093daf9730e77c96b7ba",
+    "capturedSeconds": 75.5127592086792,
+    "fullDecodePassed": true
+  },
+  "frameAdmission": {
+    "policy": "Acknowledge every observed CDP frame; retain strictly increasing finite timestamps. Omit and log invalid, duplicate, backward, or post-stop events. Never sort or rewrite retained timestamps.",
+    "rawCdpFrames": 1074,
+    "acceptedCdpFrames": 1074,
+    "droppedCdpFrames": 0,
+    "droppedFrames": []
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 261,
+    "rafIntervalMs": {
+      "count": 261,
+      "min": 16.5,
+      "median": 33.30000000000109,
+      "p95": 83.30000000000018,
+      "max": 100.09999999999945,
+      "mean": 40.611111111111114
+    },
+    "webglDrawCalls": {
+      "count": 261,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 261,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "visualReview": {
+    "playing960": true,
+    "playing1280": true,
+    "encodedSample": "screenshots/encoded-gameplay-50.png",
+    "note": "Viewed actual largest-grid960/1280 plus encoded50-second gameplay; fixed pin, digits, diagonal across/down clue cells and direction arrows are clear. Actual encoded13-second first-level success separately proves8/8 with43edits and one valid submission."
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

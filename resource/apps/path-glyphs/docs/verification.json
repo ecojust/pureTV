@@ -1,0 +1,992 @@
+{
+  "schema": 1,
+  "game": "path-glyphs",
+  "version": "0.1.0",
+  "sourceCommit": "91dfab6a41909a26badc7ba87d0ffa1406cb59cc",
+  "automationSha256": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75",
+  "pathModel": "Public 5x5 orthogonal non-repeating routes; entry-side conditions append actual symbols, and an explicit exit submission compares the complete sequence. Whole clear preserves active time and rejection history.",
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "unresolvedFindings": [],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+      "game.js": "3cb70caa9e314a0c390c49f86f4391114cce19df9a0a3f2f6c880dc29524b563",
+      "game-config.json": "c2f74740e53c32832cb033a924223104ea9b8ee01c97380345c230758bbe1391",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+      "src/main/assets/game.js": "3cb70caa9e314a0c390c49f86f4391114cce19df9a0a3f2f6c880dc29524b563",
+      "tests/automation.mjs": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75",
+      "tests/game-model.test.cjs": "2a37aa6a61bf6ae8a702b4d671a64f18c371a160b0914b8ea958652b781dbf89",
+      "docs/model-contract.md": "c44fab87f29c0adc852961aad6d1be08306e70f0fb3cfc2dc07080c039601e69"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime-v3/01-menu.png",
+        "sha256": "6543a9481697cd6007814011c743461b54b814438ed2f019bdc1aef5dab9cb71",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v3/02-wrong-exit.png",
+        "sha256": "dea364dd6da66de782b1cee8e79842fa39196a842f6f542010f61d31497b30f5",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v3/03-rejected.png",
+        "sha256": "e535efbabf426eccead19a4252e2fe550341dddf5c1c023891289e1dc0e00474",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v3/04-cleared.png",
+        "sha256": "655fae490ee158599faf5ddca7f8c294a08a3e01e7e88fb2de8b1d3ee55f68b8",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v3/05-conditional-route.png",
+        "sha256": "660ad2608cc5fd05ba64c6755871b889a6c91b3e33adb8eb92195f43a24ea7fb",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v3/06-correct-exit.png",
+        "sha256": "91215e6ce384b66f8912fdeb0543409c8864413eb1f379c2e7fea84091e3a3bc",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v3/07-result.png",
+        "sha256": "b41df44783763b04baa408459a457c87cd84bd0107e5cfe1f1b91fcf744a6db5",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "18a8bf28924328e37ec3971c111de40ce40543c001b92412c5b8ec8156dfec56",
+    "scope": "Actually reviewed candidate software-browser images on the same final bundled assets; this is a prerequisite for source freeze, separate from final packaged QA and recorded gameplay."
+  },
+  "modelTests": {
+    "passed": 32,
+    "command": "node --test resource/apps/path-glyphs/tests/game-model.test.cjs",
+    "sourceHashesBefore": {
+      "model": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+      "tests": "2a37aa6a61bf6ae8a702b4d671a64f18c371a160b0914b8ea958652b781dbf89",
+      "automation": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75",
+      "contract": "c44fab87f29c0adc852961aad6d1be08306e70f0fb3cfc2dc07080c039601e69"
+    },
+    "sourceHashesAfter": {
+      "model": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+      "tests": "2a37aa6a61bf6ae8a702b4d671a64f18c371a160b0914b8ea958652b781dbf89",
+      "automation": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75",
+      "contract": "c44fab87f29c0adc852961aad6d1be08306e70f0fb3cfc2dc07080c039601e69"
+    },
+    "testLogSha256": "88b51bb9b28fde0a02b93c162f02058431c0c875bcf64832c7ff0392be4eceff",
+    "rawReportSha256": "fa436bf8ba14753d4727e37b565f91a7c5f77e94b6837b416ac1c36039ada560",
+    "scope": "29 public-board boundary rule groups plus 3 fresh authored puzzles solved through public-only observations and ordinary inputs, including wrong exit submission, observable rejection, B clear and exact winning submission. Fixture rule tests are not normal-play evidence.",
+    "scheduling": "60 Hz fixed step, public observation every 5 ticks, normalized digital directions and actual button edges; a defined scenario, not guaranteed success for all timing."
+  },
+  "independentPathReview": {
+    "passed": true,
+    "file": "independent-path-review.json",
+    "sha256": "b7ad6722580cdf24c5942a012b6c9cf0e8324f4c8ecc2745e0413160feb92889",
+    "checksPassed": 10,
+    "totals": {
+      "directionalBoundaryCases": 8,
+      "exitSequenceCases": 4,
+      "searchExpanded": 149,
+      "ordinaryAuthoredWins": 3,
+      "ordinaryMovesVerified": 48
+    },
+    "ordinaryAuthoredModelWins": [
+      {
+        "level": 1,
+        "phase": "won",
+        "moves": [
+          "N",
+          "N",
+          "N",
+          "N",
+          "E",
+          "E",
+          "E",
+          "S",
+          "W",
+          "S",
+          "S",
+          "S",
+          "E",
+          "N",
+          "E",
+          "N",
+          "N",
+          "N"
+        ],
+        "cellPath": [
+          20,
+          15,
+          10,
+          5,
+          0,
+          1,
+          2,
+          3,
+          8,
+          7,
+          12,
+          17,
+          22,
+          23,
+          18,
+          19,
+          14,
+          9,
+          4
+        ],
+        "symbols": [
+          "W",
+          "E",
+          "E",
+          "S",
+          "N",
+          "S"
+        ],
+        "target": [
+          "W",
+          "E",
+          "E",
+          "S",
+          "N",
+          "S"
+        ],
+        "conditionHits": 2,
+        "conditionSkips": 7,
+        "elapsed": 18.616666666666667,
+        "score": 2255,
+        "searchExpanded": 45,
+        "maxQueue": 5
+      },
+      {
+        "level": 2,
+        "phase": "won",
+        "moves": [
+          "E",
+          "E",
+          "E",
+          "E",
+          "S",
+          "W",
+          "S",
+          "W",
+          "S",
+          "W",
+          "S",
+          "E",
+          "E",
+          "E"
+        ],
+        "cellPath": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          9,
+          8,
+          13,
+          12,
+          17,
+          16,
+          21,
+          22,
+          23,
+          24
+        ],
+        "symbols": [
+          "N",
+          "N",
+          "E",
+          "S",
+          "W",
+          "E",
+          "W"
+        ],
+        "target": [
+          "N",
+          "N",
+          "E",
+          "S",
+          "W",
+          "E",
+          "W"
+        ],
+        "conditionHits": 6,
+        "conditionSkips": 2,
+        "elapsed": 14.483333333333333,
+        "score": 2375,
+        "searchExpanded": 45,
+        "maxQueue": 6
+      },
+      {
+        "level": 3,
+        "phase": "won",
+        "moves": [
+          "E",
+          "N",
+          "E",
+          "N",
+          "N",
+          "N",
+          "W",
+          "S",
+          "S",
+          "W",
+          "W",
+          "W",
+          "N",
+          "N",
+          "E",
+          "E"
+        ],
+        "cellPath": [
+          22,
+          23,
+          18,
+          19,
+          14,
+          9,
+          4,
+          3,
+          8,
+          13,
+          12,
+          11,
+          10,
+          5,
+          0,
+          1,
+          2
+        ],
+        "symbols": [
+          "N",
+          "N",
+          "W",
+          "N",
+          "E",
+          "S",
+          "S",
+          "S"
+        ],
+        "target": [
+          "N",
+          "N",
+          "W",
+          "N",
+          "E",
+          "S",
+          "S",
+          "S"
+        ],
+        "conditionHits": 3,
+        "conditionSkips": 3,
+        "elapsed": 16.55,
+        "score": 2465,
+        "searchExpanded": 59,
+        "maxQueue": 11
+      }
+    ],
+    "scope": {
+      "syntheticBoundaryFixtures": true,
+      "ordinaryAuthoredModelRounds": 3,
+      "browserExecuted": false,
+      "normalGameplayVideoEvidence": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    }
+  },
+  "independentPilotReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "2d46cc4ee1e20c57e54858889d3316fd77d540d3aa0635979dbe3abac2cb4b83",
+    "checksPassed": 10,
+    "pilotCalls": 86,
+    "predictorPlannerCalls": 4,
+    "observationCalls": 90,
+    "pairedObservations": 17,
+    "sourceHashes": {
+      "tests/automation.mjs": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75",
+      "src/main/assets/game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+      "docs/model-contract.md": "c44fab87f29c0adc852961aad6d1be08306e70f0fb3cfc2dc07080c039601e69"
+    },
+    "scope": "Hand-authored small public-board observations, including fabricated terminal and rejection snapshots. These are synthetic pilot/input-protocol fixtures, not production rule tests, completed games, browser play, footage or device evidence. No production model create/step or model solver/reference route is used; the reviewed public pilot and its own planner/predictor are executed."
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "37645dcc51a2554dda6f95dfccedb7556addb3958cfdd99d8f6d291351821ad8",
+    "scope": "Source-only art evidence. Original26 rendered states and two-viewport layouts remain bound to game ec926. Final game3cb70 changes only one timeout-result string; exact reverse-byte proof restores ec926. New960/1280 timeout DOM layouts validate the final text. No original case is relabelled as a new render run. Model, atlas, geometry, controls and all other source bytes are unchanged.",
+    "finalSourceHashes": {
+      "game": {
+        "path": "resource/apps/path-glyphs/src/main/assets/game.js",
+        "sha256": "3cb70caa9e314a0c390c49f86f4391114cce19df9a0a3f2f6c880dc29524b563"
+      },
+      "model": {
+        "path": "resource/apps/path-glyphs/src/main/assets/game-model.js",
+        "sha256": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "runtime": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
+      },
+      "css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "pilot": {
+        "path": "resource/apps/path-glyphs/tests/automation.mjs",
+        "sha256": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75"
+      },
+      "icon": {
+        "path": "resource/apps/path-glyphs/icon.xml",
+        "sha256": "f9420659dadeeebb7daddc00f50c132ef65d32e131b3e119cb8a8bf367daed60"
+      },
+      "logo": {
+        "path": "resource/apps/path-glyphs/logo.svg",
+        "sha256": "f0063bdca5f1b39324289abb4eaaee215bb02ceed2428e9c3b7a2a05f0122e9b"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+      "game.js": "3cb70caa9e314a0c390c49f86f4391114cce19df9a0a3f2f6c880dc29524b563",
+      "game-config.json": "c2f74740e53c32832cb033a924223104ea9b8ee01c97380345c230758bbe1391",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75"
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "sourceUnchanged": true,
+    "sourceCommitHashesMatched": true,
+    "buildSourceSha": "91dfab6a41909a26badc7ba87d0ffa1406cb59cc",
+    "startHashes": {
+      "tests/automation.mjs": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75",
+      "tests/game-model.test.cjs": "2a37aa6a61bf6ae8a702b4d671a64f18c371a160b0914b8ea958652b781dbf89",
+      "src/main/assets/game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+      "src/main/assets/game.js": "3cb70caa9e314a0c390c49f86f4391114cce19df9a0a3f2f6c880dc29524b563"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "4ce5c738b92a37f7b45f550db0e67ee5c69fd714d64a0df77850a601b3819e75",
+      "tests/game-model.test.cjs": "2a37aa6a61bf6ae8a702b4d671a64f18c371a160b0914b8ea958652b781dbf89",
+      "src/main/assets/game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+      "src/main/assets/game.js": "3cb70caa9e314a0c390c49f86f4391114cce19df9a0a3f2f6c880dc29524b563"
+    },
+    "rawReportSha256": "c08636c6ecfdf12bca036909dda87269121850e9f15dd029f7c2e432814ec73b"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three stone gardens expose distinct full public targets and boards",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick choose one menu item per press",
+        "passed": true
+      },
+      {
+        "name": "menu modal blur and sound expose actual visible state",
+        "passed": true
+      },
+      {
+        "name": "held phone START begins one round without submitting clearing or pausing",
+        "passed": true
+      },
+      {
+        "name": "held phone A away from exit explains without emitting moving or consuming failures",
+        "passed": true
+      },
+      {
+        "name": "ordinary public route independently verifies required and skipped entry sides",
+        "passed": true
+      },
+      {
+        "name": "attempting a visited neighbor cannot reenter or duplicate a glyph",
+        "passed": true
+      },
+      {
+        "name": "wrong exit requires A and locks navigation then rejects once despite held phone A",
+        "passed": true
+      },
+      {
+        "name": "held phone B clears the whole route exactly once without refunding time or mistakes",
+        "passed": true
+      },
+      {
+        "name": "phone diagonal ties choose horizontal and held walking waits before its repeat",
+        "passed": true
+      },
+      {
+        "name": "connected phone cancelSeq does not manufacture a held B repress before real neutral",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes route ledger and clock then clears stale local and phone inputs",
+        "passed": true
+      },
+      {
+        "name": "pause primary and header controls freeze and resume the same route",
+        "passed": true
+      },
+      {
+        "name": "ordinary walking into a nonexit dead end rejects once and keeps the actual route",
+        "passed": true
+      },
+      {
+        "name": "two more ordinary wrong submissions reach real third-rejection loss and freeze",
+        "passed": true
+      },
+      {
+        "name": "R starts a fresh board route occupancy and failure ledger",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "mistakes",
+      "elapsed": 5.066666666666666,
+      "remaining": 84.93333333333334,
+      "score": 100,
+      "moves": 8,
+      "totalMoves": 22,
+      "clears": 2,
+      "submissions": 2,
+      "mistakes": 3,
+      "maxMistakes": 3,
+      "prefixLength": 1,
+      "conditionHits": 0,
+      "conditionSkips": 3,
+      "emittedCount": 1,
+      "targetLength": 6
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+      "game.js": "3cb70caa9e314a0c390c49f86f4391114cce19df9a0a3f2f6c880dc29524b563",
+      "game-config.json": "c2f74740e53c32832cb033a924223104ea9b8ee01c97380345c230758bbe1391",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "中央箭头是刻印，金色边是入口。错侧不刻印但仍占格。B 清空整条路线，时间和错误不退回。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1228.015625,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "中央箭头是刻印，金色边是入口。错侧不刻印但仍占格。B 清空整条路线，时间和错误不退回。",
+          "tipTextTop": 345.5625,
+          "tipTextBottom": 406.734375,
+          "tipTextLeft": 765,
+          "tipTextRight": 926.15625,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "中央箭头是刻印，金色边是入口。错侧不刻印但仍占格。B 清空整条路线，时间和错误不退回。",
+          "tipTextTop": 345.5625,
+          "tipTextBottom": 406.734375,
+          "tipTextLeft": 765,
+          "tipTextRight": 926.15625,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 203.71875,
+          "width": 420,
+          "height": 377.5625,
+          "right": 726.984375,
+          "bottom": 581.28125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "中央箭头是刻印，金色边是入口。错侧不刻印但仍占格。B 清空整条路线，时间和错误不退回。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1228.015625,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "中央箭头是刻印，金色边是入口。错侧不刻印但仍占格。B 清空整条路线，时间和错误不退回。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1228.015625,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "中央箭头是刻印，金色边是入口。错侧不刻印但仍占格。B 清空整条路线，时间和错误不退回。",
+          "tipTextTop": 345.5625,
+          "tipTextBottom": 406.734375,
+          "tipTextLeft": 765,
+          "tipTextRight": 926.15625,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "185c36ad39d5dc368cc5c63745e0fb5f1a4802bd126a9f6de32802336c4e619b"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 583,
+    "rafIntervalMs": {
+      "count": 583,
+      "min": 16.599999999998545,
+      "median": 50,
+      "p95": 100,
+      "max": 166.59999999999945,
+      "mean": 52.17066895368783
+    },
+    "webglDrawCalls": {
+      "count": 583,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 583,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "firstRejection": {
+      "observedAt": 16.017359594,
+      "lastObservedAt": 18.027108136,
+      "clearBDispatchedAt": 19.005890329,
+      "reason": "wrong-sequence",
+      "mistakes": 1,
+      "submissions": 1,
+      "pathLength": 9,
+      "emittedCount": 1,
+      "actualSymbols": [
+        "W"
+      ]
+    },
+    "clearRestored": {
+      "observedAt": 20.020414063,
+      "moves": 0,
+      "totalMoves": 8,
+      "clears": 1,
+      "mistakes": 1,
+      "submissions": 1,
+      "visitedCount": 1,
+      "emittedCount": 0,
+      "rejectionCleared": true,
+      "ledgerEntries": 1
+    },
+    "rejectionDisplayedSecondsAtLeast": 2.0097485420000005,
+    "rejectionHoldBasis": "rejected-samples",
+    "normalWin": {
+      "observedAt": 50.01860735300001,
+      "level": 1,
+      "difficulty": 0,
+      "score": 2020,
+      "elapsed": 45.61666666666667,
+      "remaining": 44.38333333333333,
+      "moves": 18,
+      "totalMoves": 26,
+      "clears": 1,
+      "submissions": 2,
+      "mistakes": 1,
+      "maxMistakes": 3,
+      "prefixLength": 6,
+      "conditionHits": 2,
+      "conditionSkips": 7,
+      "sequenceMatches": true,
+      "targetLength": 6,
+      "emittedCount": 6,
+      "atExit": true
+    },
+    "finalWinHeldSecondsAtLeast": 15.006261839999993,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "02aabbb3e490b1b4301295c620e635e03552b5a53798b184d72630e54841ced3"
+      },
+      {
+        "name": "menu-stairs-0.85s.png",
+        "sha256": "746df23f91dcb6707934eb854758cba7cd9c1babfe710f4bbf356365ad4994f0"
+      },
+      {
+        "name": "menu-corners-1.35s.png",
+        "sha256": "2df0f60c34bf9caf116d43f0b3d56c33dc6bddd31698aaef44275a830be5c257"
+      },
+      {
+        "name": "wrong-exit-12.12s.png",
+        "sha256": "a3080f0363fbffdac0e5bb61fe3933b1243fd3b1e4f4a2019154abba3e12daf5"
+      },
+      {
+        "name": "rejected-16.12s.png",
+        "sha256": "c74a2cb59235a45c487208200fdcf9756feb8faab433f07826fe3bc7402302cd"
+      },
+      {
+        "name": "clear-restored-20.12s.png",
+        "sha256": "e0c7ffe1086ab5f1d68b28360640659e6e673eca10a24bfd059779ef60d66564"
+      },
+      {
+        "name": "gameplay-thumb-38.12s.png",
+        "sha256": "02adbcb70c7d2f6dd5f31cdda1f27ec943716d351bd77db70d9e6773cf6bb58c"
+      },
+      {
+        "name": "correct-exit-46.12s.png",
+        "sha256": "95746c748c0c3d12e3d59318f4c24dd69a755d9611e69701b1a592eff053081c"
+      },
+      {
+        "name": "settlement-63.43s.png",
+        "sha256": "8e0131a60cf8bcadf7501a53b3f2971297438dab7b78e5339d7cd640107b8e8e"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "a4a5f817f8a551349728a29e53aa1857ba87717e25f337dad4dfd0f66c4a834f"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+    "game.js": "3cb70caa9e314a0c390c49f86f4391114cce19df9a0a3f2f6c880dc29524b563",
+    "game-config.json": "c2f74740e53c32832cb033a924223104ea9b8ee01c97380345c230758bbe1391",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "84a7bb98a735751a339b2dab4789bb84c8f5b7ba83911d71b625ff3f5068d86b",
+    "sign": "922bcf9e12ac93bb0dcb3aae765c43d9df05e3d736d3732bb472c2a726dc18d1",
+    "fetch": "e3d91cf2241918c4931ac886402b22d7884ec06d299b5eb4260c5175db5ca042",
+    "qa": "ae2eecbc4c4b3724f20412457faea8201907ef01aa6e8af013b3a41c8bbb369f",
+    "ui": "ed019f57ae624296bbd1833f0c2f2ff5bd1f09f4c385684ab302d6f256f118f2",
+    "layout": "185c36ad39d5dc368cc5c63745e0fb5f1a4802bd126a9f6de32802336c4e619b",
+    "viewport": "24052b637bfebc0d88d7fba8d4e5f0bc67c4ce09deb3db38cbe427885fa35b9f",
+    "summary": "0e66ecfe906df7ffe96e30610306fbcf20892c0141092f24445734599e13417b",
+    "record": "0d9ff0c982406708d44e72ca6a8f0897b2c7e68b2532017d2193278075093128",
+    "review": "24b3b1dd1ebdc0dbd3771ac58d832444bf4477e67e253460a5ffb35e92428186",
+    "videoValidation": "2216dca4cc6ff60c173fbf9dbc1a266990001dce73f962472b89e29dc5de17e8",
+    "artifacts": "e38764b1b267c763d06aaaf845a2a22b4856f448c97afbdde080046378af6586",
+    "independentModel": "b7ad6722580cdf24c5942a012b6c9cf0e8324f4c8ecc2745e0413160feb92889",
+    "independentPilot": "2d46cc4ee1e20c57e54858889d3316fd77d540d3aa0635979dbe3abac2cb4b83",
+    "artReview": "0db69e0ffd5638bd4b37137b5b3d963f6965d8911f393e71385f9ef9a18cde73",
+    "modelTests": "fa436bf8ba14753d4727e37b565f91a7c5f77e94b6837b416ac1c36039ada560",
+    "candidateReview": "18a8bf28924328e37ec3971c111de40ce40543c001b92412c5b8ec8156dfec56",
+    "testProvenance": "c08636c6ecfdf12bca036909dda87269121850e9f15dd029f7c2e432814ec73b"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium gameplay driven by real browser input events. Phone/native-room, source layout and mathematical boundary fixtures are separately labelled; no physical TV/phone installation or physical-device performance is claimed."
+  },
+  "release": {
+    "sourceSha": "91dfab6a41909a26badc7ba87d0ffa1406cb59cc",
+    "signerCommit": "91dfab6a41909a26badc7ba87d0ffa1406cb59cc",
+    "signingRun": 41345950070,
+    "bytes": 296227,
+    "sha256": "3cb95f8c8595659343d577e1f614d80c6e685ddb2f3113a3b341207d588a2eec",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "cc57b3e8f9a3a4a757e5f8789660433757f5cf60"
+  }
+}

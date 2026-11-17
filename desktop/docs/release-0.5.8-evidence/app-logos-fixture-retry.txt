@@ -1,0 +1,42 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+warning: fields `platform` and `file_name` are never read
+  --> /dev/shm/puretv-market-sync/desktop/src-tauri/src/client_updates.rs:56:9
+   |
+53 | pub struct Downloaded {
+   |            ---------- fields in this struct
+...
+56 |     pub platform: String,
+   |         ^^^^^^^^
+57 |     pub file_name: String,
+   |         ^^^^^^^^^
+   |
+   = note: `Downloaded` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `platform` is never used
+  --> /dev/shm/puretv-market-sync/desktop/src-tauri/src/client_updates.rs:88:8
+   |
+88 | pub fn platform() -> &'static str {
+   |        ^^^^^^^^
+
+warning: method `check` is never used
+   --> /dev/shm/puretv-market-sync/desktop/src-tauri/src/client_updates.rs:560:12
+    |
+553 | impl State {
+    | ---------- method in this implementation
+...
+560 |     pub fn check(
+    |            ^^^^^
+
+warning: `puretv-http-tests` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.16s
+     Running unittests src/lib.rs (/dev/shm/puretv-http-target/debug/deps/puretv_http_tests-fb75260699df43b8)
+
+running 1 test
+test app_logos::tests::shipped_apks_bind_persisted_logos_to_real_package_names ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 42 filtered out; finished in 0.82s
+

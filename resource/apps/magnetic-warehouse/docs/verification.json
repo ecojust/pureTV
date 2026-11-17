@@ -1,0 +1,671 @@
+{
+  "schema": 1,
+  "game": "magnetic-warehouse",
+  "version": "0.1.0",
+  "sourceCommit": "aef4fc169975dbbf84fe4cfb6fc6c19eb4569550",
+  "automationSha256": "3b843b728c9062a8cb57847987ebbaaba87bc0703a5f00ee1679fffdd7e4044a",
+  "modelTests": {
+    "passed": 30,
+    "command": "node --test resource/apps/magnetic-warehouse/tests/game-model.test.cjs",
+    "sourceHashes": {
+      "src/main/assets/game-model.js": "5cc14803afb281b801134533b0d8f1014cffa21a0966bdaa36bfa1d176b7eaaf",
+      "tests/game-model.test.cjs": "f83f91c8e584b2106eaf46d7f0009d7dd0c9267490658267895dbfc0b8957595",
+      "docs/model-contract.md": "e15b2580e23a8266adf345e1e35b86face141f893361b52b4ad50a7f310e2b4a"
+    },
+    "testLogSha256": "86b911cb743f38cd03f5653931db7508c2be7830b6a60261b6e05fc7ccff86e5",
+    "rawReportSha256": "d7852f72bb07e558807ba4dc57fc440911544c2b54ba74e67276c6ecd6fe964e",
+    "scope": "25 rule/boundary groups plus three authored normal-key wins, one normal-key scrap loss and all-map idle deadlines. Constructed rule fixtures are distinct from authored normal-input routes; no browser or physical installation claim."
+  },
+  "independentModelReview": {
+    "passed": true,
+    "file": "independent-magnetic-review.json",
+    "sha256": "72298d5529b07d9a5a248f3a007780b4832f8ef8def7190133080145b2a837b2",
+    "checksPassed": 8,
+    "totals": {
+      "pulseFixtures": 266,
+      "subsetCandidates": 1341,
+      "permutationComparisons": 2414
+    },
+    "normalInputModelSolutions": [
+      {
+        "level": 1,
+        "phase": "won",
+        "matched": 2,
+        "target": 2,
+        "actionsUsed": 24,
+        "actionsRemaining": 76,
+        "flipCount": 1,
+        "pulseCount": 9,
+        "attractedMoves": 5,
+        "repelledMoves": 4,
+        "modelElapsedSeconds": 2.3166666666666664,
+        "ordinaryInputCommands": 24,
+        "inputsSha256": "2dcc74feaeafb148bb75e3fce3028a6ebd905afd516a0f67eddc29e51ce3b9a3"
+      },
+      {
+        "level": 2,
+        "phase": "won",
+        "matched": 3,
+        "target": 3,
+        "actionsUsed": 26,
+        "actionsRemaining": 104,
+        "flipCount": 1,
+        "pulseCount": 8,
+        "attractedMoves": 5,
+        "repelledMoves": 4,
+        "modelElapsedSeconds": 2.5166666666666666,
+        "ordinaryInputCommands": 26,
+        "inputsSha256": "6dc48b08d047a87d4f235e8a95be33664a5169f669d62a52b89fa1ff6a3b6d16"
+      },
+      {
+        "level": 3,
+        "phase": "won",
+        "matched": 4,
+        "target": 4,
+        "actionsUsed": 45,
+        "actionsRemaining": 115,
+        "flipCount": 3,
+        "pulseCount": 10,
+        "attractedMoves": 9,
+        "repelledMoves": 3,
+        "modelElapsedSeconds": 4.416666666666667,
+        "ordinaryInputCommands": 45,
+        "inputsSha256": "00817b120c3c8764b0341ea51d7ee9f452d7ce248ec35853c44bded6264df7b5"
+      }
+    ],
+    "scope": {
+      "constructedFixtures": true,
+      "fixtureInitialConditionsModified": true,
+      "normalInputModelRoutes": 3,
+      "ordinaryRouteStateWrites": false,
+      "normalGameplayEvidence": false,
+      "browserExecuted": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    }
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "d17c499989ff71ca62fad58d0148b8b0a77f14426b08615661dfd27ec2ea676e",
+    "renderCases": 23,
+    "scope": "Final held-source art and layout review only. No APK build/signing, physical-phone connection or final-video claim. Model snapshots use ordinary reachable-grid/pilot inputs except the explicitly labeled wrong-numbered-dock art fixture. Terminal DOM screenshots are layout fixtures populated from real terminal states, not runtime end-to-end completion evidence.",
+    "sourceHashes": {
+      "game": {
+        "path": "resource/apps/magnetic-warehouse/src/main/assets/game.js",
+        "sha256": "fbd185794217ae32c1b7e42122b124fc25c7109fccb2a81da99d5b1650e32980"
+      },
+      "model": {
+        "path": "resource/apps/magnetic-warehouse/src/main/assets/game-model.js",
+        "sha256": "5cc14803afb281b801134533b0d8f1014cffa21a0966bdaa36bfa1d176b7eaaf"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "automation": {
+        "path": "resource/apps/magnetic-warehouse/tests/automation.mjs",
+        "sha256": "3b843b728c9062a8cb57847987ebbaaba87bc0703a5f00ee1679fffdd7e4044a"
+      },
+      "tv.css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "tv.html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "runtime.js": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "1bddd5f7a765992305679b41e4f40b8d39b717a40c233b0c87294017760e0633"
+      },
+      "game.json": {
+        "path": "resource/apps/magnetic-warehouse/game.json",
+        "sha256": "6c7f42ece610da8d426bbd6575311092b2953554e11fb0813eb50a58dd45d19b"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "1bddd5f7a765992305679b41e4f40b8d39b717a40c233b0c87294017760e0633",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "5cc14803afb281b801134533b0d8f1014cffa21a0966bdaa36bfa1d176b7eaaf",
+      "game.js": "fbd185794217ae32c1b7e42122b124fc25c7109fccb2a81da99d5b1650e32980",
+      "game-config.json": "00de3b2ca7bcdfa6e589f36412cead5d413d50c5657ec19171682c56defa108a",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "3b843b728c9062a8cb57847987ebbaaba87bc0703a5f00ee1679fffdd7e4044a"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three warehouse buttons expose distinct crate counts and action budgets",
+        "passed": true
+      },
+      {
+        "name": "remote and phone joystick cycle choices once per press",
+        "passed": true
+      },
+      {
+        "name": "menu blur and sound button reflect settings",
+        "passed": true
+      },
+      {
+        "name": "held phone START starts once without reset or pause flicker",
+        "passed": true
+      },
+      {
+        "name": "held phone A flips polarity and spends exactly one action",
+        "passed": true
+      },
+      {
+        "name": "held phone B attracts opposite crate once with a fixed recorded origin",
+        "passed": true
+      },
+      {
+        "name": "phone polarity flip changes the same aligned crate from attraction to repulsion",
+        "passed": true
+      },
+      {
+        "name": "blocked walking is free while an empty magnetic pulse spends one action",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes the warehouse and clears stale direction A and B",
+        "passed": true
+      },
+      {
+        "name": "pause and primary/header resume preserve the exact warehouse",
+        "passed": true
+      },
+      {
+        "name": "ordinary keys push a crate into scrap and produce a real terminal loss",
+        "passed": true
+      },
+      {
+        "name": "R retry restores original boxes poles docks action budget and input edges",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "scrap",
+      "elapsed": 1.8,
+      "remaining": 88.2,
+      "matched": 0,
+      "score": 0,
+      "actionsUsed": 10,
+      "actionsRemaining": 90,
+      "pulseCount": 1
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "1bddd5f7a765992305679b41e4f40b8d39b717a40c233b0c87294017760e0633",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "5cc14803afb281b801134533b0d8f1014cffa21a0966bdaa36bfa1d176b7eaaf",
+      "game.js": "fbd185794217ae32c1b7e42122b124fc25c7109fccb2a81da99d5b1650e32980",
+      "game-config.json": "00de3b2ca7bcdfa6e589f36412cead5d413d50c5657ec19171682c56defa108a",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "同极斥，异极吸。箱子不挡磁场，墙会挡。按编号归位；已归位箱仍可被移动。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1229,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "同极斥，异极吸。箱子不挡磁场，墙会挡。按编号归位；已归位箱仍可被移动。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "同极斥，异极吸。箱子不挡磁场，墙会挡。按编号归位；已归位箱仍可被移动。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 203.71875,
+          "width": 420,
+          "height": 377.5625,
+          "right": 726.984375,
+          "bottom": 581.28125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "同极斥，异极吸。箱子不挡磁场，墙会挡。按编号归位；已归位箱仍可被移动。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1229,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "同极斥，异极吸。箱子不挡磁场，墙会挡。按编号归位；已归位箱仍可被移动。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1229,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "同极斥，异极吸。箱子不挡磁场，墙会挡。按编号归位；已归位箱仍可被移动。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "5120bd4a8638d09814b34344b48a382a9182bad24234de7ff6675c2bc9143521"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 783,
+    "rafIntervalMs": {
+      "count": 783,
+      "min": 16.5,
+      "median": 33.400000000001455,
+      "p95": 83.39999999999782,
+      "max": 133.30000000000018,
+      "mean": 45.08122605363984
+    },
+    "webglDrawCalls": {
+      "count": 783,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 783,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 48.026800494,
+      "level": 1,
+      "difficulty": 0,
+      "matched": 2,
+      "target": 2,
+      "score": 2090,
+      "elapsed": 43.5,
+      "remaining": 46.5,
+      "actionsUsed": 24,
+      "actionsRemaining": 76,
+      "actionBudget": 100,
+      "moveCount": 14,
+      "flipCount": 1,
+      "pulseCount": 9,
+      "attractedMoves": 5,
+      "repelledMoves": 4,
+      "allCratesAtMatchingDocks": true
+    },
+    "finalWinHeldSecondsAtLeast": 12.000479414000004,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "99849a0baab6d23e23281d072e41d56d89821d29618e3e8637d9322c5b9c8373"
+      },
+      {
+        "name": "menu-three-crates-0.85s.png",
+        "sha256": "21c744d95801467338ab8c11d2d71c1161eeaf86b77531f08125820a768051f4"
+      },
+      {
+        "name": "menu-four-crates-1.35s.png",
+        "sha256": "23835496eeb7576ec60a6418512b43b42ab9a41cfdd6e4a557462d86c4786111"
+      },
+      {
+        "name": "attract-10.03s.png",
+        "sha256": "e4be6edbed837079127c37a40f3b3d39da62d3186a3bca6b245b55be7f4a921a"
+      },
+      {
+        "name": "repel-42.03s.png",
+        "sha256": "3c1bf31ff3fff0f6c52c52fb387743a18d37e4ec75160c4b33ef9ead94399429"
+      },
+      {
+        "name": "one-crate-docked-22.03s.png",
+        "sha256": "35f9294f4308e3282f2aae72e259a4bed85286618993012537b41984ba7ac204"
+      },
+      {
+        "name": "gameplay-thumb-20.03s.png",
+        "sha256": "5936523ac743359d2752cf8b23072dbcfa341a013595b01b4b418ec9d007c189"
+      },
+      {
+        "name": "settlement-58.45s.png",
+        "sha256": "9e49f615bc052ce09a55669ba7052f88888516ccbd9d5ec473fcacd82a0877ba"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "621237906ed08a8e5cf8db57b0ba05cd16b6f63582c50e3a8c4d508cb8d00075"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "1bddd5f7a765992305679b41e4f40b8d39b717a40c233b0c87294017760e0633",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "5cc14803afb281b801134533b0d8f1014cffa21a0966bdaa36bfa1d176b7eaaf",
+    "game.js": "fbd185794217ae32c1b7e42122b124fc25c7109fccb2a81da99d5b1650e32980",
+    "game-config.json": "00de3b2ca7bcdfa6e589f36412cead5d413d50c5657ec19171682c56defa108a",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "a862fb627a4ee638efa8a6de6465d525fbd7a0e61eb18e721614f73ab0f00210",
+    "sign": "89674740a54ba9fe59a325a2b8bc9707d30bfc71b57a0294274265e268543292",
+    "fetch": "80876334176d3a7fc581e69fd5cdc86a6ee1e6206d1ca5d6bb3be26627365400",
+    "qa": "26230940c1b6f590b61585ab016f39f4e93d5aac560b6003e4f37079fc48fa2a",
+    "ui": "f04bd1f24817f6eb8b4d416e37879779f3d7e2d44314eb6236334956bf3a86ba",
+    "layout": "5120bd4a8638d09814b34344b48a382a9182bad24234de7ff6675c2bc9143521",
+    "viewport": "99aa5a2ccfc52be72dcc706a553005a0c2888fb55e5cfe6a4761cefab6c7d39b",
+    "summary": "78f355539c24834a1c3bec5cca48ec5465610b98df3a963b1da35974bc5998a9",
+    "record": "7ac5764dab0169913901876b2ed678b33ae084e35fd78ec784a11cff910fd04a",
+    "review": "62574f05f58629c073f3dd84c2b8bdec1834e86b9d14e143c4b53c18806048be",
+    "videoValidation": "a1bed321be5d7d0c38a412665b67effe3392d2827e71ed4dc882129d22f48465",
+    "artifacts": "a57dfee6f97b53ba18bd5049443396941557472f3d26f59f7ccaa229df058caf",
+    "independentModel": "72298d5529b07d9a5a248f3a007780b4832f8ef8def7190133080145b2a837b2",
+    "artReview": "cb8febd38fee77931dcbafac3094fc92ba2ecea22c28bda7dc3e45cc4b92e9b5",
+    "modelTests": "d7852f72bb07e558807ba4dc57fc440911544c2b54ba74e67276c6ecd6fe964e"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Actual Chromium keyboard gameplay; phone bridge and room layout use controlled fixtures. Independent constructed magnetic fixtures and accelerated ordinary-input model routes are separate from the real runtime recording. No physical Android installation is claimed."
+  },
+  "release": {
+    "sourceSha": "aef4fc169975dbbf84fe4cfb6fc6c19eb4569550",
+    "signerCommit": "aef4fc169975dbbf84fe4cfb6fc6c19eb4569550",
+    "signingRun": 41336846212,
+    "bytes": 296227,
+    "sha256": "63b33ccfa9dc155fd919433caa199419350c4b4fcc5ec17b0accd89dcf87d8c3",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "937bbb80669217c8ca5ed67677b40169bf594ee8"
+  }
+}

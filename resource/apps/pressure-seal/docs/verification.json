@@ -1,0 +1,1229 @@
+{
+  "schema": 1,
+  "game": "pressure-seal",
+  "version": "0.1.0",
+  "sourceCommit": "7b16d394bb68ad3d64e8797a97d574bc97852669",
+  "automationSha256": "b848397fa2252b65235acbabc673ce5723ff5094636a45885eb2c8ab3d4a5464",
+  "gameRules": {
+    "formal": {
+      "passed": 20,
+      "sourceHashesBefore": {
+        "model": "cc687d4f4f3041db0c3d40a56a06cf4cdfd6df035c83cea1f29e5ff897404725",
+        "test": "de5897b344e9ec8d57ddabb2ff7ec110cb5f2daed57b3e6001e12c4586f9790c",
+        "publicDesign": "d0273edf80d787509c07257cac017746ffd8011f70432d6b0b5147e9ff78752e",
+        "modelContract": "18d37a8416a70311d927747e41ff8f339ecc0205d765e35edfbb70a169437bf8",
+        "publicInterface": "3ca2aa65b3876fac16022f64cd5d670794288db79ee754e9a9d38571f018cf2e"
+      },
+      "sourceHashesAfter": {
+        "model": "cc687d4f4f3041db0c3d40a56a06cf4cdfd6df035c83cea1f29e5ff897404725",
+        "test": "de5897b344e9ec8d57ddabb2ff7ec110cb5f2daed57b3e6001e12c4586f9790c",
+        "publicDesign": "d0273edf80d787509c07257cac017746ffd8011f70432d6b0b5147e9ff78752e",
+        "modelContract": "18d37a8416a70311d927747e41ff8f339ecc0205d765e35edfbb70a169437bf8",
+        "publicInterface": "3ca2aa65b3876fac16022f64cd5d670794288db79ee754e9a9d38571f018cf2e"
+      },
+      "testLogSha256": "1b61d2eaa952079fcfb74312622c97abd1c0a730959c134b43e32cd09e3386f3",
+      "rawReportSha256": "17764ef997fd077d48496c3d7485f62a2286ce39620b2788cce62c07c507b43b",
+      "scope": "Formal model rule tests, including explicitly synthetic boundary fixtures; no browser, ordinary round or hardware evidence."
+    },
+    "ordinary": {
+      "rounds": [
+        {
+          "runId": "level0-won",
+          "level": 0,
+          "phase": "won",
+          "reason": "",
+          "actualCalls": 2319,
+          "actualTicks": 773,
+          "modelSeconds": 38.650000000000006,
+          "originalSha256": "8e142dd94595a81704b976fc38404be87688b8685bc1c795928ccaa84f32c91a",
+          "publicTraceSha256": "5564328cbf2647cfb0bbe5c8a3b9f47730e761c3818d99f2e077d80f0cd3f558"
+        },
+        {
+          "runId": "level0-lost",
+          "level": 0,
+          "phase": "lost",
+          "reason": "overheat",
+          "actualCalls": 525,
+          "actualTicks": 175,
+          "modelSeconds": 8.75,
+          "originalSha256": "b96b19a730c92b075d1e17ac3b18541bcf685761b3c73d859052b7450965cf85",
+          "publicTraceSha256": "01cf9c33aed1ca437b76f32eaee87ac7c6f983accf78fd654c82f49241bd633d"
+        },
+        {
+          "runId": "level1-won",
+          "level": 1,
+          "phase": "won",
+          "reason": "",
+          "actualCalls": 2463,
+          "actualTicks": 821,
+          "modelSeconds": 41.050000000000004,
+          "originalSha256": "e718107f953d33c5987c2d02110094bb7125b8213c958593b7664b13f18cd40f",
+          "publicTraceSha256": "7b018de8c05eddfc4fba28b72644d108d58d6050c4c11f3996377f299bddf6aa"
+        },
+        {
+          "runId": "level1-lost",
+          "level": 1,
+          "phase": "lost",
+          "reason": "burst",
+          "actualCalls": 1710,
+          "actualTicks": 570,
+          "modelSeconds": 28.5,
+          "originalSha256": "af3e10d662f59c92ab9365b71687fd6be1d897626859e769aa683b36c542bc8b",
+          "publicTraceSha256": "9e17b3f50985c909a069f70732004e31d9b3ea286e6e0750d4160469adb2021a"
+        },
+        {
+          "runId": "level2-won",
+          "level": 2,
+          "phase": "won",
+          "reason": "",
+          "actualCalls": 3027,
+          "actualTicks": 1009,
+          "modelSeconds": 50.45,
+          "originalSha256": "c3192683c1def668e3b3c1eb4f26cd6f14d42863fcb9df9a21c55ceec21d0fbd",
+          "publicTraceSha256": "261d91a38f5bde6ae7c21c546e32ac3089681ece055d94e9b687aa34b8869855"
+        },
+        {
+          "runId": "level2-lost",
+          "level": 2,
+          "phase": "lost",
+          "reason": "overheat",
+          "actualCalls": 480,
+          "actualTicks": 160,
+          "modelSeconds": 8.0,
+          "originalSha256": "02ae19f55a7c0c64170ecb136c4e923980d39a202d2573c6eedd668a4f28b2bd",
+          "publicTraceSha256": "f97d29ca24141f9ef795a5803239e341de3c05f5b61d022eede9131ccae88f7f"
+        }
+      ],
+      "actualCalls": 10524,
+      "actualTicks": 3508,
+      "rawReportSha256": "3e4bf3173272393adcab058fa93562c7aa710eb4671d3d182f3a026a7c5d5869",
+      "scope": "Actual full-call model evidence only. Stop at first failure; no warmup, search, hidden retry, browser or hardware claim."
+    },
+    "independent": {
+      "verdict": "checked",
+      "manifestSha256": "7535456b705f4c778dcdf416e6743d8d84165f2bcd62c6a9f88c10d74eace5b6",
+      "rawReportSha256": "4688eaf7ee0436146be2045c351bffd9dc4a2fbda00d06abf8c771ab75867c68",
+      "runs": [
+        {
+          "runId": "level0-won",
+          "counts": {
+            "calls": 2319,
+            "checkedPairs": 2319,
+            "physicsTicks": 773,
+            "noTickCalls": 1546,
+            "noOpCalls": 0,
+            "qualifyingTicks": 470,
+            "dwellResets": 1,
+            "seals": 3,
+            "neutralRiseTicks": 282,
+            "ventFallTicks": 84,
+            "cancellationCalls": 0
+          },
+          "coverage": {
+            "completeHolds": true,
+            "heldAReleaseThenNeutralRise": true,
+            "dwellInterruptionThenSeal": true,
+            "ventFallWithStoredHeat": true,
+            "browserLifecycle": "not-observed",
+            "referenceIdentity": "not-observed"
+          },
+          "checkedPairIndicesSha256": "63e7f864ea59669103b32209ae44f1d9a6aa58afea9ef16dd60a15f50d2f17df",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not their authenticity or source execution provenance.",
+            "No Model, pilot, diagnostic, private witness, or implementation source is read or imported by this checker.",
+            "Calculated values never become later observations; missing calls and multi-tick intervals are never reconstructed.",
+            "Model runs do not establish browser-visible start/retry, trusted controls, pause duration, rendering, performance, or physical hardware behavior.",
+            "JSON snapshots cannot establish fresh object identity, getters/accessors, unrecorded input properties, or the truthfulness of display prose.",
+            "Sparse endpoints and cumulative totals cannot establish continuous holds or the absence of intermediate threshold crossings."
+          ]
+        },
+        {
+          "runId": "level0-lost",
+          "counts": {
+            "calls": 525,
+            "checkedPairs": 525,
+            "physicsTicks": 175,
+            "noTickCalls": 350,
+            "noOpCalls": 0,
+            "qualifyingTicks": 30,
+            "dwellResets": 1,
+            "seals": 0,
+            "neutralRiseTicks": 0,
+            "ventFallTicks": 0,
+            "cancellationCalls": 0
+          },
+          "coverage": {
+            "completeHolds": false,
+            "heldAReleaseThenNeutralRise": false,
+            "dwellInterruptionThenSeal": false,
+            "ventFallWithStoredHeat": false,
+            "browserLifecycle": "not-observed",
+            "referenceIdentity": "not-observed"
+          },
+          "checkedPairIndicesSha256": "2e1166448b3c964e3833ed3d4880a6f3e96f7aa31abb097c4b1e3d67edc3c53e",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not their authenticity or source execution provenance.",
+            "No Model, pilot, diagnostic, private witness, or implementation source is read or imported by this checker.",
+            "Calculated values never become later observations; missing calls and multi-tick intervals are never reconstructed.",
+            "Model runs do not establish browser-visible start/retry, trusted controls, pause duration, rendering, performance, or physical hardware behavior.",
+            "JSON snapshots cannot establish fresh object identity, getters/accessors, unrecorded input properties, or the truthfulness of display prose.",
+            "Sparse endpoints and cumulative totals cannot establish continuous holds or the absence of intermediate threshold crossings."
+          ]
+        },
+        {
+          "runId": "level1-won",
+          "counts": {
+            "calls": 2463,
+            "checkedPairs": 2463,
+            "physicsTicks": 821,
+            "noTickCalls": 1642,
+            "noOpCalls": 0,
+            "qualifyingTicks": 400,
+            "dwellResets": 0,
+            "seals": 3,
+            "neutralRiseTicks": 314,
+            "ventFallTicks": 76,
+            "cancellationCalls": 0
+          },
+          "coverage": {
+            "completeHolds": true,
+            "heldAReleaseThenNeutralRise": true,
+            "dwellInterruptionThenSeal": false,
+            "ventFallWithStoredHeat": true,
+            "browserLifecycle": "not-observed",
+            "referenceIdentity": "not-observed"
+          },
+          "checkedPairIndicesSha256": "357d59c69d271955a631a1d1d146dfe1b1574a271cf33bd81a8e573593643e28",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not their authenticity or source execution provenance.",
+            "No Model, pilot, diagnostic, private witness, or implementation source is read or imported by this checker.",
+            "Calculated values never become later observations; missing calls and multi-tick intervals are never reconstructed.",
+            "Model runs do not establish browser-visible start/retry, trusted controls, pause duration, rendering, performance, or physical hardware behavior.",
+            "JSON snapshots cannot establish fresh object identity, getters/accessors, unrecorded input properties, or the truthfulness of display prose.",
+            "Sparse endpoints and cumulative totals cannot establish continuous holds or the absence of intermediate threshold crossings."
+          ]
+        },
+        {
+          "runId": "level1-lost",
+          "counts": {
+            "calls": 1710,
+            "checkedPairs": 1710,
+            "physicsTicks": 570,
+            "noTickCalls": 1140,
+            "noOpCalls": 0,
+            "qualifyingTicks": 69,
+            "dwellResets": 1,
+            "seals": 0,
+            "neutralRiseTicks": 264,
+            "ventFallTicks": 0,
+            "cancellationCalls": 0
+          },
+          "coverage": {
+            "completeHolds": false,
+            "heldAReleaseThenNeutralRise": true,
+            "dwellInterruptionThenSeal": false,
+            "ventFallWithStoredHeat": false,
+            "browserLifecycle": "not-observed",
+            "referenceIdentity": "not-observed"
+          },
+          "checkedPairIndicesSha256": "d0004b99d4fe489808c02235aaaea71b4fb744a3725a504c21da0e05d2523900",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not their authenticity or source execution provenance.",
+            "No Model, pilot, diagnostic, private witness, or implementation source is read or imported by this checker.",
+            "Calculated values never become later observations; missing calls and multi-tick intervals are never reconstructed.",
+            "Model runs do not establish browser-visible start/retry, trusted controls, pause duration, rendering, performance, or physical hardware behavior.",
+            "JSON snapshots cannot establish fresh object identity, getters/accessors, unrecorded input properties, or the truthfulness of display prose.",
+            "Sparse endpoints and cumulative totals cannot establish continuous holds or the absence of intermediate threshold crossings."
+          ]
+        },
+        {
+          "runId": "level2-won",
+          "counts": {
+            "calls": 3027,
+            "checkedPairs": 3027,
+            "physicsTicks": 1009,
+            "noTickCalls": 2018,
+            "noOpCalls": 0,
+            "qualifyingTicks": 430,
+            "dwellResets": 0,
+            "seals": 3,
+            "neutralRiseTicks": 366,
+            "ventFallTicks": 117,
+            "cancellationCalls": 0
+          },
+          "coverage": {
+            "completeHolds": true,
+            "heldAReleaseThenNeutralRise": true,
+            "dwellInterruptionThenSeal": false,
+            "ventFallWithStoredHeat": true,
+            "browserLifecycle": "not-observed",
+            "referenceIdentity": "not-observed"
+          },
+          "checkedPairIndicesSha256": "7559fa5bae99aba29aef3f347fa55bb50f83bf7a504b7be36eec43daf9b37655",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not their authenticity or source execution provenance.",
+            "No Model, pilot, diagnostic, private witness, or implementation source is read or imported by this checker.",
+            "Calculated values never become later observations; missing calls and multi-tick intervals are never reconstructed.",
+            "Model runs do not establish browser-visible start/retry, trusted controls, pause duration, rendering, performance, or physical hardware behavior.",
+            "JSON snapshots cannot establish fresh object identity, getters/accessors, unrecorded input properties, or the truthfulness of display prose.",
+            "Sparse endpoints and cumulative totals cannot establish continuous holds or the absence of intermediate threshold crossings."
+          ]
+        },
+        {
+          "runId": "level2-lost",
+          "counts": {
+            "calls": 480,
+            "checkedPairs": 480,
+            "physicsTicks": 160,
+            "noTickCalls": 320,
+            "noOpCalls": 0,
+            "qualifyingTicks": 0,
+            "dwellResets": 0,
+            "seals": 0,
+            "neutralRiseTicks": 0,
+            "ventFallTicks": 0,
+            "cancellationCalls": 0
+          },
+          "coverage": {
+            "completeHolds": false,
+            "heldAReleaseThenNeutralRise": false,
+            "dwellInterruptionThenSeal": false,
+            "ventFallWithStoredHeat": false,
+            "browserLifecycle": "not-observed",
+            "referenceIdentity": "not-observed"
+          },
+          "checkedPairIndicesSha256": "33ea886e0c26dc475a1f60ff536142a986276852f0b85dbaf61a3c333192e68b",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not their authenticity or source execution provenance.",
+            "No Model, pilot, diagnostic, private witness, or implementation source is read or imported by this checker.",
+            "Calculated values never become later observations; missing calls and multi-tick intervals are never reconstructed.",
+            "Model runs do not establish browser-visible start/retry, trusted controls, pause duration, rendering, performance, or physical hardware behavior.",
+            "JSON snapshots cannot establish fresh object identity, getters/accessors, unrecorded input properties, or the truthfulness of display prose.",
+            "Sparse endpoints and cumulative totals cannot establish continuous holds or the absence of intermediate threshold crossings."
+          ]
+        }
+      ],
+      "corpusCoverage": {
+        "normalWinsByLevel": {
+          "0": [
+            "level0-won"
+          ],
+          "1": [
+            "level1-won"
+          ],
+          "2": [
+            "level2-won"
+          ]
+        },
+        "naturalLossesByLevel": {
+          "0": [
+            "level0-lost"
+          ],
+          "1": [
+            "level1-lost"
+          ],
+          "2": [
+            "level2-lost"
+          ]
+        },
+        "sixRunCoverage": true,
+        "listedRunCount": 6,
+        "checkedRunCount": 6
+      },
+      "limitations": [
+        "Arithmetic checks establish consistency of recorded public facts, not their authenticity or source execution provenance.",
+        "No Model, pilot, diagnostic, private witness, or implementation source is read or imported by this checker.",
+        "Calculated values never become later observations; missing calls and multi-tick intervals are never reconstructed.",
+        "Model runs do not establish browser-visible start/retry, trusted controls, pause duration, rendering, performance, or physical hardware behavior.",
+        "JSON snapshots cannot establish fresh object identity, getters/accessors, unrecorded input properties, or the truthfulness of display prose.",
+        "Sparse endpoints and cumulative totals cannot establish continuous holds or the absence of intermediate threshold crossings.",
+        "Only manifest-listed public artifacts are read; this audit cannot establish that unlisted attempts do not exist.",
+        "Origin source hashes are provenance claims. Production, pilot, and harness sources are not opened or authenticated by this CLI.",
+        "A checked ordinary corpus is not evidence of browser lifecycle, trusted controls, visuals, performance, or private implementation behavior.",
+        "Sparse reports retain their own gaps and limitations; they cannot supply continuous coverage missing from ordinary receipts."
+      ]
+    }
+  },
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "cc687d4f4f3041db0c3d40a56a06cf4cdfd6df035c83cea1f29e5ff897404725",
+      "game.js": "9b2a6ed0be1977f39cbf1e6a605536fa09dfbe44765f56043d335ed59102b1c9",
+      "game-config.json": "0acb0e0589b57a48570339d48ae4eba63dc9f8a6fe979ed72dccc575be76d5f4",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "LICENSE": "93a8777f8776e6aa280f486fb84a5a12b64fcb00d9b58086ee1cc203e7311a15",
+      "README.md": "d4e7f6c6083d35d53ddb869428d3f67d2856ecb81eb8ce170268b477b9690fc4",
+      "docs/model-contract.md": "18d37a8416a70311d927747e41ff8f339ecc0205d765e35edfbb70a169437bf8",
+      "docs/public-design.md": "d0273edf80d787509c07257cac017746ffd8011f70432d6b0b5147e9ff78752e",
+      "docs/public-interface.md": "3ca2aa65b3876fac16022f64cd5d670794288db79ee754e9a9d38571f018cf2e",
+      "game.json": "84b46183470a01f4153fcfd119233cece6df2884e461162b504987200535ce25",
+      "icon.xml": "3275d930a29577400ef8c4d56cef3cdb020f3db6481a2d2b2d21d51b7d3d2f92",
+      "logo.svg": "daa4a189289279ecbd8e561d5a1a4f29766c52438b5d36d8f767c5f2fb756767",
+      "src/main/assets/game-model.js": "cc687d4f4f3041db0c3d40a56a06cf4cdfd6df035c83cea1f29e5ff897404725",
+      "src/main/assets/game.js": "9b2a6ed0be1977f39cbf1e6a605536fa09dfbe44765f56043d335ed59102b1c9",
+      "tests/automation.mjs": "b848397fa2252b65235acbabc673ce5723ff5094636a45885eb2c8ab3d4a5464",
+      "tests/independent-audit-cli.mjs": "241e828c3254047f33be261c0cd4b2b8742239d2ffa4ea3e0c01524d6394eb3b",
+      "tests/independent-audit.mjs": "6181556931ef86612531e91e8db1ae415807c1fe1390d198c4793d9a111b4f14",
+      "tests/model.test.cjs": "de5897b344e9ec8d57ddabb2ff7ec110cb5f2daed57b3e6001e12c4586f9790c"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-first/actual-atlas.png",
+        "sha256": "9f2d188ceb2ea6ab26c0e81e786309247f2d5ed79d3f54b8998bc788b8f460e1",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/menu-1280.png",
+        "sha256": "57c0899dfa55a1b6c92e8b857fdb41cb340fbf975d01dd4a8674551613d37d3d",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/initial-heat.png",
+        "sha256": "8ac0745e657d06302fde365679dcb83fc0550bddf48d57d682c39b31cdd70fe7",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/neutral-rise.png",
+        "sha256": "255cc2c7b58994004d1c8f58c31d0451bf9532ce68795285b834dd9076fe8b8d",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/paused.png",
+        "sha256": "fa007c0212da7bb40658b72125aeb5aeb3e1fb0c4f01ef5e8a5f89db77d3aaf8",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/in-band-hold.png",
+        "sha256": "25841abdbb23d3c17da66eaa9a0edbf5526114364e2444bd66738640082978f9",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/vent.png",
+        "sha256": "063f07e503dba019a20595da5011c1cc9f46f43fe556bec249b431c4bf95f440",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/first-seal.png",
+        "sha256": "18fd31eb87345e28f2579fb204b093dae5027d8ff5ae798d366a14af0c2296f7",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/second-seal.png",
+        "sha256": "d3f70866c58f347bb13039c9b38ac54b9023bfc89984c3b7301d9c8e98def851",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/won-1280.png",
+        "sha256": "3018fe6cd9ec627d01970d808cffcaf15bd2fdc0b54c4e7b8b34daa4f3805f38",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/won-960.png",
+        "sha256": "8443ccde15a64519ad93ac58b5d727e4fee1649ad5b0f741970d8e91368b1c95",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/lost-960.png",
+        "sha256": "16a99c2341cfd4ac1cde492963281cd740064918d5517a500a86c7781d84f87b",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-first/lost-1280.png",
+        "sha256": "30a7a92c171812249a92924ff09f79fc31d98fb68a85d0bf3d14a0543569da4d",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "ui-first/controller-844x390.png",
+        "sha256": "952669801c5ed16cdcec8660bb5993b160739dc04b8b931164ba5cc0f070b908",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "ui-first/controller-both-held.png",
+        "sha256": "f3c161984e3ee32c9ac46903d5bd53e7180354e7b4793219df1dea1653834631",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/menu-level1-1280.png",
+        "sha256": "b139496c1514a354935ce00507757d46db30ce6e1fe09cf7aa76795f390ab186",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/initial-level1-1280.png",
+        "sha256": "e321f460710e8b1656ed5b7a2cdd78c695cf16c7ef49c6aff39477ffe9d5158c",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/menu-level2-1280.png",
+        "sha256": "66b54c84c0e243e45ad2f9bd24df0da9f0b50a35914cb48fc0174488c97e45b0",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/initial-level2-1280.png",
+        "sha256": "9207f26b75ce466df367d937a82e857bb0907b19cd3ecb3bebe7b97a0b106c15",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/initial-level2-960.png",
+        "sha256": "8c6b941485e72cab90e71c20841bcec8470bdbab72372cfb25c9283200cdfa96",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/menu-level0-960.png",
+        "sha256": "6c87affb2fb03e98f55679a6d7f7403a3ee092e8168eab17820750183827659e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/before-release-960.png",
+        "sha256": "9e009ca8bdd983967231b98835d0ecc09f6d75a0c4ab5b6daffe84eb1f16d483",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/after-release-rise-960.png",
+        "sha256": "47903d1c7b80073b55204332c48dfa84315371e2161e7ec437f05ebdafb25d78",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/partial-hold-pause-960.png",
+        "sha256": "4fa504655ae9c4d76c8995cc1340f9ae0dbc31a908050a2dd9842bfb48f31421",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/partial-hold-pause-1280.png",
+        "sha256": "ff9bcd70ca3660c3ba825c8cb4efe10ce7018e7e38268ad9fde199908596ff40",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/before-hold-reset-960.png",
+        "sha256": "024abc68b5194b8cdaab10acb010c2365f5fb97c18bc7c02b45173430c759a8e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/after-hold-reset-960.png",
+        "sha256": "abd43a7ceb222395ffdbc73f3bd7654d2ed13275d8a644f339751cd1f3bb4e57",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/stable-hold-960.png",
+        "sha256": "92f1d5ecfd6c022e12589169e8ed44fec8bc4e048958ccd56d5ed3b17bf4b19e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/transition-1-960.png",
+        "sha256": "89a1a200693a03dc3f9e15395c4f37512ed6b141e29e25630c846fc723a0e0b1",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/transition-2-960.png",
+        "sha256": "3ee8f9b3656f1ee0fd86849e84ea70545d7f2cdbe551b8c4c285361dfcc2eb44",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/near-overheat-1280.png",
+        "sha256": "dbce533aeb86c701b273a425376985c8535477284cc5f0229238cc4dcc02ae89",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/near-burst-960.png",
+        "sha256": "1d1fb3b956b1d3d6b0bfd43689ee808d1d132013a23959186199b5e6044ab334",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/burst-loss-960.png",
+        "sha256": "664799ea4db4758b922bd94431ae5a598499885d2886a3e66783697e3ba432ec",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/burst-loss-1280.png",
+        "sha256": "d8227a5d8659b9faae5b26b536eeb84b29340653280ebedc0ce72b36575cd99e",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "65358e1b1bfbdff77a2bf328c9cca2acac03dffd056f5c40009a1e9403af2374",
+    "unresolvedFindings": []
+  },
+  "modelTests": {
+    "passed": 20,
+    "sourceHashesBefore": {
+      "model": "cc687d4f4f3041db0c3d40a56a06cf4cdfd6df035c83cea1f29e5ff897404725",
+      "test": "de5897b344e9ec8d57ddabb2ff7ec110cb5f2daed57b3e6001e12c4586f9790c",
+      "publicDesign": "d0273edf80d787509c07257cac017746ffd8011f70432d6b0b5147e9ff78752e",
+      "modelContract": "18d37a8416a70311d927747e41ff8f339ecc0205d765e35edfbb70a169437bf8",
+      "publicInterface": "3ca2aa65b3876fac16022f64cd5d670794288db79ee754e9a9d38571f018cf2e"
+    },
+    "sourceHashesAfter": {
+      "model": "cc687d4f4f3041db0c3d40a56a06cf4cdfd6df035c83cea1f29e5ff897404725",
+      "test": "de5897b344e9ec8d57ddabb2ff7ec110cb5f2daed57b3e6001e12c4586f9790c",
+      "publicDesign": "d0273edf80d787509c07257cac017746ffd8011f70432d6b0b5147e9ff78752e",
+      "modelContract": "18d37a8416a70311d927747e41ff8f339ecc0205d765e35edfbb70a169437bf8",
+      "publicInterface": "3ca2aa65b3876fac16022f64cd5d670794288db79ee754e9a9d38571f018cf2e"
+    },
+    "testLogSha256": "1b61d2eaa952079fcfb74312622c97abd1c0a730959c134b43e32cd09e3386f3",
+    "rawReportSha256": "17764ef997fd077d48496c3d7485f62a2286ce39620b2788cce62c07c507b43b",
+    "scope": "Formal model rule tests, including explicitly synthetic boundary fixtures; no browser, ordinary round or hardware evidence."
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ]
+  },
+  "supplementaryControls": {
+    "capturedImages": [
+      {
+        "scratchRelativePath": "ui-first/controller-844x390.png",
+        "sha256": "952669801c5ed16cdcec8660bb5993b160739dc04b8b931164ba5cc0f070b908",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "ui-first/controller-both-held.png",
+        "sha256": "f3c161984e3ee32c9ac46903d5bd53e7180354e7b4793219df1dea1653834631",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/menu-level1-1280.png",
+        "sha256": "b139496c1514a354935ce00507757d46db30ce6e1fe09cf7aa76795f390ab186",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/initial-level1-1280.png",
+        "sha256": "e321f460710e8b1656ed5b7a2cdd78c695cf16c7ef49c6aff39477ffe9d5158c",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/menu-level2-1280.png",
+        "sha256": "66b54c84c0e243e45ad2f9bd24df0da9f0b50a35914cb48fc0174488c97e45b0",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/initial-level2-1280.png",
+        "sha256": "9207f26b75ce466df367d937a82e857bb0907b19cd3ecb3bebe7b97a0b106c15",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/initial-level2-960.png",
+        "sha256": "8c6b941485e72cab90e71c20841bcec8470bdbab72372cfb25c9283200cdfa96",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/menu-level0-960.png",
+        "sha256": "6c87affb2fb03e98f55679a6d7f7403a3ee092e8168eab17820750183827659e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/before-release-960.png",
+        "sha256": "9e009ca8bdd983967231b98835d0ecc09f6d75a0c4ab5b6daffe84eb1f16d483",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/after-release-rise-960.png",
+        "sha256": "47903d1c7b80073b55204332c48dfa84315371e2161e7ec437f05ebdafb25d78",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/partial-hold-pause-960.png",
+        "sha256": "4fa504655ae9c4d76c8995cc1340f9ae0dbc31a908050a2dd9842bfb48f31421",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/partial-hold-pause-1280.png",
+        "sha256": "ff9bcd70ca3660c3ba825c8cb4efe10ce7018e7e38268ad9fde199908596ff40",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/before-hold-reset-960.png",
+        "sha256": "024abc68b5194b8cdaab10acb010c2365f5fb97c18bc7c02b45173430c759a8e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/after-hold-reset-960.png",
+        "sha256": "abd43a7ceb222395ffdbc73f3bd7654d2ed13275d8a644f339751cd1f3bb4e57",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/stable-hold-960.png",
+        "sha256": "92f1d5ecfd6c022e12589169e8ed44fec8bc4e048958ccd56d5ed3b17bf4b19e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/transition-1-960.png",
+        "sha256": "89a1a200693a03dc3f9e15395c4f37512ed6b141e29e25630c846fc723a0e0b1",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/transition-2-960.png",
+        "sha256": "3ee8f9b3656f1ee0fd86849e84ea70545d7f2cdbe551b8c4c285361dfcc2eb44",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/near-overheat-1280.png",
+        "sha256": "dbce533aeb86c701b273a425376985c8535477284cc5f0229238cc4dcc02ae89",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/near-burst-960.png",
+        "sha256": "1d1fb3b956b1d3d6b0bfd43689ee808d1d132013a23959186199b5e6044ab334",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/burst-loss-960.png",
+        "sha256": "664799ea4db4758b922bd94431ae5a598499885d2886a3e66783697e3ba432ec",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/burst-loss-1280.png",
+        "sha256": "d8227a5d8659b9faae5b26b536eeb84b29340653280ebedc0ce72b36575cd99e",
+        "includedInRelease": false
+      }
+    ],
+    "trustedTouchEdges": 31,
+    "protocolChecks": [
+      "held-confirm-and-release",
+      "remote-cancel-epoch-held-quarantine-real-false-ack",
+      "disconnect-freeze-local-takeover-reconnect-and-session-quarantine",
+      "retry-confirm-quarantine-and-independent-pause-button"
+    ],
+    "pointerScope": "Trusted browser touch events on supplied controller assets; controlled local WebSocket transport. Actual TV response is a separately labelled host fixture.",
+    "protocolScope": "Controlled public native-host input snapshots with actual shared runtime and production game. This is a protocol fixture, not physical LAN/phone evidence.",
+    "gapSessions": [
+      {
+        "label": "scenario-1-initial",
+        "phase": "playing",
+        "reason": "",
+        "stopReason": "Intentional initial-scene observation only; no terminal outcome claimed"
+      },
+      {
+        "label": "scenario-2-initial",
+        "phase": "playing",
+        "reason": "",
+        "stopReason": "Intentional initial-scene observation only; no terminal outcome claimed"
+      },
+      {
+        "label": "starter-small-mechanisms",
+        "phase": "playing",
+        "reason": "",
+        "stopReason": "Intentional stop after second material transition; no duplicate complete win"
+      },
+      {
+        "label": "natural-overheat",
+        "phase": "lost",
+        "reason": "overheat",
+        "stopReason": "Actual natural overheat; existing overheat terminal images are not duplicated"
+      },
+      {
+        "label": "natural-burst",
+        "phase": "lost",
+        "reason": "burst",
+        "stopReason": "Actual natural burst; existing overheat terminal images are not duplicated"
+      }
+    ],
+    "gapScope": "Actual wall-clock browser source captures of missing visual cases. Partial sessions are declared stops, not wins; observations and screenshot windows are sparse.",
+    "rootGapLimitations": [
+      "Duplicate DOM HUD uses shared100msrefreshcondition, not framesynchronized.",
+      "No nonzero-dose completed receipt occurred; no imageclaimfor that optionalcase. Active nonzero-dose display and legitimate zero-dose success receipts reviewed.",
+      "Encodedvideo and finalperformance pending.",
+      "No physicalTV/phone tested."
+    ]
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "buildSourceSha": "7b16d394bb68ad3d64e8797a97d574bc97852669",
+    "startHashes": {
+      "harness": "281df51a8205bcfd89240135bc63113ce63ec0860fe70fbfb67681509a672539",
+      "automation": "b848397fa2252b65235acbabc673ce5723ff5094636a45885eb2c8ab3d4a5464",
+      "common": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+      "metrics": "6f3feda7dd79d649ea4f27ced8f7dd5461b7d0cf0010005b12805abace565476",
+      "docs/public-design.md": "d0273edf80d787509c07257cac017746ffd8011f70432d6b0b5147e9ff78752e",
+      "docs/model-contract.md": "18d37a8416a70311d927747e41ff8f339ecc0205d765e35edfbb70a169437bf8",
+      "docs/public-interface.md": "3ca2aa65b3876fac16022f64cd5d670794288db79ee754e9a9d38571f018cf2e"
+    },
+    "endHashes": {
+      "harness": "281df51a8205bcfd89240135bc63113ce63ec0860fe70fbfb67681509a672539",
+      "automation": "b848397fa2252b65235acbabc673ce5723ff5094636a45885eb2c8ab3d4a5464",
+      "common": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+      "metrics": "6f3feda7dd79d649ea4f27ced8f7dd5461b7d0cf0010005b12805abace565476",
+      "docs/public-design.md": "d0273edf80d787509c07257cac017746ffd8011f70432d6b0b5147e9ff78752e",
+      "docs/model-contract.md": "18d37a8416a70311d927747e41ff8f339ecc0205d765e35edfbb70a169437bf8",
+      "docs/public-interface.md": "3ca2aa65b3876fac16022f64cd5d670794288db79ee754e9a9d38571f018cf2e"
+    },
+    "sourceWindowSha256": {
+      "start": "b5152240cd4c035ce280c9107ead6751bd77b1bbbce032cb51cb20d2a5c9691b",
+      "end": "b8f14bf6c5ec188ef9d4993f595c318004b7c1c1a1df0033df200a554cf73b09"
+    }
+  },
+  "sourceArtReview": {
+    "file": "art-review.json",
+    "sha256": "fbdf4c3b89c82e82ea52e993dc398295e57eb1d6812ecda85a1522af75681195"
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "rawReportSha256": "1ce5f53568715021f3cd791ec71accf0f2a2ce04a02b81d3ea3c80d0fc6caabb",
+    "reviewedImageCount": 62,
+    "dualFinalOriginalReviews": {
+      "root-encoded-original-review.json": "86b37c3deffab84f9d9becd1dc912f0255a90d5008f2961d77fde8241836e7da",
+      "root-final-qa-original-review.json": "4978abd93bd3595b73f1e30d4d174f09ad7f0f00ba339ee85c78f0f1f4d2d4fa",
+      "peer-final-media-review.md": "036797453003a1cabf56dd0c760ef30e554552e6b1b1f839934c8114871725a8"
+    },
+    "actualImageObservations": [
+      {
+        "name": "menu-0",
+        "encodedIndex": 46,
+        "png": "encoded-originals-first/menu-0.png",
+        "pngSha256": "e352dd48c16eca9b7e5feff7bd7a2f2432256449d1aeabfdb92762cf0b02d3d5",
+        "sourceJpeg": "encoded-originals-first/menu-0.source.jpg",
+        "sourceSha256": "bcdb01f8b833c9885597e85b3e69d469c58a24a13cd1f9d21c3193a1d85cb229",
+        "exactEncodedIndexChecked": true,
+        "observations": "STARTERselected;Chinesehelp/title/start/sidebar/footer readable;blur preserved."
+      },
+      {
+        "name": "menu-1",
+        "encodedIndex": 136,
+        "png": "encoded-originals-first/menu-1.png",
+        "pngSha256": "427c4c9391e7807a0bacf13ae8fa2df519d3d1884673c363b9db9d9bfc395b7a",
+        "sourceJpeg": "encoded-originals-first/menu-1.source.jpg",
+        "sourceSha256": "eae5f11a6ea502dacc6d34a245ea4474cf538fe625063683bd61f0591d7b601d",
+        "exactEncodedIndexChecked": true,
+        "observations": "SWAPselected andfiberfirstHUD;menucontrols andletters readable."
+      },
+      {
+        "name": "menu-2",
+        "encodedIndex": 226,
+        "png": "encoded-originals-first/menu-2.png",
+        "pngSha256": "9cb6872614aac9a3e2792ddfdac973d6979244402df73a6ca84e59e95113d535",
+        "sourceJpeg": "encoded-originals-first/menu-2.source.jpg",
+        "sourceSha256": "e6e86b39e64269263c83d19ff246761326e8e9a59c2b123a88ba9260e95ac82f",
+        "exactEncodedIndexChecked": true,
+        "observations": "HEAVYselected andfoilfirstHUD;full composition preserved."
+      },
+      {
+        "name": "active-warm",
+        "encodedIndex": 310,
+        "png": "encoded-originals-first/active-warm.png",
+        "pngSha256": "d2fb4e31e750d6b02abddef5f7bf6eab9f497631abae0550c3f82d4c6dd83cf7",
+        "sourceJpeg": "encoded-originals-first/active-warm.source.jpg",
+        "sourceSha256": "40cf03f84dac05c4c202dcefbb63af551c565cf16e5807b6af2b37adaa80149d",
+        "exactEncodedIndexChecked": true,
+        "observations": "Actualimage Aheated HEAT9.6/P0 withneutralcueFLAT, not the nearby snapshotpredicate >10/P>0. Machineryandtextclear."
+      },
+      {
+        "name": "release-rise",
+        "encodedIndex": 367,
+        "png": "encoded-originals-first/release-rise.png",
+        "pngSha256": "ccd215d336b91aa6e51a6f46c41dbc8bb4b455d8f2cf3d4851b84a39383730c4",
+        "sourceJpeg": "encoded-originals-first/release-rise.source.jpg",
+        "sourceSha256": "ca5c8ca579aaf0248cd4f2bcf5c1b2abb6fad1f7d73db13932a592266827d166",
+        "exactEncodedIndexChecked": true,
+        "observations": "Actualimage A lit HEAT52.3/P5.8 with next-neutral RELEASE RISE; not anOFF/neutral capturedframe. Filename is selectionhint only."
+      },
+      {
+        "name": "b-only-vent",
+        "encodedIndex": 616,
+        "png": "encoded-originals-first/b-only-vent.png",
+        "pngSha256": "4d7ed899ee813cf19e73e0a358de58ea66dfa52d03a1785fd87799e72d252cc3",
+        "sourceJpeg": "encoded-originals-first/b-only-vent.source.jpg",
+        "sourceSha256": "f8389b545bd4a6d4fa0e520c13a6d1c3464f1c8821d5e3fa08b6fe8873387797",
+        "exactEncodedIndexChecked": true,
+        "observations": "Actualimage A+B andbothpanelslit, P37.3/HEAT52.1; simultaneousheat+vent, notBonly despite selectionname."
+      },
+      {
+        "name": "material-1-hold",
+        "encodedIndex": 502,
+        "png": "encoded-originals-first/material-1-hold.png",
+        "pngSha256": "0bce9c98abcd1446c8db51a020a7d0de72f872c96891f1af2f3d7d37528cff8a",
+        "sourceJpeg": "encoded-originals-first/material-1-hold.source.jpg",
+        "sourceSha256": "9b49cac7664a62bc6ea55a7f5a378edd0f1754c18e400ec47c51187cc1d61ae8",
+        "exactEncodedIndexChecked": true,
+        "observations": "TIN P23.7/HOLD0.4/6,OFF/HEAT51.1/RELEASE RISE; actualwarmneutraldisplay clear."
+      },
+      {
+        "name": "material-2-hold",
+        "encodedIndex": 931,
+        "png": "encoded-originals-first/material-2-hold.png",
+        "pngSha256": "1fc511014d98735902eec350ab4612300f4013bb88650be8db05560302287123",
+        "sourceJpeg": "encoded-originals-first/material-2-hold.source.jpg",
+        "sourceSha256": "9c9129a18081ab78cdd2af96b1f17a15d1e74fafb1fc3a4af42530fbfca9743d",
+        "exactEncodedIndexChecked": true,
+        "observations": "FIBER carton,firstcheck,P47.5/HOLD0.4/6.5,OFF/HEAT49/SAFE62/dose105; coherentprogression."
+      },
+      {
+        "name": "material-3-hold",
+        "encodedIndex": 1249,
+        "png": "encoded-originals-first/material-3-hold.png",
+        "pngSha256": "92e8124f631e6c160b5d92907351248030e8c580d808c5a7a440e41ec17a73af",
+        "sourceJpeg": "encoded-originals-first/material-3-hold.source.jpg",
+        "sourceSha256": "64f6b573128bf40f638ce7a47a2372cf9c3994d5a04fa85ff7a2d7106f66dd46",
+        "exactEncodedIndexChecked": true,
+        "observations": "FOIL pouch,two checks,P71.8/HOLD0.3/7,A lit/HEAT53.5/SAFE58/dose120; readable."
+      },
+      {
+        "name": "win-early",
+        "encodedIndex": 1450,
+        "png": "encoded-originals-first/win-early.png",
+        "pngSha256": "4c618b9e1659a9c95dc2abe719bb7d90a62d99f33c8959f4d6e55d9242265575",
+        "sourceJpeg": "encoded-originals-first/win-early.source.jpg",
+        "sourceSha256": "6e94d21817c553a74df67a3637cb0cba2dc09bddd283c8c7a80e0affd4f50990",
+        "exactEncodedIndexChecked": true,
+        "observations": "Actualindex1450 stillactiveFOIL,currentarrow,HOLD7.0/7 rounded,P77/HEAT47.3; not won dialogue. Originalretained."
+      },
+      {
+        "name": "win-late",
+        "encodedIndex": 1962,
+        "png": "encoded-originals-first/win-late.png",
+        "pngSha256": "d411382f95284d643f8af8598b36e5f738bdd7333f8a3ba03031031e37261cd2",
+        "sourceJpeg": "encoded-originals-first/win-late.source.jpg",
+        "sourceSha256": "e44585357c5a2ea983c726a72d515265bfe9af797848c060d6e9d0dc5982802c",
+        "exactEncodedIndexChecked": true,
+        "observations": "Actualwonresult3/3 qualified,P77.1/HEAT46.5,time38.1,score300 andall3receiptstextreadable."
+      },
+      {
+        "name": "won-settled",
+        "encodedIndex": 1510,
+        "png": "encoded-terminal-first/won-settled.png",
+        "pngSha256": "8b6f52a9ca0a4840391694a39c3f077c29caa2135c56e4546a1038ac5a46bfc3",
+        "sourceJpeg": "encoded-terminal-first/won-settled.source.jpg",
+        "sourceSha256": "c58bffd9995c7236e309986fa1b317dfbc66950fd3bd7e4e5c12abe09c930442",
+        "exactEncodedIndexChecked": true,
+        "observations": "Additionalexplicitindex1510 shows sameactualwonresult wellbeforelateindex1962;bothclear, separatelysampledterminalimages."
+      }
+    ],
+    "limitations": [
+      "Encoded/sourceJPEG mapping exact; nearbybrowserobservations notexactpixel/modeltickattribution.",
+      "Threecandidatefilenames hadcontentdifferentfromnamedmoment; originalbytespreservedandactualcontentclassified.",
+      "SharedDOM refreshcadence maylagcanvas; notframe-synchronized.",
+      "Export30fps useshold-lastactualJPEG; notmeasureddevicefps.",
+      "NophysicalTV/phone tested.",
+      "Optionalnonzero-dose completedreceipt notobserved; actualzero-dose receipts andnonzeroactivehazardreviewed.",
+      "Genericsharedleftjoystickdirectioncaption; activesealinghasnodirectionaction.",
+      "FinalpublicQAprojectionexcludes116undatedpilotrows;16datedcontrolrows only, plus793actualrecordstates. Endpointauditdoesnotreplaceordinaryfullcallaudit.",
+      "Package/index/staging/push remain separate subsequentsteps; thisisreviewedpackaginginput, notalreadyreleased."
+    ]
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 830,
+    "observedWindow": {
+      "startTime": 3800.2000000178814,
+      "endTime": 42355,
+      "excludedInitialMilliseconds": 500
+    },
+    "rafIntervalMs": {
+      "count": 830,
+      "min": 16.5,
+      "median": 33.400000000001455,
+      "p95": 83.39999999999964,
+      "max": 150,
+      "mean": 45.80144578313253
+    },
+    "webglDrawCalls": {
+      "count": 830,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 830,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "actualGameplay": {
+    "pressureSeal": {
+      "rawRecordingReportSha256": "26fabfc21fb3ca4682805bdb944c140943dec7f3e8637e062cd2007064028cc9",
+      "videoValidationSha256": "d64327b70d52d94a3009148050312ddb1b5f93edafd86a610b537e904b39baad",
+      "sourceAssetsMatched": true,
+      "ordinaryInputOnly": true,
+      "cleanCapture": true,
+      "receivedJpegs": 929,
+      "encodedFrames": 1963,
+      "actualSparseObservations": 793,
+      "actualDispatches": 128,
+      "terminalHold": {
+        "firstStateIndex": 620,
+        "lastStateIndex": 790,
+        "fromSeconds": 48.103444695,
+        "toSeconds": 65.017752221,
+        "observedSeconds": 16.914307525999995,
+        "minimumRequiredSeconds": 11,
+        "unchangedObservedModel": true,
+        "scope": "Conservative actual wall interval between retained read boundaries; every retained terminal model agrees. Sparse observations, not frame-exact state attribution."
+      },
+      "modelSeconds": 38.1,
+      "level": 0,
+      "seals": [
+        {
+          "index": 0,
+          "material": "tin",
+          "low": 22,
+          "high": 38,
+          "requiredTicks": 120,
+          "holdTicks": 120,
+          "completedTick": 332,
+          "pressure": 29.838253885914806,
+          "heat": 51.81653293855277,
+          "dose": 0,
+          "peakHeat": 54.23517437972196,
+          "inBandTicks": 199
+        },
+        {
+          "index": 1,
+          "material": "fiber",
+          "low": 46,
+          "high": 62,
+          "requiredTicks": 130,
+          "holdTicks": 130,
+          "completedTick": 543,
+          "pressure": 54.67618658614738,
+          "heat": 50.71386016966561,
+          "dose": 0,
+          "peakHeat": 54.218617369264166,
+          "inBandTicks": 130
+        },
+        {
+          "index": 2,
+          "material": "foil",
+          "low": 70,
+          "high": 86,
+          "requiredTicks": 140,
+          "holdTicks": 140,
+          "completedTick": 762,
+          "pressure": 77.08362808053924,
+          "heat": 46.51625227273483,
+          "dose": 0,
+          "peakHeat": 54.11253327104979,
+          "inBandTicks": 140
+        }
+      ],
+      "fullDecodeInvocations": 1,
+      "scope": "All state readStartedAt/readCompletedAt fields bound real awaited reads; browser observations remain sparse.",
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    },
+    "sparseFinalAudit": {
+      "rawReportSha256": "5ec7f4585db44de41f65280b5efb882769d2f438db2962b1ec15d9796c3da598",
+      "verdict": "not-observed",
+      "findings": [
+        {
+          "verdict": "not-observed",
+          "scope": "corpus",
+          "code": "six-run-coverage",
+          "message": "A checked complete ordinary win and natural loss are required for each of the three levels."
+        }
+      ],
+      "observations": [
+        {
+          "runId": "final-qa-dated-controls-only",
+          "checkedEndpoints": 16,
+          "sourceObservationCount": 132,
+          "excludedUndated": 116,
+          "unobservedGaps": 15,
+          "continuousCoverage": "not-observed",
+          "selectionScope": "Only dated control observations are selected. Undated ordinary-pilot entries, observationTrace, nested screenshots and all other QA endpoints are outside this audit projection.",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not their authenticity or source execution provenance.",
+            "No Model, pilot, diagnostic, private witness, or implementation source is read or imported by this checker.",
+            "Calculated values never become later observations; missing calls and multi-tick intervals are never reconstructed.",
+            "Model runs do not establish browser-visible start/retry, trusted controls, pause duration, rendering, performance, or physical hardware behavior.",
+            "JSON snapshots cannot establish fresh object identity, getters/accessors, unrecorded input properties, or the truthfulness of display prose.",
+            "Sparse endpoints and cumulative totals cannot establish continuous holds or the absence of intermediate threshold crossings."
+          ]
+        },
+        {
+          "runId": "final-recording-observed-states",
+          "checkedEndpoints": 793,
+          "sourceObservationCount": 793,
+          "excludedUndated": 0,
+          "unobservedGaps": 792,
+          "continuousCoverage": "not-observed",
+          "selectionScope": "Every actual retained recording state row is projected. Sparse browser reads do not observe intervening model calls or prove continuous dwell.",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not their authenticity or source execution provenance.",
+            "No Model, pilot, diagnostic, private witness, or implementation source is read or imported by this checker.",
+            "Calculated values never become later observations; missing calls and multi-tick intervals are never reconstructed.",
+            "Model runs do not establish browser-visible start/retry, trusted controls, pause duration, rendering, performance, or physical hardware behavior.",
+            "JSON snapshots cannot establish fresh object identity, getters/accessors, unrecorded input properties, or the truthfulness of display prose.",
+            "Sparse endpoints and cumulative totals cannot establish continuous holds or the absence of intermediate threshold crossings."
+          ]
+        }
+      ],
+      "limitations": [
+        "Arithmetic checks establish consistency of recorded public facts, not their authenticity or source execution provenance.",
+        "No Model, pilot, diagnostic, private witness, or implementation source is read or imported by this checker.",
+        "Calculated values never become later observations; missing calls and multi-tick intervals are never reconstructed.",
+        "Model runs do not establish browser-visible start/retry, trusted controls, pause duration, rendering, performance, or physical hardware behavior.",
+        "JSON snapshots cannot establish fresh object identity, getters/accessors, unrecorded input properties, or the truthfulness of display prose.",
+        "Sparse endpoints and cumulative totals cannot establish continuous holds or the absence of intermediate threshold crossings.",
+        "Only manifest-listed public artifacts are read; this audit cannot establish that unlisted attempts do not exist.",
+        "Origin source hashes are provenance claims. Production, pilot, and harness sources are not opened or authenticated by this CLI.",
+        "A checked ordinary corpus is not evidence of browser lifecycle, trusted controls, visuals, performance, or private implementation behavior.",
+        "Sparse reports retain their own gaps and limitations; they cannot supply continuous coverage missing from ordinary receipts."
+      ]
+    }
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "cc687d4f4f3041db0c3d40a56a06cf4cdfd6df035c83cea1f29e5ff897404725",
+    "game.js": "9b2a6ed0be1977f39cbf1e6a605536fa09dfbe44765f56043d335ed59102b1c9",
+    "game-config.json": "0acb0e0589b57a48570339d48ae4eba63dc9f8a6fe979ed72dccc575be76d5f4",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "rulesAcceptance": "5bc97b9c1a8072398af8b75d98076ef66a594a11781d45f07507936fdbded973",
+    "formal": "17764ef997fd077d48496c3d7485f62a2286ce39620b2788cce62c07c507b43b",
+    "formalStart": "ce9d6f6e0685b1bda05f8da0a9e64178c1cf8288da574506adcec19f595938ab",
+    "formalStatic": "d54b62eb29b26128149bffed5bc4d550fe553cd63e2a64cc3c095f59f374d141",
+    "ordinary": "3e4bf3173272393adcab058fa93562c7aa710eb4671d3d182f3a026a7c5d5869",
+    "ordinaryStart": "308561eddff7f90bc25c56f3615718c25a3da111efa1bbff2fbdf1b971fd3710",
+    "ordinaryEnd": "7f69c2172e0291f690659a87471ff550a2130100362d2920b7e576fa36f0e4af",
+    "ordinaryStatic": "67cb448a8dfa9f6da0f54697498be13db2eac05ba73b76b7209c4c568f22303f",
+    "publicOrdinary": "7535456b705f4c778dcdf416e6743d8d84165f2bcd62c6a9f88c10d74eace5b6",
+    "independent": "4688eaf7ee0436146be2045c351bffd9dc4a2fbda00d06abf8c771ab75867c68",
+    "independentStatic": "d0dfbfcb4082d14676a3ca397561846450426d541e6fdb83c8ba362ea180c3b8",
+    "candidateRaw": "d0a8160048e234e89b271d6dd4655b95e00f18a1e60c874c602b309001b6fb38",
+    "candidateStart": "24011df25fc7b0e1c5847fd48a9575c62b4e2986fc09db59f3110182b5cb5353",
+    "candidateEnd": "0eebb32648a682df6b4f08b618fba28f27d3978fd194fc891379acfda39deb62",
+    "candidateStatic": "d010ab030b523ff2fa3e9039445dec92a4c29810f04f48e576136eeee7704acb",
+    "candidateWin": "014abe0f462045bc852b9d7d795356181a898e0fc3173b8b9eafca7e7dfd2854",
+    "candidateLoss": "f4031fb2ba54873bbecf415f89e42765a9e7a2de6e083de199e1eae291c5bb42",
+    "rootCandidatePartial": "524252a56488ab23221ff83f36d843ffe4406f7d5219fb0c13444a03a6291de7",
+    "candidate": "65358e1b1bfbdff77a2bf328c9cca2acac03dffd056f5c40009a1e9403af2374",
+    "candidateSparse": "6f35f695d0dd5d0de58b4c0bd410547ab75c2225b14b22c7cd84891d53e5bd71",
+    "candidateSparseIndex": "079c4ca210fd5b6c7e89586779c3b0c75c2ff55f5d5040c9ec79032a802ddae2",
+    "uiRaw": "e4405942d0e1e9155f13859d46dff96537bed9fd173c896672f293ceced9009e",
+    "uiStart": "db8911b7d4573f82197c8b2e397bcb1b58aa2b0551971c8b866b07248a7e3dd2",
+    "uiEnd": "db8911b7d4573f82197c8b2e397bcb1b58aa2b0551971c8b866b07248a7e3dd2",
+    "uiStatic": "a708fb5d049baf3a9b39f5a380982cf97a4d9b73b298a69a296583336dbb8bb8",
+    "rootController": "be705adac5032748b8f80beda39035dab4e561265cb2f0d96ba854af0738ad87",
+    "gapsRaw": "72fe39532eaa380c60c549d203e6bc5d2b2698d01ba691cffe56df5637d36cd8",
+    "gapsStart": "302ba1da31631f453778ca0ff52ec9e593fafaaae1aa34f662192c4b4a4f159f",
+    "gapsEnd": "302ba1da31631f453778ca0ff52ec9e593fafaaae1aa34f662192c4b4a4f159f",
+    "gapsStatic": "a93436f9d4e1184be94c4619fcc3c5a5b9b1d725dd1cacf8d2f560bdeb9f5604",
+    "rootGaps": "27746e716f3709443f2078795b0d0e01465915a2d5d7629b476b8f3038437ea8",
+    "qa": "013b04f3b30f79fd958d703325000bec45a4e80def98832ea38dab78f256506d",
+    "qaStart": "b5152240cd4c035ce280c9107ead6751bd77b1bbbce032cb51cb20d2a5c9691b",
+    "qaEnd": "b8f14bf6c5ec188ef9d4993f595c318004b7c1c1a1df0033df200a554cf73b09",
+    "qaStatic": "d595e00430a6c674e8df359af02cedef879bf69510d3ee1ac923907025390eac",
+    "qaSamples": "ae369a348b27adfedf8100d4a2d196d56dcec864569b662bc1ef556a4cc1a7fc",
+    "qaTrace": "52fa728e1fb748f1d37bf1e3dd193ac97de09c6b66f79e98c95fb84b533c9d4e",
+    "rootQa": "4978abd93bd3595b73f1e30d4d174f09ad7f0f00ba339ee85c78f0f1f4d2d4fa",
+    "freeze": "c7b7c79f6ba5d945d623684594e8c68beefe35270b2a8ec3fa767abc307c2341",
+    "record": "26fabfc21fb3ca4682805bdb944c140943dec7f3e8637e062cd2007064028cc9",
+    "recordStart": "f2276e997854bb15b318a9a9198584552fe38a9f7f4ea33efe8e08b4b146fd8d",
+    "recordEnd": "e79e2fae13f9683a6bf0229001263fb69ece00e933e4d70d88d9767b2e395da4",
+    "capturePins": "b5c7cf94286fce309851a3d07569f83501a34c93eb95619422a121c8ada38529",
+    "mediaStatic": "57da4d3e36f1dc4aa46c50a10db68147630188a3462d637cae96f10d881502e6",
+    "recipe": "635fffe00ab440c29fd69980ee27f7464b49e2217edc46cf8c99e04e145ee8d6",
+    "receivedFrames": "2a789436f26dcc8c52a7eb86f3af660977cb382a66a74e4f70a7ee5f31c90225",
+    "frameOrder": "d9cb8dbc991a98d037677427e9146448ea11b39923dc63f11a44def5a09fec33",
+    "frameMap": "7dc20bc6c097ef8138c35bf41c3efa207e253b79d14896ca69daf5f1cafcbae8",
+    "videoValidation": "d64327b70d52d94a3009148050312ddb1b5f93edafd86a610b537e904b39baad",
+    "verifyCommand": "f16a72fdf7fcc890c0459e16b05c7e959108aae9d33ddd6ab701b3bf01c9399f",
+    "verifyExit": "9d376fcf5e7a3c78ec7d0e3b4bbacb003b60753616651c5868eaf884ed988e5d",
+    "frameProbe": "a6f01d7e41b080d0e8cd61959b54c864f22e64e45113dbe99f56bc30eb49b058",
+    "extracted": "ec703493b8e6615cbae48781fd2ec82101ee9270c20610a73c5bc0ccb724f3f8",
+    "extractorStatic": "50d9603a8c70e1666abcd7b9a66b4fed24b0ca8b22be801fffe97e205910e0e4",
+    "finalSparseIndex": "f4226eebdfeb4b28ef31ae7087cba42a6a523e721b0a93ebac3e294044a69078",
+    "finalQaPublic": "1eec072bf2399130703aa1aedd1540c21758c149454bbae18a0cc180801e7389",
+    "finalRecordingPublic": "f203200f2e8c4d5beb38c589d662eb74f9b29b7fbedd6e44f5e69d2c37aaf5fb",
+    "finalSparse": "5ec7f4585db44de41f65280b5efb882769d2f438db2962b1ec15d9796c3da598",
+    "terminalExtracted": "eb29618d71c3fa221bcc7952b5b3f404f78e92762f8c759a75d855457073d9b2",
+    "rootEncoded": "86b37c3deffab84f9d9becd1dc912f0255a90d5008f2961d77fde8241836e7da",
+    "terminalSelection": "abf47645ae550b09a54c0efc252f261680b2255a3c17e6efb9c5a887b70f7366",
+    "finalProjection": "c44fa8d7f681f23622c81be4031298f34b406b66fdfd3e7ca58d646074f0538f",
+    "projectorStatic": "9f52f80ef1da62e20a55db85b74eeaaa5236eb57b790f0981d603167a01b72d3",
+    "finalReview": "1ce5f53568715021f3cd791ec71accf0f2a2ce04a02b81d3ea3c80d0fc6caabb",
+    "build": "c939fa5f017b1d655cc6212c40cbd4ccd5a798d5cfa76a3cd35bdc7341065c29",
+    "sign": "baeb6420c7604c415b76c402fd7cbea0a6ab85b236d24c6350c71da34431d701",
+    "fetch": "0a15ea7568b769c59b7b52e0f72c292c78b4427a1a93936787bac837cd5d0fd9"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium with ordinary input. Synthetic fixtures are labelled separately; export FPS is not device FPS."
+  },
+  "release": {
+    "sourceSha": "7b16d394bb68ad3d64e8797a97d574bc97852669",
+    "requestCommit": "c4bed8a559b71d9ab3c678506ad546ce60b6c2bc",
+    "signerCommit": "7b16d394bb68ad3d64e8797a97d574bc97852669",
+    "signingRun": 41527061903,
+    "bytes": 296227,
+    "sha256": "4e6d84cfd424fccac2f728a629f191be80d25f1d440d76fcd5b30c45ac24a7ad",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "signatureVerified": true,
+      "zipalignVerified": true,
+      "crcVerified": true,
+      "sourceIdentityVerified": true,
+      "assetsMatchSigningReceipt": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "057e7ebc1b05bade50615393640011e8d6b4fd30"
+  }
+}

@@ -1,0 +1,629 @@
+{
+  "schema": 1,
+  "game": "switchyard-minute",
+  "version": "0.1.0",
+  "modelTests": {
+    "passed": 18,
+    "command": "node --test resource/apps/switchyard-minute/tests/game-model.test.cjs",
+    "modelSha256": "d4e5a47bb384f901c1302d4f3b6bda5be7e9c7a659d02654af3bbdba46fed264",
+    "normalInputLevelsWon": 3,
+    "independentSweepComparisons": 50000,
+    "independentSweepMethod": {
+      "seed": 42,
+      "generator": "uint32 LCG: state = (Math.imul(state, 1664525) + 1013904223) >>> 0; U = state / 4294967296",
+      "segments": {
+        "t0": "[0,1)",
+        "t1": "t0 + 0.001 + U",
+        "x": "[0,960)",
+        "y": "[0,540)",
+        "radius": "[0,40)"
+      },
+      "reference": "Clamp the closest-approach time of relative linear motion to the overlapping time interval, then compare squared distance with R^2 + 1e-8. Production code instead solves for quadratic first-contact time.",
+      "execution": "Read-only Node inline script in the independent review session; private firstContact exposed in VM memory only. No source modification and no standalone report file retained.",
+      "reportedOutput": "Independent closest-approach check: 50000 linear segment pairs agree"
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "0b3340a13510d05ecbbbea5288f1dd2d16a1dbe806985b637decea8d45da740e",
+      "game-model.js": "d4e5a47bb384f901c1302d4f3b6bda5be7e9c7a659d02654af3bbdba46fed264",
+      "game.js": "f12b5e851218840eee63bf16aa41a41b466f22b314a01c8a12e5c357abcde94c",
+      "renderer.js": "af08d559afff15818dadfcc2a920154c3166e90cc285ea90d980dad62c76b575",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223"
+    }
+  },
+  "supplementaryUiAndNormalLoss": {
+    "kind": "switchyard-ui-phone-bridge-and-normal-loss",
+    "sourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "0b3340a13510d05ecbbbea5288f1dd2d16a1dbe806985b637decea8d45da740e",
+      "game-model.js": "d4e5a47bb384f901c1302d4f3b6bda5be7e9c7a659d02654af3bbdba46fed264",
+      "game.js": "f12b5e851218840eee63bf16aa41a41b466f22b314a01c8a12e5c357abcde94c",
+      "renderer.js": "af08d559afff15818dadfcc2a920154c3166e90cc285ea90d980dad62c76b575",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223"
+    },
+    "mockNativeRoomForPhoneTests": true,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "tests": [
+      {
+        "name": "menu labels and all three buttons create the intended timetables",
+        "passed": true,
+        "detail": [
+          {
+            "level": 0,
+            "target": 5,
+            "delayLimit": 100
+          },
+          {
+            "level": 1,
+            "target": 7,
+            "delayLimit": 180
+          },
+          {
+            "level": 2,
+            "target": 9,
+            "delayLimit": 260
+          }
+        ]
+      },
+      {
+        "name": "remote and phone joystick cycle menu choices once per press with wraparound",
+        "passed": true,
+        "detail": [
+          {
+            "kind": "keyboard",
+            "level": 1
+          },
+          {
+            "kind": "keyboard",
+            "level": 2
+          },
+          {
+            "kind": "keyboard",
+            "level": 0
+          },
+          {
+            "kind": "mockPhone",
+            "level": 1
+          },
+          {
+            "kind": "mockPhone",
+            "level": 2
+          },
+          {
+            "kind": "mockPhone",
+            "level": 0
+          },
+          {
+            "kind": "mockPhone",
+            "level": 2
+          },
+          {
+            "kind": "mockPhone",
+            "level": 1
+          },
+          {
+            "kind": "mockPhone",
+            "level": 0
+          }
+        ]
+      },
+      {
+        "name": "menu backdrop blur and sound button reflect the actual settings",
+        "passed": true,
+        "detail": {
+          "blur": "blur(14px)",
+          "soundOnOff": true
+        }
+      },
+      {
+        "name": "held phone START begins one round without repeated pause or reset",
+        "passed": true,
+        "detail": {
+          "beforeTick": 6,
+          "afterTick": 35
+        }
+      },
+      {
+        "name": "phone A changes the selected switch once while held",
+        "passed": true,
+        "detail": {
+          "routeBefore": 1,
+          "routeAfter": 0,
+          "holdMilliseconds": 450
+        }
+      },
+      {
+        "name": "phone stick selects the gate and B releases one ready train",
+        "passed": true,
+        "detail": {
+          "selectedId": "gate-west",
+          "releasedTrain": "train-1",
+          "releasedAt": 1.6833333333333333
+        }
+      },
+      {
+        "name": "disconnect freezes trains and neutral reconnect waits for explicit START",
+        "passed": true,
+        "detail": {
+          "pausedTick": 145,
+          "resumedTick": 151,
+          "clearedInputs": true
+        }
+      },
+      {
+        "name": "pause and primary/header resume buttons retain the same timetable",
+        "passed": true,
+        "detail": {
+          "pausedTick": 181,
+          "primaryAndHeaderResume": true
+        }
+      },
+      {
+        "name": "normal wrong routing sends the first red train to blue and ends the round",
+        "passed": true,
+        "detail": {
+          "reason": "wrong-platform",
+          "elapsed": 7.916666666666667,
+          "remaining": 82.08333333333333,
+          "blur": "blur(14px)"
+        }
+      },
+      {
+        "name": "R retry clears train route history, arrival count and occupied junctions",
+        "passed": true,
+        "detail": {
+          "level": 1,
+          "deliveries": 0,
+          "routes": [
+            1,
+            0
+          ],
+          "elapsed": 0.2
+        }
+      }
+    ],
+    "passed": true,
+    "normalLossOutcome": {
+      "phase": "lost",
+      "tick": 475,
+      "elapsed": 7.916666666666644,
+      "level": 0,
+      "lostReason": "wrong-platform",
+      "deliveries": 0,
+      "target": 5,
+      "score": 0
+    }
+  },
+  "earlyCompactLayoutReview": {
+    "kind": "early-normal-input-layout-gate",
+    "sourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "0b3340a13510d05ecbbbea5288f1dd2d16a1dbe806985b637decea8d45da740e",
+      "game-model.js": "d4e5a47bb384f901c1302d4f3b6bda5be7e9c7a659d02654af3bbdba46fed264",
+      "game.js": "01f187829d9f6ea2dd0548cb383f74b9e658f6186535ba65e27d438321686467",
+      "renderer.js": "af08d559afff15818dadfcc2a920154c3166e90cc285ea90d980dad62c76b575",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223"
+    },
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "viewports": [],
+    "dialogChecks": [
+      {
+        "label": "960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "bottom": 476,
+          "right": 694.71875
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 129.90625,
+          "width": 420,
+          "height": 334.1875,
+          "bottom": 464.09375,
+          "right": 586.5
+        },
+        "overlayVisible": true,
+        "backdropFilter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "file": "960-menu.png"
+      },
+      {
+        "label": "1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "bottom": 624,
+          "right": 928.546875
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 203.71875,
+          "width": 420,
+          "height": 377.5625,
+          "bottom": 581.28125,
+          "right": 726.984375
+        },
+        "overlayVisible": true,
+        "backdropFilter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "file": "1280-menu.png"
+      },
+      {
+        "label": "960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "bottom": 476,
+          "right": 694.71875
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "bottom": 411.390625,
+          "right": 586.5
+        },
+        "overlayVisible": true,
+        "backdropFilter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "file": "960-pause.png"
+      },
+      {
+        "label": "1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "bottom": 624,
+          "right": 928.546875
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "bottom": 524.1875,
+          "right": 726.984375
+        },
+        "overlayVisible": true,
+        "backdropFilter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "file": "1280-pause.png"
+      },
+      {
+        "label": "960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "bottom": 476,
+          "right": 694.71875
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 149.203125,
+          "width": 420,
+          "height": 295.59375,
+          "bottom": 444.796875,
+          "right": 586.5
+        },
+        "overlayVisible": true,
+        "backdropFilter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "file": "960-won.png"
+      },
+      {
+        "label": "1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "bottom": 624,
+          "right": 928.546875
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 226.609375,
+          "width": 420,
+          "height": 331.78125,
+          "bottom": 558.390625,
+          "right": 726.984375
+        },
+        "overlayVisible": true,
+        "backdropFilter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "file": "1280-won.png"
+      }
+    ],
+    "passed": true,
+    "visualReviewCompleted": true,
+    "reviewMethod": "Opened all six real UI screenshots: 960/1280 menu, pause and genuine first-level win; checked instructions, layout, placeholder QR and frosted overlay.",
+    "note": "Prototype ordinary-input menu/pause/victory review at 960x540 and 1280x720. Only game.js changed later: queue card placement, gate status copy and matching visible train size to collision radius. Shared runtime/CSS/model/renderer stayed identical; final recording and UI checks use the final game.js.",
+    "normalOutcome": {
+      "phase": "won",
+      "elapsed": 40.68333333333333
+    },
+    "traceSamples": 437,
+    "traceSha256": "6e7f528c28e1eae50f615664d1a5d4dfc3e27679c81c32ab7a859a6324f5aae3"
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "kind": "final-layout-carryforward-and-gameplay-review",
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "af08d559afff15818dadfcc2a920154c3166e90cc285ea90d980dad62c76b575",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223",
+      "game-model.js": "d4e5a47bb384f901c1302d4f3b6bda5be7e9c7a659d02654af3bbdba46fed264",
+      "game.js": "f12b5e851218840eee63bf16aa41a41b466f22b314a01c8a12e5c357abcde94c",
+      "game-config.json": "0b3340a13510d05ecbbbea5288f1dd2d16a1dbe806985b637decea8d45da740e",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "earlierDialogReview": "../early-layout/early-layout.json",
+    "earlierDialogSourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "0b3340a13510d05ecbbbea5288f1dd2d16a1dbe806985b637decea8d45da740e",
+      "game-model.js": "d4e5a47bb384f901c1302d4f3b6bda5be7e9c7a659d02654af3bbdba46fed264",
+      "game.js": "01f187829d9f6ea2dd0548cb383f74b9e658f6186535ba65e27d438321686467",
+      "renderer.js": "af08d559afff15818dadfcc2a920154c3166e90cc285ea90d980dad62c76b575",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223"
+    },
+    "differencesFromEarlierDialogReview": [
+      "game.js"
+    ],
+    "menuDescriptionAndGameDefTextUnchanged": true,
+    "sharedHtmlCssRuntimeUnchanged": true,
+    "sixEarlierDialogRectanglesFit": true,
+    "final960GameplayScreenshotOpened": "resize-960.png",
+    "final960QueueCardsFit": true,
+    "final960TrainBodiesAndSignalsVisible": true,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 564,
+    "rafIntervalMs": {
+      "count": 564,
+      "min": 16.5,
+      "median": 83.29999999999563,
+      "p95": 116.70000000000437,
+      "max": 183.40000000000146,
+      "mean": 73.90372340425532
+    },
+    "webglDrawCalls": {
+      "count": 564,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 564,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "reviewer": "prism_qa_capture",
+    "sourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "0b3340a13510d05ecbbbea5288f1dd2d16a1dbe806985b637decea8d45da740e",
+      "game-model.js": "d4e5a47bb384f901c1302d4f3b6bda5be7e9c7a659d02654af3bbdba46fed264",
+      "game.js": "f12b5e851218840eee63bf16aa41a41b466f22b314a01c8a12e5c357abcde94c",
+      "renderer.js": "af08d559afff15818dadfcc2a920154c3166e90cc285ea90d980dad62c76b575",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223"
+    },
+    "videoSha256": "305ec781f0d61f2a6201004552f9b6d9cc3f7d349c797e26fa824a8aee3b4169",
+    "videoBytes": 2545781,
+    "capturedSeconds": 60.51819849014282,
+    "reviewFrames": [
+      "review/menu-morning.png",
+      "review/menu-crossing.png",
+      "review/menu-rush.png",
+      "review/gameplay-12s.png",
+      "review/gameplay-24s.png",
+      "review/gameplay-36s.png",
+      "review/gameplay-thumb-26s.png",
+      "review/settlement-58s.png"
+    ],
+    "gameplayFrameRecommended": "review/gameplay-thumb-26s.png",
+    "normalWin": {
+      "level": 1,
+      "deliveries": 5,
+      "target": 5,
+      "score": 5360,
+      "elapsed": 41.88333333333333,
+      "delay": 60.799999999997326,
+      "delayLimit": 100,
+      "allTrainsAtOwnPlatforms": true,
+      "observedAt": 50.012620471000005
+    },
+    "finalWinHeldSecondsAtLeast": 9.990541569999998,
+    "postCaptureChecks": {
+      "performedAfterCapture": true,
+      "passed": true,
+      "input": "Real browser keyboard after recording; no native mock",
+      "tests": [
+        {
+          "keyboardBTogglesSoundTo": true,
+          "heldWithoutFlicker": true
+        },
+        {
+          "keyboardBTogglesSoundTo": false,
+          "heldWithoutFlicker": true
+        }
+      ],
+      "winningScore": 5360,
+      "bestScoreInNewPage": 5360,
+      "deliveries": 5,
+      "target": 5
+    },
+    "audio": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "method": "Opened eight PNG frames extracted from the final encoded video: all three menu choices, 12/24/36-second dispatch scenes, 26-second thumbnail, and 58-second real victory.",
+    "reviewTimestampsSeconds": {
+      "menu-morning": 0.2,
+      "menu-crossing": 1.2,
+      "menu-rush": 1.7,
+      "gameplay-12s": 12,
+      "gameplay-24s": 24,
+      "gameplay-36s": 36,
+      "gameplay-thumb-26s": 26,
+      "settlement-58s": 58
+    },
+    "menuTargetCountsShown": [
+      5,
+      7,
+      9
+    ],
+    "titleReadable": true,
+    "allTracksAndPlatformsVisible": true,
+    "queueCardsFit": true,
+    "trainBodiesVisible": true,
+    "settlementReadable": true,
+    "overlayBackdropBlurVisible": true,
+    "noFabricatedPhoneQr": true
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "af08d559afff15818dadfcc2a920154c3166e90cc285ea90d980dad62c76b575",
+    "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+    "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+    "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223",
+    "game-model.js": "d4e5a47bb384f901c1302d4f3b6bda5be7e9c7a659d02654af3bbdba46fed264",
+    "game.js": "f12b5e851218840eee63bf16aa41a41b466f22b314a01c8a12e5c357abcde94c",
+    "game-config.json": "0b3340a13510d05ecbbbea5288f1dd2d16a1dbe806985b637decea8d45da740e",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Chromium with normal keyboard input; phone bridge checks use a controlled native fixture. No physical Android installation is claimed."
+  },
+  "release": {
+    "sourceSha": "bceee0bae9c086889b325eb3323d7244dabd78ac",
+    "signerCommit": "bceee0bae9c086889b325eb3323d7244dabd78ac",
+    "signingRun": 41325445482,
+    "bytes": 292131,
+    "sha256": "ca34c96a99aa484148ecde82a679e7dd8f2f402f597585d9051513afc72df6bb",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "400c2cbdd1b30c1f73d5a5921cfbbaf6d0120996"
+  }
+}

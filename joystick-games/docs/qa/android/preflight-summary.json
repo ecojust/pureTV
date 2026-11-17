@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "scope": "Tool contracts/proxy and unsigned Observer compile only; no Android installed-game acceptance yet",
+  "contractTests": 6,
+  "observersCompiled": [
+    "cf-transport-ship",
+    "qq-speed"
+  ],
+  "observerSigningPerformed": false,
+  "actualAndroidGameplayPerformed": false,
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "sourceFiles": {
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3386,
+      "sha256": "9e5093d45a4c5aaee565359683af270725db5bc15a43835faa12eb9febebca42"
+    },
+    "joystick-games/qa/android/run.py": {
+      "bytes": 24941,
+      "sha256": "4ff55cd97d4ee8031da488b099a3a211280de66879d279704b29074bc21e25f4"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10870,
+      "sha256": "0ecf4312f12dccb1f696728fc0ac0d876cbe267fca6ad9a1ef9f798bba76941b"
+    },
+    "joystick-games/qa/android/test_runner.py": {
+      "bytes": 5255,
+      "sha256": "969050379937f5633a669a1fe7995aa11c952b5cfd0d51c64135286d82e74b3d"
+    }
+  },
+  "priorAttempts": [
+    {
+      "path": "preflight-attempt-1",
+      "result": "5 passed / 1 failed",
+      "cause": "ACK fixture erroneously dropped hello/ping because both absent event.key and drop_key were None; it also disconnected after a fixed wait."
+    },
+    {
+      "path": "preflight-attempt-2",
+      "result": "5 passed / 1 failed",
+      "cause": "Waiting for ACKs exposed specifically missing hello and ping; fixture condition corrected to require non-None drop_key."
+    }
+  ],
+  "final": "preflight-final/final-test-output.log"
+}

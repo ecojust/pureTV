@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "cases": 13,
+  "checks": [
+    "public layouts are frozen, fresh, contain only times/deadlines and Dijkstra proves optima",
+    "all six optimal routes win through normal selection, crossing and release inputs",
+    "old routes allow a two-minute detour; new challenge routes require exact optima",
+    "slowest selected traveler determines cost; torch and both people can return together",
+    "planning, empty crossing, capacity, deselection and wrong-bank selection are free",
+    "animation charges once at0.4 active seconds and gives equivalent split-step positions",
+    "pause freezes transit while cancellation lets existing movement finish without rearming",
+    "held controls during animation and on landing cannot select or cross a second time",
+    "six natural poor plans lose on landing; exact exhausted budget with people left also loses",
+    "synthetic all-arrived over-budget boundary is a loss, not a goal override",
+    "B>A>direction and initial/cancel epoch release gating prevent accidental commands",
+    "invalid dt and paused samples are exact no-ops; inherited/getter/failed descriptors cannot select",
+    "receipts are detached, terminal states freeze before inputs and finite counters saturate"
+  ],
+  "optima": [
+    17,
+    29,
+    35,
+    27,
+    33,
+    57
+  ],
+  "crossings": [
+    5,
+    7,
+    9,
+    5,
+    7,
+    9
+  ],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

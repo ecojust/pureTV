@@ -1,0 +1,1250 @@
+{
+  "schema": 1,
+  "kind": "independent-island-geometry-connectivity-review",
+  "passed": true,
+  "checks": [
+    {
+      "name": "Determinant/rational geometry boundaries independent of model helpers",
+      "scope": {
+        "syntheticGeometryOnly": true,
+        "productionModelImported": false,
+        "productionModelExecuted": false,
+        "authoredLayoutsRead": false,
+        "authoredRoutesRead": false,
+        "normalGameplayClaims": 0,
+        "browserExecuted": false,
+        "physicalTvTested": false,
+        "physicalPhoneTested": false
+      },
+      "passed": true,
+      "checks": [
+        {
+          "name": "named segment cases retain legality and intersection kind under both endpoint reversals and pair exchange",
+          "passed": true,
+          "namedCases": [
+            {
+              "name": "proper diagonal crossing",
+              "allowed": false,
+              "kind": "proper-crossing"
+            },
+            {
+              "name": "rational non-lattice crossing",
+              "allowed": false,
+              "kind": "proper-crossing"
+            },
+            {
+              "name": "vertical horizontal crossing",
+              "allowed": false,
+              "kind": "proper-crossing"
+            },
+            {
+              "name": "nonparallel disjoint beyond parameter interval",
+              "allowed": true,
+              "kind": "disjoint"
+            },
+            {
+              "name": "parallel disjoint",
+              "allowed": true,
+              "kind": "parallel-disjoint"
+            },
+            {
+              "name": "collinear disjoint",
+              "allowed": true,
+              "kind": "collinear-disjoint"
+            },
+            {
+              "name": "shared island endpoint with different directions",
+              "allowed": true,
+              "kind": "shared-endpoint"
+            },
+            {
+              "name": "shared endpoint collinear opposite rays",
+              "allowed": true,
+              "kind": "shared-endpoint"
+            },
+            {
+              "name": "shared endpoint collinear same ray overlaps",
+              "allowed": false,
+              "kind": "collinear-overlap"
+            },
+            {
+              "name": "same coordinates different endpoint IDs",
+              "allowed": false,
+              "kind": "nonshared-touch"
+            },
+            {
+              "name": "nonshared collinear point contact",
+              "allowed": false,
+              "kind": "nonshared-touch"
+            },
+            {
+              "name": "endpoint touches other segment interior",
+              "allowed": false,
+              "kind": "nonshared-touch"
+            },
+            {
+              "name": "partial positive collinear overlap",
+              "allowed": false,
+              "kind": "collinear-overlap"
+            },
+            {
+              "name": "complete collinear containment",
+              "allowed": false,
+              "kind": "collinear-overlap"
+            },
+            {
+              "name": "same directed edge repeated",
+              "allowed": false,
+              "kind": "collinear-overlap"
+            },
+            {
+              "name": "same endpoints reversed edge",
+              "allowed": false,
+              "kind": "collinear-overlap"
+            },
+            {
+              "name": "vertical opposite rays at shared endpoint",
+              "allowed": true,
+              "kind": "shared-endpoint"
+            },
+            {
+              "name": "zero-length segment",
+              "allowed": false,
+              "kind": "zero-length"
+            }
+          ],
+          "ordersPerCase": 8,
+          "actualRelationCalls": 144
+        },
+        {
+          "name": "non-lattice intersection retains reduced exact rational coordinates",
+          "passed": true,
+          "intersection": {
+            "x": {
+              "numerator": "6",
+              "denominator": "5"
+            },
+            "y": {
+              "numerator": "6",
+              "denominator": "5"
+            }
+          }
+        },
+        {
+          "name": "large exact determinants do not depend on floating-point products",
+          "passed": true,
+          "coordinateMagnitude": 9007199254740000,
+          "bigIntArithmetic": true
+        },
+        {
+          "name": "open-segment membership uses strict rational bounds and excludes endpoints or collinear extensions",
+          "passed": true,
+          "actualPointQueries": 10
+        },
+        {
+          "name": "directed 3-4-5 bridge checks squared length and only target color",
+          "passed": true,
+          "sourceColorUnrestricted": true,
+          "directionChangesRequiredTarget": true
+        },
+        {
+          "name": "a third island blocks a bridge only in its open segment",
+          "passed": true,
+          "strictInteriorBlocked": true,
+          "endpointsExcluded": true
+        },
+        {
+          "name": "same coordinates with different IDs are rejected for island sets even though pair-contact classification remains explicit",
+          "passed": true,
+          "invalidIdentityFixtures": 3
+        },
+        {
+          "name": "fractional coordinates or nonpositive/noninteger bridge lengths fail the exact integer domain",
+          "passed": true,
+          "invalidNumericFixtures": 4
+        }
+      ],
+      "counts": {
+        "namedSegmentCases": 18,
+        "relationCalls": 147,
+        "bridgeCalls": 12,
+        "openSegmentCalls": 11
+      }
+    },
+    {
+      "name": "Public fixed-piece-order exhaustive search and undirected union-find",
+      "scope": "All locally legal complete assignments; no authored solution input",
+      "passed": true,
+      "puzzles": [
+        {
+          "level": 1,
+          "complete": true,
+          "nodes": 24,
+          "domains": [
+            {
+              "pieceId": "P1",
+              "localPlacements": 1
+            },
+            {
+              "pieceId": "P2",
+              "localPlacements": 2
+            },
+            {
+              "pieceId": "P3",
+              "localPlacements": 2
+            },
+            {
+              "pieceId": "P4",
+              "localPlacements": 2
+            },
+            {
+              "pieceId": "P5",
+              "localPlacements": 2
+            }
+          ],
+          "configurations": 8,
+          "connectedConfigurations": 4,
+          "disconnectedConfigurations": 4,
+          "limits": {
+            "maxNodes": 200000,
+            "maxMilliseconds": 10000
+          },
+          "elapsedMilliseconds": 3.758732000000002,
+          "hasConnectedWitness": true,
+          "hasDisconnectedWitness": true
+        },
+        {
+          "level": 2,
+          "complete": true,
+          "nodes": 88,
+          "domains": [
+            {
+              "pieceId": "P1",
+              "localPlacements": 3
+            },
+            {
+              "pieceId": "P2",
+              "localPlacements": 3
+            },
+            {
+              "pieceId": "P3",
+              "localPlacements": 3
+            },
+            {
+              "pieceId": "P4",
+              "localPlacements": 3
+            },
+            {
+              "pieceId": "P5",
+              "localPlacements": 3
+            }
+          ],
+          "configurations": 54,
+          "connectedConfigurations": 24,
+          "disconnectedConfigurations": 30,
+          "limits": {
+            "maxNodes": 200000,
+            "maxMilliseconds": 10000
+          },
+          "elapsedMilliseconds": 5.607626999999994,
+          "hasConnectedWitness": true,
+          "hasDisconnectedWitness": true
+        },
+        {
+          "level": 3,
+          "complete": true,
+          "nodes": 310,
+          "domains": [
+            {
+              "pieceId": "P1",
+              "localPlacements": 3
+            },
+            {
+              "pieceId": "P2",
+              "localPlacements": 3
+            },
+            {
+              "pieceId": "P3",
+              "localPlacements": 2
+            },
+            {
+              "pieceId": "P4",
+              "localPlacements": 3
+            },
+            {
+              "pieceId": "P5",
+              "localPlacements": 3
+            },
+            {
+              "pieceId": "P6",
+              "localPlacements": 3
+            }
+          ],
+          "configurations": 144,
+          "connectedConfigurations": 48,
+          "disconnectedConfigurations": 96,
+          "limits": {
+            "maxNodes": 200000,
+            "maxMilliseconds": 10000
+          },
+          "elapsedMilliseconds": 8.969451999999997,
+          "hasConnectedWitness": true,
+          "hasDisconnectedWitness": true
+        }
+      ]
+    },
+    {
+      "name": "All bank subsets and authored island focus graphs are reachable",
+      "scope": "Pure public navigation graph plus ordinary Model direction observations",
+      "passed": true,
+      "bankNonemptySubsets": 125,
+      "authoredIslandGraphs": 3
+    },
+    {
+      "name": "Every public island pair preview matches the independent exact oracle",
+      "scope": "Explicit preview-only snapshots; no fabricated completion",
+      "passed": true,
+      "comparisons": 2109,
+      "reasonCounts": {
+        "same-island": 327,
+        "valid": 127,
+        "length": 1488,
+        "color": 157,
+        "occupied": 7,
+        "through-island": 3
+      },
+      "source": "Original states with explicit public preview selection/network fixtures; no A commit or terminal assertion in this group."
+    },
+    {
+      "name": "Stage cancellations and exact duplicate-attribute instance undo preserve lifetime history",
+      "scope": "Ordinary A/B/directions, no state mutation",
+      "passed": true
+    },
+    {
+      "name": "Three ordinary independent connected completions and a genuine locally legal disconnected completion",
+      "scope": "Only public search witnesses and ordinary keys, no forced result or clock change",
+      "passed": true,
+      "wins": [
+        {
+          "level": 1,
+          "phase": "won",
+          "componentCount": 1,
+          "placedCount": 5,
+          "remainingPieces": 0,
+          "failedCommits": 0,
+          "totalPlacements": 5,
+          "elapsed": 0.8833333333333333,
+          "score": 2145,
+          "placements": [
+            {
+              "id": "bridge-P1",
+              "pieceId": "P1",
+              "sourceId": "I1",
+              "targetId": "I2",
+              "length": 4,
+              "targetColor": "gold"
+            },
+            {
+              "id": "bridge-P2",
+              "pieceId": "P2",
+              "sourceId": "I1",
+              "targetId": "I4",
+              "length": 3,
+              "targetColor": "teal"
+            },
+            {
+              "id": "bridge-P3",
+              "pieceId": "P3",
+              "sourceId": "I2",
+              "targetId": "I6",
+              "length": 5,
+              "targetColor": "coral"
+            },
+            {
+              "id": "bridge-P4",
+              "pieceId": "P4",
+              "sourceId": "I3",
+              "targetId": "I5",
+              "length": 2,
+              "targetColor": "gold"
+            },
+            {
+              "id": "bridge-P5",
+              "pieceId": "P5",
+              "sourceId": "I6",
+              "targetId": "I5",
+              "length": 2,
+              "targetColor": "gold"
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "phase": "won",
+          "componentCount": 1,
+          "placedCount": 5,
+          "remainingPieces": 0,
+          "failedCommits": 0,
+          "totalPlacements": 5,
+          "elapsed": 0.9166666666666666,
+          "score": 2145,
+          "placements": [
+            {
+              "id": "bridge-P1",
+              "pieceId": "P1",
+              "sourceId": "I1",
+              "targetId": "I2",
+              "length": 3,
+              "targetColor": "coral"
+            },
+            {
+              "id": "bridge-P2",
+              "pieceId": "P2",
+              "sourceId": "I3",
+              "targetId": "I4",
+              "length": 3,
+              "targetColor": "coral"
+            },
+            {
+              "id": "bridge-P3",
+              "pieceId": "P3",
+              "sourceId": "I5",
+              "targetId": "I6",
+              "length": 3,
+              "targetColor": "coral"
+            },
+            {
+              "id": "bridge-P4",
+              "pieceId": "P4",
+              "sourceId": "I2",
+              "targetId": "I3",
+              "length": 4,
+              "targetColor": "gold"
+            },
+            {
+              "id": "bridge-P5",
+              "pieceId": "P5",
+              "sourceId": "I5",
+              "targetId": "I3",
+              "length": 5,
+              "targetColor": "gold"
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "phase": "won",
+          "componentCount": 1,
+          "placedCount": 6,
+          "remainingPieces": 0,
+          "failedCommits": 0,
+          "totalPlacements": 6,
+          "elapsed": 1.2166666666666666,
+          "score": 2280,
+          "placements": [
+            {
+              "id": "bridge-P1",
+              "pieceId": "P1",
+              "sourceId": "I1",
+              "targetId": "I4",
+              "length": 3,
+              "targetColor": "coral"
+            },
+            {
+              "id": "bridge-P2",
+              "pieceId": "P2",
+              "sourceId": "I3",
+              "targetId": "I2",
+              "length": 3,
+              "targetColor": "coral"
+            },
+            {
+              "id": "bridge-P3",
+              "pieceId": "P3",
+              "sourceId": "I2",
+              "targetId": "I1",
+              "length": 4,
+              "targetColor": "gold"
+            },
+            {
+              "id": "bridge-P4",
+              "pieceId": "P4",
+              "sourceId": "I5",
+              "targetId": "I3",
+              "length": 5,
+              "targetColor": "gold"
+            },
+            {
+              "id": "bridge-P5",
+              "pieceId": "P5",
+              "sourceId": "I3",
+              "targetId": "I7",
+              "length": 2,
+              "targetColor": "teal"
+            },
+            {
+              "id": "bridge-P6",
+              "pieceId": "P6",
+              "sourceId": "I6",
+              "targetId": "I7",
+              "length": 2,
+              "targetColor": "teal"
+            }
+          ]
+        }
+      ],
+      "disconnected": [
+        {
+          "level": 1,
+          "phase": "lost",
+          "reason": "disconnected",
+          "componentCount": 2,
+          "cycleEdges": 1,
+          "placedCount": 5,
+          "remainingPieces": 0,
+          "failedCommits": 0,
+          "elapsed": 0.9166666666666666,
+          "score": 660,
+          "finalPreview": {
+            "pieceId": "P5",
+            "sourceId": "I6",
+            "targetId": "I5",
+            "length": 2,
+            "targetColor": "gold",
+            "distanceSquared": 4,
+            "requiredSquared": 4,
+            "targetColorMatches": true,
+            "valid": true,
+            "reason": null,
+            "blockingPieceId": null,
+            "blockingIslandId": null,
+            "resultingComponentCount": 2,
+            "wouldFinish": true,
+            "wouldConnectAll": false,
+            "wouldLoseDisconnected": true
+          },
+          "placements": [
+            {
+              "id": "bridge-P1",
+              "pieceId": "P1",
+              "sourceId": "I1",
+              "targetId": "I2",
+              "length": 4,
+              "targetColor": "gold"
+            },
+            {
+              "id": "bridge-P2",
+              "pieceId": "P2",
+              "sourceId": "I2",
+              "targetId": "I3",
+              "length": 3,
+              "targetColor": "teal"
+            },
+            {
+              "id": "bridge-P3",
+              "pieceId": "P3",
+              "sourceId": "I2",
+              "targetId": "I6",
+              "length": 5,
+              "targetColor": "coral"
+            },
+            {
+              "id": "bridge-P4",
+              "pieceId": "P4",
+              "sourceId": "I3",
+              "targetId": "I5",
+              "length": 2,
+              "targetColor": "gold"
+            },
+            {
+              "id": "bridge-P5",
+              "pieceId": "P5",
+              "sourceId": "I6",
+              "targetId": "I5",
+              "length": 2,
+              "targetColor": "gold"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Three illegal commits charge once per press without consuming a piece",
+      "scope": "Ordinary repeated same-island target input and cancellation",
+      "passed": true
+    },
+    {
+      "name": "Queued edges, cancellation, per-tick B priority and deadline-first final commit",
+      "scope": "Explicit input and deadline fixtures, distinct from ordinary completions",
+      "passed": true
+    }
+  ],
+  "checkCount": 8,
+  "sourceHashes": {
+    "model": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+    "contract": "3167e28a3d8efa060575a6b735152b793f53b0a7cd5f2093d5310a0f287f070b",
+    "review": "6e7b302a12710402b9074a4e1e1c1dd1f290d73bc9e14c66f6932376dcbccdd4",
+    "geometry": "94cf6a10d1fc18e47e5552849d9f795b86d44252e883f48fe1af80ef5c7fc8c1"
+  },
+  "sourceHashesAfter": {
+    "model": "a5dae599949761af4af92c4c7d5592248f70707afb1397a33d38a2fd145d4b06",
+    "contract": "3167e28a3d8efa060575a6b735152b793f53b0a7cd5f2093d5310a0f287f070b",
+    "review": "6e7b302a12710402b9074a4e1e1c1dd1f290d73bc9e14c66f6932376dcbccdd4",
+    "geometry": "94cf6a10d1fc18e47e5552849d9f795b86d44252e883f48fe1af80ef5c7fc8c1"
+  },
+  "sourceUnchanged": true,
+  "totals": {
+    "abstractGeometryGroups": 8,
+    "previewComparisons": 2109,
+    "previewReasons": {
+      "same-island": 327,
+      "valid": 127,
+      "length": 1488,
+      "color": 157,
+      "occupied": 7,
+      "through-island": 3
+    },
+    "navigationTransitions": 133,
+    "bankSubsetCount": 125,
+    "ordinaryConnectedWins": 3,
+    "ordinaryDisconnectedLosses": 1
+  },
+  "publicPuzzles": [
+    {
+      "level": 1,
+      "complete": true,
+      "nodes": 24,
+      "domains": [
+        {
+          "pieceId": "P1",
+          "localPlacements": 1
+        },
+        {
+          "pieceId": "P2",
+          "localPlacements": 2
+        },
+        {
+          "pieceId": "P3",
+          "localPlacements": 2
+        },
+        {
+          "pieceId": "P4",
+          "localPlacements": 2
+        },
+        {
+          "pieceId": "P5",
+          "localPlacements": 2
+        }
+      ],
+      "configurations": 8,
+      "connectedConfigurations": 4,
+      "disconnectedConfigurations": 4,
+      "win": [
+        {
+          "id": "bridge-P1",
+          "pieceId": "P1",
+          "sourceId": "I1",
+          "targetId": "I2",
+          "length": 4,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P2",
+          "pieceId": "P2",
+          "sourceId": "I1",
+          "targetId": "I4",
+          "length": 3,
+          "targetColor": "teal"
+        },
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I2",
+          "targetId": "I6",
+          "length": 5,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P4",
+          "pieceId": "P4",
+          "sourceId": "I3",
+          "targetId": "I5",
+          "length": 2,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P5",
+          "pieceId": "P5",
+          "sourceId": "I6",
+          "targetId": "I5",
+          "length": 2,
+          "targetColor": "gold"
+        }
+      ],
+      "loss": [
+        {
+          "id": "bridge-P1",
+          "pieceId": "P1",
+          "sourceId": "I1",
+          "targetId": "I2",
+          "length": 4,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P2",
+          "pieceId": "P2",
+          "sourceId": "I2",
+          "targetId": "I3",
+          "length": 3,
+          "targetColor": "teal"
+        },
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I2",
+          "targetId": "I6",
+          "length": 5,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P4",
+          "pieceId": "P4",
+          "sourceId": "I3",
+          "targetId": "I5",
+          "length": 2,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P5",
+          "pieceId": "P5",
+          "sourceId": "I6",
+          "targetId": "I5",
+          "length": 2,
+          "targetColor": "gold"
+        }
+      ],
+      "limits": {
+        "maxNodes": 200000,
+        "maxMilliseconds": 10000
+      },
+      "elapsedMilliseconds": 3.758732000000002
+    },
+    {
+      "level": 2,
+      "complete": true,
+      "nodes": 88,
+      "domains": [
+        {
+          "pieceId": "P1",
+          "localPlacements": 3
+        },
+        {
+          "pieceId": "P2",
+          "localPlacements": 3
+        },
+        {
+          "pieceId": "P3",
+          "localPlacements": 3
+        },
+        {
+          "pieceId": "P4",
+          "localPlacements": 3
+        },
+        {
+          "pieceId": "P5",
+          "localPlacements": 3
+        }
+      ],
+      "configurations": 54,
+      "connectedConfigurations": 24,
+      "disconnectedConfigurations": 30,
+      "win": [
+        {
+          "id": "bridge-P1",
+          "pieceId": "P1",
+          "sourceId": "I1",
+          "targetId": "I2",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P2",
+          "pieceId": "P2",
+          "sourceId": "I3",
+          "targetId": "I4",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I5",
+          "targetId": "I6",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P4",
+          "pieceId": "P4",
+          "sourceId": "I2",
+          "targetId": "I3",
+          "length": 4,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P5",
+          "pieceId": "P5",
+          "sourceId": "I5",
+          "targetId": "I3",
+          "length": 5,
+          "targetColor": "gold"
+        }
+      ],
+      "loss": [
+        {
+          "id": "bridge-P1",
+          "pieceId": "P1",
+          "sourceId": "I1",
+          "targetId": "I2",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P2",
+          "pieceId": "P2",
+          "sourceId": "I3",
+          "targetId": "I4",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I5",
+          "targetId": "I6",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P4",
+          "pieceId": "P4",
+          "sourceId": "I2",
+          "targetId": "I3",
+          "length": 4,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P5",
+          "pieceId": "P5",
+          "sourceId": "I1",
+          "targetId": "I3",
+          "length": 5,
+          "targetColor": "gold"
+        }
+      ],
+      "limits": {
+        "maxNodes": 200000,
+        "maxMilliseconds": 10000
+      },
+      "elapsedMilliseconds": 5.607626999999994
+    },
+    {
+      "level": 3,
+      "complete": true,
+      "nodes": 310,
+      "domains": [
+        {
+          "pieceId": "P1",
+          "localPlacements": 3
+        },
+        {
+          "pieceId": "P2",
+          "localPlacements": 3
+        },
+        {
+          "pieceId": "P3",
+          "localPlacements": 2
+        },
+        {
+          "pieceId": "P4",
+          "localPlacements": 3
+        },
+        {
+          "pieceId": "P5",
+          "localPlacements": 3
+        },
+        {
+          "pieceId": "P6",
+          "localPlacements": 3
+        }
+      ],
+      "configurations": 144,
+      "connectedConfigurations": 48,
+      "disconnectedConfigurations": 96,
+      "win": [
+        {
+          "id": "bridge-P1",
+          "pieceId": "P1",
+          "sourceId": "I1",
+          "targetId": "I4",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P2",
+          "pieceId": "P2",
+          "sourceId": "I3",
+          "targetId": "I2",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I2",
+          "targetId": "I1",
+          "length": 4,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P4",
+          "pieceId": "P4",
+          "sourceId": "I5",
+          "targetId": "I3",
+          "length": 5,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P5",
+          "pieceId": "P5",
+          "sourceId": "I3",
+          "targetId": "I7",
+          "length": 2,
+          "targetColor": "teal"
+        },
+        {
+          "id": "bridge-P6",
+          "pieceId": "P6",
+          "sourceId": "I6",
+          "targetId": "I7",
+          "length": 2,
+          "targetColor": "teal"
+        }
+      ],
+      "loss": [
+        {
+          "id": "bridge-P1",
+          "pieceId": "P1",
+          "sourceId": "I1",
+          "targetId": "I4",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P2",
+          "pieceId": "P2",
+          "sourceId": "I3",
+          "targetId": "I2",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I2",
+          "targetId": "I1",
+          "length": 4,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P4",
+          "pieceId": "P4",
+          "sourceId": "I1",
+          "targetId": "I3",
+          "length": 5,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P5",
+          "pieceId": "P5",
+          "sourceId": "I3",
+          "targetId": "I7",
+          "length": 2,
+          "targetColor": "teal"
+        },
+        {
+          "id": "bridge-P6",
+          "pieceId": "P6",
+          "sourceId": "I6",
+          "targetId": "I7",
+          "length": 2,
+          "targetColor": "teal"
+        }
+      ],
+      "limits": {
+        "maxNodes": 200000,
+        "maxMilliseconds": 10000
+      },
+      "elapsedMilliseconds": 8.969451999999997
+    }
+  ],
+  "ordinaryConnectedWins": [
+    {
+      "level": 1,
+      "phase": "won",
+      "componentCount": 1,
+      "placedCount": 5,
+      "remainingPieces": 0,
+      "failedCommits": 0,
+      "totalPlacements": 5,
+      "elapsed": 0.8833333333333333,
+      "score": 2145,
+      "placements": [
+        {
+          "id": "bridge-P1",
+          "pieceId": "P1",
+          "sourceId": "I1",
+          "targetId": "I2",
+          "length": 4,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P2",
+          "pieceId": "P2",
+          "sourceId": "I1",
+          "targetId": "I4",
+          "length": 3,
+          "targetColor": "teal"
+        },
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I2",
+          "targetId": "I6",
+          "length": 5,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P4",
+          "pieceId": "P4",
+          "sourceId": "I3",
+          "targetId": "I5",
+          "length": 2,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P5",
+          "pieceId": "P5",
+          "sourceId": "I6",
+          "targetId": "I5",
+          "length": 2,
+          "targetColor": "gold"
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "phase": "won",
+      "componentCount": 1,
+      "placedCount": 5,
+      "remainingPieces": 0,
+      "failedCommits": 0,
+      "totalPlacements": 5,
+      "elapsed": 0.9166666666666666,
+      "score": 2145,
+      "placements": [
+        {
+          "id": "bridge-P1",
+          "pieceId": "P1",
+          "sourceId": "I1",
+          "targetId": "I2",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P2",
+          "pieceId": "P2",
+          "sourceId": "I3",
+          "targetId": "I4",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I5",
+          "targetId": "I6",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P4",
+          "pieceId": "P4",
+          "sourceId": "I2",
+          "targetId": "I3",
+          "length": 4,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P5",
+          "pieceId": "P5",
+          "sourceId": "I5",
+          "targetId": "I3",
+          "length": 5,
+          "targetColor": "gold"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "phase": "won",
+      "componentCount": 1,
+      "placedCount": 6,
+      "remainingPieces": 0,
+      "failedCommits": 0,
+      "totalPlacements": 6,
+      "elapsed": 1.2166666666666666,
+      "score": 2280,
+      "placements": [
+        {
+          "id": "bridge-P1",
+          "pieceId": "P1",
+          "sourceId": "I1",
+          "targetId": "I4",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P2",
+          "pieceId": "P2",
+          "sourceId": "I3",
+          "targetId": "I2",
+          "length": 3,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I2",
+          "targetId": "I1",
+          "length": 4,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P4",
+          "pieceId": "P4",
+          "sourceId": "I5",
+          "targetId": "I3",
+          "length": 5,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P5",
+          "pieceId": "P5",
+          "sourceId": "I3",
+          "targetId": "I7",
+          "length": 2,
+          "targetColor": "teal"
+        },
+        {
+          "id": "bridge-P6",
+          "pieceId": "P6",
+          "sourceId": "I6",
+          "targetId": "I7",
+          "length": 2,
+          "targetColor": "teal"
+        }
+      ]
+    }
+  ],
+  "ordinaryDisconnectedLosses": [
+    {
+      "level": 1,
+      "phase": "lost",
+      "reason": "disconnected",
+      "componentCount": 2,
+      "cycleEdges": 1,
+      "placedCount": 5,
+      "remainingPieces": 0,
+      "failedCommits": 0,
+      "elapsed": 0.9166666666666666,
+      "score": 660,
+      "finalPreview": {
+        "pieceId": "P5",
+        "sourceId": "I6",
+        "targetId": "I5",
+        "length": 2,
+        "targetColor": "gold",
+        "distanceSquared": 4,
+        "requiredSquared": 4,
+        "targetColorMatches": true,
+        "valid": true,
+        "reason": null,
+        "blockingPieceId": null,
+        "blockingIslandId": null,
+        "resultingComponentCount": 2,
+        "wouldFinish": true,
+        "wouldConnectAll": false,
+        "wouldLoseDisconnected": true
+      },
+      "placements": [
+        {
+          "id": "bridge-P1",
+          "pieceId": "P1",
+          "sourceId": "I1",
+          "targetId": "I2",
+          "length": 4,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P2",
+          "pieceId": "P2",
+          "sourceId": "I2",
+          "targetId": "I3",
+          "length": 3,
+          "targetColor": "teal"
+        },
+        {
+          "id": "bridge-P3",
+          "pieceId": "P3",
+          "sourceId": "I2",
+          "targetId": "I6",
+          "length": 5,
+          "targetColor": "coral"
+        },
+        {
+          "id": "bridge-P4",
+          "pieceId": "P4",
+          "sourceId": "I3",
+          "targetId": "I5",
+          "length": 2,
+          "targetColor": "gold"
+        },
+        {
+          "id": "bridge-P5",
+          "pieceId": "P5",
+          "sourceId": "I6",
+          "targetId": "I5",
+          "length": 2,
+          "targetColor": "gold"
+        }
+      ]
+    }
+  ],
+  "scope": {
+    "pureIntegerGeometry": true,
+    "publicFactsOnlySearch": true,
+    "productionSolverImported": false,
+    "authoringSolutionsRead": false,
+    "fixtureChecksSeparateFromOrdinaryInputs": true,
+    "browserExecuted": false,
+    "normalGameplayVideoEvidence": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "limitations": [
+    "Synthetic previews and the deadline boundary mutate explicit original states; they are not gameplay captures.",
+    "Ordinary model sequences use real input fields at fixed60Hz but run without wall-clock delays; browser duration/performance comes from separate QA.",
+    "Complete configuration counts preserve distinct physical piece IDs and directed endpoints; they are not counts of visually distinct unlabeled networks."
+  ]
+}

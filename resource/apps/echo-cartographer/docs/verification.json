@@ -1,0 +1,843 @@
+{
+  "schema": 1,
+  "game": "echo-cartographer",
+  "version": "0.1.0",
+  "testProvenance": {
+    "buildSourceSha": "a7aba79c3c061903c5729abb3c05be25fc1a5f1e",
+    "testSourceSha": "4c01872896497f8d87340a87bdd571bb3d857230",
+    "automationSha256": "24c1d147c134469852be5debfa1a188407d1ceb05aa53df9c955c06642e6b6c5",
+    "testOnlyOverlay": [
+      "resource/apps/echo-cartographer/docs/independent-pilot-review.json",
+      "resource/apps/echo-cartographer/tests/automation.mjs",
+      "resource/apps/echo-cartographer/tests/game-model.test.cjs"
+    ],
+    "productionSourceUnchanged": true,
+    "browserTestSourceHashes": {
+      "tests/automation.mjs": "24c1d147c134469852be5debfa1a188407d1ceb05aa53df9c955c06642e6b6c5",
+      "tests/game-model.test.cjs": "a76096250ab38c83b94338640943cea92479edee2f227dc386727e106341365e",
+      "tests/independent-pilot-review.mjs": "e7a0cb6263165b725ef7dde683cf801d0cef022464a57ee85efc6313b177c869",
+      "src/main/assets/game-model.js": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c"
+    },
+    "browserTestSourcesUnchanged": true,
+    "browserEvidenceStartedAt": "2026-11-01T18:07:22.980327+00:00",
+    "browserEvidenceFinishedAt": "2026-11-01T18:10:47.150414+00:00",
+    "note": "The testing-only changes correct observational-pilot polling overshoot, update its independent review, and run the final three-map integration scenario with runtime-style 60 Hz steps and observation every five ticks. All production sources remain unchanged. The previous 80 ms aggregated-step suite scored 29/30 after a legitimate third-map hazard loss; it remains historical evidence and is not counted as passed. Final browser QA and video use the corrected pilot. These results do not guarantee success under every input timing."
+  },
+  "modelTests": {
+    "passed": 30,
+    "command": "node --test resource/apps/echo-cartographer/tests/game-model.test.cjs",
+    "modelSha256": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c",
+    "automationSha256": "24c1d147c134469852be5debfa1a188407d1ceb05aa53df9c955c06642e6b6c5",
+    "testSourceSha256": "a76096250ab38c83b94338640943cea92479edee2f227dc386727e106341365e",
+    "testLogSha256": "f07dd4d087fe7b316d19a3c99a2bf23b74ea81cca8b842f0cabbb1101ae4aa8a",
+    "provenanceReportSha256": "c9100e03fada9692ed2ea2ebc83a74fccee27b81ece8a1ff9f3c1886edbe01f5"
+  },
+  "historicalAggregateStepTest": {
+    "passed": false,
+    "tests": 30,
+    "pass": 29,
+    "fail": 1,
+    "inputObservationSeconds": 0.08,
+    "failure": "Third-map ordinary exploration exhausted its shield under aggregated step(0.08) input timing.",
+    "modelSha256": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c",
+    "automationSha256": "24c1d147c134469852be5debfa1a188407d1ceb05aa53df9c955c06642e6b6c5",
+    "testSourceSha256": "784143a6e92239529862aa23f652d305ddd8af75e74a525fa6c8a411a39b0ebf",
+    "testLogSha256": "baf05319bc6690023ec93dc3000f3bc4a8358e6b3be3e626a601fb7303a5a0fe",
+    "provenanceReportSha256": "c1d2bfc7b2df206ef8dc8bcaa21a511e96cadd1bf0e5a90e760ff44643931185",
+    "countedAsPassed": false,
+    "scope": "Preserved prior integration evidence. The production model and pilot remain unchanged; the final integration scenario uses 60 Hz simulation ticks and observes every five ticks. This does not invalidate the earlier timing or guarantee arbitrary-timing wins."
+  },
+  "independentModelReview": {
+    "passed": true,
+    "file": "independent-echo-review.json",
+    "sha256": "7957cb5269d72734d6bc54c7b67be716098ea67f2adacf1183f295cab1596658",
+    "checksPassed": 9,
+    "totals": {
+      "distanceComparisons": 2926,
+      "temporalComparisons": 3344,
+      "lampComparisons": 7524
+    },
+    "scope": {
+      "fixturesModifyState": true,
+      "normalGameplayEvidence": false,
+      "browserExecuted": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    }
+  },
+  "independentPilotReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "ca72cb6a5b58f150ba11105ad9bc8fb05d72c8e9f70320e78a7cff72a680924d",
+    "checksPassed": 5,
+    "pairedObservationFrames": 40,
+    "pilotCalls": 80,
+    "automationSha256": "24c1d147c134469852be5debfa1a188407d1ceb05aa53df9c955c06642e6b6c5",
+    "scope": {
+      "syntheticObservations": true,
+      "normalGameplayEvidence": false,
+      "modelExecuted": false,
+      "browserExecuted": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    }
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "e3a394921ba698871811b926c5c75393e0ab5af7de156f4452e858d4f2a6e4a3",
+    "renderCases": 26,
+    "scope": "Final candidate SOURCE art and layout review only. No APK build/signing, native-phone connection or final video claim. Actual model states use ordinary observational-pilot inputs; terminal DOM screenshots are explicitly layout fixtures populated from actual terminal states.",
+    "pilotScope": "These source-only art states use the original build-source pilot. They are historical rendering evidence, not the corrected final runtime pilot, final browser success or recorded gameplay.",
+    "sourceHashes": {
+      "game": {
+        "path": "resource/apps/echo-cartographer/src/main/assets/game.js",
+        "sha256": "b6fe50fc72f95d5a7bc6667dbdaea337839b407485573fb8b0ba38eacb656b95"
+      },
+      "model": {
+        "path": "resource/apps/echo-cartographer/src/main/assets/game-model.js",
+        "sha256": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "automation": {
+        "path": "resource/apps/echo-cartographer/tests/automation.mjs",
+        "sha256": "ca3f48742c97968ddf33afa7b87e4558d82a37b913701270fe078bff14f2f200"
+      },
+      "tv.css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "tv.html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "runtime.js": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "1bddd5f7a765992305679b41e4f40b8d39b717a40c233b0c87294017760e0633"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "1bddd5f7a765992305679b41e4f40b8d39b717a40c233b0c87294017760e0633",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c",
+      "game.js": "b6fe50fc72f95d5a7bc6667dbdaea337839b407485573fb8b0ba38eacb656b95",
+      "game-config.json": "b07fe1ce51eddf78ecd07b6686ae7168e4474c6f061f6e4ef950745cd32769de",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "24c1d147c134469852be5debfa1a188407d1ceb05aa53df9c955c06642e6b6c5"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three chart buttons select distinct layouts and finite light budgets",
+        "passed": true
+      },
+      {
+        "name": "remote and phone joystick cycle chart choices once per press",
+        "passed": true
+      },
+      {
+        "name": "menu backdrop blur and sound button reflect settings",
+        "passed": true
+      },
+      {
+        "name": "held phone START begins once without reset or pause flicker",
+        "passed": true
+      },
+      {
+        "name": "held phone A emits one paid expanding sonar even after cooldown",
+        "passed": true
+      },
+      {
+        "name": "phone B slows real movement and leaves emitted sonar origin fixed",
+        "passed": true
+      },
+      {
+        "name": "echo illumination expires while charted terrain memory persists",
+        "passed": true
+      },
+      {
+        "name": "ordinary held movement stops at the boundary wall",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes all fog and hazard state and clears stale movement",
+        "passed": true
+      },
+      {
+        "name": "pause and primary/header resume buttons retain the expedition",
+        "passed": true
+      },
+      {
+        "name": "normal movement toward visible hazards exhausts shield and loses",
+        "passed": true
+      },
+      {
+        "name": "R retry restores shield battery beacons fog and input edges",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "shield",
+      "elapsed": 6.133333333333333,
+      "remaining": 72.75555555555532,
+      "collected": 0,
+      "score": 0,
+      "shield": 0,
+      "sonarCount": 4
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "1bddd5f7a765992305679b41e4f40b8d39b717a40c233b0c87294017760e0633",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c",
+      "game.js": "b6fe50fc72f95d5a7bc6667dbdaea337839b407485573fb8b0ba38eacb656b95",
+      "game-config.json": "b07fe1ce51eddf78ecd07b6686ae7168e4474c6f061f6e4ef950745cd32769de",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "地图记忆保留，照明会消退。声呐耗电；收齐信标后返入口。按住 B 静行。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "地图记忆保留，照明会消退。声呐耗电；收齐信标后返入口。按住 B 静行。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "地图记忆保留，照明会消退。声呐耗电；收齐信标后返入口。按住 B 静行。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 203.71875,
+          "width": 420,
+          "height": 377.5625,
+          "right": 726.984375,
+          "bottom": 581.28125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "地图记忆保留，照明会消退。声呐耗电；收齐信标后返入口。按住 B 静行。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "地图记忆保留，照明会消退。声呐耗电；收齐信标后返入口。按住 B 静行。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "地图记忆保留，照明会消退。声呐耗电；收齐信标后返入口。按住 B 静行。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "270bed2536f362e282d33d15d124ef3a485b97024ba0789f835e20f5408a6ec3"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 825,
+    "rafIntervalMs": {
+      "count": 825,
+      "min": 16.599999999998545,
+      "median": 50,
+      "p95": 100,
+      "max": 166.70000000000073,
+      "mean": 52.98775757575757
+    },
+    "webglDrawCalls": {
+      "count": 825,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 825,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 64.016829461,
+      "level": 1,
+      "difficulty": 0,
+      "collected": 2,
+      "target": 2,
+      "score": 1765,
+      "elapsed": 59.166666666666664,
+      "sonarCount": 5,
+      "shield": 1,
+      "battery": 10.333333333329154,
+      "reserve": 10,
+      "remaining": 16.45833333333072,
+      "revealedCount": 192,
+      "returnedToEntry": true,
+      "allBeaconsCollected": true,
+      "returnDistance": 17.6776695296636
+    },
+    "finalWinHeldSecondsAtLeast": 5.999396703000002,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "1f11d420ccd9305de0df5e9b035f06dd9489f03fca71bc5d35d12b49b10db636"
+      },
+      {
+        "name": "menu-second-chart-0.85s.png",
+        "sha256": "ed58873d4406c4c52ac5d12f3aec7b20965c1d529a204fdd902aaafeadfc301d"
+      },
+      {
+        "name": "menu-third-chart-1.35s.png",
+        "sha256": "ac2fe4b4725cfd1d2ef2616c9ea617509be728b8e51da0efedaeecfa3dee2adf"
+      },
+      {
+        "name": "sonar-pulse-2.87s.png",
+        "sha256": "c668cdf37bb1625c1c2fc96a80e1c094ecfe42a125b66f9ead4143b1e42d767a"
+      },
+      {
+        "name": "first-beacon-16.00s.png",
+        "sha256": "9154c123f1268ba3cf0fa097045de1c263ecce04a4f71784be611fc6b5834c55"
+      },
+      {
+        "name": "gameplay-thumb-38.02s.png",
+        "sha256": "ee6abb1d7e3f165da9febc529c757cbc6077ae9d97ba2c70c67b41aed60428c1"
+      },
+      {
+        "name": "return-to-entry-56.02s.png",
+        "sha256": "dfa1859cc81393069e029bf5fb38fa3b9e90e05a55e857862c7c5518328daaf0"
+      },
+      {
+        "name": "settlement-68.56s.png",
+        "sha256": "1dd39d73c59b0e00d0e343b8b1e7c0600083df6ea888a989ddcdae7949bf51da"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "e3c4cfbfa40ebb21db332c9eae5f65b60551672d8aa3681fd040c6898cbd09c4"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "1bddd5f7a765992305679b41e4f40b8d39b717a40c233b0c87294017760e0633",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c",
+    "game.js": "b6fe50fc72f95d5a7bc6667dbdaea337839b407485573fb8b0ba38eacb656b95",
+    "game-config.json": "b07fe1ce51eddf78ecd07b6686ae7168e4474c6f061f6e4ef950745cd32769de",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "92ba2f0a6a798b2fdbb436eb48c61341daccc92154055fdae9d8644467022990",
+    "sign": "959178c5623819a09ae67df193de7c81cb52918add5a0de7a06e1e2cee0197ef",
+    "fetch": "b1a5fd93cc3fc84df98220ab1a047a8a5b9425d2d6a0a5a4f543adb4604dc06b",
+    "qa": "f0b01cf2430cc8d7ad606fbcafc3e2d4548e46a18375ba250a861859ce260d27",
+    "ui": "e3615fdeba9784c84eba266d0a8b14c28e157024c83964e3e383df4ab661881c",
+    "layout": "270bed2536f362e282d33d15d124ef3a485b97024ba0789f835e20f5408a6ec3",
+    "viewport": "78f05ebf2a0c196ffdb50e0f6f760e4d47c19fc0b449310d67678a4e51088df0",
+    "summary": "833ea2d972e73b3df8823aa899bc306f35d724808dd4605066c2475a94231640",
+    "record": "54d3b8b3aa229c7fb43848fae5f36e961394e4f53d487d532b76726985dd331d",
+    "review": "26c5f8a2648db330f91c43c24501369489e38fd04a73cd685e78ad562b489ca7",
+    "videoValidation": "f43609c81a5c43d656697def3352f7d5e8ecf949bca512037bef1fc156817e1c",
+    "artifacts": "fd2964c974f0220026b4ef40b6785cb2eb75e05f304a532c5c60f602ea0a0a1f",
+    "independentModel": "7957cb5269d72734d6bc54c7b67be716098ea67f2adacf1183f295cab1596658",
+    "independentPilot": "ca72cb6a5b58f150ba11105ad9bc8fb05d72c8e9f70320e78a7cff72a680924d",
+    "artReview": "12707a5cb54a04429aa23c5a00fdd5a35fdcdcf431952f37222a4d4775f39e32",
+    "modelTestProvenance": "c9100e03fada9692ed2ea2ebc83a74fccee27b81ece8a1ff9f3c1886edbe01f5",
+    "browserTestProvenance": "b33dc16cfeb947a21bb6a788d79c9bdb2ba2abadd5131d8e94645ed816a7f828",
+    "historicalAggregateFailure": "c1d2bfc7b2df206ef8dc8bcaa21a511e96cadd1bf0e5a90e760ff44643931185"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Actual Chromium keyboard gameplay; phone bridge and room layout are controlled fixtures. Independent constructed geometry/noninterference checks and source-only art states are separate evidence. No physical Android installation is claimed."
+  },
+  "release": {
+    "sourceSha": "a7aba79c3c061903c5729abb3c05be25fc1a5f1e",
+    "signerCommit": "a7aba79c3c061903c5729abb3c05be25fc1a5f1e",
+    "signingRun": 41334020997,
+    "bytes": 296227,
+    "sha256": "79ac5ccbccd1c523363c0baa46399f94f331c5ca0a4f316b4b02f20f78102d57",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "a4fb933bce6fa1868daf882a6c836af7fac02e2c"
+  },
+  "additionalPollingStressEvidence": {
+    "scope": "Pure-model ordinary input; no browser, no live state edits, no hidden route oracle. All three authored maps, initial offset by normal idle ticks. Targeted regression of coarse polling and corner navigation.",
+    "rawReportSha256": "4892ceadaf30d7bd1c8446f3cdde959d5cfec40d0dd28c6a3368483db4f74ee5",
+    "sourceHashes": {
+      "src/main/assets/game-model.js": "8b1c7c78f2deb2b5c5155c137fea8d5271c7a71942f7b6e15c3eebc4dc75d50c",
+      "tests/automation.mjs": "24c1d147c134469852be5debfa1a188407d1ceb05aa53df9c955c06642e6b6c5"
+    },
+    "cases": 18,
+    "wins": 17,
+    "losses": 1,
+    "results": [
+      {
+        "name": "level1-fixed-150ms-offset-0ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 47.38333333333333,
+        "collected": 2,
+        "shield": 1,
+        "reversalCount": 0
+      },
+      {
+        "name": "level1-fixed-200ms-offset-0ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 49.483333333333334,
+        "collected": 2,
+        "shield": 3,
+        "reversalCount": 0
+      },
+      {
+        "name": "level1-mixed-100-167-83-133-200-100ms-offset-0ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 47.516666666666666,
+        "collected": 2,
+        "shield": 3,
+        "reversalCount": 0
+      },
+      {
+        "name": "level1-fixed-150ms-offset-12ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 47.583333333333336,
+        "collected": 2,
+        "shield": 3,
+        "reversalCount": 0
+      },
+      {
+        "name": "level1-fixed-200ms-offset-12ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 49.43333333333333,
+        "collected": 2,
+        "shield": 3,
+        "reversalCount": 0
+      },
+      {
+        "name": "level1-mixed-100-167-83-133-200-100ms-offset-12ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 47.88333333333333,
+        "collected": 2,
+        "shield": 2,
+        "reversalCount": 0
+      },
+      {
+        "name": "level2-fixed-150ms-offset-0ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 57.61666666666667,
+        "collected": 3,
+        "shield": 1,
+        "reversalCount": 0
+      },
+      {
+        "name": "level2-fixed-200ms-offset-0ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 59.6,
+        "collected": 3,
+        "shield": 2,
+        "reversalCount": 0
+      },
+      {
+        "name": "level2-mixed-100-167-83-133-200-100ms-offset-0ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 56.55,
+        "collected": 3,
+        "shield": 3,
+        "reversalCount": 0
+      },
+      {
+        "name": "level2-fixed-150ms-offset-12ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 66.01666666666667,
+        "collected": 3,
+        "shield": 3,
+        "reversalCount": 0
+      },
+      {
+        "name": "level2-fixed-200ms-offset-12ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 57.96666666666667,
+        "collected": 3,
+        "shield": 3,
+        "reversalCount": 0
+      },
+      {
+        "name": "level2-mixed-100-167-83-133-200-100ms-offset-12ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 49.71666666666667,
+        "collected": 3,
+        "shield": 2,
+        "reversalCount": 0
+      },
+      {
+        "name": "level3-fixed-150ms-offset-0ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 51.483333333333334,
+        "collected": 3,
+        "shield": 1,
+        "reversalCount": 0
+      },
+      {
+        "name": "level3-fixed-200ms-offset-0ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 58.949999999999996,
+        "collected": 3,
+        "shield": 1,
+        "reversalCount": 0
+      },
+      {
+        "name": "level3-mixed-100-167-83-133-200-100ms-offset-0ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 64.8,
+        "collected": 3,
+        "shield": 1,
+        "reversalCount": 0
+      },
+      {
+        "name": "level3-fixed-150ms-offset-12ticks",
+        "phase": "lost",
+        "lostReason": "shield",
+        "elapsed": 23.316666666666666,
+        "collected": 1,
+        "shield": 0,
+        "reversalCount": 0
+      },
+      {
+        "name": "level3-fixed-200ms-offset-12ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 68.05,
+        "collected": 3,
+        "shield": 1,
+        "reversalCount": 0
+      },
+      {
+        "name": "level3-mixed-100-167-83-133-200-100ms-offset-12ticks",
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 50.65,
+        "collected": 3,
+        "shield": 1,
+        "reversalCount": 0
+      }
+    ],
+    "note": "Diagnostic timing variations are separate from final runtime and recording gates. Individual legitimate hazard losses are retained; this is not an all-timing success claim."
+  }
+}

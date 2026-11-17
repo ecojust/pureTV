@@ -1,0 +1,82 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T15:56:08.484Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "d661917ed16e569bc9ceb28ae505623dfbdc89bd9be4bb68cced8f0e54ad822d",
+    "game-model.js": "f6b03bf6f43225f28d496c2df46f511097a5faf50bc4a98fc4695fcb256a1331",
+    "game.js": "15e510712899158f22544d7318b40fed8b0b043e821995c3db69286e6c13e028",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "level 1: normal sowing wins with independently predicted capture, sweep and opponent burst",
+      "passed": true,
+      "level": 0,
+      "playerSows": 5,
+      "totalSows": 11,
+      "stores": [
+        17,
+        7
+      ]
+    },
+    {
+      "name": "level 2: normal sowing wins with independently predicted capture, sweep and opponent burst",
+      "passed": true,
+      "level": 1,
+      "playerSows": 5,
+      "totalSows": 10,
+      "stores": [
+        13,
+        11
+      ]
+    },
+    {
+      "name": "level 3: normal sowing wins with independently predicted capture, sweep and opponent burst",
+      "passed": true,
+      "level": 2,
+      "playerSows": 6,
+      "totalSows": 14,
+      "stores": [
+        14,
+        10
+      ]
+    },
+    {
+      "name": "empty pit is free; held A and pause cannot repeat a sow",
+      "passed": true,
+      "emptyFree": true,
+      "heldDoesNotRepeat": true,
+      "pauseFreeze": true,
+      "releaseAllowsNextSow": true
+    },
+    {
+      "name": "own-store extra turn suppresses the whole opponent response",
+      "passed": true,
+      "extraTurnObserved": true,
+      "noAiResponse": true,
+      "continuedNormallyToWin": true
+    },
+    {
+      "name": "ordinary inferior sowing naturally loses by minority and freezes",
+      "passed": true,
+      "playerSows": 4,
+      "stores": [
+        7,
+        17
+      ],
+      "reason": "minority",
+      "terminalFrozen": true
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T15:56:51.712Z"
+}

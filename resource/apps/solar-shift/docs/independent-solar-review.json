@@ -1,0 +1,195 @@
+{
+  "passed": true,
+  "checks": 3,
+  "scope": "Integer1/240J constant-flow integration and closed-form fixed-step Euler heat, read-only over QA unique six actual ordinary rounds. No Model/pilot import, author witness, policy search, extra ordinary games, browser or hardware test.",
+  "startedAt": "2026-11-02T00:41:50.430Z",
+  "completedAt": "2026-11-02T00:41:50.490Z",
+  "sourceHashesBefore": {
+    "model": "0d5255597f677850d78ad9281dac5e23b4c8795cd73a62797e9b63d3420a39ef",
+    "automation": "0d4854d0a034129816b8fac488524038714a295e3b69bae6c5766540bb173b87",
+    "tests": "08371cdf7268d76d97bb0c25f9e4e3915cd6c4740ba71ff1d548629632d44e38",
+    "contract": "0a6ed163dd87b09413ab328ee305d9f670dde85694af0ff9ca9ebdb9361ba26a",
+    "math": "c8fa752e8a4e5ea9d12d50ba1908d59bba7faf6ed157f4201cd41d0e3c9b60b2",
+    "review": "72cab07d9bc793d79abbad3d511ab15d7a0e958287a89bc00445f9111ecb82c1"
+  },
+  "sourceHashesAfter": {
+    "model": "0d5255597f677850d78ad9281dac5e23b4c8795cd73a62797e9b63d3420a39ef",
+    "automation": "0d4854d0a034129816b8fac488524038714a295e3b69bae6c5766540bb173b87",
+    "tests": "08371cdf7268d76d97bb0c25f9e4e3915cd6c4740ba71ff1d548629632d44e38",
+    "contract": "0a6ed163dd87b09413ab328ee305d9f670dde85694af0ff9ca9ebdb9361ba26a",
+    "math": "c8fa752e8a4e5ea9d12d50ba1908d59bba7faf6ed157f4201cd41d0e3c9b60b2",
+    "review": "72cab07d9bc793d79abbad3d511ab15d7a0e958287a89bc00445f9111ecb82c1"
+  },
+  "sourceUnchanged": true,
+  "sourcePaths": {
+    "model": "src/main/assets/game-model.js",
+    "automation": "tests/automation.mjs",
+    "tests": "tests/game-model.test.cjs",
+    "contract": "docs/model-contract.md",
+    "math": "../../../../scratch/hundred-games/solar-shift/independent/solar-interval-oracle.mjs",
+    "review": "../../../../scratch/hundred-games/solar-shift/independent/independent-solar-review.mjs"
+  },
+  "results": [
+    {
+      "name": "Pure arithmetic examples for integer capacity/power/priority and closed-form Euler",
+      "passed": true
+    },
+    {
+      "name": "Existing formal and exact six-case ordinary corpus source bindings",
+      "passed": true
+    },
+    {
+      "name": "Read-only six ordinary rounds: independent interval integration, actual operations, separate quotas and first failure",
+      "passed": true
+    }
+  ],
+  "details": [
+    {
+      "scope": "Pure arithmetic fixtures only; no production execution or gameplay",
+      "checks": [
+        "Power-limited discharge empties1J in15ticks with priority shares .75/.25/0J",
+        "Charge power/capacity intersection stores .5J and spills1.5J",
+        "Closed-form Euler equals two hand-calculated updates"
+      ]
+    },
+    {
+      "name": "level1-record",
+      "level": 1,
+      "mode": "record",
+      "rawFileSha256": "53a507d1bd322243fafedbff9f141aba021e47523c60c17b7d0d57e219357195",
+      "uniqueCheckpoints": 66,
+      "actualOperations": 10,
+      "constantFlowSegments": 78,
+      "phase": "won",
+      "lostReason": null,
+      "terminalTick": 3600,
+      "score": 1636,
+      "independentlyComputedEnergyJ": 18,
+      "independentlyComputedDeviceJ": [
+        240,
+        72,
+        60
+      ],
+      "independentlyComputedTemperatureC": 40.63222563533284,
+      "exactIntegerConservation": true
+    },
+    {
+      "name": "level1-loss",
+      "level": 1,
+      "mode": "loss",
+      "rawFileSha256": "3a00111befb571d2a50d27d3a4662d475dcf07a113c0a27c81d88d759bb06d75",
+      "uniqueCheckpoints": 5,
+      "actualOperations": 1,
+      "constantFlowSegments": 4,
+      "phase": "lost",
+      "lostReason": "brownout",
+      "terminalTick": 150,
+      "score": 61,
+      "independentlyComputedEnergyJ": 46,
+      "independentlyComputedDeviceJ": [
+        0,
+        7.5,
+        12.5
+      ],
+      "independentlyComputedTemperatureC": 27.451028006912633,
+      "exactIntegerConservation": true
+    },
+    {
+      "name": "level2-record",
+      "level": 2,
+      "mode": "record",
+      "rawFileSha256": "b369ee55eda096f417d371f47fff927b0a8b9262e4d538017222dc60aa34c841",
+      "uniqueCheckpoints": 69,
+      "actualOperations": 12,
+      "constantFlowSegments": 84,
+      "phase": "won",
+      "lostReason": null,
+      "terminalTick": 3600,
+      "score": 1666,
+      "independentlyComputedEnergyJ": 33,
+      "independentlyComputedDeviceJ": [
+        240,
+        76.26666666666667,
+        70.41666666666667
+      ],
+      "independentlyComputedTemperatureC": 40.154378138951614,
+      "exactIntegerConservation": true
+    },
+    {
+      "name": "level2-loss",
+      "level": 2,
+      "mode": "loss",
+      "rawFileSha256": "f405913905406f9389f2978f1837348cec00f68799b6fdb1a509886cf9c83788",
+      "uniqueCheckpoints": 11,
+      "actualOperations": 0,
+      "constantFlowSegments": 11,
+      "phase": "lost",
+      "lostReason": "heat",
+      "terminalTick": 608,
+      "score": 213,
+      "independentlyComputedEnergyJ": 18.933333333333334,
+      "independentlyComputedDeviceJ": [
+        40.53333333333333,
+        40.53333333333333,
+        25
+      ],
+      "independentlyComputedTemperatureC": 54.00654717992806,
+      "exactIntegerConservation": true
+    },
+    {
+      "name": "level3-record",
+      "level": 3,
+      "mode": "record",
+      "rawFileSha256": "aa1b9a434dbc7ab6f0b125d1803534c031459ff4b01449bc5274de981c567b1c",
+      "uniqueCheckpoints": 64,
+      "actualOperations": 7,
+      "constantFlowSegments": 74,
+      "phase": "won",
+      "lostReason": null,
+      "terminalTick": 3600,
+      "score": 1660,
+      "independentlyComputedEnergyJ": 30,
+      "independentlyComputedDeviceJ": [
+        180,
+        120,
+        100.41666666666667
+      ],
+      "independentlyComputedTemperatureC": 46.71468216398819,
+      "exactIntegerConservation": true
+    },
+    {
+      "name": "level3-loss",
+      "level": 3,
+      "mode": "loss",
+      "rawFileSha256": "526deb1ffd37ad3a0c54612081e54a50730303746dbbeb4d5ea70005132ad6cd",
+      "uniqueCheckpoints": 62,
+      "actualOperations": 3,
+      "constantFlowSegments": 69,
+      "phase": "lost",
+      "lostReason": "quota",
+      "terminalTick": 3600,
+      "score": 404,
+      "independentlyComputedEnergyJ": 30,
+      "independentlyComputedDeviceJ": [
+        180,
+        120,
+        2.4166666666666665
+      ],
+      "independentlyComputedTemperatureC": 46.71468216398819,
+      "exactIntegerConservation": true
+    }
+  ],
+  "evidence": [
+    {
+      "role": "only-six-ordinary-rounds",
+      "sha256": "bfc81209a654871283cc77bef3eb1dd3936307f8a0f2ce989a5de92f1908276f",
+      "scope": "One six-round corpus, real held/released controls at 60Hz with mixed 83.3/133.3/183.3ms observations. No cadence matrix or duplicate model rounds."
+    },
+    {
+      "role": "already-executed-focused-formal",
+      "sha256": "2f70d28e400346df7ed6bab3c9176c5668331804d582221047d0aed5e5062237",
+      "scope": "Formal arithmetic/input/terminal rule tests only, with explicitly labelled synthetic energy and last-interval fixtures. One two-second ordinary-input flow exercise; no full-game controller, author witness, browser or independent QA integration claim. First execution after root reviewed source."
+    }
+  ],
+  "failure": null
+}

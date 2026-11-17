@@ -1,0 +1,547 @@
+{
+  "schema": 1,
+  "game": "prism-relay",
+  "version": "0.1.0",
+  "modelTests": {
+    "passed": 20,
+    "command": "node --test resource/apps/prism-relay/tests/game-model.test.cjs",
+    "modelSha256": "2f791ab39bd8199de923a597fc896d557a3ee6a938d39aaca99b6af5c89d7327",
+    "independentOpticsCombinationsChecked": 146
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "ae60c5a75324241e845acf9e01a453a389eba7c0970c885ced60ec5597b59783",
+      "game-model.js": "2f791ab39bd8199de923a597fc896d557a3ee6a938d39aaca99b6af5c89d7327",
+      "game.js": "78c5dbb74ae4409e1d02f381d1b4f7d924a4cb35e52bc3a53328e17d8802349a",
+      "renderer.js": "e05119a285490ae7c5f7dd6082deb92324c6c223e90a82c87276aefd5157328a",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223"
+    }
+  },
+  "supplementaryUi": {
+    "passed": true,
+    "tests": [
+      {
+        "name": "game-specific level labels replace the route defaults",
+        "passed": true,
+        "details": {
+          "label": "关卡",
+          "levels": [
+            "折转",
+            "分色",
+            "合光"
+          ]
+        }
+      },
+      {
+        "name": "menu overlay uses a backdrop blur",
+        "passed": true,
+        "details": {
+          "visible": true,
+          "filter": "blur(14px)"
+        }
+      },
+      {
+        "name": "remote left/right keys cycle all three menu difficulty choices",
+        "passed": true,
+        "details": [
+          {
+            "key": "ArrowRight",
+            "level": 1
+          },
+          {
+            "key": "ArrowRight",
+            "level": 2
+          },
+          {
+            "key": "ArrowRight",
+            "level": 0
+          },
+          {
+            "key": "ArrowLeft",
+            "level": 2
+          },
+          {
+            "key": "ArrowLeft",
+            "level": 1
+          },
+          {
+            "key": "ArrowLeft",
+            "level": 0
+          }
+        ]
+      },
+      {
+        "name": "phone joystick cycles difficulty once per direction press including wraparound",
+        "passed": true,
+        "details": [
+          {
+            "x": 1,
+            "level": 1
+          },
+          {
+            "x": 1,
+            "level": 2
+          },
+          {
+            "x": 1,
+            "level": 0
+          },
+          {
+            "x": -1,
+            "level": 2
+          },
+          {
+            "x": -1,
+            "level": 1
+          },
+          {
+            "x": -1,
+            "level": 0
+          }
+        ]
+      },
+      {
+        "name": "all three difficulty buttons create matching model settings",
+        "passed": true,
+        "details": [
+          {
+            "level": 0,
+            "difficulty": 0,
+            "timeLimit": 45
+          },
+          {
+            "level": 1,
+            "difficulty": 1,
+            "timeLimit": 60
+          },
+          {
+            "level": 2,
+            "difficulty": 2,
+            "timeLimit": 75
+          }
+        ]
+      },
+      {
+        "name": "sound toggle updates aria-pressed and visible label",
+        "passed": true,
+        "details": {
+          "on": true,
+          "off": true
+        }
+      },
+      {
+        "name": "start, pause and both resume buttons operate without losing the round",
+        "passed": true,
+        "details": {
+          "pausedTick": 12,
+          "primaryResume": true,
+          "headerResume": true
+        }
+      },
+      {
+        "name": "a normal keyboard win writes its real best score",
+        "passed": true,
+        "details": {
+          "score": 2052,
+          "chargedReceivers": 1,
+          "elapsed": 2.3999999999999964,
+          "stored": "2052"
+        }
+      },
+      {
+        "name": "settlement overlay keeps backdrop blur and final controls",
+        "passed": true,
+        "details": {
+          "visible": true,
+          "filter": "blur(14px)"
+        }
+      },
+      {
+        "name": "settlement accepts remote and phone difficulty choices before the next round",
+        "passed": true,
+        "details": {
+          "newDifficulty": 2,
+          "bestPreserved": 2052
+        }
+      },
+      {
+        "name": "best score survives opening a new page in the same browser storage context",
+        "passed": true,
+        "details": {
+          "newPagePhase": "menu",
+          "newRoundScore": 0,
+          "best": 2052,
+          "stored": "2052"
+        }
+      }
+    ],
+    "sourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "ae60c5a75324241e845acf9e01a453a389eba7c0970c885ced60ec5597b59783",
+      "game-model.js": "2f791ab39bd8199de923a597fc896d557a3ee6a938d39aaca99b6af5c89d7327",
+      "game.js": "78c5dbb74ae4409e1d02f381d1b4f7d924a4cb35e52bc3a53328e17d8802349a",
+      "renderer.js": "e05119a285490ae7c5f7dd6082deb92324c6c223e90a82c87276aefd5157328a",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "c3a7239739ba1d764e02a39a4140da8fd533a3517f527974fdfff78f53926887",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223"
+    },
+    "note": "Menu/phone/state checks preceded a scoped compact-viewport QR-placeholder CSS correction. All other assets are unchanged; final build receives renewed shared QA, viewport visual review and complete three-level recording."
+  },
+  "phoneBridgeAndNormalLoss": {
+    "passed": true,
+    "tests": [
+      {
+        "name": "held phone START begins exactly once and model advances",
+        "passed": true,
+        "detail": {
+          "startTick": 6,
+          "endTick": 28
+        }
+      },
+      {
+        "name": "phone A/B hold rotates exactly once each, and reverses the same prism",
+        "passed": true,
+        "detail": {
+          "sequence": [
+            2,
+            3,
+            2
+          ],
+          "holdMilliseconds": 500
+        }
+      },
+      {
+        "name": "phone stick selects the nearest optical device",
+        "passed": true,
+        "detail": {
+          "selectedId": "device-2"
+        }
+      },
+      {
+        "name": "phone disconnection freezes and clears held local direction, neutral reconnect waits for START",
+        "passed": true,
+        "detail": {
+          "pausedTick": 135,
+          "resumedTick": 141,
+          "inputCleared": true
+        }
+      },
+      {
+        "name": "ordinary wrong prism rotation illuminates hazards then loses by overheat",
+        "passed": true,
+        "detail": {
+          "lostReason": "overheat",
+          "elapsed": 30.3,
+          "remaining": 29.7,
+          "heat": [
+            300,
+            300
+          ],
+          "blur": "blur(14px)"
+        }
+      },
+      {
+        "name": "R retries the failed level with clean devices and no retained heat",
+        "passed": true,
+        "detail": {
+          "level": 2,
+          "orientations": [
+            2,
+            0,
+            0
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      }
+    ],
+    "mockNativeRoomForPhoneTests": true,
+    "sourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "ae60c5a75324241e845acf9e01a453a389eba7c0970c885ced60ec5597b59783",
+      "game-model.js": "2f791ab39bd8199de923a597fc896d557a3ee6a938d39aaca99b6af5c89d7327",
+      "game.js": "78c5dbb74ae4409e1d02f381d1b4f7d924a4cb35e52bc3a53328e17d8802349a",
+      "renderer.js": "e05119a285490ae7c5f7dd6082deb92324c6c223e90a82c87276aefd5157328a",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223"
+    }
+  },
+  "finalCompactLayoutReview": {
+    "passed": true,
+    "kind": "final-css-targeted-visual-review",
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "e05119a285490ae7c5f7dd6082deb92324c6c223e90a82c87276aefd5157328a",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223",
+      "game-model.js": "2f791ab39bd8199de923a597fc896d557a3ee6a938d39aaca99b6af5c89d7327",
+      "game.js": "78c5dbb74ae4409e1d02f381d1b4f7d924a4cb35e52bc3a53328e17d8802349a",
+      "game-config.json": "ae60c5a75324241e845acf9e01a453a389eba7c0970c885ced60ec5597b59783",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "changedAssetsFromPreviousQa": [
+      "tv.css"
+    ],
+    "viewport": [
+      960,
+      540
+    ],
+    "menuPauseWonDialogGeometry": [
+      {
+        "tag": "menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "bottom": 454.1875
+        },
+        "fits": true
+      },
+      {
+        "tag": "pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "bottom": 411.390625
+        },
+        "fits": true
+      },
+      {
+        "tag": "won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 149.203125,
+          "width": 420,
+          "height": 295.59375,
+          "bottom": 444.796875
+        },
+        "fits": true
+      }
+    ],
+    "qrPlaceholderFits92PixelCard": true,
+    "addressNoLongerOverlapsPlaceholder": true,
+    "reviewMethod": "Opened final-build 960x540 screenshots after fix; measured DOM rectangles for menu/pause/won dialogs.",
+    "previousSupplementaryUiChecks": {
+      "file": "../qa-final/ui-runtime.json",
+      "passed": true,
+      "count": 11,
+      "note": "runtime/model/renderer/input byte-identical; only tv.css small-height placeholder styles changed."
+    },
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 27,
+    "rafIntervalMs": {
+      "count": 27,
+      "min": 16.600000000000364,
+      "median": 66.69999999999982,
+      "p95": 100,
+      "max": 150,
+      "mean": 61.72962962962962
+    },
+    "webglDrawCalls": {
+      "count": 27,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 27,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "visualReviewCompleted": true,
+    "passed": true,
+    "reviewer": "prism_qa_capture",
+    "videoSha256": "b66624d573d77115f9a990f0bbf0bdc824b8089d2f27cc46ba998a9f527f4827",
+    "videoBytes": 1651295,
+    "capturedSeconds": 43.515122413635254,
+    "levelsWon": {
+      "1": {
+        "observedAt": 6.014609686,
+        "score": 2038,
+        "elapsed": 3.1,
+        "allReceiversCorrect": true
+      },
+      "2": {
+        "observedAt": 16.011133425,
+        "score": 2672,
+        "elapsed": 6.4,
+        "allReceiversCorrect": true
+      },
+      "3": {
+        "observedAt": 34.009610424,
+        "score": 2624,
+        "elapsed": 13.8,
+        "allReceiversCorrect": true
+      }
+    },
+    "finalThirdLevelWinHeldSecondsAtLeast": 9.005702840999994,
+    "reviewFrames": [
+      "review/title-1s.png",
+      "review/level1-4s.png",
+      "review/level2-14s.png",
+      "review/level3-32s.png",
+      "review/settlement-41s.png"
+    ],
+    "sourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "ae60c5a75324241e845acf9e01a453a389eba7c0970c885ced60ec5597b59783",
+      "game-model.js": "2f791ab39bd8199de923a597fc896d557a3ee6a938d39aaca99b6af5c89d7327",
+      "game.js": "78c5dbb74ae4409e1d02f381d1b4f7d924a4cb35e52bc3a53328e17d8802349a",
+      "renderer.js": "e05119a285490ae7c5f7dd6082deb92324c6c223e90a82c87276aefd5157328a",
+      "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223"
+    },
+    "audio": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "method": "Opened final encoded video PNG frames at 1,4,14,32,41 seconds; verified three normal-input wins and final third-level result.",
+    "gameplayFrameRecommended": "review/level3-32s.png",
+    "titleReadable": true,
+    "allBoardsAndKeyControlsVisible": true,
+    "settlementReadable": true,
+    "overlayBackdropBlurVisible": true,
+    "noFabricatedPhoneQr": true
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "e05119a285490ae7c5f7dd6082deb92324c6c223e90a82c87276aefd5157328a",
+    "runtime.js": "6514533a31cdb34b2065ea498153fb4f7f649242f6600d258ab5f113baa07f17",
+    "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+    "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223",
+    "game-model.js": "2f791ab39bd8199de923a597fc896d557a3ee6a938d39aaca99b6af5c89d7327",
+    "game.js": "78c5dbb74ae4409e1d02f381d1b4f7d924a4cb35e52bc3a53328e17d8802349a",
+    "game-config.json": "ae60c5a75324241e845acf9e01a453a389eba7c0970c885ced60ec5597b59783",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Chromium normal keyboard play; phone bridge regression uses controlled native input fixtures."
+  },
+  "release": {
+    "sourceSha": "9f238549963caac2b156e0a5bdeff229a93b1064",
+    "signerCommit": "9f238549963caac2b156e0a5bdeff229a93b1064",
+    "signingRun": 41324408753,
+    "bytes": 288035,
+    "sha256": "c0f0222138e9b6a1e69b16910eb806a9b830f9ed07bd4e1b6ebf06f28d92e9a1",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "ab7714ef7bee644d4a40505ae2221acab75882a5"
+  }
+}

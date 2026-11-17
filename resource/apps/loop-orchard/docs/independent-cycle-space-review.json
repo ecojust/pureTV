@@ -1,0 +1,294 @@
+{
+  "schema": 1,
+  "game": "loop-orchard",
+  "passed": true,
+  "scope": "Fixed synthetic 4x4 grid geometry and its full GF(2) cycle space only. No production Model, QA pilot, authored layout, selected game clues, inventory, tree/forbidden assignments or reference route is read or executed. This is not normal gameplay, browser, recording, APK or hardware evidence.",
+  "completeness": "The grid is connected with V=16 and E=24, so its binary cycle space has dimension E-V+1=9. Nine unit-face boundaries are independent: in any nonempty chosen-face subset, an upper edge of a face in the topmost chosen row cannot cancel against a chosen face above it. Numeric GF(2) rank and all 512 distinct XOR masks confirm that these faces span every even selected-edge subgraph.",
+  "summary": {
+    "vertices": 16,
+    "edges": 24,
+    "connectedComponents": 1,
+    "cycleSpaceDimension": 9,
+    "faceSubsetsEnumerated": 512,
+    "uniqueMasks": 512,
+    "histogram": {
+      "empty": 1,
+      "singlecycle": 213,
+      "disjointcycles": 108,
+      "degree4branch": 190,
+      "openchain": 0
+    },
+    "singleCycles": 213,
+    "singleCycleClueVectors": 210,
+    "singleCyclePairsSharingAllClues": 3,
+    "topmostFaceIndependenceWitnesses": 511,
+    "boundaryIncidenceChecks": 512
+  },
+  "basisMasks": [
+    12297,
+    24594,
+    49188,
+    196680,
+    393360,
+    786720,
+    3146304,
+    6292608,
+    12585216
+  ],
+  "pivotBits": [
+    13,
+    14,
+    15,
+    17,
+    18,
+    19,
+    21,
+    22,
+    23
+  ],
+  "checks": [
+    {
+      "name": "fixed-grid-rank-and-complete-even-subgraph-space",
+      "passed": true,
+      "method": "Nine unit-face boundaries XORed over GF(2); numeric rank plus topmost selected-face witness; dimension E-V+1=9.",
+      "actualHistogram": {
+        "empty": 1,
+        "singlecycle": 213,
+        "disjointcycles": 108,
+        "degree4branch": 190,
+        "openchain": 0
+      }
+    },
+    {
+      "name": "shared-edge-belongs-to-both-faces",
+      "passed": true,
+      "internalEdge": [
+        5,
+        6
+      ],
+      "clues": [
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "corner-and-opposite-boundary-sides-each-count-two",
+      "passed": true,
+      "cornerClues": [
+        0,
+        1,
+        0,
+        1,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "oppositeSidesClues": [
+        0,
+        1,
+        0,
+        0,
+        2,
+        0,
+        0,
+        1,
+        0
+      ],
+      "scope": "These are selected boundary-segment counting fixtures, not claimed connected pipes through a cell interior."
+    },
+    {
+      "name": "no-row-wrap-invalid-mask-or-duplicate-undirected-edge",
+      "passed": true,
+      "rejectedInputs": 12
+    },
+    {
+      "name": "empty-open-chain-and-odd-junction-are-not-cycles",
+      "passed": true,
+      "emptyKind": "empty",
+      "pathOddVertices": [
+        0,
+        2
+      ],
+      "junctionOddVertices": [
+        1,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "name": "simple-square-versus-shared-node-figure-eight",
+      "passed": true,
+      "square": {
+        "vertexIds": [
+          0,
+          1,
+          5,
+          4
+        ],
+        "edgeIds": [
+          0,
+          13,
+          3,
+          12
+        ],
+        "mask": 12297
+      },
+      "figureEightBranchVertices": [
+        5
+      ]
+    },
+    {
+      "name": "adjacent-plaquettes-cancel-shared-edge-to-one-rectangle",
+      "passed": true,
+      "mask": 20507,
+      "orderedCycle": {
+        "vertexIds": [
+          0,
+          1,
+          2,
+          6,
+          5,
+          4
+        ],
+        "edgeIds": [
+          0,
+          1,
+          14,
+          4,
+          3,
+          12
+        ],
+        "mask": 20507
+      }
+    },
+    {
+      "name": "two-three-four-disjoint-loops-and-complete-clue-comparison",
+      "passed": true,
+      "scope": "All 2/3/4-loop even masks are compared against every enumerated single cycle using the entire nine-count vector. No author board, inventory, trees, forbidden nodes or ordinary-input reachability is assumed.",
+      "comparisons": {
+        "2": {
+          "layouts": 87,
+          "layoutsSharingAllClues": 0,
+          "matchingPairs": 0
+        },
+        "3": {
+          "layouts": 20,
+          "layoutsSharingAllClues": 0,
+          "matchingPairs": 0
+        },
+        "4": {
+          "layouts": 1,
+          "layoutsSharingAllClues": 0,
+          "matchingPairs": 0
+        }
+      }
+    }
+  ],
+  "assertions": 38,
+  "rejectedInputs": 12,
+  "enumerationCertificateSha256": "44daa53fc1a7c65c5821098f9c8acfb9c6cf534318633c39ddd9ed7524890496",
+  "sourceHashesAtStart": {
+    "script": "d108d387fd2d28293b2879dcde34d5768bccd31323ca61c413e42dff44c82667"
+  },
+  "sourceHashesAtEnd": {
+    "script": "d108d387fd2d28293b2879dcde34d5768bccd31323ca61c413e42dff44c82667"
+  },
+  "sourceUnchanged": true,
+  "productionModelImported": false,
+  "qaPilotImported": false,
+  "authoredLayoutsRead": false,
+  "browserUsed": false,
+  "normalWinsClaimed": 0,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "disjointClueConflicts": {
+    "2": {
+      "cycleCount": 2,
+      "layoutCount": 87,
+      "uniqueClueVectors": 86,
+      "layoutsSharingAllNineCluesWithSingleCycle": 0,
+      "matchingSingleCycleCount": 0,
+      "matchingPairCount": 0,
+      "collisionWitnesses": []
+    },
+    "3": {
+      "cycleCount": 3,
+      "layoutCount": 20,
+      "uniqueClueVectors": 20,
+      "layoutsSharingAllNineCluesWithSingleCycle": 0,
+      "matchingSingleCycleCount": 0,
+      "matchingPairCount": 0,
+      "collisionWitnesses": []
+    },
+    "4": {
+      "cycleCount": 4,
+      "layoutCount": 1,
+      "uniqueClueVectors": 1,
+      "layoutsSharingAllNineCluesWithSingleCycle": 0,
+      "matchingSingleCycleCount": 0,
+      "matchingPairCount": 0,
+      "collisionWitnesses": []
+    }
+  },
+  "rawMathematicalReportSha256": "689978ebde4cef789a7a7bb5ef9567a2a8d0abb6e7bd45b5190ed400bfa45465",
+  "rawEnumerationIncluded": false,
+  "additionalCoordinateReview": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "Fixed graph and geometry-derived cycle-space dimension",
+        "passed": true
+      },
+      {
+        "name": "One corner unit square is a four-edge simple cycle",
+        "passed": true
+      },
+      {
+        "name": "An internal shared edge counts once for each adjacent region",
+        "passed": true
+      },
+      {
+        "name": "Corner and opposite boundary segments both count as two segments",
+        "passed": true
+      },
+      {
+        "name": "Adjacent face XOR cancels the shared segment and forms one six-edge rectangle",
+        "passed": true
+      },
+      {
+        "name": "Two vertex-disjoint square loops are not a single loop",
+        "passed": true
+      },
+      {
+        "name": "Two loops sharing only a vertex form a degree-four junction",
+        "passed": true
+      },
+      {
+        "name": "Empty or open paths never become a loop, and rows do not wrap",
+        "passed": true
+      }
+    ],
+    "oracleSha256": "d108d387fd2d28293b2879dcde34d5768bccd31323ca61c413e42dff44c82667",
+    "oracleSha256After": "d108d387fd2d28293b2879dcde34d5768bccd31323ca61c413e42dff44c82667",
+    "sourceUnchanged": true,
+    "reviewScriptSha256": "052034e9099e02879ab0bcaeda87202c0efef7adaecfc0ed13b06b7087ec960a",
+    "scope": "Eight independent explicit-coordinate mathematical cases on the fixed abstract 4x4 graph. This audit does not repeat the exhaustive 512-set enumeration and uses no authored board or game state.",
+    "productionModelImported": false,
+    "pilotImported": false,
+    "authoredLayoutsRead": false,
+    "exhaustiveEnumerationRepeated": false,
+    "browserExecuted": false,
+    "ordinaryGameplayEvidence": false,
+    "rawReportSha256": "4fcb5132d73b91a9ce5a4d31443573eb84f88ec5f6d2cfa8ae64101b68ebd5b1"
+  }
+}

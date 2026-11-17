@@ -1,0 +1,44 @@
+{
+  "reviewedAt": "2026-11-11T12:19:28.525329+00:00",
+  "scope": "Separate visual review of actual screenshots from the synthetic native-bridge UI fixture. Raw automated report is unchanged. Not a real TV/phone/WebView or QR-scanning test.",
+  "visualReviewCompleted": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "reviewedScreenshots": [
+    {
+      "file": "en-menu-960x540.png",
+      "sha256": "16f98724a059de7e632e9c513ad1f07f8d39d0ab97d5d9da765ba11713a3b572"
+    },
+    {
+      "file": "en-menu-1280x720.png",
+      "sha256": "fb6ffa4723d7843f47533399a9af923b2151febff75935a3a07c39c2175a8489"
+    },
+    {
+      "file": "en-paused-960x540.png",
+      "sha256": "7e9613226756cabdea2b4b9134c83b317b91a99ead9b7de2b8f0e92adf242937"
+    },
+    {
+      "file": "en-paused-1280x720.png",
+      "sha256": "46ccbbcd957b0aa88ce17809fd73a03a9054f4579ea0be0d72cbe611bc6afb2b"
+    },
+    {
+      "file": "en-playing-1280x720.png",
+      "sha256": "b541025d3695589f913707bf0fa6c3b78d6503c60ffbab3fa26daac5e04aba86"
+    },
+    {
+      "file": "zh-menu-960x540.png",
+      "sha256": "50934519261506fc94bc1c118f5716899e663a795632ca0df1c5293eb13b8892"
+    },
+    {
+      "file": "zh-menu-1280x720.png",
+      "sha256": "aa33936cc06d64251893504b9bcd42df23948a49c5a55c103a19aa34f964c88e"
+    }
+  ],
+  "findings": [
+    "English menu, English paused and Chinese menu show the full controller panel at 960x540 and 1280x720.",
+    "Panel instructions, LAN address, primary buttons, language buttons and track labels remain visible; sidebar and dialog do not overlap.",
+    "The ordinary playing screenshot hides the controller panel and shows the real 3D scene and racing HUD.",
+    "The supplied data-URL image is a synthetic stand-in for the QR slot. No scanning or connection success is claimed."
+  ],
+  "blockingVisualIssues": []
+}

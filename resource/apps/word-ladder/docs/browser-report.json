@@ -1,0 +1,91 @@
+{
+  "kind": "ordinary-browser-word-ladder-regression",
+  "startedAt": "2026-11-03T18:15:04.436Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "bf9c2ff24ea2a4dd471b9b1018019bfeed03efbbe6f74cac5be9c1d779c894dd",
+    "game-model.js": "00e57627c3438b784bb3caf183ebeeca66e4e6a285f918a81a1baaca5525b7c2",
+    "game.js": "97c598538f80b41ae9348c4b3e61585b8354c80fd83151d1b8b371c78e41f70e",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "all 24 words, changing-letter marks and meanings fit both viewports",
+      "passed": true,
+      "milliseconds": 5349.672269,
+      "screenshots": [
+        "/workspace/scratch/word-ladder/browser-checks/initial-1280.png",
+        "/workspace/scratch/word-ladder/browser-checks/initial-960.png"
+      ]
+    },
+    {
+      "name": "level 1: public dictionary BFS wins using actual one-letter selections",
+      "passed": true,
+      "milliseconds": 6041.355907,
+      "level": 0,
+      "moves": 5,
+      "current": "TAIL"
+    },
+    {
+      "name": "level 2: public dictionary BFS wins using actual one-letter selections",
+      "passed": true,
+      "milliseconds": 7653.825669,
+      "level": 1,
+      "moves": 6,
+      "current": "FORM"
+    },
+    {
+      "name": "level 3: public dictionary BFS wins using actual one-letter selections",
+      "passed": true,
+      "milliseconds": 11209.134000999999,
+      "level": 2,
+      "moves": 7,
+      "current": "FARM"
+    },
+    {
+      "name": "both actual undo credits restore the current word and cursor without refunding paid moves",
+      "passed": true,
+      "milliseconds": 13595.644884999998,
+      "moves": 9,
+      "undos": 2
+    },
+    {
+      "name": "paid revisits reach the target on the exact final allowed move",
+      "passed": true,
+      "milliseconds": 14407.770617000002,
+      "moves": 11,
+      "pathLength": 12
+    },
+    {
+      "name": "an ordinary two-word cycle exhausts the budget and terminal undo cannot revive it",
+      "passed": true,
+      "milliseconds": 9239.903223999994,
+      "moves": 10
+    },
+    {
+      "name": "same-word and multi-letter attempts are free; the real CORK leaf is reachable before target and permits return",
+      "passed": true,
+      "milliseconds": 5995.894222999996,
+      "branch": "CORK",
+      "branchDistance": 2,
+      "paidReturn": 3,
+      "shortLastRowCursor": 21
+    },
+    {
+      "name": "held A cannot repeat across pause; fresh neutral input admits the next legitimate word",
+      "passed": true,
+      "milliseconds": 5913.065475999989,
+      "moves": 2
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T18:16:24.042Z"
+}

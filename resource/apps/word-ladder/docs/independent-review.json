@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "method": "Independent pairwise Hamming-distance graph and BFS over the full public dictionaries. Branch reachability forbids the absorbing target as an intermediate; corrected CORK branch is playable in2 moves. Every affordable pre-win outgoing edge, all optimal/exact-budget wins, paid revisits, losses and undo boundaries replay ordinary cursor/A/B inputs.",
+  "checks": [
+    "independent pairwise Hamming graphs prove5/6/7 minimum moves and target-avoiding playable leaf branches",
+    "all three ordinary shortest routes win through visible cursor selection and exact changed-letter receipts",
+    "every affordable outgoing edge from a pre-win reachable word agrees with the public Hamming rule",
+    "ordinary revisits consume moves, exact-final goal wins first, and natural cycles exhaust the budget",
+    "two ordinary undos restore path/current/cursor without refund, and blocked undo is free",
+    "reachable leaf branches stay playing and allow an ordinary paid return instead of automatic failure",
+    "same-word/multi-letter attempts are free, short rows clamp correctly, and held A cannot repeat after cancellation"
+  ],
+  "layouts": [
+    {
+      "level": 0,
+      "wordCount": 18,
+      "minimumMoves": 5,
+      "winningRoute": [
+        "HEAL",
+        "TEAL",
+        "TELL",
+        "TALL",
+        "TAIL"
+      ],
+      "branch": "LEAF",
+      "branchRoute": [
+        "HEAT",
+        "MEAT",
+        "MEAN",
+        "LEAN",
+        "LEAF"
+      ],
+      "branchDistance": 5
+    },
+    {
+      "level": 1,
+      "wordCount": 22,
+      "minimumMoves": 6,
+      "winningRoute": [
+        "CORD",
+        "CARD",
+        "WARD",
+        "WARM",
+        "FARM",
+        "FORM"
+      ],
+      "branch": "CORK",
+      "branchRoute": [
+        "CORD",
+        "CORK"
+      ],
+      "branchDistance": 2
+    },
+    {
+      "level": 2,
+      "wordCount": 24,
+      "minimumMoves": 7,
+      "winningRoute": [
+        "HAND",
+        "HARD",
+        "HARE",
+        "HIRE",
+        "FIRE",
+        "FIRM",
+        "FARM"
+      ],
+      "branch": "BONE",
+      "branchRoute": [
+        "SANE",
+        "CANE",
+        "CONE",
+        "BONE"
+      ],
+      "branchDistance": 4
+    }
+  ],
+  "comparedEdges": 142,
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "00e57627c3438b784bb3caf183ebeeca66e4e6a285f918a81a1baaca5525b7c2",
+    "tests/reference.cjs": "1084111c12e4567ea5c6ad4ca91fc07d86d16926eb8431e878c014fe2b7aae1a",
+    "tests/independent-check.cjs": "097d2399bc65ae58ea59dffff64516b78c92f4ed62effb62c69f0f3f9017e995"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

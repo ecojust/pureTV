@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {serveAssets,launch,preparePage,snapshot,tap,inspectFrame,sourceHashes,verifyErrors} from '/workspace/pureTV/resource/game-kit/qa/common.mjs';
+import {findRoute} from '/workspace/pureTV/resource/apps/twenty-four/tests/reference.mjs';
+const assets='/workspace/scratch/twenty-four/assets',output='/workspace/scratch/twenty-four/preview';await mkdir(output,{recursive:true});const server=await serveAssets(assets),browser=await launch(),observations=[];
+async function ready(page){await page.waitForFunction(()=>{const s=PureTVQA.snapshot();return s.phase==='playing'&&s.model.inputArmed&&!s.model.lastHeld.a&&!s.model.lastHeld.b&&s.model.lastHeld.direction==='none';});}
+async function action(page,key,field){await ready(page);const before=(await snapshot(page)).model[field];await page.keyboard.down(key);try{await page.waitForFunction(({field,before})=>PureTVQA.snapshot().model[field]!==before,{field,before});}finally{await page.keyboard.up(key);}if((await snapshot(page)).phase==='playing')await ready(page);}
+async function select(page,mask){while((await snapshot(page)).model.terms[(await snapshot(page)).model.cursor].mask!==mask)await action(page,'ArrowRight','cursor');}
+async function prepare(page,a,b,op){await select(page,a);await action(page,'Space','stage');await select(page,b);await action(page,'Space','stage');while((await snapshot(page)).model.opIndex!==op)await action(page,'ArrowRight','opIndex');}
+async function merge(page,a,b,op){await prepare(page,a,b,op);await action(page,'Space','mergesUsed');}
+async function capture(page,mode){for(const width of [960,1280]){await page.setViewportSize({width,height:width*9/16});const before=await snapshot(page);await inspectFrame(page,`${output}/${mode}-${width}.png`);observations.push({mode,width,before,after:await snapshot(page)});}}
+try{for(const mode of ['negative','division']){const session=await preparePage(browser,server.url),page=session.page;try{await page.locator('[data-level="2"]').click();await tap(page,'Enter');await ready(page);
+ if(mode==='negative'){await merge(page,1,4,1);await merge(page,8,5,4);assert.equal((await snapshot(page)).model.terms.at(-1).n,-8);assert.equal((await snapshot(page)).model.terms.at(-1).d,5);await capture(page,'negative-fraction');await merge(page,2,13,0);assert.equal((await snapshot(page)).model.stage,'retry');assert.equal((await snapshot(page)).model.terms[0].n,7);assert.equal((await snapshot(page)).model.terms[0].d,5);await capture(page,'full-wrong-result');}
+ else{const route=findRoute((await snapshot(page)).model.terms).route;for(const c of route.slice(0,-1))await merge(page,c.firstMask,c.secondMask,c.opIndex);const last=route.at(-1);assert.equal(last.opIndex,4);await prepare(page,last.secondMask,last.firstMask,5);const selected=(await snapshot(page)).model,left=selected.terms.find(t=>t.mask===selected.firstMask),right=selected.terms.find(t=>t.mask===selected.secondMask);assert.deepEqual([left.n,left.d,right.n,right.d,selected.opIndex],[1,3,8,1,5]);await capture(page,'selected-reverse-division');await action(page,'Space','mergesUsed');assert.equal((await snapshot(page)).phase,'won');await capture(page,'fraction-win');}
+ verifyErrors(session);
+ }finally{await session.context.close();}}
+ await writeFile(`${output}/snapshot.json`,JSON.stringify({sourceAssetHashes:await sourceHashes(assets),note:'Ordinary signed rational operations produce−8/5, a full wrong7/5 result with full source expression, and the fraction-required final division yielding24. No state writes.',observations},null,2)+'\n');
+}finally{await browser.close();await server.close();}

@@ -1,0 +1,456 @@
+{
+  "schema": 1,
+  "game": "tide-lock",
+  "version": "0.1.0",
+  "modelTests": {
+    "passed": 20,
+    "command": "node --test resource/apps/tide-lock/tests/game-model.test.cjs",
+    "modelSha256": "8937b4cca6ebad99417ae9f56b80a0eacf8c051f55c1edc3108b5c60e41342df",
+    "testSourceSha256": "08992cf04307eecc859b2b639e00306f3062bcd3f0935aaec435046dc0032c99",
+    "testLogSha256": "cacaeb1661d717d64451ef86a7bc8202205fb634714bf4d001c67bcf3a33e681",
+    "normalInputLevelsWon": 3
+  },
+  "independentWaterReview": {
+    "passed": true,
+    "file": "independent-water-review.json",
+    "sha256": "ee3a4024a63b551f5f32ed839cd2178369515703ce5f1b01f81a04537a450dc0",
+    "checksPassed": 10,
+    "normalInputVoyagesWon": 6,
+    "randomizedGateNetworks": 50000,
+    "randomizedValveCases": 5000,
+    "source": {
+      "modelPath": "resource/apps/tide-lock/src/main/assets/game-model.js",
+      "modelSha256": "8937b4cca6ebad99417ae9f56b80a0eacf8c051f55c1edc3108b5c60e41342df",
+      "automationPath": "resource/apps/tide-lock/tests/automation.mjs",
+      "automationSha256": "f968f5dcde80c0410b2cea6da14ea8008ffffe72b31877a5813f8967a28b4299",
+      "reviewScript": "resource/apps/tide-lock/tests/independent-water-review.mjs",
+      "reviewScriptSha256": "4c5e3d6d23dd7b86f942af7a2c547b6912cc752c38f26f1b79340b34ff280688"
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "cf47918ee6ab5c4a78b5150c3781fdb2008667900bea6c64a07746df4d691ab3",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223",
+      "game-model.js": "8937b4cca6ebad99417ae9f56b80a0eacf8c051f55c1edc3108b5c60e41342df",
+      "game.js": "c408d89ea8e36d290bc7c78b44643e9f3ab534aca830c481c5b14e5356360c35",
+      "game-config.json": "c6e926f352f4b5fa5a8b64d66de3956aa69ce37575024d27b9dba26a1757827b",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    }
+  },
+  "supplementaryUiAndNormalLoss": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three voyage buttons select correct boat counts and water endpoints",
+        "passed": true
+      },
+      {
+        "name": "remote and phone joystick cycle voyage choices once per press",
+        "passed": true
+      },
+      {
+        "name": "menu backdrop blur and sound button reflect settings",
+        "passed": true
+      },
+      {
+        "name": "held phone START begins one voyage without reset or pause flicker",
+        "passed": true
+      },
+      {
+        "name": "held phone A opens the safe first gate once",
+        "passed": true
+      },
+      {
+        "name": "phone B starts crossing and A cannot close a boat-occupied gate",
+        "passed": true
+      },
+      {
+        "name": "phone stick selects another gate; disconnect freezes water and boat state",
+        "passed": true
+      },
+      {
+        "name": "pause and primary/header resume buttons retain the voyage",
+        "passed": true
+      },
+      {
+        "name": "normal continued filling raises chamber two to its bank and loses by overflow",
+        "passed": true
+      },
+      {
+        "name": "R retry clears overflow and restores boat, water, gates and valves",
+        "passed": true
+      }
+    ],
+    "normalLoss": {
+      "phase": "lost",
+      "lostReason": "overflow",
+      "elapsed": 9.166666666666666,
+      "deliveries": 0,
+      "target": 1,
+      "overflowVolume": 0.00833333333349806
+    },
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "cf47918ee6ab5c4a78b5150c3781fdb2008667900bea6c64a07746df4d691ab3",
+      "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+      "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223",
+      "game-model.js": "8937b4cca6ebad99417ae9f56b80a0eacf8c051f55c1edc3108b5c60e41342df",
+      "game.js": "c408d89ea8e36d290bc7c78b44643e9f3ab534aca830c481c5b14e5356360c35",
+      "game-config.json": "c6e926f352f4b5fa5a8b64d66de3956aa69ce37575024d27b9dba26a1757827b",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "reviewKind": "final-build-postcapture-layout-review",
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 226.609375,
+          "width": 420,
+          "height": 331.78125,
+          "right": 726.984375,
+          "bottom": 558.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 149.203125,
+          "width": 420,
+          "height": 295.59375,
+          "right": 586.5,
+          "bottom": 444.796875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 203.71875,
+          "width": 420,
+          "height": 377.5625,
+          "right": 726.984375,
+          "bottom": 581.28125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true
+      }
+    ],
+    "rawReportSha256": "93c0e1cbef705606efc66798e181ee471118a56f20cb85b25ae0274bce40a25d"
+  },
+  "sharedAtlasReview": {
+    "file": "../../../game-kit/docs/atlas-verification.json",
+    "sha256": "29d35bc81ed262f6ade16a0c696aa9c1e2fb7d40de03526517b1c020eecc5bcb",
+    "checksPassed": 9,
+    "sameLegacyFrames": true
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 594,
+    "rafIntervalMs": {
+      "count": 594,
+      "min": 16.599999999998545,
+      "median": 50,
+      "p95": 100,
+      "max": 150.10000000000036,
+      "mean": 52.607407407407415
+    },
+    "webglDrawCalls": {
+      "count": 594,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 594,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "video": "gameplay-0.1.0.mp4",
+    "videoSha256": "2e80d4e164ef372360bda65f54e3976975efe010b93d560e9cdb24d8c3036c1f",
+    "normalWin": {
+      "level": 1,
+      "deliveries": 1,
+      "target": 1,
+      "score": 1325,
+      "elapsed": 32.55,
+      "allBoatsExitedDry": true,
+      "sourceVolume": 4.0593495934957,
+      "sinkVolume": 0,
+      "overflowVolume": 0,
+      "waterLedgerError": 1.0480505352461478e-13,
+      "observedAt": 36.014459523
+    },
+    "finalWinHeldSecondsAtLeast": 14.000019432999999,
+    "reviewedFrames": [
+      {
+        "name": "menu-first-tide.png",
+        "sha256": "c07894e665f5a1fee8b7e041aadda5456363424334ca3c92ee86a8f2e6000398"
+      },
+      {
+        "name": "menu-convoy.png",
+        "sha256": "bdf9e6d3fa13ea6e82feb5ca5070c833fe7b654ad7dd914dd00cd0e9a1dbcc10"
+      },
+      {
+        "name": "menu-full-load.png",
+        "sha256": "190dbd1643d58c828fccc3f79773206c9cf9ae353eda371abcb1730736f2f6fe"
+      },
+      {
+        "name": "gameplay-10s.png",
+        "sha256": "3ef0648bf7fa227d9110b8824e7ecb9c13f89dffd8144d1a96e1e194bb66bf29"
+      },
+      {
+        "name": "gameplay-20s.png",
+        "sha256": "add6231187a87c5bb14695e519dd5ab23528e0c40d30e8b7452b4359269db791"
+      },
+      {
+        "name": "gameplay-30s.png",
+        "sha256": "f7853105787b0caa07f569f2137731713295da25eb831108c874bda95c3776e3"
+      },
+      {
+        "name": "gameplay-thumb-22s.png",
+        "sha256": "b65160cc3012a4cfa0faae7efd4862ea57d168ffec3da5a7b4f7745678ad64e5"
+      },
+      {
+        "name": "settlement-48s.png",
+        "sha256": "d1c1b6fac7f79f5cd01d9565e1a6dd4538df681f18601940b57006d60eebc14a"
+      }
+    ],
+    "postCapture": {
+      "passed": true,
+      "performedAfterCapture": true,
+      "winningScore": 1325,
+      "bestScoreInNewPage": 1325,
+      "deliveries": 1,
+      "target": 1
+    }
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "cf47918ee6ab5c4a78b5150c3781fdb2008667900bea6c64a07746df4d691ab3",
+    "tv.css": "ca9147e1b9eb850c0448ddf2eed8090bce7d6957028627cff85411e8840c8199",
+    "tv.html": "abcc1e02fe993f037c512d3eee4a439f58d1218645c6cb3b706be9415a54c223",
+    "game-model.js": "8937b4cca6ebad99417ae9f56b80a0eacf8c051f55c1edc3108b5c60e41342df",
+    "game.js": "c408d89ea8e36d290bc7c78b44643e9f3ab534aca830c481c5b14e5356360c35",
+    "game-config.json": "c6e926f352f4b5fa5a8b64d66de3956aa69ce37575024d27b9dba26a1757827b",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "3cc64c51e30e56ade6e0ab6cf555c5f00bcaaf1498fccce1f1656c040d25b1a2",
+    "sign": "004260e1a085c723c4e1752b992578b085de39cb15fbd67c13b5b1ae11cb6030",
+    "fetch": "4f3ac37abd5402da8230c2a353a7694d4fc81dbfa19e060a3fdf1d0d574a1a67",
+    "record": "dcf6bdcd009557b6e5464ce2c20e9a08895041510d2c40e9e11cf399b48191c2",
+    "review": "c537ba457c102d8628638306152c4fc9ca4e59c272bcb921a20855b1cbd0f680",
+    "videoValidation": "a747a72059272b69a7fc97bbffd7b31df9a85b676d335f9038a6e5be4f1f6942",
+    "qa": "09974130673d1d7b2eae110f52ad829f200306afdd7c6ee76471f31cf787bfdc",
+    "ui": "910b9273f8983b5c09af01577479266566322de2ebb125dbf65286f250adbacb",
+    "layout": "93c0e1cbef705606efc66798e181ee471118a56f20cb85b25ae0274bce40a25d",
+    "viewport": "411b68162f1abfdb5ee753eee57fdb5434fed371f58b14baed4dbb8c01c74f10",
+    "summary": "13bda27d8c5346fab698b55c872a71ac00bd3b575bc8f424209c34b9e4376eee",
+    "artifacts": "a3a1663b86602041f2522bfd4c1fa8475e7390310e85896ff6caa51cf543f64c",
+    "water": "ee3a4024a63b551f5f32ed839cd2178369515703ce5f1b01f81a04537a450dc0",
+    "atlas": "29d35bc81ed262f6ade16a0c696aa9c1e2fb7d40de03526517b1c020eecc5bcb"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Chromium with ordinary keyboard input; phone bridge checks use a controlled native fixture. No physical Android installation is claimed."
+  },
+  "release": {
+    "sourceSha": "b50306eea3a34f1d0bd2a72149652d9f51c7c679",
+    "signerCommit": "b50306eea3a34f1d0bd2a72149652d9f51c7c679",
+    "signingRun": 41327167002,
+    "bytes": 296227,
+    "sha256": "3aa25a62218da4d6fa18f7561c3810e36f6f98c866cac7c4431afc89719fd296",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "046cefbbbbf358eff5faf88488358720bd36b1ca"
+  }
+}

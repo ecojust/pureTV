@@ -1,0 +1,200 @@
+{
+  "activeStep": "fixture-uninstall",
+  "assertionsPassed": true,
+  "attemptedEvidenceLevel": "E3",
+  "device": {
+    "catalogueCount": 56,
+    "defaultHome": null,
+    "device": {
+      "androidVersion": "6.0",
+      "model": "sdk_google_atv_x86",
+      "serial": "127.0.0.1:5555",
+      "status": "device",
+      "userId": 0
+    },
+    "installedPackageCount": 56,
+    "launcherCount": 0,
+    "systemInfo": {
+      "brand": "generic_x86",
+      "cpu": "ranchu",
+      "cpuAbi": "x86",
+      "displayResolution": "320x640",
+      "manufacturer": "unknown",
+      "memoryAvailableBytes": 1847009280,
+      "memoryTotalBytes": 2120810496,
+      "queriedAt": 1793900503,
+      "sdkVersion": "23",
+      "securityPatch": "2016-09-06",
+      "storageAvailableBytes": 667838054,
+      "storageTotalBytes": 790521446,
+      "uptimeSeconds": 36
+    }
+  },
+  "elapsedSeconds": 50.02653367,
+  "emulatorTested": true,
+  "evidenceLevel": "E3",
+  "expectedSdk": 23,
+  "fixturePackage": "org.puretv.compatfixture",
+  "fullPhysicalCompatibilityVerified": false,
+  "homeProtection": {
+    "defaultHome": null,
+    "defaultHomeIdentified": false
+  },
+  "installV1": [
+    {
+      "message": "电视已确认安装成功，已刷新应用列表",
+      "path": "/home/runner/work/_temp/puretv-emulator-yp0fygng/fixture-v1-signed.apk",
+      "success": true
+    }
+  ],
+  "installV2": [
+    {
+      "message": "电视已确认安装成功，已刷新应用列表",
+      "path": "/home/runner/work/_temp/puretv-emulator-yp0fygng/fixture-v2-signed.apk",
+      "success": true
+    }
+  ],
+  "limitations": [
+    "HOME could not be identified; disable/uninstall were correctly refused and the disposable fixture remains installed"
+  ],
+  "physicalTvTested": false,
+  "schemaVersion": 1,
+  "scope": "Production Manager API on an isolated Android emulator; not a Xiaomi or physical TV test",
+  "sourceCommit": "925cecc3a1186b49a68138e86676b7bba9eb1f83",
+  "status": "PASS",
+  "steps": [
+    {
+      "data": {
+        "initialSerial": "emulator-5554",
+        "qemu": "1",
+        "sdk": 23
+      },
+      "name": "isolated-emulator-guard",
+      "status": "PASS"
+    },
+    {
+      "data": {
+        "currentUser": 0,
+        "currentUserSource": "SDK19/23 dumpsys activity processes mUserLru"
+      },
+      "name": "manager-connect",
+      "status": "PASS"
+    },
+    {
+      "data": {
+        "catalogueCount": 56,
+        "defaultHome": null,
+        "device": {
+          "androidVersion": "6.0",
+          "model": "sdk_google_atv_x86",
+          "serial": "127.0.0.1:5555",
+          "status": "device",
+          "userId": 0
+        },
+        "installedPackageCount": 56,
+        "launcherCount": 0,
+        "systemInfo": {
+          "brand": "generic_x86",
+          "cpu": "ranchu",
+          "cpuAbi": "x86",
+          "displayResolution": "320x640",
+          "manufacturer": "unknown",
+          "memoryAvailableBytes": 1845145600,
+          "memoryTotalBytes": 2120810496,
+          "queriedAt": 1793900514,
+          "sdkVersion": "23",
+          "securityPatch": "2016-09-06",
+          "storageAvailableBytes": 667838054,
+          "storageTotalBytes": 790521446,
+          "uptimeSeconds": 47
+        }
+      },
+      "name": "manager-scan",
+      "status": "PASS"
+    },
+    {
+      "data": {
+        "catalogueCount": 56,
+        "defaultHome": null,
+        "device": {
+          "androidVersion": "6.0",
+          "model": "sdk_google_atv_x86",
+          "serial": "127.0.0.1:5555",
+          "status": "device",
+          "userId": 0
+        },
+        "installedPackageCount": 56,
+        "launcherCount": 0,
+        "systemInfo": {
+          "brand": "generic_x86",
+          "cpu": "ranchu",
+          "cpuAbi": "x86",
+          "displayResolution": "320x640",
+          "manufacturer": "unknown",
+          "memoryAvailableBytes": 1844539392,
+          "memoryTotalBytes": 2120810496,
+          "queriedAt": 1793900524,
+          "sdkVersion": "23",
+          "securityPatch": "2016-09-06",
+          "storageAvailableBytes": 667733196,
+          "storageTotalBytes": 790521446,
+          "uptimeSeconds": 58
+        }
+      },
+      "name": "manager-refresh-system-info",
+      "status": "PASS"
+    },
+    {
+      "data": {
+        "enabledState": "0",
+        "installed": true,
+        "package": "org.puretv.compatfixture",
+        "userId": 0,
+        "versionCode": 1
+      },
+      "name": "fixture-install-v1",
+      "status": "PASS"
+    },
+    {
+      "data": {
+        "enabledState": "0",
+        "installed": true,
+        "package": "org.puretv.compatfixture",
+        "userId": 0,
+        "versionCode": 2
+      },
+      "name": "fixture-upgrade-v2",
+      "status": "PASS"
+    },
+    {
+      "data": {
+        "enabledState": "0",
+        "installed": true,
+        "package": "org.puretv.compatfixture",
+        "userId": 0,
+        "versionCode": 2
+      },
+      "name": "fixture-disable",
+      "status": "EXPECTED_PROTECTION"
+    },
+    {
+      "data": {
+        "reason": "Fixture remains enabled after protected disable refusal"
+      },
+      "name": "fixture-enable",
+      "status": "NOT_RUN"
+    },
+    {
+      "data": {
+        "enabledState": "0",
+        "installed": true,
+        "package": "org.puretv.compatfixture",
+        "userId": 0,
+        "versionCode": 2
+      },
+      "name": "fixture-uninstall",
+      "status": "EXPECTED_PROTECTION"
+    }
+  ],
+  "testedScopeCompatibility": "LIMITED"
+}

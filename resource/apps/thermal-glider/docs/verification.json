@@ -1,0 +1,975 @@
+{
+  "schema": 1,
+  "game": "thermal-glider",
+  "version": "0.1.0",
+  "sourceCommit": "2dac044f91bb256db2eda6a1cb2df90b182f7a01",
+  "automationSha256": "95c56d66218224038b07b395d64d81f759d2514ba85b91433b71c6464ea46c64",
+  "flightModel": "Deterministic point-mass gliding approximation with an airspeed/potential-energy ledger; not full CFD or physical flight-training validation.",
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "unresolvedFindings": [],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+      "game.js": "0691916a4383754dc59138aaa511d4b0a7a0524d55e05fb3872e00d588584afc",
+      "game-config.json": "21a8ea13eca9cf9d95640658f8d149f40d7341d897016c146c2306094899cb00",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game-model.js": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+      "src/main/assets/game.js": "0691916a4383754dc59138aaa511d4b0a7a0524d55e05fb3872e00d588584afc",
+      "tests/automation.mjs": "95c56d66218224038b07b395d64d81f759d2514ba85b91433b71c6464ea46c64",
+      "tests/game-model.test.cjs": "94907010c61766a433d4b45a86863d2aabc012526fc5ea7d1556e0b6f76b8a63",
+      "docs/model-contract.md": "579fc9a822e8bbb5ef2b4479c633c75b87754a7214f28e663eab2680e6ad41c3"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime-v2/01-menu.png",
+        "sha256": "85626188f02e9ade231276a458e63b0be3e40820ec62064ffa970807576fc39d",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/02-thermal.png",
+        "sha256": "14e173928df3e79f1a3374507ecab49545ab1fbb924263668640782f9eb41699",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/03-airbrake.png",
+        "sha256": "baa123650116fe9e1841de18b1a465a11961bf5a0c8cab50e4bb5c37c8113062",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/04-flaps-approach.png",
+        "sha256": "137b0429570858c086554a2486f27d24df105285a0955afd4dffc17b9f1f9a2f",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/05-safe-landing.png",
+        "sha256": "00bc36874f8eeb0b5400e5005f53040b38f34048f7e83225e919889ad54f59db",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "dadc3e171bd4d87a358a0133c68e450f4020f9a558f0b9fbe3801ddbcec8aa7c",
+    "scope": "Actually reviewed candidate software-browser images on the same final bundled assets; this is a prerequisite for source freeze, separate from final packaged QA and recorded gameplay."
+  },
+  "modelTests": {
+    "passed": 33,
+    "command": "node --test resource/apps/thermal-glider/tests/game-model.test.cjs",
+    "sourceHashesBefore": {
+      "model": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+      "tests": "94907010c61766a433d4b45a86863d2aabc012526fc5ea7d1556e0b6f76b8a63",
+      "automation": "95c56d66218224038b07b395d64d81f759d2514ba85b91433b71c6464ea46c64",
+      "contract": "579fc9a822e8bbb5ef2b4479c633c75b87754a7214f28e663eab2680e6ad41c3"
+    },
+    "sourceHashesAfter": {
+      "model": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+      "tests": "94907010c61766a433d4b45a86863d2aabc012526fc5ea7d1556e0b6f76b8a63",
+      "automation": "95c56d66218224038b07b395d64d81f759d2514ba85b91433b71c6464ea46c64",
+      "contract": "579fc9a822e8bbb5ef2b4479c633c75b87754a7214f28e663eab2680e6ad41c3"
+    },
+    "testLogSha256": "b542df0c9ec9b4756b3e129747bf83d1358f9c494d0be4d7a718e295a0595c8a",
+    "rawReportSha256": "bfde8d160392bb3cd6c3d5b43f66b816a8e82be91a023f61aef5c268ca01131a",
+    "scope": "30 public-physics boundary rule tests plus 3 actual ordinary-input public-feedback course completions; fixtures are not normal-flight evidence",
+    "scheduling": "Normal flights use 60 Hz fixed ticks and public observations every 5 ticks. This does not guarantee success at every possible cadence."
+  },
+  "independentFlightReview": {
+    "passed": true,
+    "file": "independent-flight-review.json",
+    "sha256": "3ada47f8c7748d988cb5146fffbd22fc3bd0486877717f4cc86100bd4ce8623c",
+    "checksPassed": 10,
+    "totals": {
+      "energyTicks": 13266,
+      "thermalBoundaryCases": 5,
+      "sweptMountainCases": 3,
+      "landingPredicateCases": 13,
+      "ordinaryPublicFeedbackWins": 3
+    },
+    "ordinaryAuthoredModelFlights": [
+      {
+        "level": 1,
+        "phase": "won",
+        "elapsed": 58.416666666666664,
+        "score": 2210,
+        "checkpointsPassed": 3,
+        "checkpointCount": 3,
+        "landingAccepted": true,
+        "landingResult": {
+          "x": -0.39100828363333495,
+          "z": 966.5281022414865,
+          "altitude": 0,
+          "airspeed": 12.326513657134052,
+          "groundSpeed": 12.423735329343105,
+          "verticalSpeed": -0.6304100212250564,
+          "heading": -0.022130466488109235,
+          "bank": -8.945850048404274e-05,
+          "pitch": 3.917453253752568e-17,
+          "flaps": true,
+          "at": 58.40384419788354,
+          "flags": {
+            "inside": true,
+            "allRings": true,
+            "airSpeedOk": true,
+            "groundSpeedOk": true,
+            "verticalSpeedOk": true,
+            "bankOk": true,
+            "pitchOk": true,
+            "headingOk": true,
+            "trackOk": true,
+            "notStalled": true,
+            "headingError": 0.022130466488109235,
+            "trackError": 0.006216428825291942,
+            "along": 46.52810224148652,
+            "across": -0.39100828363333495,
+            "ready": true,
+            "reason": "ready"
+          },
+          "accepted": true
+        },
+        "thermalEnergyAdded": 345.7925629315532,
+        "energyDissipated": 1040.0410934617964,
+        "maxEnergyError": 1.2505552149377763e-12,
+        "brakeTicks": 970,
+        "flapToggles": 1,
+        "observationKeys": [
+          "glider",
+          "physics",
+          "runway",
+          "rings",
+          "nextRing",
+          "wind",
+          "thermals"
+        ],
+        "publicTraceSamples": 30,
+        "publicTraceSha256": "a6a685e8225993aa5122e49bbfff2248b3870ee21e5366d738c3dcaa6f90c7fb"
+      },
+      {
+        "level": 2,
+        "phase": "won",
+        "elapsed": 67.06666666666666,
+        "score": 2120,
+        "checkpointsPassed": 3,
+        "checkpointCount": 3,
+        "landingAccepted": true,
+        "landingResult": {
+          "x": 21.974768541587967,
+          "z": 1058.911530887742,
+          "altitude": 0,
+          "airspeed": 11.367537714249364,
+          "groundSpeed": 11.475993920487179,
+          "verticalSpeed": -0.7047374547594136,
+          "heading": 0.09237767324079016,
+          "bank": 0.00019342512797744917,
+          "pitch": -7.085071298512613e-21,
+          "flaps": true,
+          "at": 67.05650024251881,
+          "flags": {
+            "inside": true,
+            "allRings": true,
+            "airSpeedOk": true,
+            "groundSpeedOk": true,
+            "verticalSpeedOk": true,
+            "bankOk": true,
+            "pitchOk": true,
+            "headingOk": true,
+            "trackOk": true,
+            "notStalled": true,
+            "headingError": 0.05237767324079101,
+            "trackError": 0.005258435638143766,
+            "along": 38.95937549252451,
+            "across": 0.4171427250019897,
+            "ready": true,
+            "reason": "ready"
+          },
+          "accepted": true
+        },
+        "thermalEnergyAdded": 366.96129728825673,
+        "energyDissipated": 1101.315840445814,
+        "maxEnergyError": 3.637978807091713e-12,
+        "brakeTicks": 1025,
+        "flapToggles": 1,
+        "observationKeys": [
+          "glider",
+          "physics",
+          "runway",
+          "rings",
+          "nextRing",
+          "wind",
+          "thermals"
+        ],
+        "publicTraceSamples": 34,
+        "publicTraceSha256": "d9c10c7409b2c493b6c540cdad7d7f4efdde96f876c42bb278b43ad39f3e992c"
+      },
+      {
+        "level": 3,
+        "phase": "won",
+        "elapsed": 65.03333333333333,
+        "score": 2440,
+        "checkpointsPassed": 4,
+        "checkpointCount": 4,
+        "landingAccepted": true,
+        "landingResult": {
+          "x": -8.959735831154424,
+          "z": 1060.741376119194,
+          "altitude": 4.336808689942018e-19,
+          "airspeed": 12.315154971060007,
+          "groundSpeed": 11.9502537050063,
+          "verticalSpeed": -0.6310976017010461,
+          "heading": -0.12212905372935268,
+          "bank": 0.001472946662398033,
+          "pitch": 1.035731843165464e-18,
+          "flaps": true,
+          "at": 65.02208298164577,
+          "flags": {
+            "inside": true,
+            "allRings": true,
+            "airSpeedOk": true,
+            "groundSpeedOk": true,
+            "verticalSpeedOk": true,
+            "bankOk": true,
+            "pitchOk": true,
+            "headingOk": true,
+            "trackOk": true,
+            "notStalled": true,
+            "headingError": 0.08712905372935253,
+            "trackError": 0.03201962480853737,
+            "along": 40.680022760803446,
+            "across": 2.465284123002634,
+            "ready": true,
+            "reason": "ready"
+          },
+          "accepted": true
+        },
+        "thermalEnergyAdded": 423.17009930139125,
+        "energyDissipated": 1175.298578320782,
+        "maxEnergyError": 4.092726157978177e-12,
+        "brakeTicks": 1065,
+        "flapToggles": 1,
+        "observationKeys": [
+          "glider",
+          "physics",
+          "runway",
+          "rings",
+          "nextRing",
+          "wind",
+          "thermals"
+        ],
+        "publicTraceSamples": 33,
+        "publicTraceSha256": "a7bd8655f17793c49da7fe8bcf1ab2720cb5230b3165c034c71869bec4dd1868"
+      }
+    ],
+    "scope": {
+      "syntheticBoundaryFixtures": true,
+      "ordinaryAuthoredModelFlights": 3,
+      "normalGameplayVideoEvidence": false,
+      "browserExecuted": false,
+      "physicalTvTested": false,
+      "physicalPhoneTested": false
+    }
+  },
+  "independentPilotReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "0516b9c6c2154a5a93f1de2a5758a55e923cbb8048ecda04098554603312a17d",
+    "checksPassed": 7,
+    "pilotCalls": 52,
+    "pairedObservations": 12,
+    "sourceHashes": {
+      "tests/automation.mjs": "95c56d66218224038b07b395d64d81f759d2514ba85b91433b71c6464ea46c64",
+      "src/main/assets/game-model.js": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+      "docs/model-contract.md": "579fc9a822e8bbb5ef2b4479c633c75b87754a7214f28e663eab2680e6ad41c3"
+    },
+    "scope": "Small deep-frozen synthetic public-flight observations and explicit invalid-input fixtures; independent pilot factories are compared with different private decoys and throwing getters. No production state is simulated or changed and no normal-flight success is claimed."
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "269fb1d001e469c12af8aa9d945e7439b1a35c24d489b0c8f38b50eb6766ec4b",
+    "scope": "Source-only combined art evidence. The original43 render cases, three genuine model-controlled course wins and ordinary browser controls retain original gamea223 hashes. Final game069191 differs only by eight exactly reversible font-size substitutions, with eight fresh targeted layout/readability fixtures bound to final source. Original43 cases were not rerun or relabeled as final-font evidence. Packaged ordinary-flight QA/video are separate evidence; no physical-device claim is made here.",
+    "finalSourceHashes": {
+      "game": {
+        "path": "resource/apps/thermal-glider/src/main/assets/game.js",
+        "sha256": "0691916a4383754dc59138aaa511d4b0a7a0524d55e05fb3872e00d588584afc"
+      },
+      "model": {
+        "path": "resource/apps/thermal-glider/src/main/assets/game-model.js",
+        "sha256": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "runtime": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
+      },
+      "css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "automation": {
+        "path": "resource/apps/thermal-glider/tests/automation.mjs",
+        "sha256": "95c56d66218224038b07b395d64d81f759d2514ba85b91433b71c6464ea46c64"
+      },
+      "config": {
+        "path": "resource/apps/thermal-glider/game.json",
+        "sha256": "a36e1df44ebf67dcb3ff90af035f4c9399ebbc66e9f5fccff2e64db2767e34d7"
+      },
+      "icon": {
+        "path": "resource/apps/thermal-glider/icon.xml",
+        "sha256": "7bffc16b8df9713c0e57730816d25ccf0e210c5782ae4941a24ff2f355891d95"
+      },
+      "logo": {
+        "path": "resource/apps/thermal-glider/logo.svg",
+        "sha256": "9a3c12e1b375a93f7cb1bc6d0623418979b97e8fcbe98dfb3df73dc756fcce92"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+      "game.js": "0691916a4383754dc59138aaa511d4b0a7a0524d55e05fb3872e00d588584afc",
+      "game-config.json": "21a8ea13eca9cf9d95640658f8d149f40d7341d897016c146c2306094899cb00",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "95c56d66218224038b07b395d64d81f759d2514ba85b91433b71c6464ea46c64"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three courses expose distinct public routes and held confirm airbrake",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick select courses once per press",
+        "passed": true
+      },
+      {
+        "name": "menu blur and sound button expose actual visual state",
+        "passed": true
+      },
+      {
+        "name": "held phone START starts one flight without braking flaps or pausing",
+        "passed": true
+      },
+      {
+        "name": "phone horizontal control produces smooth correctly signed bank and heading",
+        "passed": true
+      },
+      {
+        "name": "phone pitch trades real speed and height without creating energy",
+        "passed": true
+      },
+      {
+        "name": "held phone A dissipates speed and height and releasing closes the airbrake",
+        "passed": true
+      },
+      {
+        "name": "held B toggles genuine flap configuration once and a fresh press returns clean",
+        "passed": true
+      },
+      {
+        "name": "actual held Enter brakes and pause cancellation requires a fresh release",
+        "passed": true
+      },
+      {
+        "name": "connected phone cancelSeq clears held airbrake until actual neutral and repress",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes all flight energy and clears stale steering and actions",
+        "passed": true
+      },
+      {
+        "name": "pause primary and header buttons freeze and resume the same flight",
+        "passed": true
+      },
+      {
+        "name": "normal observed-state flight crosses the first aperture once and enters real thermal lift",
+        "passed": true
+      },
+      {
+        "name": "pausing in a thermal freezes energy and resume grants no entry reward or duplicate ring",
+        "passed": true
+      },
+      {
+        "name": "ordinary nose-down flight reaches real nonstall ground loss and freezes terminal state",
+        "passed": true
+      },
+      {
+        "name": "R restores initial height speed attitude wind rings energy and clean configuration",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "ground",
+      "elapsed": 12.516666666666667,
+      "remaining": 77.48333333333333,
+      "score": 0,
+      "checkpointsPassed": 0,
+      "checkpointCount": 3,
+      "thermalEnergyAdded": 159.52975378636125,
+      "energyDissipated": 417.74975378635895,
+      "energyError": -2.2737367544323206e-12,
+      "collision": {
+        "type": "ground",
+        "id": "ground",
+        "fraction": 0.3356583562735218,
+        "at": 12.505594305937892,
+        "x": 4.3769580070782785,
+        "z": 333.8325961081141,
+        "altitude": 0
+      },
+      "landingResult": {
+        "x": 4.3769580070782785,
+        "z": 333.8325961081141,
+        "altitude": 0,
+        "airspeed": 32,
+        "groundSpeed": 31.584937444246215,
+        "verticalSpeed": -4.4876091058010354,
+        "heading": 0,
+        "bank": 0,
+        "pitch": -0.17999999999999977,
+        "flaps": false,
+        "at": 12.505594305937892,
+        "flags": {
+          "inside": false,
+          "allRings": false,
+          "airSpeedOk": false,
+          "groundSpeedOk": false,
+          "verticalSpeedOk": false,
+          "bankOk": true,
+          "pitchOk": false,
+          "headingOk": true,
+          "trackOk": true,
+          "notStalled": true,
+          "headingError": 0,
+          "trackError": 0.011081458178566095,
+          "along": -586.1674038918859,
+          "across": 4.3769580070782785,
+          "ready": false,
+          "reason": "checkpoints"
+        },
+        "accepted": false
+      }
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+      "game.js": "0691916a4383754dc59138aaa511d4b0a7a0524d55e05fb3872e00d588584afc",
+      "game-config.json": "21a8ea13eca9cf9d95640658f8d149f40d7341d897016c146c2306094899cb00",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "抬头会减速，减速板会增加下沉。襟翼利于低速，高速下沉更多。穿完航环后再按着陆检查落地。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1229,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "抬头会减速，减速板会增加下沉。襟翼利于低速，高速下沉更多。穿完航环后再按着陆检查落地。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 399.953125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "抬头会减速，减速板会增加下沉。襟翼利于低速，高速下沉更多。穿完航环后再按着陆检查落地。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 399.953125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "抬头会减速，减速板会增加下沉。襟翼利于低速，高速下沉更多。穿完航环后再按着陆检查落地。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1229,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "抬头会减速，减速板会增加下沉。襟翼利于低速，高速下沉更多。穿完航环后再按着陆检查落地。",
+          "tipTextTop": 379,
+          "tipTextBottom": 424.78125,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1229,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "抬头会减速，减速板会增加下沉。襟翼利于低速，高速下沉更多。穿完航环后再按着陆检查落地。",
+          "tipTextTop": 338.78125,
+          "tipTextBottom": 399.953125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "01ad4cd4d5e0621cc66a00117a6142981b1dac7303ef453915ae841dd345576c"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 1607,
+    "rafIntervalMs": {
+      "count": 1607,
+      "min": 16.5,
+      "median": 33.30000000000291,
+      "p95": 66.80000000000291,
+      "max": 116.59999999999854,
+      "mean": 39.37822028624766
+    },
+    "webglDrawCalls": {
+      "count": 1607,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 1607,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 68.00630420099999,
+      "level": 1,
+      "difficulty": 0,
+      "score": 2150,
+      "elapsed": 64.11666666666666,
+      "remaining": 25.88333333333334,
+      "checkpointsPassed": 3,
+      "checkpointCount": 3,
+      "thermalEnergyAdded": 340.9881089272326,
+      "energyDissipated": 1060.3924600031778,
+      "energyError": 1.3002932064409833e-12,
+      "initialEnergy": 770.22,
+      "energy": 50.81564892405611,
+      "flapToggles": 1,
+      "landingResult": {
+        "x": 0.09077130171722085,
+        "z": 995.8197796626057,
+        "altitude": 0,
+        "airspeed": 10.081234936658912,
+        "groundSpeed": 10.158702928033271,
+        "verticalSpeed": -0.3139825383426673,
+        "heading": -0.03972551066553898,
+        "bank": -0.0032207021057748266,
+        "pitch": 0.05403149435525596,
+        "flaps": true,
+        "at": 64.11530500790916,
+        "flags": {
+          "inside": true,
+          "allRings": true,
+          "airSpeedOk": true,
+          "groundSpeedOk": true,
+          "verticalSpeedOk": true,
+          "bankOk": true,
+          "pitchOk": true,
+          "headingOk": true,
+          "trackOk": true,
+          "notStalled": true,
+          "headingError": 0.03972551066553898,
+          "trackError": 0.004901490969999145,
+          "along": 75.8197796626057,
+          "across": 0.09077130171722085,
+          "ready": true,
+          "reason": "ready"
+        },
+        "accepted": true
+      }
+    },
+    "finalWinHeldSecondsAtLeast": 22.00097946800001,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "14e762caf5fac6a8b85a4cb11ca4e6e71adcce58ae63d9af8f728d013d6a01af"
+      },
+      {
+        "name": "menu-crosswind-0.85s.png",
+        "sha256": "be49386b996e73d57b2997e3d2b964fe5c8f0ee8260432484e579bb02989ee39"
+      },
+      {
+        "name": "menu-double-thermal-1.35s.png",
+        "sha256": "8ce7fbcdd5855966f9438191b5382d9971382fff8ef885f29cb81582f50ae939"
+      },
+      {
+        "name": "banked-flight-14.21s.png",
+        "sha256": "ed048f7ed686192c212ee790a83fa6a1608dc533558c734334f5216a3ee3ed01"
+      },
+      {
+        "name": "gameplay-thumb-20.22s.png",
+        "sha256": "275dae8668acd714ecc6da0df5dc340836491e1c62b68453dc82bc9a6ae00e16"
+      },
+      {
+        "name": "airbrake-38.21s.png",
+        "sha256": "9c32d69c0be9327ab1d5f23133a8a91b32475b94d544df0204d670c6a40d39c3"
+      },
+      {
+        "name": "flaps-approach-50.21s.png",
+        "sha256": "3242efe049af13cca17c45566b426931881d5441d54bd10bff8eb19ba16aaf6f"
+      },
+      {
+        "name": "low-approach-60.22s.png",
+        "sha256": "0b193064bdba25d7baad498325dbb2a8e9c50b946890a2c4dfb97c761560463b"
+      },
+      {
+        "name": "settlement-88.43s.png",
+        "sha256": "cfbfec7326d99217c6eab449615ae1e256521f0aa9eb636fb10d023bf21a1ebd"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "325fc524932fed4d720c46282d5f3df406d2e847afedbf2062ee31f3b38c4b71"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+    "game.js": "0691916a4383754dc59138aaa511d4b0a7a0524d55e05fb3872e00d588584afc",
+    "game-config.json": "21a8ea13eca9cf9d95640658f8d149f40d7341d897016c146c2306094899cb00",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "af58679f9538b615dc47fe30b68a7b2288129026e8ebb0d2de4eff701b978434",
+    "sign": "4966caa19c75344e183969e5de14a13eca17b48cf93232f2ebdf0f9b436eaa4e",
+    "fetch": "88f004955f0b8839851511949739c56714c61d0a2a51ff3782604935674aa623",
+    "qa": "45bcd5a9b4b3a661b55a6966888d2991ae4f07fdf452e5961f865d36b0bfd780",
+    "ui": "e987659500178a89af6cc9389613513b134dc5c67a581eb1d7ff4a656d342b8d",
+    "layout": "01ad4cd4d5e0621cc66a00117a6142981b1dac7303ef453915ae841dd345576c",
+    "viewport": "cb6e03b7e0f6b039e4745de5d44cd44eec3a3c3d9d9be0665ad0ae212d6836f5",
+    "summary": "2bbbde5029750d30562c84d63f777e19b508922aed918948404fee5f39fbecd0",
+    "record": "145399ca38a001078ee1612c2ce007e7f4c6918fc48aa8987e61dbf1072d45c5",
+    "review": "0c1d23a36a187bc76bf7967879a200a4fb7747e0bd71e174c18a6898f8fb563b",
+    "videoValidation": "0b74b27942b1557b216047361f2ef65983f4734fe8c9e8889a929af50320bcf9",
+    "artifacts": "33f5321c99904176e8a8d2e9cc3862da7d37363094d73b540326ab26d2e237a5",
+    "independentModel": "3ada47f8c7748d988cb5146fffbd22fc3bd0486877717f4cc86100bd4ce8623c",
+    "independentPilot": "0516b9c6c2154a5a93f1de2a5758a55e923cbb8048ecda04098554603312a17d",
+    "artReview": "cfc6fde0d04be614c1d4e6b75becccb73a0d5ae21f6acecc73f40000929d342c",
+    "modelTests": "bfde8d160392bb3cd6c3d5b43f66b816a8e82be91a023f61aef5c268ca01131a",
+    "candidateReview": "dadc3e171bd4d87a358a0133c68e450f4020f9a558f0b9fbe3801ddbcec8aa7c"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium gameplay driven by real browser input events. Phone/native-room, source layout and mathematical boundary fixtures are separately labelled; no physical TV/phone installation or physical-device performance is claimed."
+  },
+  "release": {
+    "sourceSha": "2dac044f91bb256db2eda6a1cb2df90b182f7a01",
+    "signerCommit": "2dac044f91bb256db2eda6a1cb2df90b182f7a01",
+    "signingRun": 41344091245,
+    "bytes": 300323,
+    "sha256": "b4e5eb8f8933b331dfbbb7fbba82aceb13c482786ea874be2e9798ac22ea77e7",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "b47a14a3218cdd0936912427bc191b058dbaa80e"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "kind": "independent-public-flight-pilot-review",
+  "passed": true,
+  "reviewScriptSha256": "681a6984762e8643bc8c3af19d4a23c4835dab30e4f857f235cae95e4e7125fb",
+  "sourceHashes": {
+    "tests/automation.mjs": "95c56d66218224038b07b395d64d81f759d2514ba85b91433b71c6464ea46c64",
+    "src/main/assets/game-model.js": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+    "docs/model-contract.md": "579fc9a822e8bbb5ef2b4479c633c75b87754a7214f28e663eab2680e6ad41c3"
+  },
+  "endHashes": {
+    "tests/automation.mjs": "95c56d66218224038b07b395d64d81f759d2514ba85b91433b71c6464ea46c64",
+    "src/main/assets/game-model.js": "5e134ea932303d96b7a5869c3d2f4b33babde3d4acd2b5bf8a8dceebcde50226",
+    "docs/model-contract.md": "579fc9a822e8bbb5ef2b4479c633c75b87754a7214f28e663eab2680e6ad41c3"
+  },
+  "sourceUnchanged": true,
+  "checks": [
+    {
+      "name": "identical public history yields identical keys with changed or unreadable private fields",
+      "passed": true,
+      "pairedPublicObservations": 12,
+      "guardedObservationCalls": 12,
+      "steps": [
+        {
+          "index": 0,
+          "keys": [
+            "ArrowUp"
+          ],
+          "paused": false,
+          "phase": "playing"
+        },
+        {
+          "index": 1,
+          "keys": [
+            "ArrowUp"
+          ],
+          "paused": false,
+          "phase": "playing"
+        },
+        {
+          "index": 2,
+          "keys": [
+            "ArrowUp"
+          ],
+          "paused": false,
+          "phase": "playing"
+        },
+        {
+          "index": 3,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ],
+          "paused": false,
+          "phase": "playing"
+        },
+        {
+          "index": 4,
+          "keys": [
+            "ArrowRight",
+            "ArrowUp"
+          ],
+          "paused": false,
+          "phase": "playing"
+        },
+        {
+          "index": 5,
+          "keys": [
+            "Space",
+            "b"
+          ],
+          "paused": false,
+          "phase": "playing"
+        },
+        {
+          "index": 6,
+          "keys": [
+            "Space"
+          ],
+          "paused": false,
+          "phase": "playing"
+        },
+        {
+          "index": 7,
+          "keys": [
+            "Space"
+          ],
+          "paused": false,
+          "phase": "playing"
+        },
+        {
+          "index": 8,
+          "keys": [],
+          "paused": true,
+          "phase": "playing"
+        },
+        {
+          "index": 9,
+          "keys": [],
+          "paused": false,
+          "phase": "won"
+        },
+        {
+          "index": 10,
+          "keys": [
+            "ArrowUp"
+          ],
+          "paused": false,
+          "phase": "playing"
+        },
+        {
+          "index": 11,
+          "keys": [
+            "ArrowUp"
+          ],
+          "paused": false,
+          "phase": "playing"
+        }
+      ]
+    },
+    {
+      "name": "pilot factories keep flap and braking memory independent",
+      "passed": true,
+      "separateFactories": true
+    },
+    {
+      "name": "elapsed reset starts a fresh input history instead of retaining approach controls",
+      "passed": true,
+      "resetMatchesFreshFactory": true
+    },
+    {
+      "name": "flap edge is released before another request and stops when deployment is observed",
+      "passed": true,
+      "ordinaryBThenRelease": true,
+      "observedDeploymentNoRetoggle": true
+    },
+    {
+      "name": "paused and terminal observations emit no ordinary control keys",
+      "passed": true,
+      "pausedNeutral": true,
+      "terminalNeutral": true
+    },
+    {
+      "name": "invalid public physics fails explicitly rather than guessing a flight model",
+      "passed": true,
+      "invalidParameterCases": 3
+    },
+    {
+      "name": "an uncredited ring behind the plane is reported, never silently awarded or skipped",
+      "passed": true,
+      "missedVisiblePlaneThrows": true
+    }
+  ],
+  "pilotCalls": 52,
+  "pairedObservations": 12,
+  "privateReads": 0,
+  "mutationAttempts": 0,
+  "meaningfulDirectionalBrakeAndFlapDecisions": true,
+  "productionModelImported": false,
+  "productionModelStepCalled": false,
+  "browserExecuted": false,
+  "normalGameWinsClaimed": 0,
+  "scope": "Small deep-frozen synthetic public-flight observations and explicit invalid-input fixtures; independent pilot factories are compared with different private decoys and throwing getters. No production state is simulated or changed and no normal-flight success is claimed."
+}

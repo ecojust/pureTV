@@ -1,0 +1,19 @@
+PASS public complete alphabetical4-letter dictionaries, meanings and detached state
+  level 0: 18 public words, min 5, branches 12
+  level 1: 22 public words, min 6, branches 6
+  level 2: 24 public words, min 7, branches 6
+PASS test-only independent visible-word BFS proves shortest5/6/7 with real branching
+PASS three shortest ordinary dictionary routes win with one changed letter per receipt
+PASS reachable non-goal dead ends exclude terminal target as an intermediate
+PASS same word and multi-letter candidates are free, foreign input fields cannot submit hidden words
+  affordable ordinary edges replayed 139
+PASS every affordable target-avoiding transition follows Hamming rule rather than an authored route
+PASS legal revisits append path and consume moves instead of silently rejecting cycles
+PASS two undos restore exact prior word/cursor, never refund steps, and blocked undo is free
+PASS undo after a legal revisit restores the immediate predecessor instead of resetting to start
+PASS all three exact-last-allowed-step goals win before exhaustion
+PASS natural accepted back-and-forth exhausts each budget and terminal undo cannot rescue it
+PASS visible differences and legal indices refresh after moves/undos; partial row cursor stays valid
+PASS held/release gate, cancel epoch and cancellation protect both moves and undo credit
+PASS invalid/pause inputs freeze, descriptor whitelist is safe, counters and terminal receipts are bounded
+{"passed":true,"checks":14,"shortest":[5,6,7],"dictionarySizes":[18,22,24],"ordinaryWins":3,"exactLastStepWins":3,"naturalBudgetLosses":3,"targetAvoidingDeadEnds":["LEAF","CORK","BONE"],"undoDoesNotRefund":true,"physicalDeviceTested":false}

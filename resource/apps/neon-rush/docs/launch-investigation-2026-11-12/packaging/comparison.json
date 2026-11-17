@@ -1,0 +1,203 @@
+{
+  "kind": "Static release APK/package comparison; no device launch conclusion",
+  "apks": {
+    "neon-rush": {
+      "apk": "resource/apps/neon-rush/neon-rush-0.1.1.apk",
+      "bytes": 443884,
+      "sha256": "7a76f3fb85f006cefa95afbc876fe4a0abbda52c537f28f560241b42c9018376",
+      "nativeLibraries": [],
+      "dex": [
+        {
+          "name": "classes.dex",
+          "version": "dex\n038",
+          "bytes": 512124,
+          "compressed": true,
+          "classDefinitions": 334
+        }
+      ],
+      "zipCrcValid": true
+    },
+    "hifini": {
+      "apk": "resource/apps/hifini/hifini-0.5.0.apk",
+      "bytes": 205924,
+      "sha256": "11953adb659f93838f37535ba73bf7cf8a73e3409374abe0e9016f46240ee2af",
+      "nativeLibraries": [],
+      "dex": [
+        {
+          "name": "classes.dex",
+          "version": "dex\n038",
+          "bytes": 340404,
+          "compressed": true,
+          "classDefinitions": 290
+        }
+      ],
+      "zipCrcValid": true
+    }
+  },
+  "same": {
+    "minSdk": 26,
+    "targetSdk": 29,
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "signatureSchemes": [
+      "v2",
+      "v3"
+    ],
+    "nativeLibraryCount": 0,
+    "launcherCategories": [
+      "android.intent.category.LAUNCHER",
+      "android.intent.category.LEANBACK_LAUNCHER"
+    ],
+    "hardwareAccelerationExplicitlyDisabled": false,
+    "dexVersion": "038",
+    "zipalignVerified": true
+  },
+  "differences": {
+    "neon-rush": {
+      "build": "Pinned manual aapt2 -> javac source/target 8 -> d8 API26 -> zipalign -> fixed signing",
+      "minification": false,
+      "screen": "WebView hosts bundled JavaScript/Three.js and requires WebGL",
+      "additionalStartupWork": [
+        "local TCP/WebSocket controller service",
+        "Wi-Fi TCP JSONL server",
+        "Android NSD registration"
+      ],
+      "apkBytes": 443884
+    },
+    "hifini": {
+      "build": "Gradle Android application plugin, Java17, release R8 and shrinkResources",
+      "minification": true,
+      "screen": "Native Android views for main screen; LoginActivity uses WebView and CookieManager",
+      "additionalStartupWork": [
+        "music browsing/service and networking"
+      ],
+      "apkBytes": 205924
+    }
+  },
+  "dexAndResources": {
+    "neon-rush": {
+      "entryClassPresent": true,
+      "entryClass": "Lcom/ecojust/gamekit/MainActivity;",
+      "definedClasses": 334,
+      "dexdumpExitCode": 0,
+      "resourceConstants": [
+        {
+          "class": "Lcom/ecojust/gamekit/R$drawable;",
+          "field": "banner",
+          "value": "0x7f010000",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$drawable;",
+          "field": "ic_game",
+          "value": "0x7f010001",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$raw;",
+          "field": "license",
+          "value": "0x7f020000",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$string;",
+          "field": "app_name",
+          "value": "0x7f030000",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$string;",
+          "field": "cancel",
+          "value": "0x7f030001",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$string;",
+          "field": "exit",
+          "value": "0x7f030002",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$string;",
+          "field": "exit_message",
+          "value": "0x7f030003",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$string;",
+          "field": "exit_title",
+          "value": "0x7f030004",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$string;",
+          "field": "no_network",
+          "value": "0x7f030005",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$string;",
+          "field": "server_error",
+          "value": "0x7f030006",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$string;",
+          "field": "starting",
+          "value": "0x7f030007",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$string;",
+          "field": "web_error",
+          "value": "0x7f030008",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        },
+        {
+          "class": "Lcom/ecojust/gamekit/R$style;",
+          "field": "PureGameTheme",
+          "value": "0x7f040000",
+          "existsInResourceTable": true,
+          "matchesResourceName": true
+        }
+      ],
+      "indexedAssetsPresent": true,
+      "indexedAssetCount": 13
+    },
+    "hifini": {
+      "entryClassPresent": true,
+      "entryClass": "Lcom/ecojust/hifinitv/MainActivity;",
+      "definedClasses": 290,
+      "dexdumpExitCode": 0
+    }
+  },
+  "findings": [
+    "No ABI-specific native libraries exist in either package, so an APK ARM32/ARM64 payload mismatch is not supported by these bytes.",
+    "Both actual entry Activity classes exist in their DEX. All 13 generated Neon Rush R constants resolve in its packaged resource table.",
+    "Neon Rush asset index entries all exist. APK ZIP and signatures verify.",
+    "HiFiNi opening its native home screen does not establish that its WebView login screen or WebGL can render.",
+    "Build pipeline differences are real but do not establish the cause of launch failure; logcat and actual APK launch are required."
+  ],
+  "sourceFiles": {
+    "resource/game-kit/build.py": "4476c855b8a6fb5634c7949c4c0543acf036bcc57a9ee045cb4769303b4e2f7c",
+    "resource/game-kit/android/src/main/AndroidManifest.xml": "b92c3d649b7171e2f895cde3108538ad38dfc0dbeaee8d1cf2cb2e2f9e31d9b9",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java": "8edb03a4edcd8845a1e90e8f93aecffbda1c0599a69446a236dedaa33b6dc8d5",
+    "resource/apps/hifini/build.gradle": "83c5aab3f55800cbb56d5e91f77c8568a1da2fa27a8a7587b62ee7d36c45452f",
+    "resource/apps/hifini/src/main/AndroidManifest.xml": "fff98e7eb743eded7ab7bafc291967444b8d6a6245e2e8eefcb29ac708976a6b",
+    "resource/apps/hifini/src/main/java/com/ecojust/hifinitv/MainActivity.java": "931d0c20a56586c952c85294af180db216c57909be70898a5c14b8c0f1ae23e5",
+    "resource/apps/hifini/src/main/java/com/ecojust/hifinitv/LoginActivity.java": "d1552611d4c0495f076345c3c766cf591eaeae1130c82d3a120139bff519b179"
+  },
+  "physicalDeviceTested": false,
+  "rootCauseEstablished": false
+}

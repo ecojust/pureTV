@@ -1,0 +1,231 @@
+package com.ecojust.cctvlive;
+
+import android.app.AlertDialog;
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.webkit.WebView;
+import android.webkit.ValueCallback;
+import android.os.Looper;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.android.controller.ActivityController;
+import org.robolectric.annotation.Config;
+import org.robolectric.annotation.GraphicsMode;
+import org.robolectric.annotation.Implementation;
+import org.robolectric.annotation.Implements;
+import org.robolectric.annotation.LooperMode;
+import org.robolectric.shadow.api.Shadow;
+import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowProcess;
+import org.robolectric.shadows.ShadowWebView;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
+import static org.junit.Assert.*;
+import static org.robolectric.Shadows.shadowOf;
+
+/** Real channel metadata and native controls; WebView callbacks model the official page lifecycle. */
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk=28,qualifiers="zh-rCN-w960dp-h540dp-land-xhdpi")
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
+public class UiTest {
+    @Before public void prepare() {
+        // A TV remote operates outside touch mode; otherwise Android can reject button focus.
+        new android.app.Instrumentation().setInTouchMode(false);
+        ShadowProcess.setPid(41001);ShadowProcess.clearKilledProcesses();
+        RuntimeEnvironment.getApplication().getSharedPreferences("cctv-live",0).edit().clear().commit();
+    }
+
+    /** Stock ShadowActivity does not distinguish finish() from finishAndRemoveTask(). */
+    @Implements(Activity.class)
+    public static class TaskRemovalActivityShadow extends ShadowActivity {
+        boolean taskRemovalRequested;
+        @Implementation @Override protected void finishAndRemoveTask(){taskRemovalRequested=true;super.finishAndRemoveTask();}
+    }
+
+    private ActivityController<MainActivity> activity() {
+        ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup().visible();
+        layout(controller.get(),1920,1080);
+        return controller;
+    }
+    private void layout(MainActivity activity,int width,int height) {
+        View root=activity.getWindow().getDecorView();
+        for(int i=0;i<2;i++){
+            root.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(height,View.MeasureSpec.EXACTLY));
+            root.layout(0,0,width,height);
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(20));
+        }
+    }
+    @SuppressWarnings("unchecked") private <T>T field(Object object,String name,Class<?> owner)throws Exception {
+        java.lang.reflect.Field field=owner.getDeclaredField(name);field.setAccessible(true);return (T)field.get(object);
+    }
+    private Button button(MainActivity activity,String tag){Button value=activity.getWindow().getDecorView().findViewWithTag(tag);assertNotNull(tag,value);return value;}
+    private ShadowWebView browser(MainActivity activity){assertNotNull(activity.web.view());return shadowOf(activity.web.view());}
+    private void choose(MainActivity activity,int position){
+        activity.channelList.setSelection(position);
+        activity.channelList.performItemClick(null,position,activity.channelList.getAdapter().getItemId(position));
+    }
+    private void websiteReady(MainActivity activity){
+        ShadowWebView browser=browser(activity);
+        browser.getWebViewClient().onPageFinished(activity.web.view(),activity.web.pageUrl());
+        ValueCallback<String> callback=browser.getLastEvaluatedJavascriptCallback();assertNotNull(callback);
+        callback.onReceiveValue("{\"found\":true,\"playing\":false}");
+        assertEquals(CctvWebPlayer.State.READY,activity.web.state());
+    }
+    private void key(MainActivity activity,int code){activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,code));activity.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,code));}
+    private void assertProcessRunning(){assertFalse("The application process must remain alive",ShadowProcess.wasKilled(android.os.Process.myPid()));}
+    private void assertStaysInApp(MainActivity activity){assertFalse(activity.isFinishing());assertFalse(activity.isDestroyed());assertNull(shadowOf(activity).getNextStartedActivity());assertProcessRunning();}
+
+    @Test public void bundledChannelsOpenWithoutAutoplayAndRememberFavouritesAndLastSelection(){
+        try(ActivityController<MainActivity> controller=activity()){
+            MainActivity activity=controller.get();
+            assertEquals(21,activity.channelList.getCount());assertEquals("cctv1.cn",activity.current.id);
+            assertEquals("",activity.web.pageUrl());assertEquals(CctvWebPlayer.State.IDLE,activity.web.state());
+            button(activity,"favourite").performClick();choose(activity,1);
+            assertEquals("cctv2.cn",activity.current.id);button(activity,"favourite").performClick();
+            assertEquals(2,activity.getSharedPreferences("cctv-live",0).getStringSet("favourites",Collections.emptySet()).size());
+        }
+        try(ActivityController<MainActivity> controller=activity()){
+            MainActivity activity=controller.get();assertEquals("cctv2.cn",activity.current.id);
+            assertEquals(1,activity.channelList.getSelectedItemPosition());assertEquals("",activity.web.pageUrl());
+            button(activity,"tab-favourites").performClick();assertEquals(2,activity.channelList.getCount());
+            assertEquals("cctv1.cn",((ChannelCatalog.Channel)activity.channelList.getAdapter().getItem(0)).id);
+            button(activity,"favourite").performClick();assertEquals(1,activity.channelList.getCount());
+            button(activity,"tab-all").performClick();assertEquals(21,activity.channelList.getCount());
+        }
+    }
+
+    @Test public void selectedChannelLoadsItsOfficialPageAndReloadKeepsTheSameWebView()throws Exception{
+        try(ActivityController<MainActivity> controller=activity()){
+            MainActivity activity=controller.get();WebView original=activity.web.view();
+            List<ChannelCatalog.Channel> channels=ChannelCatalog.load(activity);choose(activity,1);
+            assertEquals(channels.get(1).pageUrl,browser(activity).getLastLoadedUrl());
+            assertEquals(CctvWebPlayer.State.LOADING,activity.web.state());
+            assertFalse(button(activity,"player").isEnabled());websiteReady(activity);
+            assertTrue(button(activity,"player").isEnabled());button(activity,"play").performClick();
+            assertEquals(CctvWebPlayer.State.LOADING,activity.web.state());assertSame(original,activity.web.view());
+            assertEquals(channels.get(1).pageUrl,browser(activity).getLastLoadedUrl());assertStaysInApp(activity);
+        }
+    }
+
+    @Test public void fullscreenRetainsWebViewAndRemoteNavigationRestoresSelection()throws Exception{
+        try(ActivityController<MainActivity> controller=activity()){
+            MainActivity activity=controller.get();choose(activity,0);websiteReady(activity);WebView original=activity.web.view();
+            button(activity,"fullscreen").performClick();layout(activity,1920,1080);assertTrue(activity.fullscreen);
+            assertSame(original,activity.web.view());assertEquals(activity.current.pageUrl,browser(activity).getLastLoadedUrl());
+            View footer=field(activity,"footer",MainActivity.class);
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(4000));key(activity,KeyEvent.KEYCODE_DPAD_RIGHT);
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(4000));assertEquals(View.VISIBLE,footer.getVisibility());
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(600));assertEquals(View.GONE,footer.getVisibility());
+            key(activity,KeyEvent.KEYCODE_DPAD_DOWN);assertEquals("cctv2.cn",activity.current.id);
+            assertEquals(activity.current.pageUrl,browser(activity).getLastLoadedUrl());assertSame(original,activity.web.view());
+            activity.onBackPressed();layout(activity,1920,1080);
+            assertFalse(activity.fullscreen);assertTrue(activity.channelList.hasFocus());assertEquals(1,activity.channelList.getSelectedItemPosition());assertStaysInApp(activity);
+        }
+    }
+
+    @Test public void loadTimeoutOffersReloadAndNeverLeavesTheApp(){
+        try(ActivityController<MainActivity> controller=activity()){
+            MainActivity activity=controller.get();choose(activity,2);
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(30));
+            assertEquals(CctvWebPlayer.State.ERROR,activity.web.state());assertEquals("cctv3.cn",activity.current.id);
+            assertEquals(activity.getString(R.string.retry),button(activity,"play").getText().toString());assertTrue(button(activity,"play").hasFocus());
+            assertStaysInApp(activity);button(activity,"play").performClick();assertEquals(CctvWebPlayer.State.LOADING,activity.web.state());
+            assertEquals(activity.current.pageUrl,browser(activity).getLastLoadedUrl());
+        }
+    }
+
+    @Test public void unavailableWebsiteDoesNotLeaveThePreviousChannelPlaying(){
+        try(ActivityController<MainActivity> controller=activity()){
+            MainActivity activity=controller.get();choose(activity,0);websiteReady(activity);choose(activity,20);
+            assertEquals("cctv4k.cn",activity.current.id);assertEquals("",activity.current.pageUrl);
+            assertEquals("about:blank",browser(activity).getLastLoadedUrl());assertEquals(CctvWebPlayer.State.ERROR,activity.web.state());
+            assertEquals(activity.getString(R.string.web_page_unavailable),activity.web.error());assertStaysInApp(activity);
+        }
+    }
+
+    @Test public void stoppingClearsTheWebsiteAndLatePageResultsCannotRestartIt()throws Exception{
+        try(ActivityController<MainActivity> controller=activity()){
+            MainActivity activity=controller.get();choose(activity,0);
+            ShadowWebView browser=browser(activity);browser.getWebViewClient().onPageFinished(activity.web.view(),activity.web.pageUrl());
+            ValueCallback<String> pending=browser.getLastEvaluatedJavascriptCallback();assertNotNull(pending);
+            controller.pause().stop();pending.onReceiveValue("{\"found\":true,\"playing\":true}");
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(30));
+            assertEquals("about:blank",browser.getLastLoadedUrl());assertNotEquals(CctvWebPlayer.State.READY,activity.web.state());
+            View root=field(activity,"root",MainActivity.class);assertFalse(root.getKeepScreenOn());
+            assertProcessRunning();assertFalse(browser.wasDestroyCalled());assertFalse(activity.isFinishing());
+        }
+    }
+
+    @Test @Config(shadows=TaskRemovalActivityShadow.class)
+    public void explicitBackExitDestroysTheWebsiteRemovesTheTaskAndKillsOnlyItsOwnProcess()throws Exception{
+        try(ActivityController<MainActivity> controller=activity()){
+            MainActivity activity=controller.get();choose(activity,1);button(activity,"favourite").performClick();websiteReady(activity);
+            WebView original=activity.web.view();ShadowWebView website=shadowOf(original);int pid=android.os.Process.myPid();
+            View root=field(activity,"root",MainActivity.class);assertTrue(root.getKeepScreenOn());
+            // HTML focus requires a real WebView provider; its Robolectric delegate returns false for requestFocus.
+            activity.channelList.requestFocus();assertTrue(activity.channelList.hasFocus());assertStaysInApp(activity);
+            activity.onBackPressed();
+            TaskRemovalActivityShadow lifecycle=Shadow.extract(activity);
+            assertTrue("Exit must remove the task from recents",lifecycle.taskRemovalRequested);assertTrue(activity.isFinishing());
+            assertNull(activity.web.view());assertTrue(website.wasDestroyCalled());assertNull(original.getParent());assertFalse(root.getKeepScreenOn());
+            assertEquals("cctv2.cn",activity.getSharedPreferences("cctv-live",0).getString("last_channel",""));
+            assertTrue(activity.getSharedPreferences("cctv-live",0).getStringSet("favourites",Collections.emptySet()).contains("cctv2.cn"));
+            assertProcessRunning();
+            controller.pause().stop().destroy();shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(30));
+            assertTrue(activity.isDestroyed());assertTrue("Exit must terminate its own PID after destruction",ShadowProcess.wasKilled(pid));
+            assertFalse("Exit must not terminate another process",ShadowProcess.wasKilled(pid+1));
+        }
+    }
+
+    @Test public void rendersChineseIdlePage()throws Exception{capture(1920,1080,"cctv-live.png");}
+    @Test @Config(qualifiers="en-rUS-w960dp-h540dp-land-xhdpi") public void rendersEnglishIdlePage()throws Exception{capture(1920,1080,"cctv-live.en.png");}
+    @Test @Config(qualifiers="en-rUS-w640dp-h360dp-land-mdpi") public void compactEnglishPageKeepsControlsInsideScreen()throws Exception{capture(640,360,"cctv-live-compact.en.png");}
+
+    private void assertEnglish(View view){
+        if(view instanceof TextView)assertFalse(((TextView)view).getText().toString(),Pattern.compile("\\p{IsHan}").matcher(((TextView)view).getText()).find());
+        if(view.getContentDescription()!=null)assertFalse(view.getContentDescription().toString(),Pattern.compile("\\p{IsHan}").matcher(view.getContentDescription()).find());
+        if(view instanceof ViewGroup)for(int i=0;i<((ViewGroup)view).getChildCount();i++)assertEnglish(((ViewGroup)view).getChildAt(i));
+    }
+    private void capture(int width,int height,String name)throws Exception{
+        try(ActivityController<MainActivity> controller=Robolectric.buildActivity(MainActivity.class).setup().visible()){
+            MainActivity activity=controller.get();layout(activity,width,height);View root=activity.getWindow().getDecorView();
+            assertEquals(21,activity.channelList.getCount());assertEquals("",activity.web.pageUrl());assertEquals(CctvWebPlayer.State.IDLE,activity.web.state());
+            for(String tag:new String[]{"tab-all","tab-favourites","play","player","favourite","fullscreen"}){
+                Button control=button(activity,tag);int[] xy=new int[2];control.getLocationOnScreen(xy);
+                assertTrue(tag,control.getWidth()>0&&control.getHeight()>0);assertTrue(tag,xy[0]>=0&&xy[1]>=0);
+                assertTrue(tag,xy[0]+control.getWidth()<=width&&xy[1]+control.getHeight()<=height);
+                View parent=(View)control.getParent();
+                assertTrue(tag+" extends left of its parent",control.getLeft()>=parent.getScrollX());
+                assertTrue(tag+" extends above its parent",control.getTop()>=parent.getScrollY());
+                assertTrue(tag+" extends right of its parent",control.getRight()<=parent.getScrollX()+parent.getWidth());
+                assertTrue(tag+" extends below its parent",control.getBottom()<=parent.getScrollY()+parent.getHeight());
+            }
+            assertTrue(activity.channelList.getWidth()>0&&activity.channelList.getHeight()>0);
+            View screen=root.findViewWithTag("screen");assertTrue(screen.getWidth()>0&&screen.getHeight()>0);
+            if("en".equals(activity.getResources().getConfiguration().getLocales().get(0).getLanguage()))assertEnglish(root);
+            String folder=System.getenv("CCTV_UI_CAPTURE_DIR");
+            if(folder!=null){
+                assertTrue(new File(folder).isDirectory()||new File(folder).mkdirs());
+                Bitmap bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);root.draw(new Canvas(bitmap));
+                try(FileOutputStream output=new FileOutputStream(new File(folder,name))){assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG,100,output));}
+                bitmap.recycle();
+            }
+        }
+    }
+}

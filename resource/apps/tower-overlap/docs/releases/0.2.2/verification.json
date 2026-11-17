@@ -1,0 +1,99 @@
+{
+  "status": "passed",
+  "scope": "controller client status acceptance",
+  "game": "tower-overlap",
+  "version": "0.2.2",
+  "artifactSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "qaSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "runtimeRun": "43846050276",
+  "sourceWorkflowResult": "failure",
+  "sourceGroupResult": "passed",
+  "apk": {
+    "packageName": "com.ecojust.toweroverlaptv",
+    "versionCode": 4,
+    "versionName": "0.2.2",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "bytes": 308655,
+    "sha256": "9e1749612262480b1f496334bb788669a15f31a43ab76a71a2c381457cde42e4"
+  },
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "nativeSourceReceiptMatchesCommit": true,
+  "inPlaceUpgradeInstalled": true,
+  "controllerClientStatusAcceptancePassed": true,
+  "fullGameplayAcceptancePerformedInThisUpdate": false,
+  "modelReuse": {
+    "sourceRef": "9af9f197855eb7a0ce7174c0e6295c8974b3250d:resource/apps/tower-overlap/src/main/assets/game-model.js",
+    "sha256": "e86eb80745c571070ccb7cc1ababbb94e884a0d6a35ec1682fdce021758c4dc5",
+    "bytes": 8798,
+    "matchesNewApk": true
+  },
+  "previousReleaseVerification": {
+    "version": "0.2.1",
+    "metadata": "resource/apps/tower-overlap/docs/controller-status-baseline/0.2.1/resource.json",
+    "scope": "Historical evidence, not current UI captures"
+  },
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-762e12d89d97",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-762e12d89d97",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 20,
+        "acks": 20,
+        "connections": 2
+      }
+    }
+  ],
+  "originalEvidence": "docs/controller-client-status/android/43846050276/evidence/controller-runtime-kit-2/tower-overlap",
+  "originalDriverSha256": "de373b1534d72bedb1e66ca2435ffa797238297a11e3d699bcaea494adc9e6c7",
+  "captures": {
+    "menu-android.png": {
+      "sha256": "ab14e3775adf5f67464bacd3414dc7317432d2db33638ac4b5c4b7bb4e2533d6",
+      "bytes": 284839
+    },
+    "controller-connected-android.png": {
+      "sha256": "058280389d002d0e60752ba141b3ae89a8193b74d57ffafc1f2552cafe4f693d",
+      "bytes": 279466
+    },
+    "controller-disconnected.png": {
+      "sha256": "bf6cdde4fedd9a509b14e9c3295e42719578860154b24ce17862d2287b91453d",
+      "bytes": 283676
+    },
+    "controller-reconnected.png": {
+      "sha256": "058280389d002d0e60752ba141b3ae89a8193b74d57ffafc1f2552cafe4f693d",
+      "bytes": 279466
+    }
+  },
+  "connectedCaptureSha256": "058280389d002d0e60752ba141b3ae89a8193b74d57ffafc1f2552cafe4f693d",
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false
+}

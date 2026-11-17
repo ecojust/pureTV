@@ -1,0 +1,5538 @@
+{
+  "sourceAssetHashes": {
+    "assets-index.json": "38b84d5905bfb5976f1373cfe8e02add5ff750ee1b955fe0cdf61ad1cc84322a",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "fd00c1947349062269e6c5800ff6b1fec9ea9cf0ebb807af86bdf367563747ec",
+    "game-model.js": "5b411fd6ef588c22f0fd8590314c5d7b2c5639129eac6ae00821c232608e539f",
+    "game-theme.css": "c7df93b736087c9603a130415d809a68dba3ac003c4296bcf81576456a959a95",
+    "game.js": "8d8d2a21ed3c10ee82e614b4da9707197047ce3dc20c4b5c18d3179b49b91819",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "17bd5ba5c9cd22ee236dbc4c8e78e25e8133a2052d85d8a5cf23fa72eb563391",
+    "tv.css": "2572030056a405079866f27211f425c858c8c853cac2e699c58b85af69e03a6b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "startedAt": "2026-11-04T17:01:50.193Z",
+  "environment": {
+    "browser": "155.0.8059.79",
+    "renderer": "ANGLE SwiftShader",
+    "viewport": [
+      1280,
+      720
+    ],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "tests": [
+    {
+      "name": "loads title and read-only snapshot",
+      "passed": true,
+      "milliseconds": 26.784667000000354,
+      "details": {
+        "id": "conveyor-window",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "width": 960,
+          "height": 540,
+          "seed": 734,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "铜件初装",
+          "scenarioId": "copper-starter",
+          "phase": "playing",
+          "tick": 0,
+          "elapsed": 0,
+          "score": 0,
+          "lostReason": null,
+          "message": "左右移动夹具；A 抓取或投送，B 旋转手中零件",
+          "schemaVersion": 1,
+          "identity": {
+            "gameId": 34,
+            "name": "窗口装配",
+            "englishName": "Conveyor Window",
+            "slug": "conveyor-window",
+            "packageId": "com.ecojust.conveyorwindowtv",
+            "versionName": "0.2.0",
+            "versionCode": 2,
+            "seed": 734,
+            "actionCount": 2,
+            "assignmentSha256": "a5bb4b25c666c96c558e8ad9d08e901deb42b8b12ce4eff22be8bfe43cd0ecd7"
+          },
+          "scenario": {
+            "id": "copper-starter",
+            "name": "铜件初装",
+            "sourceVelocity": 2,
+            "targetVelocity": 1,
+            "windowXRange": [
+              240,
+              480
+            ],
+            "requiredStreak": 6,
+            "deadlineTick": 5040,
+            "gate": {
+              "periodTicks": 360,
+              "phaseOffsetTicks": 0,
+              "openFromPhaseTick": 120,
+              "openUntilPhaseTick": 240
+            },
+            "sourceCarriers": [
+              {
+                "id": "source-a",
+                "initialX": 180,
+                "type": "elbow",
+                "initialQuarterTurns": 0
+              },
+              {
+                "id": "source-b",
+                "initialX": 540,
+                "type": "arrow",
+                "initialQuarterTurns": 0
+              }
+            ],
+            "targetSlots": [
+              {
+                "id": "slot-a",
+                "initialX": 180,
+                "requiredType": "elbow",
+                "requiredQuarterTurns": 1
+              },
+              {
+                "id": "slot-b",
+                "initialX": 540,
+                "requiredType": "arrow",
+                "requiredQuarterTurns": 3
+              }
+            ]
+          },
+          "physics": {
+            "geometry": {
+              "unitsPerCell": 60,
+              "ticksPerSecond": 60,
+              "trackLengthUnits": 720,
+              "sourceY": 90,
+              "heldY": 150,
+              "targetY": 270,
+              "barrierYRange": [
+                198,
+                222
+              ],
+              "partSizeUnits": 36,
+              "partHalfSizeUnits": 18,
+              "gripperXRange": [
+                36,
+                684
+              ],
+              "initialGripperX": 360,
+              "gripperSpeedUnitsPerTick": 4,
+              "pickupRadiusUnits": 60,
+              "placementRadiusUnits": 60,
+              "origin": "x increases right; y increases down; both conveyor centers occupy x in [0,720)",
+              "distanceRule": "ordinary absolute x distance, never wrap-around distance; equality at a pickup/placement limit is accepted",
+              "windowFit": "the held component's full square footprint [gripperX-18,gripperX+18] must be contained in the scenario windowXRange; equality is accepted",
+              "transfer": "An admitted held A is an instantaneous vertical dispatch at the current gripper x through the shutter. Below the divider, a magnetic seat snaps the part to a socket within placementRadiusUnits. This is an explicit atomic interaction, not a simulated flight. The socket itself need not be directly inside the divider opening; the displayed magnetic reach bracket explains the snap.",
+              "nearest": "choose the minimum absolute-x-distance object, then lexicographically smallest carrier/slot ID for an exact tie; never ignore an occupied or wrong-type nearer slot to select a farther one",
+              "rotation": "quarter turns 0,1,2,3, clockwise in screen coordinates; 0 is the published profile orientation. Types use asymmetric silhouettes plus a keyed corner mark, so all four orientations are visibly distinct."
+            },
+            "motion": {
+              "phase": "conveyor x is mod(initialX+velocityUnitsPerTick*tick,720), with nonnegative modulo",
+              "wrapping": "on each actual one-tick interval, compute rawX=currentX+velocity; wrap when rawX>=720 or rawX<0, not merely when rawX==0. Set x=mod(rawX,720) and increment that carrier/slot generation exactly once. All authored speed magnitudes are below720.",
+              "sourceWrap": "If a source carrier still contains its current part, retire that unpicked part at the exit. Then increment generation and create exactly one new part with the carrier's authored type and initial orientation. If its old part was held, seated, completed or damaged, do not change that old part; the replacement has a new ID.",
+              "targetWrap": "If a target slot is occupied, move that part to completed storage and clear the slot, without changing score or streak. Increment slot generation; the same visible slot returns empty with the same type/orientation. An empty slot also increments generation.",
+              "ownershipOrder": "Input B/A changes ownership first. Then compute every carrier/slot's new position and wrap facts. Apply source retire/refill and target completed/clear on their own wrap facts. Finally update the gripper x and the positions of source/held/seated parts from their current unique owner. A part held before its source wraps is never retired by that wrap. A newly seated part may legitimately complete at a target exit in this same interval.",
+              "partCoordinates": "source parts follow their source carrier at sourceY; the one held part follows only gripperX at heldY; seated parts follow only their target slot at targetY. Completed/retired parts keep their exit coordinate x=720 for positive direction or x=0 for negative direction; damaged parts keep the actual dispatch origin at heldY. Nonactive history is not rendered on the belts."
+            },
+            "gate": {
+              "phase": "phaseTick=mod(tick+scenario.gate.phaseOffsetTicks,scenario.gate.periodTicks)",
+              "open": "openFromPhaseTick <= phaseTick < openUntilPhaseTick",
+              "singleBoundary": "create, input eligibility, held-A collision, HUD and rendering all consume the same gate value for the same model.tick. One A receipt records that exact boundary value. After a real interval, recompute gate at the new tick for the new state. No check uses next tick's gate to judge a current action.",
+              "physicalScope": "Only an explicit held-A dispatch crosses the divider. Ordinary horizontal carrying above it never collides with the closed shutter; opening or closing alone cannot crush a waiting part."
+            },
+            "dispatch": {
+              "qualificationOrder": [
+                "shutter_closed",
+                "outside_window",
+                "no_slot_in_reach",
+                "occupied_slot",
+                "wrong_type",
+                "wrong_orientation",
+                "seated"
+              ],
+              "shutter_closed": "gate.open is false",
+              "outside_window": "the held footprint does not fit windowXRange",
+              "no_slot_in_reach": "the nearest lower slot is farther than60 units",
+              "occupied_slot": "that nearest in-reach slot has an occupant; never overwrite it",
+              "wrong_type": "the held type differs from that slot's requiredType",
+              "wrong_orientation": "types match but quarter turns differ from requiredQuarterTurns",
+              "seated": "place exactly that held part into exactly that empty slot generation; clear heldPartId; increment totalCorrect and streak once",
+              "fault": "Any of the six rejected dispatch reasons damages exactly the held part, clears heldPartId, increments faults once and resets streak to0. Wrong orientation, a missed socket and an occupied socket are assembly mistakes. Empty grabs and empty B are harmless. No silent part return or destruction is permitted."
+            },
+            "roundRules": {
+              "goal": "streak>=scenario.requiredStreak; only consecutive correct dispatches count. Any damaged dispatch resets the streak, while totalCorrect and previously completed parts remain factual history.",
+              "faultLimit": 3,
+              "deadline": "tick reaches scenario.deadlineTick after the real interval; no later action is admitted",
+              "terminalPriority": "After B/A and one complete actual interval: required streak wins; otherwise faults>=3 loses with fault_limit; otherwise deadline loses with deadline. A final correct dispatch at deadlineTick-1 wins at deadlineTick. An action at or after deadlineTick is impossible in an active ordinary state.",
+              "lastStep": "Every valid positive active call advances tick by exactly1, even if its starting action earns the win or reaches the fault limit. No input-only transaction counter or zero-interval terminal is needed. Action receipts use boundaryTick=t, state ends at tick=t+1, and lastStep records that actual interval.",
+              "score": "100*totalCorrect while active/lost; on win 1000+100*requiredStreak+100*(3-faults). Score never changes collision or matching.",
+              "retry": "create the same scenario and seed at tick0: restore all initial belt coordinates, source parts, empty target slots, gripperx360, no held part, streak/faults/totalCorrect0, empty receipts, initial gate and quarantine"
+            }
+          },
+          "partTypes": [
+            {
+              "id": "elbow",
+              "name": "直角件",
+              "tone": "copper",
+              "profile": [
+                [
+                  -14,
+                  -14
+                ],
+                [
+                  14,
+                  -14
+                ],
+                [
+                  14,
+                  -4
+                ],
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  14
+                ],
+                [
+                  -14,
+                  14
+                ]
+              ]
+            },
+            {
+              "id": "arrow",
+              "name": "箭头件",
+              "tone": "teal",
+              "profile": [
+                [
+                  -14,
+                  -6
+                ],
+                [
+                  2,
+                  -6
+                ],
+                [
+                  2,
+                  -14
+                ],
+                [
+                  14,
+                  0
+                ],
+                [
+                  2,
+                  14
+                ],
+                [
+                  2,
+                  6
+                ],
+                [
+                  -14,
+                  6
+                ]
+              ]
+            },
+            {
+              "id": "fork",
+              "name": "叉形件",
+              "tone": "violet",
+              "profile": [
+                [
+                  -14,
+                  -14
+                ],
+                [
+                  14,
+                  -14
+                ],
+                [
+                  14,
+                  -4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  8,
+                  4
+                ],
+                [
+                  8,
+                  14
+                ],
+                [
+                  -14,
+                  14
+                ]
+              ]
+            },
+            {
+              "id": "hook",
+              "name": "钩形件",
+              "tone": "gold",
+              "profile": [
+                [
+                  -14,
+                  -14
+                ],
+                [
+                  0,
+                  -14
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  6,
+                  4
+                ],
+                [
+                  6,
+                  -4
+                ],
+                [
+                  14,
+                  -4
+                ],
+                [
+                  14,
+                  14
+                ],
+                [
+                  -14,
+                  14
+                ]
+              ]
+            }
+          ],
+          "deadlineTick": 5040,
+          "requiredStreak": 6,
+          "faultLimit": 3,
+          "streak": 0,
+          "totalCorrect": 0,
+          "faults": 0,
+          "gripper": {
+            "x": 360,
+            "y": 150,
+            "heldPartId": null
+          },
+          "sourceCarriers": [
+            {
+              "id": "source-a",
+              "x": 180,
+              "y": 90,
+              "generation": 0,
+              "type": "elbow",
+              "initialQuarterTurns": 0,
+              "partId": "source-a@0"
+            },
+            {
+              "id": "source-b",
+              "x": 540,
+              "y": 90,
+              "generation": 0,
+              "type": "arrow",
+              "initialQuarterTurns": 0,
+              "partId": "source-b@0"
+            }
+          ],
+          "targetSlots": [
+            {
+              "id": "slot-a",
+              "x": 180,
+              "y": 270,
+              "generation": 0,
+              "requiredType": "elbow",
+              "requiredQuarterTurns": 1,
+              "occupantPartId": null
+            },
+            {
+              "id": "slot-b",
+              "x": 540,
+              "y": 270,
+              "generation": 0,
+              "requiredType": "arrow",
+              "requiredQuarterTurns": 3,
+              "occupantPartId": null
+            }
+          ],
+          "parts": [
+            {
+              "id": "source-a@0",
+              "sourceCarrierId": "source-a",
+              "birthGeneration": 0,
+              "type": "elbow",
+              "quarterTurns": 0,
+              "owner": "source",
+              "ownerId": "source-a",
+              "ownerGeneration": 0,
+              "x": 180,
+              "y": 90,
+              "createdTick": 0,
+              "endedTick": null,
+              "endReason": null
+            },
+            {
+              "id": "source-b@0",
+              "sourceCarrierId": "source-b",
+              "birthGeneration": 0,
+              "type": "arrow",
+              "quarterTurns": 0,
+              "owner": "source",
+              "ownerId": "source-b",
+              "ownerGeneration": 0,
+              "x": 540,
+              "y": 90,
+              "createdTick": 0,
+              "endedTick": null,
+              "endReason": null
+            }
+          ],
+          "gate": {
+            "tick": 0,
+            "phaseTick": 0,
+            "open": false,
+            "windowXRange": [
+              240,
+              480
+            ]
+          },
+          "preview": {
+            "tick": 0,
+            "gripperX": 360,
+            "heldPartId": null,
+            "gateOpen": false,
+            "windowFits": true,
+            "nearestSource": {
+              "id": "source-a",
+              "generation": 0,
+              "x": 180,
+              "distance": 180,
+              "inReach": false,
+              "partId": "source-a@0"
+            },
+            "nearestSlot": {
+              "id": "slot-a",
+              "generation": 0,
+              "x": 180,
+              "distance": 180,
+              "inReach": false,
+              "occupantPartId": null,
+              "requiredType": "elbow",
+              "requiredQuarterTurns": 1
+            }
+          },
+          "actionReceipts": [],
+          "wrapReceipts": [],
+          "lastAction": null,
+          "lastStep": null,
+          "inputState": {
+            "cancelEpoch": null,
+            "quarantined": true,
+            "aArmed": false,
+            "bArmed": false
+          },
+          "lastInput": null,
+          "terminal": null
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 456,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          899.8999999999999,
+          1066.6
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "title is rendered",
+      "passed": true,
+      "milliseconds": 2217.983196,
+      "details": {
+        "bounds": {
+          "x": 278.21875,
+          "y": 102,
+          "width": 931.546875,
+          "height": 524
+        },
+        "coarseColors": 136,
+        "luminanceDeviation": 41.136204343030386,
+        "note": "Automatic blank-frame heuristic; requires separate human visual review."
+      }
+    },
+    {
+      "name": "Enter starts the normal game",
+      "passed": true,
+      "milliseconds": 140.24305899999945,
+      "details": {
+        "id": "conveyor-window",
+        "phase": "playing",
+        "paused": false,
+        "tick": 6,
+        "elapsed": 0.09999999999999999,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "width": 960,
+          "height": 540,
+          "seed": 734,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "铜件初装",
+          "scenarioId": "copper-starter",
+          "phase": "playing",
+          "tick": 6,
+          "elapsed": 0.1,
+          "score": 0,
+          "lostReason": null,
+          "message": "左右移动夹具；A 抓取或投送，B 旋转手中零件",
+          "schemaVersion": 1,
+          "identity": {
+            "gameId": 34,
+            "name": "窗口装配",
+            "englishName": "Conveyor Window",
+            "slug": "conveyor-window",
+            "packageId": "com.ecojust.conveyorwindowtv",
+            "versionName": "0.2.0",
+            "versionCode": 2,
+            "seed": 734,
+            "actionCount": 2,
+            "assignmentSha256": "a5bb4b25c666c96c558e8ad9d08e901deb42b8b12ce4eff22be8bfe43cd0ecd7"
+          },
+          "scenario": {
+            "id": "copper-starter",
+            "name": "铜件初装",
+            "sourceVelocity": 2,
+            "targetVelocity": 1,
+            "windowXRange": [
+              240,
+              480
+            ],
+            "requiredStreak": 6,
+            "deadlineTick": 5040,
+            "gate": {
+              "periodTicks": 360,
+              "phaseOffsetTicks": 0,
+              "openFromPhaseTick": 120,
+              "openUntilPhaseTick": 240
+            },
+            "sourceCarriers": [
+              {
+                "id": "source-a",
+                "initialX": 180,
+                "type": "elbow",
+                "initialQuarterTurns": 0
+              },
+              {
+                "id": "source-b",
+                "initialX": 540,
+                "type": "arrow",
+                "initialQuarterTurns": 0
+              }
+            ],
+            "targetSlots": [
+              {
+                "id": "slot-a",
+                "initialX": 180,
+                "requiredType": "elbow",
+                "requiredQuarterTurns": 1
+              },
+              {
+                "id": "slot-b",
+                "initialX": 540,
+                "requiredType": "arrow",
+                "requiredQuarterTurns": 3
+              }
+            ]
+          },
+          "physics": {
+            "geometry": {
+              "unitsPerCell": 60,
+              "ticksPerSecond": 60,
+              "trackLengthUnits": 720,
+              "sourceY": 90,
+              "heldY": 150,
+              "targetY": 270,
+              "barrierYRange": [
+                198,
+                222
+              ],
+              "partSizeUnits": 36,
+              "partHalfSizeUnits": 18,
+              "gripperXRange": [
+                36,
+                684
+              ],
+              "initialGripperX": 360,
+              "gripperSpeedUnitsPerTick": 4,
+              "pickupRadiusUnits": 60,
+              "placementRadiusUnits": 60,
+              "origin": "x increases right; y increases down; both conveyor centers occupy x in [0,720)",
+              "distanceRule": "ordinary absolute x distance, never wrap-around distance; equality at a pickup/placement limit is accepted",
+              "windowFit": "the held component's full square footprint [gripperX-18,gripperX+18] must be contained in the scenario windowXRange; equality is accepted",
+              "transfer": "An admitted held A is an instantaneous vertical dispatch at the current gripper x through the shutter. Below the divider, a magnetic seat snaps the part to a socket within placementRadiusUnits. This is an explicit atomic interaction, not a simulated flight. The socket itself need not be directly inside the divider opening; the displayed magnetic reach bracket explains the snap.",
+              "nearest": "choose the minimum absolute-x-distance object, then lexicographically smallest carrier/slot ID for an exact tie; never ignore an occupied or wrong-type nearer slot to select a farther one",
+              "rotation": "quarter turns 0,1,2,3, clockwise in screen coordinates; 0 is the published profile orientation. Types use asymmetric silhouettes plus a keyed corner mark, so all four orientations are visibly distinct."
+            },
+            "motion": {
+              "phase": "conveyor x is mod(initialX+velocityUnitsPerTick*tick,720), with nonnegative modulo",
+              "wrapping": "on each actual one-tick interval, compute rawX=currentX+velocity; wrap when rawX>=720 or rawX<0, not merely when rawX==0. Set x=mod(rawX,720) and increment that carrier/slot generation exactly once. All authored speed magnitudes are below720.",
+              "sourceWrap": "If a source carrier still contains its current part, retire that unpicked part at the exit. Then increment generation and create exactly one new part with the carrier's authored type and initial orientation. If its old part was held, seated, completed or damaged, do not change that old part; the replacement has a new ID.",
+              "targetWrap": "If a target slot is occupied, move that part to completed storage and clear the slot, without changing score or streak. Increment slot generation; the same visible slot returns empty with the same type/orientation. An empty slot also increments generation.",
+              "ownershipOrder": "Input B/A changes ownership first. Then compute every carrier/slot's new position and wrap facts. Apply source retire/refill and target completed/clear on their own wrap facts. Finally update the gripper x and the positions of source/held/seated parts from their current unique owner. A part held before its source wraps is never retired by that wrap. A newly seated part may legitimately complete at a target exit in this same interval.",
+              "partCoordinates": "source parts follow their source carrier at sourceY; the one held part follows only gripperX at heldY; seated parts follow only their target slot at targetY. Completed/retired parts keep their exit coordinate x=720 for positive direction or x=0 for negative direction; damaged parts keep the actual dispatch origin at heldY. Nonactive history is not rendered on the belts."
+            },
+            "gate": {
+              "phase": "phaseTick=mod(tick+scenario.gate.phaseOffsetTicks,scenario.gate.periodTicks)",
+              "open": "openFromPhaseTick <= phaseTick < openUntilPhaseTick",
+              "singleBoundary": "create, input eligibility, held-A collision, HUD and rendering all consume the same gate value for the same model.tick. One A receipt records that exact boundary value. After a real interval, recompute gate at the new tick for the new state. No check uses next tick's gate to judge a current action.",
+              "physicalScope": "Only an explicit held-A dispatch crosses the divider. Ordinary horizontal carrying above it never collides with the closed shutter; opening or closing alone cannot crush a waiting part."
+            },
+            "dispatch": {
+              "qualificationOrder": [
+                "shutter_closed",
+                "outside_window",
+                "no_slot_in_reach",
+                "occupied_slot",
+                "wrong_type",
+                "wrong_orientation",
+                "seated"
+              ],
+              "shutter_closed": "gate.open is false",
+              "outside_window": "the held footprint does not fit windowXRange",
+              "no_slot_in_reach": "the nearest lower slot is farther than60 units",
+              "occupied_slot": "that nearest in-reach slot has an occupant; never overwrite it",
+              "wrong_type": "the held type differs from that slot's requiredType",
+              "wrong_orientation": "types match but quarter turns differ from requiredQuarterTurns",
+              "seated": "place exactly that held part into exactly that empty slot generation; clear heldPartId; increment totalCorrect and streak once",
+              "fault": "Any of the six rejected dispatch reasons damages exactly the held part, clears heldPartId, increments faults once and resets streak to0. Wrong orientation, a missed socket and an occupied socket are assembly mistakes. Empty grabs and empty B are harmless. No silent part return or destruction is permitted."
+            },
+            "roundRules": {
+              "goal": "streak>=scenario.requiredStreak; only consecutive correct dispatches count. Any damaged dispatch resets the streak, while totalCorrect and previously completed parts remain factual history.",
+              "faultLimit": 3,
+              "deadline": "tick reaches scenario.deadlineTick after the real interval; no later action is admitted",
+              "terminalPriority": "After B/A and one complete actual interval: required streak wins; otherwise faults>=3 loses with fault_limit; otherwise deadline loses with deadline. A final correct dispatch at deadlineTick-1 wins at deadlineTick. An action at or after deadlineTick is impossible in an active ordinary state.",
+              "lastStep": "Every valid positive active call advances tick by exactly1, even if its starting action earns the win or reaches the fault limit. No input-only transaction counter or zero-interval terminal is needed. Action receipts use boundaryTick=t, state ends at tick=t+1, and lastStep records that actual interval.",
+              "score": "100*totalCorrect while active/lost; on win 1000+100*requiredStreak+100*(3-faults). Score never changes collision or matching.",
+              "retry": "create the same scenario and seed at tick0: restore all initial belt coordinates, source parts, empty target slots, gripperx360, no held part, streak/faults/totalCorrect0, empty receipts, initial gate and quarantine"
+            }
+          },
+          "partTypes": [
+            {
+              "id": "elbow",
+              "name": "直角件",
+              "tone": "copper",
+              "profile": [
+                [
+                  -14,
+                  -14
+                ],
+                [
+                  14,
+                  -14
+                ],
+                [
+                  14,
+                  -4
+                ],
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  14
+                ],
+                [
+                  -14,
+                  14
+                ]
+              ]
+            },
+            {
+              "id": "arrow",
+              "name": "箭头件",
+              "tone": "teal",
+              "profile": [
+                [
+                  -14,
+                  -6
+                ],
+                [
+                  2,
+                  -6
+                ],
+                [
+                  2,
+                  -14
+                ],
+                [
+                  14,
+                  0
+                ],
+                [
+                  2,
+                  14
+                ],
+                [
+                  2,
+                  6
+                ],
+                [
+                  -14,
+                  6
+                ]
+              ]
+            },
+            {
+              "id": "fork",
+              "name": "叉形件",
+              "tone": "violet",
+              "profile": [
+                [
+                  -14,
+                  -14
+                ],
+                [
+                  14,
+                  -14
+                ],
+                [
+                  14,
+                  -4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  8,
+                  4
+                ],
+                [
+                  8,
+                  14
+                ],
+                [
+                  -14,
+                  14
+                ]
+              ]
+            },
+            {
+              "id": "hook",
+              "name": "钩形件",
+              "tone": "gold",
+              "profile": [
+                [
+                  -14,
+                  -14
+                ],
+                [
+                  0,
+                  -14
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  6,
+                  4
+                ],
+                [
+                  6,
+                  -4
+                ],
+                [
+                  14,
+                  -4
+                ],
+                [
+                  14,
+                  14
+                ],
+                [
+                  -14,
+                  14
+                ]
+              ]
+            }
+          ],
+          "deadlineTick": 5040,
+          "requiredStreak": 6,
+          "faultLimit": 3,
+          "streak": 0,
+          "totalCorrect": 0,
+          "faults": 0,
+          "gripper": {
+            "x": 360,
+            "y": 150,
+            "heldPartId": null
+          },
+          "sourceCarriers": [
+            {
+              "id": "source-a",
+              "x": 192,
+              "y": 90,
+              "generation": 0,
+              "type": "elbow",
+              "initialQuarterTurns": 0,
+              "partId": "source-a@0"
+            },
+            {
+              "id": "source-b",
+              "x": 552,
+              "y": 90,
+              "generation": 0,
+              "type": "arrow",
+              "initialQuarterTurns": 0,
+              "partId": "source-b@0"
+            }
+          ],
+          "targetSlots": [
+            {
+              "id": "slot-a",
+              "x": 186,
+              "y": 270,
+              "generation": 0,
+              "requiredType": "elbow",
+              "requiredQuarterTurns": 1,
+              "occupantPartId": null
+            },
+            {
+              "id": "slot-b",
+              "x": 546,
+              "y": 270,
+              "generation": 0,
+              "requiredType": "arrow",
+              "requiredQuarterTurns": 3,
+              "occupantPartId": null
+            }
+          ],
+          "parts": [
+            {
+              "id": "source-a@0",
+              "sourceCarrierId": "source-a",
+              "birthGeneration": 0,
+              "type": "elbow",
+              "quarterTurns": 0,
+              "owner": "source",
+              "ownerId": "source-a",
+              "ownerGeneration": 0,
+              "x": 192,
+              "y": 90,
+              "createdTick": 0,
+              "endedTick": null,
+              "endReason": null
+            },
+            {
+              "id": "source-b@0",
+              "sourceCarrierId": "source-b",
+              "birthGeneration": 0,
+              "type": "arrow",
+              "quarterTurns": 0,
+              "owner": "source",
+              "ownerId": "source-b",
+              "ownerGeneration": 0,
+              "x": 552,
+              "y": 90,
+              "createdTick": 0,
+              "endedTick": null,
+              "endReason": null
+            }
+          ],
+          "gate": {
+            "tick": 6,
+            "phaseTick": 6,
+            "open": false,
+            "windowXRange": [
+              240,
+              480
+            ]
+          },
+          "preview": {
+            "tick": 6,
+            "gripperX": 360,
+            "heldPartId": null,
+            "gateOpen": false,
+            "windowFits": true,
+            "nearestSource": {
+              "id": "source-a",
+              "generation": 0,
+              "x": 192,
+              "distance": 168,
+              "inReach": false,
+              "partId": "source-a@0"
+            },
+            "nearestSlot": {
+              "id": "slot-a",
+              "generation": 0,
+              "x": 186,
+              "distance": 174,
+              "inReach": false,
+              "occupantPartId": null,
+              "requiredType": "elbow",
+              "requiredQuarterTurns": 1
+            }
+          },
+          "actionReceipts": [],
+          "wrapReceipts": [],
+          "lastAction": null,
+          "lastStep": {
+            "fromTick": 5,
+            "toTick": 6,
+            "gateBefore": {
+              "tick": 5,
+              "phaseTick": 5,
+              "open": false,
+              "windowXRange": [
+                240,
+                480
+              ]
+            },
+            "gateAfter": {
+              "tick": 6,
+              "phaseTick": 6,
+              "open": false,
+              "windowXRange": [
+                240,
+                480
+              ]
+            },
+            "gripperBefore": {
+              "x": 360,
+              "y": 150,
+              "heldPartId": null
+            },
+            "gripperAfter": {
+              "x": 360,
+              "y": 150,
+              "heldPartId": null
+            },
+            "allowedVelocityX": 0,
+            "sourceMotion": [
+              {
+                "id": "source-a",
+                "generationBefore": 0,
+                "generationAfter": 0,
+                "fromX": 190,
+                "rawToX": 192,
+                "toX": 192,
+                "velocity": 2,
+                "wrapped": false
+              },
+              {
+                "id": "source-b",
+                "generationBefore": 0,
+                "generationAfter": 0,
+                "fromX": 550,
+                "rawToX": 552,
+                "toX": 552,
+                "velocity": 2,
+                "wrapped": false
+              }
+            ],
+            "targetMotion": [
+              {
+                "id": "slot-a",
+                "generationBefore": 0,
+                "generationAfter": 0,
+                "fromX": 185,
+                "rawToX": 186,
+                "toX": 186,
+                "velocity": 1,
+                "wrapped": false
+              },
+              {
+                "id": "slot-b",
+                "generationBefore": 0,
+                "generationAfter": 0,
+                "fromX": 545,
+                "rawToX": 546,
+                "toX": 546,
+                "velocity": 1,
+                "wrapped": false
+              }
+            ],
+            "actionReceiptIds": [],
+            "wrapReceiptIds": [],
+            "countersBefore": {
+              "streak": 0,
+              "totalCorrect": 0,
+              "faults": 0
+            },
+            "countersAfter": {
+              "streak": 0,
+              "totalCorrect": 0,
+              "faults": 0
+            },
+            "terminalAfter": null
+          },
+          "inputState": {
+            "cancelEpoch": 1,
+            "quarantined": true,
+            "aArmed": false,
+            "bArmed": false
+          },
+          "lastInput": {
+            "boundaryTick": 5,
+            "rawX": 0,
+            "rawY": 0,
+            "x": 0,
+            "y": 0,
+            "axisX": 0,
+            "axisY": 0,
+            "rawA": false,
+            "rawB": false,
+            "rawAPressed": false,
+            "rawBPressed": false,
+            "effectiveA": false,
+            "effectiveB": false,
+            "cancelled": true,
+            "rawCancelEpoch": 1,
+            "cancelEpoch": 1,
+            "epochChanged": false,
+            "quarantinedBefore": true,
+            "quarantinedAfter": true,
+            "neutralAcknowledged": false,
+            "freshA": false,
+            "freshB": false,
+            "velocityX": 0
+          },
+          "terminal": null
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 456,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          899.8999999999999,
+          1066.6,
+          350,
+          16.700000000000273,
+          383.1999999999998,
+          16.700000000000273,
+          283.39999999999964,
+          216.60000000000036,
+          166.69999999999982,
+          133.30000000000018,
+          166.69999999999982,
+          16.600000000000364,
+          183.39999999999964,
+          133.30000000000018,
+          166.69999999999982,
+          133.30000000000018
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "P freezes gameplay state and tick, P resumes",
+      "passed": true,
+      "milliseconds": 640.5514660000008,
+      "details": {
+        "pausedTick": 6
+      }
+    },
+    {
+      "name": "ordinary movement and action input",
+      "passed": true,
+      "milliseconds": 32709.600106000005,
+      "details": {
+        "before": {
+          "id": "conveyor-window",
+          "phase": "playing",
+          "paused": false,
+          "tick": 12,
+          "elapsed": 0.19999999999999998,
+          "level": 0,
+          "best": 0,
+          "model": {
+            "width": 960,
+            "height": 540,
+            "seed": 734,
+            "difficulty": 0,
+            "level": 1,
+            "levelName": "铜件初装",
+            "scenarioId": "copper-starter",
+            "phase": "playing",
+            "tick": 12,
+            "elapsed": 0.2,
+            "score": 0,
+            "lostReason": null,
+            "message": "左右移动夹具；A 抓取或投送，B 旋转手中零件",
+            "schemaVersion": 1,
+            "identity": {
+              "gameId": 34,
+              "name": "窗口装配",
+              "englishName": "Conveyor Window",
+              "slug": "conveyor-window",
+              "packageId": "com.ecojust.conveyorwindowtv",
+              "versionName": "0.2.0",
+              "versionCode": 2,
+              "seed": 734,
+              "actionCount": 2,
+              "assignmentSha256": "a5bb4b25c666c96c558e8ad9d08e901deb42b8b12ce4eff22be8bfe43cd0ecd7"
+            },
+            "scenario": {
+              "id": "copper-starter",
+              "name": "铜件初装",
+              "sourceVelocity": 2,
+              "targetVelocity": 1,
+              "windowXRange": [
+                240,
+                480
+              ],
+              "requiredStreak": 6,
+              "deadlineTick": 5040,
+              "gate": {
+                "periodTicks": 360,
+                "phaseOffsetTicks": 0,
+                "openFromPhaseTick": 120,
+                "openUntilPhaseTick": 240
+              },
+              "sourceCarriers": [
+                {
+                  "id": "source-a",
+                  "initialX": 180,
+                  "type": "elbow",
+                  "initialQuarterTurns": 0
+                },
+                {
+                  "id": "source-b",
+                  "initialX": 540,
+                  "type": "arrow",
+                  "initialQuarterTurns": 0
+                }
+              ],
+              "targetSlots": [
+                {
+                  "id": "slot-a",
+                  "initialX": 180,
+                  "requiredType": "elbow",
+                  "requiredQuarterTurns": 1
+                },
+                {
+                  "id": "slot-b",
+                  "initialX": 540,
+                  "requiredType": "arrow",
+                  "requiredQuarterTurns": 3
+                }
+              ]
+            },
+            "physics": {
+              "geometry": {
+                "unitsPerCell": 60,
+                "ticksPerSecond": 60,
+                "trackLengthUnits": 720,
+                "sourceY": 90,
+                "heldY": 150,
+                "targetY": 270,
+                "barrierYRange": [
+                  198,
+                  222
+                ],
+                "partSizeUnits": 36,
+                "partHalfSizeUnits": 18,
+                "gripperXRange": [
+                  36,
+                  684
+                ],
+                "initialGripperX": 360,
+                "gripperSpeedUnitsPerTick": 4,
+                "pickupRadiusUnits": 60,
+                "placementRadiusUnits": 60,
+                "origin": "x increases right; y increases down; both conveyor centers occupy x in [0,720)",
+                "distanceRule": "ordinary absolute x distance, never wrap-around distance; equality at a pickup/placement limit is accepted",
+                "windowFit": "the held component's full square footprint [gripperX-18,gripperX+18] must be contained in the scenario windowXRange; equality is accepted",
+                "transfer": "An admitted held A is an instantaneous vertical dispatch at the current gripper x through the shutter. Below the divider, a magnetic seat snaps the part to a socket within placementRadiusUnits. This is an explicit atomic interaction, not a simulated flight. The socket itself need not be directly inside the divider opening; the displayed magnetic reach bracket explains the snap.",
+                "nearest": "choose the minimum absolute-x-distance object, then lexicographically smallest carrier/slot ID for an exact tie; never ignore an occupied or wrong-type nearer slot to select a farther one",
+                "rotation": "quarter turns 0,1,2,3, clockwise in screen coordinates; 0 is the published profile orientation. Types use asymmetric silhouettes plus a keyed corner mark, so all four orientations are visibly distinct."
+              },
+              "motion": {
+                "phase": "conveyor x is mod(initialX+velocityUnitsPerTick*tick,720), with nonnegative modulo",
+                "wrapping": "on each actual one-tick interval, compute rawX=currentX+velocity; wrap when rawX>=720 or rawX<0, not merely when rawX==0. Set x=mod(rawX,720) and increment that carrier/slot generation exactly once. All authored speed magnitudes are below720.",
+                "sourceWrap": "If a source carrier still contains its current part, retire that unpicked part at the exit. Then increment generation and create exactly one new part with the carrier's authored type and initial orientation. If its old part was held, seated, completed or damaged, do not change that old part; the replacement has a new ID.",
+                "targetWrap": "If a target slot is occupied, move that part to completed storage and clear the slot, without changing score or streak. Increment slot generation; the same visible slot returns empty with the same type/orientation. An empty slot also increments generation.",
+                "ownershipOrder": "Input B/A changes ownership first. Then compute every carrier/slot's new position and wrap facts. Apply source retire/refill and target completed/clear on their own wrap facts. Finally update the gripper x and the positions of source/held/seated parts from their current unique owner. A part held before its source wraps is never retired by that wrap. A newly seated part may legitimately complete at a target exit in this same interval.",
+                "partCoordinates": "source parts follow their source carrier at sourceY; the one held part follows only gripperX at heldY; seated parts follow only their target slot at targetY. Completed/retired parts keep their exit coordinate x=720 for positive direction or x=0 for negative direction; damaged parts keep the actual dispatch origin at heldY. Nonactive history is not rendered on the belts."
+              },
+              "gate": {
+                "phase": "phaseTick=mod(tick+scenario.gate.phaseOffsetTicks,scenario.gate.periodTicks)",
+                "open": "openFromPhaseTick <= phaseTick < openUntilPhaseTick",
+                "singleBoundary": "create, input eligibility, held-A collision, HUD and rendering all consume the same gate value for the same model.tick. One A receipt records that exact boundary value. After a real interval, recompute gate at the new tick for the new state. No check uses next tick's gate to judge a current action.",
+                "physicalScope": "Only an explicit held-A dispatch crosses the divider. Ordinary horizontal carrying above it never collides with the closed shutter; opening or closing alone cannot crush a waiting part."
+              },
+              "dispatch": {
+                "qualificationOrder": [
+                  "shutter_closed",
+                  "outside_window",
+                  "no_slot_in_reach",
+                  "occupied_slot",
+                  "wrong_type",
+                  "wrong_orientation",
+                  "seated"
+                ],
+                "shutter_closed": "gate.open is false",
+                "outside_window": "the held footprint does not fit windowXRange",
+                "no_slot_in_reach": "the nearest lower slot is farther than60 units",
+                "occupied_slot": "that nearest in-reach slot has an occupant; never overwrite it",
+                "wrong_type": "the held type differs from that slot's requiredType",
+                "wrong_orientation": "types match but quarter turns differ from requiredQuarterTurns",
+                "seated": "place exactly that held part into exactly that empty slot generation; clear heldPartId; increment totalCorrect and streak once",
+                "fault": "Any of the six rejected dispatch reasons damages exactly the held part, clears heldPartId, increments faults once and resets streak to0. Wrong orientation, a missed socket and an occupied socket are assembly mistakes. Empty grabs and empty B are harmless. No silent part return or destruction is permitted."
+              },
+              "roundRules": {
+                "goal": "streak>=scenario.requiredStreak; only consecutive correct dispatches count. Any damaged dispatch resets the streak, while totalCorrect and previously completed parts remain factual history.",
+                "faultLimit": 3,
+                "deadline": "tick reaches scenario.deadlineTick after the real interval; no later action is admitted",
+                "terminalPriority": "After B/A and one complete actual interval: required streak wins; otherwise faults>=3 loses with fault_limit; otherwise deadline loses with deadline. A final correct dispatch at deadlineTick-1 wins at deadlineTick. An action at or after deadlineTick is impossible in an active ordinary state.",
+                "lastStep": "Every valid positive active call advances tick by exactly1, even if its starting action earns the win or reaches the fault limit. No input-only transaction counter or zero-interval terminal is needed. Action receipts use boundaryTick=t, state ends at tick=t+1, and lastStep records that actual interval.",
+                "score": "100*totalCorrect while active/lost; on win 1000+100*requiredStreak+100*(3-faults). Score never changes collision or matching.",
+                "retry": "create the same scenario and seed at tick0: restore all initial belt coordinates, source parts, empty target slots, gripperx360, no held part, streak/faults/totalCorrect0, empty receipts, initial gate and quarantine"
+              }
+            },
+            "partTypes": [
+              {
+                "id": "elbow",
+                "name": "直角件",
+                "tone": "copper",
+                "profile": [
+                  [
+                    -14,
+                    -14
+                  ],
+                  [
+                    14,
+                    -14
+                  ],
+                  [
+                    14,
+                    -4
+                  ],
+                  [
+                    -4,
+                    -4
+                  ],
+                  [
+                    -4,
+                    14
+                  ],
+                  [
+                    -14,
+                    14
+                  ]
+                ]
+              },
+              {
+                "id": "arrow",
+                "name": "箭头件",
+                "tone": "teal",
+                "profile": [
+                  [
+                    -14,
+                    -6
+                  ],
+                  [
+                    2,
+                    -6
+                  ],
+                  [
+                    2,
+                    -14
+                  ],
+                  [
+                    14,
+                    0
+                  ],
+                  [
+                    2,
+                    14
+                  ],
+                  [
+                    2,
+                    6
+                  ],
+                  [
+                    -14,
+                    6
+                  ]
+                ]
+              },
+              {
+                "id": "fork",
+                "name": "叉形件",
+                "tone": "violet",
+                "profile": [
+                  [
+                    -14,
+                    -14
+                  ],
+                  [
+                    14,
+                    -14
+                  ],
+                  [
+                    14,
+                    -4
+                  ],
+                  [
+                    0,
+                    -4
+                  ],
+                  [
+                    0,
+                    4
+                  ],
+                  [
+                    8,
+                    4
+                  ],
+                  [
+                    8,
+                    14
+                  ],
+                  [
+                    -14,
+                    14
+                  ]
+                ]
+              },
+              {
+                "id": "hook",
+                "name": "钩形件",
+                "tone": "gold",
+                "profile": [
+                  [
+                    -14,
+                    -14
+                  ],
+                  [
+                    0,
+                    -14
+                  ],
+                  [
+                    0,
+                    4
+                  ],
+                  [
+                    6,
+                    4
+                  ],
+                  [
+                    6,
+                    -4
+                  ],
+                  [
+                    14,
+                    -4
+                  ],
+                  [
+                    14,
+                    14
+                  ],
+                  [
+                    -14,
+                    14
+                  ]
+                ]
+              }
+            ],
+            "deadlineTick": 5040,
+            "requiredStreak": 6,
+            "faultLimit": 3,
+            "streak": 0,
+            "totalCorrect": 0,
+            "faults": 0,
+            "gripper": {
+              "x": 360,
+              "y": 150,
+              "heldPartId": null
+            },
+            "sourceCarriers": [
+              {
+                "id": "source-a",
+                "x": 204,
+                "y": 90,
+                "generation": 0,
+                "type": "elbow",
+                "initialQuarterTurns": 0,
+                "partId": "source-a@0"
+              },
+              {
+                "id": "source-b",
+                "x": 564,
+                "y": 90,
+                "generation": 0,
+                "type": "arrow",
+                "initialQuarterTurns": 0,
+                "partId": "source-b@0"
+              }
+            ],
+            "targetSlots": [
+              {
+                "id": "slot-a",
+                "x": 192,
+                "y": 270,
+                "generation": 0,
+                "requiredType": "elbow",
+                "requiredQuarterTurns": 1,
+                "occupantPartId": null
+              },
+              {
+                "id": "slot-b",
+                "x": 552,
+                "y": 270,
+                "generation": 0,
+                "requiredType": "arrow",
+                "requiredQuarterTurns": 3,
+                "occupantPartId": null
+              }
+            ],
+            "parts": [
+              {
+                "id": "source-a@0",
+                "sourceCarrierId": "source-a",
+                "birthGeneration": 0,
+                "type": "elbow",
+                "quarterTurns": 0,
+                "owner": "source",
+                "ownerId": "source-a",
+                "ownerGeneration": 0,
+                "x": 204,
+                "y": 90,
+                "createdTick": 0,
+                "endedTick": null,
+                "endReason": null
+              },
+              {
+                "id": "source-b@0",
+                "sourceCarrierId": "source-b",
+                "birthGeneration": 0,
+                "type": "arrow",
+                "quarterTurns": 0,
+                "owner": "source",
+                "ownerId": "source-b",
+                "ownerGeneration": 0,
+                "x": 564,
+                "y": 90,
+                "createdTick": 0,
+                "endedTick": null,
+                "endReason": null
+              }
+            ],
+            "gate": {
+              "tick": 12,
+              "phaseTick": 12,
+              "open": false,
+              "windowXRange": [
+                240,
+                480
+              ]
+            },
+            "preview": {
+              "tick": 12,
+              "gripperX": 360,
+              "heldPartId": null,
+              "gateOpen": false,
+              "windowFits": true,
+              "nearestSource": {
+                "id": "source-a",
+                "generation": 0,
+                "x": 204,
+                "distance": 156,
+                "inReach": false,
+                "partId": "source-a@0"
+              },
+              "nearestSlot": {
+                "id": "slot-a",
+                "generation": 0,
+                "x": 192,
+                "distance": 168,
+                "inReach": false,
+                "occupantPartId": null,
+                "requiredType": "elbow",
+                "requiredQuarterTurns": 1
+              }
+            },
+            "actionReceipts": [],
+            "wrapReceipts": [],
+            "lastAction": null,
+            "lastStep": {
+              "fromTick": 11,
+              "toTick": 12,
+              "gateBefore": {
+                "tick": 11,
+                "phaseTick": 11,
+                "open": false,
+                "windowXRange": [
+                  240,
+                  480
+                ]
+              },
+              "gateAfter": {
+                "tick": 12,
+                "phaseTick": 12,
+                "open": false,
+                "windowXRange": [
+                  240,
+                  480
+                ]
+              },
+              "gripperBefore": {
+                "x": 360,
+                "y": 150,
+                "heldPartId": null
+              },
+              "gripperAfter": {
+                "x": 360,
+                "y": 150,
+                "heldPartId": null
+              },
+              "allowedVelocityX": 0,
+              "sourceMotion": [
+                {
+                  "id": "source-a",
+                  "generationBefore": 0,
+                  "generationAfter": 0,
+                  "fromX": 202,
+                  "rawToX": 204,
+                  "toX": 204,
+                  "velocity": 2,
+                  "wrapped": false
+                },
+                {
+                  "id": "source-b",
+                  "generationBefore": 0,
+                  "generationAfter": 0,
+                  "fromX": 562,
+                  "rawToX": 564,
+                  "toX": 564,
+                  "velocity": 2,
+                  "wrapped": false
+                }
+              ],
+              "targetMotion": [
+                {
+                  "id": "slot-a",
+                  "generationBefore": 0,
+                  "generationAfter": 0,
+                  "fromX": 191,
+                  "rawToX": 192,
+                  "toX": 192,
+                  "velocity": 1,
+                  "wrapped": false
+                },
+                {
+                  "id": "slot-b",
+                  "generationBefore": 0,
+                  "generationAfter": 0,
+                  "fromX": 551,
+                  "rawToX": 552,
+                  "toX": 552,
+                  "velocity": 1,
+                  "wrapped": false
+                }
+              ],
+              "actionReceiptIds": [],
+              "wrapReceiptIds": [],
+              "countersBefore": {
+                "streak": 0,
+                "totalCorrect": 0,
+                "faults": 0
+              },
+              "countersAfter": {
+                "streak": 0,
+                "totalCorrect": 0,
+                "faults": 0
+              },
+              "terminalAfter": null
+            },
+            "inputState": {
+              "cancelEpoch": 3,
+              "quarantined": true,
+              "aArmed": false,
+              "bArmed": false
+            },
+            "lastInput": {
+              "boundaryTick": 11,
+              "rawX": 0,
+              "rawY": 0,
+              "x": 0,
+              "y": 0,
+              "axisX": 0,
+              "axisY": 0,
+              "rawA": false,
+              "rawB": false,
+              "rawAPressed": false,
+              "rawBPressed": false,
+              "effectiveA": false,
+              "effectiveB": false,
+              "cancelled": true,
+              "rawCancelEpoch": 3,
+              "cancelEpoch": 3,
+              "epochChanged": false,
+              "quarantinedBefore": true,
+              "quarantinedAfter": true,
+              "neutralAcknowledged": false,
+              "freshA": false,
+              "freshB": false,
+              "velocityX": 0
+            },
+            "terminal": null
+          },
+          "renderer": {
+            "kind": "webgl",
+            "drawCalls": 1,
+            "quads": 456,
+            "textureCount": 1,
+            "atlasSize": 1024,
+            "contextLost": false
+          },
+          "frameTimesMs": [
+            899.8999999999999,
+            1066.6,
+            350,
+            16.700000000000273,
+            383.1999999999998,
+            16.700000000000273,
+            283.39999999999964,
+            216.60000000000036,
+            166.69999999999982,
+            133.30000000000018,
+            166.69999999999982,
+            16.600000000000364,
+            183.39999999999964,
+            133.30000000000018,
+            166.69999999999982,
+            133.30000000000018,
+            116.69999999999982,
+            166.69999999999982
+          ],
+          "connection": {
+            "phoneSeen": false,
+            "disconnected": false
+          }
+        },
+        "after": {
+          "id": "conveyor-window",
+          "phase": "won",
+          "paused": false,
+          "tick": 1931,
+          "elapsed": 32.18333333333279,
+          "level": 0,
+          "best": 1900,
+          "model": {
+            "width": 960,
+            "height": 540,
+            "seed": 734,
+            "difficulty": 0,
+            "level": 1,
+            "levelName": "铜件初装",
+            "scenarioId": "copper-starter",
+            "phase": "won",
+            "tick": 1931,
+            "elapsed": 32.18333333333333,
+            "score": 1900,
+            "lostReason": null,
+            "message": "连续装配完成！",
+            "schemaVersion": 1,
+            "identity": {
+              "gameId": 34,
+              "name": "窗口装配",
+              "englishName": "Conveyor Window",
+              "slug": "conveyor-window",
+              "packageId": "com.ecojust.conveyorwindowtv",
+              "versionName": "0.2.0",
+              "versionCode": 2,
+              "seed": 734,
+              "actionCount": 2,
+              "assignmentSha256": "a5bb4b25c666c96c558e8ad9d08e901deb42b8b12ce4eff22be8bfe43cd0ecd7"
+            },
+            "scenario": {
+              "id": "copper-starter",
+              "name": "铜件初装",
+              "sourceVelocity": 2,
+              "targetVelocity": 1,
+              "windowXRange": [
+                240,
+                480
+              ],
+              "requiredStreak": 6,
+              "deadlineTick": 5040,
+              "gate": {
+                "periodTicks": 360,
+                "phaseOffsetTicks": 0,
+                "openFromPhaseTick": 120,
+                "openUntilPhaseTick": 240
+              },
+              "sourceCarriers": [
+                {
+                  "id": "source-a",
+                  "initialX": 180,
+                  "type": "elbow",
+                  "initialQuarterTurns": 0
+                },
+                {
+                  "id": "source-b",
+                  "initialX": 540,
+                  "type": "arrow",
+                  "initialQuarterTurns": 0
+                }
+              ],
+              "targetSlots": [
+                {
+                  "id": "slot-a",
+                  "initialX": 180,
+                  "requiredType": "elbow",
+                  "requiredQuarterTurns": 1
+                },
+                {
+                  "id": "slot-b",
+                  "initialX": 540,
+                  "requiredType": "arrow",
+                  "requiredQuarterTurns": 3
+                }
+              ]
+            },
+            "physics": {
+              "geometry": {
+                "unitsPerCell": 60,
+                "ticksPerSecond": 60,
+                "trackLengthUnits": 720,
+                "sourceY": 90,
+                "heldY": 150,
+                "targetY": 270,
+                "barrierYRange": [
+                  198,
+                  222
+                ],
+                "partSizeUnits": 36,
+                "partHalfSizeUnits": 18,
+                "gripperXRange": [
+                  36,
+                  684
+                ],
+                "initialGripperX": 360,
+                "gripperSpeedUnitsPerTick": 4,
+                "pickupRadiusUnits": 60,
+                "placementRadiusUnits": 60,
+                "origin": "x increases right; y increases down; both conveyor centers occupy x in [0,720)",
+                "distanceRule": "ordinary absolute x distance, never wrap-around distance; equality at a pickup/placement limit is accepted",
+                "windowFit": "the held component's full square footprint [gripperX-18,gripperX+18] must be contained in the scenario windowXRange; equality is accepted",
+                "transfer": "An admitted held A is an instantaneous vertical dispatch at the current gripper x through the shutter. Below the divider, a magnetic seat snaps the part to a socket within placementRadiusUnits. This is an explicit atomic interaction, not a simulated flight. The socket itself need not be directly inside the divider opening; the displayed magnetic reach bracket explains the snap.",
+                "nearest": "choose the minimum absolute-x-distance object, then lexicographically smallest carrier/slot ID for an exact tie; never ignore an occupied or wrong-type nearer slot to select a farther one",
+                "rotation": "quarter turns 0,1,2,3, clockwise in screen coordinates; 0 is the published profile orientation. Types use asymmetric silhouettes plus a keyed corner mark, so all four orientations are visibly distinct."
+              },
+              "motion": {
+                "phase": "conveyor x is mod(initialX+velocityUnitsPerTick*tick,720), with nonnegative modulo",
+                "wrapping": "on each actual one-tick interval, compute rawX=currentX+velocity; wrap when rawX>=720 or rawX<0, not merely when rawX==0. Set x=mod(rawX,720) and increment that carrier/slot generation exactly once. All authored speed magnitudes are below720.",
+                "sourceWrap": "If a source carrier still contains its current part, retire that unpicked part at the exit. Then increment generation and create exactly one new part with the carrier's authored type and initial orientation. If its old part was held, seated, completed or damaged, do not change that old part; the replacement has a new ID.",
+                "targetWrap": "If a target slot is occupied, move that part to completed storage and clear the slot, without changing score or streak. Increment slot generation; the same visible slot returns empty with the same type/orientation. An empty slot also increments generation.",
+                "ownershipOrder": "Input B/A changes ownership first. Then compute every carrier/slot's new position and wrap facts. Apply source retire/refill and target completed/clear on their own wrap facts. Finally update the gripper x and the positions of source/held/seated parts from their current unique owner. A part held before its source wraps is never retired by that wrap. A newly seated part may legitimately complete at a target exit in this same interval.",
+                "partCoordinates": "source parts follow their source carrier at sourceY; the one held part follows only gripperX at heldY; seated parts follow only their target slot at targetY. Completed/retired parts keep their exit coordinate x=720 for positive direction or x=0 for negative direction; damaged parts keep the actual dispatch origin at heldY. Nonactive history is not rendered on the belts."
+              },
+              "gate": {
+                "phase": "phaseTick=mod(tick+scenario.gate.phaseOffsetTicks,scenario.gate.periodTicks)",
+                "open": "openFromPhaseTick <= phaseTick < openUntilPhaseTick",
+                "singleBoundary": "create, input eligibility, held-A collision, HUD and rendering all consume the same gate value for the same model.tick. One A receipt records that exact boundary value. After a real interval, recompute gate at the new tick for the new state. No check uses next tick's gate to judge a current action.",
+                "physicalScope": "Only an explicit held-A dispatch crosses the divider. Ordinary horizontal carrying above it never collides with the closed shutter; opening or closing alone cannot crush a waiting part."
+              },
+              "dispatch": {
+                "qualificationOrder": [
+                  "shutter_closed",
+                  "outside_window",
+                  "no_slot_in_reach",
+                  "occupied_slot",
+                  "wrong_type",
+                  "wrong_orientation",
+                  "seated"
+                ],
+                "shutter_closed": "gate.open is false",
+                "outside_window": "the held footprint does not fit windowXRange",
+                "no_slot_in_reach": "the nearest lower slot is farther than60 units",
+                "occupied_slot": "that nearest in-reach slot has an occupant; never overwrite it",
+                "wrong_type": "the held type differs from that slot's requiredType",
+                "wrong_orientation": "types match but quarter turns differ from requiredQuarterTurns",
+                "seated": "place exactly that held part into exactly that empty slot generation; clear heldPartId; increment totalCorrect and streak once",
+                "fault": "Any of the six rejected dispatch reasons damages exactly the held part, clears heldPartId, increments faults once and resets streak to0. Wrong orientation, a missed socket and an occupied socket are assembly mistakes. Empty grabs and empty B are harmless. No silent part return or destruction is permitted."
+              },
+              "roundRules": {
+                "goal": "streak>=scenario.requiredStreak; only consecutive correct dispatches count. Any damaged dispatch resets the streak, while totalCorrect and previously completed parts remain factual history.",
+                "faultLimit": 3,
+                "deadline": "tick reaches scenario.deadlineTick after the real interval; no later action is admitted",
+                "terminalPriority": "After B/A and one complete actual interval: required streak wins; otherwise faults>=3 loses with fault_limit; otherwise deadline loses with deadline. A final correct dispatch at deadlineTick-1 wins at deadlineTick. An action at or after deadlineTick is impossible in an active ordinary state.",
+                "lastStep": "Every valid positive active call advances tick by exactly1, even if its starting action earns the win or reaches the fault limit. No input-only transaction counter or zero-interval terminal is needed. Action receipts use boundaryTick=t, state ends at tick=t+1, and lastStep records that actual interval.",
+                "score": "100*totalCorrect while active/lost; on win 1000+100*requiredStreak+100*(3-faults). Score never changes collision or matching.",
+                "retry": "create the same scenario and seed at tick0: restore all initial belt coordinates, source parts, empty target slots, gripperx360, no held part, streak/faults/totalCorrect0, empty receipts, initial gate and quarantine"
+              }
+            },
+            "partTypes": [
+              {
+                "id": "elbow",
+                "name": "直角件",
+                "tone": "copper",
+                "profile": [
+                  [
+                    -14,
+                    -14
+                  ],
+                  [
+                    14,
+                    -14
+                  ],
+                  [
+                    14,
+                    -4
+                  ],
+                  [
+                    -4,
+                    -4
+                  ],
+                  [
+                    -4,
+                    14
+                  ],
+                  [
+                    -14,
+                    14
+                  ]
+                ]
+              },
+              {
+                "id": "arrow",
+                "name": "箭头件",
+                "tone": "teal",
+                "profile": [
+                  [
+                    -14,
+                    -6
+                  ],
+                  [
+                    2,
+                    -6
+                  ],
+                  [
+                    2,
+                    -14
+                  ],
+                  [
+                    14,
+                    0
+                  ],
+                  [
+                    2,
+                    14
+                  ],
+                  [
+                    2,
+                    6
+                  ],
+                  [
+                    -14,
+                    6
+                  ]
+                ]
+              },
+              {
+                "id": "fork",
+                "name": "叉形件",
+                "tone": "violet",
+                "profile": [
+                  [
+                    -14,
+                    -14
+                  ],
+                  [
+                    14,
+                    -14
+                  ],
+                  [
+                    14,
+                    -4
+                  ],
+                  [
+                    0,
+                    -4
+                  ],
+                  [
+                    0,
+                    4
+                  ],
+                  [
+                    8,
+                    4
+                  ],
+                  [
+                    8,
+                    14
+                  ],
+                  [
+                    -14,
+                    14
+                  ]
+                ]
+              },
+              {
+                "id": "hook",
+                "name": "钩形件",
+                "tone": "gold",
+                "profile": [
+                  [
+                    -14,
+                    -14
+                  ],
+                  [
+                    0,
+                    -14
+                  ],
+                  [
+                    0,
+                    4
+                  ],
+                  [
+                    6,
+                    4
+                  ],
+                  [
+                    6,
+                    -4
+                  ],
+                  [
+                    14,
+                    -4
+                  ],
+                  [
+                    14,
+                    14
+                  ],
+                  [
+                    -14,
+                    14
+                  ]
+                ]
+              }
+            ],
+            "deadlineTick": 5040,
+            "requiredStreak": 6,
+            "faultLimit": 3,
+            "streak": 6,
+            "totalCorrect": 6,
+            "faults": 0,
+            "gripper": {
+              "x": 348,
+              "y": 150,
+              "heldPartId": null
+            },
+            "sourceCarriers": [
+              {
+                "id": "source-a",
+                "x": 442,
+                "y": 90,
+                "generation": 5,
+                "type": "elbow",
+                "initialQuarterTurns": 0,
+                "partId": "source-a@5"
+              },
+              {
+                "id": "source-b",
+                "x": 82,
+                "y": 90,
+                "generation": 6,
+                "type": "arrow",
+                "initialQuarterTurns": 0,
+                "partId": "source-b@6"
+              }
+            ],
+            "targetSlots": [
+              {
+                "id": "slot-a",
+                "x": 671,
+                "y": 270,
+                "generation": 2,
+                "requiredType": "elbow",
+                "requiredQuarterTurns": 1,
+                "occupantPartId": "source-a@3"
+              },
+              {
+                "id": "slot-b",
+                "x": 311,
+                "y": 270,
+                "generation": 3,
+                "requiredType": "arrow",
+                "requiredQuarterTurns": 3,
+                "occupantPartId": "source-b@5"
+              }
+            ],
+            "parts": [
+              {
+                "id": "source-a@0",
+                "sourceCarrierId": "source-a",
+                "birthGeneration": 0,
+                "type": "elbow",
+                "quarterTurns": 1,
+                "owner": "completed",
+                "ownerId": null,
+                "ownerGeneration": null,
+                "x": 720,
+                "y": 270,
+                "createdTick": 0,
+                "endedTick": 540,
+                "endReason": "target_exit"
+              },
+              {
+                "id": "source-b@0",
+                "sourceCarrierId": "source-b",
+                "birthGeneration": 0,
+                "type": "arrow",
+                "quarterTurns": 0,
+                "owner": "retired",
+                "ownerId": null,
+                "ownerGeneration": null,
+                "x": 720,
+                "y": 90,
+                "createdTick": 0,
+                "endedTick": 90,
+                "endReason": "source_exit"
+              },
+              {
+                "id": "source-b@1",
+                "sourceCarrierId": "source-b",
+                "birthGeneration": 1,
+                "type": "arrow",
+                "quarterTurns": 3,
+                "owner": "completed",
+                "ownerId": null,
+                "ownerGeneration": null,
+                "x": 720,
+                "y": 270,
+                "createdTick": 90,
+                "endedTick": 900,
+                "endReason": "target_exit"
+              },
+              {
+                "id": "source-a@1",
+                "sourceCarrierId": "source-a",
+                "birthGeneration": 1,
+                "type": "elbow",
+                "quarterTurns": 1,
+                "owner": "completed",
+                "ownerId": null,
+                "ownerGeneration": null,
+                "x": 720,
+                "y": 270,
+                "createdTick": 270,
+                "endedTick": 1260,
+                "endReason": "target_exit"
+              },
+              {
+                "id": "source-b@2",
+                "sourceCarrierId": "source-b",
+                "birthGeneration": 2,
+                "type": "arrow",
+                "quarterTurns": 0,
+                "owner": "retired",
+                "ownerId": null,
+                "ownerGeneration": null,
+                "x": 720,
+                "y": 90,
+                "createdTick": 450,
+                "endedTick": 810,
+                "endReason": "source_exit"
+              },
+              {
+                "id": "source-a@2",
+                "sourceCarrierId": "source-a",
+                "birthGeneration": 2,
+                "type": "elbow",
+                "quarterTurns": 0,
+                "owner": "retired",
+                "ownerId": null,
+                "ownerGeneration": null,
+                "x": 720,
+                "y": 90,
+                "createdTick": 630,
+                "endedTick": 990,
+                "endReason": "source_exit"
+              },
+              {
+                "id": "source-b@3",
+                "sourceCarrierId": "source-b",
+                "birthGeneration": 3,
+                "type": "arrow",
+                "quarterTurns": 3,
+                "owner": "completed",
+                "ownerId": null,
+                "ownerGeneration": null,
+                "x": 720,
+                "y": 270,
+                "createdTick": 810,
+                "endedTick": 1620,
+                "endReason": "target_exit"
+              },
+              {
+                "id": "source-a@3",
+                "sourceCarrierId": "source-a",
+                "birthGeneration": 3,
+                "type": "elbow",
+                "quarterTurns": 1,
+                "owner": "slot",
+                "ownerId": "slot-a",
+                "ownerGeneration": 2,
+                "x": 671,
+                "y": 270,
+                "createdTick": 990,
+                "endedTick": null,
+                "endReason": null
+              },
+              {
+                "id": "source-b@4",
+                "sourceCarrierId": "source-b",
+                "birthGeneration": 4,
+                "type": "arrow",
+                "quarterTurns": 0,
+                "owner": "retired",
+                "ownerId": null,
+                "ownerGeneration": null,
+                "x": 720,
+                "y": 90,
+                "createdTick": 1170,
+                "endedTick": 1530,
+                "endReason": "source_exit"
+              },
+              {
+                "id": "source-a@4",
+                "sourceCarrierId": "source-a",
+                "birthGeneration": 4,
+                "type": "elbow",
+                "quarterTurns": 0,
+                "owner": "retired",
+                "ownerId": null,
+                "ownerGeneration": null,
+                "x": 720,
+                "y": 90,
+                "createdTick": 1350,
+                "endedTick": 1710,
+                "endReason": "source_exit"
+              },
+              {
+                "id": "source-b@5",
+                "sourceCarrierId": "source-b",
+                "birthGeneration": 5,
+                "type": "arrow",
+                "quarterTurns": 3,
+                "owner": "slot",
+                "ownerId": "slot-b",
+                "ownerGeneration": 3,
+                "x": 311,
+                "y": 270,
+                "createdTick": 1530,
+                "endedTick": null,
+                "endReason": null
+              },
+              {
+                "id": "source-a@5",
+                "sourceCarrierId": "source-a",
+                "birthGeneration": 5,
+                "type": "elbow",
+                "quarterTurns": 0,
+                "owner": "source",
+                "ownerId": "source-a",
+                "ownerGeneration": 5,
+                "x": 442,
+                "y": 90,
+                "createdTick": 1710,
+                "endedTick": null,
+                "endReason": null
+              },
+              {
+                "id": "source-b@6",
+                "sourceCarrierId": "source-b",
+                "birthGeneration": 6,
+                "type": "arrow",
+                "quarterTurns": 0,
+                "owner": "source",
+                "ownerId": "source-b",
+                "ownerGeneration": 6,
+                "x": 82,
+                "y": 90,
+                "createdTick": 1890,
+                "endedTick": null,
+                "endReason": null
+              }
+            ],
+            "gate": {
+              "tick": 1931,
+              "phaseTick": 131,
+              "open": true,
+              "windowXRange": [
+                240,
+                480
+              ]
+            },
+            "preview": {
+              "tick": 1931,
+              "gripperX": 348,
+              "heldPartId": null,
+              "gateOpen": true,
+              "windowFits": true,
+              "nearestSource": {
+                "id": "source-a",
+                "generation": 5,
+                "x": 442,
+                "distance": 94,
+                "inReach": false,
+                "partId": "source-a@5"
+              },
+              "nearestSlot": {
+                "id": "slot-b",
+                "generation": 3,
+                "x": 311,
+                "distance": 37,
+                "inReach": true,
+                "occupantPartId": "source-b@5",
+                "requiredType": "arrow",
+                "requiredQuarterTurns": 3
+              }
+            },
+            "actionReceipts": [
+              {
+                "id": 1,
+                "boundaryTick": 50,
+                "action": "grab_or_dispatch",
+                "partId": "source-a@0",
+                "result": "grabbed",
+                "gripperX": 260,
+                "gateAtAction": {
+                  "tick": 50,
+                  "phaseTick": 50,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": {
+                  "id": "source-a",
+                  "x": 280,
+                  "y": 90,
+                  "generation": 0,
+                  "type": "elbow",
+                  "initialQuarterTurns": 0,
+                  "partId": "source-a@0"
+                },
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-a@0",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 0,
+                  "type": "elbow",
+                  "quarterTurns": 0,
+                  "owner": "source",
+                  "ownerId": "source-a",
+                  "ownerGeneration": 0,
+                  "x": 280,
+                  "y": 90,
+                  "createdTick": 0,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-a@0",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 0,
+                  "type": "elbow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 260,
+                  "y": 150,
+                  "createdTick": 0,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 0,
+                "streakAfter": 0,
+                "totalCorrectBefore": 0,
+                "totalCorrectAfter": 0,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 2,
+                "boundaryTick": 92,
+                "action": "rotate",
+                "partId": "source-a@0",
+                "result": "rotated",
+                "gripperX": 356,
+                "gateAtAction": {
+                  "tick": 92,
+                  "phaseTick": 92,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-a@0",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 0,
+                  "type": "elbow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 356,
+                  "y": 150,
+                  "createdTick": 0,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-a@0",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 0,
+                  "type": "elbow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 356,
+                  "y": 150,
+                  "createdTick": 0,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 0,
+                "streakAfter": 0,
+                "totalCorrectBefore": 0,
+                "totalCorrectAfter": 0,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 3,
+                "boundaryTick": 132,
+                "action": "grab_or_dispatch",
+                "partId": "source-a@0",
+                "result": "seated",
+                "gripperX": 356,
+                "gateAtAction": {
+                  "tick": 132,
+                  "phaseTick": 132,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": {
+                  "id": "slot-a",
+                  "x": 312,
+                  "y": 270,
+                  "generation": 0,
+                  "requiredType": "elbow",
+                  "requiredQuarterTurns": 1,
+                  "occupantPartId": null
+                },
+                "partBefore": {
+                  "id": "source-a@0",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 0,
+                  "type": "elbow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 356,
+                  "y": 150,
+                  "createdTick": 0,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-a@0",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 0,
+                  "type": "elbow",
+                  "quarterTurns": 1,
+                  "owner": "slot",
+                  "ownerId": "slot-a",
+                  "ownerGeneration": 0,
+                  "x": 312,
+                  "y": 270,
+                  "createdTick": 0,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 0,
+                "streakAfter": 1,
+                "totalCorrectBefore": 0,
+                "totalCorrectAfter": 1,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 4,
+                "boundaryTick": 187,
+                "action": "grab_or_dispatch",
+                "partId": "source-b@1",
+                "result": "grabbed",
+                "gripperX": 204,
+                "gateAtAction": {
+                  "tick": 187,
+                  "phaseTick": 187,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": {
+                  "id": "source-b",
+                  "x": 194,
+                  "y": 90,
+                  "generation": 1,
+                  "type": "arrow",
+                  "initialQuarterTurns": 0,
+                  "partId": "source-b@1"
+                },
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@1",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 1,
+                  "type": "arrow",
+                  "quarterTurns": 0,
+                  "owner": "source",
+                  "ownerId": "source-b",
+                  "ownerGeneration": 1,
+                  "x": 194,
+                  "y": 90,
+                  "createdTick": 90,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@1",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 1,
+                  "type": "arrow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 204,
+                  "y": 150,
+                  "createdTick": 90,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 1,
+                "streakAfter": 1,
+                "totalCorrectBefore": 1,
+                "totalCorrectAfter": 1,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 5,
+                "boundaryTick": 246,
+                "action": "rotate",
+                "partId": "source-b@1",
+                "result": "rotated",
+                "gripperX": 360,
+                "gateAtAction": {
+                  "tick": 246,
+                  "phaseTick": 246,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@1",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 1,
+                  "type": "arrow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 360,
+                  "y": 150,
+                  "createdTick": 90,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@1",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 1,
+                  "type": "arrow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 360,
+                  "y": 150,
+                  "createdTick": 90,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 1,
+                "streakAfter": 1,
+                "totalCorrectBefore": 1,
+                "totalCorrectAfter": 1,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 6,
+                "boundaryTick": 258,
+                "action": "rotate",
+                "partId": "source-b@1",
+                "result": "rotated",
+                "gripperX": 360,
+                "gateAtAction": {
+                  "tick": 258,
+                  "phaseTick": 258,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@1",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 1,
+                  "type": "arrow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 360,
+                  "y": 150,
+                  "createdTick": 90,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@1",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 1,
+                  "type": "arrow",
+                  "quarterTurns": 2,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 360,
+                  "y": 150,
+                  "createdTick": 90,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 1,
+                "streakAfter": 1,
+                "totalCorrectBefore": 1,
+                "totalCorrectAfter": 1,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 7,
+                "boundaryTick": 270,
+                "action": "rotate",
+                "partId": "source-b@1",
+                "result": "rotated",
+                "gripperX": 360,
+                "gateAtAction": {
+                  "tick": 270,
+                  "phaseTick": 270,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@1",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 1,
+                  "type": "arrow",
+                  "quarterTurns": 2,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 360,
+                  "y": 150,
+                  "createdTick": 90,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@1",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 1,
+                  "type": "arrow",
+                  "quarterTurns": 3,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 360,
+                  "y": 150,
+                  "createdTick": 90,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 1,
+                "streakAfter": 1,
+                "totalCorrectBefore": 1,
+                "totalCorrectAfter": 1,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 8,
+                "boundaryTick": 486,
+                "action": "grab_or_dispatch",
+                "partId": "source-b@1",
+                "result": "seated",
+                "gripperX": 360,
+                "gateAtAction": {
+                  "tick": 486,
+                  "phaseTick": 126,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": {
+                  "id": "slot-b",
+                  "x": 306,
+                  "y": 270,
+                  "generation": 1,
+                  "requiredType": "arrow",
+                  "requiredQuarterTurns": 3,
+                  "occupantPartId": null
+                },
+                "partBefore": {
+                  "id": "source-b@1",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 1,
+                  "type": "arrow",
+                  "quarterTurns": 3,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 360,
+                  "y": 150,
+                  "createdTick": 90,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@1",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 1,
+                  "type": "arrow",
+                  "quarterTurns": 3,
+                  "owner": "slot",
+                  "ownerId": "slot-b",
+                  "ownerGeneration": 1,
+                  "x": 306,
+                  "y": 270,
+                  "createdTick": 90,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 1,
+                "streakAfter": 2,
+                "totalCorrectBefore": 1,
+                "totalCorrectAfter": 2,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 9,
+                "boundaryTick": 547,
+                "action": "grab_or_dispatch",
+                "partId": "source-a@1",
+                "result": "grabbed",
+                "gripperX": 528,
+                "gateAtAction": {
+                  "tick": 547,
+                  "phaseTick": 187,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": {
+                  "id": "source-a",
+                  "x": 554,
+                  "y": 90,
+                  "generation": 1,
+                  "type": "elbow",
+                  "initialQuarterTurns": 0,
+                  "partId": "source-a@1"
+                },
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-a@1",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 1,
+                  "type": "elbow",
+                  "quarterTurns": 0,
+                  "owner": "source",
+                  "ownerId": "source-a",
+                  "ownerGeneration": 1,
+                  "x": 554,
+                  "y": 90,
+                  "createdTick": 270,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-a@1",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 1,
+                  "type": "elbow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 528,
+                  "y": 150,
+                  "createdTick": 270,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 2,
+                "streakAfter": 2,
+                "totalCorrectBefore": 2,
+                "totalCorrectAfter": 2,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 10,
+                "boundaryTick": 612,
+                "action": "rotate",
+                "partId": "source-a@1",
+                "result": "rotated",
+                "gripperX": 352,
+                "gateAtAction": {
+                  "tick": 612,
+                  "phaseTick": 252,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-a@1",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 1,
+                  "type": "elbow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 352,
+                  "y": 150,
+                  "createdTick": 270,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-a@1",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 1,
+                  "type": "elbow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 352,
+                  "y": 150,
+                  "createdTick": 270,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 2,
+                "streakAfter": 2,
+                "totalCorrectBefore": 2,
+                "totalCorrectAfter": 2,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 11,
+                "boundaryTick": 842,
+                "action": "grab_or_dispatch",
+                "partId": "source-a@1",
+                "result": "seated",
+                "gripperX": 352,
+                "gateAtAction": {
+                  "tick": 842,
+                  "phaseTick": 122,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": {
+                  "id": "slot-a",
+                  "x": 302,
+                  "y": 270,
+                  "generation": 1,
+                  "requiredType": "elbow",
+                  "requiredQuarterTurns": 1,
+                  "occupantPartId": null
+                },
+                "partBefore": {
+                  "id": "source-a@1",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 1,
+                  "type": "elbow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 352,
+                  "y": 150,
+                  "createdTick": 270,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-a@1",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 1,
+                  "type": "elbow",
+                  "quarterTurns": 1,
+                  "owner": "slot",
+                  "ownerId": "slot-a",
+                  "ownerGeneration": 1,
+                  "x": 302,
+                  "y": 270,
+                  "createdTick": 270,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 2,
+                "streakAfter": 3,
+                "totalCorrectBefore": 2,
+                "totalCorrectAfter": 3,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 12,
+                "boundaryTick": 904,
+                "action": "grab_or_dispatch",
+                "partId": "source-b@3",
+                "result": "grabbed",
+                "gripperX": 180,
+                "gateAtAction": {
+                  "tick": 904,
+                  "phaseTick": 184,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": {
+                  "id": "source-b",
+                  "x": 188,
+                  "y": 90,
+                  "generation": 3,
+                  "type": "arrow",
+                  "initialQuarterTurns": 0,
+                  "partId": "source-b@3"
+                },
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@3",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 3,
+                  "type": "arrow",
+                  "quarterTurns": 0,
+                  "owner": "source",
+                  "ownerId": "source-b",
+                  "ownerGeneration": 3,
+                  "x": 188,
+                  "y": 90,
+                  "createdTick": 810,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@3",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 3,
+                  "type": "arrow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 180,
+                  "y": 150,
+                  "createdTick": 810,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 3,
+                "streakAfter": 3,
+                "totalCorrectBefore": 3,
+                "totalCorrectAfter": 3,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 13,
+                "boundaryTick": 969,
+                "action": "rotate",
+                "partId": "source-b@3",
+                "result": "rotated",
+                "gripperX": 348,
+                "gateAtAction": {
+                  "tick": 969,
+                  "phaseTick": 249,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@3",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 3,
+                  "type": "arrow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 810,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@3",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 3,
+                  "type": "arrow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 810,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 3,
+                "streakAfter": 3,
+                "totalCorrectBefore": 3,
+                "totalCorrectAfter": 3,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 14,
+                "boundaryTick": 982,
+                "action": "rotate",
+                "partId": "source-b@3",
+                "result": "rotated",
+                "gripperX": 348,
+                "gateAtAction": {
+                  "tick": 982,
+                  "phaseTick": 262,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@3",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 3,
+                  "type": "arrow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 810,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@3",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 3,
+                  "type": "arrow",
+                  "quarterTurns": 2,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 810,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 3,
+                "streakAfter": 3,
+                "totalCorrectBefore": 3,
+                "totalCorrectAfter": 3,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 15,
+                "boundaryTick": 999,
+                "action": "rotate",
+                "partId": "source-b@3",
+                "result": "rotated",
+                "gripperX": 348,
+                "gateAtAction": {
+                  "tick": 999,
+                  "phaseTick": 279,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@3",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 3,
+                  "type": "arrow",
+                  "quarterTurns": 2,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 810,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@3",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 3,
+                  "type": "arrow",
+                  "quarterTurns": 3,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 810,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 3,
+                "streakAfter": 3,
+                "totalCorrectBefore": 3,
+                "totalCorrectAfter": 3,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 16,
+                "boundaryTick": 1207,
+                "action": "grab_or_dispatch",
+                "partId": "source-b@3",
+                "result": "seated",
+                "gripperX": 348,
+                "gateAtAction": {
+                  "tick": 1207,
+                  "phaseTick": 127,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": {
+                  "id": "slot-b",
+                  "x": 307,
+                  "y": 270,
+                  "generation": 2,
+                  "requiredType": "arrow",
+                  "requiredQuarterTurns": 3,
+                  "occupantPartId": null
+                },
+                "partBefore": {
+                  "id": "source-b@3",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 3,
+                  "type": "arrow",
+                  "quarterTurns": 3,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 810,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@3",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 3,
+                  "type": "arrow",
+                  "quarterTurns": 3,
+                  "owner": "slot",
+                  "ownerId": "slot-b",
+                  "ownerGeneration": 2,
+                  "x": 307,
+                  "y": 270,
+                  "createdTick": 810,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 3,
+                "streakAfter": 4,
+                "totalCorrectBefore": 3,
+                "totalCorrectAfter": 4,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 17,
+                "boundaryTick": 1288,
+                "action": "grab_or_dispatch",
+                "partId": "source-a@3",
+                "result": "grabbed",
+                "gripperX": 568,
+                "gateAtAction": {
+                  "tick": 1288,
+                  "phaseTick": 208,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": {
+                  "id": "source-a",
+                  "x": 596,
+                  "y": 90,
+                  "generation": 3,
+                  "type": "elbow",
+                  "initialQuarterTurns": 0,
+                  "partId": "source-a@3"
+                },
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-a@3",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 3,
+                  "type": "elbow",
+                  "quarterTurns": 0,
+                  "owner": "source",
+                  "ownerId": "source-a",
+                  "ownerGeneration": 3,
+                  "x": 596,
+                  "y": 90,
+                  "createdTick": 990,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-a@3",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 3,
+                  "type": "elbow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 568,
+                  "y": 150,
+                  "createdTick": 990,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 4,
+                "streakAfter": 4,
+                "totalCorrectBefore": 4,
+                "totalCorrectAfter": 4,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 18,
+                "boundaryTick": 1366,
+                "action": "rotate",
+                "partId": "source-a@3",
+                "result": "rotated",
+                "gripperX": 348,
+                "gateAtAction": {
+                  "tick": 1366,
+                  "phaseTick": 286,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-a@3",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 3,
+                  "type": "elbow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 990,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-a@3",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 3,
+                  "type": "elbow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 990,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 4,
+                "streakAfter": 4,
+                "totalCorrectBefore": 4,
+                "totalCorrectAfter": 4,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 19,
+                "boundaryTick": 1567,
+                "action": "grab_or_dispatch",
+                "partId": "source-a@3",
+                "result": "seated",
+                "gripperX": 348,
+                "gateAtAction": {
+                  "tick": 1567,
+                  "phaseTick": 127,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": {
+                  "id": "slot-a",
+                  "x": 307,
+                  "y": 270,
+                  "generation": 2,
+                  "requiredType": "elbow",
+                  "requiredQuarterTurns": 1,
+                  "occupantPartId": null
+                },
+                "partBefore": {
+                  "id": "source-a@3",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 3,
+                  "type": "elbow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 990,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-a@3",
+                  "sourceCarrierId": "source-a",
+                  "birthGeneration": 3,
+                  "type": "elbow",
+                  "quarterTurns": 1,
+                  "owner": "slot",
+                  "ownerId": "slot-a",
+                  "ownerGeneration": 2,
+                  "x": 307,
+                  "y": 270,
+                  "createdTick": 990,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 4,
+                "streakAfter": 5,
+                "totalCorrectBefore": 4,
+                "totalCorrectAfter": 5,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 20,
+                "boundaryTick": 1631,
+                "action": "grab_or_dispatch",
+                "partId": "source-b@5",
+                "result": "grabbed",
+                "gripperX": 196,
+                "gateAtAction": {
+                  "tick": 1631,
+                  "phaseTick": 191,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": {
+                  "id": "source-b",
+                  "x": 202,
+                  "y": 90,
+                  "generation": 5,
+                  "type": "arrow",
+                  "initialQuarterTurns": 0,
+                  "partId": "source-b@5"
+                },
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@5",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 5,
+                  "type": "arrow",
+                  "quarterTurns": 0,
+                  "owner": "source",
+                  "ownerId": "source-b",
+                  "ownerGeneration": 5,
+                  "x": 202,
+                  "y": 90,
+                  "createdTick": 1530,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@5",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 5,
+                  "type": "arrow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 196,
+                  "y": 150,
+                  "createdTick": 1530,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 5,
+                "streakAfter": 5,
+                "totalCorrectBefore": 5,
+                "totalCorrectAfter": 5,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 21,
+                "boundaryTick": 1695,
+                "action": "rotate",
+                "partId": "source-b@5",
+                "result": "rotated",
+                "gripperX": 348,
+                "gateAtAction": {
+                  "tick": 1695,
+                  "phaseTick": 255,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@5",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 5,
+                  "type": "arrow",
+                  "quarterTurns": 0,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 1530,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@5",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 5,
+                  "type": "arrow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 1530,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 5,
+                "streakAfter": 5,
+                "totalCorrectBefore": 5,
+                "totalCorrectAfter": 5,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 22,
+                "boundaryTick": 1713,
+                "action": "rotate",
+                "partId": "source-b@5",
+                "result": "rotated",
+                "gripperX": 348,
+                "gateAtAction": {
+                  "tick": 1713,
+                  "phaseTick": 273,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@5",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 5,
+                  "type": "arrow",
+                  "quarterTurns": 1,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 1530,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@5",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 5,
+                  "type": "arrow",
+                  "quarterTurns": 2,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 1530,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 5,
+                "streakAfter": 5,
+                "totalCorrectBefore": 5,
+                "totalCorrectAfter": 5,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 23,
+                "boundaryTick": 1725,
+                "action": "rotate",
+                "partId": "source-b@5",
+                "result": "rotated",
+                "gripperX": 348,
+                "gateAtAction": {
+                  "tick": 1725,
+                  "phaseTick": 285,
+                  "open": false,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": null,
+                "partBefore": {
+                  "id": "source-b@5",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 5,
+                  "type": "arrow",
+                  "quarterTurns": 2,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 1530,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@5",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 5,
+                  "type": "arrow",
+                  "quarterTurns": 3,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 1530,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 5,
+                "streakAfter": 5,
+                "totalCorrectBefore": 5,
+                "totalCorrectAfter": 5,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              },
+              {
+                "id": 24,
+                "boundaryTick": 1930,
+                "action": "grab_or_dispatch",
+                "partId": "source-b@5",
+                "result": "seated",
+                "gripperX": 348,
+                "gateAtAction": {
+                  "tick": 1930,
+                  "phaseTick": 130,
+                  "open": true,
+                  "windowXRange": [
+                    240,
+                    480
+                  ]
+                },
+                "sourceAtAction": null,
+                "slotAtAction": {
+                  "id": "slot-b",
+                  "x": 310,
+                  "y": 270,
+                  "generation": 3,
+                  "requiredType": "arrow",
+                  "requiredQuarterTurns": 3,
+                  "occupantPartId": null
+                },
+                "partBefore": {
+                  "id": "source-b@5",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 5,
+                  "type": "arrow",
+                  "quarterTurns": 3,
+                  "owner": "held",
+                  "ownerId": "gripper",
+                  "ownerGeneration": null,
+                  "x": 348,
+                  "y": 150,
+                  "createdTick": 1530,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "partAfter": {
+                  "id": "source-b@5",
+                  "sourceCarrierId": "source-b",
+                  "birthGeneration": 5,
+                  "type": "arrow",
+                  "quarterTurns": 3,
+                  "owner": "slot",
+                  "ownerId": "slot-b",
+                  "ownerGeneration": 3,
+                  "x": 310,
+                  "y": 270,
+                  "createdTick": 1530,
+                  "endedTick": null,
+                  "endReason": null
+                },
+                "streakBefore": 5,
+                "streakAfter": 6,
+                "totalCorrectBefore": 5,
+                "totalCorrectAfter": 6,
+                "faultsBefore": 0,
+                "faultsAfter": 0
+              }
+            ],
+            "wrapReceipts": [
+              {
+                "id": 1,
+                "endedTick": 90,
+                "belt": "source",
+                "carrierId": "source-b",
+                "fromGeneration": 0,
+                "toGeneration": 1,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": "source-b@0",
+                "newPartId": "source-b@1"
+              },
+              {
+                "id": 2,
+                "endedTick": 180,
+                "belt": "target",
+                "carrierId": "slot-b",
+                "fromGeneration": 0,
+                "toGeneration": 1,
+                "fromX": 719,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": null,
+                "newPartId": null
+              },
+              {
+                "id": 3,
+                "endedTick": 270,
+                "belt": "source",
+                "carrierId": "source-a",
+                "fromGeneration": 0,
+                "toGeneration": 1,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": null,
+                "newPartId": "source-a@1"
+              },
+              {
+                "id": 4,
+                "endedTick": 450,
+                "belt": "source",
+                "carrierId": "source-b",
+                "fromGeneration": 1,
+                "toGeneration": 2,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": null,
+                "newPartId": "source-b@2"
+              },
+              {
+                "id": 5,
+                "endedTick": 540,
+                "belt": "target",
+                "carrierId": "slot-a",
+                "fromGeneration": 0,
+                "toGeneration": 1,
+                "fromX": 719,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": "source-a@0",
+                "newPartId": null
+              },
+              {
+                "id": 6,
+                "endedTick": 630,
+                "belt": "source",
+                "carrierId": "source-a",
+                "fromGeneration": 1,
+                "toGeneration": 2,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": null,
+                "newPartId": "source-a@2"
+              },
+              {
+                "id": 7,
+                "endedTick": 810,
+                "belt": "source",
+                "carrierId": "source-b",
+                "fromGeneration": 2,
+                "toGeneration": 3,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": "source-b@2",
+                "newPartId": "source-b@3"
+              },
+              {
+                "id": 8,
+                "endedTick": 900,
+                "belt": "target",
+                "carrierId": "slot-b",
+                "fromGeneration": 1,
+                "toGeneration": 2,
+                "fromX": 719,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": "source-b@1",
+                "newPartId": null
+              },
+              {
+                "id": 9,
+                "endedTick": 990,
+                "belt": "source",
+                "carrierId": "source-a",
+                "fromGeneration": 2,
+                "toGeneration": 3,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": "source-a@2",
+                "newPartId": "source-a@3"
+              },
+              {
+                "id": 10,
+                "endedTick": 1170,
+                "belt": "source",
+                "carrierId": "source-b",
+                "fromGeneration": 3,
+                "toGeneration": 4,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": null,
+                "newPartId": "source-b@4"
+              },
+              {
+                "id": 11,
+                "endedTick": 1260,
+                "belt": "target",
+                "carrierId": "slot-a",
+                "fromGeneration": 1,
+                "toGeneration": 2,
+                "fromX": 719,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": "source-a@1",
+                "newPartId": null
+              },
+              {
+                "id": 12,
+                "endedTick": 1350,
+                "belt": "source",
+                "carrierId": "source-a",
+                "fromGeneration": 3,
+                "toGeneration": 4,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": null,
+                "newPartId": "source-a@4"
+              },
+              {
+                "id": 13,
+                "endedTick": 1530,
+                "belt": "source",
+                "carrierId": "source-b",
+                "fromGeneration": 4,
+                "toGeneration": 5,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": "source-b@4",
+                "newPartId": "source-b@5"
+              },
+              {
+                "id": 14,
+                "endedTick": 1620,
+                "belt": "target",
+                "carrierId": "slot-b",
+                "fromGeneration": 2,
+                "toGeneration": 3,
+                "fromX": 719,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": "source-b@3",
+                "newPartId": null
+              },
+              {
+                "id": 15,
+                "endedTick": 1710,
+                "belt": "source",
+                "carrierId": "source-a",
+                "fromGeneration": 4,
+                "toGeneration": 5,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": "source-a@4",
+                "newPartId": "source-a@5"
+              },
+              {
+                "id": 16,
+                "endedTick": 1890,
+                "belt": "source",
+                "carrierId": "source-b",
+                "fromGeneration": 5,
+                "toGeneration": 6,
+                "fromX": 718,
+                "rawToX": 720,
+                "toX": 0,
+                "exitedPartId": null,
+                "newPartId": "source-b@6"
+              }
+            ],
+            "lastAction": {
+              "id": 24,
+              "boundaryTick": 1930,
+              "action": "grab_or_dispatch",
+              "partId": "source-b@5",
+              "result": "seated",
+              "gripperX": 348,
+              "gateAtAction": {
+                "tick": 1930,
+                "phaseTick": 130,
+                "open": true,
+                "windowXRange": [
+                  240,
+                  480
+                ]
+              },
+              "sourceAtAction": null,
+              "slotAtAction": {
+                "id": "slot-b",
+                "x": 310,
+                "y": 270,
+                "generation": 3,
+                "requiredType": "arrow",
+                "requiredQuarterTurns": 3,
+                "occupantPartId": null
+              },
+              "partBefore": {
+                "id": "source-b@5",
+                "sourceCarrierId": "source-b",
+                "birthGeneration": 5,
+                "type": "arrow",
+                "quarterTurns": 3,
+                "owner": "held",
+                "ownerId": "gripper",
+                "ownerGeneration": null,
+                "x": 348,
+                "y": 150,
+                "createdTick": 1530,
+                "endedTick": null,
+                "endReason": null
+              },
+              "partAfter": {
+                "id": "source-b@5",
+                "sourceCarrierId": "source-b",
+                "birthGeneration": 5,
+                "type": "arrow",
+                "quarterTurns": 3,
+                "owner": "slot",
+                "ownerId": "slot-b",
+                "ownerGeneration": 3,
+                "x": 310,
+                "y": 270,
+                "createdTick": 1530,
+                "endedTick": null,
+                "endReason": null
+              },
+              "streakBefore": 5,
+              "streakAfter": 6,
+              "totalCorrectBefore": 5,
+              "totalCorrectAfter": 6,
+              "faultsBefore": 0,
+              "faultsAfter": 0
+            },
+            "lastStep": {
+              "fromTick": 1930,
+              "toTick": 1931,
+              "gateBefore": {
+                "tick": 1930,
+                "phaseTick": 130,
+                "open": true,
+                "windowXRange": [
+                  240,
+                  480
+                ]
+              },
+              "gateAfter": {
+                "tick": 1931,
+                "phaseTick": 131,
+                "open": true,
+                "windowXRange": [
+                  240,
+                  480
+                ]
+              },
+              "gripperBefore": {
+                "x": 348,
+                "y": 150,
+                "heldPartId": "source-b@5"
+              },
+              "gripperAfter": {
+                "x": 348,
+                "y": 150,
+                "heldPartId": null
+              },
+              "allowedVelocityX": 0,
+              "sourceMotion": [
+                {
+                  "id": "source-a",
+                  "generationBefore": 5,
+                  "generationAfter": 5,
+                  "fromX": 440,
+                  "rawToX": 442,
+                  "toX": 442,
+                  "velocity": 2,
+                  "wrapped": false
+                },
+                {
+                  "id": "source-b",
+                  "generationBefore": 6,
+                  "generationAfter": 6,
+                  "fromX": 80,
+                  "rawToX": 82,
+                  "toX": 82,
+                  "velocity": 2,
+                  "wrapped": false
+                }
+              ],
+              "targetMotion": [
+                {
+                  "id": "slot-a",
+                  "generationBefore": 2,
+                  "generationAfter": 2,
+                  "fromX": 670,
+                  "rawToX": 671,
+                  "toX": 671,
+                  "velocity": 1,
+                  "wrapped": false
+                },
+                {
+                  "id": "slot-b",
+                  "generationBefore": 3,
+                  "generationAfter": 3,
+                  "fromX": 310,
+                  "rawToX": 311,
+                  "toX": 311,
+                  "velocity": 1,
+                  "wrapped": false
+                }
+              ],
+              "actionReceiptIds": [
+                24
+              ],
+              "wrapReceiptIds": [],
+              "countersBefore": {
+                "streak": 5,
+                "totalCorrect": 5,
+                "faults": 0
+              },
+              "countersAfter": {
+                "streak": 6,
+                "totalCorrect": 6,
+                "faults": 0
+              },
+              "terminalAfter": {
+                "reason": "required_streak",
+                "actionBoundaryTick": 1930,
+                "endedTick": 1931
+              }
+            },
+            "inputState": {
+              "cancelEpoch": 3,
+              "quarantined": false,
+              "aArmed": false,
+              "bArmed": true
+            },
+            "lastInput": {
+              "boundaryTick": 1930,
+              "rawX": 0,
+              "rawY": 0,
+              "x": 0,
+              "y": 0,
+              "axisX": 0,
+              "axisY": 0,
+              "rawA": true,
+              "rawB": false,
+              "rawAPressed": true,
+              "rawBPressed": false,
+              "effectiveA": true,
+              "effectiveB": false,
+              "cancelled": false,
+              "rawCancelEpoch": 3,
+              "cancelEpoch": 3,
+              "epochChanged": false,
+              "quarantinedBefore": false,
+              "quarantinedAfter": false,
+              "neutralAcknowledged": false,
+              "freshA": true,
+              "freshB": false,
+              "velocityX": 0
+            },
+            "terminal": {
+              "reason": "required_streak",
+              "actionBoundaryTick": 1930,
+              "endedTick": 1931
+            }
+          },
+          "renderer": {
+            "kind": "webgl",
+            "drawCalls": 1,
+            "quads": 506,
+            "textureCount": 1,
+            "atlasSize": 1024,
+            "contextLost": false
+          },
+          "frameTimesMs": [
+            33.29999999999927,
+            16.599999999998545,
+            66.70000000000073,
+            99.90000000000146,
+            66.69999999999709,
+            33.30000000000291,
+            66.69999999999709,
+            33.30000000000291,
+            33.39999999999782,
+            33.29999999999927,
+            33.400000000001455,
+            116.59999999999854,
+            66.70000000000073,
+            16.600000000002183,
+            83.39999999999782,
+            33.29999999999927,
+            66.60000000000218,
+            33.39999999999782,
+            100,
+            66.70000000000073,
+            33.29999999999927,
+            66.70000000000073,
+            16.600000000002183,
+            100,
+            66.59999999999854,
+            16.700000000000728,
+            100.09999999999854,
+            16.600000000002183,
+            33.39999999999782,
+            49.900000000001455,
+            100,
+            33.39999999999782,
+            83.30000000000291,
+            16.69999999999709,
+            66.60000000000218,
+            33.39999999999782,
+            100,
+            66.60000000000218,
+            33.39999999999782,
+            83.30000000000291,
+            16.69999999999709,
+            66.60000000000218,
+            50,
+            100,
+            33.39999999999782,
+            66.60000000000218,
+            50,
+            100,
+            50,
+            50,
+            16.599999999998545,
+            83.40000000000146,
+            33.29999999999927,
+            100.09999999999854,
+            16.600000000002183,
+            83.29999999999927,
+            66.70000000000073,
+            50,
+            66.70000000000073,
+            16.599999999998545,
+            66.70000000000073,
+            50,
+            66.70000000000073,
+            99.89999999999782,
+            83.40000000000146,
+            33.29999999999927,
+            66.70000000000073,
+            83.29999999999927,
+            16.599999999998545,
+            50,
+            66.70000000000073,
+            116.70000000000073,
+            66.70000000000073,
+            16.599999999998545,
+            83.40000000000146,
+            33.29999999999927,
+            99.90000000000146,
+            16.69999999999709,
+            50.10000000000218,
+            83.20000000000073,
+            100,
+            16.69999999999709,
+            150.10000000000218,
+            66.5,
+            100.09999999999854,
+            16.700000000000728,
+            66.59999999999854,
+            16.700000000000728,
+            100,
+            33.29999999999927,
+            66.70000000000073,
+            16.600000000002183,
+            83.39999999999782,
+            83.29999999999927,
+            16.700000000000728,
+            16.600000000002183,
+            100,
+            16.599999999998545,
+            83.5,
+            66.5,
+            33.400000000001455,
+            66.69999999999709,
+            50,
+            66.60000000000218,
+            83.29999999999927,
+            50.099999999998545,
+            66.60000000000218,
+            33.39999999999782,
+            99.90000000000146,
+            50,
+            50,
+            50.099999999998545,
+            49.900000000001455,
+            66.79999999999927,
+            83.29999999999927,
+            100,
+            16.600000000002183,
+            33.29999999999927,
+            83.40000000000146,
+            83.29999999999927,
+            83.39999999999782,
+            16.600000000002183,
+            33.29999999999927,
+            66.70000000000073,
+            100,
+            66.59999999999854,
+            16.799999999999272,
+            116.60000000000218,
+            16.599999999998545,
+            83.29999999999927,
+            16.700000000000728,
+            83.40000000000146,
+            33.29999999999927,
+            33.400000000001455,
+            100,
+            16.599999999998545,
+            83.40000000000146,
+            16.599999999998545,
+            100,
+            33.29999999999927,
+            16.700000000000728,
+            83.29999999999927,
+            66.70000000000073,
+            16.599999999998545,
+            33.30000000000291,
+            83.39999999999782,
+            50,
+            50,
+            66.60000000000218,
+            50.099999999998545,
+            66.70000000000073,
+            16.599999999998545,
+            100,
+            16.700000000000728,
+            66.70000000000073,
+            66.5,
+            66.79999999999927,
+            66.59999999999854,
+            16.700000000000728,
+            66.60000000000218,
+            33.29999999999927,
+            83.39999999999782,
+            66.70000000000073,
+            16.600000000002183,
+            116.69999999999709,
+            16.700000000000728,
+            83.29999999999927,
+            16.700000000000728,
+            99.90000000000146,
+            66.70000000000073,
+            33.29999999999927,
+            16.700000000000728,
+            83.39999999999782,
+            66.60000000000218,
+            33.29999999999927,
+            50.099999999998545,
+            33.20000000000073,
+            83.40000000000146,
+            33.39999999999782,
+            49.900000000001455,
+            33.29999999999927,
+            66.70000000000073,
+            50,
+            66.70000000000073,
+            33.39999999999782,
+            16.600000000002183,
+            83.29999999999927,
+            83.29999999999927,
+            33.400000000001455,
+            33.29999999999927,
+            100,
+            33.29999999999927,
+            16.700000000000728,
+            66.59999999999854,
+            83.40000000000146,
+            33.39999999999782,
+            16.600000000002183,
+            100,
+            16.599999999998545,
+            100.10000000000218,
+            33.29999999999927,
+            33.29999999999927,
+            83.40000000000146,
+            33.29999999999927,
+            83.39999999999782,
+            16.600000000002183,
+            100,
+            16.599999999998545,
+            83.29999999999927,
+            16.80000000000291,
+            50,
+            50,
+            66.59999999999854,
+            66.69999999999709,
+            33.30000000000291,
+            83.40000000000146,
+            83.19999999999709,
+            16.80000000000291,
+            100,
+            33.299999999995634,
+            66.70000000000437,
+            16.599999999998545,
+            83.30000000000291,
+            16.69999999999709,
+            83.30000000000291,
+            50,
+            66.69999999999709,
+            66.69999999999709,
+            33.30000000000291,
+            16.599999999998545,
+            66.70000000000437,
+            100,
+            16.599999999998545,
+            100.09999999999854,
+            16.599999999998545,
+            83.40000000000146,
+            16.599999999998545,
+            83.30000000000291,
+            116.69999999999709,
+            66.70000000000437,
+            33.299999999995634,
+            50,
+            100,
+            50,
+            16.599999999998545,
+            83.40000000000146,
+            16.700000000004366,
+            66.69999999999709,
+            66.59999999999854,
+            16.599999999998545,
+            100.10000000000582,
+            16.599999999998545,
+            16.69999999999709,
+            83.30000000000291,
+            83.40000000000146,
+            16.599999999998545,
+            66.69999999999709,
+            50,
+            16.599999999998545,
+            100,
+            66.70000000000437,
+            33.299999999995634,
+            50,
+            83.40000000000146,
+            33.30000000000291,
+            83.29999999999563,
+            33.400000000001455,
+            16.599999999998545,
+            66.70000000000437,
+            16.599999999998545,
+            83.30000000000291,
+            33.39999999999418,
+            83.40000000000146,
+            83.30000000000291,
+            33.299999999995634,
+            50,
+            50,
+            50,
+            100,
+            33.30000000000291,
+            50,
+            33.30000000000291,
+            83.39999999999418,
+            133.3000000000029,
+            66.69999999999709,
+            50,
+            50,
+            33.30000000000291,
+            100,
+            83.40000000000146,
+            83.29999999999563,
+            16.700000000004366,
+            100,
+            66.59999999999854,
+            50,
+            16.69999999999709,
+            49.900000000001455,
+            83.40000000000146,
+            33.30000000000291,
+            133.39999999999418
+          ],
+          "connection": {
+            "phoneSeen": false,
+            "disconnected": false
+          }
+        }
+      }
+    },
+    {
+      "name": "game-specific normal-play assertions",
+      "passed": true,
+      "milliseconds": 1.0490379999973811
+    },
+    {
+      "name": "gameplay frame is visible",
+      "passed": true,
+      "milliseconds": 1791.1174840000022,
+      "details": {
+        "bounds": {
+          "x": 278.21875,
+          "y": 102,
+          "width": 931.546875,
+          "height": 524
+        },
+        "coarseColors": 105,
+        "luminanceDeviation": 39.13631799485391,
+        "note": "Automatic blank-frame heuristic; requires separate human visual review."
+      }
+    },
+    {
+      "name": "R restarts with clean simulation state",
+      "passed": true,
+      "milliseconds": 200.6872430000003,
+      "details": {
+        "id": "conveyor-window",
+        "phase": "playing",
+        "paused": false,
+        "tick": 6,
+        "elapsed": 0.09999999999999999,
+        "level": 0,
+        "best": 1900,
+        "model": {
+          "width": 960,
+          "height": 540,
+          "seed": 734,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "铜件初装",
+          "scenarioId": "copper-starter",
+          "phase": "playing",
+          "tick": 6,
+          "elapsed": 0.1,
+          "score": 0,
+          "lostReason": null,
+          "message": "左右移动夹具；A 抓取或投送，B 旋转手中零件",
+          "schemaVersion": 1,
+          "identity": {
+            "gameId": 34,
+            "name": "窗口装配",
+            "englishName": "Conveyor Window",
+            "slug": "conveyor-window",
+            "packageId": "com.ecojust.conveyorwindowtv",
+            "versionName": "0.2.0",
+            "versionCode": 2,
+            "seed": 734,
+            "actionCount": 2,
+            "assignmentSha256": "a5bb4b25c666c96c558e8ad9d08e901deb42b8b12ce4eff22be8bfe43cd0ecd7"
+          },
+          "scenario": {
+            "id": "copper-starter",
+            "name": "铜件初装",
+            "sourceVelocity": 2,
+            "targetVelocity": 1,
+            "windowXRange": [
+              240,
+              480
+            ],
+            "requiredStreak": 6,
+            "deadlineTick": 5040,
+            "gate": {
+              "periodTicks": 360,
+              "phaseOffsetTicks": 0,
+              "openFromPhaseTick": 120,
+              "openUntilPhaseTick": 240
+            },
+            "sourceCarriers": [
+              {
+                "id": "source-a",
+                "initialX": 180,
+                "type": "elbow",
+                "initialQuarterTurns": 0
+              },
+              {
+                "id": "source-b",
+                "initialX": 540,
+                "type": "arrow",
+                "initialQuarterTurns": 0
+              }
+            ],
+            "targetSlots": [
+              {
+                "id": "slot-a",
+                "initialX": 180,
+                "requiredType": "elbow",
+                "requiredQuarterTurns": 1
+              },
+              {
+                "id": "slot-b",
+                "initialX": 540,
+                "requiredType": "arrow",
+                "requiredQuarterTurns": 3
+              }
+            ]
+          },
+          "physics": {
+            "geometry": {
+              "unitsPerCell": 60,
+              "ticksPerSecond": 60,
+              "trackLengthUnits": 720,
+              "sourceY": 90,
+              "heldY": 150,
+              "targetY": 270,
+              "barrierYRange": [
+                198,
+                222
+              ],
+              "partSizeUnits": 36,
+              "partHalfSizeUnits": 18,
+              "gripperXRange": [
+                36,
+                684
+              ],
+              "initialGripperX": 360,
+              "gripperSpeedUnitsPerTick": 4,
+              "pickupRadiusUnits": 60,
+              "placementRadiusUnits": 60,
+              "origin": "x increases right; y increases down; both conveyor centers occupy x in [0,720)",
+              "distanceRule": "ordinary absolute x distance, never wrap-around distance; equality at a pickup/placement limit is accepted",
+              "windowFit": "the held component's full square footprint [gripperX-18,gripperX+18] must be contained in the scenario windowXRange; equality is accepted",
+              "transfer": "An admitted held A is an instantaneous vertical dispatch at the current gripper x through the shutter. Below the divider, a magnetic seat snaps the part to a socket within placementRadiusUnits. This is an explicit atomic interaction, not a simulated flight. The socket itself need not be directly inside the divider opening; the displayed magnetic reach bracket explains the snap.",
+              "nearest": "choose the minimum absolute-x-distance object, then lexicographically smallest carrier/slot ID for an exact tie; never ignore an occupied or wrong-type nearer slot to select a farther one",
+              "rotation": "quarter turns 0,1,2,3, clockwise in screen coordinates; 0 is the published profile orientation. Types use asymmetric silhouettes plus a keyed corner mark, so all four orientations are visibly distinct."
+            },
+            "motion": {
+              "phase": "conveyor x is mod(initialX+velocityUnitsPerTick*tick,720), with nonnegative modulo",
+              "wrapping": "on each actual one-tick interval, compute rawX=currentX+velocity; wrap when rawX>=720 or rawX<0, not merely when rawX==0. Set x=mod(rawX,720) and increment that carrier/slot generation exactly once. All authored speed magnitudes are below720.",
+              "sourceWrap": "If a source carrier still contains its current part, retire that unpicked part at the exit. Then increment generation and create exactly one new part with the carrier's authored type and initial orientation. If its old part was held, seated, completed or damaged, do not change that old part; the replacement has a new ID.",
+              "targetWrap": "If a target slot is occupied, move that part to completed storage and clear the slot, without changing score or streak. Increment slot generation; the same visible slot returns empty with the same type/orientation. An empty slot also increments generation.",
+              "ownershipOrder": "Input B/A changes ownership first. Then compute every carrier/slot's new position and wrap facts. Apply source retire/refill and target completed/clear on their own wrap facts. Finally update the gripper x and the positions of source/held/seated parts from their current unique owner. A part held before its source wraps is never retired by that wrap. A newly seated part may legitimately complete at a target exit in this same interval.",
+              "partCoordinates": "source parts follow their source carrier at sourceY; the one held part follows only gripperX at heldY; seated parts follow only their target slot at targetY. Completed/retired parts keep their exit coordinate x=720 for positive direction or x=0 for negative direction; damaged parts keep the actual dispatch origin at heldY. Nonactive history is not rendered on the belts."
+            },
+            "gate": {
+              "phase": "phaseTick=mod(tick+scenario.gate.phaseOffsetTicks,scenario.gate.periodTicks)",
+              "open": "openFromPhaseTick <= phaseTick < openUntilPhaseTick",
+              "singleBoundary": "create, input eligibility, held-A collision, HUD and rendering all consume the same gate value for the same model.tick. One A receipt records that exact boundary value. After a real interval, recompute gate at the new tick for the new state. No check uses next tick's gate to judge a current action.",
+              "physicalScope": "Only an explicit held-A dispatch crosses the divider. Ordinary horizontal carrying above it never collides with the closed shutter; opening or closing alone cannot crush a waiting part."
+            },
+            "dispatch": {
+              "qualificationOrder": [
+                "shutter_closed",
+                "outside_window",
+                "no_slot_in_reach",
+                "occupied_slot",
+                "wrong_type",
+                "wrong_orientation",
+                "seated"
+              ],
+              "shutter_closed": "gate.open is false",
+              "outside_window": "the held footprint does not fit windowXRange",
+              "no_slot_in_reach": "the nearest lower slot is farther than60 units",
+              "occupied_slot": "that nearest in-reach slot has an occupant; never overwrite it",
+              "wrong_type": "the held type differs from that slot's requiredType",
+              "wrong_orientation": "types match but quarter turns differ from requiredQuarterTurns",
+              "seated": "place exactly that held part into exactly that empty slot generation; clear heldPartId; increment totalCorrect and streak once",
+              "fault": "Any of the six rejected dispatch reasons damages exactly the held part, clears heldPartId, increments faults once and resets streak to0. Wrong orientation, a missed socket and an occupied socket are assembly mistakes. Empty grabs and empty B are harmless. No silent part return or destruction is permitted."
+            },
+            "roundRules": {
+              "goal": "streak>=scenario.requiredStreak; only consecutive correct dispatches count. Any damaged dispatch resets the streak, while totalCorrect and previously completed parts remain factual history.",
+              "faultLimit": 3,
+              "deadline": "tick reaches scenario.deadlineTick after the real interval; no later action is admitted",
+              "terminalPriority": "After B/A and one complete actual interval: required streak wins; otherwise faults>=3 loses with fault_limit; otherwise deadline loses with deadline. A final correct dispatch at deadlineTick-1 wins at deadlineTick. An action at or after deadlineTick is impossible in an active ordinary state.",
+              "lastStep": "Every valid positive active call advances tick by exactly1, even if its starting action earns the win or reaches the fault limit. No input-only transaction counter or zero-interval terminal is needed. Action receipts use boundaryTick=t, state ends at tick=t+1, and lastStep records that actual interval.",
+              "score": "100*totalCorrect while active/lost; on win 1000+100*requiredStreak+100*(3-faults). Score never changes collision or matching.",
+              "retry": "create the same scenario and seed at tick0: restore all initial belt coordinates, source parts, empty target slots, gripperx360, no held part, streak/faults/totalCorrect0, empty receipts, initial gate and quarantine"
+            }
+          },
+          "partTypes": [
+            {
+              "id": "elbow",
+              "name": "直角件",
+              "tone": "copper",
+              "profile": [
+                [
+                  -14,
+                  -14
+                ],
+                [
+                  14,
+                  -14
+                ],
+                [
+                  14,
+                  -4
+                ],
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  14
+                ],
+                [
+                  -14,
+                  14
+                ]
+              ]
+            },
+            {
+              "id": "arrow",
+              "name": "箭头件",
+              "tone": "teal",
+              "profile": [
+                [
+                  -14,
+                  -6
+                ],
+                [
+                  2,
+                  -6
+                ],
+                [
+                  2,
+                  -14
+                ],
+                [
+                  14,
+                  0
+                ],
+                [
+                  2,
+                  14
+                ],
+                [
+                  2,
+                  6
+                ],
+                [
+                  -14,
+                  6
+                ]
+              ]
+            },
+            {
+              "id": "fork",
+              "name": "叉形件",
+              "tone": "violet",
+              "profile": [
+                [
+                  -14,
+                  -14
+                ],
+                [
+                  14,
+                  -14
+                ],
+                [
+                  14,
+                  -4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  8,
+                  4
+                ],
+                [
+                  8,
+                  14
+                ],
+                [
+                  -14,
+                  14
+                ]
+              ]
+            },
+            {
+              "id": "hook",
+              "name": "钩形件",
+              "tone": "gold",
+              "profile": [
+                [
+                  -14,
+                  -14
+                ],
+                [
+                  0,
+                  -14
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  6,
+                  4
+                ],
+                [
+                  6,
+                  -4
+                ],
+                [
+                  14,
+                  -4
+                ],
+                [
+                  14,
+                  14
+                ],
+                [
+                  -14,
+                  14
+                ]
+              ]
+            }
+          ],
+          "deadlineTick": 5040,
+          "requiredStreak": 6,
+          "faultLimit": 3,
+          "streak": 0,
+          "totalCorrect": 0,
+          "faults": 0,
+          "gripper": {
+            "x": 360,
+            "y": 150,
+            "heldPartId": null
+          },
+          "sourceCarriers": [
+            {
+              "id": "source-a",
+              "x": 192,
+              "y": 90,
+              "generation": 0,
+              "type": "elbow",
+              "initialQuarterTurns": 0,
+              "partId": "source-a@0"
+            },
+            {
+              "id": "source-b",
+              "x": 552,
+              "y": 90,
+              "generation": 0,
+              "type": "arrow",
+              "initialQuarterTurns": 0,
+              "partId": "source-b@0"
+            }
+          ],
+          "targetSlots": [
+            {
+              "id": "slot-a",
+              "x": 186,
+              "y": 270,
+              "generation": 0,
+              "requiredType": "elbow",
+              "requiredQuarterTurns": 1,
+              "occupantPartId": null
+            },
+            {
+              "id": "slot-b",
+              "x": 546,
+              "y": 270,
+              "generation": 0,
+              "requiredType": "arrow",
+              "requiredQuarterTurns": 3,
+              "occupantPartId": null
+            }
+          ],
+          "parts": [
+            {
+              "id": "source-a@0",
+              "sourceCarrierId": "source-a",
+              "birthGeneration": 0,
+              "type": "elbow",
+              "quarterTurns": 0,
+              "owner": "source",
+              "ownerId": "source-a",
+              "ownerGeneration": 0,
+              "x": 192,
+              "y": 90,
+              "createdTick": 0,
+              "endedTick": null,
+              "endReason": null
+            },
+            {
+              "id": "source-b@0",
+              "sourceCarrierId": "source-b",
+              "birthGeneration": 0,
+              "type": "arrow",
+              "quarterTurns": 0,
+              "owner": "source",
+              "ownerId": "source-b",
+              "ownerGeneration": 0,
+              "x": 552,
+              "y": 90,
+              "createdTick": 0,
+              "endedTick": null,
+              "endReason": null
+            }
+          ],
+          "gate": {
+            "tick": 6,
+            "phaseTick": 6,
+            "open": false,
+            "windowXRange": [
+              240,
+              480
+            ]
+          },
+          "preview": {
+            "tick": 6,
+            "gripperX": 360,
+            "heldPartId": null,
+            "gateOpen": false,
+            "windowFits": true,
+            "nearestSource": {
+              "id": "source-a",
+              "generation": 0,
+              "x": 192,
+              "distance": 168,
+              "inReach": false,
+              "partId": "source-a@0"
+            },
+            "nearestSlot": {
+              "id": "slot-a",
+              "generation": 0,
+              "x": 186,
+              "distance": 174,
+              "inReach": false,
+              "occupantPartId": null,
+              "requiredType": "elbow",
+              "requiredQuarterTurns": 1
+            }
+          },
+          "actionReceipts": [],
+          "wrapReceipts": [],
+          "lastAction": null,
+          "lastStep": {
+            "fromTick": 5,
+            "toTick": 6,
+            "gateBefore": {
+              "tick": 5,
+              "phaseTick": 5,
+              "open": false,
+              "windowXRange": [
+                240,
+                480
+              ]
+            },
+            "gateAfter": {
+              "tick": 6,
+              "phaseTick": 6,
+              "open": false,
+              "windowXRange": [
+                240,
+                480
+              ]
+            },
+            "gripperBefore": {
+              "x": 360,
+              "y": 150,
+              "heldPartId": null
+            },
+            "gripperAfter": {
+              "x": 360,
+              "y": 150,
+              "heldPartId": null
+            },
+            "allowedVelocityX": 0,
+            "sourceMotion": [
+              {
+                "id": "source-a",
+                "generationBefore": 0,
+                "generationAfter": 0,
+                "fromX": 190,
+                "rawToX": 192,
+                "toX": 192,
+                "velocity": 2,
+                "wrapped": false
+              },
+              {
+                "id": "source-b",
+                "generationBefore": 0,
+                "generationAfter": 0,
+                "fromX": 550,
+                "rawToX": 552,
+                "toX": 552,
+                "velocity": 2,
+                "wrapped": false
+              }
+            ],
+            "targetMotion": [
+              {
+                "id": "slot-a",
+                "generationBefore": 0,
+                "generationAfter": 0,
+                "fromX": 185,
+                "rawToX": 186,
+                "toX": 186,
+                "velocity": 1,
+                "wrapped": false
+              },
+              {
+                "id": "slot-b",
+                "generationBefore": 0,
+                "generationAfter": 0,
+                "fromX": 545,
+                "rawToX": 546,
+                "toX": 546,
+                "velocity": 1,
+                "wrapped": false
+              }
+            ],
+            "actionReceiptIds": [],
+            "wrapReceiptIds": [],
+            "countersBefore": {
+              "streak": 0,
+              "totalCorrect": 0,
+              "faults": 0
+            },
+            "countersAfter": {
+              "streak": 0,
+              "totalCorrect": 0,
+              "faults": 0
+            },
+            "terminalAfter": null
+          },
+          "inputState": {
+            "cancelEpoch": 4,
+            "quarantined": true,
+            "aArmed": false,
+            "bArmed": false
+          },
+          "lastInput": {
+            "boundaryTick": 5,
+            "rawX": 0,
+            "rawY": 0,
+            "x": 0,
+            "y": 0,
+            "axisX": 0,
+            "axisY": 0,
+            "rawA": false,
+            "rawB": false,
+            "rawAPressed": false,
+            "rawBPressed": false,
+            "effectiveA": false,
+            "effectiveB": false,
+            "cancelled": true,
+            "rawCancelEpoch": 4,
+            "cancelEpoch": 4,
+            "epochChanged": false,
+            "quarantinedBefore": true,
+            "quarantinedAfter": true,
+            "neutralAcknowledged": false,
+            "freshA": false,
+            "freshB": false,
+            "velocityX": 0
+          },
+          "terminal": null
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 456,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          66.60000000000218,
+          33.39999999999782,
+          100,
+          66.70000000000073,
+          33.29999999999927,
+          66.70000000000073,
+          16.600000000002183,
+          100,
+          66.59999999999854,
+          16.700000000000728,
+          100.09999999999854,
+          16.600000000002183,
+          33.39999999999782,
+          49.900000000001455,
+          100,
+          33.39999999999782,
+          83.30000000000291,
+          16.69999999999709,
+          66.60000000000218,
+          33.39999999999782,
+          100,
+          66.60000000000218,
+          33.39999999999782,
+          83.30000000000291,
+          16.69999999999709,
+          66.60000000000218,
+          50,
+          100,
+          33.39999999999782,
+          66.60000000000218,
+          50,
+          100,
+          50,
+          50,
+          16.599999999998545,
+          83.40000000000146,
+          33.29999999999927,
+          100.09999999999854,
+          16.600000000002183,
+          83.29999999999927,
+          66.70000000000073,
+          50,
+          66.70000000000073,
+          16.599999999998545,
+          66.70000000000073,
+          50,
+          66.70000000000073,
+          99.89999999999782,
+          83.40000000000146,
+          33.29999999999927,
+          66.70000000000073,
+          83.29999999999927,
+          16.599999999998545,
+          50,
+          66.70000000000073,
+          116.70000000000073,
+          66.70000000000073,
+          16.599999999998545,
+          83.40000000000146,
+          33.29999999999927,
+          99.90000000000146,
+          16.69999999999709,
+          50.10000000000218,
+          83.20000000000073,
+          100,
+          16.69999999999709,
+          150.10000000000218,
+          66.5,
+          100.09999999999854,
+          16.700000000000728,
+          66.59999999999854,
+          16.700000000000728,
+          100,
+          33.29999999999927,
+          66.70000000000073,
+          16.600000000002183,
+          83.39999999999782,
+          83.29999999999927,
+          16.700000000000728,
+          16.600000000002183,
+          100,
+          16.599999999998545,
+          83.5,
+          66.5,
+          33.400000000001455,
+          66.69999999999709,
+          50,
+          66.60000000000218,
+          83.29999999999927,
+          50.099999999998545,
+          66.60000000000218,
+          33.39999999999782,
+          99.90000000000146,
+          50,
+          50,
+          50.099999999998545,
+          49.900000000001455,
+          66.79999999999927,
+          83.29999999999927,
+          100,
+          16.600000000002183,
+          33.29999999999927,
+          83.40000000000146,
+          83.29999999999927,
+          83.39999999999782,
+          16.600000000002183,
+          33.29999999999927,
+          66.70000000000073,
+          100,
+          66.59999999999854,
+          16.799999999999272,
+          116.60000000000218,
+          16.599999999998545,
+          83.29999999999927,
+          16.700000000000728,
+          83.40000000000146,
+          33.29999999999927,
+          33.400000000001455,
+          100,
+          16.599999999998545,
+          83.40000000000146,
+          16.599999999998545,
+          100,
+          33.29999999999927,
+          16.700000000000728,
+          83.29999999999927,
+          66.70000000000073,
+          16.599999999998545,
+          33.30000000000291,
+          83.39999999999782,
+          50,
+          50,
+          66.60000000000218,
+          50.099999999998545,
+          66.70000000000073,
+          16.599999999998545,
+          100,
+          16.700000000000728,
+          66.70000000000073,
+          66.5,
+          66.79999999999927,
+          66.59999999999854,
+          16.700000000000728,
+          66.60000000000218,
+          33.29999999999927,
+          83.39999999999782,
+          66.70000000000073,
+          16.600000000002183,
+          116.69999999999709,
+          16.700000000000728,
+          83.29999999999927,
+          16.700000000000728,
+          99.90000000000146,
+          66.70000000000073,
+          33.29999999999927,
+          16.700000000000728,
+          83.39999999999782,
+          66.60000000000218,
+          33.29999999999927,
+          50.099999999998545,
+          33.20000000000073,
+          83.40000000000146,
+          33.39999999999782,
+          49.900000000001455,
+          33.29999999999927,
+          66.70000000000073,
+          50,
+          66.70000000000073,
+          33.39999999999782,
+          16.600000000002183,
+          83.29999999999927,
+          83.29999999999927,
+          33.400000000001455,
+          33.29999999999927,
+          100,
+          33.29999999999927,
+          16.700000000000728,
+          66.59999999999854,
+          83.40000000000146,
+          33.39999999999782,
+          16.600000000002183,
+          100,
+          16.599999999998545,
+          100.10000000000218,
+          33.29999999999927,
+          33.29999999999927,
+          83.40000000000146,
+          33.29999999999927,
+          83.39999999999782,
+          16.600000000002183,
+          100,
+          16.599999999998545,
+          83.29999999999927,
+          16.80000000000291,
+          50,
+          50,
+          66.59999999999854,
+          66.69999999999709,
+          33.30000000000291,
+          83.40000000000146,
+          83.19999999999709,
+          16.80000000000291,
+          100,
+          33.299999999995634,
+          66.70000000000437,
+          16.599999999998545,
+          83.30000000000291,
+          16.69999999999709,
+          83.30000000000291,
+          50,
+          66.69999999999709,
+          66.69999999999709,
+          33.30000000000291,
+          16.599999999998545,
+          66.70000000000437,
+          100,
+          16.599999999998545,
+          100.09999999999854,
+          16.599999999998545,
+          83.40000000000146,
+          16.599999999998545,
+          83.30000000000291,
+          116.69999999999709,
+          66.70000000000437,
+          33.299999999995634,
+          50,
+          100,
+          50,
+          16.599999999998545,
+          83.40000000000146,
+          16.700000000004366,
+          66.69999999999709,
+          66.59999999999854,
+          16.599999999998545,
+          100.10000000000582,
+          16.599999999998545,
+          16.69999999999709,
+          83.30000000000291,
+          83.40000000000146,
+          16.599999999998545,
+          66.69999999999709,
+          50,
+          16.599999999998545,
+          100,
+          66.70000000000437,
+          33.299999999995634,
+          50,
+          83.40000000000146,
+          33.30000000000291,
+          83.29999999999563,
+          33.400000000001455,
+          16.599999999998545,
+          66.70000000000437,
+          16.599999999998545,
+          83.30000000000291,
+          33.39999999999418,
+          83.40000000000146,
+          83.30000000000291,
+          33.299999999995634,
+          50,
+          50,
+          50,
+          100,
+          33.30000000000291,
+          50,
+          33.30000000000291,
+          83.39999999999418,
+          133.3000000000029,
+          66.69999999999709,
+          50,
+          50,
+          33.30000000000291,
+          100,
+          83.40000000000146,
+          83.29999999999563,
+          16.700000000004366,
+          100,
+          66.59999999999854,
+          50,
+          16.69999999999709,
+          49.900000000001455,
+          83.40000000000146,
+          33.30000000000291,
+          133.39999999999418,
+          49.900000000001455,
+          183.40000000000146,
+          149.90000000000146,
+          166.6999999999971,
+          100,
+          133.40000000000146,
+          183.1999999999971,
+          116.70000000000437,
+          100,
+          16.69999999999709,
+          166.70000000000437,
+          183.29999999999563,
+          133.3000000000029,
+          150,
+          150,
+          183.29999999999563
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "resizing keeps canvas and complete sidebar text visible",
+      "passed": true,
+      "milliseconds": 2196.8755729999975,
+      "details": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "sidebar": {
+            "visible": true,
+            "bounds": {
+              "left": 10,
+              "top": 50,
+              "right": 180,
+              "bottom": 515
+            },
+            "scrollTop": 0,
+            "clientHeight": 463,
+            "scrollHeight": 463,
+            "clientWidth": 168,
+            "scrollWidth": 168,
+            "tipText": "抓起后B旋转，开窗再A投送。最近槽即使已占用也会被选中；失误清零连装。",
+            "expectedTip": "抓起后B旋转，开窗再A投送。最近槽即使已占用也会被选中；失误清零连装。",
+            "texts": [
+              {
+                "text": "手机与电视连接同一 Wi-Fi",
+                "rects": [
+                  {
+                    "left": 19,
+                    "top": 168,
+                    "right": 122.9375,
+                    "bottom": 181
+                  }
+                ]
+              },
+              {
+                "text": "左右 / 摇杆 · 移夹具",
+                "rects": [
+                  {
+                    "left": 47,
+                    "top": 214.5,
+                    "right": 133.8125,
+                    "bottom": 228.5
+                  }
+                ]
+              },
+              {
+                "text": "抓取·投送 / 空格",
+                "rects": [
+                  {
+                    "left": 47,
+                    "top": 240.5,
+                    "right": 118.609375,
+                    "bottom": 254.5
+                  }
+                ]
+              },
+              {
+                "text": "旋转90° / B",
+                "rects": [
+                  {
+                    "left": 47,
+                    "top": 266.5,
+                    "right": 98.140625,
+                    "bottom": 280.5
+                  }
+                ]
+              },
+              {
+                "text": "P 暂停　R 重试遥控器确认开始 / A，播放键暂停",
+                "rects": [
+                  {
+                    "left": 19,
+                    "top": 292.25,
+                    "right": 79.734375,
+                    "bottom": 305.25
+                  },
+                  {
+                    "left": 19,
+                    "top": 304.390625,
+                    "right": 149.78125,
+                    "bottom": 317.390625
+                  }
+                ]
+              },
+              {
+                "text": "抓起后B旋转，开窗再A投送。最近槽即使已占用也会被选中；失误清零连装。",
+                "rects": [
+                  {
+                    "left": 28,
+                    "top": 348.125,
+                    "right": 160.890625,
+                    "bottom": 362.125
+                  },
+                  {
+                    "left": 28,
+                    "top": 363.625,
+                    "right": 148,
+                    "bottom": 377.625
+                  },
+                  {
+                    "left": 28,
+                    "top": 379.125,
+                    "right": 118,
+                    "bottom": 393.125
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "sidebar": {
+            "visible": true,
+            "bounds": {
+              "left": 16,
+              "top": 64,
+              "right": 214,
+              "bottom": 687
+            },
+            "scrollTop": 0,
+            "clientHeight": 621,
+            "scrollHeight": 621,
+            "clientWidth": 196,
+            "scrollWidth": 196,
+            "tipText": "抓起后B旋转，开窗再A投送。最近槽即使已占用也会被选中；失误清零连装。",
+            "expectedTip": "抓起后B旋转，开窗再A投送。最近槽即使已占用也会被选中；失误清零连装。",
+            "texts": [
+              {
+                "text": "手机与电视连接同一 Wi-Fi",
+                "rects": [
+                  {
+                    "left": 29,
+                    "top": 219,
+                    "right": 144.484375,
+                    "bottom": 233
+                  }
+                ]
+              },
+              {
+                "text": "左右 / 摇杆 · 移夹具",
+                "rects": [
+                  {
+                    "left": 59,
+                    "top": 278.296875,
+                    "right": 154.484375,
+                    "bottom": 293.296875
+                  }
+                ]
+              },
+              {
+                "text": "抓取·投送 / 空格",
+                "rects": [
+                  {
+                    "left": 59,
+                    "top": 309.296875,
+                    "right": 137.765625,
+                    "bottom": 324.296875
+                  }
+                ]
+              },
+              {
+                "text": "旋转90° / B",
+                "rects": [
+                  {
+                    "left": 59,
+                    "top": 340.296875,
+                    "right": 115.265625,
+                    "bottom": 355.296875
+                  }
+                ]
+              },
+              {
+                "text": "P 暂停　R 重试遥控器确认开始 / A，播放键暂停",
+                "rects": [
+                  {
+                    "left": 29,
+                    "top": 370.5,
+                    "right": 96.484375,
+                    "bottom": 384.5
+                  },
+                  {
+                    "left": 29,
+                    "top": 384.5,
+                    "right": 174.3125,
+                    "bottom": 398.5
+                  }
+                ]
+              },
+              {
+                "text": "抓起后B旋转，开窗再A投送。最近槽即使已占用也会被选中；失误清零连装。",
+                "rects": [
+                  {
+                    "left": 40,
+                    "top": 433.09375,
+                    "right": 186.1875,
+                    "bottom": 448.09375
+                  },
+                  {
+                    "left": 40,
+                    "top": 448.484375,
+                    "right": 172,
+                    "bottom": 463.484375
+                  },
+                  {
+                    "left": 40,
+                    "top": 463.875,
+                    "right": 139,
+                    "bottom": 478.875
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "no page, console or resource errors",
+      "passed": true,
+      "milliseconds": 0.13952599999902304
+    }
+  ],
+  "screenshots": [
+    "/workspace/scratch/game-polish/final-qa/conveyor-window/shared-01/01-title.png",
+    "/workspace/scratch/game-polish/final-qa/conveyor-window/shared-01/02-gameplay.png",
+    "/workspace/scratch/game-polish/final-qa/conveyor-window/shared-01/resize-960.png",
+    "/workspace/scratch/game-polish/final-qa/conveyor-window/shared-01/resize-1280.png"
+  ],
+  "uniqueRulesVerified": true,
+  "modelTestsExecuted": false,
+  "visualReviewCompleted": false,
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 575,
+    "rafIntervalMs": {
+      "count": 575,
+      "min": 16.5,
+      "median": 50.100000000000364,
+      "p95": 100,
+      "max": 166.70000000000073,
+      "mean": 55.76591304347825
+    },
+    "webglDrawCalls": {
+      "count": 575,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 575,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1
+    }
+  },
+  "sharedRegressionPassed": true,
+  "finishedAt": "2026-11-04T17:02:33.287Z"
+}

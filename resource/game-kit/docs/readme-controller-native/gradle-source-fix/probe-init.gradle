@@ -1,0 +1,38 @@
+// Scope: real Gradle source generation and Java source collection; NOT AGP execution.
+// AGP cannot be resolved from this environment. Keep that limitation explicit.
+settingsEvaluated { settings ->
+    settings.rootProject.buildFileName = '__source_selection_only__.gradle'
+    settings.rootProject.children.each { it.buildFileName = '__source_selection_only__.gradle' }
+}
+allprojects { project ->
+    if (project.parent != null) {
+        project.apply plugin: 'java'
+        project.layout.buildDirectory.set(new File('/dev/shm/legacy-gradle-source-fix/probe-outputs', project.name))
+        // The production script only asks Android for its main Java source set.
+        project.ext.android = [sourceSets: project.sourceSets]
+        project.tasks.register('preBuild')
+        project.apply from: new File(project.projectDir, '../../game-kit/legacy-controller-native/integration.gradle')
+        project.tasks.register('verifyControllerSourceSelection') {
+            dependsOn 'preparePuretvControllerSources'
+            doLast {
+                def generated = project.layout.buildDirectory.dir('generated/sources/puretv-controller').get().asFile
+                def actual = project.fileTree(generated).files.collect { generated.toPath().relativize(it.toPath()).toString() }.sort()
+                def expected = ['com/ecojust/controller/LegacyWifiController.java','com/ecojust/gamekit/WifiControllerDiscovery.java','com/ecojust/gamekit/WifiControllerServer.java'].sort()
+                assert actual == expected : actual
+                def java = project.tasks.named('compileJava').get().source.files
+                assert java.count { it.name == 'WifiControllerServer.java' } == 1
+                assert java.count { it.name == 'WifiControllerDiscovery.java' } == 1
+                assert java.count { it.name == 'LegacyWifiController.java' } == 1
+                assert !java.any { it.toString().contains('com/ecojust/gamekit/MainActivity.java') }
+                assert !java.any { it.toString().contains('com/ecojust/gamekit/LanGameServer.java') }
+                expected.each { path ->
+                    def original = new File(project.projectDir, path.startsWith('com/ecojust/gamekit/') ? '../../game-kit/android/src/main/java/' + path : '../../game-kit/legacy-controller-native/src/main/java/' + path)
+                    assert java.util.Arrays.equals(new File(generated, path).bytes, original.bytes)
+                }
+                def report = [project: project.name, status: 'passed', scope: 'Real Gradle Sync and Java source collection; AGP unavailable', generated: actual, compiledSources: java.collect { it.toString() }.sort()]
+                new File('/dev/shm/legacy-gradle-source-fix',project.name + '-sources.json').text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(report)) + '\n'
+                println 'Verified controller source selection for ' + project.name
+            }
+        }
+    }
+}

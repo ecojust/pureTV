@@ -1,0 +1,3210 @@
+{
+  "schema": 1,
+  "game": "battery-exchange",
+  "version": "0.1.0",
+  "sourceCommit": "c1d1e143055a71aa1530bc2c7ed910fa2f982466",
+  "automationSha256": "0d10af4bece2c25b7c213a5ebb2d4de2ca86cce6455361ed18ef26a706567a16",
+  "gameRules": {
+    "contract": "model-contract.md",
+    "contractSha256": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+    "designFeasibility": {
+      "publicFeasibilitySha256": "c30ffb6262426a4ed55a72473a52dc55c38d4e2d7ef0b63b15544c458cec5610",
+      "rootAcceptanceSha256": "852a9b06c53a9fab7061f5f11272cac89193ec6cc08e07ce539e5d8fe6f559d4",
+      "contractClarificationSha256": "210d6be8b749af0a2ba21def8ac55f4f10fb6ae2220b49b60da1e4bfcce85314",
+      "levels": [
+        {
+          "level": 1,
+          "wonAtSeconds": 48.45,
+          "swapCount": 5,
+          "laterWindowSwapCount": 3,
+          "topologyChangeCount": 3,
+          "maximumWindowPresses": 9
+        },
+        {
+          "level": 2,
+          "wonAtSeconds": 56.166666666666664,
+          "swapCount": 6,
+          "laterWindowSwapCount": 4,
+          "topologyChangeCount": 3,
+          "maximumWindowPresses": 9
+        },
+        {
+          "level": 3,
+          "wonAtSeconds": 59.733333333333334,
+          "swapCount": 5,
+          "laterWindowSwapCount": 3,
+          "topologyChangeCount": 4,
+          "maximumWindowPresses": 9
+        }
+      ],
+      "limitations": [
+        "Only cheapest grid route per assignment/toggle mask retained.",
+        "Bounded beam search is not exhaustive impossibility proof.",
+        "Literal author replay is not independent review or production QA.",
+        "One/zero-cell circuit fixtures are not claimed as ordinary gameplay."
+      ],
+      "scope": "Root statically read the author checker source and correction diff, public design and full schema, then read the actual first feasibility report. No private witness was read. This accepts the public contract for implementation; it is not production or browser validation.",
+      "formalScope": "Thirty synthetic rule-boundary tests against the frozen public contract. No complete ordinary route, private author witness, browser execution, rendering performance, or physical-device testing is claimed."
+    },
+    "ordinaryRounds": [
+      {
+        "name": "level1-record",
+        "phase": "won",
+        "reason": null,
+        "elapsed": 50.416666666666664,
+        "score": 1118,
+        "commandCount": 11,
+        "swapCount": 4,
+        "topologyChangeCount": 3,
+        "completionCount": 6,
+        "originalReportSha256": "700a923f362c5ed12d66f29f603df47132895a95dc09fbcb5b75ce2df7bf4a8a",
+        "rawSha256": "8e917800638e5f80ed336880db31993aee3756592811ac3e908ad88045495be8",
+        "sourceHashes": {
+          "automation": "d15bfee8b80ff9a4f098a65c7c5f42e5960c22afe73e2c439127558bfaa5c835",
+          "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+          "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+          "harness": "d9ef23b89e73f5b5c5b7e317a269cb544c897cd08942628bd0585e913d5b5aef"
+        },
+        "publicProjectionSha256": "9a2c95acc00dc13729ff9408ed8722bdf2eaa9be08fdb3524a7393b86aaec376",
+        "chargeLedger": {
+          "initialChargeC": 341,
+          "consumedChargeC": 224.8133333333301,
+          "remainingChargeC": 116.18666666666992,
+          "errorC": -1.4210854715202004e-14
+        },
+        "electricalLedger": {
+          "sourceEnergyJ": 2697.7600000000384,
+          "deliveredEnergyJ": 1801.2106666666948,
+          "internalHeatJ": 896.5493333333457,
+          "errorJ": -2.0463630789890885e-12
+        }
+      },
+      {
+        "name": "level1-loss",
+        "phase": "lost",
+        "reason": "cell-charge",
+        "elapsed": 30.1,
+        "score": 0,
+        "commandCount": 8,
+        "swapCount": 3,
+        "topologyChangeCount": 2,
+        "completionCount": 2,
+        "originalReportSha256": "700a923f362c5ed12d66f29f603df47132895a95dc09fbcb5b75ce2df7bf4a8a",
+        "rawSha256": "443dc1ec2952ea0f1317bc36b15b7dc3e141b9b41aa2192263a1ff96f515c8a3",
+        "sourceHashes": {
+          "automation": "d15bfee8b80ff9a4f098a65c7c5f42e5960c22afe73e2c439127558bfaa5c835",
+          "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+          "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+          "harness": "d9ef23b89e73f5b5c5b7e317a269cb544c897cd08942628bd0585e913d5b5aef"
+        },
+        "publicProjectionSha256": "7db317d063b11eca477101212fe4a2bd6dd736741d783d7d3af7cc41fdbb7055",
+        "chargeLedger": {
+          "initialChargeC": 341,
+          "consumedChargeC": 114.3742857142844,
+          "remainingChargeC": 226.62571428571562,
+          "errorC": 0
+        },
+        "electricalLedger": {
+          "sourceEnergyJ": 1372.4914285714422,
+          "deliveredEnergyJ": 923.5469387755256,
+          "internalHeatJ": 448.94448979592295,
+          "errorJ": -6.423306331271306e-12
+        }
+      },
+      {
+        "name": "level2-record",
+        "phase": "won",
+        "reason": null,
+        "elapsed": 56.166666666666664,
+        "score": 1123,
+        "commandCount": 15,
+        "swapCount": 6,
+        "topologyChangeCount": 3,
+        "completionCount": 6,
+        "originalReportSha256": "700a923f362c5ed12d66f29f603df47132895a95dc09fbcb5b75ce2df7bf4a8a",
+        "rawSha256": "786cdcf7c53f3424cbfa5dfbaa45c3f864449d67e998c5713c406e5aab9e4f5c",
+        "sourceHashes": {
+          "automation": "d15bfee8b80ff9a4f098a65c7c5f42e5960c22afe73e2c439127558bfaa5c835",
+          "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+          "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+          "harness": "d9ef23b89e73f5b5c5b7e317a269cb544c897cd08942628bd0585e913d5b5aef"
+        },
+        "publicProjectionSha256": "78d3f0deedb522340045b390811de417453d834f116bdcb41ae95b68f52ebbfe",
+        "chargeLedger": {
+          "initialChargeC": 384,
+          "consumedChargeC": 262.57037037036747,
+          "remainingChargeC": 121.42962962963253,
+          "errorC": 0
+        },
+        "electricalLedger": {
+          "sourceEnergyJ": 3150.8444444445045,
+          "deliveredEnergyJ": 2101.666172839553,
+          "internalHeatJ": 1049.1782716049524,
+          "errorJ": -9.094947017729282e-13
+        }
+      },
+      {
+        "name": "level2-loss",
+        "phase": "lost",
+        "reason": "cell-overheat",
+        "elapsed": 33.86666666666667,
+        "score": 0,
+        "commandCount": 6,
+        "swapCount": 2,
+        "topologyChangeCount": 2,
+        "completionCount": 2,
+        "originalReportSha256": "700a923f362c5ed12d66f29f603df47132895a95dc09fbcb5b75ce2df7bf4a8a",
+        "rawSha256": "aed854f5ceb1f8589dad2130232f97200c8b558768ad605c926f76ab349e4fdb",
+        "sourceHashes": {
+          "automation": "d15bfee8b80ff9a4f098a65c7c5f42e5960c22afe73e2c439127558bfaa5c835",
+          "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+          "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+          "harness": "d9ef23b89e73f5b5c5b7e317a269cb544c897cd08942628bd0585e913d5b5aef"
+        },
+        "publicProjectionSha256": "f02df56f1fea670b8c4ad0520a72823a3b6daf55f7fddb262a475b9635f82946",
+        "chargeLedger": {
+          "initialChargeC": 384,
+          "consumedChargeC": 136.42666666666614,
+          "remainingChargeC": 247.57333333333384,
+          "errorC": 2.842170943040401e-14
+        },
+        "electricalLedger": {
+          "sourceEnergyJ": 1637.1200000000108,
+          "deliveredEnergyJ": 1105.2231111111355,
+          "internalHeatJ": 531.8968888888926,
+          "errorJ": -1.7280399333685637e-11
+        }
+      },
+      {
+        "name": "level3-record",
+        "phase": "won",
+        "reason": null,
+        "elapsed": 59.733333333333334,
+        "score": 1134,
+        "commandCount": 14,
+        "swapCount": 5,
+        "topologyChangeCount": 4,
+        "completionCount": 6,
+        "originalReportSha256": "1fec41f824fc7361d4ab9e213fc9a4df0a81bef00d4168def68a46fce391d3a2",
+        "rawSha256": "b6672d2b611556025f9e324ccb2eb5814a2dd80f639b4b35c48487e89e7eaa8a",
+        "sourceHashes": {
+          "automation": "0d10af4bece2c25b7c213a5ebb2d4de2ca86cce6455361ed18ef26a706567a16",
+          "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+          "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+          "harness": "f4ebd5cd61d100e118b5793fd2ac2c00dea21c7d5f1dc3ef6559efa5c70fc3df"
+        },
+        "publicProjectionSha256": "a1a4e1b940431896344b72a3b8f2a045b8fbb6219c1e493459a2e4032a736ab8",
+        "chargeLedger": {
+          "initialChargeC": 425,
+          "consumedChargeC": 298.3111111111143,
+          "remainingChargeC": 126.68888888888566,
+          "errorC": 2.842170943040401e-14
+        },
+        "electricalLedger": {
+          "sourceEnergyJ": 3579.7333333332995,
+          "deliveredEnergyJ": 2482.488888888989,
+          "internalHeatJ": 1097.2444444444532,
+          "errorJ": -1.4279066817834973e-10
+        }
+      },
+      {
+        "name": "level3-loss",
+        "phase": "lost",
+        "reason": "power-fault",
+        "elapsed": 7.25,
+        "score": 0,
+        "commandCount": 2,
+        "swapCount": 0,
+        "topologyChangeCount": 2,
+        "completionCount": 0,
+        "originalReportSha256": "1fec41f824fc7361d4ab9e213fc9a4df0a81bef00d4168def68a46fce391d3a2",
+        "rawSha256": "4b8aac147bbc44e6bdc838a98e519586dbeb92aeabe7fe87f5600160c03ee060",
+        "sourceHashes": {
+          "automation": "0d10af4bece2c25b7c213a5ebb2d4de2ca86cce6455361ed18ef26a706567a16",
+          "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+          "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+          "harness": "f4ebd5cd61d100e118b5793fd2ac2c00dea21c7d5f1dc3ef6559efa5c70fc3df"
+        },
+        "publicProjectionSha256": "5acd0ae87d7c20307a8884a6fdf00308304e365951eea59971abcfe3d2987a2f",
+        "chargeLedger": {
+          "initialChargeC": 425,
+          "consumedChargeC": 13.499999999999993,
+          "remainingChargeC": 411.5,
+          "errorC": 0
+        },
+        "electricalLedger": {
+          "sourceEnergyJ": 162.0000000000001,
+          "deliveredEnergyJ": 110.69999999999997,
+          "internalHeatJ": 51.300000000000054,
+          "errorJ": 8.526512829121202e-14
+        }
+      }
+    ],
+    "plannerHistory": {
+      "firstReportSha256": "700a923f362c5ed12d66f29f603df47132895a95dc09fbcb5b75ce2df7bf4a8a",
+      "failedInitialCaseSha256": "fddf11cf2b39b5a66c8a2e05dca9daf1d8f49375980b4bba42a2160471523922",
+      "failedActualModelSteps": 0,
+      "retainedPassedRounds": 4,
+      "newLevel3Rounds": 2,
+      "correctionSha256": "bd1051b87e10f2c8ec79f098cd35f211885fbae41f311fd7d5fbe1f61a5fa53e",
+      "diagnostic": {
+        "reportSha256": "75e55418d78717923859388e5fd5f65d90d8fe2e594b85e35f94cfe9d710cdde",
+        "actualModelSteps": 0,
+        "candidates": 69084,
+        "scope": "One bounded public-planner diagnostic on the saved actual L3 initial snapshot only. No Model import, step, browser, production edit, gameplay result or author witness."
+      },
+      "oldPilotSha256": "d15bfee8b80ff9a4f098a65c7c5f42e5960c22afe73e2c439127558bfaa5c835",
+      "newPilotSha256": "0d10af4bece2c25b7c213a5ebb2d4de2ca86cce6455361ed18ef26a706567a16",
+      "scope": "Six exact result rows and original raw files: four passed physical rounds under the original cap, plus the two previously unexecuted L3 rounds under the one-line larger cap. Each case retains its own actual source hashes. No prior pass was rerun or relabelled to the later pilot. Public planning hypotheses are not gameplay evidence."
+    },
+    "independentReview": {
+      "rawReportSha256": "4ca928fe6f821d4d0f50a79b17d96c3b15d7bb8142583d220314cb278dd4f192",
+      "assertions": 3859578,
+      "results": [
+        {
+          "name": "level1-record",
+          "originalRawSha256": "8e917800638e5f80ed336880db31993aee3756592811ac3e908ad88045495be8",
+          "originalReportSha256": "700a923f362c5ed12d66f29f603df47132895a95dc09fbcb5b75ce2df7bf4a8a",
+          "projectionSha256": "9a2c95acc00dc13729ff9408ed8722bdf2eaa9be08fdb3524a7393b86aaec376",
+          "observedSourceHashes": {
+            "automation": "d15bfee8b80ff9a4f098a65c7c5f42e5960c22afe73e2c439127558bfaa5c835",
+            "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+            "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+            "harness": "d9ef23b89e73f5b5c5b7e317a269cb544c897cd08942628bd0585e913d5b5aef"
+          },
+          "fullStateOccurrences": 169,
+          "distinctFullTicks": 98,
+          "intervalCheckpoints": 3025,
+          "closedFormSpans": 10,
+          "terminal": {
+            "tick": 3025,
+            "phase": "won",
+            "reason": null
+          },
+          "coverage": {
+            "connectedTopologies": [
+              "parallel",
+              "series"
+            ],
+            "activeSupplyIntervals": 1829,
+            "bothLoadsConnectedIntervals": 1639,
+            "unequalParallelIntervals": 1204,
+            "coolingOnlyCellIntervals": 5369,
+            "overflowIntervals": 3,
+            "outOfBandIntervals": 0,
+            "swaps": 4,
+            "topologyChanges": 3,
+            "blockedActions": 0,
+            "automaticMarkClears": 0,
+            "preSupplyGuardIntervals": 0
+          },
+          "scalarChargeWitnesses": []
+        },
+        {
+          "name": "level1-loss",
+          "originalRawSha256": "443dc1ec2952ea0f1317bc36b15b7dc3e141b9b41aa2192263a1ff96f515c8a3",
+          "originalReportSha256": "700a923f362c5ed12d66f29f603df47132895a95dc09fbcb5b75ce2df7bf4a8a",
+          "projectionSha256": "7db317d063b11eca477101212fe4a2bd6dd736741d783d7d3af7cc41fdbb7055",
+          "observedSourceHashes": {
+            "automation": "d15bfee8b80ff9a4f098a65c7c5f42e5960c22afe73e2c439127558bfaa5c835",
+            "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+            "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+            "harness": "d9ef23b89e73f5b5c5b7e317a269cb544c897cd08942628bd0585e913d5b5aef"
+          },
+          "fullStateOccurrences": 121,
+          "distinctFullTicks": 66,
+          "intervalCheckpoints": 1806,
+          "closedFormSpans": 6,
+          "terminal": {
+            "tick": 1806,
+            "phase": "lost",
+            "reason": "cell-charge"
+          },
+          "coverage": {
+            "connectedTopologies": [
+              "parallel",
+              "series"
+            ],
+            "activeSupplyIntervals": 1051,
+            "bothLoadsConnectedIntervals": 1039,
+            "unequalParallelIntervals": 426,
+            "coolingOnlyCellIntervals": 2030,
+            "overflowIntervals": 1,
+            "outOfBandIntervals": 0,
+            "swaps": 3,
+            "topologyChanges": 2,
+            "blockedActions": 0,
+            "automaticMarkClears": 0,
+            "preSupplyGuardIntervals": 0
+          },
+          "scalarChargeWitnesses": [
+            {
+              "cellId": "C5",
+              "tick": 1805,
+              "scalarAdditions": 1050,
+              "chronologicalIntervals": 1805,
+              "closedFormRemainingC": 0,
+              "independentlyAccumulatedRemainingC": 7.176481631177012e-13,
+              "observedRemainingC": 7.176481631177012e-13,
+              "triggerErrorEnvelopeC": 7.176481631177012e-13,
+              "strictGateAgrees": true,
+              "status": "scalar-resolved"
+            }
+          ]
+        },
+        {
+          "name": "level2-record",
+          "originalRawSha256": "786cdcf7c53f3424cbfa5dfbaa45c3f864449d67e998c5713c406e5aab9e4f5c",
+          "originalReportSha256": "700a923f362c5ed12d66f29f603df47132895a95dc09fbcb5b75ce2df7bf4a8a",
+          "projectionSha256": "78d3f0deedb522340045b390811de417453d834f116bdcb41ae95b68f52ebbfe",
+          "observedSourceHashes": {
+            "automation": "d15bfee8b80ff9a4f098a65c7c5f42e5960c22afe73e2c439127558bfaa5c835",
+            "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+            "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+            "harness": "d9ef23b89e73f5b5c5b7e317a269cb544c897cd08942628bd0585e913d5b5aef"
+          },
+          "fullStateOccurrences": 226,
+          "distinctFullTicks": 122,
+          "intervalCheckpoints": 3370,
+          "closedFormSpans": 10,
+          "terminal": {
+            "tick": 3370,
+            "phase": "won",
+            "reason": null
+          },
+          "coverage": {
+            "connectedTopologies": [
+              "parallel",
+              "series"
+            ],
+            "activeSupplyIntervals": 2151,
+            "bothLoadsConnectedIntervals": 1912,
+            "unequalParallelIntervals": 1421,
+            "coolingOnlyCellIntervals": 5784,
+            "overflowIntervals": 5,
+            "outOfBandIntervals": 0,
+            "swaps": 6,
+            "topologyChanges": 3,
+            "blockedActions": 0,
+            "automaticMarkClears": 0,
+            "preSupplyGuardIntervals": 0
+          },
+          "scalarChargeWitnesses": []
+        },
+        {
+          "name": "level2-loss",
+          "originalRawSha256": "aed854f5ceb1f8589dad2130232f97200c8b558768ad605c926f76ab349e4fdb",
+          "originalReportSha256": "700a923f362c5ed12d66f29f603df47132895a95dc09fbcb5b75ce2df7bf4a8a",
+          "projectionSha256": "f02df56f1fea670b8c4ad0520a72823a3b6daf55f7fddb262a475b9635f82946",
+          "observedSourceHashes": {
+            "automation": "d15bfee8b80ff9a4f098a65c7c5f42e5960c22afe73e2c439127558bfaa5c835",
+            "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+            "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+            "harness": "d9ef23b89e73f5b5c5b7e317a269cb544c897cd08942628bd0585e913d5b5aef"
+          },
+          "fullStateOccurrences": 104,
+          "distinctFullTicks": 61,
+          "intervalCheckpoints": 2032,
+          "closedFormSpans": 6,
+          "terminal": {
+            "tick": 2032,
+            "phase": "lost",
+            "reason": "cell-overheat"
+          },
+          "coverage": {
+            "connectedTopologies": [
+              "parallel",
+              "series"
+            ],
+            "activeSupplyIntervals": 1262,
+            "bothLoadsConnectedIntervals": 1197,
+            "unequalParallelIntervals": 1197,
+            "coolingOnlyCellIntervals": 1770,
+            "overflowIntervals": 2,
+            "outOfBandIntervals": 0,
+            "swaps": 2,
+            "topologyChanges": 2,
+            "blockedActions": 0,
+            "automaticMarkClears": 0,
+            "preSupplyGuardIntervals": 0
+          },
+          "scalarChargeWitnesses": []
+        },
+        {
+          "name": "level3-record",
+          "originalRawSha256": "b6672d2b611556025f9e324ccb2eb5814a2dd80f639b4b35c48487e89e7eaa8a",
+          "originalReportSha256": "1fec41f824fc7361d4ab9e213fc9a4df0a81bef00d4168def68a46fce391d3a2",
+          "projectionSha256": "a1a4e1b940431896344b72a3b8f2a045b8fbb6219c1e493459a2e4032a736ab8",
+          "observedSourceHashes": {
+            "automation": "0d10af4bece2c25b7c213a5ebb2d4de2ca86cce6455361ed18ef26a706567a16",
+            "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+            "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+            "harness": "f4ebd5cd61d100e118b5793fd2ac2c00dea21c7d5f1dc3ef6559efa5c70fc3df"
+          },
+          "fullStateOccurrences": 210,
+          "distinctFullTicks": 118,
+          "intervalCheckpoints": 3584,
+          "closedFormSpans": 10,
+          "terminal": {
+            "tick": 3584,
+            "phase": "won",
+            "reason": null
+          },
+          "coverage": {
+            "connectedTopologies": [
+              "parallel",
+              "series"
+            ],
+            "activeSupplyIntervals": 2432,
+            "bothLoadsConnectedIntervals": 2112,
+            "unequalParallelIntervals": 1728,
+            "coolingOnlyCellIntervals": 5772,
+            "overflowIntervals": 4,
+            "outOfBandIntervals": 0,
+            "swaps": 5,
+            "topologyChanges": 4,
+            "blockedActions": 0,
+            "automaticMarkClears": 0,
+            "preSupplyGuardIntervals": 0
+          },
+          "scalarChargeWitnesses": []
+        },
+        {
+          "name": "level3-loss",
+          "originalRawSha256": "4b8aac147bbc44e6bdc838a98e519586dbeb92aeabe7fe87f5600160c03ee060",
+          "originalReportSha256": "1fec41f824fc7361d4ab9e213fc9a4df0a81bef00d4168def68a46fce391d3a2",
+          "projectionSha256": "5acd0ae87d7c20307a8884a6fdf00308304e365951eea59971abcfe3d2987a2f",
+          "observedSourceHashes": {
+            "automation": "0d10af4bece2c25b7c213a5ebb2d4de2ca86cce6455361ed18ef26a706567a16",
+            "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+            "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+            "harness": "f4ebd5cd61d100e118b5793fd2ac2c00dea21c7d5f1dc3ef6559efa5c70fc3df"
+          },
+          "fullStateOccurrences": 30,
+          "distinctFullTicks": 16,
+          "intervalCheckpoints": 435,
+          "closedFormSpans": 2,
+          "terminal": {
+            "tick": 435,
+            "phase": "lost",
+            "reason": "power-fault"
+          },
+          "coverage": {
+            "connectedTopologies": [
+              "series"
+            ],
+            "activeSupplyIntervals": 75,
+            "bothLoadsConnectedIntervals": 75,
+            "unequalParallelIntervals": 0,
+            "coolingOnlyCellIntervals": 0,
+            "overflowIntervals": 0,
+            "outOfBandIntervals": 150,
+            "swaps": 0,
+            "topologyChanges": 2,
+            "blockedActions": 0,
+            "automaticMarkClears": 0,
+            "preSupplyGuardIntervals": 0
+          },
+          "scalarChargeWitnesses": []
+        }
+      ],
+      "maximumErrors": {
+        "chargeC": 3.254285729781259e-12,
+        "energyJ": 1.4279066817834973e-10,
+        "temperatureC": 1.7763568394002505e-13,
+        "powerW": 7.105427357601002e-15,
+        "other": 1.0231815394945443e-11
+      },
+      "method": [
+        "Audit actual detached input receipts and entity inventory, then derive constant supply circuits independently from those configurations.",
+        "Split only at authored segment boundaries and independently calculated load completion ticks. Sample charge, electrical joules, work partitions and Euler temperature from each immutable span origin in closed form.",
+        "Check all recorded interval endpoints and terminal priorities. When a strict-zero charge gate falls inside the measured closed-form error envelope, independently fold only that cell canonical consumedC scalar from zero using independently derived currents; retain and disclose both results."
+      ],
+      "limitations": [
+        "Observed gate values trigger an ambiguity review but never supply its prediction. A scalar gate disagreement is inconclusive and makes this report fail. The observed-error envelope is empirical, not a universal floating-point error proof.",
+        "The first four cases and the last two cases have distinct controller/harness source runs. The original zero-tick planner failure and diagnostic remain provenance, not completed gameplay evidence.",
+        "Only ordinary events present here are production coverage. Four oracle-only mathematical fixtures add no Model or gameplay coverage.",
+        "Navigation receipts are checked for adjacent actual movement and valid reported repeat counts; the held-input/quarantine state machine, browser dispatch, pause/retry, invalid-dt handling and terminal freeze are not replayed.",
+        "All ordinary slots remain occupied. Pure zero/one-cell fixtures are not ordinary scenes; the generic solver input-validation domain is outside this evidence review."
+      ],
+      "scope": "Independent arithmetic review of six existing ordinary cases from their explicit source runs; no Model, pilot or new gameplay execution.",
+      "oracleOnlyFixtureGroups": 4,
+      "exactChargeGate": "remainingChargeC <= 0, without tolerance",
+      "coverageUnits": {
+        "activeSupplyIntervals": "physical ticks",
+        "bothLoadsConnectedIntervals": "physical ticks",
+        "unequalParallelIntervals": "load intervals",
+        "coolingOnlyCellIntervals": "cell intervals",
+        "overflowIntervals": "load intervals",
+        "outOfBandIntervals": "load intervals"
+      }
+    },
+    "candidateNormalPlay": {
+      "rawReportSha256": "2e851c89eb81505acdbb1d75906d38e8cec665346774328d180f184e870f998c",
+      "rootReviewSha256": "99e0a241a33c32d13869953c51a749250123e63834c1652ceed875fc3a3fffa2",
+      "normalWin": {
+        "level": 1,
+        "difficulty": 0,
+        "phase": "won",
+        "tick": 3025,
+        "elapsed": 50.416666666666664,
+        "score": 1118,
+        "remaining": 1.5833333333333333,
+        "commandCount": 11,
+        "blockedCommands": 0,
+        "swapCount": 4,
+        "topologyChangeCount": 3,
+        "chargeLedger": {
+          "initialChargeC": 341,
+          "consumedChargeC": 224.8133333333301,
+          "remainingChargeC": 116.18666666666992,
+          "errorC": -1.4210854715202004e-14
+        }
+      },
+      "imageWindows": [
+        {
+          "path": "candidate-runtime/01-menu-one.png",
+          "continuousWindow": false,
+          "tickRange": [
+            0,
+            0
+          ]
+        },
+        {
+          "path": "candidate-runtime/02-menu-two.png",
+          "continuousWindow": false,
+          "tickRange": [
+            0,
+            0
+          ]
+        },
+        {
+          "path": "candidate-runtime/03-menu-three.png",
+          "continuousWindow": false,
+          "tickRange": [
+            0,
+            0
+          ]
+        },
+        {
+          "path": "candidate-runtime/04-marked-cell-stays-in-slot-window.png",
+          "continuousWindow": true,
+          "tickRange": [
+            34,
+            54
+          ]
+        },
+        {
+          "path": "candidate-runtime/05-actual-series-and-parallel-supply-window.png",
+          "continuousWindow": true,
+          "tickRange": [
+            371,
+            396
+          ]
+        },
+        {
+          "path": "candidate-runtime/07-finished-load-really-disconnected-window.png",
+          "continuousWindow": true,
+          "tickRange": [
+            875,
+            896
+          ]
+        },
+        {
+          "path": "candidate-runtime/06-later-exchange-actual-supply-window.png",
+          "continuousWindow": true,
+          "tickRange": [
+            1386,
+            1405
+          ]
+        },
+        {
+          "path": "candidate-runtime/08-won.png",
+          "continuousWindow": false,
+          "tickRange": [
+            3025,
+            3025
+          ]
+        },
+        {
+          "path": "candidate-runtime/09-small-won.png",
+          "continuousWindow": false,
+          "tickRange": [
+            3025,
+            3025
+          ]
+        },
+        {
+          "path": "candidate-runtime/10-small-menu.png",
+          "continuousWindow": false,
+          "tickRange": [
+            0,
+            0
+          ]
+        },
+        {
+          "path": "candidate-runtime/11-small-pause.png",
+          "continuousWindow": false,
+          "tickRange": [
+            12,
+            12
+          ]
+        }
+      ],
+      "scope": "Trace contains only actual public observations. Missing intervals or operation observations are not fabricated; permanent command/work/stage receipts remain available. The separate six-case corpus retains every actual interval. Public menu planning is disclosed separately and does not execute or freeze physical time."
+    },
+    "scope": "Bind actual inventory, permanent receipts and resource summaries. Electrical and thermal arithmetic is covered by the independent public-observation oracle; no circuit solver, scheduler or physics replay runs in this release adapter."
+  },
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+      "game.js": "969d074ea4ca4799dab3c568214d9d95ed33e5f14a44d74c96b760f85a3a2e7c",
+      "game-config.json": "ca493ef5915d5111a96109f7bdfb4a0102e91ea1e434093b96a8331d974d9c86",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "LICENSE": "93a8777f8776e6aa280f486fb84a5a12b64fcb00d9b58086ee1cc203e7311a15",
+      "README.md": "8200a2ad7c6b160d5bda1fa0e67c976b883da7880431f31f5d4c74563aa8f47d",
+      "docs/independent-battery-review.json": "4ca928fe6f821d4d0f50a79b17d96c3b15d7bb8142583d220314cb278dd4f192",
+      "docs/model-contract.md": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f",
+      "game.json": "4e108aa3802977cd2dcdcb1ba4630e355bad6035e2b621e345c1b18677c4d3f9",
+      "icon.xml": "b6aa59762624a66ce62872c604d3a5fc8f4b2820552ac708c9b72aa8bddec626",
+      "logo.svg": "4bf647e2f3bb4ba371bdefad23cc4b3014d0d414026d642232f8e68fa299ed68",
+      "src/main/assets/game-model.js": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+      "src/main/assets/game.js": "969d074ea4ca4799dab3c568214d9d95ed33e5f14a44d74c96b760f85a3a2e7c",
+      "tests/automation.mjs": "0d10af4bece2c25b7c213a5ebb2d4de2ca86cce6455361ed18ef26a706567a16",
+      "tests/battery-interval-oracle.mjs": "e0049d913e63eff12c81f81c51f038567d0b0f0e89d292707917ab3131d946d9",
+      "tests/game-model.test.cjs": "dcf25b9181108d5eefa8e987c23115ff6745e01f0034d3a3714a86ddd359879c",
+      "tests/independent-battery-review.mjs": "a71318ba0bde24aa734cc70b609a70b1c6c9625f5e5fb61f355d8b106289b375"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime/01-menu-one.png",
+        "sha256": "ce5bf1be1b91a94688f179fc5efaa79406698d19a9bbdf3c9b13f38a669dc5fe",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/02-menu-two.png",
+        "sha256": "09d0f94b2ff3286d9098e60fcc3568259b6752b3a0a83ca43e6d642f2c1c0524",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/03-menu-three.png",
+        "sha256": "5ff8904949822104bdeb48b97315d42f3cb2d41716c299e36266897529b3dcd9",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/04-marked-cell-stays-in-slot-window.png",
+        "sha256": "69c9ec9df5a7f2424e272d9bdc09a2930a1f3f7345796906db2f66c5c268e395",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/05-actual-series-and-parallel-supply-window.png",
+        "sha256": "31e62554f44404bd9886d44f4bff8747f07a18ece830d3b2246c1fc34a20e9dd",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/07-finished-load-really-disconnected-window.png",
+        "sha256": "051feae602d97c71c5b8fc06ca04f95eae9d9329f14b493a5de71b6df6c5f7f9",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/06-later-exchange-actual-supply-window.png",
+        "sha256": "4ef7a5cf1fb94d604e35facd9f6ef9324c83623bf28f44f243b1749cce4c4e1d",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/08-won.png",
+        "sha256": "20d9e3abcb0583f581cc0abb08e71acc384868c8bf639abd987a867e1b223b7f",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/09-small-won.png",
+        "sha256": "46f5ed8c9e7f6db1fdde4e109498dedd8234229608cc747efc80be99b8c81da2",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/10-small-menu.png",
+        "sha256": "39b02c99ed0ec9569d6825a2fc07197bfd1454089af4253ae2193aea72ce8dab",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/11-small-pause.png",
+        "sha256": "66f1770bc65de0ca95985fb890b9fabbf0f611e0d1e6c4ec80e933409a4bf565",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "99e0a241a33c32d13869953c51a749250123e63834c1652ceed875fc3a3fffa2",
+    "unresolvedFindings": []
+  },
+  "modelTests": {
+    "passed": 30,
+    "sourceHashesBefore": {
+      "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+      "test": "dcf25b9181108d5eefa8e987c23115ff6745e01f0034d3a3714a86ddd359879c",
+      "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f"
+    },
+    "sourceHashesAfter": {
+      "model": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+      "test": "dcf25b9181108d5eefa8e987c23115ff6745e01f0034d3a3714a86ddd359879c",
+      "contract": "c88b77aa625c3f4f0378422f0e491a05c2d2c057553e4e60da91c049bb87062f"
+    },
+    "testLogSha256": "7c37582f13125afad55ed41e91e2a89c5d9d640ec00437e8f158a9fd466169fd",
+    "rawReportSha256": "5afa9f446853dbc6736637f97fac83cc2d3712fc200295115ad2dc0ef5f7258a",
+    "scope": "Thirty synthetic rule-boundary tests against the frozen public contract. No complete ordinary route, private author witness, browser execution, rendering performance, or physical-device testing is claimed."
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ]
+  },
+  "supplementaryChecks": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "three menus expose distinct physical charge and all future stage requests",
+        "passed": true
+      },
+      {
+        "name": "held START starts once; held phone A and native Enter each mark one cell without lifting or draining it",
+        "passed": true
+      },
+      {
+        "name": "A exchanges exact physical IDs; B cancels only a mark then separately changes the selected row topology",
+        "passed": true
+      },
+      {
+        "name": "runtime cancellation suppresses stale simultaneous A/B and a real neutral re-arms one mark",
+        "passed": true
+      },
+      {
+        "name": "disconnect pauses all resources and clears a marked source; explicit resume quarantines stale navigation",
+        "passed": true
+      },
+      {
+        "name": "controlled phone follows a public first-window plan; supplied circuits reject A/B and P freezes real heat",
+        "passed": true
+      },
+      {
+        "name": "ordinary wrong topology delivers bad power for 75 actual intervals and naturally loses",
+        "passed": true
+      },
+      {
+        "name": "R restores all six initial charges, temperatures, physical slots and empty service ledgers",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ]
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "buildSourceSha": "c1d1e143055a71aa1530bc2c7ed910fa2f982466",
+    "startHashes": {
+      "tests/automation.mjs": "0d10af4bece2c25b7c213a5ebb2d4de2ca86cce6455361ed18ef26a706567a16",
+      "tests/game-model.test.cjs": "dcf25b9181108d5eefa8e987c23115ff6745e01f0034d3a3714a86ddd359879c",
+      "src/main/assets/game-model.js": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+      "src/main/assets/game.js": "969d074ea4ca4799dab3c568214d9d95ed33e5f14a44d74c96b760f85a3a2e7c"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "0d10af4bece2c25b7c213a5ebb2d4de2ca86cce6455361ed18ef26a706567a16",
+      "tests/game-model.test.cjs": "dcf25b9181108d5eefa8e987c23115ff6745e01f0034d3a3714a86ddd359879c",
+      "src/main/assets/game-model.js": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+      "src/main/assets/game.js": "969d074ea4ca4799dab3c568214d9d95ed33e5f14a44d74c96b760f85a3a2e7c"
+    },
+    "rawReportSha256": "f824639ee835a3c1d769f57f466531c438c2db3386f7aa2b1cc2fb9a501ce5d4"
+  },
+  "sourceArtReview": {
+    "file": "art-review.json",
+    "sha256": "5584dafbc480d438bcf71b676b9a4d83cb504c0240e7c8dc4c2f65e21a15b420"
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "只在断电窗口换芯接线。标记不搬走电芯；任务满额后自动停机。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "只在断电窗口换芯接线。标记不搬走电芯；任务满额后自动停机。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "只在断电窗口换芯接线。标记不搬走电芯；任务满额后自动停机。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "只在断电窗口换芯接线。标记不搬走电芯；任务满额后自动停机。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "只在断电窗口换芯接线。标记不搬走电芯；任务满额后自动停机。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "只在断电窗口换芯接线。标记不搬走电芯；任务满额后自动停机。",
+          "tipTextTop": 332,
+          "tipTextBottom": 377.78125,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "c3511b167f8420d5a5d211074b046ae58dd752fa31685deebc04b9a4da661ac3"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 1223,
+    "rafIntervalMs": {
+      "count": 1223,
+      "min": 16.5,
+      "median": 33.30000000000291,
+      "p95": 83.40000000000146,
+      "max": 133.3000000000029,
+      "mean": 40.81332788225674
+    },
+    "webglDrawCalls": {
+      "count": 1223,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 1223,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 58.019657879,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1118,
+      "tick": 3025,
+      "elapsed": 50.416666666666664,
+      "remaining": 1.5833333333333333,
+      "cursor": 0,
+      "sourceSlot": null,
+      "slots": [
+        "C2",
+        "C5",
+        "C1",
+        "C3",
+        "C4",
+        "C6"
+      ],
+      "topologies": [
+        "series",
+        "series"
+      ],
+      "commandCount": 11,
+      "blockedCommands": 0,
+      "swapCount": 4,
+      "topologyChangeCount": 3,
+      "cells": [
+        {
+          "id": "C1",
+          "voltageV": 12,
+          "resistanceOhm": 1,
+          "initialChargeC": 54,
+          "consumedChargeC": 33.65333333333311,
+          "remainingChargeC": 20.34666666666689,
+          "temperatureC": 27.538149395726794,
+          "generatedHeatJ": 73.4328888888886,
+          "removedHeatJ": 45.12769372307509,
+          "sourceEnergyJ": 403.84000000000594,
+          "slot": 2,
+          "loadId": null,
+          "lastCurrentA": 0,
+          "lastSourcePowerW": 0,
+          "lastHeatPowerW": 0,
+          "heatBalanceErrorJ": 8.455458555545192e-13
+        },
+        {
+          "id": "C2",
+          "voltageV": 12,
+          "resistanceOhm": 1,
+          "initialChargeC": 56,
+          "consumedChargeC": 47.533333333332735,
+          "remainingChargeC": 8.466666666667265,
+          "temperatureC": 31.88087890703545,
+          "generatedHeatJ": 120.08888888889113,
+          "removedHeatJ": 57.04185763260551,
+          "sourceEnergyJ": 570.4000000000113,
+          "slot": 0,
+          "loadId": "L1",
+          "lastCurrentA": 2.4,
+          "lastSourcePowerW": 28.799999999999997,
+          "lastHeatPowerW": 5.76,
+          "heatBalanceErrorJ": -2.0321522242738865e-12
+        },
+        {
+          "id": "C3",
+          "voltageV": 12,
+          "resistanceOhm": 2,
+          "initialChargeC": 70,
+          "consumedChargeC": 58.33333333333212,
+          "remainingChargeC": 11.66666666666788,
+          "temperatureC": 40.95242112843299,
+          "generatedHeatJ": 261.77777777778164,
+          "removedHeatJ": 126.15840875031479,
+          "sourceEnergyJ": 700.000000000004,
+          "slot": 3,
+          "loadId": "L2",
+          "lastCurrentA": 2.4,
+          "lastSourcePowerW": 28.799999999999997,
+          "lastHeatPowerW": 11.52,
+          "heatBalanceErrorJ": -2.9416469260468148e-12
+        },
+        {
+          "id": "C4",
+          "voltageV": 12,
+          "resistanceOhm": 2,
+          "initialChargeC": 73,
+          "consumedChargeC": 53.09333333333265,
+          "remainingChargeC": 19.90666666666735,
+          "temperatureC": 42.931154939807705,
+          "generatedHeatJ": 246.84977777778278,
+          "removedHeatJ": 95.40053825931577,
+          "sourceEnergyJ": 637.1200000000142,
+          "slot": 4,
+          "loadId": "L2",
+          "lastCurrentA": 2.4,
+          "lastSourcePowerW": 28.799999999999997,
+          "lastHeatPowerW": 11.52,
+          "heatBalanceErrorJ": -5.3717030823463574e-12
+        },
+        {
+          "id": "C5",
+          "voltageV": 12,
+          "resistanceOhm": 3,
+          "initialChargeC": 42,
+          "consumedChargeC": 32.19999999999946,
+          "remainingChargeC": 9.800000000000537,
+          "temperatureC": 43.424425278368645,
+          "generatedHeatJ": 194.4000000000014,
+          "removedHeatJ": 39.00459777305126,
+          "sourceEnergyJ": 386.4000000000035,
+          "slot": 1,
+          "loadId": "L1",
+          "lastCurrentA": 2.4,
+          "lastSourcePowerW": 28.799999999999997,
+          "lastHeatPowerW": 17.28,
+          "heatBalanceErrorJ": -9.805489753489383e-13
+        },
+        {
+          "id": "C6",
+          "voltageV": 12,
+          "resistanceOhm": 3,
+          "initialChargeC": 46,
+          "consumedChargeC": 0,
+          "remainingChargeC": 46,
+          "temperatureC": 24,
+          "generatedHeatJ": 0,
+          "removedHeatJ": 0,
+          "sourceEnergyJ": 0,
+          "slot": 5,
+          "loadId": null,
+          "lastCurrentA": 0,
+          "lastSourcePowerW": 0,
+          "lastHeatPowerW": 0,
+          "heatBalanceErrorJ": 0
+        }
+      ],
+      "loads": [
+        {
+          "id": "L1",
+          "name": "机械泵",
+          "nameEn": "SERVICE PUMP",
+          "row": 0,
+          "resistanceOhm": 6,
+          "slotIndices": [
+            0,
+            1
+          ],
+          "temperatureC": 35.38003068734864,
+          "generatedHeatJ": 270.16000000000054,
+          "removedHeatJ": 99.45953968977174,
+          "deliveredEnergyJ": 900.5333333333476,
+          "creditedWorkJ": 900.0000000000134,
+          "overflowEnergyJ": 0.5333333333340227,
+          "outOfBandEnergyJ": 0,
+          "consecutiveBadPowerTicks": 0,
+          "stages": [
+            {
+              "index": 0,
+              "requirementId": "high",
+              "startTick": 360,
+              "endTick": 1080,
+              "minimumPowerW": 32,
+              "maximumPowerW": 46,
+              "targetWorkJ": 360,
+              "workJ": 360,
+              "deficitJ": 0,
+              "deliveredEnergyJ": 360.5333333333322,
+              "overflowEnergyJ": 0.5333333333322254,
+              "outOfBandEnergyJ": 0,
+              "goodIntervals": 507,
+              "badIntervals": 0,
+              "peakBadPowerTicks": 0,
+              "startedAtTick": 361,
+              "completedAtTick": 867,
+              "endedAtTick": 1080
+            },
+            {
+              "index": 1,
+              "requirementId": "low",
+              "startTick": 1380,
+              "endTick": 2100,
+              "minimumPowerW": 16,
+              "maximumPowerW": 21,
+              "targetWorkJ": 180,
+              "workJ": 179.99999999999753,
+              "deficitJ": 2.4726887204451486e-12,
+              "deliveredEnergyJ": 179.99999999999753,
+              "overflowEnergyJ": 0,
+              "outOfBandEnergyJ": 0,
+              "goodIntervals": 648,
+              "badIntervals": 0,
+              "peakBadPowerTicks": 0,
+              "startedAtTick": 1381,
+              "completedAtTick": 2028,
+              "endedAtTick": 2100
+            },
+            {
+              "index": 2,
+              "requirementId": "high",
+              "startTick": 2400,
+              "endTick": 3120,
+              "minimumPowerW": 32,
+              "maximumPowerW": 46,
+              "targetWorkJ": 360,
+              "workJ": 360,
+              "deficitJ": 0,
+              "deliveredEnergyJ": 360.0000000000018,
+              "overflowEnergyJ": 1.7972290322632034e-12,
+              "outOfBandEnergyJ": 0,
+              "goodIntervals": 625,
+              "badIntervals": 0,
+              "peakBadPowerTicks": 0,
+              "startedAtTick": 2401,
+              "completedAtTick": 3025,
+              "endedAtTick": null
+            }
+          ],
+          "lastElectrical": {
+            "fromTick": 3024,
+            "toTick": 3025,
+            "stageIndex": 2,
+            "requested": true,
+            "connected": true,
+            "disconnectReason": null,
+            "powerInBand": true,
+            "circuit": {
+              "topology": "series",
+              "connected": true,
+              "cellIds": [
+                "C2",
+                "C5"
+              ],
+              "loadResistanceOhm": 6,
+              "openCircuitVoltageV": 24,
+              "internalResistanceOhm": 4,
+              "parallelConductanceS": null,
+              "currentA": 2.4,
+              "terminalVoltageV": 14.399999999999999,
+              "sourcePowerW": 57.599999999999994,
+              "loadPowerW": 34.56,
+              "internalHeatPowerW": 23.04,
+              "powerBalanceErrorW": -7.105427357601002e-15,
+              "branches": [
+                {
+                  "cellId": "C2",
+                  "voltageV": 12,
+                  "resistanceOhm": 1,
+                  "currentA": 2.4,
+                  "sourcePowerW": 28.799999999999997,
+                  "heatPowerW": 5.76
+                },
+                {
+                  "cellId": "C5",
+                  "voltageV": 12,
+                  "resistanceOhm": 3,
+                  "currentA": 2.4,
+                  "sourcePowerW": 28.799999999999997,
+                  "heatPowerW": 17.28
+                }
+              ]
+            },
+            "currentA": 2.4,
+            "terminalVoltageV": 14.399999999999999,
+            "loadPowerW": 34.56,
+            "sourcePowerW": 57.599999999999994,
+            "internalHeatPowerW": 23.04
+          },
+          "workPartitionErrorJ": 1.8984813721090177e-13,
+          "heatBalanceErrorJ": 8.668621376273222e-13
+        },
+        {
+          "id": "L2",
+          "name": "信标塔",
+          "nameEn": "BEACON",
+          "row": 1,
+          "resistanceOhm": 6,
+          "slotIndices": [
+            3,
+            4
+          ],
+          "temperatureC": 36.02405958210408,
+          "generatedHeatJ": 270.2031999999995,
+          "removedHeatJ": 89.84230626843681,
+          "deliveredEnergyJ": 900.6773333333472,
+          "creditedWorkJ": 900.0000000000116,
+          "overflowEnergyJ": 0.6773333333354937,
+          "outOfBandEnergyJ": 0,
+          "consecutiveBadPowerTicks": 0,
+          "stages": [
+            {
+              "index": 0,
+              "requirementId": "low",
+              "startTick": 360,
+              "endTick": 1080,
+              "minimumPowerW": 16,
+              "maximumPowerW": 21,
+              "targetWorkJ": 180,
+              "workJ": 180,
+              "deficitJ": 0,
+              "deliveredEnergyJ": 180.14400000000148,
+              "overflowEnergyJ": 0.14400000000147106,
+              "outOfBandEnergyJ": 0,
+              "goodIntervals": 556,
+              "badIntervals": 0,
+              "peakBadPowerTicks": 0,
+              "startedAtTick": 361,
+              "completedAtTick": 916,
+              "endedAtTick": 1080
+            },
+            {
+              "index": 1,
+              "requirementId": "high",
+              "startTick": 1380,
+              "endTick": 2100,
+              "minimumPowerW": 32,
+              "maximumPowerW": 46,
+              "targetWorkJ": 360,
+              "workJ": 360,
+              "deficitJ": 0,
+              "deliveredEnergyJ": 360.5333333333322,
+              "overflowEnergyJ": 0.5333333333322254,
+              "outOfBandEnergyJ": 0,
+              "goodIntervals": 507,
+              "badIntervals": 0,
+              "peakBadPowerTicks": 0,
+              "startedAtTick": 1381,
+              "completedAtTick": 1887,
+              "endedAtTick": 2100
+            },
+            {
+              "index": 2,
+              "requirementId": "high",
+              "startTick": 2400,
+              "endTick": 3120,
+              "minimumPowerW": 32,
+              "maximumPowerW": 46,
+              "targetWorkJ": 360,
+              "workJ": 360,
+              "deficitJ": 0,
+              "deliveredEnergyJ": 360.0000000000018,
+              "overflowEnergyJ": 1.7972290322632034e-12,
+              "outOfBandEnergyJ": 0,
+              "goodIntervals": 625,
+              "badIntervals": 0,
+              "peakBadPowerTicks": 0,
+              "startedAtTick": 2401,
+              "completedAtTick": 3025,
+              "endedAtTick": null
+            }
+          ],
+          "lastElectrical": {
+            "fromTick": 3024,
+            "toTick": 3025,
+            "stageIndex": 2,
+            "requested": true,
+            "connected": true,
+            "disconnectReason": null,
+            "powerInBand": true,
+            "circuit": {
+              "topology": "series",
+              "connected": true,
+              "cellIds": [
+                "C3",
+                "C4"
+              ],
+              "loadResistanceOhm": 6,
+              "openCircuitVoltageV": 24,
+              "internalResistanceOhm": 4,
+              "parallelConductanceS": null,
+              "currentA": 2.4,
+              "terminalVoltageV": 14.399999999999999,
+              "sourcePowerW": 57.599999999999994,
+              "loadPowerW": 34.56,
+              "internalHeatPowerW": 23.04,
+              "powerBalanceErrorW": -7.105427357601002e-15,
+              "branches": [
+                {
+                  "cellId": "C3",
+                  "voltageV": 12,
+                  "resistanceOhm": 2,
+                  "currentA": 2.4,
+                  "sourcePowerW": 28.799999999999997,
+                  "heatPowerW": 11.52
+                },
+                {
+                  "cellId": "C4",
+                  "voltageV": 12,
+                  "resistanceOhm": 2,
+                  "currentA": 2.4,
+                  "sourcePowerW": 28.799999999999997,
+                  "heatPowerW": 11.52
+                }
+              ]
+            },
+            "currentA": 2.4,
+            "terminalVoltageV": 14.399999999999999,
+            "loadPowerW": 34.56,
+            "sourcePowerW": 57.599999999999994,
+            "internalHeatPowerW": 23.04
+          },
+          "workPartitionErrorJ": 8.848477506262498e-14,
+          "heatBalanceErrorJ": -1.5205614545266144e-12
+        }
+      ],
+      "chargeLedger": {
+        "initialChargeC": 341,
+        "consumedChargeC": 224.8133333333301,
+        "remainingChargeC": 116.18666666666992,
+        "errorC": -1.4210854715202004e-14
+      },
+      "electricalLedger": {
+        "sourceEnergyJ": 2697.7600000000384,
+        "deliveredEnergyJ": 1801.2106666666948,
+        "internalHeatJ": 896.5493333333457,
+        "errorJ": -2.0463630789890885e-12
+      },
+      "commandReceipts": [
+        {
+          "id": 1,
+          "fromTick": 10,
+          "tick": 11,
+          "segmentIndex": 0,
+          "windowIndex": 0,
+          "action": "mark-source",
+          "inputKey": "a",
+          "before": {
+            "cursor": 0,
+            "sourceSlot": null,
+            "slots": [
+              "C1",
+              "C2",
+              "C5",
+              "C3",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "parallel"
+            ]
+          },
+          "after": {
+            "cursor": 0,
+            "sourceSlot": 0,
+            "slots": [
+              "C1",
+              "C2",
+              "C5",
+              "C3",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "parallel"
+            ]
+          },
+          "fromSlot": 0,
+          "cellId": "C1"
+        },
+        {
+          "id": 2,
+          "fromTick": 31,
+          "tick": 32,
+          "segmentIndex": 0,
+          "windowIndex": 0,
+          "action": "swap",
+          "inputKey": "a",
+          "before": {
+            "cursor": 3,
+            "sourceSlot": 0,
+            "slots": [
+              "C1",
+              "C2",
+              "C5",
+              "C3",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "parallel"
+            ]
+          },
+          "after": {
+            "cursor": 3,
+            "sourceSlot": null,
+            "slots": [
+              "C3",
+              "C2",
+              "C5",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "parallel"
+            ]
+          },
+          "fromSlot": 0,
+          "toSlot": 3,
+          "cellIds": [
+            "C1",
+            "C3"
+          ]
+        },
+        {
+          "id": 3,
+          "fromTick": 1080,
+          "tick": 1081,
+          "segmentIndex": 2,
+          "windowIndex": 1,
+          "action": "toggle-topology",
+          "inputKey": "b",
+          "before": {
+            "cursor": 3,
+            "sourceSlot": null,
+            "slots": [
+              "C3",
+              "C2",
+              "C5",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "parallel"
+            ]
+          },
+          "after": {
+            "cursor": 3,
+            "sourceSlot": null,
+            "slots": [
+              "C3",
+              "C2",
+              "C5",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "series"
+            ]
+          },
+          "row": 1,
+          "fromTopology": "parallel",
+          "toTopology": "series"
+        },
+        {
+          "id": 4,
+          "fromTick": 1114,
+          "tick": 1115,
+          "segmentIndex": 2,
+          "windowIndex": 1,
+          "action": "mark-source",
+          "inputKey": "a",
+          "before": {
+            "cursor": 1,
+            "sourceSlot": null,
+            "slots": [
+              "C3",
+              "C2",
+              "C5",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "series"
+            ]
+          },
+          "after": {
+            "cursor": 1,
+            "sourceSlot": 1,
+            "slots": [
+              "C3",
+              "C2",
+              "C5",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "series"
+            ]
+          },
+          "fromSlot": 1,
+          "cellId": "C2"
+        },
+        {
+          "id": 5,
+          "fromTick": 1133,
+          "tick": 1134,
+          "segmentIndex": 2,
+          "windowIndex": 1,
+          "action": "swap",
+          "inputKey": "a",
+          "before": {
+            "cursor": 2,
+            "sourceSlot": 1,
+            "slots": [
+              "C3",
+              "C2",
+              "C5",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "series"
+            ]
+          },
+          "after": {
+            "cursor": 2,
+            "sourceSlot": null,
+            "slots": [
+              "C3",
+              "C5",
+              "C2",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "series"
+            ]
+          },
+          "fromSlot": 1,
+          "toSlot": 2,
+          "cellIds": [
+            "C2",
+            "C5"
+          ]
+        },
+        {
+          "id": 6,
+          "fromTick": 1145,
+          "tick": 1146,
+          "segmentIndex": 2,
+          "windowIndex": 1,
+          "action": "toggle-topology",
+          "inputKey": "b",
+          "before": {
+            "cursor": 2,
+            "sourceSlot": null,
+            "slots": [
+              "C3",
+              "C5",
+              "C2",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "series"
+            ]
+          },
+          "after": {
+            "cursor": 2,
+            "sourceSlot": null,
+            "slots": [
+              "C3",
+              "C5",
+              "C2",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "series"
+            ]
+          },
+          "row": 0,
+          "fromTopology": "series",
+          "toTopology": "parallel"
+        },
+        {
+          "id": 7,
+          "fromTick": 2103,
+          "tick": 2104,
+          "segmentIndex": 4,
+          "windowIndex": 2,
+          "action": "mark-source",
+          "inputKey": "a",
+          "before": {
+            "cursor": 2,
+            "sourceSlot": null,
+            "slots": [
+              "C3",
+              "C5",
+              "C2",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "series"
+            ]
+          },
+          "after": {
+            "cursor": 2,
+            "sourceSlot": 2,
+            "slots": [
+              "C3",
+              "C5",
+              "C2",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "series"
+            ]
+          },
+          "fromSlot": 2,
+          "cellId": "C2"
+        },
+        {
+          "id": 8,
+          "fromTick": 2149,
+          "tick": 2150,
+          "segmentIndex": 4,
+          "windowIndex": 2,
+          "action": "swap",
+          "inputKey": "a",
+          "before": {
+            "cursor": 3,
+            "sourceSlot": 2,
+            "slots": [
+              "C3",
+              "C5",
+              "C2",
+              "C1",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "series"
+            ]
+          },
+          "after": {
+            "cursor": 3,
+            "sourceSlot": null,
+            "slots": [
+              "C3",
+              "C5",
+              "C1",
+              "C2",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "series"
+            ]
+          },
+          "fromSlot": 2,
+          "toSlot": 3,
+          "cellIds": [
+            "C2",
+            "C1"
+          ]
+        },
+        {
+          "id": 9,
+          "fromTick": 2158,
+          "tick": 2159,
+          "segmentIndex": 4,
+          "windowIndex": 2,
+          "action": "mark-source",
+          "inputKey": "a",
+          "before": {
+            "cursor": 3,
+            "sourceSlot": null,
+            "slots": [
+              "C3",
+              "C5",
+              "C1",
+              "C2",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "series"
+            ]
+          },
+          "after": {
+            "cursor": 3,
+            "sourceSlot": 3,
+            "slots": [
+              "C3",
+              "C5",
+              "C1",
+              "C2",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "series"
+            ]
+          },
+          "fromSlot": 3,
+          "cellId": "C2"
+        },
+        {
+          "id": 10,
+          "fromTick": 2180,
+          "tick": 2181,
+          "segmentIndex": 4,
+          "windowIndex": 2,
+          "action": "swap",
+          "inputKey": "a",
+          "before": {
+            "cursor": 0,
+            "sourceSlot": 3,
+            "slots": [
+              "C3",
+              "C5",
+              "C1",
+              "C2",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "series"
+            ]
+          },
+          "after": {
+            "cursor": 0,
+            "sourceSlot": null,
+            "slots": [
+              "C2",
+              "C5",
+              "C1",
+              "C3",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "series"
+            ]
+          },
+          "fromSlot": 3,
+          "toSlot": 0,
+          "cellIds": [
+            "C2",
+            "C3"
+          ]
+        },
+        {
+          "id": 11,
+          "fromTick": 2194,
+          "tick": 2195,
+          "segmentIndex": 4,
+          "windowIndex": 2,
+          "action": "toggle-topology",
+          "inputKey": "b",
+          "before": {
+            "cursor": 0,
+            "sourceSlot": null,
+            "slots": [
+              "C2",
+              "C5",
+              "C1",
+              "C3",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "series"
+            ]
+          },
+          "after": {
+            "cursor": 0,
+            "sourceSlot": null,
+            "slots": [
+              "C2",
+              "C5",
+              "C1",
+              "C3",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "series"
+            ]
+          },
+          "row": 0,
+          "fromTopology": "parallel",
+          "toTopology": "series"
+        }
+      ],
+      "workCompletionReceipts": [
+        {
+          "id": 1,
+          "fromTick": 866,
+          "tick": 867,
+          "stageIndex": 0,
+          "loadId": "L1",
+          "targetWorkJ": 360,
+          "workBeforeJ": 359.8222222222211,
+          "deliveredEnergyJ": 0.711111111111111,
+          "creditedWorkJ": 0.1777777777788856,
+          "workAfterJ": 360,
+          "deficitJ": 0,
+          "overflowEnergyJ": 0.5333333333322254,
+          "disconnectFromTick": 867
+        },
+        {
+          "id": 2,
+          "fromTick": 915,
+          "tick": 916,
+          "stageIndex": 0,
+          "loadId": "L2",
+          "targetWorkJ": 180,
+          "workBeforeJ": 179.82000000000147,
+          "deliveredEnergyJ": 0.32399999999999995,
+          "creditedWorkJ": 0.1799999999985289,
+          "workAfterJ": 180,
+          "deficitJ": 0,
+          "overflowEnergyJ": 0.14400000000147106,
+          "disconnectFromTick": 916
+        },
+        {
+          "id": 3,
+          "fromTick": 1886,
+          "tick": 1887,
+          "stageIndex": 1,
+          "loadId": "L2",
+          "targetWorkJ": 360,
+          "workBeforeJ": 359.8222222222211,
+          "deliveredEnergyJ": 0.711111111111111,
+          "creditedWorkJ": 0.1777777777788856,
+          "workAfterJ": 360,
+          "deficitJ": 0,
+          "overflowEnergyJ": 0.5333333333322254,
+          "disconnectFromTick": 1887
+        },
+        {
+          "id": 4,
+          "fromTick": 2027,
+          "tick": 2028,
+          "stageIndex": 1,
+          "loadId": "L1",
+          "targetWorkJ": 180,
+          "workBeforeJ": 179.72222222221976,
+          "deliveredEnergyJ": 0.27777777777777773,
+          "creditedWorkJ": 0.27777777777777773,
+          "workAfterJ": 179.99999999999753,
+          "deficitJ": 2.4726887204451486e-12,
+          "overflowEnergyJ": 0,
+          "disconnectFromTick": 2028
+        },
+        {
+          "id": 5,
+          "fromTick": 3024,
+          "tick": 3025,
+          "stageIndex": 2,
+          "loadId": "L1",
+          "targetWorkJ": 360,
+          "workBeforeJ": 359.4240000000018,
+          "deliveredEnergyJ": 0.5760000000000001,
+          "creditedWorkJ": 0.5759999999982028,
+          "workAfterJ": 360,
+          "deficitJ": 0,
+          "overflowEnergyJ": 1.7972290322632034e-12,
+          "disconnectFromTick": 3025
+        },
+        {
+          "id": 6,
+          "fromTick": 3024,
+          "tick": 3025,
+          "stageIndex": 2,
+          "loadId": "L2",
+          "targetWorkJ": 360,
+          "workBeforeJ": 359.4240000000018,
+          "deliveredEnergyJ": 0.5760000000000001,
+          "creditedWorkJ": 0.5759999999982028,
+          "workAfterJ": 360,
+          "deficitJ": 0,
+          "overflowEnergyJ": 1.7972290322632034e-12,
+          "disconnectFromTick": 3025
+        }
+      ],
+      "stageEndReceipts": [
+        {
+          "id": 1,
+          "fromTick": 1079,
+          "tick": 1080,
+          "stageIndex": 0,
+          "loads": [
+            {
+              "loadId": "L1",
+              "targetWorkJ": 360,
+              "workJ": 360,
+              "deficitJ": 0,
+              "complete": true
+            },
+            {
+              "loadId": "L2",
+              "targetWorkJ": 180,
+              "workJ": 180,
+              "deficitJ": 0,
+              "complete": true
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "fromTick": 2099,
+          "tick": 2100,
+          "stageIndex": 1,
+          "loads": [
+            {
+              "loadId": "L1",
+              "targetWorkJ": 180,
+              "workJ": 179.99999999999753,
+              "deficitJ": 2.4726887204451486e-12,
+              "complete": true
+            },
+            {
+              "loadId": "L2",
+              "targetWorkJ": 360,
+              "workJ": 360,
+              "deficitJ": 0,
+              "complete": true
+            }
+          ]
+        }
+      ],
+      "failures": []
+    },
+    "ordinaryBatteryManagement": {
+      "actualActionPressCount": 8,
+      "actualTopologyOrCancelPressCount": 3,
+      "actualSwapCount": 4,
+      "actualTopologyChangeCount": 3,
+      "topologiesWithObservedActualCurrent": [
+        "parallel",
+        "series"
+      ],
+      "allLastOperationsObserved": false,
+      "unobservedLastOperationIds": [
+        4,
+        5,
+        7,
+        8,
+        9
+      ],
+      "samplingGaps": [
+        {
+          "fromTick": 0,
+          "toTick": 31,
+          "actualOperationIncrease": 1,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 31,
+          "toTick": 153,
+          "actualOperationIncrease": 1,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 153,
+          "toTick": 271,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 271,
+          "toTick": 391,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 391,
+          "toTick": 510,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 510,
+          "toTick": 631,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 631,
+          "toTick": 751,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 751,
+          "toTick": 870,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 1
+        },
+        {
+          "fromTick": 870,
+          "toTick": 994,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 1
+        },
+        {
+          "fromTick": 994,
+          "toTick": 1114,
+          "actualOperationIncrease": 1,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 1114,
+          "toTick": 1233,
+          "actualOperationIncrease": 3,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 1233,
+          "toTick": 1353,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 1353,
+          "toTick": 1472,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 1472,
+          "toTick": 1591,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 1591,
+          "toTick": 1708,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 1708,
+          "toTick": 1828,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 1828,
+          "toTick": 1947,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 1
+        },
+        {
+          "fromTick": 1947,
+          "toTick": 2071,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 1
+        },
+        {
+          "fromTick": 2071,
+          "toTick": 2187,
+          "actualOperationIncrease": 4,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 2187,
+          "toTick": 2311,
+          "actualOperationIncrease": 1,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 2311,
+          "toTick": 2431,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 2431,
+          "toTick": 2547,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 2547,
+          "toTick": 2671,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 2671,
+          "toTick": 2787,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 2787,
+          "toTick": 2910,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 0
+        },
+        {
+          "fromTick": 2910,
+          "toTick": 3025,
+          "actualOperationIncrease": 0,
+          "actualWorkCompletionIncrease": 2
+        }
+      ],
+      "finalChargeLedger": {
+        "initialChargeC": 341,
+        "consumedChargeC": 224.8133333333301,
+        "remainingChargeC": 116.18666666666992,
+        "errorC": -1.4210854715202004e-14
+      },
+      "finalElectricalLedger": {
+        "sourceEnergyJ": 2697.7600000000384,
+        "deliveredEnergyJ": 1801.2106666666948,
+        "internalHeatJ": 896.5493333333457,
+        "errorJ": -2.0463630789890885e-12
+      },
+      "postDispatchObservationCount": 46,
+      "actualMenuPreparationCount": 1,
+      "menuPreparationsChangedModel": false,
+      "scope": "Actual key edges and detached permanent input/work receipts. Sparse samples do not observe every electrical/thermal interval or last-operation update; gaps remain explicit. No circuit solver or physics replay is run here. Menu pilot preparations are excluded from gameplay evidence.",
+      "observedLastOperationIds": [
+        1,
+        2,
+        3,
+        6,
+        10,
+        11
+      ],
+      "permanentReceiptIds": {
+        "commandReceipts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "navigationReceipts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "automaticMarkClearReceipts": [],
+        "stageStartReceipts": [
+          1,
+          2,
+          3
+        ],
+        "workCompletionReceipts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "stageEndReceipts": [
+          1,
+          2
+        ]
+      },
+      "finalStageWork": [
+        {
+          "loadId": "L1",
+          "stages": [
+            {
+              "index": 0,
+              "targetWorkJ": 360,
+              "workJ": 360,
+              "deficitJ": 0,
+              "completedAtTick": 867
+            },
+            {
+              "index": 1,
+              "targetWorkJ": 180,
+              "workJ": 179.99999999999753,
+              "deficitJ": 2.4726887204451486e-12,
+              "completedAtTick": 2028
+            },
+            {
+              "index": 2,
+              "targetWorkJ": 360,
+              "workJ": 360,
+              "deficitJ": 0,
+              "completedAtTick": 3025
+            }
+          ]
+        },
+        {
+          "loadId": "L2",
+          "stages": [
+            {
+              "index": 0,
+              "targetWorkJ": 180,
+              "workJ": 180,
+              "deficitJ": 0,
+              "completedAtTick": 916
+            },
+            {
+              "index": 1,
+              "targetWorkJ": 360,
+              "workJ": 360,
+              "deficitJ": 0,
+              "completedAtTick": 1887
+            },
+            {
+              "index": 2,
+              "targetWorkJ": 360,
+              "workJ": 360,
+              "deficitJ": 0,
+              "completedAtTick": 3025
+            }
+          ]
+        }
+      ]
+    },
+    "finalDriverWindow": {
+      "drivers": {
+        "qa-tools/qa-with-dispatch-barrier.mjs": "f8cf545b1e268135b0f5cdd9805bb75209c31295262ea52e514ad02376c23a13",
+        "qa-tools/record-with-dispatch-barrier.mjs": "751d9b414d2b7059b6260c87baffd7dbe1713cc2733b505dac755d88e39ec93a",
+        "qa-tools/ui-native-loss.mjs": "dd32962008a3a1625001b4f345a58ca5df7ce293cd1f0f4c55a575b2b369f4ad",
+        "qa-tools/helpers.mjs": "2ef24a4fe2f37c6a92724afeee86cc330b720ef1c0ed2f2b8c850ce0afa3d955"
+      },
+      "unchanged": true
+    },
+    "actualDispatchBarrier": {
+      "automaticObservations": 38,
+      "automaticEdges": 38,
+      "actualTerminalExceptions": 0,
+      "scope": "Actual post-dispatch snapshots and the next decision tick, or an observed later terminal tick. Recipe/menu observations remain separately identified."
+    },
+    "normalFailure": {
+      "reason": "power-fault",
+      "level": 3,
+      "difficulty": 2,
+      "score": 0,
+      "tick": 435,
+      "elapsed": 7.25,
+      "remaining": 56.75,
+      "cursor": 3,
+      "sourceSlot": null,
+      "slots": [
+        "C1",
+        "C2",
+        "C5",
+        "C3",
+        "C4",
+        "C6"
+      ],
+      "topologies": [
+        "series",
+        "series"
+      ],
+      "commandCount": 2,
+      "blockedCommands": 0,
+      "swapCount": 0,
+      "topologyChangeCount": 2,
+      "cells": [
+        {
+          "id": "C1",
+          "voltageV": 12,
+          "resistanceOhm": 1,
+          "initialChargeC": 72,
+          "consumedChargeC": 3.7499999999999947,
+          "remainingChargeC": 68.25,
+          "temperatureC": 25.37421952175419,
+          "generatedHeatJ": 11.250000000000016,
+          "removedHeatJ": 0.25624382596637796,
+          "sourceEnergyJ": 45.000000000000064,
+          "slot": 0,
+          "loadId": "L1",
+          "lastCurrentA": 3,
+          "lastSourcePowerW": 36,
+          "lastHeatPowerW": 9,
+          "heatBalanceErrorJ": -1.3100631690576847e-13
+        },
+        {
+          "id": "C2",
+          "voltageV": 12,
+          "resistanceOhm": 1,
+          "initialChargeC": 74,
+          "consumedChargeC": 3.7499999999999947,
+          "remainingChargeC": 70.25,
+          "temperatureC": 25.37421952175419,
+          "generatedHeatJ": 11.250000000000016,
+          "removedHeatJ": 0.25624382596637796,
+          "sourceEnergyJ": 45.000000000000064,
+          "slot": 1,
+          "loadId": "L1",
+          "lastCurrentA": 3,
+          "lastSourcePowerW": 36,
+          "lastHeatPowerW": 9,
+          "heatBalanceErrorJ": -1.3100631690576847e-13
+        },
+        {
+          "id": "C3",
+          "voltageV": 12,
+          "resistanceOhm": 2,
+          "initialChargeC": 82,
+          "consumedChargeC": 3.0000000000000018,
+          "remainingChargeC": 79,
+          "temperatureC": 25.759000987845372,
+          "generatedHeatJ": 14.40000000000001,
+          "removedHeatJ": 0.327992097236966,
+          "sourceEnergyJ": 35.99999999999999,
+          "slot": 3,
+          "loadId": "L2",
+          "lastCurrentA": 2.4,
+          "lastSourcePowerW": 28.799999999999997,
+          "lastHeatPowerW": 11.52,
+          "heatBalanceErrorJ": -6.672440377997191e-14
+        },
+        {
+          "id": "C4",
+          "voltageV": 12,
+          "resistanceOhm": 2,
+          "initialChargeC": 85,
+          "consumedChargeC": 3.0000000000000018,
+          "remainingChargeC": 82,
+          "temperatureC": 25.759000987845372,
+          "generatedHeatJ": 14.40000000000001,
+          "removedHeatJ": 0.327992097236966,
+          "sourceEnergyJ": 35.99999999999999,
+          "slot": 4,
+          "loadId": "L2",
+          "lastCurrentA": 2.4,
+          "lastSourcePowerW": 28.799999999999997,
+          "lastHeatPowerW": 11.52,
+          "heatBalanceErrorJ": -6.672440377997191e-14
+        },
+        {
+          "id": "C5",
+          "voltageV": 12,
+          "resistanceOhm": 3,
+          "initialChargeC": 54,
+          "consumedChargeC": 0,
+          "remainingChargeC": 54,
+          "temperatureC": 24,
+          "generatedHeatJ": 0,
+          "removedHeatJ": 0,
+          "sourceEnergyJ": 0,
+          "slot": 2,
+          "loadId": null,
+          "lastCurrentA": 0,
+          "lastSourcePowerW": 0,
+          "lastHeatPowerW": 0,
+          "heatBalanceErrorJ": 0
+        },
+        {
+          "id": "C6",
+          "voltageV": 12,
+          "resistanceOhm": 3,
+          "initialChargeC": 58,
+          "consumedChargeC": 0,
+          "remainingChargeC": 58,
+          "temperatureC": 24,
+          "generatedHeatJ": 0,
+          "removedHeatJ": 0,
+          "sourceEnergyJ": 0,
+          "slot": 5,
+          "loadId": null,
+          "lastCurrentA": 0,
+          "lastSourcePowerW": 0,
+          "lastHeatPowerW": 0,
+          "heatBalanceErrorJ": 0
+        }
+      ],
+      "loads": [
+        {
+          "id": "L1",
+          "name": "机械泵",
+          "nameEn": "SERVICE PUMP",
+          "row": 0,
+          "resistanceOhm": 6,
+          "slotIndices": [
+            0,
+            1
+          ],
+          "temperatureC": 25.330757538402647,
+          "generatedHeatJ": 20.249999999999975,
+          "removedHeatJ": 0.28863692396039253,
+          "deliveredEnergyJ": 67.49999999999994,
+          "creditedWorkJ": 0,
+          "overflowEnergyJ": 0,
+          "outOfBandEnergyJ": 67.49999999999994,
+          "consecutiveBadPowerTicks": 75,
+          "stages": [
+            {
+              "index": 0,
+              "requirementId": "high",
+              "startTick": 360,
+              "endTick": 1320,
+              "minimumPowerW": 38,
+              "maximumPowerW": 46,
+              "targetWorkJ": 500,
+              "workJ": 0,
+              "deficitJ": 500,
+              "deliveredEnergyJ": 67.49999999999994,
+              "overflowEnergyJ": 0,
+              "outOfBandEnergyJ": 67.49999999999994,
+              "goodIntervals": 0,
+              "badIntervals": 75,
+              "peakBadPowerTicks": 75,
+              "startedAtTick": 361,
+              "completedAtTick": null,
+              "endedAtTick": null
+            },
+            {
+              "index": 1,
+              "requirementId": "low",
+              "startTick": 1620,
+              "endTick": 2580,
+              "minimumPowerW": 16,
+              "maximumPowerW": 20,
+              "targetWorkJ": 240,
+              "workJ": 0,
+              "deficitJ": 240,
+              "deliveredEnergyJ": 0,
+              "overflowEnergyJ": 0,
+              "outOfBandEnergyJ": 0,
+              "goodIntervals": 0,
+              "badIntervals": 0,
+              "peakBadPowerTicks": 0,
+              "startedAtTick": null,
+              "completedAtTick": null,
+              "endedAtTick": null
+            },
+            {
+              "index": 2,
+              "requirementId": "high",
+              "startTick": 2880,
+              "endTick": 3840,
+              "minimumPowerW": 38,
+              "maximumPowerW": 46,
+              "targetWorkJ": 500,
+              "workJ": 0,
+              "deficitJ": 500,
+              "deliveredEnergyJ": 0,
+              "overflowEnergyJ": 0,
+              "outOfBandEnergyJ": 0,
+              "goodIntervals": 0,
+              "badIntervals": 0,
+              "peakBadPowerTicks": 0,
+              "startedAtTick": null,
+              "completedAtTick": null,
+              "endedAtTick": null
+            }
+          ],
+          "lastElectrical": {
+            "fromTick": 434,
+            "toTick": 435,
+            "stageIndex": 0,
+            "requested": true,
+            "connected": true,
+            "disconnectReason": null,
+            "powerInBand": false,
+            "circuit": {
+              "topology": "series",
+              "connected": true,
+              "cellIds": [
+                "C1",
+                "C2"
+              ],
+              "loadResistanceOhm": 6,
+              "openCircuitVoltageV": 24,
+              "internalResistanceOhm": 2,
+              "parallelConductanceS": null,
+              "currentA": 3,
+              "terminalVoltageV": 18,
+              "sourcePowerW": 72,
+              "loadPowerW": 54,
+              "internalHeatPowerW": 18,
+              "powerBalanceErrorW": 0,
+              "branches": [
+                {
+                  "cellId": "C1",
+                  "voltageV": 12,
+                  "resistanceOhm": 1,
+                  "currentA": 3,
+                  "sourcePowerW": 36,
+                  "heatPowerW": 9
+                },
+                {
+                  "cellId": "C2",
+                  "voltageV": 12,
+                  "resistanceOhm": 1,
+                  "currentA": 3,
+                  "sourcePowerW": 36,
+                  "heatPowerW": 9
+                }
+              ]
+            },
+            "currentA": 3,
+            "terminalVoltageV": 18,
+            "loadPowerW": 54,
+            "sourcePowerW": 72,
+            "internalHeatPowerW": 18
+          },
+          "workPartitionErrorJ": 0,
+          "heatBalanceErrorJ": 1.2390088954816747e-13
+        },
+        {
+          "id": "L2",
+          "name": "信标塔",
+          "nameEn": "BEACON",
+          "row": 1,
+          "resistanceOhm": 6,
+          "slotIndices": [
+            3,
+            4
+          ],
+          "temperatureC": 24.85168482457768,
+          "generatedHeatJ": 12.960000000000006,
+          "removedHeatJ": 0.18472763133464876,
+          "deliveredEnergyJ": 43.20000000000003,
+          "creditedWorkJ": 0,
+          "overflowEnergyJ": 0,
+          "outOfBandEnergyJ": 43.20000000000003,
+          "consecutiveBadPowerTicks": 75,
+          "stages": [
+            {
+              "index": 0,
+              "requirementId": "low",
+              "startTick": 360,
+              "endTick": 1320,
+              "minimumPowerW": 16,
+              "maximumPowerW": 20,
+              "targetWorkJ": 240,
+              "workJ": 0,
+              "deficitJ": 240,
+              "deliveredEnergyJ": 43.20000000000003,
+              "overflowEnergyJ": 0,
+              "outOfBandEnergyJ": 43.20000000000003,
+              "goodIntervals": 0,
+              "badIntervals": 75,
+              "peakBadPowerTicks": 75,
+              "startedAtTick": 361,
+              "completedAtTick": null,
+              "endedAtTick": null
+            },
+            {
+              "index": 1,
+              "requirementId": "high",
+              "startTick": 1620,
+              "endTick": 2580,
+              "minimumPowerW": 38,
+              "maximumPowerW": 46,
+              "targetWorkJ": 500,
+              "workJ": 0,
+              "deficitJ": 500,
+              "deliveredEnergyJ": 0,
+              "overflowEnergyJ": 0,
+              "outOfBandEnergyJ": 0,
+              "goodIntervals": 0,
+              "badIntervals": 0,
+              "peakBadPowerTicks": 0,
+              "startedAtTick": null,
+              "completedAtTick": null,
+              "endedAtTick": null
+            },
+            {
+              "index": 2,
+              "requirementId": "high",
+              "startTick": 2880,
+              "endTick": 3840,
+              "minimumPowerW": 38,
+              "maximumPowerW": 46,
+              "targetWorkJ": 500,
+              "workJ": 0,
+              "deficitJ": 500,
+              "deliveredEnergyJ": 0,
+              "overflowEnergyJ": 0,
+              "outOfBandEnergyJ": 0,
+              "goodIntervals": 0,
+              "badIntervals": 0,
+              "peakBadPowerTicks": 0,
+              "startedAtTick": null,
+              "completedAtTick": null,
+              "endedAtTick": null
+            }
+          ],
+          "lastElectrical": {
+            "fromTick": 434,
+            "toTick": 435,
+            "stageIndex": 0,
+            "requested": true,
+            "connected": true,
+            "disconnectReason": null,
+            "powerInBand": false,
+            "circuit": {
+              "topology": "series",
+              "connected": true,
+              "cellIds": [
+                "C3",
+                "C4"
+              ],
+              "loadResistanceOhm": 6,
+              "openCircuitVoltageV": 24,
+              "internalResistanceOhm": 4,
+              "parallelConductanceS": null,
+              "currentA": 2.4,
+              "terminalVoltageV": 14.399999999999999,
+              "sourcePowerW": 57.599999999999994,
+              "loadPowerW": 34.56,
+              "internalHeatPowerW": 23.04,
+              "powerBalanceErrorW": -7.105427357601002e-15,
+              "branches": [
+                {
+                  "cellId": "C3",
+                  "voltageV": 12,
+                  "resistanceOhm": 2,
+                  "currentA": 2.4,
+                  "sourcePowerW": 28.799999999999997,
+                  "heatPowerW": 11.52
+                },
+                {
+                  "cellId": "C4",
+                  "voltageV": 12,
+                  "resistanceOhm": 2,
+                  "currentA": 2.4,
+                  "sourcePowerW": 28.799999999999997,
+                  "heatPowerW": 11.52
+                }
+              ]
+            },
+            "currentA": 2.4,
+            "terminalVoltageV": 14.399999999999999,
+            "loadPowerW": 34.56,
+            "sourcePowerW": 57.599999999999994,
+            "internalHeatPowerW": 23.04
+          },
+          "workPartitionErrorJ": 0,
+          "heatBalanceErrorJ": -1.3711254354120683e-13
+        }
+      ],
+      "chargeLedger": {
+        "initialChargeC": 425,
+        "consumedChargeC": 13.499999999999993,
+        "remainingChargeC": 411.5,
+        "errorC": 0
+      },
+      "electricalLedger": {
+        "sourceEnergyJ": 162.0000000000001,
+        "deliveredEnergyJ": 110.69999999999997,
+        "internalHeatJ": 51.300000000000054,
+        "errorJ": 8.526512829121202e-14
+      },
+      "commandReceipts": [
+        {
+          "id": 1,
+          "fromTick": 10,
+          "tick": 11,
+          "segmentIndex": 0,
+          "windowIndex": 0,
+          "action": "toggle-topology",
+          "inputKey": "b",
+          "before": {
+            "cursor": 0,
+            "sourceSlot": null,
+            "slots": [
+              "C1",
+              "C2",
+              "C5",
+              "C3",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "parallel",
+              "parallel"
+            ]
+          },
+          "after": {
+            "cursor": 0,
+            "sourceSlot": null,
+            "slots": [
+              "C1",
+              "C2",
+              "C5",
+              "C3",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "parallel"
+            ]
+          },
+          "row": 0,
+          "fromTopology": "parallel",
+          "toTopology": "series"
+        },
+        {
+          "id": 2,
+          "fromTick": 35,
+          "tick": 36,
+          "segmentIndex": 0,
+          "windowIndex": 0,
+          "action": "toggle-topology",
+          "inputKey": "b",
+          "before": {
+            "cursor": 3,
+            "sourceSlot": null,
+            "slots": [
+              "C1",
+              "C2",
+              "C5",
+              "C3",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "parallel"
+            ]
+          },
+          "after": {
+            "cursor": 3,
+            "sourceSlot": null,
+            "slots": [
+              "C1",
+              "C2",
+              "C5",
+              "C3",
+              "C4",
+              "C6"
+            ],
+            "topologies": [
+              "series",
+              "series"
+            ]
+          },
+          "row": 1,
+          "fromTopology": "parallel",
+          "toTopology": "series"
+        }
+      ],
+      "workCompletionReceipts": [],
+      "stageEndReceipts": [],
+      "failures": [
+        {
+          "kind": "power-fault",
+          "entityId": "L1",
+          "stageIndex": 0,
+          "fromTick": 434,
+          "tick": 435,
+          "actualValue": 75,
+          "limitValue": 75,
+          "unit": "ticks"
+        },
+        {
+          "kind": "power-fault",
+          "entityId": "L2",
+          "stageIndex": 0,
+          "fromTick": 434,
+          "tick": 435,
+          "actualValue": 75,
+          "limitValue": 75,
+          "unit": "ticks"
+        }
+      ]
+    },
+    "additionalImageReview": {
+      "images": 12,
+      "frameReviewManifestSha256": "c32fc8857af3ef162c25d2fc2a05db895d0a1e0219f3ee9aecdb705c95d8d775"
+    },
+    "actualConsolidationWindow": {
+      "startedAt": "2026-11-02T04:38:54.779757+00:00",
+      "completedAt": "2026-11-02T04:38:54.943561+00:00",
+      "startHashes": {
+        "qa-tools/record_proofs.py": "4e31873d87da6c6d4392d5ff33ca78c0d4e61bee784581b7433236246c373d50",
+        "qa-tools/report_fields.py": "99542ba34b5be243713946106a1b5eac91de699bc4d7ebd37ccca6141e956228",
+        "qa-tools/finalize-review.py": "695b55a53118b858bd5c266484bbffccb0ea002512d6bff0d522fd50d07bf1d3",
+        "qa-tools/aggregate-supplementary.py": "40d886ca405513637cbe23a7853b4869cade87b8a371d8f52f072342e9d7e02b",
+        "qa-final/report.json": "978f4578270c338348d7a527873da386e7543ac07cd96334918520be581b6345",
+        "qa-final/ui-native-loss.json": "b4c2ba7f881f7f8ab5326c67e391b4372ff9b1413fb0431cb8671be02014c3bc",
+        "qa-final/final-viewport-checks.json": "3b216f53d2cd666a22431023dbaa1d630d86ef9dc3ec13e5c1bcae530c528ec3",
+        "qa-final/test-provenance.json": "f824639ee835a3c1d769f57f466531c438c2db3386f7aa2b1cc2fb9a501ce5d4",
+        "recording-final/recording.json": "1f3edfafff25f0ddfbb6b37a144e14799973dc603037d653c022dd71292ff530",
+        "recording-final/review/frames.json": "c32fc8857af3ef162c25d2fc2a05db895d0a1e0219f3ee9aecdb705c95d8d775",
+        "recording-final/decode-verification.json": "47eef25d1ec16772368bfc3842761fdd394d9d2187127bcc111afd9b90a6473d",
+        "recording-final/video-validation.json": "4980de1262f962ace17cb278c780474e95da71d3d541d0a51dc53b77793a9c98",
+        "build-final/build-receipt.json": "50cdaca2b09c8d724218677b2e13598fcf5b7a5ace7a6f9f5a3fd601ef749d2d",
+        "build-final/assets/game-config.json": "ca493ef5915d5111a96109f7bdfb4a0102e91ea1e434093b96a8331d974d9c86",
+        "public-observations-final/index.json": "8221b1d6a08544fc6d4e9ca45d3cf24214442a9d943808dd5095280fcdc6355a"
+      },
+      "endHashes": {
+        "qa-tools/record_proofs.py": "4e31873d87da6c6d4392d5ff33ca78c0d4e61bee784581b7433236246c373d50",
+        "qa-tools/report_fields.py": "99542ba34b5be243713946106a1b5eac91de699bc4d7ebd37ccca6141e956228",
+        "qa-tools/finalize-review.py": "695b55a53118b858bd5c266484bbffccb0ea002512d6bff0d522fd50d07bf1d3",
+        "qa-tools/aggregate-supplementary.py": "40d886ca405513637cbe23a7853b4869cade87b8a371d8f52f072342e9d7e02b",
+        "qa-final/report.json": "978f4578270c338348d7a527873da386e7543ac07cd96334918520be581b6345",
+        "qa-final/ui-native-loss.json": "b4c2ba7f881f7f8ab5326c67e391b4372ff9b1413fb0431cb8671be02014c3bc",
+        "qa-final/final-viewport-checks.json": "3b216f53d2cd666a22431023dbaa1d630d86ef9dc3ec13e5c1bcae530c528ec3",
+        "qa-final/test-provenance.json": "f824639ee835a3c1d769f57f466531c438c2db3386f7aa2b1cc2fb9a501ce5d4",
+        "recording-final/recording.json": "1f3edfafff25f0ddfbb6b37a144e14799973dc603037d653c022dd71292ff530",
+        "recording-final/review/frames.json": "c32fc8857af3ef162c25d2fc2a05db895d0a1e0219f3ee9aecdb705c95d8d775",
+        "recording-final/decode-verification.json": "47eef25d1ec16772368bfc3842761fdd394d9d2187127bcc111afd9b90a6473d",
+        "recording-final/video-validation.json": "4980de1262f962ace17cb278c780474e95da71d3d541d0a51dc53b77793a9c98",
+        "build-final/build-receipt.json": "50cdaca2b09c8d724218677b2e13598fcf5b7a5ace7a6f9f5a3fd601ef749d2d",
+        "build-final/assets/game-config.json": "ca493ef5915d5111a96109f7bdfb4a0102e91ea1e434093b96a8331d974d9c86",
+        "public-observations-final/index.json": "8221b1d6a08544fc6d4e9ca45d3cf24214442a9d943808dd5095280fcdc6355a"
+      },
+      "sourceUnchanged": true
+    },
+    "ordinarySourceHistoryIndexSha256": "8221b1d6a08544fc6d4e9ca45d3cf24214442a9d943808dd5095280fcdc6355a",
+    "frameSelectionCorrection": {
+      "correctionSha256": "f47eece40ea2e87718d38488ea09c526a64480ecbec17014853ad3b9040eae58",
+      "originalFrameManifestSha256": "a564969823073fcac3ce02febaeb918ee0d33330001a3b31f6c53af59ed3ef41",
+      "originalSelectionsRejected": 3,
+      "replacementSelectionsAccepted": 3,
+      "unchangedSelections": 6,
+      "findings": [
+        {
+          "finding": "Root opened the original image: it still shows level2, not the level3 observation label.",
+          "oldPath": "review/menu-three-4.49s.png",
+          "oldSha256": "4f9ca1e30f286072fc755e79d92dc55733c7d22a6cd5d577abb61ed2b62557f0",
+          "newPath": "review/menu-three-stable-6.03s.png",
+          "newSha256": "6947a3d9cf97dc25ab9cf4f07b6cc9755f6a35bc47d3a49431b3e504faf32a7c"
+        },
+        {
+          "finding": "Root opened the original image: C1 is still marked in place before the observed swap.",
+          "oldPath": "review/actual-first-exchange-window-8.15s.png",
+          "oldSha256": "6d7ea71d9ccc281358943a387fc5116730cfff992bcb1647a6536e8a6e23359b",
+          "newPath": "review/actual-first-exchange-stable-10.03s.png",
+          "newSha256": "ba13c366bb2d4f0a3cbbea19a2496bacc0f4f3648c706d7cc3ce8300241354e5"
+        },
+        {
+          "finding": "Root opened the original image: it is still the end of supply1 rather than the new off window.",
+          "oldPath": "review/actual-second-off-window-25.55s.png",
+          "oldSha256": "a93524a26e1c1869de013c57a3a050a288f17222d87158d488024443b1715ec7",
+          "newPath": "review/actual-second-off-stable-28.03s.png",
+          "newSha256": "5a88212cfdeb67cc54e3259fbc8b031b5e123fd359b0c2c3e9bb451a37085114"
+        }
+      ],
+      "scope": "Three single-frame reads from the existing encoded video only. No recording, Model, rendering or full-decode rerun; six other selections remain byte-identical. All three replacements require personal pixel review.",
+      "captureAttempts": 1,
+      "additionalFullDecodeInvocations": 0
+    }
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "901d1f70018462074c25df9cdedc2c89aad6d1a8ff5ed4f8e0736d233b6e7608",
+    "game.js": "969d074ea4ca4799dab3c568214d9d95ed33e5f14a44d74c96b760f85a3a2e7c",
+    "game-config.json": "ca493ef5915d5111a96109f7bdfb4a0102e91ea1e434093b96a8331d974d9c86",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "formal": "5afa9f446853dbc6736637f97fac83cc2d3712fc200295115ad2dc0ef5f7258a",
+    "design": "c30ffb6262426a4ed55a72473a52dc55c38d4e2d7ef0b63b15544c458cec5610",
+    "designReview": "852a9b06c53a9fab7061f5f11272cac89193ec6cc08e07ce539e5d8fe6f559d4",
+    "designExecution": "fcccf8703e5e5fec65f9eb2836d387a69c1e020ae0a03690b3fd3fccbc9a4f46",
+    "contractClarification": "210d6be8b749af0a2ba21def8ac55f4f10fb6ae2220b49b60da1e4bfcce85314",
+    "ordinary": "58f13b1eef86049cd73cc1674aefddba4bcaee913c7eafb241b89b206d49071c",
+    "ordinaryFirst": "700a923f362c5ed12d66f29f603df47132895a95dc09fbcb5b75ce2df7bf4a8a",
+    "ordinaryLevel3": "1fec41f824fc7361d4ab9e213fc9a4df0a81bef00d4168def68a46fce391d3a2",
+    "publicObservations": "8221b1d6a08544fc6d4e9ca45d3cf24214442a9d943808dd5095280fcdc6355a",
+    "plannerCorrection": "bd1051b87e10f2c8ec79f098cd35f211885fbae41f311fd7d5fbe1f61a5fa53e",
+    "plannerDiagnostic": "75e55418d78717923859388e5fd5f65d90d8fe2e594b85e35f94cfe9d710cdde",
+    "independent": "4ca928fe6f821d4d0f50a79b17d96c3b15d7bb8142583d220314cb278dd4f192",
+    "candidate": "99e0a241a33c32d13869953c51a749250123e63834c1652ceed875fc3a3fffa2",
+    "candidateRaw": "2e851c89eb81505acdbb1d75906d38e8cec665346774328d180f184e870f998c",
+    "candidateQaVisual": "9d8b025cc837de29ec8c2d1a6cc4c631e3a57961ba81aa0d4617673fd292cce3",
+    "art": "5cf85584012d08aa8f7a7effee341e1e92ab9be8b1a73da68a45d04933c47de8",
+    "build": "50cdaca2b09c8d724218677b2e13598fcf5b7a5ace7a6f9f5a3fd601ef749d2d",
+    "sign": "9e66820b9d4b6911bb24853bd4413ffb9e972a020197f37ae10706a9d4b6a780",
+    "fetch": "7f1c35e4b30326e30d389294c922ef64510c742411efb3c7065ddef6133caab9",
+    "qa": "978f4578270c338348d7a527873da386e7543ac07cd96334918520be581b6345",
+    "uiRaw": "0f1b40f5aa7f34f621b7d236a393dcac6ab8f4b0ef7ae00d3c466661616db9d5",
+    "roomRaw": "08b73d786da4ef5c6ba158c046dd249b48df0b2eb9e5f4f643f96850c6785f9e",
+    "supplementary": "b4c2ba7f881f7f8ab5326c67e391b4372ff9b1413fb0431cb8671be02014c3bc",
+    "record": "1f3edfafff25f0ddfbb6b37a144e14799973dc603037d653c022dd71292ff530",
+    "viewport": "3b216f53d2cd666a22431023dbaa1d630d86ef9dc3ec13e5c1bcae530c528ec3",
+    "decode": "47eef25d1ec16772368bfc3842761fdd394d9d2187127bcc111afd9b90a6473d",
+    "videoValidation": "4980de1262f962ace17cb278c780474e95da71d3d541d0a51dc53b77793a9c98",
+    "selectionCorrection": "f47eece40ea2e87718d38488ea09c526a64480ecbec17014853ad3b9040eae58",
+    "rootEncoded": "5ac61fa6d26f9de7e2519cd72d43e62db6b72877afb82ac4492b0993fc6cddcc",
+    "artifacts": "ad0f744c807dca9a330789c38c08a173fc585b29f14879aaeec05351632b3b46",
+    "provenance": "f824639ee835a3c1d769f57f466531c438c2db3386f7aa2b1cc2fb9a501ce5d4",
+    "layout": "c3511b167f8420d5a5d211074b046ae58dd752fa31685deebc04b9a4da661ac3",
+    "summary": "883da668d30f198421313ed1a364bee95753e1fb5d5edcc71d4beb88ef77f457",
+    "review": "64817d0d815fa40ec2388bc8bdc351b1290a604ee44b00d714afc68e181e67f5"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium with ordinary input. Synthetic fixtures are labelled separately; export FPS is not device FPS."
+  },
+  "release": {
+    "sourceSha": "c1d1e143055a71aa1530bc2c7ed910fa2f982466",
+    "requestCommit": "f337dc6a81fa859ad8445380a6d06aceb73fbd84",
+    "signerCommit": "c1d1e143055a71aa1530bc2c7ed910fa2f982466",
+    "signingRun": 41388491392,
+    "bytes": 300323,
+    "sha256": "005d44775987d2852006fb56e6173ceb285b5a485f8d061eb67785029afbd6ab",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "59e98a5cb030681f56807f7501a31ea1814ecb63"
+  }
+}

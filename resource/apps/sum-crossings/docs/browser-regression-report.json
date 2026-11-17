@@ -1,0 +1,75 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T17:02:35.506Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "d1d5369174e264e6f15267492679d7832e02c9f5b40bcef4cb0ef28fef76482e",
+    "game-model.js": "4ef3ed5d3930ea128f55a6aeea642c33c51be2899be7284c6695ebc5c3bb3b60",
+    "game.js": "b8c9c6e7b295a484381ed425bc6795539f4b50504e4b862b26a826f4fde5c332",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "level 1: solve public crossing sums with ordinary digit cycles and explicit submit",
+      "passed": true,
+      "level": 0,
+      "edits": 43,
+      "checks": 1,
+      "mistakes": 0
+    },
+    {
+      "name": "level 2: solve public crossing sums with ordinary digit cycles and explicit submit",
+      "passed": true,
+      "level": 1,
+      "edits": 64,
+      "checks": 1,
+      "mistakes": 0
+    },
+    {
+      "name": "level 3: solve public crossing sums with ordinary digit cycles and explicit submit",
+      "passed": true,
+      "level": 2,
+      "edits": 95,
+      "checks": 1,
+      "mistakes": 0
+    },
+    {
+      "name": "fixed cells and incomplete submissions are free; navigation does not wrap",
+      "passed": true,
+      "fixedCellProtected": true,
+      "incompleteFree": true,
+      "noWrap": true
+    },
+    {
+      "name": "A is edge-triggered across pause and ten genuine presses cycle back to blank",
+      "passed": true,
+      "heldDoesNotRepeat": true,
+      "pauseFreeze": true,
+      "cycleToBlank": true
+    },
+    {
+      "name": "a complete wrong board naturally loses after three separate submissions",
+      "passed": true,
+      "checks": 3,
+      "mistakes": 3,
+      "terminalFrozen": true
+    },
+    {
+      "name": "correcting entries clears stale errors and wins on the third allowed check",
+      "passed": true,
+      "thirdCheckWon": true,
+      "mistakesRemainTwo": true,
+      "editingClearsOldCheck": true
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T17:04:29.899Z"
+}

@@ -1,0 +1,43 @@
+{
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "a148be742112583109bf63b502353d61f72e2fed55294260131c746b3088f1ae",
+    "game-model.js": "c3b8313a160a7eff8cc818e57679720e67de7a1a3db04d4f87d444673272c444",
+    "game.js": "eaf1bd3d90c1bf6997e9723f3a30cf8eb9dba79aa65bee916639464951563a14",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "screenshots": [
+    {
+      "path": "screenshots/black-group-1280.png",
+      "sha256": "547bfbcfda79f3328a67e205d7cd7d1d8fbb72b462bedad9802ae03b152f12e9"
+    },
+    {
+      "path": "screenshots/white-group-960.png",
+      "sha256": "3df190dfaca95ce8713fcc3e9732124a9159576e5df2f7857dd3817a673019e2"
+    },
+    {
+      "path": "screenshots/white-group-1280.png",
+      "sha256": "593a31e4a161a7aba575e0da1a440e38eaeaf6160f844d7f5332980ecb7f47f2"
+    }
+  ],
+  "reviewer": "independent QA agent",
+  "reviewed": false,
+  "observations": [
+    "Original1280 black-group and both1280/960 white-group screenshots inspected on the actual7\u00d77 board.",
+    "Initial focused black group3 has exactly5 visible liberty rings. After normal corner capture, focused white group[11,18,25,32] has exactly7 rings at[4,10,12,19,26,33,39].",
+    "Player1/4, AI0/4 and turns1/14 are truthful; cursorR3C5 gold frame is distinct from lastAI R2C5 red dot.",
+    "All board coordinates, stones, full Chinese sidebar and lower controls/status fit without clipping or overlapping labels."
+  ],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "status": "superseded",
+  "accepted": false,
+  "supersededReason": "Root review identified top corner column labels1/7 overlapped by stones, with tighter5x5 gutters. Earlier visual approval was incorrect. Renderer-only gutter fix and new5x5/7x7 screenshots at both sizes are required; old final/assets is not accepted final evidence.",
+  "correctedAssetsRequired": "/workspace/scratch/liberty-stones/visual-fix/assets"
+}

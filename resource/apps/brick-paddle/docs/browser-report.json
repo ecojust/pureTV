@@ -1,0 +1,91 @@
+{
+  "kind": "ordinary-browser-paddle-feedback-regression",
+  "startedAt": "2026-11-03T15:26:01.848Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "b3ac17d6ad47930e12278346bf9bb683d072ba2bff05e8158760a05844afdea2",
+    "game-model.js": "0bf81c69b12155f316fc6bd1dc478adf81c70ffbcff8a8e53595fc1766e35434",
+    "game.js": "93c830b87acde6a96e0763af90612f313b1105093c187c85760460065de9986f",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "largest field, durable-brick strengths and paddle instructions fit both viewports",
+      "passed": true,
+      "milliseconds": 5386.929527,
+      "screenshots": [
+        "/workspace/scratch/brick-paddle/browser-checks/initial-1280.png",
+        "/workspace/scratch/brick-paddle/browser-checks/initial-960.png"
+      ]
+    },
+    {
+      "name": "level 1: public-trajectory keyboard feedback clears all bricks",
+      "passed": true,
+      "milliseconds": 25271.721922,
+      "level": 0,
+      "hits": 6,
+      "lives": 3,
+      "paddleHits": 8,
+      "screenshot": "/workspace/scratch/brick-paddle/browser-checks/level-1-won.png"
+    },
+    {
+      "name": "level 2: public-trajectory keyboard feedback clears all bricks",
+      "passed": true,
+      "milliseconds": 24082.24502,
+      "level": 1,
+      "hits": 10,
+      "lives": 3,
+      "paddleHits": 8,
+      "screenshot": "/workspace/scratch/brick-paddle/browser-checks/level-2-won.png"
+    },
+    {
+      "name": "level 3: public-trajectory keyboard feedback clears all bricks",
+      "passed": true,
+      "milliseconds": 43523.849538999995,
+      "level": 2,
+      "hits": 13,
+      "lives": 3,
+      "paddleHits": 17,
+      "screenshot": "/workspace/scratch/brick-paddle/browser-checks/level-3-won.png"
+    },
+    {
+      "name": "three ordinary missed balls exhaust lives and terminal launch remains frozen",
+      "passed": true,
+      "milliseconds": 13207.440560000003,
+      "misses": 3,
+      "launches": 3
+    },
+    {
+      "name": "held directions move the attached ball continuously and clamp both paddle edges",
+      "passed": true,
+      "milliseconds": 4212.086555999995,
+      "left": 60,
+      "right": 660,
+      "launches": 0
+    },
+    {
+      "name": "held A cannot relaunch after a miss, including pause and resume",
+      "passed": true,
+      "milliseconds": 8070.905992,
+      "misses": 1,
+      "launchesAfterRelease": 2
+    },
+    {
+      "name": "pause freezes a flying ball and resumed held movement waits for physical release",
+      "passed": true,
+      "milliseconds": 3984.1596340000106,
+      "paddleBeforeRelease": 448,
+      "paddleAfterRelease": 400
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T15:28:09.769Z"
+}

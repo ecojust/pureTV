@@ -1,0 +1,828 @@
+{
+  "runId": 42455034353,
+  "sourceCommit": "a3b1ef17a08e574c5ad5e607f27dd5d1bc4d8166",
+  "tagObject": "6da7e0b94da0ebbb6bdb6f651dbcd8673a330016",
+  "status": "completed",
+  "conclusion": "success",
+  "runAttempt": 1,
+  "platforms": {
+    "windows-x64": {
+      "jobId": 128652110749,
+      "conclusion": "success",
+      "logRetrieved": true,
+      "logBytes": 197284,
+      "logSha256": "fceb2b4fc79a9d9f293aa3cb2fe6480aacee0d541feb21c93c30c567be0f4921",
+      "steps": {
+        "Verify version metadata": {
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "Check and build frontend": {
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "Test subnet comparison": {
+          "status": "completed",
+          "conclusion": "success",
+          "nodeSummary": {
+            "tests": 3,
+            "pass": 3,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        },
+        "Test read-only TV compatibility probe": {
+          "status": "completed",
+          "conclusion": "success",
+          "pythonTests": 28
+        },
+        "Test ADB core": {
+          "status": "completed",
+          "conclusion": "success",
+          "ignoredTests": [
+            {
+              "name": "adb::processes::tests::process_fixture",
+              "reason": "subprocess fixture; only the parent cleanup test launches this"
+            },
+            {
+              "name": "adb::windows_process::tests::child_process",
+              "reason": "Only launched as the owned process fixture for native cleanup tests"
+            }
+          ],
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 110,
+              "failed": 0,
+              "ignored": 2,
+              "measured": 0,
+              "filteredOut": 0
+            },
+            {
+              "result": "ok",
+              "passed": 0,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 0
+            }
+          ]
+        },
+        "Test Platform Tools installer": {
+          "status": "completed",
+          "conclusion": "success",
+          "ignoredTests": [
+            {
+              "name": "client_install::tests::native_update_package_preparation",
+              "reason": "requires an actual current-platform release package and isolated installation"
+            },
+            {
+              "name": "client_updates::tests::live_gitee_discovery_and_verified_client_download",
+              "reason": "downloads one public client package into an isolated temporary directory"
+            },
+            {
+              "name": "forum::tests::live_public_gitee_detail_and_replies",
+              "reason": "reads the live public Gitee API; run explicitly"
+            },
+            {
+              "name": "forum::tests::live_public_gitee_issues",
+              "reason": "reads the live public Gitee API; run explicitly"
+            },
+            {
+              "name": "market::tests::live_store_catalog_and_download",
+              "reason": "downloads the public catalog, small and large APKs, and reuses verified cache"
+            },
+            {
+              "name": "package_insights::tests::live_source_has_known_android_entry_and_exact_unknown_lookup",
+              "reason": "downloads the public UAD-ng list; no list is bundled"
+            },
+            {
+              "name": "platform_tools::tests::mirror_download_and_adb_check",
+              "reason": "Downloads the pinned Tencent mirror package and executes adb version; no device commands"
+            },
+            {
+              "name": "platform_tools::tests::official_download_and_offline_reuse",
+              "reason": "Downloads the pinned Google package and executes adb version; no device commands"
+            }
+          ],
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 104,
+              "failed": 0,
+              "ignored": 8,
+              "measured": 0,
+              "filteredOut": 0
+            }
+          ]
+        },
+        "Verify official Platform Tools download and offline reuse": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 111
+            }
+          ]
+        },
+        "Verify Tencent mirror download and ADB": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 111
+            }
+          ]
+        },
+        "Test desktop UI": {
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        "Test SVG normalization": {
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        "Verify actual client update installation": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 111
+            }
+          ],
+          "actualUpgrade": {
+            "baselineVersion": "0.4.10",
+            "currentVersion": "0.5.6",
+            "helperUpgrade": true,
+            "normalShutdown": true,
+            "relaunch": true,
+            "retainedData": true
+          }
+        },
+        "Verify MCP against the running desktop": {
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        "Verify macOS DMG, bundle signature and installed startup": {
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      },
+      "excerptSha256": "fc329fc009c00c0921775dcab55d10457547a7037d4d7d275a232b8d45bd25a6"
+    },
+    "macos-x64": {
+      "jobId": 128652110882,
+      "conclusion": "success",
+      "logRetrieved": true,
+      "logBytes": 199899,
+      "logSha256": "6092d099bf3ebb182f6631f0342305534bcc20d3fb0077299a641803dc609344",
+      "steps": {
+        "Verify version metadata": {
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "Check and build frontend": {
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "Test subnet comparison": {
+          "status": "completed",
+          "conclusion": "success",
+          "nodeSummary": {
+            "tests": 3,
+            "pass": 3,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        },
+        "Test read-only TV compatibility probe": {
+          "status": "completed",
+          "conclusion": "success",
+          "pythonTests": 28
+        },
+        "Test ADB core": {
+          "status": "completed",
+          "conclusion": "success",
+          "ignoredTests": [
+            {
+              "name": "adb::processes::tests::process_fixture",
+              "reason": "subprocess fixture; only the parent cleanup test launches this"
+            }
+          ],
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 110,
+              "failed": 0,
+              "ignored": 1,
+              "measured": 0,
+              "filteredOut": 0
+            },
+            {
+              "result": "ok",
+              "passed": 0,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 0
+            }
+          ]
+        },
+        "Test Platform Tools installer": {
+          "status": "completed",
+          "conclusion": "success",
+          "ignoredTests": [
+            {
+              "name": "client_install::tests::native_update_package_preparation",
+              "reason": "requires an actual current-platform release package and isolated installation"
+            },
+            {
+              "name": "client_updates::tests::live_gitee_discovery_and_verified_client_download",
+              "reason": "downloads one public client package into an isolated temporary directory"
+            },
+            {
+              "name": "forum::tests::live_public_gitee_detail_and_replies",
+              "reason": "reads the live public Gitee API; run explicitly"
+            },
+            {
+              "name": "forum::tests::live_public_gitee_issues",
+              "reason": "reads the live public Gitee API; run explicitly"
+            },
+            {
+              "name": "market::tests::live_store_catalog_and_download",
+              "reason": "downloads the public catalog, small and large APKs, and reuses verified cache"
+            },
+            {
+              "name": "package_insights::tests::live_source_has_known_android_entry_and_exact_unknown_lookup",
+              "reason": "downloads the public UAD-ng list; no list is bundled"
+            },
+            {
+              "name": "platform_tools::tests::mirror_download_and_adb_check",
+              "reason": "Downloads the pinned Tencent mirror package and executes adb version; no device commands"
+            },
+            {
+              "name": "platform_tools::tests::official_download_and_offline_reuse",
+              "reason": "Downloads the pinned Google package and executes adb version; no device commands"
+            }
+          ],
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 106,
+              "failed": 0,
+              "ignored": 8,
+              "measured": 0,
+              "filteredOut": 0
+            }
+          ]
+        },
+        "Verify official Platform Tools download and offline reuse": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 113
+            }
+          ]
+        },
+        "Verify Tencent mirror download and ADB": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 113
+            }
+          ]
+        },
+        "Test desktop UI": {
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        "Test SVG normalization": {
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        "Verify actual client update installation": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 113
+            }
+          ],
+          "actualUpgrade": {
+            "baselineVersion": "0.4.10",
+            "currentVersion": "0.5.6",
+            "helperUpgrade": true,
+            "normalShutdown": true,
+            "relaunch": true,
+            "retainedData": true
+          }
+        },
+        "Verify MCP against the running desktop": {
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        "Verify macOS DMG, bundle signature and installed startup": {
+          "status": "completed",
+          "conclusion": "success",
+          "bundleVerifications": [
+            {
+              "architecture": "x86_64",
+              "minimumMacOS": "11.0",
+              "completeBundleSignature": true
+            },
+            {
+              "architecture": "x86_64",
+              "minimumMacOS": "11.0",
+              "completeBundleSignature": true
+            }
+          ],
+          "installedCopyStartupSeconds": 5,
+          "startupDeviceOperations": false,
+          "normalExitAfterStoppingSimulatedAdb": true,
+          "dmgInstallStartupPassed": true,
+          "appleNotarizationVerified": false,
+          "gatekeeperApprovalVerified": false
+        }
+      },
+      "excerptSha256": "78c2d5d2f78742ce39ae849ed83cf3ae8bc345c5eb08462e63dce7199851ca67"
+    },
+    "linux-x64": {
+      "jobId": 128652110883,
+      "conclusion": "success",
+      "logRetrieved": true,
+      "logBytes": 414304,
+      "logSha256": "b7f15a16b1f20e61957a7793e70c51f2fca248179619d7566c1c4f27ccac7156",
+      "steps": {
+        "Verify version metadata": {
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "Check and build frontend": {
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "Test subnet comparison": {
+          "status": "completed",
+          "conclusion": "success",
+          "nodeSummary": {
+            "tests": 3,
+            "pass": 3,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        },
+        "Test read-only TV compatibility probe": {
+          "status": "completed",
+          "conclusion": "success",
+          "pythonTests": 28
+        },
+        "Test ADB core": {
+          "status": "completed",
+          "conclusion": "success",
+          "ignoredTests": [
+            {
+              "name": "adb::processes::tests::process_fixture",
+              "reason": "subprocess fixture; only the parent cleanup test launches this"
+            }
+          ],
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 110,
+              "failed": 0,
+              "ignored": 1,
+              "measured": 0,
+              "filteredOut": 0
+            },
+            {
+              "result": "ok",
+              "passed": 0,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 0
+            }
+          ]
+        },
+        "Test Platform Tools installer": {
+          "status": "completed",
+          "conclusion": "success",
+          "ignoredTests": [
+            {
+              "name": "client_install::tests::native_update_package_preparation",
+              "reason": "requires an actual current-platform release package and isolated installation"
+            },
+            {
+              "name": "client_updates::tests::live_gitee_discovery_and_verified_client_download",
+              "reason": "downloads one public client package into an isolated temporary directory"
+            },
+            {
+              "name": "forum::tests::live_public_gitee_detail_and_replies",
+              "reason": "reads the live public Gitee API; run explicitly"
+            },
+            {
+              "name": "forum::tests::live_public_gitee_issues",
+              "reason": "reads the live public Gitee API; run explicitly"
+            },
+            {
+              "name": "market::tests::live_store_catalog_and_download",
+              "reason": "downloads the public catalog, small and large APKs, and reuses verified cache"
+            },
+            {
+              "name": "package_insights::tests::live_source_has_known_android_entry_and_exact_unknown_lookup",
+              "reason": "downloads the public UAD-ng list; no list is bundled"
+            },
+            {
+              "name": "platform_tools::tests::mirror_download_and_adb_check",
+              "reason": "Downloads the pinned Tencent mirror package and executes adb version; no device commands"
+            },
+            {
+              "name": "platform_tools::tests::official_download_and_offline_reuse",
+              "reason": "Downloads the pinned Google package and executes adb version; no device commands"
+            }
+          ],
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 105,
+              "failed": 0,
+              "ignored": 8,
+              "measured": 0,
+              "filteredOut": 0
+            }
+          ]
+        },
+        "Verify official Platform Tools download and offline reuse": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 112
+            }
+          ]
+        },
+        "Verify Tencent mirror download and ADB": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 112
+            }
+          ]
+        },
+        "Test desktop UI": {
+          "status": "completed",
+          "conclusion": "success",
+          "passedScenarios": 171,
+          "reportedPassedScenarios": 171
+        },
+        "Test SVG normalization": {
+          "status": "completed",
+          "conclusion": "success",
+          "nodeSummary": {
+            "tests": 7,
+            "pass": 7,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        },
+        "Verify actual client update installation": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 112
+            }
+          ],
+          "linuxUpdate": {
+            "actualDebIdentity": true,
+            "nativeMetadataPreparation": true,
+            "systemInstallationPerformed": false
+          }
+        },
+        "Verify MCP against the running desktop": {
+          "status": "completed",
+          "conclusion": "success",
+          "passedMcpCheckLines": 72,
+          "expectedFailureMcpChecks": 12
+        },
+        "Verify macOS DMG, bundle signature and installed startup": {
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      },
+      "excerptSha256": "49a5cd1b9fe5a977a7823637de2f66ca769d160b83373cfe994c5f878ee9ccb6"
+    },
+    "macos-arm64": {
+      "jobId": 128652110885,
+      "conclusion": "success",
+      "logRetrieved": true,
+      "logBytes": 201344,
+      "logSha256": "3eedfb26e0317c3d2a2dd5ea53fcb1b66e15cc73a01db6e411ccdc5b1793016f",
+      "steps": {
+        "Verify version metadata": {
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "Check and build frontend": {
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "Test subnet comparison": {
+          "status": "completed",
+          "conclusion": "success",
+          "nodeSummary": {
+            "tests": 3,
+            "pass": 3,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          }
+        },
+        "Test read-only TV compatibility probe": {
+          "status": "completed",
+          "conclusion": "success",
+          "pythonTests": 28
+        },
+        "Test ADB core": {
+          "status": "completed",
+          "conclusion": "success",
+          "ignoredTests": [
+            {
+              "name": "adb::processes::tests::process_fixture",
+              "reason": "subprocess fixture; only the parent cleanup test launches this"
+            }
+          ],
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 110,
+              "failed": 0,
+              "ignored": 1,
+              "measured": 0,
+              "filteredOut": 0
+            },
+            {
+              "result": "ok",
+              "passed": 0,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 0
+            }
+          ]
+        },
+        "Test Platform Tools installer": {
+          "status": "completed",
+          "conclusion": "success",
+          "ignoredTests": [
+            {
+              "name": "client_install::tests::native_update_package_preparation",
+              "reason": "requires an actual current-platform release package and isolated installation"
+            },
+            {
+              "name": "client_updates::tests::live_gitee_discovery_and_verified_client_download",
+              "reason": "downloads one public client package into an isolated temporary directory"
+            },
+            {
+              "name": "forum::tests::live_public_gitee_detail_and_replies",
+              "reason": "reads the live public Gitee API; run explicitly"
+            },
+            {
+              "name": "forum::tests::live_public_gitee_issues",
+              "reason": "reads the live public Gitee API; run explicitly"
+            },
+            {
+              "name": "market::tests::live_store_catalog_and_download",
+              "reason": "downloads the public catalog, small and large APKs, and reuses verified cache"
+            },
+            {
+              "name": "package_insights::tests::live_source_has_known_android_entry_and_exact_unknown_lookup",
+              "reason": "downloads the public UAD-ng list; no list is bundled"
+            },
+            {
+              "name": "platform_tools::tests::mirror_download_and_adb_check",
+              "reason": "Downloads the pinned Tencent mirror package and executes adb version; no device commands"
+            },
+            {
+              "name": "platform_tools::tests::official_download_and_offline_reuse",
+              "reason": "Downloads the pinned Google package and executes adb version; no device commands"
+            }
+          ],
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 106,
+              "failed": 0,
+              "ignored": 8,
+              "measured": 0,
+              "filteredOut": 0
+            }
+          ]
+        },
+        "Verify official Platform Tools download and offline reuse": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 113
+            }
+          ]
+        },
+        "Verify Tencent mirror download and ADB": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 113
+            }
+          ]
+        },
+        "Test desktop UI": {
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        "Test SVG normalization": {
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        "Verify actual client update installation": {
+          "status": "completed",
+          "conclusion": "success",
+          "rustResults": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filteredOut": 113
+            }
+          ],
+          "actualUpgrade": {
+            "baselineVersion": "0.4.10",
+            "currentVersion": "0.5.6",
+            "helperUpgrade": true,
+            "normalShutdown": true,
+            "relaunch": true,
+            "retainedData": true
+          }
+        },
+        "Verify MCP against the running desktop": {
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        "Verify macOS DMG, bundle signature and installed startup": {
+          "status": "completed",
+          "conclusion": "success",
+          "bundleVerifications": [
+            {
+              "architecture": "arm64",
+              "minimumMacOS": "11.0",
+              "completeBundleSignature": true
+            },
+            {
+              "architecture": "arm64",
+              "minimumMacOS": "11.0",
+              "completeBundleSignature": true
+            }
+          ],
+          "installedCopyStartupSeconds": 5,
+          "startupDeviceOperations": false,
+          "normalExitAfterStoppingSimulatedAdb": true,
+          "dmgInstallStartupPassed": true,
+          "appleNotarizationVerified": false,
+          "gatekeeperApprovalVerified": false
+        }
+      },
+      "excerptSha256": "b20d35fc0aabc9decd9b5a8dd042d01fa1f73521a6990276db7eff54966cb3dd"
+    }
+  },
+  "publish": [
+    {
+      "databaseId": 128654520361,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "limitations": [
+    "Rust ignored and filteredOut counts are not executed passes.",
+    "Official download, Tencent mirror and update preparation each explicitly execute one test separately from the main native suite.",
+    "UI, SVG and MCP steps run only on Linux; skipped steps are not counted as passed tests.",
+    "MCP passedMcpCheckLines counts logged calls including repeated status polling; expectedFailureMcpChecks are expected rejections.",
+    "MCP and installed-startup ADB actions use simulated ADB, not a physical television.",
+    "Linux update checks validate the actual DEB and native metadata preparation without system package installation.",
+    "macOS signature/startup checks do not establish Apple notarization or Gatekeeper approval.",
+    "Public release download verification is handled separately from this CI audit."
+  ],
+  "frozenSourceFiles": {
+    ".github/workflows/desktop.yml": {
+      "sourceCommit": "a3b1ef17a08e574c5ad5e607f27dd5d1bc4d8166",
+      "bytes": 12961,
+      "sha256": "1464f1f7c5fdd6fda570cc75d19636498a82758235dc3d82fc94a824d45ec6ed"
+    },
+    "desktop/tests/ui.mjs": {
+      "sourceCommit": "a3b1ef17a08e574c5ad5e607f27dd5d1bc4d8166",
+      "bytes": 264168,
+      "sha256": "df008a392fbd2fa1aa406f035f8e44d94fcd0a543f544199e9c72bb70125d8f9"
+    },
+    "desktop/scripts/verify-client-update.py": {
+      "sourceCommit": "a3b1ef17a08e574c5ad5e607f27dd5d1bc4d8166",
+      "bytes": 20736,
+      "sha256": "7ebabbd54c6c92772e6183893ece0104920c9f4619451abdd02b51f1cd4fc808"
+    },
+    "desktop/scripts/verify-macos-bundle.py": {
+      "sourceCommit": "a3b1ef17a08e574c5ad5e607f27dd5d1bc4d8166",
+      "bytes": 8367,
+      "sha256": "0e78dfda462f4006ba463abd9ec2db137b0f09319371a2ad4cbdfb307d30dc82"
+    },
+    "desktop/scripts/verify-mcp.py": {
+      "sourceCommit": "a3b1ef17a08e574c5ad5e607f27dd5d1bc4d8166",
+      "bytes": 25991,
+      "sha256": "2ae2894dead736733b2d6306f8ce235ef54dce939f8260724b100c4b994e7f85"
+    },
+    "desktop/src-tauri/tauri.conf.json": {
+      "sourceCommit": "a3b1ef17a08e574c5ad5e607f27dd5d1bc4d8166",
+      "bytes": 1773,
+      "sha256": "b69ffff9861bc120fd496c7eebea2d16313ed5db8d7f42c66e6660b7476ba6bf"
+    }
+  },
+  "frozenMacOSSigningConfiguration": {
+    "signingIdentity": "-",
+    "meaning": "ad-hoc",
+    "source": "desktop/src-tauri/tauri.conf.json at a3b1ef17a08e574c5ad5e607f27dd5d1bc4d8166"
+  },
+  "extractionScripts": {
+    "audit-ci.py": "0d6d309c7c8cfd35e9470cecf274a7959e2f77d6f85065356a597e8b5b3c8b6d",
+    "summarize-ci.py": "4ab515e5f8846e25137a94fb5eb0d275afb9b09777ba50cbfa851f2349c7476c"
+  },
+  "totalRawLogBytes": 1012831
+}

@@ -1,0 +1,887 @@
+{
+  "schemaVersion": 1,
+  "game": "metronome-gates",
+  "passed": true,
+  "method": "Original raw inputs independently determine neutral/epoch gates, direction and button edges. Only fresh-input times and absolute beat boundaries form the queue transaction calendar. FIFO identities drive one public-grid classification per beat; integer modular gates and actual arrival prefixes determine marker ownership, score and the first terminal. Every actual frame/lastStep/receipt is compared; no Model/pilot import, route search, new gameplay or empty-tick game-state replay.",
+  "limitations": [
+    "Only the approved first six public ordinary cases. Formal synthetic boundaries, browser controller/pause/disconnect/retry and recording evidence are separate.",
+    "This corpus contains valid fixed positive-dt playing calls. Invalid dt, gaps, calls after an observed terminal or frames past the independently derived first terminal are rejected; invalid-dt and post-terminal no-op behavior is not claimed as ordinary coverage.",
+    "Full-capacity, undo, simultaneous edits, same-boundary enqueue/consume, invalid input, cancel reentry and final-budget victory/hazard are counted only when actually observed; no fixtures or extra routes are created.",
+    "An optional terminal observation timing acknowledges an existing terminal receipt and applies no input. It is bound separately and never counted as a new interval.",
+    "All integer identities, clocks, coordinates, gate residues and priorities use exact comparison with no epsilon. Numeric error is reported in each original field unit; elapsed derives from tick/60.",
+    "Only queueReceipts and beatReceipts are prefix encoded. Mutable queue/player/markers/input/last fields remain full actual observations; serialized equality cannot prove object identity or Object.freeze.",
+    "Production/pilot/raw diagnostic-bearing originals are not read. Their byte identities and ordinary source window are bound through the root-approved public projection; no future-route or feasibility material is used."
+  ],
+  "sources": {
+    "contract": {
+      "repoRelative": "resource/apps/metronome-gates/docs/model-contract.md",
+      "sha256": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29"
+    },
+    "publicInterface": {
+      "repoRelative": "resource/apps/metronome-gates/docs/public-interface.md",
+      "sha256": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540"
+    },
+    "publicDesign": {
+      "repoRelative": "resource/apps/metronome-gates/docs/public-design.md",
+      "sha256": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea"
+    },
+    "oracle": {
+      "repoRelative": "resource/apps/metronome-gates/tests/gate-event-oracle.mjs",
+      "sha256": "663e90504c8235eb2d0370bbeaea8dae08a300d3717e51bfb0db6503a09fda38"
+    },
+    "runner": {
+      "repoRelative": "resource/apps/metronome-gates/tests/independent-gate-review.mjs",
+      "sha256": "695e64a5441f77fdd60c84f1b6b63115de801517b974e904441b3bfa833e7116"
+    },
+    "publicIndex": {
+      "scratchRelative": "hundred-games/metronome-gates/public-observations-first/index.json",
+      "sha256": "b85d307e9cd2302206231dfbfed90a2297c3b0bbb55a78c966676df35b5cb364"
+    },
+    "originalReportSha256": "230f3e0256bc44a5c8527b04718f21168cfaba05dbea3dfd89f3ee8ca588a533",
+    "sourceRuns": [
+      {
+        "scratchRelative": "hundred-games/metronome-gates/ordinary-rounds-first/report.json",
+        "sha256": "230f3e0256bc44a5c8527b04718f21168cfaba05dbea3dfd89f3ee8ca588a533",
+        "startHashes": {
+          "automation": "ce4fdd89503b4b63fdb8fab84aeb1a993582d781e9d6e997f5c77f4875886d82",
+          "model": "3c2a9b53b5b1f009be2a254c804832c2536a1bec9ff6173038b694a55b732cc6",
+          "contract": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29",
+          "publicInterface": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540",
+          "publicDesign": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea",
+          "harness": "89f88cb6d83de42343d5611678c4c3925b0a50cb842f26b8f440bc5334aa6084",
+          "evidenceFormat": "4899fde391dd4a9e783102c76b262a46bf00790dcb62c3698b3b27767c600702",
+          "approvedPins": "d9a22f29a665f441e41dc72a8de614ec6afb8c0f1facaff876dd8729d6885952"
+        },
+        "endHashes": {
+          "automation": "ce4fdd89503b4b63fdb8fab84aeb1a993582d781e9d6e997f5c77f4875886d82",
+          "model": "3c2a9b53b5b1f009be2a254c804832c2536a1bec9ff6173038b694a55b732cc6",
+          "contract": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29",
+          "publicInterface": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540",
+          "publicDesign": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea",
+          "harness": "89f88cb6d83de42343d5611678c4c3925b0a50cb842f26b8f440bc5334aa6084",
+          "evidenceFormat": "4899fde391dd4a9e783102c76b262a46bf00790dcb62c3698b3b27767c600702",
+          "approvedPins": "d9a22f29a665f441e41dc72a8de614ec6afb8c0f1facaff876dd8729d6885952"
+        }
+      }
+    ]
+  },
+  "sourceWindow": {
+    "startedAt": "2026-11-02T17:22:56.898Z",
+    "completedAt": "2026-11-02T17:22:59.782Z",
+    "startHashes": {
+      "repo:resource/apps/metronome-gates/tests/independent-gate-review.mjs": "695e64a5441f77fdd60c84f1b6b63115de801517b974e904441b3bfa833e7116",
+      "repo:resource/apps/metronome-gates/tests/gate-event-oracle.mjs": "663e90504c8235eb2d0370bbeaea8dae08a300d3717e51bfb0db6503a09fda38",
+      "repo:resource/apps/metronome-gates/docs/model-contract.md": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29",
+      "repo:resource/apps/metronome-gates/docs/public-interface.md": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540",
+      "repo:resource/apps/metronome-gates/docs/public-design.md": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea",
+      "scratch:hundred-games/metronome-gates/public-observations-first/index.json": "b85d307e9cd2302206231dfbfed90a2297c3b0bbb55a78c966676df35b5cb364",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level1-record.json": "ab482dd0f9dac1fa1112ed85290637cc2fd92d9f678a6b367890591387498518",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level1-loss.json": "a4c0b82c8f09e770792502140b90c57b583436b564f16186bf2fe6df01dac076",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level2-record.json": "b2daf402073c8482e505db7915277dd4db96d205e5e87557bd76594f7a3ba34e",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level2-loss.json": "baab0df2c253d17c0387b83173b7840855ea44f22304e930bb417a8be9d66f58",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level3-record.json": "5d1069ef29328cc2dd3d829704666aa1eb37deb1891c06e801f3b162c17aba5d",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level3-loss.json": "7d02b7726634217e5d463cda86e64fbe19bc5ee56f33f13f67b9f5df0183a61b"
+    },
+    "endHashes": {
+      "repo:resource/apps/metronome-gates/tests/independent-gate-review.mjs": "695e64a5441f77fdd60c84f1b6b63115de801517b974e904441b3bfa833e7116",
+      "repo:resource/apps/metronome-gates/tests/gate-event-oracle.mjs": "663e90504c8235eb2d0370bbeaea8dae08a300d3717e51bfb0db6503a09fda38",
+      "repo:resource/apps/metronome-gates/docs/model-contract.md": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29",
+      "repo:resource/apps/metronome-gates/docs/public-interface.md": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540",
+      "repo:resource/apps/metronome-gates/docs/public-design.md": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea",
+      "scratch:hundred-games/metronome-gates/public-observations-first/index.json": "b85d307e9cd2302206231dfbfed90a2297c3b0bbb55a78c966676df35b5cb364",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level1-record.json": "ab482dd0f9dac1fa1112ed85290637cc2fd92d9f678a6b367890591387498518",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level1-loss.json": "a4c0b82c8f09e770792502140b90c57b583436b564f16186bf2fe6df01dac076",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level2-record.json": "b2daf402073c8482e505db7915277dd4db96d205e5e87557bd76594f7a3ba34e",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level2-loss.json": "baab0df2c253d17c0387b83173b7840855ea44f22304e930bb417a8be9d66f58",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level3-record.json": "5d1069ef29328cc2dd3d829704666aa1eb37deb1891c06e801f3b162c17aba5d",
+      "scratch:hundred-games/metronome-gates/public-observations-first/level3-loss.json": "7d02b7726634217e5d463cda86e64fbe19bc5ee56f33f13f67b9f5df0183a61b"
+    },
+    "unchanged": true
+  },
+  "assertions": 7526631,
+  "roundAssertions": 7526602,
+  "globalAssertions": 29,
+  "failureCount": 0,
+  "failures": [],
+  "exception": null,
+  "comparisonTolerance": 0,
+  "maxAbsoluteNumericError": 0,
+  "totals": {
+    "frames": 14766,
+    "intervals": 14760,
+    "fullSnapshots": 14778,
+    "retained": 621,
+    "compactSamples": 1845,
+    "terminalAcknowledgements": 6,
+    "eventWindows": 410,
+    "operations": 410,
+    "inputChanges": 410,
+    "queueCalendarBoundaries": 410,
+    "queueReceipts": 205,
+    "beatReceipts": 205,
+    "commandsEnqueued": 205,
+    "commandsUndone": 0,
+    "commandsConsumed": 205,
+    "commandsRetained": 0
+  },
+  "rounds": [
+    {
+      "label": "level1-record",
+      "difficulty": 0,
+      "level": 1,
+      "passed": true,
+      "assertions": 1167551,
+      "counts": {
+        "frames": 2665,
+        "intervals": 2664,
+        "fullSnapshots": 2667,
+        "retained": 112,
+        "compactSamples": 333,
+        "terminalAcknowledgements": 1,
+        "eventWindows": 74,
+        "operations": 74,
+        "inputChanges": 74,
+        "queueCalendarBoundaries": 74,
+        "queueReceipts": 37,
+        "beatReceipts": 37,
+        "commandsEnqueued": 37,
+        "commandsUndone": 0,
+        "commandsConsumed": 37,
+        "commandsRetained": 0
+      },
+      "coverage": {
+        "inputModes": {
+          "neutral_ack": 1,
+          "active": 2663
+        },
+        "freshEdges": {
+          "direction": 36,
+          "a": 1,
+          "b": 0
+        },
+        "queueResults": {
+          "enqueued": 37
+        },
+        "beatOutcomes": {
+          "moved": 36,
+          "waited": 1
+        },
+        "gateChecksByPeriod": {
+          "3:open": 2,
+          "2:open": 2
+        },
+        "nonBeatIntervals": 2627,
+        "nonBeatQueueEdits": 37,
+        "maxQueueLength": 1,
+        "multipleEditsSameTick": 0,
+        "sameTickEnqueueConsumption": 0,
+        "explicitWaits": 1,
+        "emptyWaits": 0,
+        "invalidAxes": 0,
+        "invalidMenu": 0,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "isolationBeats": 0,
+        "neutralAcknowledgements": 1,
+        "reentryAcknowledgements": 0,
+        "deadbandInputs": 0,
+        "verticalTies": 0,
+        "directionHeldWithoutFresh": 147,
+        "closedGateWaits": 0,
+        "closedOriginDepartures": 4,
+        "markerRevisits": 0,
+        "lockedExitVisits": 0,
+        "lastBudgetBeatWins": 0,
+        "lastBudgetBeatHazards": 0,
+        "terminalQueuedCommands": 0
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "all_markers_exit",
+          "tick": 2664,
+          "beatNo": 37,
+          "position": {
+            "x": 3,
+            "y": 1
+          },
+          "markerIds": [
+            "m3",
+            "m2",
+            "m1"
+          ],
+          "beatsRemaining": 11,
+          "commandId": 37
+        },
+        "tick": 2664,
+        "elapsed": 44.4,
+        "beatNo": 37,
+        "beatPhaseTicks": 0,
+        "ticksUntilBeat": 72,
+        "beatsRemaining": 11,
+        "player": {
+          "x": 3,
+          "y": 1
+        },
+        "collectedMarkerIds": [
+          "m3",
+          "m2",
+          "m1"
+        ],
+        "collectedCount": 3,
+        "exitUnlocked": true,
+        "score": 1300,
+        "nextCommandId": 38,
+        "queue": [],
+        "edgeOrdinals": {
+          "direction": 36,
+          "a": 1,
+          "b": 0
+        }
+      },
+      "source": {
+        "file": "level1-record.json",
+        "projectedSha256": "ab482dd0f9dac1fa1112ed85290637cc2fd92d9f678a6b367890591387498518",
+        "originalRawSha256": "41e51decd43812e0942fa276e6e6337173bcad5489e9d8a84bfc4ce77481c293",
+        "originalReportSha256": "230f3e0256bc44a5c8527b04718f21168cfaba05dbea3dfd89f3ee8ca588a533",
+        "sourceHashes": {
+          "automation": "ce4fdd89503b4b63fdb8fab84aeb1a993582d781e9d6e997f5c77f4875886d82",
+          "model": "3c2a9b53b5b1f009be2a254c804832c2536a1bec9ff6173038b694a55b732cc6",
+          "contract": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29",
+          "publicInterface": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540",
+          "publicDesign": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea",
+          "harness": "89f88cb6d83de42343d5611678c4c3925b0a50cb842f26b8f440bc5334aa6084",
+          "evidenceFormat": "4899fde391dd4a9e783102c76b262a46bf00790dcb62c3698b3b27767c600702",
+          "approvedPins": "d9a22f29a665f441e41dc72a8de614ec6afb8c0f1facaff876dd8729d6885952"
+        }
+      }
+    },
+    {
+      "label": "level1-loss",
+      "difficulty": 0,
+      "level": 1,
+      "passed": true,
+      "assertions": 125987,
+      "counts": {
+        "frames": 289,
+        "intervals": 288,
+        "fullSnapshots": 291,
+        "retained": 13,
+        "compactSamples": 36,
+        "terminalAcknowledgements": 1,
+        "eventWindows": 8,
+        "operations": 8,
+        "inputChanges": 8,
+        "queueCalendarBoundaries": 8,
+        "queueReceipts": 4,
+        "beatReceipts": 4,
+        "commandsEnqueued": 4,
+        "commandsUndone": 0,
+        "commandsConsumed": 4,
+        "commandsRetained": 0
+      },
+      "coverage": {
+        "inputModes": {
+          "neutral_ack": 1,
+          "active": 287
+        },
+        "freshEdges": {
+          "direction": 4,
+          "a": 0,
+          "b": 0
+        },
+        "queueResults": {
+          "enqueued": 4
+        },
+        "beatOutcomes": {
+          "moved": 3,
+          "closed_gate": 1
+        },
+        "gateChecksByPeriod": {
+          "3:closed": 1
+        },
+        "nonBeatIntervals": 284,
+        "nonBeatQueueEdits": 4,
+        "maxQueueLength": 1,
+        "multipleEditsSameTick": 0,
+        "sameTickEnqueueConsumption": 0,
+        "explicitWaits": 0,
+        "emptyWaits": 0,
+        "invalidAxes": 0,
+        "invalidMenu": 0,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "isolationBeats": 0,
+        "neutralAcknowledgements": 1,
+        "reentryAcknowledgements": 0,
+        "deadbandInputs": 0,
+        "verticalTies": 0,
+        "directionHeldWithoutFresh": 19,
+        "closedGateWaits": 0,
+        "closedOriginDepartures": 0,
+        "markerRevisits": 0,
+        "lockedExitVisits": 0,
+        "lastBudgetBeatWins": 0,
+        "lastBudgetBeatHazards": 0,
+        "terminalQueuedCommands": 0
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "closed_gate",
+          "tick": 288,
+          "beatNo": 4,
+          "position": {
+            "x": 1,
+            "y": 4
+          },
+          "markerIds": [],
+          "beatsRemaining": 44,
+          "commandId": 4
+        },
+        "tick": 288,
+        "elapsed": 4.8,
+        "beatNo": 4,
+        "beatPhaseTicks": 0,
+        "ticksUntilBeat": 72,
+        "beatsRemaining": 44,
+        "player": {
+          "x": 1,
+          "y": 4
+        },
+        "collectedMarkerIds": [],
+        "collectedCount": 0,
+        "exitUnlocked": false,
+        "score": 0,
+        "nextCommandId": 5,
+        "queue": [],
+        "edgeOrdinals": {
+          "direction": 4,
+          "a": 0,
+          "b": 0
+        }
+      },
+      "source": {
+        "file": "level1-loss.json",
+        "projectedSha256": "a4c0b82c8f09e770792502140b90c57b583436b564f16186bf2fe6df01dac076",
+        "originalRawSha256": "893ef1176db54932cbcfebe2671f02327bd5349c063f37c1259bc3656cd6035b",
+        "originalReportSha256": "230f3e0256bc44a5c8527b04718f21168cfaba05dbea3dfd89f3ee8ca588a533",
+        "sourceHashes": {
+          "automation": "ce4fdd89503b4b63fdb8fab84aeb1a993582d781e9d6e997f5c77f4875886d82",
+          "model": "3c2a9b53b5b1f009be2a254c804832c2536a1bec9ff6173038b694a55b732cc6",
+          "contract": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29",
+          "publicInterface": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540",
+          "publicDesign": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea",
+          "harness": "89f88cb6d83de42343d5611678c4c3925b0a50cb842f26b8f440bc5334aa6084",
+          "evidenceFormat": "4899fde391dd4a9e783102c76b262a46bf00790dcb62c3698b3b27767c600702",
+          "approvedPins": "d9a22f29a665f441e41dc72a8de614ec6afb8c0f1facaff876dd8729d6885952"
+        }
+      }
+    },
+    {
+      "label": "level2-record",
+      "difficulty": 1,
+      "level": 2,
+      "passed": true,
+      "assertions": 1803315,
+      "counts": {
+        "frames": 3673,
+        "intervals": 3672,
+        "fullSnapshots": 3675,
+        "retained": 154,
+        "compactSamples": 459,
+        "terminalAcknowledgements": 1,
+        "eventWindows": 102,
+        "operations": 102,
+        "inputChanges": 102,
+        "queueCalendarBoundaries": 102,
+        "queueReceipts": 51,
+        "beatReceipts": 51,
+        "commandsEnqueued": 51,
+        "commandsUndone": 0,
+        "commandsConsumed": 51,
+        "commandsRetained": 0
+      },
+      "coverage": {
+        "inputModes": {
+          "neutral_ack": 1,
+          "active": 3671
+        },
+        "freshEdges": {
+          "direction": 50,
+          "a": 1,
+          "b": 0
+        },
+        "queueResults": {
+          "enqueued": 51
+        },
+        "beatOutcomes": {
+          "moved": 50,
+          "waited": 1
+        },
+        "gateChecksByPeriod": {
+          "2:open": 5,
+          "3:open": 3
+        },
+        "nonBeatIntervals": 3621,
+        "nonBeatQueueEdits": 51,
+        "maxQueueLength": 1,
+        "multipleEditsSameTick": 0,
+        "sameTickEnqueueConsumption": 0,
+        "explicitWaits": 1,
+        "emptyWaits": 0,
+        "invalidAxes": 0,
+        "invalidMenu": 0,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "isolationBeats": 0,
+        "neutralAcknowledgements": 1,
+        "reentryAcknowledgements": 0,
+        "deadbandInputs": 0,
+        "verticalTies": 0,
+        "directionHeldWithoutFresh": 203,
+        "closedGateWaits": 0,
+        "closedOriginDepartures": 8,
+        "markerRevisits": 1,
+        "lockedExitVisits": 1,
+        "lastBudgetBeatWins": 0,
+        "lastBudgetBeatHazards": 0,
+        "terminalQueuedCommands": 0
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "all_markers_exit",
+          "tick": 3672,
+          "beatNo": 51,
+          "position": {
+            "x": 6,
+            "y": 9
+          },
+          "markerIds": [
+            "m1",
+            "m3",
+            "m2",
+            "m4"
+          ],
+          "beatsRemaining": 13,
+          "commandId": 51
+        },
+        "tick": 3672,
+        "elapsed": 61.2,
+        "beatNo": 51,
+        "beatPhaseTicks": 0,
+        "ticksUntilBeat": 72,
+        "beatsRemaining": 13,
+        "player": {
+          "x": 6,
+          "y": 9
+        },
+        "collectedMarkerIds": [
+          "m1",
+          "m3",
+          "m2",
+          "m4"
+        ],
+        "collectedCount": 4,
+        "exitUnlocked": true,
+        "score": 1400,
+        "nextCommandId": 52,
+        "queue": [],
+        "edgeOrdinals": {
+          "direction": 50,
+          "a": 1,
+          "b": 0
+        }
+      },
+      "source": {
+        "file": "level2-record.json",
+        "projectedSha256": "b2daf402073c8482e505db7915277dd4db96d205e5e87557bd76594f7a3ba34e",
+        "originalRawSha256": "1fecd17d39349dad52ef162a0788f30b28c9c7802f71d8da3c38b8bc625d6d13",
+        "originalReportSha256": "230f3e0256bc44a5c8527b04718f21168cfaba05dbea3dfd89f3ee8ca588a533",
+        "sourceHashes": {
+          "automation": "ce4fdd89503b4b63fdb8fab84aeb1a993582d781e9d6e997f5c77f4875886d82",
+          "model": "3c2a9b53b5b1f009be2a254c804832c2536a1bec9ff6173038b694a55b732cc6",
+          "contract": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29",
+          "publicInterface": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540",
+          "publicDesign": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea",
+          "harness": "89f88cb6d83de42343d5611678c4c3925b0a50cb842f26b8f440bc5334aa6084",
+          "evidenceFormat": "4899fde391dd4a9e783102c76b262a46bf00790dcb62c3698b3b27767c600702",
+          "approvedPins": "d9a22f29a665f441e41dc72a8de614ec6afb8c0f1facaff876dd8729d6885952"
+        }
+      }
+    },
+    {
+      "label": "level2-loss",
+      "difficulty": 1,
+      "level": 2,
+      "passed": true,
+      "assertions": 2211888,
+      "counts": {
+        "frames": 4609,
+        "intervals": 4608,
+        "fullSnapshots": 4611,
+        "retained": 193,
+        "compactSamples": 576,
+        "terminalAcknowledgements": 1,
+        "eventWindows": 128,
+        "operations": 128,
+        "inputChanges": 128,
+        "queueCalendarBoundaries": 128,
+        "queueReceipts": 64,
+        "beatReceipts": 64,
+        "commandsEnqueued": 64,
+        "commandsUndone": 0,
+        "commandsConsumed": 64,
+        "commandsRetained": 0
+      },
+      "coverage": {
+        "inputModes": {
+          "neutral_ack": 1,
+          "active": 4607
+        },
+        "freshEdges": {
+          "direction": 0,
+          "a": 64,
+          "b": 0
+        },
+        "queueResults": {
+          "enqueued": 64
+        },
+        "beatOutcomes": {
+          "waited": 64
+        },
+        "gateChecksByPeriod": {},
+        "nonBeatIntervals": 4544,
+        "nonBeatQueueEdits": 64,
+        "maxQueueLength": 1,
+        "multipleEditsSameTick": 0,
+        "sameTickEnqueueConsumption": 0,
+        "explicitWaits": 64,
+        "emptyWaits": 0,
+        "invalidAxes": 0,
+        "invalidMenu": 0,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "isolationBeats": 0,
+        "neutralAcknowledgements": 1,
+        "reentryAcknowledgements": 0,
+        "deadbandInputs": 0,
+        "verticalTies": 0,
+        "directionHeldWithoutFresh": 0,
+        "closedGateWaits": 0,
+        "closedOriginDepartures": 0,
+        "markerRevisits": 0,
+        "lockedExitVisits": 0,
+        "lastBudgetBeatWins": 0,
+        "lastBudgetBeatHazards": 0,
+        "terminalQueuedCommands": 0
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "beat_budget",
+          "tick": 4608,
+          "beatNo": 64,
+          "position": {
+            "x": 6,
+            "y": 1
+          },
+          "markerIds": [],
+          "beatsRemaining": 0,
+          "commandId": 64
+        },
+        "tick": 4608,
+        "elapsed": 76.8,
+        "beatNo": 64,
+        "beatPhaseTicks": 0,
+        "ticksUntilBeat": 72,
+        "beatsRemaining": 0,
+        "player": {
+          "x": 6,
+          "y": 1
+        },
+        "collectedMarkerIds": [],
+        "collectedCount": 0,
+        "exitUnlocked": false,
+        "score": 0,
+        "nextCommandId": 65,
+        "queue": [],
+        "edgeOrdinals": {
+          "direction": 0,
+          "a": 64,
+          "b": 0
+        }
+      },
+      "source": {
+        "file": "level2-loss.json",
+        "projectedSha256": "baab0df2c253d17c0387b83173b7840855ea44f22304e930bb417a8be9d66f58",
+        "originalRawSha256": "0e94a8132093f76114360bd418bdf6ff4c3b1feff73bd1c78327a03d875d73a9",
+        "originalReportSha256": "230f3e0256bc44a5c8527b04718f21168cfaba05dbea3dfd89f3ee8ca588a533",
+        "sourceHashes": {
+          "automation": "ce4fdd89503b4b63fdb8fab84aeb1a993582d781e9d6e997f5c77f4875886d82",
+          "model": "3c2a9b53b5b1f009be2a254c804832c2536a1bec9ff6173038b694a55b732cc6",
+          "contract": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29",
+          "publicInterface": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540",
+          "publicDesign": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea",
+          "harness": "89f88cb6d83de42343d5611678c4c3925b0a50cb842f26b8f440bc5334aa6084",
+          "evidenceFormat": "4899fde391dd4a9e783102c76b262a46bf00790dcb62c3698b3b27767c600702",
+          "approvedPins": "d9a22f29a665f441e41dc72a8de614ec6afb8c0f1facaff876dd8729d6885952"
+        }
+      }
+    },
+    {
+      "label": "level3-record",
+      "difficulty": 2,
+      "level": 3,
+      "passed": true,
+      "assertions": 2036895,
+      "counts": {
+        "frames": 3241,
+        "intervals": 3240,
+        "fullSnapshots": 3243,
+        "retained": 136,
+        "compactSamples": 405,
+        "terminalAcknowledgements": 1,
+        "eventWindows": 90,
+        "operations": 90,
+        "inputChanges": 90,
+        "queueCalendarBoundaries": 90,
+        "queueReceipts": 45,
+        "beatReceipts": 45,
+        "commandsEnqueued": 45,
+        "commandsUndone": 0,
+        "commandsConsumed": 45,
+        "commandsRetained": 0
+      },
+      "coverage": {
+        "inputModes": {
+          "neutral_ack": 1,
+          "active": 3239
+        },
+        "freshEdges": {
+          "direction": 42,
+          "a": 3,
+          "b": 0
+        },
+        "queueResults": {
+          "enqueued": 45
+        },
+        "beatOutcomes": {
+          "moved": 42,
+          "waited": 3
+        },
+        "gateChecksByPeriod": {
+          "2:open": 5,
+          "3:open": 3
+        },
+        "nonBeatIntervals": 3195,
+        "nonBeatQueueEdits": 45,
+        "maxQueueLength": 1,
+        "multipleEditsSameTick": 0,
+        "sameTickEnqueueConsumption": 0,
+        "explicitWaits": 3,
+        "emptyWaits": 0,
+        "invalidAxes": 0,
+        "invalidMenu": 0,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "isolationBeats": 0,
+        "neutralAcknowledgements": 1,
+        "reentryAcknowledgements": 0,
+        "deadbandInputs": 0,
+        "verticalTies": 0,
+        "directionHeldWithoutFresh": 171,
+        "closedGateWaits": 0,
+        "closedOriginDepartures": 8,
+        "markerRevisits": 0,
+        "lockedExitVisits": 1,
+        "lastBudgetBeatWins": 0,
+        "lastBudgetBeatHazards": 0,
+        "terminalQueuedCommands": 0
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "all_markers_exit",
+          "tick": 3240,
+          "beatNo": 45,
+          "position": {
+            "x": 6,
+            "y": 1
+          },
+          "markerIds": [
+            "m4",
+            "m3",
+            "m2",
+            "m1"
+          ],
+          "beatsRemaining": 17,
+          "commandId": 45
+        },
+        "tick": 3240,
+        "elapsed": 54,
+        "beatNo": 45,
+        "beatPhaseTicks": 0,
+        "ticksUntilBeat": 72,
+        "beatsRemaining": 17,
+        "player": {
+          "x": 6,
+          "y": 1
+        },
+        "collectedMarkerIds": [
+          "m4",
+          "m3",
+          "m2",
+          "m1"
+        ],
+        "collectedCount": 4,
+        "exitUnlocked": true,
+        "score": 1400,
+        "nextCommandId": 46,
+        "queue": [],
+        "edgeOrdinals": {
+          "direction": 42,
+          "a": 3,
+          "b": 0
+        }
+      },
+      "source": {
+        "file": "level3-record.json",
+        "projectedSha256": "5d1069ef29328cc2dd3d829704666aa1eb37deb1891c06e801f3b162c17aba5d",
+        "originalRawSha256": "5ee3708801121a8803e8f99f7435460c94b0ddb3209a427f250d8f1e4b8bfc2b",
+        "originalReportSha256": "230f3e0256bc44a5c8527b04718f21168cfaba05dbea3dfd89f3ee8ca588a533",
+        "sourceHashes": {
+          "automation": "ce4fdd89503b4b63fdb8fab84aeb1a993582d781e9d6e997f5c77f4875886d82",
+          "model": "3c2a9b53b5b1f009be2a254c804832c2536a1bec9ff6173038b694a55b732cc6",
+          "contract": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29",
+          "publicInterface": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540",
+          "publicDesign": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea",
+          "harness": "89f88cb6d83de42343d5611678c4c3925b0a50cb842f26b8f440bc5334aa6084",
+          "evidenceFormat": "4899fde391dd4a9e783102c76b262a46bf00790dcb62c3698b3b27767c600702",
+          "approvedPins": "d9a22f29a665f441e41dc72a8de614ec6afb8c0f1facaff876dd8729d6885952"
+        }
+      }
+    },
+    {
+      "label": "level3-loss",
+      "difficulty": 2,
+      "level": 3,
+      "passed": true,
+      "assertions": 180966,
+      "counts": {
+        "frames": 289,
+        "intervals": 288,
+        "fullSnapshots": 291,
+        "retained": 13,
+        "compactSamples": 36,
+        "terminalAcknowledgements": 1,
+        "eventWindows": 8,
+        "operations": 8,
+        "inputChanges": 8,
+        "queueCalendarBoundaries": 8,
+        "queueReceipts": 4,
+        "beatReceipts": 4,
+        "commandsEnqueued": 4,
+        "commandsUndone": 0,
+        "commandsConsumed": 4,
+        "commandsRetained": 0
+      },
+      "coverage": {
+        "inputModes": {
+          "neutral_ack": 1,
+          "active": 287
+        },
+        "freshEdges": {
+          "direction": 4,
+          "a": 0,
+          "b": 0
+        },
+        "queueResults": {
+          "enqueued": 4
+        },
+        "beatOutcomes": {
+          "moved": 3,
+          "trap": 1
+        },
+        "gateChecksByPeriod": {},
+        "nonBeatIntervals": 284,
+        "nonBeatQueueEdits": 4,
+        "maxQueueLength": 1,
+        "multipleEditsSameTick": 0,
+        "sameTickEnqueueConsumption": 0,
+        "explicitWaits": 0,
+        "emptyWaits": 0,
+        "invalidAxes": 0,
+        "invalidMenu": 0,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "isolationBeats": 0,
+        "neutralAcknowledgements": 1,
+        "reentryAcknowledgements": 0,
+        "deadbandInputs": 0,
+        "verticalTies": 0,
+        "directionHeldWithoutFresh": 19,
+        "closedGateWaits": 0,
+        "closedOriginDepartures": 0,
+        "markerRevisits": 0,
+        "lockedExitVisits": 0,
+        "lastBudgetBeatWins": 0,
+        "lastBudgetBeatHazards": 0,
+        "terminalQueuedCommands": 0
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "trap",
+          "tick": 288,
+          "beatNo": 4,
+          "position": {
+            "x": 9,
+            "y": 6
+          },
+          "markerIds": [],
+          "beatsRemaining": 58,
+          "commandId": 4
+        },
+        "tick": 288,
+        "elapsed": 4.8,
+        "beatNo": 4,
+        "beatPhaseTicks": 0,
+        "ticksUntilBeat": 72,
+        "beatsRemaining": 58,
+        "player": {
+          "x": 9,
+          "y": 6
+        },
+        "collectedMarkerIds": [],
+        "collectedCount": 0,
+        "exitUnlocked": false,
+        "score": 0,
+        "nextCommandId": 5,
+        "queue": [],
+        "edgeOrdinals": {
+          "direction": 4,
+          "a": 0,
+          "b": 0
+        }
+      },
+      "source": {
+        "file": "level3-loss.json",
+        "projectedSha256": "7d02b7726634217e5d463cda86e64fbe19bc5ee56f33f13f67b9f5df0183a61b",
+        "originalRawSha256": "645dacf9cda5f1cd3bb01fe87c2fd842b65661037425257ef8633c7efb10bc5a",
+        "originalReportSha256": "230f3e0256bc44a5c8527b04718f21168cfaba05dbea3dfd89f3ee8ca588a533",
+        "sourceHashes": {
+          "automation": "ce4fdd89503b4b63fdb8fab84aeb1a993582d781e9d6e997f5c77f4875886d82",
+          "model": "3c2a9b53b5b1f009be2a254c804832c2536a1bec9ff6173038b694a55b732cc6",
+          "contract": "df9b0af9f11fefa401eaae9c078d372935a3d2122855c0db5c8d554d70316c29",
+          "publicInterface": "5ef47ee50b82b908be3fa81f05a73f29e8d6d8957e15692c1bbf5221144f4540",
+          "publicDesign": "722ffb614b0298ca5e839f9d37891f3e2d810435c16df70aebef648b2a2c55ea",
+          "harness": "89f88cb6d83de42343d5611678c4c3925b0a50cb842f26b8f440bc5334aa6084",
+          "evidenceFormat": "4899fde391dd4a9e783102c76b262a46bf00790dcb62c3698b3b27767c600702",
+          "approvedPins": "d9a22f29a665f441e41dc72a8de614ec6afb8c0f1facaff876dd8729d6885952"
+        }
+      }
+    }
+  ]
+}

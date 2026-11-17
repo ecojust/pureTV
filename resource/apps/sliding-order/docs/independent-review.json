@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "method": "Independent breadth-first graph from the ordered goal covers all181440 reachable boards. Routes then replay through normal create/step directional samples; no model fixture writes.",
+  "checks": [
+    "independent full reachable-state graph and nonwrapping adjacency",
+    "three exact shortest routes win through ordinary directional inputs",
+    "six real slide-and-undo cycles consume allowance yet final permitted solution wins",
+    "unsolved final permitted slide loses; terminal undo cannot refund or rescue it",
+    "empty-history undo and board-edge directions are freely blocked"
+  ],
+  "reachableBoards": 181440,
+  "layouts": [
+    {
+      "level": 0,
+      "minimumSlides": 8,
+      "allowance": 14,
+      "phase": "won"
+    },
+    {
+      "level": 1,
+      "minimumSlides": 12,
+      "allowance": 18,
+      "phase": "won"
+    },
+    {
+      "level": 2,
+      "minimumSlides": 18,
+      "allowance": 24,
+      "phase": "won"
+    }
+  ],
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "e29b2e55949eca09b0184b2bbbb2261c53d9144e3a957ca99a0f9e3985636170",
+    "tests/reference.cjs": "a7acdb5d8396b55eea5f4c10b80b7128fce109a1265d2e6f7e0c556225ce3945",
+    "tests/independent-check.cjs": "1c373952dea6edae26e0d6e4344ae0ae6afa2a43acce31cfc81591e639270a77"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

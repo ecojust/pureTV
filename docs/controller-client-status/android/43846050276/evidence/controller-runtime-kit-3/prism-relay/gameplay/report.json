@@ -1,0 +1,1478 @@
+{
+  "slug": "prism-relay",
+  "mode": "android",
+  "startedAt": "2026-11-16T10:14:32.938Z",
+  "status": "passed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "16dafb1efbfeb13efc4cdeaaa4b6f49356bb3a0d276d9d8b310d4b8ef1437931",
+    "tools/readme-controller-qa/cases.mjs": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71",
+    "tools/readme-controller-qa/client-status-dom.mjs": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e",
+    "tools/readme-controller-qa/client-status-cases.mjs": "53c3a55ba494288587d5883d4f8772dd3e16e78c375d471926e06534e872d493",
+    "tools/readme-controller-qa/sdk-peer.py": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-922ea8d3d0cd",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-922ea8d3d0cd",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 22,
+        "acks": 22,
+        "connections": 2
+      }
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "id": "prism-relay",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 0,
+          "tick": 0,
+          "timeLimit": 45,
+          "remaining": 45,
+          "timeLimitTicks": 450,
+          "remainingTicks": 450,
+          "score": 0,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 4.5,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 1,
+          "tracedStates": 4,
+          "message": "选中镜片 · A 顺时针 / B 逆时针 · 连续照亮目标 2 秒",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0,
+          "_aDown": false,
+          "_bDown": false,
+          "_direction": -1,
+          "_repeatIn": 0
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 370,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6749.968,
+          83.40000000000055,
+          16.599999999999454,
+          250,
+          2400.1000000000004,
+          99.89999999999964,
+          250,
+          183.39999999999964,
+          166.60000000000036,
+          166.70000000000073,
+          366.6999999999989,
+          299.90000000000146,
+          416.6999999999989
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false,
+          "connected": false,
+          "controllerKind": null
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 13,
+                  "top": 58,
+                  "right": 189,
+                  "bottom": 511
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44953/?room=d0j3ZyA24ViwqFYpAluiJuHU_hLWs7_d",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "controller-connected-android",
+      "before": null,
+      "after": {
+        "id": "prism-relay",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 0,
+          "tick": 0,
+          "timeLimit": 45,
+          "remaining": 45,
+          "timeLimitTicks": 450,
+          "remainingTicks": 450,
+          "score": 0,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 4.5,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 1,
+          "tracedStates": 4,
+          "message": "选中镜片 · A 顺时针 / B 逆时针 · 连续照亮目标 2 秒",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0,
+          "_aDown": false,
+          "_bDown": false,
+          "_direction": -1,
+          "_repeatIn": 0
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-922ea8d3d0cd",
+            "session": "wifi-61345f2b-2a50-4fef-8bbd-dfde1b5d1bae-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 370,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6749.968,
+          83.40000000000055,
+          16.599999999999454,
+          250,
+          2400.1000000000004,
+          99.89999999999964,
+          250,
+          183.39999999999964,
+          166.60000000000036,
+          166.70000000000073,
+          366.6999999999989,
+          299.90000000000146,
+          416.6999999999989,
+          250,
+          250,
+          133.39999999999964,
+          183.3000000000011,
+          183.29999999999927,
+          366.7000000000007,
+          33.29999999999927,
+          250.10000000000036,
+          183.29999999999927,
+          166.60000000000036,
+          16.700000000000728,
+          133.29999999999927,
+          200,
+          216.70000000000073,
+          600,
+          216.60000000000036,
+          83.39999999999964,
+          233.29999999999927,
+          216.70000000000073,
+          166.6999999999989,
+          200,
+          116.60000000000036,
+          150,
+          183.39999999999964,
+          216.60000000000218
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 22,
+                  "top": 208.1953125,
+                  "right": 180,
+                  "bottom": 277.1328125,
+                  "width": 158,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 13,
+                  "top": 58,
+                  "right": 189,
+                  "bottom": 511
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-922ea8d3d0cd",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-922ea8d3d0cd",
+                    "idText": "ID: virtual-922ea8d3d0cd",
+                    "visible": true,
+                    "rect": {
+                      "left": 22,
+                      "top": 208.1953125,
+                      "right": 180,
+                      "bottom": 277.1328125,
+                      "width": 158,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 13,
+                      "top": 58,
+                      "right": 189,
+                      "bottom": 511
+                    },
+                    "idRect": {
+                      "left": 63,
+                      "top": 235.5390625,
+                      "right": 171,
+                      "bottom": 269.1328125,
+                      "width": 108,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 13,
+                      "top": 58,
+                      "right": 189,
+                      "bottom": 511
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 63,
+                        "top": 236.5390625,
+                        "right": 163.8203125,
+                        "bottom": 250.5390625,
+                        "width": 100.8203125,
+                        "height": 14
+                      },
+                      {
+                        "left": 63,
+                        "top": 253.3359375,
+                        "right": 135.015625,
+                        "bottom": 267.3359375,
+                        "width": 72.015625,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 108,
+                    "idScrollWidth": 108,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 31,
+                      "top": 216.1953125,
+                      "right": 55,
+                      "bottom": 240.1953125,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44953/?room=d0j3ZyA24ViwqFYpAluiJuHU_hLWs7_d",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "controller-reconnected",
+      "before": null,
+      "after": {
+        "id": "prism-relay",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "seed": 29,
+          "difficulty": 0,
+          "level": 1,
+          "levelName": "一束光的转弯",
+          "width": 7,
+          "height": 5,
+          "phase": "playing",
+          "elapsed": 0,
+          "tick": 0,
+          "timeLimit": 45,
+          "remaining": 45,
+          "timeLimitTicks": 450,
+          "remainingTicks": 450,
+          "score": 0,
+          "cells": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            },
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            },
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "devices": [
+            {
+              "type": "mirror",
+              "x": 3,
+              "y": 3,
+              "id": "device-1",
+              "orientation": 1,
+              "name": "反射镜 1"
+            }
+          ],
+          "receivers": [
+            {
+              "type": "receiver",
+              "x": 3,
+              "y": 0,
+              "id": "receiver-1",
+              "required": 1,
+              "incident": 0,
+              "charge": 0,
+              "maxCharge": 20
+            }
+          ],
+          "hazards": [],
+          "sources": [
+            {
+              "type": "source",
+              "x": 0,
+              "y": 3,
+              "id": "source-1",
+              "direction": 0,
+              "color": 1
+            }
+          ],
+          "beams": [
+            {
+              "x1": 0,
+              "y1": 3,
+              "x2": 3,
+              "y2": 3,
+              "colorBits": 1
+            },
+            {
+              "x1": 3,
+              "y1": 3,
+              "x2": 3,
+              "y2": 4.5,
+              "colorBits": 1
+            }
+          ],
+          "selectedId": "device-1",
+          "chargeTicks": 20,
+          "hazardLimit": 300,
+          "traceVersion": 1,
+          "tracedStates": 4,
+          "message": "选中镜片 · A 顺时针 / B 逆时针 · 连续照亮目标 2 秒",
+          "events": [],
+          "lostReason": null,
+          "_tickRemainder": 0,
+          "_aDown": false,
+          "_bDown": false,
+          "_direction": -1,
+          "_repeatIn": 0
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-922ea8d3d0cd",
+            "session": "wifi-61345f2b-2a50-4fef-8bbd-dfde1b5d1bae-2",
+            "connected": true,
+            "cancelSeq": 3,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 370,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6749.968,
+          83.40000000000055,
+          16.599999999999454,
+          250,
+          2400.1000000000004,
+          99.89999999999964,
+          250,
+          183.39999999999964,
+          166.60000000000036,
+          166.70000000000073,
+          366.6999999999989,
+          299.90000000000146,
+          416.6999999999989,
+          250,
+          250,
+          133.39999999999964,
+          183.3000000000011,
+          183.29999999999927,
+          366.7000000000007,
+          33.29999999999927,
+          250.10000000000036,
+          183.29999999999927,
+          166.60000000000036,
+          16.700000000000728,
+          133.29999999999927,
+          200,
+          216.70000000000073,
+          600,
+          216.60000000000036,
+          83.39999999999964,
+          233.29999999999927,
+          216.70000000000073,
+          166.6999999999989,
+          200,
+          116.60000000000036,
+          150,
+          183.39999999999964,
+          216.60000000000218,
+          116.59999999999854,
+          216.79999999999927,
+          183.29999999999927,
+          166.70000000000073,
+          166.60000000000218,
+          166.6999999999971,
+          166.70000000000073,
+          183.29999999999927,
+          16.700000000000728,
+          116.70000000000073,
+          283.2999999999993,
+          166.60000000000218,
+          166.59999999999854,
+          166.70000000000073,
+          216.70000000000073,
+          150,
+          150,
+          183.29999999999927,
+          150,
+          250,
+          116.70000000000073,
+          250,
+          83.29999999999927,
+          166.70000000000073,
+          233.29999999999927,
+          183.29999999999927,
+          150.09999999999854,
+          166.60000000000218,
+          216.70000000000073,
+          200,
+          133.39999999999782,
+          100,
+          233.20000000000073
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 22,
+                  "top": 208.1953125,
+                  "right": 180,
+                  "bottom": 277.1328125,
+                  "width": 158,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 13,
+                  "top": 58,
+                  "right": 189,
+                  "bottom": 511
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-922ea8d3d0cd",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-922ea8d3d0cd",
+                    "idText": "ID: virtual-922ea8d3d0cd",
+                    "visible": true,
+                    "rect": {
+                      "left": 22,
+                      "top": 208.1953125,
+                      "right": 180,
+                      "bottom": 277.1328125,
+                      "width": 158,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 13,
+                      "top": 58,
+                      "right": 189,
+                      "bottom": 511
+                    },
+                    "idRect": {
+                      "left": 63,
+                      "top": 235.5390625,
+                      "right": 171,
+                      "bottom": 269.1328125,
+                      "width": 108,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 13,
+                      "top": 58,
+                      "right": 189,
+                      "bottom": 511
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 63,
+                        "top": 236.5390625,
+                        "right": 163.8203125,
+                        "bottom": 250.5390625,
+                        "width": 100.8203125,
+                        "height": 14
+                      },
+                      {
+                        "left": 63,
+                        "top": 253.3359375,
+                        "right": 135.015625,
+                        "bottom": 267.3359375,
+                        "width": 72.015625,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 108,
+                    "idScrollWidth": 108,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 31,
+                      "top": 216.1953125,
+                      "right": 55,
+                      "bottom": 240.1953125,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44953/?room=d0j3ZyA24ViwqFYpAluiJuHU_hLWs7_d",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Light Relay",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:39.198Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-922ea8d3d0cd"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:39.198Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:39.198Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:39.198Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:39.198Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:39.198Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:39.198Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:39.198Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:39.198Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:39.198Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:39.212Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:39.219Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:39.263Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:39.313Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:39.313Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:39.313Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:39.313Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:39.313Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:39.313Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:39.313Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:41.590Z",
+      "message": {
+        "type": "ping",
+        "seq": 11,
+        "controller_id": "virtual-922ea8d3d0cd"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:41.599Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.488Z",
+      "message": {
+        "type": "hello",
+        "seq": 12,
+        "controller_id": "virtual-922ea8d3d0cd"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.488Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.488Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.488Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.488Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.488Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.488Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.488Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.488Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.488Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-922ea8d3d0cd",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.495Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.500Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.530Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.533Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.551Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.555Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.557Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.559Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.560Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.564Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:46.589Z",
+      "message": {
+        "type": "ping",
+        "seq": 22,
+        "controller_id": "virtual-922ea8d3d0cd"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:46.592Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [
+    {
+      "connection": 1,
+      "event": "client-eof",
+      "at": "2026-11-16T10:14:43.865Z",
+      "pendingSeq": []
+    },
+    {
+      "connection": 1,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-16T10:14:43.865Z",
+      "waitMs": 0.08178200000111246,
+      "pendingSeq": []
+    }
+  ],
+  "screenshots": [
+    "menu-android.png",
+    "controller-connected-android.png",
+    "controller-disconnected.png",
+    "controller-reconnected.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "scope": "controller client status acceptance",
+  "statusAcceptanceEnvironment": "android-menu",
+  "fullGameplayAcceptance": false,
+  "ports": {
+    "tcpPort": 46225,
+    "observerPort": 37919
+  },
+  "finishedAt": "2026-11-16T10:14:50.072Z"
+}

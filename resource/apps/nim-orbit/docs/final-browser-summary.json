@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "sourceCommit": "0ca7e947e61c6bb4657ae30f8be19f597a870046",
+  "testedAssets": "/workspace/scratch/nim-orbit/assets",
+  "dedicatedDirectory": "/workspace/scratch/nim-orbit/browser",
+  "sharedDirectory": "/workspace/scratch/nim-orbit/qa",
+  "dedicatedChecksPassed": 7,
+  "sharedChecksPassed": 10,
+  "ordinaryRecordedWins": [
+    {
+      "level": 0,
+      "seconds": 6.013262136,
+      "playerMoves": 4,
+      "remaining": 0,
+      "reason": "player-last",
+      "misere": false
+    },
+    {
+      "level": 1,
+      "seconds": 18.019468139999997,
+      "playerMoves": 7,
+      "remaining": 0,
+      "reason": "player-last",
+      "misere": false
+    },
+    {
+      "level": 2,
+      "seconds": 26.011194764,
+      "playerMoves": 5,
+      "remaining": 0,
+      "reason": "opponent-last",
+      "misere": true
+    }
+  ],
+  "video": {
+    "path": "/workspace/scratch/nim-orbit/qa/recording/gameplay.mp4",
+    "bytes": 1912831,
+    "sha256": "decc5a0808abc0576e42afcdaa6041492178c716036b80030f8557c4f90232d9",
+    "capturedSeconds": 50.73311424255371,
+    "fullDecodePassed": true
+  },
+  "frameAdmission": {
+    "policy": "Acknowledge every observed CDP frame; retain strictly increasing finite timestamps. Omit and log invalid, duplicate, backward, or post-stop events. Never sort or rewrite retained timestamps.",
+    "rawCdpFrames": 475,
+    "acceptedCdpFrames": 475,
+    "droppedCdpFrames": 0,
+    "droppedFrames": []
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 29,
+    "rafIntervalMs": {
+      "count": 29,
+      "min": 16.599999999999454,
+      "median": 33.30000000000018,
+      "p95": 66.69999999999982,
+      "max": 83.30000000000018,
+      "mean": 36.779310344827564
+    },
+    "webglDrawCalls": {
+      "count": 29,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 29,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "visualReview": {
+    "playing960": true,
+    "playing1280": true,
+    "encodedSample": "screenshots/encoded-gameplay-24.png",
+    "note": "Viewed actual normal-rule 960 and misere-rule 1280 gameplay plus encoded 24-second largest-level play; pile numbers, planned removal, remaining stones, previous round and final-stone rule are clear."
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

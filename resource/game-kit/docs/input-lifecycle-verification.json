@@ -1,0 +1,157 @@
+{
+  "schema": 1,
+  "scope": "Shared runtime change verification. Protocol fixtures and actual existing-game compatibility are separate; this does not publish or replace any existing APK and does not increase the completed-game count.",
+  "passed": true,
+  "protocol": {
+    "scope": "Deterministic Chromium protocol fixtures with manually advanced RAF, instrumented model and controlled native phone snapshots. Not gameplay, performance or physical hardware evidence.",
+    "runtimeSha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "testScriptSha256": "523c90704cd00ab483142eb19ba6b18437b3968d32f93f700c9dc4ab8f985caf",
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "tests": [
+      {
+        "name": "Default games retain one-frame Enter A behavior",
+        "passed": true
+      },
+      {
+        "name": "Opt-in DOM Enter stays held and releases as A",
+        "passed": true
+      },
+      {
+        "name": "Opt-in native Enter down/up preserves held A",
+        "passed": true
+      },
+      {
+        "name": "Coalesced opt-in Enter tap survives zero-physics frames exactly once",
+        "passed": true
+      },
+      {
+        "name": "Holding the menu confirm and DOM repeat cannot create a game A",
+        "passed": true
+      },
+      {
+        "name": "Pause cancels held keyboard A; repeat cannot rearm before keyup",
+        "passed": true
+      },
+      {
+        "name": "Remote A/B held across pause stay quarantined until raw release",
+        "passed": true
+      },
+      {
+        "name": "Connected phone cancelSeq distinguishes cancellation from ordinary release",
+        "passed": true
+      },
+      {
+        "name": "CancelSeq change with a still-held remote button cannot restore that hold",
+        "passed": true
+      },
+      {
+        "name": "First phone connection establishes a cancelSeq baseline without cancelling local input",
+        "passed": true
+      },
+      {
+        "name": "CancelSeq wrap/reset is detected rather than ignored as a lower value",
+        "passed": true
+      },
+      {
+        "name": "Phone disconnect freezes the model and permits independent keyboard takeover",
+        "passed": true
+      },
+      {
+        "name": "Fresh phone hold sampled in the resume frame cannot bypass clearInput",
+        "passed": true
+      },
+      {
+        "name": "Cancellation survives zero-step RAF frames and reaches all substeps of its owned sample",
+        "passed": true
+      },
+      {
+        "name": "Retry clears held keyboard input and ignores its later DOM repeats",
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "existingGameCompatibility": {
+    "scope": "Ordinary browser input using the existing Magnetic Warehouse model/art and the candidate shared runtime. Resources come from a separate local unsigned compatibility build, not the previously published signed APK.",
+    "game": "magnetic-warehouse",
+    "gameSourceCommit": "aef4fc169975dbbf84fe4cfb6fc6c19eb4569550",
+    "automationSha256": "3b843b728c9062a8cb57847987ebbaaba87bc0703a5f00ee1679fffdd7e4044a",
+    "sourceAssetHashes": {
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "game-config.json": "00de3b2ca7bcdfa6e589f36412cead5d413d50c5657ec19171682c56defa108a",
+      "game-model.js": "5cc14803afb281b801134533b0d8f1014cffa21a0966bdaa36bfa1d176b7eaaf",
+      "game.js": "fbd185794217ae32c1b7e42122b124fc25c7109fccb2a81da99d5b1650e32980",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+    },
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "normalWin": {
+      "phase": "won",
+      "level": 1,
+      "matched": 2,
+      "target": 2,
+      "actionsUsed": 24,
+      "flipCount": 1,
+      "pulseCount": 9,
+      "attractedMoves": 5,
+      "repelledMoves": 4,
+      "elapsed": 36.95,
+      "score": 2125
+    },
+    "rawReportSha256": "caed033f70326430b3be04005d98582b40abc663f6924d1163597f4cf051744a",
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "limitations": [
+    "Protocol tests advance RAF deliberately and use an instrumented model; they are not timing-performance measurements.",
+    "The compatibility run uses ordinary game inputs in Chromium. No physical TV, phone or Android installation is claimed."
+  ]
+}

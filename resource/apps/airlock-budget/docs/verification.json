@@ -1,0 +1,1697 @@
+{
+  "schema": 1,
+  "game": "airlock-budget",
+  "version": "0.1.0",
+  "sourceCommit": "0dc3688654cb938d667f4b313848836ab35eb049",
+  "automationSha256": "9512d770c7d679e502e3fcbc745356fd4865057ea87ec6340f4c99828b4b4625",
+  "gameRules": {
+    "contract": "model-contract.md",
+    "contractSha256": "f05fe9de593222e4c5205b9582995a5aa2788b093336d082598d59745e45af06",
+    "ordinaryRounds": [
+      {
+        "name": "level1-record",
+        "mode": "record",
+        "policy": "public-schedule",
+        "phase": "won",
+        "reason": null,
+        "elapsed": 62.4,
+        "score": 2100,
+        "tankOxygen": 20.896333333330432,
+        "evacuatedCount": 3,
+        "isolated": true,
+        "commandCount": 6,
+        "taskCount": 4,
+        "capacityLimitedTicks": 0,
+        "retainedCount": 76,
+        "eventTransitionCount": 27,
+        "reportSha256": "c6e8b1972ccc95a2d5e95be7ac56569ff71939896b8ad5c37b38712adf391e8a"
+      },
+      {
+        "name": "level1-loss",
+        "mode": "loss",
+        "policy": "recover-earliest",
+        "phase": "lost",
+        "reason": "deadline",
+        "elapsed": 18,
+        "score": 0,
+        "tankOxygen": 44.039999999998145,
+        "evacuatedCount": 0,
+        "isolated": false,
+        "commandCount": 1,
+        "taskCount": 1,
+        "capacityLimitedTicks": 0,
+        "retainedCount": 21,
+        "eventTransitionCount": 4,
+        "reportSha256": "c2317e661aac84eb10421e8fd99f58acc3be316ed430ec9133b4f9d31ebb982d"
+      },
+      {
+        "name": "level2-record",
+        "mode": "record",
+        "policy": "public-schedule",
+        "phase": "won",
+        "reason": null,
+        "elapsed": 62.083333333333336,
+        "score": 2100,
+        "tankOxygen": 20.296000000003463,
+        "evacuatedCount": 3,
+        "isolated": true,
+        "commandCount": 6,
+        "taskCount": 4,
+        "capacityLimitedTicks": 0,
+        "retainedCount": 75,
+        "eventTransitionCount": 26,
+        "reportSha256": "f8c76ca3033345eff8447ffec653195aa445099bf85801b843e42062a1496a9f"
+      },
+      {
+        "name": "level2-loss",
+        "mode": "loss",
+        "policy": "vent-latest",
+        "phase": "lost",
+        "reason": "deadline",
+        "elapsed": 12,
+        "score": 300,
+        "tankOxygen": 32.31166666666803,
+        "evacuatedCount": 1,
+        "isolated": false,
+        "commandCount": 3,
+        "taskCount": 2,
+        "capacityLimitedTicks": 0,
+        "retainedCount": 19,
+        "eventTransitionCount": 12,
+        "reportSha256": "7acdf020625cb9e209a1d280b5a34dd9b6b1b2b4f180ba225daefbd31ece8728"
+      },
+      {
+        "name": "level3-record",
+        "mode": "record",
+        "policy": "public-schedule",
+        "phase": "won",
+        "reason": null,
+        "elapsed": 84,
+        "score": 2140,
+        "tankOxygen": 24.763333333327836,
+        "evacuatedCount": 3,
+        "isolated": true,
+        "commandCount": 4,
+        "taskCount": 4,
+        "capacityLimitedTicks": 914,
+        "retainedCount": 96,
+        "eventTransitionCount": 25,
+        "reportSha256": "91dfa0fcb7fab0576372b11831628976ce6972f3c05570580f04872172913986"
+      },
+      {
+        "name": "level3-loss",
+        "mode": "loss",
+        "policy": "vent-only",
+        "phase": "lost",
+        "reason": "reserve",
+        "elapsed": 34.083333333333336,
+        "score": 900,
+        "tankOxygen": 2.9933333333344603,
+        "evacuatedCount": 3,
+        "isolated": true,
+        "commandCount": 5,
+        "taskCount": 4,
+        "capacityLimitedTicks": 0,
+        "retainedCount": 47,
+        "eventTransitionCount": 26,
+        "reportSha256": "d357c0fd65486a8ad4f4230993e041905c54216ec186052793a0cd102cb23d7d"
+      }
+    ],
+    "driverHistory": {
+      "scope": "Two earlier tick-zero planning failures and two completed historical driver rounds are preserved separately from the final six actual rounds.",
+      "historicalAttempts": [
+        {
+          "rawReportSha256": "4adc0e99fca8f9df581d8362246b8f7bf9ac82da9700c06fca18c6806517bd90",
+          "scope": "First attempt stopped at initial tick zero, before any input.",
+          "completedActualRounds": 0,
+          "tickZeroForecastFailures": 1
+        },
+        {
+          "rawReportSha256": "a333e55747e6e996656e0cf2108c2962fc10235603b8508c22ab4c0291d8ff69",
+          "scope": "L1 actual win and deliberate deadline loss passed; L2 stopped at tick zero by conservative idle-navigation forecast. Preserved as historical driver evidence.",
+          "completedActualRounds": 2,
+          "tickZeroForecastFailures": 1
+        }
+      ],
+      "correctionReportSha256": "3cbe13c99f3782f6441d832ca5899ba62401084038ebc22a81dd6e60070cf479",
+      "preselectionCorrectionSha256": "8d622fecae81a32a76be14004ba6c4e1b72189ad2e69dd9f7f9eb70a69a2f047",
+      "changes": [
+        "Only two default controlDelayTicks values 20→16 and one explanatory comment. The 16-tick value is the arithmetic mean of 13/16/19 ticks between commands under the existing polling schedule, not a worst-case promise. Actual six-round and browser outcomes remain required.",
+        "Remember next id from the last public schedule; while task is active, use only directions to preselect it, verifying unchanged task identity. Never press B or start a second task. Replan from actual state after completion."
+      ],
+      "cadenceTicks": [
+        5,
+        8,
+        11
+      ],
+      "finalActualOrdinaryRounds": 6,
+      "allHistoryFirstAttemptPassed": false
+    },
+    "independentReview": {
+      "passed": true,
+      "scope": "Independent offline arithmetic and event-constraint review of the six existing v3 ordinary rounds. No model, controller, browser or private witness execution/access.",
+      "rawReportSha256": "759206dca6df135b0108d70c66ecd832f3af90f387adb45ee4b6aed65967fb95",
+      "sourceHashes": {
+        "repoRelative:resource/apps/airlock-budget/docs/model-contract.md": "f05fe9de593222e4c5205b9582995a5aa2788b093336d082598d59745e45af06",
+        "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/index.json": "2f778ed17ba129141a05fbec12a651c097f7e933d024cdbcbb19d90fc702793b",
+        "repoRelative:resource/apps/airlock-budget/tests/airlock-interval-oracle.mjs": "5ff62ffbe3637bdd7eb930803c69bfd0f0ae818f775fae7eca10416910a56eb7",
+        "repoRelative:resource/apps/airlock-budget/tests/independent-airlock-review.mjs": "92d16454ff000ad2773e94e8dd8f3dcb5476a518a7112d2ee931dfdd1d4dc8d6",
+        "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level1-record.json": "88be43d968b946e6a15567976ac95a271c87ec35ec7325e42db16dba5d3270df",
+        "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level1-loss.json": "39f0ab80838266bd88cb1e9c8a51e3123cf81ac1ecb50bb614892b177f38efe2",
+        "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level2-record.json": "d6836089118c9eff020d8985b3c1cf83f21013063e0db8ac565b4c0861817ed6",
+        "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level2-loss.json": "29c799b50908980da23e1ecca3450335d7bbd8670cd721c8474c9c67484a3e48",
+        "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level3-record.json": "dfcb2a95aa30ba3f8f4b8a096f4dbf00066b27ed2f616c41d9b68ac5e92ae398",
+        "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level3-loss.json": "e38c65a97b4a6c1e8af3913a9ac620099b4d553c3c89657e4630700db6b0ebc2"
+      },
+      "assertions": 100687,
+      "failureCount": 0,
+      "oracleOnlyFixtures": {
+        "count": 3,
+        "maximumErrors": {
+          "oracle fixture full tank first tick": 0,
+          "oracle fixture full tank second tick": 1.734723475976807e-18,
+          "oracle fixture stopped equipment still consumes/leaks": 0,
+          "oracle fixture stopped air unchanged": 0,
+          "oracle fixture leak precedes breath": 0,
+          "oracle fixture proportional final breath 0": 2.168404344971009e-19,
+          "oracle fixture proportional final breath 1": 2.168404344971009e-19,
+          "oracle fixture proportional final breath 2": 0
+        }
+      },
+      "method": [
+        "Event before/after snapshots define constant phase, occupancy and isolation intervals. Each interval uses cumulative closed-form flows; global resources and ledgers continue from the authored initial state without resetting to observed inventories.",
+        "Net recovery after n ticks is min(.9*A0,n*r,headroom0+(n-1)*min(consumption,r)); the offset preserves capacity limits before same-tick consumption.",
+        "Check each observed phase transition at its first empty/full or exact 120/180 active-tick boundary, task identity/exclusivity, one migration per leg, old-occupancy breath, isolation-end leakage and every recorded door state.",
+        "Re-evaluate first terminal tick from independent inventories/shortfalls and verified migration/isolation events; compare all retained, transition, operation and compact checkpoints."
+      ],
+      "limitations": [
+        "The public projection excludes pilot diagnostics; original raw hashes are provenance from the approved index, not a claim that this reviewer inspected forbidden diagnostic bytes.",
+        "This validates observed event timing and arithmetic, not a second implementation of input navigation, scheduling or the complete production state machine.",
+        "Only actually present ordinary stop, exhaustion, pressure and exact-deadline cases count as production coverage. Three hand fixtures test the oracle only; they are not additional game rounds.",
+        "A span continuing after first numerical depletion with unfinished groups is rejected for explicit review, including the possible sub-EPS-shortfall continuation edge; gates are not silently relaxed.",
+        "capacityLimitedTicks lacks an exact public comparison predicate. Its reported value is retained for context; independent capacity evidence instead uses actual headroom-limited transfer and stage duration.",
+        "No post-terminal freeze, pause/retry/cancel/subtick or physical-device claim is made. Simultaneous terminal priorities and exact deadline arrival are not presumed covered by ordinary rounds."
+      ],
+      "results": [
+        {
+          "name": "level1-record",
+          "projectionSha256": "88be43d968b946e6a15567976ac95a271c87ec35ec7325e42db16dba5d3270df",
+          "originalRawSha256": "c6e8b1972ccc95a2d5e95be7ac56569ff71939896b8ad5c37b38712adf391e8a",
+          "fullStateOccurrences": 144,
+          "distinctFullTicks": 100,
+          "compactCheckpoints": 468,
+          "eventTransitions": 27,
+          "events": 51,
+          "operations": 6,
+          "terminal": {
+            "tick": 3744,
+            "reason": "won"
+          },
+          "tank": 20.896333333333356,
+          "reserveMargin": 0.8963333333333559,
+          "arrivals": [
+            845,
+            2304,
+            3744
+          ],
+          "independentlyCapacityConstrainedTicks": 0,
+          "recoveryBeyondUnconstrainedTicks": [
+            {
+              "taskId": 3,
+              "extraActiveTicks": 0
+            },
+            {
+              "taskId": 4,
+              "extraActiveTicks": 0
+            }
+          ],
+          "maximumError": 2.9665159217984183e-12
+        },
+        {
+          "name": "level1-loss",
+          "projectionSha256": "39f0ab80838266bd88cb1e9c8a51e3123cf81ac1ecb50bb614892b177f38efe2",
+          "originalRawSha256": "c2317e661aac84eb10421e8fd99f58acc3be316ed430ec9133b4f9d31ebb982d",
+          "fullStateOccurrences": 33,
+          "distinctFullTicks": 24,
+          "compactCheckpoints": 135,
+          "eventTransitions": 4,
+          "events": 9,
+          "operations": 1,
+          "terminal": {
+            "tick": 1080,
+            "reason": "deadline"
+          },
+          "tank": 44.03999999999999,
+          "reserveMargin": 24.039999999999992,
+          "arrivals": [
+            null,
+            null,
+            null
+          ],
+          "independentlyCapacityConstrainedTicks": 0,
+          "recoveryBeyondUnconstrainedTicks": [
+            {
+              "taskId": 1,
+              "extraActiveTicks": 0
+            }
+          ],
+          "maximumError": 1.9753088054130785e-12
+        },
+        {
+          "name": "level2-record",
+          "projectionSha256": "d6836089118c9eff020d8985b3c1cf83f21013063e0db8ac565b4c0861817ed6",
+          "originalRawSha256": "f8c76ca3033345eff8447ffec653195aa445099bf85801b843e42062a1496a9f",
+          "fullStateOccurrences": 141,
+          "distinctFullTicks": 98,
+          "compactCheckpoints": 466,
+          "eventTransitions": 26,
+          "events": 50,
+          "operations": 6,
+          "terminal": {
+            "tick": 3725,
+            "reason": "won"
+          },
+          "tank": 20.296000000000024,
+          "reserveMargin": 0.29600000000002424,
+          "arrivals": [
+            2285,
+            3725,
+            648
+          ],
+          "independentlyCapacityConstrainedTicks": 0,
+          "recoveryBeyondUnconstrainedTicks": [
+            {
+              "taskId": 3,
+              "extraActiveTicks": 0
+            },
+            {
+              "taskId": 4,
+              "extraActiveTicks": 0
+            }
+          ],
+          "maximumError": 3.439026841078885e-12
+        },
+        {
+          "name": "level2-loss",
+          "projectionSha256": "29c799b50908980da23e1ecca3450335d7bbd8670cd721c8474c9c67484a3e48",
+          "originalRawSha256": "7acdf020625cb9e209a1d280b5a34dd9b6b1b2b4f180ba225daefbd31ece8728",
+          "fullStateOccurrences": 51,
+          "distinctFullTicks": 29,
+          "compactCheckpoints": 90,
+          "eventTransitions": 12,
+          "events": 20,
+          "operations": 3,
+          "terminal": {
+            "tick": 720,
+            "reason": "deadline"
+          },
+          "tank": 32.311666666666675,
+          "reserveMargin": 12.311666666666675,
+          "arrivals": [
+            null,
+            629,
+            null
+          ],
+          "independentlyCapacityConstrainedTicks": 0,
+          "recoveryBeyondUnconstrainedTicks": [],
+          "maximumError": 1.4921397450962104e-12
+        },
+        {
+          "name": "level3-record",
+          "projectionSha256": "dfcb2a95aa30ba3f8f4b8a096f4dbf00066b27ed2f616c41d9b68ac5e92ae398",
+          "originalRawSha256": "91dfa0fcb7fab0576372b11831628976ce6972f3c05570580f04872172913986",
+          "fullStateOccurrences": 156,
+          "distinctFullTicks": 119,
+          "compactCheckpoints": 630,
+          "eventTransitions": 25,
+          "events": 49,
+          "operations": 4,
+          "terminal": {
+            "tick": 5040,
+            "reason": "won"
+          },
+          "tank": 24.763333333333332,
+          "reserveMargin": 0.7633333333333319,
+          "arrivals": [
+            2150,
+            3600,
+            5040
+          ],
+          "independentlyCapacityConstrainedTicks": 914,
+          "recoveryBeyondUnconstrainedTicks": [
+            {
+              "taskId": 2,
+              "extraActiveTicks": 481
+            },
+            {
+              "taskId": 3,
+              "extraActiveTicks": 0
+            },
+            {
+              "taskId": 4,
+              "extraActiveTicks": 0
+            }
+          ],
+          "maximumError": 5.496048061104375e-12
+        },
+        {
+          "name": "level3-loss",
+          "projectionSha256": "e38c65a97b4a6c1e8af3913a9ac620099b4d553c3c89657e4630700db6b0ebc2",
+          "originalRawSha256": "d357c0fd65486a8ad4f4230993e041905c54216ec186052793a0cd102cb23d7d",
+          "fullStateOccurrences": 111,
+          "distinctFullTicks": 70,
+          "compactCheckpoints": 256,
+          "eventTransitions": 26,
+          "events": 50,
+          "operations": 5,
+          "terminal": {
+            "tick": 2045,
+            "reason": "reserve"
+          },
+          "tank": 2.9933333333333625,
+          "reserveMargin": -21.00666666666664,
+          "arrivals": [
+            845,
+            1445,
+            2045
+          ],
+          "independentlyCapacityConstrainedTicks": 0,
+          "recoveryBeyondUnconstrainedTicks": [],
+          "maximumError": 1.3855583347321954e-12
+        }
+      ]
+    },
+    "candidateNormalPlay": {
+      "rawReportSha256": "c6d80c35f58ad0eb4111d8747c7de3fd6a3550e205336952bf17359bec275a8b",
+      "modelElapsed": 62.21666666666667,
+      "acceptedOperations": 6,
+      "completedTasks": 4,
+      "score": 2110,
+      "tankOxygen": 21.033999999996997,
+      "screenshotWindows": [
+        {
+          "name": "01-menu-one",
+          "continuousWindow": false,
+          "tickRange": [
+            0,
+            0
+          ],
+          "outerPhases": [
+            "menu",
+            "menu"
+          ],
+          "level": 1,
+          "scope": "Stable menu, paused or terminal observation."
+        },
+        {
+          "name": "02-menu-two",
+          "continuousWindow": false,
+          "tickRange": [
+            0,
+            0
+          ],
+          "outerPhases": [
+            "menu",
+            "menu"
+          ],
+          "level": 2,
+          "scope": "Stable menu, paused or terminal observation."
+        },
+        {
+          "name": "03-menu-three",
+          "continuousWindow": false,
+          "tickRange": [
+            0,
+            0
+          ],
+          "outerPhases": [
+            "menu",
+            "menu"
+          ],
+          "level": 3,
+          "scope": "Stable menu, paused or terminal observation."
+        },
+        {
+          "name": "04-isolation-service-window",
+          "continuousWindow": true,
+          "tickRange": [
+            61,
+            84
+          ],
+          "outerPhases": [
+            "playing",
+            "playing"
+          ],
+          "level": 1,
+          "scope": "Real continuous window, not a single-state image alias. Equipment flow, respiration, leakage, door operations, migration and stage completion may occur during capture."
+        },
+        {
+          "name": "05-actual-vent-window",
+          "continuousWindow": true,
+          "tickRange": [
+            257,
+            276
+          ],
+          "outerPhases": [
+            "playing",
+            "playing"
+          ],
+          "level": 1,
+          "scope": "Real continuous window, not a single-state image alias. Equipment flow, respiration, leakage, door operations, migration and stage completion may occur during capture."
+        },
+        {
+          "name": "06-loading-door-window",
+          "continuousWindow": true,
+          "tickRange": [
+            373,
+            394
+          ],
+          "outerPhases": [
+            "playing",
+            "playing"
+          ],
+          "level": 1,
+          "scope": "Real continuous window, not a single-state image alias. Equipment flow, respiration, leakage, door operations, migration and stage completion may occur during capture."
+        },
+        {
+          "name": "07-actual-fill-window",
+          "continuousWindow": true,
+          "tickRange": [
+            504,
+            522
+          ],
+          "outerPhases": [
+            "playing",
+            "playing"
+          ],
+          "level": 1,
+          "scope": "Real continuous window, not a single-state image alias. Equipment flow, respiration, leakage, door operations, migration and stage completion may occur during capture."
+        },
+        {
+          "name": "08-actual-recovery-window",
+          "continuousWindow": true,
+          "tickRange": [
+            916,
+            934
+          ],
+          "outerPhases": [
+            "playing",
+            "playing"
+          ],
+          "level": 1,
+          "scope": "Real continuous window, not a single-state image alias. Equipment flow, respiration, leakage, door operations, migration and stage completion may occur during capture."
+        },
+        {
+          "name": "09-won",
+          "continuousWindow": false,
+          "tickRange": [
+            3733,
+            3733
+          ],
+          "outerPhases": [
+            "won",
+            "won"
+          ],
+          "level": 1,
+          "scope": "Stable menu, paused or terminal observation."
+        },
+        {
+          "name": "10-small-won",
+          "continuousWindow": false,
+          "tickRange": [
+            3733,
+            3733
+          ],
+          "outerPhases": [
+            "won",
+            "won"
+          ],
+          "level": 1,
+          "scope": "Stable menu, paused or terminal observation."
+        },
+        {
+          "name": "11-small-menu",
+          "continuousWindow": false,
+          "tickRange": [
+            0,
+            0
+          ],
+          "outerPhases": [
+            "menu",
+            "menu"
+          ],
+          "level": 1,
+          "scope": "Stable menu, paused or terminal observation."
+        },
+        {
+          "name": "12-small-pause",
+          "continuousWindow": false,
+          "tickRange": [
+            6,
+            6
+          ],
+          "outerPhases": [
+            "playing",
+            "playing"
+          ],
+          "level": 1,
+          "scope": "Stable menu, paused or terminal observation."
+        }
+      ],
+      "eventScope": "Trace contains only actual public observations. Transient events missed between observations are not fabricated; persistent operations/completedTasks, actual personnel arrivals and the resource ledger remain available."
+    },
+    "recordingHistory": {
+      "firstAttemptCompleted": false,
+      "firstAttemptEvidenceSha256": "191c69afaeaad6ce80d8d5339e7d04a1c4ef351c4b8b7da42f72166a63c5a526",
+      "originalFramesPreserved": 119,
+      "originalStderrSha256": "fb16a639d2f06bf50d23d10bed2cc6f31fe790213983756874a5e6fa0115da1e",
+      "availableEvidence": "119 original compositor JPEGs and returned stderr. The common recorder did not persist inputs, sampled states, exact last-pilot tick, call duration or timestamps on this exception.",
+      "firstAttemptCauseStatus": "Startup/input or observation timing is suspected. Exact cause is not proven by the retained evidence; no production physics failure or precise elapsed tick is claimed.",
+      "firstAttemptProposedCorrection": "Scratch recorder keeps existing observations on failure; Enter becomes separate down/up (7.4/7.44) without blocking the 80ms feedback loop. Frozen automation, physics and all pass criteria remain unchanged.",
+      "secondAttemptCompleted": false,
+      "secondAttemptEvidenceSha256": "5ddcfe02ca838b581636a21aec22bfdb1a86dc6e79ee31ed8b13c860083bd5ba",
+      "secondOriginalFramesPreserved": 119,
+      "secondObservedPlayingTicks": [
+        6,
+        6,
+        11
+      ],
+      "secondDirectionEdges": [
+        {
+          "type": "down",
+          "key": "ArrowRight",
+          "dispatchedAt": 7.578492803
+        },
+        {
+          "type": "up",
+          "key": "ArrowRight",
+          "dispatchedAt": 7.6454210289999995
+        }
+      ],
+      "secondRejectedReplanTick": 105,
+      "correctionFileHashes": {
+        "record-recipe-first.json": "25562ba0a4a916a95d357d744116cebc56f7e0122e8f57f2ee264ae49ffb0c50",
+        "record-recipe.json": "61b57689770f850474c598b96f4fa550f25280f30daec9f87e9f4150b98fa982",
+        "record-startup.diff": "a4122ecb2273c6be563aa428c4d53c4d33146b889065223c6ac8eff1fa1ce421",
+        "record-with-diagnostics-before-tick-guard.mjs": "139500be35a3e0fa6c81084fd3e99f95b67629699b1b204fca0187ccd60b1e62",
+        "record-with-diagnostics.diff": "249b5fc4e492264d426941d04fb4cd0af2682a78c01115aabc6964fb2ebb323c",
+        "record-with-diagnostics.mjs": "e02077d12dcc9321be12cf90f0bca36209d9bf593599062cf2d092625653ece6",
+        "record-unchanged-tick.diff": "94b17426b0d7dbe60e86303d78dc12ea853834e33928a5bc090072daa142949e"
+      },
+      "rootCorrectionManifestSha256": "3a11d71cc49ef13eaf762d96838b84a7c0d35bfc97b087c09c7991665b670c71",
+      "correction": "Enter splitting alone did not fix capture. The second actual report shows a direction press released at the same model tick. The reviewed scratch recorder now retains held keys and skips pilot/applyKeys until that tick advances; 80ms observation polling and frozen game sources are unchanged.",
+      "scope": "The first attempt has no reconstructed states, inputs, exact tick or timestamps. The second retains actual observations. Both failed captures remain history; prior successful formal, ordinary and UI reports are reused."
+    },
+    "scope": "Finite oxygen, one pump, real safe doors and timed personnel migration. Independent offline arithmetic uses final-v3 public observations; earlier controller attempts remain explicit. Release checks do not constitute independent review by the game designer."
+  },
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "c4950519c014d6a99b4a3b1a3259fe1f1532a0ddd4e4ec4efc86787174969745",
+      "game.js": "fdec25344e9bc04d9909a8961121e9ecb767ddcdba9b21bc878bcaf8d6519f10",
+      "game-config.json": "34a7e32e7c038b6febad7916b832c28d9b14aff61cfd5dc17255f6c94cf79876",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "LICENSE": "93a8777f8776e6aa280f486fb84a5a12b64fcb00d9b58086ee1cc203e7311a15",
+      "README.md": "11e9d2b4c9f1a1383e9ebdbb922bc956df895e6b9e3e6af132058cf511d1628b",
+      "docs/independent-airlock-review.json": "759206dca6df135b0108d70c66ecd832f3af90f387adb45ee4b6aed65967fb95",
+      "docs/model-contract.md": "f05fe9de593222e4c5205b9582995a5aa2788b093336d082598d59745e45af06",
+      "game.json": "9a1dacea33aceeab644cae57d3155f8822b7533e8a959bc2d1aaf4fd39237761",
+      "icon.xml": "1e0a6272a941584dd229c3ed7faf0fcffa6660238f9139899d2143c56f1c9618",
+      "logo.svg": "e8878fba106b62f240bc9c3574b2b198896cdb5df13a06014c95abd2953699b0",
+      "src/main/assets/game-model.js": "c4950519c014d6a99b4a3b1a3259fe1f1532a0ddd4e4ec4efc86787174969745",
+      "src/main/assets/game.js": "fdec25344e9bc04d9909a8961121e9ecb767ddcdba9b21bc878bcaf8d6519f10",
+      "tests/airlock-interval-oracle.mjs": "5ff62ffbe3637bdd7eb930803c69bfd0f0ae818f775fae7eca10416910a56eb7",
+      "tests/automation.mjs": "9512d770c7d679e502e3fcbc745356fd4865057ea87ec6340f4c99828b4b4625",
+      "tests/game-model.test.cjs": "0a239848555d48779b53ed0c322897ea4f178132eb4897dc828ec0cdedbcede0",
+      "tests/independent-airlock-review.mjs": "92d16454ff000ad2773e94e8dd8f3dcb5476a518a7112d2ee931dfdd1d4dc8d6"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime/01-menu-one.png",
+        "sha256": "a2835d6d03d7dad3125bbf22aa10be9cbebcab0c94ee82db0daacf8f42c4f2d7",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/02-menu-two.png",
+        "sha256": "31ca7a70bd686bf8afa9e094efcb8a378f50ebc963f09539168a88142ea541f0",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/03-menu-three.png",
+        "sha256": "87e99defa23c4fef91a752ac89cc5dd2ed89a3809975c0b48ed189c4be993512",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/04-isolation-service-window.png",
+        "sha256": "3e28bc6f574fa0e64f840fa3bd8282fb69d48015127a1c93cb3bfe17e0444fee",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/05-actual-vent-window.png",
+        "sha256": "0052484b62ba33cc49d56108f54c5b5c1af228ec29f2cd14f234e2ce74588786",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/06-loading-door-window.png",
+        "sha256": "54caaf6eea00adb4f9ff3f0a1862be75673e67a5a5728aa2393d7713ca021314",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/07-actual-fill-window.png",
+        "sha256": "2fcd5a619d90c280002e8686ca48176be2bb99c93aca7a15c0107031b708a6ac",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/08-actual-recovery-window.png",
+        "sha256": "4e18b63eab0e56ceba3c2edbc0937048703d5ac56501e2e84ec14e566bd0ca69",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/09-won.png",
+        "sha256": "951892a23079bff15f6404f66f8bba26f180043e9f4f7b62ea9bb35931d4c2ff",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/10-small-won.png",
+        "sha256": "4da2f732d3c38eca3586023e27d0d7d774ed462464b24290e536ef8f60eb4f06",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/11-small-menu.png",
+        "sha256": "83ac70fdab7ffa496daab6e123e4c52e03d94f7b20d17ea7b8a118b2e694b66e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/12-small-pause.png",
+        "sha256": "02ad0bd1ff5375b7ec48a740b000761042e5c4aaca7cca9c2e4d3491df30c3d8",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "2a718218e39a90c1d31735015e142100facc0610429fa6f0277e7f3df8a79246",
+    "unresolvedFindings": []
+  },
+  "modelTests": {
+    "passed": 16,
+    "sourceHashesBefore": {
+      "model": "c4950519c014d6a99b4a3b1a3259fe1f1532a0ddd4e4ec4efc86787174969745",
+      "contract": "f05fe9de593222e4c5205b9582995a5aa2788b093336d082598d59745e45af06",
+      "test": "0a239848555d48779b53ed0c322897ea4f178132eb4897dc828ec0cdedbcede0"
+    },
+    "sourceHashesAfter": {
+      "model": "c4950519c014d6a99b4a3b1a3259fe1f1532a0ddd4e4ec4efc86787174969745",
+      "contract": "f05fe9de593222e4c5205b9582995a5aa2788b093336d082598d59745e45af06",
+      "test": "0a239848555d48779b53ed0c322897ea4f178132eb4897dc828ec0cdedbcede0"
+    },
+    "testLogSha256": "db224667409e3386a6a16056bbf0d04b468fc54a53fbd22f406c4e2e3552fabc",
+    "rawReportSha256": "22684b3fa3224dd9416414107fb22a6ca8bc043fe42e3f7e68ae80968918f708",
+    "scope": "Directed model rule and input tests. Any synthetic fixtures are explicitly labelled in the test source. This is not browser, ordinary full-round, or physical-device evidence."
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ]
+  },
+  "supplementaryChecks": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "three menus expose distinct tank capacities, reserves and individual deadlines with a fresh airlock",
+        "passed": true
+      },
+      {
+        "name": "held START begins once and phone direction selects a group without starting a transaction",
+        "passed": true
+      },
+      {
+        "name": "held phone A and native Enter each start one physical recovery task without duplicate commands",
+        "passed": true
+      },
+      {
+        "name": "idle B chooses vent; active preselection preserves identity; equipment stop spends oxygen while P freezes everything",
+        "passed": true
+      },
+      {
+        "name": "connected cancellation suppresses stale A/B without abandoning the deliberate task; neutral re-arms B stop",
+        "passed": true
+      },
+      {
+        "name": "disconnect pauses the entire active transaction and intentional START resume preserves its identity and clears held direction",
+        "passed": true
+      },
+      {
+        "name": "ordinary legal venting of the less urgent group naturally misses the medical deadline",
+        "passed": true
+      },
+      {
+        "name": "R clears tasks, doors, arrivals and all loss ledgers before ordinary breathing ticks resume",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ]
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "buildSourceSha": "0dc3688654cb938d667f4b313848836ab35eb049",
+    "startHashes": {
+      "tests/automation.mjs": "9512d770c7d679e502e3fcbc745356fd4865057ea87ec6340f4c99828b4b4625",
+      "tests/game-model.test.cjs": "0a239848555d48779b53ed0c322897ea4f178132eb4897dc828ec0cdedbcede0",
+      "src/main/assets/game-model.js": "c4950519c014d6a99b4a3b1a3259fe1f1532a0ddd4e4ec4efc86787174969745",
+      "src/main/assets/game.js": "fdec25344e9bc04d9909a8961121e9ecb767ddcdba9b21bc878bcaf8d6519f10"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "9512d770c7d679e502e3fcbc745356fd4865057ea87ec6340f4c99828b4b4625",
+      "tests/game-model.test.cjs": "0a239848555d48779b53ed0c322897ea4f178132eb4897dc828ec0cdedbcede0",
+      "src/main/assets/game-model.js": "c4950519c014d6a99b4a3b1a3259fe1f1532a0ddd4e4ec4efc86787174969745",
+      "src/main/assets/game.js": "fdec25344e9bc04d9909a8961121e9ecb767ddcdba9b21bc878bcaf8d6519f10"
+    },
+    "rawReportSha256": "4a60a2385e1406a0460bfd9454500ce0d82562dcef5a251cd22f9167e573e559"
+  },
+  "sourceArtReview": {
+    "file": "art-review.json",
+    "sha256": "d4b390fa80784b31b93bbe41c3668ec894c7ce5a6393fdd5d9161dce3365914d"
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "慢回收省氧，快排赶时间。停机不停止耗氧和期限。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "慢回收省氧，快排赶时间。停机不停止耗氧和期限。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 149.703125,
+          "width": 420,
+          "height": 294.59375,
+          "right": 586.5,
+          "bottom": 444.296875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "慢回收省氧，快排赶时间。停机不停止耗氧和期限。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "慢回收省氧，快排赶时间。停机不停止耗氧和期限。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "慢回收省氧，快排赶时间。停机不停止耗氧和期限。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "慢回收省氧，快排赶时间。停机不停止耗氧和期限。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "bc9074a23890281461152e1ae2775970269be14f9682b82de79638c2aa2f1f5e"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 1526,
+    "rafIntervalMs": {
+      "count": 1526,
+      "min": 16.5,
+      "median": 33.39999999999782,
+      "p95": 83.29999999999927,
+      "max": 116.69999999999709,
+      "mean": 40.44187418086501
+    },
+    "webglDrawCalls": {
+      "count": 1526,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 1526,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 70.034838751,
+      "level": 1,
+      "difficulty": 0,
+      "score": 2100,
+      "tick": 3736,
+      "elapsed": 62.266666666666666,
+      "remaining": 27.733333333333334,
+      "selectedId": "G3",
+      "modeSelection": "recover",
+      "commandCount": 6,
+      "blockedCommands": 0,
+      "taskCount": 4,
+      "evacuatedCount": 3,
+      "capacityLimitedTicks": 0,
+      "tank": {
+        "oxygen": 20.975333333330383,
+        "initialOxygen": 48,
+        "capacity": 58,
+        "reserveFloor": 20
+      },
+      "chambers": {
+        "B": {
+          "pressure": 0
+        },
+        "A": {
+          "capacity": 12,
+          "air": 12,
+          "pressure": 1,
+          "doorBOpen": false,
+          "doorCOpen": false,
+          "groupId": null
+        },
+        "C": {
+          "pressure": 1
+        }
+      },
+      "groups": [
+        {
+          "id": "G1",
+          "name": "工程队",
+          "nameEn": "ENGINEERS",
+          "people": 2,
+          "breathingRate": 0.14,
+          "deadlineTick": 1080,
+          "location": "C",
+          "evacuated": true,
+          "consumedOxygen": 1.9599999999999802,
+          "arrivalTick": 840
+        },
+        {
+          "id": "G2",
+          "name": "勘测队",
+          "nameEn": "SURVEYORS",
+          "people": 2,
+          "breathingRate": 0.1,
+          "deadlineTick": 2520,
+          "location": "C",
+          "evacuated": true,
+          "consumedOxygen": 3.8249999999998314,
+          "arrivalTick": 2295
+        },
+        {
+          "id": "G3",
+          "name": "医疗组",
+          "nameEn": "MEDIC",
+          "people": 1,
+          "breathingRate": 0.08,
+          "deadlineTick": 4080,
+          "location": "C",
+          "evacuated": true,
+          "consumedOxygen": 4.981333333333051,
+          "arrivalTick": 3736
+        }
+      ],
+      "leak": {
+        "rate": 0.5,
+        "isolated": true,
+        "isolatedTick": 223,
+        "serviceTicks": 180
+      },
+      "task": null,
+      "completedTasks": [
+        {
+          "id": 1,
+          "kind": "isolate",
+          "groupId": null,
+          "mode": null,
+          "phase": "isolate",
+          "stopped": false,
+          "startedTick": 44,
+          "phaseTicks": 180,
+          "totalTicks": 180,
+          "recovered": 0,
+          "vented": 0,
+          "filled": 0,
+          "recoveryLoss": 0,
+          "capacityLimitedTicks": 0,
+          "completedTick": 223
+        },
+        {
+          "id": 2,
+          "kind": "batch",
+          "groupId": "G1",
+          "mode": "vent",
+          "phase": "unload",
+          "stopped": false,
+          "startedTick": 241,
+          "phaseTicks": 120,
+          "totalTicks": 600,
+          "recovered": 0,
+          "vented": 11.999999999999973,
+          "filled": 11.999999999999972,
+          "recoveryLoss": 0,
+          "capacityLimitedTicks": 0,
+          "completedTick": 840
+        },
+        {
+          "id": 3,
+          "kind": "batch",
+          "groupId": "G2",
+          "mode": "recover",
+          "phase": "unload",
+          "stopped": false,
+          "startedTick": 856,
+          "phaseTicks": 120,
+          "totalTicks": 1440,
+          "recovered": 10.800000000000251,
+          "vented": 0,
+          "filled": 11.99999999999985,
+          "recoveryLoss": 1.19999999999998,
+          "capacityLimitedTicks": 0,
+          "completedTick": 2295
+        },
+        {
+          "id": 4,
+          "kind": "batch",
+          "groupId": "G3",
+          "mode": "recover",
+          "phase": "unload",
+          "stopped": false,
+          "startedTick": 2297,
+          "phaseTicks": 120,
+          "totalTicks": 1440,
+          "recovered": 10.800000000000251,
+          "vented": 0,
+          "filled": 11.99999999999985,
+          "recoveryLoss": 1.19999999999998,
+          "capacityLimitedTicks": 0,
+          "completedTick": 3736
+        }
+      ],
+      "ledger": {
+        "initialTotal": 60,
+        "breathing": 10.766333333333272,
+        "leak": 1.8583333333333292,
+        "vent": 11.999999999999973,
+        "recoveryLoss": 2.4000000000000252,
+        "recoveredTransferred": 21.60000000000066,
+        "filledTransferred": 35.99999999999966,
+        "error": 3.0180302701410255e-12
+      }
+    },
+    "normalFailure": {
+      "reason": "deadline",
+      "level": 2,
+      "difficulty": 1,
+      "score": 300,
+      "tick": 720,
+      "elapsed": 12,
+      "remaining": 78,
+      "selectedId": "G2",
+      "modeSelection": "vent",
+      "commandCount": 2,
+      "blockedCommands": 0,
+      "taskCount": 1,
+      "evacuatedCount": 1,
+      "capacityLimitedTicks": 0,
+      "tank": {
+        "oxygen": 32.31833333333469,
+        "initialOxygen": 54,
+        "capacity": 64,
+        "reserveFloor": 20
+      },
+      "chambers": {
+        "B": {
+          "pressure": 0
+        },
+        "A": {
+          "capacity": 12,
+          "air": 12,
+          "pressure": 1,
+          "doorBOpen": false,
+          "doorCOpen": false,
+          "groupId": null
+        },
+        "C": {
+          "pressure": 1
+        }
+      },
+      "groups": [
+        {
+          "id": "G1",
+          "name": "工程队",
+          "nameEn": "ENGINEERS",
+          "people": 2,
+          "breathingRate": 0.14,
+          "deadlineTick": 2520,
+          "location": "B",
+          "evacuated": false,
+          "consumedOxygen": 1.6799999999999844,
+          "arrivalTick": null
+        },
+        {
+          "id": "G2",
+          "name": "勘测队",
+          "nameEn": "SURVEYORS",
+          "people": 2,
+          "breathingRate": 0.1,
+          "deadlineTick": 4080,
+          "location": "C",
+          "evacuated": true,
+          "consumedOxygen": 1.0416666666666772,
+          "arrivalTick": 625
+        },
+        {
+          "id": "G3",
+          "name": "医疗组",
+          "nameEn": "MEDIC",
+          "people": 1,
+          "breathingRate": 0.08,
+          "deadlineTick": 720,
+          "location": "B",
+          "evacuated": false,
+          "consumedOxygen": 0.9599999999999907,
+          "arrivalTick": null
+        }
+      ],
+      "leak": {
+        "rate": 0.5,
+        "isolated": false,
+        "isolatedTick": null,
+        "serviceTicks": 180
+      },
+      "task": null,
+      "completedTasks": [
+        {
+          "id": 1,
+          "kind": "batch",
+          "groupId": "G2",
+          "mode": "vent",
+          "phase": "unload",
+          "stopped": false,
+          "startedTick": 26,
+          "phaseTicks": 120,
+          "totalTicks": 600,
+          "recovered": 0,
+          "vented": 11.999999999999973,
+          "filled": 11.999999999999972,
+          "recoveryLoss": 0,
+          "capacityLimitedTicks": 0,
+          "completedTick": 625
+        }
+      ],
+      "ledger": {
+        "initialTotal": 66,
+        "breathing": 3.681666666666647,
+        "leak": 6.000000000000088,
+        "vent": 11.999999999999973,
+        "recoveryLoss": 0,
+        "recoveredTransferred": 0,
+        "filledTransferred": 11.999999999999972,
+        "error": -1.4015455462867976e-12
+      }
+    },
+    "ordinaryAirlockManagement": {
+      "actualStartPressCount": 4,
+      "actualModePressCount": 2,
+      "observedOperations": [
+        {
+          "firstObservedAt": 10.034855333,
+          "operation": {
+            "id": 1,
+            "type": "start",
+            "tick": 44,
+            "at": 0.7333333333333333,
+            "taskId": 1,
+            "kind": "isolate",
+            "groupId": null,
+            "mode": null
+          }
+        },
+        {
+          "firstObservedAt": 12.002955969999999,
+          "operation": {
+            "id": 3,
+            "type": "start",
+            "tick": 241,
+            "at": 4.016666666666667,
+            "taskId": 2,
+            "kind": "batch",
+            "groupId": "G1",
+            "mode": "vent"
+          }
+        },
+        {
+          "firstObservedAt": 22.034899247,
+          "operation": {
+            "id": 5,
+            "type": "start",
+            "tick": 856,
+            "at": 14.266666666666667,
+            "taskId": 3,
+            "kind": "batch",
+            "groupId": "G2",
+            "mode": "recover"
+          }
+        },
+        {
+          "firstObservedAt": 46.034839206,
+          "operation": {
+            "id": 6,
+            "type": "start",
+            "tick": 2297,
+            "at": 38.28333333333333,
+            "taskId": 4,
+            "kind": "batch",
+            "groupId": "G3",
+            "mode": "recover"
+          }
+        }
+      ],
+      "allAcceptedOperationsObserved": false,
+      "unobservedAcceptedOperationIds": [
+        2,
+        4
+      ],
+      "operationSamplingGaps": [
+        {
+          "fromTick": 150,
+          "toTick": 267,
+          "actualOperationIncrease": 2,
+          "lastOperationId": 3
+        },
+        {
+          "fromTick": 744,
+          "toTick": 866,
+          "actualOperationIncrease": 2,
+          "lastOperationId": 5
+        }
+      ],
+      "observedCompletedTasks": [
+        {
+          "firstObservedAt": 12.002955969999999,
+          "task": {
+            "id": 1,
+            "kind": "isolate",
+            "groupId": null,
+            "mode": null,
+            "phase": "isolate",
+            "stopped": false,
+            "startedTick": 44,
+            "phaseTicks": 180,
+            "totalTicks": 180,
+            "recovered": 0,
+            "vented": 0,
+            "filled": 0,
+            "recoveryLoss": 0,
+            "capacityLimitedTicks": 0,
+            "completedTick": 223
+          }
+        },
+        {
+          "firstObservedAt": 22.034899247,
+          "task": {
+            "id": 2,
+            "kind": "batch",
+            "groupId": "G1",
+            "mode": "vent",
+            "phase": "unload",
+            "stopped": false,
+            "startedTick": 241,
+            "phaseTicks": 120,
+            "totalTicks": 600,
+            "recovered": 0,
+            "vented": 11.999999999999973,
+            "filled": 11.999999999999972,
+            "recoveryLoss": 0,
+            "capacityLimitedTicks": 0,
+            "completedTick": 840
+          }
+        },
+        {
+          "firstObservedAt": 46.034839206,
+          "task": {
+            "id": 3,
+            "kind": "batch",
+            "groupId": "G2",
+            "mode": "recover",
+            "phase": "unload",
+            "stopped": false,
+            "startedTick": 856,
+            "phaseTicks": 120,
+            "totalTicks": 1440,
+            "recovered": 10.800000000000251,
+            "vented": 0,
+            "filled": 11.99999999999985,
+            "recoveryLoss": 1.19999999999998,
+            "capacityLimitedTicks": 0,
+            "completedTick": 2295
+          }
+        },
+        {
+          "firstObservedAt": 70.034838751,
+          "task": {
+            "id": 4,
+            "kind": "batch",
+            "groupId": "G3",
+            "mode": "recover",
+            "phase": "unload",
+            "stopped": false,
+            "startedTick": 2297,
+            "phaseTicks": 120,
+            "totalTicks": 1440,
+            "recovered": 10.800000000000251,
+            "vented": 0,
+            "filled": 11.99999999999985,
+            "recoveryLoss": 1.19999999999998,
+            "capacityLimitedTicks": 0,
+            "completedTick": 3736
+          }
+        }
+      ],
+      "observedActivePhases": [
+        "fill",
+        "isolate",
+        "load",
+        "recover",
+        "unload",
+        "vent"
+      ],
+      "actualFlowSampleCounts": {
+        "recovered": 16,
+        "vented": 1,
+        "filled": 6
+      },
+      "activeDifferentSelectionSampleCount": 16,
+      "finalArrivals": [
+        {
+          "id": "G1",
+          "location": "C",
+          "arrivalTick": 840,
+          "deadlineTick": 1080,
+          "consumedOxygen": 1.9599999999999802
+        },
+        {
+          "id": "G2",
+          "location": "C",
+          "arrivalTick": 2295,
+          "deadlineTick": 2520,
+          "consumedOxygen": 3.8249999999998314
+        },
+        {
+          "id": "G3",
+          "location": "C",
+          "arrivalTick": 3736,
+          "deadlineTick": 4080,
+          "consumedOxygen": 4.981333333333051
+        }
+      ],
+      "isolatedTick": 223,
+      "finalTankOxygen": 20.975333333330383,
+      "reserveFloor": 20,
+      "finalLedger": {
+        "initialTotal": 60,
+        "breathing": 10.766333333333272,
+        "leak": 1.8583333333333292,
+        "vent": 11.999999999999973,
+        "recoveryLoss": 2.4000000000000252,
+        "recoveredTransferred": 21.60000000000066,
+        "filledTransferred": 35.99999999999966,
+        "error": 3.0180302701410255e-12
+      },
+      "scope": "Actual key edges and observed operation/task receipts only. Permanent completed tasks and arrivals are observed facts; missed transient events, operation ticks and exact image states are not reconstructed."
+    },
+    "recorderTickGuard": {
+      "actualPolls": 764,
+      "unchangedTickSkips": 5,
+      "skipsWithHeldKeys": 1,
+      "scope": "Actual saved poll records only; no extra game or reconstructed tick."
+    },
+    "equipmentStoppedReview": {
+      "scope": "Actual stopped equipment in the existing input test. Clock, respiration and leak continue throughout this true before/after image window; no global pause or state/time injection.",
+      "controlledPhoneBridge": true,
+      "image": {
+        "scratchRelativePath": "qa-final/equipment-stopped.png",
+        "sha256": "31dce79f77ff326277259863e99dce7101e96412ba0407cc96ba45296b65a108",
+        "includedInRelease": false
+      },
+      "observationTicks": [
+        63,
+        82
+      ],
+      "actualConsumptionIntervalTicks": [
+        39,
+        63
+      ],
+      "frameReviewManifestSha256": "6d1fa3e486f2423a881ebca6634bae9a369c23c28aacc4b91b546cbfb539a383"
+    }
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "c4950519c014d6a99b4a3b1a3259fe1f1532a0ddd4e4ec4efc86787174969745",
+    "game.js": "fdec25344e9bc04d9909a8961121e9ecb767ddcdba9b21bc878bcaf8d6519f10",
+    "game-config.json": "34a7e32e7c038b6febad7916b832c28d9b14aff61cfd5dc17255f6c94cf79876",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "e4e9e7fb1d8efd9369ba220ae0008570481ac8ab040642c4f16b50afead59588",
+    "formal": "22684b3fa3224dd9416414107fb22a6ca8bc043fe42e3f7e68ae80968918f708",
+    "ordinary": "d3e5d632613fdb289c623b6e3f1b866470ee0f6e96655fce9b5e88a1cc4d8122",
+    "plannerCorrection": "3cbe13c99f3782f6441d832ca5899ba62401084038ebc22a81dd6e60070cf479",
+    "preselectionCorrection": "8d622fecae81a32a76be14004ba6c4e1b72189ad2e69dd9f7f9eb70a69a2f047",
+    "publicObservations": "2f778ed17ba129141a05fbec12a651c097f7e933d024cdbcbb19d90fc702793b",
+    "art": "b407b50f749705bf07a4303847d4325df6d0e0c41722ba5a9cd106f881fefe4a",
+    "independent": "759206dca6df135b0108d70c66ecd832f3af90f387adb45ee4b6aed65967fb95",
+    "candidateRaw": "c6d80c35f58ad0eb4111d8747c7de3fd6a3550e205336952bf17359bec275a8b",
+    "candidateQaVisual": "516770e05e81e07855f01e8de0bccc27849ea5fd7f0785f69d90d80c719fb638",
+    "candidate": "2a718218e39a90c1d31735015e142100facc0610429fa6f0277e7f3df8a79246",
+    "sign": "8c5edad9929098acb42a334fb577f26aaf7a0b4b962fb8415ddcae312c4afe5e",
+    "fetch": "521602b908ab06401115a322eb7e081825439ce6d61b63a57c1f8572ccdc17f5",
+    "qa": "b545c072ba8f68520d435feacf4151c0e34822bff4103952bdac58752657786f",
+    "supplementary": "14b0b8ae2a4198df0e9f10239367282c9959fe272e54c58415fcc143cf793f06",
+    "recordingFailure": "191c69afaeaad6ce80d8d5339e7d04a1c4ef351c4b8b7da42f72166a63c5a526",
+    "recordingFailureSecond": "5ddcfe02ca838b581636a21aec22bfdb1a86dc6e79ee31ed8b13c860083bd5ba",
+    "recordingCorrection": "3a11d71cc49ef13eaf762d96838b84a7c0d35bfc97b087c09c7991665b670c71",
+    "record": "ed375dee7eb9825aa79ecf29bb90bcaf1e8c448119b9cc9b96ab1a2ad8037040",
+    "viewport": "44f2403ea850895bc29ac727bb310695fcad60262a51fd11c61faebdd03c231c",
+    "videoValidation": "385f0e5d0159b4c2209bb54714311812b6a8487af2dfcabba8a6c23e042b9437",
+    "decode": "f88f69483c60d8267b6b85e9dba629fb5aeb5de4ef8913864d6a41f79cc65652",
+    "rootEncoded": "18767f2e4a4842ea0652878218c79a220224afaa4bbf3c05140d2b0c9c7b3257",
+    "artifacts": "c429071098cf16878528e0f0c124c29dcbdeba6db9cbd5a089af63e256816182",
+    "layout": "bc9074a23890281461152e1ae2775970269be14f9682b82de79638c2aa2f1f5e",
+    "summary": "5934c2cd7f81e2f02e483edd766d966846423cafdbd4f9b7388d03cd65d4bd3e",
+    "review": "dcffda04d9108704b2b2bcad56648db5acca30dbc6d525796a2fdd7340686fe8",
+    "provenance": "4a60a2385e1406a0460bfd9454500ce0d82562dcef5a251cd22f9167e573e559"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium with ordinary input. Synthetic fixtures are labelled separately; export FPS is not device FPS."
+  },
+  "release": {
+    "sourceSha": "0dc3688654cb938d667f4b313848836ab35eb049",
+    "requestCommit": "3db5c2f885db72005427bbf726bef189fd8c969c",
+    "signerCommit": "0dc3688654cb938d667f4b313848836ab35eb049",
+    "signingRun": 41375342915,
+    "bytes": 296227,
+    "sha256": "be6681b224499aff2e670dd51888ccc5799fdcd5aee6ecb6a200b10e4c0f8432",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "824621d72f59ef595adb3c64cd29b20edae17475"
+  }
+}

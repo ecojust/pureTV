@@ -1,0 +1,7 @@
+# Android 观察器安装阻断与测试包声明修正
+
+运行43731392410的worlds组在测试观察器安装阶段阻塞，尚未进入游戏玩法驱动。原始截图明确显示Google Play Protect拦截“pureTV read-only QA observer”，并提示面向较旧Android；Coast的游戏新旧包已经安装。原始case、完整logcat及截图原样保存在original-coast-failure/，原worlds artifact的32个文件身份记录在original-artifact-files.json，原始artifact目录未修改。
+
+本次只将观察器生成Manifest的targetSdkVersion从29升为35，并在application声明android:testOnly="true"。Observer.java的SHA256保持40f8dc5642d39104fc9daed200bed79569b6705173dd928bc4fcee232fa5ae44，只读接口和游戏APK未改变。安装测试观察器需要adb install -r -t；游戏仍按正常安装方式处理。
+
+本地使用compileSdk35完成javac、d8和aapt2构建。对实际新unsigned APK执行aapt badging/xmltree，确认target35、testOnly=true、目标com.ecojust.coastkarttv和固定Observer runner。前后builder、完整构建输出、aapt输出、receipt和哈希在本目录。verification.json记录准确边界：本地只验证构建与Manifest，没有执行Android安装，不能将这项结果当作Play Protect已接受或玩法已通过。新20个测试观察器仍须用对应发布证书重新签名，实际安装结果以随后Android CI为准。

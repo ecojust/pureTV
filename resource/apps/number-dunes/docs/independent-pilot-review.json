@@ -1,0 +1,1914 @@
+{
+  "schemaVersion": 1,
+  "game": "number-dunes",
+  "passed": true,
+  "evidenceKind": "independent-synthetic-public-pilot-review",
+  "startedAt": "2026-11-01T23:12:34.325Z",
+  "completedAt": "2026-11-01T23:12:34.428Z",
+  "limits": {
+    "totalPilotInterfaceCalls": 100,
+    "plannerMilliseconds": 100,
+    "plannerExpanded": 1000,
+    "plannerQueued": 2000
+  },
+  "counts": {
+    "totalPilotInterfaceCalls": 74,
+    "exports": 29,
+    "observations": 36,
+    "factories": 5,
+    "diagnostics": 4,
+    "frozenSnapshots": 60,
+    "privateReads": 0,
+    "writes": 0
+  },
+  "sourceUnchanged": true,
+  "startHashes": {
+    "pilot": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13",
+    "contract": "2a636094b001400c3465e461e3c0ce88feccca6079cb420a456b09d6d37fead8",
+    "math": "ecde86f46e2ff6c2e66d4bf5ba0ffd2f9f3bdfba8b5e6ceedec5065b742482a2",
+    "modelBytesOnly": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+    "reviewScript": "b4b415e11b44be4a83bb066fd8157c7d7bb948725e2e6d4bded6cfce72dbbf02"
+  },
+  "endHashes": {
+    "pilot": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13",
+    "contract": "2a636094b001400c3465e461e3c0ce88feccca6079cb420a456b09d6d37fead8",
+    "math": "ecde86f46e2ff6c2e66d4bf5ba0ffd2f9f3bdfba8b5e6ceedec5065b742482a2",
+    "modelBytesOnly": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+    "reviewScript": "b4b415e11b44be4a83bb066fd8157c7d7bb948725e2e6d4bded6cfce72dbbf02"
+  },
+  "checks": [
+    {
+      "name": "Independent predecessor-rank predictions preserve IDs and order in W/E/N/S and pillar-separated segments",
+      "passed": true
+    },
+    {
+      "name": "Duplicate numbers retain distinct physical IDs and cannot satisfy strict numeric ordering",
+      "passed": true
+    },
+    {
+      "name": "Fresh public targets yield one ordinary move, while depth/node/queue/time caps remain distinguishable",
+      "passed": true
+    },
+    {
+      "name": "Nonfinite and invalid bounded-search, numeric-value and focus parameters are rejected",
+      "passed": true
+    },
+    {
+      "name": "No-op is idempotent, free of move/history charges, and cannot claim budget exhaustion",
+      "passed": true
+    },
+    {
+      "name": "Frozen paired observations with different inaccessible private state drive identical trial, release, undo and replan keys",
+      "passed": true
+    },
+    {
+      "name": "Paused observations have no pilot effects; factories are independent and retry resets observed state",
+      "passed": true
+    },
+    {
+      "name": "A changed physical ID assignment is rejected even when the counters and receipt appear successful",
+      "passed": true
+    },
+    {
+      "name": "An undo that refunds charged moves is rejected instead of accepted as a legitimate restore",
+      "passed": true
+    },
+    {
+      "name": "No private getter or write trap fired, and total pilot API/observation/factory/diagnostic calls stayed bounded",
+      "passed": true
+    }
+  ],
+  "details": {
+    "fixtureDefinitions": {
+      "base": {
+        "assignments": [
+          {
+            "cellId": "C2",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C4",
+            "stoneId": "S2"
+          }
+        ],
+        "targetHoleIds": [
+          "C1",
+          "C2",
+          "C5",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11",
+          "C12",
+          "C13",
+          "C14",
+          "C15",
+          "C16"
+        ],
+        "pillars": [
+          "C6"
+        ],
+        "values": [
+          1,
+          2
+        ]
+      },
+      "horizontal": {
+        "assignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C3",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C5",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C8",
+            "stoneId": "S4"
+          }
+        ],
+        "pillars": [
+          "C6",
+          "C11"
+        ]
+      },
+      "vertical": {
+        "assignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C2",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C9",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C14",
+            "stoneId": "S4"
+          }
+        ],
+        "pillars": [
+          "C7",
+          "C10"
+        ]
+      }
+    },
+    "predictions": [
+      {
+        "actionId": "R1W",
+        "movedCount": 1,
+        "assignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C2",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C5",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C8",
+            "stoneId": "S4"
+          }
+        ]
+      },
+      {
+        "actionId": "R1E",
+        "movedCount": 2,
+        "assignments": [
+          {
+            "cellId": "C3",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C4",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C5",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C8",
+            "stoneId": "S4"
+          }
+        ]
+      },
+      {
+        "actionId": "R2W",
+        "movedCount": 1,
+        "assignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C3",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C5",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C7",
+            "stoneId": "S4"
+          }
+        ]
+      },
+      {
+        "actionId": "R2E",
+        "movedCount": 0,
+        "assignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C3",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C5",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C8",
+            "stoneId": "S4"
+          }
+        ]
+      },
+      {
+        "actionId": "C1N",
+        "movedCount": 1,
+        "assignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C2",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C5",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C14",
+            "stoneId": "S4"
+          }
+        ]
+      },
+      {
+        "actionId": "C1S",
+        "movedCount": 2,
+        "assignments": [
+          {
+            "cellId": "C2",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C9",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C13",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C14",
+            "stoneId": "S4"
+          }
+        ]
+      },
+      {
+        "actionId": "C2N",
+        "movedCount": 0,
+        "assignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C2",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C9",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C14",
+            "stoneId": "S4"
+          }
+        ]
+      },
+      {
+        "actionId": "C2S",
+        "movedCount": 1,
+        "assignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C6",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C9",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C14",
+            "stoneId": "S4"
+          }
+        ]
+      }
+    ],
+    "duplicates": {
+      "evaluated": {
+        "physicalAssignments": [
+          {
+            "cellId": "C2",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C4",
+            "stoneId": "S2"
+          }
+        ],
+        "snakeOrder": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C8",
+          "C7",
+          "C6",
+          "C5",
+          "C9",
+          "C10",
+          "C11",
+          "C12",
+          "C16",
+          "C15",
+          "C14",
+          "C13"
+        ],
+        "readCellIds": [
+          "C2",
+          "C4"
+        ],
+        "readStoneIds": [
+          "S1",
+          "S2"
+        ],
+        "readValues": [
+          7,
+          7
+        ],
+        "holeIds": [
+          "C1",
+          "C3",
+          "C5",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11",
+          "C12",
+          "C13",
+          "C14",
+          "C15",
+          "C16"
+        ],
+        "targetHoleIds": [
+          "C1",
+          "C2",
+          "C5",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11",
+          "C12",
+          "C13",
+          "C14",
+          "C15",
+          "C16"
+        ],
+        "pillarIds": [
+          "C6"
+        ],
+        "stoneCount": 2,
+        "pillarCount": 1,
+        "targetHoleCount": 13,
+        "orderedPairs": 0,
+        "orderPairCount": 1,
+        "strictlyIncreasing": false,
+        "matchedHoleCount": 12,
+        "holesCorrect": false,
+        "goalReady": false
+      },
+      "predicted": {
+        "actionId": "R1W",
+        "lineId": "row1",
+        "direction": "W",
+        "changed": true,
+        "movedCount": 2,
+        "moves": [
+          {
+            "stoneId": "S1",
+            "fromCellId": "C2",
+            "toCellId": "C1"
+          },
+          {
+            "stoneId": "S2",
+            "fromCellId": "C4",
+            "toCellId": "C2"
+          }
+        ],
+        "afterAssignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C2",
+            "stoneId": "S2"
+          }
+        ],
+        "willWin": false,
+        "willExhaustMoves": false
+      },
+      "planned": {
+        "found": false,
+        "reason": "duplicate-values-cannot-be-strictly-increasing",
+        "expanded": 0,
+        "visited": 0
+      }
+    },
+    "searchBounds": {
+      "solution": {
+        "found": true,
+        "goal": "goal",
+        "actionIds": [
+          "R1E"
+        ],
+        "steps": 1,
+        "finalAssignments": [
+          {
+            "cellId": "C3",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C4",
+            "stoneId": "S2"
+          }
+        ],
+        "evaluation": {
+          "physicalAssignments": [
+            {
+              "cellId": "C3",
+              "stoneId": "S1"
+            },
+            {
+              "cellId": "C4",
+              "stoneId": "S2"
+            }
+          ],
+          "snakeOrder": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C8",
+            "C7",
+            "C6",
+            "C5",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C16",
+            "C15",
+            "C14",
+            "C13"
+          ],
+          "readCellIds": [
+            "C3",
+            "C4"
+          ],
+          "readStoneIds": [
+            "S1",
+            "S2"
+          ],
+          "readValues": [
+            1,
+            2
+          ],
+          "holeIds": [
+            "C1",
+            "C2",
+            "C5",
+            "C7",
+            "C8",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C13",
+            "C14",
+            "C15",
+            "C16"
+          ],
+          "targetHoleIds": [
+            "C1",
+            "C2",
+            "C5",
+            "C7",
+            "C8",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C13",
+            "C14",
+            "C15",
+            "C16"
+          ],
+          "pillarIds": [
+            "C6"
+          ],
+          "stoneCount": 2,
+          "pillarCount": 1,
+          "targetHoleCount": 13,
+          "orderedPairs": 1,
+          "orderPairCount": 1,
+          "strictlyIncreasing": true,
+          "matchedHoleCount": 13,
+          "holesCorrect": true,
+          "goalReady": true
+        },
+        "expanded": 2,
+        "visited": 4,
+        "maximumQueued": 3,
+        "milliseconds": 0.32030300000000267
+      },
+      "depth": {
+        "found": false,
+        "reason": "no-public-solution-within-budget",
+        "expanded": 1,
+        "visited": 1,
+        "maximumQueued": 1,
+        "milliseconds": 0.035683999999996274
+      },
+      "nodes": {
+        "found": false,
+        "reason": "node-cap",
+        "expanded": 1,
+        "visited": 4,
+        "maximumQueued": 3,
+        "milliseconds": 0.14567900000000122
+      },
+      "queue": {
+        "found": false,
+        "reason": "queue-cap",
+        "expanded": 1,
+        "visited": 1,
+        "maximumQueued": 1,
+        "milliseconds": 0.044596999999996
+      },
+      "time": {
+        "found": false,
+        "reason": "time-cap",
+        "expanded": 0,
+        "visited": 0,
+        "maximumQueued": 0,
+        "milliseconds": 0.07745599999999797
+      }
+    },
+    "noop": {
+      "predictions": {
+        "actionId": "R1W",
+        "lineId": "row1",
+        "direction": "W",
+        "changed": false,
+        "movedCount": 0,
+        "moves": [],
+        "afterAssignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C2",
+            "stoneId": "S2"
+          }
+        ],
+        "willWin": false,
+        "willExhaustMoves": false
+      },
+      "movesUsed": 1,
+      "historyDepth": 1,
+      "noOpAttempts": 1
+    },
+    "syntheticTrial": {
+      "logs": [
+        {
+          "type": "observed-round",
+          "elapsed": 0,
+          "level": 1,
+          "stage": "trial-plan"
+        },
+        {
+          "type": "public-A-star-search",
+          "elapsed": 2,
+          "found": true,
+          "steps": 1,
+          "expanded": 2,
+          "visited": 4,
+          "milliseconds": 0.09265900000001182
+        },
+        {
+          "type": "planned-public-multi-stone-trial",
+          "elapsed": 2,
+          "actionId": "R1W",
+          "chosenFromFirstSolutionStep": false
+        },
+        {
+          "type": "observed-real-preview",
+          "elapsed": 2,
+          "actionId": "R1W",
+          "lineId": "row1",
+          "direction": "W",
+          "changed": true,
+          "movedCount": 2,
+          "moves": [
+            {
+              "stoneId": "S1",
+              "fromCellId": "C2",
+              "toCellId": "C1"
+            },
+            {
+              "stoneId": "S2",
+              "fromCellId": "C4",
+              "toCellId": "C2"
+            }
+          ],
+          "afterAssignments": [
+            {
+              "cellId": "C1",
+              "stoneId": "S1"
+            },
+            {
+              "cellId": "C2",
+              "stoneId": "S2"
+            }
+          ],
+          "willWin": false,
+          "willExhaustMoves": false
+        },
+        {
+          "type": "ordinary-input",
+          "kind": "compact",
+          "elapsed": 4.5,
+          "keys": [
+            "Space"
+          ]
+        },
+        {
+          "type": "observed-compaction",
+          "elapsed": 4.9,
+          "edit": {
+            "id": 1,
+            "actionId": "R1W",
+            "lineId": "row1",
+            "direction": "W",
+            "beforeAssignments": [
+              {
+                "cellId": "C2",
+                "stoneId": "S1"
+              },
+              {
+                "cellId": "C4",
+                "stoneId": "S2"
+              }
+            ],
+            "afterAssignments": [
+              {
+                "cellId": "C1",
+                "stoneId": "S1"
+              },
+              {
+                "cellId": "C2",
+                "stoneId": "S2"
+              }
+            ],
+            "moves": [
+              {
+                "stoneId": "S1",
+                "fromCellId": "C2",
+                "toCellId": "C1"
+              },
+              {
+                "stoneId": "S2",
+                "fromCellId": "C4",
+                "toCellId": "C2"
+              }
+            ],
+            "movedCount": 2,
+            "at": 4.516666666666667,
+            "tick": 271
+          },
+          "movesUsed": 1,
+          "movesRemaining": 7,
+          "undos": 0,
+          "orderedPairs": 1,
+          "matchedHoleCount": 11
+        },
+        {
+          "type": "ordinary-input",
+          "kind": "undo",
+          "elapsed": 9.2,
+          "keys": [
+            "b"
+          ]
+        },
+        {
+          "type": "observed-undo",
+          "elapsed": 9.6,
+          "edit": {
+            "edit": {
+              "id": 1,
+              "actionId": "R1W",
+              "lineId": "row1",
+              "direction": "W",
+              "beforeAssignments": [
+                {
+                  "cellId": "C2",
+                  "stoneId": "S1"
+                },
+                {
+                  "cellId": "C4",
+                  "stoneId": "S2"
+                }
+              ],
+              "afterAssignments": [
+                {
+                  "cellId": "C1",
+                  "stoneId": "S1"
+                },
+                {
+                  "cellId": "C2",
+                  "stoneId": "S2"
+                }
+              ],
+              "moves": [
+                {
+                  "stoneId": "S1",
+                  "fromCellId": "C2",
+                  "toCellId": "C1"
+                },
+                {
+                  "stoneId": "S2",
+                  "fromCellId": "C4",
+                  "toCellId": "C2"
+                }
+              ],
+              "movedCount": 2,
+              "at": 4.516666666666667,
+              "tick": 271
+            },
+            "at": 9.216666666666667,
+            "tick": 553
+          },
+          "assignments": [
+            {
+              "cellId": "C2",
+              "stoneId": "S1"
+            },
+            {
+              "cellId": "C4",
+              "stoneId": "S2"
+            }
+          ],
+          "movesUsed": 1,
+          "movesRemaining": 7,
+          "undos": 1
+        },
+        {
+          "type": "public-A-star-search",
+          "elapsed": 13.9,
+          "found": true,
+          "steps": 1,
+          "expanded": 2,
+          "visited": 4,
+          "milliseconds": 0.07995100000000832
+        },
+        {
+          "type": "ordinary-input",
+          "kind": "navigate",
+          "elapsed": 13.9,
+          "keys": [
+            "ArrowUp"
+          ]
+        }
+      ],
+      "receipt": {
+        "id": 1,
+        "actionId": "R1W",
+        "lineId": "row1",
+        "direction": "W",
+        "beforeAssignments": [
+          {
+            "cellId": "C2",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C4",
+            "stoneId": "S2"
+          }
+        ],
+        "afterAssignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C2",
+            "stoneId": "S2"
+          }
+        ],
+        "moves": [
+          {
+            "stoneId": "S1",
+            "fromCellId": "C2",
+            "toCellId": "C1"
+          },
+          {
+            "stoneId": "S2",
+            "fromCellId": "C4",
+            "toCellId": "C2"
+          }
+        ],
+        "movedCount": 2,
+        "at": 4.516666666666667,
+        "tick": 271
+      },
+      "undoReceipt": {
+        "edit": {
+          "id": 1,
+          "actionId": "R1W",
+          "lineId": "row1",
+          "direction": "W",
+          "beforeAssignments": [
+            {
+              "cellId": "C2",
+              "stoneId": "S1"
+            },
+            {
+              "cellId": "C4",
+              "stoneId": "S2"
+            }
+          ],
+          "afterAssignments": [
+            {
+              "cellId": "C1",
+              "stoneId": "S1"
+            },
+            {
+              "cellId": "C2",
+              "stoneId": "S2"
+            }
+          ],
+          "moves": [
+            {
+              "stoneId": "S1",
+              "fromCellId": "C2",
+              "toCellId": "C1"
+            },
+            {
+              "stoneId": "S2",
+              "fromCellId": "C4",
+              "toCellId": "C2"
+            }
+          ],
+          "movedCount": 2,
+          "at": 4.516666666666667,
+          "tick": 271
+        },
+        "at": 9.216666666666667,
+        "tick": 553
+      },
+      "finalObserved": {
+        "assignments": [
+          {
+            "cellId": "C2",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C4",
+            "stoneId": "S2"
+          }
+        ],
+        "selectedId": "R1W",
+        "movesUsed": 1,
+        "movesRemaining": 7,
+        "undos": 1,
+        "historyDepth": 0,
+        "lastCompactionRetained": {
+          "id": 1,
+          "actionId": "R1W",
+          "lineId": "row1",
+          "direction": "W",
+          "beforeAssignments": [
+            {
+              "cellId": "C2",
+              "stoneId": "S1"
+            },
+            {
+              "cellId": "C4",
+              "stoneId": "S2"
+            }
+          ],
+          "afterAssignments": [
+            {
+              "cellId": "C1",
+              "stoneId": "S1"
+            },
+            {
+              "cellId": "C2",
+              "stoneId": "S2"
+            }
+          ],
+          "moves": [
+            {
+              "stoneId": "S1",
+              "fromCellId": "C2",
+              "toCellId": "C1"
+            },
+            {
+              "stoneId": "S2",
+              "fromCellId": "C4",
+              "toCellId": "C2"
+            }
+          ],
+          "movedCount": 2,
+          "at": 4.516666666666667,
+          "tick": 271
+        }
+      }
+    }
+  },
+  "observations": [
+    {
+      "label": "fresh-record",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 0,
+      "tick": 0,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "fresh-record",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 0,
+      "tick": 0,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "plan-and-inspect-public-preview",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 2,
+      "tick": 120,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "plan-and-inspect-public-preview",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 2,
+      "tick": 120,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "ordinary-A-trial",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 4.5,
+      "tick": 270,
+      "paused": false,
+      "keys": [
+        "Space"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "ordinary-A-trial",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 4.5,
+      "tick": 270,
+      "paused": false,
+      "keys": [
+        "Space"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "release-after-late-compaction-observation",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 4.85,
+      "tick": 291,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 0,
+      "historyDepth": 1,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "release-after-late-compaction-observation",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 4.85,
+      "tick": 291,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 0,
+      "historyDepth": 1,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "accept-permanent-compaction-receipt",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 4.9,
+      "tick": 294,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 0,
+      "historyDepth": 1,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "accept-permanent-compaction-receipt",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 4.9,
+      "tick": 294,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 0,
+      "historyDepth": 1,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "ordinary-B-undo",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 9.2,
+      "tick": 552,
+      "paused": false,
+      "keys": [
+        "b"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 0,
+      "historyDepth": 1,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "ordinary-B-undo",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 9.2,
+      "tick": 552,
+      "paused": false,
+      "keys": [
+        "b"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 0,
+      "historyDepth": 1,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "release-after-late-undo-observation",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 9.55,
+      "tick": 573,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 1,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "release-after-late-undo-observation",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 9.55,
+      "tick": 573,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 1,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "accept-exact-unrefunded-undo",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 9.6,
+      "tick": 576,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 1,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "accept-exact-unrefunded-undo",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 9.6,
+      "tick": 576,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 1,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "replan-from-observed-restored-board",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 13.9,
+      "tick": 834,
+      "paused": false,
+      "keys": [
+        "ArrowUp"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 1,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "replan-from-observed-restored-board",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 13.9,
+      "tick": 834,
+      "paused": false,
+      "keys": [
+        "ArrowUp"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 1,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "paused-with-pending-navigation",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 13.9,
+      "tick": 834,
+      "paused": true,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 1,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "retry-existing-factory",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 0,
+      "tick": 0,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "first-use-independent-factory",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 0,
+      "tick": 0,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "retry-existing-factory",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 0.4,
+      "tick": 24,
+      "paused": false,
+      "keys": [
+        "ArrowUp"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "first-use-independent-factory",
+      "variant": "right",
+      "synthetic": true,
+      "elapsed": 0.4,
+      "tick": 24,
+      "paused": false,
+      "keys": [
+        "ArrowUp"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "wrong-ID-setup-fresh-record",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 0,
+      "tick": 0,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "wrong-ID-setup-plan-and-inspect-public-preview",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 2,
+      "tick": 120,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "wrong-ID-setup-ordinary-A-trial",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 4.5,
+      "tick": 270,
+      "paused": false,
+      "keys": [
+        "Space"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "wrong-ID-setup-release-after-late-compaction-observation",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 4.85,
+      "tick": 291,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 0,
+      "historyDepth": 1,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "refund-setup-fresh-record",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 0,
+      "tick": 0,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "refund-setup-plan-and-inspect-public-preview",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 2,
+      "tick": 120,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "refund-setup-ordinary-A-trial",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 4.5,
+      "tick": 270,
+      "paused": false,
+      "keys": [
+        "Space"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 0,
+      "movesRemaining": 8,
+      "undos": 0,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": null
+    },
+    {
+      "label": "refund-setup-release-after-late-compaction-observation",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 4.85,
+      "tick": 291,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 0,
+      "historyDepth": 1,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "refund-setup-accept-permanent-compaction-receipt",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 4.9,
+      "tick": 294,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 0,
+      "historyDepth": 1,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "refund-setup-ordinary-B-undo",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 9.2,
+      "tick": 552,
+      "paused": false,
+      "keys": [
+        "b"
+      ],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 0,
+      "historyDepth": 1,
+      "transition": null,
+      "lastCompactionId": 1
+    },
+    {
+      "label": "refund-setup-release-after-late-undo-observation",
+      "variant": "left",
+      "synthetic": true,
+      "elapsed": 9.55,
+      "tick": 573,
+      "paused": false,
+      "keys": [],
+      "selectedId": "R1W",
+      "assignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        }
+      ],
+      "movesUsed": 1,
+      "movesRemaining": 7,
+      "undos": 1,
+      "historyDepth": 0,
+      "transition": null,
+      "lastCompactionId": 1
+    }
+  ],
+  "failure": null,
+  "scope": {
+    "syntheticFixturesOnly": true,
+    "handMadeStoneCounts": [
+      2,
+      4
+    ],
+    "productionModelImported": false,
+    "productionModelExecuted": false,
+    "productionModelDecoded": false,
+    "productionModelBytesHashedOnly": true,
+    "authorLayoutsOrRoutesUsed": false,
+    "actualBrowserExecuted": false,
+    "runtimeWinClaimed": false,
+    "actualGameWinsClaimed": 0,
+    "physicalPhoneTested": false,
+    "hiddenPrivateReads": 0,
+    "snapshotWrites": 0,
+    "countDefinition": "All externally invoked pilot exports, observation calls, factories, and diagnostics count toward the hard 100-call bound. Pure independent geometry/facts/rank utility calls construct fixtures only and perform no search. Internal pilot calls are bounded by its own reviewed search limits.",
+    "observationMeaning": "Hand-authored public fixture observations with synthetic permanent receipts and charged ledgers, not production transitions or captured gameplay.",
+    "limitations": [
+      "This does not prove the three authored levels are solvable or that browser input timing is correct.",
+      "The permanent-receipt and undo checks test the pilot against explicit synthetic public transitions, not the production Model.",
+      "Private-read traps cover arbitrary underscore-prefixed reads and five throwing private accessors; all actual puzzle targets remain public."
+    ]
+  }
+}

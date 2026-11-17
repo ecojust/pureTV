@@ -1,0 +1,22 @@
+{
+  "source": "AOSP Android 4.4 r1",
+  "files": [
+    {
+      "file": "OpenSSLProvider.java",
+      "sha256": "cd686a38d67ddbd03bb363332bf696624ef1e09b2ca865b394927266032304c9",
+      "url": "https://android.googlesource.com/platform/libcore/+/android-4.4_r1/crypto/src/main/java/org/conscrypt/OpenSSLProvider.java?format=TEXT"
+    },
+    {
+      "file": "OpenSSLSocketImpl.java",
+      "sha256": "23ef166cbe0eec48fff64588335524644cc3bf91672e4cc5ab038e9d5a5d34c4",
+      "url": "https://android.googlesource.com/platform/libcore/+/android-4.4_r1/crypto/src/main/java/org/conscrypt/OpenSSLSocketImpl.java?format=TEXT"
+    },
+    {
+      "file": "NativeCrypto.java",
+      "sha256": "b6b7cefcaee9938da32188880fbe580d7d446f7822df66ecc178b5bf07f6e7db",
+      "url": "https://android.googlesource.com/platform/libcore/+/android-4.4_r1/crypto/src/main/java/org/conscrypt/NativeCrypto.java?format=TEXT"
+    }
+  ],
+  "finding": "SSLContext.TLSv1.2 aliases the same OpenSSLContextImpl as TLS. New sockets use NativeCrypto.getDefaultProtocols() which includes only SSLv3 and TLSv1. TLSv1.2 is supported but requires explicitly enabling it on sockets.",
+  "physicalTvTested": false
+}

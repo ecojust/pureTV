@@ -1,0 +1,964 @@
+{
+  "passed": true,
+  "reviewScriptSha256": "892b6ef5701f1d356045a4c94aa9029f8fe72effa02718beb4bb44d5013d10c5",
+  "productionModelStepCalled": false,
+  "productionModelCreateUsedOnlyForPublicSchemaAndPrivateKeyGuards": true,
+  "kind": "independent-observational-pilot-fixture-noninterference",
+  "notBrowserEvidence": true,
+  "notNormalGameplayOrModelRuleProof": true,
+  "productionStateModified": false,
+  "sourceHashes": {
+    "tests/automation.mjs": "d1b73b3990612e093ac51e16e79fa0c6d48ddd3e9ecd60184b28a0861ee30f64",
+    "src/main/assets/game-model.js": "39718505330a9cccd9ba30219fc3acad26c9b49f84a1b74fddc9eb8d3fa2a780",
+    "docs/model-contract.md": "89d87d2949eabc892e8b47060b5c2b908e21a9149b5e72be37a4ae9e205b3ea4"
+  },
+  "endHashes": {
+    "tests/automation.mjs": "d1b73b3990612e093ac51e16e79fa0c6d48ddd3e9ecd60184b28a0861ee30f64",
+    "src/main/assets/game-model.js": "39718505330a9cccd9ba30219fc3acad26c9b49f84a1b74fddc9eb8d3fa2a780",
+    "docs/model-contract.md": "89d87d2949eabc892e8b47060b5c2b908e21a9149b5e72be37a4ae9e205b3ea4"
+  },
+  "sourceUnchanged": true,
+  "fixtureMethod": "Authored contract-shaped public observation sequences, isolated pilot factories, paired different private future/expected/input data, and throwing getters for every actual model private key plus decoys. All snapshots deep frozen; outputs checked against explicit ordinary-key expectations. No future cue was supplied as a displayed observation.",
+  "privateKeys": [
+    "_aDown",
+    "_bDown",
+    "_cancelEpoch",
+    "_expectedResponse",
+    "_feedbackEndsAt",
+    "_feedbackNext",
+    "_futurePattern",
+    "_heldKind",
+    "_inputs",
+    "_pattern",
+    "_pendingA",
+    "_pendingB",
+    "_pendingCancel",
+    "_phrases",
+    "_remainder",
+    "_solution"
+  ],
+  "pairs": 80,
+  "pilotCalls": 161,
+  "privateReads": 0,
+  "privateWrites": 0,
+  "directionalDecisions": 24,
+  "neutralDecisions": 52,
+  "replayDecisions": 4,
+  "checks": [
+    {
+      "name": "remembered-short-long-and-third-direction / different hidden values",
+      "passed": true,
+      "frames": 12,
+      "trace": [
+        {
+          "label": "visible short up",
+          "elapsed": 1,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "up",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 0.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible long right",
+          "elapsed": 2.4,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 1,
+            "direction": "right",
+            "kind": "long",
+            "duration": 0.72,
+            "startedAt": 2.3,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible short left",
+          "elapsed": 3.9,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 2,
+            "direction": "left",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 3.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "before public onset",
+          "elapsed": 6.8,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "start remembered short",
+          "elapsed": 7.1,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        },
+        {
+          "label": "hold actual short",
+          "elapsed": 7.2,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        },
+        {
+          "label": "release actual short",
+          "elapsed": 7.4,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "next public onset pending",
+          "elapsed": 7.5,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "start remembered long",
+          "elapsed": 8.6,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowRight",
+            "Space"
+          ]
+        },
+        {
+          "label": "continue long beyond short band",
+          "elapsed": 9.2,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowRight",
+            "Space"
+          ]
+        },
+        {
+          "label": "release actual long",
+          "elapsed": 9.35,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "start third remembered direction",
+          "elapsed": 10.1,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowLeft",
+            "Space"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "remembered-short-long-and-third-direction / throwing private getters",
+      "passed": true,
+      "frames": 12,
+      "trace": [
+        {
+          "label": "visible short up",
+          "elapsed": 1,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "up",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 0.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible long right",
+          "elapsed": 2.4,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 1,
+            "direction": "right",
+            "kind": "long",
+            "duration": 0.72,
+            "startedAt": 2.3,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible short left",
+          "elapsed": 3.9,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 2,
+            "direction": "left",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 3.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "before public onset",
+          "elapsed": 6.8,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "start remembered short",
+          "elapsed": 7.1,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        },
+        {
+          "label": "hold actual short",
+          "elapsed": 7.2,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        },
+        {
+          "label": "release actual short",
+          "elapsed": 7.4,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "next public onset pending",
+          "elapsed": 7.5,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "start remembered long",
+          "elapsed": 8.6,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowRight",
+            "Space"
+          ]
+        },
+        {
+          "label": "continue long beyond short band",
+          "elapsed": 9.2,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowRight",
+            "Space"
+          ]
+        },
+        {
+          "label": "release actual long",
+          "elapsed": 9.35,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "start third remembered direction",
+          "elapsed": 10.1,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowLeft",
+            "Space"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unobserved-cue-replay-and-cancelled-pending-replay / different hidden values",
+      "passed": true,
+      "frames": 5,
+      "trace": [
+        {
+          "label": "visible short up",
+          "elapsed": 1,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "up",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 0.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "request paid replay for never displayed cue",
+          "elapsed": 6.2,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": [
+            "b"
+          ]
+        },
+        {
+          "label": "do not spam held B",
+          "elapsed": 6.3,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "cancel discards pending B and requires neutral",
+          "elapsed": 6.4,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "reevaluate missing cue after cancellation",
+          "elapsed": 6.5,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": [
+            "b"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unobserved-cue-replay-and-cancelled-pending-replay / throwing private getters",
+      "passed": true,
+      "frames": 5,
+      "trace": [
+        {
+          "label": "visible short up",
+          "elapsed": 1,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "up",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 0.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "request paid replay for never displayed cue",
+          "elapsed": 6.2,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": [
+            "b"
+          ]
+        },
+        {
+          "label": "do not spam held B",
+          "elapsed": 6.3,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "cancel discards pending B and requires neutral",
+          "elapsed": 6.4,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "reevaluate missing cue after cancellation",
+          "elapsed": 6.5,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": [
+            "b"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "new-listen-serial-replaces-remembered-visible-answer / different hidden values",
+      "passed": true,
+      "frames": 7,
+      "trace": [
+        {
+          "label": "visible short up",
+          "elapsed": 1,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "up",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 0.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible long right",
+          "elapsed": 2.4,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 1,
+            "direction": "right",
+            "kind": "long",
+            "duration": 0.72,
+            "startedAt": 2.3,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible short left",
+          "elapsed": 3.9,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 2,
+            "direction": "left",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 3.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "fresh publicly displayed replacement",
+          "elapsed": 6,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "down",
+            "kind": "long",
+            "duration": 0.72,
+            "startedAt": 5.7,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "use displayed replacement, not prior cue",
+          "elapsed": 11.9,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowDown",
+            "Space"
+          ]
+        },
+        {
+          "label": "retain observed long kind",
+          "elapsed": 12.5,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowDown",
+            "Space"
+          ]
+        },
+        {
+          "label": "release replacement long",
+          "elapsed": 12.65,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": []
+        }
+      ]
+    },
+    {
+      "name": "new-listen-serial-replaces-remembered-visible-answer / throwing private getters",
+      "passed": true,
+      "frames": 7,
+      "trace": [
+        {
+          "label": "visible short up",
+          "elapsed": 1,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "up",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 0.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible long right",
+          "elapsed": 2.4,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 1,
+            "direction": "right",
+            "kind": "long",
+            "duration": 0.72,
+            "startedAt": 2.3,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible short left",
+          "elapsed": 3.9,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 2,
+            "direction": "left",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 3.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "fresh publicly displayed replacement",
+          "elapsed": 6,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "down",
+            "kind": "long",
+            "duration": 0.72,
+            "startedAt": 5.7,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "use displayed replacement, not prior cue",
+          "elapsed": 11.9,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowDown",
+            "Space"
+          ]
+        },
+        {
+          "label": "retain observed long kind",
+          "elapsed": 12.5,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowDown",
+            "Space"
+          ]
+        },
+        {
+          "label": "release replacement long",
+          "elapsed": 12.65,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": []
+        }
+      ]
+    },
+    {
+      "name": "cancel-real-hold-preserves-visible-memory-and-reanchors / different hidden values",
+      "passed": true,
+      "frames": 8,
+      "trace": [
+        {
+          "label": "visible short up",
+          "elapsed": 1,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "up",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 0.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible long right",
+          "elapsed": 2.4,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 1,
+            "direction": "right",
+            "kind": "long",
+            "duration": 0.72,
+            "startedAt": 2.3,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible short left",
+          "elapsed": 3.9,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 2,
+            "direction": "left",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 3.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "start hold",
+          "elapsed": 7.1,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        },
+        {
+          "label": "hold before cancel",
+          "elapsed": 7.2,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        },
+        {
+          "label": "cancel yields neutral",
+          "elapsed": 7.25,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "no answer cue or premature repress",
+          "elapsed": 7.4,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "remember same visible cue after count-in",
+          "elapsed": 9.05,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cancel-real-hold-preserves-visible-memory-and-reanchors / throwing private getters",
+      "passed": true,
+      "frames": 8,
+      "trace": [
+        {
+          "label": "visible short up",
+          "elapsed": 1,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "up",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 0.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible long right",
+          "elapsed": 2.4,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 1,
+            "direction": "right",
+            "kind": "long",
+            "duration": 0.72,
+            "startedAt": 2.3,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible short left",
+          "elapsed": 3.9,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 2,
+            "direction": "left",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 3.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "start hold",
+          "elapsed": 7.1,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        },
+        {
+          "label": "hold before cancel",
+          "elapsed": 7.2,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        },
+        {
+          "label": "cancel yields neutral",
+          "elapsed": 7.25,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "no answer cue or premature repress",
+          "elapsed": 7.4,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "remember same visible cue after count-in",
+          "elapsed": 9.05,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "paused-observation-releases-and-resumes-from-public-onset / different hidden values",
+      "passed": true,
+      "frames": 8,
+      "trace": [
+        {
+          "label": "visible short up",
+          "elapsed": 1,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "up",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 0.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible long right",
+          "elapsed": 2.4,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 1,
+            "direction": "right",
+            "kind": "long",
+            "duration": 0.72,
+            "startedAt": 2.3,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible short left",
+          "elapsed": 3.9,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 2,
+            "direction": "left",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 3.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "start before pause",
+          "elapsed": 7.1,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        },
+        {
+          "label": "paused snapshot releases input",
+          "elapsed": 7.15,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "resume cancellation gate",
+          "elapsed": 7.2,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "wait for reanchored onset",
+          "elapsed": 7.3,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "repress using retained visible memory",
+          "elapsed": 9,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "paused-observation-releases-and-resumes-from-public-onset / throwing private getters",
+      "passed": true,
+      "frames": 8,
+      "trace": [
+        {
+          "label": "visible short up",
+          "elapsed": 1,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 0,
+            "direction": "up",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 0.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible long right",
+          "elapsed": 2.4,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 1,
+            "direction": "right",
+            "kind": "long",
+            "duration": 0.72,
+            "startedAt": 2.3,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "visible short left",
+          "elapsed": 3.9,
+          "mode": "listen",
+          "visibleCue": {
+            "index": 2,
+            "direction": "left",
+            "kind": "short",
+            "duration": 0.3,
+            "startedAt": 3.8,
+            "active": true
+          },
+          "keys": []
+        },
+        {
+          "label": "start before pause",
+          "elapsed": 7.1,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        },
+        {
+          "label": "paused snapshot releases input",
+          "elapsed": 7.15,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "resume cancellation gate",
+          "elapsed": 7.2,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "wait for reanchored onset",
+          "elapsed": 7.3,
+          "mode": "count-in",
+          "visibleCue": null,
+          "keys": []
+        },
+        {
+          "label": "repress using retained visible memory",
+          "elapsed": 9,
+          "mode": "respond",
+          "visibleCue": null,
+          "keys": [
+            "ArrowUp",
+            "Space"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unobserved answer without replay is rejected explicitly",
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Fixture sequences are deliberately synthetic and are not reachable-state or complete-game proof.",
+    "No browser, physical controller, audio, video, timing jitter or game completion was tested.",
+    "This review binds the listed pilot hash; model/contract hashes provide schema context, not model-rule validation."
+  ]
+}

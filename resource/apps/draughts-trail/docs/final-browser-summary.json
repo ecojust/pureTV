@@ -1,0 +1,93 @@
+{
+  "passed": true,
+  "sourceCommit": "56852e869de27f43e0876b15d0d6b512e14225f9",
+  "testedAssets": "/workspace/scratch/draughts-trail/assets",
+  "dedicatedDirectory": "/workspace/scratch/draughts-trail/browser",
+  "sharedDirectory": "/workspace/scratch/draughts-trail/qa",
+  "dedicatedChecksPassed": 6,
+  "sharedChecksPassed": 10,
+  "ordinaryRecordedWins": [
+    {
+      "level": 0,
+      "seconds": 10.016226029999999,
+      "playerTurns": 6,
+      "halfTurns": 11,
+      "reason": "opponent-empty",
+      "evidence": "sampled public snapshot"
+    },
+    {
+      "level": 1,
+      "seconds": 19.7,
+      "playerTurns": 6,
+      "halfTurns": 11,
+      "opponentPieces": 0,
+      "evidence": "Actual encoded frame screenshots/level-2-win-encoded.png; short result screen fell between 18s and20s public snapshot samples."
+    },
+    {
+      "level": 2,
+      "seconds": 34.00939537,
+      "playerTurns": 6,
+      "halfTurns": 11,
+      "reason": "opponent-empty",
+      "evidence": "sampled public snapshot"
+    }
+  ],
+  "video": {
+    "path": "/workspace/scratch/draughts-trail/qa/recording/gameplay.mp4",
+    "bytes": 2444869,
+    "sha256": "de5b58ea5668f576e5e88ee9023b6f322eabef94a2d38fa99f3294ba74280972",
+    "capturedSeconds": 55.53004741668701,
+    "fullDecodePassed": true
+  },
+  "frameAdmission": {
+    "policy": "Acknowledge every observed CDP frame; retain strictly increasing finite timestamps. Omit and log invalid, duplicate, backward, or post-stop events. Never sort or rewrite retained timestamps.",
+    "rawCdpFrames": 614,
+    "acceptedCdpFrames": 614,
+    "droppedCdpFrames": 0,
+    "droppedFrames": []
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 172,
+    "rafIntervalMs": {
+      "count": 172,
+      "min": 16.599999999998545,
+      "median": 33.399999999999636,
+      "p95": 83.29999999999927,
+      "max": 100.09999999999945,
+      "mean": 42.24651162790698
+    },
+    "webglDrawCalls": {
+      "count": 172,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 172,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "visualReview": {
+    "playing960": true,
+    "playing1280": true,
+    "encodedSamples": [
+      "screenshots/level-2-win-encoded.png",
+      "screenshots/encoded-level3-start.png"
+    ],
+    "note": "Actual largest-board screenshot and encoded gameplay show clear crowns, P/E pieces, paths and capture requirement; encoded result proves middle-level win missed by sparse state samples."
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

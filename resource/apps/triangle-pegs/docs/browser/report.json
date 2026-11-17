@@ -1,0 +1,198 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T14:07:16.486Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "5a1ad0c397da57d3b9990ed39f21caa8a2aa88c8ed7d8f5b71b85e8badc95e89",
+    "game-model.js": "5a0e0654de1f94ac7e2ae92a7d88dc1222f09fb115b912d0b256451fa4897d31",
+    "game.js": "b631feeb997e50b46ea989e7d5c59ebedd1d6c3168078daba47d1316b8f10a81",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "blocked adjacent landing, free cancel and exact three-hole jump/undo",
+      "passed": true,
+      "milliseconds": 7110.4832,
+      "screenshots": [
+        "/workspace/scratch/triangle-pegs/browser-checks/selected-jump-1280.png",
+        "/workspace/scratch/triangle-pegs/browser-checks/selected-jump-960.png"
+      ],
+      "state": {
+        "id": "triangle-pegs",
+        "phase": "playing",
+        "paused": false,
+        "tick": 116,
+        "elapsed": 1.9333333333333313,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 753,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "cursor": 0,
+          "source": 3,
+          "occupied": [
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "pegsRemaining": 14,
+          "legalJumps": [
+            {
+              "from": 3,
+              "over": 1,
+              "to": 0
+            },
+            {
+              "from": 5,
+              "over": 2,
+              "to": 0
+            }
+          ],
+          "history": [],
+          "undoRemaining": 2,
+          "jumpsMade": 1,
+          "undosUsed": 1,
+          "elapsed": 1.9333333333333313,
+          "elapsedCapped": false,
+          "calls": 116,
+          "blockedActions": 2,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "当前 1 号孔；来源 4 号，选择标记空孔按 A 跳跃。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 185,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          499.90000000000003,
+          16.699999999999932,
+          683.3000000000001,
+          683.3,
+          133.30000000000018,
+          100,
+          166.69999999999982,
+          183.20000000000027,
+          16.699999999999818,
+          83.30000000000018,
+          100,
+          33.40000000000009,
+          16.699999999999818,
+          66.59999999999991,
+          66.70000000000027,
+          33.29999999999973,
+          33.40000000000009,
+          33.30000000000018,
+          33.29999999999973,
+          83.30000000000018,
+          16.699999999999818,
+          83.30000000000018,
+          16.699999999999818,
+          83.40000000000009,
+          16.59999999999991,
+          33.40000000000009,
+          66.59999999999991,
+          33.40000000000009,
+          50,
+          16.59999999999991,
+          33.40000000000009,
+          49.90000000000009,
+          100,
+          16.699999999999818,
+          66.59999999999991,
+          33.400000000000546,
+          33.399999999999636,
+          49.899999999999636,
+          33.30000000000018,
+          100,
+          66.80000000000018,
+          33.19999999999982,
+          16.699999999999818
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "level 1: thirteen ordinary jumps leave one peg",
+      "passed": true,
+      "milliseconds": 22239.300338,
+      "level": 0,
+      "jumps": 13,
+      "pegs": 1,
+      "screenshot": "/workspace/scratch/triangle-pegs/browser-checks/level-1-won.png"
+    },
+    {
+      "name": "level 2: thirteen ordinary jumps leave one peg",
+      "passed": true,
+      "milliseconds": 22286.919476,
+      "level": 1,
+      "jumps": 13,
+      "pegs": 1,
+      "screenshot": "/workspace/scratch/triangle-pegs/browser-checks/level-2-won.png"
+    },
+    {
+      "name": "level 3: thirteen ordinary jumps leave one peg",
+      "passed": true,
+      "milliseconds": 22782.387634,
+      "level": 2,
+      "jumps": 13,
+      "pegs": 1,
+      "screenshot": "/workspace/scratch/triangle-pegs/browser-checks/level-3-won.png"
+    },
+    {
+      "name": "natural dead end recovers three times then loses without credits",
+      "passed": true,
+      "milliseconds": 21185.606870000003,
+      "pegs": 3,
+      "undos": 3
+    },
+    {
+      "name": "held source selection and pause require actual release before jumping",
+      "passed": true,
+      "milliseconds": 3030.683806999994,
+      "pegs": 13
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T14:08:55.277Z"
+}

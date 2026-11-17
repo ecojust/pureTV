@@ -1,0 +1,63 @@
+{
+  "kind": "independent-pilot-noninterference-review",
+  "passed": true,
+  "automationSha256": "24c1d147c134469852be5debfa1a188407d1ceb05aa53df9c955c06642e6b6c5",
+  "reviewScriptSha256": "e7a0cb6263165b725ef7dde683cf801d0cef022464a57ee85efc6313b177c869",
+  "checks": [
+    {
+      "name": "unseen-world",
+      "passed": true,
+      "identicalObservationPairs": 8,
+      "hiddenGettersBlocked": true,
+      "inputSnapshotsFrozen": true,
+      "ordinaryActionFrames": 7
+    },
+    {
+      "name": "beacon-memory",
+      "passed": true,
+      "identicalObservationPairs": 8,
+      "hiddenGettersBlocked": true,
+      "inputSnapshotsFrozen": true,
+      "ordinaryActionFrames": 7
+    },
+    {
+      "name": "hazard-observation",
+      "passed": true,
+      "identicalObservationPairs": 8,
+      "hiddenGettersBlocked": true,
+      "inputSnapshotsFrozen": true,
+      "ordinaryActionFrames": 7
+    },
+    {
+      "name": "faded-chart",
+      "passed": true,
+      "identicalObservationPairs": 8,
+      "hiddenGettersBlocked": true,
+      "inputSnapshotsFrozen": true,
+      "ordinaryActionFrames": 7
+    },
+    {
+      "name": "return-entry",
+      "passed": true,
+      "identicalObservationPairs": 8,
+      "hiddenGettersBlocked": true,
+      "inputSnapshotsFrozen": true,
+      "ordinaryActionFrames": 7
+    }
+  ],
+  "pilotCalls": 80,
+  "pairedObservationFrames": 40,
+  "ordinaryActionFrames": 35,
+  "methodology": "Independent fresh pilot pairs receive identical observations with different hidden terrain, beacon locations, patrol positions/routes and wave distance tables. Getter guards forbid hidden reads and frozen snapshots forbid writes.",
+  "scope": {
+    "syntheticObservations": true,
+    "normalGameplayEvidence": false,
+    "modelExecuted": false,
+    "browserExecuted": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "limitations": [
+    "This bounded noninterference check covers the listed observations; successful exploration and recording are separate gates."
+  ]
+}

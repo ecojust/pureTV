@@ -1,0 +1,1413 @@
+{
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "b0dd72890e35a045610051931575b631090d140a62511227a66c6b8bef237a91",
+    "game-model.js": "d4622852328eea249380eaf3d954d8deef6e428d7f158438b6bdc71d875a77a2",
+    "game.js": "2ee37c2d431d4369534561264adfc5d7894099899ba11c1f967f447b8a2c68d4",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "startedAt": "2026-11-03T16:38:28.931Z",
+  "environment": {
+    "browser": "154.0.8037.57",
+    "renderer": "ANGLE SwiftShader",
+    "viewport": [
+      1280,
+      720
+    ],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  },
+  "tests": [
+    {
+      "name": "loads title and read-only snapshot",
+      "passed": true,
+      "milliseconds": 35.65746300000001,
+      "details": {
+        "id": "domino-chain",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 777,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "playerHand": [
+            12,
+            14,
+            20,
+            22,
+            26
+          ],
+          "aiHand": [
+            6,
+            7,
+            8,
+            15,
+            24
+          ],
+          "drawPile": [
+            5,
+            4,
+            3
+          ],
+          "chain": [
+            {
+              "id": 18,
+              "left": 3,
+              "right": 3,
+              "owner": 0
+            }
+          ],
+          "cursor": 0,
+          "end": "right",
+          "passStreak": 0,
+          "playerPips": 39,
+          "aiPips": 27,
+          "playerPlays": 0,
+          "aiPlays": 0,
+          "playerDraws": 0,
+          "aiDraws": 0,
+          "playerPasses": 0,
+          "aiPasses": 0,
+          "actions": 0,
+          "lastPlayer": null,
+          "lastAI": null,
+          "aiTrail": [],
+          "receipts": [],
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选牌，上选左端、下选右端，A 接牌；两端都无牌可接时，B 摸牌或跳过。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 305,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          683.3,
+          950
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "title is rendered",
+      "passed": true,
+      "milliseconds": 1704.3582219999998,
+      "details": {
+        "bounds": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463
+        },
+        "coarseColors": 100,
+        "luminanceDeviation": 35.42232137387731,
+        "note": "Automatic blank-frame heuristic; requires separate human visual review."
+      }
+    },
+    {
+      "name": "Enter starts the normal game",
+      "passed": true,
+      "milliseconds": 243.34304499999962,
+      "details": {
+        "id": "domino-chain",
+        "phase": "playing",
+        "paused": false,
+        "tick": 6,
+        "elapsed": 0.09999999999999999,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 777,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "playerHand": [
+            12,
+            14,
+            20,
+            22,
+            26
+          ],
+          "aiHand": [
+            6,
+            7,
+            8,
+            15,
+            24
+          ],
+          "drawPile": [
+            5,
+            4,
+            3
+          ],
+          "chain": [
+            {
+              "id": 18,
+              "left": 3,
+              "right": 3,
+              "owner": 0
+            }
+          ],
+          "cursor": 0,
+          "end": "right",
+          "passStreak": 0,
+          "playerPips": 39,
+          "aiPips": 27,
+          "playerPlays": 0,
+          "aiPlays": 0,
+          "playerDraws": 0,
+          "aiDraws": 0,
+          "playerPasses": 0,
+          "aiPasses": 0,
+          "actions": 0,
+          "lastPlayer": null,
+          "lastAI": null,
+          "aiTrail": [],
+          "receipts": [],
+          "elapsed": 0.09999999999999999,
+          "elapsedCapped": false,
+          "calls": 6,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": 1,
+          "cancelledLast": true,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选牌，上选左端、下选右端，A 接牌；两端都无牌可接时，B 摸牌或跳过。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 305,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          683.3,
+          950,
+          233.30000000000018,
+          16.59999999999991,
+          83.40000000000009,
+          16.699999999999818,
+          333.3000000000002,
+          183.29999999999973,
+          100,
+          16.600000000000364,
+          100.09999999999991,
+          16.59999999999991,
+          250,
+          116.69999999999982,
+          83.30000000000018,
+          100,
+          16.699999999999818,
+          16.600000000000364,
+          283.2999999999997
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "P freezes gameplay state and tick, P resumes",
+      "passed": true,
+      "milliseconds": 458.8625949999996,
+      "details": {
+        "pausedTick": 6
+      }
+    },
+    {
+      "name": "ordinary movement and action input",
+      "passed": true,
+      "milliseconds": 2015.1924990000007,
+      "details": {
+        "before": {
+          "id": "domino-chain",
+          "phase": "playing",
+          "paused": false,
+          "tick": 16,
+          "elapsed": 0.26666666666666666,
+          "level": 0,
+          "best": 0,
+          "model": {
+            "schema": 1,
+            "seed": 777,
+            "level": 0,
+            "phase": "playing",
+            "reason": "",
+            "score": 0,
+            "playerHand": [
+              12,
+              14,
+              20,
+              22,
+              26
+            ],
+            "aiHand": [
+              6,
+              7,
+              8,
+              15,
+              24
+            ],
+            "drawPile": [
+              5,
+              4,
+              3
+            ],
+            "chain": [
+              {
+                "id": 18,
+                "left": 3,
+                "right": 3,
+                "owner": 0
+              }
+            ],
+            "cursor": 0,
+            "end": "right",
+            "passStreak": 0,
+            "playerPips": 39,
+            "aiPips": 27,
+            "playerPlays": 0,
+            "aiPlays": 0,
+            "playerDraws": 0,
+            "aiDraws": 0,
+            "playerPasses": 0,
+            "aiPasses": 0,
+            "actions": 0,
+            "lastPlayer": null,
+            "lastAI": null,
+            "aiTrail": [],
+            "receipts": [],
+            "elapsed": 0.26666666666666666,
+            "elapsedCapped": false,
+            "calls": 16,
+            "blockedActions": 0,
+            "inputArmed": true,
+            "cancelEpoch": 3,
+            "cancelledLast": false,
+            "lastHeld": {
+              "a": false,
+              "b": false,
+              "x": 0,
+              "y": 0,
+              "direction": "none"
+            },
+            "lastCommand": "none",
+            "events": [],
+            "terminalReceipt": null,
+            "message": "左右选牌，上选左端、下选右端，A 接牌；两端都无牌可接时，B 摸牌或跳过。"
+          },
+          "renderer": {
+            "kind": "webgl",
+            "drawCalls": 1,
+            "quads": 305,
+            "textureCount": 1,
+            "atlasSize": 1024,
+            "contextLost": false
+          },
+          "frameTimesMs": [
+            683.3,
+            950,
+            233.30000000000018,
+            16.59999999999991,
+            83.40000000000009,
+            16.699999999999818,
+            333.3000000000002,
+            183.29999999999973,
+            100,
+            16.600000000000364,
+            100.09999999999991,
+            16.59999999999991,
+            250,
+            116.69999999999982,
+            83.30000000000018,
+            100,
+            16.699999999999818,
+            16.600000000000364,
+            283.2999999999997,
+            83.39999999999964,
+            83.30000000000018,
+            16.600000000000364,
+            116.69999999999982,
+            100,
+            66.69999999999982
+          ],
+          "connection": {
+            "phoneSeen": false,
+            "disconnected": false
+          }
+        },
+        "after": {
+          "id": "domino-chain",
+          "phase": "won",
+          "paused": false,
+          "tick": 125,
+          "elapsed": 2.083333333333331,
+          "level": 0,
+          "best": 100,
+          "model": {
+            "schema": 1,
+            "seed": 777,
+            "level": 0,
+            "phase": "won",
+            "reason": "",
+            "score": 100,
+            "playerHand": [],
+            "aiHand": [
+              7,
+              8
+            ],
+            "drawPile": [
+              4,
+              3
+            ],
+            "chain": [
+              {
+                "id": 5,
+                "left": 5,
+                "right": 0,
+                "owner": 2
+              },
+              {
+                "id": 6,
+                "left": 0,
+                "right": 6,
+                "owner": 2
+              },
+              {
+                "id": 24,
+                "left": 6,
+                "right": 4,
+                "owner": 2
+              },
+              {
+                "id": 22,
+                "left": 4,
+                "right": 4,
+                "owner": 1
+              },
+              {
+                "id": 15,
+                "left": 4,
+                "right": 2,
+                "owner": 2
+              },
+              {
+                "id": 14,
+                "left": 2,
+                "right": 3,
+                "owner": 1
+              },
+              {
+                "id": 18,
+                "left": 3,
+                "right": 3,
+                "owner": 0
+              },
+              {
+                "id": 20,
+                "left": 3,
+                "right": 5,
+                "owner": 1
+              },
+              {
+                "id": 26,
+                "left": 5,
+                "right": 6,
+                "owner": 1
+              },
+              {
+                "id": 12,
+                "left": 6,
+                "right": 1,
+                "owner": 1
+              }
+            ],
+            "cursor": 0,
+            "end": "right",
+            "passStreak": 0,
+            "playerPips": 0,
+            "aiPips": 5,
+            "playerPlays": 5,
+            "aiPlays": 4,
+            "playerDraws": 0,
+            "aiDraws": 1,
+            "playerPasses": 0,
+            "aiPasses": 0,
+            "actions": 5,
+            "lastPlayer": {
+              "type": "play",
+              "tile": 12,
+              "end": "right",
+              "oriented": {
+                "left": 6,
+                "right": 1
+              }
+            },
+            "lastAI": null,
+            "aiTrail": [],
+            "receipts": [
+              {
+                "action": 1,
+                "player": {
+                  "type": "play",
+                  "tile": 14,
+                  "end": "left",
+                  "oriented": {
+                    "left": 2,
+                    "right": 3
+                  }
+                },
+                "ai": [
+                  {
+                    "type": "play",
+                    "tile": 15,
+                    "end": "left",
+                    "oriented": {
+                      "left": 4,
+                      "right": 2
+                    }
+                  }
+                ],
+                "left": 4,
+                "right": 3,
+                "playerCount": 4,
+                "aiCount": 4,
+                "playerPips": 34,
+                "aiPips": 21,
+                "passStreak": 0,
+                "outcome": "playing",
+                "reason": ""
+              },
+              {
+                "action": 2,
+                "player": {
+                  "type": "play",
+                  "tile": 22,
+                  "end": "left",
+                  "oriented": {
+                    "left": 4,
+                    "right": 4
+                  }
+                },
+                "ai": [
+                  {
+                    "type": "play",
+                    "tile": 24,
+                    "end": "left",
+                    "oriented": {
+                      "left": 6,
+                      "right": 4
+                    }
+                  }
+                ],
+                "left": 6,
+                "right": 3,
+                "playerCount": 3,
+                "aiCount": 3,
+                "playerPips": 26,
+                "aiPips": 11,
+                "passStreak": 0,
+                "outcome": "playing",
+                "reason": ""
+              },
+              {
+                "action": 3,
+                "player": {
+                  "type": "play",
+                  "tile": 20,
+                  "end": "right",
+                  "oriented": {
+                    "left": 3,
+                    "right": 5
+                  }
+                },
+                "ai": [
+                  {
+                    "type": "play",
+                    "tile": 6,
+                    "end": "left",
+                    "oriented": {
+                      "left": 0,
+                      "right": 6
+                    }
+                  }
+                ],
+                "left": 0,
+                "right": 5,
+                "playerCount": 2,
+                "aiCount": 2,
+                "playerPips": 18,
+                "aiPips": 5,
+                "passStreak": 0,
+                "outcome": "playing",
+                "reason": ""
+              },
+              {
+                "action": 4,
+                "player": {
+                  "type": "play",
+                  "tile": 26,
+                  "end": "right",
+                  "oriented": {
+                    "left": 5,
+                    "right": 6
+                  }
+                },
+                "ai": [
+                  {
+                    "type": "draw",
+                    "tile": 5
+                  },
+                  {
+                    "type": "play",
+                    "tile": 5,
+                    "end": "left",
+                    "oriented": {
+                      "left": 5,
+                      "right": 0
+                    }
+                  }
+                ],
+                "left": 5,
+                "right": 6,
+                "playerCount": 1,
+                "aiCount": 2,
+                "playerPips": 7,
+                "aiPips": 5,
+                "passStreak": 0,
+                "outcome": "playing",
+                "reason": ""
+              },
+              {
+                "action": 5,
+                "player": {
+                  "type": "play",
+                  "tile": 12,
+                  "end": "right",
+                  "oriented": {
+                    "left": 6,
+                    "right": 1
+                  }
+                },
+                "ai": [],
+                "left": 5,
+                "right": 1,
+                "playerCount": 0,
+                "aiCount": 2,
+                "playerPips": 0,
+                "aiPips": 5,
+                "passStreak": 0,
+                "outcome": "won",
+                "reason": ""
+              }
+            ],
+            "elapsed": 2.083333333333331,
+            "elapsedCapped": false,
+            "calls": 125,
+            "blockedActions": 0,
+            "inputArmed": true,
+            "cancelEpoch": 3,
+            "cancelledLast": false,
+            "lastHeld": {
+              "a": true,
+              "b": false,
+              "x": 0,
+              "y": 0,
+              "direction": "none"
+            },
+            "lastCommand": "a",
+            "events": [
+              {
+                "type": "win",
+                "call": 125,
+                "player": {
+                  "type": "play",
+                  "tile": 12,
+                  "end": "right",
+                  "oriented": {
+                    "left": 6,
+                    "right": 1
+                  }
+                },
+                "ai": [],
+                "cause": "player-empty"
+              }
+            ],
+            "terminalReceipt": {
+              "cause": "player-empty",
+              "call": 125,
+              "elapsed": 2.083333333333331,
+              "level": 0,
+              "playerHand": [],
+              "aiHand": [
+                7,
+                8
+              ],
+              "drawPile": [
+                4,
+                3
+              ],
+              "chain": [
+                {
+                  "id": 5,
+                  "left": 5,
+                  "right": 0,
+                  "owner": 2
+                },
+                {
+                  "id": 6,
+                  "left": 0,
+                  "right": 6,
+                  "owner": 2
+                },
+                {
+                  "id": 24,
+                  "left": 6,
+                  "right": 4,
+                  "owner": 2
+                },
+                {
+                  "id": 22,
+                  "left": 4,
+                  "right": 4,
+                  "owner": 1
+                },
+                {
+                  "id": 15,
+                  "left": 4,
+                  "right": 2,
+                  "owner": 2
+                },
+                {
+                  "id": 14,
+                  "left": 2,
+                  "right": 3,
+                  "owner": 1
+                },
+                {
+                  "id": 18,
+                  "left": 3,
+                  "right": 3,
+                  "owner": 0
+                },
+                {
+                  "id": 20,
+                  "left": 3,
+                  "right": 5,
+                  "owner": 1
+                },
+                {
+                  "id": 26,
+                  "left": 5,
+                  "right": 6,
+                  "owner": 1
+                },
+                {
+                  "id": 12,
+                  "left": 6,
+                  "right": 1,
+                  "owner": 1
+                }
+              ],
+              "playerPips": 0,
+              "aiPips": 5,
+              "passStreak": 0,
+              "actions": 5,
+              "playerPlays": 5,
+              "aiPlays": 4,
+              "score": 100,
+              "phase": "won",
+              "reason": ""
+            },
+            "message": "你的手牌已出完，获胜。"
+          },
+          "renderer": {
+            "kind": "webgl",
+            "drawCalls": 1,
+            "quads": 278,
+            "textureCount": 1,
+            "atlasSize": 1024,
+            "contextLost": false
+          },
+          "frameTimesMs": [
+            683.3,
+            950,
+            233.30000000000018,
+            16.59999999999991,
+            83.40000000000009,
+            16.699999999999818,
+            333.3000000000002,
+            183.29999999999973,
+            100,
+            16.600000000000364,
+            100.09999999999991,
+            16.59999999999991,
+            250,
+            116.69999999999982,
+            83.30000000000018,
+            100,
+            16.699999999999818,
+            16.600000000000364,
+            283.2999999999997,
+            83.39999999999964,
+            83.30000000000018,
+            16.600000000000364,
+            116.69999999999982,
+            100,
+            66.69999999999982,
+            149.89999999999964,
+            83.30000000000018,
+            66.80000000000018,
+            33.30000000000018,
+            66.59999999999945,
+            16.700000000000728,
+            16.599999999999454,
+            66.69999999999982,
+            16.700000000000728,
+            66.69999999999982,
+            33.30000000000018,
+            33.29999999999927,
+            33.30000000000018,
+            33.400000000000546,
+            16.699999999999818,
+            66.59999999999945,
+            33.400000000000546,
+            66.59999999999945,
+            16.700000000000728,
+            16.599999999999454,
+            66.69999999999982,
+            33.400000000000546,
+            50,
+            33.30000000000018,
+            16.599999999999454,
+            66.69999999999982,
+            16.700000000000728,
+            33.29999999999927,
+            50,
+            33.30000000000018,
+            50.100000000000364,
+            49.899999999999636,
+            66.60000000000036,
+            16.699999999999818,
+            33.399999999999636,
+            50,
+            33.400000000000546,
+            66.5,
+            16.800000000000182,
+            33.29999999999927,
+            50,
+            33.30000000000018,
+            16.699999999999818,
+            66.60000000000036,
+            16.699999999999818,
+            50
+          ],
+          "connection": {
+            "phoneSeen": false,
+            "disconnected": false
+          }
+        }
+      }
+    },
+    {
+      "name": "game-specific normal-play assertions",
+      "passed": true,
+      "milliseconds": 0.3707909999993717
+    },
+    {
+      "name": "gameplay frame is visible",
+      "passed": true,
+      "milliseconds": 1580.3216240000002,
+      "details": {
+        "bounds": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463
+        },
+        "coarseColors": 104,
+        "luminanceDeviation": 35.6401621311103,
+        "note": "Automatic blank-frame heuristic; requires separate human visual review."
+      }
+    },
+    {
+      "name": "R restarts with clean simulation state",
+      "passed": true,
+      "milliseconds": 172.38584700000138,
+      "details": {
+        "id": "domino-chain",
+        "phase": "playing",
+        "paused": false,
+        "tick": 6,
+        "elapsed": 0.09999999999999999,
+        "level": 0,
+        "best": 100,
+        "model": {
+          "schema": 1,
+          "seed": 777,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "playerHand": [
+            12,
+            14,
+            20,
+            22,
+            26
+          ],
+          "aiHand": [
+            6,
+            7,
+            8,
+            15,
+            24
+          ],
+          "drawPile": [
+            5,
+            4,
+            3
+          ],
+          "chain": [
+            {
+              "id": 18,
+              "left": 3,
+              "right": 3,
+              "owner": 0
+            }
+          ],
+          "cursor": 0,
+          "end": "right",
+          "passStreak": 0,
+          "playerPips": 39,
+          "aiPips": 27,
+          "playerPlays": 0,
+          "aiPlays": 0,
+          "playerDraws": 0,
+          "aiDraws": 0,
+          "playerPasses": 0,
+          "aiPasses": 0,
+          "actions": 0,
+          "lastPlayer": null,
+          "lastAI": null,
+          "aiTrail": [],
+          "receipts": [],
+          "elapsed": 0.09999999999999999,
+          "elapsedCapped": false,
+          "calls": 6,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": 4,
+          "cancelledLast": true,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选牌，上选左端、下选右端，A 接牌；两端都无牌可接时，B 摸牌或跳过。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 305,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          683.3,
+          950,
+          233.30000000000018,
+          16.59999999999991,
+          83.40000000000009,
+          16.699999999999818,
+          333.3000000000002,
+          183.29999999999973,
+          100,
+          16.600000000000364,
+          100.09999999999991,
+          16.59999999999991,
+          250,
+          116.69999999999982,
+          83.30000000000018,
+          100,
+          16.699999999999818,
+          16.600000000000364,
+          283.2999999999997,
+          83.39999999999964,
+          83.30000000000018,
+          16.600000000000364,
+          116.69999999999982,
+          100,
+          66.69999999999982,
+          149.89999999999964,
+          83.30000000000018,
+          66.80000000000018,
+          33.30000000000018,
+          66.59999999999945,
+          16.700000000000728,
+          16.599999999999454,
+          66.69999999999982,
+          16.700000000000728,
+          66.69999999999982,
+          33.30000000000018,
+          33.29999999999927,
+          33.30000000000018,
+          33.400000000000546,
+          16.699999999999818,
+          66.59999999999945,
+          33.400000000000546,
+          66.59999999999945,
+          16.700000000000728,
+          16.599999999999454,
+          66.69999999999982,
+          33.400000000000546,
+          50,
+          33.30000000000018,
+          16.599999999999454,
+          66.69999999999982,
+          16.700000000000728,
+          33.29999999999927,
+          50,
+          33.30000000000018,
+          50.100000000000364,
+          49.899999999999636,
+          66.60000000000036,
+          16.699999999999818,
+          33.399999999999636,
+          50,
+          33.400000000000546,
+          66.5,
+          16.800000000000182,
+          33.29999999999927,
+          50,
+          33.30000000000018,
+          16.699999999999818,
+          66.60000000000036,
+          16.699999999999818,
+          50,
+          150,
+          16.699999999999818,
+          150,
+          116.60000000000036,
+          100,
+          133.30000000000018,
+          133.30000000000018,
+          100,
+          16.799999999999272,
+          50,
+          33.20000000000073,
+          100.09999999999945,
+          200,
+          133.30000000000018,
+          100,
+          16.600000000000364,
+          200
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "resizing keeps canvas and complete sidebar text visible",
+      "passed": true,
+      "milliseconds": 2355.5710069999986,
+      "details": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "sidebar": {
+            "visible": true,
+            "bounds": {
+              "left": 749,
+              "top": 65,
+              "right": 944,
+              "bottom": 509
+            },
+            "scrollTop": 0,
+            "clientHeight": 442,
+            "scrollHeight": 442,
+            "clientWidth": 193,
+            "scrollWidth": 193,
+            "tipText": "数字与圆点表示牌面。对手和摸牌顺序全部可见；有任一合法接法就不能摸牌。摸牌后仍是你的回合。堵局比手牌点数，平分需重试；长链中段仅合并显示张数。",
+            "expectedTip": "数字与圆点表示牌面。对手和摸牌顺序全部可见；有任一合法接法就不能摸牌。摸牌后仍是你的回合。堵局比手牌点数，平分需重试；长链中段仅合并显示张数。",
+            "texts": [
+              {
+                "text": "手机与电视连接同一 Wi-Fi",
+                "rects": [
+                  {
+                    "left": 870,
+                    "top": 134.5,
+                    "right": 930,
+                    "bottom": 148.5
+                  },
+                  {
+                    "left": 870,
+                    "top": 148.5,
+                    "right": 925.484375,
+                    "bottom": 162.5
+                  }
+                ]
+              },
+              {
+                "text": "左右选牌；上选左端，下选右端",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 205,
+                    "right": 932,
+                    "bottom": 220
+                  },
+                  {
+                    "left": 789,
+                    "top": 220.390625,
+                    "right": 800,
+                    "bottom": 235.390625
+                  }
+                ]
+              },
+              {
+                "text": "空格、Z、确认 / 手机右上：接牌",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 239.78125,
+                    "right": 926.109375,
+                    "bottom": 254.78125
+                  },
+                  {
+                    "left": 789,
+                    "top": 255.171875,
+                    "right": 811,
+                    "bottom": 270.171875
+                  }
+                ]
+              },
+              {
+                "text": "X / 手机右下：无牌可接时摸牌或跳过",
+                "rects": [
+                  {
+                    "left": 789,
+                    "top": 274.5625,
+                    "right": 926.265625,
+                    "bottom": 289.5625
+                  },
+                  {
+                    "left": 789,
+                    "top": 289.953125,
+                    "right": 833,
+                    "bottom": 304.953125
+                  }
+                ]
+              },
+              {
+                "text": "P 暂停　R 重试遥控器确认开始 / A，播放键暂停",
+                "rects": [
+                  {
+                    "left": 758,
+                    "top": 311.34375,
+                    "right": 825.484375,
+                    "bottom": 325.34375
+                  },
+                  {
+                    "left": 758,
+                    "top": 325.34375,
+                    "right": 903.3125,
+                    "bottom": 339.34375
+                  }
+                ]
+              },
+              {
+                "text": "数字与圆点表示牌面。对手和摸牌顺序全部可见；有任一合法接法就不能摸牌。摸牌后仍是你的回合。堵局比手牌点数，平分需重试；长链中段仅合并显示张数。",
+                "rects": [
+                  {
+                    "left": 801.5,
+                    "top": 352.34375,
+                    "right": 922.5,
+                    "bottom": 367.34375
+                  },
+                  {
+                    "left": 765,
+                    "top": 367.734375,
+                    "right": 919,
+                    "bottom": 382.734375
+                  },
+                  {
+                    "left": 765,
+                    "top": 383.125,
+                    "right": 919,
+                    "bottom": 398.125
+                  },
+                  {
+                    "left": 765,
+                    "top": 398.515625,
+                    "right": 919,
+                    "bottom": 413.515625
+                  },
+                  {
+                    "left": 765,
+                    "top": 413.90625,
+                    "right": 919,
+                    "bottom": 428.90625
+                  },
+                  {
+                    "left": 765,
+                    "top": 429.296875,
+                    "right": 809,
+                    "bottom": 444.296875
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "sidebar": {
+            "visible": true,
+            "bounds": {
+              "left": 1024,
+              "top": 94,
+              "right": 1252,
+              "bottom": 672
+            },
+            "scrollTop": 0,
+            "clientHeight": 576,
+            "scrollHeight": 576,
+            "clientWidth": 226,
+            "scrollWidth": 226,
+            "tipText": "数字与圆点表示牌面。对手和摸牌顺序全部可见；有任一合法接法就不能摸牌。摸牌后仍是你的回合。堵局比手牌点数，平分需重试；长链中段仅合并显示张数。",
+            "expectedTip": "数字与圆点表示牌面。对手和摸牌顺序全部可见；有任一合法接法就不能摸牌。摸牌后仍是你的回合。堵局比手牌点数，平分需重试；长链中段仅合并显示张数。",
+            "texts": [
+              {
+                "text": "手机与电视连接同一 Wi-Fi",
+                "rects": [
+                  {
+                    "left": 1163,
+                    "top": 173.5,
+                    "right": 1233,
+                    "bottom": 187.5
+                  },
+                  {
+                    "left": 1163,
+                    "top": 187.5,
+                    "right": 1208.484375,
+                    "bottom": 201.5
+                  }
+                ]
+              },
+              {
+                "text": "左右选牌；上选左端，下选右端",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 256.296875,
+                    "right": 1220,
+                    "bottom": 271.296875
+                  }
+                ]
+              },
+              {
+                "text": "空格、Z、确认 / 手机右上：接牌",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 284.296875,
+                    "right": 1225.109375,
+                    "bottom": 299.296875
+                  }
+                ]
+              },
+              {
+                "text": "X / 手机右下：无牌可接时摸牌或跳过",
+                "rects": [
+                  {
+                    "left": 1066,
+                    "top": 308,
+                    "right": 1236.265625,
+                    "bottom": 323
+                  },
+                  {
+                    "left": 1066,
+                    "top": 323.390625,
+                    "right": 1077,
+                    "bottom": 338.390625
+                  }
+                ]
+              },
+              {
+                "text": "P 暂停　R 重试遥控器确认开始 / A，播放键暂停",
+                "rects": [
+                  {
+                    "left": 1035,
+                    "top": 344.78125,
+                    "right": 1102.484375,
+                    "bottom": 358.78125
+                  },
+                  {
+                    "left": 1035,
+                    "top": 358.78125,
+                    "right": 1180.3125,
+                    "bottom": 372.78125
+                  }
+                ]
+              },
+              {
+                "text": "数字与圆点表示牌面。对手和摸牌顺序全部可见；有任一合法接法就不能摸牌。摸牌后仍是你的回合。堵局比手牌点数，平分需重试；长链中段仅合并显示张数。",
+                "rects": [
+                  {
+                    "left": 1078.5,
+                    "top": 385.78125,
+                    "right": 1232.5,
+                    "bottom": 400.78125
+                  },
+                  {
+                    "left": 1042,
+                    "top": 401.171875,
+                    "right": 1229,
+                    "bottom": 416.171875
+                  },
+                  {
+                    "left": 1042,
+                    "top": 416.5625,
+                    "right": 1229,
+                    "bottom": 431.5625
+                  },
+                  {
+                    "left": 1042,
+                    "top": 431.953125,
+                    "right": 1229,
+                    "bottom": 446.953125
+                  },
+                  {
+                    "left": 1042,
+                    "top": 447.34375,
+                    "right": 1108,
+                    "bottom": 462.34375
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "no page, console or resource errors",
+      "passed": true,
+      "milliseconds": 0.1336620000001858
+    }
+  ],
+  "screenshots": [
+    "/workspace/scratch/domino-chain/qa-final/01-title.png",
+    "/workspace/scratch/domino-chain/qa-final/02-gameplay.png",
+    "/workspace/scratch/domino-chain/qa-final/resize-960.png",
+    "/workspace/scratch/domino-chain/qa-final/resize-1280.png"
+  ],
+  "uniqueRulesVerified": true,
+  "modelTestsExecuted": false,
+  "visualReviewCompleted": false,
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 37,
+    "rafIntervalMs": {
+      "count": 37,
+      "min": 16.599999999999454,
+      "median": 33.400000000000546,
+      "p95": 66.69999999999982,
+      "max": 66.69999999999982,
+      "mean": 39.63783783783782
+    },
+    "webglDrawCalls": {
+      "count": 37,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 37,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "recording": {
+    "video": "/workspace/scratch/domino-chain/qa-final/recording/gameplay.mp4",
+    "bytes": 2512720,
+    "capturedSeconds": 70.51985216140747,
+    "frames": 754,
+    "manifest": "/workspace/scratch/domino-chain/qa-final/recording/recording.json"
+  },
+  "sharedRegressionPassed": true,
+  "finishedAt": "2026-11-03T16:40:21.479Z"
+}

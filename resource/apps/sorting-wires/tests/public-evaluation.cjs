@@ -1,0 +1,5 @@
+'use strict';
+function run(network,input){const trace=[input.slice()];for(const layer of network){const next=trace.at(-1).slice();for(const pair of layer){const [a,b]=Array.isArray(pair)?pair:[pair.a,pair.b];if(next[a]>next[b])[next[a],next[b]]=[next[b],next[a]];}trace.push(next);}return {output:trace.at(-1),trace};}
+function evaluate(network,wires){const results=Array.from({length:2**wires},(_,index)=>{const input=Array.from(index.toString(2).padStart(wires,'0'),Number),r=run(network,input);return {index,input,...r,sorted:r.output.every((v,i)=>!i||r.output[i-1]<=v)};}),first=results.find(r=>!r.sorted);return {passed:!first,total:results.length,sortedCount:results.filter(r=>r.sorted).length,firstFailure:first?{index:first.index,input:first.input,output:first.output,trace:first.trace}:null};}
+function permutations(values){if(!values.length)return [[]];return values.flatMap((v,i)=>permutations(values.filter((_,j)=>i!==j)).map(rest=>[v,...rest]));}
+module.exports={run,evaluate,permutations};

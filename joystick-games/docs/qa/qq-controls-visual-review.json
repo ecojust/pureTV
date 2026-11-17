@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "scope": "Manual image review of actual browser captures: rendered game/menu/pause, controller icon, full actual fixture ID, and non-overlap of the primary action. Synthetic bridge, not native hardware.",
+  "reviewedFiles": [
+    {
+      "path": "01-menu.png",
+      "sha256": "f888f023c779d8d4258bfc89ad62064676e15d06b0a6baf29d2fe10d301a4b9b"
+    },
+    {
+      "path": "02-connected.png",
+      "sha256": "613d22f36429377404d5e202f3fa4a16402acbcc689b0cf0e772daf2a46905df"
+    },
+    {
+      "path": "03-playing.png",
+      "sha256": "155f0ccf4278d59456b7a8641081e4556f5feafef18aa3210e0ca0a98ce758ff"
+    },
+    {
+      "path": "04-paused.png",
+      "sha256": "47f2c792e37b7daa432dee41e5cf7b820e8e2d5dca694ebe045466e1f1bde977"
+    },
+    {
+      "path": "05-reconnected.png",
+      "sha256": "c567d1f92961ed46f9b06ba9110df2dc509c4dde3dfc3613cc342871f6d72521"
+    },
+    {
+      "path": "06-layout-960.png",
+      "sha256": "0e338ba23e1da1bcadcbbafa5e669ac4353bf684b1d4dd37552d2f39bc6696e6"
+    },
+    {
+      "path": "06-layout-1280.png",
+      "sha256": "2f51e47b85c3f0420c5a860a9b82521c52df59b7b925dfda052646f6ac013099"
+    },
+    {
+      "path": "07-menu-960.png",
+      "sha256": "da364fb4a3f25ecd0cd802138861a1f2037b86a418d64e201ddf7f0c4d2ce69a"
+    },
+    {
+      "path": "07-menu-1280.png",
+      "sha256": "3b7007178a882d93ee111d356810c80b06cafb605d6e14263fef960c4d9e6f93"
+    }
+  ],
+  "controllerIdentity": "Full ID wraps and stays readable in playing, paused, reconnect and both viewport sizes.",
+  "gameWorld": "Actual original cars, track, ranking, minimap, lap/time, speed meter and boost gauge are rendered; no blank game canvas.",
+  "menuBehavior": "Configuration and the full instruction card are inside a normal scrolling menu. The Start action remains fixed. At 960×540, the connected service-information footer uses the controller panel internal scroll area; the requested controller icon and entire ID remain visible.",
+  "limitations": [
+    "The game displays its temporary control hint using an 18-second wall-clock timeout. On the slow software renderer it can expire before the countdown advances; the permanent menu instruction card remains available by scrolling.",
+    "This is not a claim that every configuration option or service-info line fits the initial 960 viewport without scrolling.",
+    "No full race completion is claimed by this controls suite; the recorded driving segment covers actual inputs and lifecycle checks."
+  ],
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false
+}

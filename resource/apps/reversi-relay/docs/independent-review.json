@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "method": "Independent 6x6 bracket rules and exhaustive player-choice search against the documented deterministic greedy opponent. No production model imported for planning; completed paths replayed through ordinary create/step inputs.",
+  "checks": [
+    "hand-authored eight-direction and row-edge reference cases",
+    "independent exact search and ordinary input replay win all three authored boards",
+    "ordinary intentionally poor legal choices lose without forced state mutation",
+    "natural forced player pass invokes the actual deterministic opponent reply"
+  ],
+  "layouts": [
+    {
+      "level": 0,
+      "maximumMargin": 6,
+      "minimumMargin": -26,
+      "searchedPositions": 223,
+      "playerCommands": 5,
+      "aiPasses": 1,
+      "phase": "won",
+      "counts": {
+        "player": 21,
+        "opponent": 15,
+        "empty": 0
+      }
+    },
+    {
+      "level": 1,
+      "maximumMargin": 4,
+      "minimumMargin": -24,
+      "searchedPositions": 249,
+      "playerCommands": 6,
+      "aiPasses": 2,
+      "phase": "won",
+      "counts": {
+        "player": 20,
+        "opponent": 16,
+        "empty": 0
+      }
+    },
+    {
+      "level": 2,
+      "maximumMargin": 26,
+      "minimumMargin": -26,
+      "searchedPositions": 1184,
+      "playerCommands": 7,
+      "aiPasses": 3,
+      "phase": "won",
+      "counts": {
+        "player": 31,
+        "opponent": 5,
+        "empty": 0
+      }
+    }
+  ],
+  "playerPass": {
+    "level": 1,
+    "commands": [
+      3,
+      11,
+      35,
+      null
+    ],
+    "playerPasses": 1,
+    "aiMoves": 4,
+    "counts": {
+      "player": 7,
+      "opponent": 27,
+      "empty": 2
+    }
+  },
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "f82d3030d3055d4c01a11e3c8d8241937e6ab6d67f7d73d8dc400648d8d77a87",
+    "tests/reference.cjs": "f33eabb14d14019df7dc81799a836284f14cfde620879127613554fa6262e8d1",
+    "tests/independent-check.cjs": "8cab1840c6658864043237de0b125ec993a804f8a75a4884e875556c331373cf"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

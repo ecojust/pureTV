@@ -1,0 +1,79 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T18:18:35.949Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "89d65b7d3bb1720852456aadd362166c19b53c663b171cedcf973f91d6c09765",
+    "game-model.js": "0991b49a761d4662761c5016b38925308d9be36b83a112f4167719ee27dfb7ec",
+    "game.js": "71927e90c278e8a65c7402963e8539ec31f271740bc50b35426458ac5e5d4927",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "level 1: ordinary exact arithmetic uses every source card and reaches24",
+      "passed": true,
+      "level": 0,
+      "merges": 3,
+      "expression": "(D*(C+(A+B)))",
+      "fractionsObserved": false
+    },
+    {
+      "name": "level 2: ordinary exact arithmetic uses every source card and reaches24",
+      "passed": true,
+      "level": 1,
+      "merges": 3,
+      "expression": "(B*((A*C)-D))",
+      "fractionsObserved": false
+    },
+    {
+      "name": "level 3: ordinary exact arithmetic uses every source card and reaches24",
+      "passed": true,
+      "level": 2,
+      "merges": 3,
+      "expression": "(D/(B-(C/A)))",
+      "fractionsObserved": true
+    },
+    {
+      "name": "held confirmation selects only once, pause freezes it, and B cancels without spending a ticket",
+      "passed": true,
+      "heldSelectOnly": true,
+      "pauseFreeze": true,
+      "pendingCancelFree": true
+    },
+    {
+      "name": "ordinary zero divisor is rejected freely and preserves the selected division",
+      "passed": true,
+      "rejectedWithoutCost": true,
+      "selectionPreserved": true
+    },
+    {
+      "name": "undoing a completed wrong result retains its failure and global merge cost before repair",
+      "passed": true,
+      "failedChanceRetained": true,
+      "noMergeRefund": true,
+      "repairWon": true
+    },
+    {
+      "name": "three ordinary wrong completions naturally lose and terminal input cannot reset or undo",
+      "passed": true,
+      "naturalFailures": 3,
+      "terminalFrozen": true
+    },
+    {
+      "name": "correct arithmetic wins on the third attempt after two genuine failed completions",
+      "passed": true,
+      "thirdAttemptWon": true,
+      "failuresNotRefunded": true
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T18:19:48.429Z"
+}

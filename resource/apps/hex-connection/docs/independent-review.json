@@ -1,0 +1,74 @@
+{
+  "passed": true,
+  "method": "Independent pairwise hex graph and empty-cell-layer connection costs, then exhaustive deterministic-reply game trees. All optimal and natural-loss routes plus every initial move replay through normal directional/A inputs, comparing boards and actual AI receipts.",
+  "checks": [
+    "independent six-neighbor graph has no row wrapping or square-grid diagonal shortcut",
+    "full independent public game trees prove minimal wins and natural losses on all layouts",
+    "ordinary replay agrees with independent geometry and every deterministic AI receipt",
+    "every initial legal choice agrees with AI win, block, cost and row-major tie policy",
+    "occupied cells, unused B and cursor boundaries consume no player or AI stones"
+  ],
+  "layouts": [
+    {
+      "level": 0,
+      "size": 5,
+      "empty": 11,
+      "searchStates": 18,
+      "minimumPlayerMoves": 4,
+      "winningRoute": [
+        19,
+        17,
+        0,
+        7
+      ],
+      "losingRoute": [
+        0
+      ]
+    },
+    {
+      "level": 1,
+      "size": 5,
+      "empty": 13,
+      "searchStates": 168,
+      "minimumPlayerMoves": 3,
+      "winningRoute": [
+        9,
+        7,
+        10
+      ],
+      "losingRoute": [
+        2
+      ]
+    },
+    {
+      "level": 2,
+      "size": 6,
+      "empty": 14,
+      "searchStates": 1024,
+      "minimumPlayerMoves": 3,
+      "winningRoute": [
+        0,
+        13,
+        16
+      ],
+      "losingRoute": [
+        0,
+        3,
+        6
+      ]
+    }
+  ],
+  "comparedReplies": 50,
+  "aiReasons": [
+    "block",
+    "cost",
+    "win"
+  ],
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "0f23839063a6415abf56e61fafc3959ddfcec2c3d4fb4dd92f755a9202f08c40",
+    "tests/reference.cjs": "e7c349d32e8789305ee2cd30c6d5414cac748d7d4defc66a36bb3642e45710a9",
+    "tests/independent-check.cjs": "50da380df2aaa4bf8b8f49e2fa72c85c0e1e33b78304c3dc59bd1aefa4f28466"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

@@ -1,0 +1,623 @@
+{
+  "checkedAt": "2026-11-08",
+  "latestRequirement": "原版免费优先，有现成APK，主要功能无需手工配置片源/接口或自行编译；每类最多两款。",
+  "physicalTvTested": false,
+  "apkDownloadedThisReview": false,
+  "archiveChanged": false,
+  "mediaResearch": {
+    "checkedAt": "2026-11-08",
+    "scope": "TVAPP相关项目，仅核查原作者公开文档与源码元数据；没有下载APK、没有实机测试、没有核验TVAPP APK与原版签名一致性。",
+    "definition": "客户端免费不等于全部节目、会员画质、直播源或版权内容免费；开源许可证也不自动证明无广告。",
+    "categories": [
+      {
+        "type": "电视频道直播",
+        "recommendedPair": [
+          "WebViewTV（条件推荐）",
+          "我的电视·〇（需配源）"
+        ],
+        "candidates": [
+          {
+            "name": "WebViewTV",
+            "officialUrl": "https://github.com/hxh19950701/WebViewTvLive",
+            "readmeUrl": "https://github.com/hxh19950701/WebViewTvLive/blob/main/README_CN.md",
+            "license": "未找到标准许可证；作者说明1.6之后暂停开源",
+            "quotes": [
+              "Open official web pages with one click, providing a convenient and quick way to watch official TV live broadcasts.",
+              "Channel switching via number keys",
+              "Donations are solely for supporting development and maintenance and are not related to any specific content or programs.",
+              "Due to the challenging open-source environment in mainland China, this project has paused open sourcing. The final open-source version is 1.6."
+            ],
+            "freeEvidence": "官方公开下载、捐赠非内容收费；未找到明确“全部功能永久免费”的承诺，因此条件推荐，不能写成全部频道永久免费。",
+            "usability": "打开电视台官网页面、自动更新频道、数字键换台，适合免配源优先场景。",
+            "limits": "官网版权时段可能不可播；需Android5+、WebView78+，推荐2GB以上；切台较慢，清晰度选择受限。源码1.6包名com.vasthread.webviewtv；TVAPP已收录2/3版包名com.vasthread.webviewtv.v2，未核验签名。"
+          },
+          {
+            "name": "我的电视·〇",
+            "officialUrl": "https://github.com/lizongying/my-tv-0",
+            "readmeUrl": "https://github.com/lizongying/my-tv-0/blob/main/README.md",
+            "license": "MIT",
+            "quotes": [
+              "電視視頻播放軟件，可以自定義視頻源",
+              "遙控器右鍵/觸屏雙擊打開配置",
+              "打開配置后，選擇遠程配置，掃描二維碼可以配置視頻源等。也可以直接遠程配置地址 http://0.0.0.0:34567"
+            ],
+            "freeEvidence": "MIT源码与官方Release免费获取；未查到客户端付费功能。",
+            "usability": "遥控器适配、扫码远程填源；需要一次配置和后续维护来源，不能当成免配置频道服务。",
+            "limits": "普通1.3.9.8与KitKat1.3.9.7是不同发布；TVAPP已经有1.3.9.8。"
+          }
+        ]
+      },
+      {
+        "type": "影视播放壳",
+        "recommendedPair": [
+          "FongMi影视",
+          "TVBox（次选、需配源）"
+        ],
+        "candidates": [
+          {
+            "name": "FongMi影视",
+            "officialUrl": "https://github.com/FongMi/TV",
+            "readmeUrl": "https://github.com/FongMi/TV/blob/fongmi/README.md",
+            "license": "GPL-3.0",
+            "quotes": [
+              "Android TV、手機、平板都能用，支援本地檔案與網址播放。",
+              "**操作**：電視遙控器、手機手勢、DLNA 投放與接收。",
+              "**瀏覽**：分類篩選、跨站搜尋、收藏、播放記錄與無痕模式。"
+            ],
+            "freeEvidence": "GPL-3.0客户端源码；不代表订阅接口/点播内容免费。",
+            "usability": "遥控器、搜索、收藏、历史齐全；纯播放器/壳需提供播放地址或配置。",
+            "limits": "不可宣传安装后拥有免费影视资源；上游TVAPP包未做官方签名核验。"
+          },
+          {
+            "name": "TVBox（takagen99/Box）",
+            "officialUrl": "https://github.com/takagen99/Box",
+            "readmeUrl": "https://github.com/takagen99/Box/blob/main/README.md",
+            "license": "AGPL-3.0",
+            "quotes": [
+              "# Box",
+              "=== Source Code - Editing the app default settings ==="
+            ],
+            "freeEvidence": "AGPL-3.0源码公开；官方README很简略，不足以单独验证所有功能免费或无广告。",
+            "usability": "TVAPP分类为原版影视空壳，需要配置源；与FongMi重叠较多，易用性次选。",
+            "limits": "客户端免费不覆盖内容源费用；不同白壳/黑壳/内置源改包不能统称原版。"
+          }
+        ]
+      },
+      {
+        "type": "直播平台聚合",
+        "recommendedPair": [
+          "纯粹直播TV",
+          "SimpleLive（需自行构建/核验原包）"
+        ],
+        "candidates": [
+          {
+            "name": "纯粹直播TV",
+            "officialUrl": "https://github.com/liuchuancong/pure_live_TV",
+            "readmeUrl": "https://github.com/liuchuancong/pure_live_TV/blob/main/README.md",
+            "license": "实际LICENSE为AGPL-3.0，README文字写GPL-3.0，两者不一致需遵守实际许可证核对",
+            "quotes": [
+              "全程无需触屏：方向键换台、OK 呼出控制栏、长按关注，支持 34 个直播平台与 IPTV 自定义源。",
+              "本项目为 **非盈利性开源软件**",
+              "无广告、无追踪。",
+              "因平台限制，观看高清直播需登录。可在 **设置 → 账号** 中通过扫码或粘贴 Cookie 登录",
+              "**不提供任何 VIP 解锁、视频破解或盗链服务**。高清直播需您在对应平台拥有合法账号权限。"
+            ],
+            "freeEvidence": "官方源码与Release提供，说明非盈利开源、无广告；平台高清权限不保证免费。",
+            "usability": "遥控器优先、搜索关注，TV专用；比自行编译SimpleLive易安装。",
+            "limits": "当前3.0.7 README最低Android7/API24，不适合直接推荐给Android4.4/6电视；TVAPP冻结包为较旧1.9.5/README3.0.2，应核验版本关系。"
+          },
+          {
+            "name": "SimpleLive",
+            "officialUrl": "https://github.com/xiaoyaocz/dart_simple_live",
+            "readmeUrl": "https://github.com/xiaoyaocz/dart_simple_live/blob/master/README.md",
+            "license": "GPL-3.0",
+            "quotes": [
+              "本项目不提供Release安装包，请自行编译后运行测试。",
+              "- [x] Android TV `BETA`",
+              "`simple_live_tv_app` 基于核心库实现的Flutter Android TV客户端。"
+            ],
+            "freeEvidence": "GPL-3.0客户端源码；公开README没有付费解锁机制。",
+            "usability": "虎牙、斗鱼、B站、抖音聚合；源码有电视版，但如今原作者不发布安装包，自行构建后才适合商城收录。",
+            "limits": "不能把TVAPP现有1.7.9APK当成已核验的最新官方安装包；TV版标BETA，来源接口有效性未实机测试。"
+          }
+        ]
+      },
+      {
+        "type": "B站客户端",
+        "recommendedPair": [
+          "BBLL原版",
+          "BiliTV（条件推荐）"
+        ],
+        "candidates": [
+          {
+            "name": "BBLL原版",
+            "officialUrl": "https://github.com/xiaye13579/BBLL",
+            "readmeUrl": "https://github.com/xiaye13579/BBLL/blob/main/README.md",
+            "license": "未找到开源许可证；不要称其开源软件",
+            "quotes": [
+              "BBLL是个学习交流应用，不存在收费内容。部分功能需要B站的会员才可以使用，仅需要开网页/手机端会员即可使用全部功能。",
+              "播放控件隐藏时按遥控器D-Pad按钮的左右键、多媒体遥控器上的快进快退按钮",
+              "release版本只能用于android 5.0以上（包含5.0）的系统。api19是做了android4.4的兼容处理的版本。"
+            ],
+            "freeEvidence": "原作者明确应用不收费，平台会员功能仍需会员。",
+            "usability": "遥控器明确支持，有Android4.4 api19包可作为旧电视备选。",
+            "limits": "原作者README下载链接指向AppCenter，当前分发可用性需再核实；硬件解码可能设备不兼容；TVAPP已收录BBLL5改1.5.2、包com.V2.blb5，不是已核验原版，不能直接用改包代替。"
+          },
+          {
+            "name": "BiliTV",
+            "officialUrl": "https://github.com/Hyper-Beast/BiliTV",
+            "readmeUrl": "https://github.com/Hyper-Beast/BiliTV/blob/main/README.md",
+            "license": "README声称GPLV3 License；仓库无独立LICENSE文件，GitHub未识别许可证",
+            "quotes": [
+              "**二维码登录** - 使用手机扫码快速登录",
+              "**搜索功能** - 支持关键词搜索，保存搜索历史（最多10条）",
+              "**完整遥控器支持** - 方向键导航、确认键选择、返回键退出",
+              "理论支持的最低安卓版本为安卓5，其他设备请自行测试。",
+              "更新功能是我自己内测使用，开源版本未实装"
+            ],
+            "freeEvidence": "公开源码及1.2.2官方APK，不见收费说明；未找到明确所有功能免费的承诺，因此条件推荐。平台会员内容不可当作免费。",
+            "usability": "TV遥控器、搜索、扫码、历史；官方1.2.2与TVAPP名称版本吻合，仍未比对APK签名。",
+            "limits": "作者实测仅索尼Android9和redmi；Android5仅理论；后续重心BiliTVNative；与pureTV自研resource/apps/bilibili不是同一项目。"
+          }
+        ]
+      }
+    ],
+    "notRecommended": [
+      {
+        "name": "HTV",
+        "url": "https://github.com/HTWMedia/HTV",
+        "reason": "官方写“App 免费；完整内置源需赞助”，与完全免费开箱即用不符；允许自配源但没有比其他壳更强的免费理由。"
+      },
+      {
+        "name": "BV",
+        "url": "https://github.com/aaa1115910/bv",
+        "reason": "MIT，但当前README明确“BV 无法在中国大陆地区内的智能电视上使用”“禁止在中国境内传播、宣传、分发 BV”，不作为此项目普通用户优先推荐。"
+      },
+      {
+        "name": "wzgrx/PureLive",
+        "url": "https://github.com/wzgrx/PureLive",
+        "reason": "明确开源免费无广告，但为另一现行分支，不默认当作TVAPP纯粹直播TV包的原项目；本清单使用liuchuancong/pure_live_TV。"
+      }
+    ],
+    "installAndUseClarification": {
+      "scope": "用户补充：直接安装能用，无手工API/片源配置；下面仅据官方文档和对应tag源码，不是运行测试。",
+      "exclude": [
+        "SimpleLive（无官方现成Release）",
+        "FongMi（需片源配置）",
+        "TVBox（需片源配置）",
+        "我的电视·〇（需片源配置）"
+      ],
+      "pureLiveTV": {
+        "status": "符合无需手工配源的直播平台聚合候选",
+        "release": "https://github.com/liuchuancong/pure_live_TV/releases/tag/v3.0.7",
+        "assets": "6个现成APK；armeabi-v7a约82.7MB，arm64-v8a约97.7MB；各有Impeller/Skia",
+        "evidence": "README支持内置直播平台、热门/搜索；IPTV源导入属可选附加功能。v3.0.7 lib/platforms/bilibili/bilibili_site.dart:57明确处理storedCookie.isEmpty，:71/:100/:157使用内置官方API，说明存在匿名列表/播放路径，无需用户填API。",
+        "codeUrl": "https://github.com/liuchuancong/pure_live_TV/blob/v3.0.7/lib/platforms/bilibili/bilibili_site.dart",
+        "limits": "登录可能提升平台画质/权限；不能保证所有平台所有房间匿名可播。当前README要求Android7+，5/6建议旧版2.0.20。"
+      },
+      "BBLL": {
+        "status": "符合无需手工配源；能否完全免登录观看未有足够公开源码验证",
+        "release": "https://github.com/xiaye13579/BBLL/releases/tag/v1.5.2",
+        "evidence": "README说明封装B站官方API、没有收费、部分功能需会员；提供遥控器说明和Android4.4 api19包。仓库仅README，无法从源码确认首页/播放登录门槛。",
+        "limits": "可推荐为原版客户端，不宜承诺“所有公开视频均无需登录”。父代理已核验Release有原版APK。"
+      },
+      "BiliTV": {
+        "status": "无需配源，但首页必须扫码登录，应标“扫码后可用”，不可标完全免登录即看",
+        "release": "https://github.com/Hyper-Beast/BiliTV/releases/tag/v1.2.2",
+        "codeUrl": "https://github.com/Hyper-Beast/BiliTV/blob/v1.2.2/lib/screens/home/home_tab.dart#L220",
+        "evidence": "v1.2.2 home_tab.dart:220 if (!AuthService.isLoggedIn) return Text(\"请先登录\"); 源码视频API包含无需登录的热门请求，搜索页未见登录门槛，但不能概括账号只影响个人功能/高清。",
+        "limits": "如果用户完全不接受登录，应剔除。"
+      }
+    }
+  },
+  "otherResearch": {
+    "date": "2026-11-08",
+    "scope": "只调查 TVAPP 快照内的工具、教育、健身、游戏、K歌、音乐。完全免费指无需购买会员或使用解锁修改版完成主要功能；每类最多两个，不足不补。",
+    "recommended_now": [
+      {
+        "category": "K歌",
+        "name": "麦动KTV",
+        "upstream_version": "2.1.7",
+        "status": "个人非商业使用可推荐，优先原作者发布包；TVAPP包签名未比对",
+        "free_boundary": "原作者明确客户端完全免费且公开源码，个人非营利使用免费；非商用协议，不应表述为无条件的OSI开源。歌曲在线来源及可用性不能据此保证长期免费稳定，客户端支持本地/U盘歌曲。",
+        "ease": "原作者文档明确 TV 遥控器方向、确认、返回和长按，全局焦点导航；支持手机二维码点歌、搜索、队列、原伴唱切换。无需部署独立服务器即可使用客户端；初始化曲库和存储权限仍需处理。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L50",
+            "quote": "开源版的K歌软件，布局和上方类似，不用担心收费弹窗。",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://gitee.com/yangyachao-X/maidong-ktv",
+            "kind": "原作者项目"
+          },
+          {
+            "url": "https://gitee.com/yangyachao-X/maidong-ktv/raw/master/README.md",
+            "quote": "本软件是完全免费且公开源码的个人学习与技术交流项目；TV 遥控器全局导航；全屏手机点歌二维码；本地硬盘与 U 盘歌曲扫描"
+          },
+          {
+            "url": "https://gitee.com/yangyachao-X/maidong-ktv/raw/master/LICENSE",
+            "quote": "软件（含源代码和APK）免费对公众开放，允许个人非营利使用；禁止任何商业用途；修改分发保留协议和原作者。"
+          }
+        ]
+      }
+    ],
+    "candidates_pending_verification": [
+      {
+        "category": "文件/应用管理",
+        "name": "应用管家",
+        "preference": 1,
+        "status": "功能最适合TV，但未找到可验证的官方免费政策",
+        "free_boundary": "TVAPP中是公签版；上游没有VIP解锁字样不等于所有功能永久免费。",
+        "ease": "上游明确支持TV、车机、Android4.3以上；应用/文件管理、提取APK、远程传输安装，较MT/NP更符合普通电视用户。未做遥控器实测。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L95",
+            "quote": "可以管理电视应用、文件，还能提取电视应用，当然也能传送应用到电视进行安装。支持TV、车机、android4.3以上",
+            "kind": "上游仓库说明，未经电视实机验证"
+          }
+        ]
+      },
+      {
+        "category": "远程安装",
+        "name": "欢视助手",
+        "preference": 1,
+        "status": "官方网页可证实易用的上传口令流程；没有明确免费政策证明",
+        "free_boundary": "可读到无需登录即可显示的上传界面及获取口令流程；没有明确收费文字不等于承诺永久免费，未实际上传文件或安装。",
+        "ease": "官方网页拖放APK，生成口令，在电视 欢视助手 > 应用安装助手 输入；上传文件24小时有效。手机微信小程序也可上传。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L116",
+            "quote": "访问zhushou.huan.tv上传应用，微信小程序欢视助手上传分享",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://zhushou.huan.tv/",
+            "quote": "官方应用上传网页"
+          },
+          {
+            "url": "https://zhushou.huan.tv/static/js/app.4f4b09f7788aed789dfa.js",
+            "quote": "点击或拖放上传应用；请上传APK文件；上传后24小时内有效；在电视端欢视助手应用安装助手输入口令即可下载安装"
+          }
+        ]
+      },
+      {
+        "category": "远程安装",
+        "name": "野草助手",
+        "preference": 2,
+        "status": "易用功能由上游支持；本次官方站点网络403，无法核实免费边界",
+        "free_boundary": "不将第三方免费宣传当作官方全功能永久免费证据。",
+        "ease": "上游支持口令、远程安装，并有小米/海信专版；与欢视助手用途重复，两者不必同时占工具仅有的两个名额。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L87",
+            "quote": "口令、远程安装等多种途径；小米电视海信电视专版",
+            "kind": "上游仓库说明，未经电视实机验证"
+          }
+        ]
+      },
+      {
+        "category": "屏幕检测",
+        "name": "电视屏幕大师",
+        "preference": 1,
+        "status": "适合轻量工具/独立复刻；全功能免费性待核验",
+        "free_boundary": "上游只有检测功能描述，没有原作者永久免费声明。",
+        "ease": "清晰度、灰度、色彩、坏点检测，功能聚焦；未验证遥控器。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L115",
+            "quote": "用于电视全面检测屏幕，清晰度、灰度、色彩、坏点测试",
+            "kind": "上游仓库说明，未经电视实机验证"
+          }
+        ]
+      },
+      {
+        "category": "音乐",
+        "name": "Myyy",
+        "preference": 1,
+        "status": "优先试用候选，不能认证完全免费",
+        "free_boundary": "找到作者发布仓库 mytv-android/Myyy，无README/源代码/收费声明；公开下载APK不等于曲库和全部功能免费。第三方音乐源同样不能保证长期稳定。",
+        "ease": "TVAPP标为电视版多源音乐播放器；发布说明列搜索、收藏、排行榜、音质、后台播放、主题和导航优化。没有明确遥控器全链路说明，需实测。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L113",
+            "quote": "电视版的多源音乐播放器",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/mytv-android/Myyy",
+            "quote": "仓库描述：Myyy - 多源音乐播放器APK发布"
+          },
+          {
+            "url": "https://github.com/mytv-android/Myyy/releases/tag/v1.0.0",
+            "quote": "多源音乐播放、排行榜、搜索歌曲和歌单、收藏歌曲和歌单、音质、后台播放、主题切换"
+          },
+          {
+            "url": "https://github.com/mytv-android/Myyy/releases/tag/2",
+            "quote": "修复后台被杀；新增更多播放样式、排行榜；支持桌面歌词；优化导航"
+          }
+        ]
+      }
+    ],
+    "reference_only_or_excluded": [
+      {
+        "category": "文件管理",
+        "names": [
+          "ES文件浏览器"
+        ],
+        "reason": "上游明确解锁所有付费VIP会员特权；不能认作官方完全免费版。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L107",
+            "quote": "解锁所有付费VIP会员特权、免广告，登录既是永久VIP",
+            "kind": "上游仓库说明，未经电视实机验证"
+          }
+        ]
+      },
+      {
+        "category": "文件管理",
+        "names": [
+          "MT管理器"
+        ],
+        "reason": "官方明确VIP付费功能，SMB/WebDAV/SFTP等是VIP；偏手机高级编辑，不适合普通电视用户易用性要求。",
+        "evidence": [
+          {
+            "url": "https://mt2.cn/vip/",
+            "quote": "免费用户 XML 长度/速度限制；除免费的FTP外，FTPS、SFTP、SMB、WebDav为VIP"
+          }
+        ]
+      },
+      {
+        "category": "文件管理",
+        "names": [
+          "NP管理器"
+        ],
+        "reason": "官方定位APK/Dex等编辑修改，未找到完全免费声明或TV遥控器适配证据；即使免费也不优先普通电视用户。",
+        "evidence": [
+          {
+            "url": "https://github.com/githubXiaowangzi/NP-Manager",
+            "quote": "主要对Apk、Dex、Jar、Smali、Pdf、音频文件操作；README提及bug/闪退，不提供TV易用性声明"
+          }
+        ]
+      },
+      {
+        "category": "音乐",
+        "names": [
+          "魔音MORIN",
+          "茉莉音乐",
+          "音悦",
+          "TG音乐台"
+        ],
+        "reason": "魔音为解锁VIP版；茉莉高级版免费宣传未核到原始证据；音悦自定义源增加配置成本且免费政策未知；TG内置源TVBox壳无法保证歌曲持续可用。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L104",
+            "quote": "去广告解锁VIP会员精简版",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L105",
+            "quote": "支持自定义音乐源",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L106",
+            "quote": "高级版，全网音乐免费听与下载",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L111",
+            "quote": "TVBox壳本地版内置10万+音乐/MV资源",
+            "kind": "上游仓库说明，未经电视实机验证"
+          }
+        ]
+      },
+      {
+        "category": "教育",
+        "names": [
+          "七星智教",
+          "宝宝趣学"
+        ],
+        "reason": "可作为功能和界面研究优先的两款，暂不能成为已验证完全免费收录推荐。无官方可核免费承诺；儿童内容依赖第三方资源。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L84",
+            "quote": "专为儿童教育设计，全新的资源接口；APK文件名标不支持安卓4",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L85",
+            "quote": "纯净无限制的TV应用，儿童和家长双模式资源",
+            "kind": "上游仓库说明，未经电视实机验证"
+          }
+        ]
+      },
+      {
+        "category": "教育",
+        "names": [
+          "儿歌多多",
+          "淘知学堂",
+          "贝乐虎儿歌"
+        ],
+        "reason": "前两者无限制/会员解锁包不是官方免费证明；贝乐虎上游明确无法获取数据。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L83",
+            "quote": "无限制版",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L108",
+            "quote": "解锁高级特权",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L112",
+            "quote": "目前无法获取数据",
+            "kind": "上游仓库说明，未经电视实机验证"
+          }
+        ]
+      },
+      {
+        "category": "健身",
+        "names": [
+          "Keep TV",
+          "Fittime/即可运动TV",
+          "每日瑜伽",
+          "CIBN糖豆"
+        ],
+        "reason": "均为会员解锁或免登录无限制版，严格完全免费收录名额留空。独立复刻功能可优先参考Keep的客厅跟练和每日瑜伽的分级课程，不复制其收费课程。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L74",
+            "quote": "免登录永久会员版",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L75",
+            "quote": "解锁付费会员高清画质",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L76",
+            "quote": "解锁VIP",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L86",
+            "quote": "解锁会员版",
+            "kind": "上游仓库说明，未经电视实机验证"
+          }
+        ]
+      },
+      {
+        "category": "游戏/模拟器",
+        "names": [
+          "小鸡模拟器TV",
+          "茱元游戏TV",
+          "酷咖游戏"
+        ],
+        "reason": "小鸡上游已无法下载新游戏，不符合易用；另两者缺乏官方免费/持续服务证明与遥控器可玩性证明（可能需要手柄）。不推荐凑两款；独立复刻可参考游戏库导航/手柄接入。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L71",
+            "quote": "专为TV设计，永久去升级；目前无法下载新游戏",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L72",
+            "quote": "支持搜索、下载、手柄；万款海量游戏终身永久免费玩（仅上游声称）",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L73",
+            "quote": "街机、FC、MD、SFC联机游戏",
+            "kind": "上游仓库说明，未经电视实机验证"
+          }
+        ]
+      },
+      {
+        "category": "K歌",
+        "names": [
+          "全民K歌",
+          "咪咕爱唱",
+          "想唱就唱",
+          "金音KTV及同类换名包"
+        ],
+        "reason": "上游免会员/VIP解锁/激活修复宣传不足以证明官方完全免费；仅用麦动一项，不补齐第二项。",
+        "evidence": [
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L35",
+            "quote": "无广告免会员无限制版",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L36",
+            "quote": "VIP版，登录连续包月会员",
+            "kind": "上游仓库说明，未经电视实机验证"
+          },
+          {
+            "url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L38",
+            "quote": "解锁会员版",
+            "kind": "上游仓库说明，未经电视实机验证"
+          }
+        ]
+      }
+    ],
+    "suggested_user_facing_position": "如果必须严格保证完全免费，本组目前能有来源支持的是麦动KTV（客户端个人使用免费）。工具实际筛选可优先应用管家+欢视助手，但标注待核验，不能与已验证免费软件混为一谈。音乐先留Myyy作候选；教育/健身/游戏空缺或单独给复刻参考。",
+    "install_and_use_followup": {
+      "maidong": {
+        "conclusion": "按原作者2.X文档，可作为安装即用候选。正常核心流程不需要手工服务器、填歌曲源、OpenList账号或试用账号。授权存储并联网，内置曲库可直接搜索，点歌后下载自动加入队列。尚未电视实测接口可用性。",
+        "evidence_url": "https://gitee.com/api/v5/repos/yangyachao-X/maidong-ktv/contents/README.md",
+        "quotes": [
+          "APK内置81,801首歌曲、4,807位歌星、63个分类歌单及7个排行榜；歌曲目录可以离线查询，下载歌曲需要网络。",
+          "内置新版歌曲、歌星、分类和排行榜曲库，首次启动即可查询。",
+          "默认使用本地存储，也可选择U盘或配置好的OpenList网盘作为保存目标。",
+          "未下载歌曲完成下载后自动加入，不打断当前播放。",
+          "启动时使用APK内置曲库，不自动更新曲库，也不从Gitee拉取数据库。",
+          "存储权限完成后再启动目录创建、数据库扫描和下载任务。"
+        ],
+        "optional_features": "OpenList自建服务地址和凭据仅为可选网盘存储扩展，不是标准点歌的前提。",
+        "caveat": "原作者不同API/raw入口返回文档曾有缓存差异；不据另一GitHub改造分支试用窗口反推原作者当前2.X。不能保证TVAPP APK与作者当前实现相同或接口现在实测可播。",
+        "checked_at_utc": "2026-11-08T15:11:41.031887+00:00",
+        "source_difference_note": "首次通过 raw/master/README.md 获取的是较早措辞（IJK、分片数据库下载、接口热更新）。本次该raw入口一度503；改用Gitee contents/README.md API取得2.X文档（内置81801首目录、FFmpeg、本地默认存储、曲库首次可查）。API文档自己标注当前分支 feature/igeba-media；未将两份文档当作相同版本，也未覆盖前次证据。TVAPP收录APK为2.1.7，未下载核对其签名或实际内置曲库。"
+      },
+      "app_manager": {
+        "conclusion": "仅有上游功能说明，尚未实测。应用/文件管理、APK提取属于本地功能，原则上无需服务器/自定义源，但不能声称已验证安装即用、全功能免费或兼容所有电视。",
+        "evidence_url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L95"
+      },
+      "screen_master": {
+        "conclusion": "仅有上游明确的清晰度、灰度、色彩和坏点测试功能证据。此类功能不需要账号/内容源，适合作为安装即用候选；未实机验证遥控器流程/付费边界。",
+        "evidence_url": "https://github.com/youhunwl/TVAPP/blob/08ec332c0a25e9ae97fb73d3b3e40784dab65fc3/README.md#L115"
+      }
+    }
+  },
+  "followups": [
+    {
+      "type": "official_release",
+      "project": "xiaye13579/BBLL",
+      "url": "https://github.com/xiaye13579/BBLL/releases/tag/v1.5.2",
+      "assets": [
+        {
+          "name": "BBLL1.5.2.apk",
+          "bytes": 6957071
+        }
+      ],
+      "note": "GitHub原版APK可获取；不用依赖README的AppCenter入口。未下载或比对已收录修改包。"
+    },
+    {
+      "type": "official_release",
+      "project": "Hyper-Beast/BiliTV",
+      "url": "https://github.com/Hyper-Beast/BiliTV/releases/tag/v1.2.2",
+      "assets": [
+        {
+          "name": "v7a-1.2.2.apk",
+          "bytes": 22832061
+        },
+        {
+          "name": "v8a-1.2.2.apk",
+          "bytes": 25335695
+        }
+      ]
+    }
+  ],
+  "finalRecommendation": {
+    "priorityCandidates": [
+      "WebViewTV",
+      "纯粹直播TV",
+      "BBLL原版",
+      "麦动KTV"
+    ],
+    "conditionalCandidate": {
+      "name": "BiliTV",
+      "condition": "扫码登录后使用首页；若要求免登录则不计入"
+    },
+    "removedForSetup": [
+      "FongMi",
+      "TVBox",
+      "我的电视·〇",
+      "SimpleLive"
+    ],
+    "notARealDeviceCertification": true
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "runId": "43739397488",
+  "qaSourceSha": "25e366494146ec0410b05a939ed4eb62bbc654d8",
+  "completeCatalogRequested": false,
+  "games": [
+    {
+      "group": "retry-used-car",
+      "slug": "used-car-racing",
+      "status": "failed",
+      "artifactSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "inPlaceUpgradeInstalled": true,
+      "packageSha256": "7c7340342928905e6b8d8e0fe443376955b43d24437825536c249f54d18a2756",
+      "observerSha256": "2cd385b38d887e326bd08702a5f9c4fa08f6b0bd133d3550e7c608dcd50b6782",
+      "error": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'used-car-racing', '--diagnostics', 'http://127.0.0.1:37161', '--tcp-port', '46321', '--output', '/home/runner/work/_temp/controller-runtime-output/used-car-racing/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "recordingError": "RuntimeError('{\"command\": [\"/usr/local/lib/android/sdk/platform-tools/adb\", \"-s\", \"emulator-5554\", \"pull\", \"/sdcard/puretv-controller-used-car-racing.mp4\", \"/home/runner/work/_temp/controller-runtime-output/used-car-racing/gameplay.mp4\"], \"exitCode\": 1, \"stdout\": \"\", \"stderr\": \"adb: error: failed to get feature set: device offline\\\\n\"}')"
+    },
+    {
+      "group": "retry-alien",
+      "slug": "alien-shooter",
+      "status": "passed",
+      "artifactSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "inPlaceUpgradeInstalled": true,
+      "packageSha256": "dc18c95016769ac77f391c1721858c937914d1e6238f3281e79eb1db54db6e22",
+      "observerSha256": "79a51bc07df3fb4e96afd4bea66dd6c610b8f67649f954b2b6d758f717b2e98c",
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 579042,
+        "sha256": "acda3e47b05b9f8d35ffe05fbeb1471a51cb868315e6ee53f952191a313db587",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      }
+    }
+  ],
+  "hostDiagnosis": "host-renderthread-segfault.json",
+  "passedGames": [
+    "alien-shooter"
+  ],
+  "originalEvidenceUnmodified": true
+}

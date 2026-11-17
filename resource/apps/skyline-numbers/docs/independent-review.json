@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "method": "Independent row and column permutation domains intersect by per-cell support, with exhaustive bounded branching when needed. Public givens and edge clues alone determine each unique city; removing edge clues admits multiple Latin squares. Normal input replay verifies every complete city still requires B.",
+  "checks": [
+    "independent visibility orientation and full permutation domains",
+    "all public puzzles have one solution while givens alone remain ambiguous",
+    "ordinary cycling and manual checking win all three uniquely solved boards",
+    "a correct third manual check wins after two real incomplete rejections",
+    "a complete Latin square with wrong skyline clues is rejected and loses on check three",
+    "fixed protection, full height cycle and duplicate row/column marking are explicit"
+  ],
+  "layouts": [
+    {
+      "size": 4,
+      "solutions": 1,
+      "clueFreeSolutionsAtLeast": 2,
+      "searchNodes": 1,
+      "candidateReductions": 51,
+      "givens": 1
+    },
+    {
+      "size": 5,
+      "solutions": 1,
+      "clueFreeSolutionsAtLeast": 2,
+      "searchNodes": 1,
+      "candidateReductions": 334,
+      "givens": 2
+    },
+    {
+      "size": 6,
+      "solutions": 1,
+      "clueFreeSolutionsAtLeast": 2,
+      "searchNodes": 1,
+      "candidateReductions": 1290,
+      "givens": 10
+    }
+  ],
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "c8f4041c98e8c7380d30f535f249d03727ac934071ef758e778a697cdeb26a36",
+    "tests/reference.cjs": "c96877b80ec826774bd1fb1988a3c2eb80536f7e5ca64005eb3b345181ad457f",
+    "tests/independent-check.cjs": "bf81dc1f43d107fa218bf2b7a9be3ba53e016009fc37e2914687d1f89626008c"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

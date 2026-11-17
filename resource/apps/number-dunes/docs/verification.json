@@ -1,0 +1,1521 @@
+{
+  "schema": 1,
+  "game": "number-dunes",
+  "version": "0.1.0",
+  "sourceCommit": "cf41c4f05aa7ef29c067c625832287e0c87c497d",
+  "automationSha256": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13",
+  "dunesModel": "Each of 16 directional arrows compacts one selected row or column of a 4x4 board. Fixed pillars split the line; physical stones keep their within-segment order and never merge. Strict snake readout and the complete exact target-hole set are both required. A changed compaction charges one lifetime move; no-ops are free. B restores exact prior stone IDs, cells and action focus without refunding charged moves or active time. A final-budget goal wins before move-limit loss, but the active 90-second deadline precedes input. This is a discrete layout puzzle; interpolation does not simulate physical collisions.",
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "unresolvedFindings": [],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+      "game.js": "fe53ba6d965e527e8c57b9d19505805b46f1c7c1dc3921db43cea910060bfd02",
+      "game-config.json": "57a63ed2c1cfe756df91c6e82ecf128ce10ddb7976f2561430f0d180cff051f8",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game.js": "fe53ba6d965e527e8c57b9d19505805b46f1c7c1dc3921db43cea910060bfd02",
+      "src/main/assets/game-model.js": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+      "tests/automation.mjs": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13",
+      "docs/model-contract.md": "2a636094b001400c3465e461e3c0ce88feccca6079cb420a456b09d6d37fead8",
+      "tests/game-model.test.cjs": "d134d03d1023a9ac190057479fa4b59171dd90fd0502e3cb7d58c18f7031e2cd"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime/01-menu.png",
+        "sha256": "dbee4683e2c2cc46416597914cb2a6a6367116ff7d769b0a7b1c3450b5644c2e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/02-multi-stone-real-preview.png",
+        "sha256": "9972816136100924ac68f91bc7c173c098a43f166225e192bc03d60cd312644a",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/03-trial-committed-stable-order.png",
+        "sha256": "ec2e4bf450544c8ad7c31ac62367183ef01655b61e0c8168c11071847e16105e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/04-B-exact-restore-no-refund.png",
+        "sha256": "26c7b8a300e1759dbd13feb7a4d598406e3671be1fba5c0dfe3fec02a23f1323",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/05-correcting-snake-and-holes.png",
+        "sha256": "21df9d8d5710bd9e8d6250d42f0a7ec3600f5b8ec3dc74c190a5d70c0efabcb5",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/06-final-preview-before-real-A.png",
+        "sha256": "57988ed2ed32ff02b35b1cab0f97f935ebf2fae324e930b8d4aba6644aa15c45",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/07-won.png",
+        "sha256": "943c5a4c22c8ea40802ae8b6a7820e83198b9deb90ee30ee06e92482bd1f7db6",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/08-small-won.png",
+        "sha256": "0e1819662caa904137b10f48c692102c66066f8022bf005839e2ed509908f59b",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/09-small-menu.png",
+        "sha256": "237ef330e601376fdd67a949935a6499f0f5d468f9969a0e0d05178413b37179",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/10-small-playing.png",
+        "sha256": "6c20d5e8a5a50e931ca1a926177ce59596429d9335cfa4feafeec64a94e992b2",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime/11-small-pause.png",
+        "sha256": "59a8ab38c5a30e485dbc53c78ecaf5df26d7f25ecdecc4d58dc29bdb77229092",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "f44bf8953b7dcb85885d644e041c85334338436d09aaea1b324517b38afd21d0",
+    "scope": "Actually reviewed software-browser candidate using exactly the final bundled assets before source freeze; separate from final packaged QA and video."
+  },
+  "modelTests": {
+    "passed": 30,
+    "command": "node --test --test-reporter=tap resource/apps/number-dunes/tests/game-model.test.cjs",
+    "sourceHashesBefore": {
+      "model": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+      "tests": "d134d03d1023a9ac190057479fa4b59171dd90fd0502e3cb7d58c18f7031e2cd",
+      "contract": "2a636094b001400c3465e461e3c0ce88feccca6079cb420a456b09d6d37fead8",
+      "automation": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13"
+    },
+    "sourceHashesAfter": {
+      "model": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+      "tests": "d134d03d1023a9ac190057479fa4b59171dd90fd0502e3cb7d58c18f7031e2cd",
+      "contract": "2a636094b001400c3465e461e3c0ce88feccca6079cb420a456b09d6d37fead8",
+      "automation": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13"
+    },
+    "testLogSha256": "10f2b030492d6dd0884a7113030b027975e98418f79e1164dab26c27023ff746",
+    "rawReportSha256": "53f8325bb8776b109ebafe593cd1ef0f2e76f8aac66a2e6e9744e18662cca6b5",
+    "scope": "Stable segment compaction and physical-ID budget/undo rules, strict snake ordering plus exact holes and input/clock boundaries, with three public-planner real multi-stone trial/undo wins and three ordinary move-budget losses. Authored rule examples and labeled value/clock fixtures are distinct from public-planner normal gameplay.",
+    "scheduling": "Ordinary wins use runtime 60 Hz ticks and public observations every five ticks, genuine A/B edges and no state edits. Losses use ordinary navigation and press/release. These are defined legal-input scenarios, not guarantees for arbitrary input timing."
+  },
+  "independentDunesReview": {
+    "passed": true,
+    "file": "independent-dunes-review.json",
+    "sha256": "7964942cada6257ced6ca367eb5205b37815d079f5e6fdc9c4bde70487658e19",
+    "checksPassed": 10,
+    "totals": {
+      "checks": 10,
+      "observations": 5644,
+      "navigationInputs": 1944,
+      "orderedFocusPairs": 256,
+      "explicitPublicGeometryFixtures": 324,
+      "ordinaryWins": 3,
+      "ordinaryGoalCounterexamples": 6,
+      "ordinaryBudgetLosses": 3
+    },
+    "publicBoardSearches": [
+      {
+        "level": 1,
+        "moveLimit": 6,
+        "initialScore": 155,
+        "shortestDepth": 4,
+        "search": {
+          "expanded": 811,
+          "visited": 2443,
+          "transitions": 12976,
+          "maxVisited": 100000,
+          "maxDepth": 6,
+          "stoppedBy": "all-required-witnesses"
+        },
+        "orderedWrongHolesDepth": 2,
+        "holesWrongOrderDepth": 4
+      },
+      {
+        "level": 2,
+        "moveLimit": 7,
+        "initialScore": 210,
+        "shortestDepth": 5,
+        "search": {
+          "expanded": 1577,
+          "visited": 4632,
+          "transitions": 25232,
+          "maxVisited": 100000,
+          "maxDepth": 7,
+          "stoppedBy": "all-required-witnesses"
+        },
+        "orderedWrongHolesDepth": 0,
+        "holesWrongOrderDepth": 5
+      },
+      {
+        "level": 3,
+        "moveLimit": 8,
+        "initialScore": 170,
+        "shortestDepth": 6,
+        "search": {
+          "expanded": 2323,
+          "visited": 5679,
+          "transitions": 37168,
+          "maxVisited": 100000,
+          "maxDepth": 8,
+          "stoppedBy": "all-required-witnesses"
+        },
+        "orderedWrongHolesDepth": 2,
+        "holesWrongOrderDepth": 5
+      }
+    ],
+    "ordinaryModelWins": [
+      {
+        "level": 1,
+        "path": [
+          "R2E",
+          "C1S",
+          "C2S",
+          "C4S"
+        ],
+        "trialAction": "R1W",
+        "movesUsed": 5,
+        "movesRemaining": 1,
+        "undos": 1,
+        "noOpAttempts": 1,
+        "elapsed": 0.7833333333333333,
+        "score": 1780,
+        "terminalFrozen": true
+      },
+      {
+        "level": 2,
+        "path": [
+          "R1E",
+          "C3S",
+          "R4W",
+          "C2N",
+          "R4W"
+        ],
+        "trialAction": "R3W",
+        "movesUsed": 6,
+        "movesRemaining": 1,
+        "undos": 1,
+        "noOpAttempts": 1,
+        "elapsed": 1.0166666666666666,
+        "score": 1760,
+        "terminalFrozen": true
+      },
+      {
+        "level": 3,
+        "path": [
+          "R1E",
+          "R3E",
+          "C4N",
+          "R3W",
+          "R4E",
+          "C4N"
+        ],
+        "trialAction": "R1W",
+        "movesUsed": 7,
+        "movesRemaining": 1,
+        "undos": 1,
+        "noOpAttempts": 1,
+        "elapsed": 1.0833333333333333,
+        "score": 1765,
+        "terminalFrozen": true
+      }
+    ],
+    "ordinaryConjunctCounterexamples": [
+      {
+        "level": 1,
+        "type": "orderedWrongHoles",
+        "path": [
+          "C1S",
+          "C2S"
+        ],
+        "movesUsed": 2,
+        "readValues": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "holeIds": [
+          "C1",
+          "C3",
+          "C5",
+          "C8",
+          "C9",
+          "C10",
+          "C12",
+          "C15"
+        ],
+        "goalReady": false
+      },
+      {
+        "level": 1,
+        "type": "holesWrongOrder",
+        "path": [
+          "C1S",
+          "C2S",
+          "C4S",
+          "R2E"
+        ],
+        "movesUsed": 4,
+        "readValues": [
+          1,
+          3,
+          2,
+          4,
+          5,
+          6
+        ],
+        "holeIds": [
+          "C1",
+          "C3",
+          "C4",
+          "C5",
+          "C7",
+          "C9",
+          "C10",
+          "C15"
+        ],
+        "goalReady": false
+      },
+      {
+        "level": 2,
+        "type": "orderedWrongHoles",
+        "path": [],
+        "movesUsed": 0,
+        "readValues": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "holeIds": [
+          "C4",
+          "C5",
+          "C8",
+          "C10",
+          "C14",
+          "C15"
+        ],
+        "goalReady": false
+      },
+      {
+        "level": 2,
+        "type": "holesWrongOrder",
+        "path": [
+          "R1E",
+          "R4W",
+          "C2N",
+          "C3S",
+          "R4W"
+        ],
+        "movesUsed": 5,
+        "readValues": [
+          1,
+          2,
+          3,
+          4,
+          7,
+          6,
+          5
+        ],
+        "holeIds": [
+          "C3",
+          "C5",
+          "C8",
+          "C11",
+          "C15",
+          "C16"
+        ],
+        "goalReady": false
+      },
+      {
+        "level": 3,
+        "type": "orderedWrongHoles",
+        "path": [
+          "R3W",
+          "C2S"
+        ],
+        "movesUsed": 2,
+        "readValues": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "holeIds": [
+          "C2",
+          "C6",
+          "C8",
+          "C11",
+          "C12"
+        ],
+        "goalReady": false
+      },
+      {
+        "level": 3,
+        "type": "holesWrongOrder",
+        "path": [
+          "R1E",
+          "R3W",
+          "C4N",
+          "R4E",
+          "C4N"
+        ],
+        "movesUsed": 5,
+        "readValues": [
+          1,
+          2,
+          3,
+          6,
+          5,
+          4,
+          7,
+          8
+        ],
+        "holeIds": [
+          "C1",
+          "C10",
+          "C11",
+          "C15",
+          "C16"
+        ],
+        "goalReady": false
+      }
+    ],
+    "ordinaryBudgetLosses": [
+      {
+        "level": 1,
+        "path": [
+          "R1W",
+          "R1E",
+          "R1W",
+          "R1E",
+          "R1W",
+          "R1E"
+        ],
+        "searchExpanded": 6,
+        "movesUsed": 6,
+        "elapsed": 0.85,
+        "terminalFrozen": true
+      },
+      {
+        "level": 2,
+        "path": [
+          "R1E",
+          "R1W",
+          "R1E",
+          "R1W",
+          "R1E",
+          "R1W",
+          "R1E"
+        ],
+        "searchExpanded": 7,
+        "movesUsed": 7,
+        "elapsed": 1.15,
+        "terminalFrozen": true
+      },
+      {
+        "level": 3,
+        "path": [
+          "R1W",
+          "R1E",
+          "R1W",
+          "R1E",
+          "R1W",
+          "R1E",
+          "R1W",
+          "R1E"
+        ],
+        "searchExpanded": 8,
+        "movesUsed": 8,
+        "elapsed": 1.1833333333333333,
+        "terminalFrozen": true
+      }
+    ],
+    "ordinaryLastMoveWin": {
+      "level": 1,
+      "movesUsed": 6,
+      "undos": 2,
+      "elapsed": 0.6833333333333333,
+      "score": 1730
+    },
+    "scope": "Independent per-stone predecessor ranks, bounded breadth-first public search and ordinary directional/A/B Model inputs. Synthetic 4-cell geometry, duplicate-value and clock/input boundary cases are explicitly labelled. No QA planner, author route, browser, video or physical hardware is used.",
+    "limitations": [
+      "Small reviewed authored-board searches are not exhaustive over all 4x4 permutations.",
+      "324 ternary line cases are explicitly synthetic public geometry, not ordinary authored play.",
+      "Equal-value and final-clock fixtures are labelled; normal wins and failures use original boards and ordinary inputs.",
+      "Fast Model input sequences are not software-browser recordings or physical-device tests."
+    ]
+  },
+  "independentPilotReview": {
+    "passed": true,
+    "file": "independent-pilot-review.json",
+    "sha256": "db6c4509bb36d5f0fceae631aff078116d4a46421e2d523c9dbb57c532ee50b3",
+    "checksPassed": 10,
+    "counts": {
+      "totalPilotInterfaceCalls": 74,
+      "exports": 29,
+      "observations": 36,
+      "factories": 5,
+      "diagnostics": 4,
+      "frozenSnapshots": 60,
+      "privateReads": 0,
+      "writes": 0
+    },
+    "limits": {
+      "totalPilotInterfaceCalls": 100,
+      "plannerMilliseconds": 100,
+      "plannerExpanded": 1000,
+      "plannerQueued": 2000
+    },
+    "scope": {
+      "syntheticFixturesOnly": true,
+      "handMadeStoneCounts": [
+        2,
+        4
+      ],
+      "productionModelImported": false,
+      "productionModelExecuted": false,
+      "productionModelDecoded": false,
+      "productionModelBytesHashedOnly": true,
+      "authorLayoutsOrRoutesUsed": false,
+      "actualBrowserExecuted": false,
+      "runtimeWinClaimed": false,
+      "actualGameWinsClaimed": 0,
+      "physicalPhoneTested": false,
+      "hiddenPrivateReads": 0,
+      "snapshotWrites": 0,
+      "countDefinition": "All externally invoked pilot exports, observation calls, factories, and diagnostics count toward the hard 100-call bound. Pure independent geometry/facts/rank utility calls construct fixtures only and perform no search. Internal pilot calls are bounded by its own reviewed search limits.",
+      "observationMeaning": "Hand-authored public fixture observations with synthetic permanent receipts and charged ledgers, not production transitions or captured gameplay.",
+      "limitations": [
+        "This does not prove the three authored levels are solvable or that browser input timing is correct.",
+        "The permanent-receipt and undo checks test the pilot against explicit synthetic public transitions, not the production Model.",
+        "Private-read traps cover arbitrary underscore-prefixed reads and five throwing private accessors; all actual puzzle targets remain public."
+      ]
+    }
+  },
+  "pilotDevelopmentHistory": {
+    "preRunPredicate": {
+      "scope": "Static review before any pilot/model execution",
+      "finding": "No-op on a won layout has goalReady=true but willWin must require changed=true.",
+      "productionIssue": false,
+      "beforeSha256": "1f58021bff63f9ad4083c81cb429766d9c071bbe113491a0e3cb2013af7fca8e",
+      "afterSha256": "6758d2fb73e2168612a9a41a83e12bf28debbe694d78615b13cf630709ec2bf3",
+      "fixedPredicate": "moves.length > 0 && result.goalReady",
+      "modelOrHarnessExecuted": false
+    },
+    "recordOnlyDwell": {
+      "beforeSha256": "6758d2fb73e2168612a9a41a83e12bf28debbe694d78615b13cf630709ec2bf3",
+      "afterSha256": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13",
+      "change": "Record-only preview dwell 1.8 to 2.5 model seconds using neutral keys; QA cadence unchanged",
+      "cause": "First ordinary first-level win at27.6 seconds failed >=30 display gate; original evidence retained",
+      "rootApproved": true
+    },
+    "firstQuickRun": {
+      "passed": false,
+      "requestedJobs": 3,
+      "completedJobs": 1,
+      "sourceHashes": {
+        "automation": "6758d2fb73e2168612a9a41a83e12bf28debbe694d78615b13cf630709ec2bf3",
+        "model": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+        "contract": "2a636094b001400c3465e461e3c0ce88feccca6079cb420a456b09d6d37fead8",
+        "harness": "e8e4f90aa78dbcabaf48ad22ab298613bd4af07f3a12f0076f162afb260d2bca"
+      },
+      "actualPhase": "won",
+      "elapsed": 27.6,
+      "movesUsed": 5,
+      "movesRemaining": 1,
+      "undos": 1,
+      "failure": {
+        "message": "Record must contain 30–90 active model seconds"
+      },
+      "scope": "Original offline ordinary first-board win passed gameplay conditions but was shorter than the 30-second demonstration requirement. The retained failed aggregate is historical; it is not relabelled as a final-pilot run or a production-model failure."
+    },
+    "preservedSourceSha256": {
+      "beforePredicate": "1f58021bff63f9ad4083c81cb429766d9c071bbe113491a0e3cb2013af7fca8e",
+      "beforeDwell": "6758d2fb73e2168612a9a41a83e12bf28debbe694d78615b13cf630709ec2bf3",
+      "finalPilot": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13"
+    }
+  },
+  "sourceArtReview": {
+    "passed": true,
+    "file": "art-review.json",
+    "sha256": "3307b6c86322cad85fcc08c7d7940b94d1f5ded57ded46c6f56e06c4a53994be",
+    "scope": "Final source art:34 ordinary keyboard-equivalent Model input states plus1 explicitly synthetic public-value boundary fixture;2 actual runtime menu/play/compact/pause sequences and16 no-op DOM snapshots. No APK, physical-device, video or browser-earned-win claim.",
+    "finalSourceHashes": {
+      "game": {
+        "path": "resource/apps/number-dunes/src/main/assets/game.js",
+        "sha256": "fe53ba6d965e527e8c57b9d19505805b46f1c7c1dc3921db43cea910060bfd02"
+      },
+      "model": {
+        "path": "resource/apps/number-dunes/src/main/assets/game-model.js",
+        "sha256": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5"
+      },
+      "pilot": {
+        "path": "resource/apps/number-dunes/tests/automation.mjs",
+        "sha256": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13"
+      },
+      "contract": {
+        "path": "resource/apps/number-dunes/docs/model-contract.md",
+        "sha256": "2a636094b001400c3465e461e3c0ce88feccca6079cb420a456b09d6d37fead8"
+      },
+      "renderer": {
+        "path": "resource/game-kit/web/renderer.js",
+        "sha256": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411"
+      },
+      "runtime": {
+        "path": "resource/game-kit/web/runtime.js",
+        "sha256": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993"
+      },
+      "css": {
+        "path": "resource/game-kit/web/tv.css",
+        "sha256": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b"
+      },
+      "html": {
+        "path": "resource/game-kit/web/tv.html",
+        "sha256": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+      },
+      "icon": {
+        "path": "resource/apps/number-dunes/icon.xml",
+        "sha256": "ad2ba9766dd61f54484a08f9afce39ca68b408e233f8249d6a42e4ae62493210"
+      },
+      "logo": {
+        "path": "resource/apps/number-dunes/logo.svg",
+        "sha256": "7b57df26c118802d56e9815f9e8de07b0953b501d427dc89a343e9b6c7c05a7a"
+      }
+    }
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ],
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+      "game.js": "fe53ba6d965e527e8c57b9d19505805b46f1c7c1dc3921db43cea910060bfd02",
+      "game-config.json": "57a63ed2c1cfe756df91c6e82ecf128ce10ddb7976f2561430f0d180cff051f8",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "automationSha256": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13"
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "sourceUnchanged": true,
+    "sourceCommitHashesMatched": true,
+    "buildSourceSha": "cf41c4f05aa7ef29c067c625832287e0c87c497d",
+    "startHashes": {
+      "tests/automation.mjs": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13",
+      "tests/game-model.test.cjs": "d134d03d1023a9ac190057479fa4b59171dd90fd0502e3cb7d58c18f7031e2cd",
+      "src/main/assets/game-model.js": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+      "src/main/assets/game.js": "fe53ba6d965e527e8c57b9d19505805b46f1c7c1dc3921db43cea910060bfd02"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "d7ff4e890abc19c9f43ca2e4dca9092f35a3ce5607882f982cb186594dea8d13",
+      "tests/game-model.test.cjs": "d134d03d1023a9ac190057479fa4b59171dd90fd0502e3cb7d58c18f7031e2cd",
+      "src/main/assets/game-model.js": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+      "src/main/assets/game.js": "fe53ba6d965e527e8c57b9d19505805b46f1c7c1dc3921db43cea910060bfd02"
+    },
+    "rawReportSha256": "aed7adaae1610608c023932a0a7bd1a46fa746b206c4a459bdd9b941a9354964"
+  },
+  "supplementaryUiAndFailure": {
+    "passed": true,
+    "mockNativeRoomForPhoneTests": true,
+    "checks": [
+      {
+        "name": "three public boards have exact stones pillars target holes and nonzero derived initial score",
+        "passed": true
+      },
+      {
+        "name": "keyboard and phone joystick select exactly one board per menu press",
+        "passed": true
+      },
+      {
+        "name": "menu blur and sound controls report their real state",
+        "passed": true
+      },
+      {
+        "name": "held phone START starts once without a compaction or undo",
+        "passed": true
+      },
+      {
+        "name": "held phone A makes one stable multi-stone compaction and charges one move",
+        "passed": true
+      },
+      {
+        "name": "held phone B restores exact physical IDs and action focus without refunding a move",
+        "passed": true
+      },
+      {
+        "name": "phone direction uses the public axis-biased focus graph before delayed repeat",
+        "passed": true
+      },
+      {
+        "name": "repeating a compacted arrow is a genuine no-op and does not charge or add history",
+        "passed": true
+      },
+      {
+        "name": "B after a no-op undoes the actual prior edit and empty B leaves counters unchanged",
+        "passed": true
+      },
+      {
+        "name": "a real pillar-separated line keeps every physical ID inside its original stable segment",
+        "passed": true
+      },
+      {
+        "name": "connected cancelSeq preserves committed stones and requires a real release before another A",
+        "passed": true
+      },
+      {
+        "name": "held native Enter is one A edge and does not emit repeated no-op attempts",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes the exact board history and charged budget and clears held directions",
+        "passed": true
+      },
+      {
+        "name": "primary and header pause resume the same physical stones and permanent move ledger",
+        "passed": true
+      },
+      {
+        "name": "ordinary increasing snake with wrong exact holes remains playing",
+        "passed": true
+      },
+      {
+        "name": "ordinary public compactions reach exact holes with a genuinely unsorted snake without winning",
+        "passed": true
+      },
+      {
+        "name": "repeated genuine compaction and B restoration still exhaust the permanent successful-move budget",
+        "passed": true
+      },
+      {
+        "name": "R restores exact starting IDs target holes score and clean history rather than refunding a terminal undo",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ],
+    "normalFailure": {
+      "reason": "moves",
+      "level": 1,
+      "difficulty": 0,
+      "score": 155,
+      "elapsed": 1.8,
+      "remaining": 88.2,
+      "movesUsed": 6,
+      "moveLimit": 6,
+      "movesRemaining": 0,
+      "compactionAttempts": 6,
+      "noOpAttempts": 0,
+      "undos": 5,
+      "historyDepth": 1,
+      "stoneCount": 6,
+      "pillarCount": 2,
+      "targetHoleCount": 8,
+      "orderedPairs": 3,
+      "orderPairCount": 5,
+      "strictlyIncreasing": false,
+      "matchedHoleCount": 4,
+      "holesCorrect": false,
+      "goalReady": false,
+      "readValues": [
+        1,
+        2,
+        3,
+        6,
+        5,
+        4
+      ]
+    }
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+      "game.js": "fe53ba6d965e527e8c57b9d19505805b46f1c7c1dc3921db43cea910060bfd02",
+      "game-config.json": "57a63ed2c1cfe756df91c6e82ecf128ce10ddb7976f2561430f0d180cff051f8",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "按蛇形递增，空洞须对位。撤销不退步数。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "按蛇形递增，空洞须对位。撤销不退步数。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "按蛇形递增，空洞须对位。撤销不退步数。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "按蛇形递增，空洞须对位。撤销不退步数。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "按蛇形递增，空洞须对位。撤销不退步数。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "按蛇形递增，空洞须对位。撤销不退步数。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 911.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "818cc648c89af14ec3ee9c23f3f1583ba2eb6404be0e1ff527c53415d477e40f"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 126,
+    "rafIntervalMs": {
+      "count": 126,
+      "min": 16.599999999998545,
+      "median": 33.399999999999636,
+      "p95": 83.29999999999927,
+      "max": 83.40000000000055,
+      "mean": 41.66507936507936
+    },
+    "webglDrawCalls": {
+      "count": 126,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 126,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 3
+    }
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 36.007556046,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1620,
+      "elapsed": 32.55,
+      "remaining": 57.45,
+      "movesUsed": 5,
+      "moveLimit": 6,
+      "movesRemaining": 1,
+      "compactionAttempts": 5,
+      "noOpAttempts": 0,
+      "undos": 1,
+      "historyDepth": 4,
+      "stoneCount": 6,
+      "pillarCount": 2,
+      "targetHoleCount": 8,
+      "orderedPairs": 5,
+      "orderPairCount": 5,
+      "strictlyIncreasing": true,
+      "matchedHoleCount": 8,
+      "holesCorrect": true,
+      "goalReady": true,
+      "readValues": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    "trialCompaction": {
+      "observedAt": 8.000811249,
+      "physicalAssignments": [
+        {
+          "cellId": "C1",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C2",
+          "stoneId": "S2"
+        },
+        {
+          "cellId": "C7",
+          "stoneId": "S3"
+        },
+        {
+          "cellId": "C9",
+          "stoneId": "S6"
+        },
+        {
+          "cellId": "C10",
+          "stoneId": "S5"
+        },
+        {
+          "cellId": "C16",
+          "stoneId": "S4"
+        }
+      ],
+      "elapsed": 5.85,
+      "selectedId": "R1W",
+      "movesUsed": 1,
+      "moveLimit": 6,
+      "movesRemaining": 5,
+      "undos": 0,
+      "historyDepth": 1,
+      "compactionAttempts": 1,
+      "noOpAttempts": 0,
+      "score": 155,
+      "orderedPairs": 3,
+      "matchedHoleCount": 4,
+      "strictlyIncreasing": false,
+      "holesCorrect": false,
+      "goalReady": false,
+      "readValues": [
+        1,
+        2,
+        3,
+        6,
+        5,
+        4
+      ],
+      "holeIds": [
+        "C3",
+        "C4",
+        "C5",
+        "C8",
+        "C12",
+        "C13",
+        "C14",
+        "C15"
+      ],
+      "lastObservedAt": 10.001358479,
+      "undoBDispatchedAt": 11.375423244,
+      "edit": {
+        "id": 1,
+        "actionId": "R1W",
+        "lineId": "row1",
+        "direction": "W",
+        "beforeAssignments": [
+          {
+            "cellId": "C2",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C4",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C7",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C9",
+            "stoneId": "S6"
+          },
+          {
+            "cellId": "C10",
+            "stoneId": "S5"
+          },
+          {
+            "cellId": "C16",
+            "stoneId": "S4"
+          }
+        ],
+        "afterAssignments": [
+          {
+            "cellId": "C1",
+            "stoneId": "S1"
+          },
+          {
+            "cellId": "C2",
+            "stoneId": "S2"
+          },
+          {
+            "cellId": "C7",
+            "stoneId": "S3"
+          },
+          {
+            "cellId": "C9",
+            "stoneId": "S6"
+          },
+          {
+            "cellId": "C10",
+            "stoneId": "S5"
+          },
+          {
+            "cellId": "C16",
+            "stoneId": "S4"
+          }
+        ],
+        "moves": [
+          {
+            "stoneId": "S1",
+            "fromCellId": "C2",
+            "toCellId": "C1"
+          },
+          {
+            "stoneId": "S2",
+            "fromCellId": "C4",
+            "toCellId": "C2"
+          }
+        ],
+        "movedCount": 2,
+        "at": 4.7,
+        "tick": 282
+      }
+    },
+    "undoRestored": {
+      "observedAt": 12.013652749,
+      "physicalAssignments": [
+        {
+          "cellId": "C2",
+          "stoneId": "S1"
+        },
+        {
+          "cellId": "C4",
+          "stoneId": "S2"
+        },
+        {
+          "cellId": "C7",
+          "stoneId": "S3"
+        },
+        {
+          "cellId": "C9",
+          "stoneId": "S6"
+        },
+        {
+          "cellId": "C10",
+          "stoneId": "S5"
+        },
+        {
+          "cellId": "C16",
+          "stoneId": "S4"
+        }
+      ],
+      "elapsed": 9.883333333333333,
+      "selectedId": "R1W",
+      "movesUsed": 1,
+      "moveLimit": 6,
+      "movesRemaining": 5,
+      "undos": 1,
+      "historyDepth": 0,
+      "compactionAttempts": 1,
+      "noOpAttempts": 0,
+      "score": 155,
+      "orderedPairs": 3,
+      "matchedHoleCount": 4,
+      "strictlyIncreasing": false,
+      "holesCorrect": false,
+      "goalReady": false,
+      "readValues": [
+        1,
+        2,
+        3,
+        6,
+        5,
+        4
+      ],
+      "holeIds": [
+        "C1",
+        "C3",
+        "C5",
+        "C8",
+        "C12",
+        "C13",
+        "C14",
+        "C15"
+      ],
+      "lastObservedAt": 20.001631272999997,
+      "firstSolutionADispatchedAt": 20.368806229,
+      "lastUndo": {
+        "edit": {
+          "id": 1,
+          "actionId": "R1W",
+          "lineId": "row1",
+          "direction": "W",
+          "beforeAssignments": [
+            {
+              "cellId": "C2",
+              "stoneId": "S1"
+            },
+            {
+              "cellId": "C4",
+              "stoneId": "S2"
+            },
+            {
+              "cellId": "C7",
+              "stoneId": "S3"
+            },
+            {
+              "cellId": "C9",
+              "stoneId": "S6"
+            },
+            {
+              "cellId": "C10",
+              "stoneId": "S5"
+            },
+            {
+              "cellId": "C16",
+              "stoneId": "S4"
+            }
+          ],
+          "afterAssignments": [
+            {
+              "cellId": "C1",
+              "stoneId": "S1"
+            },
+            {
+              "cellId": "C2",
+              "stoneId": "S2"
+            },
+            {
+              "cellId": "C7",
+              "stoneId": "S3"
+            },
+            {
+              "cellId": "C9",
+              "stoneId": "S6"
+            },
+            {
+              "cellId": "C10",
+              "stoneId": "S5"
+            },
+            {
+              "cellId": "C16",
+              "stoneId": "S4"
+            }
+          ],
+          "moves": [
+            {
+              "stoneId": "S1",
+              "fromCellId": "C2",
+              "toCellId": "C1"
+            },
+            {
+              "stoneId": "S2",
+              "fromCellId": "C4",
+              "toCellId": "C2"
+            }
+          ],
+          "movedCount": 2,
+          "at": 4.7,
+          "tick": 282
+        },
+        "at": 9.25,
+        "tick": 555
+      }
+    },
+    "trialDisplayedSecondsAtLeast": 2.0005472300000005,
+    "trialHoldBasis": "trial-samples",
+    "restoredDisplayedSecondsAtLeast": 7.987978523999997,
+    "restoredHoldBasis": "restored-samples",
+    "finalWinHeldSecondsAtLeast": 19.006009864,
+    "reviewedFrames": [
+      {
+        "name": "title-0.15s.png",
+        "sha256": "f814dbcea211e1de0b035b99f15ab8b797acf89a2c2a33e34410352573ea374b"
+      },
+      {
+        "name": "menu-two-0.85s.png",
+        "sha256": "ac8ec4a698a788ec738debebd53d5e3aa83622059dd633706e98cf8a6686d2f5"
+      },
+      {
+        "name": "menu-three-1.35s.png",
+        "sha256": "b63bea7efd6b4d15eb23d62da208bcb5f478f7cddc64976aae717866ac87b542"
+      },
+      {
+        "name": "multi-stone-preview-2.41s.png",
+        "sha256": "051c218277c57a5279c4013d2c3e501a626b4cb1de6b173934ea5fcb04726e55"
+      },
+      {
+        "name": "trial-stable-compaction-8.30s.png",
+        "sha256": "b4e855e6b2d1e6cf4133d4f4e3894e8e427aca521a59166d28f7ac1e07f1a83e"
+      },
+      {
+        "name": "undo-no-move-refund-12.31s.png",
+        "sha256": "48f4cfa3eb0e070b7d11724d1a15516358cbb0c17980da61bdb26eabab68e3d3"
+      },
+      {
+        "name": "gameplay-thumb-22.31s.png",
+        "sha256": "8f6ce18d55c584297f9594c466e60927911628730d6bd6f3f70b886f5391a5fe"
+      },
+      {
+        "name": "winning-preview-32.30s.png",
+        "sha256": "8349c1e97a99c5482629a4381b94cf2af512e8f5a9fd73e1044407a0a9f2a997"
+      },
+      {
+        "name": "settlement-53.41s.png",
+        "sha256": "045f09826a2c9f98cf5f047a493fbf31ebabdfcf4aebe35551118125730bc91d"
+      }
+    ],
+    "visualReviewCompleted": true,
+    "videoSha256": "ae3de6d28b28118e21d1a9857f980615a83b4b24e9c0df8fa275b117f84a4bd8"
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "76087949d8fab9fc112034b93443e64862662f7982f1e8f80c2d6535a94cedb5",
+    "game.js": "fe53ba6d965e527e8c57b9d19505805b46f1c7c1dc3921db43cea910060bfd02",
+    "game-config.json": "57a63ed2c1cfe756df91c6e82ecf128ce10ddb7976f2561430f0d180cff051f8",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "88c409626b111e62fdfb6a5cb1247a4e57661aecb79b4c11f6164d93da54d923",
+    "sign": "99ab9d1e31121eed72c33966a13331afc3e1e3432853b315619a541483a8eb59",
+    "fetch": "237b2a3e789d8cf042935d93655ae5f7f6f6e0fc67501c8e490cd2b18e7bca36",
+    "qa": "0e62848af785d0e8df65901c8cad97066d3fcdff7a33d4b5d0d20ac1671f9b69",
+    "ui": "e6dfb1fed0d37af6debeb5e527828720a1fb45bea4fc94fed0c06f04cfc14791",
+    "layout": "818cc648c89af14ec3ee9c23f3f1583ba2eb6404be0e1ff527c53415d477e40f",
+    "viewport": "910e5711c51bbbff0b7329691ec45ca577459990dc55204ba5435b86f6dc621c",
+    "summary": "8a3b2bc50152bd900f55587e7274620dd88e90a214ce882f08ccf1ff074a15ff",
+    "record": "a26431790b1a27e87028c64c314adede2b4eacb925cdc4ae9c562e6df995cf12",
+    "review": "aada453fb32771f56fa4951bcd7db94c77c0dbd8787148c8b65ffb66bf4b1e67",
+    "videoValidation": "9d252074ead6853bf34e7a4c1040a62abdd2090f865239aeed2f9c6ba2bfcb82",
+    "artifacts": "365eb3312e9ff16763402e8fe0faf7fad5067555cb89ffaccc7e7d40cbf60566",
+    "independentModel": "7964942cada6257ced6ca367eb5205b37815d079f5e6fdc9c4bde70487658e19",
+    "independentPilot": "db6c4509bb36d5f0fceae631aff078116d4a46421e2d523c9dbb57c532ee50b3",
+    "artReview": "f1b47b5aba0e2ee86b112f7affd2fd18abe90e8a41e32770de1e198e5d2ad61f",
+    "modelTests": "53f8325bb8776b109ebafe593cd1ef0f2e76f8aac66a2e6e9744e18662cca6b5",
+    "candidateReview": "f44bf8953b7dcb85885d644e041c85334338436d09aaea1b324517b38afd21d0",
+    "testProvenance": "aed7adaae1610608c023932a0a7bd1a46fa746b206c4a459bdd9b941a9354964",
+    "pilotPreRun": "140d4e8772c3391d32c38f00a57f4b58ce25e820c902af3f2d01b82c6d7e0e0d",
+    "pilotDwell": "d718f0b7381ce3f8a58109fffa72d40aaaef9d246e93db6ddaa0d2dda187e80b",
+    "pilotFirstQuick": "35762a0a56f77c00eca0cab0c8dc814e7d10f4b81f40ec7f93f8afd1951aa9fb"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium gameplay uses real browser input events. Synthetic geometry, timing, observer and native-room/phone fixtures are separately labelled; no physical TV/phone installation or device performance is claimed."
+  },
+  "release": {
+    "sourceSha": "cf41c4f05aa7ef29c067c625832287e0c87c497d",
+    "signerCommit": "cf41c4f05aa7ef29c067c625832287e0c87c497d",
+    "signingRun": 41361254592,
+    "bytes": 296227,
+    "sha256": "5939760e755106d26e2767ad4ab1732f420d1f55c2b4316cfce3cb5111f44952",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "fc6548e1f33781a8998eaa665d6222d43ec4d574"
+  }
+}

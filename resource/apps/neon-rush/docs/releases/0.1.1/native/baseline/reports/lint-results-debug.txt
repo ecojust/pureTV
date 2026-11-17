@@ -1,0 +1,36 @@
+/workspace/scratch/neon-rush-wifi-native/baseline/resource/game-kit/android/build.gradle:2: Warning: A newer version of com.android.application than 8.5.2 is available: 9.5.1 [AndroidGradlePluginVersion]
+plugins { id 'com.android.application' version '8.5.2' }
+                                               ~~~~~~~
+
+   Explanation for issues of type "AndroidGradlePluginVersion":
+   This detector looks for usage of the Android Gradle Plugin where the
+   version you are using is not the current stable release. Using older
+   versions is fine, and there are cases where you deliberately want to stick
+   with an older version. However, you may simply not be aware that a more
+   recent version is available, and that is what this lint check helps find.
+
+/workspace/scratch/neon-rush-wifi-native/baseline/resource/game-kit/android/src/main/AndroidManifest.xml:9: Warning: Should not restrict activity to fixed orientation. This may not be suitable for different form factors, causing the app to be letterboxed. [DiscouragedApi]
+        <activity android:name="com.ecojust.gamekit.MainActivity" android:exported="true" android:screenOrientation="landscape"
+                                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "DiscouragedApi":
+   Discouraged APIs are allowed and are not deprecated, but they may be unfit
+   for common use (e.g. due to slow performance or subtle behavior).
+
+/workspace/scratch/neon-rush-wifi-native/baseline/resource/game-kit/android/src/main/res/raw/license.txt: Warning: The resource R.raw.license appears to be unused [UnusedResources]
+
+   Explanation for issues of type "UnusedResources":
+   Unused resources make applications larger and slow down builds.
+
+
+   The unused resource check can ignore tests. If you want to include
+   resources that are only referenced from tests, consider packaging them in a
+   test source set instead.
+
+   You can include test sources in the unused resource check by setting the
+   system property lint.unused-resources.include-tests =true, and to exclude
+   them (usually for performance reasons), use
+   lint.unused-resources.exclude-tests =true.
+   ,
+
+0 errors, 3 warnings

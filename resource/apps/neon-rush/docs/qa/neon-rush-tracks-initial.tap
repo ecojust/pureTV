@@ -1,0 +1,169 @@
+TAP version 13
+# Subtest: three original routes have distinct identities and fresh deterministic data
+ok 1 - three original routes have distinct identities and fresh deterministic data
+  ---
+  duration_ms: 25.350486
+  type: 'test'
+  ...
+# Subtest: distance wraps in both directions and rejects non-finite queries
+ok 2 - distance wraps in both directions and rejects non-finite queries
+  ---
+  duration_ms: 0.288063
+  type: 'test'
+  ...
+# Subtest: skyport: continuous closed 3D route has safe width, grade, curvature and a 100m start straight
+ok 3 - skyport: continuous closed 3D route has safe width, grade, curvature and a 100m start straight
+  ---
+  duration_ms: 3.885217
+  type: 'test'
+  ...
+# Subtest: skyport: centerline does not self-cross and separated sections cannot overlap road width
+ok 4 - skyport: centerline does not self-cross and separated sections cannot overlap road width
+  ---
+  duration_ms: 11.209667
+  type: 'test'
+  ...
+# Subtest: skyport: projection recovers signed lateral offsets and original arc positions
+ok 5 - skyport: projection recovers signed lateral offsets and original arc positions
+  ---
+  duration_ms: 4.610047
+  type: 'test'
+  ...
+# Subtest: skyport: stale and absent projection hints recover the global nearest section
+not ok 6 - skyport: stale and absent projection hints recover the global nearest section
+  ---
+  duration_ms: 1.796814
+  type: 'test'
+  location: '/workspace/pureTV/resource/apps/neon-rush/tests/tracks.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: '7.601564064206157 differs from 0 by more than 1e-7'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    near (file:///workspace/pureTV/resource/apps/neon-rush/tests/tracks.test.mjs:5:61)
+    TestContext.<anonymous> (file:///workspace/pureTV/resource/apps/neon-rush/tests/tracks.test.mjs:102:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: skyport: boost and launch intervals are on a forward road segment and outside the finish seam
+ok 7 - skyport: boost and launch intervals are on a forward road segment and outside the finish seam
+  ---
+  duration_ms: 1.011702
+  type: 'test'
+  ...
+# Subtest: coast: continuous closed 3D route has safe width, grade, curvature and a 100m start straight
+ok 8 - coast: continuous closed 3D route has safe width, grade, curvature and a 100m start straight
+  ---
+  duration_ms: 1.512816
+  type: 'test'
+  ...
+# Subtest: coast: centerline does not self-cross and separated sections cannot overlap road width
+ok 9 - coast: centerline does not self-cross and separated sections cannot overlap road width
+  ---
+  duration_ms: 8.52007
+  type: 'test'
+  ...
+# Subtest: coast: projection recovers signed lateral offsets and original arc positions
+ok 10 - coast: projection recovers signed lateral offsets and original arc positions
+  ---
+  duration_ms: 1.152304
+  type: 'test'
+  ...
+# Subtest: coast: stale and absent projection hints recover the global nearest section
+not ok 11 - coast: stale and absent projection hints recover the global nearest section
+  ---
+  duration_ms: 1.00339
+  type: 'test'
+  location: '/workspace/pureTV/resource/apps/neon-rush/tests/tracks.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: '7.569712065473598 differs from 0 by more than 1e-7'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    near (file:///workspace/pureTV/resource/apps/neon-rush/tests/tracks.test.mjs:5:61)
+    TestContext.<anonymous> (file:///workspace/pureTV/resource/apps/neon-rush/tests/tracks.test.mjs:102:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: coast: boost and launch intervals are on a forward road segment and outside the finish seam
+ok 12 - coast: boost and launch intervals are on a forward road segment and outside the finish seam
+  ---
+  duration_ms: 0.673954
+  type: 'test'
+  ...
+# Subtest: canyon: continuous closed 3D route has safe width, grade, curvature and a 100m start straight
+ok 13 - canyon: continuous closed 3D route has safe width, grade, curvature and a 100m start straight
+  ---
+  duration_ms: 3.758666
+  type: 'test'
+  ...
+# Subtest: canyon: centerline does not self-cross and separated sections cannot overlap road width
+ok 14 - canyon: centerline does not self-cross and separated sections cannot overlap road width
+  ---
+  duration_ms: 5.418814
+  type: 'test'
+  ...
+# Subtest: canyon: projection recovers signed lateral offsets and original arc positions
+ok 15 - canyon: projection recovers signed lateral offsets and original arc positions
+  ---
+  duration_ms: 1.246726
+  type: 'test'
+  ...
+# Subtest: canyon: stale and absent projection hints recover the global nearest section
+not ok 16 - canyon: stale and absent projection hints recover the global nearest section
+  ---
+  duration_ms: 0.967596
+  type: 'test'
+  location: '/workspace/pureTV/resource/apps/neon-rush/tests/tracks.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: '7.84718516744773 differs from 0 by more than 1e-7'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    near (file:///workspace/pureTV/resource/apps/neon-rush/tests/tracks.test.mjs:5:61)
+    TestContext.<anonymous> (file:///workspace/pureTV/resource/apps/neon-rush/tests/tracks.test.mjs:102:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: canyon: boost and launch intervals are on a forward road segment and outside the finish seam
+ok 17 - canyon: boost and launch intervals are on a forward road segment and outside the finish seam
+  ---
+  duration_ms: 0.492551
+  type: 'test'
+  ...
+# Subtest: Redrock Leap has an actual road ramp beneath its launch marker
+ok 18 - Redrock Leap has an actual road ramp beneath its launch marker
+  ---
+  duration_ms: 1.467278
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 15
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 145.693478

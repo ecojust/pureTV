@@ -1,0 +1,63 @@
+{
+  "native": [
+    {
+      "suite": "com.ecojust.gamekit.LanGameServerTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.ecojust.gamekit.MainActivityTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "nativeTestsPassed": 29,
+  "lintErrors": 0,
+  "lintWarnings": [
+    "DiscouragedApi"
+  ],
+  "controller": {
+    "checks": [
+      "LAN hello/welcome and neutral initial input",
+      "Long-press context/selection/drag events prevented and user-select disabled",
+      "CDP multi-touch: direction + edge A/B, independent release, cancel token",
+      "Window blur releases action",
+      "Resize cancels touch ownership",
+      "System start/restart press and release",
+      "Synthetic visibility transition neutralizes and resumes saved session",
+      "One action owns the entire right third",
+      "Portrait controller preserves the complete action surface"
+    ],
+    "passed": 9,
+    "browser": "Chromium",
+    "transport": "Playwright WebSocket fixture",
+    "touch": "CDP synthetic multi-touch",
+    "physicalPhoneTested": false,
+    "pageErrors": []
+  },
+  "signingValidation": {
+    "passed": 9,
+    "checks": [
+      "Valid requested APK matches source, clean rebuild, identity and size",
+      "Different requested bytecode is never selected for signing; CI rebuild is retained",
+      "Reject mismatched requested asset",
+      "Reject mismatched CI asset",
+      "Reject requested package substitution",
+      "Reject false request digest",
+      "Reject signing without prior validation",
+      "Reject request branch change before secret signing step",
+      "Reject duplicate APK entries"
+    ],
+    "transport": "simulated read-only git; real APK/aapt/zipalign",
+    "signed": false,
+    "secretAccessed": false
+  },
+  "workflowYamlAndInputSchemaPassed": true,
+  "workflowExecuted": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

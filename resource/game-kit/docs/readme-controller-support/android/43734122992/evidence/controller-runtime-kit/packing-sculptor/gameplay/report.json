@@ -1,0 +1,5356 @@
+{
+  "slug": "packing-sculptor",
+  "mode": "android",
+  "startedAt": "2026-11-15T16:20:12.260Z",
+  "status": "failed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "c912791ee3543f73298a631015c2c6f2ac225b1cc929ba4bba31bf60ae5b12c4",
+    "tools/readme-controller-qa/cases.mjs": "99e7a01d4e7554ee684561a5006c75564741ff310e8730544f68b535a1133342",
+    "tools/readme-controller-qa/sdk-peer.py": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "passed"
+    },
+    {
+      "name": "START pause freezes game, fresh START resumes",
+      "status": "passed"
+    },
+    {
+      "name": "disconnect clears held input, reconnect sync requires fresh START",
+      "status": "passed"
+    },
+    {
+      "name": "all nine official keys and long hold have real protocol receipts",
+      "status": "passed",
+      "result": {
+        "keys": 9,
+        "unchangedOfficialPage": true,
+        "longPressAndRelease": true
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK message",
+      "status": "failed",
+      "error": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2"
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "id": "packing-sculptor",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "rack",
+          "rackIndex": 0,
+          "preview": null,
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 1,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 0,
+            "missingIds": [
+              "rail",
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": null,
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 0,
+          "moves": 0,
+          "pickups": 0,
+          "placementsMade": 0,
+          "rotations": 0,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "选择零件后装入箱内；为标记零件留出指定直线出口。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 351,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6033.400000000001,
+          149.89999999999964,
+          16.699999999999818,
+          383.40000000000055,
+          1249.8999999999996,
+          100.10000000000036,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          16.700000000000728,
+          150,
+          216.60000000000036,
+          383.39999999999964,
+          200
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false,
+          "connected": false,
+          "controllerKind": null
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44355/?room=MumA4J0Eh6bi6jLColAUB1_uSW1QN5V7",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Packing Sculptor",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "id": "packing-sculptor",
+        "phase": "playing",
+        "paused": false,
+        "tick": 46,
+        "elapsed": 0.7666666666666674,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "rack",
+          "rackIndex": 0,
+          "preview": null,
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 1,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 0,
+            "missingIds": [
+              "rail",
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": null,
+          "elapsed": 0.7666666666666674,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 46,
+          "moves": 0,
+          "pickups": 0,
+          "placementsMade": 0,
+          "rotations": 0,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "选择零件后装入箱内；为标记零件留出指定直线出口。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-a4762c05bbaa",
+            "session": "wifi-f9aac8d5-dfe3-4c0c-99d1-3678a45a3d9f-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 351,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6033.400000000001,
+          149.89999999999964,
+          16.699999999999818,
+          383.40000000000055,
+          1249.8999999999996,
+          100.10000000000036,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          16.700000000000728,
+          150,
+          216.60000000000036,
+          383.39999999999964,
+          200,
+          166.60000000000036,
+          183.29999999999927,
+          166.70000000000073,
+          116.69999999999891,
+          200,
+          116.60000000000036,
+          183.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          116.70000000000073,
+          100,
+          116.69999999999891,
+          66.60000000000036,
+          100,
+          116.70000000000073,
+          100.09999999999854,
+          100,
+          16.600000000000364,
+          133.3000000000011,
+          83.39999999999964,
+          133.29999999999927,
+          133.3000000000011,
+          66.69999999999891,
+          150,
+          116.70000000000073,
+          83.29999999999927,
+          16.600000000000364,
+          100.09999999999854,
+          133.3000000000011,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          83.39999999999964,
+          33.20000000000073,
+          16.700000000000728,
+          33.399999999999636,
+          83.29999999999927
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44355/?room=MumA4J0Eh6bi6jLColAUB1_uSW1QN5V7",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Packing Sculptor",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "pick-rotate",
+      "before": {
+        "id": "packing-sculptor",
+        "phase": "playing",
+        "paused": false,
+        "tick": 235,
+        "elapsed": 3.9166666666666576,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "place",
+          "rackIndex": 0,
+          "preview": {
+            "x": 0,
+            "y": 0,
+            "turn": 0
+          },
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 1,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 0,
+            "missingIds": [
+              "rail",
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": {
+            "id": "rail",
+            "pose": {
+              "x": 0,
+              "y": 0,
+              "turn": 0
+            },
+            "cells": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            "vertices": [
+              [
+                0,
+                0
+              ],
+              [
+                3,
+                0
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "outsideCells": [],
+            "blockerIds": [],
+            "valid": true
+          },
+          "elapsed": 3.9166666666666576,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 235,
+          "moves": 2,
+          "pickups": 1,
+          "placementsMade": 0,
+          "rotations": 0,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "正在摆放长轨：A 落定，B 旋转；右侧 BACK 可取消。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-a4762c05bbaa",
+            "session": "wifi-f9aac8d5-dfe3-4c0c-99d1-3678a45a3d9f-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 356,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6033.400000000001,
+          149.89999999999964,
+          16.699999999999818,
+          383.40000000000055,
+          1249.8999999999996,
+          100.10000000000036,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          16.700000000000728,
+          150,
+          216.60000000000036,
+          383.39999999999964,
+          200,
+          166.60000000000036,
+          183.29999999999927,
+          166.70000000000073,
+          116.69999999999891,
+          200,
+          116.60000000000036,
+          183.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          116.70000000000073,
+          100,
+          116.69999999999891,
+          66.60000000000036,
+          100,
+          116.70000000000073,
+          100.09999999999854,
+          100,
+          16.600000000000364,
+          133.3000000000011,
+          83.39999999999964,
+          133.29999999999927,
+          133.3000000000011,
+          66.69999999999891,
+          150,
+          116.70000000000073,
+          83.29999999999927,
+          16.600000000000364,
+          100.09999999999854,
+          133.3000000000011,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          83.39999999999964,
+          33.20000000000073,
+          16.700000000000728,
+          33.399999999999636,
+          83.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          100.10000000000036,
+          33.29999999999927,
+          100,
+          116.70000000000073,
+          16.69999999999891,
+          83.20000000000073,
+          16.799999999999272,
+          66.60000000000036,
+          33.30000000000109,
+          116.69999999999891,
+          100,
+          83.30000000000109,
+          116.69999999999891,
+          83.30000000000109,
+          50.099999999998545,
+          83.30000000000109,
+          83.29999999999927,
+          116.60000000000036,
+          33.5,
+          99.89999999999964,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          133.3000000000011,
+          16.69999999999891,
+          83.30000000000109,
+          66.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          49.899999999999636,
+          66.70000000000073,
+          16.69999999999891,
+          66.70000000000073,
+          133.29999999999927,
+          66.70000000000073,
+          33.29999999999927,
+          116.69999999999891,
+          83.30000000000291,
+          33.29999999999927,
+          33.29999999999927,
+          66.79999999999927,
+          83.29999999999927,
+          116.60000000000218
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44355/?room=MumA4J0Eh6bi6jLColAUB1_uSW1QN5V7",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Packing Sculptor",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "packing-sculptor",
+        "phase": "playing",
+        "paused": false,
+        "tick": 286,
+        "elapsed": 4.766666666666655,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "place",
+          "rackIndex": 0,
+          "preview": {
+            "x": 0,
+            "y": 0,
+            "turn": 1
+          },
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 1,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 0,
+            "missingIds": [
+              "rail",
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": {
+            "id": "rail",
+            "pose": {
+              "x": 0,
+              "y": 0,
+              "turn": 1
+            },
+            "cells": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            "vertices": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "outsideCells": [],
+            "blockerIds": [],
+            "valid": true
+          },
+          "elapsed": 4.766666666666655,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 286,
+          "moves": 2,
+          "pickups": 1,
+          "placementsMade": 0,
+          "rotations": 1,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "已将长轨旋转到朝向 1；锚点保持不变。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-a4762c05bbaa",
+            "session": "wifi-f9aac8d5-dfe3-4c0c-99d1-3678a45a3d9f-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 356,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6033.400000000001,
+          149.89999999999964,
+          16.699999999999818,
+          383.40000000000055,
+          1249.8999999999996,
+          100.10000000000036,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          16.700000000000728,
+          150,
+          216.60000000000036,
+          383.39999999999964,
+          200,
+          166.60000000000036,
+          183.29999999999927,
+          166.70000000000073,
+          116.69999999999891,
+          200,
+          116.60000000000036,
+          183.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          116.70000000000073,
+          100,
+          116.69999999999891,
+          66.60000000000036,
+          100,
+          116.70000000000073,
+          100.09999999999854,
+          100,
+          16.600000000000364,
+          133.3000000000011,
+          83.39999999999964,
+          133.29999999999927,
+          133.3000000000011,
+          66.69999999999891,
+          150,
+          116.70000000000073,
+          83.29999999999927,
+          16.600000000000364,
+          100.09999999999854,
+          133.3000000000011,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          83.39999999999964,
+          33.20000000000073,
+          16.700000000000728,
+          33.399999999999636,
+          83.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          100.10000000000036,
+          33.29999999999927,
+          100,
+          116.70000000000073,
+          16.69999999999891,
+          83.20000000000073,
+          16.799999999999272,
+          66.60000000000036,
+          33.30000000000109,
+          116.69999999999891,
+          100,
+          83.30000000000109,
+          116.69999999999891,
+          83.30000000000109,
+          50.099999999998545,
+          83.30000000000109,
+          83.29999999999927,
+          116.60000000000036,
+          33.5,
+          99.89999999999964,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          133.3000000000011,
+          16.69999999999891,
+          83.30000000000109,
+          66.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          49.899999999999636,
+          66.70000000000073,
+          16.69999999999891,
+          66.70000000000073,
+          133.29999999999927,
+          66.70000000000073,
+          33.29999999999927,
+          116.69999999999891,
+          83.30000000000291,
+          33.29999999999927,
+          33.29999999999927,
+          66.79999999999927,
+          83.29999999999927,
+          116.60000000000218,
+          33.39999999999782,
+          50,
+          50,
+          150,
+          50,
+          50,
+          83.30000000000291,
+          116.59999999999854,
+          33.400000000001455,
+          100,
+          66.59999999999854,
+          50,
+          83.40000000000146
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44355/?room=MumA4J0Eh6bi6jLColAUB1_uSW1QN5V7",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Packing Sculptor",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "pause-freeze",
+      "before": {
+        "id": "packing-sculptor",
+        "phase": "playing",
+        "paused": true,
+        "tick": 376,
+        "elapsed": 6.26666666666665,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "place",
+          "rackIndex": 0,
+          "preview": {
+            "x": 0,
+            "y": 0,
+            "turn": 1
+          },
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 1,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 0,
+            "missingIds": [
+              "rail",
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": {
+            "id": "rail",
+            "pose": {
+              "x": 0,
+              "y": 0,
+              "turn": 1
+            },
+            "cells": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            "vertices": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "outsideCells": [],
+            "blockerIds": [],
+            "valid": true
+          },
+          "elapsed": 6.26666666666665,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 376,
+          "moves": 2,
+          "pickups": 1,
+          "placementsMade": 0,
+          "rotations": 1,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "已将长轨旋转到朝向 1；锚点保持不变。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-a4762c05bbaa",
+            "session": "wifi-f9aac8d5-dfe3-4c0c-99d1-3678a45a3d9f-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 356,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6033.400000000001,
+          149.89999999999964,
+          16.699999999999818,
+          383.40000000000055,
+          1249.8999999999996,
+          100.10000000000036,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          16.700000000000728,
+          150,
+          216.60000000000036,
+          383.39999999999964,
+          200,
+          166.60000000000036,
+          183.29999999999927,
+          166.70000000000073,
+          116.69999999999891,
+          200,
+          116.60000000000036,
+          183.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          116.70000000000073,
+          100,
+          116.69999999999891,
+          66.60000000000036,
+          100,
+          116.70000000000073,
+          100.09999999999854,
+          100,
+          16.600000000000364,
+          133.3000000000011,
+          83.39999999999964,
+          133.29999999999927,
+          133.3000000000011,
+          66.69999999999891,
+          150,
+          116.70000000000073,
+          83.29999999999927,
+          16.600000000000364,
+          100.09999999999854,
+          133.3000000000011,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          83.39999999999964,
+          33.20000000000073,
+          16.700000000000728,
+          33.399999999999636,
+          83.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          100.10000000000036,
+          33.29999999999927,
+          100,
+          116.70000000000073,
+          16.69999999999891,
+          83.20000000000073,
+          16.799999999999272,
+          66.60000000000036,
+          33.30000000000109,
+          116.69999999999891,
+          100,
+          83.30000000000109,
+          116.69999999999891,
+          83.30000000000109,
+          50.099999999998545,
+          83.30000000000109,
+          83.29999999999927,
+          116.60000000000036,
+          33.5,
+          99.89999999999964,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          133.3000000000011,
+          16.69999999999891,
+          83.30000000000109,
+          66.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          49.899999999999636,
+          66.70000000000073,
+          16.69999999999891,
+          66.70000000000073,
+          133.29999999999927,
+          66.70000000000073,
+          33.29999999999927,
+          116.69999999999891,
+          83.30000000000291,
+          33.29999999999927,
+          33.29999999999927,
+          66.79999999999927,
+          83.29999999999927,
+          116.60000000000218,
+          33.39999999999782,
+          50,
+          50,
+          150,
+          50,
+          50,
+          83.30000000000291,
+          116.59999999999854,
+          33.400000000001455,
+          100,
+          66.59999999999854,
+          50,
+          83.40000000000146,
+          116.69999999999709,
+          16.600000000002183,
+          100.09999999999854,
+          83.29999999999927,
+          100,
+          66.60000000000218,
+          83.39999999999782,
+          83.30000000000291,
+          66.69999999999709,
+          83.30000000000291,
+          83.29999999999927,
+          50,
+          83.39999999999782,
+          116.60000000000218,
+          33.39999999999782,
+          83.30000000000291,
+          16.69999999999709,
+          100,
+          50,
+          166.70000000000073,
+          16.600000000002183,
+          100.09999999999854,
+          49.900000000001455,
+          66.69999999999709,
+          16.700000000000728,
+          16.600000000002183,
+          166.6999999999971,
+          133.3000000000029,
+          100,
+          100,
+          116.69999999999709,
+          83.30000000000291,
+          100
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44355/?room=MumA4J0Eh6bi6jLColAUB1_uSW1QN5V7",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Packing Sculptor",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "packing-sculptor",
+        "phase": "playing",
+        "paused": true,
+        "tick": 376,
+        "elapsed": 6.26666666666665,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "place",
+          "rackIndex": 0,
+          "preview": {
+            "x": 0,
+            "y": 0,
+            "turn": 1
+          },
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 1,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 0,
+            "missingIds": [
+              "rail",
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": {
+            "id": "rail",
+            "pose": {
+              "x": 0,
+              "y": 0,
+              "turn": 1
+            },
+            "cells": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            "vertices": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "outsideCells": [],
+            "blockerIds": [],
+            "valid": true
+          },
+          "elapsed": 6.26666666666665,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 376,
+          "moves": 2,
+          "pickups": 1,
+          "placementsMade": 0,
+          "rotations": 1,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "已将长轨旋转到朝向 1；锚点保持不变。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-a4762c05bbaa",
+            "session": "wifi-f9aac8d5-dfe3-4c0c-99d1-3678a45a3d9f-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 356,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6033.400000000001,
+          149.89999999999964,
+          16.699999999999818,
+          383.40000000000055,
+          1249.8999999999996,
+          100.10000000000036,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          16.700000000000728,
+          150,
+          216.60000000000036,
+          383.39999999999964,
+          200,
+          166.60000000000036,
+          183.29999999999927,
+          166.70000000000073,
+          116.69999999999891,
+          200,
+          116.60000000000036,
+          183.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          116.70000000000073,
+          100,
+          116.69999999999891,
+          66.60000000000036,
+          100,
+          116.70000000000073,
+          100.09999999999854,
+          100,
+          16.600000000000364,
+          133.3000000000011,
+          83.39999999999964,
+          133.29999999999927,
+          133.3000000000011,
+          66.69999999999891,
+          150,
+          116.70000000000073,
+          83.29999999999927,
+          16.600000000000364,
+          100.09999999999854,
+          133.3000000000011,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          83.39999999999964,
+          33.20000000000073,
+          16.700000000000728,
+          33.399999999999636,
+          83.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          100.10000000000036,
+          33.29999999999927,
+          100,
+          116.70000000000073,
+          16.69999999999891,
+          83.20000000000073,
+          16.799999999999272,
+          66.60000000000036,
+          33.30000000000109,
+          116.69999999999891,
+          100,
+          83.30000000000109,
+          116.69999999999891,
+          83.30000000000109,
+          50.099999999998545,
+          83.30000000000109,
+          83.29999999999927,
+          116.60000000000036,
+          33.5,
+          99.89999999999964,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          133.3000000000011,
+          16.69999999999891,
+          83.30000000000109,
+          66.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          49.899999999999636,
+          66.70000000000073,
+          16.69999999999891,
+          66.70000000000073,
+          133.29999999999927,
+          66.70000000000073,
+          33.29999999999927,
+          116.69999999999891,
+          83.30000000000291,
+          33.29999999999927,
+          33.29999999999927,
+          66.79999999999927,
+          83.29999999999927,
+          116.60000000000218,
+          33.39999999999782,
+          50,
+          50,
+          150,
+          50,
+          50,
+          83.30000000000291,
+          116.59999999999854,
+          33.400000000001455,
+          100,
+          66.59999999999854,
+          50,
+          83.40000000000146,
+          116.69999999999709,
+          16.600000000002183,
+          100.09999999999854,
+          83.29999999999927,
+          100,
+          66.60000000000218,
+          83.39999999999782,
+          83.30000000000291,
+          66.69999999999709,
+          83.30000000000291,
+          83.29999999999927,
+          50,
+          83.39999999999782,
+          116.60000000000218,
+          33.39999999999782,
+          83.30000000000291,
+          16.69999999999709,
+          100,
+          50,
+          166.70000000000073,
+          16.600000000002183,
+          100.09999999999854,
+          49.900000000001455,
+          66.69999999999709,
+          16.700000000000728,
+          16.600000000002183,
+          166.6999999999971,
+          133.3000000000029,
+          100,
+          100,
+          116.69999999999709,
+          83.30000000000291,
+          100,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          66.70000000000073,
+          83.39999999999782,
+          100
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44355/?room=MumA4J0Eh6bi6jLColAUB1_uSW1QN5V7",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Packing Sculptor",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "reconnect",
+      "before": {
+        "id": "packing-sculptor",
+        "phase": "playing",
+        "paused": true,
+        "tick": 456,
+        "elapsed": 7.599999999999978,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "rack",
+          "rackIndex": 0,
+          "preview": null,
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            {
+              "x": 0,
+              "y": 0,
+              "turn": 1
+            },
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 0,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": {
+                  "x": 0,
+                  "y": 0,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    0,
+                    2
+                  ]
+                ],
+                "vertices": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    3
+                  ],
+                  [
+                    0,
+                    3
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 1,
+            "missingIds": [
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "east",
+                    "direction": "right",
+                    "distance": 5,
+                    "doorFits": false,
+                    "sweptRects": [
+                      {
+                        "minX": 0,
+                        "minY": 0,
+                        "maxX": 6,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 0,
+                        "minY": 1,
+                        "maxX": 6,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 0,
+                        "minY": 2,
+                        "maxX": 6,
+                        "maxY": 3
+                      }
+                    ],
+                    "wallHits": [
+                      [
+                        4,
+                        0
+                      ]
+                    ],
+                    "blockerIds": [],
+                    "clear": false
+                  }
+                ],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": null,
+          "elapsed": 7.599999999999978,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 456,
+          "moves": 2,
+          "pickups": 1,
+          "placementsMade": 1,
+          "rotations": 1,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": true,
+          "cancelEpoch": 3,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": true,
+            "b": false,
+            "direction": "right"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "已放入长轨，锚点 (0,0)，朝向 1。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 353,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6033.400000000001,
+          149.89999999999964,
+          16.699999999999818,
+          383.40000000000055,
+          1249.8999999999996,
+          100.10000000000036,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          16.700000000000728,
+          150,
+          216.60000000000036,
+          383.39999999999964,
+          200,
+          166.60000000000036,
+          183.29999999999927,
+          166.70000000000073,
+          116.69999999999891,
+          200,
+          116.60000000000036,
+          183.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          116.70000000000073,
+          100,
+          116.69999999999891,
+          66.60000000000036,
+          100,
+          116.70000000000073,
+          100.09999999999854,
+          100,
+          16.600000000000364,
+          133.3000000000011,
+          83.39999999999964,
+          133.29999999999927,
+          133.3000000000011,
+          66.69999999999891,
+          150,
+          116.70000000000073,
+          83.29999999999927,
+          16.600000000000364,
+          100.09999999999854,
+          133.3000000000011,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          83.39999999999964,
+          33.20000000000073,
+          16.700000000000728,
+          33.399999999999636,
+          83.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          100.10000000000036,
+          33.29999999999927,
+          100,
+          116.70000000000073,
+          16.69999999999891,
+          83.20000000000073,
+          16.799999999999272,
+          66.60000000000036,
+          33.30000000000109,
+          116.69999999999891,
+          100,
+          83.30000000000109,
+          116.69999999999891,
+          83.30000000000109,
+          50.099999999998545,
+          83.30000000000109,
+          83.29999999999927,
+          116.60000000000036,
+          33.5,
+          99.89999999999964,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          133.3000000000011,
+          16.69999999999891,
+          83.30000000000109,
+          66.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          49.899999999999636,
+          66.70000000000073,
+          16.69999999999891,
+          66.70000000000073,
+          133.29999999999927,
+          66.70000000000073,
+          33.29999999999927,
+          116.69999999999891,
+          83.30000000000291,
+          33.29999999999927,
+          33.29999999999927,
+          66.79999999999927,
+          83.29999999999927,
+          116.60000000000218,
+          33.39999999999782,
+          50,
+          50,
+          150,
+          50,
+          50,
+          83.30000000000291,
+          116.59999999999854,
+          33.400000000001455,
+          100,
+          66.59999999999854,
+          50,
+          83.40000000000146,
+          116.69999999999709,
+          16.600000000002183,
+          100.09999999999854,
+          83.29999999999927,
+          100,
+          66.60000000000218,
+          83.39999999999782,
+          83.30000000000291,
+          66.69999999999709,
+          83.30000000000291,
+          83.29999999999927,
+          50,
+          83.39999999999782,
+          116.60000000000218,
+          33.39999999999782,
+          83.30000000000291,
+          16.69999999999709,
+          100,
+          50,
+          166.70000000000073,
+          16.600000000002183,
+          100.09999999999854,
+          49.900000000001455,
+          66.69999999999709,
+          16.700000000000728,
+          16.600000000002183,
+          166.6999999999971,
+          133.3000000000029,
+          100,
+          100,
+          116.69999999999709,
+          83.30000000000291,
+          100,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          66.70000000000073,
+          83.39999999999782,
+          100,
+          116.60000000000218,
+          116.69999999999709,
+          100,
+          99.90000000000146,
+          100,
+          133.40000000000146,
+          100,
+          150,
+          66.59999999999854,
+          100.09999999999854,
+          116.60000000000218,
+          100,
+          116.70000000000073,
+          116.69999999999709,
+          199.90000000000146,
+          50.099999999998545,
+          16.600000000002183,
+          16.700000000000728,
+          150,
+          133.39999999999782,
+          166.60000000000218,
+          50,
+          116.59999999999854,
+          33.400000000001455,
+          83.39999999999782,
+          16.600000000002183,
+          50,
+          66.69999999999709,
+          50,
+          150,
+          66.60000000000218,
+          66.70000000000073,
+          83.29999999999927,
+          33.29999999999927,
+          83.40000000000146,
+          83.29999999999927,
+          100,
+          66.70000000000073,
+          66.69999999999709,
+          100,
+          66.60000000000218,
+          150.09999999999854,
+          83.29999999999927,
+          116.70000000000073
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": true,
+          "connected": false,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44355/?room=MumA4J0Eh6bi6jLColAUB1_uSW1QN5V7",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Packing Sculptor",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "packing-sculptor",
+        "phase": "playing",
+        "paused": true,
+        "tick": 456,
+        "elapsed": 7.599999999999978,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "rack",
+          "rackIndex": 0,
+          "preview": null,
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            {
+              "x": 0,
+              "y": 0,
+              "turn": 1
+            },
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 0,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": {
+                  "x": 0,
+                  "y": 0,
+                  "turn": 1
+                },
+                "cells": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    0,
+                    2
+                  ]
+                ],
+                "vertices": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    3
+                  ],
+                  [
+                    0,
+                    3
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 1,
+            "missingIds": [
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": true,
+                "options": [
+                  {
+                    "doorId": "east",
+                    "direction": "right",
+                    "distance": 5,
+                    "doorFits": false,
+                    "sweptRects": [
+                      {
+                        "minX": 0,
+                        "minY": 0,
+                        "maxX": 6,
+                        "maxY": 1
+                      },
+                      {
+                        "minX": 0,
+                        "minY": 1,
+                        "maxX": 6,
+                        "maxY": 2
+                      },
+                      {
+                        "minX": 0,
+                        "minY": 2,
+                        "maxX": 6,
+                        "maxY": 3
+                      }
+                    ],
+                    "wallHits": [
+                      [
+                        4,
+                        0
+                      ]
+                    ],
+                    "blockerIds": [],
+                    "clear": false
+                  }
+                ],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": null,
+          "elapsed": 7.599999999999978,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 456,
+          "moves": 2,
+          "pickups": 1,
+          "placementsMade": 1,
+          "rotations": 1,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": true,
+          "cancelEpoch": 3,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": true,
+            "b": false,
+            "direction": "right"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "已放入长轨，锚点 (0,0)，朝向 1。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-a4762c05bbaa",
+            "session": "wifi-f9aac8d5-dfe3-4c0c-99d1-3678a45a3d9f-2",
+            "connected": true,
+            "cancelSeq": 3,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 353,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          6033.400000000001,
+          149.89999999999964,
+          16.699999999999818,
+          383.40000000000055,
+          1249.8999999999996,
+          100.10000000000036,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          16.700000000000728,
+          150,
+          216.60000000000036,
+          383.39999999999964,
+          200,
+          166.60000000000036,
+          183.29999999999927,
+          166.70000000000073,
+          116.69999999999891,
+          200,
+          116.60000000000036,
+          183.39999999999964,
+          83.30000000000109,
+          83.29999999999927,
+          116.70000000000073,
+          100,
+          116.69999999999891,
+          66.60000000000036,
+          100,
+          116.70000000000073,
+          100.09999999999854,
+          100,
+          16.600000000000364,
+          133.3000000000011,
+          83.39999999999964,
+          133.29999999999927,
+          133.3000000000011,
+          66.69999999999891,
+          150,
+          116.70000000000073,
+          83.29999999999927,
+          16.600000000000364,
+          100.09999999999854,
+          133.3000000000011,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          83.39999999999964,
+          33.20000000000073,
+          16.700000000000728,
+          33.399999999999636,
+          83.29999999999927,
+          133.3000000000011,
+          33.29999999999927,
+          100.10000000000036,
+          33.29999999999927,
+          100,
+          116.70000000000073,
+          16.69999999999891,
+          83.20000000000073,
+          16.799999999999272,
+          66.60000000000036,
+          33.30000000000109,
+          116.69999999999891,
+          100,
+          83.30000000000109,
+          116.69999999999891,
+          83.30000000000109,
+          50.099999999998545,
+          83.30000000000109,
+          83.29999999999927,
+          116.60000000000036,
+          33.5,
+          99.89999999999964,
+          50,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          133.3000000000011,
+          16.69999999999891,
+          83.30000000000109,
+          66.69999999999891,
+          33.399999999999636,
+          133.3000000000011,
+          49.899999999999636,
+          66.70000000000073,
+          16.69999999999891,
+          66.70000000000073,
+          133.29999999999927,
+          66.70000000000073,
+          33.29999999999927,
+          116.69999999999891,
+          83.30000000000291,
+          33.29999999999927,
+          33.29999999999927,
+          66.79999999999927,
+          83.29999999999927,
+          116.60000000000218,
+          33.39999999999782,
+          50,
+          50,
+          150,
+          50,
+          50,
+          83.30000000000291,
+          116.59999999999854,
+          33.400000000001455,
+          100,
+          66.59999999999854,
+          50,
+          83.40000000000146,
+          116.69999999999709,
+          16.600000000002183,
+          100.09999999999854,
+          83.29999999999927,
+          100,
+          66.60000000000218,
+          83.39999999999782,
+          83.30000000000291,
+          66.69999999999709,
+          83.30000000000291,
+          83.29999999999927,
+          50,
+          83.39999999999782,
+          116.60000000000218,
+          33.39999999999782,
+          83.30000000000291,
+          16.69999999999709,
+          100,
+          50,
+          166.70000000000073,
+          16.600000000002183,
+          100.09999999999854,
+          49.900000000001455,
+          66.69999999999709,
+          16.700000000000728,
+          16.600000000002183,
+          166.6999999999971,
+          133.3000000000029,
+          100,
+          100,
+          116.69999999999709,
+          83.30000000000291,
+          100,
+          83.29999999999927,
+          116.70000000000073,
+          133.29999999999927,
+          66.70000000000073,
+          83.39999999999782,
+          100,
+          116.60000000000218,
+          116.69999999999709,
+          100,
+          99.90000000000146,
+          100,
+          133.40000000000146,
+          100,
+          150,
+          66.59999999999854,
+          100.09999999999854,
+          116.60000000000218,
+          100,
+          116.70000000000073,
+          116.69999999999709,
+          199.90000000000146,
+          50.099999999998545,
+          16.600000000002183,
+          16.700000000000728,
+          150,
+          133.39999999999782,
+          166.60000000000218,
+          50,
+          116.59999999999854,
+          33.400000000001455,
+          83.39999999999782,
+          16.600000000002183,
+          50,
+          66.69999999999709,
+          50,
+          150,
+          66.60000000000218,
+          66.70000000000073,
+          83.29999999999927,
+          33.29999999999927,
+          83.40000000000146,
+          83.29999999999927,
+          100,
+          66.70000000000073,
+          66.69999999999709,
+          100,
+          66.60000000000218,
+          150.09999999999854,
+          83.29999999999927,
+          116.70000000000073,
+          66.60000000000218,
+          133.39999999999782,
+          83.29999999999927,
+          100,
+          99.90000000000146,
+          83.40000000000146,
+          100,
+          116.59999999999854,
+          100.09999999999854,
+          116.60000000000218,
+          100.09999999999854,
+          83.20000000000073,
+          133.40000000000146
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:44355/?room=MumA4J0Eh6bi6jLColAUB1_uSW1QN5V7",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Packing Sculptor",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.072Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.072Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.073Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.073Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.073Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.073Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.073Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.073Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.073Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.073Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.104Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.104Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.104Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.165Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.177Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.177Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.177Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.177Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.223Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.223Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:17.781Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:17.792Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:18.115Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 331
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:18.124Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:19.462Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:19.508Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:19.714Z",
+      "message": {
+        "type": "ping",
+        "seq": 14,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:19.723Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:19.776Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 316
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:19.811Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:20.533Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:20.539Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:20.788Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "LEFT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 248
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:20.798Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:21.161Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:21.184Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:21.348Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 189
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:21.363Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:22.343Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:22.392Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:22.671Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "B",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 321
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:22.764Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:24.708Z",
+      "message": {
+        "type": "ping",
+        "seq": 22,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:24.745Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:24.778Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:24.812Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:24.933Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 157
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:24.940Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:28.357Z",
+      "message": {
+        "type": "button",
+        "seq": 25,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:28.373Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:28.798Z",
+      "message": {
+        "type": "button",
+        "seq": 26,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 445
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:28.807Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:29.655Z",
+      "message": {
+        "type": "button",
+        "seq": 27,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:29.661Z",
+      "message": {
+        "type": "button",
+        "seq": 28,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:29.661Z",
+      "message": {
+        "type": "ack",
+        "seq": 27
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:29.681Z",
+      "message": {
+        "type": "ack",
+        "seq": 28
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:29.707Z",
+      "message": {
+        "type": "ping",
+        "seq": 29,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:29.802Z",
+      "message": {
+        "type": "ack",
+        "seq": 29
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:29.810Z",
+      "message": {
+        "type": "button",
+        "seq": 30,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 161
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:29.823Z",
+      "message": {
+        "type": "button",
+        "seq": 31,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 148
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:31.327Z",
+      "message": {
+        "type": "hello",
+        "seq": 32,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:31.327Z",
+      "message": {
+        "type": "button",
+        "seq": 33,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:31.327Z",
+      "message": {
+        "type": "button",
+        "seq": 34,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:31.327Z",
+      "message": {
+        "type": "button",
+        "seq": 35,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:31.327Z",
+      "message": {
+        "type": "button",
+        "seq": 36,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:31.327Z",
+      "message": {
+        "type": "button",
+        "seq": 37,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:31.327Z",
+      "message": {
+        "type": "button",
+        "seq": 38,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:31.327Z",
+      "message": {
+        "type": "button",
+        "seq": 39,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:31.327Z",
+      "message": {
+        "type": "button",
+        "seq": 40,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:31.327Z",
+      "message": {
+        "type": "button",
+        "seq": 41,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:31.372Z",
+      "message": {
+        "type": "ack",
+        "seq": 32
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:31.375Z",
+      "message": {
+        "type": "ack",
+        "seq": 33
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:31.375Z",
+      "message": {
+        "type": "ack",
+        "seq": 34
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:31.375Z",
+      "message": {
+        "type": "ack",
+        "seq": 35
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:31.375Z",
+      "message": {
+        "type": "ack",
+        "seq": 36
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:31.375Z",
+      "message": {
+        "type": "ack",
+        "seq": 37
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:31.375Z",
+      "message": {
+        "type": "ack",
+        "seq": 38
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:31.375Z",
+      "message": {
+        "type": "ack",
+        "seq": 39
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:31.375Z",
+      "message": {
+        "type": "ack",
+        "seq": 40
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:31.375Z",
+      "message": {
+        "type": "ack",
+        "seq": 41
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:32.055Z",
+      "message": {
+        "type": "button",
+        "seq": 42,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:32.070Z",
+      "message": {
+        "type": "ack",
+        "seq": 42
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:32.226Z",
+      "message": {
+        "type": "button",
+        "seq": 43,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 170
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:32.237Z",
+      "message": {
+        "type": "ack",
+        "seq": 43
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:34.375Z",
+      "message": {
+        "type": "button",
+        "seq": 44,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:34.392Z",
+      "message": {
+        "type": "ack",
+        "seq": 44
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:34.707Z",
+      "message": {
+        "type": "ping",
+        "seq": 45,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:34.709Z",
+      "message": {
+        "type": "ack",
+        "seq": 45
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:34.767Z",
+      "message": {
+        "type": "button",
+        "seq": 46,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 395
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:34.784Z",
+      "message": {
+        "type": "ack",
+        "seq": 46
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:35.655Z",
+      "message": {
+        "type": "button",
+        "seq": 47,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "UP",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:35.666Z",
+      "message": {
+        "type": "ack",
+        "seq": 47
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:36.080Z",
+      "message": {
+        "type": "button",
+        "seq": 48,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "UP",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 424
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:36.086Z",
+      "message": {
+        "type": "ack",
+        "seq": 48
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:36.461Z",
+      "message": {
+        "type": "button",
+        "seq": 49,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "DOWN",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:36.528Z",
+      "message": {
+        "type": "ack",
+        "seq": 49
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:36.961Z",
+      "message": {
+        "type": "button",
+        "seq": 50,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "DOWN",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:36.988Z",
+      "message": {
+        "type": "button",
+        "seq": 51,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "DOWN",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 524
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:37.006Z",
+      "message": {
+        "type": "ack",
+        "seq": 50
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:37.050Z",
+      "message": {
+        "type": "ack",
+        "seq": 51
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:37.461Z",
+      "message": {
+        "type": "button",
+        "seq": 52,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:37.568Z",
+      "message": {
+        "type": "ack",
+        "seq": 52
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:37.961Z",
+      "message": {
+        "type": "button",
+        "seq": 53,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "LEFT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 503
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:37.987Z",
+      "message": {
+        "type": "ack",
+        "seq": 53
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:38.911Z",
+      "message": {
+        "type": "button",
+        "seq": 54,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "LEFT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 1451
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:38.939Z",
+      "message": {
+        "type": "ack",
+        "seq": 54
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:39.352Z",
+      "message": {
+        "type": "button",
+        "seq": 55,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:39.418Z",
+      "message": {
+        "type": "ack",
+        "seq": 55
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:39.710Z",
+      "message": {
+        "type": "ping",
+        "seq": 56,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:39.717Z",
+      "message": {
+        "type": "ack",
+        "seq": 56
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:39.847Z",
+      "message": {
+        "type": "button",
+        "seq": 57,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "RIGHT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:39.859Z",
+      "message": {
+        "type": "ack",
+        "seq": 57
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:39.903Z",
+      "message": {
+        "type": "button",
+        "seq": 58,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "RIGHT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 547
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:39.989Z",
+      "message": {
+        "type": "ack",
+        "seq": 58
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:40.359Z",
+      "message": {
+        "type": "button",
+        "seq": 59,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:40.394Z",
+      "message": {
+        "type": "ack",
+        "seq": 59
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:40.797Z",
+      "message": {
+        "type": "button",
+        "seq": 60,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 438
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:40.819Z",
+      "message": {
+        "type": "ack",
+        "seq": 60
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:41.221Z",
+      "message": {
+        "type": "button",
+        "seq": 61,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:41.225Z",
+      "message": {
+        "type": "ack",
+        "seq": 61
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:41.700Z",
+      "message": {
+        "type": "button",
+        "seq": 62,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "B",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 472
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:41.737Z",
+      "message": {
+        "type": "ack",
+        "seq": 62
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:42.148Z",
+      "message": {
+        "type": "button",
+        "seq": 63,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "X",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:42.190Z",
+      "message": {
+        "type": "ack",
+        "seq": 63
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:42.646Z",
+      "message": {
+        "type": "button",
+        "seq": 64,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "X",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:42.657Z",
+      "message": {
+        "type": "ack",
+        "seq": 64
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:42.919Z",
+      "message": {
+        "type": "button",
+        "seq": 65,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "X",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 769
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:42.987Z",
+      "message": {
+        "type": "ack",
+        "seq": 65
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:43.312Z",
+      "message": {
+        "type": "button",
+        "seq": 66,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "Y",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:43.319Z",
+      "message": {
+        "type": "ack",
+        "seq": 66
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:43.812Z",
+      "message": {
+        "type": "button",
+        "seq": 67,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "Y",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:43.815Z",
+      "message": {
+        "type": "ack",
+        "seq": 67
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:43.847Z",
+      "message": {
+        "type": "button",
+        "seq": 68,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "Y",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 533
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:43.852Z",
+      "message": {
+        "type": "ack",
+        "seq": 68
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:44.371Z",
+      "message": {
+        "type": "button",
+        "seq": 69,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:44.430Z",
+      "message": {
+        "type": "ack",
+        "seq": 69
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:44.644Z",
+      "message": {
+        "type": "button",
+        "seq": 70,
+        "controller_id": "virtual-a4762c05bbaa",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 270
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:44.681Z",
+      "message": {
+        "type": "ack",
+        "seq": 70
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:44.708Z",
+      "message": {
+        "type": "ping",
+        "seq": 71,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:44.744Z",
+      "message": {
+        "type": "ack",
+        "seq": 71
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:49.710Z",
+      "message": {
+        "type": "ping",
+        "seq": 72,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:49.719Z",
+      "message": {
+        "type": "ack",
+        "seq": 72
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:54.711Z",
+      "message": {
+        "type": "ping",
+        "seq": 73,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:54.729Z",
+      "message": {
+        "type": "ack",
+        "seq": 73
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:20:59.707Z",
+      "message": {
+        "type": "ping",
+        "seq": 74,
+        "controller_id": "virtual-a4762c05bbaa"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:20:59.747Z",
+      "message": {
+        "type": "ack",
+        "seq": 74
+      }
+    }
+  ],
+  "transportErrors": [],
+  "screenshots": [
+    "menu-android.png",
+    "gameplay.png",
+    "paused.png",
+    "reconnected.png",
+    "failure.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "ports": {
+    "tcpPort": 37887,
+    "observerPort": 46723
+  },
+  "error": "Error: ACK for every sent original SDK message timed out\n    at waitFor (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:24:184)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:169\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:121:2",
+  "lastSnapshot": {
+    "id": "packing-sculptor",
+    "phase": "playing",
+    "paused": false,
+    "tick": 1547,
+    "elapsed": 25.78333333333315,
+    "level": 0,
+    "best": 0,
+    "model": {
+      "schema": 1,
+      "seed": 746,
+      "level": 0,
+      "phase": "playing",
+      "reason": "",
+      "score": 0,
+      "mode": "rack",
+      "rackIndex": 0,
+      "preview": null,
+      "pieceIds": [
+        "rail",
+        "elbow",
+        "crate",
+        "bar"
+      ],
+      "container": {
+        "width": 5,
+        "height": 4,
+        "rows": [
+          "11110",
+          "11111",
+          "11111",
+          "01111"
+        ],
+        "doors": [
+          {
+            "id": "east",
+            "direction": "right",
+            "start": 1,
+            "end": 2
+          }
+        ],
+        "requirements": [
+          {
+            "pieceId": "rail",
+            "doorIds": [
+              "east"
+            ]
+          }
+        ]
+      },
+      "placements": [
+        {
+          "x": 0,
+          "y": 0,
+          "turn": 1
+        },
+        null,
+        null,
+        null
+      ],
+      "inventory": {
+        "rail": 0,
+        "elbow": 1,
+        "crate": 1,
+        "bar": 1
+      },
+      "geometry": {
+        "pieces": [
+          {
+            "id": "rail",
+            "pose": {
+              "x": 0,
+              "y": 0,
+              "turn": 1
+            },
+            "cells": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            "vertices": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "outsideCells": [],
+            "overlapIds": []
+          },
+          {
+            "id": "elbow",
+            "pose": null,
+            "cells": [],
+            "vertices": [],
+            "outsideCells": [],
+            "overlapIds": []
+          },
+          {
+            "id": "crate",
+            "pose": null,
+            "cells": [],
+            "vertices": [],
+            "outsideCells": [],
+            "overlapIds": []
+          },
+          {
+            "id": "bar",
+            "pose": null,
+            "cells": [],
+            "vertices": [],
+            "outsideCells": [],
+            "overlapIds": []
+          }
+        ],
+        "placedCount": 1,
+        "missingIds": [
+          "elbow",
+          "crate",
+          "bar"
+        ],
+        "allPlaced": false,
+        "allInside": true,
+        "noOverlap": true,
+        "validPacking": false,
+        "extractions": [
+          {
+            "pieceId": "rail",
+            "placed": true,
+            "options": [
+              {
+                "doorId": "east",
+                "direction": "right",
+                "distance": 5,
+                "doorFits": false,
+                "sweptRects": [
+                  {
+                    "minX": 0,
+                    "minY": 0,
+                    "maxX": 6,
+                    "maxY": 1
+                  },
+                  {
+                    "minX": 0,
+                    "minY": 1,
+                    "maxX": 6,
+                    "maxY": 2
+                  },
+                  {
+                    "minX": 0,
+                    "minY": 2,
+                    "maxX": 6,
+                    "maxY": 3
+                  }
+                ],
+                "wallHits": [
+                  [
+                    4,
+                    0
+                  ]
+                ],
+                "blockerIds": [],
+                "clear": false
+              }
+            ],
+            "canExit": false
+          }
+        ],
+        "canShip": false
+      },
+      "previewCheck": null,
+      "elapsed": 25.78333333333315,
+      "elapsedCapped": false,
+      "failures": 0,
+      "submissions": [],
+      "terminalReceipt": null,
+      "calls": 1547,
+      "moves": 2,
+      "pickups": 1,
+      "placementsMade": 1,
+      "rotations": 1,
+      "removals": 0,
+      "clears": 0,
+      "blockedActions": 0,
+      "counterSaturated": false,
+      "inputArmed": true,
+      "cancelEpoch": 8,
+      "cancelledLast": false,
+      "lastHeld": {
+        "a": false,
+        "b": false,
+        "direction": "none"
+      },
+      "lastCommand": "none",
+      "events": [],
+      "message": "已放入长轨，锚点 (0,0)，朝向 1。"
+    },
+    "controllers": [
+      {
+        "id": 1,
+        "transport": "wifi",
+        "controllerId": "virtual-a4762c05bbaa",
+        "session": "wifi-f9aac8d5-dfe3-4c0c-99d1-3678a45a3d9f-2",
+        "connected": true,
+        "cancelSeq": 3,
+        "inputActive": true,
+        "x": 0,
+        "y": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "a": false,
+        "b": false,
+        "start": false,
+        "select": false,
+        "buttons": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        }
+      }
+    ],
+    "renderer": {
+      "kind": "webgl",
+      "drawCalls": 1,
+      "quads": 353,
+      "textureCount": 1,
+      "atlasSize": 1024,
+      "contextLost": false
+    },
+    "frameTimesMs": [
+      133.29999999999927,
+      100.10000000000218,
+      99.89999999999418,
+      116.70000000000437,
+      116.59999999999854,
+      66.69999999999709,
+      116.70000000000437,
+      66.69999999999709,
+      116.59999999999854,
+      100,
+      133.3000000000029,
+      50.099999999998545,
+      83.30000000000291,
+      150,
+      100,
+      66.69999999999709,
+      133.3000000000029,
+      116.69999999999709,
+      66.59999999999854,
+      150,
+      66.70000000000437,
+      116.59999999999854,
+      83.40000000000146,
+      150,
+      83.29999999999563,
+      83.40000000000146,
+      100,
+      133.3000000000029,
+      83.29999999999563,
+      100.10000000000582,
+      99.89999999999418,
+      150.10000000000582,
+      99.89999999999418,
+      116.70000000000437,
+      100,
+      66.69999999999709,
+      116.70000000000437,
+      100,
+      99.89999999999418,
+      100.10000000000582,
+      116.59999999999854,
+      116.59999999999854,
+      100,
+      133.40000000000146,
+      100,
+      83.29999999999563,
+      100,
+      100,
+      50,
+      50.10000000000582,
+      133.29999999999563,
+      116.70000000000437,
+      16.599999999998545,
+      16.69999999999709,
+      66.70000000000437,
+      199.89999999999418,
+      166.70000000000437,
+      16.69999999999709,
+      16.700000000004366,
+      83.29999999999563,
+      166.59999999999854,
+      116.70000000000437,
+      66.69999999999709,
+      100,
+      150,
+      83.30000000000291,
+      83.40000000000146,
+      33.299999999995634,
+      116.59999999999854,
+      83.40000000000146,
+      83.30000000000291,
+      50,
+      100,
+      50,
+      33.299999999995634,
+      83.40000000000146,
+      100,
+      66.59999999999854,
+      33.400000000001455,
+      83.30000000000291,
+      66.59999999999854,
+      100.09999999999854,
+      16.599999999998545,
+      50,
+      16.700000000004366,
+      133.29999999999563,
+      83.30000000000291,
+      83.5,
+      33.30000000000291,
+      66.59999999999854,
+      83.29999999999563,
+      50.10000000000582,
+      99.89999999999418,
+      33.400000000001455,
+      83.30000000000291,
+      50,
+      100,
+      83.40000000000146,
+      33.19999999999709,
+      16.69999999999709,
+      116.70000000000437,
+      50,
+      66.59999999999854,
+      50.099999999998545,
+      100,
+      66.59999999999854,
+      66.70000000000437,
+      66.59999999999854,
+      66.80000000000291,
+      83.19999999999709,
+      116.80000000000291,
+      16.599999999998545,
+      100,
+      50,
+      83.29999999999563,
+      100,
+      83.30000000000291,
+      50.099999999998545,
+      33.30000000000291,
+      33.299999999995634,
+      100.10000000000582,
+      83.29999999999563,
+      83.30000000000291,
+      16.69999999999709,
+      66.59999999999854,
+      33.30000000000291,
+      100.09999999999854,
+      83.40000000000146,
+      66.59999999999854,
+      49.900000000001455,
+      16.69999999999709,
+      116.70000000000437,
+      100,
+      83.40000000000146,
+      49.89999999999418,
+      33.30000000000291,
+      66.80000000000291,
+      83.29999999999563,
+      66.70000000000437,
+      83.29999999999563,
+      66.70000000000437,
+      116.59999999999854,
+      16.69999999999709,
+      100,
+      83.30000000000291,
+      50,
+      50,
+      83.29999999999563,
+      66.70000000000437,
+      100,
+      66.69999999999709,
+      66.59999999999854,
+      100,
+      66.70000000000437,
+      66.69999999999709,
+      83.30000000000291,
+      33.299999999995634,
+      50,
+      116.70000000000437,
+      33.299999999995634,
+      83.40000000000146,
+      83.30000000000291,
+      50.099999999998545,
+      83.19999999999709,
+      50,
+      100,
+      50,
+      66.70000000000437,
+      66.69999999999709,
+      83.30000000000291,
+      83.29999999999563,
+      33.400000000001455,
+      66.70000000000437,
+      66.59999999999854,
+      66.59999999999854,
+      116.80000000000291,
+      66.59999999999854,
+      33.299999999995634,
+      66.70000000000437,
+      33.400000000001455,
+      83.19999999999709,
+      116.69999999999709,
+      50,
+      66.70000000000437,
+      50,
+      83.40000000000146,
+      99.89999999999418,
+      83.30000000000291,
+      16.69999999999709,
+      66.70000000000437,
+      50,
+      66.59999999999854,
+      100,
+      50,
+      83.40000000000146,
+      83.29999999999563,
+      50,
+      83.40000000000146,
+      33.30000000000291,
+      66.69999999999709,
+      33.30000000000291,
+      116.69999999999709,
+      100,
+      16.599999999998545,
+      50.10000000000582,
+      100,
+      99.89999999999418,
+      100,
+      33.400000000001455,
+      49.900000000001455,
+      16.69999999999709,
+      50,
+      100,
+      100.10000000000582,
+      33.19999999999709,
+      116.80000000000291,
+      83.29999999999563,
+      33.30000000000291,
+      100,
+      16.69999999999709,
+      49.900000000001455,
+      66.69999999999709,
+      100,
+      83.40000000000146,
+      66.59999999999854,
+      66.70000000000437,
+      33.299999999995634,
+      100,
+      66.70000000000437,
+      50,
+      116.59999999999854,
+      33.400000000001455,
+      66.59999999999854,
+      100.09999999999854,
+      33.30000000000291,
+      66.69999999999709,
+      100,
+      50,
+      100,
+      16.599999999998545,
+      100,
+      50,
+      50.10000000000582,
+      99.89999999999418,
+      66.70000000000437,
+      66.69999999999709,
+      16.700000000004366,
+      83.19999999999709,
+      33.400000000001455,
+      66.59999999999854,
+      66.80000000000291,
+      99.89999999999418,
+      66.70000000000437,
+      100,
+      33.400000000001455,
+      99.89999999999418,
+      100,
+      33.400000000001455,
+      83.30000000000291,
+      66.69999999999709,
+      116.70000000000437,
+      16.599999999998545,
+      66.69999999999709,
+      100,
+      66.70000000000437,
+      50,
+      66.59999999999854,
+      133.29999999999563,
+      50,
+      66.70000000000437,
+      83.40000000000146,
+      16.599999999998545,
+      83.40000000000146,
+      33.299999999995634,
+      100,
+      83.30000000000291,
+      100,
+      33.299999999995634,
+      83.30000000000291,
+      66.69999999999709,
+      66.70000000000437,
+      33.299999999995634,
+      83.40000000000146,
+      66.70000000000437,
+      66.59999999999854,
+      83.29999999999563,
+      66.70000000000437,
+      50,
+      100,
+      66.69999999999709,
+      66.70000000000437,
+      83.29999999999563,
+      49.900000000001455,
+      33.400000000001455,
+      16.599999999998545,
+      133.40000000000146,
+      66.69999999999709,
+      66.59999999999854,
+      100,
+      83.40000000000146
+    ],
+    "connection": {
+      "phoneSeen": true,
+      "disconnected": false,
+      "connected": true,
+      "controllerKind": "wifi"
+    },
+    "document": {
+      "url": "https://game-kit.invalid/tv.html",
+      "width": 960,
+      "height": 540,
+      "scrollWidth": 960,
+      "scrollHeight": 540,
+      "hidden": false,
+      "focused": true
+    },
+    "nativeInfo": {
+      "url": "http://10.0.2.15:44355/?room=MumA4J0Eh6bi6jLColAUB1_uSW1QN5V7",
+      "qr": "data:image/png;base64,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",
+      "addresses": [
+        "10.0.2.15"
+      ],
+      "error": "",
+      "language": "en",
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Packing Sculptor",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "error": 0
+      }
+    },
+    "activityState": "resumed"
+  },
+  "finishedAt": "2026-11-15T16:21:02.553Z"
+}

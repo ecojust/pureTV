@@ -1,0 +1,116 @@
+{
+  "passed": true,
+  "sourceCommit": "916ea89004cf0f77f0d2f38ab7cb4d27de4c03cf",
+  "testedAssets": "/workspace/scratch/twenty-four/assets",
+  "dedicatedDirectory": "/workspace/scratch/twenty-four/browser",
+  "sharedDirectory": "/workspace/scratch/twenty-four/qa",
+  "dedicatedChecksPassed": 8,
+  "sharedChecksPassed": 10,
+  "ordinaryRecordedWins": [
+    {
+      "level": 0,
+      "seconds": 14.012334222000002,
+      "mergesUsed": 3,
+      "failures": 0,
+      "undoUsed": 0,
+      "terms": [
+        {
+          "id": 15,
+          "mask": 15,
+          "n": 24,
+          "d": 1,
+          "expr": "(D*(C+(A+B)))"
+        }
+      ]
+    },
+    {
+      "level": 1,
+      "seconds": 28.012679685,
+      "mergesUsed": 3,
+      "failures": 0,
+      "undoUsed": 0,
+      "terms": [
+        {
+          "id": 15,
+          "mask": 15,
+          "n": 24,
+          "d": 1,
+          "expr": "(B*((A*C)-D))"
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "seconds": 44.012315955,
+      "mergesUsed": 3,
+      "failures": 0,
+      "undoUsed": 0,
+      "terms": [
+        {
+          "id": 15,
+          "mask": 15,
+          "n": 24,
+          "d": 1,
+          "expr": "(D/(B-(C/A)))"
+        }
+      ]
+    }
+  ],
+  "video": {
+    "path": "/workspace/scratch/twenty-four/qa/recording/gameplay.mp4",
+    "bytes": 2744511,
+    "sha256": "5d32cd63d8468ff3d1bf6707300afef22f28fc617c62b15874f9c80eab8573ba",
+    "capturedSeconds": 50.45281720161438,
+    "fullDecodePassed": true
+  },
+  "frameAdmission": {
+    "policy": "Acknowledge every observed CDP frame; retain strictly increasing finite timestamps. Omit and log invalid, duplicate, backward, or post-stop events. Never sort or rewrite retained timestamps.",
+    "rawCdpFrames": 790,
+    "acceptedCdpFrames": 790,
+    "droppedCdpFrames": 0,
+    "droppedFrames": []
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 57,
+    "rafIntervalMs": {
+      "count": 57,
+      "min": 16.599999999999454,
+      "median": 33.399999999999636,
+      "p95": 83.39999999999964,
+      "max": 83.40000000000055,
+      "mean": 43.27368421052632
+    },
+    "webglDrawCalls": {
+      "count": 57,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 57,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    }
+  },
+  "visualReview": {
+    "playing960": true,
+    "playing1280": true,
+    "encodedSample": "screenshots/encoded-gameplay-33.png",
+    "note": "Viewed actual 8/3 fraction at 960/1280 and encoded 33-second reverse division selection: L=3, R=8, R/L highlighted. Fractions, full source expressions, directional operators and the original-card legend are clear. All three recorded results are full-mask exact24/1."
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "sourcePreflight": "source-asset-preflight.json",
+  "sourcePreflightSha256": "02a4fcf411635631ec116eca62ce6d600c402d964dd9da5da0f3d951b188e34f"
+}

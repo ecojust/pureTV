@@ -1,0 +1,99 @@
+{
+  "checkedAt": "2026-11-16T11:07:53.729459+00:00",
+  "run": {
+    "id": 43851891831,
+    "workflow_id": 419240641,
+    "path": ".github/workflows/controller-games.yml",
+    "event": "workflow_dispatch",
+    "head_branch": "fix/controller-status-cozy-layout",
+    "head_sha": "29c2abdda135d698f1baa0038c286babf05d29c6",
+    "status": "queued",
+    "conclusion": null,
+    "created_at": "2026-11-16T10:46:52Z",
+    "updated_at": "2026-11-16T10:46:52Z",
+    "run_started_at": "2026-11-16T10:46:52Z",
+    "run_attempt": 1,
+    "check_suite_id": 118711820890
+  },
+  "workflowSha256": "ea8545439ae47205e9a76a3b146acde325e5c4d53387a5f49affa3dd753309b6",
+  "workflowConcurrency": null,
+  "workflowEnvironment": null,
+  "jobGates": {
+    "shared": {
+      "if": null,
+      "needs": null,
+      "runs-on": "ubuntu-24.04",
+      "concurrency": null,
+      "environment": null
+    },
+    "build": {
+      "if": null,
+      "needs": null,
+      "runs-on": "ubuntu-24.04",
+      "concurrency": null,
+      "environment": null
+    },
+    "sign": {
+      "if": null,
+      "needs": [
+        "shared",
+        "build"
+      ],
+      "runs-on": "ubuntu-24.04",
+      "concurrency": null,
+      "environment": null
+    },
+    "export": {
+      "if": "always()",
+      "needs": [
+        "shared",
+        "build",
+        "sign"
+      ],
+      "runs-on": "ubuntu-24.04",
+      "concurrency": null,
+      "environment": null
+    }
+  },
+  "jobs": {
+    "total_count": 0,
+    "jobs": []
+  },
+  "pendingDeployments": [],
+  "suite": {
+    "id": 118711820890,
+    "status": "queued",
+    "conclusion": null,
+    "head_sha": "29c2abdda135d698f1baa0038c286babf05d29c6",
+    "latest_check_runs_count": 0,
+    "rerequestable": true,
+    "runs_rerequestable": false,
+    "created_at": "2026-11-16T10:46:52Z",
+    "updated_at": "2026-11-16T10:46:52Z"
+  },
+  "checks": [],
+  "requests": {
+    "run": {
+      "exitCode": 0,
+      "endpoint": "repos/ecojust/pureTV/actions/runs/43851891831"
+    },
+    "jobs": {
+      "exitCode": 0,
+      "endpoint": "repos/ecojust/pureTV/actions/runs/43851891831/jobs?per_page=100"
+    },
+    "pending-deployments": {
+      "exitCode": 0,
+      "endpoint": "repos/ecojust/pureTV/actions/runs/43851891831/pending_deployments"
+    },
+    "check-suite": {
+      "exitCode": 0,
+      "endpoint": "repos/ecojust/pureTV/check-suites/118711820890"
+    },
+    "check-runs": {
+      "exitCode": 0,
+      "endpoint": "repos/ecojust/pureTV/check-suites/118711820890/check-runs?per_page=100"
+    }
+  },
+  "sourceChanged": false,
+  "workflowsRedispatched": false
+}

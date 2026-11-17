@@ -1,0 +1,946 @@
+{
+  "schema": 1,
+  "game": "arrow-harvest",
+  "version": "0.1.0",
+  "sourceCommit": "d20272608d107ade9a89fec224f1154d7a303ae1",
+  "automationSha256": "0138c0a85afd40e479d6abd54151a52ec921707f0846217b31cbc065a3539281",
+  "gameRules": {
+    "description": "A rotates editable arrows clockwise; B locks the layout and covers every source once. Every 30 ticks all active seeds propose together. Outside/forbidden has priority over overlap; any failure rejects the whole batch. Stops retire seeds and every walkable cell must be covered exactly once. The 90-second deadline precedes inputs and due batches.",
+    "finitePropagation": "At most targetCount-sourceCount+1 attempted batches; this follows from irreversible coverage, not a separate loss condition.",
+    "ordinaryModelRounds": [
+      {
+        "name": "level1-record",
+        "rawFileSha256": "9357b14939d4cab3e1c713e9370aaea3c1f044bd015e73642ce352cb5edd6ade",
+        "level": 1,
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 41.36666666666667,
+        "editCount": 6,
+        "waveIndex": 5,
+        "acceptedWaves": 5,
+        "coveredCount": 12,
+        "targetCount": 12
+      },
+      {
+        "name": "level1-loss",
+        "rawFileSha256": "f1a36f0acbc5be67410512096e999f39f344153af8f23f92e9d59cde6147c332",
+        "level": 1,
+        "phase": "lost",
+        "lostReason": "incomplete",
+        "elapsed": 0.5166666666666667,
+        "editCount": 0,
+        "waveIndex": 1,
+        "acceptedWaves": 1,
+        "coveredCount": 4,
+        "targetCount": 12
+      },
+      {
+        "name": "level2-record",
+        "rawFileSha256": "d26d3b4aa81d2a15d360529a8a405955b8ec94c2808bcdb56af5570da9aaf1f1",
+        "level": 2,
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 44,
+        "editCount": 8,
+        "waveIndex": 6,
+        "acceptedWaves": 6,
+        "coveredCount": 14,
+        "targetCount": 14
+      },
+      {
+        "name": "level2-loss",
+        "rawFileSha256": "8831875069cec661b276c97b609d6075e243c9e38b0574abd21fffe64c688017",
+        "level": 2,
+        "phase": "lost",
+        "lostReason": "overlap",
+        "elapsed": 0.5166666666666667,
+        "editCount": 0,
+        "waveIndex": 1,
+        "acceptedWaves": 0,
+        "coveredCount": 2,
+        "targetCount": 14
+      },
+      {
+        "name": "level3-record",
+        "rawFileSha256": "749f9593f2fa2a0bf452afd5a6e65e3974382a26f138e16908ad8f2f3737c78b",
+        "level": 3,
+        "phase": "won",
+        "lostReason": null,
+        "elapsed": 46.2,
+        "editCount": 12,
+        "waveIndex": 4,
+        "acceptedWaves": 4,
+        "coveredCount": 14,
+        "targetCount": 14
+      },
+      {
+        "name": "level3-loss",
+        "rawFileSha256": "7dc266f6c9d0fe430b165d611fb0bf9dd0df7321e3f163d88a1472ce3660ad3e",
+        "level": 3,
+        "phase": "lost",
+        "lostReason": "forbidden",
+        "elapsed": 0.7666666666666667,
+        "editCount": 1,
+        "waveIndex": 1,
+        "acceptedWaves": 0,
+        "coveredCount": 3,
+        "targetCount": 14
+      }
+    ],
+    "independentRules": {
+      "file": "independent-arrow-review.json",
+      "sha256": "b37ca260ffad08a9abaa5199c23291c4cd838ddb530553093c26d71fef166f09",
+      "scope": "Independent path-time mathematics and read-only verification of QA six ordinary rounds plus one already-executed formal boundary. No Model or pilot import, authored routes, solution search, browser or hardware test.",
+      "checks": 4,
+      "storedStateChecks": 63,
+      "existingOrdinaryRoundsVerified": 6,
+      "ordinaryRoundsExecutedAgain": 0,
+      "handCalculatedFixtureCount": 5,
+      "archivedSources": {
+        "math": {
+          "path": "tests/arrow-path-oracle.mjs",
+          "sha256": "4e2e6eaa361e511e1db7ccd551e3017075e7d2ef2bfaa9990a320ec5199fb4cc"
+        },
+        "review": {
+          "path": "tests/independent-arrow-review.mjs",
+          "sha256": "4dbbe9f08694ff871cdc3d49fe5d21576550e2402091c86e45f04bf6687d852b"
+        }
+      },
+      "existingFormalBoundary": {
+        "scratchRelativePath": "model-tests-first/source-revisit-atomic.json",
+        "sha256": "5bf1f1ba01da518578fa29be3bf4631f4c2e3633159b5678982be461bc430ade",
+        "reason": "overlap",
+        "allProposalsRetained": true,
+        "committedMovementBatches": 0,
+        "stopProposalNotCommitted": true
+      }
+    },
+    "staticPilotReview": {
+      "kind": "static-public-pilot-review",
+      "rawReportSha256": "155c423adeaf20659186484096ee830c51cf7f9f9471f35c00511b19c11d378f",
+      "scope": "Small source-only review of the public contract, atomic batch predictor and ordinary input observer. Not runtime, model integration, browser or synthetic-execution evidence.",
+      "reviewer": "lantern_pilot_review",
+      "reviewedAreas": [
+        "Complete intents and arrival groups before atomic acceptance or rejection",
+        "Forbidden priority; old committed coverage and same-destination conflicts",
+        "Stop retirement and incomplete outcome after a valid commit",
+        "Normal key release and new-tick observation before validating edit or sow receipts",
+        "Observed direction overshoot only triggers navigation replanning"
+      ],
+      "runtimeTestsExecuted": 0,
+      "unresolvedFindings": []
+    },
+    "actualCandidate": {
+      "scope": "Root personally opened all eleven actual candidate PNGs after an ordinary keyboard/wallclock complete win. Nine static board images have consistent before/after snapshots; two live propagation images are separately reviewed against their actual observation windows. No native fixture, Model writes or clock overrides. APK-extracted browser resources, no physical-device claim.",
+      "normalWin": {
+        "level": 1,
+        "difficulty": 0,
+        "score": 1715,
+        "elapsed": 42.06666666666667,
+        "remaining": 47.93333333333333,
+        "mode": "finished",
+        "editCount": 6,
+        "launchCount": 1,
+        "waveIndex": 5,
+        "acceptedWaves": 5,
+        "sourceCount": 2,
+        "stopCount": 2,
+        "targetCount": 12,
+        "editableCount": 5,
+        "coveredCount": 12,
+        "remainingTargetCount": 0,
+        "activeSeedCount": 0,
+        "stoppedSeedCount": 2,
+        "allSeedsStopped": true,
+        "allTargetsCovered": true,
+        "goalReady": true
+      },
+      "naturalPropagation": {
+        "sowObservedAt": 39.630859201,
+        "waveObservedAt": 40.137987415000005,
+        "sowingStartedAt": 39.56666666666667,
+        "elapsed": 2.5,
+        "actualObservedWaveIndices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "attemptedWaves": 5,
+        "acceptedWaves": 5,
+        "fullTerminalSnapshotRetained": true
+      },
+      "staticImagesReviewed": 9,
+      "liveWindowReviews": [
+        {
+          "path": "candidate-runtime-v2/05-sowing-window.png",
+          "sha256": "20038fc87a481876babc2295d7200c6e679236b3952f67d44477d836c455ae69",
+          "observedWaveRange": [
+            0,
+            0
+          ],
+          "observedPhaseRange": [
+            "playing",
+            "playing"
+          ],
+          "modelElapsedRange": [
+            39.68333333333333,
+            39.96666666666667
+          ],
+          "visualWaveIndex": 0,
+          "visualCoveredCount": 2,
+          "visualSeedCells": [
+            "C1",
+            "C16"
+          ],
+          "scope": "Image taken within these actual observations; it is not assigned to either snapshot. Natural batch transitions are retained and require visual review."
+        },
+        {
+          "path": "candidate-runtime-v2/06-propagation-window.png",
+          "sha256": "534d1e5cc562f927ca93423717e3b0d7d2944db89f2a71fb53fdd5853b7efe50",
+          "observedWaveRange": [
+            1,
+            1
+          ],
+          "observedPhaseRange": [
+            "playing",
+            "playing"
+          ],
+          "modelElapsedRange": [
+            40.15,
+            40.43333333333333
+          ],
+          "visualWaveIndex": 1,
+          "visualCoveredCount": 4,
+          "visualSeedCells": [
+            "C5",
+            "C12"
+          ],
+          "scope": "Image taken within these actual observations; it is not assigned to either snapshot. Natural batch transitions are retained and require visual review."
+        }
+      ],
+      "exactScreenshotModelTickAssigned": false,
+      "priorAttempt": {
+        "path": "candidate-runtime/report.json",
+        "sha256": "6cd14a273af48d05d4455ff88da0516edd2f09f1f0876d0c976edccb1cf3605b",
+        "passed": false,
+        "cause": "Strict same-board live screenshot assertion crossed a natural half-second wave. Original evidence and script retained; only screenshot-window harness changed for v2."
+      }
+    }
+  },
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "f2bb5314ecc3b5bed942d342c0c1c6a790ccce468dae4fbc361e1a29c84598c3",
+      "game.js": "b3c99e1a280833bba382503fdebf639563cd83613e1288c6b6d110203e4172e1",
+      "game-config.json": "12f6195a51e3cf70a92d43c7be9b904efb7fb399c542f210b5dbfd1ceb81e350",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "src/main/assets/game.js": "b3c99e1a280833bba382503fdebf639563cd83613e1288c6b6d110203e4172e1",
+      "src/main/assets/game-model.js": "f2bb5314ecc3b5bed942d342c0c1c6a790ccce468dae4fbc361e1a29c84598c3",
+      "tests/automation.mjs": "0138c0a85afd40e479d6abd54151a52ec921707f0846217b31cbc065a3539281",
+      "docs/model-contract.md": "16b9dcc455360d41db7e8614f68646eb185f36d8c04cae34a1c48702467b694c",
+      "tests/game-model.test.cjs": "cb7953899454b3cbf2e7eb191a29ce30bf4dffeb3013bf64fcbe3c87886343a9"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-runtime-v2/01-menu.png",
+        "sha256": "6a4e7afb2b8e73e6fafa0460a0b8b61911bb93a1859c24e31c6bc72e0e5f80f8",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/02-initial-editing.png",
+        "sha256": "03e85d5eda734f554a1f542ee6aa3511cc2cb561f06216f66f7800e1f78ed831",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/03-actual-arrow-edit.png",
+        "sha256": "dd190a371b997ff52b8159f9a35c13fd2fb8dada7ebeec6af7afbf03e195777b",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/04-before-sowing.png",
+        "sha256": "21d25e77623b067c5efa1ae12f04d70dd8927947fd424c3ed5ceff9b760eefcd",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/07-won.png",
+        "sha256": "707f9162a09c90cda1a3cec633cde3f9bac235e6aa5dad555d4b47fd34953aa5",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/08-small-won.png",
+        "sha256": "6356fcb36473f7dfe9959b0238f866ec36a9203fd5c2fc1fc6338434079259f8",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/09-small-menu.png",
+        "sha256": "12ca96fbf81f98b129c27e5d21f9797bd8a227ee4ec8885610517f731c98f337",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/10-small-playing.png",
+        "sha256": "bcec94c98adce515855f0724861063149c3e4021b19eb348675d4d8f1a7157b0",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-runtime-v2/11-small-pause.png",
+        "sha256": "1e091d0955dae6093f4c1b25ada18f8ebabedf50f44f13ea776260696256a6d3",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "3bf835dd4cc6c1a9cf526fcb696f0b05b044a9c2c1de9fe7e4e10c428800b7f1",
+    "unresolvedFindings": []
+  },
+  "modelTests": {
+    "passed": 14,
+    "sourceHashesBefore": {
+      "model": "f2bb5314ecc3b5bed942d342c0c1c6a790ccce468dae4fbc361e1a29c84598c3",
+      "contract": "16b9dcc455360d41db7e8614f68646eb185f36d8c04cae34a1c48702467b694c",
+      "test": "cb7953899454b3cbf2e7eb191a29ce30bf4dffeb3013bf64fcbe3c87886343a9"
+    },
+    "sourceHashesAfter": {
+      "model": "f2bb5314ecc3b5bed942d342c0c1c6a790ccce468dae4fbc361e1a29c84598c3",
+      "contract": "16b9dcc455360d41db7e8614f68646eb185f36d8c04cae34a1c48702467b694c",
+      "test": "cb7953899454b3cbf2e7eb191a29ce30bf4dffeb3013bf64fcbe3c87886343a9"
+    },
+    "testLogSha256": "987abf573f5418c93a957ebc023cfc5a3bdafb4d2f6d6edd2c513a5085bd1c45",
+    "rawReportSha256": "356d24526e339fc337ef2e628ea0aa7d98fc5110534824b7b0bdd1ba93fbe20f",
+    "scope": "Formal rule/boundary tests only; production model imported after root static-review GO. No browser or independent public-pilot full-round claim. Seed order and last-tick clocks are explicitly labelled fixtures."
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "loads title and read-only snapshot",
+        "passed": true
+      },
+      {
+        "name": "title is rendered",
+        "passed": true
+      },
+      {
+        "name": "Enter starts the normal game",
+        "passed": true
+      },
+      {
+        "name": "P freezes gameplay state and tick, P resumes",
+        "passed": true
+      },
+      {
+        "name": "ordinary movement and action input",
+        "passed": true
+      },
+      {
+        "name": "game-specific normal-play assertions",
+        "passed": true
+      },
+      {
+        "name": "gameplay frame is visible",
+        "passed": true
+      },
+      {
+        "name": "R restarts with clean simulation state",
+        "passed": true
+      },
+      {
+        "name": "resizing keeps canvas and complete sidebar text visible",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ]
+  },
+  "supplementaryChecks": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "three public boards start unseeded with visibly fixed and editable arrows",
+        "passed": true
+      },
+      {
+        "name": "held START starts once; phone selection reaches a locked stop and A cannot edit it",
+        "passed": true
+      },
+      {
+        "name": "held phone A and native Enter each produce one actual clockwise edit",
+        "passed": true
+      },
+      {
+        "name": "connected cancellation suppresses a stale edit until actual neutral and repress",
+        "passed": true
+      },
+      {
+        "name": "disconnect freezes the complete puzzle and clears held navigation before intentional resume",
+        "passed": true
+      },
+      {
+        "name": "one phone sow freezes arrows and focus; propagation pauses and then ends naturally",
+        "passed": true
+      },
+      {
+        "name": "ordinary simultaneous arrivals reject the whole wave without partial coverage",
+        "passed": true
+      },
+      {
+        "name": "R restores original arrows, waiting seeds and zero coverage rather than the edited run",
+        "passed": true
+      },
+      {
+        "name": "separate QR room-info layout fixture fits complete text at both TV sizes",
+        "passed": true
+      }
+    ]
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "buildSourceSha": "d20272608d107ade9a89fec224f1154d7a303ae1",
+    "startHashes": {
+      "tests/automation.mjs": "0138c0a85afd40e479d6abd54151a52ec921707f0846217b31cbc065a3539281",
+      "tests/game-model.test.cjs": "cb7953899454b3cbf2e7eb191a29ce30bf4dffeb3013bf64fcbe3c87886343a9",
+      "src/main/assets/game-model.js": "f2bb5314ecc3b5bed942d342c0c1c6a790ccce468dae4fbc361e1a29c84598c3",
+      "src/main/assets/game.js": "b3c99e1a280833bba382503fdebf639563cd83613e1288c6b6d110203e4172e1"
+    },
+    "endHashes": {
+      "tests/automation.mjs": "0138c0a85afd40e479d6abd54151a52ec921707f0846217b31cbc065a3539281",
+      "tests/game-model.test.cjs": "cb7953899454b3cbf2e7eb191a29ce30bf4dffeb3013bf64fcbe3c87886343a9",
+      "src/main/assets/game-model.js": "f2bb5314ecc3b5bed942d342c0c1c6a790ccce468dae4fbc361e1a29c84598c3",
+      "src/main/assets/game.js": "b3c99e1a280833bba382503fdebf639563cd83613e1288c6b6d110203e4172e1"
+    },
+    "rawReportSha256": "fac339b05106f8d7f5779ba59a1870d658337a3dd675cf9b471a44782765cda5"
+  },
+  "sourceArtReview": {
+    "file": "art-review.json",
+    "sha256": "1101b257dc951cede85519f37817811a1c613160a283c1f9b68cff599b35681e"
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "viewports": [
+      {
+        "name": "final-1280-won",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 238.296875,
+          "width": 420,
+          "height": 308.390625,
+          "right": 726.984375,
+          "bottom": 546.6875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "锁标不可转。虚线是失败意图，种子仍在原格。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-won",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 159.09375,
+          "width": 420,
+          "height": 275.796875,
+          "right": 586.5,
+          "bottom": 434.890625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "锁标不可转。虚线是失败意图，种子仍在原格。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-menu",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 139.796875,
+          "width": 420,
+          "height": 314.390625,
+          "right": 586.5,
+          "bottom": 454.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "锁标不可转。虚线是失败意图，种子仍在原格。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-menu",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 215.40625,
+          "width": 420,
+          "height": 354.171875,
+          "right": 726.984375,
+          "bottom": 569.578125
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "锁标不可转。虚线是失败意图，种子仍在原格。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-1280-pause",
+        "scene": {
+          "x": 105.4375,
+          "y": 161,
+          "width": 823.109375,
+          "height": 463,
+          "right": 928.546875,
+          "bottom": 624
+        },
+        "dialog": {
+          "x": 306.984375,
+          "y": 260.796875,
+          "width": 420,
+          "height": 263.390625,
+          "right": 726.984375,
+          "bottom": 524.1875
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 576,
+          "clientHeight": 576,
+          "scrollTop": 0,
+          "asideTop": 94,
+          "asideBottom": 672,
+          "asideLeft": 1024,
+          "asideRight": 1252,
+          "tipText": "锁标不可转。虚线是失败意图，种子仍在原格。",
+          "tipTextTop": 379,
+          "tipTextBottom": 409.390625,
+          "tipTextLeft": 1042,
+          "tipTextRight": 1232.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      },
+      {
+        "name": "final-960-pause",
+        "scene": {
+          "x": 58.28125,
+          "y": 118,
+          "width": 636.4375,
+          "height": 358,
+          "right": 694.71875,
+          "bottom": 476
+        },
+        "dialog": {
+          "x": 166.5,
+          "y": 182.59375,
+          "width": 420,
+          "height": 228.796875,
+          "right": 586.5,
+          "bottom": 411.390625
+        },
+        "visible": true,
+        "filter": "blur(14px)",
+        "dialogFits": true,
+        "placeholderFits": true,
+        "sidebar": {
+          "scrollHeight": 442,
+          "clientHeight": 442,
+          "scrollTop": 0,
+          "asideTop": 65,
+          "asideBottom": 509,
+          "asideLeft": 749,
+          "asideRight": 944,
+          "tipText": "锁标不可转。虚线是失败意图，种子仍在原格。",
+          "tipTextTop": 332,
+          "tipTextBottom": 362.390625,
+          "tipTextLeft": 765,
+          "tipTextRight": 922.5,
+          "tipTextFullyVisible": true,
+          "asideContentFits": true
+        },
+        "footerText": "0.1.0",
+        "bundledVersion": "0.1.0",
+        "footerVersionMatches": true
+      }
+    ],
+    "rawReportSha256": "b7e8155a94462d0e9f25641133721532cadbbbb3ea2447dc3ff99f307f230d46"
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "samples": 168,
+    "rafIntervalMs": {
+      "count": 168,
+      "min": 16.599999999998545,
+      "median": 33.399999999999636,
+      "p95": 83.29999999999927,
+      "max": 116.69999999999982,
+      "mean": 40.27559523809524
+    },
+    "webglDrawCalls": {
+      "count": 168,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 168,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {}
+  },
+  "actualGameplay": {
+    "normalWin": {
+      "observedAt": 50.041306889,
+      "level": 1,
+      "difficulty": 0,
+      "score": 1715,
+      "elapsed": 42.166666666666664,
+      "remaining": 47.833333333333336,
+      "mode": "finished",
+      "editCount": 6,
+      "launchCount": 1,
+      "waveIndex": 5,
+      "acceptedWaves": 5,
+      "sourceCount": 2,
+      "stopCount": 2,
+      "targetCount": 12,
+      "editableCount": 5,
+      "coveredCount": 12,
+      "remainingTargetCount": 0,
+      "activeSeedCount": 0,
+      "stoppedSeedCount": 2,
+      "allSeedsStopped": true,
+      "allTargetsCovered": true,
+      "goalReady": true
+    },
+    "normalSowing": {
+      "lastEditedBoardObservedAt": 46.019342319,
+      "actualBDownDispatchedAt": 47.229240122,
+      "actualBReleasedAt": 47.334482943000005,
+      "firstLaunchedObservationAt": 48.019397801,
+      "firstLaunchedObservedWaveIndex": 1,
+      "actualEditPressCount": 6,
+      "allEditReceiptsObserved": true,
+      "observedEditReceipts": [
+        {
+          "observedAt": 14.019443142000002,
+          "receipt": {
+            "id": 1,
+            "cellId": "C1",
+            "before": "E",
+            "after": "S",
+            "at": 6.3,
+            "tick": 378
+          }
+        },
+        {
+          "observedAt": 20.019332857,
+          "receipt": {
+            "id": 2,
+            "cellId": "C5",
+            "before": "N",
+            "after": "E",
+            "at": 11.8,
+            "tick": 708
+          }
+        },
+        {
+          "observedAt": 26.02305886,
+          "receipt": {
+            "id": 3,
+            "cellId": "C5",
+            "before": "E",
+            "after": "S",
+            "at": 17.05,
+            "tick": 1023
+          }
+        },
+        {
+          "observedAt": 32.00191705899999,
+          "receipt": {
+            "id": 4,
+            "cellId": "C8",
+            "before": "W",
+            "after": "N",
+            "at": 22.983333333333334,
+            "tick": 1379
+          }
+        },
+        {
+          "observedAt": 40.019341859,
+          "receipt": {
+            "id": 5,
+            "cellId": "C14",
+            "before": "N",
+            "after": "E",
+            "at": 30.75,
+            "tick": 1845
+          }
+        },
+        {
+          "observedAt": 46.019342319,
+          "receipt": {
+            "id": 6,
+            "cellId": "C16",
+            "before": "W",
+            "after": "N",
+            "at": 36.516666666666666,
+            "tick": 2191
+          }
+        }
+      ],
+      "frozenRunArrows": [
+        "S",
+        null,
+        "W",
+        "W",
+        "S",
+        null,
+        null,
+        "N",
+        "S",
+        null,
+        null,
+        "N",
+        "E",
+        "E",
+        null,
+        "N"
+      ],
+      "observedWaveIndices": [
+        1,
+        5
+      ],
+      "allWaveIndicesObserved": false,
+      "sourceCoverageSampleObserved": false,
+      "attemptedWaves": 5,
+      "acceptedWaves": 5,
+      "sowingStartedAt": 39.666666666666664,
+      "sowingStartedTick": 2380,
+      "propagationElapsedSeconds": 2.5,
+      "scope": "Actual inputs and sampled permanent receipts only. Missing 0.5-second wave samples are not fabricated; the independent release oracle checks frozen arrows and recorded states."
+    },
+    "normalFailure": {
+      "reason": "overlap",
+      "level": 2,
+      "difficulty": 1,
+      "score": 80,
+      "elapsed": 0.7,
+      "remaining": 89.3,
+      "mode": "finished",
+      "editCount": 0,
+      "launchCount": 1,
+      "waveIndex": 1,
+      "acceptedWaves": 0,
+      "sourceCount": 2,
+      "stopCount": 2,
+      "targetCount": 14,
+      "editableCount": 6,
+      "coveredCount": 2,
+      "remainingTargetCount": 12,
+      "activeSeedCount": 2,
+      "stoppedSeedCount": 0,
+      "allSeedsStopped": false,
+      "allTargetsCovered": false,
+      "goalReady": false
+    },
+    "recordedStateDerivation": {
+      "publicLevelBoardsChecked": true,
+      "committedSeedPositionsAndCoverageChecked": true,
+      "simultaneousIntentsAndAtomicFailureChecked": true,
+      "actualSparseSamplingPreserved": true
+    }
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "f2bb5314ecc3b5bed942d342c0c1c6a790ccce468dae4fbc361e1a29c84598c3",
+    "game.js": "b3c99e1a280833bba382503fdebf639563cd83613e1288c6b6d110203e4172e1",
+    "game-config.json": "12f6195a51e3cf70a92d43c7be9b904efb7fb399c542f210b5dbfd1ceb81e350",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "build": "1bb076098668ed13551937ca1fca495b4cb9f472b8d2ebe140f8d51535079def",
+    "formal": "356d24526e339fc337ef2e628ea0aa7d98fc5110534824b7b0bdd1ba93fbe20f",
+    "ordinary": "d54885c6f86e2777a6874ed2a5d9a81125bc49cde5a019720728efe2ebeb03ca",
+    "pilotStatic": "155c423adeaf20659186484096ee830c51cf7f9f9471f35c00511b19c11d378f",
+    "independent": "b37ca260ffad08a9abaa5199c23291c4cd838ddb530553093c26d71fef166f09",
+    "art": "c8b72f04427dc6cfb7f76d41213fccf5a124a68b473698744500933f35264c1e",
+    "candidateRaw": "6e63d9b1c9b61982cde49ceccf7a4a24a511d21ce47be90f9bf44435f2f98c43",
+    "candidateQaVisual": "22bb9effe1d599891d9a3e3d64a6ba25f46320c69d5e35b973fd80012f5c6f10",
+    "candidate": "3bf835dd4cc6c1a9cf526fcb696f0b05b044a9c2c1de9fe7e4e10c428800b7f1",
+    "candidateFirstAttempt": "6cd14a273af48d05d4455ff88da0516edd2f09f1f0876d0c976edccb1cf3605b",
+    "qa": "90a7189781b46f0b6117ba6a1cbba3575888ba7244404f638f55bae16a391724",
+    "supplementary": "f4606a3fee8608217ed3005a8e2e680af5e6c18411289d6871300af6b989d823",
+    "record": "f63117f9cc94d3e8c2e497d8c892d0363b9b743a2d10e86221467dd12c2628ee",
+    "decode": "93b0cb4af6ed2cd17d940fa6b583e14072a47c699762ab911064e0d37fba2115",
+    "viewport": "38a0fee40f7833f11b6343cb3ac8233de5c3662a7805785aec0c70329974f0be",
+    "sign": "60289253f8510c48b2b471d1f005ae579f315620d592b39fe0238d41f070e00d",
+    "fetch": "4fe64cd422c619b6309630689679d6c48687af6347eaa48fe6acd35ac96ad54a",
+    "videoValidation": "71a0e6b1b0db9f6a24cc86d80fc826981e96ee5ce5466a9cd2adf605e3bc1464",
+    "artifacts": "0d268467f25e303940785d75641cbb66bfc420b81b2d7cfadf64935e9889d43e",
+    "rootEncoded": "f6c8b61723f65cf1de7c83c7bab1b95b987daba40a9073908678fea725b1ff87",
+    "layout": "b7e8155a94462d0e9f25641133721532cadbbbb3ea2447dc3ff99f307f230d46",
+    "summary": "0e0ed39199fddce08a03eb52290b7bc0c31a672babd8649face2571a55fed180",
+    "review": "f98e945f9933d5220df4ab693006a326226fe86b47f9363de8ed147baa4b0f66",
+    "provenance": "fac339b05106f8d7f5779ba59a1870d658337a3dd675cf9b471a44782765cda5"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium with ordinary input. Synthetic fixtures are labelled separately; export FPS is not device FPS."
+  },
+  "release": {
+    "sourceSha": "d20272608d107ade9a89fec224f1154d7a303ae1",
+    "requestCommit": "47d85c6e3ccee556a42ac796e7a6efff568f6d2d",
+    "signerCommit": "d20272608d107ade9a89fec224f1154d7a303ae1",
+    "signingRun": 41366536608,
+    "bytes": 296227,
+    "sha256": "79871283dddef913cda84908aca744853be82aa95c2aec7355eb875660d81257",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "apkSize": true,
+      "apkManifest": true,
+      "apkSignature": true,
+      "apkZipIntegrity": true,
+      "apkAssetsMatch": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "e551ac414d0517fbfa864bac2ee22aef0139f847"
+  }
+}

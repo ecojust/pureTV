@@ -1,0 +1,3028 @@
+{
+  "scope": "Independent BFS and public arithmetic; complete normal model-input replays, not browser/hardware execution.",
+  "modelSha256": "fd29649d19115e408aa043f38f9969b2dd87a240ca2f468e88ba2dea0543d627",
+  "tests": [
+    {
+      "name": "three public layouts match contract",
+      "passed": true
+    },
+    {
+      "name": "level 1: independent minimum route and successful final state",
+      "passed": true
+    },
+    {
+      "name": "level 1: winning on exact final allowance has priority",
+      "passed": true
+    },
+    {
+      "name": "level 1: natural finite-budget loss",
+      "passed": true
+    },
+    {
+      "name": "level 1: maximal-pour arithmetic across independently reachable states",
+      "passed": true
+    },
+    {
+      "name": "level 2: independent minimum route and successful final state",
+      "passed": true
+    },
+    {
+      "name": "level 2: winning on exact final allowance has priority",
+      "passed": true
+    },
+    {
+      "name": "level 2: natural finite-budget loss",
+      "passed": true
+    },
+    {
+      "name": "level 2: maximal-pour arithmetic across independently reachable states",
+      "passed": true
+    },
+    {
+      "name": "level 3: independent minimum route and successful final state",
+      "passed": true
+    },
+    {
+      "name": "level 3: winning on exact final allowance has priority",
+      "passed": true
+    },
+    {
+      "name": "level 3: natural finite-budget loss",
+      "passed": true
+    },
+    {
+      "name": "level 3: maximal-pour arithmetic across independently reachable states",
+      "passed": true
+    },
+    {
+      "name": "free cancel preserves water and allowance; holding A never repeats",
+      "passed": true
+    },
+    {
+      "name": "cancel epoch requires later neutral and fresh edge",
+      "passed": true
+    }
+  ],
+  "runs": [
+    {
+      "level": 0,
+      "kind": "minimum-win",
+      "route": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        }
+      ],
+      "pours": 7,
+      "final": {
+        "schema": 1,
+        "seed": 750,
+        "level": 0,
+        "phase": "won",
+        "reason": "",
+        "score": 100,
+        "selected": 0,
+        "source": null,
+        "volumes": [
+          4,
+          4,
+          0
+        ],
+        "capacities": [
+          8,
+          5,
+          3
+        ],
+        "target": [
+          4,
+          4,
+          0
+        ],
+        "pourLimit": 9,
+        "poursUsed": 7,
+        "elapsed": 0.7833333333333341,
+        "elapsedCapped": false,
+        "calls": 47,
+        "blockedActions": 0,
+        "inputArmed": true,
+        "cancelEpoch": null,
+        "cancelledLast": false,
+        "lastHeld": {
+          "a": true,
+          "b": false,
+          "direction": "none"
+        },
+        "lastCommand": "a",
+        "events": [
+          {
+            "type": "win",
+            "call": 47,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "poursUsed": 7
+          }
+        ],
+        "pourReceipts": [
+          {
+            "index": 0,
+            "call": 7,
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              8,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              5,
+              0
+            ],
+            "poursUsed": 1,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 1,
+            "call": 13,
+            "from": 1,
+            "to": 2,
+            "amount": 3,
+            "before": [
+              3,
+              5,
+              0
+            ],
+            "after": [
+              3,
+              2,
+              3
+            ],
+            "poursUsed": 2,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 2,
+            "call": 19,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "before": [
+              3,
+              2,
+              3
+            ],
+            "after": [
+              6,
+              2,
+              0
+            ],
+            "poursUsed": 3,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 3,
+            "call": 27,
+            "from": 1,
+            "to": 2,
+            "amount": 2,
+            "before": [
+              6,
+              2,
+              0
+            ],
+            "after": [
+              6,
+              0,
+              2
+            ],
+            "poursUsed": 4,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 4,
+            "call": 35,
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              6,
+              0,
+              2
+            ],
+            "after": [
+              1,
+              5,
+              2
+            ],
+            "poursUsed": 5,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 5,
+            "call": 41,
+            "from": 1,
+            "to": 2,
+            "amount": 1,
+            "before": [
+              1,
+              5,
+              2
+            ],
+            "after": [
+              1,
+              4,
+              3
+            ],
+            "poursUsed": 6,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 6,
+            "call": 47,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "before": [
+              1,
+              4,
+              3
+            ],
+            "after": [
+              4,
+              4,
+              0
+            ],
+            "poursUsed": 7,
+            "matched": true,
+            "outcome": "won"
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 47,
+          "elapsed": 0.7833333333333341,
+          "level": 0,
+          "selected": 0,
+          "source": null,
+          "volumes": [
+            4,
+            4,
+            0
+          ],
+          "poursUsed": 7,
+          "pourLimit": 9,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        },
+        "message": "三杯水量均与目标一致，转运完成。"
+      }
+    },
+    {
+      "level": 0,
+      "kind": "last-pour-win",
+      "route": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        }
+      ],
+      "pours": 9,
+      "final": {
+        "schema": 1,
+        "seed": 750,
+        "level": 0,
+        "phase": "won",
+        "reason": "",
+        "score": 100,
+        "selected": 0,
+        "source": null,
+        "volumes": [
+          4,
+          4,
+          0
+        ],
+        "capacities": [
+          8,
+          5,
+          3
+        ],
+        "target": [
+          4,
+          4,
+          0
+        ],
+        "pourLimit": 9,
+        "poursUsed": 9,
+        "elapsed": 1.016666666666668,
+        "elapsedCapped": false,
+        "calls": 61,
+        "blockedActions": 0,
+        "inputArmed": true,
+        "cancelEpoch": null,
+        "cancelledLast": false,
+        "lastHeld": {
+          "a": true,
+          "b": false,
+          "direction": "none"
+        },
+        "lastCommand": "a",
+        "events": [
+          {
+            "type": "win",
+            "call": 61,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "poursUsed": 9
+          }
+        ],
+        "pourReceipts": [
+          {
+            "index": 0,
+            "call": 7,
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              8,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              5,
+              0
+            ],
+            "poursUsed": 1,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 1,
+            "call": 15,
+            "from": 1,
+            "to": 0,
+            "amount": 5,
+            "before": [
+              3,
+              5,
+              0
+            ],
+            "after": [
+              8,
+              0,
+              0
+            ],
+            "poursUsed": 2,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 2,
+            "call": 21,
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              8,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              5,
+              0
+            ],
+            "poursUsed": 3,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 3,
+            "call": 27,
+            "from": 1,
+            "to": 2,
+            "amount": 3,
+            "before": [
+              3,
+              5,
+              0
+            ],
+            "after": [
+              3,
+              2,
+              3
+            ],
+            "poursUsed": 4,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 4,
+            "call": 33,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "before": [
+              3,
+              2,
+              3
+            ],
+            "after": [
+              6,
+              2,
+              0
+            ],
+            "poursUsed": 5,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 5,
+            "call": 41,
+            "from": 1,
+            "to": 2,
+            "amount": 2,
+            "before": [
+              6,
+              2,
+              0
+            ],
+            "after": [
+              6,
+              0,
+              2
+            ],
+            "poursUsed": 6,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 6,
+            "call": 49,
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              6,
+              0,
+              2
+            ],
+            "after": [
+              1,
+              5,
+              2
+            ],
+            "poursUsed": 7,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 7,
+            "call": 55,
+            "from": 1,
+            "to": 2,
+            "amount": 1,
+            "before": [
+              1,
+              5,
+              2
+            ],
+            "after": [
+              1,
+              4,
+              3
+            ],
+            "poursUsed": 8,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 8,
+            "call": 61,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "before": [
+              1,
+              4,
+              3
+            ],
+            "after": [
+              4,
+              4,
+              0
+            ],
+            "poursUsed": 9,
+            "matched": true,
+            "outcome": "won"
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 61,
+          "elapsed": 1.016666666666668,
+          "level": 0,
+          "selected": 0,
+          "source": null,
+          "volumes": [
+            4,
+            4,
+            0
+          ],
+          "poursUsed": 9,
+          "pourLimit": 9,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        },
+        "message": "三杯水量均与目标一致，转运完成。"
+      }
+    },
+    {
+      "level": 0,
+      "kind": "exhaustion",
+      "route": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        }
+      ],
+      "pours": 9,
+      "final": {
+        "schema": 1,
+        "seed": 750,
+        "level": 0,
+        "phase": "lost",
+        "reason": "pours",
+        "score": 0,
+        "selected": 1,
+        "source": null,
+        "volumes": [
+          3,
+          5,
+          0
+        ],
+        "capacities": [
+          8,
+          5,
+          3
+        ],
+        "target": [
+          4,
+          4,
+          0
+        ],
+        "pourLimit": 9,
+        "poursUsed": 9,
+        "elapsed": 1.0500000000000012,
+        "elapsedCapped": false,
+        "calls": 63,
+        "blockedActions": 0,
+        "inputArmed": true,
+        "cancelEpoch": null,
+        "cancelledLast": false,
+        "lastHeld": {
+          "a": true,
+          "b": false,
+          "direction": "none"
+        },
+        "lastCommand": "a",
+        "events": [
+          {
+            "type": "collision",
+            "call": 63,
+            "reason": "pours",
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "poursUsed": 9
+          }
+        ],
+        "pourReceipts": [
+          {
+            "index": 0,
+            "call": 7,
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              8,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              5,
+              0
+            ],
+            "poursUsed": 1,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 1,
+            "call": 15,
+            "from": 1,
+            "to": 0,
+            "amount": 5,
+            "before": [
+              3,
+              5,
+              0
+            ],
+            "after": [
+              8,
+              0,
+              0
+            ],
+            "poursUsed": 2,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 2,
+            "call": 21,
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              8,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              5,
+              0
+            ],
+            "poursUsed": 3,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 3,
+            "call": 29,
+            "from": 1,
+            "to": 0,
+            "amount": 5,
+            "before": [
+              3,
+              5,
+              0
+            ],
+            "after": [
+              8,
+              0,
+              0
+            ],
+            "poursUsed": 4,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 4,
+            "call": 35,
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              8,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              5,
+              0
+            ],
+            "poursUsed": 5,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 5,
+            "call": 43,
+            "from": 1,
+            "to": 0,
+            "amount": 5,
+            "before": [
+              3,
+              5,
+              0
+            ],
+            "after": [
+              8,
+              0,
+              0
+            ],
+            "poursUsed": 6,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 6,
+            "call": 49,
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              8,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              5,
+              0
+            ],
+            "poursUsed": 7,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 7,
+            "call": 57,
+            "from": 1,
+            "to": 0,
+            "amount": 5,
+            "before": [
+              3,
+              5,
+              0
+            ],
+            "after": [
+              8,
+              0,
+              0
+            ],
+            "poursUsed": 8,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 8,
+            "call": 63,
+            "from": 0,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              8,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              5,
+              0
+            ],
+            "poursUsed": 9,
+            "matched": false,
+            "outcome": "lost"
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "pours",
+          "call": 63,
+          "elapsed": 1.0500000000000012,
+          "level": 0,
+          "selected": 1,
+          "source": null,
+          "volumes": [
+            3,
+            5,
+            0
+          ],
+          "poursUsed": 9,
+          "pourLimit": 9,
+          "score": 0,
+          "phase": "lost",
+          "reason": "pours"
+        },
+        "message": "倒水次数已用尽，三杯水量尚未全部达标。"
+      }
+    },
+    {
+      "level": 0,
+      "kind": "reachable-state-edges",
+      "states": 16,
+      "transitions": 135,
+      "minimumPours": 7
+    },
+    {
+      "level": 1,
+      "kind": "minimum-win",
+      "route": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        }
+      ],
+      "pours": 9,
+      "final": {
+        "schema": 1,
+        "seed": 750,
+        "level": 1,
+        "phase": "won",
+        "reason": "",
+        "score": 100,
+        "selected": 0,
+        "source": null,
+        "volumes": [
+          5,
+          5,
+          0
+        ],
+        "capacities": [
+          10,
+          7,
+          3
+        ],
+        "target": [
+          5,
+          5,
+          0
+        ],
+        "pourLimit": 11,
+        "poursUsed": 9,
+        "elapsed": 1.016666666666668,
+        "elapsedCapped": false,
+        "calls": 61,
+        "blockedActions": 0,
+        "inputArmed": true,
+        "cancelEpoch": null,
+        "cancelledLast": false,
+        "lastHeld": {
+          "a": true,
+          "b": false,
+          "direction": "none"
+        },
+        "lastCommand": "a",
+        "events": [
+          {
+            "type": "win",
+            "call": 61,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "poursUsed": 9
+          }
+        ],
+        "pourReceipts": [
+          {
+            "index": 0,
+            "call": 7,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              10,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              7,
+              0
+            ],
+            "poursUsed": 1,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 1,
+            "call": 13,
+            "from": 1,
+            "to": 2,
+            "amount": 3,
+            "before": [
+              3,
+              7,
+              0
+            ],
+            "after": [
+              3,
+              4,
+              3
+            ],
+            "poursUsed": 2,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 2,
+            "call": 19,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "before": [
+              3,
+              4,
+              3
+            ],
+            "after": [
+              6,
+              4,
+              0
+            ],
+            "poursUsed": 3,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 3,
+            "call": 27,
+            "from": 1,
+            "to": 2,
+            "amount": 3,
+            "before": [
+              6,
+              4,
+              0
+            ],
+            "after": [
+              6,
+              1,
+              3
+            ],
+            "poursUsed": 4,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 4,
+            "call": 33,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "before": [
+              6,
+              1,
+              3
+            ],
+            "after": [
+              9,
+              1,
+              0
+            ],
+            "poursUsed": 5,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 5,
+            "call": 41,
+            "from": 1,
+            "to": 2,
+            "amount": 1,
+            "before": [
+              9,
+              1,
+              0
+            ],
+            "after": [
+              9,
+              0,
+              1
+            ],
+            "poursUsed": 6,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 6,
+            "call": 49,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              9,
+              0,
+              1
+            ],
+            "after": [
+              2,
+              7,
+              1
+            ],
+            "poursUsed": 7,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 7,
+            "call": 55,
+            "from": 1,
+            "to": 2,
+            "amount": 2,
+            "before": [
+              2,
+              7,
+              1
+            ],
+            "after": [
+              2,
+              5,
+              3
+            ],
+            "poursUsed": 8,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 8,
+            "call": 61,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "before": [
+              2,
+              5,
+              3
+            ],
+            "after": [
+              5,
+              5,
+              0
+            ],
+            "poursUsed": 9,
+            "matched": true,
+            "outcome": "won"
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 61,
+          "elapsed": 1.016666666666668,
+          "level": 1,
+          "selected": 0,
+          "source": null,
+          "volumes": [
+            5,
+            5,
+            0
+          ],
+          "poursUsed": 9,
+          "pourLimit": 11,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        },
+        "message": "三杯水量均与目标一致，转运完成。"
+      }
+    },
+    {
+      "level": 1,
+      "kind": "last-pour-win",
+      "route": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        }
+      ],
+      "pours": 11,
+      "final": {
+        "schema": 1,
+        "seed": 750,
+        "level": 1,
+        "phase": "won",
+        "reason": "",
+        "score": 100,
+        "selected": 0,
+        "source": null,
+        "volumes": [
+          5,
+          5,
+          0
+        ],
+        "capacities": [
+          10,
+          7,
+          3
+        ],
+        "target": [
+          5,
+          5,
+          0
+        ],
+        "pourLimit": 11,
+        "poursUsed": 11,
+        "elapsed": 1.2500000000000004,
+        "elapsedCapped": false,
+        "calls": 75,
+        "blockedActions": 0,
+        "inputArmed": true,
+        "cancelEpoch": null,
+        "cancelledLast": false,
+        "lastHeld": {
+          "a": true,
+          "b": false,
+          "direction": "none"
+        },
+        "lastCommand": "a",
+        "events": [
+          {
+            "type": "win",
+            "call": 75,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "poursUsed": 11
+          }
+        ],
+        "pourReceipts": [
+          {
+            "index": 0,
+            "call": 7,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              10,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              7,
+              0
+            ],
+            "poursUsed": 1,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 1,
+            "call": 15,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              3,
+              7,
+              0
+            ],
+            "after": [
+              10,
+              0,
+              0
+            ],
+            "poursUsed": 2,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 2,
+            "call": 21,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              10,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              7,
+              0
+            ],
+            "poursUsed": 3,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 3,
+            "call": 27,
+            "from": 1,
+            "to": 2,
+            "amount": 3,
+            "before": [
+              3,
+              7,
+              0
+            ],
+            "after": [
+              3,
+              4,
+              3
+            ],
+            "poursUsed": 4,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 4,
+            "call": 33,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "before": [
+              3,
+              4,
+              3
+            ],
+            "after": [
+              6,
+              4,
+              0
+            ],
+            "poursUsed": 5,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 5,
+            "call": 41,
+            "from": 1,
+            "to": 2,
+            "amount": 3,
+            "before": [
+              6,
+              4,
+              0
+            ],
+            "after": [
+              6,
+              1,
+              3
+            ],
+            "poursUsed": 6,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 6,
+            "call": 47,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "before": [
+              6,
+              1,
+              3
+            ],
+            "after": [
+              9,
+              1,
+              0
+            ],
+            "poursUsed": 7,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 7,
+            "call": 55,
+            "from": 1,
+            "to": 2,
+            "amount": 1,
+            "before": [
+              9,
+              1,
+              0
+            ],
+            "after": [
+              9,
+              0,
+              1
+            ],
+            "poursUsed": 8,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 8,
+            "call": 63,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              9,
+              0,
+              1
+            ],
+            "after": [
+              2,
+              7,
+              1
+            ],
+            "poursUsed": 9,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 9,
+            "call": 69,
+            "from": 1,
+            "to": 2,
+            "amount": 2,
+            "before": [
+              2,
+              7,
+              1
+            ],
+            "after": [
+              2,
+              5,
+              3
+            ],
+            "poursUsed": 10,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 10,
+            "call": 75,
+            "from": 2,
+            "to": 0,
+            "amount": 3,
+            "before": [
+              2,
+              5,
+              3
+            ],
+            "after": [
+              5,
+              5,
+              0
+            ],
+            "poursUsed": 11,
+            "matched": true,
+            "outcome": "won"
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 75,
+          "elapsed": 1.2500000000000004,
+          "level": 1,
+          "selected": 0,
+          "source": null,
+          "volumes": [
+            5,
+            5,
+            0
+          ],
+          "poursUsed": 11,
+          "pourLimit": 11,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        },
+        "message": "三杯水量均与目标一致，转运完成。"
+      }
+    },
+    {
+      "level": 1,
+      "kind": "exhaustion",
+      "route": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        }
+      ],
+      "pours": 11,
+      "final": {
+        "schema": 1,
+        "seed": 750,
+        "level": 1,
+        "phase": "lost",
+        "reason": "pours",
+        "score": 0,
+        "selected": 1,
+        "source": null,
+        "volumes": [
+          3,
+          7,
+          0
+        ],
+        "capacities": [
+          10,
+          7,
+          3
+        ],
+        "target": [
+          5,
+          5,
+          0
+        ],
+        "pourLimit": 11,
+        "poursUsed": 11,
+        "elapsed": 1.2833333333333337,
+        "elapsedCapped": false,
+        "calls": 77,
+        "blockedActions": 0,
+        "inputArmed": true,
+        "cancelEpoch": null,
+        "cancelledLast": false,
+        "lastHeld": {
+          "a": true,
+          "b": false,
+          "direction": "none"
+        },
+        "lastCommand": "a",
+        "events": [
+          {
+            "type": "collision",
+            "call": 77,
+            "reason": "pours",
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "poursUsed": 11
+          }
+        ],
+        "pourReceipts": [
+          {
+            "index": 0,
+            "call": 7,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              10,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              7,
+              0
+            ],
+            "poursUsed": 1,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 1,
+            "call": 15,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              3,
+              7,
+              0
+            ],
+            "after": [
+              10,
+              0,
+              0
+            ],
+            "poursUsed": 2,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 2,
+            "call": 21,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              10,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              7,
+              0
+            ],
+            "poursUsed": 3,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 3,
+            "call": 29,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              3,
+              7,
+              0
+            ],
+            "after": [
+              10,
+              0,
+              0
+            ],
+            "poursUsed": 4,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 4,
+            "call": 35,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              10,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              7,
+              0
+            ],
+            "poursUsed": 5,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 5,
+            "call": 43,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              3,
+              7,
+              0
+            ],
+            "after": [
+              10,
+              0,
+              0
+            ],
+            "poursUsed": 6,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 6,
+            "call": 49,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              10,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              7,
+              0
+            ],
+            "poursUsed": 7,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 7,
+            "call": 57,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              3,
+              7,
+              0
+            ],
+            "after": [
+              10,
+              0,
+              0
+            ],
+            "poursUsed": 8,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 8,
+            "call": 63,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              10,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              7,
+              0
+            ],
+            "poursUsed": 9,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 9,
+            "call": 71,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              3,
+              7,
+              0
+            ],
+            "after": [
+              10,
+              0,
+              0
+            ],
+            "poursUsed": 10,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 10,
+            "call": 77,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              10,
+              0,
+              0
+            ],
+            "after": [
+              3,
+              7,
+              0
+            ],
+            "poursUsed": 11,
+            "matched": false,
+            "outcome": "lost"
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "pours",
+          "call": 77,
+          "elapsed": 1.2833333333333337,
+          "level": 1,
+          "selected": 1,
+          "source": null,
+          "volumes": [
+            3,
+            7,
+            0
+          ],
+          "poursUsed": 11,
+          "pourLimit": 11,
+          "score": 0,
+          "phase": "lost",
+          "reason": "pours"
+        },
+        "message": "倒水次数已用尽，三杯水量尚未全部达标。"
+      }
+    },
+    {
+      "level": 1,
+      "kind": "reachable-state-edges",
+      "states": 20,
+      "transitions": 171,
+      "minimumPours": 9
+    },
+    {
+      "level": 2,
+      "kind": "minimum-win",
+      "route": [
+        {
+          "from": 0,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 0,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 0,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 0,
+          "to": 2
+        }
+      ],
+      "pours": 11,
+      "final": {
+        "schema": 1,
+        "seed": 750,
+        "level": 2,
+        "phase": "won",
+        "reason": "",
+        "score": 100,
+        "selected": 2,
+        "source": null,
+        "volumes": [
+          6,
+          1,
+          5
+        ],
+        "capacities": [
+          12,
+          7,
+          5
+        ],
+        "target": [
+          6,
+          1,
+          5
+        ],
+        "pourLimit": 13,
+        "poursUsed": 11,
+        "elapsed": 1.816666666666665,
+        "elapsedCapped": false,
+        "calls": 109,
+        "blockedActions": 0,
+        "inputArmed": true,
+        "cancelEpoch": null,
+        "cancelledLast": false,
+        "lastHeld": {
+          "a": true,
+          "b": false,
+          "direction": "none"
+        },
+        "lastCommand": "a",
+        "events": [
+          {
+            "type": "win",
+            "call": 109,
+            "from": 0,
+            "to": 2,
+            "amount": 5,
+            "poursUsed": 11
+          }
+        ],
+        "pourReceipts": [
+          {
+            "index": 0,
+            "call": 9,
+            "from": 0,
+            "to": 2,
+            "amount": 5,
+            "before": [
+              12,
+              0,
+              0
+            ],
+            "after": [
+              7,
+              0,
+              5
+            ],
+            "poursUsed": 1,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 1,
+            "call": 17,
+            "from": 2,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              7,
+              0,
+              5
+            ],
+            "after": [
+              7,
+              5,
+              0
+            ],
+            "poursUsed": 2,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 2,
+            "call": 29,
+            "from": 0,
+            "to": 2,
+            "amount": 5,
+            "before": [
+              7,
+              5,
+              0
+            ],
+            "after": [
+              2,
+              5,
+              5
+            ],
+            "poursUsed": 3,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 3,
+            "call": 37,
+            "from": 2,
+            "to": 1,
+            "amount": 2,
+            "before": [
+              2,
+              5,
+              5
+            ],
+            "after": [
+              2,
+              7,
+              3
+            ],
+            "poursUsed": 4,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 4,
+            "call": 45,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              2,
+              7,
+              3
+            ],
+            "after": [
+              9,
+              0,
+              3
+            ],
+            "poursUsed": 5,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 5,
+            "call": 57,
+            "from": 2,
+            "to": 1,
+            "amount": 3,
+            "before": [
+              9,
+              0,
+              3
+            ],
+            "after": [
+              9,
+              3,
+              0
+            ],
+            "poursUsed": 6,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 6,
+            "call": 69,
+            "from": 0,
+            "to": 2,
+            "amount": 5,
+            "before": [
+              9,
+              3,
+              0
+            ],
+            "after": [
+              4,
+              3,
+              5
+            ],
+            "poursUsed": 7,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 7,
+            "call": 77,
+            "from": 2,
+            "to": 1,
+            "amount": 4,
+            "before": [
+              4,
+              3,
+              5
+            ],
+            "after": [
+              4,
+              7,
+              1
+            ],
+            "poursUsed": 8,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 8,
+            "call": 85,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              4,
+              7,
+              1
+            ],
+            "after": [
+              11,
+              0,
+              1
+            ],
+            "poursUsed": 9,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 9,
+            "call": 97,
+            "from": 2,
+            "to": 1,
+            "amount": 1,
+            "before": [
+              11,
+              0,
+              1
+            ],
+            "after": [
+              11,
+              1,
+              0
+            ],
+            "poursUsed": 10,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 10,
+            "call": 109,
+            "from": 0,
+            "to": 2,
+            "amount": 5,
+            "before": [
+              11,
+              1,
+              0
+            ],
+            "after": [
+              6,
+              1,
+              5
+            ],
+            "poursUsed": 11,
+            "matched": true,
+            "outcome": "won"
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 109,
+          "elapsed": 1.816666666666665,
+          "level": 2,
+          "selected": 2,
+          "source": null,
+          "volumes": [
+            6,
+            1,
+            5
+          ],
+          "poursUsed": 11,
+          "pourLimit": 13,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        },
+        "message": "三杯水量均与目标一致，转运完成。"
+      }
+    },
+    {
+      "level": 2,
+      "kind": "last-pour-win",
+      "route": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 0,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 0,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 0,
+          "to": 2
+        }
+      ],
+      "pours": 13,
+      "final": {
+        "schema": 1,
+        "seed": 750,
+        "level": 2,
+        "phase": "won",
+        "reason": "",
+        "score": 100,
+        "selected": 2,
+        "source": null,
+        "volumes": [
+          6,
+          1,
+          5
+        ],
+        "capacities": [
+          12,
+          7,
+          5
+        ],
+        "target": [
+          6,
+          1,
+          5
+        ],
+        "pourLimit": 13,
+        "poursUsed": 13,
+        "elapsed": 2.0499999999999976,
+        "elapsedCapped": false,
+        "calls": 123,
+        "blockedActions": 0,
+        "inputArmed": true,
+        "cancelEpoch": null,
+        "cancelledLast": false,
+        "lastHeld": {
+          "a": true,
+          "b": false,
+          "direction": "none"
+        },
+        "lastCommand": "a",
+        "events": [
+          {
+            "type": "win",
+            "call": 123,
+            "from": 0,
+            "to": 2,
+            "amount": 5,
+            "poursUsed": 13
+          }
+        ],
+        "pourReceipts": [
+          {
+            "index": 0,
+            "call": 7,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              12,
+              0,
+              0
+            ],
+            "after": [
+              5,
+              7,
+              0
+            ],
+            "poursUsed": 1,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 1,
+            "call": 15,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              5,
+              7,
+              0
+            ],
+            "after": [
+              12,
+              0,
+              0
+            ],
+            "poursUsed": 2,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 2,
+            "call": 23,
+            "from": 0,
+            "to": 2,
+            "amount": 5,
+            "before": [
+              12,
+              0,
+              0
+            ],
+            "after": [
+              7,
+              0,
+              5
+            ],
+            "poursUsed": 3,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 3,
+            "call": 31,
+            "from": 2,
+            "to": 1,
+            "amount": 5,
+            "before": [
+              7,
+              0,
+              5
+            ],
+            "after": [
+              7,
+              5,
+              0
+            ],
+            "poursUsed": 4,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 4,
+            "call": 43,
+            "from": 0,
+            "to": 2,
+            "amount": 5,
+            "before": [
+              7,
+              5,
+              0
+            ],
+            "after": [
+              2,
+              5,
+              5
+            ],
+            "poursUsed": 5,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 5,
+            "call": 51,
+            "from": 2,
+            "to": 1,
+            "amount": 2,
+            "before": [
+              2,
+              5,
+              5
+            ],
+            "after": [
+              2,
+              7,
+              3
+            ],
+            "poursUsed": 6,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 6,
+            "call": 59,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              2,
+              7,
+              3
+            ],
+            "after": [
+              9,
+              0,
+              3
+            ],
+            "poursUsed": 7,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 7,
+            "call": 71,
+            "from": 2,
+            "to": 1,
+            "amount": 3,
+            "before": [
+              9,
+              0,
+              3
+            ],
+            "after": [
+              9,
+              3,
+              0
+            ],
+            "poursUsed": 8,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 8,
+            "call": 83,
+            "from": 0,
+            "to": 2,
+            "amount": 5,
+            "before": [
+              9,
+              3,
+              0
+            ],
+            "after": [
+              4,
+              3,
+              5
+            ],
+            "poursUsed": 9,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 9,
+            "call": 91,
+            "from": 2,
+            "to": 1,
+            "amount": 4,
+            "before": [
+              4,
+              3,
+              5
+            ],
+            "after": [
+              4,
+              7,
+              1
+            ],
+            "poursUsed": 10,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 10,
+            "call": 99,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              4,
+              7,
+              1
+            ],
+            "after": [
+              11,
+              0,
+              1
+            ],
+            "poursUsed": 11,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 11,
+            "call": 111,
+            "from": 2,
+            "to": 1,
+            "amount": 1,
+            "before": [
+              11,
+              0,
+              1
+            ],
+            "after": [
+              11,
+              1,
+              0
+            ],
+            "poursUsed": 12,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 12,
+            "call": 123,
+            "from": 0,
+            "to": 2,
+            "amount": 5,
+            "before": [
+              11,
+              1,
+              0
+            ],
+            "after": [
+              6,
+              1,
+              5
+            ],
+            "poursUsed": 13,
+            "matched": true,
+            "outcome": "won"
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "success",
+          "call": 123,
+          "elapsed": 2.0499999999999976,
+          "level": 2,
+          "selected": 2,
+          "source": null,
+          "volumes": [
+            6,
+            1,
+            5
+          ],
+          "poursUsed": 13,
+          "pourLimit": 13,
+          "score": 100,
+          "phase": "won",
+          "reason": ""
+        },
+        "message": "三杯水量均与目标一致，转运完成。"
+      }
+    },
+    {
+      "level": 2,
+      "kind": "exhaustion",
+      "route": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 0,
+          "to": 1
+        }
+      ],
+      "pours": 13,
+      "final": {
+        "schema": 1,
+        "seed": 750,
+        "level": 2,
+        "phase": "lost",
+        "reason": "pours",
+        "score": 0,
+        "selected": 1,
+        "source": null,
+        "volumes": [
+          5,
+          7,
+          0
+        ],
+        "capacities": [
+          12,
+          7,
+          5
+        ],
+        "target": [
+          6,
+          1,
+          5
+        ],
+        "pourLimit": 13,
+        "poursUsed": 13,
+        "elapsed": 1.5166666666666662,
+        "elapsedCapped": false,
+        "calls": 91,
+        "blockedActions": 0,
+        "inputArmed": true,
+        "cancelEpoch": null,
+        "cancelledLast": false,
+        "lastHeld": {
+          "a": true,
+          "b": false,
+          "direction": "none"
+        },
+        "lastCommand": "a",
+        "events": [
+          {
+            "type": "collision",
+            "call": 91,
+            "reason": "pours",
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "poursUsed": 13
+          }
+        ],
+        "pourReceipts": [
+          {
+            "index": 0,
+            "call": 7,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              12,
+              0,
+              0
+            ],
+            "after": [
+              5,
+              7,
+              0
+            ],
+            "poursUsed": 1,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 1,
+            "call": 15,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              5,
+              7,
+              0
+            ],
+            "after": [
+              12,
+              0,
+              0
+            ],
+            "poursUsed": 2,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 2,
+            "call": 21,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              12,
+              0,
+              0
+            ],
+            "after": [
+              5,
+              7,
+              0
+            ],
+            "poursUsed": 3,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 3,
+            "call": 29,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              5,
+              7,
+              0
+            ],
+            "after": [
+              12,
+              0,
+              0
+            ],
+            "poursUsed": 4,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 4,
+            "call": 35,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              12,
+              0,
+              0
+            ],
+            "after": [
+              5,
+              7,
+              0
+            ],
+            "poursUsed": 5,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 5,
+            "call": 43,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              5,
+              7,
+              0
+            ],
+            "after": [
+              12,
+              0,
+              0
+            ],
+            "poursUsed": 6,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 6,
+            "call": 49,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              12,
+              0,
+              0
+            ],
+            "after": [
+              5,
+              7,
+              0
+            ],
+            "poursUsed": 7,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 7,
+            "call": 57,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              5,
+              7,
+              0
+            ],
+            "after": [
+              12,
+              0,
+              0
+            ],
+            "poursUsed": 8,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 8,
+            "call": 63,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              12,
+              0,
+              0
+            ],
+            "after": [
+              5,
+              7,
+              0
+            ],
+            "poursUsed": 9,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 9,
+            "call": 71,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              5,
+              7,
+              0
+            ],
+            "after": [
+              12,
+              0,
+              0
+            ],
+            "poursUsed": 10,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 10,
+            "call": 77,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              12,
+              0,
+              0
+            ],
+            "after": [
+              5,
+              7,
+              0
+            ],
+            "poursUsed": 11,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 11,
+            "call": 85,
+            "from": 1,
+            "to": 0,
+            "amount": 7,
+            "before": [
+              5,
+              7,
+              0
+            ],
+            "after": [
+              12,
+              0,
+              0
+            ],
+            "poursUsed": 12,
+            "matched": false,
+            "outcome": "playing"
+          },
+          {
+            "index": 12,
+            "call": 91,
+            "from": 0,
+            "to": 1,
+            "amount": 7,
+            "before": [
+              12,
+              0,
+              0
+            ],
+            "after": [
+              5,
+              7,
+              0
+            ],
+            "poursUsed": 13,
+            "matched": false,
+            "outcome": "lost"
+          }
+        ],
+        "terminalReceipt": {
+          "cause": "pours",
+          "call": 91,
+          "elapsed": 1.5166666666666662,
+          "level": 2,
+          "selected": 1,
+          "source": null,
+          "volumes": [
+            5,
+            7,
+            0
+          ],
+          "poursUsed": 13,
+          "pourLimit": 13,
+          "score": 0,
+          "phase": "lost",
+          "reason": "pours"
+        },
+        "message": "倒水次数已用尽，三杯水量尚未全部达标。"
+      }
+    },
+    {
+      "level": 2,
+      "kind": "reachable-state-edges",
+      "states": 24,
+      "transitions": 207,
+      "minimumPours": 11
+    }
+  ],
+  "ordinaryPoursChecked": 2616,
+  "passed": true
+}

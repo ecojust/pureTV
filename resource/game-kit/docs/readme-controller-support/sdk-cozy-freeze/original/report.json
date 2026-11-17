@@ -1,0 +1,4273 @@
+{
+  "slug": "cozy-island",
+  "mode": "android",
+  "startedAt": "2026-11-15T16:36:55.755Z",
+  "status": "failed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "c754c4c79f888419051c05a728ec356d802016f38de0c3680a3aaaa8874740e2",
+    "tools/readme-controller-qa/cases.mjs": "99e7a01d4e7554ee684561a5006c75564741ff310e8730544f68b535a1133342",
+    "tools/readme-controller-qa/sdk-peer.py": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "passed"
+    },
+    {
+      "name": "START pause freezes game, fresh START resumes",
+      "status": "passed"
+    },
+    {
+      "name": "disconnect clears held input, reconnect sync requires fresh START",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: sync does not award gameplay\n+ actual - expected\n... Skipped lines\n\n  {\n    model: {\n      clock: 544.400000000001,\n      elapsed: 4.4,\n      phase: 'paused',\n...\n          active: true,\n+         cancelSeq: 4,\n+         connected: true,\n-         cancelSeq: 3,\n-         connected: false,\n          facing: {\n            x: -0.7071067811865475,\n            y: 0.7071067811865475\n          },\n          id: 1,\n...\n          active: false,\n+         cancelSeq: 3,\n-         cancelSeq: 2,\n          connected: false,\n          facing: {\n            x: 0,\n            y: 1\n          },\n...\n        active: true,\n+       cancelSeq: 4,\n+       connected: true,\n-       cancelSeq: 3,\n-       connected: false,\n        facing: {\n          x: -0.7071067811865475,\n          y: 0.7071067811865475\n        },\n        id: 1,\n...\n        active: false,\n+       cancelSeq: 3,\n-       cancelSeq: 2,\n        connected: false,\n        facing: {\n          x: 0,\n          y: 1\n        },\n\n    at file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:117:810\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:116:2"
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0,
+            "aimY": 0,
+            "aimX": 0
+          },
+          {
+            "id": 2,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0,
+            "aimY": 0,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "players": [
+            {
+              "id": 1,
+              "x": 11.899999999999999,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "elapsed": 0,
+          "clock": 540,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 11.899999999999999,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 11.899999999999999,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 0.5,
+          "clock": 540.5000000000001,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 11.899999999999999,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "right-position",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 11.899999999999999,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 0.7,
+          "clock": 540.7000000000002,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 11.899999999999999,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.409999999999998,
+              "y": 11.790000000000001,
+              "facing": {
+                "x": 0.7071067811865475,
+                "y": -0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 1.4000000000000001,
+          "clock": 541.4000000000003,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.409999999999998,
+            "y": 11.790000000000001,
+            "facing": {
+              "x": 0.7071067811865475,
+              "y": -0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "left-position",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdVSURBVHic7d3LjuNGFAVBy5j//2V57V6YFtjFW6WM2A70bE2iFgfk6/1+v/8CCPp7+g0ATBFAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgaw/T7/g6/V6+iUf9X6///Pfrz7/1eOv3P1+V7//1Y+/svr7vfv8d1//dKu/v5+cAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHp8B3jl6R3Qp6Z3dnef/8rqndvqx3/7Tu7Kt///+W1OgECWAAJZAghkCSCQJYBAlgACWQIIZG23A7yyekc0vaNavXObfvz09Q6nd5zTv69v///zKSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsB1k3vrOr3vV29Q5z++9Y4AQJZAghkCSCQJYBAlgACWQIIZAkgkGUHuJm7O7HVj5++b/Du1yO04zuLEyCQJYBAlgACWQIIZAkgkCWAQJYAAlnH7QC/fWc1vfO7Mn09wOkd3+n3BZ5+/d04AQJZAghkCSCQJYBAlgACWQIIZAkgkLXdDnD3+8LedfpObPfrFe6+U5zeOfJvToBAlgACWQIIZAkgkCWAQJYAAlkCCGQ9vgOc3rl9u+md2uod2vTrX5m+bzKfcQIEsgQQyBJAIEsAgSwBBLIEEMgSQCDr9X54WLT6vrTTz7/79dxO/3y7v/708+++E9zt/TsBAlkCCGQJIJAlgECWAAJZAghkCSCQ9fgOcNr0Tuuu6R3cld3f35XV739653f68/82J0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJyO8C7pndO0zvG6R3bXbvf9/iu3Xd8u/0+nACBLAEEsgQQyBJAIEsAgSwBBLIEEMiyA/xhegdX35mtfv27pv++09//lem/z6ecAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuB3j6jur0HeH0z2X6739l+u83fb2+6ff/KSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSy/ky/gU+t3iGdvoNavQM7/fu5Mn3f2umd5V2nvX8nQCBLAIEsAQSyBBDIEkAgSwCBLAEEso7bAa62+np9V6Z3dlemd37Tn2/143f/fN/GCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazcDnD6enSrr1d45fQd2PRO88rd15/+fU3ft9p9gQEeIoBAlgACWQIIZAkgkCWAQJYAAlmv98PDm+kd2+7XW9ttJ/XT7t/fXdO/zyurv/8r09eD/G1OgECWAAJZAghkCSCQJYBAlgACWQIIZH3d9QCnd3TTO6jdd2J3nf75pneU0/8/duMECGQJIJAlgECWAAJZAghkCSCQJYBA1uM7wNN3RqfvqKZ3eqffd3b3nef073P19QJ/mxMgkCWAQJYAAlkCCGQJIJAlgECWAAJZX3c9wCurd1zTO6fpnd1dq1//7ueffn9Xpneep3ECBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/Ed4O47tCvfviOcfv0r0zu3068neGX6eoJPcwIEsgQQyBJAIEsAgSwBBLIEEMgSQCBru+sBTu/svn1ntXrHNr0T233HN216hzv9+/jJCRDIEkAgSwCBLAEEsgQQyBJAIEsAgaztdoB3d0jT92W9a3rH9u3Pf/oObvr3edduO1InQCBLAIEsAQSyBBDIEkAgSwCBLAEEsrbbAV7Z/Xp/V6Z3bNOf/8rqHef0559+f7vvHJ/mBAhkCSCQJYBAlgACWQIIZAkgkCWAQNbr/fBw5/Sd0enXk7syfV/mu89/Zfp6hbvb/fv9bU6AQJYAAlkCCGQJIJAlgECWAAJZAghkPX49wN12QJ+afv/T1xNcrbZD+2n3nefpO8efnACBLAEEsgQQyBJAIEsAgSwBBLIEEMh6fAf4bTuin+7el3f191O/3t3pO8Hd3//063/KCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazHd4BXdt8RffsO7q7pneOV1b+v3e+LvNppn88JEMgSQCBLAIEsAQSyBBDIEkAgSwCBrO12gFemd2x3rb6v7/QOa/XfZ/q+yNOfb7Xp7/dpToBAlgACWQIIZAkgkCWAQJYAAlkCCGQdtwPknt12WJ9avdNbvWM7bSf323b7/E6AQJYAAlkCCGQJIJAlgECWAAJZAghk2QE+bPq+sdPXm/v29ze94zv9eplPcwIEsgQQyBJAIEsAgSwBBLIEEMgSQCDruB3g6Tuk6fvK7n7f3Onnv/v46e9/+r7Wp3ECBLIEEMgSQCBLAIEsAQSyBBDIEkAga7sd4LftjPi31Tu36d/P9PUEXQ/wM06AQJYAAlkCCGQJIJAlgECWAAJZAghkvd7fNuwB+J+cAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDI+gcK6fOOx7EI9wAAAABJRU5ErkJggg==",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.409999999999998,
+              "y": 11.790000000000001,
+              "facing": {
+                "x": 0.7071067811865475,
+                "y": -0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 1.4000000000000001,
+          "clock": 541.4000000000003,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.409999999999998,
+            "y": 11.790000000000001,
+            "facing": {
+              "x": 0.7071067811865475,
+              "y": -0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 2.0000000000000004,
+          "clock": 542.0000000000005,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "select-tool",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdVSURBVHic7d3LjuNGFAVBy5j//2V57V6YFtjFW6WM2A70bE2iFgfk6/1+v/8CCPp7+g0ATBFAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgaw/T7/g6/V6+iUf9X6///Pfrz7/1eOv3P1+V7//1Y+/svr7vfv8d1//dKu/v5+cAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHp8B3jl6R3Qp6Z3dnef/8rqndvqx3/7Tu7Kt///+W1OgECWAAJZAghkCSCQJYBAlgACWQIIZG23A7yyekc0vaNavXObfvz09Q6nd5zTv69v///zKSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsB1k3vrOr3vV29Q5z++9Y4AQJZAghkCSCQJYBAlgACWQIIZAkgkGUHuJm7O7HVj5++b/Du1yO04zuLEyCQJYBAlgACWQIIZAkgkCWAQJYAAlnH7QC/fWc1vfO7Mn09wOkd3+n3BZ5+/d04AQJZAghkCSCQJYBAlgACWQIIZAkgkLXdDnD3+8LedfpObPfrFe6+U5zeOfJvToBAlgACWQIIZAkgkCWAQJYAAlkCCGQ9vgOc3rl9u+md2uod2vTrX5m+bzKfcQIEsgQQyBJAIEsAgSwBBLIEEMgSQCDr9X54WLT6vrTTz7/79dxO/3y7v/708+++E9zt/TsBAlkCCGQJIJAlgECWAAJZAghkCSCQ9fgOcNr0Tuuu6R3cld3f35XV739653f68/82J0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJyO8C7pndO0zvG6R3bXbvf9/iu3Xd8u/0+nACBLAEEsgQQyBJAIEsAgSwBBLIEEMiyA/xhegdX35mtfv27pv++09//lem/z6ecAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuB3j6jur0HeH0z2X6739l+u83fb2+6ff/KSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSy/ky/gU+t3iGdvoNavQM7/fu5Mn3f2umd5V2nvX8nQCBLAIEsAQSyBBDIEkAgSwCBLAEEso7bAa62+np9V6Z3dlemd37Tn2/143f/fN/GCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazcDnD6enSrr1d45fQd2PRO88rd15/+fU3ft9p9gQEeIoBAlgACWQIIZAkgkCWAQJYAAlmv98PDm+kd2+7XW9ttJ/XT7t/fXdO/zyurv/8r09eD/G1OgECWAAJZAghkCSCQJYBAlgACWQIIZH3d9QCnd3TTO6jdd2J3nf75pneU0/8/duMECGQJIJAlgECWAAJZAghkCSCQJYBA1uM7wNN3RqfvqKZ3eqffd3b3nef073P19QJ/mxMgkCWAQJYAAlkCCGQJIJAlgECWAAJZX3c9wCurd1zTO6fpnd1dq1//7ueffn9Xpneep3ECBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/Ed4O47tCvfviOcfv0r0zu3068neGX6eoJPcwIEsgQQyBJAIEsAgSwBBLIEEMgSQCBru+sBTu/svn1ntXrHNr0T233HN216hzv9+/jJCRDIEkAgSwCBLAEEsgQQyBJAIEsAgaztdoB3d0jT92W9a3rH9u3Pf/oObvr3edduO1InQCBLAIEsAQSyBBDIEkAgSwCBLAEEsrbbAV7Z/Xp/V6Z3bNOf/8rqHef0559+f7vvHJ/mBAhkCSCQJYBAlgACWQIIZAkgkCWAQNbr/fBw5/Sd0enXk7syfV/mu89/Zfp6hbvb/fv9bU6AQJYAAlkCCGQJIJAlgECWAAJZAghkPX49wN12QJ+afv/T1xNcrbZD+2n3nefpO8efnACBLAEEsgQQyBJAIEsAgSwBBLIEEMh6fAf4bTuin+7el3f191O/3t3pO8Hd3//063/KCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazHd4BXdt8RffsO7q7pneOV1b+v3e+LvNppn88JEMgSQCBLAIEsAQSyBBDIEkAgSwCBrO12gFemd2x3rb6v7/QOa/XfZ/q+yNOfb7Xp7/dpToBAlgACWQIIZAkgkCWAQJYAAlkCCGQdtwPknt12WJ9avdNbvWM7bSf323b7/E6AQJYAAlkCCGQJIJAlgECWAAJZAghk2QE+bPq+sdPXm/v29ze94zv9eplPcwIEsgQQyBJAIEsAgSwBBLIEEMgSQCDruB3g6Tuk6fvK7n7f3Onnv/v46e9/+r7Wp3ECBLIEEMgSQCBLAIEsAQSyBBDIEkAga7sd4LftjPi31Tu36d/P9PUEXQ/wM06AQJYAAlkCCGQJIJAlgECWAAJZAghkvd7fNuwB+J+cAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDI+gcK6fOOx7EI9wAAAABJRU5ErkJggg==",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 2.0000000000000004,
+          "clock": 542.0000000000005,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdVSURBVHic7d3LjuNGFAVBy5j//2V57V6YFtjFW6WM2A70bE2iFgfk6/1+v/8CCPp7+g0ATBFAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgaw/T7/g6/V6+iUf9X6///Pfrz7/1eOv3P1+V7//1Y+/svr7vfv8d1//dKu/v5+cAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHp8B3jl6R3Qp6Z3dnef/8rqndvqx3/7Tu7Kt///+W1OgECWAAJZAghkCSCQJYBAlgACWQIIZG23A7yyekc0vaNavXObfvz09Q6nd5zTv69v///zKSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsB1k3vrOr3vV29Q5z++9Y4AQJZAghkCSCQJYBAlgACWQIIZAkgkGUHuJm7O7HVj5++b/Du1yO04zuLEyCQJYBAlgACWQIIZAkgkCWAQJYAAlnH7QC/fWc1vfO7Mn09wOkd3+n3BZ5+/d04AQJZAghkCSCQJYBAlgACWQIIZAkgkLXdDnD3+8LedfpObPfrFe6+U5zeOfJvToBAlgACWQIIZAkgkCWAQJYAAlkCCGQ9vgOc3rl9u+md2uod2vTrX5m+bzKfcQIEsgQQyBJAIEsAgSwBBLIEEMgSQCDr9X54WLT6vrTTz7/79dxO/3y7v/708+++E9zt/TsBAlkCCGQJIJAlgECWAAJZAghkCSCQ9fgOcNr0Tuuu6R3cld3f35XV739653f68/82J0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJyO8C7pndO0zvG6R3bXbvf9/iu3Xd8u/0+nACBLAEEsgQQyBJAIEsAgSwBBLIEEMiyA/xhegdX35mtfv27pv++09//lem/z6ecAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuB3j6jur0HeH0z2X6739l+u83fb2+6ff/KSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSy/ky/gU+t3iGdvoNavQM7/fu5Mn3f2umd5V2nvX8nQCBLAIEsAQSyBBDIEkAgSwCBLAEEso7bAa62+np9V6Z3dlemd37Tn2/143f/fN/GCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazcDnD6enSrr1d45fQd2PRO88rd15/+fU3ft9p9gQEeIoBAlgACWQIIZAkgkCWAQJYAAlmv98PDm+kd2+7XW9ttJ/XT7t/fXdO/zyurv/8r09eD/G1OgECWAAJZAghkCSCQJYBAlgACWQIIZH3d9QCnd3TTO6jdd2J3nf75pneU0/8/duMECGQJIJAlgECWAAJZAghkCSCQJYBA1uM7wNN3RqfvqKZ3eqffd3b3nef073P19QJ/mxMgkCWAQJYAAlkCCGQJIJAlgECWAAJZX3c9wCurd1zTO6fpnd1dq1//7ueffn9Xpneep3ECBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/Ed4O47tCvfviOcfv0r0zu3068neGX6eoJPcwIEsgQQyBJAIEsAgSwBBLIEEMgSQCBru+sBTu/svn1ntXrHNr0T233HN216hzv9+/jJCRDIEkAgSwCBLAEEsgQQyBJAIEsAgaztdoB3d0jT92W9a3rH9u3Pf/oObvr3edduO1InQCBLAIEsAQSyBBDIEkAgSwCBLAEEsrbbAV7Z/Xp/V6Z3bNOf/8rqHef0559+f7vvHJ/mBAhkCSCQJYBAlgACWQIIZAkgkCWAQNbr/fBw5/Sd0enXk7syfV/mu89/Zfp6hbvb/fv9bU6AQJYAAlkCCGQJIJAlgECWAAJZAghkPX49wN12QJ+afv/T1xNcrbZD+2n3nefpO8efnACBLAEEsgQQyBJAIEsAgSwBBLIEEMh6fAf4bTuin+7el3f191O/3t3pO8Hd3//063/KCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazHd4BXdt8RffsO7q7pneOV1b+v3e+LvNppn88JEMgSQCBLAIEsAQSyBBDIEkAgSwCBrO12gFemd2x3rb6v7/QOa/XfZ/q+yNOfb7Xp7/dpToBAlgACWQIIZAkgkCWAQJYAAlkCCGQdtwPknt12WJ9avdNbvWM7bSf323b7/E6AQJYAAlkCCGQJIJAlgECWAAJZAghk2QE+bPq+sdPXm/v29ze94zv9eplPcwIEsgQQyBJAIEsAgSwBBLIEEMgSQCDruB3g6Tuk6fvK7n7f3Onnv/v46e9/+r7Wp3ECBLIEEMgSQCBLAIEsAQSyBBDIEkAga7sd4LftjPi31Tu36d/P9PUEXQ/wM06AQJYAAlkCCGQJIJAlgECWAAJZAghkvd7fNuwB+J+cAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDI+gcK6fOOx7EI9wAAAABJRU5ErkJggg==",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "rod",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 2.700000000000001,
+          "clock": 542.7000000000006,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "rod",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "bag-button",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 2.0000000000000004,
+          "clock": 542.0000000000005,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdVSURBVHic7d3LjuNGFAVBy5j//2V57V6YFtjFW6WM2A70bE2iFgfk6/1+v/8CCPp7+g0ATBFAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgaw/T7/g6/V6+iUf9X6///Pfrz7/1eOv3P1+V7//1Y+/svr7vfv8d1//dKu/v5+cAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHp8B3jl6R3Qp6Z3dnef/8rqndvqx3/7Tu7Kt///+W1OgECWAAJZAghkCSCQJYBAlgACWQIIZG23A7yyekc0vaNavXObfvz09Q6nd5zTv69v///zKSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsB1k3vrOr3vV29Q5z++9Y4AQJZAghkCSCQJYBAlgACWQIIZAkgkGUHuJm7O7HVj5++b/Du1yO04zuLEyCQJYBAlgACWQIIZAkgkCWAQJYAAlnH7QC/fWc1vfO7Mn09wOkd3+n3BZ5+/d04AQJZAghkCSCQJYBAlgACWQIIZAkgkLXdDnD3+8LedfpObPfrFe6+U5zeOfJvToBAlgACWQIIZAkgkCWAQJYAAlkCCGQ9vgOc3rl9u+md2uod2vTrX5m+bzKfcQIEsgQQyBJAIEsAgSwBBLIEEMgSQCDr9X54WLT6vrTTz7/79dxO/3y7v/708+++E9zt/TsBAlkCCGQJIJAlgECWAAJZAghkCSCQ9fgOcNr0Tuuu6R3cld3f35XV739653f68/82J0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJyO8C7pndO0zvG6R3bXbvf9/iu3Xd8u/0+nACBLAEEsgQQyBJAIEsAgSwBBLIEEMiyA/xhegdX35mtfv27pv++09//lem/z6ecAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuB3j6jur0HeH0z2X6739l+u83fb2+6ff/KSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSy/ky/gU+t3iGdvoNavQM7/fu5Mn3f2umd5V2nvX8nQCBLAIEsAQSyBBDIEkAgSwCBLAEEso7bAa62+np9V6Z3dlemd37Tn2/143f/fN/GCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazcDnD6enSrr1d45fQd2PRO88rd15/+fU3ft9p9gQEeIoBAlgACWQIIZAkgkCWAQJYAAlmv98PDm+kd2+7XW9ttJ/XT7t/fXdO/zyurv/8r09eD/G1OgECWAAJZAghkCSCQJYBAlgACWQIIZH3d9QCnd3TTO6jdd2J3nf75pneU0/8/duMECGQJIJAlgECWAAJZAghkCSCQJYBA1uM7wNN3RqfvqKZ3eqffd3b3nef073P19QJ/mxMgkCWAQJYAAlkCCGQJIJAlgECWAAJZX3c9wCurd1zTO6fpnd1dq1//7ueffn9Xpneep3ECBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/Ed4O47tCvfviOcfv0r0zu3068neGX6eoJPcwIEsgQQyBJAIEsAgSwBBLIEEMgSQCBru+sBTu/svn1ntXrHNr0T233HN216hzv9+/jJCRDIEkAgSwCBLAEEsgQQyBJAIEsAgaztdoB3d0jT92W9a3rH9u3Pf/oObvr3edduO1InQCBLAIEsAQSyBBDIEkAgSwCBLAEEsrbbAV7Z/Xp/V6Z3bNOf/8rqHef0559+f7vvHJ/mBAhkCSCQJYBAlgACWQIIZAkgkCWAQNbr/fBw5/Sd0enXk7syfV/mu89/Zfp6hbvb/fv9bU6AQJYAAlkCCGQJIJAlgECWAAJZAghkPX49wN12QJ+afv/T1xNcrbZD+2n3nefpO8efnACBLAEEsgQQyBJAIEsAgSwBBLIEEMh6fAf4bTuin+7el3f191O/3t3pO8Hd3//063/KCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazHd4BXdt8RffsO7q7pneOV1b+v3e+LvNppn88JEMgSQCBLAIEsAQSyBBDIEkAgSwCBrO12gFemd2x3rb6v7/QOa/XfZ/q+yNOfb7Xp7/dpToBAlgACWQIIZAkgkCWAQJYAAlkCCGQdtwPknt12WJ9avdNbvWM7bSf323b7/E6AQJYAAlkCCGQJIJAlgECWAAJZAghk2QE+bPq+sdPXm/v29ze94zv9eplPcwIEsgQQyBJAIEsAgSwBBLIEEMgSQCDruB3g6Tuk6fvK7n7f3Onnv/v46e9/+r7Wp3ECBLIEEMgSQCBLAIEsAQSyBBDIEkAga7sd4LftjPi31Tu36d/P9PUEXQ/wM06AQJYAAlkCCGQJIJAlgECWAAJZAghkvd7fNuwB+J+cAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDI+gcK6fOOx7EI9wAAAABJRU5ErkJggg==",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "rod",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 3.2000000000000015,
+          "clock": 543.2000000000007,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "rod",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "pause-freeze",
+      "before": {
+        "phase": "paused",
+        "paused": true,
+        "controllerPaused": true,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "paused",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "rod",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 3.600000000000002,
+          "clock": 543.6000000000008,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "rod",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "paused",
+        "paused": true,
+        "controllerPaused": true,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "paused",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "rod",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 3.600000000000002,
+          "clock": 543.6000000000008,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "rod",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "held-before-disconnect",
+      "before": null,
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-784387035bf1",
+            "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 1,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": true,
+              "START": false,
+              "A": true,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "rod",
+              "netRaised": false,
+              "previous": {
+                "a": true,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 1
+            }
+          ],
+          "elapsed": 4.300000000000001,
+          "clock": 544.300000000001,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "rod",
+            "netRaised": false,
+            "previous": {
+              "a": true,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 1
+          }
+        ],
+        "camera": null,
+        "document": {
+          "url": "https://cozy-island.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Cozy Island TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.073Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-784387035bf1"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.073Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-784387035bf1",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.073Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-784387035bf1",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.073Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-784387035bf1",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.073Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-784387035bf1",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.073Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.073Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-784387035bf1",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.073Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-784387035bf1",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.073Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-784387035bf1",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.073Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-784387035bf1",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.090Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.095Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.100Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.103Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.103Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.108Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.110Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.113Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.113Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.113Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:36:59.613Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:36:59.619Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:00.115Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:00.117Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:00.267Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 656
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:00.273Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:02.279Z",
+      "message": {
+        "type": "ping",
+        "seq": 14,
+        "controller_id": "virtual-784387035bf1"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:02.282Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:02.752Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-784387035bf1",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:02.783Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:03.239Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-784387035bf1",
+        "key": "RIGHT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:03.244Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:03.590Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-784387035bf1",
+        "key": "RIGHT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 850
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:03.697Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:04.945Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-784387035bf1",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:04.976Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:05.438Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-784387035bf1",
+        "key": "LEFT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:05.444Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:05.538Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-784387035bf1",
+        "key": "LEFT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 601
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:05.546Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:06.849Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-784387035bf1",
+        "key": "Y",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:06.859Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:07.276Z",
+      "message": {
+        "type": "ping",
+        "seq": 22,
+        "controller_id": "virtual-784387035bf1"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:07.283Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:07.350Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-784387035bf1",
+        "key": "Y",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:07.359Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:07.553Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-784387035bf1",
+        "key": "Y",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 702
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:07.776Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:08.674Z",
+      "message": {
+        "type": "button",
+        "seq": 25,
+        "controller_id": "virtual-784387035bf1",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:08.687Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:09.174Z",
+      "message": {
+        "type": "button",
+        "seq": 26,
+        "controller_id": "virtual-784387035bf1",
+        "key": "B",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:09.178Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:09.568Z",
+      "message": {
+        "type": "button",
+        "seq": 27,
+        "controller_id": "virtual-784387035bf1",
+        "key": "B",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 892
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:09.575Z",
+      "message": {
+        "type": "ack",
+        "seq": 27
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:11.433Z",
+      "message": {
+        "type": "button",
+        "seq": 28,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:11.439Z",
+      "message": {
+        "type": "ack",
+        "seq": 28
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:11.936Z",
+      "message": {
+        "type": "button",
+        "seq": 29,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 503
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:11.943Z",
+      "message": {
+        "type": "ack",
+        "seq": 29
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:12.258Z",
+      "message": {
+        "type": "button",
+        "seq": 30,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 823
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:12.263Z",
+      "message": {
+        "type": "ack",
+        "seq": 30
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:12.277Z",
+      "message": {
+        "type": "ping",
+        "seq": 31,
+        "controller_id": "virtual-784387035bf1"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:12.526Z",
+      "message": {
+        "type": "ack",
+        "seq": 31
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:15.901Z",
+      "message": {
+        "type": "button",
+        "seq": 32,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:15.904Z",
+      "message": {
+        "type": "ack",
+        "seq": 32
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:16.398Z",
+      "message": {
+        "type": "button",
+        "seq": 33,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:16.409Z",
+      "message": {
+        "type": "ack",
+        "seq": 33
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:16.818Z",
+      "message": {
+        "type": "button",
+        "seq": 34,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 917
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:16.833Z",
+      "message": {
+        "type": "ack",
+        "seq": 34
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:17.276Z",
+      "message": {
+        "type": "ping",
+        "seq": 35,
+        "controller_id": "virtual-784387035bf1"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:17.284Z",
+      "message": {
+        "type": "ack",
+        "seq": 35
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:18.000Z",
+      "message": {
+        "type": "button",
+        "seq": 36,
+        "controller_id": "virtual-784387035bf1",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:18.016Z",
+      "message": {
+        "type": "button",
+        "seq": 37,
+        "controller_id": "virtual-784387035bf1",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:18.027Z",
+      "message": {
+        "type": "ack",
+        "seq": 36
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:18.032Z",
+      "message": {
+        "type": "ack",
+        "seq": 37
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:18.362Z",
+      "message": {
+        "type": "button",
+        "seq": 38,
+        "controller_id": "virtual-784387035bf1",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 369
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:18.378Z",
+      "message": {
+        "type": "button",
+        "seq": 39,
+        "controller_id": "virtual-784387035bf1",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 362
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:18.615Z",
+      "message": {
+        "type": "ack",
+        "seq": 38
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:18.616Z",
+      "message": {
+        "type": "ack",
+        "seq": 39
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:19.532Z",
+      "message": {
+        "type": "hello",
+        "seq": 40,
+        "controller_id": "virtual-784387035bf1"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:19.532Z",
+      "message": {
+        "type": "button",
+        "seq": 41,
+        "controller_id": "virtual-784387035bf1",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:19.532Z",
+      "message": {
+        "type": "button",
+        "seq": 42,
+        "controller_id": "virtual-784387035bf1",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:19.532Z",
+      "message": {
+        "type": "button",
+        "seq": 43,
+        "controller_id": "virtual-784387035bf1",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:19.532Z",
+      "message": {
+        "type": "button",
+        "seq": 44,
+        "controller_id": "virtual-784387035bf1",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:19.532Z",
+      "message": {
+        "type": "button",
+        "seq": 45,
+        "controller_id": "virtual-784387035bf1",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:19.532Z",
+      "message": {
+        "type": "button",
+        "seq": 46,
+        "controller_id": "virtual-784387035bf1",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:19.532Z",
+      "message": {
+        "type": "button",
+        "seq": 47,
+        "controller_id": "virtual-784387035bf1",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:19.532Z",
+      "message": {
+        "type": "button",
+        "seq": 48,
+        "controller_id": "virtual-784387035bf1",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:37:19.532Z",
+      "message": {
+        "type": "button",
+        "seq": 49,
+        "controller_id": "virtual-784387035bf1",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:19.551Z",
+      "message": {
+        "type": "ack",
+        "seq": 40
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:19.553Z",
+      "message": {
+        "type": "ack",
+        "seq": 41
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:19.553Z",
+      "message": {
+        "type": "ack",
+        "seq": 42
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:19.553Z",
+      "message": {
+        "type": "ack",
+        "seq": 43
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:19.553Z",
+      "message": {
+        "type": "ack",
+        "seq": 44
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:19.598Z",
+      "message": {
+        "type": "ack",
+        "seq": 45
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:19.602Z",
+      "message": {
+        "type": "ack",
+        "seq": 46
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:19.611Z",
+      "message": {
+        "type": "ack",
+        "seq": 47
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:19.626Z",
+      "message": {
+        "type": "ack",
+        "seq": 48
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:37:19.635Z",
+      "message": {
+        "type": "ack",
+        "seq": 49
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [
+    {
+      "connection": 1,
+      "event": "client-eof",
+      "at": "2026-11-15T16:37:18.381Z",
+      "pendingSeq": [
+        38,
+        39
+      ]
+    },
+    {
+      "connection": 1,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-15T16:37:18.616Z",
+      "waitMs": 234.92537599999923,
+      "pendingSeq": []
+    }
+  ],
+  "screenshots": [
+    "menu-android.png",
+    "gameplay.png",
+    "paused.png",
+    "failure.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "ports": {
+    "tcpPort": 35173,
+    "observerPort": 38641
+  },
+  "error": "AssertionError [ERR_ASSERTION]: sync does not award gameplay\n+ actual - expected\n... Skipped lines\n\n  {\n    model: {\n      clock: 544.400000000001,\n      elapsed: 4.4,\n      phase: 'paused',\n...\n          active: true,\n+         cancelSeq: 4,\n+         connected: true,\n-         cancelSeq: 3,\n-         connected: false,\n          facing: {\n            x: -0.7071067811865475,\n            y: 0.7071067811865475\n          },\n          id: 1,\n...\n          active: false,\n+         cancelSeq: 3,\n-         cancelSeq: 2,\n          connected: false,\n          facing: {\n            x: 0,\n            y: 1\n          },\n...\n        active: true,\n+       cancelSeq: 4,\n+       connected: true,\n-       cancelSeq: 3,\n-       connected: false,\n        facing: {\n          x: -0.7071067811865475,\n          y: 0.7071067811865475\n        },\n        id: 1,\n...\n        active: false,\n+       cancelSeq: 3,\n-       cancelSeq: 2,\n        connected: false,\n        facing: {\n          x: 0,\n          y: 1\n        },\n\n    at file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:117:810\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:116:2",
+  "lastSnapshot": {
+    "phase": "paused",
+    "paused": true,
+    "controllerPaused": true,
+    "controllers": [
+      {
+        "id": 1,
+        "transport": "wifi",
+        "controllerId": "virtual-784387035bf1",
+        "session": "wifi-bb2c4cf2-75ae-493b-bd00-3f1e2dcd9b53-2",
+        "connected": true,
+        "cancelSeq": 4,
+        "inputActive": true,
+        "x": 0,
+        "y": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "a": false,
+        "b": false,
+        "start": false,
+        "select": false,
+        "buttons": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        }
+      },
+      {
+        "id": 2,
+        "transport": "wifi",
+        "controllerId": "",
+        "session": "",
+        "connected": false,
+        "cancelSeq": 3,
+        "inputActive": true,
+        "x": 0,
+        "y": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "a": false,
+        "b": false,
+        "start": false,
+        "select": false,
+        "buttons": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        }
+      }
+    ],
+    "info": {
+      "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+      "qr": "data:image/png;base64,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",
+      "addresses": [
+        "10.0.2.15"
+      ],
+      "error": "",
+      "language": "en",
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Cozy Island TV",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "10.0.2.15"
+        ],
+        "error": 0,
+        "connected": true,
+        "inputActive": true
+      }
+    },
+    "model": {
+      "phase": "paused",
+      "players": [
+        {
+          "id": 1,
+          "x": 12.069999999999999,
+          "y": 12.13,
+          "facing": {
+            "x": -0.7071067811865475,
+            "y": 0.7071067811865475
+          },
+          "movingSpeed": 0,
+          "inventory": {},
+          "tool": "rod",
+          "netRaised": false,
+          "previous": {
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false
+          },
+          "connected": true,
+          "joined": true,
+          "active": true,
+          "cancelSeq": 4
+        },
+        {
+          "id": 2,
+          "x": 12.6,
+          "y": 12.3,
+          "facing": {
+            "x": 0,
+            "y": 1
+          },
+          "movingSpeed": 0,
+          "inventory": {},
+          "tool": "hand",
+          "netRaised": false,
+          "previous": {
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false
+          },
+          "connected": false,
+          "joined": false,
+          "active": false,
+          "cancelSeq": 3
+        }
+      ],
+      "elapsed": 4.4,
+      "clock": 544.400000000001,
+      "selectedPlayers": 1
+    },
+    "players": [
+      {
+        "id": 1,
+        "x": 12.069999999999999,
+        "y": 12.13,
+        "facing": {
+          "x": -0.7071067811865475,
+          "y": 0.7071067811865475
+        },
+        "movingSpeed": 0,
+        "inventory": {},
+        "tool": "rod",
+        "netRaised": false,
+        "previous": {
+          "a": false,
+          "b": false,
+          "start": false,
+          "select": false
+        },
+        "connected": true,
+        "joined": true,
+        "active": true,
+        "cancelSeq": 4
+      },
+      {
+        "id": 2,
+        "x": 12.6,
+        "y": 12.3,
+        "facing": {
+          "x": 0,
+          "y": 1
+        },
+        "movingSpeed": 0,
+        "inventory": {},
+        "tool": "hand",
+        "netRaised": false,
+        "previous": {
+          "a": false,
+          "b": false,
+          "start": false,
+          "select": false
+        },
+        "connected": false,
+        "joined": false,
+        "active": false,
+        "cancelSeq": 3
+      }
+    ],
+    "camera": null,
+    "document": {
+      "url": "https://cozy-island.invalid/tv.html",
+      "width": 960,
+      "height": 540,
+      "scrollWidth": 960,
+      "scrollHeight": 540,
+      "hidden": false,
+      "focused": true
+    },
+    "nativeInfo": {
+      "url": "http://10.0.2.15:42951/?room=VoZNgzdgJiwp9mL-o9lRU8C0NSRXO4-k",
+      "qr": "data:image/png;base64,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",
+      "addresses": [
+        "10.0.2.15"
+      ],
+      "error": "",
+      "language": "en",
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Cozy Island TV",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "10.0.2.15"
+        ],
+        "error": 0,
+        "connected": true,
+        "inputActive": true
+      }
+    },
+    "activityState": "resumed"
+  },
+  "finishedAt": "2026-11-15T16:37:21.601Z"
+}

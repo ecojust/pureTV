@@ -1,0 +1,312 @@
+name: Launcher store integration build
+
+on:
+  push:
+    branches: [master, feat/putrtv-store]
+    paths:
+      - 'resource/launcher/**'
+      - 'tools/resource_catalog.py'
+      - 'tools/puretv-release-certificate-v2.sha256'
+      - '.github/workflows/launcher-store-integration.yml'
+  pull_request:
+    paths:
+      - 'resource/launcher/**'
+      - 'tools/resource_catalog.py'
+      - 'tools/puretv-release-certificate-v2.sha256'
+      - '.github/workflows/launcher-store-integration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: launcher-store-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        launcher: [puretv, nova, aster, sol, moss, forma, mono, drift, circuit, pixel]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      LAUNCHER: ${{ matrix.launcher }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install SDK and preview font
+        run: |
+          sdkmanager "platforms;android-35" "build-tools;34.0.0"
+          if [ -z "$(fc-list :lang=zh)" ]; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends fonts-wqy-zenhei
+            fc-cache -f
+          fi
+      - name: Build, test, lint and capture native launcher UI
+        working-directory: resource/launcher/${{ matrix.launcher }}
+        env:
+          CLEAN_UI_CAPTURE_DIR: ${{ runner.temp }}/launcher-previews
+          NOVA_UI_CAPTURE_DIR: ${{ runner.temp }}/launcher-previews
+          LAUNCHER_UI_CAPTURE_DIR: ${{ runner.temp }}/launcher-previews
+          ADD_TO_HOME_CAPTURE_DIR: ${{ runner.temp }}/launcher-previews
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon --continue :app:assembleDebug :app:assembleRelease :app:testDebugUnitTest :app:lintDebug 2>&1 | tee "$RUNNER_TEMP/launcher-build.log"
+      - name: Report test and lint failures
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import os, xml.etree.ElementTree as ET
+          from pathlib import Path
+          def report(title, message):
+              escaped = message.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+              print('::error title='+title+'::'+escaped)
+          build = Path('resource/launcher')/os.environ['LAUNCHER']/'app/build'
+          for path in (build/'test-results').rglob('TEST-*.xml'):
+              for case in ET.parse(path).getroot().iter('testcase'):
+                  for failure in case.findall('failure')+case.findall('error'):
+                      report('Launcher test', case.get('classname', '')+'.'+case.get('name', '')+'\n'+(failure.text or failure.get('message', ''))[:5000])
+          for path in (build/'reports').glob('lint-results*.xml'):
+              for issue in ET.parse(path).getroot().findall('issue'):
+                  if issue.get('severity') in ('Error', 'Fatal'):
+                      locations = [item.get('file', '')+':'+item.get('line', '') for item in issue.findall('location')]
+                      report('Launcher lint', issue.get('id', '')+': '+issue.get('message', '')+'\n'+'\n'.join(locations))
+          PY
+      - name: Verify unsigned APK and collect native previews
+        run: |
+          python3 - <<'PY'
+          import json, os, re, shutil, struct, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools')
+          from resource_catalog import apk_info
+          name = os.environ['LAUNCHER']
+          packages = {'puretv':'com.ecojust.puretv', **{name:'com.ecojust.'+name+'tv' for name in ('nova','aster','sol','moss','forma','mono','drift','circuit','pixel')}}
+          source = Path('resource/launcher')/name
+          tools = Path(os.environ['ANDROID_HOME'])/'build-tools/34.0.0'
+          apks = list((source/'app/build/outputs/apk/release').glob('*.apk'))
+          assert len(apks) == 1, 'Expected one unsigned release APK'
+          info = apk_info(apks[0], tools, allow_unsigned=True)
+          gradle = (source/'app/build.gradle').read_text()
+          assert info['packageName'] == packages[name] == re.search(r"applicationId '([^']+)'", gradle)[1]
+          assert info['versionName'] == re.search(r"versionName '([^']+)'", gradle)[1]
+          assert info['versionCode'] == int(re.search(r'versionCode (\d+)', gradle)[1])
+          assert info['certificateSha256'] is None, 'Build job must not sign APKs'
+          assert 0 < info['bytes'] < 5*1024*1024
+          badging = subprocess.check_output([str(tools/'aapt'), 'dump', 'badging', str(apks[0])], text=True)
+          assert re.search(r"^sdkVersion:'26'$", badging, re.M)
+          assert re.search(r"^targetSdkVersion:'29'$", badging, re.M)
+          output = Path('launcher-output'); output.mkdir()
+          shutil.copyfile(apks[0], output/'unsigned.apk')
+          previews = Path(os.environ['RUNNER_TEMP'])/'launcher-previews'
+          (output/'previews').mkdir()
+          for filename in ('home-render.png','apps-render.png','home-render.en.png','apps-render.en.png','add-to-home.png'):
+              data = (previews/filename).read_bytes()
+              assert data[:8] == b'\x89PNG\r\n\x1a\n' and 24 < len(data) <= 4000000
+              assert min(struct.unpack('>II', data[16:24])) > 0
+              (output/'previews'/filename).write_bytes(data)
+          info.update(launcher=name, sourceSha=os.environ['GITHUB_SHA'], sourceRun=os.environ['GITHUB_RUN_ID'],
+                      minSdk=26, targetSdk=29, physicalTvTested=False, previewData='simulated')
+          (output/'build-metadata.json').write_text(json.dumps(info, indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: launcher-store-build-${{ matrix.launcher }}
+          path: launcher-output/
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: launcher-store-reports-${{ matrix.launcher }}
+          path: |
+            resource/launcher/${{ matrix.launcher }}/app/build/reports/
+            resource/launcher/${{ matrix.launcher }}/app/build/test-results/
+            ${{ runner.temp }}/launcher-build.log
+            ${{ runner.temp }}/launcher-previews/
+          if-no-files-found: warn
+          retention-days: 14
+
+  sign:
+    needs: build
+    if: github.event_name != 'pull_request' && github.repository == 'ecojust/pureTV' && (github.ref == 'refs/heads/feat/putrtv-store' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: build-tools;34.0.0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: launcher-store-build-*
+          path: launcher-store-input
+      - name: Sign ten launchers with the existing pureTV certificate
+        env:
+          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, os, re, shutil, subprocess, sys, tempfile
+          from pathlib import Path
+          sys.path.insert(0, 'tools')
+          from resource_catalog import apk_info, digest
+          names = ('puretv','nova','aster','sol','moss','forma','mono','drift','circuit','pixel')
+          tools = Path(os.environ['ANDROID_HOME'])/'build-tools/34.0.0'
+          expected = Path('tools/puretv-release-certificate-v2.sha256').read_text().strip()
+          assert re.fullmatch(r'[a-f0-9]{64}', expected)
+          key_data = os.environ.get('PURETV_KEYSTORE_BASE64')
+          assert key_data and os.environ.get('PURETV_KEYSTORE_PASSWORD'), 'Existing pureTV signing secrets are required'
+          output_root = Path('launcher-store-release'); output_root.mkdir()
+          with tempfile.TemporaryDirectory(prefix='launcher-store-sign-', dir=os.environ['RUNNER_TEMP']) as temporary:
+              temporary = Path(temporary)
+              key = temporary/'puretv.jks'
+              key.write_bytes(base64.b64decode(''.join(key_data.split()), validate=True)); key.chmod(0o600)
+              certificate = subprocess.check_output(['keytool', '-exportcert', '-alias', 'puretv', '-keystore', str(key), '-storepass:env', 'PURETV_KEYSTORE_PASSWORD'])
+              assert hashlib.sha256(certificate).hexdigest() == expected, 'Unexpected release key'
+              for name in names:
+                  source = Path('launcher-store-input')/('launcher-store-build-'+name)
+                  metadata = json.loads((source/'build-metadata.json').read_text())
+                  unsigned = source/'unsigned.apk'
+                  package = 'com.ecojust.puretv' if name == 'puretv' else 'com.ecojust.'+name+'tv'
+                  assert metadata['sourceSha'] == os.environ['GITHUB_SHA'] and metadata['sourceRun'] == os.environ['GITHUB_RUN_ID']
+                  assert metadata['launcher'] == name and metadata['packageName'] == package
+                  assert metadata['certificateSha256'] is None and metadata['sha256'] == digest(unsigned)
+                  assert re.fullmatch(r'\d+\.\d+\.\d+', metadata['versionName'])
+                  # Every launcher has already crossed the repository's fixed-certificate cutover.
+                  assert metadata['versionCode'] >= (14 if name == 'puretv' else 4 if name == 'nova' else 3)
+                  output = output_root/name; output.mkdir()
+                  aligned = temporary/(name+'-aligned.apk')
+                  subprocess.run([str(tools/'zipalign'), '-f', '4', str(unsigned), str(aligned)], check=True)
+                  apk_name = ('pureTV' if name == 'puretv' else name.capitalize()+'TV')+'-'+metadata['versionName']+'.apk'
+                  apk = output/apk_name
+                  subprocess.run([str(tools/'apksigner'), 'sign', '--min-sdk-version', '26', '--v1-signing-enabled', 'true', '--v2-signing-enabled', 'true', '--v3-signing-enabled', 'true', '--v4-signing-enabled', 'false', '--ks', str(key), '--ks-key-alias', 'puretv', '--ks-pass', 'env:PURETV_KEYSTORE_PASSWORD', '--key-pass', 'env:PURETV_KEYSTORE_PASSWORD', '--out', str(apk), str(aligned)], check=True)
+                  subprocess.run([str(tools/'apksigner'), 'verify', '--min-sdk-version', '26', str(apk)], check=True)
+                  subprocess.run([str(tools/'zipalign'), '-c', '4', str(apk)], check=True)
+                  signed = apk_info(apk, tools)
+                  assert signed['certificateSha256'] == expected
+                  assert all(signed[field] == metadata[field] for field in ('packageName','versionCode','versionName'))
+                  assert 0 < signed['bytes'] < 5*1024*1024
+                  signed.update(launcher=name, apk=apk_name, sourceSha=metadata['sourceSha'],
+                                buildRun='https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['GITHUB_RUN_ID'],
+                                minSdk=26, targetSdk=29, signatureVerified=True, physicalTvTested=False, previewData='simulated')
+                  (output/'metadata.json').write_text(json.dumps(signed, indent=2)+'\n')
+                  (output/'SHA256SUMS.txt').write_text(signed['sha256']+'  '+apk.name+'\n')
+                  shutil.copytree(source/'previews', output/'previews')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: launcher-store-release
+          path: launcher-store-release/
+          if-no-files-found: error
+          retention-days: 14
+
+  export:
+    needs: [build, sign]
+    if: always() && github.event_name != 'pull_request' && github.repository == 'ecojust/pureTV' && (github.ref == 'refs/heads/feat/putrtv-store' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve available test diagnostics
+        id: reports
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: launcher-store-reports-*
+          path: launcher-store-export-input/reports
+      - name: Retrieve verified release
+        if: needs.sign.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: launcher-store-release
+          path: launcher-store-export-input/release
+      - name: Stage bounded diagnostics and verified release files
+        env:
+          BUILD_RESULT: ${{ needs.build.result }}
+          SIGN_RESULT: ${{ needs.sign.result }}
+          REPORT_DOWNLOAD: ${{ steps.reports.outcome }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, re, shutil
+          from pathlib import Path
+          source = Path('launcher-store-export-input')
+          output = Path('release-staging/launcher-store')
+          assert not output.exists(), 'Refusing to reuse a staging directory'
+          output.mkdir(parents=True)
+          records = []; skipped = []; total = 0
+          def copy(path, relative, maximum):
+              global total
+              assert path.is_file() and not path.is_symlink(), 'Only regular artifact files may be exported'
+              size = path.stat().st_size
+              assert 0 < size <= maximum, 'Artifact exceeds its export size bound: '+str(relative)
+              total += size
+              assert total <= 100000000, 'Export exceeds 100 MB'
+              target = output/relative; target.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(path, target)
+              records.append({'path':relative.as_posix(), 'bytes':size, 'sha256':hashlib.sha256(target.read_bytes()).hexdigest()})
+          if os.environ['SIGN_RESULT'] == 'success':
+              for name in ('puretv','nova','aster','sol','moss','forma','mono','drift','circuit','pixel'):
+                  release = source/'release'/name
+                  metadata = json.loads((release/'metadata.json').read_text())
+                  assert metadata['sourceSha'] == os.environ['GITHUB_SHA']
+                  assert metadata['buildRun'].endswith('/actions/runs/'+os.environ['GITHUB_RUN_ID'])
+                  assert metadata['signatureVerified'] is True and metadata['launcher'] == name
+                  assert metadata['packageName'] == ('com.ecojust.puretv' if name == 'puretv' else 'com.ecojust.'+name+'tv')
+                  assert re.fullmatch(r'\d+\.\d+\.\d+', metadata['versionName'])
+                  assert metadata['certificateSha256'] == Path('tools/puretv-release-certificate-v2.sha256').read_text().strip()
+                  apk_name = ('pureTV' if name == 'puretv' else name.capitalize()+'TV')+'-'+metadata['versionName']+'.apk'
+                  assert metadata['apk'] == apk_name
+                  apk = release/apk_name
+                  assert apk.stat().st_size == metadata['bytes'] and hashlib.sha256(apk.read_bytes()).hexdigest() == metadata['sha256']
+                  for path in (apk, release/'metadata.json', release/'SHA256SUMS.txt'):
+                      copy(path, Path('release')/name/path.name, 5*1024*1024 if path == apk else 64000)
+                  for filename in ('home-render.png','apps-render.png','home-render.en.png','apps-render.en.png','add-to-home.png'):
+                      copy(release/'previews'/filename, Path('release')/name/'previews'/filename, 4000000)
+          reports = source/'reports'
+          if reports.is_dir():
+              for path in sorted(reports.rglob('*')):
+                  assert not path.is_symlink(), 'Report symlink is not allowed'
+                  if not path.is_file() or path.suffix.lower() not in ('.xml','.log','.png'):
+                      continue
+                  relative = Path('reports')/path.relative_to(reports)
+                  size = path.stat().st_size
+                  if size == 0 or size > 4000000 or total+size > 100000000:
+                      skipped.append({'path':relative.as_posix(), 'reason':'empty or export size bound reached'})
+                      continue
+                  copy(path, relative, 4000000)
+          manifest = {'sourceSha':os.environ['GITHUB_SHA'], 'runId':os.environ['GITHUB_RUN_ID'],
+                      'runUrl':'https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['GITHUB_RUN_ID'],
+                      'buildResult':os.environ['BUILD_RESULT'], 'signResult':os.environ['SIGN_RESULT'],
+                      'reportDownload':os.environ['REPORT_DOWNLOAD'], 'files':records, 'skipped':skipped}
+          (output/'export-metadata.json').write_text(json.dumps(manifest, indent=2)+'\n')
+          PY
+      - name: Export to a new temporary build-assets branch
+        run: |
+          export_branch="build-assets/launcher-store-${GITHUB_RUN_ID}"
+          if git ls-remote --exit-code --heads origin "$export_branch" >/dev/null; then
+            echo "::error::This run already has an export branch; it will not be overwritten."
+            exit 1
+          fi
+          git checkout -b "$export_branch"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -f release-staging/launcher-store
+          git commit -m "Stage ten launcher build ${GITHUB_RUN_ID} diagnostics and verified artifacts"
+          git push origin "HEAD:refs/heads/$export_branch"

@@ -1,0 +1,226 @@
+{
+  "kind": "ordinary-browser-keyboard-regression",
+  "startedAt": "2026-11-03T13:42:30.518Z",
+  "sourceAssetHashes": {
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "279b1f9e3c9bcb854cbf8137c75182b21088784731ec08136c3f72a538b4ad0e",
+    "game-model.js": "66381b37cd25f8d6f792db36b1c8d1468adf9dc40e8a37db3554a1e752f46601",
+    "game.js": "cf5a7b9a65e5911564f4fba2eb7964a171d78c28f660464a72cd231e06e54a40",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "tests": [
+    {
+      "name": "ordinary full-capacity bay and held cargo remain separately visible",
+      "passed": true,
+      "milliseconds": 5869.793467,
+      "screenshots": [
+        "/workspace/scratch/stack-dispatch/browser-checks/full-bay-held-1280.png",
+        "/workspace/scratch/stack-dispatch/browser-checks/full-bay-held-960.png"
+      ],
+      "state": {
+        "id": "stack-dispatch",
+        "phase": "playing",
+        "paused": false,
+        "tick": 91,
+        "elapsed": 1.5166666666666662,
+        "level": 1,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 748,
+          "level": 1,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "selected": 1,
+          "inbound": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "delivery": [
+            5,
+            2,
+            7,
+            1,
+            4,
+            6,
+            3
+          ],
+          "capacity": 3,
+          "moveLimit": 28,
+          "inboundIndex": 4,
+          "bays": [
+            [
+              1,
+              2,
+              3
+            ],
+            [],
+            []
+          ],
+          "held": 4,
+          "nextDelivery": 0,
+          "movesUsed": 7,
+          "mistakes": 0,
+          "elapsed": 1.5166666666666662,
+          "elapsedCapped": false,
+          "calls": 91,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "dispatchReceipts": [],
+          "terminalReceipt": null,
+          "message": "已选择货栈 1；A 只取放栈顶。"
+        },
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 223,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.7,
+          50,
+          16.700000000000045,
+          1133.2,
+          400,
+          100,
+          133.19999999999982,
+          16.700000000000273,
+          50.09999999999991,
+          33.30000000000018,
+          66.59999999999991,
+          16.59999999999991,
+          33.40000000000009,
+          50,
+          16.699999999999818,
+          99.90000000000009,
+          16.699999999999818,
+          16.700000000000273,
+          66.59999999999991,
+          33.40000000000009,
+          49.90000000000009,
+          33.399999999999636,
+          16.700000000000273,
+          83.29999999999973,
+          33.40000000000009,
+          49.90000000000009,
+          16.699999999999818,
+          66.70000000000027,
+          16.59999999999991,
+          33.40000000000009,
+          50,
+          16.59999999999991,
+          83.30000000000018,
+          16.699999999999818,
+          33.40000000000009,
+          66.69999999999982,
+          33.30000000000018,
+          49.90000000000009,
+          33.399999999999636,
+          16.700000000000273
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false
+        }
+      }
+    },
+    {
+      "name": "level 1: complete visible manifest through ordinary input",
+      "passed": true,
+      "milliseconds": 10328.845729,
+      "level": 0,
+      "moves": 12,
+      "delivered": 6,
+      "screenshot": "/workspace/scratch/stack-dispatch/browser-checks/level-1-won.png",
+      "searches": [
+        {
+          "call": 9,
+          "expanded": 55,
+          "moves": 12
+        }
+      ]
+    },
+    {
+      "name": "level 2: complete visible manifest through ordinary input",
+      "passed": true,
+      "milliseconds": 12496.463208999998,
+      "level": 1,
+      "moves": 17,
+      "delivered": 7,
+      "screenshot": "/workspace/scratch/stack-dispatch/browser-checks/level-2-won.png",
+      "searches": [
+        {
+          "call": 14,
+          "expanded": 354,
+          "moves": 17
+        }
+      ]
+    },
+    {
+      "name": "level 3: complete visible manifest through ordinary input",
+      "passed": true,
+      "milliseconds": 17583.4982,
+      "level": 2,
+      "moves": 24,
+      "delivered": 8,
+      "screenshot": "/workspace/scratch/stack-dispatch/browser-checks/level-3-won.png",
+      "searches": [
+        {
+          "call": 12,
+          "expanded": 6591,
+          "moves": 24
+        }
+      ]
+    },
+    {
+      "name": "natural mistakes loss and terminal freeze",
+      "passed": true,
+      "milliseconds": 3005.646149,
+      "reason": "mistakes",
+      "moves": 1,
+      "mistakes": 3
+    },
+    {
+      "name": "natural moves loss and terminal freeze",
+      "passed": true,
+      "milliseconds": 7369.810470999997,
+      "reason": "moves",
+      "moves": 25,
+      "mistakes": 0
+    },
+    {
+      "name": "held A does not repeat; pause/resume requires a real release",
+      "passed": true,
+      "milliseconds": 3956.5564019999947,
+      "moves": 3,
+      "screenshot": "/workspace/scratch/stack-dispatch/browser-checks/crane-after-real-release.png"
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-03T13:43:31.301Z"
+}

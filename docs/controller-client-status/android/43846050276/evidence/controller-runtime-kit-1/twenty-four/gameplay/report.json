@@ -1,0 +1,1417 @@
+{
+  "slug": "twenty-four",
+  "mode": "android",
+  "startedAt": "2026-11-16T10:13:57.195Z",
+  "status": "passed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "16dafb1efbfeb13efc4cdeaaa4b6f49356bb3a0d276d9d8b310d4b8ef1437931",
+    "tools/readme-controller-qa/cases.mjs": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71",
+    "tools/readme-controller-qa/client-status-dom.mjs": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e",
+    "tools/readme-controller-qa/client-status-cases.mjs": "53c3a55ba494288587d5883d4f8772dd3e16e78c375d471926e06534e872d493",
+    "tools/readme-controller-qa/sdk-peer.py": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-cc28ee7ce67a",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-cc28ee7ce67a",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 21,
+        "acks": 21,
+        "connections": 2
+      }
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "id": "twenty-four",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 0,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选现存数，A 先选L再选R，再选带方向的运算。四张原牌各用一次，最后精确等于24；B 取消选数或用票撤销。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          3200,
+          166.69999999999982,
+          16.700000000000273,
+          83.29999999999973,
+          1199.9000000000005,
+          66.69999999999982,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          83.39999999999964,
+          133.30000000000018,
+          183.30000000000018,
+          166.69999999999982,
+          183.30000000000018
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false,
+          "connected": false,
+          "controllerKind": null
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 13,
+                  "top": 423,
+                  "right": 947,
+                  "bottom": 515
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:41811/?room=-yqjcmPeDM4SzM7mD4wPCeCnhBqg6sot",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Twenty Four",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "controller-connected-android",
+      "before": null,
+      "after": {
+        "id": "twenty-four",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 0,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选现存数，A 先选L再选R，再选带方向的运算。四张原牌各用一次，最后精确等于24；B 取消选数或用票撤销。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-cc28ee7ce67a",
+            "session": "wifi-a791f70c-bc74-42de-8eec-3dbf9ffb08d5-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          3200,
+          166.69999999999982,
+          16.700000000000273,
+          83.29999999999973,
+          1199.9000000000005,
+          66.69999999999982,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          83.39999999999964,
+          133.30000000000018,
+          183.30000000000018,
+          166.69999999999982,
+          183.30000000000018,
+          116.69999999999982,
+          200,
+          83.30000000000018,
+          100.09999999999945,
+          116.60000000000036,
+          50,
+          100,
+          133.30000000000018,
+          133.30000000000018,
+          50,
+          50.099999999999454,
+          83.30000000000018,
+          116.69999999999982,
+          83.19999999999982,
+          50,
+          100,
+          66.80000000000018,
+          83.19999999999982,
+          116.70000000000073,
+          83.39999999999964,
+          50,
+          83.30000000000018,
+          100,
+          83.40000000000055,
+          66.59999999999854,
+          83.40000000000146,
+          66.69999999999891,
+          366.60000000000036,
+          83.29999999999927,
+          50,
+          116.70000000000073,
+          66.60000000000036,
+          83.39999999999964,
+          66.60000000000036,
+          100.10000000000036,
+          66.59999999999854,
+          66.70000000000073
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 231,
+                  "top": 429,
+                  "right": 399.3828125,
+                  "bottom": 497.9375,
+                  "width": 168.3828125,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 231,
+                  "top": 429,
+                  "right": 399,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-cc28ee7ce67a",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-cc28ee7ce67a",
+                    "idText": "ID: virtual-cc28ee7ce67a",
+                    "visible": true,
+                    "rect": {
+                      "left": 231,
+                      "top": 429,
+                      "right": 399.3828125,
+                      "bottom": 497.9375,
+                      "width": 168.3828125,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 231,
+                      "top": 429,
+                      "right": 399,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 272,
+                      "top": 456.34375,
+                      "right": 390.3828125,
+                      "bottom": 489.9375,
+                      "width": 118.3828125,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 231,
+                      "top": 429,
+                      "right": 399,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 272,
+                        "top": 457.34375,
+                        "right": 387.21875,
+                        "bottom": 471.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 272,
+                        "top": 474.140625,
+                        "right": 329.609375,
+                        "bottom": 488.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 118,
+                    "idScrollWidth": 118,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 240,
+                      "top": 437,
+                      "right": 264,
+                      "bottom": 461,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:41811/?room=-yqjcmPeDM4SzM7mD4wPCeCnhBqg6sot",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Twenty Four",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "controller-reconnected",
+      "before": null,
+      "after": {
+        "id": "twenty-four",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 0,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选现存数，A 先选L再选R，再选带方向的运算。四张原牌各用一次，最后精确等于24；B 取消选数或用票撤销。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-cc28ee7ce67a",
+            "session": "wifi-a791f70c-bc74-42de-8eec-3dbf9ffb08d5-2",
+            "connected": true,
+            "cancelSeq": 3,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          3200,
+          166.69999999999982,
+          16.700000000000273,
+          83.29999999999973,
+          1199.9000000000005,
+          66.69999999999982,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          83.39999999999964,
+          133.30000000000018,
+          183.30000000000018,
+          166.69999999999982,
+          183.30000000000018,
+          116.69999999999982,
+          200,
+          83.30000000000018,
+          100.09999999999945,
+          116.60000000000036,
+          50,
+          100,
+          133.30000000000018,
+          133.30000000000018,
+          50,
+          50.099999999999454,
+          83.30000000000018,
+          116.69999999999982,
+          83.19999999999982,
+          50,
+          100,
+          66.80000000000018,
+          83.19999999999982,
+          116.70000000000073,
+          83.39999999999964,
+          50,
+          83.30000000000018,
+          100,
+          83.40000000000055,
+          66.59999999999854,
+          83.40000000000146,
+          66.69999999999891,
+          366.60000000000036,
+          83.29999999999927,
+          50,
+          116.70000000000073,
+          66.60000000000036,
+          83.39999999999964,
+          66.60000000000036,
+          100.10000000000036,
+          66.59999999999854,
+          66.70000000000073,
+          83.39999999999964,
+          149.89999999999964,
+          50,
+          133.3000000000011,
+          83.29999999999927,
+          116.80000000000109,
+          33.19999999999891,
+          66.70000000000073,
+          33.399999999999636,
+          100,
+          116.70000000000073,
+          66.69999999999891,
+          99.89999999999964,
+          83.30000000000109,
+          150.10000000000036,
+          49.899999999999636,
+          16.69999999999891,
+          33.30000000000109,
+          100,
+          116.69999999999891,
+          133.3000000000011,
+          16.69999999999891,
+          16.700000000000728,
+          16.700000000000728,
+          83.29999999999927,
+          83.29999999999927,
+          100,
+          116.70000000000073,
+          16.600000000000364,
+          16.69999999999891,
+          16.700000000000728,
+          166.60000000000036,
+          83.39999999999964,
+          83.29999999999927,
+          50,
+          116.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          16.700000000000728,
+          50,
+          83.29999999999927,
+          116.60000000000036,
+          50.100000000000364,
+          16.600000000000364,
+          83.39999999999964
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 231,
+                  "top": 429,
+                  "right": 399.3828125,
+                  "bottom": 497.9375,
+                  "width": 168.3828125,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 231,
+                  "top": 429,
+                  "right": 399,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-cc28ee7ce67a",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-cc28ee7ce67a",
+                    "idText": "ID: virtual-cc28ee7ce67a",
+                    "visible": true,
+                    "rect": {
+                      "left": 231,
+                      "top": 429,
+                      "right": 399.3828125,
+                      "bottom": 497.9375,
+                      "width": 168.3828125,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 231,
+                      "top": 429,
+                      "right": 399,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 272,
+                      "top": 456.34375,
+                      "right": 390.3828125,
+                      "bottom": 489.9375,
+                      "width": 118.3828125,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 231,
+                      "top": 429,
+                      "right": 399,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 272,
+                        "top": 457.34375,
+                        "right": 387.21875,
+                        "bottom": 471.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 272,
+                        "top": 474.140625,
+                        "right": 329.609375,
+                        "bottom": 488.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 118,
+                    "idScrollWidth": 118,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 240,
+                      "top": 437,
+                      "right": 264,
+                      "bottom": 461,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:41811/?room=-yqjcmPeDM4SzM7mD4wPCeCnhBqg6sot",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Twenty Four",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:01.487Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-cc28ee7ce67a"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:01.487Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:01.487Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:01.487Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:01.487Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:01.487Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:01.487Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:01.487Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:01.487Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:01.487Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:01.502Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:01.502Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:01.516Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:01.526Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:01.527Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:01.529Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:01.530Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:01.531Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:01.534Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:01.536Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:04.181Z",
+      "message": {
+        "type": "ping",
+        "seq": 11,
+        "controller_id": "virtual-cc28ee7ce67a"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:04.204Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:05.978Z",
+      "message": {
+        "type": "hello",
+        "seq": 12,
+        "controller_id": "virtual-cc28ee7ce67a"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:05.978Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:05.978Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:05.978Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:05.978Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:05.978Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:05.978Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:05.978Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:05.978Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-16T10:14:05.978Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-cc28ee7ce67a",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:06.009Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:06.025Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:06.046Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:06.046Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:06.046Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:06.046Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:06.046Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:06.046Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:06.046Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-16T10:14:06.046Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [
+    {
+      "connection": 1,
+      "event": "client-eof",
+      "at": "2026-11-16T10:14:04.429Z",
+      "pendingSeq": []
+    },
+    {
+      "connection": 1,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-16T10:14:04.429Z",
+      "waitMs": 0.11207199999989825,
+      "pendingSeq": []
+    }
+  ],
+  "screenshots": [
+    "menu-android.png",
+    "controller-connected-android.png",
+    "controller-disconnected.png",
+    "controller-reconnected.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "scope": "controller client status acceptance",
+  "statusAcceptanceEnvironment": "android-menu",
+  "fullGameplayAcceptance": false,
+  "ports": {
+    "tcpPort": 36475,
+    "observerPort": 38529
+  },
+  "finishedAt": "2026-11-16T10:14:08.026Z"
+}

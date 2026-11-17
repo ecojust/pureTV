@@ -1,0 +1,314 @@
+{
+  "kind": "independent-public-path-rule-review",
+  "passed": true,
+  "modelSha256": "acf03c373312c6e901f9d3081370c64786f2ce21140ae50e6dcaeafc1f5b2c81",
+  "contractSha256": "c44fab87f29c0adc852961aad6d1be08306e70f0fb3cfc2dc07080c039601e69",
+  "reviewScriptSha256": "e025e1f06e12b1a273b7339b089269e725aa1e01bbc92a459766483822df154a",
+  "sourceUnchanged": true,
+  "checks": [
+    {
+      "name": "entry side is opposite travel; a wrong conditional entry remains consumed without output",
+      "passed": true,
+      "cases": 8,
+      "startDoesNotEmit": true,
+      "wrongEntryDoesNotSubstitute": true,
+      "returnCannotHarvestVisitedRune": true
+    },
+    {
+      "name": "walls, exterior and visited cells cannot extend path or farm prefix score",
+      "passed": true,
+      "blockedDirectionsDoNotReject": true,
+      "heldVisitedDirectionDoesNotDuplicate": true
+    },
+    {
+      "name": "exit arrival is explicit-submit locked; incomplete, extra and reordered strings never win",
+      "passed": true,
+      "cases": [
+        {
+          "name": "exact",
+          "phase": "won",
+          "mistakes": 0
+        },
+        {
+          "name": "early",
+          "phase": "playing",
+          "mistakes": 1
+        },
+        {
+          "name": "extra",
+          "phase": "playing",
+          "mistakes": 1
+        },
+        {
+          "name": "wrong-order",
+          "phase": "playing",
+          "mistakes": 1
+        }
+      ],
+      "submitElsewhereNoOp": true
+    },
+    {
+      "name": "wrong prefixes remain traversable and a 24-symbol route cannot pass a shorter target",
+      "passed": true,
+      "nonmatchingPrefixDoesNotAutoReject": true,
+      "actualEmittedSymbols": 24,
+      "targetLength": 6,
+      "oldFullSymbolHistorySurvivesClear": true
+    },
+    {
+      "name": "a non-exit dead end rejects once and preserves the failed route until whole clear",
+      "passed": true,
+      "repeatedFrames": 90,
+      "requestedDtSeconds": 0.5,
+      "actualAdditionalTicks": 15,
+      "singleRejection": true,
+      "preservedLedger": true
+    },
+    {
+      "name": "CLEAR resets route occupancy and score but never clock, failures or total counters",
+      "passed": true,
+      "entireRouteRestored": true,
+      "noTimeOrFailureRefund": true,
+      "historyDoesNotAliasCurrentPath": true
+    },
+    {
+      "name": "third wrong exit attempt loses once and terminal steps freeze every field",
+      "passed": true,
+      "rejections": 3,
+      "terminalFramesFrozen": 120
+    },
+    {
+      "name": "deadline precedes a correct exit submit and route inspection consumes active time",
+      "passed": true,
+      "expiryWinsPriority": true,
+      "rejectedInspectionClockContinues": true
+    },
+    {
+      "name": "one atomic action per tick, held edges, cancellation and movement cadence are real",
+      "passed": true,
+      "deadlineThenClearThenSubmitThenMove": true,
+      "firstHeldRepeatTicks": 20,
+      "laterRepeatTicks": 10,
+      "cancelDoesNotQueueAction": true,
+      "zeroDtCachesWithoutActingAndCancellationDiscards": true
+    },
+    {
+      "name": "independent public-board BFS solves all three authored rounds with exact per-entry evidence",
+      "passed": true,
+      "scope": "Fresh unmodified authored models, public-board BFS, ordinary direction/submit keys and neutral fixed ticks; not browser or video evidence",
+      "solutions": [
+        {
+          "level": 1,
+          "phase": "won",
+          "moves": [
+            "N",
+            "N",
+            "N",
+            "N",
+            "E",
+            "E",
+            "E",
+            "S",
+            "W",
+            "S",
+            "S",
+            "S",
+            "E",
+            "N",
+            "E",
+            "N",
+            "N",
+            "N"
+          ],
+          "cellPath": [
+            20,
+            15,
+            10,
+            5,
+            0,
+            1,
+            2,
+            3,
+            8,
+            7,
+            12,
+            17,
+            22,
+            23,
+            18,
+            19,
+            14,
+            9,
+            4
+          ],
+          "symbols": [
+            "W",
+            "E",
+            "E",
+            "S",
+            "N",
+            "S"
+          ],
+          "target": [
+            "W",
+            "E",
+            "E",
+            "S",
+            "N",
+            "S"
+          ],
+          "conditionHits": 2,
+          "conditionSkips": 7,
+          "elapsed": 18.616666666666667,
+          "score": 2255,
+          "searchExpanded": 45,
+          "maxQueue": 5
+        },
+        {
+          "level": 2,
+          "phase": "won",
+          "moves": [
+            "E",
+            "E",
+            "E",
+            "E",
+            "S",
+            "W",
+            "S",
+            "W",
+            "S",
+            "W",
+            "S",
+            "E",
+            "E",
+            "E"
+          ],
+          "cellPath": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            9,
+            8,
+            13,
+            12,
+            17,
+            16,
+            21,
+            22,
+            23,
+            24
+          ],
+          "symbols": [
+            "N",
+            "N",
+            "E",
+            "S",
+            "W",
+            "E",
+            "W"
+          ],
+          "target": [
+            "N",
+            "N",
+            "E",
+            "S",
+            "W",
+            "E",
+            "W"
+          ],
+          "conditionHits": 6,
+          "conditionSkips": 2,
+          "elapsed": 14.483333333333333,
+          "score": 2375,
+          "searchExpanded": 45,
+          "maxQueue": 6
+        },
+        {
+          "level": 3,
+          "phase": "won",
+          "moves": [
+            "E",
+            "N",
+            "E",
+            "N",
+            "N",
+            "N",
+            "W",
+            "S",
+            "S",
+            "W",
+            "W",
+            "W",
+            "N",
+            "N",
+            "E",
+            "E"
+          ],
+          "cellPath": [
+            22,
+            23,
+            18,
+            19,
+            14,
+            9,
+            4,
+            3,
+            8,
+            13,
+            12,
+            11,
+            10,
+            5,
+            0,
+            1,
+            2
+          ],
+          "symbols": [
+            "N",
+            "N",
+            "W",
+            "N",
+            "E",
+            "S",
+            "S",
+            "S"
+          ],
+          "target": [
+            "N",
+            "N",
+            "W",
+            "N",
+            "E",
+            "S",
+            "S",
+            "S"
+          ],
+          "conditionHits": 3,
+          "conditionSkips": 3,
+          "elapsed": 16.55,
+          "score": 2465,
+          "searchExpanded": 59,
+          "maxQueue": 11
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "directionalBoundaryCases": 8,
+    "exitSequenceCases": 4,
+    "searchExpanded": 149,
+    "ordinaryAuthoredWins": 3,
+    "ordinaryMovesVerified": 48
+  },
+  "methodology": "A separately written bitmask BFS over public cell facts and append-only exact target prefixes, plus an independent four-neighbor/entry-side symbol oracle. No production solver or pilot is imported.",
+  "scope": {
+    "syntheticBoundaryFixtures": true,
+    "ordinaryAuthoredModelRounds": 3,
+    "browserExecuted": false,
+    "normalGameplayVideoEvidence": false,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false
+  }
+}

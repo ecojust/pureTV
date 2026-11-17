@@ -1,0 +1,61 @@
+{
+  "kind": "test-only-recording-pilot-revision",
+  "productionSourceSha": "40a9c83627463151ef4685a5286e20e9fadd145d",
+  "originalSourceCheck": "before/optics-final-test-source-check.json",
+  "change": {
+    "path": "resource/apps/glass-fold/tests/automation.mjs",
+    "before": "if(options.elapsed-recordWonAt<2)return[];",
+    "after": "if(options.elapsed-recordWonAt<2.5)return[];",
+    "reason": "Recording samples model states every two seconds. Hold a genuine won state at least 2.5 seconds before ordinary menu input so each victory remains observable across sample boundaries."
+  },
+  "unchanged": {
+    "productionAssets": true,
+    "prismRecordWonHoldSeconds": 4,
+    "glassRecipeSeconds": 225,
+    "prismRecipeSeconds": 150
+  },
+  "automationImports": {
+    "glass-fold": [],
+    "prism-relay": []
+  },
+  "archiveHashes": {
+    "automation.mjs": "77b9d00117258d4aaac163ee714d3ddec6292208b03615028ae81b3c2de42249",
+    "browser-checks.mjs": "35e022e3957c9a96dc97a67a76f33b6eb27950078101739d36b87f860b34076e",
+    "recipe.json": "1b02bc3e0564386a273ef5e0615b172a76512c6d12df5aed30c62d30f1096a5b",
+    "model-tests.txt": "18d50449f8169a8ab71449250e76e4ee9097089237eac47d20075aaa37249eeb",
+    "before/optics-final-test-source-check.json": "b7d8572ce332eb3da2921589ec2443dfbdf331dd5d4e09913a7af447b74ed1c1",
+    "before/glass-fold-automation.mjs": "387a4359b1b7c346d00fd101c824e3bbfbdf051d2cec6f7ff20eb2e4a4391cba",
+    "deps/verify-artifacts.py": "3818578d1ebec724718f34c7ccd079850dd0f18e896abafcaeeeb7fffebd2105",
+    "deps/qa.mjs": "aa9e781afa6f0115658cab5e7cfa77f5f7f5dbe21c58abe6d4a1d4bea498e21b",
+    "deps/frame-stream.mjs": "6f3d910169cad3898d00d423f765b8b055221ce1b453722b9e25b5cd87e81815",
+    "deps/record.mjs": "dcddf0f27da00eec307e43f6934eb2c3e91f6c805fbc4ba11a3d1ae005857ef2",
+    "deps/common.mjs": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+  },
+  "validation": {
+    "nodeModelTestsPassed": 56,
+    "nodeModelTestsFailed": 0,
+    "testOutput": "model-tests.txt",
+    "ordinarySixLevelGlassRecordCampaign": {
+      "kind": "ordinary-six-level-record-pilot",
+      "elapsed": 209.7600000000104,
+      "levelDurations": [
+        32.61666666666667,
+        32.61666666666667,
+        32.61666666666667,
+        32.61666666666667,
+        32.61666666666667,
+        32.61666666666667
+      ]
+    },
+    "browserExecuted": false,
+    "actualRecordingExecuted": false,
+    "nodeTestsExecutedBeforeNoRerunFollowup": true
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "testSourceCommit": "e5bd770e739b643dda8946825949281791aa50dc",
+  "actualAutomationSource": "automation.mjs",
+  "actualRecipe": "recipe.json",
+  "dependencies": "deps",
+  "originalRevisionSource": "/workspace/scratch/game-polish/optics-recording-pilot-revision-01/revision.json"
+}

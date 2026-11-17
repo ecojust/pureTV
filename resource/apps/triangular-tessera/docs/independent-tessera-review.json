@@ -1,0 +1,4383 @@
+{
+  "passed": true,
+  "scope": "Independent exact sector-boundary geometry and exhaustive public color states; one fresh ordinary edge-only counterexample. The six recorded model rounds are verified from existing evidence, not executed again.",
+  "sourceHashesBefore": {
+    "model": "872c8b8b2fcecf382b00ca9ca667f16ecb77516b490f6d0150e7bab233e54dce",
+    "contract": "4c53cd5a8832c22e1fa685f7b3488dbd7edede87406904dd39142ca041d923f8",
+    "automation": "70d897c22491ec011bddff76a9b38da2de4c6ca13763ebc4de6556bcfee49e8d",
+    "math": "6b35fbbb0bf8862c248e8ab48a557f95134eafcf053506070a88a1a8c0026953",
+    "review": "3486f39aa4b13c10a435d0d2425b288e6d74a3fc68629b6608dd2d87acea098b"
+  },
+  "modelSha256": "872c8b8b2fcecf382b00ca9ca667f16ecb77516b490f6d0150e7bab233e54dce",
+  "automationSha256": "70d897c22491ec011bddff76a9b38da2de4c6ca13763ebc4de6556bcfee49e8d",
+  "contractSha256": "4c53cd5a8832c22e1fa685f7b3488dbd7edede87406904dd39142ca041d923f8",
+  "mathSha256": "6b35fbbb0bf8862c248e8ab48a557f95134eafcf053506070a88a1a8c0026953",
+  "reviewSourceSha256": "3486f39aa4b13c10a435d0d2425b288e6d74a3fc68629b6608dd2d87acea098b",
+  "results": [
+    {
+      "name": "positive-length boundaries and physical D3",
+      "passed": true,
+      "geometryFixtures": 3,
+      "identityChecks": 3,
+      "scope": "Small exact geometry and permutation fixtures, not gameplay"
+    },
+    {
+      "name": "complete public board enumeration and minimum physical costs",
+      "passed": true,
+      "boards": 3,
+      "colorStates": 8748,
+      "physicalStatesAccounted": 139968,
+      "minimumCosts": [
+        4,
+        5,
+        6
+      ],
+      "limitation": "Exact per-color targets imply all shared edges matched on these authored forest boards; the reverse negative case is impossible."
+    },
+    {
+      "name": "one ordinary all-edges-matched but wrong-region counterexample",
+      "passed": true,
+      "ordinaryCounterexamplesExecuted": 1,
+      "chargedOperations": 4,
+      "matchedEdges": 6,
+      "regionCounts": {
+        "R": 4,
+        "G": 2,
+        "B": 2
+      }
+    },
+    {
+      "name": "independent read-only verification of the unique six ordinary rounds",
+      "passed": true,
+      "existingRoundsVerified": 6,
+      "reportSha256": "76a2d93a0db3206e8c393d0e137885de55d04f10da08a2681fe59b6f66dc2810",
+      "ordinaryRoundsExecutedHere": 0
+    }
+  ],
+  "proofs": [
+    {
+      "level": 1,
+      "counts": {
+        "colorStates": 2916,
+        "physicalStates": 46656,
+        "goals": 1,
+        "goalPhysicalStates": 16,
+        "edgeOnly": 4,
+        "regionOnly": 0,
+        "rotationsOnlyGoals": 0,
+        "mirrorsOnlyGoals": 0
+      },
+      "internalComponents": 14,
+      "forestResiduals": [
+        0
+      ],
+      "minimumGoal": {
+        "assignment": [
+          [
+            "T1S2",
+            "T1S1",
+            "T1S3"
+          ],
+          [
+            "T2S3",
+            "T2S1",
+            "T2S2"
+          ],
+          [
+            "T3S1",
+            "T3S2",
+            "T3S3"
+          ],
+          [
+            "T4S1",
+            "T4S3",
+            "T4S2"
+          ],
+          [
+            "T5S1",
+            "T5S2",
+            "T5S3"
+          ],
+          [
+            "T6S1",
+            "T6S2",
+            "T6S3"
+          ]
+        ],
+        "cost": 4,
+        "operations": [
+          {
+            "tileId": "T1",
+            "key": "B"
+          },
+          {
+            "tileId": "T1",
+            "key": "A"
+          },
+          {
+            "tileId": "T2",
+            "key": "A"
+          },
+          {
+            "tileId": "T4",
+            "key": "B"
+          }
+        ],
+        "regionCounts": {
+          "R": 2,
+          "G": 2,
+          "B": 4
+        },
+        "matchedEdgeCount": 6,
+        "largestTileSpan": 3
+      },
+      "minimumEdgeOnly": {
+        "assignment": [
+          [
+            "T1S2",
+            "T1S3",
+            "T1S1"
+          ],
+          [
+            "T2S1",
+            "T2S3",
+            "T2S2"
+          ],
+          [
+            "T3S1",
+            "T3S2",
+            "T3S3"
+          ],
+          [
+            "T4S1",
+            "T4S2",
+            "T4S3"
+          ],
+          [
+            "T5S3",
+            "T5S1",
+            "T5S2"
+          ],
+          [
+            "T6S1",
+            "T6S2",
+            "T6S3"
+          ]
+        ],
+        "cost": 4,
+        "operations": [
+          {
+            "tileId": "T1",
+            "key": "A"
+          },
+          {
+            "tileId": "T1",
+            "key": "A"
+          },
+          {
+            "tileId": "T2",
+            "key": "B"
+          },
+          {
+            "tileId": "T5",
+            "key": "A"
+          }
+        ],
+        "regionCounts": {
+          "R": 4,
+          "G": 2,
+          "B": 2
+        },
+        "matchedEdgeCount": 6,
+        "largestTileSpan": 3
+      },
+      "minimumRegionOnly": null,
+      "widestRegion": {
+        "assignment": [
+          [
+            "T1S1",
+            "T1S2",
+            "T1S3"
+          ],
+          [
+            "T2S1",
+            "T2S2",
+            "T2S3"
+          ],
+          [
+            "T3S1",
+            "T3S2",
+            "T3S3"
+          ],
+          [
+            "T4S1",
+            "T4S2",
+            "T4S3"
+          ],
+          [
+            "T5S3",
+            "T5S1",
+            "T5S2"
+          ],
+          [
+            "T6S1",
+            "T6S2",
+            "T6S3"
+          ]
+        ],
+        "cost": 1,
+        "operations": [
+          {
+            "tileId": "T5",
+            "key": "A"
+          }
+        ],
+        "regionCounts": {
+          "R": 4,
+          "G": 3,
+          "B": 4
+        },
+        "matchedEdgeCount": 3,
+        "largestTileSpan": 3
+      },
+      "geometry": {
+        "sectorNodes": 18,
+        "internalAdjacencies": 18,
+        "sharedEdges": 6
+      },
+      "proofScope": "Complete public color-state Cartesian product; all physical D3 states counted through exact multiplicities. Witnesses independently derived, not authored routes."
+    },
+    {
+      "level": 2,
+      "counts": {
+        "colorStates": 2916,
+        "physicalStates": 46656,
+        "goals": 1,
+        "goalPhysicalStates": 16,
+        "edgeOnly": 7,
+        "regionOnly": 0,
+        "rotationsOnlyGoals": 0,
+        "mirrorsOnlyGoals": 0
+      },
+      "internalComponents": 14,
+      "forestResiduals": [
+        0
+      ],
+      "minimumGoal": {
+        "assignment": [
+          [
+            "T1S3",
+            "T1S1",
+            "T1S2"
+          ],
+          [
+            "T2S3",
+            "T2S2",
+            "T2S1"
+          ],
+          [
+            "T3S1",
+            "T3S2",
+            "T3S3"
+          ],
+          [
+            "T4S1",
+            "T4S2",
+            "T4S3"
+          ],
+          [
+            "T5S3",
+            "T5S1",
+            "T5S2"
+          ],
+          [
+            "T6S3",
+            "T6S1",
+            "T6S2"
+          ]
+        ],
+        "cost": 5,
+        "operations": [
+          {
+            "tileId": "T1",
+            "key": "A"
+          },
+          {
+            "tileId": "T2",
+            "key": "A"
+          },
+          {
+            "tileId": "T2",
+            "key": "B"
+          },
+          {
+            "tileId": "T5",
+            "key": "A"
+          },
+          {
+            "tileId": "T6",
+            "key": "A"
+          }
+        ],
+        "regionCounts": {
+          "R": 2,
+          "G": 3,
+          "B": 3
+        },
+        "matchedEdgeCount": 6,
+        "largestTileSpan": 3
+      },
+      "minimumEdgeOnly": {
+        "assignment": [
+          [
+            "T1S1",
+            "T1S2",
+            "T1S3"
+          ],
+          [
+            "T2S1",
+            "T2S2",
+            "T2S3"
+          ],
+          [
+            "T3S3",
+            "T3S1",
+            "T3S2"
+          ],
+          [
+            "T4S2",
+            "T4S3",
+            "T4S1"
+          ],
+          [
+            "T5S3",
+            "T5S1",
+            "T5S2"
+          ],
+          [
+            "T6S1",
+            "T6S2",
+            "T6S3"
+          ]
+        ],
+        "cost": 4,
+        "operations": [
+          {
+            "tileId": "T3",
+            "key": "A"
+          },
+          {
+            "tileId": "T4",
+            "key": "A"
+          },
+          {
+            "tileId": "T4",
+            "key": "A"
+          },
+          {
+            "tileId": "T5",
+            "key": "A"
+          }
+        ],
+        "regionCounts": {
+          "R": 3,
+          "G": 3,
+          "B": 2
+        },
+        "matchedEdgeCount": 6,
+        "largestTileSpan": 3
+      },
+      "minimumRegionOnly": null,
+      "widestRegion": {
+        "assignment": [
+          [
+            "T1S1",
+            "T1S2",
+            "T1S3"
+          ],
+          [
+            "T2S1",
+            "T2S2",
+            "T2S3"
+          ],
+          [
+            "T3S1",
+            "T3S2",
+            "T3S3"
+          ],
+          [
+            "T4S1",
+            "T4S2",
+            "T4S3"
+          ],
+          [
+            "T5S3",
+            "T5S1",
+            "T5S2"
+          ],
+          [
+            "T6S1",
+            "T6S2",
+            "T6S3"
+          ]
+        ],
+        "cost": 1,
+        "operations": [
+          {
+            "tileId": "T5",
+            "key": "A"
+          }
+        ],
+        "regionCounts": {
+          "R": 3,
+          "G": 4,
+          "B": 2
+        },
+        "matchedEdgeCount": 5,
+        "largestTileSpan": 3
+      },
+      "geometry": {
+        "sectorNodes": 18,
+        "internalAdjacencies": 18,
+        "sharedEdges": 6
+      },
+      "proofScope": "Complete public color-state Cartesian product; all physical D3 states counted through exact multiplicities. Witnesses independently derived, not authored routes."
+    },
+    {
+      "level": 3,
+      "counts": {
+        "colorStates": 2916,
+        "physicalStates": 46656,
+        "goals": 1,
+        "goalPhysicalStates": 16,
+        "edgeOnly": 4,
+        "regionOnly": 0,
+        "rotationsOnlyGoals": 0,
+        "mirrorsOnlyGoals": 0
+      },
+      "internalComponents": 14,
+      "forestResiduals": [
+        0
+      ],
+      "minimumGoal": {
+        "assignment": [
+          [
+            "T1S2",
+            "T1S3",
+            "T1S1"
+          ],
+          [
+            "T2S1",
+            "T2S2",
+            "T2S3"
+          ],
+          [
+            "T3S1",
+            "T3S2",
+            "T3S3"
+          ],
+          [
+            "T4S1",
+            "T4S3",
+            "T4S2"
+          ],
+          [
+            "T5S2",
+            "T5S3",
+            "T5S1"
+          ],
+          [
+            "T6S3",
+            "T6S1",
+            "T6S2"
+          ]
+        ],
+        "cost": 6,
+        "operations": [
+          {
+            "tileId": "T1",
+            "key": "A"
+          },
+          {
+            "tileId": "T1",
+            "key": "A"
+          },
+          {
+            "tileId": "T4",
+            "key": "B"
+          },
+          {
+            "tileId": "T5",
+            "key": "A"
+          },
+          {
+            "tileId": "T5",
+            "key": "A"
+          },
+          {
+            "tileId": "T6",
+            "key": "A"
+          }
+        ],
+        "regionCounts": {
+          "R": 3,
+          "G": 2,
+          "B": 3
+        },
+        "matchedEdgeCount": 6,
+        "largestTileSpan": 3
+      },
+      "minimumEdgeOnly": {
+        "assignment": [
+          [
+            "T1S3",
+            "T1S2",
+            "T1S1"
+          ],
+          [
+            "T2S1",
+            "T2S2",
+            "T2S3"
+          ],
+          [
+            "T3S1",
+            "T3S2",
+            "T3S3"
+          ],
+          [
+            "T4S1",
+            "T4S3",
+            "T4S2"
+          ],
+          [
+            "T5S2",
+            "T5S3",
+            "T5S1"
+          ],
+          [
+            "T6S1",
+            "T6S2",
+            "T6S3"
+          ]
+        ],
+        "cost": 5,
+        "operations": [
+          {
+            "tileId": "T1",
+            "key": "A"
+          },
+          {
+            "tileId": "T1",
+            "key": "B"
+          },
+          {
+            "tileId": "T4",
+            "key": "B"
+          },
+          {
+            "tileId": "T5",
+            "key": "A"
+          },
+          {
+            "tileId": "T5",
+            "key": "A"
+          }
+        ],
+        "regionCounts": {
+          "R": 2,
+          "G": 2,
+          "B": 4
+        },
+        "matchedEdgeCount": 6,
+        "largestTileSpan": 3
+      },
+      "minimumRegionOnly": null,
+      "widestRegion": {
+        "assignment": [
+          [
+            "T1S1",
+            "T1S2",
+            "T1S3"
+          ],
+          [
+            "T2S3",
+            "T2S1",
+            "T2S2"
+          ],
+          [
+            "T3S3",
+            "T3S1",
+            "T3S2"
+          ],
+          [
+            "T4S1",
+            "T4S2",
+            "T4S3"
+          ],
+          [
+            "T5S1",
+            "T5S2",
+            "T5S3"
+          ],
+          [
+            "T6S1",
+            "T6S2",
+            "T6S3"
+          ]
+        ],
+        "cost": 2,
+        "operations": [
+          {
+            "tileId": "T2",
+            "key": "A"
+          },
+          {
+            "tileId": "T3",
+            "key": "A"
+          }
+        ],
+        "regionCounts": {
+          "R": 3,
+          "G": 5,
+          "B": 3
+        },
+        "matchedEdgeCount": 3,
+        "largestTileSpan": 3
+      },
+      "geometry": {
+        "sectorNodes": 18,
+        "internalAdjacencies": 18,
+        "sharedEdges": 6
+      },
+      "proofScope": "Complete public color-state Cartesian product; all physical D3 states counted through exact multiplicities. Witnesses independently derived, not authored routes."
+    }
+  ],
+  "actualModelCounterexamples": [
+    {
+      "level": 1,
+      "initial": {
+        "width": 960,
+        "height": 540,
+        "seed": 1,
+        "level": 1,
+        "difficulty": 0,
+        "levelName": "初片连彩",
+        "projection": {
+          "x": 324,
+          "y": 270,
+          "unit": 190
+        },
+        "colors": [
+          {
+            "id": "R",
+            "name": "珊瑚红",
+            "rgb": [
+              203,
+              102,
+              93
+            ]
+          },
+          {
+            "id": "G",
+            "name": "湖绿",
+            "rgb": [
+              92,
+              158,
+              135
+            ]
+          },
+          {
+            "id": "B",
+            "name": "靛蓝",
+            "rgb": [
+              94,
+              126,
+              182
+            ]
+          }
+        ],
+        "vertices": [
+          {
+            "id": "V1",
+            "u": 0,
+            "v": 0,
+            "x": 324,
+            "y": 270
+          },
+          {
+            "id": "V2",
+            "u": 1,
+            "v": 0,
+            "x": 514,
+            "y": 270
+          },
+          {
+            "id": "V3",
+            "u": 0,
+            "v": 1,
+            "x": 419,
+            "y": 434.54482671904333
+          },
+          {
+            "id": "V4",
+            "u": -1,
+            "v": 1,
+            "x": 229,
+            "y": 434.54482671904333
+          },
+          {
+            "id": "V5",
+            "u": -1,
+            "v": 0,
+            "x": 134,
+            "y": 270
+          },
+          {
+            "id": "V6",
+            "u": 0,
+            "v": -1,
+            "x": 229,
+            "y": 105.45517328095667
+          },
+          {
+            "id": "V7",
+            "u": 1,
+            "v": -1,
+            "x": 419,
+            "y": 105.45517328095667
+          }
+        ],
+        "tiles": [
+          {
+            "id": "T1",
+            "vertexIds": [
+              "V1",
+              "V2",
+              "V3"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V2",
+                "u": 1,
+                "v": 0,
+                "x": 514,
+                "y": 270
+              },
+              {
+                "id": "V3",
+                "u": 0,
+                "v": 1,
+                "x": 419,
+                "y": 434.54482671904333
+              }
+            ],
+            "center": {
+              "x": 419,
+              "y": 324.84827557301446
+            },
+            "x": 419,
+            "y": 324.84827557301446,
+            "slotSectorIds": [
+              "T1S1",
+              "T1S2",
+              "T1S3"
+            ],
+            "slotColors": [
+              "B",
+              "G",
+              "R"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E1",
+                "sectorId": "T1S1",
+                "mark": 1,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 514,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T1S1"
+              },
+              {
+                "index": 1,
+                "edgeId": "E2",
+                "sectorId": "T1S2",
+                "mark": 2,
+                "colorId": "G",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 514,
+                    "y": 270
+                  },
+                  {
+                    "x": 419,
+                    "y": 434.54482671904333
+                  }
+                ],
+                "regionId": "region-T1S2"
+              },
+              {
+                "index": 2,
+                "edgeId": "E3",
+                "sectorId": "T1S3",
+                "mark": 3,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 419,
+                    "y": 434.54482671904333
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T1S3"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 419,
+                "y": 434.54482671904333
+              },
+              "b": {
+                "x": 419,
+                "y": 270
+              }
+            }
+          },
+          {
+            "id": "T2",
+            "vertexIds": [
+              "V1",
+              "V3",
+              "V4"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V3",
+                "u": 0,
+                "v": 1,
+                "x": 419,
+                "y": 434.54482671904333
+              },
+              {
+                "id": "V4",
+                "u": -1,
+                "v": 1,
+                "x": 229,
+                "y": 434.54482671904333
+              }
+            ],
+            "center": {
+              "x": 324,
+              "y": 379.6965511460289
+            },
+            "x": 324,
+            "y": 379.6965511460289,
+            "slotSectorIds": [
+              "T2S1",
+              "T2S2",
+              "T2S3"
+            ],
+            "slotColors": [
+              "B",
+              "B",
+              "R"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E3",
+                "sectorId": "T2S1",
+                "mark": 1,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 379.6965511460289
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 419,
+                    "y": 434.54482671904333
+                  }
+                ],
+                "regionId": "region-T2S1"
+              },
+              {
+                "index": 1,
+                "edgeId": "E4",
+                "sectorId": "T2S2",
+                "mark": 2,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 379.6965511460289
+                  },
+                  {
+                    "x": 419,
+                    "y": 434.54482671904333
+                  },
+                  {
+                    "x": 229,
+                    "y": 434.54482671904333
+                  }
+                ],
+                "regionId": "region-T2S1"
+              },
+              {
+                "index": 2,
+                "edgeId": "E5",
+                "sectorId": "T2S3",
+                "mark": 3,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 379.6965511460289
+                  },
+                  {
+                    "x": 229,
+                    "y": 434.54482671904333
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T2S3"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 229,
+                "y": 434.54482671904333
+              },
+              "b": {
+                "x": 371.5,
+                "y": 352.2724133595217
+              }
+            }
+          },
+          {
+            "id": "T3",
+            "vertexIds": [
+              "V1",
+              "V4",
+              "V5"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V4",
+                "u": -1,
+                "v": 1,
+                "x": 229,
+                "y": 434.54482671904333
+              },
+              {
+                "id": "V5",
+                "u": -1,
+                "v": 0,
+                "x": 134,
+                "y": 270
+              }
+            ],
+            "center": {
+              "x": 229,
+              "y": 324.84827557301446
+            },
+            "x": 229,
+            "y": 324.84827557301446,
+            "slotSectorIds": [
+              "T3S1",
+              "T3S2",
+              "T3S3"
+            ],
+            "slotColors": [
+              "B",
+              "G",
+              "R"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E5",
+                "sectorId": "T3S1",
+                "mark": 1,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 229,
+                    "y": 434.54482671904333
+                  }
+                ],
+                "regionId": "region-T3S1"
+              },
+              {
+                "index": 1,
+                "edgeId": "E6",
+                "sectorId": "T3S2",
+                "mark": 2,
+                "colorId": "G",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 229,
+                    "y": 434.54482671904333
+                  },
+                  {
+                    "x": 134,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T3S2"
+              },
+              {
+                "index": 2,
+                "edgeId": "E7",
+                "sectorId": "T3S3",
+                "mark": 3,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 134,
+                    "y": 270
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T3S3"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 134,
+                "y": 270
+              },
+              "b": {
+                "x": 276.5,
+                "y": 352.2724133595217
+              }
+            }
+          },
+          {
+            "id": "T4",
+            "vertexIds": [
+              "V1",
+              "V5",
+              "V6"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V5",
+                "u": -1,
+                "v": 0,
+                "x": 134,
+                "y": 270
+              },
+              {
+                "id": "V6",
+                "u": 0,
+                "v": -1,
+                "x": 229,
+                "y": 105.45517328095667
+              }
+            ],
+            "center": {
+              "x": 229,
+              "y": 215.15172442698554
+            },
+            "x": 229,
+            "y": 215.15172442698554,
+            "slotSectorIds": [
+              "T4S1",
+              "T4S2",
+              "T4S3"
+            ],
+            "slotColors": [
+              "R",
+              "R",
+              "B"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E7",
+                "sectorId": "T4S1",
+                "mark": 1,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 134,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T3S3"
+              },
+              {
+                "index": 1,
+                "edgeId": "E8",
+                "sectorId": "T4S2",
+                "mark": 2,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 134,
+                    "y": 270
+                  },
+                  {
+                    "x": 229,
+                    "y": 105.45517328095667
+                  }
+                ],
+                "regionId": "region-T3S3"
+              },
+              {
+                "index": 2,
+                "edgeId": "E9",
+                "sectorId": "T4S3",
+                "mark": 3,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 229,
+                    "y": 105.45517328095667
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T4S3"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 229,
+                "y": 105.45517328095667
+              },
+              "b": {
+                "x": 229,
+                "y": 270
+              }
+            }
+          },
+          {
+            "id": "T5",
+            "vertexIds": [
+              "V1",
+              "V6",
+              "V7"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V6",
+                "u": 0,
+                "v": -1,
+                "x": 229,
+                "y": 105.45517328095667
+              },
+              {
+                "id": "V7",
+                "u": 1,
+                "v": -1,
+                "x": 419,
+                "y": 105.45517328095667
+              }
+            ],
+            "center": {
+              "x": 324,
+              "y": 160.3034488539711
+            },
+            "x": 324,
+            "y": 160.3034488539711,
+            "slotSectorIds": [
+              "T5S1",
+              "T5S2",
+              "T5S3"
+            ],
+            "slotColors": [
+              "R",
+              "B",
+              "B"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E9",
+                "sectorId": "T5S1",
+                "mark": 1,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 160.3034488539711
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 229,
+                    "y": 105.45517328095667
+                  }
+                ],
+                "regionId": "region-T5S1"
+              },
+              {
+                "index": 1,
+                "edgeId": "E10",
+                "sectorId": "T5S2",
+                "mark": 2,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 160.3034488539711
+                  },
+                  {
+                    "x": 229,
+                    "y": 105.45517328095667
+                  },
+                  {
+                    "x": 419,
+                    "y": 105.45517328095667
+                  }
+                ],
+                "regionId": "region-T5S2"
+              },
+              {
+                "index": 2,
+                "edgeId": "E11",
+                "sectorId": "T5S3",
+                "mark": 3,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 160.3034488539711
+                  },
+                  {
+                    "x": 419,
+                    "y": 105.45517328095667
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T5S2"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 419,
+                "y": 105.45517328095667
+              },
+              "b": {
+                "x": 276.5,
+                "y": 187.72758664047834
+              }
+            }
+          },
+          {
+            "id": "T6",
+            "vertexIds": [
+              "V1",
+              "V7",
+              "V2"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V7",
+                "u": 1,
+                "v": -1,
+                "x": 419,
+                "y": 105.45517328095667
+              },
+              {
+                "id": "V2",
+                "u": 1,
+                "v": 0,
+                "x": 514,
+                "y": 270
+              }
+            ],
+            "center": {
+              "x": 419,
+              "y": 215.15172442698554
+            },
+            "x": 419,
+            "y": 215.15172442698554,
+            "slotSectorIds": [
+              "T6S1",
+              "T6S2",
+              "T6S3"
+            ],
+            "slotColors": [
+              "B",
+              "G",
+              "G"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E11",
+                "sectorId": "T6S1",
+                "mark": 1,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 419,
+                    "y": 105.45517328095667
+                  }
+                ],
+                "regionId": "region-T5S2"
+              },
+              {
+                "index": 1,
+                "edgeId": "E12",
+                "sectorId": "T6S2",
+                "mark": 2,
+                "colorId": "G",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 419,
+                    "y": 105.45517328095667
+                  },
+                  {
+                    "x": 514,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T6S2"
+              },
+              {
+                "index": 2,
+                "edgeId": "E1",
+                "sectorId": "T6S3",
+                "mark": 3,
+                "colorId": "G",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 514,
+                    "y": 270
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T6S2"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 514,
+                "y": 270
+              },
+              "b": {
+                "x": 371.5,
+                "y": 187.72758664047834
+              }
+            }
+          }
+        ],
+        "sectors": [
+          {
+            "id": "T1S1",
+            "tileId": "T1",
+            "mark": 1,
+            "colorId": "B",
+            "slotIndex": 0
+          },
+          {
+            "id": "T1S2",
+            "tileId": "T1",
+            "mark": 2,
+            "colorId": "G",
+            "slotIndex": 1
+          },
+          {
+            "id": "T1S3",
+            "tileId": "T1",
+            "mark": 3,
+            "colorId": "R",
+            "slotIndex": 2
+          },
+          {
+            "id": "T2S1",
+            "tileId": "T2",
+            "mark": 1,
+            "colorId": "B",
+            "slotIndex": 0
+          },
+          {
+            "id": "T2S2",
+            "tileId": "T2",
+            "mark": 2,
+            "colorId": "B",
+            "slotIndex": 1
+          },
+          {
+            "id": "T2S3",
+            "tileId": "T2",
+            "mark": 3,
+            "colorId": "R",
+            "slotIndex": 2
+          },
+          {
+            "id": "T3S1",
+            "tileId": "T3",
+            "mark": 1,
+            "colorId": "B",
+            "slotIndex": 0
+          },
+          {
+            "id": "T3S2",
+            "tileId": "T3",
+            "mark": 2,
+            "colorId": "G",
+            "slotIndex": 1
+          },
+          {
+            "id": "T3S3",
+            "tileId": "T3",
+            "mark": 3,
+            "colorId": "R",
+            "slotIndex": 2
+          },
+          {
+            "id": "T4S1",
+            "tileId": "T4",
+            "mark": 1,
+            "colorId": "R",
+            "slotIndex": 0
+          },
+          {
+            "id": "T4S2",
+            "tileId": "T4",
+            "mark": 2,
+            "colorId": "R",
+            "slotIndex": 1
+          },
+          {
+            "id": "T4S3",
+            "tileId": "T4",
+            "mark": 3,
+            "colorId": "B",
+            "slotIndex": 2
+          },
+          {
+            "id": "T5S1",
+            "tileId": "T5",
+            "mark": 1,
+            "colorId": "R",
+            "slotIndex": 0
+          },
+          {
+            "id": "T5S2",
+            "tileId": "T5",
+            "mark": 2,
+            "colorId": "B",
+            "slotIndex": 1
+          },
+          {
+            "id": "T5S3",
+            "tileId": "T5",
+            "mark": 3,
+            "colorId": "B",
+            "slotIndex": 2
+          },
+          {
+            "id": "T6S1",
+            "tileId": "T6",
+            "mark": 1,
+            "colorId": "B",
+            "slotIndex": 0
+          },
+          {
+            "id": "T6S2",
+            "tileId": "T6",
+            "mark": 2,
+            "colorId": "G",
+            "slotIndex": 1
+          },
+          {
+            "id": "T6S3",
+            "tileId": "T6",
+            "mark": 3,
+            "colorId": "G",
+            "slotIndex": 2
+          }
+        ],
+        "edges": [
+          {
+            "id": "E1",
+            "vertexIds": [
+              "V1",
+              "V2"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 514,
+              "y": 270
+            },
+            "incidences": [
+              {
+                "tileId": "T1",
+                "slotIndex": 0
+              },
+              {
+                "tileId": "T6",
+                "slotIndex": 2
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "B",
+              "G"
+            ],
+            "matched": false
+          },
+          {
+            "id": "E2",
+            "vertexIds": [
+              "V2",
+              "V3"
+            ],
+            "a": {
+              "x": 514,
+              "y": 270
+            },
+            "b": {
+              "x": 419,
+              "y": 434.54482671904333
+            },
+            "incidences": [
+              {
+                "tileId": "T1",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "G"
+            ],
+            "matched": null
+          },
+          {
+            "id": "E3",
+            "vertexIds": [
+              "V1",
+              "V3"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 419,
+              "y": 434.54482671904333
+            },
+            "incidences": [
+              {
+                "tileId": "T1",
+                "slotIndex": 2
+              },
+              {
+                "tileId": "T2",
+                "slotIndex": 0
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "R",
+              "B"
+            ],
+            "matched": false
+          },
+          {
+            "id": "E4",
+            "vertexIds": [
+              "V3",
+              "V4"
+            ],
+            "a": {
+              "x": 419,
+              "y": 434.54482671904333
+            },
+            "b": {
+              "x": 229,
+              "y": 434.54482671904333
+            },
+            "incidences": [
+              {
+                "tileId": "T2",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "B"
+            ],
+            "matched": null
+          },
+          {
+            "id": "E5",
+            "vertexIds": [
+              "V1",
+              "V4"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 229,
+              "y": 434.54482671904333
+            },
+            "incidences": [
+              {
+                "tileId": "T2",
+                "slotIndex": 2
+              },
+              {
+                "tileId": "T3",
+                "slotIndex": 0
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "R",
+              "B"
+            ],
+            "matched": false
+          },
+          {
+            "id": "E6",
+            "vertexIds": [
+              "V4",
+              "V5"
+            ],
+            "a": {
+              "x": 229,
+              "y": 434.54482671904333
+            },
+            "b": {
+              "x": 134,
+              "y": 270
+            },
+            "incidences": [
+              {
+                "tileId": "T3",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "G"
+            ],
+            "matched": null
+          },
+          {
+            "id": "E7",
+            "vertexIds": [
+              "V1",
+              "V5"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 134,
+              "y": 270
+            },
+            "incidences": [
+              {
+                "tileId": "T3",
+                "slotIndex": 2
+              },
+              {
+                "tileId": "T4",
+                "slotIndex": 0
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "R",
+              "R"
+            ],
+            "matched": true
+          },
+          {
+            "id": "E8",
+            "vertexIds": [
+              "V5",
+              "V6"
+            ],
+            "a": {
+              "x": 134,
+              "y": 270
+            },
+            "b": {
+              "x": 229,
+              "y": 105.45517328095667
+            },
+            "incidences": [
+              {
+                "tileId": "T4",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "R"
+            ],
+            "matched": null
+          },
+          {
+            "id": "E9",
+            "vertexIds": [
+              "V1",
+              "V6"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 229,
+              "y": 105.45517328095667
+            },
+            "incidences": [
+              {
+                "tileId": "T4",
+                "slotIndex": 2
+              },
+              {
+                "tileId": "T5",
+                "slotIndex": 0
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "B",
+              "R"
+            ],
+            "matched": false
+          },
+          {
+            "id": "E10",
+            "vertexIds": [
+              "V6",
+              "V7"
+            ],
+            "a": {
+              "x": 229,
+              "y": 105.45517328095667
+            },
+            "b": {
+              "x": 419,
+              "y": 105.45517328095667
+            },
+            "incidences": [
+              {
+                "tileId": "T5",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "B"
+            ],
+            "matched": null
+          },
+          {
+            "id": "E11",
+            "vertexIds": [
+              "V1",
+              "V7"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 419,
+              "y": 105.45517328095667
+            },
+            "incidences": [
+              {
+                "tileId": "T5",
+                "slotIndex": 2
+              },
+              {
+                "tileId": "T6",
+                "slotIndex": 0
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "B",
+              "B"
+            ],
+            "matched": true
+          },
+          {
+            "id": "E12",
+            "vertexIds": [
+              "V2",
+              "V7"
+            ],
+            "a": {
+              "x": 514,
+              "y": 270
+            },
+            "b": {
+              "x": 419,
+              "y": 105.45517328095667
+            },
+            "incidences": [
+              {
+                "tileId": "T6",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "G"
+            ],
+            "matched": null
+          }
+        ],
+        "regions": [
+          {
+            "id": "region-T1S3",
+            "colorId": "R",
+            "sectorIds": [
+              "T1S3"
+            ],
+            "tileIds": [
+              "T1"
+            ]
+          },
+          {
+            "id": "region-T2S3",
+            "colorId": "R",
+            "sectorIds": [
+              "T2S3"
+            ],
+            "tileIds": [
+              "T2"
+            ]
+          },
+          {
+            "id": "region-T3S3",
+            "colorId": "R",
+            "sectorIds": [
+              "T3S3",
+              "T4S1",
+              "T4S2"
+            ],
+            "tileIds": [
+              "T3",
+              "T4"
+            ]
+          },
+          {
+            "id": "region-T5S1",
+            "colorId": "R",
+            "sectorIds": [
+              "T5S1"
+            ],
+            "tileIds": [
+              "T5"
+            ]
+          },
+          {
+            "id": "region-T1S2",
+            "colorId": "G",
+            "sectorIds": [
+              "T1S2"
+            ],
+            "tileIds": [
+              "T1"
+            ]
+          },
+          {
+            "id": "region-T3S2",
+            "colorId": "G",
+            "sectorIds": [
+              "T3S2"
+            ],
+            "tileIds": [
+              "T3"
+            ]
+          },
+          {
+            "id": "region-T6S2",
+            "colorId": "G",
+            "sectorIds": [
+              "T6S2",
+              "T6S3"
+            ],
+            "tileIds": [
+              "T6"
+            ]
+          },
+          {
+            "id": "region-T1S1",
+            "colorId": "B",
+            "sectorIds": [
+              "T1S1"
+            ],
+            "tileIds": [
+              "T1"
+            ]
+          },
+          {
+            "id": "region-T2S1",
+            "colorId": "B",
+            "sectorIds": [
+              "T2S1",
+              "T2S2"
+            ],
+            "tileIds": [
+              "T2"
+            ]
+          },
+          {
+            "id": "region-T3S1",
+            "colorId": "B",
+            "sectorIds": [
+              "T3S1"
+            ],
+            "tileIds": [
+              "T3"
+            ]
+          },
+          {
+            "id": "region-T4S3",
+            "colorId": "B",
+            "sectorIds": [
+              "T4S3"
+            ],
+            "tileIds": [
+              "T4"
+            ]
+          },
+          {
+            "id": "region-T5S2",
+            "colorId": "B",
+            "sectorIds": [
+              "T5S2",
+              "T5S3",
+              "T6S1"
+            ],
+            "tileIds": [
+              "T5",
+              "T6"
+            ]
+          }
+        ],
+        "regionCounts": {
+          "R": 4,
+          "G": 3,
+          "B": 5
+        },
+        "targetRegions": {
+          "R": 2,
+          "G": 2,
+          "B": 4
+        },
+        "colorRegions": [
+          {
+            "colorId": "R",
+            "actual": 4,
+            "target": 2,
+            "matched": false
+          },
+          {
+            "colorId": "G",
+            "actual": 3,
+            "target": 2,
+            "matched": false
+          },
+          {
+            "colorId": "B",
+            "actual": 5,
+            "target": 4,
+            "matched": false
+          }
+        ],
+        "sharedEdgeCount": 6,
+        "matchedEdgeCount": 2,
+        "matchingEdgeIds": [
+          "E7",
+          "E11"
+        ],
+        "conflictEdgeIds": [
+          "E1",
+          "E3",
+          "E5",
+          "E9"
+        ],
+        "matchedRegionColorCount": 0,
+        "allEdgesMatched": false,
+        "allRegionsMatched": false,
+        "goalReady": false,
+        "focusItems": [
+          {
+            "id": "T1",
+            "kind": "tile",
+            "x": 419,
+            "y": 324.84827557301446
+          },
+          {
+            "id": "T2",
+            "kind": "tile",
+            "x": 324,
+            "y": 379.6965511460289
+          },
+          {
+            "id": "T3",
+            "kind": "tile",
+            "x": 229,
+            "y": 324.84827557301446
+          },
+          {
+            "id": "T4",
+            "kind": "tile",
+            "x": 229,
+            "y": 215.15172442698554
+          },
+          {
+            "id": "T5",
+            "kind": "tile",
+            "x": 324,
+            "y": 160.3034488539711
+          },
+          {
+            "id": "T6",
+            "kind": "tile",
+            "x": 419,
+            "y": 215.15172442698554
+          }
+        ],
+        "selectedId": "T1",
+        "cursor": {
+          "id": "T1",
+          "kind": "tile",
+          "x": 419,
+          "y": 324.84827557301446
+        },
+        "previewRotate": {
+          "kind": "rotate",
+          "tileId": "T1",
+          "beforeSectorIds": [
+            "T1S1",
+            "T1S2",
+            "T1S3"
+          ],
+          "afterSectorIds": [
+            "T1S3",
+            "T1S1",
+            "T1S2"
+          ],
+          "beforeColors": [
+            "B",
+            "G",
+            "R"
+          ],
+          "afterColors": [
+            "R",
+            "B",
+            "G"
+          ],
+          "colorChanged": true,
+          "cost": 1,
+          "matchedEdgeCount": 2,
+          "regionCounts": {
+            "R": 4,
+            "G": 3,
+            "B": 5
+          },
+          "allEdgesMatched": false,
+          "allRegionsMatched": false,
+          "willWin": false,
+          "willExhaustMoves": false
+        },
+        "previewMirror": {
+          "kind": "mirror",
+          "tileId": "T1",
+          "beforeSectorIds": [
+            "T1S1",
+            "T1S2",
+            "T1S3"
+          ],
+          "afterSectorIds": [
+            "T1S1",
+            "T1S3",
+            "T1S2"
+          ],
+          "beforeColors": [
+            "B",
+            "G",
+            "R"
+          ],
+          "afterColors": [
+            "B",
+            "R",
+            "G"
+          ],
+          "colorChanged": true,
+          "cost": 1,
+          "matchedEdgeCount": 2,
+          "regionCounts": {
+            "R": 4,
+            "G": 3,
+            "B": 5
+          },
+          "allEdgesMatched": false,
+          "allRegionsMatched": false,
+          "willWin": false,
+          "willExhaustMoves": false
+        },
+        "moveLimit": 6,
+        "movesUsed": 0,
+        "movesRemaining": 6,
+        "rotationCount": 0,
+        "mirrorCount": 0,
+        "history": [],
+        "historyDepth": 0,
+        "lastOperation": null,
+        "lastAction": null,
+        "events": [],
+        "phase": "playing",
+        "tick": 0,
+        "elapsed": 0,
+        "timeLimit": 90,
+        "remaining": 90,
+        "score": 80,
+        "lostReason": null,
+        "message": "方向选择彩砖，A 旋转、B 镜像；检查共享边与各色色域数量"
+      },
+      "final": {
+        "width": 960,
+        "height": 540,
+        "seed": 1,
+        "level": 1,
+        "difficulty": 0,
+        "levelName": "初片连彩",
+        "projection": {
+          "x": 324,
+          "y": 270,
+          "unit": 190
+        },
+        "colors": [
+          {
+            "id": "R",
+            "name": "珊瑚红",
+            "rgb": [
+              203,
+              102,
+              93
+            ]
+          },
+          {
+            "id": "G",
+            "name": "湖绿",
+            "rgb": [
+              92,
+              158,
+              135
+            ]
+          },
+          {
+            "id": "B",
+            "name": "靛蓝",
+            "rgb": [
+              94,
+              126,
+              182
+            ]
+          }
+        ],
+        "vertices": [
+          {
+            "id": "V1",
+            "u": 0,
+            "v": 0,
+            "x": 324,
+            "y": 270
+          },
+          {
+            "id": "V2",
+            "u": 1,
+            "v": 0,
+            "x": 514,
+            "y": 270
+          },
+          {
+            "id": "V3",
+            "u": 0,
+            "v": 1,
+            "x": 419,
+            "y": 434.54482671904333
+          },
+          {
+            "id": "V4",
+            "u": -1,
+            "v": 1,
+            "x": 229,
+            "y": 434.54482671904333
+          },
+          {
+            "id": "V5",
+            "u": -1,
+            "v": 0,
+            "x": 134,
+            "y": 270
+          },
+          {
+            "id": "V6",
+            "u": 0,
+            "v": -1,
+            "x": 229,
+            "y": 105.45517328095667
+          },
+          {
+            "id": "V7",
+            "u": 1,
+            "v": -1,
+            "x": 419,
+            "y": 105.45517328095667
+          }
+        ],
+        "tiles": [
+          {
+            "id": "T1",
+            "vertexIds": [
+              "V1",
+              "V2",
+              "V3"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V2",
+                "u": 1,
+                "v": 0,
+                "x": 514,
+                "y": 270
+              },
+              {
+                "id": "V3",
+                "u": 0,
+                "v": 1,
+                "x": 419,
+                "y": 434.54482671904333
+              }
+            ],
+            "center": {
+              "x": 419,
+              "y": 324.84827557301446
+            },
+            "x": 419,
+            "y": 324.84827557301446,
+            "slotSectorIds": [
+              "T1S2",
+              "T1S3",
+              "T1S1"
+            ],
+            "slotColors": [
+              "G",
+              "R",
+              "B"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E1",
+                "sectorId": "T1S2",
+                "mark": 2,
+                "colorId": "G",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 514,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T1S2"
+              },
+              {
+                "index": 1,
+                "edgeId": "E2",
+                "sectorId": "T1S3",
+                "mark": 3,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 514,
+                    "y": 270
+                  },
+                  {
+                    "x": 419,
+                    "y": 434.54482671904333
+                  }
+                ],
+                "regionId": "region-T1S3"
+              },
+              {
+                "index": 2,
+                "edgeId": "E3",
+                "sectorId": "T1S1",
+                "mark": 1,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 419,
+                    "y": 434.54482671904333
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T1S1"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 419,
+                "y": 434.54482671904333
+              },
+              "b": {
+                "x": 419,
+                "y": 270
+              }
+            }
+          },
+          {
+            "id": "T2",
+            "vertexIds": [
+              "V1",
+              "V3",
+              "V4"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V3",
+                "u": 0,
+                "v": 1,
+                "x": 419,
+                "y": 434.54482671904333
+              },
+              {
+                "id": "V4",
+                "u": -1,
+                "v": 1,
+                "x": 229,
+                "y": 434.54482671904333
+              }
+            ],
+            "center": {
+              "x": 324,
+              "y": 379.6965511460289
+            },
+            "x": 324,
+            "y": 379.6965511460289,
+            "slotSectorIds": [
+              "T2S1",
+              "T2S3",
+              "T2S2"
+            ],
+            "slotColors": [
+              "B",
+              "R",
+              "B"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E3",
+                "sectorId": "T2S1",
+                "mark": 1,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 379.6965511460289
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 419,
+                    "y": 434.54482671904333
+                  }
+                ],
+                "regionId": "region-T1S1"
+              },
+              {
+                "index": 1,
+                "edgeId": "E4",
+                "sectorId": "T2S3",
+                "mark": 3,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 379.6965511460289
+                  },
+                  {
+                    "x": 419,
+                    "y": 434.54482671904333
+                  },
+                  {
+                    "x": 229,
+                    "y": 434.54482671904333
+                  }
+                ],
+                "regionId": "region-T2S3"
+              },
+              {
+                "index": 2,
+                "edgeId": "E5",
+                "sectorId": "T2S2",
+                "mark": 2,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 379.6965511460289
+                  },
+                  {
+                    "x": 229,
+                    "y": 434.54482671904333
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T1S1"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 229,
+                "y": 434.54482671904333
+              },
+              "b": {
+                "x": 371.5,
+                "y": 352.2724133595217
+              }
+            }
+          },
+          {
+            "id": "T3",
+            "vertexIds": [
+              "V1",
+              "V4",
+              "V5"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V4",
+                "u": -1,
+                "v": 1,
+                "x": 229,
+                "y": 434.54482671904333
+              },
+              {
+                "id": "V5",
+                "u": -1,
+                "v": 0,
+                "x": 134,
+                "y": 270
+              }
+            ],
+            "center": {
+              "x": 229,
+              "y": 324.84827557301446
+            },
+            "x": 229,
+            "y": 324.84827557301446,
+            "slotSectorIds": [
+              "T3S1",
+              "T3S2",
+              "T3S3"
+            ],
+            "slotColors": [
+              "B",
+              "G",
+              "R"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E5",
+                "sectorId": "T3S1",
+                "mark": 1,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 229,
+                    "y": 434.54482671904333
+                  }
+                ],
+                "regionId": "region-T1S1"
+              },
+              {
+                "index": 1,
+                "edgeId": "E6",
+                "sectorId": "T3S2",
+                "mark": 2,
+                "colorId": "G",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 229,
+                    "y": 434.54482671904333
+                  },
+                  {
+                    "x": 134,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T3S2"
+              },
+              {
+                "index": 2,
+                "edgeId": "E7",
+                "sectorId": "T3S3",
+                "mark": 3,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 324.84827557301446
+                  },
+                  {
+                    "x": 134,
+                    "y": 270
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T3S3"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 134,
+                "y": 270
+              },
+              "b": {
+                "x": 276.5,
+                "y": 352.2724133595217
+              }
+            }
+          },
+          {
+            "id": "T4",
+            "vertexIds": [
+              "V1",
+              "V5",
+              "V6"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V5",
+                "u": -1,
+                "v": 0,
+                "x": 134,
+                "y": 270
+              },
+              {
+                "id": "V6",
+                "u": 0,
+                "v": -1,
+                "x": 229,
+                "y": 105.45517328095667
+              }
+            ],
+            "center": {
+              "x": 229,
+              "y": 215.15172442698554
+            },
+            "x": 229,
+            "y": 215.15172442698554,
+            "slotSectorIds": [
+              "T4S1",
+              "T4S2",
+              "T4S3"
+            ],
+            "slotColors": [
+              "R",
+              "R",
+              "B"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E7",
+                "sectorId": "T4S1",
+                "mark": 1,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 134,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T3S3"
+              },
+              {
+                "index": 1,
+                "edgeId": "E8",
+                "sectorId": "T4S2",
+                "mark": 2,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 134,
+                    "y": 270
+                  },
+                  {
+                    "x": 229,
+                    "y": 105.45517328095667
+                  }
+                ],
+                "regionId": "region-T3S3"
+              },
+              {
+                "index": 2,
+                "edgeId": "E9",
+                "sectorId": "T4S3",
+                "mark": 3,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 229,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 229,
+                    "y": 105.45517328095667
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T4S3"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 229,
+                "y": 105.45517328095667
+              },
+              "b": {
+                "x": 229,
+                "y": 270
+              }
+            }
+          },
+          {
+            "id": "T5",
+            "vertexIds": [
+              "V1",
+              "V6",
+              "V7"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V6",
+                "u": 0,
+                "v": -1,
+                "x": 229,
+                "y": 105.45517328095667
+              },
+              {
+                "id": "V7",
+                "u": 1,
+                "v": -1,
+                "x": 419,
+                "y": 105.45517328095667
+              }
+            ],
+            "center": {
+              "x": 324,
+              "y": 160.3034488539711
+            },
+            "x": 324,
+            "y": 160.3034488539711,
+            "slotSectorIds": [
+              "T5S3",
+              "T5S1",
+              "T5S2"
+            ],
+            "slotColors": [
+              "B",
+              "R",
+              "B"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E9",
+                "sectorId": "T5S3",
+                "mark": 3,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 160.3034488539711
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 229,
+                    "y": 105.45517328095667
+                  }
+                ],
+                "regionId": "region-T4S3"
+              },
+              {
+                "index": 1,
+                "edgeId": "E10",
+                "sectorId": "T5S1",
+                "mark": 1,
+                "colorId": "R",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 160.3034488539711
+                  },
+                  {
+                    "x": 229,
+                    "y": 105.45517328095667
+                  },
+                  {
+                    "x": 419,
+                    "y": 105.45517328095667
+                  }
+                ],
+                "regionId": "region-T5S1"
+              },
+              {
+                "index": 2,
+                "edgeId": "E11",
+                "sectorId": "T5S2",
+                "mark": 2,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 324,
+                    "y": 160.3034488539711
+                  },
+                  {
+                    "x": 419,
+                    "y": 105.45517328095667
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T4S3"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 419,
+                "y": 105.45517328095667
+              },
+              "b": {
+                "x": 276.5,
+                "y": 187.72758664047834
+              }
+            }
+          },
+          {
+            "id": "T6",
+            "vertexIds": [
+              "V1",
+              "V7",
+              "V2"
+            ],
+            "vertices": [
+              {
+                "id": "V1",
+                "u": 0,
+                "v": 0,
+                "x": 324,
+                "y": 270
+              },
+              {
+                "id": "V7",
+                "u": 1,
+                "v": -1,
+                "x": 419,
+                "y": 105.45517328095667
+              },
+              {
+                "id": "V2",
+                "u": 1,
+                "v": 0,
+                "x": 514,
+                "y": 270
+              }
+            ],
+            "center": {
+              "x": 419,
+              "y": 215.15172442698554
+            },
+            "x": 419,
+            "y": 215.15172442698554,
+            "slotSectorIds": [
+              "T6S1",
+              "T6S2",
+              "T6S3"
+            ],
+            "slotColors": [
+              "B",
+              "G",
+              "G"
+            ],
+            "slots": [
+              {
+                "index": 0,
+                "edgeId": "E11",
+                "sectorId": "T6S1",
+                "mark": 1,
+                "colorId": "B",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  },
+                  {
+                    "x": 419,
+                    "y": 105.45517328095667
+                  }
+                ],
+                "regionId": "region-T4S3"
+              },
+              {
+                "index": 1,
+                "edgeId": "E12",
+                "sectorId": "T6S2",
+                "mark": 2,
+                "colorId": "G",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 419,
+                    "y": 105.45517328095667
+                  },
+                  {
+                    "x": 514,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T1S2"
+              },
+              {
+                "index": 2,
+                "edgeId": "E1",
+                "sectorId": "T6S3",
+                "mark": 3,
+                "colorId": "G",
+                "polygon": [
+                  {
+                    "x": 419,
+                    "y": 215.15172442698554
+                  },
+                  {
+                    "x": 514,
+                    "y": 270
+                  },
+                  {
+                    "x": 324,
+                    "y": 270
+                  }
+                ],
+                "regionId": "region-T1S2"
+              }
+            ],
+            "mirrorAxis": {
+              "a": {
+                "x": 514,
+                "y": 270
+              },
+              "b": {
+                "x": 371.5,
+                "y": 187.72758664047834
+              }
+            }
+          }
+        ],
+        "sectors": [
+          {
+            "id": "T1S1",
+            "tileId": "T1",
+            "mark": 1,
+            "colorId": "B",
+            "slotIndex": 2
+          },
+          {
+            "id": "T1S2",
+            "tileId": "T1",
+            "mark": 2,
+            "colorId": "G",
+            "slotIndex": 0
+          },
+          {
+            "id": "T1S3",
+            "tileId": "T1",
+            "mark": 3,
+            "colorId": "R",
+            "slotIndex": 1
+          },
+          {
+            "id": "T2S1",
+            "tileId": "T2",
+            "mark": 1,
+            "colorId": "B",
+            "slotIndex": 0
+          },
+          {
+            "id": "T2S2",
+            "tileId": "T2",
+            "mark": 2,
+            "colorId": "B",
+            "slotIndex": 2
+          },
+          {
+            "id": "T2S3",
+            "tileId": "T2",
+            "mark": 3,
+            "colorId": "R",
+            "slotIndex": 1
+          },
+          {
+            "id": "T3S1",
+            "tileId": "T3",
+            "mark": 1,
+            "colorId": "B",
+            "slotIndex": 0
+          },
+          {
+            "id": "T3S2",
+            "tileId": "T3",
+            "mark": 2,
+            "colorId": "G",
+            "slotIndex": 1
+          },
+          {
+            "id": "T3S3",
+            "tileId": "T3",
+            "mark": 3,
+            "colorId": "R",
+            "slotIndex": 2
+          },
+          {
+            "id": "T4S1",
+            "tileId": "T4",
+            "mark": 1,
+            "colorId": "R",
+            "slotIndex": 0
+          },
+          {
+            "id": "T4S2",
+            "tileId": "T4",
+            "mark": 2,
+            "colorId": "R",
+            "slotIndex": 1
+          },
+          {
+            "id": "T4S3",
+            "tileId": "T4",
+            "mark": 3,
+            "colorId": "B",
+            "slotIndex": 2
+          },
+          {
+            "id": "T5S1",
+            "tileId": "T5",
+            "mark": 1,
+            "colorId": "R",
+            "slotIndex": 1
+          },
+          {
+            "id": "T5S2",
+            "tileId": "T5",
+            "mark": 2,
+            "colorId": "B",
+            "slotIndex": 2
+          },
+          {
+            "id": "T5S3",
+            "tileId": "T5",
+            "mark": 3,
+            "colorId": "B",
+            "slotIndex": 0
+          },
+          {
+            "id": "T6S1",
+            "tileId": "T6",
+            "mark": 1,
+            "colorId": "B",
+            "slotIndex": 0
+          },
+          {
+            "id": "T6S2",
+            "tileId": "T6",
+            "mark": 2,
+            "colorId": "G",
+            "slotIndex": 1
+          },
+          {
+            "id": "T6S3",
+            "tileId": "T6",
+            "mark": 3,
+            "colorId": "G",
+            "slotIndex": 2
+          }
+        ],
+        "edges": [
+          {
+            "id": "E1",
+            "vertexIds": [
+              "V1",
+              "V2"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 514,
+              "y": 270
+            },
+            "incidences": [
+              {
+                "tileId": "T1",
+                "slotIndex": 0
+              },
+              {
+                "tileId": "T6",
+                "slotIndex": 2
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "G",
+              "G"
+            ],
+            "matched": true
+          },
+          {
+            "id": "E2",
+            "vertexIds": [
+              "V2",
+              "V3"
+            ],
+            "a": {
+              "x": 514,
+              "y": 270
+            },
+            "b": {
+              "x": 419,
+              "y": 434.54482671904333
+            },
+            "incidences": [
+              {
+                "tileId": "T1",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "R"
+            ],
+            "matched": null
+          },
+          {
+            "id": "E3",
+            "vertexIds": [
+              "V1",
+              "V3"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 419,
+              "y": 434.54482671904333
+            },
+            "incidences": [
+              {
+                "tileId": "T1",
+                "slotIndex": 2
+              },
+              {
+                "tileId": "T2",
+                "slotIndex": 0
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "B",
+              "B"
+            ],
+            "matched": true
+          },
+          {
+            "id": "E4",
+            "vertexIds": [
+              "V3",
+              "V4"
+            ],
+            "a": {
+              "x": 419,
+              "y": 434.54482671904333
+            },
+            "b": {
+              "x": 229,
+              "y": 434.54482671904333
+            },
+            "incidences": [
+              {
+                "tileId": "T2",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "R"
+            ],
+            "matched": null
+          },
+          {
+            "id": "E5",
+            "vertexIds": [
+              "V1",
+              "V4"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 229,
+              "y": 434.54482671904333
+            },
+            "incidences": [
+              {
+                "tileId": "T2",
+                "slotIndex": 2
+              },
+              {
+                "tileId": "T3",
+                "slotIndex": 0
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "B",
+              "B"
+            ],
+            "matched": true
+          },
+          {
+            "id": "E6",
+            "vertexIds": [
+              "V4",
+              "V5"
+            ],
+            "a": {
+              "x": 229,
+              "y": 434.54482671904333
+            },
+            "b": {
+              "x": 134,
+              "y": 270
+            },
+            "incidences": [
+              {
+                "tileId": "T3",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "G"
+            ],
+            "matched": null
+          },
+          {
+            "id": "E7",
+            "vertexIds": [
+              "V1",
+              "V5"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 134,
+              "y": 270
+            },
+            "incidences": [
+              {
+                "tileId": "T3",
+                "slotIndex": 2
+              },
+              {
+                "tileId": "T4",
+                "slotIndex": 0
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "R",
+              "R"
+            ],
+            "matched": true
+          },
+          {
+            "id": "E8",
+            "vertexIds": [
+              "V5",
+              "V6"
+            ],
+            "a": {
+              "x": 134,
+              "y": 270
+            },
+            "b": {
+              "x": 229,
+              "y": 105.45517328095667
+            },
+            "incidences": [
+              {
+                "tileId": "T4",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "R"
+            ],
+            "matched": null
+          },
+          {
+            "id": "E9",
+            "vertexIds": [
+              "V1",
+              "V6"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 229,
+              "y": 105.45517328095667
+            },
+            "incidences": [
+              {
+                "tileId": "T4",
+                "slotIndex": 2
+              },
+              {
+                "tileId": "T5",
+                "slotIndex": 0
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "B",
+              "B"
+            ],
+            "matched": true
+          },
+          {
+            "id": "E10",
+            "vertexIds": [
+              "V6",
+              "V7"
+            ],
+            "a": {
+              "x": 229,
+              "y": 105.45517328095667
+            },
+            "b": {
+              "x": 419,
+              "y": 105.45517328095667
+            },
+            "incidences": [
+              {
+                "tileId": "T5",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "R"
+            ],
+            "matched": null
+          },
+          {
+            "id": "E11",
+            "vertexIds": [
+              "V1",
+              "V7"
+            ],
+            "a": {
+              "x": 324,
+              "y": 270
+            },
+            "b": {
+              "x": 419,
+              "y": 105.45517328095667
+            },
+            "incidences": [
+              {
+                "tileId": "T5",
+                "slotIndex": 2
+              },
+              {
+                "tileId": "T6",
+                "slotIndex": 0
+              }
+            ],
+            "shared": true,
+            "colorIds": [
+              "B",
+              "B"
+            ],
+            "matched": true
+          },
+          {
+            "id": "E12",
+            "vertexIds": [
+              "V2",
+              "V7"
+            ],
+            "a": {
+              "x": 514,
+              "y": 270
+            },
+            "b": {
+              "x": 419,
+              "y": 105.45517328095667
+            },
+            "incidences": [
+              {
+                "tileId": "T6",
+                "slotIndex": 1
+              }
+            ],
+            "shared": false,
+            "colorIds": [
+              "G"
+            ],
+            "matched": null
+          }
+        ],
+        "regions": [
+          {
+            "id": "region-T1S3",
+            "colorId": "R",
+            "sectorIds": [
+              "T1S3"
+            ],
+            "tileIds": [
+              "T1"
+            ]
+          },
+          {
+            "id": "region-T2S3",
+            "colorId": "R",
+            "sectorIds": [
+              "T2S3"
+            ],
+            "tileIds": [
+              "T2"
+            ]
+          },
+          {
+            "id": "region-T3S3",
+            "colorId": "R",
+            "sectorIds": [
+              "T3S3",
+              "T4S1",
+              "T4S2"
+            ],
+            "tileIds": [
+              "T3",
+              "T4"
+            ]
+          },
+          {
+            "id": "region-T5S1",
+            "colorId": "R",
+            "sectorIds": [
+              "T5S1"
+            ],
+            "tileIds": [
+              "T5"
+            ]
+          },
+          {
+            "id": "region-T1S2",
+            "colorId": "G",
+            "sectorIds": [
+              "T1S2",
+              "T6S2",
+              "T6S3"
+            ],
+            "tileIds": [
+              "T1",
+              "T6"
+            ]
+          },
+          {
+            "id": "region-T3S2",
+            "colorId": "G",
+            "sectorIds": [
+              "T3S2"
+            ],
+            "tileIds": [
+              "T3"
+            ]
+          },
+          {
+            "id": "region-T1S1",
+            "colorId": "B",
+            "sectorIds": [
+              "T1S1",
+              "T2S1",
+              "T2S2",
+              "T3S1"
+            ],
+            "tileIds": [
+              "T1",
+              "T2",
+              "T3"
+            ]
+          },
+          {
+            "id": "region-T4S3",
+            "colorId": "B",
+            "sectorIds": [
+              "T4S3",
+              "T5S2",
+              "T5S3",
+              "T6S1"
+            ],
+            "tileIds": [
+              "T4",
+              "T5",
+              "T6"
+            ]
+          }
+        ],
+        "regionCounts": {
+          "R": 4,
+          "G": 2,
+          "B": 2
+        },
+        "targetRegions": {
+          "R": 2,
+          "G": 2,
+          "B": 4
+        },
+        "colorRegions": [
+          {
+            "colorId": "R",
+            "actual": 4,
+            "target": 2,
+            "matched": false
+          },
+          {
+            "colorId": "G",
+            "actual": 2,
+            "target": 2,
+            "matched": true
+          },
+          {
+            "colorId": "B",
+            "actual": 2,
+            "target": 4,
+            "matched": false
+          }
+        ],
+        "sharedEdgeCount": 6,
+        "matchedEdgeCount": 6,
+        "matchingEdgeIds": [
+          "E1",
+          "E3",
+          "E5",
+          "E7",
+          "E9",
+          "E11"
+        ],
+        "conflictEdgeIds": [],
+        "matchedRegionColorCount": 1,
+        "allEdgesMatched": true,
+        "allRegionsMatched": false,
+        "goalReady": false,
+        "focusItems": [
+          {
+            "id": "T1",
+            "kind": "tile",
+            "x": 419,
+            "y": 324.84827557301446
+          },
+          {
+            "id": "T2",
+            "kind": "tile",
+            "x": 324,
+            "y": 379.6965511460289
+          },
+          {
+            "id": "T3",
+            "kind": "tile",
+            "x": 229,
+            "y": 324.84827557301446
+          },
+          {
+            "id": "T4",
+            "kind": "tile",
+            "x": 229,
+            "y": 215.15172442698554
+          },
+          {
+            "id": "T5",
+            "kind": "tile",
+            "x": 324,
+            "y": 160.3034488539711
+          },
+          {
+            "id": "T6",
+            "kind": "tile",
+            "x": 419,
+            "y": 215.15172442698554
+          }
+        ],
+        "selectedId": "T5",
+        "cursor": {
+          "id": "T5",
+          "kind": "tile",
+          "x": 324,
+          "y": 160.3034488539711
+        },
+        "previewRotate": {
+          "kind": "rotate",
+          "tileId": "T5",
+          "beforeSectorIds": [
+            "T5S3",
+            "T5S1",
+            "T5S2"
+          ],
+          "afterSectorIds": [
+            "T5S2",
+            "T5S3",
+            "T5S1"
+          ],
+          "beforeColors": [
+            "B",
+            "R",
+            "B"
+          ],
+          "afterColors": [
+            "B",
+            "B",
+            "R"
+          ],
+          "colorChanged": true,
+          "cost": 1,
+          "matchedEdgeCount": 5,
+          "regionCounts": {
+            "R": 4,
+            "G": 2,
+            "B": 3
+          },
+          "allEdgesMatched": false,
+          "allRegionsMatched": false,
+          "willWin": false,
+          "willExhaustMoves": false
+        },
+        "previewMirror": {
+          "kind": "mirror",
+          "tileId": "T5",
+          "beforeSectorIds": [
+            "T5S3",
+            "T5S1",
+            "T5S2"
+          ],
+          "afterSectorIds": [
+            "T5S3",
+            "T5S2",
+            "T5S1"
+          ],
+          "beforeColors": [
+            "B",
+            "R",
+            "B"
+          ],
+          "afterColors": [
+            "B",
+            "B",
+            "R"
+          ],
+          "colorChanged": true,
+          "cost": 1,
+          "matchedEdgeCount": 5,
+          "regionCounts": {
+            "R": 4,
+            "G": 2,
+            "B": 3
+          },
+          "allEdgesMatched": false,
+          "allRegionsMatched": false,
+          "willWin": false,
+          "willExhaustMoves": false
+        },
+        "moveLimit": 6,
+        "movesUsed": 4,
+        "movesRemaining": 2,
+        "rotationCount": 3,
+        "mirrorCount": 1,
+        "history": [
+          {
+            "id": 1,
+            "kind": "rotate",
+            "tileId": "T1",
+            "beforeSectorIds": [
+              "T1S1",
+              "T1S2",
+              "T1S3"
+            ],
+            "afterSectorIds": [
+              "T1S3",
+              "T1S1",
+              "T1S2"
+            ],
+            "beforeColors": [
+              "B",
+              "G",
+              "R"
+            ],
+            "afterColors": [
+              "R",
+              "B",
+              "G"
+            ],
+            "colorChanged": true,
+            "at": 0.03333333333333333,
+            "tick": 2
+          },
+          {
+            "id": 2,
+            "kind": "rotate",
+            "tileId": "T1",
+            "beforeSectorIds": [
+              "T1S3",
+              "T1S1",
+              "T1S2"
+            ],
+            "afterSectorIds": [
+              "T1S2",
+              "T1S3",
+              "T1S1"
+            ],
+            "beforeColors": [
+              "R",
+              "B",
+              "G"
+            ],
+            "afterColors": [
+              "G",
+              "R",
+              "B"
+            ],
+            "colorChanged": true,
+            "at": 0.06666666666666667,
+            "tick": 4
+          },
+          {
+            "id": 3,
+            "kind": "mirror",
+            "tileId": "T2",
+            "beforeSectorIds": [
+              "T2S1",
+              "T2S2",
+              "T2S3"
+            ],
+            "afterSectorIds": [
+              "T2S1",
+              "T2S3",
+              "T2S2"
+            ],
+            "beforeColors": [
+              "B",
+              "B",
+              "R"
+            ],
+            "afterColors": [
+              "B",
+              "R",
+              "B"
+            ],
+            "colorChanged": true,
+            "at": 0.13333333333333333,
+            "tick": 8
+          },
+          {
+            "id": 4,
+            "kind": "rotate",
+            "tileId": "T5",
+            "beforeSectorIds": [
+              "T5S1",
+              "T5S2",
+              "T5S3"
+            ],
+            "afterSectorIds": [
+              "T5S3",
+              "T5S1",
+              "T5S2"
+            ],
+            "beforeColors": [
+              "R",
+              "B",
+              "B"
+            ],
+            "afterColors": [
+              "B",
+              "R",
+              "B"
+            ],
+            "colorChanged": true,
+            "at": 0.26666666666666666,
+            "tick": 16
+          }
+        ],
+        "historyDepth": 4,
+        "lastOperation": {
+          "id": 4,
+          "kind": "rotate",
+          "tileId": "T5",
+          "beforeSectorIds": [
+            "T5S1",
+            "T5S2",
+            "T5S3"
+          ],
+          "afterSectorIds": [
+            "T5S3",
+            "T5S1",
+            "T5S2"
+          ],
+          "beforeColors": [
+            "R",
+            "B",
+            "B"
+          ],
+          "afterColors": [
+            "B",
+            "R",
+            "B"
+          ],
+          "colorChanged": true,
+          "at": 0.26666666666666666,
+          "tick": 16
+        },
+        "lastAction": {
+          "type": "rotate",
+          "at": 0.26666666666666666,
+          "tick": 16,
+          "id": 4,
+          "kind": "rotate",
+          "tileId": "T5",
+          "beforeSectorIds": [
+            "T5S1",
+            "T5S2",
+            "T5S3"
+          ],
+          "afterSectorIds": [
+            "T5S3",
+            "T5S1",
+            "T5S2"
+          ],
+          "beforeColors": [
+            "R",
+            "B",
+            "B"
+          ],
+          "afterColors": [
+            "B",
+            "R",
+            "B"
+          ],
+          "colorChanged": true
+        },
+        "events": [
+          {
+            "type": "rotate",
+            "at": 0.26666666666666666,
+            "tick": 16,
+            "id": 4,
+            "kind": "rotate",
+            "tileId": "T5",
+            "beforeSectorIds": [
+              "T5S1",
+              "T5S2",
+              "T5S3"
+            ],
+            "afterSectorIds": [
+              "T5S3",
+              "T5S1",
+              "T5S2"
+            ],
+            "beforeColors": [
+              "R",
+              "B",
+              "B"
+            ],
+            "afterColors": [
+              "B",
+              "R",
+              "B"
+            ],
+            "colorChanged": true
+          }
+        ],
+        "phase": "playing",
+        "tick": 16,
+        "elapsed": 0.26666666666666666,
+        "timeLimit": 90,
+        "remaining": 89.73333333333333,
+        "score": 340,
+        "lostReason": null,
+        "message": "已顺时针旋转120°；编号与颜色随扇区移动"
+      },
+      "operations": [
+        {
+          "tileId": "T1",
+          "key": "A"
+        },
+        {
+          "tileId": "T1",
+          "key": "A"
+        },
+        {
+          "tileId": "T2",
+          "key": "B"
+        },
+        {
+          "tileId": "T5",
+          "key": "A"
+        }
+      ],
+      "scope": "Fresh model, ordinary direction/A/B input only; no state mutation or authored action route. No claim of browser duration."
+    }
+  ],
+  "reusedOrdinaryEvidence": [
+    {
+      "name": "level1-record",
+      "sourceSha256": "46fc5e6954e8d0a9306b4954c10da49ac5713d012ac2ea9277427b0a738b068f",
+      "phase": "won",
+      "movesUsed": 6,
+      "elapsed": 35.13333333333333,
+      "regionCounts": {
+        "R": 2,
+        "G": 2,
+        "B": 4
+      },
+      "physicalFinal": [
+        [
+          "T1S2",
+          "T1S1",
+          "T1S3"
+        ],
+        [
+          "T2S3",
+          "T2S1",
+          "T2S2"
+        ],
+        [
+          "T3S1",
+          "T3S2",
+          "T3S3"
+        ],
+        [
+          "T4S1",
+          "T4S3",
+          "T4S2"
+        ],
+        [
+          "T5S1",
+          "T5S2",
+          "T5S3"
+        ],
+        [
+          "T6S1",
+          "T6S2",
+          "T6S3"
+        ]
+      ],
+      "scope": "Existing QA execution independently recomputed; no replay or new Model.step calls."
+    },
+    {
+      "name": "level1-budget-loss",
+      "sourceSha256": "68ab0ca6513f83bee9e6bcc56356ef5f3e2c1a64dba23829826a692b12173df9",
+      "phase": "lost",
+      "movesUsed": 6,
+      "elapsed": 1.3333333333333333,
+      "regionCounts": {
+        "R": 4,
+        "G": 3,
+        "B": 5
+      },
+      "physicalFinal": [
+        [
+          "T1S1",
+          "T1S2",
+          "T1S3"
+        ],
+        [
+          "T2S1",
+          "T2S2",
+          "T2S3"
+        ],
+        [
+          "T3S1",
+          "T3S2",
+          "T3S3"
+        ],
+        [
+          "T4S1",
+          "T4S2",
+          "T4S3"
+        ],
+        [
+          "T5S1",
+          "T5S2",
+          "T5S3"
+        ],
+        [
+          "T6S1",
+          "T6S2",
+          "T6S3"
+        ]
+      ],
+      "scope": "Existing QA execution independently recomputed; no replay or new Model.step calls."
+    },
+    {
+      "name": "level2-record",
+      "sourceSha256": "3c91d1e15c07d0cf851e487ed9909e70c332bec65c7df0d3ab6b6210def72ad6",
+      "phase": "won",
+      "movesUsed": 7,
+      "elapsed": 40.46666666666667,
+      "regionCounts": {
+        "R": 2,
+        "G": 3,
+        "B": 3
+      },
+      "physicalFinal": [
+        [
+          "T1S3",
+          "T1S1",
+          "T1S2"
+        ],
+        [
+          "T2S3",
+          "T2S2",
+          "T2S1"
+        ],
+        [
+          "T3S1",
+          "T3S2",
+          "T3S3"
+        ],
+        [
+          "T4S1",
+          "T4S2",
+          "T4S3"
+        ],
+        [
+          "T5S3",
+          "T5S1",
+          "T5S2"
+        ],
+        [
+          "T6S3",
+          "T6S1",
+          "T6S2"
+        ]
+      ],
+      "scope": "Existing QA execution independently recomputed; no replay or new Model.step calls."
+    },
+    {
+      "name": "level2-budget-loss",
+      "sourceSha256": "c6b753d737c0ca7a4b7e79e98cd60d2fb3d149030dd8750a2dbbfc101c31ca44",
+      "phase": "lost",
+      "movesUsed": 7,
+      "elapsed": 1.6166666666666667,
+      "regionCounts": {
+        "R": 4,
+        "G": 5,
+        "B": 4
+      },
+      "physicalFinal": [
+        [
+          "T1S3",
+          "T1S1",
+          "T1S2"
+        ],
+        [
+          "T2S1",
+          "T2S2",
+          "T2S3"
+        ],
+        [
+          "T3S1",
+          "T3S2",
+          "T3S3"
+        ],
+        [
+          "T4S1",
+          "T4S2",
+          "T4S3"
+        ],
+        [
+          "T5S1",
+          "T5S2",
+          "T5S3"
+        ],
+        [
+          "T6S1",
+          "T6S2",
+          "T6S3"
+        ]
+      ],
+      "scope": "Existing QA execution independently recomputed; no replay or new Model.step calls."
+    },
+    {
+      "name": "level3-record",
+      "sourceSha256": "050ba8e4978f0cae42abae20c0ec17ce316bd689e094ab93f7a3d2b65a8b8a74",
+      "phase": "won",
+      "movesUsed": 8,
+      "elapsed": 44.733333333333334,
+      "regionCounts": {
+        "R": 3,
+        "G": 2,
+        "B": 3
+      },
+      "physicalFinal": [
+        [
+          "T1S2",
+          "T1S3",
+          "T1S1"
+        ],
+        [
+          "T2S1",
+          "T2S2",
+          "T2S3"
+        ],
+        [
+          "T3S1",
+          "T3S2",
+          "T3S3"
+        ],
+        [
+          "T4S1",
+          "T4S3",
+          "T4S2"
+        ],
+        [
+          "T5S2",
+          "T5S3",
+          "T5S1"
+        ],
+        [
+          "T6S3",
+          "T6S1",
+          "T6S2"
+        ]
+      ],
+      "scope": "Existing QA execution independently recomputed; no replay or new Model.step calls."
+    },
+    {
+      "name": "level3-budget-loss",
+      "sourceSha256": "6c9d4b4a3d44e4b0027045d4eaaa2b9c417d0dda8868dc9bc5a747ce272711a9",
+      "phase": "lost",
+      "movesUsed": 8,
+      "elapsed": 1.8666666666666667,
+      "regionCounts": {
+        "R": 3,
+        "G": 3,
+        "B": 4
+      },
+      "physicalFinal": [
+        [
+          "T1S2",
+          "T1S3",
+          "T1S1"
+        ],
+        [
+          "T2S1",
+          "T2S2",
+          "T2S3"
+        ],
+        [
+          "T3S1",
+          "T3S2",
+          "T3S3"
+        ],
+        [
+          "T4S1",
+          "T4S2",
+          "T4S3"
+        ],
+        [
+          "T5S1",
+          "T5S2",
+          "T5S3"
+        ],
+        [
+          "T6S1",
+          "T6S2",
+          "T6S3"
+        ]
+      ],
+      "scope": "Existing QA execution independently recomputed; no replay or new Model.step calls."
+    }
+  ],
+  "sourceHashesAfter": {
+    "model": "872c8b8b2fcecf382b00ca9ca667f16ecb77516b490f6d0150e7bab233e54dce",
+    "contract": "4c53cd5a8832c22e1fa685f7b3488dbd7edede87406904dd39142ca041d923f8",
+    "automation": "70d897c22491ec011bddff76a9b38da2de4c6ca13763ebc4de6556bcfee49e8d",
+    "math": "6b35fbbb0bf8862c248e8ab48a557f95134eafcf053506070a88a1a8c0026953",
+    "review": "3486f39aa4b13c10a435d0d2425b288e6d74a3fc68629b6608dd2d87acea098b"
+  },
+  "sourceUnchanged": true,
+  "checks": 4,
+  "snapshotChecks": 67,
+  "actualModelTicks": 16
+}

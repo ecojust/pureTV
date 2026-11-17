@@ -1,0 +1,1585 @@
+{
+  "schema": 1,
+  "game": "parallax-skyline",
+  "version": "0.1.0",
+  "sourceCommit": "64b3b0965a24aa092a7cb3fb9737aebe4a01cfda",
+  "automationSha256": "0a2ab76174061da5370063f36ad4eb2919ba8e0dbf9e641eb0a5d9a0d3de3bc8",
+  "gameRules": {
+    "publicDocuments": {
+      "docs/public-design.md": "cc8b11d7e8080fe910b6a0bc53e99fd951eb81885c7eb0a22ae6a5e2b49ea036",
+      "docs/model-contract.md": "059606d8195439ba5ebcc7225ddd1090e47898fcb157c10495d6de9aadfe5863",
+      "docs/public-interface.md": "58a99431116ba26a78f0f68aaf362a8c8ecbb2bdd207013b675d514a97a12400"
+    },
+    "publicRulesReviewSha256": "ad45b6875f858f51cb2a73018d10448c4a92f7f65d15938fd112c257d3baff81",
+    "sourceCorrectionReviewSha256": "ba46478981a23efa2e2c0d9dfb8dc418ac77d3a36a1eb62eb9bd66c7549851d1",
+    "ordinary": {
+      "rawReportSha256": "bed4a9b5a59dfe9002fe452fb8fc293865c7ed59f8acfb6e5f3723c1f7e79d0b",
+      "runs": [
+        {
+          "runId": "level0-won",
+          "sha256": "08e2ea898b402ff67ae1b47c6152275c9fbfe3a9be0c77316d7a5122f6627f2b",
+          "level": 0,
+          "outcome": "won",
+          "actualCalls": 211,
+          "modelElapsedSeconds": 3.516666666666659,
+          "reportedMechanismCallIndices": {
+            "nearDoubleShift": 7,
+            "farSingleShift": 43,
+            "falseMainRejected": 91,
+            "viewSwitchInvariant": 115,
+            "undoFullPairAfterRejection": 199,
+            "actualSubmissions": 2
+          }
+        },
+        {
+          "runId": "level0-lost",
+          "sha256": "34219614782edbebf5fd285794b053464f6c87367dc74b5e7d7d0f6c73e08a36",
+          "level": 0,
+          "outcome": "lost",
+          "actualCalls": 43,
+          "modelElapsedSeconds": 0.7166666666666672,
+          "reportedMechanismCallIndices": {
+            "nearDoubleShift": null,
+            "farSingleShift": null,
+            "falseMainRejected": null,
+            "viewSwitchInvariant": null,
+            "undoFullPairAfterRejection": null,
+            "actualSubmissions": 4
+          }
+        },
+        {
+          "runId": "level1-won",
+          "sha256": "d5a0f4a876b91adab6aee31c4dea59bd4ae86fb9d9a4bc2acbec3516bbc4ffd0",
+          "level": 1,
+          "outcome": "won",
+          "actualCalls": 127,
+          "modelElapsedSeconds": 2.116666666666664,
+          "reportedMechanismCallIndices": {
+            "nearDoubleShift": 7,
+            "farSingleShift": 43,
+            "falseMainRejected": null,
+            "viewSwitchInvariant": null,
+            "undoFullPairAfterRejection": null,
+            "actualSubmissions": 1
+          }
+        },
+        {
+          "runId": "level1-lost",
+          "sha256": "645d5d909111e2bb204ab99cbf19d7db8cf005a68aac7e852f8fa312a062b311",
+          "level": 1,
+          "outcome": "lost",
+          "actualCalls": 43,
+          "modelElapsedSeconds": 0.7166666666666672,
+          "reportedMechanismCallIndices": {
+            "nearDoubleShift": null,
+            "farSingleShift": null,
+            "falseMainRejected": null,
+            "viewSwitchInvariant": null,
+            "undoFullPairAfterRejection": null,
+            "actualSubmissions": 4
+          }
+        },
+        {
+          "runId": "level2-won",
+          "sha256": "ff8a839f3afb52656f38edf1d104e6808bb2d68f800355e3e3f162e48c1b3ada",
+          "level": 2,
+          "outcome": "won",
+          "actualCalls": 151,
+          "modelElapsedSeconds": 2.5166666666666626,
+          "reportedMechanismCallIndices": {
+            "nearDoubleShift": 7,
+            "farSingleShift": 55,
+            "falseMainRejected": null,
+            "viewSwitchInvariant": null,
+            "undoFullPairAfterRejection": null,
+            "actualSubmissions": 1
+          }
+        },
+        {
+          "runId": "level2-lost",
+          "sha256": "9f2c8ffc7727a0e0a19fb09c30f5532490bac42e9ffa8306195625979a7aa9ea",
+          "level": 2,
+          "outcome": "lost",
+          "actualCalls": 43,
+          "modelElapsedSeconds": 0.7166666666666672,
+          "reportedMechanismCallIndices": {
+            "nearDoubleShift": null,
+            "farSingleShift": null,
+            "falseMainRejected": null,
+            "viewSwitchInvariant": null,
+            "undoFullPairAfterRejection": null,
+            "actualSubmissions": 4
+          }
+        }
+      ],
+      "actualCalls": 618,
+      "scope": "All actual model calls retained; first attempt only, stop on first failure. Automated model time is not observed human/browser/device play duration.",
+      "independentAuditIncluded": false,
+      "limitations": [
+        "These are retained model-call chains, not browser or device play.",
+        "Mechanism indices here are original harness claims; independent results are a separate projection.",
+        "No projection arithmetic or command recurrence is executed by this release adapter."
+      ]
+    },
+    "independent": {
+      "rawReportSha256": "60b0f269ebfd0c4356f88082a217cd426879c4cf746b73e002e7edf9b26bcf98",
+      "verdict": "checked",
+      "manifestSha256": "7ba4d69908e033f9cd11f381cbc76dd362e3de0b20f404daf95f2c3ed5c217ff",
+      "publicProjectionSha256": "dd07c92500e0ed2e91da61b9e0dd75f6881c9f844a1e7690f4d871e9551e6994",
+      "checkerSha256": {
+        "independent-audit.mjs": "bc7398133d6db39da141ce5b099dca61022c8a648b7c8a87213e5454ee168fe1",
+        "independent-audit-cli.mjs": "1d16226c7dc709a0a85dcf3852a882b21d3b9827be870b975289acf542a66ca6"
+      },
+      "checkedPairs": 618,
+      "runs": [
+        {
+          "runId": "level0-won",
+          "level": 0,
+          "outcome": "won",
+          "naturalLoss": false,
+          "counts": {
+            "recordedCalls": 211,
+            "checkedPairs": 211,
+            "checkedEndpoints": 423
+          },
+          "mechanisms": {
+            "neutralRearms": 1,
+            "nearMoves": 3,
+            "heldDirectionNotRepeated": 75,
+            "farMoves": 5,
+            "frontOnlyRejected": 1,
+            "heldANotRepeated": 5,
+            "viewSwitchesPreservingPlacements": 1,
+            "wholePairUndos": 1,
+            "undoAfterBothLayersMoved": 1,
+            "undoRetainingFailedSubmissions": 1
+          },
+          "mechanismScope": "Counts include only individually checked actual call pairs; they do not establish browser-visible or physical-device behavior.",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not source execution or artifact authenticity.",
+            "No Model, renderer, pilot, formal-test source, private witness or diagnostic corpus is read or imported.",
+            "Each transition starts from its actual recorded before state. Calculated states never become later observations.",
+            "Sparse endpoints do not establish intervening calls, held-input continuity, undo history transitions or ordinary reachability.",
+            "JSON cannot establish fresh object identity, accessor/Proxy behavior, missing native values or the truth of display prose.",
+            "Model consistency does not establish browser lifecycle, trusted touch handling, visuals, performance or physical-device behavior."
+          ],
+          "artifactSha256": "462348277926c782453730670a33ed3f4eb229875824130de05f2d472ed9724c"
+        },
+        {
+          "runId": "level0-lost",
+          "level": 0,
+          "outcome": "lost",
+          "naturalLoss": true,
+          "counts": {
+            "recordedCalls": 43,
+            "checkedPairs": 43,
+            "checkedEndpoints": 87
+          },
+          "mechanisms": {
+            "neutralRearms": 1,
+            "heldANotRepeated": 15
+          },
+          "mechanismScope": "Counts include only individually checked actual call pairs; they do not establish browser-visible or physical-device behavior.",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not source execution or artifact authenticity.",
+            "No Model, renderer, pilot, formal-test source, private witness or diagnostic corpus is read or imported.",
+            "Each transition starts from its actual recorded before state. Calculated states never become later observations.",
+            "Sparse endpoints do not establish intervening calls, held-input continuity, undo history transitions or ordinary reachability.",
+            "JSON cannot establish fresh object identity, accessor/Proxy behavior, missing native values or the truth of display prose.",
+            "Model consistency does not establish browser lifecycle, trusted touch handling, visuals, performance or physical-device behavior."
+          ],
+          "artifactSha256": "e910c23c998c4426f2bb6ebe405a00d08b8d5a3ca04ceb442f7ae95c44327c0e"
+        },
+        {
+          "runId": "level1-won",
+          "level": 1,
+          "outcome": "won",
+          "naturalLoss": false,
+          "counts": {
+            "recordedCalls": 127,
+            "checkedPairs": 127,
+            "checkedEndpoints": 255
+          },
+          "mechanisms": {
+            "neutralRearms": 1,
+            "nearMoves": 2,
+            "heldDirectionNotRepeated": 50,
+            "farMoves": 7
+          },
+          "mechanismScope": "Counts include only individually checked actual call pairs; they do not establish browser-visible or physical-device behavior.",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not source execution or artifact authenticity.",
+            "No Model, renderer, pilot, formal-test source, private witness or diagnostic corpus is read or imported.",
+            "Each transition starts from its actual recorded before state. Calculated states never become later observations.",
+            "Sparse endpoints do not establish intervening calls, held-input continuity, undo history transitions or ordinary reachability.",
+            "JSON cannot establish fresh object identity, accessor/Proxy behavior, missing native values or the truth of display prose.",
+            "Model consistency does not establish browser lifecycle, trusted touch handling, visuals, performance or physical-device behavior."
+          ],
+          "artifactSha256": "8cdf707200918b632d83a2edc351045b8ab3299ac725f874cb2bf30b3038cb15"
+        },
+        {
+          "runId": "level1-lost",
+          "level": 1,
+          "outcome": "lost",
+          "naturalLoss": true,
+          "counts": {
+            "recordedCalls": 43,
+            "checkedPairs": 43,
+            "checkedEndpoints": 87
+          },
+          "mechanisms": {
+            "neutralRearms": 1,
+            "heldANotRepeated": 15
+          },
+          "mechanismScope": "Counts include only individually checked actual call pairs; they do not establish browser-visible or physical-device behavior.",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not source execution or artifact authenticity.",
+            "No Model, renderer, pilot, formal-test source, private witness or diagnostic corpus is read or imported.",
+            "Each transition starts from its actual recorded before state. Calculated states never become later observations.",
+            "Sparse endpoints do not establish intervening calls, held-input continuity, undo history transitions or ordinary reachability.",
+            "JSON cannot establish fresh object identity, accessor/Proxy behavior, missing native values or the truth of display prose.",
+            "Model consistency does not establish browser lifecycle, trusted touch handling, visuals, performance or physical-device behavior."
+          ],
+          "artifactSha256": "5c6ba18d16a6e3de0f2f8c526b6bbeeb363e7f13d94df927708af8e340c674b7"
+        },
+        {
+          "runId": "level2-won",
+          "level": 2,
+          "outcome": "won",
+          "naturalLoss": false,
+          "counts": {
+            "recordedCalls": 151,
+            "checkedPairs": 151,
+            "checkedEndpoints": 303
+          },
+          "mechanisms": {
+            "neutralRearms": 1,
+            "nearMoves": 3,
+            "heldDirectionNotRepeated": 60,
+            "farMoves": 8
+          },
+          "mechanismScope": "Counts include only individually checked actual call pairs; they do not establish browser-visible or physical-device behavior.",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not source execution or artifact authenticity.",
+            "No Model, renderer, pilot, formal-test source, private witness or diagnostic corpus is read or imported.",
+            "Each transition starts from its actual recorded before state. Calculated states never become later observations.",
+            "Sparse endpoints do not establish intervening calls, held-input continuity, undo history transitions or ordinary reachability.",
+            "JSON cannot establish fresh object identity, accessor/Proxy behavior, missing native values or the truth of display prose.",
+            "Model consistency does not establish browser lifecycle, trusted touch handling, visuals, performance or physical-device behavior."
+          ],
+          "artifactSha256": "9e6675957440066256109622b7277452559f9e0e68751aa1149afe6e78bd28be"
+        },
+        {
+          "runId": "level2-lost",
+          "level": 2,
+          "outcome": "lost",
+          "naturalLoss": true,
+          "counts": {
+            "recordedCalls": 43,
+            "checkedPairs": 43,
+            "checkedEndpoints": 87
+          },
+          "mechanisms": {
+            "neutralRearms": 1,
+            "heldANotRepeated": 15
+          },
+          "mechanismScope": "Counts include only individually checked actual call pairs; they do not establish browser-visible or physical-device behavior.",
+          "limitations": [
+            "Arithmetic checks establish consistency of recorded public facts, not source execution or artifact authenticity.",
+            "No Model, renderer, pilot, formal-test source, private witness or diagnostic corpus is read or imported.",
+            "Each transition starts from its actual recorded before state. Calculated states never become later observations.",
+            "Sparse endpoints do not establish intervening calls, held-input continuity, undo history transitions or ordinary reachability.",
+            "JSON cannot establish fresh object identity, accessor/Proxy behavior, missing native values or the truth of display prose.",
+            "Model consistency does not establish browser lifecycle, trusted touch handling, visuals, performance or physical-device behavior."
+          ],
+          "artifactSha256": "f3c815c57d1127fafe3380fba060bc6fd6f040f31f80867e4da4b8a18c58cb0d"
+        }
+      ],
+      "coverage": [
+        {
+          "level": 0,
+          "winRunIds": [
+            "level0-won"
+          ],
+          "lossRunIds": [
+            "level0-lost"
+          ]
+        },
+        {
+          "level": 1,
+          "winRunIds": [
+            "level1-won"
+          ],
+          "lossRunIds": [
+            "level1-lost"
+          ]
+        },
+        {
+          "level": 2,
+          "winRunIds": [
+            "level2-won"
+          ],
+          "lossRunIds": [
+            "level2-lost"
+          ]
+        }
+      ],
+      "scope": "Consistency of explicitly listed public observations with frozen public rules.",
+      "limitations": [
+        "Arithmetic checks establish consistency of recorded public facts, not source execution or artifact authenticity.",
+        "No Model, renderer, pilot, formal-test source, private witness or diagnostic corpus is read or imported.",
+        "Each transition starts from its actual recorded before state. Calculated states never become later observations.",
+        "Sparse endpoints do not establish intervening calls, held-input continuity, undo history transitions or ordinary reachability.",
+        "JSON cannot establish fresh object identity, accessor/Proxy behavior, missing native values or the truth of display prose.",
+        "Model consistency does not establish browser lifecycle, trusted touch handling, visuals, performance or physical-device behavior.",
+        "Only manifest-listed public artifacts are read; this audit cannot establish that unlisted attempts do not exist.",
+        "Origin source hashes are provenance claims. Production, pilot, renderer and harness sources are not opened or authenticated.",
+        "Sparse endpoints and their gaps cannot replace a complete ordinary model-call chain or prove browser lifecycle, trusted controls, visuals or hardware behavior.",
+        "JSON cannot establish fresh reference identity, descriptor/getter/Proxy behavior, or unrecorded input properties."
+      ],
+      "invocationHistory": {
+        "mistakenCoreInvocationWasNotAnAudit": true,
+        "mistakenInvocationSha256": "90117f48b2e2c8da9d4f44e1625529654dbb024590994ebe9ceeafe522d38195",
+        "correctionReviewSha256": "3e7d717f039bc9e6bc6fc8523c0781e272539dcdaf166d1627bf861f5e943d24",
+        "actualCliExecutionSha256": "857624b734d499a43c71ff38fbf647fd8867b6dfa98258ff06171e43dbe2912c"
+      }
+    },
+    "mechanics": {
+      "kind": "two-depth architectural alignment puzzle",
+      "tasks": 3,
+      "projectionScales": [
+        2,
+        1
+      ],
+      "observationOffsets": [
+        [
+          0,
+          0
+        ],
+        [
+          -4,
+          -1
+        ]
+      ],
+      "requiredMatches": "Both complete silhouettes and both visible roof-owner landmarks.",
+      "submissionBudget": "Four incorrect submissions lose; a correct final-chance submission wins.",
+      "undo": "Restore the entire previous pair of physical positions without refunding failures.",
+      "clock": "Admitted public calls and actual accepted dt; no timer loss or pressure-game ticks."
+    }
+  },
+  "candidateReadiness": {
+    "passed": true,
+    "visualReviewCompleted": true,
+    "readyToFreeze": true,
+    "sourceAssetHashes": {
+      "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "game-model.js": "8803ff30d8aeb64b2539b8098fa2c731deb05ad830140044fe3431727b1c6f04",
+      "game.js": "857d63b671a011241dcf50744eadb7b96be9bb94a8f1a78514678d20744a46c7",
+      "game-config.json": "857ad88adcbe149707411fa7c5f6bc5e120421ce23acb6238f54849fa9c581b6",
+      "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+    },
+    "appRelativeSourceHashes": {
+      "LICENSE": "93a8777f8776e6aa280f486fb84a5a12b64fcb00d9b58086ee1cc203e7311a15",
+      "README.md": "e09ae1b58f262fc4596f0e2ad0c32accfd036d85bad89f0e0e6a01ed2b779686",
+      "docs/model-contract.md": "059606d8195439ba5ebcc7225ddd1090e47898fcb157c10495d6de9aadfe5863",
+      "docs/public-design.md": "cc8b11d7e8080fe910b6a0bc53e99fd951eb81885c7eb0a22ae6a5e2b49ea036",
+      "docs/public-interface.md": "58a99431116ba26a78f0f68aaf362a8c8ecbb2bdd207013b675d514a97a12400",
+      "game.json": "0974be1213a2885b6e9826cb5d1159536b23bd4fc5f43fc6060c4b073bd36d12",
+      "icon.xml": "dad9006e1f347a98124e74af6141d036140404d4781fe3aca28a187977b391e6",
+      "logo.svg": "4a7e947e7cae4159c47acc6dc5c4b78208bf729bf8f9c0ee1caff2c80bbdaec8",
+      "src/main/assets/game-model.js": "8803ff30d8aeb64b2539b8098fa2c731deb05ad830140044fe3431727b1c6f04",
+      "src/main/assets/game.js": "857d63b671a011241dcf50744eadb7b96be9bb94a8f1a78514678d20744a46c7",
+      "tests/automation.mjs": "0a2ab76174061da5370063f36ad4eb2919ba8e0dbf9e641eb0a5d9a0d3de3bc8",
+      "tests/independent-audit-cli.mjs": "1d16226c7dc709a0a85dcf3852a882b21d3b9827be870b975289acf542a66ca6",
+      "tests/independent-audit.mjs": "bc7398133d6db39da141ce5b099dca61022c8a648b7c8a87213e5454ee168fe1",
+      "tests/model.test.cjs": "cee5f639c854ef0bffea96b2bc30f22f83e517335874279d9c0c5f3838fc3a96"
+    },
+    "reviewedImages": [
+      {
+        "scratchRelativePath": "candidate-v2-first/menu-1280.png",
+        "sha256": "dcf4ef43f1c0de282751b2e9805678dfd2042a06e32be5381835253aa04134c5",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/initial-1280.png",
+        "sha256": "ff76d496625ee4094c6d997b1eb0409bb22c32edad6f9d85d9886a799a0ecfdb",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/paused-1280.png",
+        "sha256": "4ab5d457e0c167ecef5fe9de92584e6a7ead33f44a07d6c12090154c523e2eaf",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/near-shift.png",
+        "sha256": "14081d321228b057ff5064d344bd587e5332e6e8c6b9fb7fed3ec532f2e73d9c",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/far-shift.png",
+        "sha256": "2c1f658dd14aa5eb3d78cf3ecc40b53f68475880956c8702c6494ed4d1f53087",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/false-main.png",
+        "sha256": "8e450d6b7c00b658d38351824d69c7c55266676fa3f6345133f2aff080b79612",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/rejected.png",
+        "sha256": "9f4af5dcf0486d3498671e8a3dd8cd0840e4e0dd2f76531cd35b89deb2c8ace5",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/view-1.png",
+        "sha256": "c4590417fdc4cdd492eb1046afbd1a7e024447466ae3d8687fffa85110cf4995",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/four-checks-ready.png",
+        "sha256": "4362e62bfd274c3224f96504b072bee8af7cf650bcd7d4e2cd7b66398619f27e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/undo-restored.png",
+        "sha256": "93e978c107b5f3da4e3c80b05d8b933de6dfcefbb97324d8ac5d83dcf673ac2e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/won-1280.png",
+        "sha256": "b307a1d718f8fe7eb7fd3164426341032b796e9fb47c6d1863830d49c0654d33",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/won-960.png",
+        "sha256": "41afb1d450dad31c7cf5bf9290a963bbfa361fcb018737954203407f0b6a0e7c",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/lost-960.png",
+        "sha256": "3cd2d70fb60f111aaae586b32305682c7aade1baa83d433f5e4ccbe257d0ebc1",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/lost-1280.png",
+        "sha256": "6626bea300c8e576c9f41149cf04e24d3cf8cd9d4a2522394802ac9c2b1f9202",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "candidate-v2-first/actual-atlas.png",
+        "sha256": "b50dc594f2c0ed168e6d5250ef3a3a6a30d263c8498698ea0fd222e99729970b",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "ui-first/controller-844x390.png",
+        "sha256": "84f6cdf781887d68d72a5a357aa296cb59a7b68cdd99cc1f04018bf1f2f87a69",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "ui-first/controller-both-held.png",
+        "sha256": "5e0a5b13660235ae0256efb523257e712dd4cdc8319efc453b6db5f184205785",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/menu-level1-1280.png",
+        "sha256": "531917be9224e0255629254b3141fd0bae74dcaa592edb90e4b282dde0edbc3c",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/initial-level1-1280.png",
+        "sha256": "6bd693d4de2e5f704614f86992fab1ad4070c071f68d3cfeadd726e9394ce16c",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/menu-level2-1280.png",
+        "sha256": "205c59f8af26e6cbc404b5b5f4815f95d9727ffbe77b0cf3a264e39b6bda9567",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/initial-level2-1280.png",
+        "sha256": "c7f2c5b9c23bae254cad4bf33284c405b842d30001b274064ef402d3a04e7718",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/initial-level2-960.png",
+        "sha256": "d1bf1760cda4b1a525a14e8463d07414fe7e87d598565ac13894e59e9d9beb2a",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/menu-level0-960.png",
+        "sha256": "cb85ccb43c14fbe70e5b97fc1ed4b5bc6847746952b35047fbc512f89b3feae3",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/hidden-anchor-far-focus-960.png",
+        "sha256": "697226a4185fb789e4a0b281f599582b1bdc390be1d8c32c621a83d5551ae0ef",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/rejected-false-main-960.png",
+        "sha256": "4c309020ccd84f380f8d24a84e6be2c063e8547de74859a88a30f45d8939dde1",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/view-1-focus-960.png",
+        "sha256": "6e9215acb867df7f2517cf30558f286eadf89398e2d03848be7f41798b5b431e",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/undo-ready-near-focus-960.png",
+        "sha256": "6a6598a6dae9664abe82b22f083cc0d49deb5213b00aff23dd3cc3f5bbe9ad70",
+        "includedInRelease": false
+      },
+      {
+        "scratchRelativePath": "visual-gaps-first/pause-ready-960.png",
+        "sha256": "7285665975a9974a03fd047d3eedc06678906122e0446b2185176d027e61045e",
+        "includedInRelease": false
+      }
+    ],
+    "rawReportSha256": "6a081e0b0e25e4b01066aaed692ab0b9f1936beadd3b919e6cd5b2e661b62c0f",
+    "unresolvedFindings": []
+  },
+  "modelTests": {
+    "passed": 28,
+    "testLogSha256": "4c7bcdfa67dd6d7d6e52132af8025283197cb25882a85eea5e9520b8b5e58951",
+    "rawReportSha256": "39ef034a053662247515533cce1b4875770478010992ed031fa85a3bfb220284",
+    "testNames": [
+      "public API and exact immutable configuration match the accepted three-task tables",
+      "creation normalizes identity and allocates detached round data without consuming seed randomness",
+      "synthetic public-anchor fixtures freshly project and pass all four checks for every task",
+      "synthetic legal extrema remain in twenty cells with negative camera offsets and correct width",
+      "near and far ordinary moves have distinct two-cell and one-cell projection displacement",
+      "synthetic equal-height far roof loses ownership and its designated anchor is hidden",
+      "the published main-view false placement is rejected by a fresh two-view submission",
+      "submission ignores forged cached match flags and recomputes actual geometry",
+      "view emphasis and focus selection preserve both projections, placements and undo history",
+      "whole-pair undo restores edits across both layers without refunding rejection or view/focus",
+      "history discards only the oldest full pair at the thirty-two entry cap",
+      "history, caches, receipts and fresh positions do not alias each other",
+      "movement bounds consume the edge without history, move count or repeated hold effects",
+      "direction threshold, clamping and vertical diagonal ties use one deterministic edge",
+      "simultaneous B A and direction consume all edges with B then A priority",
+      "four distinct incorrect submission edges lose once and held A never repeats",
+      "a correct last-chance synthetic placement wins after three actual rejected submissions",
+      "a correct arrangement stays active until A and receipts preserve exact updated call and clock",
+      "start and retry quarantine held controls until a genuinely neutral admitted sample",
+      "epoch changes and persistent cancellation suppress stale input and cannot synthesize a release",
+      "first epoch is a baseline, invalid epochs are ignored, and cancellation rises disarm",
+      "only own literal data values are accepted and ordinary accessors never run",
+      "malformed containers and nonnumeric axes become empty or neutral without coercion",
+      "throwing or revoked proxy normalization discards all partial fields before paused handling",
+      "invalid durations, literal paused calls and terminal calls are exact no-ops",
+      "one admitted large call means one edge and exact bounded active-clock addition",
+      "synthetic counter and clock caps signal only overflow and never settle play",
+      "fresh retry restores all dirty fields and identical sequences remain deterministic"
+    ],
+    "sourceHashes": {
+      "model": "8803ff30d8aeb64b2539b8098fa2c731deb05ad830140044fe3431727b1c6f04",
+      "tests": "cee5f639c854ef0bffea96b2bc30f22f83e517335874279d9c0c5f3838fc3a96",
+      "docs/public-design.md": "cc8b11d7e8080fe910b6a0bc53e99fd951eb81885c7eb0a22ae6a5e2b49ea036",
+      "docs/model-contract.md": "059606d8195439ba5ebcc7225ddd1090e47898fcb157c10495d6de9aadfe5863",
+      "docs/public-interface.md": "58a99431116ba26a78f0f68aaf362a8c8ecbb2bdd207013b675d514a97a12400"
+    },
+    "scope": "First formal run for display-corrected v2 source; original v1 run retained. Synthetic boundaries remain separate from ordinary/browser evidence."
+  },
+  "sharedBrowserRegression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "menu, version and visible canvas load",
+        "passed": true
+      },
+      {
+        "name": "Enter starts with genuine release acknowledgement",
+        "passed": true
+      },
+      {
+        "name": "pause freezes complete model and host tick, resume advances calls",
+        "passed": true
+      },
+      {
+        "name": "ordinary input reaches a real win with acknowledged edges",
+        "passed": true
+      },
+      {
+        "name": "game-specific observed geometry, rejection and undo assertions",
+        "passed": true
+      },
+      {
+        "name": "measured software-browser rendering submissions stay within budget",
+        "passed": true
+      },
+      {
+        "name": "visible retry restores the original round and both layer positions",
+        "passed": true
+      },
+      {
+        "name": "960 and 1280 layouts retain visible canvas and complete sidebar text",
+        "passed": true
+      },
+      {
+        "name": "four actual rejected submissions produce the natural loss",
+        "passed": true
+      },
+      {
+        "name": "no page, console or resource errors",
+        "passed": true
+      }
+    ]
+  },
+  "supplementaryControls": {
+    "trustedTouchEdges": 43,
+    "controlledProtocolChecks": [
+      "menu-start-held-confirm-genuine-release-and-no-repeat",
+      "remote-cancel-epoch-other-source-quarantine-real-raw-false",
+      "disconnect-freeze-local-takeover-reconnect-and-session-replacement",
+      "joystick-edges-combined-priority-retry-quarantine-and-independent-pause"
+    ],
+    "sourceWindows": {
+      "ui": {
+        "startHashes": {
+          "harness": "5be7bdd46beceb48562b53e8872a06a0327638fda8472c941f408f5b3c30d7a3",
+          "pointers": "364218acc1bab88f1ca611eea22834ff2d6d51b4594785c1772b4e270341d38c",
+          "evidence": "fb16142e51094c28c8fa0f11b9e1138372f7da4f01ff8fa4453a5fc296740321",
+          "common": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+          "model": "8803ff30d8aeb64b2539b8098fa2c731deb05ad830140044fe3431727b1c6f04",
+          "game": "857d63b671a011241dcf50744eadb7b96be9bb94a8f1a78514678d20744a46c7",
+          "shared/runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+          "shared/renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+          "shared/controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+          "shared/controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+          "shared/controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+          "shared/tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+          "shared/tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+          "docs/public-design.md": "cc8b11d7e8080fe910b6a0bc53e99fd951eb81885c7eb0a22ae6a5e2b49ea036",
+          "docs/model-contract.md": "059606d8195439ba5ebcc7225ddd1090e47898fcb157c10495d6de9aadfe5863",
+          "docs/public-interface.md": "58a99431116ba26a78f0f68aaf362a8c8ecbb2bdd207013b675d514a97a12400"
+        },
+        "endHashes": {
+          "harness": "5be7bdd46beceb48562b53e8872a06a0327638fda8472c941f408f5b3c30d7a3",
+          "pointers": "364218acc1bab88f1ca611eea22834ff2d6d51b4594785c1772b4e270341d38c",
+          "evidence": "fb16142e51094c28c8fa0f11b9e1138372f7da4f01ff8fa4453a5fc296740321",
+          "common": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+          "model": "8803ff30d8aeb64b2539b8098fa2c731deb05ad830140044fe3431727b1c6f04",
+          "game": "857d63b671a011241dcf50744eadb7b96be9bb94a8f1a78514678d20744a46c7",
+          "shared/runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+          "shared/renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+          "shared/controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+          "shared/controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+          "shared/controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+          "shared/tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+          "shared/tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+          "docs/public-design.md": "cc8b11d7e8080fe910b6a0bc53e99fd951eb81885c7eb0a22ae6a5e2b49ea036",
+          "docs/model-contract.md": "059606d8195439ba5ebcc7225ddd1090e47898fcb157c10495d6de9aadfe5863",
+          "docs/public-interface.md": "58a99431116ba26a78f0f68aaf362a8c8ecbb2bdd207013b675d514a97a12400"
+        },
+        "startReportSha256": "4e006d3003cc682b3f0b76b9bc5c75b12b0e14680218ca6d5e16478bf65aa68f",
+        "endReportSha256": "7b422566152f5fc0fd964e92e69c94da2f25eb4ef8f8a73b91f2401606d26ed0"
+      },
+      "gaps": {
+        "startHashes": {
+          "harness": "7a372458353eafedf05a2c90d3bea709f783f51e7dd921ea2c698c889f8691c9",
+          "evidence": "fb16142e51094c28c8fa0f11b9e1138372f7da4f01ff8fa4453a5fc296740321",
+          "common": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+          "automation": "0a2ab76174061da5370063f36ad4eb2919ba8e0dbf9e641eb0a5d9a0d3de3bc8",
+          "model": "8803ff30d8aeb64b2539b8098fa2c731deb05ad830140044fe3431727b1c6f04",
+          "game": "857d63b671a011241dcf50744eadb7b96be9bb94a8f1a78514678d20744a46c7",
+          "shared/runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+          "shared/renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+          "shared/controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+          "shared/controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+          "shared/controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+          "shared/tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+          "shared/tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+          "docs/public-design.md": "cc8b11d7e8080fe910b6a0bc53e99fd951eb81885c7eb0a22ae6a5e2b49ea036",
+          "docs/model-contract.md": "059606d8195439ba5ebcc7225ddd1090e47898fcb157c10495d6de9aadfe5863",
+          "docs/public-interface.md": "58a99431116ba26a78f0f68aaf362a8c8ecbb2bdd207013b675d514a97a12400"
+        },
+        "endHashes": {
+          "harness": "7a372458353eafedf05a2c90d3bea709f783f51e7dd921ea2c698c889f8691c9",
+          "evidence": "fb16142e51094c28c8fa0f11b9e1138372f7da4f01ff8fa4453a5fc296740321",
+          "common": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+          "automation": "0a2ab76174061da5370063f36ad4eb2919ba8e0dbf9e641eb0a5d9a0d3de3bc8",
+          "model": "8803ff30d8aeb64b2539b8098fa2c731deb05ad830140044fe3431727b1c6f04",
+          "game": "857d63b671a011241dcf50744eadb7b96be9bb94a8f1a78514678d20744a46c7",
+          "shared/runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+          "shared/renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+          "shared/controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+          "shared/controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+          "shared/controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+          "shared/tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+          "shared/tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+          "docs/public-design.md": "cc8b11d7e8080fe910b6a0bc53e99fd951eb81885c7eb0a22ae6a5e2b49ea036",
+          "docs/model-contract.md": "059606d8195439ba5ebcc7225ddd1090e47898fcb157c10495d6de9aadfe5863",
+          "docs/public-interface.md": "58a99431116ba26a78f0f68aaf362a8c8ecbb2bdd207013b675d514a97a12400"
+        },
+        "startReportSha256": "523d2fddd0caccc3a334ad92d647b6b8090fdf16bdf6b728e45992c007594473",
+        "endReportSha256": "a111450b177161653e29e0157e8fdf6f8106d6eb28a28b5e5ef069d74fc549d1"
+      }
+    },
+    "pointerScope": "Trusted browser touch events on supplied controller assets; controlled local WebSocket transport. Actual TV response is a separately labelled host fixture.",
+    "protocolScope": "Controlled public native-host input snapshots with the real shared runtime and production game. Separate from trusted controller touch transport; no physical Android/LAN/phone claim.",
+    "visualGapScope": "Actual ordinary browser sessions for missing original-image coverage; declared partial stops are not terminal wins. All reads are sparse.",
+    "rawReportSha256": {
+      "ui": "83e9c083da9c198d9942ca44b714d8e65362f690ab29adffd144979e927a24aa",
+      "gaps": "49df3f2c3ad6fa9c107c8e3bfd030561884719a919853b353b1e763f821b6184"
+    }
+  },
+  "finalQaSourceWindow": {
+    "passed": true,
+    "buildSourceSha": "64b3b0965a24aa092a7cb3fb9737aebe4a01cfda",
+    "startHashes": {
+      "harness": "b14a7d1cf38b18c8e099affedf24f669aeaf7f8544890a7cd42e4deb25229e4e",
+      "evidence": "fb16142e51094c28c8fa0f11b9e1138372f7da4f01ff8fa4453a5fc296740321",
+      "common": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+      "metrics": "6f3feda7dd79d649ea4f27ced8f7dd5461b7d0cf0010005b12805abace565476",
+      "automation": "0a2ab76174061da5370063f36ad4eb2919ba8e0dbf9e641eb0a5d9a0d3de3bc8",
+      "model": "8803ff30d8aeb64b2539b8098fa2c731deb05ad830140044fe3431727b1c6f04",
+      "game": "857d63b671a011241dcf50744eadb7b96be9bb94a8f1a78514678d20744a46c7",
+      "shared/runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "shared/renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "shared/controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "shared/controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "shared/controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "shared/tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "shared/tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "docs/public-design.md": "cc8b11d7e8080fe910b6a0bc53e99fd951eb81885c7eb0a22ae6a5e2b49ea036",
+      "docs/model-contract.md": "059606d8195439ba5ebcc7225ddd1090e47898fcb157c10495d6de9aadfe5863",
+      "docs/public-interface.md": "58a99431116ba26a78f0f68aaf362a8c8ecbb2bdd207013b675d514a97a12400"
+    },
+    "endHashes": {
+      "harness": "b14a7d1cf38b18c8e099affedf24f669aeaf7f8544890a7cd42e4deb25229e4e",
+      "evidence": "fb16142e51094c28c8fa0f11b9e1138372f7da4f01ff8fa4453a5fc296740321",
+      "common": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1",
+      "metrics": "6f3feda7dd79d649ea4f27ced8f7dd5461b7d0cf0010005b12805abace565476",
+      "automation": "0a2ab76174061da5370063f36ad4eb2919ba8e0dbf9e641eb0a5d9a0d3de3bc8",
+      "model": "8803ff30d8aeb64b2539b8098fa2c731deb05ad830140044fe3431727b1c6f04",
+      "game": "857d63b671a011241dcf50744eadb7b96be9bb94a8f1a78514678d20744a46c7",
+      "shared/runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+      "shared/renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+      "shared/controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+      "shared/controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+      "shared/controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+      "shared/tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+      "shared/tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+      "docs/public-design.md": "cc8b11d7e8080fe910b6a0bc53e99fd951eb81885c7eb0a22ae6a5e2b49ea036",
+      "docs/model-contract.md": "059606d8195439ba5ebcc7225ddd1090e47898fcb157c10495d6de9aadfe5863",
+      "docs/public-interface.md": "58a99431116ba26a78f0f68aaf362a8c8ecbb2bdd207013b675d514a97a12400"
+    },
+    "sourceWindowSha256": {
+      "start": "8a8a3e91a098faf98d22eb95190961c11c7fca84a8767f80fc9f3927d4b04226",
+      "end": "2ffaabdee1e3d18f6ef6c7cee451ca06059c6bef97309414c4e1616cfdfcd785"
+    }
+  },
+  "sourceArtReview": {
+    "file": "art-review.json",
+    "sha256": "c018a4febe7afec5cd735bf26411cf82e930c33108770ad70cd25eac3b699fb4"
+  },
+  "finalLayoutReview": {
+    "passed": true,
+    "rawReportSha256": "120fdea540bc644b33f546cbdf86c373c7d533f4513d4172841081ccc7dae1d5",
+    "reviewedImageCount": 58,
+    "dualFinalOriginalReviews": {
+      "root-final-qa-original-review.json": "ad5d49b71b5ec53084707b7ed662707c1b376ab83900465d9478c993e13beabb",
+      "peer-final-qa-original-review.json": "dc05b97012940c19eecf93ac372ad96bae09424edb2ef2a38c4ab33791a06706",
+      "root-encoded-original-review.json": "c2a5b720010b5df23a7626e1bc68e4fdca283f096f5b36970ca090ef4d9741bc",
+      "peer-encoded-original-review.json": "4264e9f84f8d2f5b9293f0d978301b347eba89b0228a3c598c08ecd4c5f85c46"
+    },
+    "actualImageObservations": [
+      {
+        "name": "menu-0",
+        "encodedIndex": 49,
+        "png": "encoded-review/menu-0.png",
+        "pngSha256": "619915e5338b9b91525a39516bfe5d8e95a758e701a512e01bc0c20f38b6aa19",
+        "sourceJpeg": "encoded-review/menu-0.source.jpg",
+        "sourceSha256": "35a97cee3a69ca7b61475bcd2620fd8f35c20074a9832d22346f95435a81f938",
+        "rootPixelObservation": "COURTYARD task selected, complete Chinese menu/start/sideinstructions legible.",
+        "peerPixelClassification": {
+          "phase": "menu",
+          "task": "COURTYARD / 庭院遮挡",
+          "notes": [
+            "First task visibly selected; three task choices, control instructions and start button fit.",
+            "Frosted scene behind the modal and readable surrounding HUD/sidebar."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 3,
+            "readStartedAt": 1.63011409,
+            "readCompletedAt": 1.6328621410000002,
+            "observedAt": "2026-11-02T22:03:02.902Z",
+            "phase": "menu",
+            "modelCalls": 0,
+            "modelElapsed": 0,
+            "level": 0,
+            "positions": [
+              5,
+              4
+            ],
+            "focus": 0,
+            "view": 0,
+            "failures": 0,
+            "undos": 0
+          }
+        ]
+      },
+      {
+        "name": "menu-1",
+        "encodedIndex": 123,
+        "png": "encoded-review/menu-1.png",
+        "pngSha256": "d17e36bc3e637eef435764d9f0d27903a3f2dc515f6789c79d178d0eb987c4ca",
+        "sourceJpeg": "encoded-review/menu-1.source.jpg",
+        "sourceSha256": "af4f705d85deadf905d21af7302f96f033a2316bbd7c87a2c175e84e0b08d5ce",
+        "rootPixelObservation": "RIVERFRONT task selected, correct HUDtask andmenuhighlight.",
+        "peerPixelClassification": {
+          "phase": "menu",
+          "task": "RIVERFRONT / 河岸交错",
+          "notes": [
+            "Second task visibly selected and task HUD agrees.",
+            "Menu controls and start button remain fully visible. This frame does not show active Riverfront play."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 13,
+            "readStartedAt": 4.090021796,
+            "readCompletedAt": 4.10356384,
+            "observedAt": "2026-11-02T22:03:05.373Z",
+            "phase": "menu",
+            "modelCalls": 0,
+            "modelElapsed": 0,
+            "level": 1,
+            "positions": [
+              2,
+              13
+            ],
+            "focus": 0,
+            "view": 0,
+            "failures": 0,
+            "undos": 0
+          }
+        ]
+      },
+      {
+        "name": "menu-2",
+        "encodedIndex": 222,
+        "png": "encoded-review/menu-2.png",
+        "pngSha256": "b8f99c272bac73f13714d59e5aa753e1ac3391db0be27d51fc3a3e50ae2f383b",
+        "sourceJpeg": "encoded-review/menu-2.source.jpg",
+        "sourceSha256": "335092c1e37c955ab1248ab88ea1f2da698f45e92b3bc83356740e2f2e0a333b",
+        "rootPixelObservation": "TWIN SPIRES task selected, correct HUDtask andmenuhighlight.",
+        "peerPixelClassification": {
+          "phase": "menu",
+          "task": "TWIN SPIRES / 双塔视差",
+          "notes": [
+            "Third task visibly selected and task HUD agrees.",
+            "All three task choices and instructions fit. This frame does not show active Twin Spires play."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 25,
+            "readStartedAt": 7.345360203000001,
+            "readCompletedAt": 7.384181869000001,
+            "observedAt": "2026-11-02T22:03:08.654Z",
+            "phase": "menu",
+            "modelCalls": 0,
+            "modelElapsed": 0,
+            "level": 2,
+            "positions": [
+              5,
+              4
+            ],
+            "focus": 0,
+            "view": 0,
+            "failures": 0,
+            "undos": 0
+          }
+        ]
+      },
+      {
+        "name": "near-first-move",
+        "encodedIndex": 312,
+        "png": "encoded-review/near-first-move.png",
+        "pngSha256": "4ec86bb7d6f46098ae9de19af0c6778d9877a6e6264eea6a09325af43cabf083",
+        "sourceJpeg": "encoded-review/near-first-move.source.jpg",
+        "sourceSha256": "0bbee50aec4d4fa2a40fea99bdc6c8c05c10ff66e85f1d780c695bd347cc0772",
+        "rootPixelObservation": "World4/4,NEARfocus,primarybothNO,secondaryhiddenfaranchorX; clear rail/footer.",
+        "peerPixelClassification": {
+          "phase": "playing",
+          "task": "COURTYARD",
+          "displayedWorld": [
+            4,
+            4
+          ],
+          "displayedFocus": "NEAR",
+          "displayedView": 0,
+          "displayedRemainingBudget": "4 / 4",
+          "displayedChecks": "0 / 4",
+          "displayedUndo": 1,
+          "notes": [
+            "Both projection panels are visible; live near roof and target differ.",
+            "Secondary far roof marker is a red cross with MARK HIDDEN.",
+            "WORLD labels clear the baked rails and the solid footer keeps its text clear."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 49,
+            "readStartedAt": 10.139994772000001,
+            "readCompletedAt": 10.145289248000001,
+            "observedAt": "2026-11-02T22:03:11.415Z",
+            "phase": "playing",
+            "modelCalls": 42,
+            "modelElapsed": 0.7000000000000005,
+            "level": 0,
+            "positions": [
+              4,
+              4
+            ],
+            "focus": 0,
+            "view": 0,
+            "failures": 0,
+            "undos": 0
+          }
+        ]
+      },
+      {
+        "name": "far-first-move",
+        "encodedIndex": 473,
+        "png": "encoded-review/far-first-move.png",
+        "pngSha256": "a077b6f53b2f60d506bdb8293b339ec09a5ee26a562541346859b67a1958a5d2",
+        "sourceJpeg": "encoded-review/far-first-move.source.jpg",
+        "sourceSha256": "fa8d4433a42a259b624900b25fa4c72fb184ee994e879d4cff55ec70e7e62ad7",
+        "rootPixelObservation": "World3/5,FARfocus,primaryMARKOK andsecondaryhiddenanchor. Actualconfigurationdistinct; not an adjacent movement-only pair with near screenshot.",
+        "peerPixelClassification": {
+          "phase": "playing",
+          "task": "COURTYARD",
+          "displayedWorld": [
+            3,
+            5
+          ],
+          "displayedFocus": "FAR",
+          "displayedView": 0,
+          "displayedRemainingBudget": "4 / 4",
+          "displayedChecks": "1 / 4",
+          "displayedUndo": 3,
+          "notes": [
+            "Main view reads SKY NO and MARK OK.",
+            "Secondary view reads SKY NO and MARK HIDDEN.",
+            "FAR focus is visible; physical movement sequence between sampled frames is not inferred from the filename."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 72,
+            "readStartedAt": 15.479975510000001,
+            "readCompletedAt": 15.49396701,
+            "observedAt": "2026-11-02T22:03:16.763Z",
+            "phase": "playing",
+            "modelCalls": 359,
+            "modelElapsed": 5.983333333333317,
+            "level": 0,
+            "positions": [
+              3,
+              5
+            ],
+            "focus": 1,
+            "view": 0,
+            "failures": 0,
+            "undos": 0
+          }
+        ]
+      },
+      {
+        "name": "front-only-rejected",
+        "encodedIndex": 690,
+        "png": "encoded-review/front-only-rejected.png",
+        "pngSha256": "9a39d810eebfd1d549faea2790b1d49d95e7f62509213f8a251b23afd43980a4",
+        "sourceJpeg": "encoded-review/front-only-rejected.source.jpg",
+        "sourceSha256": "a8f3c60ef731120e5b1a21f30c6f0af81d345b5a230bfe670d381b2efc00a4c3",
+        "rootPixelObservation": "World3/8,FARfocus,primarybothOK,secondarybothNO,budget3/4; correctedpoint1 status.",
+        "peerPixelClassification": {
+          "phase": "playing",
+          "task": "COURTYARD",
+          "displayedWorld": [
+            3,
+            8
+          ],
+          "displayedFocus": "FAR",
+          "displayedView": 0,
+          "displayedRemainingBudget": "3 / 4",
+          "displayedChecks": "2 / 4",
+          "displayedUndo": 6,
+          "notes": [
+            "Main view reads SKY OK and MARK OK; secondary reads SKY NO and MARK NO.",
+            "Far marker is visible but displaced from its target in the secondary view.",
+            "Bottom status names observation point 1 as the mismatching silhouette; no success modal is present."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 104,
+            "readStartedAt": 22.723989803000002,
+            "readCompletedAt": 22.727561454,
+            "observedAt": "2026-11-02T22:03:23.997Z",
+            "phase": "playing",
+            "modelCalls": 792,
+            "modelElapsed": 13.200000000000236,
+            "level": 0,
+            "positions": [
+              3,
+              8
+            ],
+            "focus": 1,
+            "view": 0,
+            "failures": 1,
+            "undos": 0
+          }
+        ]
+      },
+      {
+        "name": "view-one-selected",
+        "encodedIndex": 802,
+        "png": "encoded-review/view-one-selected.png",
+        "pngSha256": "800ebc0cb60e68f211f3603145abff25c65474f124ad147a226e4d764ae60fdf",
+        "sourceJpeg": "encoded-review/view-one-selected.source.jpg",
+        "sourceSha256": "76c6e1334b7501f0769f964cb63b09262168da40df783e467719c255158e82e6",
+        "rootPixelObservation": "World3/8 unchanged,VIEWfocus andrightview1highlight,point1status.",
+        "peerPixelClassification": {
+          "phase": "playing",
+          "task": "COURTYARD",
+          "displayedWorld": [
+            3,
+            8
+          ],
+          "displayedFocus": "VIEW",
+          "displayedView": 1,
+          "displayedRemainingBudget": "3 / 4",
+          "displayedChecks": "2 / 4",
+          "notes": [
+            "POINT 1 and highlighted secondary VIEW 1 frame agree.",
+            "Both panels remain visible with the same displayed world coordinates as the preceding rejected sample.",
+            "A pair of sampled images does not establish continuous invariance between frames."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 121,
+            "readStartedAt": 26.444723479,
+            "readCompletedAt": 26.482408971,
+            "observedAt": "2026-11-02T22:03:27.752Z",
+            "phase": "playing",
+            "modelCalls": 1012,
+            "modelElapsed": 16.86666666666699,
+            "level": 0,
+            "positions": [
+              3,
+              8
+            ],
+            "focus": 2,
+            "view": 1,
+            "failures": 1,
+            "undos": 0
+          }
+        ]
+      },
+      {
+        "name": "ready-before-edit",
+        "encodedIndex": 966,
+        "png": "encoded-review/ready-before-edit.png",
+        "pngSha256": "b673d739810eebc8dcd37f175a798d2cfbcae5b650c3512c9261f42da3531852",
+        "sourceJpeg": "encoded-review/ready-before-edit.source.jpg",
+        "sourceSha256": "746b1614d2d778d05393852b552d34bfeae34aff869e1ca91b61e5b2559ac548",
+        "rootPixelObservation": "World3/9,FARfocus,all4OK,READY PRESS A,budget3/4; activebeforeacceptance.",
+        "peerPixelClassification": {
+          "phase": "playing",
+          "task": "COURTYARD",
+          "displayedWorld": [
+            3,
+            9
+          ],
+          "displayedFocus": "FAR",
+          "displayedView": 1,
+          "displayedRemainingBudget": "3 / 4",
+          "displayedChecks": "4 / 4",
+          "displayedUndo": 7,
+          "notes": [
+            "All four checks are green; footer reads READY - PRESS A.",
+            "This is an active correct arrangement awaiting submission, not a win modal."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 145,
+            "readStartedAt": 31.927503783,
+            "readCompletedAt": 31.944487803999998,
+            "observedAt": "2026-11-02T22:03:33.214Z",
+            "phase": "playing",
+            "modelCalls": 1340,
+            "modelElapsed": 22.333333333333346,
+            "level": 0,
+            "positions": [
+              3,
+              9
+            ],
+            "focus": 1,
+            "view": 1,
+            "failures": 1,
+            "undos": 0
+          }
+        ]
+      },
+      {
+        "name": "near-offset-edit",
+        "encodedIndex": 1131,
+        "png": "encoded-review/near-offset-edit.png",
+        "pngSha256": "7458840d8ef8b9a98ea3c142866710d3ea73c21a860c976f4b84c6ec8fab1fa4",
+        "sourceJpeg": "encoded-review/near-offset-edit.source.jpg",
+        "sourceSha256": "29e44d464a1d4600ba69434f497d78f9fde6dc2bb7cd8310ae23c69b092c565b",
+        "rootPixelObservation": "World4/9,NEARfocus,0/4,faranchorhidden;undo8,budget3/4.",
+        "peerPixelClassification": {
+          "phase": "playing",
+          "task": "COURTYARD",
+          "displayedWorld": [
+            4,
+            9
+          ],
+          "displayedFocus": "NEAR",
+          "displayedView": 1,
+          "displayedRemainingBudget": "3 / 4",
+          "displayedChecks": "0 / 4",
+          "displayedUndo": 8,
+          "notes": [
+            "Near roof is visibly displaced from the outline, with ALIGN BOTH VIEWS in the footer.",
+            "Secondary far roof marker is a red cross with MARK HIDDEN, overlapping the hollow target location.",
+            "Actual pixels show world 4/9; the earlier nearby observation of 3/9 is not assigned to this frame."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 145,
+            "readStartedAt": 31.927503783,
+            "readCompletedAt": 31.944487803999998,
+            "observedAt": "2026-11-02T22:03:33.214Z",
+            "phase": "playing",
+            "modelCalls": 1340,
+            "modelElapsed": 22.333333333333346,
+            "level": 0,
+            "positions": [
+              3,
+              9
+            ],
+            "focus": 1,
+            "view": 1,
+            "failures": 1,
+            "undos": 0
+          },
+          {
+            "index": 169,
+            "readStartedAt": 37.426350527000004,
+            "readCompletedAt": 37.43801999,
+            "observedAt": "2026-11-02T22:03:38.707Z",
+            "phase": "playing",
+            "modelCalls": 1670,
+            "modelElapsed": 27.833333333333034,
+            "level": 0,
+            "positions": [
+              4,
+              9
+            ],
+            "focus": 0,
+            "view": 1,
+            "failures": 1,
+            "undos": 0
+          }
+        ]
+      },
+      {
+        "name": "undo-restored",
+        "encodedIndex": 1186,
+        "png": "encoded-review/undo-restored.png",
+        "pngSha256": "47386de7a42749ace09d8c8d86c783cb24513986105750521531e882d73976d4",
+        "sourceJpeg": "encoded-review/undo-restored.source.jpg",
+        "sourceSha256": "5285e687de3b31ef0e2b0d587856c8f8200989c9f0a1b17227915da50b8ed0f8",
+        "rootPixelObservation": "World3/9,NEARfocus,4/4 andREADY;undo7,budget3/4.",
+        "peerPixelClassification": {
+          "phase": "playing",
+          "task": "COURTYARD",
+          "displayedWorld": [
+            3,
+            9
+          ],
+          "displayedFocus": "NEAR",
+          "displayedView": 1,
+          "displayedRemainingBudget": "3 / 4",
+          "displayedChecks": "4 / 4",
+          "displayedUndo": 7,
+          "notes": [
+            "Restored arrangement has all four checks green and READY - PRESS A.",
+            "Undo count display falls from the sampled edited state 8 to 7; actual input execution is separately recorded, not inferred solely from stills."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 177,
+            "readStartedAt": 39.279940424,
+            "readCompletedAt": 39.289649523,
+            "observedAt": "2026-11-02T22:03:40.559Z",
+            "phase": "playing",
+            "modelCalls": 1776,
+            "modelElapsed": 29.5999999999996,
+            "level": 0,
+            "positions": [
+              3,
+              9
+            ],
+            "focus": 0,
+            "view": 1,
+            "failures": 1,
+            "undos": 1
+          }
+        ]
+      },
+      {
+        "name": "won-settled",
+        "encodedIndex": 1294,
+        "png": "encoded-review/won-settled.png",
+        "pngSha256": "a163aa48d005646f456b1197ea3cbd6a26fb55956794d6bb92f43f35915eacbe",
+        "sourceJpeg": "encoded-review/won-settled.source.jpg",
+        "sourceSha256": "063c08d58205c73521c869369fd427c5d2640b5ac022469a1aa7240b0e2cf5fd",
+        "rootPixelObservation": "Glassvictoryoverlay legible,1error near3/far9,best100,correctterminalstatus.",
+        "peerPixelClassification": {
+          "phase": "won",
+          "task": "COURTYARD / 庭院遮挡",
+          "displayedWorldInResult": [
+            3,
+            9
+          ],
+          "displayedFocus": "NEAR",
+          "displayedView": 1,
+          "displayedRemainingBudget": "3 / 4",
+          "displayedChecks": "4 / 4",
+          "displayedFailuresInResult": 1,
+          "notes": [
+            "Actual success modal reads 双重视角 · 验收通过 and reports one erroneous submission, near 3 and far 9.",
+            "Three task choices and 再次出发 · ENTER button remain fully visible.",
+            "Frosted background is visible; modal title, result text, HUD and sidebar remain readable."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 186,
+            "readStartedAt": 41.132447953,
+            "readCompletedAt": 41.136388661,
+            "observedAt": "2026-11-02T22:03:42.406Z",
+            "phase": "won",
+            "modelCalls": 1885,
+            "modelElapsed": 31.416666666666163,
+            "level": 0,
+            "positions": [
+              3,
+              9
+            ],
+            "focus": 0,
+            "view": 1,
+            "failures": 1,
+            "undos": 1
+          }
+        ]
+      },
+      {
+        "name": "win-late",
+        "encodedIndex": 1813,
+        "png": "encoded-review/win-late.png",
+        "pngSha256": "5e7c608f60365ac10fa3b2a88e47bb6e3224db9dcc4a805068962ea187f56988",
+        "sourceJpeg": "encoded-review/win-late.source.jpg",
+        "sourceSha256": "5e6385307e3fb3469aaac779bf48de90870375c95cb03dff593ce7483916945d",
+        "rootPixelObservation": "Same readableterminalcontent on actualfinalimage, no black/endclip.",
+        "peerPixelClassification": {
+          "phase": "won",
+          "task": "COURTYARD / 庭院遮挡",
+          "displayedWorldInResult": [
+            3,
+            9
+          ],
+          "displayedFocus": "NEAR",
+          "displayedView": 1,
+          "displayedRemainingBudget": "3 / 4",
+          "displayedChecks": "4 / 4",
+          "displayedFailuresInResult": 1,
+          "notes": [
+            "Late sample visibly retains the same success modal and result values.",
+            "No clipping, black area or compression failure in the ending sample.",
+            "This confirms a late sampled success image, not personal inspection of every intervening video frame."
+          ]
+        },
+        "nearbySparseReadWindows": [
+          {
+            "index": 213,
+            "readStartedAt": 60.415169606999996,
+            "readCompletedAt": 60.419030313,
+            "observedAt": "2026-11-02T22:04:01.688Z",
+            "phase": "won",
+            "modelCalls": 1885,
+            "modelElapsed": 31.416666666666163,
+            "level": 0,
+            "positions": [
+              3,
+              9
+            ],
+            "focus": 0,
+            "view": 1,
+            "failures": 1,
+            "undos": 1
+          }
+        ]
+      }
+    ],
+    "scope": "Accepted for packaging after actual formal28tests,6ordinary618checkedpairs, candidate controls+28dualoriginals, final10browserchecks+6dualoriginals, one clean actual60s capture and one successful full decode,12decoded/sourcepairs dualreviewed, signature/source/assets verified. Sparse audits remain endpoint-only with all explicit unobserved boundaries retained.",
+    "limitations": [
+      "No physical TV or phone execution/install tested.",
+      "Measured software-browser API submissions are not device FPS;30fps is videoexport only.",
+      "Facadecolumncolors indicate roofowner,not full per-height physicaldepthocclusion.",
+      "Decoded sampledframes do not prove everyintervening frame or exact model-to-frame identity."
+    ]
+  },
+  "performance": {
+    "note": "Intervals between observer RAF callbacks on this browser; not render CPU time or device FPS. WebGL multi_draw counts API submissions, not its subdraws. Canvas paint commands are not GPU draw calls. OffscreenCanvas workers are not observed.",
+    "instrumentationOverheadIncluded": true,
+    "observedWindow": {
+      "clock": "browser performance.now milliseconds",
+      "startTime": 3660.5,
+      "endTime": 7471.9000000059605,
+      "excludedInitialMilliseconds": 500
+    },
+    "samples": 72,
+    "rafIntervalMs": {
+      "count": 72,
+      "min": 16.599999999999454,
+      "median": 33.399999999999636,
+      "p95": 99.89999999999964,
+      "max": 100,
+      "mean": 46.06388888888888
+    },
+    "webglDrawCalls": {
+      "count": 72,
+      "min": 1,
+      "median": 1,
+      "p95": 1,
+      "max": 1,
+      "mean": 1
+    },
+    "canvasPaintCommands": {
+      "count": 72,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "mean": 0
+    },
+    "budgets": {
+      "maxWebGLDrawCalls": 1,
+      "maxCanvasPaintCommands": 0
+    },
+    "scope": "Counts are API submissions during observer RAF intervals; RAF intervals are not render CPU cost or measured television FPS."
+  },
+  "actualGameplay": {
+    "parallaxSkyline": {
+      "sourceAssetsMatched": true,
+      "ordinaryInputOnly": true,
+      "cleanCapture": true,
+      "receivedJpegs": 888,
+      "encodedFrames": 1814,
+      "actualSparseObservations": 214,
+      "actualDispatches": 44,
+      "publicModelCalls": 1885,
+      "modelElapsedSeconds": 31.416666666666163,
+      "terminalHold": {
+        "firstStateIndex": 186,
+        "lastStateIndex": 211,
+        "fromSeconds": 41.136388661,
+        "toSeconds": 60.000378697,
+        "observedSeconds": 18.863990036000004,
+        "minimumRequiredSeconds": 10,
+        "unchangedObservedModel": true,
+        "scope": "Conservative actual wall interval between retained read boundaries; every retained terminal model agrees. Sparse observations, not frame-exact state attribution."
+      },
+      "fullDecodeInvocations": 1,
+      "rawRecordingSha256": "f9f9f148800e040f55fd699773b2d78c6839494a276e1279beaac89ea804fd44",
+      "sourceWindowSha256": {
+        "recordStart": "5760d5b1adc8b0110f4d9ed8a14c9badefb8c108dd35509476430ee97c6edb0e",
+        "recordEnd": "4d0cc92cc8f37ff66c8975810ece82ec356f4ac3eb448f96cf7380b0b6489704"
+      },
+      "finalScreenshotClockScope": "last-CDP-timestamp plus measured reception-clock delta; estimated cross-clock placement",
+      "scope": "All state readStartedAt/readCompletedAt fields bound real awaited reads; browser observations remain sparse."
+    },
+    "sparseFinalAudit": {
+      "rawReportSha256": "1e9574b285ed784eb1c088abc54151848e54c1e9006f498d130d58c3a9be546a",
+      "projectionSha256": "9ee7f6766542177397dcb4871acd6bb857e3a8deba24853ea404eafd9f083caa",
+      "checkedEndpoints": 486,
+      "internalUnobservedGaps": 479,
+      "boundaryUnobservedGaps": 4,
+      "checkedPairs": 0,
+      "verdict": "not-observed",
+      "findings": [
+        {
+          "verdict": "not-observed",
+          "scope": "corpus",
+          "code": "six-run-coverage",
+          "message": "Each task requires a checked complete ordinary win and natural four-rejection loss.",
+          "missing": [
+            {
+              "level": 0,
+              "outcome": "won"
+            },
+            {
+              "level": 0,
+              "outcome": "lost"
+            },
+            {
+              "level": 1,
+              "outcome": "won"
+            },
+            {
+              "level": 1,
+              "outcome": "lost"
+            },
+            {
+              "level": 2,
+              "outcome": "won"
+            },
+            {
+              "level": 2,
+              "outcome": "lost"
+            }
+          ]
+        }
+      ],
+      "scope": "Lossless observed task/retry segmentation; no inferred transitions, clocks, unobserved calls or frame/state identity.",
+      "ordinaryCoverageIsSeparate": true,
+      "limitations": [
+        "Arithmetic checks establish consistency of recorded public facts, not source execution or artifact authenticity.",
+        "No Model, renderer, pilot, formal-test source, private witness or diagnostic corpus is read or imported.",
+        "Each transition starts from its actual recorded before state. Calculated states never become later observations.",
+        "Sparse endpoints do not establish intervening calls, held-input continuity, undo history transitions or ordinary reachability.",
+        "JSON cannot establish fresh object identity, accessor/Proxy behavior, missing native values or the truth of display prose.",
+        "Model consistency does not establish browser lifecycle, trusted touch handling, visuals, performance or physical-device behavior.",
+        "Only manifest-listed public artifacts are read; this audit cannot establish that unlisted attempts do not exist.",
+        "Origin source hashes are provenance claims. Production, pilot, renderer and harness sources are not opened or authenticated.",
+        "Sparse endpoints and their gaps cannot replace a complete ordinary model-call chain or prove browser lifecycle, trusted controls, visuals or hardware behavior.",
+        "JSON cannot establish fresh reference identity, descriptor/getter/Proxy behavior, or unrecorded input properties."
+      ]
+    }
+  },
+  "finalAssetHashes": {
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a3a391d1782219039dab39ab86a9245879f477d4f085251e3c51025fb6105993",
+    "tv.css": "ed55c4988e20d999c691d927bfb8efccceea6de4ee07561bb4ba0653b0653c2b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc",
+    "game-model.js": "8803ff30d8aeb64b2539b8098fa2c731deb05ad830140044fe3431727b1c6f04",
+    "game.js": "857d63b671a011241dcf50744eadb7b96be9bb94a8f1a78514678d20744a46c7",
+    "game-config.json": "857ad88adcbe149707411fa7c5f6bc5e120421ce23acb6238f54849fa9c581b6",
+    "assets-index.json": "f94b95a5d645b781fb78fb4203c58534b504c6f56b38deebada47db66bcc3245"
+  },
+  "rawEvidenceSha256": {
+    "publicRules": "ad45b6875f858f51cb2a73018d10448c4a92f7f65d15938fd112c257d3baff81",
+    "sourceFixReview": "ba46478981a23efa2e2c0d9dfb8dc418ac77d3a36a1eb62eb9bd66c7549851d1",
+    "formal": "39ef034a053662247515533cce1b4875770478010992ed031fa85a3bfb220284",
+    "formalStart": "50cb8c779e652b58b089c98d4ab28878e1852036c89a1c8bdfee00f5a4038dd6",
+    "formalEnd": "3f19a63f2d4eeefa08818576b10c801e325af99b7ab0b7ec60a186449221f891",
+    "ordinary": "bed4a9b5a59dfe9002fe452fb8fc293865c7ed59f8acfb6e5f3723c1f7e79d0b",
+    "ordinaryStart": "3ec22a2a64e09f589523a50f6b6170048560caebd76844ea28417626fc320cee",
+    "ordinaryEnd": "196b9c35aad979e8a806959c31a4f99fc859ded93ab1830651b8970cdd33899f",
+    "buildCandidate": "3f590e294900322838d428867ec8160326d2b2decf7ddaa00ac5b135dfcd7d1a",
+    "publicOrdinary": "7ba4d69908e033f9cd11f381cbc76dd362e3de0b20f404daf95f2c3ed5c217ff",
+    "ordinaryProjection": "dd07c92500e0ed2e91da61b9e0dd75f6881c9f844a1e7690f4d871e9551e6994",
+    "independent": "60b0f269ebfd0c4356f88082a217cd426879c4cf746b73e002e7edf9b26bcf98",
+    "independentExecution": "857624b734d499a43c71ff38fbf647fd8867b6dfa98258ff06171e43dbe2912c",
+    "independentStaticReview": "c436e29a35eab6f783f37aeb8b5d405b95b1368997413ad864130806aff8b698",
+    "independentMistakenInvocation": "90117f48b2e2c8da9d4f44e1625529654dbb024590994ebe9ceeafe522d38195",
+    "independentInvocationReview": "3e7d717f039bc9e6bc6fc8523c0781e272539dcdaf166d1627bf861f5e943d24",
+    "candidate": "6a081e0b0e25e4b01066aaed692ab0b9f1936beadd3b919e6cd5b2e661b62c0f",
+    "candidateRaw": "d0bc23257efa54c980f16ab9f8b41a5291dbc6343f267686f958974136d9c13d",
+    "candidateStart": "35f4115dd1e65f4c403e42d2e70a8b03e31798252b858237574918c6b0f66d97",
+    "candidateEnd": "97c4abfcffd3e2fb23988da6cf181f564027cbc4359dfeb1e06103b134c063d0",
+    "ui": "83e9c083da9c198d9942ca44b714d8e65362f690ab29adffd144979e927a24aa",
+    "uiStart": "4e006d3003cc682b3f0b76b9bc5c75b12b0e14680218ca6d5e16478bf65aa68f",
+    "uiEnd": "7b422566152f5fc0fd964e92e69c94da2f25eb4ef8f8a73b91f2401606d26ed0",
+    "uiAssets": "84d8a1cea3ead44ddc99bbce74b8bf2f8bdf949fb01b501e5fa5166751ab5faa",
+    "gaps": "49df3f2c3ad6fa9c107c8e3bfd030561884719a919853b353b1e763f821b6184",
+    "gapsStart": "523d2fddd0caccc3a334ad92d647b6b8090fdf16bdf6b728e45992c007594473",
+    "gapsEnd": "a111450b177161653e29e0157e8fdf6f8106d6eb28a28b5e5ef069d74fc549d1",
+    "gapsAssets": "b873d045f71f86596bca1fa56e1af6ea31048c6df707d7f4cb55519dddef19b0",
+    "browserOriginalManifest": "d292fdb850ff442f46658ba445dab9a109a44285eee7ef0fa071c1385263327d",
+    "browserProjection": "b16b7ccedc0c6f662f7a2a460718fab356ee4b6f591a19fd120696cc5878fdc5",
+    "browserSegments": "ec5dc66b1e06b40ac5368750efc78ce14a82718b35df6d468f7188f152085dc9",
+    "browserSegmentation": "dbfd04dbf30ae752c631f7e5946a9c84b81e44af264b95b532f85910f4e59df6",
+    "browserSparseAudit": "c491e876ddecefa5135c1434a54b9668ffceac4d1fed5b1cd663442f1137f37a",
+    "browserOriginalAudit": "ed8838ff290bc9b6ae880567f8d92c222dad2da30adc67b451c10cbfcd4bf647",
+    "browserSparseExecution": "d27761b9100db699765b0afd62c642d4a94eaa5644d121ea588e70b5258d50ec",
+    "qa": "5295251b5e2a4b59ed65fe25ddd7c66de9b52ba06b7e602ace1dbfa71526198a",
+    "qaStart": "8a8a3e91a098faf98d22eb95190961c11c7fca84a8767f80fc9f3927d4b04226",
+    "qaEnd": "2ffaabdee1e3d18f6ef6c7cee451ca06059c6bef97309414c4e1616cfdfcd785",
+    "qaAssets": "f94c01771e367f1bf2bad629b4146426255a59b45b9b889b8b8aca32903a9046",
+    "qaSamples": "008f20556998b716f48574582ceea073d38bc513741927c1c6666055a35bf23c",
+    "rootFinalQa": "ad5d49b71b5ec53084707b7ed662707c1b376ab83900465d9478c993e13beabb",
+    "peerFinalQa": "dc05b97012940c19eecf93ac372ad96bae09424edb2ef2a38c4ab33791a06706",
+    "build": "3f590e294900322838d428867ec8160326d2b2decf7ddaa00ac5b135dfcd7d1a",
+    "freeze": "0c24f7cc4bf9d30e7cd9b7faa525c4c0668dcfaadf8e77c7f86f6c5c3c321b97",
+    "sign": "62c70f1aaa693d13a26e0b3225511f9bb85db185bea0b2a5abd548866c02ccf5",
+    "fetch": "bd1742ee395a49d27845c7ef1b462476c918c94d36304b71b17f322b9dc5c3d6",
+    "record": "f9f9f148800e040f55fd699773b2d78c6839494a276e1279beaac89ea804fd44",
+    "recordStart": "5760d5b1adc8b0110f4d9ed8a14c9badefb8c108dd35509476430ee97c6edb0e",
+    "recordEnd": "4d0cc92cc8f37ff66c8975810ece82ec356f4ac3eb448f96cf7380b0b6489704",
+    "capturePins": "ff34e57589a0291bc34a13fc13f221c863f104fb9bdcb6a9f0d30609eea2de47",
+    "recipe": "1bd974b1c2e035d56423bda91ba26682dd02c4de5c87451a32890c23076568f1",
+    "videoValidation": "a6d3c1ce4770df6f961105a9811695bc40423c2821bd7277476c6666348462f6",
+    "receivedFrames": "408770ced54fe4d6e1b917efcf735d9f0e6e1781cdc3e2a5b7674fedd5be620a",
+    "frameOrder": "933bfc22ecd7bd5f76af950c8b175d3f42409fa0c35f36e0f02f6b3a89823bdd",
+    "frameMap": "fcf84a14117ccbe158157e0ea1dd314175e76cb472d8333054523b17fcde563f",
+    "extracted": "cb5b6eac778cb26c3caf2895f21255cefa652f872905a0fde076097a5f595bb0",
+    "rootEncoded": "c2a5b720010b5df23a7626e1bc68e4fdca283f096f5b36970ca090ef4d9741bc",
+    "finalSparseIndex": "36afba03dd733a92efc681f1196c448d584596bb47c50bc99fa20bb7e3d97504",
+    "finalProjection": "9ee7f6766542177397dcb4871acd6bb857e3a8deba24853ea404eafd9f083caa",
+    "finalSparse": "1e9574b285ed784eb1c088abc54151848e54c1e9006f498d130d58c3a9be546a",
+    "finalSparseExecution": "21a8d75df7960c2b43a9c7b26cbe80401f74e410b39019f3a994290e1c7c637e",
+    "peerEncoded": "4264e9f84f8d2f5b9293f0d978301b347eba89b0228a3c598c08ecd4c5f85c46",
+    "finalReview": "120fdea540bc644b33f546cbdf86c373c7d533f4513d4172841081ccc7dae1d5"
+  },
+  "hardware": {
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "note": "Software Chromium with ordinary input. Synthetic fixtures are labelled separately; export FPS is not device FPS."
+  },
+  "release": {
+    "sourceSha": "64b3b0965a24aa092a7cb3fb9737aebe4a01cfda",
+    "requestCommit": "00d78631c0ba2e966214951142d516437edff041",
+    "signerCommit": "64b3b0965a24aa092a7cb3fb9737aebe4a01cfda",
+    "signingRun": 41533685255,
+    "bytes": 292131,
+    "sha256": "b9a31ac6b4d51ec63d19ea4b38f366acd55adbe02cd02340951beac2daffeb72",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "localBuildMatchesCi": true,
+    "artifactChecks": {
+      "signatureVerified": true,
+      "zipalignVerified": true,
+      "crcVerified": true,
+      "sourceIdentityVerified": true,
+      "assetsMatchSigningReceipt": true,
+      "videoSize": true,
+      "videoFormat": true,
+      "videoFullDecode": true
+    },
+    "exportCommit": "9d899dea372ef4d5bd4e495d157b0015c808a89c"
+  }
+}

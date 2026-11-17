@@ -1,0 +1,19 @@
+// AGP's Java compilation does not honor AndroidSourceDirectorySet include filters.
+// Give it a generated directory containing exactly the three shared controller files.
+def controllerOutput = layout.buildDirectory.dir('generated/sources/puretv-controller')
+def prepareController = tasks.register('preparePuretvControllerSources', Sync) {
+    from(file('../../game-kit/android/src/main/java')) {
+        include 'com/ecojust/gamekit/WifiControllerServer.java'
+        include 'com/ecojust/gamekit/WifiControllerDiscovery.java'
+    }
+    from(file('../../game-kit/legacy-controller-native/src/main/java')) {
+        include 'com/ecojust/controller/LegacyWifiController.java'
+    }
+    into(controllerOutput)
+}
+android.sourceSets.main.java.srcDir(controllerOutput)
+tasks.withType(JavaCompile).configureEach { dependsOn(prepareController) }
+// Standalone lint also needs the generated source even without an assemble task.
+tasks.configureEach {
+    if (name == 'preBuild' || name.startsWith('lint') || name.contains('Lint')) dependsOn(prepareController)
+}

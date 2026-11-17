@@ -1,0 +1,203 @@
+{
+  "passed": true,
+  "method": "Independent public-physics integrator uses projected line/circle capture intervals, friction distance, rounded rectangle normals and deterministic contact order; visibility-distance beam planning contains no authored routes. All1080 public opening angle/power pairs and planned continuations replay through ordinary model inputs, comparing full physical receipts within1e-6. No fixture state writes.",
+  "checks": [
+    "independent public physics and visibility planning find ordinary obstacle-aware wins on all layouts",
+    "all1080 first-shot angle/power combinations agree on geometry, contacts, duration and capture",
+    "ordinary fast cup crossing and a final rest inside the drawn rim do not bypass capture radius/speed",
+    "an ordinary triangle of short putts preserves the final allowed winning stroke, and natural misses exhaust the budget",
+    "fixed-step public collisions produce the same physical receipt under large and irregular real-dt partitions",
+    "moving commands cannot change the pending stroke, cancelled input leaves physics active, and pause freezes it"
+  ],
+  "layouts": [
+    {
+      "level": 0,
+      "plannedStrokes": 1,
+      "simulatedPlanningShots": 4,
+      "route": [
+        {
+          "angleIndex": 0,
+          "power": 4
+        }
+      ],
+      "shotReceipts": [
+        {
+          "stroke": 1,
+          "from": {
+            "x": 100,
+            "y": 225
+          },
+          "angleIndex": 0,
+          "angle": 0,
+          "power": 4,
+          "speed": 305,
+          "wallHits": 0,
+          "obstacleHits": 0,
+          "end": {
+            "x": 580,
+            "y": 225
+          },
+          "duration": 2.5361023798045728,
+          "result": "cup",
+          "capture": {
+            "x": 568,
+            "y": 225,
+            "speed": 64.07027391856757,
+            "stroke": 1
+          }
+        }
+      ],
+      "capture": {
+        "x": 568,
+        "y": 225,
+        "speed": 64.07027391856757,
+        "stroke": 1
+      },
+      "fastCrossingRestDistance": 12.355355902764472
+    },
+    {
+      "level": 1,
+      "plannedStrokes": 2,
+      "simulatedPlanningShots": 375,
+      "route": [
+        {
+          "angleIndex": 62,
+          "power": 5
+        },
+        {
+          "angleIndex": 2,
+          "power": 5
+        }
+      ],
+      "shotReceipts": [
+        {
+          "stroke": 1,
+          "from": {
+            "x": 110,
+            "y": 330
+          },
+          "angleIndex": 62,
+          "angle": 310,
+          "power": 5,
+          "speed": 380,
+          "wallHits": 1,
+          "obstacleHits": 0,
+          "end": {
+            "x": 556.9269720187349,
+            "y": 218.62682453057994
+          },
+          "duration": 3.6500000000000763,
+          "result": "rest",
+          "capture": null
+        },
+        {
+          "stroke": 2,
+          "from": {
+            "x": 556.9269720187349,
+            "y": 218.62682453057994
+          },
+          "angleIndex": 2,
+          "angle": 10,
+          "power": 5,
+          "speed": 380,
+          "wallHits": 1,
+          "obstacleHits": 1,
+          "end": {
+            "x": 610,
+            "y": 330
+          },
+          "duration": 2.7732178408359793,
+          "result": "cup",
+          "capture": {
+            "x": 603.4444592839534,
+            "y": 319.94888633432817,
+            "speed": 62.291388453922664,
+            "stroke": 2
+          }
+        }
+      ],
+      "capture": {
+        "x": 603.4444592839534,
+        "y": 319.94888633432817,
+        "speed": 62.291388453922664,
+        "stroke": 2
+      }
+    },
+    {
+      "level": 2,
+      "plannedStrokes": 2,
+      "simulatedPlanningShots": 445,
+      "route": [
+        {
+          "angleIndex": 5,
+          "power": 5
+        },
+        {
+          "angleIndex": 16,
+          "power": 5
+        }
+      ],
+      "shotReceipts": [
+        {
+          "stroke": 1,
+          "from": {
+            "x": 120,
+            "y": 370
+          },
+          "angleIndex": 5,
+          "angle": 25,
+          "power": 5,
+          "speed": 380,
+          "wallHits": 1,
+          "obstacleHits": 0,
+          "end": {
+            "x": 707.1153497945363,
+            "y": 240.22361617045752
+          },
+          "duration": 3.566666666666739,
+          "result": "rest",
+          "capture": null
+        },
+        {
+          "stroke": 2,
+          "from": {
+            "x": 707.1153497945363,
+            "y": 240.22361617045752
+          },
+          "angleIndex": 16,
+          "angle": 80,
+          "power": 5,
+          "speed": 380,
+          "wallHits": 2,
+          "obstacleHits": 0,
+          "end": {
+            "x": 635,
+            "y": 120
+          },
+          "duration": 2.69406606129121,
+          "result": "cup",
+          "capture": {
+            "x": 625.9101148049544,
+            "y": 127.8341551644636,
+            "speed": 58.67997417733981,
+            "stroke": 2
+          }
+        }
+      ],
+      "capture": {
+        "x": 625.9101148049544,
+        "y": 127.8341551644636,
+        "speed": 58.67997417733981,
+        "stroke": 2
+      }
+    }
+  ],
+  "comparedShots": 1107,
+  "sourceSha256": {
+    "src/main/assets/game-model.js": "171efec687bd63a67b375e9af978b9632465c8f7edc3be5bf19d14898ea09cf9",
+    "tests/reference.cjs": "18e3cade270e13adcb19fe828a2a39713382ecca6738300301c1e4d31c403540",
+    "tests/independent-check.cjs": "8128a420bb184cd1b4d7072b24744b773b8ab8accfafdb15fa7b0b4b66529062"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

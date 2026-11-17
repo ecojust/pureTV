@@ -1,0 +1,112 @@
+{
+  "status": "passed",
+  "scope": "controller client status acceptance",
+  "game": "cozy-island",
+  "version": "0.5.4",
+  "artifactSourceSha": "29c2abdda135d698f1baa0038c286babf05d29c6",
+  "qaSourceSha": "29c2abdda135d698f1baa0038c286babf05d29c6",
+  "runtimeRun": "43856477200",
+  "sourceWorkflowResult": "success",
+  "sourceGroupResult": "passed",
+  "apk": {
+    "packageName": "com.ecojust.cozyislandtv",
+    "versionCode": 6,
+    "versionName": "0.5.4",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "bytes": 288454,
+    "sha256": "44e0e8bebf67e78ea4dccb7d04deb36fec3771c6d0a7e543f73fe7083619283f"
+  },
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "nativeSourceReceiptMatchesCommit": true,
+  "inPlaceUpgradeInstalled": true,
+  "controllerClientStatusAcceptancePassed": true,
+  "fullGameplayAcceptancePerformedInThisUpdate": false,
+  "modelReuse": {
+    "sourceRef": "9af9f197855eb7a0ce7174c0e6295c8974b3250d:resource/apps/cozy-island/src/main/assets/game-model.js",
+    "sha256": "05436c6e352273b0399bc7f1e72def24b19c96f11f02145305df59554ed5ed92",
+    "bytes": 46372,
+    "matchesNewApk": true
+  },
+  "previousReleaseVerification": {
+    "version": "0.5.3",
+    "metadata": "resource/apps/cozy-island/docs/controller-status-baseline/0.5.3/resource.json",
+    "scope": "Historical evidence, not current UI captures"
+  },
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-fc6dedd6229f",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "two SDK identities display separate seats and update independently",
+      "status": "passed",
+      "result": {
+        "primaryControllerId": "virtual-fc6dedd6229f",
+        "secondaryControllerId": "virtual-e43c2755f788",
+        "seats": 2
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-fc6dedd6229f",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 55,
+        "acks": 55,
+        "connections": 4
+      }
+    }
+  ],
+  "originalEvidence": "docs/controller-client-status/android/43856477200/evidence/controller-runtime-retry-cozy/cozy-island",
+  "originalDriverSha256": "86d4c357c5595046307240fa44766c8d7cad663af505bd98b90bc0ffd6c7e653",
+  "captures": {
+    "menu-android.png": {
+      "sha256": "a2d723eb798e26b65b7294e45ec2a57dc5b92e9cede831dc0778b46e2b42528b",
+      "bytes": 534096
+    },
+    "controller-connected-android.png": {
+      "sha256": "749c34195c88fccdf70d61c06b8cb3b27358131b167a15fac048029c64804f72",
+      "bytes": 528269
+    },
+    "controllers-two-android.png": {
+      "sha256": "2863310769752ddd3eb2fae01f96295739725cfbf1fed6c71e2dd88520f1abf7",
+      "bytes": 534444
+    },
+    "controller-disconnected.png": {
+      "sha256": "a2d723eb798e26b65b7294e45ec2a57dc5b92e9cede831dc0778b46e2b42528b",
+      "bytes": 534096
+    },
+    "controller-reconnected.png": {
+      "sha256": "749c34195c88fccdf70d61c06b8cb3b27358131b167a15fac048029c64804f72",
+      "bytes": 528269
+    }
+  },
+  "connectedCaptureSha256": "749c34195c88fccdf70d61c06b8cb3b27358131b167a15fac048029c64804f72",
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false
+}

@@ -1,0 +1,86 @@
+{
+  "created_utc": "2026-11-12T16:51:56.072503+00:00",
+  "source_head": "a5fd8b2adc7f2df2f319b495595d9a4f5a893e7e",
+  "snapshot": "/workspace/scratch/neon-rush-wifi-native/current-3",
+  "command": "/workspace/scratch/neon-rush-wifi-native/run-gradle.sh -p /workspace/scratch/neon-rush-wifi-native/current-3/resource/game-kit/android testDebugUnitTest lintDebug",
+  "exit_code": 0,
+  "build_result": "BUILD SUCCESSFUL in 57s",
+  "test_suites": [
+    {
+      "name": "com.ecojust.gamekit.LanGameServerTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "time": "10.404"
+    },
+    {
+      "name": "com.ecojust.gamekit.MainActivityTest",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "time": "4.711"
+    },
+    {
+      "name": "com.ecojust.gamekit.WifiControllerDiscoveryTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "time": "0.203"
+    },
+    {
+      "name": "com.ecojust.gamekit.WifiControllerServerTest",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "time": "9.345"
+    }
+  ],
+  "test_total": 66,
+  "failures": 0,
+  "lint_issues": [
+    {
+      "id": "AndroidGradlePluginVersion",
+      "severity": "Warning",
+      "message": "A newer version of com.android.application than 8.5.2 is available: 9.5.1"
+    },
+    {
+      "id": "DiscouragedApi",
+      "severity": "Warning",
+      "message": "Should not restrict activity to fixed orientation. This may not be suitable for different form factors, causing the app to be letterboxed."
+    },
+    {
+      "id": "UnusedResources",
+      "severity": "Warning",
+      "message": "The resource `R.raw.license` appears to be unused"
+    }
+  ],
+  "source_inputs_sha256": "2d1f656963da5b77a25922189dd7c9ddae0c799c377cbe7ab11939517e9b782e",
+  "current_source_mismatches": [],
+  "toolchain": {
+    "distribution": "https://downloads.gradle.org/distributions/gradle-8.9-bin.zip",
+    "sha256": "d725d707bfabd4dfdc958c624003b3c80accc03f7037b5122c4b1d0ef15cecab",
+    "bytes": 136114148,
+    "jdk": "/workspace/scratch/neon-rush-toolchain/jdk17",
+    "sdk": "/workspace/scratch/neon-rush-toolchain/sdk"
+  },
+  "test_network_init_sha256": "c866ab6f526f2d18a5bca464263e095ebe862a41dac43b27d4ee7995e1047c3e",
+  "limits": [
+    "Robolectric Android API 28 with actual Java loopback TCP/WebSocket sockets; NSD manager calls recorded via custom shadow.",
+    "No physical Android TV/ESP32 or multicast mDNS discovery exercised by this native suite."
+  ],
+  "prior_attempts": [
+    {
+      "path": "/workspace/scratch/neon-rush-wifi-native/current-1.log",
+      "result": "Compilation failure: MainActivity lambda shadowed onCreate state; fixed in parent."
+    },
+    {
+      "path": "/workspace/scratch/neon-rush-wifi-native/current-2.log",
+      "result": "62 tests, 7 failures from custom shadow state leaking between tests; fixed explicit Before reset.",
+      "snapshot": "/workspace/scratch/neon-rush-wifi-native/current-2"
+    }
+  ]
+}

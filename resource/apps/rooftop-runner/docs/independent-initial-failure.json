@@ -1,0 +1,77 @@
+{
+  "scope": "Independent exact quadratic interval geometry and obstacle-local jump windows. Ordinary create/step pilot uses digital A/B with66–91ms jitter; synthetic geometry/boundary cases are labelled separately.",
+  "modelSha256": "e7600c180b0b349c82121c075076c90486f1b2a614de1af4f4b5e79c718d2ff3",
+  "tests": [
+    {
+      "name": "public layout describes only geometry; exact jump windows fit every box/gap",
+      "passed": true
+    },
+    {
+      "name": "positive tiny dt and unused direction inputs preserve exact auto-run speed",
+      "passed": true
+    },
+    {
+      "name": "ordinary free jump follows analytic parabola and lands at its exact root",
+      "passed": true
+    },
+    {
+      "name": "uneven partitions give the same free jump position and velocity",
+      "passed": true
+    },
+    {
+      "name": "level 1: ordinary obstacle-local jitter pilot clears all geometry",
+      "passed": true
+    },
+    {
+      "name": "level 1: omitting crouch naturally collides with beam despite normal jumps",
+      "passed": true
+    },
+    {
+      "name": "level 2: ordinary obstacle-local jitter pilot clears all geometry",
+      "passed": true
+    },
+    {
+      "name": "level 2: omitting crouch naturally collides with beam despite normal jumps",
+      "passed": true
+    },
+    {
+      "name": "level 3: ordinary obstacle-local jitter pilot clears all geometry",
+      "passed": true
+    },
+    {
+      "name": "level 3: omitting crouch naturally collides with beam despite normal jumps",
+      "passed": true
+    },
+    {
+      "name": "ordinary idle collides with first boxes or falls through the first open gap",
+      "passed": true
+    }
+  ],
+  "syntheticTests": [],
+  "runs": [
+    {
+      "level": 0,
+      "time": 17.517241379309816,
+      "passed": 8,
+      "jumps": 5,
+      "crouchEntries": 3
+    },
+    {
+      "level": 1,
+      "time": 19.515151515150787,
+      "passed": 11,
+      "jumps": 7,
+      "crouchEntries": 4
+    },
+    {
+      "level": 2,
+      "time": 21.18918918918726,
+      "passed": 14,
+      "jumps": 10,
+      "crouchEntries": 4
+    }
+  ],
+  "ordinaryStepsChecked": 968,
+  "passed": false,
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///workspace/pureTV/resource/apps/rooftop-runner/tests/independent-check.mjs:28:144\n    at test (file:///workspace/pureTV/resource/apps/rooftop-runner/tests/independent-check.mjs:16:40)\n    at file:///workspace/pureTV/resource/apps/rooftop-runner/tests/independent-check.mjs:28:2\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+}

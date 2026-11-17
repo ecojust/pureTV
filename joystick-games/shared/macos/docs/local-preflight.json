@@ -1,0 +1,64 @@
+{
+  "status": "local_preflight_passed",
+  "tests": {
+    "webBridge": 7,
+    "pythonSyntax": "passed",
+    "workflowYaml": "passed",
+    "committedSourceBoundary": "passed (frozen match, dirty bytes with old/new manifest, symlink rejection)",
+    "nativeObservationFreshness": "passed (new diagnostic alone is not a consumed game frame)"
+  },
+  "nativeCompiled": false,
+  "nativeRun": false,
+  "reason": "Current execution environment is Linux; Swift AppKit/Network/WebKit compilation and runtime require the frozen macOS workflow.",
+  "files": {
+    ".github/workflows/joystick-games-macos.yml": {
+      "bytes": 8676,
+      "sha256": "bf4bf652e4d63fcd9a169207b8e477154feb92697e818d70371908747c6bf9b9"
+    },
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": {
+      "bytes": 21160,
+      "sha256": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430"
+    },
+    "joystick-games/shared/macos/Sources/LocalAssetServer.swift": {
+      "bytes": 13465,
+      "sha256": "1d968e721a6848d421f85d112e36d5dda716af5acfa7b36f23d27893b429ef2d"
+    },
+    "joystick-games/shared/macos/Sources/main.swift": {
+      "bytes": 20244,
+      "sha256": "4888c7ba767907e8d04723bbda333bf1efe07cc02d6563d0dcf5abab4367eaf7"
+    },
+    "joystick-games/shared/macos/Web/bridge.js": {
+      "bytes": 4510,
+      "sha256": "0aa29efcf46fbb60c25d2833262b5ca8589e957de59063d7e90cd372db760edf"
+    },
+    "joystick-games/shared/macos/tests/ControllerServerTests.swift": {
+      "bytes": 20083,
+      "sha256": "632a19aa5dda8118b3c355b6f60f7af286124a248b01df9024f3a0fc8d18f378"
+    },
+    "joystick-games/shared/macos/tests/web-bridge.test.mjs": {
+      "bytes": 3852,
+      "sha256": "5a831133a0c0762b20dbb8e9a73154e9e984b8002018b17a9243b7f05255a6e3"
+    },
+    "joystick-games/tools/macos-build.py": {
+      "bytes": 8939,
+      "sha256": "a20d6c4e04b039c9803470669a5249f9bec5af4b67a7df84b9620ad81f006740"
+    },
+    "joystick-games/tools/macos-packages.py": {
+      "bytes": 2189,
+      "sha256": "810f6803076d0cf03703b61e722e6888f8de04757050025a86fb38c33a5c20b6"
+    },
+    "joystick-games/tools/macos-verify.py": {
+      "bytes": 22071,
+      "sha256": "80c2293e1e3c23092be471c97b502d8cd6d45e358d26b1db8103901480350c2b"
+    },
+    "joystick-games/shared/macos/tests/build-source.test.py": {
+      "bytes": 1588,
+      "sha256": "8687c8d0a135286ddaea381de56861fb511e74f19d0e75d7b9b376c0a4054efb"
+    },
+    "joystick-games/shared/macos/tests/native-observation.test.py": {
+      "bytes": 1092,
+      "sha256": "7ca850a663b555413669698d1c05a7c1bce90e5cb3378ffbd5f50742abea9b92"
+    }
+  },
+  "nativeQaRevisionNote": "Before any native run: replace fixed wall-clock gameplay waits with cached controller pollCount + diagnostic timestamp advancement, observed held/released keys and actual turn/movement/shot/drift/pause predicates. Background transport uses fresh native diagnostics because RAF can stop. No native failure or native pass is claimed."
+}

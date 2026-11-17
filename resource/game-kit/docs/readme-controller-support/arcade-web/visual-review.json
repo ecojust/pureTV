@@ -1,0 +1,112 @@
+{
+  "method": "Direct image inspection of final layout screenshots at both required sizes; corresponding raw measured layouts are in the unmodified reports.",
+  "reviewedAt": "2026-11-15T15:04:55.889437+00:00",
+  "physicalTvTested": false,
+  "qrFixture": "A white synthetic SVG placeholder represents the native QR image. These screenshots do not prove QR decoding.",
+  "findings": [
+    "Game canvases render original game artwork and distinct menus.",
+    "TCP address 192.168.1.100:63485 and discovery readiness are legible.",
+    "Both controller choices, player cards and bottom action legends fit without meaningful scrolling.",
+    "Final 960px compact CSS removes only duplicate phone connection explanation and adjusts spacing; QR title and image remain.",
+    "Menu labels are the original game labels; hardware Y maps to SELECT as documented in the game READMEs.",
+    "Additional service-state screens display localized connected/registering/stopped/failure explanations instead of numeric native error codes; longest English discovery failure text fits at 960×540."
+  ],
+  "images": [
+    {
+      "path": "layout-final-zh/super-mario-menu-960.png",
+      "sha256": "057a7fedaf841e1eb584320e0bac001fe9797e1a6af0425e5298ee95d4f73068",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-en/jewel-menu-960.png",
+      "sha256": "79bc48a614613db8c649057b2febc27d7b5bd9cfba9d31cb89b3912767432ddb",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-zh/bomb-jack-menu-960.png",
+      "sha256": "fd5c019e5352e054ddf3444ab53742d3c0ae2b9d65c868db5c96c94706d27089",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-en/adventure-island-menu-960.png",
+      "sha256": "cfffdeb9e0833583af047df5bbf8c088099c8bf4cc85c298c53ee9a2dc769ac8",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-en/tetris-menu-960.png",
+      "sha256": "2cabde8ec0fbae108e99109103980d87ac6db0f171f21e2f56b943a74e1e9d44",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-en/jackal-menu-960.png",
+      "sha256": "ae5c5d77460806515303400b7b97c0c121769061ef3387ceeebf37d35ce8b72d",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-zh/tank-menu-960.png",
+      "sha256": "47cf4495fa609072a854d66d564e6c9cea524d678bcb1ab55522e99b7a80373a",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-en/super-mario-menu-1280.png",
+      "sha256": "b227d9217a7130683e170e2a4c17e9d3b779defd996179cd4bc22beae957d01e",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-zh/jewel-menu-1280.png",
+      "sha256": "c7593aa3780c963a706a1af23c14dabf49d45f60f034afe2d26713c39b5114b9",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-zh/bomb-jack-menu-1280.png",
+      "sha256": "dbd659fffe0e45134ec9f2fba2837dfd274c0dd39fc4d510a7ce03392fad4205",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-en/adventure-island-menu-1280.png",
+      "sha256": "34bde261564f927da4cac7a3e2a08e92a9c5b81f18332190cf9cd5aee263b170",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-en/tetris-menu-1280.png",
+      "sha256": "315468b62e287dca2031707f33b404f6f13cc7f334cacd85e392450ab7e423ae",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-en/jackal-menu-1280.png",
+      "sha256": "bd450f65774715e37c600954541cd123e9508de843fea676ab0f2cab23389b80",
+      "result": "passed"
+    },
+    {
+      "path": "layout-final-zh/tank-menu-1280.png",
+      "sha256": "f9dc2324b570163e6e180d74a491f6d749ace10b4dc299484370ea462279781e",
+      "result": "passed"
+    },
+    {
+      "path": "wifi-states-final-en/jewel-discovery-failed-960.png",
+      "sha256": "e743786cbe66864457ac57e26623400480f52ddf29604235cb3e82458925ccc5",
+      "result": "passed"
+    },
+    {
+      "path": "wifi-states-final-zh/super-mario-service-failed-960.png",
+      "sha256": "633c222f6d3a3a17c8242137e2f8aaad51246e2c61c78f9ee056967472dd889b",
+      "result": "passed"
+    },
+    {
+      "path": "wifi-states-final-en/tetris-connected-960.png",
+      "sha256": "1f08403e9adb91831ec921a4e46a7ed6b54241fdf3e2d411139be44a0a18cf51",
+      "result": "passed"
+    },
+    {
+      "path": "wifi-states-final-zh/bomb-jack-registering-960.png",
+      "sha256": "859b331770e0b0b78cbc37753941ab66203040c1348428cb98d8eacff870767a",
+      "result": "passed"
+    },
+    {
+      "path": "wifi-states-final-en/adventure-island-stopped-960.png",
+      "sha256": "2c64549b60e8ed6a15c3d0eac272e22a901d983d4baa29691119137a77759570",
+      "result": "passed"
+    }
+  ],
+  "sourceNote": "The 14 normal-menu images were inspected after the compact CSS freeze and before the presentation-only native-error text update. Their default available state has unchanged markup/styles/text. Five additional final-runtime state images were inspected after that update. Final complete browser/input and all-state layout reports use matching final asset hashes."
+}

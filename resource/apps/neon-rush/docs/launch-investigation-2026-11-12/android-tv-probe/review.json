@@ -1,0 +1,80 @@
+{
+  "sourceRunId": "43268397554",
+  "sourceCommit": "b101eaa64e678d62c2c85914c37d1a4b5b50aaf3",
+  "environment": {
+    "host": "Ubuntu 24.04 GitHub Actions",
+    "androidVersion": "16",
+    "api": 36,
+    "imageArch": "x86_64",
+    "reportedAbis": [
+      "x86_64",
+      "arm64-v8a"
+    ],
+    "gpu": "swiftshader_indirect",
+    "display": "1920x1080",
+    "ramMb": 3072,
+    "webviewPackage": "com.google.android.webview",
+    "webviewVersion": "143.0.7499.24"
+  },
+  "neonRush011": {
+    "apkSha256": "7a76f3fb85f006cefa95afbc876fe4a0abbda52c537f28f560241b42c9018376",
+    "installExitCode": 0,
+    "installElapsedSeconds": 8.868,
+    "processSurvivedObservedWindow": true,
+    "activityInForeground": true,
+    "javaFatalExceptionObserved": false,
+    "manualVisualReview": [
+      {
+        "file": "after-ten-seconds-screen.png",
+        "observation": "Generic Game Kit loading page: 正在准备游戏 / Creating your game room...; this is not yet the Neon Rush menu or race."
+      },
+      {
+        "file": "after-confirm-screen.png",
+        "observation": "Neon Rush 0.1.1 visible with 3D city, cars, road, HUD and race countdown 1 after ordinary DPAD_CENTER; lap 1/2, time 00:00.0, speed 0."
+      }
+    ],
+    "loadingDelayObserved": true,
+    "fullRaceVerified": false,
+    "frameRateVerified": false,
+    "logLimitations": [
+      "Chromium tile-memory warning present despite rendered screenshot; not established as the user failure cause.",
+      "Empty UIAutomator accessibility text does not describe the visible WebView canvas.",
+      "Skipped-frame and long-draw observations in software-rendered CI do not measure Apple Silicon or physical-TV performance."
+    ]
+  },
+  "comparisonCases": [
+    {
+      "id": "hifini-0.5.0",
+      "installExitCode": -1,
+      "installElapsedSeconds": 120.102,
+      "error": "command_timeout",
+      "launchVerified": false,
+      "observedInterference": [
+        "Play Protect response=3 and POTENTIALLY_UNWANTED verdict followed by PlayProtectDialogsActivity",
+        "Play Store self-update force-stopped its process and removed the protection dialog"
+      ]
+    },
+    {
+      "id": "neon-rush-0.1.0",
+      "installExitCode": -1,
+      "installElapsedSeconds": 120.082,
+      "error": "command_timeout",
+      "launchVerified": false,
+      "observedInterference": [
+        "Play Protect response=3 followed by PlayProtectDialogsActivity"
+      ]
+    }
+  ],
+  "comparisonComplete": false,
+  "userReportedHiFiNiWorks": true,
+  "appleSiliconTested": false,
+  "apkCheckerHostTested": false,
+  "physicalTvTested": false,
+  "userFailureReproduced": false,
+  "rootCauseIdentified": false,
+  "productionCodeChanged": false,
+  "newApkPublished": false,
+  "nextEvidenceNeeded": "User APK Checker full error, or precise crash/blank/loading-page symptom on Apple Silicon Mac.",
+  "note": "Supplementary manual interpretation. Original summary.json and the 102 archived artifact files remain unchanged; CI success means the diagnostic script completed, not that all apps passed.",
+  "comparisonInstallDialogsHandled": false
+}

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/game-polish/publication-review/win_audit.py", line 68, in <module>
+    result=audit(a.game,json.loads(a.recording.read_text()));result['recordingSha256']=hashlib.sha256(a.recording.read_bytes()).hexdigest();raw=json.dumps(result,ensure_ascii=False,indent=2)+'\n'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/game-polish/publication-review/win_audit.py", line 63, in audit
+    require(sorted(wins)==list(range(6)),'Recorded model wins missing: '+str(sorted(wins)))
+  File "/workspace/scratch/game-polish/publication-review/win_audit.py", line 7, in require
+    if not condition: raise ValueError(message)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Recorded model wins missing: [0, 1, 2, 3, 4]

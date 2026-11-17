@@ -1,0 +1,35 @@
+    Updating crates.io index
+     Locking 4 packages to highest compatible versions
+      Adding ascii v1.1.0
+      Adding chunked_transfer v1.5.0
+      Adding httpdate v1.0.3
+      Adding tiny_http v0.12.0
+ Downloading crates ...
+  Downloaded chunked_transfer v1.5.0
+  Downloaded ascii v1.1.0
+  Downloaded httpdate v1.0.3
+  Downloaded tiny_http v0.12.0
+   Compiling httpdate v1.0.3
+   Compiling chunked_transfer v1.5.0
+   Compiling ascii v1.1.0
+   Compiling tiny_http v0.12.0
+   Compiling puretv-http-tests v0.5.8 (/dev/shm/puretv-http-tests)
+error[E0308]: mismatched types
+   --> /dev/shm/puretv-market-sync/desktop/src-tauri/src/client_updates.rs:474:5
+    |
+467 | fn save_receipt(path: &Path, candidate: &Candidate, sha256: &str) -> Result<(), String> {
+    |                                                                      ------------------ expected `Result<(), std::string::String>` because of return type
+...
+474 |     fs::rename(&temporary.0, path.with_extension("receipt.json")).map_err(|_| "无法保存客户端更新校验记录")
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<(), String>`, found `Result<(), &str>`
+    |
+    = note: expected enum `Result<_, std::string::String>`
+               found enum `Result<_, &str>`
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+474 |     Ok(fs::rename(&temporary.0, path.with_extension("receipt.json")).map_err(|_| "无法保存客户端更新校验记录")?)
+    |     +++                                                                                                       ++
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `puretv-http-tests` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

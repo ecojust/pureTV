@@ -1,0 +1,460 @@
+{
+  "passed": true,
+  "scope": "Independent offline arithmetic review of the existing first six ordinary model rounds; no model or pilot execution.",
+  "correction": {
+    "firstReviewSha256": "01857b3a7f40e878eca08dbbc2bc260ab75ade216e9a919c25b8ea4f0b8d53f2",
+    "reason": "Correct partial-flow coverage classification relative to the applied drip level. A final drip2 tick using 1/120 litre was incorrectly counted as full flow. Climate arithmetic, integer counters and terminal checks are unchanged; the first review is preserved."
+  },
+  "startedAt": "2026-11-02T01:21:33.581Z",
+  "completedAt": "2026-11-02T01:21:33.871Z",
+  "startHashes": {
+    "repoRelative:resource/apps/greenhouse-dials/docs/model-contract.md": "da85252bbb36e5c15214311aac90ccde7a036b2da8da20bd1afcdf8c21d80ad7",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/report.json": "1e7d505a3cb038727d4b4f0f2639fcfd903fe7502cc0f7de0bca0af4fc741705",
+    "repoRelative:resource/apps/greenhouse-dials/tests/greenhouse-interval-oracle.mjs": "1d96627968c7fbe04d5609f36251740286ceacb81bccaf12b955b3013f1b9608",
+    "repoRelative:resource/apps/greenhouse-dials/tests/independent-greenhouse-review.mjs": "e2c285d6ca8340abb4d62fe9dd2d0f9506603f86bbb556e766d72b43b7ecd6af",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level1-record.json": "06bd913cbafc36956cdc16487a9b6afcac148fc8933b3bd54a6c682cd5815354",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level1-loss.json": "16eb0565d0d27bd61b19095f293e91697d0781cacafe414ccd05e338ff087205",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level2-record.json": "091ba4fe615c76286a5c2edec4ab8ab866496300c84a08204b32199350055cae",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level2-loss.json": "c3e1612030f52a481a5b28bf036998d58a10c04901ac510447136004edd110b6",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level3-record.json": "fc83c4e1dbed59b6c209ff93fa9e594e891e2cb9084ef0673e9acfc3c2c163ac",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level3-loss.json": "54403d33ea0a646902632213c7ab2a2e5d7a167330329d60aff8d682891d8fa8"
+  },
+  "endHashes": {
+    "repoRelative:resource/apps/greenhouse-dials/docs/model-contract.md": "da85252bbb36e5c15214311aac90ccde7a036b2da8da20bd1afcdf8c21d80ad7",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/report.json": "1e7d505a3cb038727d4b4f0f2639fcfd903fe7502cc0f7de0bca0af4fc741705",
+    "repoRelative:resource/apps/greenhouse-dials/tests/greenhouse-interval-oracle.mjs": "1d96627968c7fbe04d5609f36251740286ceacb81bccaf12b955b3013f1b9608",
+    "repoRelative:resource/apps/greenhouse-dials/tests/independent-greenhouse-review.mjs": "e2c285d6ca8340abb4d62fe9dd2d0f9506603f86bbb556e766d72b43b7ecd6af",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level1-record.json": "06bd913cbafc36956cdc16487a9b6afcac148fc8933b3bd54a6c682cd5815354",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level1-loss.json": "16eb0565d0d27bd61b19095f293e91697d0781cacafe414ccd05e338ff087205",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level2-record.json": "091ba4fe615c76286a5c2edec4ab8ab866496300c84a08204b32199350055cae",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level2-loss.json": "c3e1612030f52a481a5b28bf036998d58a10c04901ac510447136004edd110b6",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level3-record.json": "fc83c4e1dbed59b6c209ff93fa9e594e891e2cb9084ef0673e9acfc3c2c163ac",
+    "scratchRelative:hundred-games/greenhouse-dials/ordinary-rounds-first/level3-loss.json": "54403d33ea0a646902632213c7ab2a2e5d7a167330329d60aff8d682891d8fa8"
+  },
+  "sourceUnchanged": true,
+  "contractSha256": "da85252bbb36e5c15214311aac90ccde7a036b2da8da20bd1afcdf8c21d80ad7",
+  "corpusReportSha256": "1e7d505a3cb038727d4b4f0f2639fcfd903fe7502cc0f7de0bca0af4fc741705",
+  "toolHashes": {
+    "greenhouse-interval-oracle.mjs": "1d96627968c7fbe04d5609f36251740286ceacb81bccaf12b955b3013f1b9608",
+    "independent-greenhouse-review.mjs": "e2c285d6ca8340abb4d62fe9dd2d0f9506603f86bbb556e766d72b43b7ecd6af"
+  },
+  "method": [
+    "Reconstruct accepted command receipts from recorded held/released keys; check absolute targets, fixed delay, FIFO application and each checkpoint pending queue.",
+    "Partition at old-tick weather boundaries, application ticks and water phases. T/H use discrete geometric decay; soil uses the cumulative old-temperature positive part, split at T=24 and soil increment sign/clamp changes.",
+    "Evaluate the closed form at integer endpoints, then independently count each crop comfort conjunction, danger union, maturity cap, continued mature damage, unfinished-crop dry stall and first terminal tick.",
+    "Compare every retained/command/application/initial/final full state and every compact climate/progress checkpoint; no observed climate is used to restart the oracle."
+  ],
+  "tolerances": {
+    "climateAndWaterAbsolute": 1e-08,
+    "integerCounters": 0,
+    "gatePredicates": "Exact closed intervals without relaxed gates; report proximity <=1e-8 as numerical ambiguity."
+  },
+  "limitations": [
+    "Double-precision geometric formulas rearrange the contract arithmetic and are not bit-identical to repeated IEEE-754 Euler updates.",
+    "Only six existing ordinary rounds are evidence. Oracle hand fixtures are separate arithmetic checks, not game runs or production boundary tests.",
+    "Input evidence has one key at a time, direction holds below 20 ticks, and no pause/retry/cancel/subtick events; those behaviors are outside this review.",
+    "The six rounds do not establish simultaneous terminal precedence or post-terminal freeze behavior. The terminal rule is independently evaluated along the observed trajectories.",
+    "T/H equilibrium bounds under authored controls stay inside their clamps; soil clamp handling is explicit but ordinary coverage is reported rather than presumed.",
+    "Recorded keyboard mapping is evidence-specific; this review makes no browser or physical-device claim."
+  ],
+  "oracleOnlyFixtures": {
+    "count": 2,
+    "descriptions": [
+      "One tick at T=24 with drip1 confirms old-temperature evaporation.",
+      "0.025 litre with drip2 over three ticks separates full, partial and dry flow."
+    ],
+    "maximumErrors": {
+      "hand fixture temperature": 0,
+      "hand fixture humidity": 0,
+      "hand fixture soil uses old T=24": 0
+    }
+  },
+  "assertions": 96615,
+  "results": [
+    {
+      "name": "level1-record",
+      "rawSha256": "06bd913cbafc36956cdc16487a9b6afcac148fc8933b3bd54a6c682cd5815354",
+      "passed": true,
+      "assertions": 18689,
+      "retainedStates": 81,
+      "fullStateOccurrences": 157,
+      "compactCheckpoints": 285,
+      "distinctFullTicks": 81,
+      "commands": 37,
+      "applications": 37,
+      "intervals": 39,
+      "terminal": {
+        "tick": 2280,
+        "reason": "won"
+      },
+      "growthTicks": [
+        1800,
+        2280,
+        2040
+      ],
+      "damageTicks": [
+        0,
+        0,
+        0
+      ],
+      "water": 14.416666666666666,
+      "firstDryTick": null,
+      "firstStallTick": null,
+      "nearestBoundary": {
+        "tick": 290,
+        "crop": "C1",
+        "dimension": "temperature",
+        "kind": "comfort",
+        "edge": 28.5,
+        "margin": 0.002982214785408388
+      },
+      "ambiguousBoundaryCount": 0,
+      "ambiguousBoundaries": [],
+      "maximumErrors": {
+        "temperature": 3.907985046680551e-14,
+        "humidity": 8.029132914089132e-13,
+        "soilMoisture": 9.379164112033322e-13,
+        "remainingLitres": 5.453415496958769e-13,
+        "usedLitres": 1.8474111129762605e-13,
+        "ledger": 6.465938895416912e-13,
+        "intervalBefore.temperature": 3.552713678800501e-14,
+        "intervalBefore.humidity": 8.029132914089132e-13,
+        "intervalBefore.soilMoisture": 9.379164112033322e-13,
+        "intervalAfter.temperature": 3.552713678800501e-14,
+        "intervalAfter.humidity": 8.029132914089132e-13,
+        "intervalAfter.soilMoisture": 9.379164112033322e-13,
+        "intervalBeforeWater": 5.435651928564766e-13,
+        "intervalUsed": 0,
+        "actualDripLps": 0,
+        "evaporation": 8.881784197001252e-16,
+        "bounds.temperature": 2.1316282072803006e-14,
+        "bounds.humidity": 7.531752999057062e-13,
+        "bounds.soilMoisture": 7.887024366937112e-13
+      },
+      "soilClampPieces": 0,
+      "partialFlowIntervals": 0
+    },
+    {
+      "name": "level1-loss",
+      "rawSha256": "16eb0565d0d27bd61b19095f293e91697d0781cacafe414ccd05e338ff087205",
+      "passed": true,
+      "assertions": 6155,
+      "retainedStates": 31,
+      "fullStateOccurrences": 33,
+      "compactCheckpoints": 239,
+      "distinctFullTicks": 31,
+      "commands": 0,
+      "applications": 0,
+      "intervals": 2,
+      "terminal": {
+        "tick": 1904,
+        "reason": "crop"
+      },
+      "growthTicks": [
+        0,
+        359,
+        0
+      ],
+      "damageTicks": [
+        480,
+        0,
+        109
+      ],
+      "water": 24,
+      "firstDryTick": null,
+      "firstStallTick": null,
+      "nearestBoundary": {
+        "tick": 1354,
+        "crop": "C2",
+        "dimension": "soilMoisture",
+        "kind": "comfort",
+        "edge": 35,
+        "margin": 0.0010455346404611987
+      },
+      "ambiguousBoundaryCount": 0,
+      "ambiguousBoundaries": [],
+      "maximumErrors": {
+        "temperature": 1.2079226507921703e-13,
+        "humidity": 9.947598300641403e-14,
+        "soilMoisture": 1.8474111129762605e-13,
+        "remainingLitres": 0,
+        "usedLitres": 0,
+        "ledger": 0,
+        "intervalBefore.temperature": 1.2079226507921703e-13,
+        "intervalBefore.humidity": 8.526512829121202e-14,
+        "intervalBefore.soilMoisture": 1.8474111129762605e-13,
+        "intervalAfter.temperature": 1.2079226507921703e-13,
+        "intervalAfter.humidity": 8.526512829121202e-14,
+        "intervalAfter.soilMoisture": 1.8474111129762605e-13,
+        "intervalBeforeWater": 0,
+        "intervalUsed": 0,
+        "actualDripLps": 0,
+        "evaporation": 2.9976021664879227e-15,
+        "bounds.temperature": 1.2079226507921703e-13,
+        "bounds.humidity": 2.842170943040401e-14,
+        "bounds.soilMoisture": 1.7408297026122455e-13
+      },
+      "soilClampPieces": 0,
+      "partialFlowIntervals": 0
+    },
+    {
+      "name": "level2-record",
+      "rawSha256": "091ba4fe615c76286a5c2edec4ab8ab866496300c84a08204b32199350055cae",
+      "passed": true,
+      "assertions": 18452,
+      "retainedStates": 80,
+      "fullStateOccurrences": 150,
+      "compactCheckpoints": 315,
+      "distinctFullTicks": 80,
+      "commands": 34,
+      "applications": 34,
+      "intervals": 36,
+      "terminal": {
+        "tick": 2519,
+        "reason": "won"
+      },
+      "growthTicks": [
+        1980,
+        2460,
+        2220
+      ],
+      "damageTicks": [
+        0,
+        0,
+        0
+      ],
+      "water": 9.708333333333334,
+      "firstDryTick": null,
+      "firstStallTick": null,
+      "nearestBoundary": {
+        "tick": 2431,
+        "crop": "C1",
+        "dimension": "humidity",
+        "kind": "comfort",
+        "edge": 55,
+        "margin": 0.0002746380656262204
+      },
+      "ambiguousBoundaryCount": 0,
+      "ambiguousBoundaries": [],
+      "maximumErrors": {
+        "temperature": 8.171241461241152e-14,
+        "humidity": 9.805489753489383e-13,
+        "soilMoisture": 1.5276668818842154e-12,
+        "remainingLitres": 7.549516567451064e-13,
+        "usedLitres": 2.540190280342358e-13,
+        "ledger": 5.009326287108706e-13,
+        "intervalBefore.temperature": 7.460698725481052e-14,
+        "intervalBefore.humidity": 9.805489753489383e-13,
+        "intervalBefore.soilMoisture": 1.5276668818842154e-12,
+        "intervalAfter.temperature": 7.460698725481052e-14,
+        "intervalAfter.humidity": 9.805489753489383e-13,
+        "intervalAfter.soilMoisture": 1.5276668818842154e-12,
+        "intervalBeforeWater": 7.549516567451064e-13,
+        "intervalUsed": 0,
+        "actualDripLps": 0,
+        "evaporation": 1.887379141862766e-15,
+        "bounds.temperature": 2.842170943040401e-14,
+        "bounds.humidity": 8.668621376273222e-13,
+        "bounds.soilMoisture": 1.2931877790833823e-12
+      },
+      "soilClampPieces": 0,
+      "partialFlowIntervals": 0
+    },
+    {
+      "name": "level2-loss",
+      "rawSha256": "c3e1612030f52a481a5b28bf036998d58a10c04901ac510447136004edd110b6",
+      "passed": true,
+      "assertions": 26719,
+      "retainedStates": 126,
+      "fullStateOccurrences": 196,
+      "compactCheckpoints": 638,
+      "distinctFullTicks": 126,
+      "commands": 34,
+      "applications": 34,
+      "intervals": 37,
+      "terminal": {
+        "tick": 5099,
+        "reason": "crop"
+      },
+      "growthTicks": [
+        0,
+        1237,
+        137
+      ],
+      "damageTicks": [
+        480,
+        0,
+        0
+      ],
+      "water": 23,
+      "firstDryTick": null,
+      "firstStallTick": null,
+      "nearestBoundary": {
+        "tick": 2845,
+        "crop": "C1",
+        "dimension": "temperature",
+        "kind": "comfort",
+        "edge": 28.5,
+        "margin": 4.1541327895799895e-05
+      },
+      "ambiguousBoundaryCount": 0,
+      "ambiguousBoundaries": [],
+      "maximumErrors": {
+        "temperature": 7.105427357601002e-14,
+        "humidity": 2.8421709430404007e-13,
+        "soilMoisture": 1.4566126083082054e-13,
+        "remainingLitres": 0,
+        "usedLitres": 0,
+        "ledger": 0,
+        "intervalBefore.temperature": 7.105427357601002e-14,
+        "intervalBefore.humidity": 2.8421709430404007e-13,
+        "intervalBefore.soilMoisture": 1.3855583347321954e-13,
+        "intervalAfter.temperature": 7.105427357601002e-14,
+        "intervalAfter.humidity": 2.8421709430404007e-13,
+        "intervalAfter.soilMoisture": 1.3855583347321954e-13,
+        "intervalBeforeWater": 0,
+        "intervalUsed": 0,
+        "actualDripLps": 0,
+        "evaporation": 1.7763568394002505e-15,
+        "bounds.temperature": 2.842170943040401e-14,
+        "bounds.humidity": 2.8421709430404007e-13,
+        "bounds.soilMoisture": 9.769962616701378e-14
+      },
+      "soilClampPieces": 0,
+      "partialFlowIntervals": 0
+    },
+    {
+      "name": "level3-record",
+      "rawSha256": "fc83c4e1dbed59b6c209ff93fa9e594e891e2cb9084ef0673e9acfc3c2c163ac",
+      "passed": true,
+      "assertions": 20391,
+      "retainedStates": 92,
+      "fullStateOccurrences": 170,
+      "compactCheckpoints": 330,
+      "distinctFullTicks": 92,
+      "commands": 38,
+      "applications": 38,
+      "intervals": 41,
+      "terminal": {
+        "tick": 2640,
+        "reason": "won"
+      },
+      "growthTicks": [
+        2160,
+        2640,
+        2400
+      ],
+      "damageTicks": [
+        0,
+        0,
+        0
+      ],
+      "water": 12.95,
+      "firstDryTick": null,
+      "firstStallTick": null,
+      "nearestBoundary": {
+        "tick": 292,
+        "crop": "C1",
+        "dimension": "temperature",
+        "kind": "comfort",
+        "edge": 28.5,
+        "margin": 0.005551479964879036
+      },
+      "ambiguousBoundaryCount": 0,
+      "ambiguousBoundaries": [],
+      "maximumErrors": {
+        "temperature": 6.039613253960852e-14,
+        "humidity": 7.815970093361102e-13,
+        "soilMoisture": 9.734435479913373e-13,
+        "remainingLitres": 5.151434834260726e-13,
+        "usedLitres": 1.8118839761882555e-13,
+        "ledger": 6.394884621840902e-13,
+        "intervalBefore.temperature": 5.684341886080802e-14,
+        "intervalBefore.humidity": 7.815970093361102e-13,
+        "intervalBefore.soilMoisture": 9.663381206337363e-13,
+        "intervalAfter.temperature": 6.039613253960852e-14,
+        "intervalAfter.humidity": 7.815970093361102e-13,
+        "intervalAfter.soilMoisture": 9.734435479913373e-13,
+        "intervalBeforeWater": 5.133671265866724e-13,
+        "intervalUsed": 0,
+        "actualDripLps": 0,
+        "evaporation": 1.4432899320127035e-15,
+        "bounds.temperature": 3.197442310920451e-14,
+        "bounds.humidity": 7.247535904753022e-13,
+        "bounds.soilMoisture": 8.455458555545192e-13
+      },
+      "soilClampPieces": 0,
+      "partialFlowIntervals": 0
+    },
+    {
+      "name": "level3-loss",
+      "rawSha256": "54403d33ea0a646902632213c7ab2a2e5d7a167330329d60aff8d682891d8fa8",
+      "passed": true,
+      "assertions": 6202,
+      "retainedStates": 31,
+      "fullStateOccurrences": 37,
+      "compactCheckpoints": 212,
+      "distinctFullTicks": 31,
+      "commands": 2,
+      "applications": 2,
+      "intervals": 6,
+      "terminal": {
+        "tick": 1688,
+        "reason": "water"
+      },
+      "growthTicks": [
+        0,
+        576,
+        167
+      ],
+      "damageTicks": [
+        230,
+        0,
+        0
+      ],
+      "water": 0,
+      "firstDryTick": 1509,
+      "firstStallTick": 1509,
+      "nearestBoundary": {
+        "tick": 908,
+        "crop": "C1",
+        "dimension": "soilMoisture",
+        "kind": "comfort",
+        "edge": 68,
+        "margin": 0.0005865946499170605
+      },
+      "ambiguousBoundaryCount": 0,
+      "ambiguousBoundaries": [],
+      "maximumErrors": {
+        "temperature": 1.0658141036401503e-13,
+        "humidity": 1.4352963262354024e-12,
+        "soilMoisture": 2.7569058147491887e-12,
+        "remainingLitres": 3.375077994860476e-13,
+        "usedLitres": 3.694822225952521e-13,
+        "ledger": 3.197442310920451e-13,
+        "intervalBefore.temperature": 9.237055564881302e-14,
+        "intervalBefore.humidity": 1.3784529073745944e-12,
+        "intervalBefore.soilMoisture": 2.7569058147491887e-12,
+        "intervalAfter.temperature": 9.237055564881302e-14,
+        "intervalAfter.humidity": 1.3784529073745944e-12,
+        "intervalAfter.soilMoisture": 2.7569058147491887e-12,
+        "intervalBeforeWater": 3.1441516057384433e-13,
+        "intervalUsed": 0,
+        "actualDripLps": 0,
+        "evaporation": 2.3314683517128287e-15,
+        "bounds.temperature": 7.815970093361102e-14,
+        "bounds.humidity": 1.4352963262354024e-12,
+        "bounds.soilMoisture": 2.6716406864579767e-12
+      },
+      "soilClampPieces": 0,
+      "partialFlowIntervals": 1
+    }
+  ],
+  "failureCount": 0,
+  "failures": [],
+  "archive": {
+    "rawReportSha256": "2e351d5dde53ef2529c0dfaa7f7ed69f971d61a8512e5bff430dab148cf7d399",
+    "rawReportScratchRelative": "hundred-games/greenhouse-dials/independent-review-corrected/report.json",
+    "projection": "Only start/end hash-map path keys are portable. All numerical results, source-window values, correction provenance and limits are copied unchanged from the actual corrected offline review."
+  }
+}

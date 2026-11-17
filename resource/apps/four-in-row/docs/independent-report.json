@@ -1,0 +1,124 @@
+{
+  "scope": "Independent 69-window geometry and exact public AI policy; exhaustive reachable human-turn graph replayed using normal create/step inputs, with no state writes.",
+  "modelSha256": "119bb3c8d517ac52c7562b82ce5a4a109cdcaa80e38e3983424eeb759a248b5c",
+  "tests": [
+    {
+      "name": "public geometry and AI settings match published rules",
+      "passed": true
+    },
+    {
+      "name": "level 1: declared position is legally reachable without an earlier win",
+      "passed": true
+    },
+    {
+      "name": "level 1: exhaustive independent opponent graph agrees with ordinary model inputs",
+      "passed": true
+    },
+    {
+      "name": "level 1: full columns and clamped cursor actions do not trigger an AI turn",
+      "passed": true
+    },
+    {
+      "name": "level 2: declared position is legally reachable without an earlier win",
+      "passed": true
+    },
+    {
+      "name": "level 2: exhaustive independent opponent graph agrees with ordinary model inputs",
+      "passed": true
+    },
+    {
+      "name": "level 2: full columns and clamped cursor actions do not trigger an AI turn",
+      "passed": true
+    },
+    {
+      "name": "level 3: declared position is legally reachable without an earlier win",
+      "passed": true
+    },
+    {
+      "name": "level 3: exhaustive independent opponent graph agrees with ordinary model inputs",
+      "passed": true
+    },
+    {
+      "name": "level 3: full columns and clamped cursor actions do not trigger an AI turn",
+      "passed": true
+    },
+    {
+      "name": "held A does not repeat; cancellation and physical release gate the next turn",
+      "passed": true
+    },
+    {
+      "name": "simultaneous A and direction drops in current column; unused B does not override",
+      "passed": true
+    }
+  ],
+  "proofs": [
+    {
+      "level": 0,
+      "states": 20,
+      "edges": 50,
+      "shortestWin": [
+        5,
+        3,
+        5,
+        6
+      ],
+      "naturalLoss": [
+        3
+      ],
+      "naturalDraw": [
+        5,
+        3,
+        5,
+        2,
+        5
+      ]
+    },
+    {
+      "level": 1,
+      "states": 32,
+      "edges": 88,
+      "shortestWin": [
+        4,
+        3,
+        6,
+        3
+      ],
+      "naturalLoss": [
+        2
+      ],
+      "naturalDraw": null
+    },
+    {
+      "level": 2,
+      "states": 74,
+      "edges": 169,
+      "shortestWin": [
+        3,
+        3,
+        4,
+        5,
+        5,
+        2
+      ],
+      "naturalLoss": [
+        2
+      ],
+      "naturalDraw": [
+        4,
+        2,
+        3,
+        3,
+        2,
+        5,
+        2
+      ]
+    }
+  ],
+  "turnsChecked": 307,
+  "policyCounts": {
+    "immediate-win": 107,
+    "minimax": 131,
+    "immediate-block": 52
+  },
+  "passed": true
+}

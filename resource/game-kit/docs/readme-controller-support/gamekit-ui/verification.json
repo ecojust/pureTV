@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "generatedAt": "2026-11-15T15:14:41.922602+00:00",
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "gameStateWrites": false,
+  "clockWrites": false,
+  "ordinaryInputUniqueCases": 18,
+  "ordinaryInputGames": 9,
+  "ordinaryInputResolutions": [
+    "960x540",
+    "1280x720"
+  ],
+  "ordinaryInputReports": [
+    "attempt-3/report.json",
+    "attempt-4/report.json"
+  ],
+  "finalSelection": "attempt-3 except glass-fold, for which attempt-4 supersedes its menu/playing/paused cases",
+  "targetedNativeStatusCases": 12,
+  "targetedNativeStatusReport": "wifi-status-layout/report.json",
+  "scrollAndOverlayCases": 3,
+  "scrollAndOverlayReport": "scroll-and-visibility-attempt-2/report.json",
+  "unchangedRuleModels": 9,
+  "ruleReuseReport": "model-reuse.json",
+  "sourceBinding": "final-source-binding.json",
+  "limits": [
+    "Native metadata and connection are browser fixtures. The separate official SDK/TCP suite covers actual wire transport.",
+    "The final status-string and vertical-scroll changes occurred after the 18 normal-input UI cases; final-source-binding asserts their exact limited diff, and targeted reports cover them.",
+    "Native MainActivity lifecycle tests still require Android/Robolectric CI; this UI evidence does not claim they ran.",
+    "Old preflight source snapshots and receipts retain their original hashes; they are not rewritten to imply final source coverage."
+  ]
+}

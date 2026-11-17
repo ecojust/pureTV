@@ -1,0 +1,1729 @@
+{
+  "kind": "independent-synthetic-public-forge-pilot-review",
+  "passed": true,
+  "sourceHashes": {
+    "tests/automation.mjs": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+    "src/main/assets/game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+    "docs/model-contract.md": "266769598052c76a6ce6bbbfd0b931283842c79ef44a6b7a9ed3026fb2d6c0b7",
+    "tests/independent-forge-math.mjs": "7211b65e1077b18a4e8a28c7066495c76a954a564b9107876e745ae9bcfd8d2d"
+  },
+  "expectedPilotSha256": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+  "reviewScriptSha256": "2bca19b3b01b242063400d8ddf91a647ce9c611d69902f5267afcba927ce9c98",
+  "productionModelImported": false,
+  "productionModelStepCalled": false,
+  "productionModelSourceReadOnlyForHashAndPrivateKeyNames": true,
+  "authoredLayoutsRead": false,
+  "normalGameWinsClaimed": 0,
+  "browserExecuted": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "privateKeys": [
+    "_accumulator",
+    "_cancelEpoch",
+    "_futureRoute",
+    "_heldDirection",
+    "_lastA",
+    "_lastB",
+    "_nextMoveTick",
+    "_pendingA",
+    "_pendingB",
+    "_plannedAnswer",
+    "_private",
+    "_referenceAssignment",
+    "_solution"
+  ],
+  "checks": [
+    {
+      "name": "reviewed public pilot and independent math imports remain pinned; production model is not imported",
+      "passed": true
+    },
+    {
+      "name": "three separate factories produce identical keys for paired public histories with different private payloads or throwing getters",
+      "passed": true,
+      "pairedObservations": 12,
+      "variants": 3
+    },
+    {
+      "name": "A edges release, stale ticks remain neutral, and observations must preserve exact physical IDs even for equal materials",
+      "passed": true,
+      "negativeFixture": "same-material ID substitution is intentionally inconsistent with the pending receipt, not ordinary play"
+    },
+    {
+      "name": "record mode requires observed trial commit, empty-hand B undo, then the exact same physical pair repair",
+      "passed": true,
+      "syntheticObservations": 24,
+      "pair": [
+        "C2",
+        "C3"
+      ],
+      "physicalIDs": [
+        "T4",
+        "T5"
+      ],
+      "normalGameplayClaim": false
+    },
+    {
+      "name": "interleaved factories keep independent holding versus ready tasks; FORGE while holding cancels without submitting or undoing",
+      "passed": true
+    },
+    {
+      "name": "paused/menu/constructed-terminal runtime gates return neutral; clock rollback begins a fresh public plan",
+      "passed": true
+    },
+    {
+      "name": "bounded public exports agree with independent cube/material facts, preserve same-material IDs, reject invalid caps, and use actual screen focus",
+      "passed": true,
+      "explicitPlannerGoal": "goal",
+      "minimumSwapsObserved": 2,
+      "noAuthoredFeasibilityClaim": true
+    },
+    {
+      "name": "all observation inputs stay deeply frozen with zero private getter reads or writes",
+      "passed": true
+    }
+  ],
+  "scope": "Hand-constructed seven-cell disconnected geometry: two Cu/Fe/Ag triangles and one Cu leaf, with requiredCount=1 for every material. Public observations are independently derived from that synthetic board by the reviewed pure cube/heat oracle. No production model, authored board, reference assignment or model solver is executed. The reviewed public pilot and its own public planner/predictor are executed. These are synthetic observation/input-protocol fixtures, not normal gameplay, footage or device evidence.",
+  "afterImportHashes": {
+    "tests/automation.mjs": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+    "src/main/assets/game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+    "docs/model-contract.md": "266769598052c76a6ce6bbbfd0b931283842c79ef44a6b7a9ed3026fb2d6c0b7",
+    "tests/independent-forge-math.mjs": "7211b65e1077b18a4e8a28c7066495c76a954a564b9107876e745ae9bcfd8d2d"
+  },
+  "endHashes": {
+    "tests/automation.mjs": "1ea6e2f3edacc11778231df0625bef63b416adcfdd6753bb56d6651bcaef2dfa",
+    "src/main/assets/game-model.js": "a51bbd9370ee162d760364d88efaefa59b6932c2555245da96b324a3ef61c491",
+    "docs/model-contract.md": "266769598052c76a6ce6bbbfd0b931283842c79ef44a6b7a9ed3026fb2d6c0b7",
+    "tests/independent-forge-math.mjs": "7211b65e1077b18a4e8a28c7066495c76a954a564b9107876e745ae9bcfd8d2d"
+  },
+  "reviewScriptEndSha256": "2bca19b3b01b242063400d8ddf91a647ce9c611d69902f5267afcba927ce9c98",
+  "sourceUnchanged": true,
+  "pilotCalls": 76,
+  "exportCalls": 10,
+  "observationCalls": 86,
+  "reviewedApiCallsIncludingFactoriesAndDiagnostics": 95,
+  "callLimit": 100,
+  "factoriesCreated": 6,
+  "diagnosticCalls": 3,
+  "deepFrozenObservations": 86,
+  "privateReads": 0,
+  "mutationAttempts": 0,
+  "meaningfulDirectionOutputs": 6,
+  "pickSwapSubmitEdgeOutputs": 11,
+  "cancelUndoEdgeOutputs": 2,
+  "inputTraceSha256": "a43bb9bddff9f42ab22469f38a5117caf86b06dbf39a8d64bec1b0c5c3fa3c15",
+  "inputTrace": [
+    {
+      "label": "paired-0-a",
+      "tick": 60,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-0-b",
+      "tick": 60,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-0-getters",
+      "tick": 60,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-1-a",
+      "tick": 90,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-1-b",
+      "tick": 90,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-1-getters",
+      "tick": 90,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-2-a",
+      "tick": 90,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-2-b",
+      "tick": 90,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-2-getters",
+      "tick": 90,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-3-a",
+      "tick": 90,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-3-b",
+      "tick": 90,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-3-getters",
+      "tick": 90,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-a",
+      "tick": 96,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-b",
+      "tick": 96,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-4-getters",
+      "tick": 96,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-5-a",
+      "tick": 108,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "paired-5-b",
+      "tick": 108,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "paired-5-getters",
+      "tick": 108,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "paired-6-a",
+      "tick": 108,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-6-b",
+      "tick": 108,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-6-getters",
+      "tick": 108,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-7-a",
+      "tick": 114,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-7-b",
+      "tick": 114,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-7-getters",
+      "tick": 114,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-8-a",
+      "tick": 120,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-8-b",
+      "tick": 120,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-8-getters",
+      "tick": 120,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-9-a",
+      "tick": 132,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-9-b",
+      "tick": 132,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-9-getters",
+      "tick": 132,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "paired-10-a",
+      "tick": 132,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-10-b",
+      "tick": 132,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-10-getters",
+      "tick": 132,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-11-a",
+      "tick": 138,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C3",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "paired-11-b",
+      "tick": 138,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C3",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "negative-same-material-physical-ID-substitution",
+      "tick": 138,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C3",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T2",
+        "T4",
+        "T5",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "error": "Actual swap violated physical IDs or history/lifetime ledger"
+    },
+    {
+      "label": "paired-11-getters",
+      "tick": 138,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C3",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-0",
+      "tick": 60,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-1",
+      "tick": 240,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "record-trial-undo-repair-2",
+      "tick": 240,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-3",
+      "tick": 246,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-4",
+      "tick": 342,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "record-trial-undo-repair-5",
+      "tick": 342,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-6",
+      "tick": 348,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-7",
+      "tick": 366,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-8",
+      "tick": 480,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "record-trial-undo-repair-9",
+      "tick": 480,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-10",
+      "tick": 486,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C3",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-11",
+      "tick": 744,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C3",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "record-trial-undo-repair-12",
+      "tick": 744,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C3",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "negative-undo-same-material-ID-substitution",
+      "tick": 750,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T2",
+        "T5",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "error": "Undo must restore exact ID allocation without refunding time or lifetime counters"
+    },
+    {
+      "label": "record-trial-undo-repair-13",
+      "tick": 750,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-14",
+      "tick": 1008,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "record-trial-undo-repair-15",
+      "tick": 1008,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C2",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-16",
+      "tick": 1014,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-17",
+      "tick": 1110,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "keys": [
+        "ArrowDown"
+      ]
+    },
+    {
+      "label": "record-trial-undo-repair-18",
+      "tick": 1110,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C2",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-19",
+      "tick": 1116,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-20",
+      "tick": 1134,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-21",
+      "tick": 1248,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "record-trial-undo-repair-22",
+      "tick": 1248,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "C3",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "keys": []
+    },
+    {
+      "label": "record-trial-undo-repair-23",
+      "tick": 1254,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C3",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 2,
+      "undos": 1,
+      "keys": []
+    },
+    {
+      "label": "holding-FORGE-factory-start",
+      "tick": 1800,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "forge",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "ready-other-factory-start",
+      "tick": 1800,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "forge",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "holding-FORGE-cancels-not-submits",
+      "tick": 1830,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "forge",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "keys": [
+        "b"
+      ]
+    },
+    {
+      "label": "ready-does-not-auto-submit",
+      "tick": 1830,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "forge",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "cancel-release",
+      "tick": 1830,
+      "phase": "playing",
+      "stage": "holding",
+      "selectedId": "forge",
+      "heldTileId": "T4",
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "negative-cancel-that-undoes-history",
+      "tick": 1836,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C3",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 1,
+      "error": "Cancel must not commit or undo a physical swap"
+    },
+    {
+      "label": "cancel-preserves-existing-history",
+      "tick": 1836,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C3",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T5",
+        "T4",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 1,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "ready-explicit-Space-submit",
+      "tick": 1848,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "forge",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "Space"
+      ]
+    },
+    {
+      "label": "submit-release",
+      "tick": 1848,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "forge",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "synthetic-runtime-neutral-gate",
+      "tick": 1848,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C1",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "synthetic-runtime-neutral-gate",
+      "tick": 1848,
+      "phase": "menu",
+      "stage": "select",
+      "selectedId": "C1",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "synthetic-runtime-neutral-gate",
+      "tick": 1848,
+      "phase": "won",
+      "stage": "select",
+      "selectedId": "C1",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "retry-clock-rollback",
+      "tick": 0,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C1",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": []
+    },
+    {
+      "label": "retry-fresh-navigation",
+      "tick": 30,
+      "phase": "playing",
+      "stage": "select",
+      "selectedId": "C1",
+      "heldTileId": null,
+      "assignment": [
+        "T1",
+        "T4",
+        "T5",
+        "T2",
+        "T3",
+        "T6",
+        "T7"
+      ],
+      "totalSwaps": 0,
+      "undos": 0,
+      "keys": [
+        "ArrowRight"
+      ]
+    }
+  ],
+  "calledExports": [
+    "createPilot",
+    "publicAssignment",
+    "evaluateBoard",
+    "predictSwap",
+    "planVisibleState",
+    "predictFocus",
+    "focusPath",
+    "assertPublicBoard"
+  ],
+  "syntheticGeometry": {
+    "axialCells": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        2,
+        0
+      ]
+    ],
+    "sourceCellId": "C1",
+    "moldCellId": "C2",
+    "materialTotals": {
+      "copper": 3,
+      "iron": 2,
+      "silver": 2
+    },
+    "requiredCounts": {
+      "copper": 1,
+      "iron": 1,
+      "silver": 1
+    },
+    "disconnectedFootprint": true
+  }
+}

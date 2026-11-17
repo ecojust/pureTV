@@ -1,0 +1,99 @@
+{
+  "status": "passed",
+  "scope": "controller client status acceptance",
+  "game": "alien-shooter",
+  "version": "0.1.4",
+  "artifactSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "qaSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "runtimeRun": "43846050276",
+  "sourceWorkflowResult": "failure",
+  "sourceGroupResult": "passed",
+  "apk": {
+    "packageName": "com.ecojust.alienshootertv",
+    "versionCode": 5,
+    "versionName": "0.1.4",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "bytes": 1775787,
+    "sha256": "2dae05c633afca0250822937d87fd57f9e90c643414200bf506ceba31dfbd42b"
+  },
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "nativeSourceReceiptMatchesCommit": true,
+  "inPlaceUpgradeInstalled": true,
+  "controllerClientStatusAcceptancePassed": true,
+  "fullGameplayAcceptancePerformedInThisUpdate": false,
+  "modelReuse": {
+    "sourceRef": "9af9f197855eb7a0ce7174c0e6295c8974b3250d:resource/apps/alien-shooter/src/main/assets/game-model.js",
+    "sha256": "1cb4cc6b8e47e55ac78da62c681dc2d29a41448b15f340c0736599dc99bec425",
+    "bytes": 35246,
+    "matchesNewApk": true
+  },
+  "previousReleaseVerification": {
+    "version": "0.1.3",
+    "metadata": "resource/apps/alien-shooter/docs/controller-status-baseline/0.1.3/resource.json",
+    "scope": "Historical evidence, not current UI captures"
+  },
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-91103a4b550d",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-91103a4b550d",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 21,
+        "acks": 21,
+        "connections": 2
+      }
+    }
+  ],
+  "originalEvidence": "docs/controller-client-status/android/43846050276/evidence/controller-runtime-worlds-2/alien-shooter",
+  "originalDriverSha256": "c494b3e9c541876fe7e35671331777b32975ed27f30095e9c5f54c56abd0a8f2",
+  "captures": {
+    "menu-android.png": {
+      "sha256": "e3d0f67bc9f309cf2eb00c68542207541b5b8629cb137bb3d4e2b8c39f502ae2",
+      "bytes": 1251546
+    },
+    "controller-connected-android.png": {
+      "sha256": "84d6390bdb8a48954226aaa2c15c19b848ceae00bbe511a80925a6a3b50cf86d",
+      "bytes": 1242591
+    },
+    "controller-disconnected.png": {
+      "sha256": "ffb7d80644d7c82f2713c1104d8154896aed4d8918ef1868ca7cc643f5488a52",
+      "bytes": 1251669
+    },
+    "controller-reconnected.png": {
+      "sha256": "9cbe492d4b7b7d0785ceb39206d508280badf5027f38c9a73449fdfeb0c00a4e",
+      "bytes": 1251766
+    }
+  },
+  "connectedCaptureSha256": "84d6390bdb8a48954226aaa2c15c19b848ceae00bbe511a80925a6a3b50cf86d",
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false
+}

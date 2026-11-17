@@ -1,0 +1,881 @@
+{
+  "passed": true,
+  "scope": "Independent offline arithmetic and event-constraint review of the six existing v3 ordinary rounds. No model, controller, browser or private witness execution/access.",
+  "startedAt": "2026-11-02T01:56:53.190Z",
+  "completedAt": "2026-11-02T01:56:53.404Z",
+  "startHashes": {
+    "repoRelative:resource/apps/airlock-budget/docs/model-contract.md": "f05fe9de593222e4c5205b9582995a5aa2788b093336d082598d59745e45af06",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/index.json": "2f778ed17ba129141a05fbec12a651c097f7e933d024cdbcbb19d90fc702793b",
+    "repoRelative:resource/apps/airlock-budget/tests/airlock-interval-oracle.mjs": "5ff62ffbe3637bdd7eb930803c69bfd0f0ae818f775fae7eca10416910a56eb7",
+    "repoRelative:resource/apps/airlock-budget/tests/independent-airlock-review.mjs": "92d16454ff000ad2773e94e8dd8f3dcb5476a518a7112d2ee931dfdd1d4dc8d6",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level1-record.json": "88be43d968b946e6a15567976ac95a271c87ec35ec7325e42db16dba5d3270df",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level1-loss.json": "39f0ab80838266bd88cb1e9c8a51e3123cf81ac1ecb50bb614892b177f38efe2",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level2-record.json": "d6836089118c9eff020d8985b3c1cf83f21013063e0db8ac565b4c0861817ed6",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level2-loss.json": "29c799b50908980da23e1ecca3450335d7bbd8670cd721c8474c9c67484a3e48",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level3-record.json": "dfcb2a95aa30ba3f8f4b8a096f4dbf00066b27ed2f616c41d9b68ac5e92ae398",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level3-loss.json": "e38c65a97b4a6c1e8af3913a9ac620099b4d553c3c89657e4630700db6b0ebc2"
+  },
+  "endHashes": {
+    "repoRelative:resource/apps/airlock-budget/docs/model-contract.md": "f05fe9de593222e4c5205b9582995a5aa2788b093336d082598d59745e45af06",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/index.json": "2f778ed17ba129141a05fbec12a651c097f7e933d024cdbcbb19d90fc702793b",
+    "repoRelative:resource/apps/airlock-budget/tests/airlock-interval-oracle.mjs": "5ff62ffbe3637bdd7eb930803c69bfd0f0ae818f775fae7eca10416910a56eb7",
+    "repoRelative:resource/apps/airlock-budget/tests/independent-airlock-review.mjs": "92d16454ff000ad2773e94e8dd8f3dcb5476a518a7112d2ee931dfdd1d4dc8d6",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level1-record.json": "88be43d968b946e6a15567976ac95a271c87ec35ec7325e42db16dba5d3270df",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level1-loss.json": "39f0ab80838266bd88cb1e9c8a51e3123cf81ac1ecb50bb614892b177f38efe2",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level2-record.json": "d6836089118c9eff020d8985b3c1cf83f21013063e0db8ac565b4c0861817ed6",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level2-loss.json": "29c799b50908980da23e1ecca3450335d7bbd8670cd721c8474c9c67484a3e48",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level3-record.json": "dfcb2a95aa30ba3f8f4b8a096f4dbf00066b27ed2f616c41d9b68ac5e92ae398",
+    "scratchRelative:hundred-games/airlock-budget/ordinary-rounds-v3/public-observations/level3-loss.json": "e38c65a97b4a6c1e8af3913a9ac620099b4d553c3c89657e4630700db6b0ebc2"
+  },
+  "sourceUnchanged": true,
+  "originalReportSha256": "d3e5d632613fdb289c623b6e3f1b866470ee0f6e96655fce9b5e88a1cc4d8122",
+  "publicObservationIndexSha256": "2f778ed17ba129141a05fbec12a651c097f7e933d024cdbcbb19d90fc702793b",
+  "observedProductionSourceHashesFromIndex": {
+    "automation": "9512d770c7d679e502e3fcbc745356fd4865057ea87ec6340f4c99828b4b4625",
+    "model": "c4950519c014d6a99b4a3b1a3259fe1f1532a0ddd4e4ec4efc86787174969745",
+    "contract": "f05fe9de593222e4c5205b9582995a5aa2788b093336d082598d59745e45af06",
+    "harness": "b4d774c7e57615c7e7fec3850adf5012d7e447cb042a177d7c163aeb83c52c04"
+  },
+  "method": [
+    "Event before/after snapshots define constant phase, occupancy and isolation intervals. Each interval uses cumulative closed-form flows; global resources and ledgers continue from the authored initial state without resetting to observed inventories.",
+    "Net recovery after n ticks is min(.9*A0,n*r,headroom0+(n-1)*min(consumption,r)); the offset preserves capacity limits before same-tick consumption.",
+    "Check each observed phase transition at its first empty/full or exact 120/180 active-tick boundary, task identity/exclusivity, one migration per leg, old-occupancy breath, isolation-end leakage and every recorded door state.",
+    "Re-evaluate first terminal tick from independent inventories/shortfalls and verified migration/isolation events; compare all retained, transition, operation and compact checkpoints."
+  ],
+  "tolerances": {
+    "numericAbsolute": 1e-8,
+    "contractEPS": 1e-9,
+    "cumulativeExhaustionDetection": 1e-10,
+    "integerCounters": 0
+  },
+  "limitations": [
+    "The public projection excludes pilot diagnostics; original raw hashes are provenance from the approved index, not a claim that this reviewer inspected forbidden diagnostic bytes.",
+    "This validates observed event timing and arithmetic, not a second implementation of input navigation, scheduling or the complete production state machine.",
+    "Only actually present ordinary stop, exhaustion, pressure and exact-deadline cases count as production coverage. Three hand fixtures test the oracle only; they are not additional game rounds.",
+    "A span continuing after first numerical depletion with unfinished groups is rejected for explicit review, including the possible sub-EPS-shortfall continuation edge; gates are not silently relaxed.",
+    "capacityLimitedTicks lacks an exact public comparison predicate. Its reported value is retained for context; independent capacity evidence instead uses actual headroom-limited transfer and stage duration.",
+    "No post-terminal freeze, pause/retry/cancel/subtick or physical-device claim is made. Simultaneous terminal priorities and exact deadline arrival are not presumed covered by ordinary rounds."
+  ],
+  "oracleOnlyFixtures": {
+    "count": 3,
+    "maximumErrors": {
+      "oracle fixture full tank first tick": 0,
+      "oracle fixture full tank second tick": 1.734723475976807e-18,
+      "oracle fixture stopped equipment still consumes/leaks": 0,
+      "oracle fixture stopped air unchanged": 0,
+      "oracle fixture leak precedes breath": 0,
+      "oracle fixture proportional final breath 0": 2.168404344971009e-19,
+      "oracle fixture proportional final breath 1": 2.168404344971009e-19,
+      "oracle fixture proportional final breath 2": 0
+    }
+  },
+  "assertions": 100687,
+  "results": [
+    {
+      "name": "level1-record",
+      "passed": true,
+      "assertions": 23353,
+      "projectionSha256": "88be43d968b946e6a15567976ac95a271c87ec35ec7325e42db16dba5d3270df",
+      "originalRawSha256": "c6e8b1972ccc95a2d5e95be7ac56569ff71939896b8ad5c37b38712adf391e8a",
+      "fullStateOccurrences": 144,
+      "distinctFullTicks": 100,
+      "retainedStates": 76,
+      "compactCheckpoints": 468,
+      "eventTransitions": 27,
+      "events": 51,
+      "operations": 6,
+      "fixedIntervals": 51,
+      "terminal": {
+        "tick": 3744,
+        "reason": "won"
+      },
+      "tank": 20.896333333333356,
+      "reserveMargin": 0.8963333333333559,
+      "groupConsumptions": [
+        1.9716666666666667,
+        3.84,
+        4.991999999999999
+      ],
+      "arrivals": [
+        845,
+        2304,
+        3744
+      ],
+      "completedStageDurations": [
+        {
+          "taskId": 1,
+          "phase": "isolate",
+          "activeTicks": 180
+        },
+        {
+          "taskId": 2,
+          "phase": "vent",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 2,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 2,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 2,
+          "phase": "unload",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 3,
+          "phase": "recover",
+          "activeTicks": 960
+        },
+        {
+          "taskId": 3,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 3,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 3,
+          "phase": "unload",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 4,
+          "phase": "recover",
+          "activeTicks": 960
+        },
+        {
+          "taskId": 4,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 4,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 4,
+          "phase": "unload",
+          "activeTicks": 120
+        }
+      ],
+      "recoveryBeyondUnconstrainedTicks": [
+        {
+          "taskId": 3,
+          "extraActiveTicks": 0
+        },
+        {
+          "taskId": 4,
+          "extraActiveTicks": 0
+        }
+      ],
+      "independentlyCapacityConstrainedTicks": 0,
+      "capacityConstraintExamples": [],
+      "observedCapacityLimitedTicksNotIndependentlySpecified": 0,
+      "stoppedTicks": 0,
+      "oxygenExhaustionBoundaryTicks": 0,
+      "maximumErrors": {
+        "door.air": 1.47121897997593e-13,
+        "door.pressure": 1.2260158166466084e-14,
+        "tank": 2.9238833576528123e-12,
+        "air": 2.2648549702353193e-13,
+        "pressure": 1.8540724511240114e-14,
+        "ledger.breathing": 1.509903313490213e-13,
+        "ledger.leak": 4.218847493575595e-15,
+        "ledger.vent": 2.6645352591003757e-14,
+        "ledger.recoveryLoss": 3.6415315207705135e-14,
+        "ledger.recoveredTransferred": 6.536993168992922e-13,
+        "ledger.filledTransferred": 3.410605131648481e-13,
+        "conservation": 2.9629632081196178e-12,
+        "reportedResidual": 2.9665159217984183e-12,
+        "group.G1": 1.9984014443252818e-14,
+        "group.G2": 1.7008616737257398e-13,
+        "group.G3": 2.824407374646398e-13,
+        "groupSum": 4.156675004196586e-13,
+        "task.recovered": 2.504663143554353e-13,
+        "task.vented": 2.6645352591003757e-14,
+        "task.filled": 1.4921397450962104e-13,
+        "task.recoveryLoss": 2.042810365310288e-14,
+        "interval.tankBefore": 2.9238833576528123e-12,
+        "interval.tankAfter": 2.9238833576528123e-12,
+        "interval.airBefore": 2.220446049250313e-13,
+        "interval.airAfter": 2.220446049250313e-13,
+        "interval.airRemoved": 2.4875934645507414e-15,
+        "interval.recovered": 1.3513495877859327e-15,
+        "interval.recoveryLoss": 1.1362438767648086e-15,
+        "interval.vented": 3.608224830031759e-16,
+        "interval.filled": 1.840333441194275e-13,
+        "interval.leak": 2.949029909160572e-17,
+        "interval.breathing": 3.3046482217358175e-16,
+        "interval.breathingDemand": 0,
+        "interval.group.requested": 0,
+        "interval.group.actual": 1.8366384801904445e-16
+      }
+    },
+    {
+      "name": "level1-loss",
+      "passed": true,
+      "assertions": 4757,
+      "projectionSha256": "39f0ab80838266bd88cb1e9c8a51e3123cf81ac1ecb50bb614892b177f38efe2",
+      "originalRawSha256": "c2317e661aac84eb10421e8fd99f58acc3be316ed430ec9133b4f9d31ebb982d",
+      "fullStateOccurrences": 33,
+      "distinctFullTicks": 24,
+      "retainedStates": 21,
+      "compactCheckpoints": 135,
+      "eventTransitions": 4,
+      "events": 9,
+      "operations": 1,
+      "fixedIntervals": 7,
+      "terminal": {
+        "tick": 1080,
+        "reason": "deadline"
+      },
+      "tank": 44.03999999999999,
+      "reserveMargin": 24.039999999999992,
+      "groupConsumptions": [
+        2.5200000000000005,
+        1.8000000000000003,
+        1.4400000000000002
+      ],
+      "arrivals": [
+        null,
+        null,
+        null
+      ],
+      "completedStageDurations": [
+        {
+          "taskId": 1,
+          "phase": "recover",
+          "activeTicks": 960
+        },
+        {
+          "taskId": 1,
+          "phase": "load",
+          "activeTicks": 120
+        }
+      ],
+      "recoveryBeyondUnconstrainedTicks": [
+        {
+          "taskId": 1,
+          "extraActiveTicks": 0
+        }
+      ],
+      "independentlyCapacityConstrainedTicks": 0,
+      "capacityConstraintExamples": [],
+      "observedCapacityLimitedTicksNotIndependentlySpecified": 0,
+      "stoppedTicks": 0,
+      "oxygenExhaustionBoundaryTicks": 0,
+      "maximumErrors": {
+        "door.air": 1.47121897997593e-13,
+        "door.pressure": 1.2260158166466084e-14,
+        "tank": 1.9753088054130785e-12,
+        "air": 2.255973186038318e-13,
+        "pressure": 1.8540724511240114e-14,
+        "ledger.breathing": 5.684341886080802e-14,
+        "ledger.leak": 1.8740564655672642e-13,
+        "ledger.vent": 0,
+        "ledger.recoveryLoss": 2.042810365310288e-14,
+        "ledger.recoveredTransferred": 2.504663143554353e-13,
+        "ledger.filledTransferred": 0,
+        "conservation": 1.6484591469634324e-12,
+        "reportedResidual": 1.6482371023585074e-12,
+        "group.G1": 2.0872192862952943e-14,
+        "group.G2": 2.7755575615628914e-14,
+        "group.G3": 1.4210854715202004e-14,
+        "groupSum": 2.7977620220553945e-14,
+        "task.recovered": 2.504663143554353e-13,
+        "task.vented": 0,
+        "task.filled": 0,
+        "task.recoveryLoss": 2.042810365310288e-14,
+        "interval.tankBefore": 1.9753088054130785e-12,
+        "interval.tankAfter": 1.9753088054130785e-12,
+        "interval.airBefore": 2.220446049250313e-13,
+        "interval.airAfter": 2.220446049250313e-13,
+        "interval.airRemoved": 2.4875934645507414e-15,
+        "interval.recovered": 1.3513495877859327e-15,
+        "interval.recoveryLoss": 1.1362438767648086e-15,
+        "interval.vented": 0,
+        "interval.filled": 0,
+        "interval.leak": 4.145989107584569e-16,
+        "interval.breathing": 5.872038966181492e-16,
+        "interval.breathingDemand": 0,
+        "interval.group.requested": 0,
+        "interval.group.actual": 2.5717275531356165e-16
+      }
+    },
+    {
+      "name": "level2-record",
+      "passed": true,
+      "assertions": 22877,
+      "projectionSha256": "d6836089118c9eff020d8985b3c1cf83f21013063e0db8ac565b4c0861817ed6",
+      "originalRawSha256": "f8c76ca3033345eff8447ffec653195aa445099bf85801b843e42062a1496a9f",
+      "fullStateOccurrences": 141,
+      "distinctFullTicks": 98,
+      "retainedStates": 75,
+      "compactCheckpoints": 466,
+      "eventTransitions": 26,
+      "events": 50,
+      "operations": 6,
+      "fixedIntervals": 49,
+      "terminal": {
+        "tick": 3725,
+        "reason": "won"
+      },
+      "tank": 20.296000000000024,
+      "reserveMargin": 0.29600000000002424,
+      "groupConsumptions": [
+        5.331666666666668,
+        6.208333333333334,
+        0.8639999999999999
+      ],
+      "arrivals": [
+        2285,
+        3725,
+        648
+      ],
+      "completedStageDurations": [
+        {
+          "taskId": 1,
+          "phase": "vent",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 1,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 1,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 1,
+          "phase": "unload",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 2,
+          "phase": "isolate",
+          "activeTicks": 180
+        },
+        {
+          "taskId": 3,
+          "phase": "recover",
+          "activeTicks": 960
+        },
+        {
+          "taskId": 3,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 3,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 3,
+          "phase": "unload",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 4,
+          "phase": "recover",
+          "activeTicks": 960
+        },
+        {
+          "taskId": 4,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 4,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 4,
+          "phase": "unload",
+          "activeTicks": 120
+        }
+      ],
+      "recoveryBeyondUnconstrainedTicks": [
+        {
+          "taskId": 3,
+          "extraActiveTicks": 0
+        },
+        {
+          "taskId": 4,
+          "extraActiveTicks": 0
+        }
+      ],
+      "independentlyCapacityConstrainedTicks": 0,
+      "capacityConstraintExamples": [],
+      "observedCapacityLimitedTicksNotIndependentlySpecified": 0,
+      "stoppedTicks": 0,
+      "oxygenExhaustionBoundaryTicks": 0,
+      "maximumErrors": {
+        "door.air": 1.47121897997593e-13,
+        "door.pressure": 1.2260158166466084e-14,
+        "tank": 3.439026841078885e-12,
+        "air": 2.2737367544323206e-13,
+        "pressure": 1.8762769116165146e-14,
+        "ledger.breathing": 6.838973831690964e-13,
+        "ledger.leak": 1.2967404927621828e-13,
+        "ledger.vent": 2.6645352591003757e-14,
+        "ledger.recoveryLoss": 3.597122599785507e-14,
+        "ledger.recoveredTransferred": 6.536993168992922e-13,
+        "ledger.filledTransferred": 3.268496584496461e-13,
+        "conservation": 3.282707439211663e-12,
+        "reportedResidual": 3.282707439211663e-12,
+        "group.G1": 2.4513724383723456e-13,
+        "group.G2": 1.8562928971732617e-13,
+        "group.G3": 6.5503158452884236e-15,
+        "groupSum": 7.585043704239069e-13,
+        "task.recovered": 2.504663143554353e-13,
+        "task.vented": 2.6645352591003757e-14,
+        "task.filled": 1.4921397450962104e-13,
+        "task.recoveryLoss": 1.9984014443252818e-14,
+        "interval.tankBefore": 3.439026841078885e-12,
+        "interval.tankAfter": 3.439026841078885e-12,
+        "interval.airBefore": 2.255973186038318e-13,
+        "interval.airAfter": 2.255973186038318e-13,
+        "interval.airRemoved": 2.4875934645507414e-15,
+        "interval.recovered": 1.3513495877859327e-15,
+        "interval.recoveryLoss": 1.1362438767648086e-15,
+        "interval.vented": 3.608224830031759e-16,
+        "interval.filled": 1.840333441194275e-13,
+        "interval.leak": 8.153200337090993e-17,
+        "interval.breathing": 2.185751579730777e-16,
+        "interval.breathingDemand": 0,
+        "interval.group.requested": 0,
+        "interval.group.actual": 2.5717275531356165e-16
+      }
+    },
+    {
+      "name": "level2-loss",
+      "passed": true,
+      "assertions": 6543,
+      "projectionSha256": "29c799b50908980da23e1ecca3450335d7bbd8670cd721c8474c9c67484a3e48",
+      "originalRawSha256": "7acdf020625cb9e209a1d280b5a34dd9b6b1b2b4f180ba225daefbd31ece8728",
+      "fullStateOccurrences": 51,
+      "distinctFullTicks": 29,
+      "retainedStates": 19,
+      "compactCheckpoints": 90,
+      "eventTransitions": 12,
+      "events": 20,
+      "operations": 3,
+      "fixedIntervals": 22,
+      "terminal": {
+        "tick": 720,
+        "reason": "deadline"
+      },
+      "tank": 32.311666666666675,
+      "reserveMargin": 12.311666666666675,
+      "groupConsumptions": [
+        1.68,
+        1.0483333333333333,
+        0.9599999999999997
+      ],
+      "arrivals": [
+        null,
+        629,
+        null
+      ],
+      "completedStageDurations": [
+        {
+          "taskId": 1,
+          "phase": "vent",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 1,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 1,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 1,
+          "phase": "unload",
+          "activeTicks": 120
+        }
+      ],
+      "recoveryBeyondUnconstrainedTicks": [],
+      "independentlyCapacityConstrainedTicks": 0,
+      "capacityConstraintExamples": [],
+      "observedCapacityLimitedTicksNotIndependentlySpecified": 0,
+      "stoppedTicks": 0,
+      "oxygenExhaustionBoundaryTicks": 0,
+      "maximumErrors": {
+        "door.air": 2.5895952049381776e-14,
+        "door.pressure": 2.157996004115148e-15,
+        "tank": 1.3926637620897964e-12,
+        "air": 6.394884621840902e-14,
+        "pressure": 5.329070518200751e-15,
+        "ledger.breathing": 2.353672812205332e-14,
+        "ledger.leak": 8.526512829121202e-14,
+        "ledger.vent": 3.730349362740526e-14,
+        "ledger.recoveryLoss": 0,
+        "ledger.recoveredTransferred": 0,
+        "ledger.filledTransferred": 3.552713678800501e-14,
+        "conservation": 1.4779288903810084e-12,
+        "reportedResidual": 1.4921397450962104e-12,
+        "group.G1": 1.554312234475219e-14,
+        "group.G2": 1.0658141036401503e-14,
+        "group.G3": 8.992806499463768e-15,
+        "groupSum": 1.6431300764452317e-14,
+        "task.recovered": 0,
+        "task.vented": 2.6645352591003757e-14,
+        "task.filled": 3.552713678800501e-14,
+        "task.recoveryLoss": 0,
+        "interval.tankBefore": 1.3926637620897964e-12,
+        "interval.tankAfter": 1.3926637620897964e-12,
+        "interval.airBefore": 6.394884621840902e-14,
+        "interval.airAfter": 6.394884621840902e-14,
+        "interval.airRemoved": 0,
+        "interval.recovered": 0,
+        "interval.recoveryLoss": 0,
+        "interval.vented": 5.273559366969494e-16,
+        "interval.filled": 6.324107904021048e-14,
+        "interval.leak": 8.153200337090993e-17,
+        "interval.breathing": 7.892991815694472e-17,
+        "interval.breathingDemand": 0,
+        "interval.group.requested": 0,
+        "interval.group.actual": 7.589415207398531e-17
+      }
+    },
+    {
+      "name": "level3-record",
+      "passed": true,
+      "assertions": 26390,
+      "projectionSha256": "dfcb2a95aa30ba3f8f4b8a096f4dbf00066b27ed2f616c41d9b68ac5e92ae398",
+      "originalRawSha256": "91dfa0fcb7fab0576372b11831628976ce6972f3c05570580f04872172913986",
+      "fullStateOccurrences": 156,
+      "distinctFullTicks": 119,
+      "retainedStates": 96,
+      "compactCheckpoints": 630,
+      "eventTransitions": 25,
+      "events": 49,
+      "operations": 4,
+      "fixedIntervals": 48,
+      "terminal": {
+        "tick": 5040,
+        "reason": "won"
+      },
+      "tank": 24.763333333333332,
+      "reserveMargin": 0.7633333333333319,
+      "groupConsumptions": [
+        5.0166666666666675,
+        6,
+        6.719999999999999
+      ],
+      "arrivals": [
+        2150,
+        3600,
+        5040
+      ],
+      "completedStageDurations": [
+        {
+          "taskId": 1,
+          "phase": "isolate",
+          "activeTicks": 180
+        },
+        {
+          "taskId": 2,
+          "phase": "recover",
+          "activeTicks": 1441
+        },
+        {
+          "taskId": 2,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 2,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 2,
+          "phase": "unload",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 3,
+          "phase": "recover",
+          "activeTicks": 960
+        },
+        {
+          "taskId": 3,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 3,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 3,
+          "phase": "unload",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 4,
+          "phase": "recover",
+          "activeTicks": 960
+        },
+        {
+          "taskId": 4,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 4,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 4,
+          "phase": "unload",
+          "activeTicks": 120
+        }
+      ],
+      "recoveryBeyondUnconstrainedTicks": [
+        {
+          "taskId": 2,
+          "extraActiveTicks": 481
+        },
+        {
+          "taskId": 3,
+          "extraActiveTicks": 0
+        },
+        {
+          "taskId": 4,
+          "extraActiveTicks": 0
+        }
+      ],
+      "independentlyCapacityConstrainedTicks": 914,
+      "capacityConstraintExamples": [
+        {
+          "tick": 756,
+          "taskId": 2,
+          "headroom": 0.009166666666651224,
+          "actualRecovered": 0.009166666666651224,
+          "nominalRecovered": 0.011250000000000001
+        },
+        {
+          "tick": 757,
+          "taskId": 2,
+          "headroom": 0.005333333333332746,
+          "actualRecovered": 0.005333333333333634,
+          "nominalRecovered": 0.011250000000000001
+        },
+        {
+          "tick": 758,
+          "taskId": 2,
+          "headroom": 0.005333333333332746,
+          "actualRecovered": 0.005333333333333634,
+          "nominalRecovered": 0.011250000000000001
+        }
+      ],
+      "observedCapacityLimitedTicksNotIndependentlySpecified": 914,
+      "stoppedTicks": 0,
+      "oxygenExhaustionBoundaryTicks": 0,
+      "maximumErrors": {
+        "door.air": 1.47121897997593e-13,
+        "door.pressure": 1.2260158166466084e-14,
+        "tank": 5.496048061104375e-12,
+        "air": 1.0409451078885468e-12,
+        "pressure": 8.615330671091215e-14,
+        "ledger.breathing": 2.071232074740692e-12,
+        "ledger.leak": 4.218847493575595e-15,
+        "ledger.vent": 0,
+        "ledger.recoveryLoss": 1.9273471707492718e-13,
+        "ledger.recoveredTransferred": 1.1572964808692632e-12,
+        "ledger.filledTransferred": 3.126388037344441e-13,
+        "conservation": 3.460343123151688e-12,
+        "reportedResidual": 3.4714453533979395e-12,
+        "group.G1": 2.2026824808563106e-13,
+        "group.G2": 1.8385293287792592e-13,
+        "group.G3": 4.725109192804666e-13,
+        "groupSum": 2.19912976717751e-12,
+        "task.recovered": 1.1572964808692632e-12,
+        "task.vented": 0,
+        "task.filled": 1.4921397450962104e-13,
+        "task.recoveryLoss": 1.1124434706744069e-13,
+        "interval.tankBefore": 5.496048061104375e-12,
+        "interval.tankAfter": 5.496048061104375e-12,
+        "interval.airBefore": 1.0338396805309458e-12,
+        "interval.airAfter": 1.0338396805309458e-12,
+        "interval.airRemoved": 5.11300203565046e-13,
+        "interval.recovered": 4.601700964723676e-13,
+        "interval.recoveryLoss": 5.11301070926784e-14,
+        "interval.vented": 0,
+        "interval.filled": 1.840333441194275e-13,
+        "interval.leak": 2.949029909160572e-17,
+        "interval.breathing": 5.872038966181492e-16,
+        "interval.breathingDemand": 0,
+        "interval.group.requested": 0,
+        "interval.group.actual": 2.6042536183101817e-16
+      }
+    },
+    {
+      "name": "level3-loss",
+      "passed": true,
+      "assertions": 16755,
+      "projectionSha256": "e38c65a97b4a6c1e8af3913a9ac620099b4d553c3c89657e4630700db6b0ebc2",
+      "originalRawSha256": "d357c0fd65486a8ad4f4230993e041905c54216ec186052793a0cd102cb23d7d",
+      "fullStateOccurrences": 111,
+      "distinctFullTicks": 70,
+      "retainedStates": 47,
+      "compactCheckpoints": 256,
+      "eventTransitions": 26,
+      "events": 50,
+      "operations": 5,
+      "fixedIntervals": 49,
+      "terminal": {
+        "tick": 2045,
+        "reason": "reserve"
+      },
+      "tank": 2.9933333333333625,
+      "reserveMargin": -21.00666666666664,
+      "groupConsumptions": [
+        1.9716666666666667,
+        2.408333333333333,
+        2.726666666666667
+      ],
+      "arrivals": [
+        845,
+        1445,
+        2045
+      ],
+      "completedStageDurations": [
+        {
+          "taskId": 1,
+          "phase": "isolate",
+          "activeTicks": 180
+        },
+        {
+          "taskId": 2,
+          "phase": "vent",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 2,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 2,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 2,
+          "phase": "unload",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 3,
+          "phase": "vent",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 3,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 3,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 3,
+          "phase": "unload",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 4,
+          "phase": "vent",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 4,
+          "phase": "load",
+          "activeTicks": 120
+        },
+        {
+          "taskId": 4,
+          "phase": "fill",
+          "activeTicks": 240
+        },
+        {
+          "taskId": 4,
+          "phase": "unload",
+          "activeTicks": 120
+        }
+      ],
+      "recoveryBeyondUnconstrainedTicks": [],
+      "independentlyCapacityConstrainedTicks": 0,
+      "capacityConstraintExamples": [],
+      "observedCapacityLimitedTicksNotIndependentlySpecified": 0,
+      "stoppedTicks": 0,
+      "oxygenExhaustionBoundaryTicks": 0,
+      "maximumErrors": {
+        "door.air": 2.5895952049381776e-14,
+        "door.pressure": 2.157996004115148e-15,
+        "tank": 1.2114753644709708e-12,
+        "air": 6.394884621840902e-14,
+        "pressure": 5.329070518200751e-15,
+        "ledger.breathing": 5.3290705182007514e-14,
+        "ledger.leak": 4.218847493575595e-15,
+        "ledger.vent": 2.3447910280083306e-13,
+        "ledger.recoveryLoss": 0,
+        "ledger.recoveredTransferred": 0,
+        "ledger.filledTransferred": 1.6342482922482304e-13,
+        "conservation": 1.3784529073745944e-12,
+        "reportedResidual": 1.3855583347321954e-12,
+        "group.G1": 1.9984014443252818e-14,
+        "group.G2": 3.108624468950438e-14,
+        "group.G3": 4.39648317751562e-14,
+        "groupSum": 4.618527782440651e-14,
+        "task.recovered": 0,
+        "task.vented": 2.6645352591003757e-14,
+        "task.filled": 3.552713678800501e-14,
+        "task.recoveryLoss": 0,
+        "interval.tankBefore": 1.2114753644709708e-12,
+        "interval.tankAfter": 1.2114753644709708e-12,
+        "interval.airBefore": 6.394884621840902e-14,
+        "interval.airAfter": 6.394884621840902e-14,
+        "interval.airRemoved": 0,
+        "interval.recovered": 0,
+        "interval.recoveryLoss": 0,
+        "interval.vented": 1.4155343563970746e-15,
+        "interval.filled": 6.324107904021048e-14,
+        "interval.leak": 2.949029909160572e-17,
+        "interval.breathing": 7.892991815694472e-17,
+        "interval.breathingDemand": 0,
+        "interval.group.requested": 0,
+        "interval.group.actual": 7.589415207398531e-17
+      }
+    }
+  ],
+  "failureCount": 0,
+  "failures": []
+}

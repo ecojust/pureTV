@@ -1,0 +1,272 @@
+name: Desktop build
+
+on:
+  push:
+    branches: [master]
+    tags: ['desktop-v*']
+    paths:
+      - 'desktop/**'
+      - '.github/workflows/desktop.yml'
+      - 'resource/launcher/puretv/app/src/main/assets/layout.json'
+  pull_request:
+    paths:
+      - 'desktop/**'
+      - '.github/workflows/desktop.yml'
+      - 'resource/launcher/puretv/app/src/main/assets/layout.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+jobs:
+  build:
+    name: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-x64
+            runner: windows-latest
+            target: x86_64-pc-windows-msvc
+            bundle: nsis
+          - platform: macos-arm64
+            runner: macos-latest
+            target: aarch64-apple-darwin
+            bundle: dmg
+          - platform: macos-x64
+            runner: macos-15-intel
+            target: x86_64-apple-darwin
+            bundle: dmg
+          - platform: linux-x64
+            runner: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+            bundle: deb
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+        working-directory: desktop
+    env:
+      BUILD_PLATFORM: ${{ matrix.platform }}
+      BUILD_TARGET: ${{ matrix.target }}
+      BUNDLE_FORMAT: ${{ matrix.bundle }}
+      CARGO_TERM_COLOR: always
+      PYTHONUTF8: '1'
+      MACOSX_DEPLOYMENT_TARGET: '11.0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            desktop/core -> target
+            desktop/src-tauri -> target
+          key: ${{ matrix.target }}
+      - name: Install Linux desktop libraries
+        if: runner.os == 'Linux'
+        timeout-minutes: 12
+        run: |
+          sudo tee /etc/apt/apt.conf.d/99puretv-ci >/dev/null <<'APT'
+          Acquire::Retries "1";
+          Acquire::http::Timeout "20";
+          Acquire::https::Timeout "20";
+          APT::Update::Error-Mode "any";
+          APT
+          if ! sudo timeout --kill-after=10s 120s apt-get update; then
+            echo "::warning::Runner package indexes unavailable; retrying official Ubuntu archive mirrors."
+            cat > "$RUNNER_TEMP/puretv-ubuntu.list" <<'SOURCES'
+          deb [signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] https://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
+          deb [signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] https://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
+          deb [signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] https://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse
+          deb [signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] https://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse
+          SOURCES
+            sudo tee -a /etc/apt/apt.conf.d/99puretv-ci >/dev/null <<APT
+          Dir::Etc::sourcelist "$RUNNER_TEMP/puretv-ubuntu.list";
+          Dir::Etc::sourceparts "-";
+          APT
+            sudo timeout --kill-after=10s 120s apt-get update
+          fi
+          sudo timeout --kill-after=10s 360s apt-get install -y --no-install-recommends libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libssl-dev patchelf
+      - name: Verify version metadata
+        run: |
+          python - <<'PYTHON'
+          import json, os, re, tomllib
+          from pathlib import Path
+          config = json.loads(Path('src-tauri/tauri.conf.json').read_text())
+          version = config['version']
+          assert re.fullmatch(r'\d+\.\d+\.\d+', version), 'Use a stable semantic version'
+          assert json.loads(Path('package.json').read_text())['version'] == version
+          for manifest in ('src-tauri/Cargo.toml', 'core/Cargo.toml'):
+              assert tomllib.loads(Path(manifest).read_text())['package']['version'] == version, manifest
+          if os.environ['GITHUB_REF'].startswith('refs/tags/'):
+              assert os.environ['GITHUB_REF_NAME'] == f'desktop-v{version}', 'Tag does not match desktop version'
+          print(f'pureTV Manager {version} — {os.environ["BUILD_PLATFORM"]}')
+          PYTHON
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Check and build frontend
+        run: npm run build
+      - name: Test subnet comparison
+        run: npm run test:network
+      - name: Test read-only TV compatibility probe
+        run: python -m unittest discover -s tests -p 'test_probe_tv_compatibility.py' -v
+      - name: Test ADB core
+        run: cargo test --locked --manifest-path core/Cargo.toml 2>&1 | tee "$RUNNER_TEMP/puretv-core-tests.log"
+      - name: Test Platform Tools installer
+        run: cargo test --locked --manifest-path src-tauri/Cargo.toml 2>&1 | tee "$RUNNER_TEMP/puretv-native-tests.log"
+      - name: Report native test failures
+        if: failure()
+        run: |
+          python - <<'PYTHON'
+          import os
+          from pathlib import Path
+          for name in ['puretv-core-tests.log','puretv-native-tests.log']:
+              path=Path(os.environ['RUNNER_TEMP'])/name
+              if path.exists():
+                  message=path.read_text(errors='replace')[-14000:]
+                  print('::error::'+message.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
+          PYTHON
+      - name: Verify official Platform Tools download and offline reuse
+        run: cargo test --locked --manifest-path src-tauri/Cargo.toml official_download_and_offline_reuse -- --ignored --nocapture
+      - name: Verify Tencent mirror download and ADB
+        run: cargo test --locked --manifest-path src-tauri/Cargo.toml mirror_download_and_adb_check -- --ignored --nocapture
+      - name: Install UI test browser
+        if: runner.os == 'Linux'
+        timeout-minutes: 8
+        run: npx playwright install --with-deps chromium
+      - name: Test desktop UI
+        if: runner.os == 'Linux'
+        run: npm run test:ui
+      - name: Test SVG normalization
+        if: runner.os == 'Linux'
+        run: npm run test:svg
+      - name: Build native desktop and installer
+        run: npm run tauri -- build --ci --target "$BUILD_TARGET" --bundles "$BUNDLE_FORMAT" -- --locked
+      - name: Verify actual client update installation
+        run: python scripts/verify-client-update.py --target "$BUILD_TARGET"
+      - name: Verify MCP against the running desktop
+        if: runner.os == 'Linux'
+        run: xvfb-run -a python scripts/verify-mcp.py --binary "src-tauri/target/$BUILD_TARGET/release/puretv-desktop"
+      - name: Verify macOS DMG, bundle signature and installed startup
+        if: runner.os == 'macOS'
+        run: python scripts/verify-macos-bundle.py --target "$BUILD_TARGET"
+      - name: Collect release files
+        run: |
+          python - <<'PYTHON'
+          import hashlib, json, os, shutil
+          from pathlib import Path
+          version = json.loads(Path('src-tauri/tauri.conf.json').read_text())['version']
+          platform = os.environ['BUILD_PLATFORM']
+          target = Path('src-tauri/target') / os.environ['BUILD_TARGET'] / 'release'
+          output = Path('release')
+          output.mkdir(exist_ok=True)
+          prefix = f'pureTV-Manager-{version}-{platform}'
+          bundles = target / 'bundle'
+          if platform == 'windows-x64':
+              matches = list((bundles / 'nsis').glob('*.exe'))
+              assert len(matches) == 1, f'Expected one NSIS installer, got {matches}'
+              shutil.copyfile(matches[0], output / f'{prefix}-setup.exe')
+              shutil.copyfile(target / 'puretv-desktop.exe', output / f'{prefix}-portable.exe')
+          else:
+              extension = 'dmg' if platform.startswith('macos-') else 'deb'
+              matches = list((bundles / extension).glob(f'*.{extension}'))
+              assert len(matches) == 1, f'Expected one {extension}, got {matches}'
+              shutil.copyfile(matches[0], output / f'{prefix}.{extension}')
+          files = sorted(output.iterdir())
+          sums = []
+          for file in files:
+              assert file.stat().st_size > 0, f'Empty artifact: {file}'
+              digest = hashlib.file_digest(file.open('rb'), 'sha256').hexdigest()
+              sums.append(f'{digest}  {file.name}\n')
+              print(f'{file.name}: {file.stat().st_size:,} bytes')
+          (output / f'SHA256SUMS-{platform}.txt').write_text(''.join(sums))
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+              summary.write(f'### {platform}\n\n')
+              for file in files:
+                  summary.write(f'- `{file.name}`: {file.stat().st_size:,} bytes\n')
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        with:
+          name: puretv-manager-${{ matrix.platform }}
+          path: desktop/release/*
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: Publish desktop release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/desktop-v')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: puretv-manager-*
+          path: release
+          merge-multiple: true
+      - name: Verify complete artifact set and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PYTHON'
+          import hashlib, json, os
+          from pathlib import Path
+          version = json.loads(Path('desktop/src-tauri/tauri.conf.json').read_text())['version']
+          assert os.environ['RELEASE_TAG'] == f'desktop-v{version}'
+          root = Path('release')
+          expected = {
+              f'pureTV-Manager-{version}-windows-x64-setup.exe',
+              f'pureTV-Manager-{version}-windows-x64-portable.exe',
+              f'pureTV-Manager-{version}-macos-arm64.dmg',
+              f'pureTV-Manager-{version}-macos-x64.dmg',
+              f'pureTV-Manager-{version}-linux-x64.deb',
+          }
+          verified = {}
+          for platform in ('windows-x64', 'macos-arm64', 'macos-x64', 'linux-x64'):
+              manifest = root / f'SHA256SUMS-{platform}.txt'
+              for line in manifest.read_text().splitlines():
+                  digest, name = line.split('  ', 1)
+                  assert name in expected and name not in verified, f'Unexpected artifact: {name}'
+                  file = root / name
+                  actual = hashlib.file_digest(file.open('rb'), 'sha256').hexdigest()
+                  assert actual == digest, f'Checksum mismatch: {name}'
+                  verified[name] = actual
+          assert set(verified) == expected, 'Incomplete platform artifacts'
+          (root / 'SHA256SUMS.txt').write_text(''.join(f'{verified[name]}  {name}\n' for name in sorted(verified)))
+          notes = Path('desktop/docs/release-notes.md')
+          if notes.exists():
+              body = notes.read_text()
+          else:
+              body = '''pureTV 电视管理器：在电脑上通过 ADB 连接 Android TV / Google TV，扫描应用，停用／启用、为当前用户卸载／恢复、安装 APK 和切换启动器。
+
+          分别提供 Windows x64 安装版与便携版、macOS Apple Silicon（ARM64）与 Intel（x86_64）DMG、Linux x64 DEB。电脑需要可用的 Android Platform Tools；Windows 使用系统 WebView2。安装包尚未进行商业代码签名／Apple 公证，构建通过不代表电视实机兼容性已验证。
+
+          电视端 APK 从仓库 resource/launcher 和 resource/apps 下载；系统应用卸载仅针对当前用户，不删除系统分区 APK。校验值见 SHA256SUMS.txt。'''
+          Path('release-notes.txt').write_text(body)
+          PYTHON
+          if gh release view "$RELEASE_TAG" --json isDraft >/dev/null 2>&1; then
+            test "$(gh release view "$RELEASE_TAG" --json isDraft --jq '.isDraft')" = true
+          else
+            gh release create "$RELEASE_TAG" --verify-tag --draft --title "pureTV Manager ${RELEASE_TAG#desktop-v}" --notes-file release-notes.txt
+          fi
+          gh release upload "$RELEASE_TAG" release/*.exe release/*.dmg release/*.deb release/SHA256SUMS.txt --clobber
+          gh release edit "$RELEASE_TAG" --draft=false --latest

@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import model from '../src/main/assets/game-model.js';
+import {solveVisible,validate} from './reference.mjs';
+let ordinaryPresses=0;
+function press(s,input){ordinaryPresses++;model.step(s,1/60,{});model.step(s,1/60,input);}
+function go(s,to){while(s.cursor!==to){const x=s.cursor%s.width,y=Math.floor(s.cursor/s.width),tx=to%s.width,ty=Math.floor(to/s.width);press(s,x!==tx?{x:x<tx?1:-1}:{y:y<ty?1:-1});}}
+function enter(s,target){for(let i=0;i<s.cells.length;i++){go(s,i);if(Object.hasOwn(s.fixedValues,i)){assert.equal(s.cells[i],target[i]);continue;}while(s.cells[i]!==target[i])press(s,{a:true});}}
+const layouts=[];for(let level=0;level<3;level++){const s=model.create(784,level),proof=solveVisible(s);press(s,{b:true});assert.equal(s.checks,0);assert.equal(s.mistakes,0);enter(s,proof.solution);assert.equal(s.phase,'playing');assert.deepEqual(validate(s),[]);press(s,{b:true});assert.equal(s.phase,'won');assert.equal(s.lastCheck.valid,true);const frozen=JSON.stringify(s);press(s,{a:true});assert.equal(JSON.stringify(s),frozen);
+ const wrong=model.create(784,level),allSea=wrong.cells.map((_,i)=>Object.hasOwn(wrong.fixedValues,i)?wrong.fixedValues[i]:1);enter(wrong,allSea);for(let n=1;n<=3;n++){press(wrong,{b:true});assert.equal(wrong.mistakes,n);assert.deepEqual(wrong.lastCheck.errors,validate(wrong));}assert.equal(wrong.phase,'lost');
+ const third=model.create(784,level);enter(third,allSea);press(third,{b:true});press(third,{b:true});enter(third,proof.solution);assert.equal(third.lastCheck,null);press(third,{b:true});assert.equal(third.phase,'won');assert.equal(third.checks,3);assert.equal(third.mistakes,2);
+ layouts.push({level,uniqueSolutions:proof.solutions,shapeCandidates:proof.shapeCandidates,searchNodes:proof.nodes,editableCells:s.editableCount,ordinaryEdits:s.edits,normalExplicitSubmitWin:true,naturalThreeErrorLoss:true,ordinaryThirdCheckWin:true});}
+// Reach every non-fixed validation error with ordinary colors on the unchanged4x4 puzzle.
+const base=model.create(784,0),editable=base.cells.flatMap((_,i)=>Object.hasOwn(base.fixedValues,i)?[]:[i]),witnesses=new Map(),wanted=['unseeded-island','merged-islands','island-size','missing-sea','split-sea','sea-square'];
+for(let mask=0;mask<(1<<editable.length)&&witnesses.size<wanted.length;mask++){const cells=base.cells.slice();editable.forEach((cell,i)=>cells[cell]=mask&(1<<i)?2:1);for(const error of validate(base,cells))if(wanted.includes(error.type)&&!witnesses.has(error.type))witnesses.set(error.type,cells);}
+assert.equal(witnesses.size,wanted.length);const errorsExercised=[];for(const[type,cells]of witnesses){const s=model.create(784,0);enter(s,cells);press(s,{b:true});assert.deepEqual(s.lastCheck.errors,validate(s));assert.ok(s.lastCheck.errors.some(e=>e.type===type));assert.equal(s.mistakes,1);errorsExercised.push(type);}
+const fixed=model.create(784,0);for(const seed of fixed.seeds){go(fixed,seed.cell);const edits=fixed.edits,blocked=fixed.blockedActions;press(fixed,{a:true});assert.equal(fixed.cells[seed.cell],2);assert.equal(fixed.edits,edits);assert.equal(fixed.blockedActions,blocked+1);}
+console.log(JSON.stringify({passed:true,method:'Independent connected-island shape enumeration and orthogonal component/sea-square validator; unique solutions from seeds only, ordinary A/B entry, every non-fixed error reached normally, fixed cells protected by normal inputs.',layouts,errorsExercised,ordinaryPresses},null,2));

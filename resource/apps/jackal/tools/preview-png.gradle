@@ -1,0 +1,67 @@
+import java.util.zip.CRC32
+import java.util.zip.Deflater
+import java.util.zip.InflaterInputStream
+
+// Changes only zlib encoding of consecutive IDAT chunks. Filtered image bytes,
+// PNG metadata, dimensions, palette and every non-IDAT chunk remain identical.
+ext.recompressPreviewPng = { File png ->
+    byte[] original = png.bytes
+    if (original.length < 8 || Arrays.copyOf(original,8).encodeHex().toString() != '89504e470d0a1a0a')
+        throw new GradleException("Invalid preview PNG signature: ${png}")
+    def chunks = []
+    ByteArrayOutputStream idat = new ByteArrayOutputStream()
+    DataInputStream source = new DataInputStream(new ByteArrayInputStream(original,8,original.length-8))
+    boolean seenIdat = false, finishedIdat = false, ended = false
+    while (source.available() > 0) {
+        int length = source.readInt()
+        if (length < 0 || length > source.available()-8) throw new GradleException("Invalid PNG chunk length: ${png}")
+        byte[] type = source.readNBytes(4)
+        byte[] payload = source.readNBytes(length)
+        int crcValue = source.readInt()
+        CRC32 crc = new CRC32(); crc.update(type); crc.update(payload)
+        if (crc.value != (crcValue & 0xffffffffL)) throw new GradleException("Invalid PNG chunk CRC: ${png}")
+        String name = new String(type,java.nio.charset.StandardCharsets.US_ASCII)
+        ByteArrayOutputStream raw = new ByteArrayOutputStream()
+        DataOutputStream chunk = new DataOutputStream(raw)
+        chunk.writeInt(length); chunk.write(type); chunk.write(payload); chunk.writeInt(crcValue)
+        chunks.add([name:name,raw:raw.toByteArray()])
+        if (name == 'IDAT') {
+            if (finishedIdat) throw new GradleException("Nonconsecutive PNG IDAT chunks: ${png}")
+            seenIdat = true; idat.write(payload)
+        } else if (seenIdat) finishedIdat = true
+        if (name == 'IEND') { ended = true; break }
+    }
+    if (!seenIdat || !ended || source.available() != 0) throw new GradleException("Incomplete preview PNG: ${png}")
+    def inflate = { byte[] bytes ->
+        InflaterInputStream stream = new InflaterInputStream(new ByteArrayInputStream(bytes))
+        try { stream.readAllBytes() } finally { stream.close() }
+    }
+    byte[] pixels = inflate(idat.toByteArray())
+    ByteArrayOutputStream encoded = new ByteArrayOutputStream()
+    Deflater deflater = new Deflater(9)
+    try {
+        deflater.setInput(pixels); deflater.finish()
+        byte[] buffer = new byte[8192]
+        while (!deflater.finished()) {
+            int count = deflater.deflate(buffer)
+            encoded.write(buffer,0,count)
+        }
+    } finally { deflater.end() }
+    byte[] compressed = encoded.toByteArray()
+    if (!Arrays.equals(pixels,inflate(compressed))) throw new GradleException("PNG recompression changed image bytes: ${png}")
+    ByteArrayOutputStream result = new ByteArrayOutputStream()
+    result.write(original,0,8)
+    boolean writtenIdat = false
+    chunks.each { chunk ->
+        if (chunk.name != 'IDAT') result.write((byte[])chunk.raw)
+        else if (!writtenIdat) {
+            writtenIdat = true
+            byte[] type = 'IDAT'.getBytes(java.nio.charset.StandardCharsets.US_ASCII)
+            CRC32 crc = new CRC32(); crc.update(type); crc.update(compressed)
+            DataOutputStream output = new DataOutputStream(result)
+            output.writeInt(compressed.length); output.write(type); output.write(compressed); output.writeInt((int)crc.value)
+        }
+    }
+    byte[] optimized = result.toByteArray()
+    if (optimized.length < original.length) png.bytes = optimized
+}

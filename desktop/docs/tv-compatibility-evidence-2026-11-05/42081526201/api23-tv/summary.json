@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "stage": "completed",
+  "image": {
+    "sdk": 23,
+    "tag": "android-tv",
+    "abi": "x86",
+    "package": "system-images;android-23;android-tv;x86",
+    "revision": "21",
+    "repository": "https://dl.google.com/android/repository/sys-img/android-tv/sys-img2-3.xml",
+    "url": "https://dl.google.com/android/repository/sys-img/android-tv/x86-23_r21.zip",
+    "bytes": 340921232,
+    "checksumType": "sha1",
+    "checksum": "094575ec634a662115a7a4c2b63d1743dfbca43c"
+  },
+  "sourceCommit": "ae60c0af9af1177c6a65cc0348e32a22348a2eeb",
+  "startedAt": "2026-11-05T18:09:44.485030+00:00",
+  "attemptedEvidenceLevel": "E3",
+  "evidenceLevel": "E3",
+  "emulatorTested": true,
+  "physicalTvTested": false,
+  "fullPhysicalCompatibilityVerified": false,
+  "scope": "Official SDK image; does not certify Xiaomi/vendor firmware or a physical television.",
+  "archiveChecksumSource": "Official SDK repository metadata; sdkmanager performs the archive installation.",
+  "archiveChecksumIndependentlyRecomputed": false,
+  "host": {
+    "os": "Linux",
+    "release": "7.0.0-1017-azure",
+    "architecture": "x86_64",
+    "freeBytesBeforeSetup": 91989065728
+  },
+  "installedImageProperties": {
+    "Pkg.Desc": "Android SDK Platform 6.0",
+    "Pkg.UserSrc": "false",
+    "Pkg.Revision": "21",
+    "AndroidVersion.ApiLevel": "23",
+    "SystemImage.Abi": "x86",
+    "SystemImage.GpuSupport": "true",
+    "SystemImage.TagId": "android-tv",
+    "SystemImage.TagDisplay": "Android TV"
+  },
+  "installedEmulatorProperties": {
+    "Pkg.UserSrc": "false",
+    "Pkg.Revision": "37.2.13",
+    "Pkg.Path": "emulator",
+    "Pkg.Desc": "Android Emulator",
+    "Pkg.BuildId": "16740729"
+  },
+  "bootVerified": {
+    "ro.kernel.qemu": "1",
+    "ro.build.version.sdk": "23",
+    "sys.boot_completed": "1"
+  },
+  "privilege": {
+    "before": {
+      "shellUid": 0,
+      "adbShellRoot": true,
+      "buildType": "userdebug",
+      "shellIdentityStatus": "verified",
+      "buildTypeStatus": "verified"
+    },
+    "after": {
+      "shellUid": 0,
+      "adbShellRoot": true,
+      "buildType": "userdebug",
+      "shellIdentityStatus": "verified",
+      "buildTypeStatus": "verified"
+    },
+    "rootRequested": false,
+    "unrootRequested": true,
+    "unrootCommandStatus": "exit_zero",
+    "identityReverifiedAfterUnroot": true,
+    "ordinaryAdbShellVerified": false,
+    "unrootCommand": {
+      "exitCode": 0,
+      "output": "restarting adbd as non root\n",
+      "outputTruncated": false
+    },
+    "firstRecheck": {
+      "identityVerified": true,
+      "remainingSeconds": 30.0,
+      "unroot-qemu": {
+        "exitCode": 0,
+        "output": "1\n",
+        "outputTruncated": false
+      },
+      "unroot-sdk": {
+        "exitCode": 0,
+        "output": "23\n",
+        "outputTruncated": false
+      },
+      "unroot-shell-identity": {
+        "exitCode": 0,
+        "output": "uid=0(root) gid=0(root) groups=0(root),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats) context=u:r:su:s0\n",
+        "outputTruncated": false
+      },
+      "unroot-build-type": {
+        "exitCode": 0,
+        "output": "userdebug\n",
+        "outputTruncated": false
+      }
+    },
+    "lastRecheck": {
+      "identityVerified": false,
+      "remainingSeconds": 0.049,
+      "unroot-qemu": {
+        "exitCode": 0,
+        "output": "1\n",
+        "outputTruncated": false
+      },
+      "failure": "budget_exhausted_before_unroot-sdk"
+    },
+    "finalRecheck": {
+      "identityVerified": true,
+      "unroot-final-qemu": {
+        "exitCode": 0,
+        "output": "1\n",
+        "outputTruncated": false
+      },
+      "unroot-final-sdk": {
+        "exitCode": 0,
+        "output": "23\n",
+        "outputTruncated": false
+      },
+      "unroot-final-shell-identity": {
+        "exitCode": 0,
+        "output": "uid=0(root) gid=0(root) groups=0(root),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats) context=u:r:su:s0\n",
+        "outputTruncated": false
+      },
+      "unroot-final-build-type": {
+        "exitCode": 0,
+        "output": "userdebug\n",
+        "outputTruncated": false
+      }
+    },
+    "shellUid": 0,
+    "adbShellRoot": true,
+    "buildType": "userdebug",
+    "shellIdentityStatus": "verified",
+    "buildTypeStatus": "verified",
+    "limitation": "An ordinary Android ADB shell (UID 2000) was not verified; root or unknown privilege does not establish that condition."
+  },
+  "testedScopeCompatibility": "LIMITED",
+  "emulatorProcessExited": true,
+  "finishedAt": "2026-11-05T18:12:15.518902+00:00"
+}

@@ -1,0 +1,761 @@
+{
+  "schemaVersion": 1,
+  "game": "beat-braid",
+  "passed": true,
+  "method": "Original input safety gates and independent edge ordinals define the model-to-active clock mapping. Active held intervals intersect public hold ranges; first eligible fresh edges match disjoint closed windows. Completed woven flags determine crossings, streak runs, triangular chain bonus and the first segment-boundary terminal. All actual frames, interval summaries and receipt copies are compared without Model/pilot import, gameplay or per-tick rhythm-state replay.",
+  "limitations": [
+    "Only the root-approved first six public ordinary cases. Formal synthetic boundaries, browser dual-pointer input, host pause/disconnect/retry and video remain separate evidence.",
+    "All model ticks, including initial neutral acknowledgement and preparation, are retained. Cancel reentry, invalid axes, pressed aliases and post-terminal/invalid-dt calls are checked only if actually present; none are synthesized.",
+    "Active-clock held continuity excludes frozen recovery calls exactly as the public rules require. Recovery-zero calls remain non-running; preparation edges consume ordinals without matching a pulse.",
+    "Serialized observations prove values and historical copies, not object identity or Object.freeze. Only tapReceipts and segmentReceipts are prefix-encoded; mutable segment progress remains fully observed.",
+    "Integer windows, hold counts, edge identities, scores and terminal gates use zero tolerance. Model and active elapsed values are separately derived from the public 60 Hz unit.",
+    "Observed coverage counts do not turn absent boundary cases into ordinary evidence. Original raw/source hashes are bound through the approved projection without reading diagnostic-bearing originals or production implementation."
+  ],
+  "sources": {
+    "contract": {
+      "repoRelative": "resource/apps/beat-braid/docs/model-contract.md",
+      "sha256": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725"
+    },
+    "publicInterface": {
+      "repoRelative": "resource/apps/beat-braid/docs/public-interface.md",
+      "sha256": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d"
+    },
+    "oracle": {
+      "repoRelative": "resource/apps/beat-braid/tests/beat-interval-oracle.mjs",
+      "sha256": "237f12a2da0e5c557bb262b707913d439ee0457f0486a6b71f3a2a79d462b6ea"
+    },
+    "runner": {
+      "repoRelative": "resource/apps/beat-braid/tests/independent-beat-review.mjs",
+      "sha256": "067e9dfd29401a775abffbc566029fa7b5d9ee5ac27bee472c0e51c884ee1570"
+    },
+    "publicIndex": {
+      "scratchRelative": "hundred-games/beat-braid/public-observations-first/index.json",
+      "sha256": "8a2a41842663e839f51d86888da763c9adfb7b4bcc05f6e0f5fcd78da388c5df"
+    },
+    "originalReportSha256": "a3f59ea6838ef4ac0eebaff6e5c65283a736d550163f1fcd40d93861f276c761",
+    "sourceRuns": [
+      {
+        "scratchRelative": "hundred-games/beat-braid/ordinary-rounds-first/report.json",
+        "sha256": "a3f59ea6838ef4ac0eebaff6e5c65283a736d550163f1fcd40d93861f276c761",
+        "startHashes": {
+          "automation": "255f9ce347c14051e385608331e6d1a6897e77243dba75c9067d22022ae811a1",
+          "model": "ad04d6061eb041a5a003c756d58f801c4f2e3a1d01dbcfa3b686e865795d18a8",
+          "contract": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725",
+          "publicInterface": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d",
+          "harness": "1b90b8fa98cddb3107b90dcbd32a06e677631b9f2171f1a2474b5ffbc132cb00",
+          "evidenceFormat": "27adaed07306604d4f81b35071c4c8509127bfd3a2a884dbdb99a8f962b3e34a"
+        },
+        "endHashes": {
+          "automation": "255f9ce347c14051e385608331e6d1a6897e77243dba75c9067d22022ae811a1",
+          "model": "ad04d6061eb041a5a003c756d58f801c4f2e3a1d01dbcfa3b686e865795d18a8",
+          "contract": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725",
+          "publicInterface": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d",
+          "harness": "1b90b8fa98cddb3107b90dcbd32a06e677631b9f2171f1a2474b5ffbc132cb00",
+          "evidenceFormat": "27adaed07306604d4f81b35071c4c8509127bfd3a2a884dbdb99a8f962b3e34a"
+        }
+      }
+    ]
+  },
+  "sourceWindow": {
+    "startedAt": "2026-11-02T16:26:16.463Z",
+    "completedAt": "2026-11-02T16:26:21.089Z",
+    "startHashes": {
+      "repo:resource/apps/beat-braid/tests/independent-beat-review.mjs": "067e9dfd29401a775abffbc566029fa7b5d9ee5ac27bee472c0e51c884ee1570",
+      "repo:resource/apps/beat-braid/tests/beat-interval-oracle.mjs": "237f12a2da0e5c557bb262b707913d439ee0457f0486a6b71f3a2a79d462b6ea",
+      "repo:resource/apps/beat-braid/docs/model-contract.md": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725",
+      "repo:resource/apps/beat-braid/docs/public-interface.md": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d",
+      "scratch:hundred-games/beat-braid/public-observations-first/index.json": "8a2a41842663e839f51d86888da763c9adfb7b4bcc05f6e0f5fcd78da388c5df",
+      "scratch:hundred-games/beat-braid/public-observations-first/level1-record.json": "296d0cd6466ecc1d9974313625cd7d50da9529fe70cc9d06c381471e67758826",
+      "scratch:hundred-games/beat-braid/public-observations-first/level1-loss.json": "c71984b4cc2da6a6ec6282d6dc931c06c9f2001a94e758dceb9ca7a5ae7694ed",
+      "scratch:hundred-games/beat-braid/public-observations-first/level2-record.json": "c03d990bf34d4e1073d1d1c00be738683014f843f13e1f11b6ac51f2c905119a",
+      "scratch:hundred-games/beat-braid/public-observations-first/level2-loss.json": "d147ec9a649b2fe8064c085d0fca7dd4097dcc89d61d8412471757b279e0e90c",
+      "scratch:hundred-games/beat-braid/public-observations-first/level3-record.json": "ade8ff785cae9204384ee21133d726930c12b7b4e1b8e9c91a0dec7f76a51f97",
+      "scratch:hundred-games/beat-braid/public-observations-first/level3-loss.json": "827e05730147d3eb4a02cbb0cac9d663759d120a6e46ff9beb801532a3dad6fa"
+    },
+    "endHashes": {
+      "repo:resource/apps/beat-braid/tests/independent-beat-review.mjs": "067e9dfd29401a775abffbc566029fa7b5d9ee5ac27bee472c0e51c884ee1570",
+      "repo:resource/apps/beat-braid/tests/beat-interval-oracle.mjs": "237f12a2da0e5c557bb262b707913d439ee0457f0486a6b71f3a2a79d462b6ea",
+      "repo:resource/apps/beat-braid/docs/model-contract.md": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725",
+      "repo:resource/apps/beat-braid/docs/public-interface.md": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d",
+      "scratch:hundred-games/beat-braid/public-observations-first/index.json": "8a2a41842663e839f51d86888da763c9adfb7b4bcc05f6e0f5fcd78da388c5df",
+      "scratch:hundred-games/beat-braid/public-observations-first/level1-record.json": "296d0cd6466ecc1d9974313625cd7d50da9529fe70cc9d06c381471e67758826",
+      "scratch:hundred-games/beat-braid/public-observations-first/level1-loss.json": "c71984b4cc2da6a6ec6282d6dc931c06c9f2001a94e758dceb9ca7a5ae7694ed",
+      "scratch:hundred-games/beat-braid/public-observations-first/level2-record.json": "c03d990bf34d4e1073d1d1c00be738683014f843f13e1f11b6ac51f2c905119a",
+      "scratch:hundred-games/beat-braid/public-observations-first/level2-loss.json": "d147ec9a649b2fe8064c085d0fca7dd4097dcc89d61d8412471757b279e0e90c",
+      "scratch:hundred-games/beat-braid/public-observations-first/level3-record.json": "ade8ff785cae9204384ee21133d726930c12b7b4e1b8e9c91a0dec7f76a51f97",
+      "scratch:hundred-games/beat-braid/public-observations-first/level3-loss.json": "827e05730147d3eb4a02cbb0cac9d663759d120a6e46ff9beb801532a3dad6fa"
+    },
+    "unchanged": true
+  },
+  "assertions": 10997736,
+  "roundAssertions": 10997709,
+  "globalAssertions": 27,
+  "failureCount": 0,
+  "failures": [],
+  "exception": null,
+  "comparisonTolerance": {
+    "modelTicks": 0,
+    "activeTicks": 0,
+    "score": 0,
+    "counts": 0,
+    "elapsedSeconds": 0,
+    "gates": 0
+  },
+  "maximumErrors": {
+    "modelTicks": 0,
+    "activeTicks": 0,
+    "score": 0,
+    "counts": 0,
+    "elapsedSeconds": 0
+  },
+  "totals": {
+    "frames": 12252,
+    "intervals": 12246,
+    "fullSnapshots": 12264,
+    "retained": 276,
+    "compactSamples": 1533,
+    "eventWindows": 132,
+    "operations": 132,
+    "inputChanges": 183,
+    "activeIntervals": 11880,
+    "gatedIntervals": 366,
+    "missingHoldRanges": 103,
+    "tapReceipts": 99,
+    "segmentReceipts": 33
+  },
+  "rounds": [
+    {
+      "label": "level1-record",
+      "difficulty": 0,
+      "level": 1,
+      "passed": true,
+      "assertions": 1620640,
+      "counts": {
+        "frames": 2222,
+        "intervals": 2221,
+        "fullSnapshots": 2224,
+        "retained": 50,
+        "compactSamples": 278,
+        "eventWindows": 24,
+        "operations": 24,
+        "inputChanges": 42,
+        "activeIntervals": 2160,
+        "gatedIntervals": 61,
+        "missingHoldRanges": 24,
+        "tapReceipts": 18,
+        "segmentReceipts": 6
+      },
+      "coverage": {
+        "modes": {
+          "neutral_ack": 1,
+          "preparing": 60,
+          "running": 2160
+        },
+        "tapResults": {
+          "hit": 18
+        },
+        "segmentResults": {
+          "woven": 6
+        },
+        "actualCrossings": {
+          "left-over-right": 3,
+          "right-over-left": 3
+        },
+        "freshEdges": {
+          "left": 12,
+          "right": 12
+        },
+        "preparingFreshEdges": 1,
+        "simultaneousFreshIntervals": 0,
+        "heldWithoutFreshLaneIntervals": 2317,
+        "pendingTapHeldWithoutFresh": 0,
+        "holdCheckedIntervals": 1620,
+        "holdMissingIntervals": 0,
+        "holdStartEndpoints": 6,
+        "holdEndEndpoints": 6,
+        "windowOpenHits": 0,
+        "windowCloseHits": 0,
+        "freshAtClosePlusOne": 0,
+        "hitsAfterHoldGap": 0,
+        "multipleDefectsOneBreak": 0,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "recoveryReentries": 0,
+        "preparationZeroStillFrozen": 1,
+        "longestReachedBeforeSongEnd": 1080,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "braid_complete",
+          "endedTick": 2221,
+          "endedActiveTick": 2160,
+          "completedSegments": 6,
+          "breaks": 0,
+          "longestStreak": 6
+        },
+        "tick": 2221,
+        "elapsed": 37.016666666666666,
+        "activeTick": 2160,
+        "activeElapsed": 36,
+        "score": 1200,
+        "completedSegments": 6,
+        "wovenSegments": 6,
+        "breaks": 0,
+        "currentStreak": 6,
+        "longestStreak": 6,
+        "tapHitCount": 18,
+        "tapMissCount": 0,
+        "chainBonus": 420,
+        "currentSegmentIndex": 6,
+        "localTick": 0,
+        "edgeOrdinals": {
+          "left": 12,
+          "right": 12
+        }
+      },
+      "source": {
+        "file": "level1-record.json",
+        "projectedSha256": "296d0cd6466ecc1d9974313625cd7d50da9529fe70cc9d06c381471e67758826",
+        "originalRawSha256": "1349ea936af3f9b4e885470d92175e7233069daf7609bd9f055e10bc8124b84f",
+        "originalReportSha256": "a3f59ea6838ef4ac0eebaff6e5c65283a736d550163f1fcd40d93861f276c761",
+        "sourceHashes": {
+          "automation": "255f9ce347c14051e385608331e6d1a6897e77243dba75c9067d22022ae811a1",
+          "model": "ad04d6061eb041a5a003c756d58f801c4f2e3a1d01dbcfa3b686e865795d18a8",
+          "contract": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725",
+          "publicInterface": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d",
+          "harness": "1b90b8fa98cddb3107b90dcbd32a06e677631b9f2171f1a2474b5ffbc132cb00",
+          "evidenceFormat": "27adaed07306604d4f81b35071c4c8509127bfd3a2a884dbdb99a8f962b3e34a"
+        }
+      }
+    },
+    {
+      "label": "level1-loss",
+      "difficulty": 0,
+      "level": 1,
+      "passed": true,
+      "assertions": 831881,
+      "counts": {
+        "frames": 1142,
+        "intervals": 1141,
+        "fullSnapshots": 1144,
+        "retained": 26,
+        "compactSamples": 143,
+        "eventWindows": 12,
+        "operations": 12,
+        "inputChanges": 1,
+        "activeIntervals": 1080,
+        "gatedIntervals": 61,
+        "missingHoldRanges": 0,
+        "tapReceipts": 9,
+        "segmentReceipts": 3
+      },
+      "coverage": {
+        "modes": {
+          "neutral_ack": 1,
+          "preparing": 60,
+          "running": 1080
+        },
+        "tapResults": {
+          "missed": 9
+        },
+        "segmentResults": {
+          "frayed": 3
+        },
+        "actualCrossings": {},
+        "freshEdges": {
+          "left": 1,
+          "right": 1
+        },
+        "preparingFreshEdges": 2,
+        "simultaneousFreshIntervals": 1,
+        "heldWithoutFreshLaneIntervals": 2160,
+        "pendingTapHeldWithoutFresh": 441,
+        "holdCheckedIntervals": 810,
+        "holdMissingIntervals": 0,
+        "holdStartEndpoints": 3,
+        "holdEndEndpoints": 3,
+        "windowOpenHits": 0,
+        "windowCloseHits": 0,
+        "freshAtClosePlusOne": 0,
+        "hitsAfterHoldGap": 0,
+        "multipleDefectsOneBreak": 3,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "recoveryReentries": 0,
+        "preparationZeroStillFrozen": 1,
+        "longestReachedBeforeSongEnd": 0,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "broken_threads",
+          "endedTick": 1141,
+          "endedActiveTick": 1080,
+          "completedSegments": 3,
+          "breaks": 3,
+          "longestStreak": 0
+        },
+        "tick": 1141,
+        "elapsed": 19.016666666666666,
+        "activeTick": 1080,
+        "activeElapsed": 18,
+        "score": 0,
+        "completedSegments": 3,
+        "wovenSegments": 0,
+        "breaks": 3,
+        "currentStreak": 0,
+        "longestStreak": 0,
+        "tapHitCount": 0,
+        "tapMissCount": 9,
+        "chainBonus": 0,
+        "currentSegmentIndex": 3,
+        "localTick": 0,
+        "edgeOrdinals": {
+          "left": 1,
+          "right": 1
+        }
+      },
+      "source": {
+        "file": "level1-loss.json",
+        "projectedSha256": "c71984b4cc2da6a6ec6282d6dc931c06c9f2001a94e758dceb9ca7a5ae7694ed",
+        "originalRawSha256": "bb85e75cd4f8d063facff3b0b5b5fbca76b033fc1ef91847af6a9abe84e25170",
+        "originalReportSha256": "a3f59ea6838ef4ac0eebaff6e5c65283a736d550163f1fcd40d93861f276c761",
+        "sourceHashes": {
+          "automation": "255f9ce347c14051e385608331e6d1a6897e77243dba75c9067d22022ae811a1",
+          "model": "ad04d6061eb041a5a003c756d58f801c4f2e3a1d01dbcfa3b686e865795d18a8",
+          "contract": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725",
+          "publicInterface": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d",
+          "harness": "1b90b8fa98cddb3107b90dcbd32a06e677631b9f2171f1a2474b5ffbc132cb00",
+          "evidenceFormat": "27adaed07306604d4f81b35071c4c8509127bfd3a2a884dbdb99a8f962b3e34a"
+        }
+      }
+    },
+    {
+      "label": "level2-record",
+      "difficulty": 1,
+      "level": 2,
+      "passed": true,
+      "assertions": 2589934,
+      "counts": {
+        "frames": 2942,
+        "intervals": 2941,
+        "fullSnapshots": 2944,
+        "retained": 66,
+        "compactSamples": 368,
+        "eventWindows": 32,
+        "operations": 32,
+        "inputChanges": 52,
+        "activeIntervals": 2880,
+        "gatedIntervals": 61,
+        "missingHoldRanges": 28,
+        "tapReceipts": 24,
+        "segmentReceipts": 8
+      },
+      "coverage": {
+        "modes": {
+          "neutral_ack": 1,
+          "preparing": 60,
+          "running": 2880
+        },
+        "tapResults": {
+          "hit": 24
+        },
+        "segmentResults": {
+          "woven": 8
+        },
+        "actualCrossings": {
+          "left-over-right": 4,
+          "right-over-left": 4
+        },
+        "freshEdges": {
+          "left": 14,
+          "right": 14
+        },
+        "preparingFreshEdges": 1,
+        "simultaneousFreshIntervals": 0,
+        "heldWithoutFreshLaneIntervals": 3093,
+        "pendingTapHeldWithoutFresh": 0,
+        "holdCheckedIntervals": 2160,
+        "holdMissingIntervals": 0,
+        "holdStartEndpoints": 8,
+        "holdEndEndpoints": 8,
+        "windowOpenHits": 0,
+        "windowCloseHits": 0,
+        "freshAtClosePlusOne": 0,
+        "hitsAfterHoldGap": 0,
+        "multipleDefectsOneBreak": 0,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "recoveryReentries": 0,
+        "preparationZeroStillFrozen": 1,
+        "longestReachedBeforeSongEnd": 1440,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "braid_complete",
+          "endedTick": 2941,
+          "endedActiveTick": 2880,
+          "completedSegments": 8,
+          "breaks": 0,
+          "longestStreak": 8
+        },
+        "tick": 2941,
+        "elapsed": 49.016666666666666,
+        "activeTick": 2880,
+        "activeElapsed": 48,
+        "score": 1760,
+        "completedSegments": 8,
+        "wovenSegments": 8,
+        "breaks": 0,
+        "currentStreak": 8,
+        "longestStreak": 8,
+        "tapHitCount": 24,
+        "tapMissCount": 0,
+        "chainBonus": 720,
+        "currentSegmentIndex": 8,
+        "localTick": 0,
+        "edgeOrdinals": {
+          "left": 14,
+          "right": 14
+        }
+      },
+      "source": {
+        "file": "level2-record.json",
+        "projectedSha256": "c03d990bf34d4e1073d1d1c00be738683014f843f13e1f11b6ac51f2c905119a",
+        "originalRawSha256": "af61848faec2522aac9afd5353d1c0ad383169603abe8c7995880e6192595d43",
+        "originalReportSha256": "a3f59ea6838ef4ac0eebaff6e5c65283a736d550163f1fcd40d93861f276c761",
+        "sourceHashes": {
+          "automation": "255f9ce347c14051e385608331e6d1a6897e77243dba75c9067d22022ae811a1",
+          "model": "ad04d6061eb041a5a003c756d58f801c4f2e3a1d01dbcfa3b686e865795d18a8",
+          "contract": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725",
+          "publicInterface": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d",
+          "harness": "1b90b8fa98cddb3107b90dcbd32a06e677631b9f2171f1a2474b5ffbc132cb00",
+          "evidenceFormat": "27adaed07306604d4f81b35071c4c8509127bfd3a2a884dbdb99a8f962b3e34a"
+        }
+      }
+    },
+    {
+      "label": "level2-loss",
+      "difficulty": 1,
+      "level": 2,
+      "passed": true,
+      "assertions": 1003498,
+      "counts": {
+        "frames": 1142,
+        "intervals": 1141,
+        "fullSnapshots": 1144,
+        "retained": 26,
+        "compactSamples": 143,
+        "eventWindows": 12,
+        "operations": 12,
+        "inputChanges": 18,
+        "activeIntervals": 1080,
+        "gatedIntervals": 61,
+        "missingHoldRanges": 11,
+        "tapReceipts": 9,
+        "segmentReceipts": 3
+      },
+      "coverage": {
+        "modes": {
+          "neutral_ack": 1,
+          "preparing": 60,
+          "running": 1080
+        },
+        "tapResults": {
+          "missed": 9
+        },
+        "segmentResults": {
+          "frayed": 3
+        },
+        "actualCrossings": {},
+        "freshEdges": {
+          "left": 3,
+          "right": 6
+        },
+        "preparingFreshEdges": 0,
+        "simultaneousFreshIntervals": 0,
+        "heldWithoutFreshLaneIntervals": 81,
+        "pendingTapHeldWithoutFresh": 0,
+        "holdCheckedIntervals": 810,
+        "holdMissingIntervals": 810,
+        "holdStartEndpoints": 3,
+        "holdEndEndpoints": 3,
+        "windowOpenHits": 0,
+        "windowCloseHits": 0,
+        "freshAtClosePlusOne": 0,
+        "hitsAfterHoldGap": 0,
+        "multipleDefectsOneBreak": 3,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "recoveryReentries": 0,
+        "preparationZeroStillFrozen": 1,
+        "longestReachedBeforeSongEnd": 0,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "broken_threads",
+          "endedTick": 1141,
+          "endedActiveTick": 1080,
+          "completedSegments": 3,
+          "breaks": 3,
+          "longestStreak": 0
+        },
+        "tick": 1141,
+        "elapsed": 19.016666666666666,
+        "activeTick": 1080,
+        "activeElapsed": 18,
+        "score": 0,
+        "completedSegments": 3,
+        "wovenSegments": 0,
+        "breaks": 3,
+        "currentStreak": 0,
+        "longestStreak": 0,
+        "tapHitCount": 0,
+        "tapMissCount": 9,
+        "chainBonus": 0,
+        "currentSegmentIndex": 3,
+        "localTick": 0,
+        "edgeOrdinals": {
+          "left": 3,
+          "right": 6
+        }
+      },
+      "source": {
+        "file": "level2-loss.json",
+        "projectedSha256": "d147ec9a649b2fe8064c085d0fca7dd4097dcc89d61d8412471757b279e0e90c",
+        "originalRawSha256": "176b124a1d5326ef9091bfff1f8c9470ecf8703a0ecd02e3bd82b5e91734eb90",
+        "originalReportSha256": "a3f59ea6838ef4ac0eebaff6e5c65283a736d550163f1fcd40d93861f276c761",
+        "sourceHashes": {
+          "automation": "255f9ce347c14051e385608331e6d1a6897e77243dba75c9067d22022ae811a1",
+          "model": "ad04d6061eb041a5a003c756d58f801c4f2e3a1d01dbcfa3b686e865795d18a8",
+          "contract": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725",
+          "publicInterface": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d",
+          "harness": "1b90b8fa98cddb3107b90dcbd32a06e677631b9f2171f1a2474b5ffbc132cb00",
+          "evidenceFormat": "27adaed07306604d4f81b35071c4c8509127bfd3a2a884dbdb99a8f962b3e34a"
+        }
+      }
+    },
+    {
+      "label": "level3-record",
+      "difficulty": 2,
+      "level": 3,
+      "passed": true,
+      "assertions": 3776674,
+      "counts": {
+        "frames": 3662,
+        "intervals": 3661,
+        "fullSnapshots": 3664,
+        "retained": 82,
+        "compactSamples": 458,
+        "eventWindows": 40,
+        "operations": 40,
+        "inputChanges": 68,
+        "activeIntervals": 3600,
+        "gatedIntervals": 61,
+        "missingHoldRanges": 38,
+        "tapReceipts": 30,
+        "segmentReceipts": 10
+      },
+      "coverage": {
+        "modes": {
+          "neutral_ack": 1,
+          "preparing": 60,
+          "running": 3600
+        },
+        "tapResults": {
+          "hit": 30
+        },
+        "segmentResults": {
+          "woven": 10
+        },
+        "actualCrossings": {
+          "left-over-right": 5,
+          "right-over-left": 5
+        },
+        "freshEdges": {
+          "left": 19,
+          "right": 19
+        },
+        "preparingFreshEdges": 1,
+        "simultaneousFreshIntervals": 0,
+        "heldWithoutFreshLaneIntervals": 3863,
+        "pendingTapHeldWithoutFresh": 0,
+        "holdCheckedIntervals": 2700,
+        "holdMissingIntervals": 0,
+        "holdStartEndpoints": 10,
+        "holdEndEndpoints": 10,
+        "windowOpenHits": 0,
+        "windowCloseHits": 0,
+        "freshAtClosePlusOne": 0,
+        "hitsAfterHoldGap": 0,
+        "multipleDefectsOneBreak": 0,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "recoveryReentries": 0,
+        "preparationZeroStillFrozen": 1,
+        "longestReachedBeforeSongEnd": 1800,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "won",
+        "terminal": {
+          "reason": "braid_complete",
+          "endedTick": 3661,
+          "endedActiveTick": 3600,
+          "completedSegments": 10,
+          "breaks": 0,
+          "longestStreak": 10
+        },
+        "tick": 3661,
+        "elapsed": 61.016666666666666,
+        "activeTick": 3600,
+        "activeElapsed": 60,
+        "score": 2400,
+        "completedSegments": 10,
+        "wovenSegments": 10,
+        "breaks": 0,
+        "currentStreak": 10,
+        "longestStreak": 10,
+        "tapHitCount": 30,
+        "tapMissCount": 0,
+        "chainBonus": 1100,
+        "currentSegmentIndex": 10,
+        "localTick": 0,
+        "edgeOrdinals": {
+          "left": 19,
+          "right": 19
+        }
+      },
+      "source": {
+        "file": "level3-record.json",
+        "projectedSha256": "ade8ff785cae9204384ee21133d726930c12b7b4e1b8e9c91a0dec7f76a51f97",
+        "originalRawSha256": "e843e2f950a0b980abcb30793d6ed69e0c9d4eeee891f82d0f63f2e4d375eb58",
+        "originalReportSha256": "a3f59ea6838ef4ac0eebaff6e5c65283a736d550163f1fcd40d93861f276c761",
+        "sourceHashes": {
+          "automation": "255f9ce347c14051e385608331e6d1a6897e77243dba75c9067d22022ae811a1",
+          "model": "ad04d6061eb041a5a003c756d58f801c4f2e3a1d01dbcfa3b686e865795d18a8",
+          "contract": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725",
+          "publicInterface": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d",
+          "harness": "1b90b8fa98cddb3107b90dcbd32a06e677631b9f2171f1a2474b5ffbc132cb00",
+          "evidenceFormat": "27adaed07306604d4f81b35071c4c8509127bfd3a2a884dbdb99a8f962b3e34a"
+        }
+      }
+    },
+    {
+      "label": "level3-loss",
+      "difficulty": 2,
+      "level": 3,
+      "passed": true,
+      "assertions": 1175082,
+      "counts": {
+        "frames": 1142,
+        "intervals": 1141,
+        "fullSnapshots": 1144,
+        "retained": 26,
+        "compactSamples": 143,
+        "eventWindows": 12,
+        "operations": 12,
+        "inputChanges": 2,
+        "activeIntervals": 1080,
+        "gatedIntervals": 61,
+        "missingHoldRanges": 2,
+        "tapReceipts": 9,
+        "segmentReceipts": 3
+      },
+      "coverage": {
+        "modes": {
+          "neutral_ack": 1,
+          "preparing": 60,
+          "running": 1080
+        },
+        "tapResults": {
+          "missed": 9
+        },
+        "segmentResults": {
+          "frayed": 3
+        },
+        "actualCrossings": {},
+        "freshEdges": {
+          "left": 1,
+          "right": 1
+        },
+        "preparingFreshEdges": 1,
+        "simultaneousFreshIntervals": 0,
+        "heldWithoutFreshLaneIntervals": 1079,
+        "pendingTapHeldWithoutFresh": 0,
+        "holdCheckedIntervals": 810,
+        "holdMissingIntervals": 0,
+        "holdStartEndpoints": 3,
+        "holdEndEndpoints": 3,
+        "windowOpenHits": 0,
+        "windowCloseHits": 0,
+        "freshAtClosePlusOne": 0,
+        "hitsAfterHoldGap": 0,
+        "multipleDefectsOneBreak": 3,
+        "cancelledCalls": 0,
+        "epochChanges": 1,
+        "neutralAcknowledgements": 1,
+        "recoveryReentries": 0,
+        "preparationZeroStillFrozen": 1,
+        "longestReachedBeforeSongEnd": 0,
+        "terminalWithRealInterval": 1
+      },
+      "result": {
+        "phase": "lost",
+        "terminal": {
+          "reason": "broken_threads",
+          "endedTick": 1141,
+          "endedActiveTick": 1080,
+          "completedSegments": 3,
+          "breaks": 3,
+          "longestStreak": 0
+        },
+        "tick": 1141,
+        "elapsed": 19.016666666666666,
+        "activeTick": 1080,
+        "activeElapsed": 18,
+        "score": 0,
+        "completedSegments": 3,
+        "wovenSegments": 0,
+        "breaks": 3,
+        "currentStreak": 0,
+        "longestStreak": 0,
+        "tapHitCount": 0,
+        "tapMissCount": 9,
+        "chainBonus": 0,
+        "currentSegmentIndex": 3,
+        "localTick": 0,
+        "edgeOrdinals": {
+          "left": 1,
+          "right": 1
+        }
+      },
+      "source": {
+        "file": "level3-loss.json",
+        "projectedSha256": "827e05730147d3eb4a02cbb0cac9d663759d120a6e46ff9beb801532a3dad6fa",
+        "originalRawSha256": "70ae0960a151be8980cd20eaaf9d35cb77e3d914b47dd44578d5d196b85002c5",
+        "originalReportSha256": "a3f59ea6838ef4ac0eebaff6e5c65283a736d550163f1fcd40d93861f276c761",
+        "sourceHashes": {
+          "automation": "255f9ce347c14051e385608331e6d1a6897e77243dba75c9067d22022ae811a1",
+          "model": "ad04d6061eb041a5a003c756d58f801c4f2e3a1d01dbcfa3b686e865795d18a8",
+          "contract": "23b6328f9b5aa6506570f5bd5940fe0ea7f381b6f2272d221356555452d1d725",
+          "publicInterface": "026fd01bb622e605c6d148ba76c576511a395674ef30b331bbfbd7efadbfe33d",
+          "harness": "1b90b8fa98cddb3107b90dcbd32a06e677631b9f2171f1a2474b5ffbc132cb00",
+          "evidenceFormat": "27adaed07306604d4f81b35071c4c8509127bfd3a2a884dbdb99a8f962b3e34a"
+        }
+      }
+    }
+  ]
+}
