@@ -1,0 +1,3747 @@
+{
+  "status": "failed",
+  "startedAt": "2026-11-17T15:43:01.285282+00:00",
+  "game": "qq-speed",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [
+    {
+      "name": "Bonjour actual port and version",
+      "status": "passed",
+      "details": {
+        "service": "QQ 飞车",
+        "port": 63485,
+        "txtVersion": "1"
+      }
+    },
+    {
+      "name": "Original SDK native receiver without renderer",
+      "status": "passed",
+      "details": {
+        "id": "virtual-fb57a1306a7d",
+        "nineInitialSyncs": true
+      }
+    },
+    {
+      "name": "Three foreground cycles keep transport stable",
+      "status": "passed",
+      "details": {
+        "cycles": [
+          {
+            "cycle": 1,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 20,
+            "freshStartResumes": false
+          },
+          {
+            "cycle": 2,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 39,
+            "freshStartResumes": false
+          },
+          {
+            "cycle": 3,
+            "samePort": true,
+            "sameSocket": true,
+            "heldKeysSuppressed": true,
+            "backgroundPingAck": 58,
+            "freshStartResumes": false
+          }
+        ],
+        "port": 63485,
+        "defaultPortOccupied": false
+      }
+    },
+    {
+      "name": "Disconnect, held sync and same-ID reconnect",
+      "status": "passed",
+      "details": {
+        "sameIdentity": "virtual-fb57a1306a7d",
+        "heldSyncNoResume": true,
+        "observedState": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        }
+      }
+    },
+    {
+      "name": "Same-sequence ACK for every SDK message",
+      "status": "failed",
+      "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 95, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 232, in acks\n    assert sent==acks and not self.report['observerErrors'];return {'messages':len(sent),'matchingAcks':len(acks)}\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    }
+  ],
+  "wire": [
+    {
+      "at": "2026-11-17T15:43:11.719063+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-fb57a1306a7d"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.719133+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.719168+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.719295+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.719323+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.720400+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.720463+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.720608+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.721153+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.721205+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.725453+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 1,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.725517+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 2,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.725898+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 3,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.725932+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 4,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.725955+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 5,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.725976+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 6,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.725996+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 7,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.726220+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 8,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.727488+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 9,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:11.727538+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 10,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.592070+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.592119+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.595731+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 11,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.595967+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 12,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.970786+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "UP",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.970840+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "DOWN",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.970861+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.970878+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.970893+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.970988+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "X",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.971011+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "Y",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.971027+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 20,
+        "controller_id": "virtual-fb57a1306a7d"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.991272+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 13,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.991321+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 14,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.991492+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 15,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.991745+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 16,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.992004+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 17,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.993113+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 18,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.993155+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 19,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:13.993271+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 20,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.448417+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "Y",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.448500+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.448522+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "B",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.448566+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.448583+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 25,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "UP",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.449021+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 26,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "DOWN",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.449270+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 27,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "LEFT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.449319+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 28,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.449347+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 29,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "X",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.449372+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 30,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.449768+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 31,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.452475+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 21,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.452769+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 22,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.452844+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 23,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.452924+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 24,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.452980+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 25,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.453587+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 26,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.453716+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 27,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.453779+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 28,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.453854+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 29,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.453893+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 30,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.453988+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 31,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.717458+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 32,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "UP",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.717498+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 33,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "DOWN",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.717636+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 34,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.718256+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 35,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.718293+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 36,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.718403+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 37,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "X",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.718437+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 38,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "Y",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.718461+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 39,
+        "controller_id": "virtual-fb57a1306a7d"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.719052+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 32,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.719364+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 33,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.719747+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 34,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.719811+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 35,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.720004+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 36,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.720046+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 37,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.720240+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 38,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:14.720287+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 39,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.193158+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 40,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "Y",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.193236+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 41,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.193271+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 42,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "B",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.193299+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 43,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.193326+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 44,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "UP",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.193348+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 45,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.193501+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 46,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "LEFT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.194005+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 47,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "DOWN",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.194058+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 48,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "X",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.194093+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 49,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.194200+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 50,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198270+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 40,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198650+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 41,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198676+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 42,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198720+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 43,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198784+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 44,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198812+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 45,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198839+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 46,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198865+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 47,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198882+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 48,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198908+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 49,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.198933+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 50,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.680956+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 51,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "UP",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.681012+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 52,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "DOWN",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.681053+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 53,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.681079+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 54,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.681105+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 55,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.681508+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 56,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "X",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.681552+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 57,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "Y",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.682091+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 58,
+        "controller_id": "virtual-fb57a1306a7d"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.682222+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 51,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.682259+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 52,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.682304+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 53,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.682334+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 54,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.682354+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 55,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.683333+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 56,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.683381+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 57,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.683948+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 58,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.780566+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 59,
+        "controller_id": "virtual-fb57a1306a7d"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:15.781469+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 59,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:16.281393+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 60,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "Y",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:16.281481+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 61,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:16.281588+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 62,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "B",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:16.282447+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 63,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "UP",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:16.282499+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 64,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:16.282623+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 65,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "X",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:16.282661+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 66,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:16.282691+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 67,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "LEFT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:16.282719+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 68,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "DOWN",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:16.282746+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 69,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.196808+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "hello",
+        "seq": 70,
+        "controller_id": "virtual-fb57a1306a7d"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.196865+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 71,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.196901+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 72,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.196926+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 73,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.196949+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 74,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.196971+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 75,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.196987+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 76,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.197001+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 77,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.197780+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 78,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.197818+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 79,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.197980+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 80,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "START",
+        "action": "sync",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.198013+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 81,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "sync",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.198056+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 82,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "B",
+        "action": "sync",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.198083+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 83,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "X",
+        "action": "sync",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.198210+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 84,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "Y",
+        "action": "sync",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.198860+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 85,
+        "controller_id": "virtual-fb57a1306a7d"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.199055+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 70,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.199101+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 71,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.199713+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 72,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.199748+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 73,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.199775+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 74,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.199795+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 75,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.199815+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 76,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.199833+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 77,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.200291+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 78,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.200322+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 79,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.200469+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 80,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.200510+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 81,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.200581+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 82,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.200784+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 83,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.200821+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 84,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.200843+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 85,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.344498+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 86,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.344547+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 87,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.344574+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 88,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.344605+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 89,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.344627+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 90,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.344748+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 91,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.344779+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 92,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.344801+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 93,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.344822+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 94,
+        "controller_id": "virtual-fb57a1306a7d",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.345621+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 86,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.345784+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 87,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.345962+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 88,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.345999+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 89,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.346020+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 90,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.346916+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 91,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.347085+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 92,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.347320+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 93,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:18.347486+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 94,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.801898+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 95,
+        "controller_id": "virtual-fb57a1306a7d"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.803083+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 95,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:20.011151+00:00",
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 96,
+        "controller_id": "virtual-fb57a1306a7d"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:20.012317+00:00",
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 96,
+        "type": "ack"
+      }
+    }
+  ],
+  "observerErrors": [],
+  "observerConnectionEnds": [
+    {
+      "connection": 2,
+      "error": "[Errno 9] Bad file descriptor"
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "Native ready",
+      "at": "2026-11-17T15:43:08.254589+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickqqspeed",
+          "name": "QQ 飞车"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "registering"
+          }
+        },
+        "timestamp": 1794930188.1238508
+      }
+    },
+    {
+      "label": "Bonjour ready",
+      "at": "2026-11-17T15:43:11.400070+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickqqspeed",
+          "name": "QQ 飞车"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 4,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 4
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930191.2988229
+      }
+    },
+    {
+      "label": "SDK hello",
+      "at": "2026-11-17T15:43:11.845767+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickqqspeed",
+          "name": "QQ 飞车"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 5,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 14
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930191.815774
+      }
+    },
+    {
+      "label": "Background 0",
+      "at": "2026-11-17T15:43:13.970060+00:00",
+      "state": {
+        "active": false,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.apple.finder",
+          "name": "Finder"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": false,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 1,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 1,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 6,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 1,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 1,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 17
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": false,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930193.834991
+      }
+    },
+    {
+      "label": "Fresh suppressed background input 0",
+      "at": "2026-11-17T15:43:14.180073+00:00",
+      "state": {
+        "active": false,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.apple.finder",
+          "name": "Finder"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": false,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 1,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 1,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 6,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 1,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 1,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 25
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": false,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930194.11714
+      }
+    },
+    {
+      "label": "Foreground 0",
+      "at": "2026-11-17T15:43:14.447744+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickqqspeed",
+          "name": "QQ 飞车"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 1,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 1,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 7,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 1,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 1,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 26
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930194.4141068
+      }
+    },
+    {
+      "label": "Background 1",
+      "at": "2026-11-17T15:43:14.717067+00:00",
+      "state": {
+        "active": false,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.apple.finder",
+          "name": "Finder"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": false,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 2,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 2,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 8,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 2,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 2,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 38
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": false,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930194.61644
+      }
+    },
+    {
+      "label": "Fresh suppressed background input 1",
+      "at": "2026-11-17T15:43:14.941261+00:00",
+      "state": {
+        "active": false,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.apple.finder",
+          "name": "Finder"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": false,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 2,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 2,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 8,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 2,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 2,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 46
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": false,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930194.902645
+      }
+    },
+    {
+      "label": "Foreground 1",
+      "at": "2026-11-17T15:43:15.192517+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickqqspeed",
+          "name": "QQ 飞车"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 2,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 2,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 9,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 2,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 2,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 47
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930195.128603
+      }
+    },
+    {
+      "label": "Background 2",
+      "at": "2026-11-17T15:43:15.680278+00:00",
+      "state": {
+        "active": false,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.apple.finder",
+          "name": "Finder"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": false,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 3,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 3,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 10,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 3,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 3,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 59
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": false,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930195.620502
+      }
+    },
+    {
+      "label": "Fresh suppressed background input 2",
+      "at": "2026-11-17T15:43:15.936579+00:00",
+      "state": {
+        "active": false,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.apple.finder",
+          "name": "Finder"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": false,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 3,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 3,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 10,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 3,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 3,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 68
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": false,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930195.8429089
+      }
+    },
+    {
+      "label": "Foreground 2",
+      "at": "2026-11-17T15:43:16.280849+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickqqspeed",
+          "name": "QQ 飞车"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 3,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 3,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 11,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 3,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 3,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 69
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930196.217266
+      }
+    },
+    {
+      "label": "Disconnect",
+      "at": "2026-11-17T15:43:16.364234+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickqqspeed",
+          "name": "QQ 飞车"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 12,
+              "connected": false,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 80
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930196.302103
+      }
+    },
+    {
+      "label": "Fresh held-sync reconnect",
+      "at": "2026-11-17T15:43:18.343942+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "QQ 飞车 · pureTV 手柄版",
+          "url": "http://127.0.0.1:55552/tv.html",
+          "webglError": true,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickqqspeed",
+          "name": "QQ 飞车"
+        },
+        "game": {
+          "game": "qq-speed",
+          "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+          "stage": "error",
+          "webglError": true
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 13,
+              "connected": true,
+              "controllerId": "virtual-fb57a1306a7d",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-2",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 96
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.2"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "QQ 飞车",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930198.329372
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "diagnostics/menu.png",
+      "bytes": 47288,
+      "sha256": "312e572f2bc22ddbce5143f5b5ef97e9bb3a5f4966a04068fefbded0f8a9a7e8"
+    },
+    {
+      "path": "diagnostics/connected-menu.png",
+      "bytes": 47288,
+      "sha256": "312e572f2bc22ddbce5143f5b5ef97e9bb3a5f4966a04068fefbded0f8a9a7e8"
+    },
+    {
+      "path": "diagnostics/disconnected.png",
+      "bytes": 47288,
+      "sha256": "312e572f2bc22ddbce5143f5b5ef97e9bb3a5f4966a04068fefbded0f8a9a7e8"
+    },
+    {
+      "path": "diagnostics/reconnected.png",
+      "bytes": 47288,
+      "sha256": "312e572f2bc22ddbce5143f5b5ef97e9bb3a5f4966a04068fefbded0f8a9a7e8"
+    }
+  ],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "80c2293e1e3c23092be471c97b502d8cd6d45e358d26b1db8103901480350c2b",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/Sources/main.swift": "4888c7ba767907e8d04723bbda333bf1efe07cc02d6563d0dcf5abab4367eaf7",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "0aa29efcf46fbb60c25d2833262b5ca8589e957de59063d7e90cd372db760edf"
+  },
+  "binarySha256": "de2b3e313af4ffc4ff1ecbc3ceaa0acfbf2b8027721823690e91844db18b8753",
+  "nativeProcessArchitecture": "x86_64",
+  "webglAvailable": false,
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 256, in run\n    self.check('Three foreground cycles keep transport stable',self.focus);self.check('Disconnect, held sync and same-ID reconnect',self.reconnect);self.check('Same-sequence ACK for every SDK message',self.acks);self.check('Normal quit closes TCP',self.quit)\n                                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 95, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 232, in acks\n    assert sent==acks and not self.report['observerErrors'];return {'messages':len(sent),'matchingAcks':len(acks)}\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "zh-CN",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "QQ 飞车 · pureTV 手柄版",
+      "url": "http://127.0.0.1:55552/tv.html",
+      "webglError": true,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystickqqspeed",
+      "name": "QQ 飞车"
+    },
+    "game": {
+      "game": "qq-speed",
+      "message": "无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')",
+      "stage": "error",
+      "webglError": true
+    },
+    "input": {
+      "connections": 1,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 13,
+          "connected": true,
+          "controllerId": "virtual-fb57a1306a7d",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "wifi-7CBD6213-E7E2-4F38-A95F-2ACA97CE9BE3-2",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 96
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.2"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "QQ 飞车",
+        "state": "available"
+      }
+    },
+    "timestamp": 1794930198.329372
+  },
+  "finishedAt": "2026-11-17T15:43:20.174452+00:00"
+}
