@@ -11,6 +11,32 @@ LEGACY_GAMES=['cf-transport-ship','qq-speed']
 plan_spec=importlib.util.spec_from_file_location('qa_plan',Path(__file__).with_name('qa-plan.py'));qa_plan=importlib.util.module_from_spec(plan_spec);plan_spec.loader.exec_module(qa_plan)
 def now():return datetime.datetime.now(datetime.timezone.utc).isoformat()
 def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def port_blocker(port=63485):
+    """Occupy one TCP port while allowing closed-connection TIME_WAIT reuse.
+
+    Sequential native QA modes can leave closed TCP connections behind. This
+    never enables SO_REUSEPORT or accepts an already listening server.
+    """
+    blocker=socket.socket()
+    try:
+        blocker.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+        blocker.bind(('0.0.0.0',port));blocker.listen(1)
+        return blocker
+    except Exception:
+        blocker.close();raise
+def failed_port_observation(port=63485):
+    """Read current sockets after a bind failure; never kill or replace owners."""
+    observed={'observedAt':now(),'port':port,'timing':'After the failed blocker bind; not a claim about earlier socket ownership','commands':[]}
+    for argv in [['/usr/sbin/lsof','-nP','-iTCP:'+str(port)],['/usr/sbin/netstat','-an','-p','tcp']]:
+        row={'command':argv}
+        try:
+            result=subprocess.run(argv,capture_output=True,text=True,timeout=15)
+            lines=result.stdout.splitlines()
+            if 'netstat' in argv[0]:lines=[line for line in lines if re.search(r'[.:]'+str(port)+r'(?:\s|$)',line)]
+            row.update(returncode=result.returncode,stdout='\n'.join(lines[:120]),stderr=result.stderr[:4000])
+        except Exception:row['error']=traceback.format_exc()
+        observed['commands'].append(row)
+    return observed
 def acknowledged_ping(wire,seq):
     sent=[r for r in wire if r['direction']=='sdk-to-game' and r['message'].get('type')=='ping' and r['message'].get('seq')==seq]
     if len(sent)!=1:return False
@@ -352,7 +378,12 @@ class Check:
             if os.environ.get('GITHUB_ACTIONS')=='true':
                 helper=SHARED/'tools/allow-local-network.py';shutil.copy2(helper,self.out/'executed-allow-local-network.py')
                 self.process([sys.executable,helper,self.args.app],'network-prompts.txt')
-            if self.args.occupy_default_port:self.blocker=socket.socket();self.blocker.bind(('0.0.0.0',63485));self.blocker.listen(1)
+            if self.args.occupy_default_port:
+                self.report['occupiedPortSetup']={'port':63485,'addressReuseEnabled':True,'reusePortEnabled':False,'status':'preparing'}
+                try:
+                    self.blocker=port_blocker();self.report['occupiedPortSetup']['status']='listening'
+                except OSError:
+                    self.report['occupiedPortSetup'].update(status='failed',observation=failed_port_observation());raise
             prefix=['/usr/bin/arch','-'+self.args.launch_architecture] if self.args.launch_architecture else []
             probe=None
             if self.args.webgl_probe:

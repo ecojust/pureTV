@@ -4,6 +4,27 @@ import copy,importlib.util,json,socket,threading,time,unittest
 from pathlib import Path
 spec=importlib.util.spec_from_file_location('macverify',Path(__file__).resolve().parents[3]/'tools/macos-verify.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
 class Observation(unittest.TestCase):
+ def test_blocker_reuses_port_after_a_closed_connection(self):
+  listener=module.port_blocker(0);port=listener.getsockname()[1]
+  client=socket.create_connection(('127.0.0.1',port));peer,_=listener.accept()
+  try:
+   peer.shutdown(socket.SHUT_WR);self.assertEqual(client.recv(1),b'')
+   client.close();self.assertEqual(peer.recv(1),b'')
+  finally:client.close();peer.close();listener.close()
+  blocker=module.port_blocker(port)
+  try:
+   self.assertEqual(blocker.getsockname()[1],port)
+   self.assertEqual(blocker.getsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR),1)
+   if hasattr(socket,'SO_REUSEPORT'):self.assertEqual(blocker.getsockopt(socket.SOL_SOCKET,socket.SO_REUSEPORT),0)
+  finally:blocker.close()
+ def test_blocker_never_shares_an_active_listener(self):
+  listener=module.port_blocker(0)
+  try:
+   with self.assertRaises(OSError):module.port_blocker(listener.getsockname()[1])
+   listener.settimeout(2)
+   client=socket.create_connection(('127.0.0.1',listener.getsockname()[1]));peer,_=listener.accept()
+   client.close();peer.close()
+  finally:listener.close()
  def test_a_new_diagnostic_is_not_a_new_game_frame(self):
   check=object.__new__(module.Check)
   before={'timestamp':10,'game':{'controller':{'pollCount':40}}}
