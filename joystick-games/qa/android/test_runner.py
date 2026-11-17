@@ -275,6 +275,29 @@ class CatalogContracts(unittest.TestCase):
         snapshot['game']['webglVersion'] = None
         acceptance.validate_catalog_snapshot(snapshot)
 
+    def test_numeric_and_driver_string_versions_require_the_matching_webgl_renderer(self):
+        for version in (1, 2):
+            acceptance = self.acceptance(); acceptance.plan['renderer'] = 'webgl' + str(version)
+            snapshot = self.snapshot(); snapshot['game']['renderer'] = acceptance.plan['renderer']
+            for actual in (version, 'WebGL ' + str(version), 'WebGL ' + str(version) + '.0 (OpenGL ES Chromium)'):
+                snapshot['game']['webglVersion'] = actual
+                acceptance.validate_catalog_snapshot(snapshot)
+            for invalid in (None, True, False, float(version), 0, 3, 3-version, '', str(version),
+                            'WebGL ' + str(3-version) + '.0', 'WebGL ' + str(version) + '0.0',
+                            'WebGL ' + str(version) + '.1', 'WebGL unavailable'):
+                snapshot['game']['webglVersion'] = invalid
+                with self.assertRaises(AssertionError, msg=repr(invalid)):
+                    acceptance.validate_catalog_snapshot(snapshot)
+
+    def test_all_four_original_triptych_webgl_observations_match_their_frozen_plans(self):
+        fixtures = json.loads((HERE/'fixtures/catalog-webgl-versions.json').read_text())
+        self.assertEqual(len(fixtures['cases']), 4)
+        for case in fixtures['cases']:
+            acceptance = self.acceptance(); acceptance.args.game = case['game']
+            acceptance.plan = runner.plan.load_plan(runner.ROOT/'joystick-games'/case['game']/'qa-plan.json')
+            snapshot = self.snapshot(); snapshot['game'] = case['browserObservation']
+            acceptance.validate_catalog_snapshot(snapshot)
+
     def test_failed_renderer_wrong_game_and_missing_actual_model_are_rejected(self):
         for mutation in ('error', 'wrong-game', 'missing-state', 'null-state', 'invisible-canvas', 'wrong-renderer'):
             snapshot = self.snapshot()
@@ -306,7 +329,7 @@ class InstallationSetup(unittest.TestCase):
     class LaunchReached(Exception):
         pass
 
-    def setup_case(self, slug, occupied=False, reset_stdout=b'Success\n', reset_exit=0):
+    def setup_case(self, slug, occupied=False, reset_stdout=b'Success\n', reset_exit=0, initial=None):
         """Run the real setup until instrumentation launch against a stateful ADB fixture."""
         directory = tempfile.TemporaryDirectory(prefix='joystick-install-', dir='/dev/shm')
         self.addCleanup(directory.cleanup)
@@ -317,7 +340,13 @@ class InstallationSetup(unittest.TestCase):
             observer=Path('/fixture/observer.apk'), occupy_default_port=occupied)
         acceptance.package = runner.PACKAGES[slug]
         acceptance.plan = None if slug in runner.build.LEGACY_PACKAGES else {'renderer': 'canvas2d'}
-        acceptance.report = {}; acceptance.tests = []
+        acceptance.snapshots = []; acceptance.report = {'snapshots': acceptance.snapshots}; acceptance.tests = []
+        if initial is not None:
+            acceptance.plan = {'renderer': 'webgl2', 'pauseStablePaths': ['gameplay.tick']}
+            def initial_observation(predicate, **kwargs):
+                self.assertTrue(predicate(initial))
+                return initial
+            acceptance.wait = initial_observation
         state = {'gameInstalled': False, 'observerInstalled': False, 'stopped': False,
                  'storySeen': True, 'observerData': 'preserved', 'unrelatedData': 'preserved',
                  'cleared': [], 'launches': 0, 'forwards': 0}
@@ -355,6 +384,7 @@ class InstallationSetup(unittest.TestCase):
                 self.assertFalse(state['storySeen'], 'Story state must be reset before target launch')
                 self.assertEqual(acceptance.report['installationSetup']['status'], 'passed')
             state['launches'] += 1
+            if initial is not None: return SimpleNamespace()
             raise self.LaunchReached()
 
         error = None
@@ -370,6 +400,20 @@ class InstallationSetup(unittest.TestCase):
         self.assertEqual(state['observerData'], 'preserved')
         self.assertEqual(state['unrelatedData'], 'preserved')
         return acceptance, state, error, commands
+
+    def test_failed_initial_context_validation_preserves_the_actual_observation(self):
+        initial = {'game': {'game': 'phosphor-patrol', 'renderer': 'webgl2', 'webglVersion': 1,
+            'stage': 'menu', 'paused': False, 'frames': 2, 'gameplay': {'tick': 0},
+            'controller': {'pollCount': 2}, 'errors': []},
+            'info': {'wifiController': {'port': 63485, 'serviceType': '_puretv._tcp', 'version': '1'}},
+            'page': {'canvases': [{'width': 960, 'height': 540, 'visible': True}]}}
+        acceptance, state, error, _ = self.setup_case('phosphor-patrol', initial=initial)
+        self.assertIsInstance(error, AssertionError)
+        self.assertIn('No matching initialized WebGL context', str(error))
+        self.assertEqual(state['forwards'], 1)  # Observer only; no controller connection yet.
+        saved = json.loads((acceptance.out/'report.json').read_text())
+        self.assertEqual(saved['snapshots'][0]['label'], 'initial-menu')
+        self.assertEqual(saved['snapshots'][0]['snapshot'], initial)
 
     def test_each_catalog_scenario_clears_only_target_before_launch(self):
         for occupied in (False, True):

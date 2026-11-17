@@ -10,6 +10,7 @@ from collections import Counter
 import hashlib
 import json
 import math
+import re
 import shutil
 import socket
 import subprocess
@@ -411,6 +412,9 @@ class Acceptance:
         initial = self.wait(lambda s: self.game(s).get('stage') == 'menu' and self.game(s).get('loading') is not True
                             and self.game(s).get('controller', {}).get('pollCount', 0) > 0
                             and (s.get('info') or {}).get('wifiController', {}).get('port', 0) > 0, timeout=150, label='initial-menu')
+        # Keep the actual observation even when the renderer/port assertions below fail.
+        self.record('initial-menu', initial)
+        self.save()
         service = initial['info']['wifiController']
         self.service_port = service['port']
         assert service['serviceType'] == '_puretv._tcp' and service['version'] == '1', service
@@ -424,7 +428,6 @@ class Acceptance:
         self.report['controllerService'] = service
         self.report['targetPid'] = self.command('shell', 'pidof', self.package).decode().strip()
         assert self.report['targetPid'], 'Target process is not running'
-        self.record('initial-menu', initial)
         assert self.visible_ids(initial) == []
         self.passed('installed target launches initialized game menu with no controller card')
         self.recording_log = (self.out / 'screenrecord.log').open('wb')
@@ -507,8 +510,14 @@ class Acceptance:
         assert game.get('renderer') in plan.accepted_renderers(self.plan), 'Actual renderer differs from QA plan'
         if game['renderer'] in ('webgl1', 'webgl2'):
             version = game.get('webglVersion')
-            prefix = 'WebGL 2' if game['renderer'] == 'webgl2' else 'WebGL 1'
-            assert isinstance(version, str) and version.startswith(prefix), 'No matching initialized WebGL context'
+            expected = 2 if game['renderer'] == 'webgl2' else 1
+            # Catalog games report the actual context's numeric API version;
+            # legacy adapters use gl.getParameter(gl.VERSION). Both must agree
+            # with the selected renderer; bools/floats are not API versions.
+            matching = type(version) is int and version == expected
+            matching = matching or (isinstance(version, str) and re.match(
+                r'^WebGL ' + str(expected) + r'(?:\.0)?(?:\s|\(|$)', version) is not None)
+            assert matching, 'No matching initialized WebGL context: ' + repr(version)
         assert game.get('stage') in ('menu', 'playing', 'paused', 'ended')
         assert type(game.get('paused')) is bool and type(game.get('frames')) is int
         assert isinstance(game.get('gameplay'), dict) and game['gameplay'], 'Missing actual gameplay observations'

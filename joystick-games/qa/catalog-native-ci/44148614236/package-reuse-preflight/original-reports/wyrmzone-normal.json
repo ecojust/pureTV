@@ -1,0 +1,83 @@
+{
+  "game": "wyrmzone",
+  "targetPackage": "com.ecojust.joystick.wyrmzone",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "127d108053297e2ae5f2b6e14aa20550ae97dae4",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/wyrmzone/wyrmzone-0.1.0.apk",
+    "bytes": 435255,
+    "sha256": "058e3e986fb3c608433f731434d94aebfb43e29455f061cd53d552c407e39423"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/wyrmzone/observer-wyrmzone.apk",
+    "bytes": 16783,
+    "sha256": "e2159a4b245150bb04db029625887f6bad2cc8cfef33ab2d6e4a153f8f4d9bc2"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 45172,
+      "sha256": "71c04edb176791e4f4180af0738797820420e66fa7f6ac2bd7972d4890f5a142"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 11507,
+      "sha256": "e07a90452ea913ccce16d3b251f134dc7720bba3b6c42c521312b6895d2303be"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 5101,
+      "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582"
+    },
+    "joystick-games/wyrmzone/qa-plan.json": {
+      "bytes": 1604,
+      "sha256": "3f3f4c977f5bc0fb80fe3cb594346dc690ef4010319585f61b8988f9b6cce858"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 3747,
+      "sha256": "a34fc2e2892b3f5962e1ba2b45b48afb8358cc9d85728320a786805f4f55c30a"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.wyrmzone",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    }
+  ],
+  "snapshots": [],
+  "captures": [],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.wyrmzone",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 745, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 419, in setup\n    self.validate_catalog_snapshot(initial)\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 511, in validate_catalog_snapshot\n    assert isinstance(version, str) and version.startswith(prefix), 'No matching initialized WebGL context'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: No matching initialized WebGL context\n",
+  "finishedAt": 1794941028.626517
+}
