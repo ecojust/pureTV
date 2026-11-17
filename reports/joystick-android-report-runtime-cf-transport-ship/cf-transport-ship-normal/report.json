@@ -1,0 +1,514 @@
+{
+  "game": "cf-transport-ship",
+  "targetPackage": "com.ecojust.joystickcf",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "d30e1ce26abbf27d07d149b708c6a491abb105b3",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/cf-transport-ship/cf-transport-ship-0.1.0.apk",
+    "bytes": 521271,
+    "sha256": "b4efa97a33669380c5f10b4b094a491e530c636ae44e3202c0346194f502728d"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/cf-transport-ship/observer-cf-transport-ship.apk",
+    "bytes": 16783,
+    "sha256": "00db918c75584031847967eeb7a3ba24c11b3de88fa51e31c79e99ee33b8d684"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 29154,
+      "sha256": "6d095b696f7e417e80dbdf51dd205b9c4e5bed11b31209edb2d0cab87445a620"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3386,
+      "sha256": "9e5093d45a4c5aaee565359683af270725db5bc15a43835faa12eb9febebca42"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10870,
+      "sha256": "0ecf4312f12dccb1f696728fc0ac0d876cbe267fca6ad9a1ef9f798bba76941b"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    }
+  },
+  "tests": [
+    {
+      "name": "installed target launches WebGL menu with no controller card",
+      "status": "passed",
+      "details": null
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1794928272.6973562,
+      "snapshot": {
+        "game": {
+          "game": "cf-transport-ship",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "ready": true,
+          "stage": "menu",
+          "webglError": false,
+          "error": "",
+          "playing": false,
+          "paused": false,
+          "ended": false,
+          "controllerMode": true,
+          "focus": "btnStart",
+          "pointerLocked": false,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:35379/?room=s5hTMwB4R_Mh_lJw7_W3A60NhPlyBXVB",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "CF Transport Ship",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 5,
+            "native": true,
+            "inputAvailable": true
+          },
+          "quality": "low",
+          "team": "BL",
+          "primary": "ak47",
+          "time": 0,
+          "score": {
+            "BL": 0,
+            "GR": 0
+          },
+          "controllerConnected": false,
+          "settings": {
+            "strafe": false,
+            "crouch": false
+          },
+          "player": null,
+          "telemetry": {
+            "polls": 5,
+            "forwardFrames": 0,
+            "turnFrames": 0,
+            "aimFrames": 0,
+            "fireFrames": 0,
+            "reloadRequests": 0,
+            "jumpRequests": 0,
+            "weaponCycles": 0,
+            "scopeRequests": 0,
+            "pauses": 0,
+            "cancellations": 0
+          }
+        },
+        "info": {
+          "url": "http://10.0.2.15:35379/?room=s5hTMwB4R_Mh_lJw7_W3A60NhPlyBXVB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "CF Transport Ship",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 751,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 131
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystickcf"
+      }
+    },
+    {
+      "label": "timeout-single-controller",
+      "snapshot": {
+        "game": {
+          "game": "cf-transport-ship",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "ready": true,
+          "stage": "menu",
+          "webglError": false,
+          "error": "",
+          "playing": false,
+          "paused": false,
+          "ended": false,
+          "controllerMode": true,
+          "focus": "btnStart",
+          "pointerLocked": false,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-7744c175f4da",
+                "session": "wifi-62241041-d4c3-44a2-85fb-a1b3766b169a-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-7744c175f4da\",\"wifi-62241041-d4c3-44a2-85fb-a1b3766b169a-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:35379/?room=s5hTMwB4R_Mh_lJw7_W3A60NhPlyBXVB",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "CF Transport Ship",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 71,
+            "native": true,
+            "inputAvailable": true
+          },
+          "quality": "low",
+          "team": "BL",
+          "primary": "ak47",
+          "time": 0,
+          "score": {
+            "BL": 0,
+            "GR": 0
+          },
+          "controllerConnected": true,
+          "settings": {
+            "strafe": false,
+            "crouch": false
+          },
+          "player": null,
+          "telemetry": {
+            "polls": 71,
+            "forwardFrames": 0,
+            "turnFrames": 0,
+            "aimFrames": 0,
+            "fireFrames": 0,
+            "reloadRequests": 0,
+            "jumpRequests": 0,
+            "weaponCycles": 0,
+            "scopeRequests": 0,
+            "pauses": 0,
+            "cancellations": 0
+          }
+        },
+        "info": {
+          "url": "http://10.0.2.15:35379/?room=s5hTMwB4R_Mh_lJw7_W3A60NhPlyBXVB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "CF Transport Ship",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 761,
+                  "top": 47.5,
+                  "right": 937,
+                  "bottom": 113.4921875,
+                  "width": 176,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 751,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 201
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-7744c175f4da",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-7744c175f4da",
+                    "idText": "ID: virtual-7744c175f4da",
+                    "visible": true,
+                    "rect": {
+                      "left": 761,
+                      "top": 47.5,
+                      "right": 937,
+                      "bottom": 113.4921875,
+                      "width": 176,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 751,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 201
+                    },
+                    "idRect": {
+                      "left": 802,
+                      "top": 74.6953125,
+                      "right": 928,
+                      "bottom": 105.4921875,
+                      "width": 126,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 751,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 201
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 802,
+                        "top": 75.6953125,
+                        "right": 927.421875,
+                        "bottom": 88.1953125,
+                        "width": 125.421875,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 802,
+                        "top": 91.09375,
+                        "right": 835.0078125,
+                        "bottom": 103.59375,
+                        "width": 33.0078125,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 126,
+                    "idScrollWidth": 126,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 770,
+                      "top": 55.5,
+                      "right": 794,
+                      "bottom": 79.5,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystickcf"
+      },
+      "error": null
+    }
+  ],
+  "captures": [],
+  "adbForwards": {
+    "observer": 39411,
+    "controller": 34733
+  },
+  "controllerService": {
+    "state": "available",
+    "serviceName": "CF Transport Ship",
+    "port": 63485,
+    "serviceType": "_puretv._tcp",
+    "version": "1",
+    "error": 0
+  },
+  "targetPid": "2759",
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 488, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 310, in setup\n    self.wait(lambda s: self.visible_ids(s) == [client.identity], label='single-controller')\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 166, in wait\n    raise AssertionError(label + ' timed out; last snapshot retained')\nAssertionError: single-controller timed out; last snapshot retained\n",
+  "wire": {
+    "sdkMessages": 20,
+    "hostReplies": 20,
+    "matchingAcks": 20,
+    "missingAcks": [],
+    "keysSent": [
+      "A",
+      "B",
+      "DOWN",
+      "LEFT",
+      "RIGHT",
+      "START",
+      "UP",
+      "X",
+      "Y"
+    ],
+    "errors": []
+  },
+  "video": {
+    "path": "controller-gameplay.mp4",
+    "bytes": 618455,
+    "sha256": "7073cab2dddb7f3ccaa1af1f927b5284b411a86987d48a8d969e4b23e30d32f1",
+    "scope": "Actual screen recording of SDK-driven acceptance; no model or clock changes"
+  },
+  "finishedAt": 1794928296.2767718
+}
