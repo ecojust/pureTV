@@ -79,6 +79,30 @@ class CatalogTools(unittest.TestCase):
         self.assertEqual(verify.initialization(state, renderer='webgl1'), 'ready')
         self.assertEqual(verify.initialization(state, renderer='webgl2'), 'pending')
 
+    def test_actual_triptych_numeric_context_versions_are_strict(self):
+        # The four Three games derive 1/2 from their actual context type;
+        # rejecting that observation must not force a production asset rewrite.
+        state = {'game': 'phosphor-patrol', 'renderer': 'webgl2', 'webglVersion': 2,
+                 'stage': 'menu', 'paused': False, 'frames': 3,
+                 'gameplay': {'tick': 0}, 'controller': {'pollCount': 3}}
+        self.assertEqual(verify.initialization(state, renderer='webgl2'), 'ready')
+        for version in [1, True, False, None, 2.0, '2', 'WebGL 1.0 (WebKit)', 'WebGL 20', 'WebGL 2.01', 'WebGL 2.0spoof']:
+            with self.subTest(version=version):
+                self.assertEqual(verify.initialization(dict(state, webglVersion=version), renderer='webgl2'), 'pending')
+        for version in ['WebGL 2', 'WebGL 2.0 (WebKit)', 'WebGL 2.0(WebKit)']:
+            self.assertEqual(verify.initialization(dict(state, webglVersion=version), renderer='webgl2'), 'ready')
+        state.update(renderer='webgl1', webglVersion=1)
+        self.assertEqual(verify.initialization(state, renderer=['webgl1','webgl2']), 'ready')
+        self.assertEqual(verify.initialization(dict(state, webglVersion=2), renderer=['webgl1','webgl2']), 'pending')
+        self.assertEqual(verify.initialization(dict(state, webglVersion=True), renderer=['webgl1','webgl2']), 'pending')
+
+    def test_retained_browser_observations_match_native_type_contract(self):
+        fixture = json.loads((Path(__file__).parent / 'fixtures/catalog-webgl-versions.json').read_text())
+        self.assertEqual(len(fixture['cases']), 4)
+        for case in fixture['cases']:
+            with self.subTest(game=case['game']):
+                self.assertEqual(verify.initialization(case['browserObservation'], renderer='webgl2'), 'ready')
+
     def test_registry_rejects_duplicate_and_unsafe_application_identity(self):
         with self.assertRaises(AssertionError):
             builder.registry_data('{"games":{"sample":1,"sample":2}}')

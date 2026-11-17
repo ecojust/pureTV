@@ -60,7 +60,8 @@ def main():
         assert name == path.as_posix() and not path.is_absolute() and '..' not in path.parts
     provenance = {'artifactSourceCommit': meta['sourceCommit'], 'qaSourceCommit': os.environ['GITHUB_SHA']}
     if args.artifact_source_checkout:
-        spec = importlib.util.spec_from_file_location('reuse', Path(__file__).with_name('macos-reuse.py'))
+        reuse_tool = 'macos-reuse.py' if meta['game'] in {'cf-transport-ship', 'qq-speed'} else 'macos-catalog-reuse.py'
+        spec = importlib.util.spec_from_file_location('reuse', Path(__file__).with_name(reuse_tool))
         reuse = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(reuse)
         provenance = reuse.verify_source(meta, args.artifact_source_checkout.resolve(), Path(__file__).resolve().parents[2])

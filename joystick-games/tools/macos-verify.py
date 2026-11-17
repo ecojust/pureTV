@@ -31,8 +31,10 @@ def initialization(game,probe=None,renderer=None):
         actual=game.get('renderer')
         if actual not in allowed:return 'pending'
         if actual.startswith('webgl'):
-            expected='WebGL 2.0' if actual=='webgl2' else 'WebGL 1.0'
-            if not str(game.get('webglVersion','')).startswith(expected):return 'pending'
+            version=game.get('webglVersion');major=2 if actual=='webgl2' else 1
+            # Triptych observes the real context kind as an integer; Pixi and
+            # legacy hosts expose GL_VERSION. Neither permits a guessed value.
+            if not ((type(version) is int and version==major) or (isinstance(version,str) and re.match(r'^WebGL '+str(major)+r'(?:\.0)?(?:\s|\(|$)',version))):return 'pending'
         return 'ready' if game.get('stage')=='menu' and game.get('paused') is False and qa_plan.numeric(game.get('frames')) and game['frames']>1 and game.get('controller',{}).get('pollCount',0)>1 and isinstance(game.get('gameplay'),dict) else 'pending'
     if game.get('stage')=='error':
         cause=str(game.get('error') or game.get('message') or '').strip()
