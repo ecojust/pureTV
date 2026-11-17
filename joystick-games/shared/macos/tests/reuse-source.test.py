@@ -19,10 +19,22 @@ class Provenance(unittest.TestCase):
   with self.assertRaises(AssertionError):reuse.validate_run(run,bad,artifacts)
   bad=copy.deepcopy(artifacts);bad[0]['expired']=True
   with self.assertRaises(AssertionError):reuse.validate_run(run,jobs,bad)
+ def test_previous_qq_requires_both_successful_jobs_and_original_qa_source(self):
+  run={'id':reuse.QQ_QA_RUN,'head_sha':reuse.QQ_QA_SOURCE,'run_attempt':1,'repository':{'full_name':reuse.REPO},'path':'.github/workflows/joystick-games-macos-qa.yml'}
+  jobs=[{'name':'verify (qq-speed, '+platform+')','conclusion':'success','status':'completed'} for platform in ['macos-latest','macos-15-intel']]
+  artifacts=[{'name':'joystick-macos-qa-qq-speed-'+platform,'expired':False,'workflow_run':{'id':reuse.QQ_QA_RUN,'head_sha':reuse.QQ_QA_SOURCE}} for platform in ['macos-latest','macos-15-intel']]
+  self.assertEqual(len(reuse.validate_previous_qq(run,jobs,artifacts)),2)
+  for changes in ['source','failed-job','artifact-source']:
+   r=copy.deepcopy(run);j=copy.deepcopy(jobs);a=copy.deepcopy(artifacts)
+   if changes=='source':r['head_sha']='0'*40
+   elif changes=='failed-job':j[0]['conclusion']='failure'
+   else:a[1]['workflow_run']['head_sha']='0'*40
+   with self.assertRaises(AssertionError):reuse.validate_previous_qq(r,j,a)
  def test_source_and_payload_freeze_allow_only_new_qa(self):
   with tempfile.TemporaryDirectory() as directory:
    root=Path(directory);frozen=root/'original';frozen.mkdir();game='cf-transport-ship'
    names=['joystick-games/shared/macos/Sources/main.swift','joystick-games/shared/macos/Web/bridge.js','joystick-games/shared/web/input.js',f'joystick-games/{game}/src/main.js',f'joystick-games/{game}/dist/tv.html',f'joystick-games/{game}/game.json','puretv-joystick/joystick_sdk.py','.github/workflows/joystick-games-macos.yml']
+   names.extend(['joystick-games/qq-speed/src/main.js','joystick-games/qq-speed/dist/tv.html','joystick-games/qq-speed/game.json'])
    for name in names:p=frozen/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(name+'\n')
    target=frozen/'joystick-games/tools/macos-build.py';target.parent.mkdir();shutil.copy2(ROOT/'joystick-games/tools/macos-build.py',target)
    def git(*args):return subprocess.check_output(['git','-C',str(frozen),*args],stderr=subprocess.DEVNULL,text=True).strip()
@@ -33,6 +45,9 @@ class Provenance(unittest.TestCase):
     current=root/'qa';shutil.copytree(frozen,current)
     (current/'joystick-games/tools/macos-build.py').write_text('# QA tool revisions do not change original package provenance\n')
     result=reuse.verify_source(meta,frozen,current);self.assertEqual(result['artifactSourceCommit'],commit)
+    qq=current/'joystick-games/qq-speed/src/main.js';original_qq=qq.read_text();qq.write_text('QQ-only production mutation')
+    with self.assertRaises(AssertionError):reuse.verify_source(meta,frozen,current)
+    qq.write_text(original_qq)
     changed=current/names[0];original=changed.read_text();changed.write_text('changed production')
     with self.assertRaises(AssertionError):reuse.verify_source(meta,frozen,current)
     changed.write_text(original);extra=current/'joystick-games/shared/macos/Sources/new.swift';extra.write_text('new production')

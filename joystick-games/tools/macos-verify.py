@@ -149,6 +149,25 @@ class Check:
         # A bounded observation of the actual cached frame, not a wall-clock
         # assumption about the WKWebView render rate. No extra input snapshot.
         self.observed_button(k,True);self.observed_button(k,False)
+    def start_transition_observed(self,state,before,target):
+        owner=self.player(before);player=self.player(state)
+        return self.fresh(state,before,True) and player.get('session')==owner['session'] and player.get('controllerId')==owner['controllerId'] and player.get('buttons',{}).get('START') is True and player.get('buttonCounters',{}).get('START')==owner['buttonCounters']['START']+1 and target(state)
+    def start_transition(self,target,label,seconds=25):
+        before=self.read()
+        assert not target(before),'START target already active before input: '+label
+        if self.args.game!='cf-transport-ship':
+            self.tap('START')
+            return self.until(lambda s:self.fresh(s,before,True) and target(s),label,seconds)
+        # CF deliberately clears/quarantines semantic buttons when pausing.
+        # The consumed START frame can therefore be shorter than diagnostics.
+        # Require the actual transition plus a new raw native press in the same
+        # owner session; a neutral semantic cache alone never establishes it.
+        session=self.player(before)['session']
+        self.press('START')
+        observed=self.until(lambda state:self.start_transition_observed(state,before,target),label+' with native START counter',seconds)
+        self.release('START')
+        self.until(lambda state:self.fresh(state,observed,True) and self.player(state).get('session')==session and self.player(state).get('buttons',{}).get('START') is False and state.get('game',{}).get('controller',{}).get('buttons',{}).get('START') is False,label+' raw and semantic START released')
+        return observed
     def settle_input(self,label):
         before=self.read()
         return self.until(lambda s:self.fresh(s,before,True) and not any(s.get('game',{}).get('controller',{}).get('buttons',{}).values()),label)
@@ -193,7 +212,7 @@ class Check:
         messages=[r['message'] for r in self.report['wire'] if r['direction']=='sdk-to-game'];assert messages[0]['type']=='hello';assert [(m['key'],m['action'],m['pressed']) for m in messages[1:10]]==[(k,'sync',False) for k in KEYS]
         return {'id':self.client.identity,'nineInitialSyncs':True}
     def gameplay(self):
-        self.tap('START');start=self.until(self.playing,'Start gameplay',60);self.display();self.screenshot('playing.png')
+        start=self.start_transition(self.playing,'Start gameplay',60);self.display();self.screenshot('playing.png')
         if self.args.game=='qq-speed':
             self.observed_button('UP',True);self.until(lambda s:s['game']['player']['speed']>25,'Accelerate')
             cases=[]
@@ -223,8 +242,8 @@ class Check:
             aimed=self.until(lambda s:self.fresh(s,before_aim,True) and abs(s['game']['player']['pitch']-before_aim['game']['player']['pitch'])>.02,'CF actual pitch aim')
             self.observed_button('UP',False);self.observed_button('B',False)
             details={'before':before['game']['player'],'turn':turn['game']['player'],'moved':moved['game']['player'],'fired':fired['game']['player'],'aimed':aimed['game']['player'],'reloadJumpInputsConsumed':True,'fullRoundCompleted':False}
-        before=self.read();self.tap('START');self.until(lambda s:self.fresh(s,before,True) and self.paused(s),'START pauses');self.display();self.screenshot('paused.png')
-        before=self.read();self.tap('START');self.until(lambda s:self.fresh(s,before,True) and self.playing(s),'START resumes');return details
+        self.start_transition(self.paused,'START pauses');self.display();self.screenshot('paused.png')
+        self.start_transition(self.playing,'START resumes');return details
     def focus(self):
         baseline=self.read();session=self.player(baseline)['session'];sock=self.client.sock;cycles=[]
         def neutral(s):return not any(self.player(s).get('buttons',{}).values())
@@ -244,7 +263,7 @@ class Check:
             foreground=self.until(lambda s:self.fresh(s,suppressed) and s.get('active') and s['server']['wifiController']['inputEnabled'] and neutral(s) and (not self.graphics or self.paused(s)),'Foreground '+str(i));stable(foreground)
             self.clear()
             if self.graphics:
-                self.settle_input('Fresh released quarantine '+str(i));before=self.read();self.tap('START');self.until(lambda s:self.fresh(s,before,True) and self.playing(s),'Fresh START '+str(i))
+                self.settle_input('Fresh released quarantine '+str(i));self.start_transition(self.playing,'Fresh START '+str(i))
             cycles.append({'cycle':i+1,'samePort':True,'sameSocket':True,'heldKeysSuppressed':True,'backgroundPingAck':seq,'freshStartResumes':self.graphics})
         return {'cycles':cycles,'port':self.port,'defaultPortOccupied':self.args.occupy_default_port}
     def reconnect(self):

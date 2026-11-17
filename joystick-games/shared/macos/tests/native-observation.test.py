@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Reject stale native diagnostics even if their cached values look correct."""
-import importlib.util,json,socket,threading,time,unittest
+import copy,importlib.util,json,socket,threading,time,unittest
 from pathlib import Path
 spec=importlib.util.spec_from_file_location('macverify',Path(__file__).resolve().parents[3]/'tools/macos-verify.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
 class Observation(unittest.TestCase):
@@ -43,6 +43,20 @@ class Observation(unittest.TestCase):
   for bad in [{'status':'timeout'},dict(probe,samples=probe['samples'][:2]),dict(probe,samples=[{'vertexHighFloat':{'precision':23}}]*3),dict(probe,samples=[{'vertexHighFloat':None,'error':'script broke'}]*3)]:
    self.assertEqual(module.initialization(game,bad),'initialization_error')
   self.assertEqual(module.initialization({'stage':'error','message':'TypeError: failed'},probe),'initialization_error')
+ def test_cf_start_accepts_actual_pause_with_cleared_semantic_cache(self):
+  fixture=json.loads((Path(__file__).parent/'fixtures/cf-start-pause-44120745068.json').read_text());before=fixture['before'];after=fixture['after'];check=object.__new__(module.Check)
+  self.assertFalse(after['game']['controller']['buttons']['START'])
+  self.assertTrue(check.start_transition_observed(after,before,check.paused))
+  mutations=[('timestamp',before['timestamp']),('pollCount',before['game']['controller']['pollCount']),('session','different-session'),('controllerId','different-controller'),('count',before['input']['players'][0]['buttonCounters']['START']),('held',False),('paused',False)]
+  for field,value in mutations:
+   bad=copy.deepcopy(after)
+   if field=='timestamp':bad['timestamp']=value
+   elif field=='pollCount':bad['game']['controller']['pollCount']=value
+   elif field in ['session','controllerId']:bad['input']['players'][0][field]=value
+   elif field=='count':bad['input']['players'][0]['buttonCounters']['START']=value
+   elif field=='held':bad['input']['players'][0]['buttons']['START']=value
+   else:bad['game']['stage']='playing';bad['game']['paused']=False
+   with self.subTest(field=field):self.assertFalse(check.start_transition_observed(bad,before,check.paused))
  def test_real_sdk_barrier_drains_delayed_replies_before_disconnect(self):
   sdk_spec=importlib.util.spec_from_file_location('unchanged_sdk',module.SDK);sdk=importlib.util.module_from_spec(sdk_spec);sdk_spec.loader.exec_module(sdk)
   server=socket.socket();server.bind(('127.0.0.1',0));server.listen(1);errors=[]
