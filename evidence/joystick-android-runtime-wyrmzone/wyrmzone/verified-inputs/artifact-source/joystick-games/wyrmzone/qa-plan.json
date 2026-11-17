@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.score",
+    "gameplay.playerX",
+    "gameplay.playerZ",
+    "gameplay.heading",
+    "gameplay.fires"
+  ],
+  "steps": [
+    {
+      "name": "Start the first march",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "play"
+        }
+      ]
+    },
+    {
+      "name": "Walk forward and breathe fire",
+      "keys": [
+        "UP",
+        "A"
+      ],
+      "holdMs": 1600,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.fires",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Turn the actual dragon",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 500,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.heading",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Pause the real simulation",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume only by explicit START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}
