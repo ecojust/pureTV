@@ -1,0 +1,269 @@
+{
+  "method": "Diagnostic rebuilt host, not an original installation package runtime test",
+  "originalPackageSource": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "workflowSourceCommit": "e00e23617c43bac9d3daf62c5e5c427f5c544149",
+  "game": "quiverspire",
+  "status": "failed",
+  "gameAssetsChanged": false,
+  "gameplayVerified": false,
+  "originalAppModified": false,
+  "observations": [
+    {
+      "elapsedSeconds": 10,
+      "ready": false,
+      "active": true,
+      "gamePresent": true,
+      "startupObservation": {
+        "gameQaType": "object",
+        "readyState": "loading",
+        "records": [
+          {
+            "kind": "document-start",
+            "time": 1794944800587,
+            "values": [
+              "loading",
+              "http://127.0.0.1:60446/tv.html",
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"
+            ]
+          }
+        ],
+        "scripts": [
+          {
+            "src": "",
+            "type": ""
+          }
+        ],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"
+      }
+    },
+    {
+      "elapsedSeconds": 30,
+      "ready": true,
+      "active": true,
+      "gamePresent": true,
+      "startupObservation": {
+        "gameQaType": "object",
+        "readyState": "complete",
+        "records": [
+          {
+            "kind": "document-start",
+            "time": 1794944800587,
+            "values": [
+              "loading",
+              "http://127.0.0.1:60446/tv.html",
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"
+            ]
+          },
+          {
+            "kind": "readystatechange",
+            "time": 1794944802805,
+            "values": [
+              "interactive"
+            ]
+          },
+          {
+            "kind": "readystatechange",
+            "time": 1794944802810,
+            "values": [
+              "complete"
+            ]
+          }
+        ],
+        "scripts": [
+          {
+            "src": "",
+            "type": ""
+          }
+        ],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"
+      }
+    }
+  ],
+  "commands": [
+    {
+      "name": "sdk",
+      "argv": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "--show-sdk-path"
+      ]
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "xcrun",
+        "swiftc",
+        "--version"
+      ]
+    },
+    {
+      "name": "sign-diagnostic-copy",
+      "argv": [
+        "codesign",
+        "--force",
+        "--sign",
+        "-",
+        "--timestamp=none",
+        "/Users/runner/work/_temp/capability/quiverspire/Quiverspire Startup Diagnostic.app"
+      ]
+    }
+  ],
+  "originalHostSources": {
+    "ControllerServer.swift": {
+      "bytes": 21160,
+      "sha256": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430"
+    },
+    "GameStorage.swift": {
+      "bytes": 1714,
+      "sha256": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+    },
+    "LocalAssetServer.swift": {
+      "bytes": 13465,
+      "sha256": "1d968e721a6848d421f85d112e36d5dda716af5acfa7b36f23d27893b429ef2d"
+    },
+    "main.swift": {
+      "bytes": 20743,
+      "sha256": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1"
+    }
+  },
+  "diagnosticHostSources": {
+    "ControllerServer.swift": {
+      "bytes": 21160,
+      "sha256": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430"
+    },
+    "GameStorage.swift": {
+      "bytes": 1714,
+      "sha256": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+    },
+    "LocalAssetServer.swift": {
+      "bytes": 13465,
+      "sha256": "1d968e721a6848d421f85d112e36d5dda716af5acfa7b36f23d27893b429ef2d"
+    },
+    "main.swift": {
+      "bytes": 22496,
+      "sha256": "bed5deea19c7806b03e29d780237e1703471297d4a115758fbd2832928dcdc16"
+    }
+  },
+  "swiftVersion": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0",
+  "diagnosticHostCache": {
+    "key": "38f339e674825bf9ee8f3940c395ca543139dce5b0fe43a642cf52e3f6fdbaf7",
+    "reused": true,
+    "inputs": {
+      "sources": {
+        "ControllerServer.swift": {
+          "bytes": 21160,
+          "sha256": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430"
+        },
+        "GameStorage.swift": {
+          "bytes": 1714,
+          "sha256": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+        },
+        "LocalAssetServer.swift": {
+          "bytes": 13465,
+          "sha256": "1d968e721a6848d421f85d112e36d5dda716af5acfa7b36f23d27893b429ef2d"
+        },
+        "main.swift": {
+          "bytes": 22496,
+          "sha256": "bed5deea19c7806b03e29d780237e1703471297d4a115758fbd2832928dcdc16"
+        }
+      },
+      "architecture": "arm64",
+      "sdk": "/Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "swiftVersion": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0"
+    }
+  },
+  "diagnosticBinarySha256": "89a594eb69f82ff2cb8d23bbcee2b525c0fb9d37915e6a84d6410bd3207f32c2",
+  "webFiles": {
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 3011,
+      "sha256": "6ad417c3a9dd108176536d4143d3b98cd0cee36829eff4e662414da08538dd65"
+    },
+    "bridge.js": {
+      "bytes": 5712,
+      "sha256": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c"
+    },
+    "game-config.json": {
+      "bytes": 373,
+      "sha256": "3cbe4c837726afcfa0623133f18ac68392742053e82ab28fa305b031d545e162"
+    },
+    "tv.html": {
+      "bytes": 735399,
+      "sha256": "005c5ba0db40c3082b5e63f6d29495663de39402d607b2c2279774850bdc1116"
+    }
+  },
+  "diagnosticAppFiles": {
+    "Contents/Info.plist": {
+      "bytes": 1574,
+      "sha256": "15ddb6b2499ce2bbad0ac4772e42277ff459b638ea32c8ec774e40d14db89943"
+    },
+    "Contents/MacOS/Quiverspire": {
+      "bytes": 475824,
+      "sha256": "e84f0c8aae4daa16554321c0ce7759e5cce1d2d15836bb3dc64d02e5b883b335"
+    },
+    "Contents/PkgInfo": {
+      "bytes": 8,
+      "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0"
+    },
+    "Contents/Resources/Game.icns": {
+      "bytes": 276969,
+      "sha256": "15c16d6407686bf48c80350a14dcefe6adeada62b51358ebcdba71beceae892c"
+    },
+    "Contents/Resources/LICENSE": {
+      "bytes": 1074,
+      "sha256": "817f65ae87dcd4fc4fa968827e9056e86682096925c62b34e6c10f10597b77db"
+    },
+    "Contents/Resources/NOTICE.md": {
+      "bytes": 3011,
+      "sha256": "6ad417c3a9dd108176536d4143d3b98cd0cee36829eff4e662414da08538dd65"
+    },
+    "Contents/Resources/Web/THIRD-PARTY-NOTICES.txt": {
+      "bytes": 3011,
+      "sha256": "6ad417c3a9dd108176536d4143d3b98cd0cee36829eff4e662414da08538dd65"
+    },
+    "Contents/Resources/Web/bridge.js": {
+      "bytes": 5712,
+      "sha256": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c"
+    },
+    "Contents/Resources/Web/game-config.json": {
+      "bytes": 373,
+      "sha256": "3cbe4c837726afcfa0623133f18ac68392742053e82ab28fa305b031d545e162"
+    },
+    "Contents/Resources/Web/tv.html": {
+      "bytes": 735399,
+      "sha256": "005c5ba0db40c3082b5e63f6d29495663de39402d607b2c2279774850bdc1116"
+    },
+    "Contents/_CodeSignature/CodeResources": {
+      "bytes": 3850,
+      "sha256": "adf10959e6537c4b2d1337f932e25189f2281804bad04c044d62ae19811e8993"
+    }
+  },
+  "diagnosticInfoPlist": {
+    "CFBundleDisplayName": "Quiverspire Startup Diagnostic",
+    "CFBundleExecutable": "Quiverspire",
+    "CFBundleIconFile": "Game",
+    "CFBundleIdentifier": "com.ecojust.joystick.quiverspire.startupdiagnostic",
+    "CFBundleName": "Quiverspire Startup Diagnostic",
+    "CFBundlePackageType": "APPL",
+    "CFBundleShortVersionString": "0.1.0",
+    "CFBundleVersion": "1",
+    "LSMinimumSystemVersion": "11.0",
+    "NSAppTransportSecurity": {
+      "NSAllowsLocalNetworking": true
+    },
+    "NSBonjourServices": [
+      "_puretv._tcp"
+    ],
+    "NSHighResolutionCapable": true,
+    "NSHumanReadableCopyright": "Upstream authors; pureTV controller adaptation. See bundled source and license notices.",
+    "NSLocalNetworkUsageDescription": "Connect the pureTV Wi-Fi controller to this game on your Mac.",
+    "NSPrincipalClass": "NSApplication",
+    "NSSupportsAutomaticGraphicsSwitching": true,
+    "PureTVStorageKeys": [
+      "quiverspire-v1"
+    ],
+    "PureTVUpstreamAttribution": "https://github.com/triptych/web-games-andrew"
+  },
+  "diagnosticPreferencesDomain": "com.ecojust.joystick.startupdiagnostic.quiverspire.44159596612.arm64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/workflow-source/joystick-games/qa/tools/mac-startup-diagnostic.py\", line 132, in main\n    assert len(report['observations']) == 3, 'Startup state observations are missing'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Startup state observations are missing\n"
+}

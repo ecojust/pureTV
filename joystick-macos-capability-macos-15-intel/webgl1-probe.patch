@@ -1,0 +1,13 @@
+--- unchanged-b15-webgl2.swift
++++ separate-webgl1-probe.swift
+@@ -39,8 +39,8 @@
+           const result={status:'running',url:location.href,userAgent:navigator.userAgent,samples};
+           window.__probeResult=result;
+           let gl;
+-          try { gl=canvas.getContext('webgl2'); } catch(error) { result.contextError=String(error); }
+-          result.webgl2ContextCreated=!!gl;
++          try { gl=canvas.getContext('webgl'); } catch(error) { result.contextError=String(error); }
++          result.webgl1ContextCreated=!!gl;
+           if(!gl){result.status='complete';return;}
+           const sample=()=>{
+             const value={};
