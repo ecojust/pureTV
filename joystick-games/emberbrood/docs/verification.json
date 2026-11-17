@@ -1,0 +1,72 @@
+{
+  "status": "source-and-browser-verified",
+  "upstreamModelChecks": 31,
+  "buildCheck": true,
+  "offline": true,
+  "browserReports": [
+    "browser-attempt-4-960/report.json",
+    "browser-attempt-5-1280/report.json"
+  ],
+  "renderer": "dom",
+  "browserGraphics": "Chromium --disable-gpu; original DOM and Canvas2D sprite renderer",
+  "resolutions": [
+    [
+      960,
+      540
+    ],
+    [
+      1280,
+      720
+    ]
+  ],
+  "visualReview": "Original pixel-art UI retained. Short-screen battle cards use horizontal layouts so the observed 960 first battle shows enemy name/attributes, ally HP, log and six commands together. Focus stays within the battle scroll region when commands rebuild. Both-size tests navigate normally from Guard back to an enemy card and assert the focused command and enemy name rectangles are fully inside the scroll viewport. Larger content/maps may still scroll; no claim that every offscreen item is simultaneously visible.",
+  "validated": [
+    "original seeded world and roster initialization",
+    "seven authored introduction confirmations and actual travel to Low Fields",
+    "original random encounter and guard round",
+    "pause freezes actual gameplay and original UI/audio scheduler",
+    "focus cancellation",
+    "disconnect and reconnect remain paused",
+    "single native snapshot per RAF",
+    "no external runtime requests",
+    "normal directional scroll/focus returns to fully readable enemy name and battle commands"
+  ],
+  "failureHistory": [
+    {
+      "report": "browser-attempt-1-960/report.json",
+      "cause": "Test expected round > 1 after first original round; readonly snapshot round=1,state=input. Corrected predicate >=1."
+    },
+    {
+      "reports": [
+        "browser-attempt-2-960/report.json",
+        "browser-attempt-3-1280/report.json"
+      ],
+      "cause": "Input tests passed, but independent visual review found 960 thumbnail retained middle scroll position and clipped enemy name after command DOM rebuilt. Old full-visibility claim withdrawn. Battle-scoped focus and compact short-screen cards implemented; new byte-bound reports above replace those visuals."
+    }
+  ],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "nativeAndroidTested": false,
+  "nativeMacTested": false,
+  "signedApk": false,
+  "files": {
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 1469,
+      "sha256": "bc6c8584c13cecb6812568b739382d7e0e25aaeecaf14ad6b55f39286a281533"
+    },
+    "tv.html": {
+      "bytes": 264060,
+      "sha256": "a61fa27215ba53e2b89ee7cd93c920da6a5bf030ed6d98124d228ffb6e9df741"
+    }
+  },
+  "coarsePointerVerification": {
+    "hasTouch": true,
+    "mediaQuery": "(pointer: coarse)",
+    "productionBytesChanged": false,
+    "reports": [
+      "browser-attempt-6-coarse-960/report.json",
+      "browser-attempt-7-coarse-1280/report.json"
+    ],
+    "result": "passed original normal-input flow including battle, pause, blur, disconnect/reconnect and two-size screenshot review; no touch deck exists"
+  }
+}

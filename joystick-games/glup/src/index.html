@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>GLUP</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#10141c">
+<meta name="description" content="GLUP: plataformas en pixel art. Nila recorre el pantano con Bigotes, un pez gato que sorbe caracoles, cajas y piedras y los escupe.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GLUP">
+<link rel="stylesheet" href="style.css?v=18">
+</head>
+<body>
+<main id="shell" aria-label="GLUP">
+  <div id="screen"><canvas id="c" width="320" height="180" aria-label="GLUP. Nila y su pez gato Bigotes cruzan el pantano."></canvas></div>
+  <nav id="touch-top" class="touch-only" aria-label="Menú">
+    <button type="button" data-act="pause" aria-label="Pausa"><canvas width="16" height="16"></canvas></button>
+    <button type="button" id="touch-sound" aria-label="Sonido" aria-pressed="false"><canvas width="16" height="16"></canvas></button>
+    <button type="button" id="touch-fs" aria-label="Pantalla completa"><canvas width="16" height="16"></canvas></button>
+  </nav>
+  <button type="button" id="update" hidden aria-label="Hay una versión nueva: toca para actualizar"><canvas width="128" height="14"></canvas></button>
+  <canvas id="hud-ext" class="touch-only" width="64" height="60" aria-hidden="true"></canvas>
+  <canvas id="banda" class="touch-only" width="130" height="200" aria-hidden="true"></canvas>
+  <button type="button" id="empezar" class="touch-only" aria-label="Jugar"><canvas width="112" height="40"></canvas></button>
+  <canvas id="touch-fx" class="touch-only" aria-hidden="true"></canvas>
+  <div id="girar" hidden aria-label="Gira el móvil: se juega en horizontal"><canvas width="200" height="260"></canvas></div>
+  <canvas id="rotate-hint" class="touch-only" width="104" height="18" aria-hidden="true"></canvas>
+  <div id="stick-zone" class="touch-only" aria-label="Cruceta: arrastra el pulgar">
+    <div id="stick"><canvas class="base" width="66" height="66"></canvas><canvas class="knob" width="31" height="31"></canvas></div>
+  </div>
+  <div id="touch-buttons" class="touch-only" aria-label="Acciones">
+    <button type="button" data-act="up" class="talk" aria-label="Hablar"><canvas width="56" height="20"></canvas></button>
+    <button type="button" data-act="puff" class="act puff" aria-label="Soplo"><canvas width="31" height="31"></canvas></button>
+    <button type="button" data-act="fish" class="act fish" aria-label="Bigotes: mantén para sorber, suelta para escupir"><canvas width="42" height="42"></canvas></button>
+    <button type="button" data-act="jump" class="act jump" aria-label="Salto"><canvas width="42" height="42"></canvas></button>
+  </div>
+</main>
+<div id="hint" hidden>Flechas o WASD · Z salta (otra vez en el aire: aleteo) · X: mantén para sorber, pulsa para escupir · C: soplar · ↑ apunta arriba · ↓ agacha, desliza, suelta; ↓ y Z: planchazo · Esc pausa · M sonido</div>
+<script>
+(function () {
+  const version = location.protocol === 'file:' ? Date.now() : '54';
+  const niveles = ['01-embarcadero', '02-juncos', '03-raices', '04-molino', '05-muelle', '06-turbera', '07-cueva', '08-rio', '09-nido'].map(n => 'niveles/' + n + '.js');
+  // The songs: one file each in musica/ (see musica/LEEME.md); add new ones here and in sw.js.
+  const musica = ['marsh', 'dock', 'omen', 'sad', 'march', 'victoria', 'alba', 'creditos', 'heron', 'heron2', 'heron3', 'turbera', 'cueva', 'rio', 'juncos', 'raices', 'molino', 'muelle'].map(n => 'musica/' + n + '.js');
+  for (const src of ['art.js', 'mundo.js', 'audio.js', ...musica, 'levels.js', ...niveles, 'cine.js', 'titulo.js', 'mapa.js', 'hud.js', 'aprende.js', 'letra.js', 'maestros.js', 'barca.js', 'victoria.js', 'garza.js', 'final.js', 'gramola.js', 'pausa.js', 'farol.js', 'game.js']) document.write('<script src="' + src + '?v=' + version + '"><\/script>');
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !location.search.includes('escena')) {
+    // Look for a new version on start, whenever the app comes back to the front, and every 20 minutes.
+    addEventListener('load', () => navigator.serviceWorker.register('sw.js').then(r => {
+      r.update(); setInterval(() => r.update(), 20 * 60 * 1000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) r.update(); });
+    }).catch(() => {}));
+    // When one takes over, a tag at the top offers it: a tap reloads (never by surprise in the middle of things).
+    const had = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && typeof Game !== 'undefined') Game.updateReady(); });
+  }
+})();
+</script>
+</body>
+</html>
