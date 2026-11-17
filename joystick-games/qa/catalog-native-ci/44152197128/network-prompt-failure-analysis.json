@@ -1,0 +1,18 @@
+{
+  "status": "failed",
+  "sourceCommit": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "qaSourceCommit": "44eec802f9ba270f38b8b19a1adc594c1bd8de6e",
+  "runId": 44152197128,
+  "originalEvidenceFilesVerified": 35,
+  "cause": "The existing CI-only network prompt helper accepted only the former CF/QQ application names. The new applications stayed behind UserNotificationCenter with active=false and Bonjour registering.",
+  "observedGames": [
+    "sugarplum-drop",
+    "starblazer-86",
+    "popgun-pip"
+  ],
+  "packageVerification": "All three original ZIP/DMG and copied installed file sets/signatures passed on the native Intel runner.",
+  "initialGameObservation": "All three Canvas snapshots had frames/pollCount advancing and no JS errors; no gameplay/visual success is claimed because the initialization gate never became foreground-active.",
+  "fixScope": "Read the current verified installed Info.plist exact app names; accept only that app or Python network prompts on disposable GitHub macOS runners. No global permissions disable, game state writes, app recompilation or graphics waiver.",
+  "helperNotPackaged": "macos-build.py copies Web assets, notices, Info.plist, icon and compiled Sources/*.swift into the app. shared/macos/tools/allow-local-network.py is executed only by the QA verifier.",
+  "originalPackageBytesRetained": true
+}

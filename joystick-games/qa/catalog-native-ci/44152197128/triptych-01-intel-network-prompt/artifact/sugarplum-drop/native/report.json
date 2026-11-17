@@ -1,0 +1,415 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "44eec802f9ba270f38b8b19a1adc594c1bd8de6e",
+  "artifactSourceCommit": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "artifactRunId": "44150598155",
+  "startedAt": "2026-11-17T18:52:24.192782+00:00",
+  "game": "sugarplum-drop",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "45f19d34ebf2c2e8b8bf5349670ec91730357793e60982d249b13797a2cbe828",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/Sources/main.swift": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/sugarplum-drop/qa-plan.json": "f0ee75bc6ea2519e1e6df27d64c1134b49957736c2f1c0faf4144bc8056e2b09",
+    "joystick-games/tools/qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "joystick-games/tools/macos-build.py": "1a0b81f2c712aff665be692f677573fa54b7466d6484a563588ea672b6ed2e0a",
+    "joystick-games/catalog-registry.json": "a34fc2e2892b3f5962e1ba2b45b48afb8358cc9d85728320a786805f4f55c30a",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "canvas2d",
+    "pauseStablePaths": [
+      "gameplay.tick",
+      "gameplay.score",
+      "gameplay.aimX",
+      "gameplay.drops"
+    ],
+    "steps": [
+      {
+        "name": "Start a candy jar",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      },
+      {
+        "name": "Move the actual dropper",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 450,
+        "expect": [
+          {
+            "path": "gameplay.aimX",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Drop a treat into the physics simulation",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.drops",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Pause the jar",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Resume explicitly",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      }
+    ],
+    "storageRestartRequired": true
+  },
+  "acceptedRenderers": [
+    "canvas2d"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "a585a5e5ee988540d1bc0ce80dfbc8ece090a57dc0acd8aeae2c8fb508169f82",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.sugarplum-drop.4292697e1fac435c8b4144cfde0249e1",
+    "reusedAcrossRestartOnly": true
+  },
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 365, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 168, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": false, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"Sugarplum Drop\", \"url\": \"http://127.0.0.1:61439/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.apple.UserNotificationCenter\", \"name\": \"UserNotificationCenter\"}, \"game\": {\"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": false, \"info\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"sugarplum-drop.v1\", \"sugarplum-drop.v1.settings\", \"sugarplum-drop.v1.best\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.11\"], \"inputEnabled\": false, \"port\": 63485, \"serviceName\": \"糖梅落落\", \"state\": \"registering\"}}, \"inputAvailable\": true, \"native\": true, \"players\": [], \"pollCount\": 2406, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"\"}, \"errors\": [], \"frames\": 2406, \"game\": \"sugarplum-drop\", \"gameplay\": {\"aimX\": 9.66, \"bodies\": [{\"id\": 56, \"tier\": 6, \"x\": 8.695873127211001, \"y\": 12.7}, {\"id\": 77, \"tier\": 5, \"x\": 6.306220658681866, \"y\": 12.9}, {\"id\": 117, \"tier\": 4, \"x\": 0.92, \"y\": 10.527869769240489}, {\"id\": 125, \"tier\": 3, \"x\": 9.259999176859715, \"y\": 10.743459180136282}, {\"id\": 132, \"tier\": 7, \"x\": 2.3825177626446514, \"y\": 12.48}, {\"id\": 135, \"tier\": 3, \"x\": 4.6697129211623585, \"y\": 12.058849313010725}, {\"id\": 137, \"tier\": 2, \"x\": 4.354118296682352, \"y\": 13.38}, {\"id\": 138, \"tier\": 2, \"x\": 3.880205728007425, \"y\": 10.951526918209343}, {\"id\": 144, \"tier\": 2, \"x\": 5.774199719780001, \"y\": 11.266959983019627}, {\"id\": 147, \"tier\": 5, \"x\": 7.392653345508952, \"y\": 10.685762854066263}, {\"id\": 149, \"tier\": 3, \"x\": 2.6989589813939836, \"y\": 10.24258669305599}, {\"id\": 151, \"tier\": 4, \"x\": 5.025184973273375, \"y\": 9.921651069801046}, {\"id\": 152, \"tier\": 2, \"x\": 3.635987584500671, \"y\": 9.257022891662224}, {\"id\": 154, \"tier\": 1, \"x\": 9.284307170114785, \"y\": 9.537579292174252}], \"drops\": 84, \"merges\": 70, \"score\": 694, \"screen\": \"title\", \"tick\": 80.85000000001041, \"topTier\": 7}, \"paused\": false, \"renderer\": \"canvas2d\", \"stage\": \"menu\", \"webglVersion\": null}, \"input\": {\"connections\": 0, \"inputEnabled\": false, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 3, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 3}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"sugarplum-drop.v1\", \"sugarplum-drop.v1.settings\", \"sugarplum-drop.v1.best\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.11\"], \"inputEnabled\": false\n",
+  "lastState": {
+    "active": false,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "Sugarplum Drop",
+      "url": "http://127.0.0.1:61439/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.apple.UserNotificationCenter",
+      "name": "UserNotificationCenter"
+    },
+    "game": {
+      "controller": {
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false,
+        "connected": false,
+        "info": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "storageKeys": [
+            "sugarplum-drop.v1",
+            "sugarplum-drop.v1.settings",
+            "sugarplum-drop.v1.best"
+          ],
+          "storageMaxBytes": 1048576,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.11"
+            ],
+            "inputEnabled": false,
+            "port": 63485,
+            "serviceName": "糖梅落落",
+            "state": "registering"
+          }
+        },
+        "inputAvailable": true,
+        "native": true,
+        "players": [],
+        "pollCount": 2406,
+        "pressed": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "released": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "source": ""
+      },
+      "errors": [],
+      "frames": 2406,
+      "game": "sugarplum-drop",
+      "gameplay": {
+        "aimX": 9.66,
+        "bodies": [
+          {
+            "id": 56,
+            "tier": 6,
+            "x": 8.695873127211001,
+            "y": 12.7
+          },
+          {
+            "id": 77,
+            "tier": 5,
+            "x": 6.306220658681866,
+            "y": 12.9
+          },
+          {
+            "id": 117,
+            "tier": 4,
+            "x": 0.92,
+            "y": 10.527869769240489
+          },
+          {
+            "id": 125,
+            "tier": 3,
+            "x": 9.259999176859715,
+            "y": 10.743459180136282
+          },
+          {
+            "id": 132,
+            "tier": 7,
+            "x": 2.3825177626446514,
+            "y": 12.48
+          },
+          {
+            "id": 135,
+            "tier": 3,
+            "x": 4.6697129211623585,
+            "y": 12.058849313010725
+          },
+          {
+            "id": 137,
+            "tier": 2,
+            "x": 4.354118296682352,
+            "y": 13.38
+          },
+          {
+            "id": 138,
+            "tier": 2,
+            "x": 3.880205728007425,
+            "y": 10.951526918209343
+          },
+          {
+            "id": 144,
+            "tier": 2,
+            "x": 5.774199719780001,
+            "y": 11.266959983019627
+          },
+          {
+            "id": 147,
+            "tier": 5,
+            "x": 7.392653345508952,
+            "y": 10.685762854066263
+          },
+          {
+            "id": 149,
+            "tier": 3,
+            "x": 2.6989589813939836,
+            "y": 10.24258669305599
+          },
+          {
+            "id": 151,
+            "tier": 4,
+            "x": 5.025184973273375,
+            "y": 9.921651069801046
+          },
+          {
+            "id": 152,
+            "tier": 2,
+            "x": 3.635987584500671,
+            "y": 9.257022891662224
+          },
+          {
+            "id": 154,
+            "tier": 1,
+            "x": 9.284307170114785,
+            "y": 9.537579292174252
+          }
+        ],
+        "drops": 84,
+        "merges": 70,
+        "score": 694,
+        "screen": "title",
+        "tick": 80.85000000001041,
+        "topTier": 7
+      },
+      "paused": false,
+      "renderer": "canvas2d",
+      "stage": "menu",
+      "webglVersion": null
+    },
+    "input": {
+      "connections": 0,
+      "inputEnabled": false,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 3,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 3
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "sugarplum-drop.v1",
+        "sugarplum-drop.v1.settings",
+        "sugarplum-drop.v1.best"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.11"
+        ],
+        "inputEnabled": false,
+        "port": 63485,
+        "serviceName": "糖梅落落",
+        "state": "registering"
+      }
+    },
+    "storage": {
+      "current": {
+        "sugarplum-drop.v1": null,
+        "sugarplum-drop.v1.best": null,
+        "sugarplum-drop.v1.settings": null
+      },
+      "initial": {
+        "sugarplum-drop.v1": null,
+        "sugarplum-drop.v1.best": null,
+        "sugarplum-drop.v1.settings": null
+      },
+      "origin": "http://127.0.0.1:61439"
+    },
+    "timestamp": 1794941634.178111
+  },
+  "finishedAt": "2026-11-17T18:53:54.951250+00:00"
+}

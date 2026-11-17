@@ -57,7 +57,7 @@ jobs:
           REQUESTED_BATCHES: ${{ inputs.batches }}
         run: |
           set -euo pipefail
-          for test_name in catalog-reuse catalog-tools native-observation; do
+          for test_name in catalog-reuse catalog-tools native-observation local-network-prompts; do
             python3 "joystick-games/shared/macos/tests/$test_name.test.py" 2>&1 | tee "$RUNNER_TEMP/$test_name-tests.log"
           done
           python3 joystick-games/tools/macos-catalog-reuse.py plan \
@@ -76,14 +76,14 @@ jobs:
           registry_path=Path('joystick-games/catalog-registry.json');registry=json.loads(registry_path.read_text())
           assert registry_path.read_bytes()==(Path('artifact-source')/registry_path).read_bytes(), 'Registry must match original packages'
           selected=provenance['batches'];games=provenance['games'];renderers={};test_scripts={}
-          paths=[registry_path,Path('.github/workflows/joystick-catalog-macos-runtime.yml'),Path('joystick-games/tools/qa-plan.py'),Path('puretv-joystick/joystick_sdk.py'),*sorted(Path('joystick-games/tools').glob('macos-*.py'))]
+          paths=[Path('joystick-games/shared/macos/tools/allow-local-network.py'),registry_path,Path('.github/workflows/joystick-catalog-macos-runtime.yml'),Path('joystick-games/tools/qa-plan.py'),Path('puretv-joystick/joystick_sdk.py'),*sorted(Path('joystick-games/tools').glob('macos-*.py'))]
           for game in games:
               assert game in registry['games'] and game not in ['cf-transport-ship','qq-speed']
               plan_path=Path('joystick-games')/game/'qa-plan.json';renderers[game]=qa_plan.accepted_renderers(qa_plan.load_plan(plan_path));paths.append(plan_path)
               test_scripts[game]=json.loads((Path('artifact-source/joystick-games')/game/'package.json').read_text()).get('scripts',{}).get('test') or None
-          paths += [Path('joystick-games/shared/macos/tests')/(name+'.test.py') for name in ['catalog-reuse','catalog-tools','native-observation']]
-          paths += [Path('joystick-games/shared/macos/tests/fixtures/catalog-webgl-versions.json')]
-          for name in ['catalog-reuse','catalog-tools','native-observation']:shutil.copy2(Path(os.environ['RUNNER_TEMP'])/(name+'-tests.log'),out/(name+'-tests.log'))
+          paths += [Path('joystick-games/shared/macos/tests')/(name+'.test.py') for name in ['catalog-reuse','catalog-tools','native-observation','local-network-prompts']]
+          paths += [Path('joystick-games/shared/macos/tests/fixtures/catalog-webgl-versions.json'),Path('joystick-games/shared/macos/tests/fixtures/catalog-network-prompts-44152197128.json')]
+          for name in ['catalog-reuse','catalog-tools','native-observation','local-network-prompts']:shutil.copy2(Path(os.environ['RUNNER_TEMP'])/(name+'-tests.log'),out/(name+'-tests.log'))
           files={}
           for p in paths:
               data=p.read_bytes();assert data==subprocess.check_output(['git','show',qa_source+':'+p.as_posix()]), 'Uncommitted QA input'
@@ -283,6 +283,7 @@ jobs:
                   frozen_inputs={**meta['inputFiles'],**plan['inputFiles']}
                   for filename,checksum in report['sourceHashes'].items():assert filename in frozen_inputs and checksum==frozen_inputs[filename]['sha256'], filename
                   assert matches(evidence/mode/'executed-macos-verify.py',plan['inputFiles']['joystick-games/tools/macos-verify.py'])
+                  assert matches(evidence/mode/'executed-allow-local-network.py',plan['inputFiles']['joystick-games/shared/macos/tools/allow-local-network.py'])
               count+=1
           assert count==len(plan['games'])
           files={}

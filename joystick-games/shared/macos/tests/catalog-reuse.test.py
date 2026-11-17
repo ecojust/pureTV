@@ -64,6 +64,7 @@ class CatalogReuse(unittest.TestCase):
             frozen.mkdir()
             registry = {'schemaVersion': 1, 'games': {'sample': {'packageName': 'com.example.sample', 'appName': 'Sample', 'executable': 'Sample', 'initials': 'S'}}, 'batches': {'sample-01': ['sample']}}
             names = ['joystick-games/shared/macos/Sources/main.swift', 'joystick-games/shared/macos/tests/example.test.py',
+                     'joystick-games/shared/macos/tools/allow-local-network.py',
                      'joystick-games/shared/web/input.js', 'joystick-games/sample/src/main.js', 'joystick-games/sample/dist/tv.html',
                      'joystick-games/sample/game.json', 'joystick-games/sample/qa-plan.json', 'puretv-joystick/joystick_sdk.py',
                      'joystick-games/tools/qa-plan.py', 'joystick-games/tools/macos-verify.py', 'joystick-games/tools/macos-packages.py',
@@ -92,12 +93,13 @@ class CatalogReuse(unittest.TestCase):
             (current / 'joystick-games/tools/macos-catalog-reuse.py').write_text('new read-only package audit\n')
             (current / '.github/workflows/joystick-catalog-macos-runtime.yml').write_text('reuse original package\n')
             (current / 'joystick-games/shared/macos/tests/example.test.py').write_text('QA regression\n')
+            (current / 'joystick-games/shared/macos/tools/allow-local-network.py').write_text('Observe current verified test app network prompt\n')
             qa_source = commit(current, 'QA only')
             env = {'ARTIFACT_SOURCE_COMMIT': source, 'ARTIFACT_SOURCE_RUN': '123', 'ARTIFACT_SOURCE_ATTEMPT': '1', 'GITHUB_SHA': qa_source}
             with patch.dict(os.environ, env):
                 verified = reuse.verify_source(meta, frozen, current)
                 self.assertTrue(verified['originalPackageBytesReused'])
-                self.assertEqual(len(verified['changedQaFiles']), 4)
+                self.assertEqual(len(verified['changedQaFiles']), 5)
             for name in ['joystick-games/sample/src/main.js', 'joystick-games/shared/macos/Sources/main.swift',
                          'puretv-joystick/joystick_sdk.py', 'joystick-games/sample/game.json',
                          'joystick-games/sample/dist/injected.js']:

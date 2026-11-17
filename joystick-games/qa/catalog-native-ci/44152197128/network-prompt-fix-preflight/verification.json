@@ -1,0 +1,60 @@
+{
+  "status": "passed",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-network-prompts.test.py"
+      ],
+      "exitCode": 0,
+      "log": "local-network-prompts.test.py.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-reuse.test.py"
+      ],
+      "exitCode": 0,
+      "log": "catalog-reuse.test.py.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/native-observation.test.py"
+      ],
+      "exitCode": 0,
+      "log": "native-observation.test.py.log"
+    }
+  ],
+  "inputFiles": {
+    "joystick-games/shared/macos/tools/allow-local-network.py": {
+      "bytes": 4623,
+      "sha256": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03"
+    },
+    "joystick-games/tools/macos-verify.py": {
+      "bytes": 43318,
+      "sha256": "f4aad5f2af7d9255a6beb3b898daa290f2209df26b29db5db7e15865ddca8904"
+    },
+    "joystick-games/tools/macos-catalog-reuse.py": {
+      "bytes": 9063,
+      "sha256": "e8f04fc2bc1e333f5d718089c97b3b6f8211a3e515f5f41c6cdd4161e9fb3bfc"
+    },
+    "joystick-games/shared/macos/tests/catalog-reuse.test.py": {
+      "bytes": 8052,
+      "sha256": "ee6f983b9e6ac4c71c4a067e88745ca42cd21c8f2385ac5c6a63cee5385dd127"
+    },
+    "joystick-games/shared/macos/tests/local-network-prompts.test.py": {
+      "bytes": 3028,
+      "sha256": "6c03a062de0ab37233be2fab90bf385f8e554869781d37a23a6f3bcae7c7076e"
+    },
+    "joystick-games/shared/macos/tests/fixtures/catalog-network-prompts-44152197128.json": {
+      "bytes": 1646,
+      "sha256": "72487cb4986f1644758099d97a55a8e77287e75582386f5eaf582248738fcd02"
+    }
+  },
+  "actualPermissionPromptHandledByThisPreflight": false,
+  "actualMacOsascriptExecuted": false,
+  "nativePackagesRebuilt": false,
+  "originalFailuresRetained": true,
+  "scope": "Exact original prompt text predicate, installed Info.plist identity, unrelated app/permission rejection, narrow QA-only source reuse and existing observation regressions. Real AppleScript/permission handling requires the next Mac CI."
+}
