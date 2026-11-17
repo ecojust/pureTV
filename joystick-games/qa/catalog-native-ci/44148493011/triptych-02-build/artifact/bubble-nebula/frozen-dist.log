@@ -1,0 +1,19 @@
+
+> bubble-nebula@0.1.0 build:check
+> node build.mjs --check
+
+▲ [WARNING] The CommonJS "module" variable is treated as a global variable in an ECMAScript module and may not work as expected [commonjs-variable-in-esm]
+
+    ../shared/web/controller-clients.js:125:55:
+      125 │ ...defined' && module.exports) module.exports = root.PureTVContro...
+          ╵                                ~~~~~~
+
+  This file is considered to be an ECMAScript module because the enclosing "package.json" file sets the type of this file to "module":
+
+    ../shared/web/package.json:1:23:
+      1 │ {"private":true,"type":"module"}
+        ╵                        ~~~~~~~~
+
+  Node's package format requires that CommonJS files in a "type": "module" package use the ".cjs" file extension.
+
+Reproducible build verified: bubble-nebula

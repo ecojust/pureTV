@@ -1,0 +1,33 @@
+{
+  "originalSourceCommit": "127d108053297e2ae5f2b6e14aa20550ae97dae4",
+  "originalRunId": 44148493011,
+  "originalRunAttempt": 1,
+  "originalJobId": 134270310121,
+  "originalJobConclusion": "failure",
+  "exportRunId": 44150207878,
+  "exportSourceCommit": "e08d72022a3a7c65cce3a370f0dc07714d38cfec",
+  "exportCommit": "c8238f1f5932f01cd12f277371c2c82ca1fd32e9",
+  "originalEvidenceFilesVerified": 26,
+  "failedSharedTest": "reuse-source.test.py",
+  "cause": "The test fixture used /var/folders but the imported builder resolved its __file__ under /private/var/folders; relative_to rejected the mismatched roots.",
+  "fixScope": "Resolve only the temporary test fixture root. Production source/symlink checks unchanged.",
+  "localRegression": "Original failure reproduced under a symlinked TMPDIR; all 4 tests pass with both resolved and symlinked TMPDIR after fix.",
+  "actualMacFixVerified": false,
+  "gamePackagesBuilt": false,
+  "passedNativeFoundationTests": [
+    "ControllerServerTests",
+    "GameStorageTests"
+  ],
+  "passedOriginalGameTests": [
+    "bubble-nebula",
+    "phosphor-patrol",
+    "wyrmzone",
+    "quiverspire"
+  ],
+  "passedFrozenDistChecks": [
+    "bubble-nebula",
+    "phosphor-patrol",
+    "wyrmzone",
+    "quiverspire"
+  ]
+}

@@ -32,7 +32,9 @@ class Provenance(unittest.TestCase):
    with self.assertRaises(AssertionError):reuse.validate_previous_qq(r,j,a)
  def test_source_and_payload_freeze_allow_only_new_qa(self):
   with tempfile.TemporaryDirectory() as directory:
-   root=Path(directory);frozen=root/'original';frozen.mkdir();game='cf-transport-ship'
+   # macOS exposes its temporary directory through /var -> /private/var.
+   # Match the fixture builder's resolved __file__ root; source symlinks remain rejected.
+   root=Path(directory).resolve();frozen=root/'original';frozen.mkdir();game='cf-transport-ship'
    names=['joystick-games/shared/macos/Sources/main.swift','joystick-games/shared/macos/Web/bridge.js','joystick-games/shared/web/input.js',f'joystick-games/{game}/src/main.js',f'joystick-games/{game}/dist/tv.html',f'joystick-games/{game}/game.json','puretv-joystick/joystick_sdk.py','.github/workflows/joystick-games-macos.yml']
    names.extend(['joystick-games/qq-speed/src/main.js','joystick-games/qq-speed/dist/tv.html','joystick-games/qq-speed/game.json'])
    for name in names:p=frozen/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(name+'\n')

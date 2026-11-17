@@ -1,0 +1,302 @@
+{
+  "sourceCommit": "127d108053297e2ae5f2b6e14aa20550ae97dae4",
+  "batch": "triptych-02",
+  "status": "failed",
+  "shared": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "joystick-games/shared/macos/tests/web-bridge.test.mjs"
+      ],
+      "status": "passed",
+      "log": "shared/00.log",
+      "startedAt": "2026-11-17T18:35:46.394165+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/build-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/01.log",
+      "startedAt": "2026-11-17T18:35:46.544484+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-tools.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/02.log",
+      "startedAt": "2026-11-17T18:35:46.913956+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/native-observation.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/03.log",
+      "startedAt": "2026-11-17T18:35:47.214769+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/reuse-source.test.py"
+      ],
+      "status": "failed",
+      "log": "shared/04.log",
+      "startedAt": "2026-11-17T18:35:47.872331+00:00",
+      "returncode": 1
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/ControllerServer.swift",
+        "joystick-games/shared/macos/tests/ControllerServerTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/05.log",
+      "startedAt": "2026-11-17T18:35:48.269601+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/06.log",
+      "startedAt": "2026-11-17T18:36:01.807531+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/GameStorage.swift",
+        "joystick-games/shared/macos/tests/GameStorageTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/07.log",
+      "startedAt": "2026-11-17T18:36:01.871894+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/08.log",
+      "startedAt": "2026-11-17T18:36:02.857135+00:00",
+      "returncode": 0
+    }
+  ],
+  "games": [
+    {
+      "game": "bubble-nebula",
+      "status": "failed",
+      "originalTestScript": "node src/dev/simtest.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "bubble-nebula/dependencies.log",
+          "startedAt": "2026-11-17T18:36:02.923945+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "bubble-nebula/original-tests.log",
+          "startedAt": "2026-11-17T18:36:06.805284+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "bubble-nebula/frozen-dist.log",
+          "startedAt": "2026-11-17T18:36:24.684500+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "status": "skipped",
+        "reason": "Shared or game source regressions failed; original reports retained"
+      }
+    },
+    {
+      "game": "phosphor-patrol",
+      "status": "failed",
+      "originalTestScript": "node src/dev/simtest.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "phosphor-patrol/dependencies.log",
+          "startedAt": "2026-11-17T18:36:25.296745+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "phosphor-patrol/original-tests.log",
+          "startedAt": "2026-11-17T18:36:26.703105+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "phosphor-patrol/frozen-dist.log",
+          "startedAt": "2026-11-17T18:36:29.553454+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "status": "skipped",
+        "reason": "Shared or game source regressions failed; original reports retained"
+      }
+    },
+    {
+      "game": "wyrmzone",
+      "status": "failed",
+      "originalTestScript": "node src/dev/simtest.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "wyrmzone/dependencies.log",
+          "startedAt": "2026-11-17T18:36:29.980387+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "wyrmzone/original-tests.log",
+          "startedAt": "2026-11-17T18:36:31.198026+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "wyrmzone/frozen-dist.log",
+          "startedAt": "2026-11-17T18:36:33.097967+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "status": "skipped",
+        "reason": "Shared or game source regressions failed; original reports retained"
+      }
+    },
+    {
+      "game": "quiverspire",
+      "status": "failed",
+      "originalTestScript": "node src/dev/simtest.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "quiverspire/dependencies.log",
+          "startedAt": "2026-11-17T18:36:33.560566+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "quiverspire/original-tests.log",
+          "startedAt": "2026-11-17T18:36:34.939852+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "quiverspire/frozen-dist.log",
+          "startedAt": "2026-11-17T18:36:55.796563+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "status": "skipped",
+        "reason": "Shared or game source regressions failed; original reports retained"
+      }
+    }
+  ]
+}

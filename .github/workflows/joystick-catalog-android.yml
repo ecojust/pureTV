@@ -106,6 +106,8 @@ jobs:
           npm run build:check 2>&1 | tee "$RUNNER_TEMP/web-build-check.log"
           python3 ../qa/android/test_runner.py 2>&1 | tee "$RUNNER_TEMP/qa-contract-tests.log"
           python3 ../tools/android-tests.py 2>&1 | tee "$RUNNER_TEMP/android-contract-tests.log"
+          cp ../../resource/game-kit/build-strings-test.py "$RUNNER_TEMP/executed-string-resource-test.py"
+          python3 ../../resource/game-kit/build-strings-test.py --sdk "$ANDROID_HOME" | tee "$RUNNER_TEMP/string-resource-tests.json"
       - name: Fetch the existing pinned QR encoder
         run: |
           curl --fail --silent --show-error --location https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar --output "$RUNNER_TEMP/zxing.jar"
@@ -143,6 +145,8 @@ jobs:
             ${{ runner.temp }}/original-tests.log
             ${{ runner.temp }}/android-contract-tests.log
             ${{ runner.temp }}/qa-contract-tests.log
+            ${{ runner.temp }}/string-resource-tests.json
+            ${{ runner.temp }}/executed-string-resource-test.py
             ${{ runner.temp }}/unsigned/*/build-receipt.json
             ${{ runner.temp }}/unsigned/*/source-inputs.json
             ${{ runner.temp }}/unsigned/*/source-inputs.after.json

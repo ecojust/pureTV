@@ -34,6 +34,16 @@ def require(test, message):
         raise ValueError(message)
 
 
+def android_string_literal(value):
+    """Quote Android's resource syntax; XML escaping alone does not quote it.
+
+    The surrounding quotes preserve apostrophes, reference-like prefixes and
+    repeated spaces. Escape backslashes first so a literal ``\\n`` stays literal.
+    ElementTree still handles XML characters when writing the resource file.
+    """
+    return '"' + value.replace('\\', '\\\\').replace('"', '\\"') + '"'
+
+
 def checked_directory(path, label):
     """Reject symlinks before resolving paths or passing files to native tools."""
     path = Path(path)
@@ -159,7 +169,7 @@ def main():
         for folder, title in (('values', meta['name']), ('values-en', meta['nameEn'])):
             path = res / folder / 'strings.xml'
             tree = ET.parse(path)
-            tree.find(".//string[@name='app_name']").text = title
+            tree.find(".//string[@name='app_name']").text = android_string_literal(title)
             tree.write(path, encoding='utf-8', xml_declaration=True)
         asset_dir = work / 'assets'
         asset_dir.mkdir()
