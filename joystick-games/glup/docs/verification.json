@@ -8,8 +8,8 @@
   "buildCheck": true,
   "offline": true,
   "browserReports": [
-    "browser-attempt-7-960/report.json",
-    "browser-attempt-7-1280/report.json"
+    "browser-attempt-8-960/report.json",
+    "browser-attempt-8-1280/report.json"
   ],
   "layoutReport": "layout-attempt-1/report.json",
   "resolutions": [
@@ -23,7 +23,7 @@
     ]
   ],
   "browserLaunch": "Chromium --disable-gpu; pure Canvas2D cases run sequentially, separately from shared WebGL lock with parent approval. No physical/GPU performance inference.",
-  "visualReview": "Reviewed final original pixel-art game/map/pause at both sizes. Original 320x180 art scales by integer multiples, with clear separate right controller/help column; A/B/X/START hints match pureTV. DOM text bounds, scroll extents and full long controller ID passed at both sizes.",
+  "visualReview": "Reviewed final original pixel-art game/map/pause at both sizes. Original 320x180 art scales by integer multiples, with clear separate right controller/help column; A/B/X/START hints match pureTV. DOM text bounds, scroll extents and full long controller ID passed at both sizes. Revised-route attempt 8 playing/paused screenshots at both sizes separately reviewed; no overlaps or clipped controller/help text.",
   "physicalTvTested": false,
   "physicalPhoneTested": false,
   "nativeAndroidTested": false,
@@ -50,8 +50,8 @@
       "sha256": "041363e6fbeb06665bf951393e8ab97f868460401187b74272f1bcaf13078849"
     },
     "qa-plan.json": {
-      "bytes": 2810,
-      "sha256": "89771073b5f78b299fce76718f09fc72feb7552df0e2003d7ba45cf002c12424"
+      "bytes": 4611,
+      "sha256": "2d4594a9dc2f3e81e391ba031c67a8b978434b222ab363952c672e16915693ee"
     },
     "game.json": {
       "bytes": 369,
@@ -92,6 +92,38 @@
     "docs/layout-attempt-1/executed-layout.mjs": {
       "bytes": 3857,
       "sha256": "ccd396e9661ff58221d5bf2b5c3ff8cfa792a596f9ac2855e6bbab0a11338da7"
+    },
+    "docs/verification-original-route.json": {
+      "bytes": 4207,
+      "sha256": "7ec558572f95be2f503db161b9d82bb4839daf390c56cdfe59c022be9288ede4"
+    },
+    "docs/qa-route-correction-2026-11-17.json": {
+      "bytes": 18649,
+      "sha256": "78b539eb82481f5dbba58f08d2c45b57eb80379c7e86181de93a0ca84a035dc3"
+    },
+    "docs/browser-attempt-8-960/report.json": {
+      "bytes": 104361,
+      "sha256": "56ef218c66e19c3f645da57a16964acd0bb51dac6db728771c6c41e9a930e052"
+    },
+    "docs/browser-attempt-8-960/executed-browser.mjs": {
+      "bytes": 7888,
+      "sha256": "20d36e94bbc381fc437df5a4a07a2fb89783b346bc7a338a0e9d1695e43c0b18"
+    },
+    "docs/browser-attempt-8-960/executed-qa-plan.json": {
+      "bytes": 4611,
+      "sha256": "2d4594a9dc2f3e81e391ba031c67a8b978434b222ab363952c672e16915693ee"
+    },
+    "docs/browser-attempt-8-1280/report.json": {
+      "bytes": 104364,
+      "sha256": "2ade13a9be678dfe9b9be07644281ce9fd6fe8110d6ebf6dc302ccff1a069274"
+    },
+    "docs/browser-attempt-8-1280/executed-browser.mjs": {
+      "bytes": 7888,
+      "sha256": "20d36e94bbc381fc437df5a4a07a2fb89783b346bc7a338a0e9d1695e43c0b18"
+    },
+    "docs/browser-attempt-8-1280/executed-qa-plan.json": {
+      "bytes": 4611,
+      "sha256": "2d4594a9dc2f3e81e391ba031c67a8b978434b222ab363952c672e16915693ee"
     }
   },
   "coarsePointerLayout": {
@@ -114,5 +146,20 @@
     "textBoundsAndSidebarScrollPassed": true,
     "visualReviewed": true,
     "distChanged": false
+  },
+  "previousBrowserReports": [
+    "browser-attempt-7-960/report.json",
+    "browser-attempt-7-1280/report.json"
+  ],
+  "qaRouteCorrection": {
+    "scope": "QA-only; src, tests, dist and production metadata unchanged",
+    "productionSourceCommit": "dfae2fb0979314424ef3e4f2c7cb7cfcac91885d",
+    "report": "docs/qa-route-correction-2026-11-17.json",
+    "currentPlanSha256": "2d4594a9dc2f3e81e391ba031c67a8b978434b222ab363952c672e16915693ee",
+    "previousPlanSha256": "89771073b5f78b299fce76718f09fc72feb7552df0e2003d7ba45cf002c12424",
+    "originalVerification": "docs/verification-original-route.json",
+    "currentBrowserScope": "15-step normal-input route explicitly reaches and confirms Ruca speech before observing jump and inhale; both resolutions passed with model/audio pause and input cancellation.",
+    "reusedEvidenceScope": "Original model/build, text bounds/long-ID layout and coarse-pointer checks remain valid for identical production dist; their original executed plans and reports remain preserved. They do not claim execution of the revised route.",
+    "nativeRouteRecheckPending": true
   }
 }

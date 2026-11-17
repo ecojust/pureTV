@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "steps": [
+    {
+      "name": "start original rules with START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 100,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "gameplay.ticks",
+          "op": "gt",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "name": "original one-button action changes focusDepth",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 160,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "gameplay.focusDepth",
+          "op": "changed"
+        }
+      ]
+    }
+  ],
+  "pauseStablePaths": [
+    "gameplay.ticks",
+    "gameplay.score",
+    "gameplay.focusDepth"
+  ],
+  "compatibleRenderers": [
+    "webgl1",
+    "webgl2"
+  ]
+}

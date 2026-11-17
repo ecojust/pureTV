@@ -1,0 +1,599 @@
+{
+  "runId": 44155639268,
+  "runAttempt": 1,
+  "qaSource": "b15beb969bfc83595143aec4ddc4817220ba8119",
+  "packageSource": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "exportRunId": 44158943763,
+  "exportCommit": "0b2dde406004bdc33b07d92efd969d9450f433c8",
+  "manifestFilesVerified": 165,
+  "exactDirectoryFiles": 166,
+  "passedModes": 7,
+  "failedModes": 2,
+  "findings": "All three ARM native and Rosetta modes passed real Canvas gameplay and storage restart. Popgun also passed occupied-port mode. Sugarplum and Starblazer occupied-port attempts failed before app launch while the QA blocker bound 63485; TIME_WAIT is plausible but original port owner/state was not captured. No claim that these two fallback tests passed. These original Starblazer/Popgun bytes are superseded by pending UI changes.",
+  "nativeScreenshotsViewed": false,
+  "installationPackagesDelivered": false,
+  "games": [
+    {
+      "game": "sugarplum-drop",
+      "mode": "native",
+      "status": "passed",
+      "architecture": "arm64",
+      "tests": [
+        [
+          "Bonjour actual port and version",
+          "passed"
+        ],
+        [
+          "Original SDK and complete identity card",
+          "passed"
+        ],
+        [
+          "Real gameplay actions and START pause/resume",
+          "passed"
+        ],
+        [
+          "Three foreground cycles keep transport stable",
+          "passed"
+        ],
+        [
+          "Disconnect, held sync and same-ID reconnect",
+          "passed"
+        ],
+        [
+          "Real game storage reaches native persistence",
+          "passed"
+        ],
+        [
+          "Same-sequence ACK for every SDK message",
+          "passed"
+        ],
+        [
+          "Normal quit closes TCP",
+          "passed"
+        ],
+        [
+          "Native relaunch restores actual saves at a different origin",
+          "passed"
+        ]
+      ],
+      "screenshots": [
+        {
+          "path": "diagnostics/menu.png",
+          "bytes": 283648,
+          "sha256": "73bbb3ce988568f6ac4d5f9c631b5013930879f41dcddbe6cac94427be352b53"
+        },
+        {
+          "path": "diagnostics/connected-menu.png",
+          "bytes": 292384,
+          "sha256": "fcc888b74da14c79f3c521bd219e8c4e5272855cf99203f54093205681bfd7ae"
+        },
+        {
+          "path": "diagnostics/playing.png",
+          "bytes": 374020,
+          "sha256": "7388d14770967d9154fc5dd4f82dc61b779ebead37f30ac77b321f82cc86cc9e"
+        },
+        {
+          "path": "diagnostics/paused.png",
+          "bytes": 284616,
+          "sha256": "4b2b4c9a295716687f1af51c8c31cb9203e29b8801952a516ca344d70e2a4598"
+        },
+        {
+          "path": "diagnostics/disconnected.png",
+          "bytes": 286708,
+          "sha256": "13f2870342d5e1f3d97e9ab4a65f4143047f175ae5de8d2b902d759366249de7"
+        },
+        {
+          "path": "diagnostics/reconnected.png",
+          "bytes": 293205,
+          "sha256": "01b1c8457af7a5d9d89c159e23b6e19a6334d2f0a31a7f12ddf93d37facc3cf1"
+        }
+      ],
+      "visualReviewPerformed": false,
+      "storageKeys": [
+        "sugarplum-drop.v1"
+      ]
+    },
+    {
+      "game": "sugarplum-drop",
+      "mode": "occupied-port",
+      "status": "failed",
+      "architecture": null,
+      "tests": [],
+      "screenshots": [],
+      "visualReviewPerformed": false,
+      "failure": "QA blocker bind failed before application launch",
+      "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 355, in run\n    if self.args.occupy_default_port:self.blocker=socket.socket();self.blocker.bind(('0.0.0.0',63485));self.blocker.listen(1)\n                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 48] Address already in use\n"
+    },
+    {
+      "game": "sugarplum-drop",
+      "mode": "rosetta",
+      "status": "passed",
+      "architecture": "x86_64",
+      "tests": [
+        [
+          "Bonjour actual port and version",
+          "passed"
+        ],
+        [
+          "Original SDK and complete identity card",
+          "passed"
+        ],
+        [
+          "Real gameplay actions and START pause/resume",
+          "passed"
+        ],
+        [
+          "Three foreground cycles keep transport stable",
+          "passed"
+        ],
+        [
+          "Disconnect, held sync and same-ID reconnect",
+          "passed"
+        ],
+        [
+          "Real game storage reaches native persistence",
+          "passed"
+        ],
+        [
+          "Same-sequence ACK for every SDK message",
+          "passed"
+        ],
+        [
+          "Normal quit closes TCP",
+          "passed"
+        ],
+        [
+          "Native relaunch restores actual saves at a different origin",
+          "passed"
+        ]
+      ],
+      "screenshots": [
+        {
+          "path": "diagnostics/menu.png",
+          "bytes": 284341,
+          "sha256": "7d7a81b6b4fc04aa1458a939849a542926cb7844e9642b7c239b66de8740f35a"
+        },
+        {
+          "path": "diagnostics/connected-menu.png",
+          "bytes": 294207,
+          "sha256": "92f110c26a78f149cb0a1ad9cde2f6c5d17af1a7dde2869c1827fda881390e7e"
+        },
+        {
+          "path": "diagnostics/playing.png",
+          "bytes": 372365,
+          "sha256": "830ea141607ae94d75b052ed817f11e69027522cca9473f4adf0faff5a33f6b9"
+        },
+        {
+          "path": "diagnostics/paused.png",
+          "bytes": 283462,
+          "sha256": "2a58db39cdc76fa9c5464044576ccfecfc5fbeddff9e0291bfd2aa77601cb03f"
+        },
+        {
+          "path": "diagnostics/disconnected.png",
+          "bytes": 285324,
+          "sha256": "d886789ab87adfdadfc6b8733e61fa599359d56540669408cea06416126b28ab"
+        },
+        {
+          "path": "diagnostics/reconnected.png",
+          "bytes": 291398,
+          "sha256": "a1f42d199b6882f67fcc36621a85723c512e4a5e13e1bb944a037a567b978bf6"
+        }
+      ],
+      "visualReviewPerformed": false,
+      "storageKeys": [
+        "sugarplum-drop.v1"
+      ]
+    },
+    {
+      "game": "starblazer-86",
+      "mode": "native",
+      "status": "passed",
+      "architecture": "arm64",
+      "tests": [
+        [
+          "Bonjour actual port and version",
+          "passed"
+        ],
+        [
+          "Original SDK and complete identity card",
+          "passed"
+        ],
+        [
+          "Real gameplay actions and START pause/resume",
+          "passed"
+        ],
+        [
+          "Three foreground cycles keep transport stable",
+          "passed"
+        ],
+        [
+          "Disconnect, held sync and same-ID reconnect",
+          "passed"
+        ],
+        [
+          "Real game storage reaches native persistence",
+          "passed"
+        ],
+        [
+          "Same-sequence ACK for every SDK message",
+          "passed"
+        ],
+        [
+          "Normal quit closes TCP",
+          "passed"
+        ],
+        [
+          "Native relaunch restores actual saves at a different origin",
+          "passed"
+        ]
+      ],
+      "screenshots": [
+        {
+          "path": "diagnostics/menu.png",
+          "bytes": 291316,
+          "sha256": "ef98cf08eac42c136d5cea84e711a9492d4933e06fed27d420ac8da8fc3ea790"
+        },
+        {
+          "path": "diagnostics/connected-menu.png",
+          "bytes": 297654,
+          "sha256": "fbe032be54684f0cbef2fa8a86747cd75dc9b1f01dace24cb2b36ed7d341199a"
+        },
+        {
+          "path": "diagnostics/playing.png",
+          "bytes": 241240,
+          "sha256": "c36d0aa34692c152dd94d571753b450c9d64d66010d363d17c0ae2ed21adccde"
+        },
+        {
+          "path": "diagnostics/paused.png",
+          "bytes": 215123,
+          "sha256": "0dd8871270e7db932250b4725c7cdf541685cdc23db85a1ed971118199eb80c2"
+        },
+        {
+          "path": "diagnostics/disconnected.png",
+          "bytes": 217684,
+          "sha256": "bb531f1524658e7f012bd2fbe57b5f401491a3b3082bef5c8cf6a7c6f5a9db02"
+        },
+        {
+          "path": "diagnostics/reconnected.png",
+          "bytes": 223633,
+          "sha256": "bb9de8b92e90b045bfd6f64f04c2d10738121cb469719f4b3cb1fa9afbad6ad9"
+        }
+      ],
+      "visualReviewPerformed": false,
+      "storageKeys": [
+        "starblazer-86.v1"
+      ]
+    },
+    {
+      "game": "starblazer-86",
+      "mode": "occupied-port",
+      "status": "failed",
+      "architecture": null,
+      "tests": [],
+      "screenshots": [],
+      "visualReviewPerformed": false,
+      "failure": "QA blocker bind failed before application launch",
+      "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 355, in run\n    if self.args.occupy_default_port:self.blocker=socket.socket();self.blocker.bind(('0.0.0.0',63485));self.blocker.listen(1)\n                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 48] Address already in use\n"
+    },
+    {
+      "game": "starblazer-86",
+      "mode": "rosetta",
+      "status": "passed",
+      "architecture": "x86_64",
+      "tests": [
+        [
+          "Bonjour actual port and version",
+          "passed"
+        ],
+        [
+          "Original SDK and complete identity card",
+          "passed"
+        ],
+        [
+          "Real gameplay actions and START pause/resume",
+          "passed"
+        ],
+        [
+          "Three foreground cycles keep transport stable",
+          "passed"
+        ],
+        [
+          "Disconnect, held sync and same-ID reconnect",
+          "passed"
+        ],
+        [
+          "Real game storage reaches native persistence",
+          "passed"
+        ],
+        [
+          "Same-sequence ACK for every SDK message",
+          "passed"
+        ],
+        [
+          "Normal quit closes TCP",
+          "passed"
+        ],
+        [
+          "Native relaunch restores actual saves at a different origin",
+          "passed"
+        ]
+      ],
+      "screenshots": [
+        {
+          "path": "diagnostics/menu.png",
+          "bytes": 291544,
+          "sha256": "9952cec94d9ae51e2aee984b00f4a6d07adf336ec24aeca20e5cbf2988add468"
+        },
+        {
+          "path": "diagnostics/connected-menu.png",
+          "bytes": 297385,
+          "sha256": "ad99f2a9a1f772e2d273d96a295b1ba6a58e710109241d5a4a27e7746de60b8d"
+        },
+        {
+          "path": "diagnostics/playing.png",
+          "bytes": 239605,
+          "sha256": "f372b5410e14de52443a2412abe8b23bbc0c415e1edc0d147092ce88b8a7cb86"
+        },
+        {
+          "path": "diagnostics/paused.png",
+          "bytes": 218240,
+          "sha256": "49729b2062be0316dababddf6c94cc7ab58ab5fe83cff8be0248ad15d0044bc6"
+        },
+        {
+          "path": "diagnostics/disconnected.png",
+          "bytes": 215603,
+          "sha256": "bb2a83886d0da76f2b0dbce22ea3d478b87fc248978b478f349cd24ee7b7a359"
+        },
+        {
+          "path": "diagnostics/reconnected.png",
+          "bytes": 221595,
+          "sha256": "dbba5ff688eb54c59c7b0a9a2e567c5a1583f7b9eaf525eb2eb75feb5c7342d8"
+        }
+      ],
+      "visualReviewPerformed": false,
+      "storageKeys": [
+        "starblazer-86.v1"
+      ]
+    },
+    {
+      "game": "popgun-pip",
+      "mode": "native",
+      "status": "passed",
+      "architecture": "arm64",
+      "tests": [
+        [
+          "Bonjour actual port and version",
+          "passed"
+        ],
+        [
+          "Original SDK and complete identity card",
+          "passed"
+        ],
+        [
+          "Real gameplay actions and START pause/resume",
+          "passed"
+        ],
+        [
+          "Three foreground cycles keep transport stable",
+          "passed"
+        ],
+        [
+          "Disconnect, held sync and same-ID reconnect",
+          "passed"
+        ],
+        [
+          "Real game storage reaches native persistence",
+          "passed"
+        ],
+        [
+          "Same-sequence ACK for every SDK message",
+          "passed"
+        ],
+        [
+          "Normal quit closes TCP",
+          "passed"
+        ],
+        [
+          "Native relaunch restores actual saves at a different origin",
+          "passed"
+        ]
+      ],
+      "screenshots": [
+        {
+          "path": "diagnostics/menu.png",
+          "bytes": 72110,
+          "sha256": "abf07c23efa2266dc573a7bcb56ec625a5e1a5025d4d3f927b34d5b48204e9a4"
+        },
+        {
+          "path": "diagnostics/connected-menu.png",
+          "bytes": 77144,
+          "sha256": "2963c24ab79f6a2983e006b75ab410cd4a4f8cad432c1fd721fd17ad6201ccf2"
+        },
+        {
+          "path": "diagnostics/playing.png",
+          "bytes": 59527,
+          "sha256": "e9fdf3da95df2fd3528f02837fcc06b74c5e2f6b685d9a89c5dfa136a0409dc1"
+        },
+        {
+          "path": "diagnostics/paused.png",
+          "bytes": 76029,
+          "sha256": "1a8e7d74b8806186b33223b8a213c7b43ecfd9b7203d196504322b7d98f8d3c0"
+        },
+        {
+          "path": "diagnostics/disconnected.png",
+          "bytes": 75179,
+          "sha256": "fe348f84facd781649e64b3522813036f50e158a689b1640c2a2e2083440c933"
+        },
+        {
+          "path": "diagnostics/reconnected.png",
+          "bytes": 80385,
+          "sha256": "25df98688c1d927850c587d02662e2e9e46bccc6b84f1a70469f1d2e61e70451"
+        }
+      ],
+      "visualReviewPerformed": false,
+      "storageKeys": [
+        "popgunpip.save.v1"
+      ]
+    },
+    {
+      "game": "popgun-pip",
+      "mode": "occupied-port",
+      "status": "passed",
+      "architecture": "arm64",
+      "tests": [
+        [
+          "Bonjour actual port and version",
+          "passed"
+        ],
+        [
+          "Original SDK and complete identity card",
+          "passed"
+        ],
+        [
+          "Real gameplay actions and START pause/resume",
+          "passed"
+        ],
+        [
+          "Three foreground cycles keep transport stable",
+          "passed"
+        ],
+        [
+          "Disconnect, held sync and same-ID reconnect",
+          "passed"
+        ],
+        [
+          "Real game storage reaches native persistence",
+          "passed"
+        ],
+        [
+          "Same-sequence ACK for every SDK message",
+          "passed"
+        ],
+        [
+          "Normal quit closes TCP",
+          "passed"
+        ],
+        [
+          "Native relaunch restores actual saves at a different origin",
+          "passed"
+        ]
+      ],
+      "screenshots": [
+        {
+          "path": "diagnostics/menu.png",
+          "bytes": 72305,
+          "sha256": "9c34d32238f9061cfde6e46a0bea0c544ecbc7a147beedf7cc133a50288a9c12"
+        },
+        {
+          "path": "diagnostics/connected-menu.png",
+          "bytes": 77441,
+          "sha256": "250b9679dd670d0e6511c251da5f931a36de8614a72c4c592f25fbd776b2a8ca"
+        },
+        {
+          "path": "diagnostics/playing.png",
+          "bytes": 60217,
+          "sha256": "c4f221893d63fabc44628a8fd5a86a1bb35e2d322101c2c00e9d46e75fed5a2c"
+        },
+        {
+          "path": "diagnostics/paused.png",
+          "bytes": 76182,
+          "sha256": "ce45a37c0d11d82e7748fd295e2a3222ef0f5df1edbb22c198dc6481afeb61e6"
+        },
+        {
+          "path": "diagnostics/disconnected.png",
+          "bytes": 70770,
+          "sha256": "dc6606c9be57ff32f52824c64b20e18714ddd65766030fb7c514f25a10da7d49"
+        },
+        {
+          "path": "diagnostics/reconnected.png",
+          "bytes": 76010,
+          "sha256": "a34e795c3e63f8fae320f6cd190dd4589811321bb94d34b39524e4abc5064172"
+        }
+      ],
+      "visualReviewPerformed": false,
+      "storageKeys": [
+        "popgunpip.save.v1"
+      ]
+    },
+    {
+      "game": "popgun-pip",
+      "mode": "rosetta",
+      "status": "passed",
+      "architecture": "x86_64",
+      "tests": [
+        [
+          "Bonjour actual port and version",
+          "passed"
+        ],
+        [
+          "Original SDK and complete identity card",
+          "passed"
+        ],
+        [
+          "Real gameplay actions and START pause/resume",
+          "passed"
+        ],
+        [
+          "Three foreground cycles keep transport stable",
+          "passed"
+        ],
+        [
+          "Disconnect, held sync and same-ID reconnect",
+          "passed"
+        ],
+        [
+          "Real game storage reaches native persistence",
+          "passed"
+        ],
+        [
+          "Same-sequence ACK for every SDK message",
+          "passed"
+        ],
+        [
+          "Normal quit closes TCP",
+          "passed"
+        ],
+        [
+          "Native relaunch restores actual saves at a different origin",
+          "passed"
+        ]
+      ],
+      "screenshots": [
+        {
+          "path": "diagnostics/menu.png",
+          "bytes": 72018,
+          "sha256": "22f8bd693e44e390ce2a41e3819699c5ca343c7260294942376fc412ff2ea942"
+        },
+        {
+          "path": "diagnostics/connected-menu.png",
+          "bytes": 77189,
+          "sha256": "e089de34e89c424e98c4b384461260ad869819d3ee10c2cfacac01b4470141d0"
+        },
+        {
+          "path": "diagnostics/playing.png",
+          "bytes": 60137,
+          "sha256": "091ea8df9e05fa4dbb81b7263ce9603403e287d72559a7f6e87a140015792080"
+        },
+        {
+          "path": "diagnostics/paused.png",
+          "bytes": 76622,
+          "sha256": "72039d9830bdd1130c2d741367d205e4834af506d0df664284d4ac055b10e177"
+        },
+        {
+          "path": "diagnostics/disconnected.png",
+          "bytes": 72472,
+          "sha256": "5e7b2d0cd318e6eae6bc642cd9b8555d39fcbb1145e3fec86b1c61a7fbac8b24"
+        },
+        {
+          "path": "diagnostics/reconnected.png",
+          "bytes": 77755,
+          "sha256": "6e256df3da0a7758f66bf5f28a3907213b5ac5baaabcd54f69e2e4952f44d629"
+        }
+      ],
+      "visualReviewPerformed": false,
+      "storageKeys": [
+        "popgunpip.save.v1"
+      ]
+    }
+  ]
+}
