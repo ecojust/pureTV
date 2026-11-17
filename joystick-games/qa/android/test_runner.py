@@ -7,6 +7,7 @@ import tempfile
 import threading
 import time
 import unittest
+from types import SimpleNamespace
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -99,5 +100,47 @@ class Contracts(unittest.TestCase):
         row['idText']='virtual-123...'; self.assertEqual(runner.Acceptance.visible_ids(sample),[])
         row['idText']=row['controllerId']; row['iconVisible']=False
         self.assertEqual(runner.Acceptance.visible_ids(sample),[])
+
+    def test_freshness_rejects_stale_missing_boolean_and_reset_counters(self):
+        before = {'game': {'controller': {'pollCount': 8}}}
+        for value in [None, True, False, 7, 8]:
+            after = {'game': {'controller': {'pollCount': value}}}
+            self.assertFalse(runner.Acceptance.frame_advanced(after, before))
+        self.assertTrue(runner.Acceptance.frame_advanced({'game': {'controller': {'pollCount': 9}}}, before))
+        self.assertFalse(runner.Acceptance.frame_advanced({'game': {'controller': {'pollCount': 9}}}, before, frames=3))
+        self.assertTrue(runner.Acceptance.frame_advanced({'game': {'controller': {'pollCount': 11}}}, before, frames=3))
+
+    def test_wait_fresh_rejects_stale_success_and_fresh_non_action(self):
+        acceptance = runner.Acceptance.__new__(runner.Acceptance)
+        acceptance.report = {}; acceptance.snapshots = []
+        def snapshot(count, action): return {'game': {'controller': {'pollCount': count}, 'actualAction': action}}
+        samples = iter([snapshot(8, True), snapshot(9, False), snapshot(10, True)])
+        acceptance.snapshot = lambda: next(samples)
+        found = acceptance.wait_fresh(snapshot(8, False), lambda s: s['game']['actualAction'], timeout=2, label='fixture-action')
+        self.assertEqual(found['game']['controller']['pollCount'], 10)
+        self.assertEqual(acceptance.report['freshnessChecks'][0]['beforePollCount'], 8)
+        self.assertEqual(acceptance.report['freshnessChecks'][0]['afterPollCount'], 10)
+
+    def test_stalled_frame_times_out_even_when_action_value_is_true(self):
+        acceptance = runner.Acceptance.__new__(runner.Acceptance)
+        acceptance.report = {}; acceptance.snapshots = []
+        stale = {'game': {'controller': {'pollCount': 8}, 'actualAction': True}}
+        acceptance.snapshot = lambda: stale
+        with self.assertRaisesRegex(AssertionError, 'timed out'):
+            acceptance.wait_fresh(stale, lambda s: s['game']['actualAction'], timeout=.02, label='stalled-fixture')
+        self.assertEqual(acceptance.snapshots[0]['snapshot'], stale)
+        self.assertNotIn('freshnessChecks', acceptance.report)
+
+    def test_sync_observation_requires_ack_for_matching_connection_and_sequence(self):
+        acceptance = runner.Acceptance.__new__(runner.Acceptance)
+        client = SimpleNamespace(identity='virtual-test')
+        sent = {'direction':'sdk-to-game','connection':1,'message':{'controller_id':client.identity,'seq':12}}
+        wrong_connection = {'direction':'game-to-sdk','connection':2,'message':{'type':'ack','seq':12}}
+        wrong_sequence = {'direction':'game-to-sdk','connection':1,'message':{'type':'ack','seq':11}}
+        acceptance.proxy = SimpleNamespace(lock=threading.Lock(), records=[sent,wrong_connection,wrong_sequence])
+        with self.assertRaisesRegex(AssertionError,'ACK did not arrive'):
+            acceptance.wait_sent_ack(client,12,timeout=.02)
+        acceptance.proxy.records.append({'direction':'game-to-sdk','connection':1,'message':{'type':'ack','seq':12}})
+        acceptance.wait_sent_ack(client,12,timeout=.02)
 
 if __name__=='__main__': unittest.main(verbosity=2)

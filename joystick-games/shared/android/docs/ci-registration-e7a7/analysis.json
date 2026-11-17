@@ -1,0 +1,72 @@
+{
+  "observedAt": "2026-11-17T15:02:31.971097+00:00",
+  "sourceSha": "e7a7c9a9b823052425b7ea111d61896b2f92ea60",
+  "androidRunPresent": false,
+  "androidWorkflowGetStatus": 404,
+  "registrationCause": "unknown; no Android runner was queued and no Android build/sign/runtime result exists for this push",
+  "independentDefect": "All four sparse checkouts omitted .github/workflows; the runtime evidence-copy step requires the workflow file, and the build source manifest previously silently omitted it when absent.",
+  "correction": "Add .github/workflows to every checkout; require the workflow as a source input; trigger a dedicated build/joystick-games-android branch without path filters, symmetrically to the macOS workflow. Original refs stay on e7a7.",
+  "originalWorkflowActionlintPassed": true,
+  "correctedWorkflowActionlintPassed": true,
+  "actionlintVersion": "1.7.12",
+  "actionlintBinarySha256": "c872d6db8c6bf83a8eaa704fc93999f027d55dffbc63b8a6abdccb47df5f4cd4",
+  "dispatchPerformed": false,
+  "commands": [
+    {
+      "name": "runs",
+      "command": [
+        "gh",
+        "api",
+        "repos/ecojust/pureTV/actions/runs?head_sha=e7a7c9a9b823052425b7ea111d61896b2f92ea60&per_page=20"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "workflow-registration",
+      "command": [
+        "gh",
+        "api",
+        "repos/ecojust/pureTV/actions/workflows/joystick-games-android.yml"
+      ],
+      "exitCode": 1
+    },
+    {
+      "name": "branch",
+      "command": [
+        "gh",
+        "api",
+        "repos/ecojust/pureTV/branches/feat/joystick-games"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "check-suites",
+      "command": [
+        "gh",
+        "api",
+        "repos/ecojust/pureTV/commits/e7a7c9a9b823052425b7ea111d61896b2f92ea60/check-suites"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "original-actionlint",
+      "command": [
+        "/dev/shm/joystick-actionlint/actionlint",
+        "-shellcheck=",
+        "-pyflakes=",
+        "joystick-games/shared/android/docs/ci-registration-e7a7/original-workflow.yml"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "corrected-actionlint",
+      "command": [
+        "/dev/shm/joystick-actionlint/actionlint",
+        "-shellcheck=",
+        "-pyflakes=",
+        ".github/workflows/joystick-games-android.yml"
+      ],
+      "exitCode": 0
+    }
+  ]
+}

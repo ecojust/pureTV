@@ -28,4 +28,6 @@ python3 joystick-games/qa/android/run.py \
 
 输出保存游戏/Observer/实际执行源码哈希、原始 `wire.jsonl`、ADB 命令和输出、只读快照、原生 PNG 与屏幕录像。每张图前自然等待 1500 ms 并记录前后 DOM、实际采集时间及 PNG 哈希；这不等同于渲染栅栏，图片仍须逐张目视。既有失败目录不可覆盖。Observer 不随最终游戏 APK 分发。
 
+动作等待使用生产缓存的 `controller.pollCount`：按下后必须看到更新帧中的对应九键输入，再等更新帧中的实际位置、角度、射击或漂移变化，才松开。暂停和 held-sync 抑制也要跨越真实新帧；held-sync 先匹配同 TCP 连接和 seq 的真实 ACK。等待有墙钟上限，不以固定按住毫秒数推算已渲染帧数。工具修正来源及陈旧快照负例见 `../../docs/qa/android/freshness-correction/summary.json`。
+
 本地 `python3 joystick-games/qa/android/test_runner.py` 仅验证 SDK 透传/ACK、只读工具和快照契约，不能替代 Android 实包运行；实体电视、ESP32 及发现广播测试仍需单独进行。

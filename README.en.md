@@ -151,6 +151,10 @@ The **20 games shown above** have updated APKs with **pureTV Wi-Fi controller** 
 
 The [fork/ catalog](fork/README.md) contains 14 apps and 23 APKs under 10 MB from TVAPP, plus five explicitly requested apps, Erge Duoduo TV, Baby Fun Learning, Jasmine Music, Taozhi Classroom TV and Qixing Opera: 19 apps and 28 APKs in total, with icons, catalog covers and manifests. The [oversized-app inventory and implementation notes](fork/OVERSIZED.md) retain all 205 oversized files, including five archived APKs and 200 still excluded files.
 
+## Dedicated controller games
+
+[joystick-games/](joystick-games/) contains Android TV and macOS controller adaptations. The first two are [CF Transport Ship](joystick-games/cf-transport-ship/) and [QQ Speed](joystick-games/qq-speed/), based on riba2534's demos. They retain their maps and gameplay while adding the nine pureTV buttons, start/pause, and complete controller IDs. See the [directory guide](joystick-games/README.md) for packages and verification status. Both require WebGL2; existing app download paths remain available.
+
 ## MCP / Agent
 
 Open “Device connection → MCP · Agent debugging,” copy the configuration into your client, and keep the manager window open. Its 34 tools cover system information, connections, app management, APK installation, launcher switching and layouts, market browsing/downloads/installation, background images, ADB configuration, language and theme settings, cancellation, and logs. The Agent and the interface share the same state.

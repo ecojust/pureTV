@@ -61,8 +61,7 @@ def sources(slug):
                 paths.append(path)
     paths += list((ROOT / 'joystick-games/tools').glob('android-*.py'))
     workflow = ROOT / '.github/workflows/joystick-games-android.yml'
-    if workflow.exists():
-        paths.append(workflow)
+    paths.append(workflow)  # Required even in CI sparse checkouts; never silently omit the workflow.
     if (game / 'icon.xml').exists():
         paths.append(game / 'icon.xml')
     return {p.relative_to(ROOT).as_posix(): record(p) for p in sorted(set(paths))}

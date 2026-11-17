@@ -36,3 +36,9 @@ npm run build:check
 `window.JoystickGameQA.snapshot()` 只读公开当前菜单／比赛、车辆与已消费的手柄缓存，供正常输入验收；没有模型写入、改时钟或强制通关入口。原先上游的可写 `window.game` 调试引用不再导出。
 
 来源、非官方同人属性和许可事实见 [NOTICE.md](NOTICE.md)。
+
+## 当前浏览器检查范围
+
+手柄映射与取消等 6 项独立检查通过。冻结源码的菜单检查完成 10 项：960×540／1280×720 两种菜单，以及原四赛道×两模式各实际开始并渲染；十张截图已目视，未发现脚本错误。详见 [原始报告](docs/menu-browser-attempt-3/report.json) 与 [画面复核](docs/menu-browser-review.json)。这组检查不代表完整比赛通关、原生安装包或实体手柄验收。
+
+960×540 下配置和详细说明在内部滚动区，开始按钮始终可见。开局 HUD 会显示手柄按键说明。前两次并行软件渲染的截屏／等待超时记录保留在 `docs/preflight-attempt-1/`、`docs/preflight-attempt-2/`；当前单独运行的结果另存，没有覆盖旧失败。

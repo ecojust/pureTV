@@ -2,18 +2,7 @@ name: Joystick games Android packages and runtime
 
 on:
   push:
-    branches: [feat/joystick-games]
-    paths:
-      - '.github/workflows/joystick-games-android.yml'
-      - 'joystick-games/**/src/**'
-      - 'joystick-games/**/dist/**'
-      - 'joystick-games/**/game.json'
-      - 'joystick-games/**/icon.xml'
-      - 'joystick-games/**/package*.json'
-      - 'joystick-games/**/build.mjs'
-      - 'joystick-games/shared/**'
-      - 'joystick-games/tools/android-*'
-      - 'joystick-games/qa/android/**'
+    branches: [build/joystick-games-android]
   workflow_dispatch:
 
 permissions:
@@ -35,6 +24,7 @@ jobs:
         with:
           filter: blob:none
           sparse-checkout: |
+            .github/workflows
             joystick-games
             resource/game-kit
             tools
@@ -105,6 +95,7 @@ jobs:
         with:
           filter: blob:none
           sparse-checkout: |
+            .github/workflows
             joystick-games
             resource/game-kit
             tools
@@ -156,6 +147,7 @@ jobs:
         with:
           filter: blob:none
           sparse-checkout: |
+            .github/workflows
             joystick-games
             resource/game-kit
             tools
@@ -238,6 +230,7 @@ jobs:
         with:
           filter: blob:none
           sparse-checkout: |
+            .github/workflows
             joystick-games
             resource/game-kit
             tools

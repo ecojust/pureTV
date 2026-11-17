@@ -92,6 +92,23 @@ class PayloadBoundaries(unittest.TestCase):
 
 
 class SignatureInputBoundaries(unittest.TestCase):
+    def test_workflow_must_be_present_in_sparse_source_checkout(self):
+        with tempfile.TemporaryDirectory(prefix='joystick-sparse-contract-') as tmp:
+            root = Path(tmp); kit = root / 'resource/game-kit'; game = root / 'joystick-games/cf-transport-ship'
+            for folder in (kit / 'android/src/main', game / 'src', game / 'dist', root / 'joystick-games/shared/web'):
+                folder.mkdir(parents=True)
+            files = [kit / 'build.py', root / 'tools/resource_catalog.py', root / 'tools/puretv-release-certificate-v2.sha256',
+                     *[game / n for n in ('game.json', 'package.json', 'package-lock.json', 'build.mjs')],
+                     *[kit / 'web' / n for n in build.PHONE]]
+            for path in files:
+                path.parent.mkdir(parents=True, exist_ok=True); path.write_text('fixture')
+            with patch.object(build, 'ROOT', root), patch.object(build, 'KIT', kit), patch.object(build, 'metadata', return_value={}):
+                with self.assertRaises(AssertionError):
+                    build.sources('cf-transport-ship')
+                workflow = root / '.github/workflows/joystick-games-android.yml'
+                workflow.parent.mkdir(parents=True); workflow.write_text('fixture workflow')
+                self.assertIn('.github/workflows/joystick-games-android.yml', build.sources('cf-transport-ship'))
+
     def test_source_binding_rejects_unsafe_paths_before_reading(self):
         for name in ('../outside', '/outside', 'folder\\outside', 'source\x00.js'):
             with self.assertRaises(AssertionError):

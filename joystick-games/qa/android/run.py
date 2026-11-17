@@ -165,6 +165,20 @@ class Acceptance:
         self.snapshots.append({'label': 'timeout-' + label, 'snapshot': last, 'error': error})
         raise AssertionError(label + ' timed out; last snapshot retained')
 
+    @classmethod
+    def frame_advanced(cls, after, before, frames=1):
+        a = cls.game(after).get('controller', {}).get('pollCount')
+        b = cls.game(before).get('controller', {}).get('pollCount')
+        return type(a) is int and type(b) is int and a >= b + frames
+
+    def wait_fresh(self, before, predicate=lambda s: True, timeout=60, label='fresh-frame', frames=1):
+        started = time.time()
+        after = self.wait(lambda s: self.frame_advanced(s, before, frames) and predicate(s), timeout=timeout, label=label)
+        self.report.setdefault('freshnessChecks', []).append({'label': label, 'startedAt': started, 'endedAt': time.time(),
+            'beforePollCount': self.game(before)['controller']['pollCount'], 'afterPollCount': self.game(after)['controller']['pollCount'],
+            'minimumFrames': frames, 'maximumWallSeconds': timeout})
+        return after
+
     def record(self, label, snapshot=None):
         snapshot = snapshot or self.snapshot()
         self.snapshots.append({'label': label, 'wallTime': time.time(), 'snapshot': snapshot})
@@ -189,12 +203,40 @@ class Acceptance:
     def button(self, key, down=True, client=None):
         (client or self.clients[0]).button(key, 'down' if down else 'tap', duration=0 if down else 180)
 
-    def tap(self, key, seconds=0.18):
-        self.button(key); time.sleep(seconds); self.button(key, False)
+    def press_observed(self, key, effective=False):
+        before = self.snapshot()
+        self.button(key)
+        return self.wait_fresh(before, lambda s: self.native_buttons(s).get(key) is True
+                               and (not effective or self.button_state(s, key)), label='observed-down-' + key)
+
+    def release_observed(self, key):
+        before = self.snapshot()
+        self.button(key, False)
+        return self.wait_fresh(before, lambda s: not self.native_buttons(s).get(key), label='observed-release-' + key)
+
+    def tap(self, key):
+        observed = self.press_observed(key)
+        self.release_observed(key)
+        return observed
 
     def release(self):
+        before = self.snapshot()
         for key in KEYS:
             self.button(key, False)
+        return self.wait_fresh(before, lambda s: not any(self.native_buttons(s).get(k) for k in KEYS), label='all-released')
+
+    def wait_sent_ack(self, client, sequence, timeout=10):
+        until = time.monotonic() + timeout
+        while time.monotonic() < until:
+            with self.proxy.lock:
+                rows = list(self.proxy.records)
+            connections = {r['connection'] for r in rows if r['direction'] == 'sdk-to-game'
+                           and r['message'].get('controller_id') == client.identity and r['message'].get('seq') == sequence}
+            if any(r['direction'] == 'game-to-sdk' and r['connection'] in connections
+                   and r['message'].get('type') == 'ack' and r['message'].get('seq') == sequence for r in rows):
+                return
+            time.sleep(0.05)
+        raise AssertionError('Actual host ACK did not arrive for sequence ' + str(sequence))
 
     @staticmethod
     def game(snapshot):
@@ -281,22 +323,20 @@ class Acceptance:
             if self.paused(self.snapshot()):
                 self.tap('START')
                 self.wait(lambda s: self.game(s).get('stage') in playing, label='resume-before-' + key)
-            self.release(); time.sleep(0.15)
-            self.button(key)
-            down = self.wait(lambda s: self.native_buttons(s).get(key) is True, label='key-down-' + key)
+            self.release()
+            down = self.press_observed(key)
             buttons = self.native_buttons(down)
             assert [k for k in KEYS if buttons.get(k)] == [key], (key, buttons)
             self.record('key-down-' + key, down)
-            self.button(key, False)
-            up = self.wait(lambda s: not any(self.native_buttons(s).get(k) for k in KEYS), label='key-up-' + key)
+            up = self.release_observed(key)
+            assert not any(self.native_buttons(up).get(k) for k in KEYS)
             self.record('key-up-' + key, up)
             self.passed('independent cached input down/release ' + key)
         if not self.paused(self.snapshot()): self.tap('START')
         self.wait(self.paused, label='START-pause')
-        before = self.game(self.snapshot())
-        time.sleep(0.6)
-        after = self.game(self.snapshot())
-        assert before.get('time') == after.get('time'), 'simulation advances while paused'
+        before = self.snapshot()
+        after = self.wait_fresh(before, self.paused, frames=3, label='pause-fresh-frames')
+        assert self.game(before).get('time') == self.game(after).get('time'), 'simulation advances while paused'
         self.capture('paused', [self.clients[0].identity]); self.passed('START pauses simulation and preserves controller card')
         self.tap('START')
         self.wait(lambda s: self.game(s).get('stage') in playing, label='START-resume'); self.passed('START resumes gameplay')
@@ -309,7 +349,7 @@ class Acceptance:
         self.capture('two-controllers', identities); self.passed('two controllers have independent visible identities')
         second.disconnect()
         self.wait(lambda s: self.visible_ids(s) == [self.clients[0].identity], label='second-disconnect')
-        self.button('UP'); self.wait(lambda s: self.button_state(s, 'UP'), label='held-before-disconnect')
+        self.press_observed('UP', effective=True)
         self.clients[0].disconnect()
         self.wait(lambda s: not self.visible_ids(s) and not any(self.button_state(s, k) for k in KEYS), label='disconnect-cancels')
         self.capture('disconnected', []); self.passed('disconnect clears held movement and removes ID card')
@@ -317,9 +357,13 @@ class Acceptance:
         self.wait(lambda s: self.visible_ids(s) == [self.clients[0].identity], label='reconnect-identity')
         self.capture('reconnected', [self.clients[0].identity]); self.passed('same SDK client reconnects with original ID')
         baseline = self.record('before-held-sync')
-        self.clients[0].send('button', key='START', action='sync', pressed=True, duration_ms=0)
-        time.sleep(0.5)
-        synced = self.record('held-start-sync')
+        with self.clients[0].lock:
+            self.clients[0].send('button', key='START', action='sync', pressed=True, duration_ms=0)
+            sync_seq = self.clients[0].seq
+        self.wait_sent_ack(self.clients[0], sync_seq)
+        acked = self.record('held-sync-acked')
+        assert self.game(acked)['stage'] == self.game(baseline)['stage'], 'held sync triggered START action before observation'
+        synced = self.record('held-start-sync', self.wait_fresh(acked, frames=3, label='held-start-sync-fresh-frames'))
         assert self.game(synced)['stage'] == self.game(baseline)['stage'], 'held sync triggered START action'
         self.clients[0].button('START', 'sync')
         self.passed('reconnect held START sync cannot trigger start/pause action')
@@ -337,47 +381,69 @@ class Acceptance:
         self.passed('controller service keeps the same port throughout live session and reconnection', self.service_port)
 
     def cf_gameplay(self):
-        base = self.game(self.snapshot())['player']
-        self.button('UP'); time.sleep(0.8); self.button('UP', False)
-        moved = self.game(self.record('cf-movement'))['player']
-        a, b = base['position'], moved['position']
-        assert math.hypot(b['x'] - a['x'], b['z'] - a['z']) > 0.05
+        base = self.wait(lambda s: self.game(s)['player']['alive'], timeout=60, label='CF-alive')
+        origin = self.game(base)['player']['position']
+        observed = self.press_observed('UP', effective=True)
+        def moved_position(s):
+            p = self.game(s)['player']
+            return p['alive'] and math.hypot(p['position']['x'] - origin['x'], p['position']['z'] - origin['z']) > 0.05
+        moved = self.wait_fresh(observed, moved_position, label='CF-move-actual-position')
+        self.release_observed('UP'); self.record('cf-movement', moved)
         self.passed('CF forward movement changes actual position')
-        self.button('B'); self.button('RIGHT'); time.sleep(0.5); self.button('RIGHT', False)
-        self.button('UP'); time.sleep(0.4); self.button('UP', False); self.button('B', False)
-        aimed = self.game(self.record('cf-aim'))['player']
-        assert abs(aimed['yaw'] - moved['yaw']) > 0.02 and abs(aimed['pitch'] - moved['pitch']) > 0.02
+        self.press_observed('B', effective=True)
+        yaw_base = self.snapshot()
+        yaw = self.game(yaw_base)['player']['yaw']
+        observed = self.press_observed('RIGHT', effective=True)
+        def turned(s):
+            p = self.game(s)['player']; delta = p['yaw'] - yaw
+            return p['alive'] and math.atan2(math.sin(delta), math.cos(delta)) < -0.02
+        self.record('cf-yaw', self.wait_fresh(observed, turned, label='CF-right-actual-yaw'))
+        self.release_observed('RIGHT')
+        pitch = self.game(self.snapshot())['player']['pitch']
+        observed = self.press_observed('UP', effective=True)
+        aimed = self.wait_fresh(observed, lambda s: self.game(s)['player']['alive'] and self.game(s)['player']['pitch'] > pitch + 0.02,
+                                label='CF-up-actual-pitch')
+        self.release_observed('UP'); self.release_observed('B'); self.record('cf-aim', aimed)
         self.passed('CF B+direction changes actual yaw and pitch')
-        shots = aimed['shotsFired']
-        self.button('A')
-        fired = self.wait(lambda s: self.game(s)['player']['shotsFired'] > shots, timeout=12, label='CF-shoot')
-        self.button('A', False); self.record('cf-fired', fired)
+        shots = self.game(self.snapshot())['player']['shotsFired']
+        observed = self.press_observed('A', effective=True)
+        fired = self.wait_fresh(observed, lambda s: self.game(s)['player']['shotsFired'] > shots, label='CF-shoot')
+        self.release_observed('A'); self.record('cf-fired', fired)
         self.passed('CF A fires actual weapon', {'before': shots, 'after': self.game(fired)['player']['shotsFired']})
-        self.tap('X')
-        self.wait(lambda s: self.game(s)['player']['reloading'], timeout=3, label='CF-reload')
+        before = self.snapshot()
+        self.press_observed('X', effective=True)
+        reloading = self.wait_fresh(before, lambda s: self.game(s)['player']['reloading'], label='CF-reload')
+        self.release_observed('X'); self.record('cf-reloading', reloading)
         self.passed('CF X starts actual reload')
         self.capture('playing', [self.clients[0].identity])
 
     def qq_gameplay(self):
-        self.wait(lambda s: self.game(s).get('stage') == 'race', timeout=30, label='QQ-countdown')
-        self.button('UP')
-        before = self.wait(lambda s: self.game(s)['player']['speed'] > 20, timeout=30, label='QQ-accelerate')
+        self.wait(lambda s: self.game(s).get('stage') == 'race', timeout=120, label='QQ-countdown')
+        observed = self.press_observed('UP', effective=True)
+        before = self.wait_fresh(observed, lambda s: self.game(s)['player']['speed'] > 20, timeout=120, label='QQ-accelerate')
         heading = self.game(before)['player']['h']
-        self.button('LEFT'); time.sleep(0.35); self.button('LEFT', False)
-        left = self.game(self.record('qq-left'))['player']['h']
-        self.button('RIGHT'); time.sleep(0.6); self.button('RIGHT', False)
-        right = self.game(self.record('qq-right'))['player']['h']
         delta = lambda a, b: math.atan2(math.sin(a - b), math.cos(a - b))
-        assert delta(left, heading) > 0.001 and delta(right, left) < -0.001, (heading, left, right)
+        observed = self.press_observed('LEFT', effective=True)
+        left_frame = self.wait_fresh(observed, lambda s: delta(self.game(s)['player']['h'], heading) > 0.01, label='QQ-left-actual-heading')
+        left = self.game(self.record('qq-left', left_frame))['player']['h']
+        self.release_observed('LEFT')
+        heading_before_right = self.game(self.snapshot())['player']['h']
+        observed = self.press_observed('RIGHT', effective=True)
+        right_frame = self.wait_fresh(observed, lambda s: delta(self.game(s)['player']['h'], heading_before_right) < -0.01,
+                                      label='QQ-right-actual-heading')
+        right = self.game(self.record('qq-right', right_frame))['player']['h']
+        self.release_observed('RIGHT')
+        assert delta(left, heading) > 0.01 and delta(right, heading_before_right) < -0.01
         self.passed('QQ left and right steer in original vehicle coordinates', {'before': heading, 'left': left, 'right': right})
-        self.button('A'); self.button('LEFT')
-        drifting = self.wait(lambda s: self.game(s)['player']['drift'], timeout=15, label='QQ-drift')
+        self.press_observed('A', effective=True)
+        observed = self.press_observed('LEFT', effective=True)
+        drifting = self.wait_fresh(observed, lambda s: self.game(s)['player']['drift'], label='QQ-drift')
         self.record('qq-drifting', drifting)
         self.passed('QQ A+direction enters actual drift')
-        time.sleep(0.45); self.button('A', False); self.button('LEFT', False)
-        self.tap('X', seconds=0.1)
+        self.release_observed('A'); self.release_observed('LEFT')
+        self.tap('X')
         self.record('qq-small-boost-attempt')
-        self.button('UP', False)
+        self.release_observed('UP')
         self.capture('playing', [self.clients[0].identity])
 
     def cleanup(self):
