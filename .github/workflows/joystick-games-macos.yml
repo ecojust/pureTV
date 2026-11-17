@@ -58,6 +58,7 @@ jobs:
             ${{ runner.temp }}/package/build-manifest.json
             ${{ runner.temp }}/package/controller-tests.txt
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 14
   verify:
     needs: build
@@ -89,34 +90,45 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/qa"
           python3 joystick-games/tools/macos-packages.py --directory "$RUNNER_TEMP/package" --output "$RUNNER_TEMP/qa/package-verification.json" 2>&1 | tee "$RUNNER_TEMP/qa/package-verification.log"
+      - name: Compile independent graphics capability probe
+        run: |
+          set -euo pipefail
+          for TARGET_ARCH in arm64 x86_64; do
+            xcrun swiftc -swift-version 5 -target "$TARGET_ARCH-apple-macos11.0" -sdk "$(xcrun --sdk macosx --show-sdk-path)" -framework AppKit -framework WebKit joystick-games/shared/macos/tools/webgl-probe.swift -o "$RUNNER_TEMP/webgl-probe-$TARGET_ARCH"
+          done
+          lipo -create "$RUNNER_TEMP/webgl-probe-arm64" "$RUNNER_TEMP/webgl-probe-x86_64" -output "$RUNNER_TEMP/webgl-probe"
+          codesign --force --sign - --timestamp=none "$RUNNER_TEMP/webgl-probe"
       - name: Verify actual native app through the official SDK
         env:
           RUNNER_KIND: ${{ matrix.runner }}
         run: |
           set -euo pipefail
           if [ "$GAME" = cf-transport-ship ]; then APP='CF Transport Ship.app'; else APP='QQ Speed.app'; fi
-          OPTIONS=()
-          if [ "$RUNNER_KIND" = macos-15-intel ]; then OPTIONS+=(--allow-unavailable-webgl); fi
-          python3 joystick-games/tools/macos-verify.py --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/native" "${OPTIONS[@]}"
+          if [ "$RUNNER_KIND" = macos-15-intel ]; then
+            python3 joystick-games/tools/macos-verify.py --webgl-probe "$RUNNER_TEMP/webgl-probe" --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/native" --allow-unavailable-webgl
+          else
+            python3 joystick-games/tools/macos-verify.py --webgl-probe "$RUNNER_TEMP/webgl-probe" --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/native"
+          fi
       - name: Verify stable initial fallback while port 63485 is occupied
         if: matrix.runner == 'macos-latest'
         run: |
           set -euo pipefail
           if [ "$GAME" = cf-transport-ship ]; then APP='CF Transport Ship.app'; else APP='QQ Speed.app'; fi
-          python3 joystick-games/tools/macos-verify.py --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/occupied-port" --occupy-default-port
+          python3 joystick-games/tools/macos-verify.py --webgl-probe "$RUNNER_TEMP/webgl-probe" --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/occupied-port" --occupy-default-port
       - name: Run Intel executable under Rosetta with graphics
         if: matrix.runner == 'macos-latest'
         run: |
           set -euo pipefail
           if [ "$GAME" = cf-transport-ship ]; then APP='CF Transport Ship.app'; else APP='QQ Speed.app'; fi
           if ! /usr/bin/arch -x86_64 /usr/bin/true; then sudo /usr/sbin/softwareupdate --install-rosetta --agree-to-license; fi
-          python3 joystick-games/tools/macos-verify.py --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/rosetta" --launch-architecture x86_64
+          python3 joystick-games/tools/macos-verify.py --webgl-probe "$RUNNER_TEMP/webgl-probe" --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/rosetta" --launch-architecture x86_64
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: joystick-macos-qa-${{ matrix.game }}-${{ matrix.runner }}
           path: ${{ runner.temp }}/qa/
           if-no-files-found: warn
+          include-hidden-files: true
           retention-days: 14
   export:
     if: always()
@@ -158,7 +170,7 @@ jobs:
                 evidence=out/'evidence'/('joystick-macos-qa-'+game+'-'+platform)
                 assert json.loads((evidence/'package-verification.json').read_text())['status']=='passed'
                 native=json.loads((evidence/'native/report.json').read_text())
-                assert native['status']=='passed' or (platform=='macos-15-intel' and native['status']=='limited_graphics' and not native['webglAvailable'])
+                assert native['status']=='passed' or (platform=='macos-15-intel' and native['status']=='limited_graphics' and not native['webglAvailable'] and native['initialization']['classification'] in ['webgl_unavailable','webgl_incomplete'])
                 if platform=='macos-latest':
                   for mode in ['occupied-port','rosetta']:assert json.loads((evidence/mode/'report.json').read_text())['status']=='passed'
           else:assert not (out/'packages').exists(),'Never export packages as validated after failed runtime checks'

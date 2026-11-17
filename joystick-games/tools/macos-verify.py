@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Observe the actual native app; drive it only through the unchanged TCP SDK."""
-import argparse,datetime,hashlib,importlib.util,json,math,os,platform,plistlib,select,shutil,socket,subprocess,sys,threading,time,traceback
+import argparse,datetime,hashlib,importlib.util,json,math,os,platform,plistlib,re,select,shutil,socket,subprocess,sys,threading,time,traceback
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 SHARED=ROOT/'joystick-games/shared/macos'
@@ -8,6 +8,40 @@ SDK=ROOT/'puretv-joystick/joystick_sdk.py'
 KEYS=['UP','DOWN','LEFT','RIGHT','START','A','B','X','Y']
 def now():return datetime.datetime.now(datetime.timezone.utc).isoformat()
 def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def acknowledged_ping(wire,seq):
+    sent=[r for r in wire if r['direction']=='sdk-to-game' and r['message'].get('type')=='ping' and r['message'].get('seq')==seq]
+    if len(sent)!=1:return False
+    return any(r['connection']==sent[0]['connection'] and r['direction']=='game-to-sdk' and r['message']=={'type':'ack','seq':seq} for r in wire)
+def initialization(game,probe=None):
+    """Wait for a real rendered menu, or classify an explicit terminal error.
+
+    CF exposes its observation API before awaiting renderer construction. QQ's
+    error wrapper mentions WebGL even for unrelated JS errors. Neither the API's
+    existence nor its broad webglError boolean establishes graphics availability.
+    """
+    if not isinstance(game,dict):return 'pending'
+    if game.get('stage')=='error':
+        cause=str(game.get('error') or game.get('message') or '').strip()
+        prefix='无法启动 3D 游戏：需要支持 WebGL 2 的系统 WebView。'
+        if cause.startswith(prefix):cause=cause[len(prefix):].strip()
+        unavailable={
+            'Error creating WebGL context.',
+            'Error creating WebGL context with your selected attributes.',
+            'THREE.WebGLRenderer: Error creating WebGL context.',
+            'THREE.WebGLRenderer: Error creating WebGL context with your selected attributes.',
+            'THREE.WebGLRenderer: WebGL 1 is not supported since r163.',
+        }
+        if cause in unavailable:return 'webgl_unavailable'
+        precision_error=re.fullmatch(r"null is not an object \(evaluating '([A-Za-z_$][\w$]*)\.getShaderPrecisionFormat\(\1\.VERTEX_SHADER,\1\.HIGH_FLOAT\)\.precision'\)",cause)
+        samples=(probe or {}).get('samples',[])
+        incomplete=probe and probe.get('status')=='complete' and probe.get('webgl2ContextCreated') is True and len(samples)==3 and all('vertexHighFloat' in item and item['vertexHighFloat'] is None and not item.get('error') for item in samples)
+        if precision_error and incomplete:return 'webgl_incomplete'
+        return 'initialization_error'
+    version=game.get('webglVersion')
+    if game.get('stage')!='menu' or not isinstance(version,str) or not version.startswith('WebGL 2.0') or game.get('controller',{}).get('pollCount',0)<1:return 'pending'
+    if game.get('game')=='cf-transport-ship':return 'ready' if game.get('ready') is True else 'pending'
+    if game.get('game')=='qq-speed':return 'ready' if game.get('loading') is False and game.get('render',{}).get('calls',0)>0 and game.get('render',{}).get('triangles',0)>0 else 'pending'
+    return 'initialization_error'
 class Observer:
     """Forward TCP bytes unchanged while recording complete JSON lines both ways."""
     def __init__(self, target, report):
@@ -76,7 +110,7 @@ class Check:
     def __init__(self,args):
         self.args=args;self.out=args.output.resolve();self.out.mkdir(parents=True,exist_ok=True);assert not any(self.out.iterdir())
         self.diag=self.out/'diagnostics';self.diag.mkdir();self.processes=[];self.logs=[];self.client=None;self.proxy=None;self.app=None;self.blocker=None;self.held=set();self.stop=threading.Event();self.last=None
-        self.report={'status':'running','startedAt':now(),'game':args.game,'method':'Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.','physicalEsp32Tested':False,'tests':[],'wire':[],'observerErrors':[],'observerConnectionEnds':[],'snapshots':[],'screenshots':[],'sourceHashes':{str(p.relative_to(ROOT)):digest(p) for p in [Path(__file__),SDK,SHARED/'Sources/main.swift',SHARED/'Sources/ControllerServer.swift',SHARED/'Web/bridge.js']}}
+        self.report={'status':'running','qaSourceCommit':os.environ.get('GITHUB_SHA'),'artifactSourceCommit':os.environ.get('ARTIFACT_SOURCE_COMMIT',os.environ.get('GITHUB_SHA')),'artifactRunId':os.environ.get('ARTIFACT_SOURCE_RUN',os.environ.get('GITHUB_RUN_ID')),'startedAt':now(),'game':args.game,'method':'Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.','physicalEsp32Tested':False,'tests':[],'wire':[],'observerErrors':[],'observerConnectionEnds':[],'snapshots':[],'screenshots':[],'sourceHashes':{str(p.relative_to(ROOT)):digest(p) for p in [Path(__file__),SDK,SHARED/'tools/webgl-probe.swift',SHARED/'Sources/main.swift',SHARED/'Sources/ControllerServer.swift',SHARED/'Web/bridge.js']}}
     def process(self,argv,name):
         log=(self.out/name).open('wb');self.logs.append(log);p=subprocess.Popen([str(a) for a in argv],stdout=log,stderr=subprocess.STDOUT);self.processes.append(p);return p
     def read(self):
@@ -119,10 +153,11 @@ class Check:
         before=self.read()
         return self.until(lambda s:self.fresh(s,before,True) and not any(s.get('game',{}).get('controller',{}).get('buttons',{}).values()),label)
     def ping_ack(self):
-        self.client.ping();seq=self.client.seq;connection=self.proxy.connections
+        with self.client.lock:
+            self.client.ping();seq=self.client.seq
         end=time.monotonic()+10
         while time.monotonic()<end:
-            if any(r['connection']==connection and r['direction']=='game-to-sdk' and r['message']=={'type':'ack','seq':seq} for r in self.report['wire']):return seq
+            if acknowledged_ping(self.report['wire'],seq):return seq
             time.sleep(.05)
         raise AssertionError('Missing ping ACK '+str(seq))
     def clear(self):
@@ -151,7 +186,7 @@ class Check:
         raise AssertionError('Bonjour did not resolve port/version')
     def connect(self):
         self.proxy=Observer(('127.0.0.1',self.port),self.report);spec=importlib.util.spec_from_file_location('sdk',SDK);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
-        self.client=module.JoystickClient('127.0.0.1',self.proxy.port);self.client.connect();threading.Thread(target=self.heartbeat,daemon=True).start()
+        self.client=module.JoystickClient('127.0.0.1',self.proxy.port);self.client.connect();self.heartbeat_thread=threading.Thread(target=self.heartbeat,daemon=True);self.heartbeat_thread.start()
         self.until(lambda s:self.player(s).get('controllerId')==self.client.identity,'SDK hello')
         if self.graphics:self.display()
         self.screenshot('connected-menu.png')
@@ -216,7 +251,13 @@ class Check:
         self.clear()
         if self.graphics:self.settle_input('Before reconnect keys released');self.observed_button('A',True)
         else:self.press('A')
-        before=self.read();self.client.disconnect();self.held.clear();self.until(lambda s:self.fresh(s,before) and not self.player(s),'Disconnect')
+        self.until(lambda s:self.player(s).get('buttons',{}).get('A') is True,'Native A held before deliberate disconnect')
+        # Keep the held key, but allow all existing requests to be acknowledged
+        # before deliberately tearing down TCP. Hold the SDK RLock so heartbeat
+        # cannot add an in-flight request after this barrier.
+        with self.client.lock:
+            disconnect_ack=self.ping_ack();before=self.read();self.client.disconnect()
+        self.held.clear();self.until(lambda s:self.fresh(s,before) and not self.player(s),'Disconnect')
         if self.graphics:self.display(False);self.until(lambda s:self.fresh(s,before) and self.paused(s),'Disconnect pauses')
         self.screenshot('disconnected.png');self.client.connect()
         for k in ['START','A','B','X','Y']:self.client.send('button',key=k,action='sync',pressed=True,duration_ms=0)
@@ -225,9 +266,9 @@ class Check:
         if self.graphics:self.display()
         for k in KEYS:self.client.send('button',key=k,action='sync',pressed=False,duration_ms=0)
         if self.graphics:self.settle_input('Reconnect sync released')
-        self.screenshot('reconnected.png');return {'sameIdentity':self.client.identity,'heldSyncNoResume':True,'observedState':synced['game']}
+        self.screenshot('reconnected.png');return {'sameIdentity':self.client.identity,'disconnectBarrierAck':disconnect_ack,'heldSyncNoResume':True,'observedState':synced['game']}
     def acks(self):
-        self.stop.set();self.ping_ack()
+        self.stop.set();self.heartbeat_thread.join(timeout=5);assert not self.heartbeat_thread.is_alive();self.ping_ack()
         sent={(r['connection'],r['message']['seq']) for r in self.report['wire'] if r['direction']=='sdk-to-game'};acks={(r['connection'],r['message']['seq']) for r in self.report['wire'] if r['direction']=='game-to-sdk' and r['message'].get('type')=='ack'}
         assert sent==acks and not self.report['observerErrors'];return {'messages':len(sent),'matchingAcks':len(acks)}
     def quit(self):
@@ -248,14 +289,24 @@ class Check:
             if os.environ.get('GITHUB_ACTIONS')=='true':self.process([sys.executable,SHARED/'tools/allow-local-network.py',self.args.app],'network-prompts.txt')
             if self.args.occupy_default_port:self.blocker=socket.socket();self.blocker.bind(('0.0.0.0',63485));self.blocker.listen(1)
             prefix=['/usr/bin/arch','-'+self.args.launch_architecture] if self.args.launch_architecture else []
+            probe=None
+            if self.args.webgl_probe:
+                probe_process=self.process(prefix+[self.args.webgl_probe,self.out/'webgl-probe.json'],'webgl-probe.log');probe_process.wait(timeout=45);assert probe_process.returncode==0
+                probe=json.loads((self.out/'webgl-probe.json').read_text());self.report['webglProbe']=probe;self.report['webglProbeBinarySha256']=digest(self.args.webgl_probe);shutil.copy2(SHARED/'tools/webgl-probe.swift',self.out/'executed-webgl-probe.swift')
+                assert probe.get('status')=='complete','Independent graphics probe failed'
+                assert probe.get('processArchitecture')==(self.args.launch_architecture or platform.machine()),'Probe architecture mismatch'
             self.app=self.process(prefix+[binary,'--diagnostics-dir',self.diag,'--preferences-domain','com.ecojust.joystick.qa.'+str(os.getpid()),'--language','zh'],'native.log')
-            initial=self.until(lambda s:s.get('ready') and s.get('game') and s.get('active'),'Native ready',70);self.report['nativeProcessArchitecture']=initial['processArchitecture'];self.graphics=not initial['document']['webglError'];self.report['webglAvailable']=self.graphics
-            assert self.graphics or self.args.allow_unavailable_webgl
+            initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe)!='pending','Native initialization terminal state',90)
+            classification=initialization(initial['game'],probe);self.report['initialization']={'classification':classification,'observedGame':initial['game']}
+            assert classification!='initialization_error','Actual game initialization failed: '+json.dumps(initial['game'],ensure_ascii=False)
+            self.report['nativeProcessArchitecture']=initial['processArchitecture'];assert initial['processArchitecture']==(self.args.launch_architecture or platform.machine()),'Actual game process architecture mismatch'
+            self.graphics=classification=='ready';self.report['webglAvailable']=self.graphics
+            assert self.graphics or (classification in ['webgl_unavailable','webgl_incomplete'] and self.args.allow_unavailable_webgl), 'This platform must render the actual game'
             self.screenshot('menu.png');self.check('Bonjour actual port and version',self.discovery);self.check('Original SDK and complete identity card' if self.graphics else 'Original SDK native receiver without renderer',self.connect)
             if self.graphics:self.check('Real gameplay actions and START pause/resume',self.gameplay)
             self.check('Three foreground cycles keep transport stable',self.focus);self.check('Disconnect, held sync and same-ID reconnect',self.reconnect);self.check('Same-sequence ACK for every SDK message',self.acks);self.check('Normal quit closes TCP',self.quit)
             self.report['status']='passed' if self.graphics else 'limited_graphics';self.report['fullGameCompletionTested']=False
-            if not self.graphics:self.report['limitations']=['Native renderer lacks WebGL2; native TCP/Bonjour/ACK/lifecycle and error screen only. No gameplay or rendered controller-card claim.']
+            if not self.graphics:self.report['limitations']=['Runner WebGL2 initialization is unavailable or its shader-precision API is incomplete, as recorded by the actual app and independent probe. Native TCP/Bonjour/ACK/lifecycle and error screen only; no gameplay or rendered controller-card claim.']
         except Exception:self.report['status']='failed';self.report['error']=traceback.format_exc();self.report['lastState']=self.last;print(self.report['error'],file=sys.stderr)
         finally:
             self.stop.set()
@@ -271,6 +322,6 @@ class Check:
             self.report['finishedAt']=now();(self.out/'report.json').write_text(json.dumps(self.report,ensure_ascii=False,indent=2)+'\n');shutil.copy2(__file__,self.out/'executed-macos-verify.py')
         return 0 if self.report['status'] in ['passed','limited_graphics'] else 1
 if __name__=='__main__':
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--game',choices=['cf-transport-ship','qq-speed'],required=True);parser.add_argument('--app',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--launch-architecture',choices=['arm64','x86_64']);parser.add_argument('--occupy-default-port',action='store_true');parser.add_argument('--allow-unavailable-webgl',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--game',choices=['cf-transport-ship','qq-speed'],required=True);parser.add_argument('--app',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--launch-architecture',choices=['arm64','x86_64']);parser.add_argument('--occupy-default-port',action='store_true');parser.add_argument('--allow-unavailable-webgl',action='store_true');parser.add_argument('--webgl-probe',type=Path);args=parser.parse_args()
     if sys.platform!='darwin':parser.error('Requires the actual macOS GUI app; no simulated substitute')
     sys.exit(Check(args).run())

@@ -19,6 +19,7 @@ python3 joystick-games/tools/macos-build.py --game qq-speed --output /absolute/s
 - `tests/ControllerServerTests.swift`：既有 ACK、同步、重连、取消与 socket 生命周期回归，新增九键独立状态/计数；必须在 macOS 编译执行，不能用本地 JS 通过代替。
 - `tools/macos-packages.py`：完整核对 ZIP、只读挂载 DMG、实际复制安装后的 `.app` 与签名。
 - `tools/macos-verify.py`：真实 AppKit/WKWebView + 未修改 Python SDK，观察 Bonjour、卡片 ID、游戏动作、START 暂停、三次焦点变化同端口/同连接、断线/同步重连与 ACK。只读诊断不会读会消费短按的页面 snapshot。
-- workflow 保存 ARM、端口占用、Rosetta 的游戏检查；Intel 没有 WebGL2 时只记 `limited_graphics`，不算玩法通过。原生专项未覆盖完整比赛/整局胜负，另见游戏浏览器 QA。
+- workflow 保存 ARM、端口占用、Rosetta 的游戏检查；Intel 只有明确创建 WebGL2 失败，或实际游戏的 shader precision 空值与独立 WKWebView 三帧能力探针吻合时，才记 `limited_graphics`，不算玩法通过。普通初始化错误仍失败。原生专项未覆盖完整比赛/整局胜负，另见游戏浏览器 QA。
+- `joystick-games-macos-qa.yml` 复用 run `44115155028` / source `8d647598` 的成功构建包；先核对原构建状态、冻结输入与当前生产文件，再安装与运行原字节。产物来源与新验收脚本提交分别记录，所有平台通过相应范围检查后才导出安装包。旧失败报告及截图保留在 `docs/attempts/44115155028-1/`。
 
 当前文档描述工具能力，是否已构建与通过原生检查以对应版本实际工作流和证据为准。没有实体 ESP32 手柄验收。
